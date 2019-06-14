@@ -4,48 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1758C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1510C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E9F9217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8537217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544175;
-	bh=ymfTA8TIc50PZWNkDWCca0LUE+32hCvRBt8FdyzzDh4=;
+	s=default; t=1560544176;
+	bh=DkwTj3lGy+62IaL5sUSt22R/GkKUGMOQMc62lTrrUjc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nH6xak2AI5XadHnF877bLhgFwLF0afASxR0wIdooNqXsdlam2AIUePFhxn5m6y6BS
-	 J69FWfUfKcjKRagAXoP+/aZoBZEk/GHwaEY0j8a/JBuNb7q9a7F7+tsgYQ+0VAPJZ1
-	 yvMVG7P/80hXQuznJzhDyzsfXDFkKy4ZJfoB//7s=
+	b=uIO63PjnG3RP2PSBQ0cytsoYsvo6/4YoAAZmCFi6kim4E82sC8QvDfObJr2URp+3b
+	 mTJq0ymbACXglOixLeACN1DNSbK93dR9BbapdwxBGMzXti9m8dhnefaCLSWaKvdH4k
+	 kmp/3sFEtOhphmIl1cbThyCWBUklUCnNWaSH3jSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfFNU3M (ORCPT
+        id S1726800AbfFNU3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:29:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50844 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:29:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726697AbfFNU3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:02 -0400
+        id S1726649AbfFNU3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:00 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6F3A21852;
-        Fri, 14 Jun 2019 20:29:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBCC021850;
+        Fri, 14 Jun 2019 20:28:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544141;
-        bh=ymfTA8TIc50PZWNkDWCca0LUE+32hCvRBt8FdyzzDh4=;
+        s=default; t=1560544140;
+        bh=DkwTj3lGy+62IaL5sUSt22R/GkKUGMOQMc62lTrrUjc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BZI0jj/xjAyGd5VIEMWxUSX0oqAdyrYw/qQ+pLy+pNnb9gshOAqyC/zzFxjVMYhA6
-         WD3hzOCNv8qEpiMtjzt+EwpAPvtDY0pCFbMwB2xwiajn7+Pqng+8SWoLDv76OS8mzH
-         9BRNvglI4kG/7z0KLFk5/SvhOQVljLqrsAD7X/2g=
+        b=VcH/ToUZ1UIIL4mXEmxV1+GXMxxyxkcScWFsWF/rx/ti2K7L31AU3uegRpej1uujn
+         BQ1j/pDSxs1bv/FrTnaJT7/R2YRFGC9mqIVnUDzfSXQlY0XwGNL32LKCf5EQqb9OM4
+         QsO4gY04Xq7stZT3jWZPtlvCos6fUIhlBhRM2zX0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Oded Gabbay <oded.gabbay@gmail.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 20/59] habanalabs: fix bug in checking huge page optimization
-Date:   Fri, 14 Jun 2019 16:28:04 -0400
-Message-Id: <20190614202843.26941-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 18/59] parport: Fix mem leak in parport_register_dev_model
+Date:   Fri, 14 Jun 2019 16:28:02 -0400
+Message-Id: <20190614202843.26941-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -58,51 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Oded Gabbay <oded.gabbay@gmail.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit d724170160f800fa8dfd3c0cdebb8b093570b504 ]
+[ Upstream commit 1c7ebeabc9e5ee12e42075a597de40fdb9059530 ]
 
-This patch fix a bug in the mmu code that checks whether we can use huge
-page mappings for host pages.
+BUG: memory leak
+unreferenced object 0xffff8881df48cda0 (size 16):
+  comm "syz-executor.0", pid 5077, jiffies 4295994670 (age 22.280s)
+  hex dump (first 16 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000d2d0d5fe>] parport_register_dev_model+0x141/0x6e0 [parport]
+    [<00000000782f6dab>] 0xffffffffc15d1196
+    [<00000000d2ca6ae4>] platform_drv_probe+0x7e/0x100
+    [<00000000628c2a94>] really_probe+0x342/0x4d0
+    [<000000006874f5da>] driver_probe_device+0x8c/0x170
+    [<00000000424de37a>] __device_attach_driver+0xda/0x100
+    [<000000002acab09a>] bus_for_each_drv+0xfe/0x170
+    [<000000003d9e5f31>] __device_attach+0x190/0x230
+    [<0000000035d32f80>] bus_probe_device+0x123/0x140
+    [<00000000a05ba627>] device_add+0x7cc/0xce0
+    [<000000003f7560bf>] platform_device_add+0x230/0x3c0
+    [<000000002a0be07d>] 0xffffffffc15d0949
+    [<000000007361d8d2>] port_check+0x3b/0x50 [parport]
+    [<000000004d67200f>] bus_for_each_dev+0x115/0x180
+    [<000000003ccfd11c>] __parport_register_driver+0x1f0/0x210 [parport]
+    [<00000000987f06fc>] 0xffffffffc15d803e
 
-The code is supposed to enable huge page mappings only if ALL DMA
-addresses are aligned to 2MB AND the number of pages in each DMA chunk is
-a modulo of the number of pages in 2MB. However, the code ignored the
-first requirement for the first DMA chunk.
+After commit 4e5a74f1db8d ("parport: Revert "parport: fix
+memory leak""), free_pardevice do not free par_dev->state,
+we should free it in error path of parport_register_dev_model
+before return.
 
-This patch fix that issue by making sure the requirement of address
-alignment is validated against all DMA chunks.
-
-Signed-off-by: Oded Gabbay <oded.gabbay@gmail.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 4e5a74f1db8d ("parport: Revert "parport: fix memory leak"")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/habanalabs/memory.c | 6 ------
- 1 file changed, 6 deletions(-)
+ drivers/parport/share.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/misc/habanalabs/memory.c b/drivers/misc/habanalabs/memory.c
-index fadaf557603f..425442819d31 100644
---- a/drivers/misc/habanalabs/memory.c
-+++ b/drivers/misc/habanalabs/memory.c
-@@ -675,11 +675,6 @@ static int init_phys_pg_pack_from_userptr(struct hl_ctx *ctx,
- 
- 		total_npages += npages;
- 
--		if (first) {
--			first = false;
--			dma_addr &= PAGE_MASK_2MB;
--		}
--
- 		if ((npages % PGS_IN_2MB_PAGE) ||
- 					(dma_addr & (PAGE_SIZE_2MB - 1)))
- 			is_huge_page_opt = false;
-@@ -704,7 +699,6 @@ static int init_phys_pg_pack_from_userptr(struct hl_ctx *ctx,
- 	phys_pg_pack->total_size = total_npages * page_size;
- 
- 	j = 0;
--	first = true;
- 	for_each_sg(userptr->sgt->sgl, sg, userptr->sgt->nents, i) {
- 		npages = get_sg_info(sg, &dma_addr);
- 
+diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+index 5dc53d420ca8..7b4ee33c1935 100644
+--- a/drivers/parport/share.c
++++ b/drivers/parport/share.c
+@@ -895,6 +895,7 @@ parport_register_dev_model(struct parport *port, const char *name,
+ 	par_dev->devmodel = true;
+ 	ret = device_register(&par_dev->dev);
+ 	if (ret) {
++		kfree(par_dev->state);
+ 		put_device(&par_dev->dev);
+ 		goto err_put_port;
+ 	}
+@@ -912,6 +913,7 @@ parport_register_dev_model(struct parport *port, const char *name,
+ 			spin_unlock(&port->physport->pardevice_lock);
+ 			pr_debug("%s: cannot grant exclusive access for device %s\n",
+ 				 port->name, name);
++			kfree(par_dev->state);
+ 			device_unregister(&par_dev->dev);
+ 			goto err_put_port;
+ 		}
 -- 
 2.20.1
 
