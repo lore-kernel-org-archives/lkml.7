@@ -2,101 +2,99 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B42C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DD5C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 427DB20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20FD920866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qdBwUMao"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTTzFtfp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728310AbfFNOZg (ORCPT
+        id S1728386AbfFNOZj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:25:36 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:36790 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbfFNOZf (ORCPT
+        Fri, 14 Jun 2019 10:25:39 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46489 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728050AbfFNOZi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:25:35 -0400
-Received: by mail-yw1-f67.google.com with SMTP id t126so1179486ywf.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:25:35 -0700 (PDT)
+        Fri, 14 Jun 2019 10:25:38 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so2719665wrw.13;
+        Fri, 14 Jun 2019 07:25:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LYUOOkbDEtc/n63J16wUInERrQ528yDBZpQw3peOe88=;
-        b=qdBwUMaogc4xCMq8nYw9mw2BMaMCPofGrk0xtOBNrpZEcRu8ecbbJ2gRK++oUcFy5b
-         zAxEFOZ7dWU6kj3Ouu7nkjWPiydd/HSwZxS/h/cGqhS3MtTsHYGuQN5gngcAEM1zFfvt
-         xVTnTxA9dwYp0gMCXIHvKHhQGaYH1fCGFSdEVNMc3UAteWux7Y/PkW9pDXN3mkdJR8GH
-         jY+2SPuU5r3E46sRf3k2E/ocAcEvf1O3JOtjWHiCG6klFVJTxwIXOLK5Mutg+7UP711J
-         lai7oSTxDPCXXYbW8eLZR97IKWFsrUGD7Tlng14vj4yvsBKs7tyP3PIG9rt3QXh1pSnZ
-         8puw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1Xht2wc6GWx7rzL95f/p5mApKK3FegYBNbBLdEdfnr8=;
+        b=HTTzFtfpAF7+upWVnlS6HBVNxdNCAADrxhNr4kucftYM4HXyFdAvdhyZxI+VeHwMml
+         tpCWY6gmJD8HUgbBkc+253BCWQZ+EKwBarLVFbmzugu1hsPor4xw7UaSuB3fX50ahyeF
+         98A/bSytV5+rUoSWDjrvwqlHAyARUmOvVB1TopUb9S1Oe3HfKH+eCnuiCLhkLzp4aT2Y
+         f3SJIwUVEaHqrNeDpwUTycBzlA2luKc9RKu+ct38kupUocELFqB8akHFXXMH0TyT0S1R
+         DHre7T8ydHY4mLa3ZSteGpRlTAyWh9QS9ibS3245dY+bIiC8yk16FwhWl8lq9BDkeRYh
+         /MCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LYUOOkbDEtc/n63J16wUInERrQ528yDBZpQw3peOe88=;
-        b=THKQUQq0W8508OjoJVNXrMPQrjJXspW5s5w9S8XIQyGthp1QkmTveNSu9eZSesqv13
-         QWphMowAMJxTHtne1gU6RMCMIUd3s4aqXL4tlmmfw/C6vDwEN0m4jbSwsffIA5g/21LZ
-         IhALkd2NHy38I9rJ3dWyAJxMWNnICQ4S8ucgcnqQjMPRRf1mVcLJhWx3uuxz3V6Opz60
-         bmnVG+oLkmKaV5CnXiIBnO4I99XicYDzbH7BKf791G1/CjJ4ildir4UPRqMXhjm8yLu9
-         ZNTN9j4JFTnzOskk638TAO5AcWtfR9drXnl0plR3ECUSsxCHjoqq3zAt1vS+QNXE6L9+
-         A3ww==
-X-Gm-Message-State: APjAAAXsZKxwNQroOpeHMr9HxVZJFXAhY9Kyd22eHKn5BOro8oSjACW1
-        p5EJgamlyTGnoQkeuWrPzm/lJsFB8wu1tQWtsX+m0A==
-X-Google-Smtp-Source: APXvYqx1FaR3U1ZRHnOIFijrW4O3vjCsEduL+I5+YOFpO4Kz+puzSgk1iHxjH/mPPRVyJyb5GOmSOewLXM7BlC+xBRc=
-X-Received: by 2002:a0d:fbc6:: with SMTP id l189mr34021112ywf.135.1560522334672;
- Fri, 14 Jun 2019 07:25:34 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1Xht2wc6GWx7rzL95f/p5mApKK3FegYBNbBLdEdfnr8=;
+        b=P0LsrmlvEtCY+2LPOikfguIHNDfeM9nZOelgwefKTWTk7NInK9MOVS7FqF2a6F94Hh
+         1q2MT2V/jS+NUn9EietTKRSx9Jzgb4Sfc+eezv0VU9S00maAZDgs2YdoC+QZktX25Vl6
+         q2XZxwoecaMWy/SMys/eTymUYgEeddvj1Dm4fHzET2IB1GmiBl1mAsFS2fDvwwgFRSiH
+         2L3P3lA7v5B8w+2cQ0aXy5z7wYIbH3hJuXWuU3UflmGADyIWKrcms7QD30ySndociFm6
+         cpvFzTf1xIjFpBZ0wglcmk3smGqmJmx0KFy3QXEH6psDhkHdB/d5X25eQxwIvk6lWtQJ
+         +gVQ==
+X-Gm-Message-State: APjAAAVNXfNMtN4o8Vo6pb62HSrnpyrr1c4V+ygO+7u0qNzvwFgqEduo
+        80W3XQmDvoMYiU/QR2h1PyrkEwqEw/Q=
+X-Google-Smtp-Source: APXvYqzwEPtYyUzAXb5zFSOaN+f0YKpZ4EqTXQYjc8hxuUV7sIsNkAI1Sk65ytkZJVM7eEj1ESqcLA==
+X-Received: by 2002:adf:ebc6:: with SMTP id v6mr3408593wrn.222.1560522336433;
+        Fri, 14 Jun 2019 07:25:36 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id z14sm7966501wre.96.2019.06.14.07.25.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Jun 2019 07:25:35 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 16:25:34 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     util-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: Help with reviewing dosfstools patches
+Message-ID: <20190614142534.4obcytnq4v3ejdni@pali>
+References: <20190614102513.4uwsu2wkigg3pimq@pali>
+ <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
 MIME-Version: 1.0
-References: <20190612035715.166676-1-maowenan@huawei.com> <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
- <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com> <a674e90e-d06f-cb67-604f-30cb736d7c72@huawei.com>
- <6aa69ab5-ed81-6a7f-2b2b-214e44ff0ada@gmail.com> <52025f94-04d3-2a44-11cd-7aa66ebc7e27@huawei.com>
- <CANn89iKzfvZqZRo1pEwqW11DQk1YOPkoAR4tLbjRG9qbKOYEMw@mail.gmail.com> <7d0f5a21-717c-74ee-18ad-fc0432dfbe33@huawei.com>
-In-Reply-To: <7d0f5a21-717c-74ee-18ad-fc0432dfbe33@huawei.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Fri, 14 Jun 2019 07:25:23 -0700
-Message-ID: <CANn89iJW0DHBg=RKgdLq1r33THL15UO3c2n4MkR6DdD7-QwP1w@mail.gmail.com>
-Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
- same tuples
-To:     maowenan <maowenan@huawei.com>
-Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 7:04 AM maowenan <maowenan@huawei.com> wrote:
-> I agree that this is a special case.
-> I propose one point about the sequence of synack, if two synack with two different
-> sequence since the time elapse 64ns, this issue disappear.
->
-> tcp_conn_request->tcp_v4_init_seq->secure_tcp_seq->seq_scale
-> static u32 seq_scale(u32 seq)
-> {
->         /*
->          *      As close as possible to RFC 793, which
->          *      suggests using a 250 kHz clock.
->          *      Further reading shows this assumes 2 Mb/s networks.
->          *      For 10 Mb/s Ethernet, a 1 MHz clock is appropriate.
->          *      For 10 Gb/s Ethernet, a 1 GHz clock should be ok, but
->          *      we also need to limit the resolution so that the u32 seq
->          *      overlaps less than one time per MSL (2 minutes).
->          *      Choosing a clock of 64 ns period is OK. (period of 274 s)
->          */
->         return seq + (ktime_get_real_ns() >> 6);
-> }
->
-> So if the long delay larger than 64ns, the seq is difference.
+On Friday 14 June 2019 16:20:08 Enrico Weigelt, metux IT consult wrote:
+> On 14.06.19 12:25, Pali Rohár wrote:
+> > Hello!
+> > 
+> > Can somebody help with reviewing existing patches / pull requests for
+> > dosfstools project? https://github.com/dosfstools/dosfstools/pulls
+> 
+> I'll have a look at it. Could you perhaps prepare a (rebased) patch
+> queue ?
+> 
+> Does the project already have a maillist ?
 
-The core issue has nothing to do with syncookies.
+No, there is no mailing list. Basically whole development is on github
+via github pull requests where are also put review comments and where is
+also whole discussion, including bug reports.
 
-Are you sure you really understand this stack ?
+-- 
+Pali Rohár
+pali.rohar@gmail.com
