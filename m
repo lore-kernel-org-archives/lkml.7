@@ -2,114 +2,157 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DCAC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A61C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8748121473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBD9621473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:42:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="n1dXLHic"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XR58Y3i7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfFNIl0 (ORCPT
+        id S1726742AbfFNIm5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:41:26 -0400
-Received: from mail-eopbgr150095.outbound.protection.outlook.com ([40.107.15.95]:25248
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726255AbfFNIlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:41:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=l/XnEsRw+q639kFXEt1+2HpcSnmLzlpQdK+wVyoquTg=;
- b=n1dXLHicgzlYPgru4H6Z4N3wHuZaR3vEbU8oSVZ2H9QZG8d1G5q/ktesNy/ATEP6v07fNa/5a3iLx0HNJgdKX5fcQU1SuY1bgcaqo8aAISTeLpn50Q9EnZAd/3HMHWTlUu9t9WTWfqAO9cfEdtrzssUoK2tcIhGzXyxQyHMLZN8=
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
- VI1PR10MB2063.EURPRD10.PROD.OUTLOOK.COM (52.134.28.157) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Fri, 14 Jun 2019 08:41:21 +0000
-Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1987.010; Fri, 14 Jun 2019
- 08:41:20 +0000
-From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Esben Haabendal <esben@haabendal.dk>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-Subject: Re: [PATCH v10 3/3] watchdog: make the device time out at
- open_deadline when open_timeout is used
-Thread-Topic: [PATCH v10 3/3] watchdog: make the device time out at
- open_deadline when open_timeout is used
-Thread-Index: AQHVG6fowaQY4GjN3k2RR2MpldVesqaQiRSAgApZeYA=
-Date:   Fri, 14 Jun 2019 08:41:20 +0000
-Message-ID: <56280052-9437-9813-a24e-125abb876762@prevas.dk>
-References: <20190605140628.618-1-rasmus.villemoes@prevas.dk>
- <20190605140628.618-4-rasmus.villemoes@prevas.dk>
- <20190607183827.GA32475@roeck-us.net>
-In-Reply-To: <20190607183827.GA32475@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR0502CA0022.eurprd05.prod.outlook.com
- (2603:10a6:3:e3::32) To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
- (2603:10a6:803:e1::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [81.216.59.226]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: e629911a-ef23-460f-ca3c-08d6f0a412f7
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR10MB2063;
-x-ms-traffictypediagnostic: VI1PR10MB2063:
-x-microsoft-antispam-prvs: <VI1PR10MB20634B11852C2D47958B8B318AEE0@VI1PR10MB2063.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(346002)(136003)(366004)(39850400004)(189003)(199004)(68736007)(26005)(31686004)(2906002)(6486002)(5660300002)(54906003)(186003)(4744005)(478600001)(6436002)(8936002)(7736002)(72206003)(74482002)(8976002)(6512007)(25786009)(14454004)(229853002)(486006)(14444005)(44832011)(66556008)(64756008)(66446008)(66946007)(66476007)(6916009)(73956011)(256004)(53936002)(446003)(2616005)(476003)(11346002)(3846002)(6116002)(71190400001)(71200400001)(76176011)(316002)(296002)(6506007)(386003)(305945005)(4326008)(99286004)(81166006)(31696002)(8676002)(81156014)(102836004)(42882007)(66066001)(52116002)(36756003)(6246003)(107886003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2063;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: prevas.se does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ZKnVIpAUzFX8ZV1TUQWKlpc8OGSceaDpeFh1TSwHdJieuuapGVHdCVhEjS92yztNydi+P7HRqBtLRGoV4LGWBYiibm4Qg7rlkWW1qs74jf5nVJX3/LMn2LWIlsrWsNAYun8O+lMlHnuWtvrxy8uomAkv08R4OTYZpPaxPrRRrUI9EQeIzP3R9HPJRDhVj/Lhzm0Qb+5BRGxkZvpd4tOxRSIbdaeOzEOOcpaQkZQJjCbLRsXRvgw4Z/TDkQJi0TKIRIYCjx3QoZxPBw9TYgxlDFTAQDqt7jXP7b/k2OFk1P8UTmllYsxIC82dhEgEKsjc66imLfYjEVwIrt6B0UPnX2j59P+82ku9TugDbrjeg4aN26vi9Qqcnls6aNXB5NfxyyhVWWMxtzOerXKsvQLNvsThqZHMfRvu/zyoGjnU37s=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <C7FBBE264731A14A83C7DEA4737F5C7F@EURPRD10.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: base64
+        Fri, 14 Jun 2019 04:42:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44390 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726432AbfFNIm5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 04:42:57 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so2329548edr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 01:42:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QgL2xEAvTit++D3krd05nlqQHQWQMdk7SdHziLACmgM=;
+        b=XR58Y3i7jh0s5ib+GPkWBYx5jkGGKnL6OtPhGMnIBDHFCkRvO/5LSEA0GQVt6euYoc
+         2D8OEuFd0loxWkqqM6jxW3f4fxleyUMo+JEAeloHbyHmGkYy+7cI4/UC2Yq0Ah1Px7bi
+         s0SkPljmpvYKvE4ULlepeye+FGxVL2/x4kvfw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=QgL2xEAvTit++D3krd05nlqQHQWQMdk7SdHziLACmgM=;
+        b=H1wS+aswzOk6MYAtlJeVyYCW4ly3+un147w1gwo5H7yUsrUk9593cyQGN1mNoxftlN
+         2Xl9fPaiJIDxzbl+ui2ca+p2d3aIwZbW2AhMldVYCxn8mVrpd1JK0PG7bFU98ooPDcBM
+         RzgpCuHZKis7qxHD/Mg9JpaOJFJbRxVcN/uTeImfcdPCFOLODb7EEkaxS/uwcvAwt5DR
+         AoQGzv7agWcRL7V9eBwnxXk/Ntkkb5xmJY1sUVfMWewicb10KnaqEvoCuyPXUyL0LYHG
+         BKeDP9Uky9Y/9KV6u9woQOqAjMzzEqn0+kstlighcr4Jy4XVQbby7Pw1yZndXlhO8WRb
+         ymnA==
+X-Gm-Message-State: APjAAAXIsWjxP3A2fv4/3aE4KoC5CxpRZuBG6i27E9acyhJCw7lBWT6A
+        WalhBtFhtvLubEJRQ9XrAcwupw==
+X-Google-Smtp-Source: APXvYqwbZ1p/AAYkMvc204IuHnK2Mme6rVhADerqoPX3axFuelEDR2MDYfkYCclx3wOIYO9+vicaOg==
+X-Received: by 2002:a50:b68f:: with SMTP id d15mr25067320ede.39.1560501775062;
+        Fri, 14 Jun 2019 01:42:55 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id i5sm681242edc.20.2019.06.14.01.42.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 01:42:54 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 10:42:51 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jacopo Mondi <jacopo@jmondi.org>
+Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 19/20] drm: rcar-du: crtc: Register GAMMA_LUT properties
+Message-ID: <20190614084251.GW23020@phenom.ffwll.local>
+Mail-Followup-To: Jacopo Mondi <jacopo@jmondi.org>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Jacopo Mondi <jacopo+renesas@jmondi.org>,
+        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
+        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
+        VenkataRajesh.Kalakodima@in.bosch.com,
+        Harsha.ManjulaMallikarjun@in.bosch.com,
+        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
+ <20190606142220.1392-20-jacopo+renesas@jmondi.org>
+ <20190607120304.GH7593@pendragon.ideasonboard.com>
+ <20190614081507.3ky4pcyijjxnr7mp@uno.localdomain>
 MIME-Version: 1.0
-X-OriginatorOrg: prevas.dk
-X-MS-Exchange-CrossTenant-Network-Message-Id: e629911a-ef23-460f-ca3c-08d6f0a412f7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 08:41:20.5374
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614081507.3ky4pcyijjxnr7mp@uno.localdomain>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDcvMDYvMjAxOSAyMC4zOCwgR3VlbnRlciBSb2VjayB3cm90ZToNCj4gT24gV2VkLCBKdW4g
-MDUsIDIwMTkgYXQgMDI6MDY6NDRQTSArMDAwMCwgUmFzbXVzIFZpbGxlbW9lcyB3cm90ZToNCj4+
-IFdoZW4gdGhlIHdhdGNoZG9nIGRldmljZSBpcyBub3Qgb3BlbiBieSB1c2Vyc3BhY2UsIHRoZSBr
-ZXJuZWwgdGFrZXMNCj4+IGNhcmUgb2YgcGluZ2luZyBpdC4gV2hlbiB0aGUgb3Blbl90aW1lb3V0
-IGZlYXR1cmUgaXMgaW4gdXNlLCB3ZSBzaG91bGQNCj4+IGVuc3VyZSB0aGF0IHRoZSBoYXJkd2Fy
-ZSBmaXJlcyBjbG9zZSB0byBvcGVuX3RpbWVvdXQgc2Vjb25kcyBhZnRlciB0aGUNCj4+IGtlcm5l
-bCBoYXMgYXNzdW1lZCByZXNwb25zaWJpbGl0eSBmb3IgdGhlIGRldmljZS4NCj4+DQo+PiBUbyBk
-byB0aGlzLCBzaW1wbHkgcmV1c2UgdGhlIGxvZ2ljIHRoYXQgaXMgYWxyZWFkeSBpbiBwbGFjZSBm
-b3INCj4+IGVuc3VyaW5nIHRoZSBzYW1lIHRoaW5nIHdoZW4gdXNlcnNwYWNlIGlzIHJlc3BvbnNp
-YmxlIGZvciByZWd1bGFybHkNCj4+IHBpbmdpbmcgdGhlIGRldmljZToNCj4+DQo+PiAtIFdoZW4g
-d2F0Y2hkb2dfYWN0aXZlKHdkZCksIHRoaXMgcGF0Y2ggZG9lc24ndCBjaGFuZ2UgYW55dGhpbmcu
-DQo+Pg0KPj4gLSBXaGVuICF3YXRjaGRvY19hY3RpdmUod2RkKSwgdGhlICJ2aXJ0dWFsIHRpbWVv
-dXQiIHNob3VsZCBiZSB0YWtlbiB0bw0KPiANCj4gcy93YXRjaGRvY19hY3RpdmUvd2F0Y2hkb2df
-YWN0aXZlLw0KPiANCj4gb3RoZXJ3aXNlDQo+IA0KPiBSZXZpZXdlZC1ieTogR3VlbnRlciBSb2Vj
-ayA8bGludXhAcm9lY2stdXMubmV0Pg0KDQpUaGFua3MhIFdpbSwgY2FuIHlvdSBmaXggdXAgaWYv
-d2hlbiBhcHBseWluZywgb3IgZG8geW91IHByZWZlciBJIHJlc2VuZD8NCg0KUmFzbXVzDQo=
+On Fri, Jun 14, 2019 at 10:15:52AM +0200, Jacopo Mondi wrote:
+> Hi Laurent,
+>    thanks for review
+> 
+> On Fri, Jun 07, 2019 at 03:03:04PM +0300, Laurent Pinchart wrote:
+> > Hi Jacopo,
+> >
+> > Thank you for the patch.
+> >
+> > On Thu, Jun 06, 2019 at 04:22:19PM +0200, Jacopo Mondi wrote:
+> > > Enable the GAMMA_LUT KMS property using the framework helpers to
+> > > register the proeprty and the associated gamma table size maximum size.
+> > >
+> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
+> > > ---
+> > >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > index e6d3df37c827..c920fb5dba65 100644
+> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
+> > > @@ -1207,6 +1207,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
+> > >  	    rcdu->cmms[swindex]) {
+> > >  		rcrtc->cmm = rcdu->cmms[swindex];
+> > >  		rgrp->cmms_mask |= BIT(hwindex % 2);
+> > > +
+> > > +		drm_mode_crtc_set_gamma_size(crtc, CMM_GAMMA_LUT_SIZE);
+> > > +		drm_crtc_enable_color_mgmt(crtc, 0, false, CMM_GAMMA_LUT_SIZE);
+> >
+> > This change looks good, but you also need to add support for legacy API.
+> > According to the function's documentation,
+> >
+> >  * Drivers should use drm_atomic_helper_legacy_gamma_set() to implement the
+> >  * legacy &drm_crtc_funcs.gamma_set callback.
+> >
+> 
+> Drivers 'shuld' or drivers 'shall' ?
+> Isn't this required only to support the 'legacy APIs' ? Do we want that?
+
+You're calling drm_mode_crtc_set_gamma_size, which is only useful for the
+legacy ioctls. should here = assuming your hw supports something that
+legacy gamma ioctl can use. Feel free to patch up the docs.
+-Daniel
+
+> 
+> Thanks
+>    j
+> 
+> > >  	}
+> > >
+> > >  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
+> > >
+> >
+> > --
+> > Regards,
+> >
+> > Laurent Pinchart
+
+
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
