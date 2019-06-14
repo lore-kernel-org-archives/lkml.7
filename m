@@ -2,109 +2,84 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A247C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DA0C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28EEE21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76A321537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728859AbfFNOOc (ORCPT
+        id S1728902AbfFNOOi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:14:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42374 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727698AbfFNOOb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:14:31 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EE8Iq6105485
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 10:14:30 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t4d3489pp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 10:14:29 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Fri, 14 Jun 2019 15:14:28 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Jun 2019 15:14:24 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EEEN2H20840506
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jun 2019 14:14:23 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8DC59AE053;
-        Fri, 14 Jun 2019 14:14:23 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A5240AE051;
-        Fri, 14 Jun 2019 14:14:22 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.110.199])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Jun 2019 14:14:22 +0000 (GMT)
-Subject: Re: [PATCH V8 2/3] Define a new ima template field buf
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Prakhar Srivastava <prsriva02@gmail.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     roberto.sassu@huawei.com,
-        thiago Jung Bauermann <bauerman@linux.ibm.com>
-Date:   Fri, 14 Jun 2019 10:14:11 -0400
-In-Reply-To: <1560509860.4171.13.camel@linux.ibm.com>
-References: <20190612221549.28399-1-prsriva02@gmail.com>
-         <20190612221549.28399-3-prsriva02@gmail.com>
-         <1560455980.4805.57.camel@linux.ibm.com>
-         <1560509860.4171.13.camel@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
+        Fri, 14 Jun 2019 10:14:38 -0400
+Received: from ms.lwn.net ([45.79.88.28]:52178 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728239AbfFNOOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:14:38 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 2EACC2D6;
+        Fri, 14 Jun 2019 14:14:37 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 08:14:36 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 05/14] scripts: add an script to parse the ABI files
+Message-ID: <20190614081436.3f41746b@lwn.net>
+In-Reply-To: <87lfy4uuzs.fsf@intel.com>
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+        <196fb3c497546f923bf5d156c3fddbe74a4913bc.1560477540.git.mchehab+samsung@kernel.org>
+        <87r27wuwc3.fsf@intel.com>
+        <20190614133933.GA1076@kroah.com>
+        <87lfy4uuzs.fsf@intel.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061414-0008-0000-0000-000002F3C76B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061414-0009-0000-0000-00002260D213
-Message-Id: <1560521651.4072.7.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906140121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-> > > index 993d0f1915ff..c8591406c0e2 100644
-> > > --- a/security/integrity/ima/ima_init.c
-> > > +++ b/security/integrity/ima/ima_init.c
-> > > @@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
-> > >  	struct ima_template_entry *entry;
-> > >  	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
-> > >  	struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
-> > > -					    NULL, 0, NULL};
-> > > +					    NULL, 0, NULL, NULL, 0};
-> > 
-> > here, don't belong in this patch.  It belongs in "IMA: support for per
-> > policy rule template formats", in case it should ever be backported.
-> >  Please post this as a separate patch, that will be squashed with
-> > "IMA: support for per policy rule template formats".
+On Fri, 14 Jun 2019 17:00:55 +0300
+Jani Nikula <jani.nikula@linux.intel.com> wrote:
+
+> On Fri, 14 Jun 2019, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
+> > On Fri, Jun 14, 2019 at 04:31:56PM +0300, Jani Nikula wrote:  
+> >> On Thu, 13 Jun 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:  
+> >> > From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> >> >
+> >> > Add a script to parse the Documentation/ABI files and produce
+> >> > an output with all entries inside an ABI (sub)directory.
+> >> >
+> >> > Right now, it outputs its contents on ReST format. It shouldn't
+> >> > be hard to make it produce other kind of outputs, since the ABI
+> >> > file parser is implemented in separate than the output generator.  
+> >> 
+> >> Hum, or just convert the ABI files to rst directly.  
+> >
+> > And what would that look like?  
 > 
-> My mistake.  I should have picked up Thaigo's "ima: Use designated
-> initializers for struct ima_event_data".  Please drop these changes
-> instead.
+> That pretty much depends on the requirements we want to set on both the
+> ABI source files and the generated output. Obviously the requirements
+> can be conflicting; might be hard to produce fancy output if the input
+> is very limited.
 
-Sorry for the confusion.  I just pushed out Thiago's patch.
+The real question, I guess, is: is there anything else that depends on the
+current format of those files?  That could make reformatting them harder.
 
-thanks,
+Otherwise it seems like Jani's fieldlist idea might have some potential.
+We could consider a *really* simple preprocessing step if we really wanted
+("prepend a colon on relevant lines and join with the following line if
+need be") to keep the current format nearly unchanged.
 
-Mimi
-
+jon
