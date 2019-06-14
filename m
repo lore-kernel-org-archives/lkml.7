@@ -2,122 +2,159 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C546C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDA6C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:40:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD32420850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE67217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:40:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfFNVgO (ORCPT
+        id S1726264AbfFNVkH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:36:14 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32973 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725999AbfFNVgN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:36:13 -0400
-Received: by mail-wr1-f66.google.com with SMTP id n9so3973684wru.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 14:36:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=bCvKwbWJesvWCy0sKuZ4V0I/xR2OhzdiNEAy87dgHgM=;
-        b=AjPXFC2pW4DWQx+QYIgvHV9fR93dv/DkRQODLVHcHudlfy+vveJ2PUdRkR7JoswGTv
-         sxgjrZJpdunKBtE2ibOnXrP/yBm9n4ZIBb84jlQ1yn+1jH0WeX8B71qoMoigOuPrDyUC
-         pi+GG9DZNU7dHQeheAxVLMPSllcFvkNWaI23gc8vW0aFffCl/oLCXU5VK/Z+CbrQ/6q1
-         0EIY8/1huEtqmkDD26mwNzy8ZQw137iFw2cMWRWibbAvGbUYZTioDqEmJw2izV5WD/Y/
-         j6y9wU4znG0TqNe3NWXCssEIyZrUa2GxWU6r0nqLAyKcaTdX83J7bF6ytRRo2BkwvY9V
-         sasQ==
-X-Gm-Message-State: APjAAAVRgc40FG5IdpbwqjpXgxoW9LOd3BuW2EcqoASE2reDS0CZnTLy
-        yYDbtLSOAefLLVPhQCYs+E41GA==
-X-Google-Smtp-Source: APXvYqyaz9SMMAfY94vjBsF6aHQAfX+3a3A9OUyl0nhTjKgPhD32zJqRx7RQJvJahMVOLtJk25eU4Q==
-X-Received: by 2002:a5d:500d:: with SMTP id e13mr3847025wrt.337.1560548171165;
-        Fri, 14 Jun 2019 14:36:11 -0700 (PDT)
-Received: from vitty.brq.redhat.com (ip-78-102-201-117.net.upcbroadband.cz. [78.102.201.117])
-        by smtp.gmail.com with ESMTPSA id y6sm2905993wma.6.2019.06.14.14.36.09
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 14:36:10 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dmitry Safonov <dima@arista.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Prasanna Panchamukhi <panchamukhi@arista.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Cathy Avery <cavery@redhat.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        "Michael Kelley \(EOSG\)" <Michael.H.Kelley@microsoft.com>,
-        Mohammed Gamal <mmorsy@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Roman Kagan <rkagan@virtuozzo.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        devel@linuxdriverproject.org, kvm@vger.kernel.org,
-        linux-hyperv@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting reenlightenment vector
-In-Reply-To: <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
-References: <20190611212003.26382-1-dima@arista.com> <8736kff6q3.fsf@vitty.brq.redhat.com> <20190614082807.GV3436@hirez.programming.kicks-ass.net> <877e9o7a4e.fsf@vitty.brq.redhat.com> <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
-Date:   Fri, 14 Jun 2019 23:36:09 +0200
-Message-ID: <87sgsb6e9i.fsf@vitty.brq.redhat.com>
+        Fri, 14 Jun 2019 17:40:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39150 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbfFNVkG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:40:06 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BB53217F9;
+        Fri, 14 Jun 2019 21:40:05 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 17:40:04 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Wei Li <liwei391@huawei.com>
+Cc:     <mingo@redhat.com>, <huawei.libin@huawei.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ftrace: fix NULL pointer dereference in
+ free_ftrace_func_mapper()
+Message-ID: <20190614174004.1e2efef4@gandalf.local.home>
+In-Reply-To: <20190606031754.10798-1-liwei391@huawei.com>
+References: <20190606031754.10798-1-liwei391@huawei.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry Safonov <dima@arista.com> writes:
+On Thu, 6 Jun 2019 11:17:54 +0800
+Wei Li <liwei391@huawei.com> wrote:
 
-> On 6/14/19 11:08 AM, Vitaly Kuznetsov wrote:
->> Peter Zijlstra <peterz@infradead.org> writes:
->> 
->>> @@ -182,7 +182,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
->>>  	struct hv_reenlightenment_control re_ctrl = {
->>>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
->>>  		.enabled = 1,
->>> -		.target_vp = hv_vp_index[smp_processor_id()]
->>> +		.target_vp = hv_vp_index[raw_smp_processor_id()]
->>>  	};
->>>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
->>>  
->> 
->> Yes, this should do, thanks! I'd also suggest to leave a comment like
->> 	/* 
->>          * This function can get preemted and migrate to a different CPU
->> 	 * but this doesn't matter. We just need to assign
->> 	 * reenlightenment notification to some online CPU. In case this
->>          * CPU goes offline, hv_cpu_die() will re-assign it to some
->>  	 * other online CPU.
->> 	 */
->
-> What if the cpu goes down just before wrmsrl()?
-> I mean, hv_cpu_die() will reassign another cpu, but this thread will be
-> resumed on some other cpu and will write cpu number which is at that
-> moment already down?
->
+> The mapper may be NULL when called from register_ftrace_function_probe()
+> with probe->data == NULL.
+> 
+> This issue can be reproduced as follow (it may be coverd by compiler
+> optimization sometime):
+> 
+> / # cat /sys/kernel/debug/tracing/set_ftrace_filter 
 
-Right you are, we need to guarantee wrmsr() happens before the CPU gets
-a chance to go offline: we don't save the cpu number anywhere, we just
-read it with rdmsr() in hv_cpu_die().
+I'm not able to reproduce this, but I have nothing against the patch.
+It seems like a sane test. We can probably remove all the:
 
->
-> And I presume it's guaranteed that during hv_cpu_die() no other cpu may
-> go down:
-> :	new_cpu = cpumask_any_but(cpu_online_mask, cpu);
-> :	re_ctrl.target_vp = hv_vp_index[new_cpu];
-> :	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
+  if (!mapper)
+	return;
 
-I *think* I got convinced that CPUs don't go offline simultaneously when
-I was writing this.
+before callers of this function then.
 
--- 
-Vitaly
+I'll apply this for my next push to Linus.
+
+-- Steve
+
+> #### all functions enabled ####
+> / # echo foo_bar:dump > /sys/kernel/debug/tracing/set_ftrace_filter 
+> [  206.949100] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000000
+> [  206.952402] Mem abort info:
+> [  206.952819]   ESR = 0x96000006
+> [  206.955326]   Exception class = DABT (current EL), IL = 32 bits
+> [  206.955844]   SET = 0, FnV = 0
+> [  206.956272]   EA = 0, S1PTW = 0
+> [  206.956652] Data abort info:
+> [  206.957320]   ISV = 0, ISS = 0x00000006
+> [  206.959271]   CM = 0, WnR = 0
+> [  206.959938] user pgtable: 4k pages, 48-bit VAs, pgdp=0000000419f3a000
+> [  206.960483] [0000000000000000] pgd=0000000411a87003, pud=0000000411a83003, pmd=0000000000000000
+> [  206.964953] Internal error: Oops: 96000006 [#1] SMP
+> [  206.971122] Dumping ftrace buffer:
+> [  206.973677]    (ftrace buffer empty)
+> [  206.975258] Modules linked in:
+> [  206.976631] Process sh (pid: 281, stack limit = 0x(____ptrval____))
+> [  206.978449] CPU: 10 PID: 281 Comm: sh Not tainted 5.2.0-rc1+ #17
+> [  206.978955] Hardware name: linux,dummy-virt (DT)
+> [  206.979883] pstate: 60000005 (nZCv daif -PAN -UAO)
+> [  206.980499] pc : free_ftrace_func_mapper+0x2c/0x118
+> [  206.980874] lr : ftrace_count_free+0x68/0x80
+> [  206.982539] sp : ffff0000182f3ab0
+> [  206.983102] x29: ffff0000182f3ab0 x28: ffff8003d0ec1700 
+> [  206.983632] x27: ffff000013054b40 x26: 0000000000000001 
+> [  206.984000] x25: ffff00001385f000 x24: 0000000000000000 
+> [  206.984394] x23: ffff000013453000 x22: ffff000013054000 
+> [  206.984775] x21: 0000000000000000 x20: ffff00001385fe28 
+> [  206.986575] x19: ffff000013872c30 x18: 0000000000000000 
+> [  206.987111] x17: 0000000000000000 x16: 0000000000000000 
+> [  206.987491] x15: ffffffffffffffb0 x14: 0000000000000000 
+> [  206.987850] x13: 000000000017430e x12: 0000000000000580 
+> [  206.988251] x11: 0000000000000000 x10: cccccccccccccccc 
+> [  206.988740] x9 : 0000000000000000 x8 : ffff000013917550 
+> [  206.990198] x7 : ffff000012fac2e8 x6 : ffff000012fac000 
+> [  206.991008] x5 : ffff0000103da588 x4 : 0000000000000001 
+> [  206.991395] x3 : 0000000000000001 x2 : ffff000013872a28 
+> [  206.991771] x1 : 0000000000000000 x0 : 0000000000000000 
+> [  206.992557] Call trace:
+> [  206.993101]  free_ftrace_func_mapper+0x2c/0x118
+> [  206.994827]  ftrace_count_free+0x68/0x80
+> [  206.995238]  release_probe+0xfc/0x1d0
+> [  206.995555]  register_ftrace_function_probe+0x4a8/0x868
+> [  206.995923]  ftrace_trace_probe_callback.isra.4+0xb8/0x180
+> [  206.996330]  ftrace_dump_callback+0x50/0x70
+> [  206.996663]  ftrace_regex_write.isra.29+0x290/0x3a8
+> [  206.997157]  ftrace_filter_write+0x44/0x60
+> [  206.998971]  __vfs_write+0x64/0xf0
+> [  206.999285]  vfs_write+0x14c/0x2f0
+> [  206.999591]  ksys_write+0xbc/0x1b0
+> [  206.999888]  __arm64_sys_write+0x3c/0x58
+> [  207.000246]  el0_svc_common.constprop.0+0x408/0x5f0
+> [  207.000607]  el0_svc_handler+0x144/0x1c8
+> [  207.000916]  el0_svc+0x8/0xc
+> [  207.003699] Code: aa0003f8 a9025bf5 aa0103f5 f946ea80 (f9400303) 
+> [  207.008388] ---[ end trace 7b6d11b5f542bdf1 ]---
+> [  207.010126] Kernel panic - not syncing: Fatal exception
+> [  207.011322] SMP: stopping secondary CPUs
+> [  207.013956] Dumping ftrace buffer:
+> [  207.014595]    (ftrace buffer empty)
+> [  207.015632] Kernel Offset: disabled
+> [  207.017187] CPU features: 0x002,20006008
+> [  207.017985] Memory Limit: none
+> [  207.019825] ---[ end Kernel panic - not syncing: Fatal exception ]---
+> 
+> Signed-off-by: Wei Li <liwei391@huawei.com>
+> ---
+>  kernel/trace/ftrace.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index a12aff849c04..7e2488da69ac 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -4221,10 +4221,13 @@ void free_ftrace_func_mapper(struct ftrace_func_mapper *mapper,
+>  	struct ftrace_func_entry *entry;
+>  	struct ftrace_func_map *map;
+>  	struct hlist_head *hhd;
+> -	int size = 1 << mapper->hash.size_bits;
+> -	int i;
+> +	int size, i;
+> +
+> +	if (!mapper)
+> +		return;
+>  
+>  	if (free_func && mapper->hash.count) {
+> +		size = 1 << mapper->hash.size_bits;
+>  		for (i = 0; i < size; i++) {
+>  			hhd = &mapper->hash.buckets[i];
+>  			hlist_for_each_entry(entry, hhd, hlist) {
+
