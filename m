@@ -2,99 +2,84 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 487C8C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C687DC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1473A2064A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560535714;
-	bh=S6eD/OBjba2USkkWAIp4R8wMlj47jkpPE3pTAgWl2I8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wt/iUtrFXfo9nG8Z4V7M6+teP2tAhHLRZmw9+mQqA9IkI1GmN6nAznl/19wtx+muV
-	 BtJ/Ck6dhVYJcYgjYOfwPkqqkuGAkiB4rJCAqO2sFPIiwmW8iE6sNiVe1DejbueXOk
-	 NFOYErA9p59wEMeRAiPlYzz+YAuMr/DkcPgfty4Q=
+	by mail.kernel.org (Postfix) with ESMTP id ACEEC2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:08:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726103AbfFNSIc (ORCPT
+        id S1726202AbfFNSIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:08:32 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:44162 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfFNSIc (ORCPT
+        Fri, 14 Jun 2019 14:08:39 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:52461 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfFNSIi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:08:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=S6eD/OBjba2USkkWAIp4R8wMlj47jkpPE3pTAgWl2I8=; b=KjTjSpkRwpkDuBWkoD6399Van
-        IO20atW52hTE983NlT/tLggv3kcG0UEVKslLvj7uskRpFSnPkRH6G/mKWr53Ee6K23+aRRfrvmF7p
-        OKgyJysJdks8pDU7zntuTk+EKOudj+hAvkJinChxHxGuNni06xiYtsBNaq5pKffT/Uq0E=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hbqcl-0000BB-BC; Fri, 14 Jun 2019 18:08:27 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id A288A440046; Fri, 14 Jun 2019 19:08:26 +0100 (BST)
-Date:   Fri, 14 Jun 2019 19:08:26 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 21/28] drivers: Introduce
- bus_find_device_by_acpi_dev() helper
-Message-ID: <20190614180826.GH5316@sirena.org.uk>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-22-git-send-email-suzuki.poulose@arm.com>
+        Fri, 14 Jun 2019 14:08:38 -0400
+X-Originating-IP: 37.205.120.66
+Received: from localhost (unknown [37.205.120.66])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 5A6AF40003;
+        Fri, 14 Jun 2019 18:08:29 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 20:08:26 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Ken Sloat <KSloat@aampglobal.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
+ watchdog on system suspend
+Message-ID: <20190614180826.GD3369@piout.net>
+References: <20190614125310.29458-1-ksloat@aampglobal.com>
+ <20190614164609.GA29814@roeck-us.net>
+ <BL0PR07MB4115E99D065FD9BEA4C43BB5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r21wuLfwIlf/vvzy"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560534863-15115-22-git-send-email-suzuki.poulose@arm.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <BL0PR07MB4115E99D065FD9BEA4C43BB5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 14/06/2019 17:53:01+0000, Ken Sloat wrote:
+> > The call to sama5d4_wdt_init() above now explicitly stops the watchdog
+> > even if we want to (re)start it. I think this would be better handled with an
+> > else case here
+> > 
+> >         else
+> >                 sama5d4_wdt_stop(&wdt->wdd);
+> > 
+> 
+> So we completely remove the sama5d4_wdt_init() call then correct?
+> 
+> To leave the code as it behaves today with the addition
+> of wdt stop/start, shouldn't we call init in the else instead?
+> 
+> 	if (watchdog_active(&wdt->wdd))
+> 		sama5d4_wdt_start(&wdt->wdd);
+> 	else
+> 		sama5d4_wdt_init();
+> 
+> I guess I don't really understand the purpose of having the init statement in resume
+> in the first place. I agree, calling this first does end up essentially resetting the wdt
+> it will start again if it was running before, but the count will be reset.
+> 
 
---r21wuLfwIlf/vvzy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+There is a nice comment explaining why ;)
 
-On Fri, Jun 14, 2019 at 06:54:16PM +0100, Suzuki K Poulose wrote:
-> Add a wrapper to bus_find_device() to search for a device
-> by the ACPI COMPANION device, reusing the generic match function.
-> Also convert the existing users to make use of the new helper.
 
-Acked-by: Mark Brown <broonie@kernel.org>
-
-This might have merge issues, I just applied some changes to the ACPI
-parsing code the other day.
-
---r21wuLfwIlf/vvzy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0D4pkACgkQJNaLcl1U
-h9AmVQf/WWt5yCgqJS2hZ0wFS5SWw5i/JVNB1OTySWW4UwV8kzMIO9QKAQcU7Bjt
-DSD24i2mUo/SaKBH+15eddgJLLJp4TNDVS8nKqhT+otXOn2usObZBjsVRtWwflu0
-fqz3PoaUimH0t+spe5Zc6PeDh5vQZSnqlodIq4Z0enShaVZorKbLNWodISJFEGV3
-F8AuiHutx8XotM8N3d5082oq84OJrKco7j0OMGNwZK0iP3oCWjjSZLPY9nAVhHVr
-2Jb+oYxGskwzQGJTb1522E0Y8H8ZYjqYrpOXW0Sg+tbSP9gxoxOoJFnOzMQUlcAI
-3khjbxrC4r6AoHawwMjUOc5V/BunEQ==
-=t8zE
------END PGP SIGNATURE-----
-
---r21wuLfwIlf/vvzy--
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
