@@ -2,99 +2,128 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D66FC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828C0C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A51720850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:03:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=essential-com.20150623.gappssmtp.com header.i=@essential-com.20150623.gappssmtp.com header.b="OX7FQRuA"
+	by mail.kernel.org (Postfix) with ESMTP id 5549E20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:03:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727230AbfFNAC6 (ORCPT
+        id S1727395AbfFNADg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:02:58 -0400
-Received: from mail-vs1-f53.google.com ([209.85.217.53]:41811 "EHLO
-        mail-vs1-f53.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfFNAC6 (ORCPT
+        Thu, 13 Jun 2019 20:03:36 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46706 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727248AbfFNADg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:02:58 -0400
-Received: by mail-vs1-f53.google.com with SMTP id g24so631553vso.8
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 17:02:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=essential-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=2opkvVT34hnRoCGzOfcOB0iua9D1z55NI8XzuN4ShgM=;
-        b=OX7FQRuA9OTKAXDHa/iNjbvag4WVn74BVkR1IdLp8Mya03h9QUvrCqVmmepOf57FCB
-         ZNCkgpJio2iC79WzJdsDWwwTkuzWBDsTADMcf3fIBBYd7hvklVq8eELoLbIhg2bE8cL1
-         tQzUWKfGZzARzUqJqedVVm+GBx5WmXDypwNz2KEY9+QGIBq8DQa+NbuQ119rXqnoV7fK
-         mnohV+8Lj4oqDevRShmZySexdFGV72DG8sO+Oub3eADBjHDY1HYhvajjvnqanrPx+8u2
-         MQpEvpnFF50eGJsWxnJ+6Ge84asphx74QbWD6Rgcn7GZVyVMw6AKnzapXQZv9xwb/i63
-         xZ7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:content-transfer-encoding;
-        bh=2opkvVT34hnRoCGzOfcOB0iua9D1z55NI8XzuN4ShgM=;
-        b=Unkebo2cX8hE2oPXMGoJ0LJQnGzS50p9Tr8YCrSwamBJaouAd93+PrEgPOoup9okj7
-         RHm+fLeIiq90HDjkn2jaStFLbUw6CdkAYe+R31kjMmkRjtrAG5NBKXKn5RSaebfbFIed
-         MAtxi2DzpLojUx6RiQqEzRGhHRorVEz0BUk7EHqPF0KLkD03zBT0Yp99o7TGIjYqRK2G
-         n3Ts/GkwdaFv5tHqLVBnaOaCrxGL9H7T4vOtlC+qV/MeZ5DJE+eAa06mzDaTj203/hKx
-         0akHZnF/AZxX4qKz7uZGxA29xmHpxQB/yYx0p4ygNxVaXflpIys4aG024/IJcNvX8rc/
-         Zv5g==
-X-Gm-Message-State: APjAAAV24DpDljkqfMYEFHbnB8on8ML2SNOuYBFARfRwUM1Vw60uAlL7
-        SsEnXi/lONSaXNZhHdf52MTfBdOgmzxhFPWKrUFgYq4px78=
-X-Google-Smtp-Source: APXvYqzeU0eYysnKeFUi8fAY2Jki/miEPQcV78GxVnv0M+odjqOwRO9SNFqOwYI7O49jZkJEBsFwvNYxkP0T0eK/ChA=
-X-Received: by 2002:a67:cd14:: with SMTP id u20mr2693863vsl.36.1560470577392;
- Thu, 13 Jun 2019 17:02:57 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAEXycp+Y-x7N_Yr==Xy_CT5K_a1DZYc85w1OUV+cKC5ZN+KB1g@mail.gmail.com>
-In-Reply-To: <CAEXycp+Y-x7N_Yr==Xy_CT5K_a1DZYc85w1OUV+cKC5ZN+KB1g@mail.gmail.com>
-From:   =?UTF-8?Q?Jean=2DBaptiste_Th=C3=A9ou?= <jb@essential.com>
-Date:   Fri, 14 Jun 2019 09:02:46 +0900
-Message-ID: <CAEXycpKJvSsyDQjeCC4YqmtN5tpmO15g8D-_3mrunY-NL1w4Qw@mail.gmail.com>
-Subject: Re: Regression post "HID: core: move Usage Page concatenation to Main item"
-To:     Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, nsaenzjulienne@suse.de
+        Thu, 13 Jun 2019 20:03:36 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5E01nKX063458
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 20:03:35 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3ywmsdch-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 20:03:35 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 14 Jun 2019 01:03:32 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 01:03:27 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5E03QVC33095874
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 00:03:26 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 79607A405F;
+        Fri, 14 Jun 2019 00:03:26 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 986BBA4062;
+        Fri, 14 Jun 2019 00:03:24 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.81.91])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 00:03:24 +0000 (GMT)
+Subject: Re: [RFC 0/7] Introduce TEE based Trusted Keys support
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>,
+        Sumit Garg <sumit.garg@linaro.org>, keyrings@vger.kernel.org,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org
+Cc:     jens.wiklander@linaro.org, corbet@lwn.net, dhowells@redhat.com,
+        jejb@linux.ibm.com, jarkko.sakkinen@linux.intel.com,
+        jmorris@namei.org, serge@hallyn.com, ard.biesheuvel@linaro.org,
+        daniel.thompson@linaro.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Date:   Thu, 13 Jun 2019 20:03:13 -0400
+In-Reply-To: <d803283e-5e69-5deb-fe94-3f2e45fb95af@schaufler-ca.com>
+References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
+         <d803283e-5e69-5deb-fe94-3f2e45fb95af@schaufler-ca.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061400-0028-0000-0000-0000037A2047
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061400-0029-0000-0000-0000243A1AE4
+Message-Id: <1560470593.4805.109.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_14:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130179
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry - Please find the public link:
+On Thu, 2019-06-13 at 09:40 -0700, Casey Schaufler wrote:
+> On 6/13/2019 3:30 AM, Sumit Garg wrote:
+> > Add support for TEE based trusted keys where TEE provides the functionality
+> > to seal and unseal trusted keys using hardware unique key. Also, this is
+> > an alternative in case platform doesn't possess a TPM device.
+> >
+> > This series also adds some TEE features like:
+> 
+> Please expand the acronym TEE on first use. That will
+> help people who don't work with it on a daily basis
+> understand what you're going on about.
 
-https://android.googlesource.com/platform/cts/+/master/tests/tests/hardware=
-/res/raw/asus_gamepad_register.json
+Thanks, Casey.
 
-Best regards
+"[6/7] doc: keys: Document usage of TEE based Trusted Keys" refers to
+the kernel tee documentation, but that documentation is limited to
+userspace interaction with the tee.
 
-On Fri, Jun 14, 2019 at 9:01 AM Jean-Baptiste Th=C3=A9ou <jb@essential.com>=
- wrote:
->
-> Hi,
->
-> This patch (58e75155009cc800005629955d3482f36a1e0eec) is triggering a
-> regression with the following descriptor (report not working as
-> expected)
->
-> https://partner-android.googlesource.com/platform/cts/+/refs/heads/q-fs-r=
-elease/tests/tests/hardware/res/raw/asus_gamepad_register.json
->
-> Didn't see anything obviously wrong with this gamepad descriptor, so
-> not sure what's trigger the regression.
->
-> Thanks a lot
->
-> Best regards
+A trusted key is a random number generated and sealed(encrypted) by
+the TPM, so that only the TPM may unseal it.  The sealing key never
+leaves the TPM.  The sealed, trusted key may be exported to userspace.
+ In the tee case, can the "sealing" key ever leave the tee?  Can the
+sealed, trusted key, exported to userspace, be unsealed by the tee?
+ Are the tee security protections similar to those of the TPM?  How do
+they compare?
 
+Mimi
 
+> 
+> >
+> > Patch #1, #2 enables support for registered kernel shared memory with TEE.
+> >
+> > Patch #3 enables support for private kernel login method required for
+> > cases like trusted keys where we don't wan't user-space to directly access
+> > TEE service to retrieve trusted key contents.
+> >
+> > Rest of the patches from #4 to #7 adds support for TEE based trusted keys.
+> >
+> > This patch-set has been tested with OP-TEE based pseudo TA which can be
+> > found here [1].
+> >
+> > Looking forward to your valuable feedback/suggestions.
 
---=20
-Jean-Baptiste Th=C3=A9ou
-Principal System Software Engineer @ Essential
