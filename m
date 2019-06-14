@@ -2,126 +2,135 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AF8DC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D7F3C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F60920850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11CFB20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:50:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7ZP9j9Y"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="X57dInWj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727554AbfFNLuj (ORCPT
+        id S1727620AbfFNLu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:50:39 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36808 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfFNLuj (ORCPT
+        Fri, 14 Jun 2019 07:50:56 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38449 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727434AbfFNLu4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:50:39 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f21so1433768pgi.3;
-        Fri, 14 Jun 2019 04:50:38 -0700 (PDT)
+        Fri, 14 Jun 2019 07:50:56 -0400
+Received: by mail-wr1-f68.google.com with SMTP id d18so2215840wrs.5
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 04:50:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=h3a8MSgllR1VzyxCgXzslXCSIaES75ArkXEmitqW5jU=;
-        b=E7ZP9j9YWgo8vSuFABpgNgE2+vhludF3mH8n5M6tO78o+s0p7B3iAj+j/R0jY63w1n
-         qIpEMPj6OPQjKTSyzol3TEvGbco7cyOADqeWZh1Iaec6DMeaJLP5C8AyjIjPvlSjFsRG
-         Ysw4b5XIU4WUbm1/onI39AHEqLFrsb2shYhe9jgfYBV2SpJe8D1/wSjD5BHOPqltyob1
-         3hGQGZWyPZmCKKnnaSZ4JUXya08IQ/kdLH/qerOr8lOL0/ytZtUnOH24YouPKFC8oGX+
-         FBOxARwmP1qy7VDbZDqWqR8lXP+gK0N3X3nkmNkWaZ0haF1uZb0tIajrCEG48d3SD7e+
-         hlKA==
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=j/mrTktDdZBIOs0fb7bg3GlLfNmxkoW9xlbMZCkSZ0I=;
+        b=X57dInWjSfJLzXwFIEJdQ5q6FsaS7CvV1EF+IkBVFhkzOOrUcEJ8GYohyKra30O9bL
+         DgC889Z97zOmyYvArr3dNR5uguITXF/4k25N90biUzdDwX1YLc0K55cClHn5hD/m9DQr
+         GdX6zoEcAVANQOs9OMkNUHsBNPvc6+jXi/+cnRu1AqqUYVMizGmHhzJuymsJAs72qSnY
+         e8F3/ZPbxbdHSq7MdgpmfoT4ec4DS0vA3tZVPQHXLmbCs/pEXNbRSZdJNq/EDlac9ieS
+         yGsbdUapKayV7E6lyKh04LQsF1MKh2CokJE48bCM7aGEJOUNIYWhm+teYHC79YzfoQJa
+         GwVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=h3a8MSgllR1VzyxCgXzslXCSIaES75ArkXEmitqW5jU=;
-        b=Vck6FDiiofYqL6ODDucD+B/kjukPau4y5qtkJCkBlokbwPpMvFBClJoir3Ea+hPl/O
-         v9+F/T9aSx735ZKlHyEPkc5+yLy7ZrGqYn9qhnt7b+nhJUQrNXWdEpZHeZwPAVdR1Ttr
-         Juh/HDtCUHMynfImJnc7g5mGGfSkbA+X4zV7UWb315wvYyJNai5hw2djGLpWFJhYSa4o
-         mAo1SkGFl2E9b2SZH6+D/c19xjnm+Z8LTBsx21TS6TgAo3rmMR5qUOgGXnSwUJ7ediA0
-         ADOE24cojOOY20fCIPQ5R0ZmtGa/Cs375PKHmZ8zAsr0RTRqViuMsSqj6nPeEi3QrP+r
-         WdlA==
-X-Gm-Message-State: APjAAAWUrjHEyLwPIVQIu2+3cCUqFj+kqta1ZI1LGn5yaVmpebdosjyf
-        ntm9Hl2EUerQZ4lHha726V30GsBe3t6adA==
-X-Google-Smtp-Source: APXvYqxlEHvwEzPSNOgpEmqYxAwFljTQCNczS9YEeJvwU1v3jnZxJfJTHERdfqNnMhb0CS1KegTDlQ==
-X-Received: by 2002:a63:6105:: with SMTP id v5mr35288809pgb.312.1560513038336;
-        Fri, 14 Jun 2019 04:50:38 -0700 (PDT)
-Received: from xy-data.openstacklocal ([159.138.22.150])
-        by smtp.gmail.com with ESMTPSA id f10sm2275556pgq.73.2019.06.14.04.50.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Fri, 14 Jun 2019 04:50:37 -0700 (PDT)
-From:   Young Xiao <92siuyang@gmail.com>
-To:     clm@fb.com, josef@toxicpanda.com, dsterba@suse.com,
-        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Young Xiao <92siuyang@gmail.com>
-Subject: [PATCH] btrfs: fix out of bounds array access while reading extent buffer
-Date:   Fri, 14 Jun 2019 19:51:49 +0800
-Message-Id: <1560513109-2568-1-git-send-email-92siuyang@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=j/mrTktDdZBIOs0fb7bg3GlLfNmxkoW9xlbMZCkSZ0I=;
+        b=GRdVTDnLoPs8hxJWpTk7JwPmNGid8ZA63IsUME+atCU5BH5YrnfBFDSMTg7D2OFV6W
+         Juvc2IR5z4aoknDaz1mcEVgjDJarfQITY96C4v3K2d4/oxFn8YwujJnzAk79pJ98v4Pk
+         6x05apEuiB+1izFLsfns2myJNp0n35UUG+XJn8JYXSZt4WVftqNunF6eEdoGkEjqlVwg
+         PxNbaXTXGOms2LigXV1hIpLU8iy3CjcPu4PB+Bvu1FCG/FefzHViwXvn2vwMVt/s/ZrA
+         OZviS82CrWm3bYhx0GIOXv8u2E6RSe6h8CvIb+tfC9R+vikTZACjPiOCFp8B1g8l1xCn
+         gBkg==
+X-Gm-Message-State: APjAAAVTfjJy6jONJNW0PEWiVhpsqG97tbNxQvhsSyMpELjMWsM3dwxJ
+        pIRmskkzTzT9ACvMAqf56e969Q==
+X-Google-Smtp-Source: APXvYqzAYHdO6w8DBfi5lPDXVFzFFl/H9Zr+6ay+lTLK6DZ+DrLmMao9TSeNccrggbh94rgdTebIrA==
+X-Received: by 2002:a5d:540e:: with SMTP id g14mr5857286wrv.346.1560513053775;
+        Fri, 14 Jun 2019 04:50:53 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id x129sm4138600wmg.44.2019.06.14.04.50.52
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 04:50:53 -0700 (PDT)
+Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting
+ reenlightenment vector
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+References: <20190611212003.26382-1-dima@arista.com>
+ <8736kff6q3.fsf@vitty.brq.redhat.com>
+ <20190614082807.GV3436@hirez.programming.kicks-ass.net>
+ <877e9o7a4e.fsf@vitty.brq.redhat.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
+Date:   Fri, 14 Jun 2019 12:50:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <877e9o7a4e.fsf@vitty.brq.redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is a corner case that slips through the checkers in functions
-reading extent buffer, ie.
+On 6/14/19 11:08 AM, Vitaly Kuznetsov wrote:
+> Peter Zijlstra <peterz@infradead.org> writes:
+> 
+>> @@ -182,7 +182,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
+>>  	struct hv_reenlightenment_control re_ctrl = {
+>>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+>>  		.enabled = 1,
+>> -		.target_vp = hv_vp_index[smp_processor_id()]
+>> +		.target_vp = hv_vp_index[raw_smp_processor_id()]
+>>  	};
+>>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+>>  
+> 
+> Yes, this should do, thanks! I'd also suggest to leave a comment like
+> 	/* 
+>          * This function can get preemted and migrate to a different CPU
+> 	 * but this doesn't matter. We just need to assign
+> 	 * reenlightenment notification to some online CPU. In case this
+>          * CPU goes offline, hv_cpu_die() will re-assign it to some
+>  	 * other online CPU.
+> 	 */
 
-if (start < eb->len) and (start + len > eb->len), then:
-the checkers in read_extent_buffer_to_user(), and memcmp_extent_buffer()
-WARN_ON(start > eb->len) and WARN_ON(start + len > eb->start + eb->len),
-both are OK in this corner case, but it'd actually try to access the eb->pages
-out of bounds because of (start + len > eb->len).
+What if the cpu goes down just before wrmsrl()?
+I mean, hv_cpu_die() will reassign another cpu, but this thread will be
+resumed on some other cpu and will write cpu number which is at that
+moment already down?
 
-This is adding proper checks in order to avoid invalid memory access,
-ie. 'general protection fault', before it's too late.
+(probably I miss something)
 
-See commit f716abd55d1e ("Btrfs: fix out of bounds array access while
-reading extent buffer") for details.
+And I presume it's guaranteed that during hv_cpu_die() no other cpu may
+go down:
+:	new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+:	re_ctrl.target_vp = hv_vp_index[new_cpu];
+:	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
----
- fs/btrfs/extent_io.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
-
-diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c
-index db337e5..dcf3b2e 100644
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -5476,8 +5476,12 @@ int read_extent_buffer_to_user(const struct extent_buffer *eb,
- 	unsigned long i = (start_offset + start) >> PAGE_SHIFT;
- 	int ret = 0;
- 
--	WARN_ON(start > eb->len);
--	WARN_ON(start + len > eb->start + eb->len);
-+	if (start + len > eb->len) {
-+		WARN(1, KERN_ERR "btrfs bad mapping eb start %llu len %lu, wanted %lu %lu\n",
-+		     eb->start, eb->len, start, len);
-+		memset(dst, 0, len);
-+		return;
-+	}
- 
- 	offset = offset_in_page(start_offset + start);
- 
-@@ -5554,8 +5558,12 @@ int memcmp_extent_buffer(const struct extent_buffer *eb, const void *ptrv,
- 	unsigned long i = (start_offset + start) >> PAGE_SHIFT;
- 	int ret = 0;
- 
--	WARN_ON(start > eb->len);
--	WARN_ON(start + len > eb->start + eb->len);
-+	if (start + len > eb->len) {
-+		WARN(1, KERN_ERR "btrfs bad mapping eb start %llu len %lu, wanted %lu %lu\n",
-+		     eb->start, eb->len, start, len);
-+		memset(ptr, 0, len);
-+		return;
-+	}
- 
- 	offset = offset_in_page(start_offset + start);
- 
 -- 
-2.7.4
-
+          Dima
