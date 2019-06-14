@@ -2,102 +2,128 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E19FC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D7F5C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0069420850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:51:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560513061;
-	bh=uMLCxfgCikGdC+QC7VrDvh04xE8Slxir3W8oO9YHF+A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=sGK1ko53iHrd3XFJHdR4J80dNIRGuoo6V5FpWCDhTPcRsphvb27TE8TB44FVR81zl
-	 EffQll/s/LMSs2WDd5LPx8MDx2fL9J012WNfDwvVBlpNy46ytzVe3oGZlXR5nUSbmn
-	 9XjijzCrV5h7L/RyDDU0o14JGnFuTTrb3SHVezAA=
+	by mail.kernel.org (Postfix) with ESMTP id 3C9A521473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:51:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727662AbfFNLvA (ORCPT
+        id S1727671AbfFNLvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60770 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 07:51:09 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:49690 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727434AbfFNLu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:50:58 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B5F32168B;
-        Fri, 14 Jun 2019 11:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560513058;
-        bh=uMLCxfgCikGdC+QC7VrDvh04xE8Slxir3W8oO9YHF+A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nCk2pYF4Yk+dVb3EOoGZy1Nzord7PDDyF8WuKXGqkFjwO7KYjTDQGUyKUVhj6Lzri
-         C3/zEhik78cxTA7iaBE8s7ThRfSUtdxaZZaz9FnUwjhYC0ivWoL1zDXlWtdFKJsoMG
-         u3tGG3e6A7cxIZ+5Gp9hiEBJpTV+KaTaMAofQUuU=
-Date:   Fri, 14 Jun 2019 06:50:56 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     lorenzo.pieralisi@arm.com, arnd@arndb.de,
-        linux-pci@vger.kernel.org, rjw@rjwysocki.net,
-        linux-arm-kernel@lists.infradead.org, will.deacon@arm.com,
-        wangkefeng.wang@huawei.com, linuxarm@huawei.com,
-        andriy.shevchenko@linux.intel.com, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com
-Subject: Re: [PATCH v4 1/3] lib: logic_pio: Use logical PIO low-level
- accessors for !CONFIG_INDIRECT_PIO
-Message-ID: <20190614115056.GP13533@google.com>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-2-git-send-email-john.garry@huawei.com>
- <20190613023947.GD13533@google.com>
- <8ef228f8-97cb-e40e-ea6b-410b80a845cf@huawei.com>
- <20190613200932.GJ13533@google.com>
- <7495dcab-f293-4b2a-4740-2249f61351f7@huawei.com>
+        id S1727434AbfFNLvH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 07:51:07 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D6FDA200EA3;
+        Fri, 14 Jun 2019 13:51:04 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C98EE200EA2;
+        Fri, 14 Jun 2019 13:51:04 +0200 (CEST)
+Received: from fsr-ub1664-046.ea.freescale.net (fsr-ub1664-046.ea.freescale.net [10.171.96.34])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id B634C20606;
+        Fri, 14 Jun 2019 13:51:04 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id 8EB9255AE;
+        Fri, 14 Jun 2019 14:51:04 +0300 (EEST)
+Received: from fsr-ub1664-046.ea.freescale.net ([127.0.0.1])
+        by localhost (fsr-ub1664-046.ea.freescale.net [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 0h5MoUcoTq8V; Fri, 14 Jun 2019 14:51:04 +0300 (EEST)
+Received: from localhost (localhost [127.0.0.1])
+        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id 1C6C155B0;
+        Fri, 14 Jun 2019 14:51:04 +0300 (EEST)
+X-Virus-Scanned: amavisd-new at ea.freescale.net
+Received: from fsr-ub1664-046.ea.freescale.net ([127.0.0.1])
+        by localhost (fsr-ub1664-046.ea.freescale.net [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id q-SgHouCg23M; Fri, 14 Jun 2019 14:51:03 +0300 (EEST)
+Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
+        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id DF85E55AD;
+        Fri, 14 Jun 2019 14:51:03 +0300 (EEST)
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        Robert Chiras <robert.chiras@nxp.com>
+Subject: [PATCH 1/2] dt-bindings: display: panel: Add support for Raydium RM67191 panel
+Date:   Fri, 14 Jun 2019 14:51:02 +0300
+Message-Id: <1560513063-24995-2-git-send-email-robert.chiras@nxp.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
+References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7495dcab-f293-4b2a-4740-2249f61351f7@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="iso-8859-1"
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:02:52AM +0100, John Garry wrote:
-> On 13/06/2019 21:09, Bjorn Helgaas wrote:
-> > On Thu, Jun 13, 2019 at 10:39:12AM +0100, John Garry wrote:
-> > > On 13/06/2019 03:39, Bjorn Helgaas wrote:
-> > > > I'm not sure it's even safe, because CONFIG_INDIRECT_PIO depends on
-> > > > ARM64,  but PCI_IOBASE is defined on most arches via asm-generic/io.h,
-> > > > so this potentially affects arches other than ARM64.
-> > > 
-> > > It would do. It would affect any arch which defines PCI_IOBASE and
-> > > does not have arch-specific definition of inb et all.
-> 
-> > What's the reason for testing PCI_IOBASE instead of
-> > CONFIG_INDIRECT_PIO?  If there's a reason it's needed, that's fine,
-> > but it does make this much more complicated to review.
-> 
-> For ARM64, we have PCI_IOBASE defined but may not have
-> CONFIG_INDIRECT_PIO defined. Currently CONFIG_INDIRECT_PIO is only
-> selected by CONFIG_HISILICON_LPC.
-> 
-> As such, we should make this change also for when
-> CONFIG_INDIRECT_PIO is not defined.
+Add dt-bindings documentation for Raydium RM67191 DSI panel.
 
-OK.  This is all very important for the commit log -- we need to
-understand what arches are affected and the reason they need it.
+Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+---
+ .../bindings/display/panel/raydium,rm67191.txt     | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
 
-Since the goal of this series is to fix an ARM64-specific issue, and
-the typical port I/O model is for each arch to #define its own inb(),
-maybe it would make sense to move the "#define inb logic_inb" from
-linux/logic_pio.h to arm64/include/asm/io.h?
+diff --git a/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+new file mode 100644
+index 0000000..5a6268d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+@@ -0,0 +1,42 @@
++Raydium RM67171 OLED LCD panel with MIPI-DSI protocol
++
++Required properties:
++- compatible: 		"raydium,rm67191"
++- reg:			virtual channel for MIPI-DSI protocol
++			must be <0>
++- dsi-lanes:		number of DSI lanes to be used
++			must be <3> or <4>
++- port: 		input port node with endpoint definition as
++			defined in Documentation/devicetree/bindings/graph.txt;
++			the input port should be connected to a MIPI-DSI device
++			driver
++
++Optional properties:
++- reset-gpio:		a GPIO spec for the RST_B GPIO pin
++- pinctrl-0		phandle to the pin settings for the reset pin
++- width-mm:		physical panel width [mm]
++- height-mm:		physical panel height [mm]
++- display-timings:	timings for the connected panel according to [1]
++- video-mode:		0 - burst-mode
++			1 - non-burst with sync event
++			2 - non-burst with sync pulse
++
++[1]: Documentation/devicetree/bindings/display/display-timing.txt
++
++Example:
++
++	panel@0 {
++		compatible = "raydium,rm67191";
++		reg = <0>;
++		pinctrl-0 = <&pinctrl_mipi_dsi_0_1_en>;
++		reset-gpio = <&gpio1 7 GPIO_ACTIVE_HIGH>;
++		dsi-lanes = <4>;
++		width-mm = <68>;
++		height-mm = <121>;
++
++		port {
++			panel_in: endpoint {
++				remote-endpoint = <&mipi_out>;
++			};
++		};
++	};
+-- 
+2.7.4
 
-The "#ifndef inb" arrangement gets pretty complicated when it occurs
-more than one place (asm-generic/io.h and logic_pio.h) and we have to
-start worrying about the ordering of #includes.
-
-Bjorn
