@@ -2,83 +2,128 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C56C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D7CFC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFC1B2177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:29:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E89E22175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:29:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e+P5gDSW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726322AbfFNP3J (ORCPT
+        id S1726535AbfFNP3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:29:09 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35278 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725780AbfFNP3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:29:09 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7F5E2D672D3B51780036;
-        Fri, 14 Jun 2019 23:29:06 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
- 23:28:57 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <gregkh@linuxfoundation.org>, <lars@metafoo.de>,
-        <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <jic23@kernel.org>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>
-CC:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-iio@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] staging: iio: adt7316: Add missing include files
-Date:   Fri, 14 Jun 2019 23:28:46 +0800
-Message-ID: <20190614152846.28108-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 14 Jun 2019 11:29:20 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:34831 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfFNP3T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:29:19 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a25so2034390lfg.2;
+        Fri, 14 Jun 2019 08:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qNZZnJGaKofn2cHkIBRXjMyNHGsFyy4dzeNzR7jKPw4=;
+        b=e+P5gDSWAKwulncFFhF6v5lyy8ulSp/mGS8oB7e1qQac6yToKhocOhhl+HDGViIdNj
+         Gl08Kiw2dMAsy8dd+MOLIjFrtl2P53mY7Y7k8u9Gz4m7Id2SvL5IW8bdSmuO3v9gYFt8
+         MKte5Rl2qivER/G3ECgRtuhx5fzd9A/+JUKZ1ttH3KyzD+eLtm7PWy70joJqO/+PLBQu
+         mvMwHFcwTt2MNeDTIeArq9pUjN+sEl5GIcYdY5faUP+PZAQhLRBIY+A7FxVJx61Uwcco
+         m7OqmoTDwCc8lyhwNofcEJW7SOMYTR4EJ82Vm+fGTtsfiU3JowL/eqjD4oI3lOgAtT9k
+         Fdvg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qNZZnJGaKofn2cHkIBRXjMyNHGsFyy4dzeNzR7jKPw4=;
+        b=YBt0KdiT+EDITLTrJttuKg/+hv62MyhQ5joB0J5uegLuB8Q441FR+Nls+i+vH4JZtZ
+         Z8jpw3Q4YBppEmdAe2HpWH4Wxcr+ERof55KpB3eaappAaILXrcIudp++YWuc4FIEaZ28
+         6/DEGnY/6QCN+BB8UqjT06gkafafDMQZUCGEDcCrl3655NtwgL41U+CfYthtuo5o4jLK
+         5QB56P6rPLoiHay4RrJOhNEYtm48ddGeeEtmpv2CVd0FYTfj/TkqxyiJsGimdhA35vBL
+         i+zmbYeLsg/1T787uAI+L0VmI37nCTwDmi3HKFs4ZSToNXfuBNMpkpmFxXhysX+sFbZE
+         ojhw==
+X-Gm-Message-State: APjAAAXwKll3WzPzFqS8eeauBGdi4AACk3G135lpdu5raRizB5gUzq/K
+        6F0M3HuI9UioLh4A/8G7Dqg0ggwDIv0pA6bncS8=
+X-Google-Smtp-Source: APXvYqxloTnUeXliCBshJ+sHIUsfQSQIoO2O2mNEJ/EaFCec653XsZE6w0JtQhNxw4ZGgos7x1xxJ25NwStuBR77SMU=
+X-Received: by 2002:a19:ab1a:: with SMTP id u26mr10583956lfe.6.1560526157752;
+ Fri, 14 Jun 2019 08:29:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+References: <cover.1560431531.git.jpoimboe@redhat.com> <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+ <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
+ <20190614013051.6gnwduy4dsygbamj@treble> <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
+ <20190614015848.todgfogryjn573nd@treble> <20190614022848.ly4vlgsz6fa4bcbl@treble>
+ <20190614045037.zinbi2sivthcfrtg@treble> <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
+ <20190614074136.GR3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190614074136.GR3436@hirez.programming.kicks-ass.net>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Fri, 14 Jun 2019 08:29:06 -0700
+Message-ID: <CAADnVQJS2tZr8vVsORm+PF7qJZ-aKsRj5Mbwcim5q7PXCQgU4Q@mail.gmail.com>
+Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers for
+ generated code
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix build error:
+On Fri, Jun 14, 2019 at 12:41 AM Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Thu, Jun 13, 2019 at 11:00:09PM -0700, Alexei Starovoitov wrote:
+>
+> > There is something wrong with
+> > commit d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+>
+> It assumes we can always unwind stack, which is, imo, not a weird thing.
+>
+> > If I simply revert it and have CONFIG_UNWINDER_FRAME_POINTER=y
+> > JITed stacks work just fine, because
+> > bpf_get_stackid()->get_perf_callchain()
+> > need to start unwinding before any bpf stuff.
+>
+> How does stack unwinding work if we try and unwind from an interrupt
+> that hits inside a BPF program? That too needs to work properly.
+>
+> > After that commit it needs to go through which is a bug on its own.
+> > imo patch 1 doesn't really fix that issue.
+>
+> This we agree on, patch 1 doesn't solve that at all. But we also should
+> not loose the initial regs->ip value.
+>
+> > As far as mangled rbp can we partially undo old
+> > commit 177366bf7ceb ("bpf: change x86 JITed program stack layout")
+> > that introduced that rbp adjustment.
+>
+> > Going through bpf code is only interesting in case of panics somewhere
+> > in bpf helpers. Back then we didn't even have ksym of jited code.
+>
+> I disagree here, interrupts/NMIs hitting inside BPF should be able to
+> reliably unwind the entire stack. Back then is irrelevant, these days we
+> expect a reliable unwind.
+>
+> > Anyhow I agree that we need to make the jited frame proper,
+> > but unwinding need to start before any bpf stuff.
+> > That's a bigger issue.
+>
+> I strongly disagree, we should be able to unwind through bpf.
 
-drivers/staging/iio/addac/adt7316.c: In function adt7316_store_update_DAC:
-drivers/staging/iio/addac/adt7316.c:949:3: error: implicit declaration of
- function gpiod_set_value; did you mean gpio_set_value? [-Werror=implicit-function-declaration]
-   gpiod_set_value(chip->ldac_pin, 0);
-
-drivers/staging/iio/addac/adt7316.c: In function adt7316_setup_irq:
-drivers/staging/iio/addac/adt7316.c:1807:13: error: implicit declaration of
- function irqd_get_trigger_type; did you mean devm_iio_trigger_free? [-Werror=implicit-function-declaration]
-  irq_type = irqd_get_trigger_type(irq_get_irq_data(chip->bus.irq));
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 7f6b6d553df7 ("Staging: iio: adt7316: Add all irq related code in adt7316_irq_setup()")
-Fixes: c63460c4298f ("Staging: iio: adt7316: Use device tree data to set ldac_pin")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/staging/iio/addac/adt7316.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
-index 37ce563..9d3d159 100644
---- a/drivers/staging/iio/addac/adt7316.c
-+++ b/drivers/staging/iio/addac/adt7316.c
-@@ -16,6 +16,8 @@
- #include <linux/i2c.h>
- #include <linux/rtc.h>
- #include <linux/module.h>
-+#include <linux/irq.h>
-+#include <linux/gpio/consumer.h>
- 
- #include <linux/iio/iio.h>
- #include <linux/iio/events.h>
--- 
-2.7.4
-
-
+I'm not saying that we should not.
+I'm saying that unwinding through jited code was not working
+for long time and it wasn't an issue. The issue is start of unwind.
+This is user expected behavior that we cannot just break.
+The users expect stack trace to be the same JITed vs interpreted.
+Hence unwinder should start before interpreter/jit.
+That's the first problem to address.
+In parallel we can discuss how to make unwinding work through jited code.
