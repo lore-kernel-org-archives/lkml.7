@@ -2,83 +2,99 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92343C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AF95C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6544321721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="KF4oP5QO"
+	by mail.kernel.org (Postfix) with ESMTP id 1D9C221537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:03:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725993AbfFNPCY (ORCPT
+        id S1726063AbfFNPDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:02:24 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52784 "EHLO mail.skyhub.de"
+        Fri, 14 Jun 2019 11:03:03 -0400
+Received: from foss.arm.com ([217.140.110.172]:36250 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725823AbfFNPCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:02:24 -0400
-Received: from zn.tnic (p200300EC2F097F0010F3CEDA9C41B474.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:10f3:ceda:9c41:b474])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3F7C11EC0ABC;
-        Fri, 14 Jun 2019 17:02:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560524543;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=wVbIeB5RBruw3P5Jvb8KpfKPlB6Et64szvPsVG3HZRA=;
-        b=KF4oP5QOFoHCC2JFIpgWbi89njsovgHX7BR9g/ALuWBRKX46SEeBOoxFhIHlTO3bp0OD17
-        EIY9/scSU8rNkht9a7JYSthuY/3qNI9XYO6Y6ABDKJWbFSB99MsZnRlJk08cV/02/qOgct
-        AnM9hK5lSwukJwZWEzeSkhnb3m/Eu6U=
-Date:   Fri, 14 Jun 2019 17:02:19 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
- scattered features word 11
-Message-ID: <20190614150219.GK2586@zn.tnic>
-References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
- <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
- <20190614114410.GD2586@zn.tnic>
- <20190614122749.GE2586@zn.tnic>
- <20190614131701.GA198207@romley-ivt3.sc.intel.com>
- <20190614134123.GF2586@zn.tnic>
- <20190614141424.GA12191@linux.intel.com>
- <20190614141519.GC198207@romley-ivt3.sc.intel.com>
- <20190614142611.GI2586@zn.tnic>
- <20190614142550.GD198207@romley-ivt3.sc.intel.com>
+        id S1725780AbfFNPDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:03:03 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 72CD4346;
+        Fri, 14 Jun 2019 08:03:02 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BFB093F246;
+        Fri, 14 Jun 2019 08:03:01 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 16:02:59 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        catalin.marinas@arm.com
+Subject: [GIT PULL] arm64: fixes for -rc5
+Message-ID: <20190614150259.GC29231@fuggles.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614142550.GD198207@romley-ivt3.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 07:25:51AM -0700, Fenghua Yu wrote:
-> But without this small patch, CPUID_7_EDX is 17 instead of
-> NCAPINTS(19)-1=18 in patch 0002. Of course CPUID_7_EDX is 18 correctly
-> evetually after applying patch 0003 which add the word 12 back.
+Hi Linus,
 
-Ok, then I guess the easiest should be if not remove defines from
-cpuid_leafs but rename them, no?
+Here are some arm64 fixes for -rc5. The only non-trivial change (in
+terms of the diffstat) is fixing our SVE ptrace API for big-endian
+machines, but the majority of this is actually the addition of
+much-needed comments and updates to the documentation to try to avoid
+this mess biting us again in future.
 
--- 
-Regards/Gruss,
-    Boris.
+There are still a couple of small things on the horizon, but nothing
+major at this point.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Please pull. Thanks,
+
+Will
+
+--->8
+
+The following changes since commit ebcc5928c5d925b1c8d968d9c89cdb0d0186db17:
+
+  arm64: Silence gcc warnings about arch ABI drift (2019-06-06 13:28:45 +0100)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git tags/arm64-fixes
+
+for you to fetch changes up to 41040cf7c5f0f26c368bc5d3016fed3a9ca6dba4:
+
+  arm64/sve: Fix missing SVE/FPSIMD endianness conversions (2019-06-13 10:07:19 +0100)
+
+----------------------------------------------------------------
+arm64 fixes for -rc5
+
+- Fix broken SVE ptrace API when running in a big-endian configuration
+
+- Fix performance regression due to off-by-one in TLBI range checking
+
+- Fix build regression when using Clang
+
+----------------------------------------------------------------
+Dave Martin (1):
+      arm64/sve: Fix missing SVE/FPSIMD endianness conversions
+
+Nathan Chancellor (1):
+      arm64: Don't unconditionally add -Wno-psabi to KBUILD_CFLAGS
+
+Will Deacon (1):
+      arm64: tlbflush: Ensure start/end of address range are aligned to stride
+
+ Documentation/arm64/sve.txt              | 16 ++++++++++++
+ arch/arm64/Makefile                      |  2 +-
+ arch/arm64/include/asm/tlbflush.h        |  3 +++
+ arch/arm64/include/uapi/asm/kvm.h        |  7 ++++++
+ arch/arm64/include/uapi/asm/ptrace.h     |  4 +++
+ arch/arm64/include/uapi/asm/sigcontext.h | 14 +++++++++++
+ arch/arm64/kernel/fpsimd.c               | 42 +++++++++++++++++++++++++-------
+ 7 files changed, 78 insertions(+), 10 deletions(-)
