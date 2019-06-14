@@ -7,58 +7,59 @@ X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
 	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FF5C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:18:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED33C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3252168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:18:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57D04217D7
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:18:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hofCja+a"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="GVJb8P57"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfFNESC (ORCPT
+        id S1726429AbfFNESH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 00:18:02 -0400
-Received: from mail-oi1-f201.google.com ([209.85.167.201]:42981 "EHLO
-        mail-oi1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726291AbfFNER5 (ORCPT
+        Fri, 14 Jun 2019 00:18:07 -0400
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:40126 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfFNESD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 00:17:57 -0400
-Received: by mail-oi1-f201.google.com with SMTP id d204so394637oib.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 21:17:57 -0700 (PDT)
+        Fri, 14 Jun 2019 00:18:03 -0400
+Received: by mail-pf1-f202.google.com with SMTP id z1so847832pfb.7
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 21:18:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=pA88GQBtAGP1rgMV9ltyoIPWXgCzn/zukoiOtKtlP+A=;
-        b=hofCja+avL07axE3R4McdlSXe7Uh1GlxOzhy0doUwhmYDuewv+768/I2/KGsCvyQpo
-         M9xTviAi5haf2KYGdovWoHAcGJa7VbsrRtv/AjJKAZwrfpo8FVa5gl4mZhD7XQO8MMzn
-         6i6SfA2Zif1JxtMQVS/hnSNwJDVOcv6MPZj/Lm+G7QLJYcJcQevCABuIT5Rvj/HHBNkY
-         ZuGV4njreHUAIUWt73jMnymqo3iIeshCrnHg7I3OFkKgIjb9kfLgvirLXt2K+9a+vEqC
-         xdb9689SZkzVD9QCCLwB3sMV0UJ3zeXxW4A7eME2k2i/aaxwgVKaysFyt0f8HgTerpTn
-         jNpQ==
+        bh=nYfthp2AfyfO7B9ZHl8Ammgshm5FNB69pWC4uzGdWTs=;
+        b=GVJb8P57i8A8s2Q/xPGtRuqGml/T3Dc0WEw/F17bY2Wsfnclfx3eGoWReG2O2lx7Gg
+         UqqGqa+5rSPj1HwW/apFO4TKxeR038gAsdmdb24fPQ1J2xlKNO3SQeHYcojtHMumKBTM
+         WTe4FG2V1nSEKJ40YNvaiKOND86UFZPcLh+rhoVLkd9aaSK+qGkN6VsEgJZOwSN1d40U
+         kCje8mYmJlqqIbPjDs7c3lcHZh5KyfWT17dG7WEjxtFaIU9RkqXXN1EbHmC4Jgfj5ia0
+         7vwvk2Tq6R5fIrgtS/V+ak2yQ4QVpk9qGxaCPye+fr3NR5F5nC1yY5k/l8BM9BA+quEd
+         R3Qg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=pA88GQBtAGP1rgMV9ltyoIPWXgCzn/zukoiOtKtlP+A=;
-        b=uU9hRylFqYAsG00Ad2r6Xe+xv6yT0zUC+j755QbJbgt+M8UHjIyxrc1l19be22YwxA
-         fixwA1VihQ/3U2Mp6jQzLH9sc3lEQc7GoPFIoNcYHl1CVFG7EL12LU0BEQqVkbjRWyuY
-         YpfwaEMoi7uguhSqaIfaYTjacHuQiyvQ7qn+gePUCUcMwZTBb6I45mxJmgooAF1mmWRi
-         Rv1jGiQ5Dzv/ZBMvAShcXAy3tyAnKh0LPp4BAwBASwOYeTVTuPe4fDdGWUfeWiJWOdPI
-         A4bi+a/8Hqgw7V1UziVxYRjrwHl6Oh5n9/3UngqKDkLoVjOmyoG4M58iUHLqRRxwh8tR
-         mYvA==
-X-Gm-Message-State: APjAAAVCOosWWsXiG8vBgT02K/yEOeqH7jpe9m2fFz11SteyFCx+aau8
-        NXJkvs4ulICDtNxGtLbS7JSrI4+K4jedFuo=
-X-Google-Smtp-Source: APXvYqz3ylX7YKsVxmRmx0ILRl96jgFQUhX4Ot0Xk/v6CidHJ6fjT9LuNNkVqkxIwm4aW7E/2qf1NayfUQeABYk=
-X-Received: by 2002:aca:6c1:: with SMTP id 184mr563474oig.122.1560485876623;
- Thu, 13 Jun 2019 21:17:56 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 21:17:28 -0700
+        bh=nYfthp2AfyfO7B9ZHl8Ammgshm5FNB69pWC4uzGdWTs=;
+        b=diaMFxEoLGuraa9cWx+1EDTK/V5RGmuKUB9zaXztcHfeeLR8X/f9vISwMtB3gi/r/z
+         XeRAQrBfe/FvhxBWyuVZVjpQbLkABfaz6K/feTOwxv1rhzv2PWHBVDyxakgkOb2ANl45
+         RFNy2ypPBI7l2okL/uX9shO90yvLQcuGJZcgMK1gAIFQi9BxWtHXjqY0Emw/RRTkSzwe
+         p4JnXTAdlEH7yC0o9wUUfe4TiLkIMNKClthg2Xnqy6UN//lxK+4HXn5TQq8gGMXWSq/w
+         S5zCfhhb9UTitCXY38m+ETPNuO47+nGjirprUx0+KhboX9Mom3PbgImjM8ALWjxW5vHE
+         /ffw==
+X-Gm-Message-State: APjAAAV/1ncBaEzhyKabjYgMTOqNaIX7qddsGgXfb+xNTtS3t+bsZhwS
+        nKjzDwJe62PvbtVNUc63aBJorMa5oC6JlDA=
+X-Google-Smtp-Source: APXvYqzUC9HlFhAxNmIuXsO0mETwrQGfBv0aMuyKBFgTaDc2h9LrsQyWa5pzvaoE3ygZQW3W2VXMmmglbK9s5ko=
+X-Received: by 2002:a63:1919:: with SMTP id z25mr34405308pgl.440.1560485882676;
+ Thu, 13 Jun 2019 21:18:02 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 21:17:30 -0700
 In-Reply-To: <20190614041733.120807-1-saravanak@google.com>
-Message-Id: <20190614041733.120807-7-saravanak@google.com>
+Message-Id: <20190614041733.120807-9-saravanak@google.com>
 Mime-Version: 1.0
 References: <20190614041733.120807-1-saravanak@google.com>
 X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v2 06/11] OPP: Add helper function for bandwidth OPP tables
+Subject: [PATCH v2 08/11] dt-bindings: interconnect: Add interconnect-opp-table
+ property
 From:   Saravana Kannan <saravanak@google.com>
 To:     Georgi Djakov <georgi.djakov@linaro.org>,
         Rob Herring <robh+dt@kernel.org>,
@@ -84,147 +85,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The frequency OPP tables have helper functions to search for entries in the
-table based on frequency and get the frequency values for a given (or
-suspend) OPP entry.
-
-Add similar helper functions for bandwidth OPP tables to search for entries
-in the table based on peak bandwidth and to get the peak and average
-bandwidth for a given (or suspend) OPP entry.
+Add support for listing bandwidth OPP tables for each interconnect path
+listed using the interconnects property.
 
 Signed-off-by: Saravana Kannan <saravanak@google.com>
 ---
- drivers/opp/core.c     | 51 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/pm_opp.h | 19 ++++++++++++++++
- 2 files changed, 70 insertions(+)
+ .../devicetree/bindings/interconnect/interconnect.txt     | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/opp/core.c b/drivers/opp/core.c
-index 4f7870bffbf8..c9914afd508a 100644
---- a/drivers/opp/core.c
-+++ b/drivers/opp/core.c
-@@ -130,6 +130,29 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
+diff --git a/Documentation/devicetree/bindings/interconnect/interconnect.txt b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+index 6f5d23a605b7..fc5b75b76a2c 100644
+--- a/Documentation/devicetree/bindings/interconnect/interconnect.txt
++++ b/Documentation/devicetree/bindings/interconnect/interconnect.txt
+@@ -55,10 +55,18 @@ interconnect-names : List of interconnect path name strings sorted in the same
+ 			 * dma-mem: Path from the device to the main memory of
+ 			            the system
  
-+/**
-+ * dev_pm_opp_get_bw() - Gets the bandwidth corresponding to an available opp
-+ * @opp:	opp for which frequency has to be returned for
-+ * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
-+ *		Can be NULL.
-+ *
-+ * Return: Peak bandwidth in KBps corresponding to the opp, else
-+ * return 0
-+ */
-+unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw)
-+{
-+	if (IS_ERR_OR_NULL(opp) || !opp->available) {
-+		pr_err("%s: Invalid parameters\n", __func__);
-+		return 0;
-+	}
++interconnect-opp-table: List of phandles to OPP tables (bandwidth OPP tables)
++			that specify the OPPs for the interconnect paths listed
++			in the interconnects property. This property can only
++			point to OPP tables that belong to the device and are
++			listed in the device's operating-points-v2 property.
 +
-+	if (avg_bw)
-+		*avg_bw = opp->avg_bw;
-+
-+	return opp->rate;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_get_bw);
-+
- /**
-  * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
-  * @opp:	opp for which level value has to be returned for
-@@ -302,6 +325,34 @@ unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
- }
- EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_freq);
+ Example:
  
-+/**
-+ * dev_pm_opp_get_suspend_opp_bw() - Get peak bandwidth of suspend opp in KBps
-+ * @dev:	device for which we do this operation
-+ * @avg_bw:	Pointer where the corresponding average bandwidth is stored.
-+ *		Can be NULL.
-+ *
-+ * Return: This function returns the peak bandwidth of the OPP marked as
-+ * suspend_opp if one is available, else returns 0;
-+ */
-+unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+					    unsigned long *avg_bw)
-+{
-+	struct opp_table *opp_table;
-+	unsigned long peak_bw = 0;
-+
-+	opp_table = _find_opp_table(dev);
-+	if (IS_ERR(opp_table))
-+		return 0;
-+
-+	if (opp_table->suspend_opp && opp_table->suspend_opp->available)
-+		peak_bw = dev_pm_opp_get_bw(opp_table->suspend_opp, avg_bw);
-+
-+	dev_pm_opp_put_opp_table(opp_table);
-+
-+	return peak_bw;
-+}
-+EXPORT_SYMBOL_GPL(dev_pm_opp_get_suspend_opp_bw);
-+
- int _get_opp_count(struct opp_table *opp_table)
- {
- 	struct dev_pm_opp *opp;
-diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
-index bc5c68bdfc8d..2e122af26b8e 100644
---- a/include/linux/pm_opp.h
-+++ b/include/linux/pm_opp.h
-@@ -85,6 +85,7 @@ void dev_pm_opp_put_opp_table(struct opp_table *opp_table);
- unsigned long dev_pm_opp_get_voltage(struct dev_pm_opp *opp);
- 
- unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp);
-+unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp, unsigned long *avg_bw);
- 
- unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp);
- 
-@@ -95,6 +96,8 @@ unsigned long dev_pm_opp_get_max_clock_latency(struct device *dev);
- unsigned long dev_pm_opp_get_max_volt_latency(struct device *dev);
- unsigned long dev_pm_opp_get_max_transition_latency(struct device *dev);
- unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev);
-+unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+					    unsigned long *avg_bw);
- 
- struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
- 					      unsigned long freq,
-@@ -164,6 +167,11 @@ static inline unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
- {
- 	return 0;
- }
-+static inline unsigned long dev_pm_opp_get_bw(struct dev_pm_opp *opp,
-+					      unsigned long *avg_bw)
-+{
-+	return 0;
-+}
- 
- static inline unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp)
- {
-@@ -200,6 +208,12 @@ static inline unsigned long dev_pm_opp_get_suspend_opp_freq(struct device *dev)
- 	return 0;
- }
- 
-+static inline unsigned long dev_pm_opp_get_suspend_opp_bw(struct device *dev,
-+							  unsigned long *avg_bw)
-+{
-+	return 0;
-+}
-+
- static inline struct dev_pm_opp *dev_pm_opp_find_freq_exact(struct device *dev,
- 					unsigned long freq, bool available)
- {
-@@ -343,6 +357,11 @@ static inline void dev_pm_opp_cpumask_remove_table(const struct cpumask *cpumask
- 
- #endif		/* CONFIG_PM_OPP */
- 
-+#define dev_pm_opp_find_peak_bw_exact	dev_pm_opp_find_freq_exact
-+#define dev_pm_opp_find_peak_bw_floor	dev_pm_opp_find_freq_floor
-+#define dev_pm_opp_find_peak_bw_ceil_by_volt dev_pm_opp_find_freq_ceil_by_volt
-+#define dev_pm_opp_find_peak_bw_ceil	dev_pm_opp_find_freq_ceil
-+
- #if defined(CONFIG_PM_OPP) && defined(CONFIG_OF)
- int dev_pm_opp_of_add_table(struct device *dev);
- int dev_pm_opp_of_add_table_indexed(struct device *dev, int index);
+ 	sdhci@7864000 {
++		operating-points-v2 = <&sdhc_opp_table>, <&sdhc_mem_opp_table>;
+ 		...
+ 		interconnects = <&pnoc MASTER_SDCC_1 &bimc SLAVE_EBI_CH0>;
+ 		interconnect-names = "sdhc-mem";
++		interconnect-opp-table = <&sdhc_mem_opp_table>;
+ 	};
 -- 
 2.22.0.rc2.383.gf4fbbf30c2-goog
 
