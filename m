@@ -4,148 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A586BC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC0AC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 831DA2177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:00:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5008421773
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfFNKA1 (ORCPT
+        id S1727371AbfFNKB0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:00:27 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:56833 "EHLO
-        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfFNKA0 (ORCPT
+        Fri, 14 Jun 2019 06:01:26 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:53989 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727162AbfFNKBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:00:26 -0400
-X-Originating-IP: 37.177.88.254
-Received: from uno.localdomain (unknown [37.177.88.254])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id CD4C9C0002;
-        Fri, 14 Jun 2019 10:00:20 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 12:01:33 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
-        Libin Yang <lbyang@marvell.com>,
-        Albert Wang <twang13@marvell.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v5 03/10] [media] marvell-ccic: don't generate EOF on
- parallel bus
-Message-ID: <20190614100133.euxhdaktlemnd2ep@uno.localdomain>
-References: <20190505140031.9636-1-lkundrak@v3.sk>
- <20190505140031.9636-4-lkundrak@v3.sk>
+        Fri, 14 Jun 2019 06:01:25 -0400
+Received: from localhost (unknown [88.190.179.123])
+        (Authenticated sender: repk@triplefau.lt)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BF1E1100018;
+        Fri, 14 Jun 2019 10:01:21 +0000 (UTC)
+From:   Remi Pommarel <repk@triplefau.lt>
+To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Ellie Reeves <ellierevves@gmail.com>, linux-pci@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Remi Pommarel <repk@triplefau.lt>
+Subject: [PATCH v3] PCI: aardvark: Fix PCI_EXP_RTCTL register configuration
+Date:   Fri, 14 Jun 2019 12:10:59 +0200
+Message-Id: <20190614101059.1664-1-repk@triplefau.lt>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="mmzrrql2dydy5u5w"
-Content-Disposition: inline
-In-Reply-To: <20190505140031.9636-4-lkundrak@v3.sk>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
+should not modify other interrupts' mask. The ISR mask polarity was also
+inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
+should actually be cleared.
 
---mmzrrql2dydy5u5w
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Fixes: 8a3ebd8de328 ("PCI: aardvark: Implement emulated root PCI bridge config space")
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+---
+Changes since v1:
+ * Improve code readability
+ * Fix mask polarity
+ * PME_MASK shift was off by one
+Changes since v2:
+ * Modify patch title
+ * Change Fixes tag to commit that actually introduces the bug
+---
+ drivers/pci/controller/pci-aardvark.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
 
-Hi Lubomir,
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 134e0306ff00..f6e55c4597b1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -415,7 +415,7 @@ advk_pci_bridge_emul_pcie_conf_read(struct pci_bridge_emul *bridge,
+ 
+ 	case PCI_EXP_RTCTL: {
+ 		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG);
+-		*value = (val & PCIE_MSG_PM_PME_MASK) ? PCI_EXP_RTCTL_PMEIE : 0;
++		*value = (val & PCIE_MSG_PM_PME_MASK) ? 0 : PCI_EXP_RTCTL_PMEIE;
+ 		return PCI_BRIDGE_EMUL_HANDLED;
+ 	}
+ 
+@@ -451,10 +451,15 @@ advk_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+ 		advk_writel(pcie, new, PCIE_CORE_PCIEXP_CAP + reg);
+ 		break;
+ 
+-	case PCI_EXP_RTCTL:
+-		new = (new & PCI_EXP_RTCTL_PMEIE) << 3;
+-		advk_writel(pcie, new, PCIE_ISR0_MASK_REG);
++	case PCI_EXP_RTCTL: {
++		/* Only mask/unmask PME interrupt */
++		u32 val = advk_readl(pcie, PCIE_ISR0_MASK_REG) &
++			~PCIE_MSG_PM_PME_MASK;
++		if ((new & PCI_EXP_RTCTL_PMEIE) == 0)
++			val |= PCIE_MSG_PM_PME_MASK;
++		advk_writel(pcie, val, PCIE_ISR0_MASK_REG);
+ 		break;
++	}
+ 
+ 	case PCI_EXP_RTSTA:
+ 		new = (new & PCI_EXP_RTSTA_PME) >> 9;
+-- 
+2.20.1
 
-On Sun, May 05, 2019 at 04:00:24PM +0200, Lubomir Rintel wrote:
-> The commit 05fed81625bf ("[media] marvell-ccic: add MIPI support for
-> marvell-ccic driver") that claimed to add CSI2 turned on C0_EOF_VSYNC for
-> parallel bus without a very good explanation.
->
-> That broke camera on OLPC XO-1.75 which precisely uses a sensor on a
-> parallel bus. Revert that chunk.
->
-> Tested on an OLPC XO-1.75.
->
-> Fixes: 05fed81625bf755cc67c5864cdfd18b69ea828d1
-
-Use the proper fixes format here
-Fixes: 05fed81625bf ("[media] marvell-ccic: add MIPI support for marvell-ccic driver")
-
-I have this simple entry in my git config:
-
-[pretty]
-	fixes = Fixes: %h (\"%s\")
-
-With
-        abbrev=12
-
-in the [core] section.
-
-You can now
-$git show 05fed81625bf755cc67c5864cdfd18b69ea828d1 --pretty=fixes
-
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  drivers/media/platform/marvell-ccic/mcam-core.c | 6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-> index d97f39bde9bd6..d24e5b7a3bc52 100644
-> --- a/drivers/media/platform/marvell-ccic/mcam-core.c
-> +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-> @@ -792,12 +792,6 @@ static void mcam_ctlr_image(struct mcam_camera *cam)
->  	 * Make sure it knows we want to use hsync/vsync.
->  	 */
->  	mcam_reg_write_mask(cam, REG_CTRL0, C0_SIF_HVSYNC, C0_SIFM_MASK);
-> -	/*
-> -	 * This field controls the generation of EOF(DVP only)
-> -	 */
-> -	if (cam->bus_type != V4L2_MBUS_CSI2_DPHY)
-> -		mcam_reg_set_bit(cam, REG_CTRL0,
-> -				C0_EOF_VSYNC | C0_VEDGE_CTRL);
-
-This change seems in facts unrelated to the original patch. As you
-remove all usages of C0_EOF_VSYNC and C0_VEDGE_CTRL you can drop their
-definition in mcam-core.h.
-
-As I've said, the change seems unrelated to CSI-2 support and could
-probably be salfey dropped, but pay attention, you're also dropping
-C0_VEDGE_CTRL, which seems to enable VSYNC detection on the signal
-falling edge. Is this intentional ?
-
-Thanks
-   j
-
->  }
->
->
-> --
-> 2.21.0
->
-
---mmzrrql2dydy5u5w
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DcH0ACgkQcjQGjxah
-VjyxcRAAoBs1nLSqKz9dDuh1ExoER+gBlhUSp11xMqI770WvPzLLiSgVImxYpd3f
-JfLjOEzypnmiitZ8+V6+erHY0uTNnQaVgeaZpkLSe+uLBNqxzcMioFWoxBEgPDSq
-Uo1GYLMJ/bXEb2gmgH2/5EOjLME6fGyOlsUbU//ft0eAvOmS8qTA3z1cmvpRfume
-a+e2qav1MUXZ5EoImgWSSjn6YS8Epr96uKWg+lmoYzUaSuFJ8MvY7dc9Cq+yn5lz
-EVDCHkA7JMvfA6j1sbiPMwN+kB1QCKp8c2+IfQFQAo2A/M7MyYOl9oz45YOkqNKL
-Ub6olMo3EN6ZRePt2ooFLOuUJNLwnbgB4g4TQ8QlNW1dMrT0D2eRZw01sw6Sh6Qu
-xqmfrf9Jgjei1epV1/8KPNBUOTs/tr/AJGn00SSgpd/TcSnXTguPGZbkhvxs/1Un
-8A2pF8y1pR8l3FDbGkwWg1HzcbReyVrPmpTG2F+Z72SGAVsDDmOfapRi9++1owNf
-DTNjRshLw2fjmjFvrTgdyKEPJ7ENv1I57CLC7OdkdPf4uISeXfvuMkU2OIgP5j9x
-3Wf2WGumaR8U1uMQy98V5JYJzA+pNKhgzSlK6TWQQDCdpUt+LwlWFVjv4LmT1EQ/
-BnSdMDXuA1rBQ32TtrBIqVk9oDOrk51uXGuo5c48wz7htS8Tu4M=
-=DOfD
------END PGP SIGNATURE-----
-
---mmzrrql2dydy5u5w--
