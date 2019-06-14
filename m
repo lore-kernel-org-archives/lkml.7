@@ -2,66 +2,100 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E5D9C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E46B6C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7680821473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB3832184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560544693;
+	bh=zAHSL8lMf9ibQlvky8Qqu2bROjW1/JN7MkBf5X00ZA0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=PgRVrkoiHuI7sW1rJT0JBsntzRtH6wX4TmLNEoDjnf/fj1NCk9vGHu6mvfLFuvsug
+	 M5ZqEZsODjAlpaiaE/RJDoA83+vy9CwOw64G8LHLd/FYmduBoevKNfGElRGreiCrSR
+	 xY52I2mrP8eG3vjJd6BhTvMdnoRMQO95rrd+149g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728210AbfFNUiD (ORCPT
+        id S1727747AbfFNUiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:38:03 -0400
-Received: from ms.lwn.net ([45.79.88.28]:54198 "EHLO ms.lwn.net"
+        Fri, 14 Jun 2019 16:38:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50888 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfFNUiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:38:00 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726732AbfFNU3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:03 -0400
+Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id D29F1740;
-        Fri, 14 Jun 2019 20:37:59 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 14:37:58 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] scripts/documentation-file-ref-check: ignore output dir
-Message-ID: <20190614143758.36b0ed65@lwn.net>
-In-Reply-To: <093d01459be472a20894c5be6f9b937ff7fd7d47.1560421751.git.mchehab+samsung@kernel.org>
-References: <093d01459be472a20894c5be6f9b937ff7fd7d47.1560421751.git.mchehab+samsung@kernel.org>
-Organization: LWN.net
+        by mail.kernel.org (Postfix) with ESMTPSA id EA0052184E;
+        Fri, 14 Jun 2019 20:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560544143;
+        bh=zAHSL8lMf9ibQlvky8Qqu2bROjW1/JN7MkBf5X00ZA0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OXl6T011IuJCdTP69Y/J1W8wZPQ6WKTCKQ/J5NyaAukULcUbiHB4smxidvi+WkW3c
+         RAa4MyLclGQCTA5LoLfyO6POBh+H6orNjPK8Ggk7eGXCkZ0zmXDzlv8qmoj3oOyLaE
+         6WvF+Gvpf9YodK05tji1hEVRji/G/dV6M7dVIrFk=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Kamenee Arumugam <kamenee.arumugam@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 24/59] IB/hfi1: Validate page aligned for a given virtual address
+Date:   Fri, 14 Jun 2019 16:28:08 -0400
+Message-Id: <20190614202843.26941-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
+References: <20190614202843.26941-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 07:29:17 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+From: Kamenee Arumugam <kamenee.arumugam@intel.com>
 
-> When there's no Documentation/output directory, the script will
-> complain about those missing references:
-> 
-> 	Documentation/doc-guide/sphinx.rst: Documentation/output
-> 	Documentation/doc-guide/sphinx.rst: Documentation/output
-> 	Documentation/process/howto.rst: Documentation/output
-> 	Documentation/translations/it_IT/doc-guide/sphinx.rst: Documentation/output
-> 	Documentation/translations/it_IT/doc-guide/sphinx.rst: Documentation/output
-> 	Documentation/translations/it_IT/process/howto.rst: Documentation/output
-> 	Documentation/translations/ja_JP/howto.rst: Documentation/output
-> 	Documentation/translations/ko_KR/howto.rst: Documentation/output
-> 
-> Those are false positives, so add an ignore rule for them.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+[ Upstream commit 97736f36dbebf2cda2799db3b54717ba5b388255 ]
 
-Applied, thanks.
+User applications can register memory regions for TID buffers that are not
+aligned on page boundaries. Hfi1 is expected to pin those pages in memory
+and cache the pages with mmu_rb. The rb tree will fail to insert pages
+that are not aligned correctly.
 
-jon
+Validate whether a given virtual address is page aligned before pinning.
+
+Fixes: 7e7a436ecb6e ("staging/hfi1: Add TID entry program function body")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Kamenee Arumugam <kamenee.arumugam@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/infiniband/hw/hfi1/user_exp_rcv.c b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+index 0cd71ce7cc71..3592a9ec155e 100644
+--- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
++++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+@@ -324,6 +324,9 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
+ 	u32 *tidlist = NULL;
+ 	struct tid_user_buf *tidbuf;
+ 
++	if (!PAGE_ALIGNED(tinfo->vaddr))
++		return -EINVAL;
++
+ 	tidbuf = kzalloc(sizeof(*tidbuf), GFP_KERNEL);
+ 	if (!tidbuf)
+ 		return -ENOMEM;
+-- 
+2.20.1
+
