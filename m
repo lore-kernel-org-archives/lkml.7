@@ -2,214 +2,134 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B67BAC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:18:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33F3CC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89FE72183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:18:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S0xtbz3P"
+	by mail.kernel.org (Postfix) with ESMTP id 155AC2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfFNRS3 (ORCPT
+        id S1726358AbfFNRU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:18:29 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:52054 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfFNRS3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:18:29 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5EHIM4R037139;
-        Fri, 14 Jun 2019 12:18:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560532702;
-        bh=YAV8kjvzmhIpBEXNbXi91uV4TOTMlxj3RoDfsxqvjxc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=S0xtbz3Pjsku+utgwQC8CujKspUPPAbgZ2n5yNl/cxxhwnpbE52D3j2ZUR1QptsqD
-         E+ID6s8BNntwCCLhbE8DiSpTu8keWtZRMIiOV3SXBlMYkxSiD2dz3CZTBroSnqF1CG
-         yHK1KiYG0JKg8XtHg4SRVdDlTBQivHhRvkN/3jYs=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5EHIMwL064473
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Jun 2019 12:18:22 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
- Jun 2019 12:18:22 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 14 Jun 2019 12:18:22 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5EHILSv019322;
-        Fri, 14 Jun 2019 12:18:21 -0500
-Subject: Re: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings
- documention
-To:     Rob Herring <robh@kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
-        <devicetree@vger.kernel.org>, <linux-leds@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-3-dmurphy@ti.com> <20190614170011.GA3277@bogus>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <c234361e-f5f7-f8d7-18c6-9cc8ef74ac99@ti.com>
-Date:   Fri, 14 Jun 2019 12:18:21 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 13:20:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:55329 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbfFNRU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:20:27 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 10:20:27 -0700
+X-ExtLoop1: 1
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by orsmga006.jf.intel.com with SMTP; 14 Jun 2019 10:20:23 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 14 Jun 2019 20:20:22 +0300
+Date:   Fri, 14 Jun 2019 20:20:22 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Sam Ravnborg <sam@ravnborg.org>
+Cc:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        kernel-janitors@vger.kernel.org, intel-gfx@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
+Subject: Re: Drop use of DRM_WAIT_ON() [Was: drm/drm_vblank: Change EINVAL by
+ the correct errno]
+Message-ID: <20190614172022.GE5942@intel.com>
+References: <20190613021054.cdewdb3azy6zuoyw@smtp.gmail.com>
+ <20190613050403.GA21502@ravnborg.org>
 MIME-Version: 1.0
-In-Reply-To: <20190614170011.GA3277@bogus>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190613050403.GA21502@ravnborg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rob
+On Thu, Jun 13, 2019 at 07:04:03AM +0200, Sam Ravnborg wrote:
+> Hi Rodrigo.
+> 
+> On Wed, Jun 12, 2019 at 11:10:54PM -0300, Rodrigo Siqueira wrote:
+> > For historical reason, the function drm_wait_vblank_ioctl always return
+> > -EINVAL if something gets wrong. This scenario limits the flexibility
+> > for the userspace make detailed verification of the problem and take
+> > some action. In particular, the validation of “if (!dev->irq_enabled)”
+> > in the drm_wait_vblank_ioctl is responsible for checking if the driver
+> > support vblank or not. If the driver does not support VBlank, the
+> > function drm_wait_vblank_ioctl returns EINVAL which does not represent
+> > the real issue; this patch changes this behavior by return EOPNOTSUPP.
+> > Additionally, some operations are unsupported by this function, and
+> > returns EINVAL; this patch also changes the return value to EOPNOTSUPP
+> > in this case. Lastly, the function drm_wait_vblank_ioctl is invoked by
+> > libdrm, which is used by many compositors; because of this, it is
+> > important to check if this change breaks any compositor. In this sense,
+> > the following projects were examined:
+> > 
+> > * Drm-hwcomposer
+> > * Kwin
+> > * Sway
+> > * Wlroots
+> > * Wayland-core
+> > * Weston
+> > * Xorg (67 different drivers)
+> > 
+> > For each repository the verification happened in three steps:
+> > 
+> > * Update the main branch
+> > * Look for any occurrence "drmWaitVBlank" with the command:
+> >   git grep -n "drmWaitVBlank"
+> > * Look in the git history of the project with the command:
+> >   git log -SdrmWaitVBlank
+> > 
+> > Finally, none of the above projects validate the use of EINVAL which
+> > make safe, at least for these projects, to change the return values.
+> > 
+> > Change since V2:
+> >  Daniel Vetter and Chris Wilson
+> >  - Replace ENOTTY by EOPNOTSUPP
+> >  - Return EINVAL if the parameters are wrong
+> > 
+> > Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> > ---
+> > Update:
+> >   Now IGT has a way to validate if a driver has vblank support or not.
+> >   See: https://gitlab.freedesktop.org/drm/igt-gpu-tools/commit/2d244aed69165753f3adbbd6468db073dc1acf9A
+> > 
+> >  drivers/gpu/drm/drm_vblank.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/drm_vblank.c b/drivers/gpu/drm/drm_vblank.c
+> > index 0d704bddb1a6..d76a783a7d4b 100644
+> > --- a/drivers/gpu/drm/drm_vblank.c
+> > +++ b/drivers/gpu/drm/drm_vblank.c
+> > @@ -1578,10 +1578,10 @@ int drm_wait_vblank_ioctl(struct drm_device *dev, void *data,
+> >  	unsigned int flags, pipe, high_pipe;
+> >  
+> >  	if (!dev->irq_enabled)
+> > -		return -EINVAL;
+> > +		return -EOPNOTSUPP;
+> >  
+> >  	if (vblwait->request.type & _DRM_VBLANK_SIGNAL)
+> > -		return -EINVAL;
+> > +		return -EOPNOTSUPP;
+> >  
+> >  	if (vblwait->request.type &
+> >  	    ~(_DRM_VBLANK_TYPES_MASK | _DRM_VBLANK_FLAGS_MASK |
+> 
+> When touching this function, could I ask you to take a look at
+> eliminating the use of DRM_WAIT_ON()?
+> It comes from the deprecated drm_os_linux.h header, and it is only of
+> the few remaining users of DRM_WAIT_ON().
 
-Thanks for the review
+IIRC all previous attempts at removing that ended up with
+regressions. I think there are some dragons lurking inside that
+macro.
 
-On 6/14/19 12:00 PM, Rob Herring wrote:
-> On Thu, May 23, 2019 at 02:08:13PM -0500, Dan Murphy wrote:
->> Add DT bindings for the LEDs multicolor class framework.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>   .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
->>   1 file changed, 97 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->> new file mode 100644
->> index 000000000000..e2a2ce3279cb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
->> @@ -0,0 +1,97 @@
->> +* Multicolor LED properties
->> +
->> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
->> +can be grouped together and also provide a modeling mechanism so that the
->> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
->> +
->> +The nodes and properties defined in this document are unique to the multicolor
->> +LED class.  Common LED nodes and properties are inherited from the common.txt
->> +within this documentation directory.
->> +
->> +Required LED Child properties:
->> +	- color : For multicolor LED support this property should be defined as
->> +		  LED_COLOR_ID_MULTI and further definition can be found in
->> +		  include/linux/leds/common.h.
->> +
->> +led-controller@30 {
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +	compatible = "ti,lp5024";
->> +	reg = <0x29>;
->> +
->> +	multi-led@4 {
-> Typically we sort by address order.
-
-These are not addresses these end up being the "module" number that the 
-LEDs below are associated to.
-
-
->
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		reg = <4>;
->> +		color = <LED_COLOR_ID_MULTI>;
->> +		function = LED_FUNCTION_ACTIVITY;
->> +
->> +		led@12 {
->> +			reg = <12>;
->> +			color = <LED_COLOR_ID_RED>;
->> +		};
->> +
->> +		led@13 {
->> +			reg = <13>;
->> +			color = <LED_COLOR_ID_GREEN>;
->> +		};
->> +
->> +		led@14 {
->> +			reg = <14>;
->> +			color = <LED_COLOR_ID_BLUE>;
->> +		};
->> +	};
->> +
->> +	/* Only support RGB no model defined */
-> I don't understand this comment.
-
-Artifact can be removed
-
-
->
->> +	multi-led@1 {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		reg = <1>;
->> +		color = <LED_COLOR_ID_MULTI>;
->> +		function = LED_FUNCTION_;
-> ??
-
-I meant to change that but missed it in the example.
-
-Dan
-
-
->
->> +
->> +
->> +		led@3 {
->> +			reg = <3>;
->> +			color = <LED_COLOR_ID_RED>;
->> +		};
->> +
->> +		led@4 {
->> +			reg = <4>;
->> +			color = <LED_COLOR_ID_GREEN>;
->> +		};
->> +
->> +		led@5 {
->> +			reg = <5>;
->> +			color = <LED_COLOR_ID_BLUE>;
->> +		};
->> +	};
->> +
->> +	multi-led@2 {
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +		color = <LED_COLOR_ID_MULTI>;
->> +		function = LED_FUNCTION_ACTIVITY;
->> +		reg = <2>;
->> +		ti,led-bank = <2 3 5>;
->> +
->> +		led@6 {
->> +			reg = <0x6>;
->> +			color = <LED_COLOR_ID_RED>;
->> +			led-sources = <6 9 15>;
->> +		};
->> +
->> +		led@7 {
->> +			reg = <0x7>;
->> +			color = <LED_COLOR_ID_GREEN>;
->> +			led-sources = <7 10 16>;
->> +		};
->> +
->> +		led@8 {
->> +			reg = <0x8>;
->> +			color = <LED_COLOR_ID_BLUE>;
->> +			led-sources = <8 11 17>;
->> +		};
->> +	};
->> +
->> +};
->> -- 
->> 2.21.0.5.gaeb582a983
->>
+-- 
+Ville Syrjälä
+Intel
