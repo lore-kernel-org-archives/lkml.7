@@ -2,87 +2,126 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 703BCC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0550C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:28:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A9DD21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:27:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560518861;
-	bh=ea08hvvFym2BqK0H+7qsxpRl3vGfVmwnYVFKyXYmfU4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=0hIbRiaEsl3W6l5bfuEdgp8OuTVCjyqaMtg1LeMBu+5Y42mJrUWB5oCe//6OQNmVl
-	 fkTkWMW2Ggyr4i+NfSbpfOjti7rv2MArBfPcEZiYHSbNy+TwcaydDxI524xbOtyAB+
-	 1mK+sZLvULAxPUQQjv47J1W+ru8HemmnmkU75Wuw=
+	by mail.kernel.org (Postfix) with ESMTP id 94ECE20851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:28:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="voy0OQVz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728189AbfFNN1j (ORCPT
+        id S1728023AbfFNN2j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:27:39 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46630 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727808AbfFNN1j (ORCPT
+        Fri, 14 Jun 2019 09:28:39 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34709 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727729AbfFNN2i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:27:39 -0400
-Received: by mail-oi1-f195.google.com with SMTP id 65so1911654oid.13;
-        Fri, 14 Jun 2019 06:27:39 -0700 (PDT)
+        Fri, 14 Jun 2019 09:28:38 -0400
+Received: by mail-ed1-f65.google.com with SMTP id s49so3563649edb.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:28:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/bEFMtHnd0Lq4R6BgJaHDb9jSNJdzL1pBjuE2g5cik8=;
+        b=voy0OQVzAPCvIAmwQgiYtlSleenOKuT/qpb01Z/+4pGuPKe1skxIJEkKDPpwS9HC3H
+         d2duEeopfKNnnkQCjYrCgqImAQqW5bLMgwugLa222v0jda83+go22NOjY5PWaEnTSvyV
+         KLhBwBJPS7SZJtXCtxB7OvQQqgSQ3kPKWmFUA1MJa9Wrfld0MCSAXdHUdWfClFnEwpgf
+         sOPE6zcJmB0iiUGNc4akPixQ19M5SCYisvcVkA0vU6UsVVet+GzmRtabFV//WJ5mNMyj
+         qJmJDuvP10aBanhB/RZD0uRXen4zbe9eWcwwuargF/sjpjd9dhGMdU11acHxnHjo9xUZ
+         o5vw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Yo5M/62c1VWnHHchUf/18xtrzwn4K+cBzYArn3eS/wE=;
-        b=eCFUja2kL4Pf7Htd7G8UpROAD9wjSYBflg2I3xkLKgfUh5NJUWlDxOeMKK+JBJAWxh
-         12IL+B0zPVYWsdyIkFcBsUvQXH0XKWMToQxALALeVZ69vaZ/C3hvNJhF1veTmew6PIxs
-         dPD8ip9PBIq9lVvHayfb4WwxpAJVUVrPx0aoDP5ACptbqXt+anygn9Xo0eByOGrRkQR6
-         Qe7fqS+im3JT1s46v3irv2EASImbe1VuBbJTyzF4LguJ4IFxxCENEpWYvCAlwXB5C3Lw
-         UEJmdldpcHtCQsgpkpjfOYGeQBq5EsS8CICn4EbpJAmIUOhIBBhoTfXC5gPCmyNkNkln
-         c+KA==
-X-Gm-Message-State: APjAAAV9aReLyG2R4E2LeVIKLImNU6aCwKZOIl5NMFq4626mAP95FWsP
-        q7dyEj5G1WwzhFwaOiBzWe9ck0T02USDoXAh8RQ=
-X-Google-Smtp-Source: APXvYqyrbvXm6KAxzVwYxHfUU+xwcdonSMTGkAdKWJ2RtMICDSE2DmK9NZiMC0hTqufaz5rm60KelQOQlT9gG+xeKr4=
-X-Received: by 2002:aca:f089:: with SMTP id o131mr1890388oih.103.1560518858527;
- Fri, 14 Jun 2019 06:27:38 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/bEFMtHnd0Lq4R6BgJaHDb9jSNJdzL1pBjuE2g5cik8=;
+        b=coD8TeATohLfgZQhGaarZO74H5exr9aMPwmhM04iLuOdielfvnp9KkJqchf8iTxzf2
+         Szva4WXx0uFFaF4RBwneD30WNRsBF1d6f2O7gFnHFQTh3tQ64rfqjOZ0xkqremG2khBT
+         /wCkKGZdYEFNKeQZrRPtqlMVptlRic9UCfXqffsHSLNimzvZxpKSBUs5zpyiY6/hFzPb
+         bIxj9mmS3Hg45fR1ZZH5FV1WOGFv4ekfDr9panV6rfKb84CaA5VOhUEFqVLepB+zuEEt
+         KGaHate7qj+uzdH0O/tvVZoARD7vaQh/yVOtyHrCOa2w83Nn/ONq1Q30z5KmurGO40kF
+         mBEA==
+X-Gm-Message-State: APjAAAW1kQ8TjEbvpzl1dLCscruHT0RR+FLRpueFGOlOBPRCYyDJWcDn
+        qsz+woU7MSfiK9qOADjO1IBzGA==
+X-Google-Smtp-Source: APXvYqwTjBWiaWugHv92n/VOXJckmXdJ0ij79tTSCt3WN5QrjcsRYX/bfqnOjwWa25VDWFa14JeAyw==
+X-Received: by 2002:a50:b178:: with SMTP id l53mr75879420edd.244.1560518916776;
+        Fri, 14 Jun 2019 06:28:36 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id 34sm901697eds.5.2019.06.14.06.28.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:28:36 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 8857010086F; Fri, 14 Jun 2019 16:28:36 +0300 (+03)
+Date:   Fri, 14 Jun 2019 16:28:36 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free
+ encrypted pages
+Message-ID: <20190614132836.spl6bmk2kkx65nfr@box>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
+ <20190614093409.GX3436@hirez.programming.kicks-ass.net>
+ <20190614110458.GN3463@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190516193616.252788-1-furquan@google.com> <13361760.nMXA0SR1Mq@kreacher>
- <20190614104511.GC2640@lahna.fi.intel.com>
-In-Reply-To: <20190614104511.GC2640@lahna.fi.intel.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 14 Jun 2019 15:27:26 +0200
-Message-ID: <CAJZ5v0jRoajC=P9nGvi1bF8EwO5yShpeqtFSpdEm5aftFoLRqQ@mail.gmail.com>
-Subject: Re: [PATCH] ACPI: PM: Clear wake-up device GPEs before enabling
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Furquan Shaikh <furquan@google.com>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rajat Jain <rajatja@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614110458.GN3463@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:45 PM Mika Westerberg
-<mika.westerberg@linux.intel.com> wrote:
->
-> On Thu, Jun 13, 2019 at 10:24:41PM +0200, Rafael J. Wysocki wrote:
-> > This patch may cause events to be missed if the GPE.  I guess what you reall mean is
-> > something like the patch below.
-> >
-> > This should allow the kernel to see the events generated before the GPEs are
-> > implicitly enabled, but it should clear them for the explicit users of acpi_enable_gpe().
-> >
-> > Mika, what do you think?
->
-> Looks good to me. I also tested this with two TBT systems (Skull Canyon
-> NUC and Dell XPS 9370) using ACPI hotplug and it did not cause any
-> problems if I boot the system with device connected.
+On Fri, Jun 14, 2019 at 01:04:58PM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 14, 2019 at 11:34:09AM +0200, Peter Zijlstra wrote:
+> > On Wed, May 08, 2019 at 05:43:33PM +0300, Kirill A. Shutemov wrote:
+> > 
+> > > +		lookup_page_ext(page)->keyid = keyid;
+> 
+> > > +		lookup_page_ext(page)->keyid = 0;
+> 
+> Also, perhaps paranoid; but do we want something like:
+> 
+> static inline void page_set_keyid(struct page *page, int keyid)
+> {
+> 	/* ensure nothing creeps after changing the keyid */
+> 	barrier();
+> 	WRITE_ONCE(lookup_page_ext(page)->keyid, keyid);
+> 	barrier();
+> 	/* ensure nothing creeps before changing the keyid */
+> }
+> 
+> And this is very much assuming there is no concurrency through the
+> allocator locks.
 
-Awesome, thanks!
+There's no concurrency for this page: it has been off the free list, but
+have not yet passed on to user. Nobody else sees the page before
+allocation is finished.
 
-I'll add a changelog to it and post a full version over the weekend or
-early next week.
+And barriers/WRITE_ONCE() looks excessive to me. It's just yet another bit
+of page's metadata and I don't see why it's has to be handled in a special
+way.
+
+Does it relax your paranoia? :P
+
+-- 
+ Kirill A. Shutemov
