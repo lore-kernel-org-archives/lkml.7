@@ -2,97 +2,88 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55B13C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9CFC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22D9721848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544299;
-	bh=emo5NoVAJUMx3vVnWPrQjV4K8lZvK7IDblvuixJL9h4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zmKC4YLw3tq49YYhes7rxoHewWFGS65lqouhtKBfocDI4VJ/K0sarSTJpmI2C7Cvw
-	 rObIBNqjn4aErMGStBdfGMxUFQEO1oLtr8uVilB1+VqVjAgbflzaxQr/WRm+SGwOSa
-	 07QO+M8bv9nzhkehh/fdYxqD36VP1eW83pb6o1gM=
+	by mail.kernel.org (Postfix) with ESMTP id 66ACF217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728137AbfFNUbi (ORCPT
+        id S1728148AbfFNUbl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:31:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54610 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:31:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55670 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727952AbfFNUau (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:50 -0400
-Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727206AbfFNUbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:31:38 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2528D2184E;
-        Fri, 14 Jun 2019 20:30:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544250;
-        bh=emo5NoVAJUMx3vVnWPrQjV4K8lZvK7IDblvuixJL9h4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o3/u3R2cs1b83lL5F+Kh583Hoq+VFZ6rid8WzbAtrip6F39BfxiIFdt/4s7yYPkVi
-         fYBqN419/bqNpPq/oItzM7Fwgp0JMhjjHyZ51C6jXFzx2iq1XwPTY3W7eKTaNU/fP0
-         4NLMI2jwqshMtxn0rEV7CiSP8BdcR5TC7Ow/Ts50=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, devel@driverdev.osuosl.org
-Subject: [PATCH AUTOSEL 4.4 03/10] IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
-Date:   Fri, 14 Jun 2019 16:30:39 -0400
-Message-Id: <20190614203046.28077-3-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614203046.28077-1-sashal@kernel.org>
-References: <20190614203046.28077-1-sashal@kernel.org>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1888E21841;
+        Fri, 14 Jun 2019 20:31:38 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 16:31:36 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] tracing: Fix out-of-range read in trace_stack_print()
+Message-ID: <20190614163136.25115131@gandalf.local.home>
+In-Reply-To: <20190610040016.5598-1-devel@etsukata.com>
+References: <20190610040016.5598-1-devel@etsukata.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+On Mon, 10 Jun 2019 13:00:16 +0900
+Eiichi Tsukata <devel@etsukata.com> wrote:
 
-[ Upstream commit 6d517353c70bb0818b691ca003afdcb5ee5ea44e ]
+> Puts range check before dereferencing the pointer.
+> 
+> Reproducer:
+> 
+>   # echo stacktrace > trace_options
+>   # echo 1 > events/enable
+>   # cat trace > /dev/null
+> 
+>
 
-By code inspection, the freeze_work is never canceled.
+Thanks I applied this.
 
-Fix by adding a cancel_work_sync in the shutdown path to insure it is no
-longer running.
+> 
+> Fixes: 4a9bd3f134dec ("tracing: Have dynamic size event stack traces")
 
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/staging/rdma/hfi1/chip.c | 1 +
- 1 file changed, 1 insertion(+)
+Actually it fixes:
 
-diff --git a/drivers/staging/rdma/hfi1/chip.c b/drivers/staging/rdma/hfi1/chip.c
-index e48981994b10..e1531feb6c5d 100644
---- a/drivers/staging/rdma/hfi1/chip.c
-+++ b/drivers/staging/rdma/hfi1/chip.c
-@@ -5906,6 +5906,7 @@ void hfi1_quiet_serdes(struct hfi1_pportdata *ppd)
- 
- 	/* disable the port */
- 	clear_rcvctrl(dd, RCV_CTRL_RCV_PORT_ENABLE_SMASK);
-+	cancel_work_sync(&ppd->freeze_work);
- }
- 
- static inline int init_cpu_counters(struct hfi1_devdata *dd)
--- 
-2.20.1
+ 4285f2fcef80 ("tracing: Remove the ULONG_MAX stack trace hackery")
+
+Because before that, a ULONG_MAX was inserted into the buffer.
+
+-- Steve
+
+> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+> ---
+>  kernel/trace/trace_output.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
+> index 54373d93e251..ba751f993c3b 100644
+> --- a/kernel/trace/trace_output.c
+> +++ b/kernel/trace/trace_output.c
+> @@ -1057,7 +1057,7 @@ static enum print_line_t trace_stack_print(struct trace_iterator *iter,
+>  
+>  	trace_seq_puts(s, "<stack trace>\n");
+>  
+> -	for (p = field->caller; p && *p != ULONG_MAX && p < end; p++) {
+> +	for (p = field->caller; p && p < end && *p != ULONG_MAX; p++) {
+>  
+>  		if (trace_seq_has_overflowed(s))
+>  			break;
 
