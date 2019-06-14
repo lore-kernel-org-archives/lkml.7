@@ -2,194 +2,112 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71385C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:21:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CDBC31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AC3521537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:21:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D69DD208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:24:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="a/oW8uBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726692AbfFNAU5 (ORCPT
+        id S1726754AbfFNAYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:20:57 -0400
-Received: from mga01.intel.com ([192.55.52.88]:65198 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfFNAU4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:20:56 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 17:20:55 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by FMSMGA003.fm.intel.com with ESMTP; 13 Jun 2019 17:20:55 -0700
-Date:   Thu, 13 Jun 2019 17:22:17 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org,
-        nouveau@lists.freedesktop.org
-Subject: Re: [PATCH 13/22] device-dax: use the dev_pagemap internal refcount
-Message-ID: <20190614002217.GB783@iweiny-DESK2.sc.intel.com>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-14-hch@lst.de>
+        Thu, 13 Jun 2019 20:24:10 -0400
+Received: from mail-eopbgr60064.outbound.protection.outlook.com ([40.107.6.64]:9298
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725801AbfFNAYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 20:24:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cAImgzXnowv6qDhqtjF71NCMmyzHuhDMrZiDcAdDS44=;
+ b=a/oW8uBQB1y3cJMNZOZdFMpTw65gCxejE6t7g+GQEdfiSVYl1g8e8O5bHmyvzR8MZ92W7Mmg4v5Oc4coEY3Q4BrvBplxJWJ6MjIbCpx6OaxRXpxCgRflLiNiy0z8dnm0tP+93f3cg0vF5uKtJHuApzN0nnJsFquSZRVE0sdmPAM=
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
+ VI1PR05MB4320.eurprd05.prod.outlook.com (52.133.12.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Fri, 14 Jun 2019 00:24:05 +0000
+Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
+ ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Fri, 14 Jun 2019
+ 00:24:05 +0000
+From:   Jason Gunthorpe <jgg@mellanox.com>
+To:     Ralph Campbell <rcampbell@nvidia.com>
+CC:     Jerome Glisse <jglisse@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/nouveau/dmem: missing mutex_lock in error path
+Thread-Topic: [PATCH] drm/nouveau/dmem: missing mutex_lock in error path
+Thread-Index: AQHVIkXN8eYXmKvfbEike7oriK2vlaaaSl+A
+Date:   Fri, 14 Jun 2019 00:24:04 +0000
+Message-ID: <20190614002359.GI22062@mellanox.com>
+References: <20190614001121.23950-1-rcampbell@nvidia.com>
+In-Reply-To: <20190614001121.23950-1-rcampbell@nvidia.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: YTOPR0101CA0059.CANPRD01.PROD.OUTLOOK.COM
+ (2603:10b6:b00:14::36) To VI1PR05MB4141.eurprd05.prod.outlook.com
+ (2603:10a6:803:4d::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=jgg@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [156.34.55.100]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4bb8361b-ff68-4286-7658-08d6f05e9b95
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4320;
+x-ms-traffictypediagnostic: VI1PR05MB4320:
+x-microsoft-antispam-prvs: <VI1PR05MB4320DD8E3FB7FDC1A1C21F98CFEE0@VI1PR05MB4320.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(376002)(366004)(39860400002)(199004)(189003)(6506007)(386003)(68736007)(305945005)(54906003)(8936002)(86362001)(81166006)(81156014)(25786009)(8676002)(2906002)(102836004)(7736002)(26005)(186003)(4326008)(3846002)(6116002)(486006)(478600001)(6246003)(6916009)(446003)(11346002)(53936002)(1076003)(76176011)(476003)(2616005)(6436002)(6512007)(52116002)(99286004)(14454004)(64756008)(66556008)(66446008)(66476007)(5660300002)(316002)(73956011)(6486002)(66946007)(71190400001)(71200400001)(33656002)(4744005)(66066001)(229853002)(36756003)(256004)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4320;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OH4rhpR5cFF4RnjFeJHTsT/RtqndUbX2mQZUNK2YZeLkTeXw2JdfEoDUDFNkchTzWJxAbjI8Ihv2SjWcNQ0+xjahfkTPm3W3JL2UlSE1+7dRxv5r12z7wySspEoqd3dyLlF33mZI8D1a4hOJ0D7iZ12wvQdEe1va21K8F53LxuNzKWFnx13TOOKvCDhMibYwlRWtNOA593YlS91DjVPjKjCsM4Lyagvz2vRjndxjSTG6K4F/Fz2qe38uDpVaFfTkoqLXQTopAUV2Snyqe3VbZlPTHDkuX6Mt0+X5/9BAjrqKC3Cuoorc65sGvTZ0dH6PGyy6z+MzHW5VTwZocCRE7jDgFdqvY880t071cAhndTqUxdunJ+XKXTcgY89wrGOmy1UCmLBBRwaefWHgNF1bxjIYfZzKiASkzYLVGh4vydM=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <563E69CBF7DBDB4381F3D484B873273B@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613094326.24093-14-hch@lst.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4bb8361b-ff68-4286-7658-08d6f05e9b95
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 00:24:04.9798
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4320
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:43:16AM +0200, Christoph Hellwig wrote:
-> The functionality is identical to the one currently open coded in
-> device-dax.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+On Thu, Jun 13, 2019 at 05:11:21PM -0700, Ralph Campbell wrote:
+> In nouveau_dmem_pages_alloc(), the drm->dmem->mutex is unlocked before
+> calling nouveau_dmem_chunk_alloc().
+> Reacquire the lock before continuing to the next page.
+>=20
+> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
 > ---
->  drivers/dax/dax-private.h |  4 ---
->  drivers/dax/device.c      | 52 +--------------------------------------
->  2 files changed, 1 insertion(+), 55 deletions(-)
-> 
-> diff --git a/drivers/dax/dax-private.h b/drivers/dax/dax-private.h
-> index a45612148ca0..ed04a18a35be 100644
-> --- a/drivers/dax/dax-private.h
-> +++ b/drivers/dax/dax-private.h
-> @@ -51,8 +51,6 @@ struct dax_region {
->   * @target_node: effective numa node if dev_dax memory range is onlined
->   * @dev - device core
->   * @pgmap - pgmap for memmap setup / lifetime (driver owned)
-> - * @ref: pgmap reference count (driver owned)
-> - * @cmp: @ref final put completion (driver owned)
->   */
->  struct dev_dax {
->  	struct dax_region *region;
-> @@ -60,8 +58,6 @@ struct dev_dax {
->  	int target_node;
->  	struct device dev;
->  	struct dev_pagemap pgmap;
-> -	struct percpu_ref ref;
-> -	struct completion cmp;
->  };
->  
->  static inline struct dev_dax *to_dev_dax(struct device *dev)
-> diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-> index e23fa1bd8c97..a9d7c90ecf1e 100644
-> --- a/drivers/dax/device.c
-> +++ b/drivers/dax/device.c
-> @@ -14,37 +14,6 @@
->  #include "dax-private.h"
->  #include "bus.h"
->  
-> -static struct dev_dax *ref_to_dev_dax(struct percpu_ref *ref)
-> -{
-> -	return container_of(ref, struct dev_dax, ref);
-> -}
-> -
-> -static void dev_dax_percpu_release(struct percpu_ref *ref)
-> -{
-> -	struct dev_dax *dev_dax = ref_to_dev_dax(ref);
-> -
-> -	dev_dbg(&dev_dax->dev, "%s\n", __func__);
-> -	complete(&dev_dax->cmp);
-> -}
-> -
-> -static void dev_dax_percpu_exit(void *data)
-> -{
-> -	struct percpu_ref *ref = data;
-> -	struct dev_dax *dev_dax = ref_to_dev_dax(ref);
-> -
-> -	dev_dbg(&dev_dax->dev, "%s\n", __func__);
-> -	wait_for_completion(&dev_dax->cmp);
-> -	percpu_ref_exit(ref);
-> -}
-> -
-> -static void dev_dax_percpu_kill(struct dev_pagemap *pgmap)
-> -{
-> -	struct dev_dax *dev_dax = container_of(pgmap, struct dev_dax, pgmap);
-> -
-> -	dev_dbg(&dev_dax->dev, "%s\n", __func__);
-> -	percpu_ref_kill(pgmap->ref);
-> -}
-> -
->  static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
->  		const char *func)
->  {
-> @@ -442,10 +411,6 @@ static void dev_dax_kill(void *dev_dax)
->  	kill_dev_dax(dev_dax);
->  }
->  
-> -static const struct dev_pagemap_ops dev_dax_pagemap_ops = {
-> -	.kill		= dev_dax_percpu_kill,
-> -};
-> -
->  int dev_dax_probe(struct device *dev)
->  {
->  	struct dev_dax *dev_dax = to_dev_dax(dev);
-> @@ -463,24 +428,9 @@ int dev_dax_probe(struct device *dev)
->  		return -EBUSY;
->  	}
->  
-> -	init_completion(&dev_dax->cmp);
-> -	rc = percpu_ref_init(&dev_dax->ref, dev_dax_percpu_release, 0,
-> -			GFP_KERNEL);
-> -	if (rc)
-> -		return rc;
-> -
-> -	rc = devm_add_action_or_reset(dev, dev_dax_percpu_exit, &dev_dax->ref);
-> -	if (rc)
-> -		return rc;
-> -
-> -	dev_dax->pgmap.ref = &dev_dax->ref;
+>=20
+> I found this while testing Jason Gunthorpe's hmm tree but this is
+> independant of those changes. I guess it could go through
+> David Airlie's tree for nouveau or Jason's tree.
 
-I don't think this exactly correct.  pgmap.ref is a pointer to the dev_dax ref
-structure.  Taking it away will cause devm_memremap_pages() to fail AFAICS.
+This seems like a bad enough bug to send it into -rc?
 
-I think you need to change struct dev_pagemap as well:
+It probably should go through the normal nouveau channels, thanks
 
-diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index f0628660d541..5e2120589ddf 100644
---- a/include/linux/memremap.h
-+++ b/include/linux/memremap.h
-@@ -90,7 +90,7 @@ struct dev_pagemap {
-        struct vmem_altmap altmap;
-        bool altmap_valid;
-        struct resource res;
--       struct percpu_ref *ref;
-+       struct percpu_ref ref;
-        void (*kill)(struct percpu_ref *ref);
-        struct device *dev;
-        void *data;
-
-And all usages of it, right?
-
-Ira
-
-> -	dev_dax->pgmap.ops = &dev_dax_pagemap_ops;
->  	addr = devm_memremap_pages(dev, &dev_dax->pgmap);
-> -	if (IS_ERR(addr)) {
-> -		devm_remove_action(dev, dev_dax_percpu_exit, &dev_dax->ref);
-> -		percpu_ref_exit(&dev_dax->ref);
-> +	if (IS_ERR(addr))
->  		return PTR_ERR(addr);
-> -	}
->  
->  	inode = dax_inode(dax_dev);
->  	cdev = inode->i_cdev;
-> -- 
-> 2.20.1
-> 
-> _______________________________________________
-> Linux-nvdimm mailing list
-> Linux-nvdimm@lists.01.org
-> https://lists.01.org/mailman/listinfo/linux-nvdimm
+Jason
