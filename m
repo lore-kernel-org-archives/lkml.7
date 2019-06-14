@@ -2,151 +2,179 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95201C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C7FC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B3F20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:24:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9167820866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yvZMu4n2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfFNOYr (ORCPT
+        id S1728641AbfFNOZK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:24:47 -0400
-Received: from mga18.intel.com ([134.134.136.126]:60424 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbfFNOYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:24:46 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 07:24:45 -0700
-X-ExtLoop1: 1
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jun 2019 07:24:45 -0700
-Date:   Fri, 14 Jun 2019 07:15:20 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
+        Fri, 14 Jun 2019 10:25:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35255 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727729AbfFNOZJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:25:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so2778313wrv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:25:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VyDBdhGftaZbPaEl9I9ydm7cJ7DrPM+9JSJRw8SbgK8=;
+        b=yvZMu4n2UpH27+O/KZzWwWE8SQWx3A35vjfTMUvWzAkfgihFy7ZmFVX0/MqUqRT523
+         VrXqt8xgvOshZ8FOt4ojIy3r+MqL680/blyWmN82MFSfXuO2UyQkY1aEGuttVSQ4yYbM
+         6vr7V79aKx+GVptfWkwxGRSLm8gqkFXUCwvgASO/x4BxFj15iNawFi1A+LNQrDA/u2EV
+         HH7hf6IedLEYinBF3qJmwZ8UpUV3heOEQSxC90d6dEaamUNZlFF2WJqx6tY/9gTVz68t
+         sG0GFpZp9P8xfRmeVTtNkk16aBi7cJACa5nAc9zewljWjXQW1cY6hNeiOOTxWMFmyB6W
+         GjoA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=VyDBdhGftaZbPaEl9I9ydm7cJ7DrPM+9JSJRw8SbgK8=;
+        b=OagjohvswUx0AGSGSijmUPfcY0NTpfusFZ3YbX4tyAjlJbiHHV4kPAs5WkQ6SKZzrF
+         KaMduRthgB+cI53ZmtxGoVjwzH6dRJn8kkGJkHEbyS7J4GV6KhUjWkk6/c3W3SaobHBy
+         ywe3IVQxHOln1QO7rwcT51w9rAk0m6a3Cq3Dn6MjEoVF8Oj8tcVGrismKsP1sEA29yKH
+         Y+guYVTxz21z47Lpb2tiArd6Z6uxIIvF/EMVyEes5YkUl3WffD6rylqf+fMxAV6xBT2x
+         pi6XKtQs4lyiqeVDVKBw3M60ZuEw/qYDvqWgGa3ByydwCsrajkzL6Xb0EdIeN/OKy6Gg
+         mUSA==
+X-Gm-Message-State: APjAAAVp30oDydh/EBO98OyMEa4FBEDp0rzM/ki5TAnRV73KQqdY/tpC
+        mTufYlcSuTQcKhOpHll//O6zwA==
+X-Google-Smtp-Source: APXvYqxTy2k5C3afQxVFAuu6hFVKbgPWRGa9lEGeLY/xFLaqrI4AeZU1X0GVcL6atx1S6mTiw7C4zA==
+X-Received: by 2002:a5d:63c9:: with SMTP id c9mr18027137wrw.81.1560522306777;
+        Fri, 14 Jun 2019 07:25:06 -0700 (PDT)
+Received: from [192.168.0.41] (22.194.95.92.rev.sfr.net. [92.95.194.22])
+        by smtp.googlemail.com with ESMTPSA id o13sm4467383wra.92.2019.06.14.07.25.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 07:25:05 -0700 (PDT)
+Subject: Re: [RFC v3 0/2] clocksource: davinci-timer: new driver
+To:     Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kevin Hilman <khilman@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
- scattered features word 11
-Message-ID: <20190614141519.GC198207@romley-ivt3.sc.intel.com>
-References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
- <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
- <20190614114410.GD2586@zn.tnic>
- <20190614122749.GE2586@zn.tnic>
- <20190614131701.GA198207@romley-ivt3.sc.intel.com>
- <20190614134123.GF2586@zn.tnic>
- <20190614141424.GA12191@linux.intel.com>
+        David Lechner <david@lechnology.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190605083334.22383-1-brgl@bgdev.pl>
+ <1ac8cfcf-1d77-9b6b-4aab-4171f6cf80fc@ti.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Openpgp: preference=signencrypt
+Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <67e4688a-09d5-61a3-7406-a91f55045004@linaro.org>
+Date:   Fri, 14 Jun 2019 16:25:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <1ac8cfcf-1d77-9b6b-4aab-4171f6cf80fc@ti.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190614141424.GA12191@linux.intel.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 07:14:24AM -0700, Sean Christopherson wrote:
-> On Fri, Jun 14, 2019 at 03:41:23PM +0200, Borislav Petkov wrote:
-> > + Radim and Paolo. See upthread for context.
-> > 
-> > On Fri, Jun 14, 2019 at 06:17:02AM -0700, Fenghua Yu wrote:
-> > > > Alternatively - and what I think is the better solution - would be to
-> > > > remove those BUILD_BUG_ONs in x86_feature_cpuid and filter out the
-> > > > Linux-defined leafs dynamically. This way the array won't have holes in
-> > > > it.
-> > > 
-> > > Maybe adding a dummy slot in cpuid_leafs in patch 0002 to avoid the
-> > > compilation errors?
-> > 
-> > Maybe you didn't read what you're replying to: "This way the array
-> > won't have holes in it". Ontop of yours:
-> > 
-> > diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> > index d78a61408243..03d6f3f7b27c 100644
-> > --- a/arch/x86/kvm/cpuid.h
-> > +++ b/arch/x86/kvm/cpuid.h
-> > @@ -47,6 +47,7 @@ static const struct cpuid_reg reverse_cpuid[] = {
-> >  	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
-> >  	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
-> >  	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
-> > +	[CPUID_7_1_EAX]       = {         7, 1, CPUID_EAX},
-> >  	[CPUID_8000_0008_EBX] = {0x80000008, 0, CPUID_EBX},
-> >  	[CPUID_6_EAX]         = {         6, 0, CPUID_EAX},
-> >  	[CPUID_8000_000A_EDX] = {0x8000000a, 0, CPUID_EDX},
-> > @@ -59,8 +60,9 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
-> >  {
-> >  	unsigned x86_leaf = x86_feature / 32;
-> >  
-> > -	BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
-> > -	BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
-> > +	if (x86_leaf == CPUID_LNX_1 ||
-> > +	    x86_leaf == CPUID_LNX_4)
-> > +		return NULL;
-> >  
-> >  	return reverse_cpuid[x86_leaf];
-> >  }
-> > 
-> > That's what I mean with filter out dynamically.
+On 14/06/2019 12:39, Sekhar Nori wrote:
+> Hi Daniel,
 > 
-> This is wrong.  KVM isn't complaining about shuffling the order of feature
-> words, it's complaining that code is trying to do a reverse CPUID lookup
-> to a feature that isn't in the reverse_cpuid table.   Filtering out
-> checks dynamically is just hiding bugs.
+> On 05/06/19 2:03 PM, Bartosz Golaszewski wrote:
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> This is another version of the new davinci clocksource driver. After much
+>> discussion this contains many changes to simplify and improve the driver.
 > 
-> >In function ‘x86_feature_cpuid’,
-> >     inlined from ‘guest_cpuid_get_register’ at arch/x86/kvm/cpuid.h:71:33,
-> >     inlined from ‘guest_cpuid_has’ at arch/x86/kvm/cpuid.h:100:8,
-> >     inlined from ‘kvm_get_msr_common’ at arch/x86/kvm/x86.c:2804:8:
-> 
-> This corresponds to "guest_cpuid_has(vcpu, X86_FEATURE_ARCH_CAPABILITIES)",
-> i.e. KVM is trying to query X86_FEATURE_ARCH_CAPABILITIES and is yelling
-> that there is no reverse_cpuid entry for CPUID_7_EDX.
-> 
-> The problem is that 'enum cpuid_leafs' no longer matches up with the
-> word numbers defined in cpufeatures.h, e.g. CPUID_7_EDX == 17 or so, but
-> the entries in cpufeatures.h defined CPUID_7_EDX flags using word 18.
-> 
-> This patch also needs to modify NCAPINTS.
+> Does this look good to you now? If yes, can you please merge and provide
+> an immutable branch to me so I can merge dependent mach-davinci patches?
 
-Changing NCAPINTS is heavy lifting to only solve this biset issue. After
-applying patch 0003, the word 12 hole generated in patch 0002 is filled
-in and no issue reported. If changing NCAPINTS in patch 0002, it needs to
-be changed back again after applying 0003.
+Yes, I think it is fine.
 
-How about add this patch in patch 0002? I posted this patch in this thread
-just now and post it here again:
+http://git@git.linaro.org/people/daniel.lezcano/linux.git
+timers/drivers/davinci
 
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 526619906305..403f70c2e431 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -23,6 +23,7 @@ enum cpuid_leafs
- 	CPUID_7_0_EBX,
- 	CPUID_D_1_EAX,
- 	CPUID_LNX_4,
-+	CPUID_DUMMY,
- 	CPUID_8000_0008_EBX,
- 	CPUID_6_EAX,
- 	CPUID_8000_000A_EDX,
+It is v5.2-rc4 + (2 x patches)
 
-Adding this small patch into patch 0002 will solve the build errors without
-changing the build checks.
+It is merged in clockevents/next which is exported to linux-next and for
+kernel-ci.
 
-Thanks.
+AFAIU, the patch was compiled and tested. If not, please let me know.
 
--Fenghua
+Please, wait a couple of days I confirm the tests passed and you can
+consider the branch immutable.
 
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
