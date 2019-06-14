@@ -2,112 +2,91 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8106C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:48:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C56C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:48:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD9AF20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:48:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875392173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:48:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ty9usQOn"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="w85yzapM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728957AbfFNNsV (ORCPT
+        id S1728985AbfFNNsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:48:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53102 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728034AbfFNNsT (ORCPT
+        Fri, 14 Jun 2019 09:48:33 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40679 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728566AbfFNNs3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:48:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=OBOS8iCVbCKavrjNtD9grYbIza6qqnOVd5RpWueyj/M=; b=ty9usQOn48ryjo/yA+LI46GxnP
-        KU+hV8DMp9K1AiYIp8CEWPCsYTVt0fa2fCx5FsgZtmFG+oZvda4iGOisvCu0KEUqYodtwwPbJHVPw
-        Db2/6G2kesXnDnAn6z45JeeW3RlmDj87Wy6HfqWc00nj35RFlVFkRRZqPO0HsFrH99HI5YZOdnRTJ
-        tHa9SDSKcyyo8FiIMQIwPBhvOKYxNIVJw/YdoAgm7jutOjnHItVUz1dXoVckleKMabuzqyEvJHykt
-        ISIIujsBNMPIb0GXNcbQX1pr9F5xfFC5uZwG+WNcNlp5UaVPCWtpvsAYlg/ngmgqOUWtijss40PJa
-        oxHQO6Tw==;
-Received: from 213-225-9-13.nat.highway.a1.net ([213.225.9.13] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbmYn-0005Ie-J2; Fri, 14 Jun 2019 13:48:06 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>
-Cc:     Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 10/16] iwlwifi: stop passing bogus gfp flags arguments to dma_alloc_coherent
-Date:   Fri, 14 Jun 2019 15:47:20 +0200
-Message-Id: <20190614134726.3827-11-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614134726.3827-1-hch@lst.de>
-References: <20190614134726.3827-1-hch@lst.de>
+        Fri, 14 Jun 2019 09:48:29 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c70so1673565qkg.7
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:48:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rnGRxFxOoVoCJlpWf5YwCxAGlT+Sc1FUpYO8QlgwSjM=;
+        b=w85yzapM6oQuLGvkrulj+iPAX76vQ9VdYBXRlGt9Hf8SiFTFl+1a7viss9jINwRpsN
+         J9A+qVYyXcJ/tZhZ1RHj2aYpCaxlLR392Juyc6Gs6KJhXgkQaA1uUOCVvAbN950OW5kZ
+         5d06dcracY0f2RCO7wti/DHByanIMsFUvNA/XzJzZ5+809Sqozt5M+rggEn7q5tTFqrb
+         uE6JF6wincuKAPQ5HPmSmcSA4N5Y/Zn5eZeAaLgbC6iiZZ+P0hqEbE9zaNirjH0Hv9v1
+         P9CAJkt+sqvxlR0u9VjU5FNAuaN7P/kDv1YkpAyYd4cRVdBXcV3T+G3nFkGRy/elTMOr
+         OMzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rnGRxFxOoVoCJlpWf5YwCxAGlT+Sc1FUpYO8QlgwSjM=;
+        b=SYQwbuFmgn5GSBlFT6LgMS1qYC5cIb4bctO+jxi+PO9v256aBKc4D31a/8DSmgiSz7
+         2cknOx0ob2z8ANwSVxmhdVEZwMaNn+Kh/V6NToEPcAIaaFQwzt9wtsAgHp2J9f/2T4vQ
+         XwEXSLWKYYRisBxkl74UNXMNh/K/AyeEYEvyO4BLQX8CvsuFi4alMv+HRsATvmX1lHI5
+         uB2JDdEFXELLcU2pm7LdcTzX4bPmmWq3UB8maz3kps/8NmzEh3zgq01VoFwzxkbUAn47
+         /4r17ZiLrjH/Otn1s0FBoueQ9JWOt06cy1pB6QNXtwkNKQEqdToo8DmPzZ5rZq6bHbU6
+         PKsA==
+X-Gm-Message-State: APjAAAVQs34f31VJkDuI5WZ/jVeG+UumKemKPcCZWRSo8c8f0uFNnZzM
+        FI3wEpzWetUVC+x9ANBzb/8wDA==
+X-Google-Smtp-Source: APXvYqwsR8RvRpY6ld/gvqnd2sdXs0I92KrB7t3+rTb1qpbvIeD3KNowVm1Bjsyu4kJI09jR3h7lCQ==
+X-Received: by 2002:a37:e30b:: with SMTP id y11mr57978829qki.100.1560520108439;
+        Fri, 14 Jun 2019 06:48:28 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::a658])
+        by smtp.gmail.com with ESMTPSA id w189sm1341749qkc.38.2019.06.14.06.48.27
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:48:27 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 09:48:26 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 5/8] Btrfs: delete the entire async bio submission
+ framework
+Message-ID: <20190614134825.ew3d2hfyczolylr6@MacBook-Pro-91.local>
+References: <20190614003350.1178444-1-tj@kernel.org>
+ <20190614003350.1178444-6-tj@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614003350.1178444-6-tj@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-dma_alloc_coherent is not just the page allocator.  The only valid
-arguments to pass are either GFP_ATOMIC or GFP_ATOMIC with possible
-modifiers of __GFP_NORETRY or __GFP_NOWARN.
+On Thu, Jun 13, 2019 at 05:33:47PM -0700, Tejun Heo wrote:
+> From: Chris Mason <clm@fb.com>
+> 
+> Now that we're not using btrfs_schedule_bio() anymore, delete all the
+> code that supported it.
+> 
+> Signed-off-by: Chris Mason <clm@fb.com>
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/net/wireless/intel/iwlwifi/fw/dbg.c     | 3 +--
- drivers/net/wireless/intel/iwlwifi/pcie/trans.c | 3 +--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-index 5f52e40a2903..323dc5d5ee88 100644
---- a/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-+++ b/drivers/net/wireless/intel/iwlwifi/fw/dbg.c
-@@ -2361,8 +2361,7 @@ iwl_fw_dbg_buffer_allocation(struct iwl_fw_runtime *fwrt, u32 size)
- 
- 	virtual_addr =
- 		dma_alloc_coherent(fwrt->trans->dev, size, &phys_addr,
--				   GFP_KERNEL | __GFP_NOWARN | __GFP_ZERO |
--				   __GFP_COMP);
-+				   GFP_KERNEL | __GFP_NOWARN);
- 
- 	/* TODO: alloc fragments if needed */
- 	if (!virtual_addr)
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 803fcbac4152..22a47f928dc8 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -210,8 +210,7 @@ static void iwl_pcie_alloc_fw_monitor_block(struct iwl_trans *trans,
- 	for (power = max_power; power >= min_power; power--) {
- 		size = BIT(power);
- 		cpu_addr = dma_alloc_coherent(trans->dev, size, &phys,
--					      GFP_KERNEL | __GFP_NOWARN |
--					      __GFP_ZERO | __GFP_COMP);
-+					      GFP_KERNEL | __GFP_NOWARN);
- 		if (!cpu_addr)
- 			continue;
- 
--- 
-2.20.1
+Thanks,
 
+Josef
