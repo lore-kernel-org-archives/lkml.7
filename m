@@ -2,103 +2,151 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6106CC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:23:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95201C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:24:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332DF20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:23:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eZVJpZ1m"
+	by mail.kernel.org (Postfix) with ESMTP id 68B3F20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:24:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728869AbfFNOXr (ORCPT
+        id S1728583AbfFNOYr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:23:47 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:44138 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728545AbfFNOXr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:23:47 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5EENYNY087791;
-        Fri, 14 Jun 2019 09:23:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560522214;
-        bh=jqWIXPxQ0tUVep8/8V0HZ+0jev3IjHrnjzBzntRpW+E=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=eZVJpZ1mJwnABWygXpv6c60oFL4KxmnDdnaP0oazfPYjrTxeFgR6OhRr8sEVjoZXF
-         gFb56vWyLFWSrz4tLjyvXaXAoGlfANGuNZHmg9BijIv8ml0vQADpCsje3hAQ7nVsT7
-         7jNXnEdGJZ3SMEnFrCFN9ojx2s4/LtloBWK88K18=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5EENY7j068628
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Jun 2019 09:23:34 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
- Jun 2019 09:23:34 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 14 Jun 2019 09:23:34 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5EENXEF102349;
-        Fri, 14 Jun 2019 09:23:34 -0500
-Subject: Re: [PATCH v3 0/9] Multicolor Framework update
-To:     Alexander Dahl <ada@thorsis.com>, <linux-leds@vger.kernel.org>
-CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190523190820.29375-1-dmurphy@ti.com> <55737098.K72IVJ5cDM@ada>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <adfe9901-5428-3cd5-32a2-1e9ee3654460@ti.com>
-Date:   Fri, 14 Jun 2019 09:23:33 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 10:24:47 -0400
+Received: from mga18.intel.com ([134.134.136.126]:60424 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727979AbfFNOYq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:24:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 07:24:45 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga002.jf.intel.com with ESMTP; 14 Jun 2019 07:24:45 -0700
+Date:   Fri, 14 Jun 2019 07:15:20 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
+ scattered features word 11
+Message-ID: <20190614141519.GC198207@romley-ivt3.sc.intel.com>
+References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
+ <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
+ <20190614114410.GD2586@zn.tnic>
+ <20190614122749.GE2586@zn.tnic>
+ <20190614131701.GA198207@romley-ivt3.sc.intel.com>
+ <20190614134123.GF2586@zn.tnic>
+ <20190614141424.GA12191@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <55737098.K72IVJ5cDM@ada>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190614141424.GA12191@linux.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Fri, Jun 14, 2019 at 07:14:24AM -0700, Sean Christopherson wrote:
+> On Fri, Jun 14, 2019 at 03:41:23PM +0200, Borislav Petkov wrote:
+> > + Radim and Paolo. See upthread for context.
+> > 
+> > On Fri, Jun 14, 2019 at 06:17:02AM -0700, Fenghua Yu wrote:
+> > > > Alternatively - and what I think is the better solution - would be to
+> > > > remove those BUILD_BUG_ONs in x86_feature_cpuid and filter out the
+> > > > Linux-defined leafs dynamically. This way the array won't have holes in
+> > > > it.
+> > > 
+> > > Maybe adding a dummy slot in cpuid_leafs in patch 0002 to avoid the
+> > > compilation errors?
+> > 
+> > Maybe you didn't read what you're replying to: "This way the array
+> > won't have holes in it". Ontop of yours:
+> > 
+> > diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> > index d78a61408243..03d6f3f7b27c 100644
+> > --- a/arch/x86/kvm/cpuid.h
+> > +++ b/arch/x86/kvm/cpuid.h
+> > @@ -47,6 +47,7 @@ static const struct cpuid_reg reverse_cpuid[] = {
+> >  	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
+> >  	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
+> >  	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
+> > +	[CPUID_7_1_EAX]       = {         7, 1, CPUID_EAX},
+> >  	[CPUID_8000_0008_EBX] = {0x80000008, 0, CPUID_EBX},
+> >  	[CPUID_6_EAX]         = {         6, 0, CPUID_EAX},
+> >  	[CPUID_8000_000A_EDX] = {0x8000000a, 0, CPUID_EDX},
+> > @@ -59,8 +60,9 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
+> >  {
+> >  	unsigned x86_leaf = x86_feature / 32;
+> >  
+> > -	BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
+> > -	BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
+> > +	if (x86_leaf == CPUID_LNX_1 ||
+> > +	    x86_leaf == CPUID_LNX_4)
+> > +		return NULL;
+> >  
+> >  	return reverse_cpuid[x86_leaf];
+> >  }
+> > 
+> > That's what I mean with filter out dynamically.
+> 
+> This is wrong.  KVM isn't complaining about shuffling the order of feature
+> words, it's complaining that code is trying to do a reverse CPUID lookup
+> to a feature that isn't in the reverse_cpuid table.   Filtering out
+> checks dynamically is just hiding bugs.
+> 
+> >In function ‘x86_feature_cpuid’,
+> >     inlined from ‘guest_cpuid_get_register’ at arch/x86/kvm/cpuid.h:71:33,
+> >     inlined from ‘guest_cpuid_has’ at arch/x86/kvm/cpuid.h:100:8,
+> >     inlined from ‘kvm_get_msr_common’ at arch/x86/kvm/x86.c:2804:8:
+> 
+> This corresponds to "guest_cpuid_has(vcpu, X86_FEATURE_ARCH_CAPABILITIES)",
+> i.e. KVM is trying to query X86_FEATURE_ARCH_CAPABILITIES and is yelling
+> that there is no reverse_cpuid entry for CPUID_7_EDX.
+> 
+> The problem is that 'enum cpuid_leafs' no longer matches up with the
+> word numbers defined in cpufeatures.h, e.g. CPUID_7_EDX == 17 or so, but
+> the entries in cpufeatures.h defined CPUID_7_EDX flags using word 18.
+> 
+> This patch also needs to modify NCAPINTS.
 
-On 6/14/19 2:02 AM, Alexander Dahl wrote:
-> Hello Dan,
->
-> Am Donnerstag, 23. Mai 2019, 14:08:11 CEST schrieb Dan Murphy:
->>    leds: multicolor: Add sysfs interface definition
->>    dt: bindings: Add multicolor class dt bindings documention
->>    documention: leds: Add multicolor class documentation
->>    dt-bindings: leds: Add multicolor ID to the color ID  list
->>    leds: Add multicolor ID to the color ID list
->>    leds: multicolor: Introduce a multicolor class definition
->>    dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
->>    leds: lp50xx: Add the LP50XX family of the RGB LED driver
->>    leds: Update the lp55xx to use the multi color framework
-> While not having much experience with the implementation of the LED subsystem,
-> I've had a short look at those. Curious question: would it be possible to take
-> three gpio-leds and group those together to one multicolor-led? I know at
-> least one board, where things are wired up like this, see e.g.
-> at91-sama5d27_som1_ek.dts
+Changing NCAPINTS is heavy lifting to only solve this biset issue. After
+applying patch 0003, the word 12 hole generated in patch 0002 is filled
+in and no issue reported. If changing NCAPINTS in patch 0002, it needs to
+be changed back again after applying 0003.
 
-I have been thinking a lot about how gpio LEDs would fit into the mix here.
+How about add this patch in patch 0002? I posted this patch in this thread
+just now and post it here again:
 
-The leds-gpio.c would need to be extended to register to the multicolor 
-framework for this to work.
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 526619906305..403f70c2e431 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -23,6 +23,7 @@ enum cpuid_leafs
+ 	CPUID_7_0_EBX,
+ 	CPUID_D_1_EAX,
+ 	CPUID_LNX_4,
++	CPUID_DUMMY,
+ 	CPUID_8000_0008_EBX,
+ 	CPUID_6_EAX,
+ 	CPUID_8000_000A_EDX,
 
-I would need to get or create a gpio led cluster to test it out.
+Adding this small patch into patch 0002 will solve the build errors without
+changing the build checks.
 
-Dan
+Thanks.
+
+-Fenghua
 
 
-> Greets
-> Alex
->
