@@ -2,109 +2,142 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B18C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F1EC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FF220851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:29:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4E12133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nrh7mspP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFkz0AWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfFNK3t (ORCPT
+        id S1727093AbfFNKei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:29:49 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:5922 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfFNK3t (ORCPT
+        Fri, 14 Jun 2019 06:34:38 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55804 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726693AbfFNKeh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:29:49 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d03771c0000>; Fri, 14 Jun 2019 03:29:48 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Fri, 14 Jun 2019 03:29:48 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Fri, 14 Jun 2019 03:29:48 -0700
-Received: from [10.26.11.12] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 10:29:45 +0000
-Subject: Re: [PATCH 4.19 000/118] 4.19.51-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>
-References: <20190613075643.642092651@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <f3984fd7-e5f7-92c6-ecc6-d21e700ccb01@nvidia.com>
-Date:   Fri, 14 Jun 2019 11:29:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 06:34:37 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so1791112wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:34:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VQlYOuWw/XgKJ5lYOlgzDNhtem0wEWO83AzsJk5siJw=;
+        b=CFkz0AWBLH3qM/wTX9/0rbnEGIdGMhwqDq25JmOGJSDvCx9ui0dw9bqgpr1ksw+LT6
+         VMXk2sllUNdudRlnQH2Z9jYfoaJjzBK0BdkpGhugaQ59wtMT7Fi1LQBmUAcNx7u/Q6pU
+         woUjMPVk5GtD8+dGjT/59hrYjznvzD+kfru+iCm4Tz+MtFEks/RA/Kl9F9z+YnEp4Rj6
+         sL4tqPfeAmH+cBDQDwBd7Dr9J45Vc23gasoIa+2gUZSSujFqmnL1Cd4a2nk5nisrD3o2
+         zIEygEfF25IlZJQyz3E3gS73g0A/n8nN0PtL72QnwI6a6tCnEqMvkchTeYiJ1eSFbbrZ
+         iG7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VQlYOuWw/XgKJ5lYOlgzDNhtem0wEWO83AzsJk5siJw=;
+        b=YMvaAfKbxiFLjQL/iF+2bqtdaYR270eJWKiI0YIE2oB4tsirqb7I9ag2eW5cjRY9hB
+         3bJMg1UcF1+ukNKo17BgC+AUiI+lq7Q+6mpRGZ38PPEqgPEzrvYpPGXPsfwXIIB6RSRp
+         v8XILx0Jx1myvD8EZz1Tnb8Lm1qXFktwc5tsqCFvVMOwbzXXyB0BANxmHbC/cYxMf848
+         QH/X/IbmQT4IT9ca4G0VvxwkByuxszyn5/XKZeb6eOJU/UUbCYejU7TW2G4RB3kThmIy
+         UXoF8TpMdbLEcrJnVbXyOQIU8kqCAVKmmUh8FdJhQHuxW8RYwRMGTQHj4Amkzyv1X/nk
+         DVvA==
+X-Gm-Message-State: APjAAAUH+PSkWH7eko1zBjJPEGZe9b98xJ4EibbidkGEQShs8cK6P069
+        jcHERZAbkqVeatSA1iYUIl6yyw==
+X-Google-Smtp-Source: APXvYqzMy7f04xPUuO0lEJs4Zkj7eAmy4TPUQhawhEeebqMCl/nBD1FiRvyH776EUxFte8zki3W9TQ==
+X-Received: by 2002:a7b:c933:: with SMTP id h19mr7726918wml.52.1560508474645;
+        Fri, 14 Jun 2019 03:34:34 -0700 (PDT)
+Received: from apalos (athedsl-4461147.home.otenet.gr. [94.71.2.75])
+        by smtp.gmail.com with ESMTPSA id s10sm3938737wrw.45.2019.06.14.03.34.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 03:34:34 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 13:34:30 +0300
+From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     Sumit Garg <sumit.garg@linaro.org>, peterhuewe@gmx.de,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        jgg@ziepe.ca, corbet@lwn.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
+        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
+        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
+        tee-dev@lists.linaro.org
+Subject: Re: [PATCH v4 1/2] fTPM: firmware TPM running in TEE
+Message-ID: <20190614103430.GA6108@apalos>
+References: <20190530152758.16628-1-sashal@kernel.org>
+ <20190530152758.16628-2-sashal@kernel.org>
+ <CAFA6WYM1NrghG9qxUhrm76kopvBx9nmCL9XnRs11ysb2Yr0+Qw@mail.gmail.com>
+ <20190604200951.GB29739@sasha-vm>
+ <CAFA6WYMOjgHRw9RVrjherNo0ZNbTtEonPwSFFC0dT4CZO=A1NQ@mail.gmail.com>
+ <20190613171141.GL1513@sasha-vm>
 MIME-Version: 1.0
-In-Reply-To: <20190613075643.642092651@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560508189; bh=5D2yI8MYIL8SD8Q+3MVWw12CheDWJS6bgVRjT/j7ayM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=nrh7mspP+NZyksoWs9d4lAUfgTX8ST/tW08C1t8tn6jZJZSy7N+4banAvpVtNcein
-         oZ1yrn2pbwy2FTm3oLd3+r0pVwyDF+K796CiejCt6m8KW/McZMWhXvLMSDX/TTJdIv
-         YeIZiBCI5HlURa4Xn+a85Fi7bURQshItXSJ6dsnVJIee6udBVUllJtMz8+ZzvVg34N
-         qakM7XwMQP6qdcKy9eGRsvmJ/cPfluYTTTTTSaGcYb3+WknBhWuN1ayMPT5yHuZTmn
-         ntqwK2tEuTviFu0D0xCsypo8+zdMsCid1HEBI5KCFoMm5o/VODJDBM57nk9vjadTgf
-         1E7uOhMaVbEig==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613171141.GL1513@sasha-vm>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Sasha, 
+On Thu, Jun 13, 2019 at 01:11:41PM -0400, Sasha Levin wrote:
+> On Wed, Jun 05, 2019 at 04:39:36PM +0530, Sumit Garg wrote:
+> >On Wed, 5 Jun 2019 at 01:39, Sasha Levin <sashal@kernel.org> wrote:
+> >>
+> >>On Tue, Jun 04, 2019 at 11:45:52AM +0530, Sumit Garg wrote:
+> >>>On Thu, 30 May 2019 at 20:58, Sasha Levin <sashal@kernel.org> wrote:
+> >>>> +       /* Open context with TEE driver */
+> >>>> +       pvt_data->ctx = tee_client_open_context(NULL, ftpm_tee_match, NULL,
+> >>>> +                                               NULL);
+> >>>> +       if (IS_ERR(pvt_data->ctx)) {
+> >>>> +               dev_err(dev, "%s:tee_client_open_context failed\n", __func__);
+> >>>
+> >>>Is this well tested? I see this misleading error multiple times as
+> >>>follows although TEE driver works pretty well.
+> >>
+> >>Yes, this was all functionally tested.
+I did test as well with a DeveloperBox, i can confirm the driver is loading (but
+i have no fTPM support on the OP-TEE side for now)
 
-On 13/06/2019 09:32, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.51 release.
-> There are 118 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+
+apalos@mule:~>sudo dmesg | grep optee
+[sudo] password for apalos: 
+[    5.035801] optee: probing for conduit method from DT.
+[    5.041045] optee: revision 3.2 (53bf1c38)
+[    5.041772] optee: initialized driver
+apalos@mule:~>sudo dmesg | grep tpm
+[    5.000674] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
+[    5.101655] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_session failed,
+err=ffff000c
+[    5.109703] ftpm-tee: probe of tpm@0 failed with error -22
+
+
+The error -22 is nice since the probe eventually failed (no fTPM support in
+secure world). Can we slightly change the
+'ftpm_tee_probe:tee_client_open_context failed' and indicate this is not a real
+error since the probe gets deferred untill Secure world is alive?
+
+By the way there is *real* interest for this functionality. I expect to run it
+on a number of Arm boards once i get some free time.
+
+> >Can you share your build instructions and testing approach?
 > 
-> Responses should be made by Sat 15 Jun 2019 07:54:44 AM UTC.
-> Anything received after that time might be too late.
+> Yes: it looks like you got all the kernel bits, but not the firmware.
+> There are instructions for it here: https://github.com/microsoft/ms-tpm-20-ref
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.51-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
+> Once it's running, you can test it by running your favorite TPM usecases
+> through /dev/tpm0.
 > 
-> thanks,
-> 
-> greg k-h
+> --
+> Thanks,
+> Sasha
 
-All tests are passing for Tegra ...
-
-Test results for stable-v4.19:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    32 tests:	32 pass, 0 fail
-
-Linux version:	4.19.51-rc2-gc6c7a311e997
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+Thanks
+/Ilias
