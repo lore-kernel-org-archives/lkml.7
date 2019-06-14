@@ -2,98 +2,112 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735B2C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:39:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62190C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B1421473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:39:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560515968;
-	bh=h4+jr7GFm2wkitjdD2lHltRkw9ikoA87cqaxH5FXp1M=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MK2JFINVvrE4AzZ5rdJvK7eUDlsjPT5ro62sEX8Zu729MzvvnWreLyj5sNebuJDrV
-	 12nIcLfw8pEdGyvIrSzyRgtA9zRjrbDU0VqnW2ZqdTs4eraT/T1t4PydeyFKvJbeev
-	 CnVzXhBjr9zy2HnPNyCVunUVfdnTpk7BE791I1vc=
+	by mail.kernel.org (Postfix) with ESMTP id 3A2C62133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:40:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nSzXWq2w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfFNMj0 (ORCPT
+        id S1727888AbfFNMkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:39:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727685AbfFNMj0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:39:26 -0400
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB3572177E;
-        Fri, 14 Jun 2019 12:39:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560515965;
-        bh=h4+jr7GFm2wkitjdD2lHltRkw9ikoA87cqaxH5FXp1M=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hCx+2Pta3PtS85q5AlHrTvrSwcwe51L0/A90JL8ILfjHRek1cKA8fmZHGs8BKbVDI
-         IuSxe8YbpEV+bLkVHT7S9jMd2bF3e60Zbvpxlmzr6HBT/AuMPTJKYHbKNkDWsT+Adm
-         NFKlvZF4X0lGPvv7g/5zIqG3CPnUxzq9FvsEys+Q=
-Received: by mail-lf1-f44.google.com with SMTP id z15so1606465lfh.13;
-        Fri, 14 Jun 2019 05:39:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAX97+za6pRpmgAmHtMYCA2aR9MSkYXrakPoYke6SX/iwwM5jZLv
-        nPD0ij/NauyB1Q7wP5HJ6orWvJ3Ul/7gmqe0NeU=
-X-Google-Smtp-Source: APXvYqzU4BYkdLXQ14moDZGW0N4jlP+pEkPQkjyQ1iy7sxRkDPxMnVuLMevSUvxQZ+wiK8Z5zxc1nfEIFrx9/KR3t28=
-X-Received: by 2002:a19:4f50:: with SMTP id a16mr47042701lfk.24.1560515963169;
- Fri, 14 Jun 2019 05:39:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <CGME20190614095320eucas1p2919a6169c997bb81c80416e8a0ede538@eucas1p2.samsung.com>
- <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-2-l.luba@partner.samsung.com>
- <CAJKOXPeeVhHS62jiUgwySf5EYzW2Rkvu=HxyA7NjpGZFp=fWYQ@mail.gmail.com> <cbfa8fab-7cd0-1508-7b9b-482fefdb4de3@samsung.com>
-In-Reply-To: <cbfa8fab-7cd0-1508-7b9b-482fefdb4de3@samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 14 Jun 2019 14:39:11 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfmy6jKVF5f0vy9YOvbH8y0s_DHAR=P6+QbsRRHvLNd_g@mail.gmail.com>
-Message-ID: <CAJKOXPfmy6jKVF5f0vy9YOvbH8y0s_DHAR=P6+QbsRRHvLNd_g@mail.gmail.com>
-Subject: Re: [PATCH v10 01/13] clk: samsung: add needed IDs for DMC clocks in Exynos5420
-To:     Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc:     Lukasz Luba <l.luba@partner.samsung.com>,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, mturquette@baylibre.com,
-        sboyd@kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
-        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
-        gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Jun 2019 08:40:17 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44352 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfFNMkR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:40:17 -0400
+Received: by mail-pf1-f196.google.com with SMTP id t16so1388042pfe.11;
+        Fri, 14 Jun 2019 05:40:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=G6J+XslQx14mgUJu3IkiN0FzUg+9m/GNr8qGP15QXM4=;
+        b=nSzXWq2wgDfSBPulagdL8DAcLzRmrLOdE8OSqGLUh/cCWEG3++iLthKmJE9JgDDu0J
+         g6PnPHyDY4q1EPdQW2X9uzxa3pPRJ1cOQ1fmM2aAQOyFV0HQsI4WYBYU17eIUeOW/36Y
+         KMj/d23F7Z95RMGAVs1TVxOW+bsfxCQPm7DxMpsIGQveqjpZoTZoueZ+mBMA9pxuYLEZ
+         /Wvfsyspn1WnCvGsUWh7gn1T+DdlKXPbDnokDp+vpPD9ZTI7sNMCiTspAz3oXxBwFKKx
+         OgMQHvcTuF2AoZgLsLOqS77QFmKQ0yZpPHOcNVjbQ5a6LU7o7HAkbsD5iytZBkx/8vr5
+         ngGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G6J+XslQx14mgUJu3IkiN0FzUg+9m/GNr8qGP15QXM4=;
+        b=U4nq5HKrszTiqmcJW/4G87D3JptiK8laVf3weo0WVzpl6cDeDskbUoJqWFe+myp7k2
+         chAVnrZX/bIeEovQPTE5WkYTEgBvUa5BG/1uCHlBoXAftBYOWHJ6I3hKaF2UiiQ4lkxP
+         DL5okDpnwugrr5AITKQ17l96nD/HJRgth/eVEzgGFSqCa3m6vn+3okYkRZRxEF5xOFQY
+         BGQcyRTvn8LciOTSO0Iwfy0BniQiHmPYUrPEo1AEt0NfG2OuMLeAtF1gUCOt8M8lIlWz
+         AnOr8gpCMGa8pdlBtXeWZ1Z8lE3E5ibLbe6sidS7CHUWc41iZb1QJO4aTFK0MT6hIFaA
+         ykCA==
+X-Gm-Message-State: APjAAAUAM8AqSKLNpFLtXps4XC4650UbYftdfGk5jWAdTFVESRICM3Lo
+        vmE6bkgUyCtfLd5QNTI0qDQ=
+X-Google-Smtp-Source: APXvYqx9/TmX0TUwRb9YhbZ2LXa7SIjFQEulobTNWMcuiWddW3z+6s9Qvfj2cWsqDvqXx986mqHohQ==
+X-Received: by 2002:aa7:84d1:: with SMTP id x17mr75198419pfn.188.1560516016456;
+        Fri, 14 Jun 2019 05:40:16 -0700 (PDT)
+Received: from xy-data.openstacklocal ([159.138.22.150])
+        by smtp.gmail.com with ESMTPSA id a3sm2477908pff.122.2019.06.14.05.40.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Fri, 14 Jun 2019 05:40:15 -0700 (PDT)
+From:   Young Xiao <92siuyang@gmail.com>
+To:     bhelgaas@google.com, tyreld@linux.vnet.ibm.com,
+        andy.shevchenko@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Young Xiao <92siuyang@gmail.com>
+Subject: [PATCH] PCI/hotplug: fix potential null pointer deference
+Date:   Fri, 14 Jun 2019 20:41:25 +0800
+Message-Id: <1560516085-3101-1-git-send-email-92siuyang@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 14:38, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->
-> On 6/14/19 14:04, Krzysztof Kozlowski wrote:
-> > I do not quite understand why this patch is still being resent instead
-> > of have been applied some time ago. Are there any issues here? Or are
-> > there any issues with the entire patchset (except some review comments
-> > to be resolved)? If not, then this is a dependency which should go
-> > regardless of other patches. There is no point to keep it pending...
-> > All other changes, e.g. DTS will have to wait for more cycles till
-> > this gets in.
-> >
-> > Therefore either please apply this or please comment what is stopping
-> > dependencies from being applied.
->
-> Indeed the first 3 (clk) patches should not be part of the series any more,
-> I have applied them few days ago - https://lkml.org/lkml/2019/6/6/554
+There is otherwise a risk of a null pointer dereference.
 
-Ahhh, I missed that. Sorry for the noise then and thanks!
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+---
+ drivers/pci/hotplug/cpqphp_ctrl.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
+index b7f4e1f..3c8399f 100644
+--- a/drivers/pci/hotplug/cpqphp_ctrl.c
++++ b/drivers/pci/hotplug/cpqphp_ctrl.c
+@@ -598,10 +598,11 @@ static struct pci_resource *get_io_resource(struct pci_resource **head, u32 size
+ 			*head = node->next;
+ 		} else {
+ 			prevnode = *head;
+-			while (prevnode->next != node)
++			while (prevnode && prevnode->next != node)
+ 				prevnode = prevnode->next;
+ 
+-			prevnode->next = node->next;
++			if (prevnode)
++				prevnode->next = node->next;
+ 		}
+ 		node->next = NULL;
+ 		break;
+@@ -788,10 +789,11 @@ static struct pci_resource *get_resource(struct pci_resource **head, u32 size)
+ 			*head = node->next;
+ 		} else {
+ 			prevnode = *head;
+-			while (prevnode->next != node)
++			while (prevnode && prevnode->next != node)
+ 				prevnode = prevnode->next;
+ 
+-			prevnode->next = node->next;
++			if (prevnode)
++				prevnode->next = node->next;
+ 		}
+ 		node->next = NULL;
+ 		break;
+-- 
+2.7.4
+
