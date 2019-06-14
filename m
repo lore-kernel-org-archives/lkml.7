@@ -2,91 +2,75 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FD2C31E52
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FA87C31E50
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7593121848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:17:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5EE621848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:19:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=126.com header.i=@126.com header.b="c2Qp4i/s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbfFNXR1 (ORCPT
+        id S1726201AbfFNXT3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 19:17:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45108 "EHLO mx1.redhat.com"
+        Fri, 14 Jun 2019 19:19:29 -0400
+Received: from m15-62.126.com ([220.181.15.62]:11101 "EHLO m15-62.126.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbfFNXR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 19:17:26 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 31D74368E3;
-        Fri, 14 Jun 2019 23:17:26 +0000 (UTC)
-Received: from treble (ovpn-112-39.rdu2.redhat.com [10.10.112.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C2B65C29A;
-        Fri, 14 Jun 2019 23:17:20 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 18:17:17 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF
- generated code
-Message-ID: <20190614231717.xukbfpc2cy47s4xh@treble>
-References: <cover.1560534694.git.jpoimboe@redhat.com>
- <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
- <20190614205841.s4utbpurntpr6aiq@ast-mbp.dhcp.thefacebook.com>
- <20190614210745.kwiqm5pkgabruzuj@treble>
- <CAADnVQLK3ixK1JWF_mfScZoFzFF=6O8f1WcqkYqiejKeex1GSQ@mail.gmail.com>
- <20190614211929.drnnawbi7guqj2ck@treble>
- <CAADnVQ+BCxsKEK=ZzYOZkgTJAg_7jz1_f+FCX+Ms0vTOuW8Mxw@mail.gmail.com>
+        id S1725809AbfFNXT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 19:19:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=Date:From:Subject:MIME-Version:Message-ID; bh=n4WmK
+        URsM47Zn2SNCEHlEjsXVDp9cHazAH6KI9Q6OlM=; b=c2Qp4i/sV5X1m7eLE+D2T
+        eH91jqD5tkjm299WO9ssSuwVgFk+wpMBf3ca5wqFyXRCzwhMerNEG9ilG8ZxjE+H
+        N0DSH33LflSilP2fEKdJ98qfwgWIRgdTAL8CAT/sHIad3Stxs+s7KaBB8Ltp33kn
+        T5h+JSQxfBU6OJ28ythcFA=
+Received: from kernelpatch$126.com ( [117.136.86.35] ) by
+ ajax-webmail-wmsvr62 (Coremail) ; Sat, 15 Jun 2019 07:18:20 +0800 (CST)
+X-Originating-IP: [117.136.86.35]
+Date:   Sat, 15 Jun 2019 07:18:20 +0800 (CST)
+From:   "Tiezhu Yang" <kernelpatch@126.com>
+To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+Subject: [PATCH] kexec: fix warnig of crash_zero_bytes in crash.c
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version SP_ntes V3.5 build
+ 20180927(cd7136b6) Copyright (c) 2002-2019 www.mailtech.cn 126com
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=GBK
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAADnVQ+BCxsKEK=ZzYOZkgTJAg_7jz1_f+FCX+Ms0vTOuW8Mxw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 14 Jun 2019 23:17:26 +0000 (UTC)
+Message-ID: <fa5d08.1fe.16b5848e5f7.Coremail.kernelpatch@126.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID: PsqowADnTBE9KwRdlf1AAA--.6214W
+X-CM-SenderInfo: xnhu0vxosd3ubk6rjloofrz/1tbijBzR9VpD9X4bpwACsY
+X-Coremail-Antispam: 1U5529EdanIXcx71UUUUU7vcSsGvfC2KfnxnUU==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 02:22:59PM -0700, Alexei Starovoitov wrote:
-> On Fri, Jun 14, 2019 at 2:19 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > > > > >
-> > > > > > +#define JUMP_TABLE_SYM_PREFIX "jump_table."
-> > > > >
-> > > > > since external tool will be looking at it should it be named
-> > > > > "bpf_jump_table." to avoid potential name conflicts?
-> > > > > Or even more unique name?
-> > > > > Like "bpf_interpreter_jump_table." ?
-> > > >
-> > > > No, the point is that it's a generic feature which can also be used any
-> > > > non-BPF code which might also have a jump table.
-> > >
-> > > and you're proposing to name all such jump tables in the kernel
-> > > as static foo jump_table[] ?
-> >
-> > That's the idea.
-> 
-> Then it needs much wider discussion.
-
-Why would it need wider discussion?  It only has one user.  If you
-honestly believe that it will be controversial to require future users
-to call a static jump table "jump_table" then we can have that
-discussion when it comes up.
-
--- 
-Josh
+VGhpcyBwYXRjaCBmaXhlcyB0aGUgZm9sbG93aW5nIHNwYXJzZSB3YXJuaW5nOgoKYXJjaC94ODYv
+a2VybmVsL2NyYXNoLmM6NTk6MTU6Cndhcm5pbmc6IHN5bWJvbCAnY3Jhc2hfemVyb19ieXRlcycg
+d2FzIG5vdCBkZWNsYXJlZC4gU2hvdWxkIGl0IGJlIHN0YXRpYz8KCkluIGFkZGl0aW9uLCBjcmFz
+aF96ZXJvX2J5dGVzIGlzIHVzZWQgd2hlbiBDT05GSUdfS0VYRUNfRklMRSBpcwpzZXQsIHNvIG1h
+a2UgaXQgb25seSBhdmFpbGFibGUgdW5kZXIgQ09ORklHX0tFWEVDX0ZJTEUuIE90aGVyd2lzZSwK
+aWYgQ09ORklHX0tFWEVDX0ZJTEUgaXMgbm90IHNldCwgdGhlIGZvbGxvd2luZyB3YXJuaW5nIHdp
+bGwgYXBwZWFyOgoKYXJjaC94ODYva2VybmVsL2NyYXNoLmM6NTk6MjI6Cndhcm5pbmc6IKGuY3Jh
+c2hfemVyb19ieXRlc6GvIGRlZmluZWQgYnV0IG5vdCB1c2VkIFstV3VudXNlZC12YXJpYWJsZV0K
+CkZpeGVzOiBkZDVmNzI2MDc2Y2MgKCJrZXhlYzogc3VwcG9ydCBmb3Iga2V4ZWMgb24gcGFuaWMg
+dXNpbmcgbmV3IHN5c3RlbSBjYWxsIikKU2lnbmVkLW9mZi1ieTogVGllemh1IFlhbmcgPGtlcm5l
+bHBhdGNoQDEyNi5jb20+CkNjOiBWaXZlayBHb3lhbCA8dmdveWFsQHJlZGhhdC5jb20+Ci0tLQog
+YXJjaC94ODYva2VybmVsL2NyYXNoLmMgfCA0ICsrKy0KIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2Vy
+dGlvbnMoKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9rZXJuZWwvY3Jh
+c2guYyBiL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCmluZGV4IDU3NmIyZTEuLmYxMzQ4MGUgMTAw
+NjQ0Ci0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCisrKyBiL2FyY2gveDg2L2tlcm5lbC9j
+cmFzaC5jCkBAIC01Niw3ICs1Niw5IEBAIHN0cnVjdCBjcmFzaF9tZW1tYXBfZGF0YSB7CiAgKi8K
+IGNyYXNoX3ZtY2xlYXJfZm4gX19yY3UgKmNyYXNoX3ZtY2xlYXJfbG9hZGVkX3ZtY3NzID0gTlVM
+TDsKIEVYUE9SVF9TWU1CT0xfR1BMKGNyYXNoX3ZtY2xlYXJfbG9hZGVkX3ZtY3NzKTsKLXVuc2ln
+bmVkIGxvbmcgY3Jhc2hfemVyb19ieXRlczsKKyNpZmRlZiBDT05GSUdfS0VYRUNfRklMRQorc3Rh
+dGljIHVuc2lnbmVkIGxvbmcgY3Jhc2hfemVyb19ieXRlczsKKyNlbmRpZgogCiBzdGF0aWMgaW5s
+aW5lIHZvaWQgY3B1X2NyYXNoX3ZtY2xlYXJfbG9hZGVkX3ZtY3NzKHZvaWQpCiB7Ci0tIAoxLjgu
+My4x
