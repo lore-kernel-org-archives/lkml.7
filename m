@@ -2,176 +2,166 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DABF5C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2DCC31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF83A21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07A3E21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:55:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="msD87jcA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Am2rlOOm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfFNAyK (ORCPT
+        id S1727320AbfFNAzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:54:10 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19858 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725765AbfFNAyK (ORCPT
+        Thu, 13 Jun 2019 20:55:50 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:38149 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725765AbfFNAzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:54:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d02f02f0000>; Thu, 13 Jun 2019 17:54:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 17:54:07 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 17:54:07 -0700
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 00:54:05 +0000
-Subject: Re: [Nouveau] [PATCH 03/22] mm: remove hmm_devmem_add_resource
-To:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     <linux-nvdimm@lists.01.org>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-4-hch@lst.de>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <b0136e6b-2262-ae4e-67ba-3d0b3895873b@nvidia.com>
-Date:   Thu, 13 Jun 2019 17:54:05 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 20:55:50 -0400
+Received: by mail-lf1-f65.google.com with SMTP id b11so492491lfa.5;
+        Thu, 13 Jun 2019 17:55:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ryaPCZIxAcKEqlnkJURjQarpGjK1d3kFhw+bV3KFP9w=;
+        b=Am2rlOOmSe5TZvPubrB9t5WLp99W7cGT3AFwKkLm752jiH3pKsM7TuXaV/gVBtbI0I
+         Lvt/jAO2ZklUO1AuoGu4BSbAG3VQGC0Bs/G/Nudkn/xfVMLjTPELMRMyOX731rgWMoqJ
+         9Gh6wD1+eyS6aCNiN3tdJ1UyKEUtUfWNfMC3eDMhMJsX44+v5DWx7n2a931/3UcXjJs5
+         QbANRRVfLLaJzAf3JXE4YvgTn0D3VYoGcLZh3KqPm6iMoJOfV0OFEXA94WXq3noAf1yq
+         iFlBs6bFtTBu3UnsjO3GXwg/ug1ViobK/hpmMhcfcroIa30HDFexgv6ZYKKPwspta92N
+         VdvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ryaPCZIxAcKEqlnkJURjQarpGjK1d3kFhw+bV3KFP9w=;
+        b=DhP81wer8GY2AoeNzp0w3CV4Q04uUa0DWyPXb1srpOHIx3Ib/zE/GVDlzsz/J8bkqE
+         GSViQVBYm0F27uuSXJs7yj6Uxny3WG4W+PQ3FNvm4j827EhxRgchJoTescpXhegWo0dr
+         EA+/SMzLvphSAhNfMPV/RwxBraSeewXjf9v8lzNbo/zwRoN0DymXKUPUi83XgpRz/HZo
+         XDQOvBtw9ZLRUug4+SF0DIjkxJSUTx1jVLQ0DnqI8Z8qonFvdi8oLpneFh73RCdLVKpM
+         v2W3feCLGxc7AFIkJzZx/kbqllA1W5kPvMmJsmbU0xJaGYJAWU29lTPru1R8MjBYcg0e
+         /SIA==
+X-Gm-Message-State: APjAAAUEs+RAWOZGMdbf1ZKdJKOCWLlQND/Qxb+1pi+lbZ0lDBWf9M7k
+        Sy3CSH9ZMYHSU0CF6gODDR9S7xGZnmJIJOPhO+M=
+X-Google-Smtp-Source: APXvYqx9lJ1Egqv+7WXAkIM2x8BJIXO6TIeTHbKoqF+cwbEj1hpPLT6iy6bgD8dz8+Z+cP0erI7MZ1fSdo/A3fdlVgE=
+X-Received: by 2002:a19:ab1a:: with SMTP id u26mr8730266lfe.6.1560473747165;
+ Thu, 13 Jun 2019 17:55:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190613094326.24093-4-hch@lst.de>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560473647; bh=oaghaGhc6k9hrZ1Hrvf1WRHivvtYUvtzqZie9Kkvs/o=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=msD87jcA2rRG9Llyq0qt1WMB2QnQwlCA5FboAnD5ObAlNrd0UXGEduqhvkfygikiG
-         X/FDHinicS3Efvg3d57Jm26shPNaEmayltJCp5yJQZZeY/XUAJ9yuE28dJLinUDmst
-         hfPVk2mmuqjWbbXi5PN/lD+bEyQhTU2/HuxvXb4GSlidJB0FuUB3Qbw3dB7EXnopuS
-         70ZHlcNhJG9lxipOFV1GdXLcilcLcloKtFVGyKtsgpsjI+nbjKdhxdsIHIGRCMwhfr
-         h2Uc0N+TEc+StNM9rr5zvfJdDHOGWwk2wBBxonlsQTnl7Sy3RjDibSN0QnbqU2I3p2
-         +mHNjmJsw2lrA==
+References: <20190611215304.28831-1-mmullins@fb.com> <CAEf4BzZ_Gypm32mSnrpGWw_U9q8LfTn7hag-p-LvYKVNkFdZGw@mail.gmail.com>
+ <4aa26670-75b8-118d-68ca-56719af44204@iogearbox.net> <9c77657414993332987ca79d4081c4d71cc48d66.camel@fb.com>
+In-Reply-To: <9c77657414993332987ca79d4081c4d71cc48d66.camel@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Thu, 13 Jun 2019 17:55:35 -0700
+Message-ID: <CAADnVQLV3n3ozBbz-7dJbYfptDwQtL_zM95Z5rcAF-A72aJ9DA@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] bpf: fix nested bpf tracepoints with per-cpu data
+To:     Matt Mullins <mmullins@fb.com>
+Cc:     "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "andrii.nakryiko@gmail.com" <andrii.nakryiko@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        "ast@kernel.org" <ast@kernel.org>, Andrew Hall <hall@fb.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 2:43 AM, Christoph Hellwig wrote:
-> This function has never been used since it was first added to the kernel
-> more than a year and a half ago, and if we ever grow a consumer of the
-> MEMORY_DEVICE_PUBLIC infrastructure it can easily use devm_memremap_pages
-> directly now that we've simplified the API for it.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/linux/hmm.h |  3 ---
->  mm/hmm.c            | 54 ---------------------------------------------
->  2 files changed, 57 deletions(-)
-> 
+On Thu, Jun 13, 2019 at 5:52 PM Matt Mullins <mmullins@fb.com> wrote:
+>
+> On Fri, 2019-06-14 at 00:47 +0200, Daniel Borkmann wrote:
+> > On 06/12/2019 07:00 AM, Andrii Nakryiko wrote:
+> > > On Tue, Jun 11, 2019 at 8:48 PM Matt Mullins <mmullins@fb.com> wrote:
+> > > >
+> > > > BPF_PROG_TYPE_RAW_TRACEPOINTs can be executed nested on the same CP=
+U, as
+> > > > they do not increment bpf_prog_active while executing.
+> > > >
+> > > > This enables three levels of nesting, to support
+> > > >   - a kprobe or raw tp or perf event,
+> > > >   - another one of the above that irq context happens to call, and
+> > > >   - another one in nmi context
+> > > > (at most one of which may be a kprobe or perf event).
+> > > >
+> > > > Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sam=
+ple_data")
+> >
+> > Generally, looks good to me. Two things below:
+> >
+> > Nit, for stable, shouldn't fixes tag be c4f6699dfcb8 ("bpf: introduce B=
+PF_RAW_TRACEPOINT")
+> > instead of the one you currently have?
+>
+> Ah, yeah, that's probably more reasonable; I haven't managed to come up
+> with a scenario where one could hit this without raw tracepoints.  I'll
+> fix up the nits that've accumulated since v2.
+>
+> > One more question / clarification: we have __bpf_trace_run() vs trace_c=
+all_bpf().
+> >
+> > Only raw tracepoints can be nested since the rest has the bpf_prog_acti=
+ve per-CPU
+> > counter via trace_call_bpf() and would bail out otherwise, iiuc. And ra=
+w ones use
+> > the __bpf_trace_run() added in c4f6699dfcb8 ("bpf: introduce BPF_RAW_TR=
+ACEPOINT").
+> >
+> > 1) I tried to recall and find a rationale for mentioned trace_call_bpf(=
+) split in
+> > the c4f6699dfcb8 log, but couldn't find any. Is the raison d'=C3=AAtre =
+purely because of
+> > performance overhead (and desire to not miss events as a result of nest=
+ing)? (This
+> > also means we're not protected by bpf_prog_active in all the map ops, o=
+f course.)
+> > 2) Wouldn't this also mean that we only need to fix the raw tp programs=
+ via
+> > get_bpf_raw_tp_regs() / put_bpf_raw_tp_regs() and won't need this dupli=
+cation for
+> > the rest which relies upon trace_call_bpf()? I'm probably missing somet=
+hing, but
+> > given they have separate pt_regs there, how could they be affected then=
+?
+>
+> For the pt_regs, you're correct: I only used get/put_raw_tp_regs for
+> the _raw_tp variants.  However, consider the following nesting:
+>
+>                                     trace_nest_level raw_tp_nest_level
+>   (kprobe) bpf_perf_event_output            1               0
+>   (raw_tp) bpf_perf_event_output_raw_tp     2               1
+>   (raw_tp) bpf_get_stackid_raw_tp           2               2
+>
+> I need to increment a nest level (and ideally increment it only once)
+> between the kprobe and the first raw_tp, because they would otherwise
+> share the struct perf_sample_data.  But I also need to increment a nest
+> level between the two raw_tps, since they share the pt_regs -- I can't
+> use trace_nest_level for everything because it's not used by
+> get_stackid, and I can't use raw_tp_nest_level for everything because
+> it's not incremented by kprobes.
+>
+> If raw tracepoints were to bump bpf_prog_active, then I could get away
+> with just using that count in these callsites -- I'm reluctant to do
+> that, though, since it would prevent kprobes from ever running inside a
+> raw_tp.  I'd like to retain the ability to (e.g.)
+>   trace.py -K htab_map_update_elem
+> and get some stack traces from at least within raw tracepoints.
+>
+> That said, as I wrote up this example, bpf_trace_nest_level seems to be
+> wildly misnamed; I should name those after the structure they're
+> protecting...
 
-No objections here, good cleanup.
-
-Reviewed-by: John Hubbard <jhubbard@nvidia.com> 
-
-thanks,
--- 
-John Hubbard
-NVIDIA
-
-> diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-> index 4867b9da1b6c..5761a39221a6 100644
-> --- a/include/linux/hmm.h
-> +++ b/include/linux/hmm.h
-> @@ -688,9 +688,6 @@ struct hmm_devmem {
->  struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
->  				  struct device *device,
->  				  unsigned long size);
-> -struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
-> -					   struct device *device,
-> -					   struct resource *res);
->  
->  /*
->   * hmm_devmem_page_set_drvdata - set per-page driver data field
-> diff --git a/mm/hmm.c b/mm/hmm.c
-> index ff2598eb7377..0c62426d1257 100644
-> --- a/mm/hmm.c
-> +++ b/mm/hmm.c
-> @@ -1445,58 +1445,4 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
->  	return devmem;
->  }
->  EXPORT_SYMBOL_GPL(hmm_devmem_add);
-> -
-> -struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
-> -					   struct device *device,
-> -					   struct resource *res)
-> -{
-> -	struct hmm_devmem *devmem;
-> -	void *result;
-> -	int ret;
-> -
-> -	if (res->desc != IORES_DESC_DEVICE_PUBLIC_MEMORY)
-> -		return ERR_PTR(-EINVAL);
-> -
-> -	dev_pagemap_get_ops();
-> -
-> -	devmem = devm_kzalloc(device, sizeof(*devmem), GFP_KERNEL);
-> -	if (!devmem)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	init_completion(&devmem->completion);
-> -	devmem->pfn_first = -1UL;
-> -	devmem->pfn_last = -1UL;
-> -	devmem->resource = res;
-> -	devmem->device = device;
-> -	devmem->ops = ops;
-> -
-> -	ret = percpu_ref_init(&devmem->ref, &hmm_devmem_ref_release,
-> -			      0, GFP_KERNEL);
-> -	if (ret)
-> -		return ERR_PTR(ret);
-> -
-> -	ret = devm_add_action_or_reset(device, hmm_devmem_ref_exit,
-> -			&devmem->ref);
-> -	if (ret)
-> -		return ERR_PTR(ret);
-> -
-> -	devmem->pfn_first = devmem->resource->start >> PAGE_SHIFT;
-> -	devmem->pfn_last = devmem->pfn_first +
-> -			   (resource_size(devmem->resource) >> PAGE_SHIFT);
-> -	devmem->page_fault = hmm_devmem_fault;
-> -
-> -	devmem->pagemap.type = MEMORY_DEVICE_PUBLIC;
-> -	devmem->pagemap.res = *devmem->resource;
-> -	devmem->pagemap.page_free = hmm_devmem_free;
-> -	devmem->pagemap.altmap_valid = false;
-> -	devmem->pagemap.ref = &devmem->ref;
-> -	devmem->pagemap.data = devmem;
-> -	devmem->pagemap.kill = hmm_devmem_ref_kill;
-> -
-> -	result = devm_memremap_pages(devmem->device, &devmem->pagemap);
-> -	if (IS_ERR(result))
-> -		return result;
-> -	return devmem;
-> -}
-> -EXPORT_SYMBOL_GPL(hmm_devmem_add_resource);
->  #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
-> 
+I still don't get what's wrong with the previous approach.
+Didn't I manage to convince both of you that perf_sample_data
+inside bpf_perf_event_array doesn't have any issue that Daniel brought up?
+I think this refcnting approach is inferior.
