@@ -2,219 +2,146 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10F61C31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:36:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C41FC31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDB0F2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 238B021841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:41:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="CPGuBSov"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfFNWgo (ORCPT
+        id S1726346AbfFNWle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 18:36:44 -0400
-Received: from www62.your-server.de ([213.133.104.62]:60172 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfFNWgn (ORCPT
+        Fri, 14 Jun 2019 18:41:34 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:46161 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfFNWld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 18:36:43 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hbuoF-0004Yi-FH; Sat, 15 Jun 2019 00:36:35 +0200
-Received: from [178.199.41.31] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hbuoF-000ODy-6d; Sat, 15 Jun 2019 00:36:35 +0200
-Subject: Re: [PATCH v2 bpf-next] bpf: sk_storage: Fix out of bounds memory
- access
-To:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Arthur Fabre <afabre@cloudflare.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190614093728.622-1-afabre@cloudflare.com>
- <CAEf4BzZNO8Px2BRcs5WMxfrfRaekxF=_fz_p2A+eL94L0DrfQg@mail.gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <6aaa3a2f-5da5-525f-89a1-59dddc1cfa53@iogearbox.net>
-Date:   Sat, 15 Jun 2019 00:36:34 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Fri, 14 Jun 2019 18:41:33 -0400
+Received: by mail-ed1-f67.google.com with SMTP id d4so5572808edr.13
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 15:41:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kKBlaaZ2e0R8Qmq/ym3o296XdTEZmGz+dmrLAMFTTnM=;
+        b=CPGuBSov5EtyIvw2ZTZfpLXH+m7nArR8FUWgvlBePXdjMMPA+IllY65N5XVaJeFXGX
+         S+EacF/ActYMQZRJhhIJSfzfPop2+kZjoBgPJHcx2z7p74dlBg7IqjzTZHOH9FY6/FML
+         ANudxrhtB9aceq/ZfOdQyRFEixvnwgQkUXUiC7Etp+RfnHnVOMi2aXkzm1Sb6OiKEhpk
+         /5FhyQKkpk+Sf0MdmVKR3Ybqhj011xuJYbjEXw5yYkJ2a1UmUhyXcG5zJOlWCYCvWUfA
+         nRLArs2z6tB3k5oWgjh6c060atJzsvPn8rYXaHW2T2LLR+ioz03Ty/SSN2uIo8CUCZAH
+         qyZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kKBlaaZ2e0R8Qmq/ym3o296XdTEZmGz+dmrLAMFTTnM=;
+        b=gM325RlGzAawwaDHtjxyvu08ZfhS0vsp9cQrI9OHdum6trRsHF5x4QvxrS+RzPbwh5
+         703+hb4mtUHCO44IVYEOJmu6HAB3FvhIh6/NU0Dx993KpoqALCcZbt8oT/esDMzvRHRu
+         2KWAb0FbqNTJFuHcpmtx39Wpr8gMKIujw1oTylZzK6bl45UAgl/Zyp+RqdrIRtla/mG3
+         Ka1gCHmN5SyNN3UlwuaX94otkXJ5kORUIpfAK1Ii7ZUFlq/TB+ay3+aWaeUsK3p8xYtQ
+         14ookxE2C6Eq+B8iv7egWXhDJaaHaUYWnjMfLquHHdE6THDFHAtxwimkIJn8lwCe9+ue
+         Wqdg==
+X-Gm-Message-State: APjAAAXHGe/yRpj7tlQRZQxX6B8ySapPdElXY6Ul7BwJbenHZbt6jTw/
+        l5S50FTIf8CUEtrm37kEbWbtBA==
+X-Google-Smtp-Source: APXvYqzGx/+9/zTI71X2KsJYZP9s0HxE5l2n9lbx9/IlAC6AFkQjQN9+Z7eAaIEasZDypTRFQX080A==
+X-Received: by 2002:a50:f4d8:: with SMTP id v24mr3644568edm.166.1560552091661;
+        Fri, 14 Jun 2019 15:41:31 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id i16sm845646ejc.16.2019.06.14.15.41.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 15:41:30 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id 453FB1032BB; Sat, 15 Jun 2019 01:41:31 +0300 (+03)
+Date:   Sat, 15 Jun 2019 01:41:31 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free
+ encrypted pages
+Message-ID: <20190614224131.q2gjai32la4zb42p@box>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
+ <20190614093409.GX3436@hirez.programming.kicks-ass.net>
+ <20190614110458.GN3463@hirez.programming.kicks-ass.net>
+ <20190614132836.spl6bmk2kkx65nfr@box>
+ <20190614134335.GU3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <CAEf4BzZNO8Px2BRcs5WMxfrfRaekxF=_fz_p2A+eL94L0DrfQg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25480/Fri Jun 14 10:12:45 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614134335.GU3436@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/15/2019 12:31 AM, Andrii Nakryiko wrote:
-> On Fri, Jun 14, 2019 at 2:45 AM Arthur Fabre <afabre@cloudflare.com> wrote:
->>
->> bpf_sk_storage maps use multiple spin locks to reduce contention.
->> The number of locks to use is determined by the number of possible CPUs.
->> With only 1 possible CPU, bucket_log == 0, and 2^0 = 1 locks are used.
->>
->> When updating elements, the correct lock is determined with hash_ptr().
->> Calling hash_ptr() with 0 bits is undefined behavior, as it does:
->>
->> x >> (64 - bits)
->>
->> Using the value results in an out of bounds memory access.
->> In my case, this manifested itself as a page fault when raw_spin_lock_bh()
->> is called later, when running the self tests:
->>
->> ./tools/testing/selftests/bpf/test_verifier 773 775
->>
->> [   16.366342] BUG: unable to handle page fault for address: ffff8fe7a66f93f8
->> [   16.367139] #PF: supervisor write access in kernel mode
->> [   16.367751] #PF: error_code(0x0002) - not-present page
->> [   16.368323] PGD 35a01067 P4D 35a01067 PUD 0
->> [   16.368796] Oops: 0002 [#1] SMP PTI
->> [   16.369175] CPU: 0 PID: 189 Comm: test_verifier Not tainted 5.2.0-rc2+ #10
->> [   16.369960] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-1 04/01/2014
->> [   16.371021] RIP: 0010:_raw_spin_lock_bh (/home/afabre/linux/./include/trace/events/initcall.h:48)
->> [ 16.371571] Code: 02 00 00 31 c0 ba ff 00 00 00 3e 0f b1 17 75 01 c3 e9 82 12 5f ff 66 90 65 81 05 ad 14 6f 41 00 02 00 00 31 c0 ba 01 00 00 00 <3e> 0f b1 17 75 01 c3 89 c6 e9 f0 02 5f ff b8 00 02 00 00 3e 0f c1
->> All code
->> ========
->>    0:   02 00                   add    (%rax),%al
->>    2:   00 31                   add    %dh,(%rcx)
->>    4:   c0 ba ff 00 00 00 3e    sarb   $0x3e,0xff(%rdx)
->>    b:   0f b1 17                cmpxchg %edx,(%rdi)
->>    e:   75 01                   jne    0x11
->>   10:   c3                      retq
->>   11:   e9 82 12 5f ff          jmpq   0xffffffffff5f1298
->>   16:   66 90                   xchg   %ax,%ax
->>   18:   65 81 05 ad 14 6f 41    addl   $0x200,%gs:0x416f14ad(%rip)        # 0x416f14d0
->>   1f:   00 02 00 00
->>   23:   31 c0                   xor    %eax,%eax
->>   25:   ba 01 00 00 00          mov    $0x1,%edx
->>   2a:   3e 0f b1 17             cmpxchg %edx,%ds:*(%rdi)                <-- trapping instruction
->>   2e:   75 01                   jne    0x31
->>   30:   c3                      retq
->>   31:   89 c6                   mov    %eax,%esi
->>   33:   e9 f0 02 5f ff          jmpq   0xffffffffff5f0328
->>   38:   b8 00 02 00 00          mov    $0x200,%eax
->>   3d:   3e                      ds
->>   3e:   0f                      .byte 0xf
->>   3f:   c1                      .byte 0xc1
->>
->> Code starting with the faulting instruction
->> ===========================================
->>    0:   3e 0f b1 17             cmpxchg %edx,%ds:(%rdi)
->>    4:   75 01                   jne    0x7
->>    6:   c3                      retq
->>    7:   89 c6                   mov    %eax,%esi
->>    9:   e9 f0 02 5f ff          jmpq   0xffffffffff5f02fe
->>    e:   b8 00 02 00 00          mov    $0x200,%eax
->>   13:   3e                      ds
->>   14:   0f                      .byte 0xf
->>   15:   c1                      .byte 0xc1
->> [   16.373398] RSP: 0018:ffffa759809d3be0 EFLAGS: 00010246
->> [   16.373954] RAX: 0000000000000000 RBX: ffff8fe7a66f93f0 RCX: 0000000000000040
->> [   16.374645] RDX: 0000000000000001 RSI: ffff8fdaf9f0d180 RDI: ffff8fe7a66f93f8
->> [   16.375338] RBP: ffff8fdaf9f0d180 R08: ffff8fdafba2c320 R09: ffff8fdaf9f0d0c0
->> [   16.376028] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8fdafa346700
->> [   16.376719] R13: ffff8fe7a66f93f8 R14: ffff8fdaf9f0d0c0 R15: 0000000000000001
->> [   16.377413] FS:  00007fda724c0740(0000) GS:ffff8fdafba00000(0000) knlGS:0000000000000000
->> [   16.378204] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   16.378763] CR2: ffff8fe7a66f93f8 CR3: 0000000139d1c006 CR4: 0000000000360ef0
->> [   16.379453] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> [   16.380144] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> [   16.380864] Call Trace:
->> [   16.381112] selem_link_map (/home/afabre/linux/./include/linux/compiler.h:221 /home/afabre/linux/net/core/bpf_sk_storage.c:243)
->> [   16.381476] sk_storage_update (/home/afabre/linux/net/core/bpf_sk_storage.c:355 /home/afabre/linux/net/core/bpf_sk_storage.c:414)
->> [   16.381888] bpf_sk_storage_get (/home/afabre/linux/net/core/bpf_sk_storage.c:760 /home/afabre/linux/net/core/bpf_sk_storage.c:741)
->> [   16.382285] ___bpf_prog_run (/home/afabre/linux/kernel/bpf/core.c:1447)
->> [   16.382679] ? __bpf_prog_run32 (/home/afabre/linux/kernel/bpf/core.c:1603)
->> [   16.383074] ? alloc_file_pseudo (/home/afabre/linux/fs/file_table.c:232)
->> [   16.383486] ? kvm_clock_get_cycles (/home/afabre/linux/arch/x86/kernel/kvmclock.c:98)
->> [   16.383906] ? ktime_get (/home/afabre/linux/kernel/time/timekeeping.c:265 /home/afabre/linux/kernel/time/timekeeping.c:369 /home/afabre/linux/kernel/time/timekeeping.c:754)
->> [   16.384243] ? bpf_test_run (/home/afabre/linux/net/bpf/test_run.c:47)
->> [   16.384613] ? bpf_prog_test_run_skb (/home/afabre/linux/net/bpf/test_run.c:313)
->> [   16.385065] ? security_capable (/home/afabre/linux/security/security.c:696 (discriminator 19))
->> [   16.385460] ? __do_sys_bpf (/home/afabre/linux/kernel/bpf/syscall.c:2072 /home/afabre/linux/kernel/bpf/syscall.c:2848)
->> [   16.385854] ? __handle_mm_fault (/home/afabre/linux/mm/memory.c:3507 /home/afabre/linux/mm/memory.c:3532 /home/afabre/linux/mm/memory.c:3666 /home/afabre/linux/mm/memory.c:3897 /home/afabre/linux/mm/memory.c:4021)
->> [   16.386273] ? __dentry_kill (/home/afabre/linux/fs/dcache.c:595)
->> [   16.386652] ? do_syscall_64 (/home/afabre/linux/arch/x86/entry/common.c:301)
->> [   16.387031] ? entry_SYSCALL_64_after_hwframe (/home/afabre/linux/./include/trace/events/initcall.h:10 /home/afabre/linux/./include/trace/events/initcall.h:10)
->> [   16.387541] Modules linked in:
->> [   16.387846] CR2: ffff8fe7a66f93f8
->> [   16.388175] ---[ end trace 891cf27b5b9c9cc6 ]---
->> [   16.388628] RIP: 0010:_raw_spin_lock_bh (/home/afabre/linux/./include/trace/events/initcall.h:48)
->> [ 16.389089] Code: 02 00 00 31 c0 ba ff 00 00 00 3e 0f b1 17 75 01 c3 e9 82 12 5f ff 66 90 65 81 05 ad 14 6f 41 00 02 00 00 31 c0 ba 01 00 00 00 <3e> 0f b1 17 75 01 c3 89 c6 e9 f0 02 5f ff b8 00 02 00 00 3e 0f c1
->> All code
->> ========
->>    0:   02 00                   add    (%rax),%al
->>    2:   00 31                   add    %dh,(%rcx)
->>    4:   c0 ba ff 00 00 00 3e    sarb   $0x3e,0xff(%rdx)
->>    b:   0f b1 17                cmpxchg %edx,(%rdi)
->>    e:   75 01                   jne    0x11
->>   10:   c3                      retq
->>   11:   e9 82 12 5f ff          jmpq   0xffffffffff5f1298
->>   16:   66 90                   xchg   %ax,%ax
->>   18:   65 81 05 ad 14 6f 41    addl   $0x200,%gs:0x416f14ad(%rip)        # 0x416f14d0
->>   1f:   00 02 00 00
->>   23:   31 c0                   xor    %eax,%eax
->>   25:   ba 01 00 00 00          mov    $0x1,%edx
->>   2a:   3e 0f b1 17             cmpxchg %edx,%ds:*(%rdi)                <-- trapping instruction
->>   2e:   75 01                   jne    0x31
->>   30:   c3                      retq
->>   31:   89 c6                   mov    %eax,%esi
->>   33:   e9 f0 02 5f ff          jmpq   0xffffffffff5f0328
->>   38:   b8 00 02 00 00          mov    $0x200,%eax
->>   3d:   3e                      ds
->>   3e:   0f                      .byte 0xf
->>   3f:   c1                      .byte 0xc1
->>
->> Code starting with the faulting instruction
->> ===========================================
->>    0:   3e 0f b1 17             cmpxchg %edx,%ds:(%rdi)
->>    4:   75 01                   jne    0x7
->>    6:   c3                      retq
->>    7:   89 c6                   mov    %eax,%esi
->>    9:   e9 f0 02 5f ff          jmpq   0xffffffffff5f02fe
->>    e:   b8 00 02 00 00          mov    $0x200,%eax
->>   13:   3e                      ds
->>   14:   0f                      .byte 0xf
->>   15:   c1                      .byte 0xc1
->> [   16.390899] RSP: 0018:ffffa759809d3be0 EFLAGS: 00010246
->> [   16.391410] RAX: 0000000000000000 RBX: ffff8fe7a66f93f0 RCX: 0000000000000040
->> [   16.392102] RDX: 0000000000000001 RSI: ffff8fdaf9f0d180 RDI: ffff8fe7a66f93f8
->> [   16.392795] RBP: ffff8fdaf9f0d180 R08: ffff8fdafba2c320 R09: ffff8fdaf9f0d0c0
->> [   16.393481] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8fdafa346700
->> [   16.394169] R13: ffff8fe7a66f93f8 R14: ffff8fdaf9f0d0c0 R15: 0000000000000001
->> [   16.394870] FS:  00007fda724c0740(0000) GS:ffff8fdafba00000(0000) knlGS:0000000000000000
->> [   16.395641] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   16.396193] CR2: ffff8fe7a66f93f8 CR3: 0000000139d1c006 CR4: 0000000000360ef0
->> [   16.396876] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
->> [   16.397557] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
->> [   16.398246] Kernel panic - not syncing: Fatal exception in interrupt
->> [   16.399067] Kernel Offset: 0x3ce00000 from 0xffffffff81000000 (relocation range: 0xffffffff80000000-0xffffffffbfffffff)
->> [   16.400098] ---[ end Kernel panic - not syncing: Fatal exception in interrupt ]---
->>
+On Fri, Jun 14, 2019 at 03:43:35PM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 14, 2019 at 04:28:36PM +0300, Kirill A. Shutemov wrote:
+> > On Fri, Jun 14, 2019 at 01:04:58PM +0200, Peter Zijlstra wrote:
+> > > On Fri, Jun 14, 2019 at 11:34:09AM +0200, Peter Zijlstra wrote:
+> > > > On Wed, May 08, 2019 at 05:43:33PM +0300, Kirill A. Shutemov wrote:
+> > > > 
+> > > > > +		lookup_page_ext(page)->keyid = keyid;
+> > > 
+> > > > > +		lookup_page_ext(page)->keyid = 0;
+> > > 
+> > > Also, perhaps paranoid; but do we want something like:
+> > > 
+> > > static inline void page_set_keyid(struct page *page, int keyid)
+> > > {
+> > > 	/* ensure nothing creeps after changing the keyid */
+> > > 	barrier();
+> > > 	WRITE_ONCE(lookup_page_ext(page)->keyid, keyid);
+> > > 	barrier();
+> > > 	/* ensure nothing creeps before changing the keyid */
+> > > }
+> > > 
+> > > And this is very much assuming there is no concurrency through the
+> > > allocator locks.
+> > 
+> > There's no concurrency for this page: it has been off the free list, but
+> > have not yet passed on to user. Nobody else sees the page before
+> > allocation is finished.
+> > 
+> > And barriers/WRITE_ONCE() looks excessive to me. It's just yet another bit
+> > of page's metadata and I don't see why it's has to be handled in a special
+> > way.
+> > 
+> > Does it relax your paranoia? :P
 > 
-> I think the bug is pretty clear without this detailed example, I'd
-> remove it from commit message.
+> Not really, it all 'works' because clflush_cache_range() includes mb()
+> and page_address() has an address dependency on the store, and there are
+> no other sites that will ever change 'keyid', which is all kind of
+> fragile.
+
+Hm. I don't follow how the mb() in clflush_cache_range() relevant...
+
+Any following access of page's memory by kernel will go through
+page_keyid() and therefore I believe there's always address dependency on
+the store.
+
+Am I missing something?
+
+> At the very least that should be explicitly called out in a comment.
 > 
->> Force the minimum number of locks to two.
->>
->> Signed-off-by: Arthur Fabre <afabre@cloudflare.com>
->> Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
 
-The offending commit is already in Linus tree hence if so bpf tree. Arthur, please
-elaborate why bpf-next is targeted specifically here?
-
-Thanks,
-Daniel
+-- 
+ Kirill A. Shutemov
