@@ -2,140 +2,102 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BFDC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:02:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C060C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FF921537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:02:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEED12168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:02:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560520964;
+	bh=yuQRJdK0c0k8QDLCPmaaUBPA4Gh5iMSc87ydddzUjLY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I2N7HGhnUEkO5rDP2Wqcgx6oLAGIzLIShFhKcvtlgQUTaCUpXwBmotzsVKqCEG/um
+	 2Ajin2TpzWxanuVVbRY2nw3PCc3UxTnGkySppsF9H8CUKHvY5Nok8orJ9qeINZoWA0
+	 o4BWBhqMm7J+Ydug2HhZg06zGw/lE4NRaSPPfxZQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfFNOCV (ORCPT
+        id S1728748AbfFNOCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:02:21 -0400
-Received: from foss.arm.com ([217.140.110.172]:34692 "EHLO foss.arm.com"
+        Fri, 14 Jun 2019 10:02:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50708 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728034AbfFNOCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:02:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 59C9728;
-        Fri, 14 Jun 2019 07:02:20 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C8EFF3F718;
-        Fri, 14 Jun 2019 07:02:17 -0700 (PDT)
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
- conflict in rk3399.dtsi
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Heiko Stuebner <heiko@sntech.de>
-Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
-        manivannan.sadhasivam@linaro.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>, dianders@chromium.org
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
- <5188064.YWmxIpmbGp@phil> <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
-Date:   Fri, 14 Jun 2019 15:02:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728034AbfFNOCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:02:42 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F10F42064A;
+        Fri, 14 Jun 2019 14:02:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560520961;
+        bh=yuQRJdK0c0k8QDLCPmaaUBPA4Gh5iMSc87ydddzUjLY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Adj/ubhVrddpf3XNZqH7bla3F/OQLtlWktGpnu78fRXaEWJVclE8EAVB7iVcwuXIj
+         MgEu3GKKHjwm4kv6V7mrBTfmdB65iAPolSabTzDn8Y8MigqQqnxVgShMq6aUvnqaEX
+         cqT5x9DBfftx8QKc8qPay9S9idxZcSOh+UlLdp+0=
+Date:   Fri, 14 Jun 2019 16:02:39 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 12/16] staging/comedi: mark as broken
+Message-ID: <20190614140239.GA7234@kroah.com>
+References: <20190614134726.3827-1-hch@lst.de>
+ <20190614134726.3827-13-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614134726.3827-13-hch@lst.de>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/2019 14:03, Daniel Lezcano wrote:
-> On 14/06/2019 11:35, Heiko Stuebner wrote:
->> Hi Daniel,
->>
->> Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
->>> Currently the common thermal zones definitions for the rk3399 assumes
->>> multiple thermal zones are supported by the governors. This is not the
->>> case and each thermal zone has its own governor instance acting
->>> individually without collaboration with other governors.
->>>
->>> As the cooling device for the CPU and the GPU thermal zones is the
->>> same, each governors take different decisions for the same cooling
->>> device leading to conflicting instructions and an erratic behavior.
->>>
->>> As the cooling-maps is about to become an optional property, let's
->>> remove the cpu cooling device map from the GPU thermal zone.
->>>
->>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
->>> ---
->>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
->>>   1 file changed, 9 deletions(-)
->>>
->>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> index 196ac9b78076..e1357e0f60f7 100644
->>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
->>> @@ -821,15 +821,6 @@
->>>   					type = "critical";
->>>   				};
->>>   			};
->>> -
->>> -			cooling-maps {
->>> -				map0 {
->>> -					trip = <&gpu_alert0>;
->>> -					cooling-device =
->>> -						<&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
->>> -						<&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
->>> -				};
->>> -			};
->>>   		};
->>>   	};
->>
->> my knowledge of the thermal framework is not that big, but what about the
->> rk3399-devices which further detail the cooling-maps like rk3399-gru-kevin
->> and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
+On Fri, Jun 14, 2019 at 03:47:22PM +0200, Christoph Hellwig wrote:
+> comedi_buf.c abuse the DMA API in gravely broken ways, as it assumes it
+> can call virt_to_page on the result, and the just remap it as uncached
+> using vmap.  Disable the driver until this API abuse has been fixed.
 > 
-> The rk3399-gru-kevin is correct.
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/staging/comedi/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> The rk3399-nanopc-t4 is not correct because the cpu and the gpu are
-> sharing the same cooling device (the fan). There are different
-> configurations:
-> 
-> 1. The cpu cooling device for the CPU and the fan for the GPU
-> 
-> 2. Different trip points on the CPU thermal zone, eg. one to for the CPU
-> cooling device and another one for the fan.
-> 
-> There are some variant for the above. If this board is not on battery,
-> you may want to give priority to the throughput, so activate the fan
-> first and then cool down the CPU. Or if you are on battery, you may want
-> to invert the trip points.
-> 
-> In any case, it is not possible to share the same cooling device for
-> different thermal zones.
+> diff --git a/drivers/staging/comedi/Kconfig b/drivers/staging/comedi/Kconfig
+> index 049b659fa6ad..e7c021d76cfa 100644
+> --- a/drivers/staging/comedi/Kconfig
+> +++ b/drivers/staging/comedi/Kconfig
+> @@ -1,6 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+>  config COMEDI
+>  	tristate "Data acquisition support (comedi)"
+> +	depends on BROKEN
 
-OK, thanks for the clarification. I'll get my board set up again to 
-figure out the best fix for rk3399-nanopc-t4 (FWIW most users are 
-probably just using passive cooling or a plain DC fan anyway). You might 
-want to raise this issue with the maintainers of 
-arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi, since the 
-everything-shared-by-everything approach in there was what I used as a 
-reference.
+Um, that's a huge sledgehammer.
 
-Robin.
+Perhaps a hint as to how we can fix this up?  This is the first time
+I've heard of the comedi code not handling dma properly.
+
+thanks,
+
+greg k-h
