@@ -2,170 +2,138 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715B1C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD152C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E9722173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B020421721
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560521409;
+	bh=X3olSuNcAEC4oKTYoE6rwJUp6F7cA7DAFJwXvntbFZ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=IUyOHQe8e8/DV2+qdvWrcjByWd3d3V02leyscczA4HDtND52gpAvFqvkO5HB1Ra+N
+	 ckpJMY4LngPDXJ81uwu7e5vE0W0SAqHcQI9245YfgQUhL7f5sMkdyYN4ZZo2EEc8EW
+	 ATv1mLuoP/GZa4FAYkabyXoMkb5AVlnvsHh3TvpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbfFNOJv (ORCPT
+        id S1728891AbfFNOKI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:09:51 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48068 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727382AbfFNOJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:09:33 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id CF56D180660588AC652B;
-        Fri, 14 Jun 2019 22:09:29 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 14 Jun 2019 22:09:23 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
-        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
-        <namhyung@kernel.org>, <tmricht@linux.ibm.com>,
-        <brueckner@linux.ibm.com>, <kan.liang@linux.intel.com>,
-        <ben@decadent.org.uk>, <mathieu.poirier@linaro.org>,
-        <mark.rutland@arm.com>, <will.deacon@arm.com>
-CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <zhangshaokun@hisilicon.com>, "John Garry" <john.garry@huawei.com>
-Subject: [PATCH v2 3/5] perf jevents: Add support for Hisi hip08 DDRC PMU aliasing
-Date:   Fri, 14 Jun 2019 22:08:01 +0800
-Message-ID: <1560521283-73314-4-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
-In-Reply-To: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
-References: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
+        Fri, 14 Jun 2019 10:10:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54392 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727382AbfFNOKI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:10:08 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4826821721;
+        Fri, 14 Jun 2019 14:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560521406;
+        bh=X3olSuNcAEC4oKTYoE6rwJUp6F7cA7DAFJwXvntbFZ4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qZCdPdQZfEwHNfS1xlho9YTjV85ahmdys2IFn8rEms4D6V842SVLCqeSXEw3pePhD
+         g1GXkXCuZikiXJtCdZnAwpn5tgzRwjVDscNV386/YaPYhWhvFgHU0ZqQV9CAmqaPZL
+         pLUQDNGl0AWOgS1B6+W+7D9tWvNw/Fnsodc95VCs=
+Date:   Fri, 14 Jun 2019 16:10:04 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Jack Ping CHNG <jack.ping.chng@linux.intel.com>,
+        kernel-janitors@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Enrico Weigelt <lkml@metux.net>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] drivers: Provide devm_platform_ioremap_resource_byname()
+Message-ID: <20190614141004.GC7234@kroah.com>
+References: <39e46643-d799-94b7-4aa5-d6d99d738f99@web.de>
+ <20190614133840.GN9224@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190614133840.GN9224@smile.fi.intel.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Hisi hip08 DDRC PMU event aliasing. We can now do
-something like this:
+On Fri, Jun 14, 2019 at 04:38:40PM +0300, Andy Shevchenko wrote:
+> +Cc: Jack Ping, who did internally the same
+> 
+> On Fri, Jun 14, 2019 at 03:26:25PM +0200, Markus Elfring wrote:
+> > From: Markus Elfring <elfring@users.sourceforge.net>
+> > Date: Fri, 14 Jun 2019 15:15:14 +0200
+> > 
+> > The functions “platform_get_resource_byname” and “devm_ioremap_resource”
+> > are called together in 181 source files.
+> > This implementation detail can be determined also with the help
+> > of the semantic patch language (Coccinelle software).
+> > 
+> > Wrap these two calls into another helper function.
+> > Thus a local variable does not need to be declared for a resource
+> > structure pointer before and a redundant argument can be omitted
+> > for the resource type.
+> 
+> This one makes sense.
+> Though I'm not sure Greg will see your message.
 
-$perf list
+Nope, didn't see it, don't want to see it, it will only cause more work
+in the longrun...
 
-[snip]
+> Rafael, maybe you can apply this one?
 
-uncore ddrc:
-  uncore_hisi_ddrc.act_cmd
-       [DDRC active commands. Unit: hisi_sccl,ddrc]
-  uncore_hisi_ddrc.flux_rcmd
-       [DDRC read commands. Unit: hisi_sccl,ddrc]
-  uncore_hisi_ddrc.flux_wcmd
-       [DDRC write commands. Unit: hisi_sccl,ddrc]
-  uncore_hisi_ddrc.flux_wr
-       [DDRC precharge commands. Unit: hisi_sccl,ddrc]
-  uncore_hisi_ddrc.rnk_chg
-       [DDRC rank commands. Unit: hisi_sccl,ddrc]
-  uncore_hisi_ddrc.rw_chg
-       [DDRC read and write changes. Unit: hisi_sccl,ddrc]
+Um, don't go around maintainers please, that's rude.  There is a reason
+this specific developer is in my blacklist, and perhaps they should be
+in yours as well :)
 
-$sudo ./perf stat -e uncore_hisi_ddrc.flux_rcmd --no-merge sleep 1
+> FWIW,
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> 
+> > 
+> > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> > ---
+> >  drivers/base/platform.c | 18 ++++++++++++++++++
+> >  1 file changed, 18 insertions(+)
+> > 
+> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > index 4d1729853d1a..c1f19a479dd7 100644
+> > --- a/drivers/base/platform.c
+> > +++ b/drivers/base/platform.c
+> > @@ -97,6 +97,24 @@ void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+> >  	return devm_ioremap_resource(&pdev->dev, res);
+> >  }
+> >  EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
+> > +
+> > +/**
+> > + * devm_platform_ioremap_resource_byname
+> > + * Call devm_ioremap_resource() for a platform device
+> > + *
+> > + * @pdev: platform device to use both for memory resource lookup as well as
+> > + *        resource management
+> > + * @name: resource name
+> > + */
+> > +void __iomem *devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+> > +						    const char *name)
+> > +{
+> > +	struct resource *res;
+> > +
+> > +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> > +	return devm_ioremap_resource(&pdev->dev, res);
+> > +}
+> > +EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
+> >  #endif /* CONFIG_HAS_IOMEM */
 
-Performance counter stats for 'system wide':
+I don't like adding new apis with no user.
 
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl1_ddrc0]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl3_ddrc1]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl5_ddrc2]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl7_ddrc3]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl5_ddrc0]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl7_ddrc1]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl1_ddrc3]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl1_ddrc1]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl3_ddrc2]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl5_ddrc3]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl3_ddrc0]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl5_ddrc1]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl7_ddrc2]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl7_ddrc0]
-            20,421      uncore_hisi_ddrc.flux_rcmd [hisi_sccl1_ddrc2]
-                 0      uncore_hisi_ddrc.flux_rcmd [hisi_sccl3_ddrc3]
+thanks,
 
-       1.001559011 seconds time elapsed
-
-
-The kernel driver is in drivers/perf/hisilicon/hisi_uncore_ddrc_pmu.c
-
-Signed-off-by: John Garry <john.garry@huawei.com>
----
- .../arm64/hisilicon/hip08/uncore-ddrc.json    | 44 +++++++++++++++++++
- tools/perf/pmu-events/jevents.c               |  1 +
- 2 files changed, 45 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
-
-diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
-new file mode 100644
-index 000000000000..0d1556fcdffe
---- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-ddrc.json
-@@ -0,0 +1,44 @@
-+[
-+   {
-+	    "EventCode": "0x02",
-+	    "EventName": "uncore_hisi_ddrc.flux_wcmd",
-+	    "BriefDescription": "DDRC write commands",
-+	    "PublicDescription": "DDRC write commands",
-+	    "Unit": "hisi_sccl,ddrc",
-+   },
-+   {
-+	    "EventCode": "0x03",
-+	    "EventName": "uncore_hisi_ddrc.flux_rcmd",
-+	    "BriefDescription": "DDRC read commands",
-+	    "PublicDescription": "DDRC read commands",
-+	    "Unit": "hisi_sccl,ddrc",
-+   },
-+   {
-+	    "EventCode": "0x04",
-+	    "EventName": "uncore_hisi_ddrc.flux_wr",
-+	    "BriefDescription": "DDRC precharge commands",
-+	    "PublicDescription": "DDRC precharge commands",
-+	    "Unit": "hisi_sccl,ddrc",
-+   },
-+   {
-+	    "EventCode": "0x05",
-+	    "EventName": "uncore_hisi_ddrc.act_cmd",
-+	    "BriefDescription": "DDRC active commands",
-+	    "PublicDescription": "DDRC active commands",
-+	    "Unit": "hisi_sccl,ddrc",
-+   },
-+   {
-+	    "EventCode": "0x06",
-+	    "EventName": "uncore_hisi_ddrc.rnk_chg",
-+	    "BriefDescription": "DDRC rank commands",
-+	    "PublicDescription": "DDRC rank commands",
-+	    "Unit": "hisi_sccl,ddrc",
-+   },
-+   {
-+	    "EventCode": "0x07",
-+	    "EventName": "uncore_hisi_ddrc.rw_chg",
-+	    "BriefDescription": "DDRC read and write changes",
-+	    "PublicDescription": "DDRC read and write changes",
-+	    "Unit": "hisi_sccl,ddrc",
-+   },
-+]
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 58f77fd0f59f..cf9a60333554 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -236,6 +236,7 @@ static struct map {
- 	{ "CPU-M-CF", "cpum_cf" },
- 	{ "CPU-M-SF", "cpum_sf" },
- 	{ "UPI LL", "uncore_upi" },
-+	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
- 	{}
- };
- 
--- 
-2.17.1
-
+greg k-h
