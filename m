@@ -2,61 +2,61 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D020FC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0260CC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:03:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0402133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEA522168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MSjB8VBk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ImPTz3XJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726296AbfFNIDe (ORCPT
+        id S1726393AbfFNIDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:03:34 -0400
-Received: from mail-pl1-f175.google.com ([209.85.214.175]:40389 "EHLO
-        mail-pl1-f175.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725823AbfFNIDd (ORCPT
+        Fri, 14 Jun 2019 04:03:37 -0400
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:41854 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725823AbfFNIDe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:03:33 -0400
-Received: by mail-pl1-f175.google.com with SMTP id a93so680596pla.7;
-        Fri, 14 Jun 2019 01:03:33 -0700 (PDT)
+        Fri, 14 Jun 2019 04:03:34 -0400
+Received: by mail-pl1-f178.google.com with SMTP id s24so680548plr.8;
+        Fri, 14 Jun 2019 01:03:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6Dwoarg07buvoXDBogOPDr/1lMa/FxCfxF94USEO5EU=;
-        b=MSjB8VBkeI9/g3SBJjYAP7aZlyNM+5szuiBETq0+ZePQFT8IWv7FqTdhiIC0XnXKVs
-         WCZRES11iSwCVRqiaVGEvRNdpHqDiJaOSSA/Antui/+UmYGyci4C9RfkI0lh87kMr+ap
-         X2ULLxjfqlVItx9BP6zTPBL7UIdplOiJdnu6PEXApewUV1Uvr/q+MO5eFOuj9CPg0ny7
-         JRQ7nbhz7Bz2oTZJL/oOED6qJu+mOwwKsxjk3OGsUgbBlaZ2UcIsQi8MTTljyhLLJutZ
-         TnIUWZbfH7rSAzEm4Kir75Ufq4AyeTjP5jU5+G5P0ylcnDLtEUzZRWW10nGdVuT+4DW6
-         dYXA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=xB93p51LoWFDyQP6GRTibbBaNfliN1OIfftKtAHaj1c=;
+        b=ImPTz3XJKn6/xYqThv+m8LLGxrSkgJBJy3RnJfixNCUgZBb7Q0vl7Hz2EbfbZKC9s5
+         bJS8CeLzQBd87BZpaN+d8jWr6wPtybATrqi/d+LqTATCxj4VdwEUf+vZ3bGsXXJJyZnt
+         cbCN0E1VNQAxEI0ZxoKIo7BQOO2AU9pnEIh0d6IFnC5nFAnA8oeE3h6eFz9Y05Rpw+BK
+         HQKMP4ScLNxNui9S/BRKXqInF6NClVA62c6zzinjUx/T1rmi9kQ6aMr/4akySf0ZM9zk
+         ZKEl4IKQjMTz9O85F+r4ASQN5taK98CpIIrn9zArXR3Bp5FeMedudWDNY1XX9mntRozJ
+         tKug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6Dwoarg07buvoXDBogOPDr/1lMa/FxCfxF94USEO5EU=;
-        b=P4k23n3HasAZ1J7aNuGHwXUqp2N4gtTd8KgkxYpLzAck6ohOocdB793Gfdrup9F3Jn
-         B7XDk1JiwbqvZB+YfIiSJ8Idua9QHQDk9NtsQjWa7CuSOWoQjFHBhsuAU6hB5p6NqLBX
-         fFy05pbVKwZJPxz6FX8P1VpVEJnW/X8pIBomgCMrffU0hxaTqy0e9AuPFBySNHgqbTMI
-         MZhs6XEfkRc1zDa1/+F9XyzdZetQ07EGri6IMlkuy2DDGo/V19LqfGW1MOY/k3sDiV+S
-         9fePGJvB3MqhIoIf8JE7oOYhBLbp1f2PcWUZoQIni25Nnuzktqi4/AN0M+MLlqhuBPYv
-         81dQ==
-X-Gm-Message-State: APjAAAV8hdusZvhD8hG2V0fsNCAsGOETNVY0t7QDebpOsHRBTyoZR3C9
-        UocmsQHrRxzZ3V3DO7sr5fjD3dAScm4=
-X-Google-Smtp-Source: APXvYqxAkhniTFU+H+COqDPon6A1GCEmBxDe1nX4uRTBYtuPOzr9N4p+tCibndQXjrXrMpz3/M5WeA==
-X-Received: by 2002:a17:902:165:: with SMTP id 92mr64931296plb.197.1560499412491;
-        Fri, 14 Jun 2019 01:03:32 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=xB93p51LoWFDyQP6GRTibbBaNfliN1OIfftKtAHaj1c=;
+        b=QIbmp/emS1a0v703wX9m7CJW1z/TspV3WCP4orZH//lGCCV7HDKMVTNPjdUnYnNpsl
+         w5kq20n/bI8KCdr7moZO8d0usVWywLfW78UbtplkFWhgrGppXUnwl5zW9Juxxjk5nb98
+         Eoc/eY+TYhsjQvIi39tD2O9fFc56pVYXtzXC+CLaIEr+aFAUfQN1s/Tm4jRdbM2Kq13v
+         BWYBWYLqBOOVZ6UQ9oTYGwXcQTC5ss8eeXICW7I5wF6fqTQ30w2vSJowjz1zZh0X52eZ
+         YoooL4+mVUkQ/cdXx8gENh1bbBUH+9ceKNFtrQlqXRc/pT7wyLknITfxNb8cryW02E1B
+         q6zQ==
+X-Gm-Message-State: APjAAAUn7TWAKI16n8/n7oxMYbgf1R36hjy6LV0/PpSt1Y6oRdnq0mme
+        NbRE5KscpAztKZuOEewlIkY=
+X-Google-Smtp-Source: APXvYqy6uVhaBGp/EYpOb7nyjOKx2rYmVb6ZbXx3HMat3Hf5iBYw48paro/t8wRJJY8JoBx2IX2aiw==
+X-Received: by 2002:a17:902:108a:: with SMTP id c10mr90187111pla.48.1560499413873;
+        Fri, 14 Jun 2019 01:03:33 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id c10sm1718237pjq.14.2019.06.14.01.03.30
+        by smtp.gmail.com with ESMTPSA id c10sm1718237pjq.14.2019.06.14.01.03.32
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 01:03:31 -0700 (PDT)
+        Fri, 14 Jun 2019 01:03:33 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -67,10 +67,12 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Bob Langer <Bob.Langer@zii.aero>,
         Liang Pan <Liang.Pan@zii.aero>, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org
-Subject: [PATCH 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
-Date:   Fri, 14 Jun 2019 01:03:16 -0700
-Message-Id: <20190614080317.16850-1-andrew.smirnov@gmail.com>
+Subject: [PATCH 2/2] dt-bindings: arm: fsl: Add support for ZII i.MX7 RMU2 board
+Date:   Fri, 14 Jun 2019 01:03:17 -0700
+Message-Id: <20190614080317.16850-2-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190614080317.16850-1-andrew.smirnov@gmail.com>
+References: <20190614080317.16850-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,7 +80,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
+Add support for ZII i.MX7 RMU2 board.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Cc: Shawn Guo <shawnguo@kernel.org>
@@ -92,387 +94,21 @@ Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 ---
- arch/arm/boot/dts/Makefile           |   1 +
- arch/arm/boot/dts/imx7d-zii-rmu2.dts | 358 +++++++++++++++++++++++++++
- 2 files changed, 359 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx7d-zii-rmu2.dts
+ Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 5559028b770e..516e2912236d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -593,6 +593,7 @@ dtb-$(CONFIG_SOC_IMX7D) += \
- 	imx7d-sdb.dtb \
- 	imx7d-sdb-reva.dtb \
- 	imx7d-sdb-sht11.dtb \
-+	imx7d-zii-rmu2.dtb \
- 	imx7d-zii-rpu2.dtb \
- 	imx7s-colibri-eval-v3.dtb \
- 	imx7s-mba7.dtb \
-diff --git a/arch/arm/boot/dts/imx7d-zii-rmu2.dts b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-new file mode 100644
-index 000000000000..10fdafe5e0e4
---- /dev/null
-+++ b/arch/arm/boot/dts/imx7d-zii-rmu2.dts
-@@ -0,0 +1,358 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Device tree file for ZII's RMU2 board
-+ *
-+ * RMU - Remote Modem Unit
-+ *
-+ * Copyright (C) 2019 Zodiac Inflight Innovations
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/thermal/thermal.h>
-+#include "imx7d.dtsi"
-+
-+/ {
-+	model = "ZII RMU2 Board";
-+	compatible = "zii,imx7d-rmu2", "fsl,imx7d";
-+
-+	chosen {
-+		stdout-path = &uart2;
-+	};
-+
-+	gpio-leds {
-+		compatible = "gpio-leds";
-+		pinctrl-0 = <&pinctrl_leds_debug>;
-+		pinctrl-names = "default";
-+
-+		debug {
-+			label = "zii:green:debug1";
-+			gpios = <&gpio2 8 GPIO_ACTIVE_HIGH>;
-+			linux,default-trigger = "heartbeat";
-+		};
-+	};
-+};
-+
-+&cpu0 {
-+	arm-supply = <&sw1a_reg>;
-+};
-+
-+&ecspi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_ecspi1>;
-+	cs-gpios = <&gpio4 19 GPIO_ACTIVE_HIGH>;
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "jedec,spi-nor";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_enet1>;
-+	assigned-clocks = <&clks IMX7D_ENET1_TIME_ROOT_SRC>,
-+			  <&clks IMX7D_ENET1_TIME_ROOT_CLK>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_ENET_MAIN_100M_CLK>;
-+	assigned-clock-rates = <0>, <100000000>;
-+	phy-mode = "rgmii";
-+	phy-handle = <&fec1_phy>;
-+	status = "okay";
-+
-+	mdio {
-+		fec1_phy: phy@0 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_enet1_phy_reset>,
-+				    <&pinctrl_enet1_phy_interrupt>;
-+			reg = <0>;
-+			interrupt-parent = <&gpio1>;
-+			interrupts = <2 IRQ_TYPE_LEVEL_LOW>;
-+			reset-gpio = <&gpio5 11 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	pmic: pmic@8 {
-+		compatible = "fsl,pfuze3000";
-+		reg = <0x08>;
-+
-+		regulators {
-+			sw1a_reg: sw1a {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw1c_reg: sw1b {
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1475000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <6250>;
-+			};
-+
-+			sw2_reg: sw2 {
-+				regulator-min-microvolt = <1500000>;
-+				regulator-max-microvolt = <1850000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			sw3a_reg: sw3 {
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1650000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			swbst_reg: swbst {
-+				regulator-min-microvolt = <5000000>;
-+				regulator-max-microvolt = <5150000>;
-+			};
-+
-+			snvs_reg: vsnvs {
-+				regulator-min-microvolt = <1000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vref_reg: vrefddr {
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			vgen1_reg: vldo1 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen2_reg: vldo2 {
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1550000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen3_reg: vccsd {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen4_reg: v33 {
-+				regulator-min-microvolt = <2850000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen5_reg: vldo3 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vgen6_reg: vldo4 {
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c04";
-+		reg = <0x50>;
-+	};
-+
-+	eeprom@52 {
-+		compatible = "atmel,24c04";
-+		reg = <0x52>;
-+	};
-+};
-+
-+&uart2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart2>;
-+	assigned-clocks = <&clks IMX7D_UART2_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_OSC_24M_CLK>;
-+	status = "okay";
-+};
-+
-+&uart4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart4>;
-+	assigned-clocks = <&clks IMX7D_UART4_ROOT_SRC>;
-+	assigned-clock-parents = <&clks IMX7D_PLL_SYS_MAIN_240M_CLK>;
-+	status = "okay";
-+
-+	rave-sp {
-+		compatible = "zii,rave-sp-rdu2";
-+		current-speed = <1000000>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		watchdog {
-+			compatible = "zii,rave-sp-watchdog";
-+		};
-+
-+		eeprom@a3 {
-+			compatible = "zii,rave-sp-eeprom";
-+			reg = <0xa3 0x4000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			zii,eeprom-name = "main-eeprom";
-+		};
-+	};
-+};
-+
-+&usbotg2 {
-+	dr_mode = "host";
-+	disable-over-current;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	bus-width = <4>;
-+	no-1-8-v;
-+	no-sdio;
-+	keep-power-in-suspend;
-+	status = "okay";
-+};
-+
-+&usdhc3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_usdhc3>;
-+	bus-width = <8>;
-+	no-1-8-v;
-+	non-removable;
-+	no-sdio;
-+	no-sd;
-+	keep-power-in-suspend;
-+	status = "okay";
-+};
-+
-+&wdog1 {
-+	status = "disabled";
-+};
-+
-+&snvs_rtc {
-+	status = "disabled";
-+};
-+
-+&snvs_pwrkey {
-+	status = "disabled";
-+};
-+
-+&iomuxc {
-+	pinctrl_ecspi1: ecspi1grp {
-+		fsl,pins = <
-+			MX7D_PAD_ECSPI1_SCLK__ECSPI1_SCLK	0x2
-+			MX7D_PAD_ECSPI1_MOSI__ECSPI1_MOSI	0x2
-+			MX7D_PAD_ECSPI1_MISO__ECSPI1_MISO	0x2
-+			MX7D_PAD_ECSPI1_SS0__GPIO4_IO19         0x59
-+		>;
-+	};
-+
-+	pinctrl_enet1: enet1grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD2_CD_B__ENET1_MDIO				0x3
-+			MX7D_PAD_SD2_WP__ENET1_MDC				0x3
-+			MX7D_PAD_ENET1_RGMII_TXC__ENET1_RGMII_TXC		0x1
-+			MX7D_PAD_ENET1_RGMII_TD0__ENET1_RGMII_TD0		0x1
-+			MX7D_PAD_ENET1_RGMII_TD1__ENET1_RGMII_TD1		0x1
-+			MX7D_PAD_ENET1_RGMII_TD2__ENET1_RGMII_TD2		0x1
-+			MX7D_PAD_ENET1_RGMII_TD3__ENET1_RGMII_TD3		0x1
-+			MX7D_PAD_ENET1_RGMII_TX_CTL__ENET1_RGMII_TX_CTL		0x1
-+			MX7D_PAD_ENET1_RGMII_RXC__ENET1_RGMII_RXC		0x1
-+			MX7D_PAD_ENET1_RGMII_RD0__ENET1_RGMII_RD0		0x1
-+			MX7D_PAD_ENET1_RGMII_RD1__ENET1_RGMII_RD1		0x1
-+			MX7D_PAD_ENET1_RGMII_RD2__ENET1_RGMII_RD2		0x1
-+			MX7D_PAD_ENET1_RGMII_RD3__ENET1_RGMII_RD3		0x1
-+			MX7D_PAD_ENET1_RGMII_RX_CTL__ENET1_RGMII_RX_CTL		0x1
-+		>;
-+	};
-+
-+	pinctrl_enet1_phy_reset: enet1phyresetgrp {
-+		fsl,pins = <
-+			MX7D_PAD_SD2_RESET_B__GPIO5_IO11	0x14
-+
-+		>;
-+	};
-+
-+	pinctrl_i2c1: i2c1grp {
-+		fsl,pins = <
-+			MX7D_PAD_I2C1_SDA__I2C1_SDA		0x4000007f
-+			MX7D_PAD_I2C1_SCL__I2C1_SCL		0x4000007f
-+		>;
-+	};
-+
-+	pinctrl_leds_debug: debuggrp {
-+		fsl,pins = <
-+			MX7D_PAD_EPDC_DATA08__GPIO2_IO8		0x59
-+		>;
-+	};
-+
-+
-+	pinctrl_uart2: uart2grp {
-+		fsl,pins = <
-+			MX7D_PAD_UART2_RX_DATA__UART2_DCE_RX	0x79
-+			MX7D_PAD_UART2_TX_DATA__UART2_DCE_TX	0x79
-+		>;
-+	};
-+
-+	pinctrl_uart4: uart4grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD2_DATA0__UART4_DCE_RX	0x79
-+			MX7D_PAD_SD2_DATA1__UART4_DCE_TX	0x79
-+		>;
-+	};
-+
-+	pinctrl_usdhc1: usdhc1grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD1_CMD__SD1_CMD		0x59
-+			MX7D_PAD_SD1_CLK__SD1_CLK		0x19
-+			MX7D_PAD_SD1_DATA0__SD1_DATA0		0x59
-+			MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
-+			MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
-+			MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
-+		>;
-+	};
-+
-+	pinctrl_usdhc3: usdhc3grp {
-+		fsl,pins = <
-+			MX7D_PAD_SD3_CMD__SD3_CMD		0x59
-+			MX7D_PAD_SD3_CLK__SD3_CLK		0x19
-+			MX7D_PAD_SD3_DATA0__SD3_DATA0		0x59
-+			MX7D_PAD_SD3_DATA1__SD3_DATA1		0x59
-+			MX7D_PAD_SD3_DATA2__SD3_DATA2		0x59
-+			MX7D_PAD_SD3_DATA3__SD3_DATA3		0x59
-+			MX7D_PAD_SD3_DATA4__SD3_DATA4		0x59
-+			MX7D_PAD_SD3_DATA5__SD3_DATA5		0x59
-+			MX7D_PAD_SD3_DATA6__SD3_DATA6		0x59
-+			MX7D_PAD_SD3_DATA7__SD3_DATA7		0x59
-+			MX7D_PAD_SD3_RESET_B__SD3_RESET_B	0x59
-+		>;
-+	};
-+};
-+
-+&iomuxc_lpsr {
-+	pinctrl_enet1_phy_interrupt: enet1phyinterruptgrp {
-+		fsl,phy = <
-+			MX7D_PAD_LPSR_GPIO1_IO02__GPIO1_IO2	0x08
-+		>;
-+	};
-+};
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index 407138ebc0d0..8fb4dc1d55e7 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -158,6 +158,7 @@ properties:
+               - fsl,imx7d-sdb             # i.MX7 SabreSD Board
+               - tq,imx7d-mba7             # i.MX7D TQ MBa7 with TQMa7D SoM
+               - zii,imx7d-rpu2            # ZII RPU2 Board
++              - zii,imx7d-rmu2            # ZII RMU2 Board
+           - const: fsl,imx7d
+ 
+       - description:
 -- 
 2.21.0
 
