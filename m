@@ -2,104 +2,139 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6373AC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE37C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:23:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F6B20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4349320850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:23:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="CCd8e2Op"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727568AbfFNBWv (ORCPT
+        id S1727628AbfFNBXJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 21:22:51 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36910 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfFNBWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 21:22:51 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 367303082DCE;
-        Fri, 14 Jun 2019 01:22:51 +0000 (UTC)
-Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 31F845C8B9;
-        Fri, 14 Jun 2019 01:22:50 +0000 (UTC)
-Date:   Thu, 13 Jun 2019 20:22:48 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
-Message-ID: <20190614012248.ztruzocusb2vu7bl@treble>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
- <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
+        Thu, 13 Jun 2019 21:23:09 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:18476 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfFNBXJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 21:23:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d02f6fc0000>; Thu, 13 Jun 2019 18:23:08 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 18:23:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 18:23:08 -0700
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
+ 2019 01:23:04 +0000
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+To:     Ira Weiny <ira.weiny@intel.com>, Jason Gunthorpe <jgg@mellanox.com>
+CC:     Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-19-hch@lst.de> <20190613194430.GY22062@mellanox.com>
+ <a27251ad-a152-f84d-139d-e1a3bf01c153@nvidia.com>
+ <20190613195819.GA22062@mellanox.com>
+ <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <d2b77ea1-7b27-e37d-c248-267a57441374@nvidia.com>
+Date:   Thu, 13 Jun 2019 18:23:04 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 14 Jun 2019 01:22:51 +0000 (UTC)
+In-Reply-To: <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560475388; bh=NWiGQvc0UaQg06vGlx/KBoyQY7FTb90HKZp/7cWu1+4=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=CCd8e2OpQNYk9MLkQj2SISKb1f8rHEt8owfBUnfdQ/EbQaEHFbssnQujsTCvu1hg/
+         mR8Y3/sQ0FeoXBKw8x7EwSNeP0JirtlvLprjUK1BAmudORUfLC87dyxEeAk19INas5
+         NI29MBs4mO8FUO+2r1avdCcLUMWD+OBag9RCJIoLc2O2dHRfWViTRDAYcfn3m6Wrf6
+         udfy6sC0OFEAlHI5edqKIVUfELxR84G7Dkf+roQu6aKqp3E13WZ1IqDdG/Lffgeh/e
+         nogIq4wl7uO95KxuzvD0ijZERk5Gr6SxTkWBIiWMnMYA0zmWut5Pf3opqWtrNeceNW
+         Ua0w/eL4F+pAQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 02:58:09PM -0700, Alexei Starovoitov wrote:
-> On Thu, Jun 13, 2019 at 08:21:03AM -0500, Josh Poimboeuf wrote:
-> > The BPF JIT code clobbers RBP.  This breaks frame pointer convention and
-> > thus prevents the FP unwinder from unwinding through JIT generated code.
-> > 
-> > RBP is currently used as the BPF stack frame pointer register.  The
-> > actual register used is opaque to the user, as long as it's a
-> > callee-saved register.  Change it to use R12 instead.
-> > 
-> > Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-> > Reported-by: Song Liu <songliubraving@fb.com>
-> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> > ---
-> >  arch/x86/net/bpf_jit_comp.c | 43 +++++++++++++++++++++----------------
-> >  1 file changed, 25 insertions(+), 18 deletions(-)
-> > 
-> > diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-> > index e649f977f8e1..bb1968fea50a 100644
-> > --- a/arch/x86/net/bpf_jit_comp.c
-> > +++ b/arch/x86/net/bpf_jit_comp.c
-> > @@ -100,9 +100,8 @@ static int bpf_size_to_x86_bytes(int bpf_size)
-> >  /*
-> >   * The following table maps BPF registers to x86-64 registers.
-> >   *
-> > - * x86-64 register R12 is unused, since if used as base address
-> > - * register in load/store instructions, it always needs an
-> > - * extra byte of encoding and is callee saved.
-> > + * RBP isn't used; it needs to be preserved to allow the unwinder to move
-> > + * through generated code stacks.
+On 6/13/19 5:43 PM, Ira Weiny wrote:
+> On Thu, Jun 13, 2019 at 07:58:29PM +0000, Jason Gunthorpe wrote:
+>> On Thu, Jun 13, 2019 at 12:53:02PM -0700, Ralph Campbell wrote:
+>>>
+...
+>> Hum, so the only thing this config does is short circuit here:
+>>
+>> static inline bool is_device_public_page(const struct page *page)
+>> {
+>>         return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
+>>                 IS_ENABLED(CONFIG_DEVICE_PUBLIC) &&
+>>                 is_zone_device_page(page) &&
+>>                 page->pgmap->type == MEMORY_DEVICE_PUBLIC;
+>> }
+>>
+>> Which is called all over the place.. 
 > 
-> Extra register save/restore is kinda annoying just to fix ORC.
+> <sigh>  yes but the earlier patch:
+> 
+> [PATCH 03/22] mm: remove hmm_devmem_add_resource
+> 
+> Removes the only place type is set to MEMORY_DEVICE_PUBLIC.
+> 
+> So I think it is ok.  Frankly I was wondering if we should remove the public
+> type altogether but conceptually it seems ok.  But I don't see any users of it
+> so...  should we get rid of it in the code rather than turning the config off?
+> 
+> Ira
 
-It's not just for the ORC unwinder.  It also fixes the frame pointer
-unwinder (see above commit msg).  And it's standard frame pointer
-practice to not clobber RBP.
+That seems reasonable. I recall that the hope was for those IBM Power 9
+systems to use _PUBLIC, as they have hardware-based coherent device (GPU)
+memory, and so the memory really is visible to the CPU. And the IBM team
+was thinking of taking advantage of it. But I haven't seen anything on
+that front for a while.
 
-> Also every stack access from bpf prog will be encoded via r12 and consume
-> extra byte of encoding. I really don't like this approach.
+So maybe it will get re-added as part of a future patchset to use that
+kind of memory, but yes, we should not hesitate to clean house at this
+point, and delete unused code.
 
-Do you have another callee-saved register you'd prefer to use as the
-stack pointer?
 
-> Can you teach ORC to understand JIT-ed frames instead?
-
-We could, but it would add a lot more complexity than this.  And anyway,
-the frame pointer unwinder would still be broken.
-
+thanks,
 -- 
-Josh
+John Hubbard
+NVIDIA
+
+> 
+>>
+>> So, yes, we really don't want any distro or something to turn this on
+>> until it has a use.
+>>
+>> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+>>
+>> Jason
+>> _______________________________________________
+>> Linux-nvdimm mailing list
+>> Linux-nvdimm@lists.01.org
+>> https://lists.01.org/mailman/listinfo/linux-nvdimm
