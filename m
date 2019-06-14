@@ -2,170 +2,123 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 351F8C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBE3C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:07:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03B0B21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D01221537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:07:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iTvz3kCj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJy/6Mns"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728630AbfFNOGy (ORCPT
+        id S1728800AbfFNOHL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:06:54 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:39599 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727587AbfFNOGy (ORCPT
+        Fri, 14 Jun 2019 10:07:11 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:43485 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfFNOHK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:06:54 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z23so2471263wma.4;
-        Fri, 14 Jun 2019 07:06:51 -0700 (PDT)
+        Fri, 14 Jun 2019 10:07:10 -0400
+Received: by mail-pf1-f196.google.com with SMTP id i189so1520525pfg.10;
+        Fri, 14 Jun 2019 07:07:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
+        h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=V/MEaLPGgc9Oghk+CYfvQ6apAzqXFwTknVZOHarrRvc=;
-        b=iTvz3kCj8bmt7wHvCPXwRxuUN3HtpA1Pkps5A5LzsE2ldXHLM+WihyusAxG7vaRSNn
-         8TidpXJ2yHayBtJWOwrocPL1IPz5xAhyNZa4S9K4v/Kr82KLVoEJKqeVYQwAE/sISvkh
-         Z+hjpLbOBYj/Z2ux4OULB8dbM5ToDihOg8luwNI4oDA71zW/yO/Vv9I122ZvdJ37ifMg
-         TiPopz7rkNgohF60/mfWEqoGlFb7c2ItZuBDUFO0d22Vc4ckNf4JT45nmX5HqRn1IpSB
-         rus9kTIEYQPUQSQrAAONG/ucK5XO8Dj84s348BW5OcjCFulMODwAge5PKaKuny8YpspY
-         HU+Q==
+        bh=LJg9268+LDPIRhGrkFTLGpEAlX1lCnLtO8bJQ4QN05M=;
+        b=QJy/6MnsHsECy1HYz/rqZ3HHq3OQroAc6nX9BCwm9YFf2YbvaicxGQ6bvxsH5aqSZa
+         6yEn9yuIgjL95131ax2bk6Pe0PoU3AeVPdqf2QS1c19ftcVhh5zHh1wq7wvqwGxu4MvP
+         O4s1ytatGdrM1WwgTMFFgxxyEVplOnOrE3ydAcx+o9F1Dw3n5E4uHMbJqtLK8zKEJjmY
+         42i0Umlo3Z+ig8IkvNchp8izRNDzR4Mr6YoT9wb5iO+PuscND4uR+e/Fq6S8mKsFykpB
+         bInllyf25qaS7Vgi5WvgHtvepVsxg+HmjvOEycPObi0biMGp1BsUEqhg0MSF2oaKEN8V
+         hpOw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=V/MEaLPGgc9Oghk+CYfvQ6apAzqXFwTknVZOHarrRvc=;
-        b=b5JP/s4gwLKEKmG+2O6Jq1ZELLddGi0pwH1v+rFP9DHhaLMHf7M9k7ha4iX+bMAh99
-         UgAWgFH+kZVxOwhAvQsCAGNzqpLPn96MbKRbcThXi+emwOc44u6BavuY5ItrDZXcjUNa
-         r8b+/hrR/iusqo5QzQf/fQGj1Qnu9vIS/w0K3g3DlUaKhn+RvCoyprarssvXMMsTWRzP
-         jjBdJmaRcKDLie7/1rpTQvkCQp5n6m3IkY/YtcBtErCUsxU4L+yg4N/ThXpE1UfUCdBY
-         xmAuMnL578v3tLjFOODKiJrB487zwwTd7PcdSqUSZnNVYj4Zotx7f3fMoDvNqsosqirK
-         dEdA==
-X-Gm-Message-State: APjAAAWuAAbvYHLtkMIOODVuQ4L2C0kW4nkknH/j8PLJ9M1Ru/G74+SR
-        7mgm3gDF5ZXEAK2Q9fPLxqx3cP0K
-X-Google-Smtp-Source: APXvYqwi5KtK5AY4vgqtsw2r4pNx3Ut2NHmPJnSI4jtN60zkkVO0eRAZSEZvfFnsS8ZyQhpUwInR9g==
-X-Received: by 2002:a1c:448b:: with SMTP id r133mr8520859wma.114.1560521210022;
-        Fri, 14 Jun 2019 07:06:50 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id r2sm3982202wme.30.2019.06.14.07.06.48
+        bh=LJg9268+LDPIRhGrkFTLGpEAlX1lCnLtO8bJQ4QN05M=;
+        b=rRQfi4eOIYRHtLcmGARFp/JWGvoHqxOQRTz86tUVhFb+u4Qcrg3pMLjDcYQbW33Yy7
+         ZbOA4fyGxmcFwGSTh1oLMOFUnNuIqJESZWJS80zwsiY+ojaOojy0RijuqCJO0JUTaSpE
+         jD+hjQ5RLW1n5ANg0dR0UhRMBP85kQEfmNJDd3qUC2LOKKb4FZcEzUwCUGg/ne8ANJuy
+         NUKGl7Dch5/doIInl0fpBAyk+u4eSO+jLr8xFNmSONIKnkjTnrJZZiY4xN6DQfTbuj54
+         RdE8v8j8UMtvRINRp6l6aIaiD4BPGcI3Rq0T3CTeerX5d4o/KhcEjARjvBX9t1JiayGC
+         IZLg==
+X-Gm-Message-State: APjAAAVX8iLJT+MShvgQ3lgQbOPReFpzKupXw13BNhUXCUi89dkCea6x
+        SyryCSsUjuzbTnttIVdwMH+SXWoZQ9U=
+X-Google-Smtp-Source: APXvYqzcEOiZIn73KTG+EBoUQLrcnli4yGKqfYpCbo2WD10sB9flhtjQ3YZWE5gdb0osUBpoEcTbUA==
+X-Received: by 2002:a62:1ec1:: with SMTP id e184mr8001336pfe.185.1560521229311;
+        Fri, 14 Jun 2019 07:07:09 -0700 (PDT)
+Received: from [172.27.227.167] ([216.129.126.118])
+        by smtp.googlemail.com with ESMTPSA id i3sm3418766pfo.138.2019.06.14.07.07.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 07:06:49 -0700 (PDT)
-Subject: Re: [PATCH 1/2] clocksource: tegra: Use rating when registering clock
- source
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190614104747.19712-1-thierry.reding@gmail.com>
- <8ff5d2da-907e-611c-ec82-bbe50197c2f4@gmail.com>
- <20190614132253.GE15526@ulmo>
- <3c339341-e77a-38aa-702a-1aef6c229eed@gmail.com>
- <20190614135353.GH15526@ulmo>
- <286cb0b7-1c8a-1a61-517e-1a9eee08e614@gmail.com>
-Message-ID: <fba9791a-8e73-398b-5851-689dc1d769f0@gmail.com>
-Date:   Fri, 14 Jun 2019 17:06:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 07:07:08 -0700 (PDT)
+Subject: Re: [PATCH net] mpls: fix af_mpls dependencies
+To:     Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>
+Cc:     Matteo Croce <mcroce@redhat.com>,
+        David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
+References: <20190608125019.417-1-mcroce@redhat.com>
+ <20190609.195742.739339469351067643.davem@davemloft.net>
+ <d19abcd4-799c-ac2f-ffcb-fa749d17950c@infradead.org>
+ <CAGnkfhyS15NPEO2ygkjazECULtUDkJgPk8wCYFhA9zL2+w27pg@mail.gmail.com>
+ <49b58181-90da-4ee4-cbb0-80e226d040fc@infradead.org>
+ <CAK8P3a1mwnDFeD3xnQ6bm1x8C6yX=YEccxN2jknvTbRiCfD=Bg@mail.gmail.com>
+From:   David Ahern <dsahern@gmail.com>
+Message-ID: <47f1889a-e919-e3fd-f90c-39c26cb1ccbb@gmail.com>
+Date:   Fri, 14 Jun 2019 08:07:06 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <286cb0b7-1c8a-1a61-517e-1a9eee08e614@gmail.com>
+In-Reply-To: <CAK8P3a1mwnDFeD3xnQ6bm1x8C6yX=YEccxN2jknvTbRiCfD=Bg@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.06.2019 17:02, Dmitry Osipenko пишет:
-> 14.06.2019 16:53, Thierry Reding пишет:
->> On Fri, Jun 14, 2019 at 04:29:17PM +0300, Dmitry Osipenko wrote:
->>> 14.06.2019 16:22, Thierry Reding пишет:
->>>> On Fri, Jun 14, 2019 at 03:24:07PM +0300, Dmitry Osipenko wrote:
->>>>> 14.06.2019 13:47, Thierry Reding пишет:
->>>>>> From: Thierry Reding <treding@nvidia.com>
->>>>>>
->>>>>> The rating is parameterized depending on SoC generation to make sure it
->>>>>> takes precedence on implementations where the architected timer can't be
->>>>>> used. This rating is already used for the clock event device. Use the
->>>>>> same rating for the clock source to be consistent.
->>>>>>
->>>>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
->>>>>> ---
->>>>>>  drivers/clocksource/timer-tegra.c | 2 +-
->>>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
->>>>>> index f6a8eb0d7322..e6608141cccb 100644
->>>>>> --- a/drivers/clocksource/timer-tegra.c
->>>>>> +++ b/drivers/clocksource/timer-tegra.c
->>>>>> @@ -318,7 +318,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
->>>>>>  	sched_clock_register(tegra_read_sched_clock, 32, TIMER_1MHz);
->>>>>>  
->>>>>>  	ret = clocksource_mmio_init(timer_reg_base + TIMERUS_CNTR_1US,
->>>>>> -				    "timer_us", TIMER_1MHz, 300, 32,
->>>>>> +				    "timer_us", TIMER_1MHz, rating, 32,
->>>>>>  				    clocksource_mmio_readl_up);
->>>>>>  	if (ret)
->>>>>>  		pr_err("failed to register clocksource: %d\n", ret);
->>>>>>
->>>>>
->>>>> Looks good. Although, could you please clarify whether arch-timer stops on T210 when CPU
->>>>> enters deepest (powerdown) idle state? I'm starting to lose track a bit already. Because
->>>>> if arch-timer stops in the deepest idle state, then it's a bit odd that Joseph didn't add
->>>>> the clocksource for T210 in the first place and v5.1 probably shouldn't work well because
->>>>> of that already.
->>>>
->>>> Yes, the architected timer doesn't work across an SC7 (which is what the
->>>> deepest idle state is called on Tegra210) transition, hence why we can't
->>>> use it as a suspend clocksource. I actually sent out a patch to do that,
->>>> earlier.
->>>>
->>>> And yes, it's entirely possible that v5.1 doesn't work in this regard,
->>>> but we're not noticing that because we don't have suspend/resume support
->>>> for Tegra210 anyway. There are a couple of missing pieces that we need
->>>> in order to make it work.
->>>>
->>>> This change in particular is only going to affect the CPU idle state
->>>> (CC7). Since the architected timer doesn't survive that either, we need
->>>> the Tegra timer to be preferred over the architected timer for normal
->>>> operation.
->>>>
->>>> All of these issues go away on Tegra186 and later, where the architected
->>>> timer is in an always-on partition and has a PLL that remains on during
->>>> SC7 (and CC7).
->>>
->>> Thank you very much for the clarification. But then what about the
->>> sched_clock? I suppose sched_clock will suffer on T210 as well and it's
->>> a bit trickier case because apparently arch-timer always wins since it
->>> has a higher precision. I guess the best solution will be to just bail
->>> out from arch-timer's driver probe in a case of T210.
->>>
->>> if (of_machine_is_compatible("nvidia,tegra210"))
->>> 	return 0.
+On 6/14/19 8:01 AM, Arnd Bergmann wrote:
+> On Wed, Jun 12, 2019 at 9:41 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>> On 6/11/19 5:08 PM, Matteo Croce wrote:
+>>> On Wed, Jun 12, 2019 at 1:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
+>>> * Configure standard kernel features (expert users)
+>>> *
+>>> Configure standard kernel features (expert users) (EXPERT) [Y/?] y
+>>>   Multiple users, groups and capabilities support (MULTIUSER) [Y/n/?] y
+>>>   sgetmask/ssetmask syscalls support (SGETMASK_SYSCALL) [N/y/?] n
+>>>   Sysfs syscall support (SYSFS_SYSCALL) [N/y/?] n
+>>>   Sysctl syscall support (SYSCTL_SYSCALL) [N/y/?] (NEW)
 >>
->> I don't think there's any issue with the scheduler clock on Tegra210.
->> Before the CPU can be turned off, all tasks scheduled on that CPU have
->> to be migrated to another CPU, right? Conversely, before any tasks can
->> be scheduled on a CPU that CPU needs to be brought online, at which
->> point the architected timer should work fine again.
+>> So I still say that MPLS_ROUTING should depend on PROC_SYSCTL,
+>> not select it.
 > 
-> Is SC7 a CPU-idle state that cpuidle driver may enter or it's a
-> system-wide suspend state? It's still not clear to me.
+> It clearly shouldn't select PROC_SYSCTL, but I think it should not
+> have a 'depends on' statement either. I think the correct fix for the
+> original problem would have been something like
+> 
+> --- a/net/mpls/af_mpls.c
+> +++ b/net/mpls/af_mpls.c
+> @@ -2659,6 +2659,9 @@ static int mpls_net_init(struct net *net)
+>         net->mpls.ip_ttl_propagate = 1;
+>         net->mpls.default_ttl = 255;
+> 
+> +       if (!IS_ENABLED(CONFIG_PROC_SYSCTL))
+> +               return 0;
+> +
+>         table = kmemdup(mpls_table, sizeof(mpls_table), GFP_KERNEL);
+>         if (table == NULL)
+>                 return -ENOMEM;
 > 
 
-Ah, looks like I see now. So CC7 (CPU idle state) also affects the
-arch-timer (like SC7) and hence scheduler clock will be stopped while it
-shouldn't, which doesn't sound good.
+Without sysctl, the entire mpls_router code is disabled. So if sysctl is
+not enabled there is no point in building this file.
