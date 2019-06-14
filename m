@@ -6,98 +6,153 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4B48C31E52
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:34:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8257BC31E51
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:34:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6591921850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:34:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 505A9217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:34:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="fteRuuju"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="f1HPAzwq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbfFNXeB (ORCPT
+        id S1726353AbfFNXeV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 19:34:01 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44682 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfFNXeB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 19:34:01 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ENXaBH134612;
-        Fri, 14 Jun 2019 23:33:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=xC57jn87JyXy7UEJGYT3I0BpBDnQuaSrP5i3P1QlI6I=;
- b=fteRuujufu3CmIQ0hpxr3+DyF3Am163I32ktIzUzd9sOepWWRmqepsAtq8Gxt4y4VAog
- LM2vzoQo1R5A/xCc7g6UYg0Q4MATHrE8QxJ6wLY2uu5nhFEZ/G/LZOgDkYOMtF7OFpZ9
- 1ixxkQkAA0WPyqDBLwCYi0TktWyxmkGyOhPBL2JbS142d+gNM+gVbRvH2zIMyW3c1S01
- oQFRK0HZS3jkXyMKG4wQjuSD2eOZoUx5c+PvJXBvlxFZYpjdzHUq52EZYK6QaurDHB5h
- 0vd5nkpD5p4NYWyj4QcAjFe30PQNSHNx/1oFZuDMchT0o+UNU6VZGKOZp8BWI/1PzvWw Iw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t04eu9srg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jun 2019 23:33:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5ENWsED162221;
-        Fri, 14 Jun 2019 23:33:56 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2t0p9t7n0b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jun 2019 23:33:56 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5ENXtO0029569;
-        Fri, 14 Jun 2019 23:33:55 GMT
-Received: from [192.168.1.222] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Fri, 14 Jun 2019 16:33:55 -0700
-Subject: Re: [PATCH 2/3] hugetlbfs: Use i_mmap_rwsem to fix page
- fault/truncate race
-To:     Sasha Levin <sashal@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Cc:     Michal Hocko <mhocko@kernel.org>, Hugh Dickins <hughd@google.com>,
-        stable@vger.kernel.org
-References: <20181203200850.6460-3-mike.kravetz@oracle.com>
- <20190614215632.BF5F721473@mail.kernel.org>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <f8cea651-8052-4109-ea9b-dee3fbfc81d1@oracle.com>
-Date:   Fri, 14 Jun 2019 16:33:53 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190614215632.BF5F721473@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8
+        Fri, 14 Jun 2019 19:34:21 -0400
+Received: from mail-eopbgr1300104.outbound.protection.outlook.com ([40.107.130.104]:56610
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725812AbfFNXeU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 19:34:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=hlzXTWuOgEspVBFuxGxRAWiPsj0PPTe+urTKuXOJXuy62KQEX7KampUVGnPij/uwv9ytSkJ+JL/R/sjYMJ01ItGDehvuO7ttZ7h+/2ogPGLTWo01MMkjdKlsUkxrm/i3+R+igbLIKJs/p9FJZ8kZBqBQWTMRa2Cg7tMQPoutU/c=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=98DQMG0pvSoaYuFr2gROAz8nsZYhAd8aOxrXjlOtUj0=;
+ b=laNd1HytNsUiAfGrvtlc02RQ/F4S1nwJ0I6o9pJe2f0mNqLC1fWZwBVonLTJiY88udmpIfNv7rI37eFTfiLhkrCAtNsTTSWvWZVSEJUdxme/Squ1kD4ztEEQwRD5l1xsX5ZJRm2e/MMs9MpBWDZBzZe2rn9U71I5oFT8+ljUMds=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=98DQMG0pvSoaYuFr2gROAz8nsZYhAd8aOxrXjlOtUj0=;
+ b=f1HPAzwqb1tXZis1fjcAAM8mVaDsO6aioIs5Q105dG3/0vnUmZYPWGFaPWbMYMCGQVCCi+hwJaFeoveMb5Z6dzmdBzbp6Z8SUEcNWtbY8N674qXm6ubBWazYYovlFXSQssNqC1s+UML7Zo+ZCoGnHc8U3Kmsez0SFfvwOHOQJnw=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0124.APCP153.PROD.OUTLOOK.COM (10.170.188.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.0; Fri, 14 Jun 2019 23:34:05 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d896:4219:e493:b04%4]) with mapi id 15.20.2008.007; Fri, 14 Jun 2019
+ 23:34:05 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     Michael Kelley <mikelley@microsoft.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "robert.moore@intel.com" <robert.moore@intel.com>,
+        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
+        Russ Dill <Russ.Dill@ti.com>,
+        Sebastian Capella <sebastian.capella@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH] ACPI: PM: Export the function
+ acpi_sleep_state_supported()
+Thread-Topic: [PATCH] ACPI: PM: Export the function
+ acpi_sleep_state_supported()
+Thread-Index: AQHVIt2lUviLbUjfZEmzRslUu7e03qabnRQggAAYmbCAAAbhAIAADalg
+Date:   Fri, 14 Jun 2019 23:34:05 +0000
+Message-ID: <PU1P153MB0169C43993952984FADF1B85BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
+ <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+ <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190614223310.pwwoefu5qdvcuaiy@shell.armlinux.org.uk>
+In-Reply-To: <20190614223310.pwwoefu5qdvcuaiy@shell.armlinux.org.uk>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9288 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906140187
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9288 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906140187
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-14T23:34:00.8940315Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=2c396d4f-04f2-43d1-855c-f5c9751730e0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:f:a444:4515:ca58:8eeb]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7529d7fb-a51c-46a5-cd35-08d6f120ca73
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0124;
+x-ms-traffictypediagnostic: PU1P153MB0124:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB01244B7F016BE0D462A55951BFEE0@PU1P153MB0124.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(136003)(376002)(346002)(366004)(396003)(189003)(199004)(46003)(68736007)(186003)(8936002)(6116002)(8676002)(10090500001)(476003)(486006)(5660300002)(52536014)(86362001)(256004)(11346002)(66476007)(446003)(71200400001)(73956011)(14444005)(71190400001)(76116006)(66946007)(66556008)(64756008)(66446008)(14454004)(22452003)(54906003)(8990500004)(74316002)(33656002)(4326008)(99286004)(6246003)(6916009)(102836004)(6436002)(25786009)(9686003)(316002)(81166006)(81156014)(7736002)(305945005)(229853002)(76176011)(53936002)(7416002)(7696005)(2906002)(10290500003)(6506007)(478600001)(55016002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0124;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: foWTZclbDfhCQrSbglLmje6UrlgApJTZgEtDxlfr3l9sVZSNp38eD4wblSS2gGZUwNbvC57P8OMCsw2VNxt5gOq/HGgBOuqP0eAmlHrvHUv08AFctF992npKuoe5P0/1/AXzaZDyqIOlz4Lz9xF+6Wdiim4jixmo7BJ12a5kdysMqFniNVgkIYwDSCKYf0Girw/tSLZHL7QgxOdzVyCj5PqeyREKoHw1yyGIamhFz6HlizKPY8kkdUmmqiXgk4VbGiRxxPajB7mtphlQ9FDZtujgYZ5Lg7No4n6zYMj6j5xwPCPpZVNaBLb7pRowRmLM2SJ6bhSwOkcZ1Y3u3S3n/FeLXkqVbSyU3A58emiRn2gCvitZKxzvrZ1Js5EFZajb9izHh3aIKyJWEu/EsJNZEHdDvR+cbsHusaW3qE2HPb4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7529d7fb-a51c-46a5-cd35-08d6f120ca73
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 23:34:05.1721
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/14/19 2:56 PM, Sasha Levin wrote:
-> Hi,
-> 
-> [This is an automated email]
-> 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: ebed4bfc8da8 [PATCH] hugetlb: fix absurd HugePages_Rsvd.
-<snip>
-> 
-> How should we proceed with this patch?
-> 
+> From: linux-hyperv-owner@vger.kernel.org
+> <linux-hyperv-owner@vger.kernel.org> On Behalf Of Russell King
+> On Fri, Jun 14, 2019 at 10:19:02PM +0000, Dexuan Cui wrote:
+> > It looks ARM does not support the ACPI S4 state, then how do we know
+> > if an ARM host supports hibernation or not?
+>=20
+> Don't forget that Linux does not support ACPI on 32-bit ARM, which is
+> quite different from the situation on 64-bit ARM.
+>=20
+> arch/arm/kernel/hibernate.c is only for 32-bit ARM, and is written with
+> the assumption that there is no interaction required with any firmware
+> to save state, and later restore state upon resuming.
+>=20
+> Or am I missing something?
 
-I hope you do nothing with this as the patch is not upstream.
+Hi Russell,
+Thanks for your reply and please excuse me for my ignorance of ARM.=20
 
--- 
-Mike Kravetz
+So 32-bit ARM Linux can hibernate even if it doesn't support ACPI, but
+I guess not all 32-bit ARM machines support hibernation? If my guess
+is correct, is there any standard capability bit or something that can be
+used to tell if an ARM machine supports hibernation? I'm purely curious. :-=
+)
+
+Do you imply 64-bit ARM Linux supports ACPI and the ACPI S4 state?
+If not, how can we tell if a 64-bit ARM machine supports hibernation or not=
+?
+
+Thanks,
+-- Dexuan
