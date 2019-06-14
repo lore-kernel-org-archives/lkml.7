@@ -2,82 +2,46 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A340C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A405BC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0B9C2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 83F292084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfFNHty (ORCPT
+        id S1726318AbfFNHt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:49:54 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12480 "EHLO mga07.intel.com"
+        Fri, 14 Jun 2019 03:49:59 -0400
+Received: from verein.lst.de ([213.95.11.211]:44900 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfFNHtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:49:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 00:49:53 -0700
-X-ExtLoop1: 1
-Received: from rbhardw1-mobl.gar.corp.intel.com (HELO [10.252.89.98]) ([10.252.89.98])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Jun 2019 00:49:51 -0700
-Subject: Re: [PATCH 2/2] powercap/rapl: Add Ice Lake NNPI support to RAPL
- driver
-To:     rjw@rjwysocki.net, linux-kernel@vger.kernel.org
-Cc:     len.brown@intel.com, rafael.j.wysocki@intel.com,
-        linux-pm@vger.kernel.org
-References: <20190614073947.12270-1-rajneesh.bhardwaj@linux.intel.com>
- <20190614073947.12270-2-rajneesh.bhardwaj@linux.intel.com>
-From:   "Bhardwaj, Rajneesh" <rajneesh.bhardwaj@linux.intel.com>
-Message-ID: <2d097ac4-2533-42a1-3658-9b646d105a84@linux.intel.com>
-Date:   Fri, 14 Jun 2019 13:19:50 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725775AbfFNHt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 03:49:58 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 9112068B02; Fri, 14 Jun 2019 09:49:28 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 09:49:28 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>
+Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: remove asm-generic/ptrace.h v2
+Message-ID: <20190614074928.GA9631@lst.de>
+References: <20190520060018.25569-1-hch@lst.de> <20190604070205.GA15438@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20190614073947.12270-2-rajneesh.bhardwaj@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604070205.GA15438@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael
+On Tue, Jun 04, 2019 at 09:02:05AM +0200, Christoph Hellwig wrote:
+> Is anyone going to pick this series up?
 
-On 14-Jun-19 1:09 PM, Rajneesh Bhardwaj wrote:
-> Enables support for ICL-NNPI, neural network processor for deep learning
-> inference. From RAPL point of view it is same as Ice Lake Mobile
-> processor.
->
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: linux-pm@vger.kernel.org
-> Link: https://lkml.org/lkml/2019/6/5/1034
-> Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
-> ---
->   drivers/powercap/intel_rapl.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/powercap/intel_rapl.c b/drivers/powercap/intel_rapl.c
-> index 4347f15165f8..19d470c73b6e 100644
-> --- a/drivers/powercap/intel_rapl.c
-> +++ b/drivers/powercap/intel_rapl.c
-> @@ -1156,7 +1156,7 @@ static const struct x86_cpu_id rapl_ids[] __initconst = {
->   	INTEL_CPU_FAM6(KABYLAKE_MOBILE,		rapl_defaults_core),
->   	INTEL_CPU_FAM6(KABYLAKE_DESKTOP,	rapl_defaults_core),
->   	INTEL_CPU_FAM6(CANNONLAKE_MOBILE,	rapl_defaults_core),
-> -	INTEL_CPU_FAM6(ICELAKE_MOBILE,		rapl_defaults_core),
-> +	INTEL_CPU_FAM6(ICELAKE_NNPI,		rapl_defaults_core),
-
-Sorry, i sent the wrong patch, please ignore this one. I will send 
-another one.
-
-Thanks.
-
->   	INTEL_CPU_FAM6(ATOM_SILVERMONT,		rapl_defaults_byt),
->   	INTEL_CPU_FAM6(ATOM_AIRMONT,		rapl_defaults_cht),
+ping?  Arnd, this might be asm-generic tree material?
