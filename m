@@ -2,236 +2,138 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D5C4C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:52:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A27C46477
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD21204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:52:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA3BF2082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:53:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Viq4BvGd"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="qM6xA9qO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727243AbfFNKwX (ORCPT
+        id S1727334AbfFNKxM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:52:23 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37187 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727083AbfFNKwW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:52:22 -0400
-Received: by mail-wr1-f66.google.com with SMTP id v14so2033486wrr.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:52:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+vwrk+AgrEhYlE80M3+MGdcU7iUcY3uN9bVr59vASP0=;
-        b=Viq4BvGdowF1J5eJcqGDhNe6hoIU2YzXZua720oX7YMhb83Dfr0dSktGPGVma6nIVa
-         rovFdaZM5CiklG3z0VpthS94btRCRUmi0KjvriE+vDi3DUWwRLvxZJ84qBlfXcHPNi/g
-         ipvaA864SZADzLVdyv9rD2Q2H+nkljmucwelQzb/6gHWvY8ssR3CkFDKoOtbLG5cf2ew
-         4yUbHAK69zumdcN5pxTujDZpRmm3skEucXr2ZP8xZdpTzcFHcZE66NVhXYH13lRKx7d8
-         qtLJeezSKeWL10JoCzqoPifvI/MhUtcb6wz2J+wK0XUaIBmzfxC/GmDMmEKPq71ux4Pr
-         wNOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=+vwrk+AgrEhYlE80M3+MGdcU7iUcY3uN9bVr59vASP0=;
-        b=tZAqzTn0xxXZjGxbLjX023TuswD1d6xLGcxBajaACj+KmEroDBvsmZf3bZDyCUtK4v
-         KxWUEzbBcQudV5ve45dRARBxCU8ER4dEYMcoEPRmDzOPGMVZFGCblSj6VSsYDUv5sXyG
-         lM5YX9VoqqI9wY3nbkzwhhQ3wP6PcOrpPZ61N1XaE3NI2tlfiL9afGqIYO9H3144fVp2
-         EgQs8wqOZ7syrr+0gTyQrNpb7WVSvH43YEa91nWcxyJ3p9ic5uDj+h3ojiamifIN5QNl
-         cD+akVxpyrV0hS8pXYxUMIAdyFEdo1WvE1u9oNQw9NyhmsnRmrcIQiXVvIq9IbCJ2TQA
-         cdGQ==
-X-Gm-Message-State: APjAAAUtYShS5KPinU4gJCIIR/LMej1f8y+kwpOKINOknGPUGM5m9SCY
-        sKcYfPPFvBdIgrO64BBKEJRI+w==
-X-Google-Smtp-Source: APXvYqw1S3/O1d0sqNf14VVfEd1n0a/IXQOLeDdJXieMrTyT3NdvFieJMT/Pt7d/4PbCr7O6cb+8wA==
-X-Received: by 2002:adf:eb4e:: with SMTP id u14mr16811884wrn.168.1560509539430;
-        Fri, 14 Jun 2019 03:52:19 -0700 (PDT)
-Received: from [192.168.0.41] (sju31-1-78-210-255-2.fbx.proxad.net. [78.210.255.2])
-        by smtp.googlemail.com with ESMTPSA id r3sm4220947wrr.61.2019.06.14.03.52.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 03:52:18 -0700 (PDT)
-Subject: Re: [PATCH] thermal: rcar_gen3_thermal: Fix Wshift-negative-value
-To:     Nathan Huckleberry <nhuck@google.com>, rui.zhang@intel.com,
-        edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Yoshihiro Kaneko <ykaneko0929@gmail.com>
-References: <20190613211228.34092-1-nhuck@google.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <fd8b8a48-dfb7-1478-2d8d-0953acee39d3@linaro.org>
-Date:   Fri, 14 Jun 2019 12:52:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 06:53:12 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:43162 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727153AbfFNKxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:53:11 -0400
+Received: from zn.tnic (p200300EC2F097F00C4A032B92937AA15.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:c4a0:32b9:2937:aa15])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B61DD1EC08BF;
+        Fri, 14 Jun 2019 12:53:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560509589;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=yzCmUlCjP9a7GEpaOHqX1nvhmFrkNCsaBbmvlBxEF5c=;
+        b=qM6xA9qOPjwVNkU21hNWRUr7MvFeIQC3OWWvSiZOPF4FaHtYc942B7yj11LC+PcVYc1mlK
+        KGATlePwCuIJ1OvpeRi5W3y+3jqKtVxhCcaqPy6j9/DmtgTtsczGVa4S7ITHxyzOln6jRM
+        Wv9mL0WGTAgB50AcnVKXGbQIpRyTcD0=
+Date:   Fri, 14 Jun 2019 12:53:01 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     James Morse <james.morse@arm.com>,
+        "Hawa, Hanna" <hhhawa@amazon.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        "paulmck@linux.ibm.com" <paulmck@linux.ibm.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "Shenhar, Talel" <talel@amazon.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Chocron, Jonathan" <jonnyc@amazon.com>,
+        "Krupnik, Ronen" <ronenk@amazon.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "Hanoch, Uri" <hanochu@amazon.com>
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+Message-ID: <20190614105301.GB2586@zn.tnic>
+References: <9a2aaf4a9545ed30568a0613e64bc3f57f047799.camel@kernel.crashing.org>
+ <20190608090556.GA32464@zn.tnic>
+ <1ae5e7a3464f9d8e16b112cd371957ea20472864.camel@kernel.crashing.org>
+ <68446361fd1e742b284555b96b638fe6b5218b8b.camel@kernel.crashing.org>
+ <20190611115651.GD31772@zn.tnic>
+ <6df5a17bb1c900dc69b991171e55632f40d9426f.camel@kernel.crashing.org>
+ <20190612034813.GA32652@zn.tnic>
+ <08bd58dc0045670223f8d3bbc8be774505bd3ddf.camel@kernel.crashing.org>
+ <20190612104238.GG32652@zn.tnic>
+ <2a53690aa81a406b9a6290f70e47470d0f698f00.camel@kernel.crashing.org>
 MIME-Version: 1.0
-In-Reply-To: <20190613211228.34092-1-nhuck@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <2a53690aa81a406b9a6290f70e47470d0f698f00.camel@kernel.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Reply part 2.
 
-Hi Nathan,
+On Thu, Jun 13, 2019 at 09:54:18AM +1000, Benjamin Herrenschmidt wrote:
+> Why ? Because one or two historical drivers mix MC and PCI then "it
+> makes sense" to do that for everybody ?
 
-On 13/06/2019 23:12, Nathan Huckleberry wrote:
-> Clang produces the following warning
+Because it was like that. And now all of a sudden ARM wants something
+different. So we must at least talk about it before we do it, right?
+
+Also, I don't know if you've noticed but RAS "architecture" on Linux is
+still a big WIP, to put it mildly. So before we do anything, we should
+have at least some rough idea of where it is all going to.
+
+> And then you have 20 platforms and 20 drivers, with 50% or more code
+> duplication, bugs fixed in one and not the other, gratuituous behaviour
+> differences to confuse users etc... No. that doesn't make sense.
+
+No different on ARM if you have a memory controller IP which is roughly
+the same IP but different vendors integrate it and they each tweak it
+a bit in their own way (registers, ECC support, etc) and you get an
+EDAC MC driver from every vendor and they all don't share the basic
+functionality.
+
+> I have no idea what "the DT argument" is, and that's from the guy who
+> created the FDT....
 > 
-> vers/thermal/rcar_gen3_thermal.c:147:33: warning: shifting a negative
-> signed value is undefined [-Wshift-negative-value] / (ptat[0] - ptat[2])) +
-> FIXPT_INT(TJ_3); ^~~~~~~~~~~~~~~ drivers/thermal/rcar_gen3_thermal.c:126:29
-> note: expanded from macro 'FIXPT_INT' #define FIXPT_INT(_x) ((_x) <<
-> FIXPT_SHIFT) ~~~~ ^ drivers/thermal/rcar_gen3_thermal.c:150:18: warning:
-> shifting a negative signed value is undefined [-Wshift-negative-value]
-> tsc->tj_t - FIXPT_INT(TJ_3)); ~~~~~~~~~~~~^~~~~~~~~~~~~~~~
+> I have difficulties understanding how you cannot see that having re-
+> usable single drivers for a single piece of HW makes sense. If anything
+> in term of avoiding duplication, bitrot, bugs being fixed in some and
+> not others, etc etc... It also means more eyes on a given piece of code
+> which is a good thing.
 > 
-> Upon further investigating it looks like there is no real reason for
-> TJ_3 to be -41. Usages subtract -41, code would be cleaner to just add.
+> Also you "have heard more than enough" is again a sign that a whole lot
+> of people are trying to tell you something that you seem to refuse to
+> hear.
 
-All the code seems broken regarding the negative value shifting as the
-macros pass an integer:
+Hmm, I think I'm hearing it. But not without good arguments for why
+we're going to do it. I believe that became clear so far..
 
-eg.
-        tsc->coef.a2 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
-                                 tsc->tj_t - FIXPT_INT(ths_tj_1));
+> Whatever that "DT argument" is, did you just ignore it or had
+> some good and solid arguments of your own to refute it ?
 
-thcode[1] is always < than thcode[0],
+I don't care about refuting it or not - all I care about is getting good
+arguments for why we should do this driver-per-IP-block thing. EDAC was
+was ok so far - I wasn't going to change it just because someone is
+sending me drivers per-IP block and not selling me the idea properly.
 
-thcode[1] - thcode[0] < 0
+And AFAIR I haven't heard a single good argument trying to convince me
+why it should be done this way. Only after this thread started and we
+started poking at it, I got some good arguments.
 
-FIXPT_INT(thcode[1] - thcode[0]) is undefined
-
-
-Is it done on purpose FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]) ?
-
-Try developing the macro with the coef.a2 computation ...
-
-The code quality of this driver could be better, it deserves a rework
-IMHO ...
-
-I suggest to revert:
-
-4eb39f79ef443fa566d36bd43f1f578d5c140305
-bdc4480a669d476814061b4da6bb006f7048c8e5
-6a310f8f97bb8bc2e2bb9db6f49a1b8678c8d144
-
-Rework the coefficient computation and re-introduce what was reverted in
-a nicer way.
-
-
-> Fixes: 4eb39f79ef44 ("thermal: rcar_gen3_thermal: Update value of Tj_1")
-> Cc: clang-built-linux@googlegroups.com
-> Link: https://github.com/ClangBuiltLinux/linux/issues/531
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> ---
->  drivers/thermal/rcar_gen3_thermal.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-> index a56463308694..f4b4558c08e9 100644
-> --- a/drivers/thermal/rcar_gen3_thermal.c
-> +++ b/drivers/thermal/rcar_gen3_thermal.c
-> @@ -131,7 +131,7 @@ static inline void rcar_gen3_thermal_write(struct rcar_gen3_thermal_tsc *tsc,
->  #define RCAR3_THERMAL_GRAN 500 /* mili Celsius */
->  
->  /* no idea where these constants come from */
-> -#define TJ_3 -41
-> +#define TJ_3 41
->  
->  static void rcar_gen3_thermal_calc_coefs(struct rcar_gen3_thermal_tsc *tsc,
->  					 int *ptat, const int *thcode,
-> @@ -144,11 +144,11 @@ static void rcar_gen3_thermal_calc_coefs(struct rcar_gen3_thermal_tsc *tsc,
->  	 * the dividend (4095 * 4095 << 14 > INT_MAX) so keep it unscaled
->  	 */
->  	tsc->tj_t = (FIXPT_INT((ptat[1] - ptat[2]) * 157)
-> -		     / (ptat[0] - ptat[2])) + FIXPT_INT(TJ_3);
-> +		     / (ptat[0] - ptat[2])) - FIXPT_INT(TJ_3);
->  
->  	tsc->coef.a1 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[2]),
-> -				 tsc->tj_t - FIXPT_INT(TJ_3));
-> -	tsc->coef.b1 = FIXPT_INT(thcode[2]) - tsc->coef.a1 * TJ_3;
-> +				 tsc->tj_t + FIXPT_INT(TJ_3));
-> +	tsc->coef.b1 = FIXPT_INT(thcode[2]) + tsc->coef.a1 * TJ_3;
->  
->  	tsc->coef.a2 = FIXPT_DIV(FIXPT_INT(thcode[1] - thcode[0]),
->  				 tsc->tj_t - FIXPT_INT(ths_tj_1));
-> 
-
+So enough wasting time, I think we can try the per-IP things and see
+where it would get us.
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Regards/Gruss,
+    Boris.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Good mailing practices for 400: avoid top-posting and trim the reply.
