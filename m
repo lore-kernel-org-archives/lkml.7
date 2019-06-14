@@ -2,93 +2,61 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B89C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC55C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:57:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1485F2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560531450;
-	bh=ZrMxzjNpJdxFQLDipvH3qic7BLlICi19F43lUocjQQ4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=khy8cDBkVmz/8UCCW498lNk93f+8bt7fWxtK+D58f8ZgFlCbDuhuNjWpDpQo3tkZG
-	 YkLly4SeyJnh108VYBzNlF6yGxFkLipHaqev6AJw+2pkMRO+44GhrmhnGiq8xVsYsn
-	 Yv/u1XFIy+SYtaNiozzlJNS6pEELf8hHu5jtS3fQ=
+	by mail.kernel.org (Postfix) with ESMTP id 62EB72183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:57:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726402AbfFNQ52 (ORCPT
+        id S1726449AbfFNQ5m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:57:28 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:34175 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfFNQ52 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:57:28 -0400
-Received: by mail-qt1-f193.google.com with SMTP id m29so3287566qtu.1;
-        Fri, 14 Jun 2019 09:57:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kuAEv/PlG/wLUd5sE7CBGEhgBQkunbAzlunVIqZV/qs=;
-        b=IhTXspyw4NA6GWCH0hQu+YoTfNm0PqsKuvlY4OrTBhlTPZSBjCxgkEvZCPNcF+a8Da
-         VsAq92zV6hfPu26qYYTTmtpV8jo7KmgYUjSVFnyKMiy08ypirlOuK247ldsvu/VprX+W
-         WdJ+/0XnfLmwElsdxw1jnuK5Cq/dA5z8hXdL8lwLgpcLguVXtOTUIvyZZjp1fuiPNeNR
-         sDaDwdzwnQQ3ciDdwQnELNKvZlqm2KaWNSDFpQ3um8L8K2vgvp0Pm/ua1WerS9HiAxO3
-         nWFogAsphkwH3tVDoE3rKU1wrj7mbc4AVa3t5h3+gCqwpEIE0bGiDw6hFBPBB3lu911S
-         7K3Q==
-X-Gm-Message-State: APjAAAU1+L97SrkKTlHziMLiZn5ju3zCn7AC4lgWehSPMVwMidch52Dj
-        3ZLL/oHmdpFkIurH/0gZng==
-X-Google-Smtp-Source: APXvYqxkCzR6nUY+HgvZWIHjhjgEC1kMxIXehNr9VUSu1DnVOQd08FOUe0jGEMuy2YJFBFjI6vNo/g==
-X-Received: by 2002:a0c:8b54:: with SMTP id d20mr9239221qvc.1.1560531446638;
-        Fri, 14 Jun 2019 09:57:26 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id f189sm1925498qkj.13.2019.06.14.09.57.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 09:57:26 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 10:57:24 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        Fri, 14 Jun 2019 12:57:42 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:43354 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725801AbfFNQ5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:57:42 -0400
+Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hbpWE-0006XT-5C; Fri, 14 Jun 2019 18:57:38 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     linux-clk@vger.kernel.org
+Cc:     linux-rockchip@lists.infradead.org, mturquette@baylibre.com,
+        sboyd@kernel.org, papadakospan@gmail.com,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] soc: qcom: apr: Don't use reg for domain id
-Message-ID: <20190614165724.GA3083@bogus>
-References: <20190523150153.13136-1-bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/2] clk: rockchip: add a type from SGRF-controlled gate clocks
+Date:   Fri, 14 Jun 2019 18:57:37 +0200
+Message-ID: <2861779.VsSVQ8N6Tg@phil>
+In-Reply-To: <20190606090934.4443-1-heiko@sntech.de>
+References: <20190606090934.4443-1-heiko@sntech.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523150153.13136-1-bjorn.andersson@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 08:01:53 -0700, Bjorn Andersson wrote:
-> The reg property represents the address and size on the bus that a
-> device lives, but for APR the parent is a rpmsg bus, which does not have
-> numerical addresses. Simply defining #address/#size-cells to 1 and 0,
-> respectively, to silence the compiler is not an appropriate solution.
+Am Donnerstag, 6. Juni 2019, 11:09:33 CEST schrieb Heiko Stuebner:
+> Some clk gates on Rockchip SoCs are part of the SGRF (secure general
+> register files) and thus only controllable from secure mode, with the
+> most prominent example being the watchdog.
 > 
-> Replace the use of "reg" with an APR specific property.
+> In most cases we still want to define this as a real clock though,
+> to have complete clock tree and not reference the generic base-clock
+> from the devicetree.
 > 
-> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
+> So far we've just defined this as factor-1-1 clocks in the clock init,
+> so define a special clock-type for it so that this definition can be
+> part of the general tree-definition and save some boilerplate code.
 > 
-> Changes since v1:
-> - Fixed example to match change
-> 
->  Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 6 +++---
->  drivers/soc/qcom/apr.c                                  | 2 +-
->  2 files changed, 4 insertions(+), 4 deletions(-)
-> 
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+applied both for 5.3
+
+
