@@ -2,172 +2,209 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA956C31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E25C31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:06:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7D22184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:58:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h6yLi+nh"
+	by mail.kernel.org (Postfix) with ESMTP id C90332184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:06:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFNV6u (ORCPT
+        id S1726679AbfFNWGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:58:50 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34255 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfFNV6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:58:50 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y198so2718302lfa.1;
-        Fri, 14 Jun 2019 14:58:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=xxGu6CJPBGoL/dbTAjrQA1DoihdFeXBSa3YpyIkyJT4=;
-        b=h6yLi+nhVF/VAdQ2zqX0arqlj6tyh5yrcySN5HknKhZGOjEwiBkWZX7NjCZOM7u2Ef
-         vNM1tmEH2VbvyWGZIGWFfFqBub9pCX/6kbzZiwM9aljPNqYXZ+4Upm88MSfPClpGzLZC
-         g66sNiWkUFURPlBiUE3YX7HuOT7FSsPDJgsZSpBFl43MU3ajJpqHzXOfWL1ZOlq8Gn3O
-         3MMQJa1veRx0jllCTLHIp725Of1XMU/3lpmYWDwb1foYK+VgvfpITd/PmbQJrrNe3aha
-         eH4tu8XOw+FDPmRfgwsCcMWEzxlyuITvDpksfnxsko0EhBr+XBwx3TSWpM5ilFpb3q//
-         ljng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xxGu6CJPBGoL/dbTAjrQA1DoihdFeXBSa3YpyIkyJT4=;
-        b=OndJXZyAifzBV9zIEbnKYvhU9BphoQ9kNTg5tGOnK1/YtQnLNuOIT6IgQwL9s535tI
-         O+d/99wCHwUCBTnTddtAcaVOJ/pkfaF8LbrbgCLmfzkVyfEBl+YJ5KuVFXn7b8eD0uRQ
-         wbmEeL6bz2LmD9Z47gqYgc4+qDk56fQ+5ykcgDKd5pVGc/Z9fJ4LGlbCdKPMjPdTRSd5
-         FL0G8+WR17cSh/vMpNHCw3KFIeq80YcnsT/7zsTlVIOR6SI3gc8J7zYeEcx/oTDSpbhs
-         yydQZ14UvjewPCMAvZZplSdj5RetwTC2b3TZMAySE4k7jZMMVgfF3PSSw2T2QCi44V+r
-         BaDA==
-X-Gm-Message-State: APjAAAVFChBB7iMcdE4upZvS+dbKE7WMLfl2jICSylvY8I4+ldInulma
-        lhuXL2DxYUb6fkzGCOgOO38=
-X-Google-Smtp-Source: APXvYqxxKspRlwzxhtlUC/Niqid8Giv0llcz0pjr2zBnppSAIQcNaASJpkWDWB/Y/gL9p6D3mm3TIw==
-X-Received: by 2002:ac2:5467:: with SMTP id e7mr25581014lfn.23.1560549527979;
-        Fri, 14 Jun 2019 14:58:47 -0700 (PDT)
-Received: from mobilestation ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id t7sm781898ljd.5.2019.06.14.14.58.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 14:58:47 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 00:58:45 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     Peter Korsgaard <peter.korsgaard@barco.com>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs
- request code
-Message-ID: <20190614215844.2ueoqadvj5dqbaua@mobilestation>
-References: <20190425232028.9333-1-fancer.lancer@gmail.com>
- <20190425232028.9333-3-fancer.lancer@gmail.com>
- <783250dd-87c0-b3cc-0e90-7978605a9b07@axentia.se>
- <20190614163134.zs5xyuqvp25ahbng@mobilestation>
- <fb96ba56-4754-a962-ceea-4fd50ee59c69@axentia.se>
+        Fri, 14 Jun 2019 18:06:14 -0400
+Received: from mga12.intel.com ([192.55.52.136]:55527 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbfFNWGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 18:06:13 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 15:06:12 -0700
+X-ExtLoop1: 1
+Received: from ray.jf.intel.com (HELO [10.7.201.15]) ([10.7.201.15])
+  by orsmga002.jf.intel.com with ESMTP; 14 Jun 2019 15:06:12 -0700
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+ <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+ <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
+ <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
+ <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
+ <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
+ <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
+ <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
+ <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
+ <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
+ <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com>
+ <1b961c71d30e31ecb22da2c5401b1a81cb802d86.camel@intel.com>
+ <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
+ <cf0d1470e95e0a8b88742651d06601a53d6655c1.camel@intel.com>
+ <5ddf59e2-c701-3741-eaa1-f63ee741ea55@intel.com>
+ <b5a915602020a6ce26ea1254f7f60e239c91bc9f.camel@intel.com>
+ <598edca7-c36a-a236-3b72-08b2194eb609@intel.com>
+ <359e6f64d646d5305c52f393db5296c469630d11.camel@intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ mQINBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABtEVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT6JAjgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lcuQINBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABiQIfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+Message-ID: <5d7012f6-7ab9-fd3d-4a11-294258e48fb5@intel.com>
+Date:   Fri, 14 Jun 2019 15:06:12 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fb96ba56-4754-a962-ceea-4fd50ee59c69@axentia.se>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <359e6f64d646d5305c52f393db5296c469630d11.camel@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 06:04:33PM +0000, Peter Rosin wrote:
-> On 2019-06-14 18:31, Serge Semin wrote:
-> > Hello Peter,
-> > 
-> > On Sun, Jun 09, 2019 at 09:34:54PM +0000, Peter Rosin wrote:
-> >> On 2019-04-26 01:20, Serge Semin wrote:
-> >>> The GPIOs request loop can be safely moved to a separate function.
-> >>> First of all it shall improve the code readability. Secondly the
-> >>> initialization loop at this point is used for both of- and
-> >>> platform_data-based initialization paths, but it will be changed in
-> >>> the next patch, so by isolating the code we'll simplify the future
-> >>> work.
-> >>
-> >> This patch is just preparatory for patch 3/3, as I see it. And since
-> >> I'm not really fond of the end result after patch 3/3, I'm going to
-> >> sum up my issues here, instead of trying do it piecemeal in the two
-> >> patches.
-> >>
-> >> Linus and Jean, for your convenience, link to this patch series [1].
-> >>
-> >> While I agree with the goal (to use the more flexible gpiod functions
-> >> to get at the gpio descriptors), the cost is too high when the init
-> >> code for platform and OF is basically completely separated. I much
-> >> prefer the approach taken by Linus [2], which instead converts the
-> >> platform interface and its single user to use gpio descriptors instead
-> >> of the legacy gpio interface. The i2c-mux-gpio code then has the
-> >> potential to take a unified approach to the given gpio descriptors,
-> >> wherever they are originating from, which is much nicer than the
-> >> code-fork in this series.
-> >>
-> >> I also think it is pretty pointless to first split the code into
-> >> platform and OF paths, just so that the next patch (from Linus) can
-> >> unify the two paths again. I'd like to skip the intermediate step.
-> >>
-> >> So, I'm hoping for the following to happen.
-> >> 1. Sergey sends a revised patch for patch 1/3.
-> >> 2. I put the patch on the for-next branch.
-> >> 3. Linus rebases his patch on top of that (while thinking about
-> >>    the questions raised by Sergey).
-> >> 4. Sergey tests the result, I and Jean review it, then possibly
-> >>    go back to 3.
-> >> 5. I put the patch on the for-next branch.
-> >>
-> >> Is that ok? Or is someone insisting that we take a detour?
-> >>
-> > 
-> > The series was intended to add the gpiod support to the i2c-mux-gpio driver
-> > (see the cover letter of the series). So the last patch is the most valuable
-> > one. Without it the whole series is nothing but a small readability improvement.
-> > So it is pointless to merge the first patch only.
+On 6/14/19 2:34 PM, Yu-cheng Yu wrote:
+> On Fri, 2019-06-14 at 13:57 -0700, Dave Hansen wrote:
+>>> I have a related question:
+>>>
+>>> Do we allow the application to read the bitmap, or any fault from the
+>>> application on bitmap pages?
+>>
+>> We have to allow apps to read it.  Otherwise they can't execute
+>> instructions.
 > 
-> Agreed on all points, except perhaps for the "refuse" part below and
-> that the readability improvement of patch 1/3 is perhaps not all that
-> pointless.
+> What I meant was, if an app executes some legacy code that results in bitmap
+> lookup, but the bitmap page is not yet populated, and if we then populate that
+> page with all-zero, a #CP should follow.  So do we even populate that zero page
+> at all?
 > 
-> > Anyway since you refuse to add the last patch and the first patch is actually
-> > pointless without the rest of the series, and I would have to spend my time to
-> > resubmit the v3 of the first patch anyway, it was much easier to test the
-> > current version of the Linus' patch and make it working for OF-based platforms.
-> > Additionally the Linus' patch also reaches the main goal of this patchset.
-> 
-> I'm very pleased that you do not feel totally put off, and are willing
-> to help even if we end up storing your series in /dev/null. Kudos!
-> 
-> > I don't know what would be the appropriate way to send the updated version of
-> > the Linus' patch. So I just attached the v4 of it to this email. Shall I better
-> > send it in reply to the Linus' patch series?
-> 
-> I get the impression that you have already done the work? In that case,
-> how I would proceed would depend on how big the difference is. If it's
-> just a few one-liners here and there, I think I would make a detailed
-> review comment so that it is easy for Linus to incorporate the needed
-> changes. If it's anything even remotely complex I would post an
-> incremental patch. Of course, the former does not exclude the latter,
-> but I do think an incremental patch is better than a repost.
-> 
+> I think we should; a #CP is more obvious to the user at least.
 
-Yes, I tested the Linus' patch on my OF-based platform (though had to port to
-kernel 4.9) and found two problems. The incremental patch, which fixes them is
-send to you with mailing lists and everyone involved being Cc'ed.
+Please make an effort to un-Intel-ificate your messages as much as
+possible.  I'd really prefer that folks say "missing end branch fault"
+rather than #CP.  I had to Google "#CP".
 
-Regards,
--Sergey
+I *think* you are saying that:  The *only* lookups to this bitmap are on
+"missing end branch" conditions.  Normal, proper-functioning code
+execution that has ENDBR instructions in it will never even look at the
+bitmap.  The only case when we reference the bitmap locations is when
+the processor is about do do a "missing end branch fault" so that it can
+be suppressed.  Any population with the zero page would be done when
+code had already encountered a "missing end branch" condition, and
+populating with a zero-filled page will guarantee that a "missing end
+branch fault" will result.  You're arguing that we should just figure
+this out at fault time and not ever reach the "missing end branch fault"
+at all.
 
-> Thanks again!
+Is that right?
+
+If so, that's an architecture subtlety that I missed until now and which
+went entirely unmentioned in the changelog and discussion up to this
+point.  Let's make sure that nobody else has to walk that path by
+improving our changelog, please.
+
+In any case, I don't think this is worth special-casing our zero-fill
+code, FWIW.  It's not performance critical and not worth the complexity.
+ If apps want to handle the signals and abuse this to fill space up with
+boring page table contents, they're welcome to.  There are much easier
+ways to consume a lot of memory.
+
+>> We don't have to allow them to (popuating) fault on it.  But, if we
+>> don't, we need some kind of kernel interface to avoid the faults.
 > 
-> Cheers,
-> Peter
+> The plan is:
+> 
+> * Move STACK_TOP (and vdso) down to give space to the bitmap.
+
+Even for apps with 57-bit address spaces?
+
+> * Reserve the bitmap space from (mm->start_stack + PAGE_SIZE) to cover a code
+> size of TASK_SIZE_LOW, which is (TASK_SIZE_LOW / PAGE_SIZE / 8).
+
+The bitmap size is determined by CR4.LA57, not the app.  If you place
+the bitmap here, won't references to it for high addresses go into the
+high address space?
+
+Specifically, on a CR4.LA57=0 system, we have 48 bits of address space,
+so 128TB for apps.  You are proposing sticking the bitmap above the
+stack which is near the top of that 128TB address space.  But on a
+5-level paging system with CR4.LA57=1, there could be valid data at
+129GB.  Is there something keeping that data from being mistaken for
+being part of the bitmap?
+
+Also, if you're limiting it to TASK_SIZE_LOW, please don't forget that
+this is yet another thing that probably won't work with the vsyscall
+page.  Please make sure you consider it and mention it in your next post.
+
+> * Mmap the space only when the app issues the first mark-legacy prctl.  This
+> avoids the core-dump issue for most apps and the accounting problem that
+> MAP_NORESERVE probably won't solve completely.
+
+What is this accounting problem?
