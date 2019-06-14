@@ -2,145 +2,173 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DF6BC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F092FC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:14:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01DB2208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560503587;
-	bh=SkghNqzo5bE6Z3IkHPT7zhkzvoIXBQOulp8Xma9jxI8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=BYtpQxaHaYYhFNRROtFCPBZebyDL0MNN2C+1UIhUDj27rLpvl1yKNZdXw08Qa/mvT
-	 ptPRY+OmYGRi2pRq146oIp6UPk5hM9hd/YXouP5IL7WAevdR/FtTMEN0YpOM0a+DJf
-	 +Zsk4GuK1TIC0Qpmeog7hEotERo4BrkzD015WYq8=
+	by mail.kernel.org (Postfix) with ESMTP id C56F9208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:14:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="FCl00sRo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726806AbfFNJNF (ORCPT
+        id S1726879AbfFNJO1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:13:05 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:32773 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbfFNJNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:13:04 -0400
-Received: by mail-ot1-f66.google.com with SMTP id p4so2016299oti.0;
-        Fri, 14 Jun 2019 02:13:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iQKOlho3IePwEIN90jAdwdDwovI9WsnmIGTODVgkjRA=;
-        b=WBt42ZFsjkB1h+W59AEmW0p5Z4PbncLAzeV7iKPVlD7QvQ9y2IT96iXNMvAaPvBZ9T
-         kRypHl/oFlCIe9FQwmX2HizCmXz1mn7xXMMBTgmWJwP5zhs0xdc5J8+A3J0zzmjITFgy
-         YXwY53hLE3WZY2zcjfJt0pECB/c4SFYu4lkEHDr+ViYw0Z73lawdd1XkJDJIiojbhg19
-         IM0VlvJkQuGKP73ImtI2UpZVMxw/VIYTU2yj90HdX2qnxEX+mMQLiVCpvdMGICkDUsSk
-         5AVj2BjxWjA1TK6dpx6Ixr4qzMFPp+1k/nO5Rhd5Wmfqaxy6t2KeNpr3mJK1h9DlTgIy
-         tE8w==
-X-Gm-Message-State: APjAAAXF07kaErJ4haKJqz+S1idWeYEYZed0uniVnjQ9T0lCeNSeuNFW
-        N4axdw0modMa5gQJ3NmPag31s54hLH+9NlVD9A0=
-X-Google-Smtp-Source: APXvYqwmdZTMd2v6GPlEy1a/TL7qrJsrqpXKgBAz63iJnH2gtW407SGicB8TN5jAyyOvInGV4i/vIKKPF+eAlUMk8A4=
-X-Received: by 2002:a05:6830:1516:: with SMTP id k22mr2077918otp.189.1560503583969;
- Fri, 14 Jun 2019 02:13:03 -0700 (PDT)
+        Fri, 14 Jun 2019 05:14:27 -0400
+Received: from frisell.zx2c4.com ([192.95.5.64]:51513 "EHLO frisell.zx2c4.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725859AbfFNJO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 05:14:26 -0400
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id 71501d62
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 14 Jun 2019 08:41:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
+        :references:in-reply-to:from:date:message-id:subject:to:cc
+        :content-type; s=mail; bh=DwB0m+ZKAlNI36vkOaVtsOJ7Lbw=; b=FCl00s
+        RovZwBpL5wFf0ApsEYVnzuGnnvsEUSmMQsxLBIUSNlKGRguFcm1HQbPNEz4qJoqq
+        YM63LIDfu3g4y1zRjDeZlm/VM4E6J5AVMFREnW7WC0lKD/dm4ajjdyiLtmnEEipr
+        mElkkLlOazax6TFi0MLuXDPnZU3c5O62aMPW+AfjYfpwSjZJA4DwVS4/66FcN7dr
+        kaiGMgHjuxgj5hZQ8FwsLATYy5qcqfNMEHj14xe0JHbAmAJY1d9ySLLG21uwc5+P
+        ocDeLKm05/HtkOA+VkuVabrDFOtzU6bO7ScvFjmkRxB6+TSYO0WbS5iW/CphYvYE
+        6eoeysT69WGTvTFA==
+Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id 2e4c7ace (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
+        for <linux-kernel@vger.kernel.org>;
+        Fri, 14 Jun 2019 08:41:55 +0000 (UTC)
+Received: by mail-oi1-f170.google.com with SMTP id s184so1432386oie.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 02:14:24 -0700 (PDT)
+X-Gm-Message-State: APjAAAUS4Qlks0adeFcZWv9ukYAdk1i9CtZJIlaDay4tDwafRlsKXPNl
+        wFNRUsQ7lOVlGnWbV9BXVnRx+22Cq3+0br9b5aM=
+X-Google-Smtp-Source: APXvYqwr3bx7Z+kWv0UQCyRH9CX83lJaOFK37a0TlSG/R/SqEZIiSUHyE1yB0oYGXu8LbMm1TnVwImDUBwXeWRhRFao=
+X-Received: by 2002:aca:3a0a:: with SMTP id h10mr1246888oia.52.1560503663539;
+ Fri, 14 Jun 2019 02:14:23 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
-In-Reply-To: <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 14 Jun 2019 11:12:53 +0200
-Message-ID: <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table loads
-To:     Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        linux-leds@vger.kernel.org,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        nv@vosn.de
+References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
+ <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
+ <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
+ <CAK8P3a15NTV=njOjz-ccYL8=_q_MdEru0A+jeE=f7ufUTOOTgw@mail.gmail.com>
+ <CAHmME9pOWk_ZteUZc_PT19rMn1kfYcXtmLcyAy5sncdV1tNuiQ@mail.gmail.com>
+ <CAK8P3a3DpRvk1Mw_MKs8wAbRJbMUQoY2UTgK1CF8UOiBQg=btw@mail.gmail.com>
+ <CAHmME9pVeYBkUX058EA-W4ZkEch=enPsiPioWnkVLK03djuQ9A@mail.gmail.com>
+ <alpine.DEB.2.21.1906131822300.1791@nanos.tec.linutronix.de>
+ <CAHmME9q1ihF617=Gjw9k9BK7OC9Ghnzfnfi6LfvJ8DG+vrQOqA@mail.gmail.com> <alpine.DEB.2.21.1906132136280.1791@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906132136280.1791@nanos.tec.linutronix.de>
+From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
+Date:   Fri, 14 Jun 2019 11:14:12 +0200
+X-Gmail-Original-Message-ID: <CAHmME9qa-8J0-x8zmcBrSg_iyPNS02h5CFvhFfXpNth60OQsBg@mail.gmail.com>
+Message-ID: <CAHmME9qa-8J0-x8zmcBrSg_iyPNS02h5CFvhFfXpNth60OQsBg@mail.gmail.com>
+Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
-<nikolaus.voss@loewensteinmedical.de> wrote:
->
-> If an ACPI SSDT overlay is loaded after built-in tables
-> have been loaded e.g. via configfs or efivar_ssdt_load()
-> it is necessary to rewalk the namespace to resolve
-> references. Without this, relative and absolute paths
-> like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
-> correctly.
->
-> Make configfs load use the same method as efivar_ssdt_load().
->
-> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+Hey Thomas,
 
-This is fine by me, so
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
-Or if you want me to take this patch (without the other two in the
-series), please let me know.
-
-As for the other two patches, someone else needs to review them for
-you as I'm not particularly familiar with the PWM subsystem.
-
-> ---
->  drivers/acpi/acpi_configfs.c   |  6 +-----
->  drivers/acpi/acpica/tbxfload.c | 11 +++++++++++
->  2 files changed, 12 insertions(+), 5 deletions(-)
+> --- a/kernel/time/timekeeping.c
+> +++ b/kernel/time/timekeeping.c
+>         } while (read_seqcount_retry(&tk_core.seq, seq));
 >
-> diff --git a/drivers/acpi/acpi_configfs.c b/drivers/acpi/acpi_configfs.c
-> index f92033661239..663f0d88f912 100644
-> --- a/drivers/acpi/acpi_configfs.c
-> +++ b/drivers/acpi/acpi_configfs.c
-> @@ -56,11 +56,7 @@ static ssize_t acpi_table_aml_write(struct config_item *cfg,
->         if (!table->header)
->                 return -ENOMEM;
->
-> -       ACPI_INFO(("Host-directed Dynamic ACPI Table Load:"));
-> -       ret = acpi_tb_install_and_load_table(
-> -                       ACPI_PTR_TO_PHYSADDR(table->header),
-> -                       ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL, FALSE,
-> -                       &table->index);
-> +       ret = acpi_load_table(table->header);
->         if (ret) {
->                 kfree(table->header);
->                 table->header = NULL;
-> diff --git a/drivers/acpi/acpica/tbxfload.c b/drivers/acpi/acpica/tbxfload.c
-> index 4f30f06a6f78..ef8f8a9f3c9c 100644
-> --- a/drivers/acpi/acpica/tbxfload.c
-> +++ b/drivers/acpi/acpica/tbxfload.c
-> @@ -297,6 +297,17 @@ acpi_status acpi_load_table(struct acpi_table_header *table)
->         status = acpi_tb_install_and_load_table(ACPI_PTR_TO_PHYSADDR(table),
->                                                 ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL,
->                                                 FALSE, &table_index);
-> +
-> +       if (ACPI_SUCCESS(status)) {
-> +               /* Complete the initialization/resolution of package objects */
-> +
-> +               status = acpi_ns_walk_namespace(ACPI_TYPE_PACKAGE,
-> +                                               ACPI_ROOT_OBJECT,
-> +                                               ACPI_UINT32_MAX, 0,
-> +                                               acpi_ns_init_one_package,
-> +                                               NULL, NULL, NULL);
-> +       }
-> +
->         return_ACPI_STATUS(status);
->  }
->
-> --
-> 2.17.1
->
+> -       return base;
+> -
+> +       return base + nsecs;
+
+The rest of the file seems to use `ktime_add_ns(base, nsecs)`. I
+realize, of course, that these days that macro is the same thing as
+what you wrote, though.
+
+I can confirm that this fixes it (see below), so you can add my
+Tested-by if you want or care.
+
+One thing I'm curious about is the performance comparison with various
+ways of using jiffies directly:
+
+ktime_mono_to_any(ns_to_ktime(jiffies64_to_nsecs(get_jiffies_64())),
+TK_OFFS_BOOT)
+
+Or really giving up on the locking:
+
+ktime_to_ns(tk_core.timekeeper.offs_boot) + jiffies64_to_nsecs(get_jiffies_64())
+
+Or keeping things in units of jiffies, though that incurs a div_u64:
+
+nsecs_to_jiffies64(ktime_to_ns(tk_core.timekeeper.offs_boot)) + get_jiffies_64()
+
+But since offs_boot is updated somewhat rarely, that div_u64 could be
+precomputed each time offs_boot is updated, allowing hypothetically:
+
+tk_core.timekeeper.offs_boot_jiffies + get_jiffies_64()
+
+Which then could be remade into a wrapper such as:
+
+get_jiffies_boot_64()
+
+The speed is indeed an important factor to me in accessing this time
+value. Are any of these remotely interesting to you in that light?
+Maybe I'll send a patch for the latter.
+
+Jason
+
+8<-----------------
+
+int __init mod_init(void)
+{
+  u64 j1 = 0, j2, k1 = 0, k2, c1 = 0, c2, l1 = 0, l2;
+  for (;;) {
+    j2 = jiffies64_to_nsecs(get_jiffies_64());
+    k2 = ktime_to_ns(ktime_mono_to_any(ns_to_ktime(jiffies64_to_nsecs(get_jiffies_64())),
+TK_OFFS_BOOT));
+    c2 = ktime_get_coarse_boottime();
+    l2 = local_clock();
+    pr_err("%llu %llu %llu %llu\n", j2 - j1, k2 - k1, c2 - c1, l2 - l1);
+    j1 = j2;
+    k1 = k2;
+    c1 = c2;
+    l1 = l2;
+    msleep(200);
+  }
+  return 0;
+}
+
+[    0.420861] wireguard: 17179569472000000 17179569472000000
+312696682 420860781
+[    0.628656] wireguard: 208000000 208000000 208000000 207791083
+[    0.836591] wireguard: 208000000 208000000 208000000 207934734
+[    1.044728] wireguard: 208000000 208000000 208000000 208137167
+[    1.252593] wireguard: 208000000 208000000 208000000 207862974
+[    1.460815] wireguard: 208000000 208000000 208000000 208223514
+[    1.668667] wireguard: 208000000 208000000 208000000 207852437
+[    1.876438] wireguard: 208000000 208000000 208000000 207773658
+[    2.084627] wireguard: 208000000 208000000 208000000 208185643
+[    2.292690] wireguard: 208000000 208000000 208000000 208063377
+[    2.500672] wireguard: 208000000 208000000 208000000 207982209
+[    2.708658] wireguard: 208000000 208000000 208000000 207986527
+[    2.916686] wireguard: 208000000 208000000 208000000 208026945
+[    3.124732] wireguard: 208000000 208000000 208000000 208046153
+[    3.332684] wireguard: 208000000 208000000 208000000 207952302
+[    3.540668] wireguard: 208000000 208000000 208000000 207978195
+[    3.748633] wireguard: 208000000 208000000 208000000 207970981
+[    3.956686] wireguard: 208000000 208000000 208000000 208053094
+[    4.164690] wireguard: 208000000 208000000 208000000 207995376
+[    4.372660] wireguard: 208000000 208000000 208000000 207978324
+[    4.580787] wireguard: 208000000 208000000 208000000 208126491
+[    4.788716] wireguard: 208000000 208000000 208000000 207930106
+[    4.996685] wireguard: 208000000 208000000 208000000 207968555
+[    5.204673] wireguard: 208000000 208000000 208000000 207988295
+[    5.412676] wireguard: 208000000 208000000 208000000 207991396
+[    5.620648] wireguard: 208000000 208000000 208000000 207983671
+[    5.828822] wireguard: 208000000 208000000 208000000 208174230
+[    6.036596] wireguard: 208000000 208000000 208000000 207773401
+[    6.244615] wireguard: 208000000 208000000 208000000 208017986
+[    6.452625] wireguard: 208000000 208000000 208000000 208011215
+[    6.660678] wireguard: 208000000 208000000 208000000 208053134
+[    6.868609] wireguard: 208000000 208000000 208000000 207929536
