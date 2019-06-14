@@ -2,148 +2,89 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D720BC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D18D6C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95682073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:16:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560482172;
-	bh=tgRqoiznvUDUtStKKg1tp13aJ17PRPCL34jDJaQ26No=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=dvxvTrM8zn+FpG3Jf9//ekCpeZGSxtEQBPufzmlPGK+xxnLAZB45SIE5ZQeZkIHtC
-	 B69+fqkUdzbKVlLBp072jrDt+ag9pTABgmZL4Fvq/FV2WAI5E30VlHScdBiIDN854H
-	 f37wYwNnIgUpson6v62po4thbuZiA50XBt7w8ILQ=
+	by mail.kernel.org (Postfix) with ESMTP id ADB122073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726252AbfFNDQL (ORCPT
+        id S1726327AbfFNDS7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 23:16:11 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45436 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfFNDQK (ORCPT
+        Thu, 13 Jun 2019 23:18:59 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42864 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfFNDS6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 23:16:10 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so779164lje.12
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 20:16:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CJD5Oc6zmvXaVn3uGPjjPCtVx39KdSpYi2Iir9oJ4pE=;
-        b=c8Dd9yVuZrGwyOECEiNIFNBaiENJ8KvhuUkTobdjyjxFioQm9x+srYpCxXeYqUlYAD
-         uTex+sHSyhpFTOwrn9/TaRkbBKGIWujgB4MwCYBbZyXMUhQwCbFSkjXCppR6gW+P4o4I
-         KGyDDzVlQn4xshfEF5ZvoJKHSfyRCHHZmFIHg=
+        Thu, 13 Jun 2019 23:18:58 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z25so1285918edq.9;
+        Thu, 13 Jun 2019 20:18:57 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=CJD5Oc6zmvXaVn3uGPjjPCtVx39KdSpYi2Iir9oJ4pE=;
-        b=KzhzvTqgDFLzcoSWbEindzLmVpV10geUO+kanMwuMQz0b3YnnH8pATf+VqI27Dk9pM
-         v079CGR7U/mEE1EvubQd2WByg56GyZGpu3BS/EPNJZPBcBAWnPrIsUOqRNEztwbnBDuS
-         HXZK4wwEuXn4ny89xVS6227DLuIE05tc0xUYNDr9y8mIb0kYuGzIavGGDAItvKia8T1T
-         ktSQFakpHr7EsWrJWJVtL082cjYuvILTZaRynozKICr8itT0tN7ak3yCZGB91gThewxd
-         Q8GzBqvJVxf47M0sCSQEaV5QGUc97kNr+bPiGdjMNIX665KmMqUiwWmudMN9rXsL3Bj0
-         cQ4g==
-X-Gm-Message-State: APjAAAV8+bnwsdL4LmSHQkRTazvUQf3poBtFZ+L+hq+RStVl225sVqUJ
-        ZvYFrjZMz7llj6rWz5OlOk1SPkmyTTw=
-X-Google-Smtp-Source: APXvYqzGe2iJ5n8eJfFyY19yJ5m+Fhhz3a+uoS+rocYMsJL/MBT944sjJs4kIWJH5xfQ3N1IGFaUBw==
-X-Received: by 2002:a2e:934e:: with SMTP id m14mr22086486ljh.116.1560482167785;
-        Thu, 13 Jun 2019 20:16:07 -0700 (PDT)
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com. [209.85.208.174])
-        by smtp.gmail.com with ESMTPSA id i2sm317170ljc.96.2019.06.13.20.16.07
-        for <linux-kernel@vger.kernel.org>
+        bh=rY0FBLu0h9/AWoT8gIxRHyZHL+wYrWVVxtiQxFiOFAg=;
+        b=eBSjsPrE4/uImZTSsfDVJi7NW7rwgQ5n1kWcxvZrcbzojDu+1oAyioQDMAEW/vyrw2
+         S+DG19zfPwZywSFdeTRwArB68pYWwUnsYVz+C6EdkbkI7bfDEkJpLDGedkHNxdEAPX4Q
+         qvrfbhBFWShNPpb/zy6B05cED8lC4l8mTLos+GhpQVfqksxSO9sbbKFAZaRlNGXQaRY1
+         0O7ZQIqKDRUX77IDDORL2eTgMbrXHxgN+o7YUlEJezfLUCVu7Oqwb4KL5mDo/fRklaXQ
+         xX9uyT7mT7QyGwKslINwf0iLKKCw88QvGvx7ciLRMjVIdEU4rEgn4YWZhWxk6lzlpnCs
+         YSNw==
+X-Gm-Message-State: APjAAAWUfVtj3ZjeMiTQJEpZ5OBYI8DcH3DXrGyLIBB0YD+YGriizwPV
+        GekieHnh077Ck+m8Tj5pAEhKXypLhFw=
+X-Google-Smtp-Source: APXvYqwBljU69CEhZ4u1sK/roevkFO+Q3ztGcCmnJiPKqVwE0wgM0gbfd5f4cipz9VtshWrr5xhKXA==
+X-Received: by 2002:a17:906:5c4a:: with SMTP id c10mr8689565ejr.15.1560482335973;
+        Thu, 13 Jun 2019 20:18:55 -0700 (PDT)
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com. [209.85.221.49])
+        by smtp.gmail.com with ESMTPSA id h10sm138276ede.93.2019.06.13.20.18.54
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 20:16:07 -0700 (PDT)
-Received: by mail-lj1-f174.google.com with SMTP id t28so791877lje.9
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 20:16:07 -0700 (PDT)
-X-Received: by 2002:a2e:9a58:: with SMTP id k24mr3378542ljj.165.1560481713174;
- Thu, 13 Jun 2019 20:08:33 -0700 (PDT)
+        Thu, 13 Jun 2019 20:18:54 -0700 (PDT)
+Received: by mail-wr1-f49.google.com with SMTP id c2so862543wrm.8;
+        Thu, 13 Jun 2019 20:18:54 -0700 (PDT)
+X-Received: by 2002:a5d:4311:: with SMTP id h17mr64136370wrq.9.1560482334085;
+ Thu, 13 Jun 2019 20:18:54 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel> <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel> <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel> <20190613235524.GK14363@dread.disaster.area>
-In-Reply-To: <20190613235524.GK14363@dread.disaster.area>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 13 Jun 2019 17:08:16 -1000
-X-Gmail-Original-Message-ID: <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
-Message-ID: <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
+References: <20190613185241.22800-1-jagan@amarulasolutions.com> <20190613185241.22800-2-jagan@amarulasolutions.com>
+In-Reply-To: <20190613185241.22800-2-jagan@amarulasolutions.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 14 Jun 2019 11:18:41 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64NVoakoRzg6XeE0jzgACU3G7=_E6MOGfPYGkw3f8E8nQ@mail.gmail.com>
+Message-ID: <CAGb2v64NVoakoRzg6XeE0jzgACU3G7=_E6MOGfPYGkw3f8E8nQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 1/9] dt-bindings: display: Add TCON LCD
+ compatible for R40
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula@amarulasolutions.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 1:56 PM Dave Chinner <david@fromorbit.com> wrote:
+On Fri, Jun 14, 2019 at 2:53 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
-> - buffered read and buffered write can run concurrently if they
-> don't overlap, but right now they are serialised because that's the
-> only way to provide POSIX atomic write vs read semantics (only XFS
-> provides userspace with that guarantee).
+> Like TCON TV0, TV1 allwinner R40 has TCON LCD0, LCD1 which
+> are managed via TCON TOP.
+>
+> Add tcon lcd compatible R40, the same compatible can handle
+> TCON LCD0, LCD1.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 
-I do not believe that posix itself actually requires that at all,
-although extended standards may.
-
-That said, from a quality of implementation standpoint, it's obviously
-a good thing to do, so it might be worth looking at if something
-reasonable can be done. The XFS atomicity guarantees are better than
-what other filesystems give, but they might also not be exactly
-required.
-
-But POSIX actually ends up being pretty lax, and says
-
-  "Writes can be serialized with respect to other reads and writes. If
-a read() of file data can be proven (by any means) to occur after a
-write() of the data, it must reflect that write(), even if the calls
-are made by different processes. A similar requirement applies to
-multiple write operations to the same file position. This is needed to
-guarantee the propagation of data from write() calls to subsequent
-read() calls. This requirement is particularly significant for
-networked file systems, where some caching schemes violate these
-semantics."
-
-Note the "can" in "can be serialized", not "must". Also note that
-whole language about how the read file data must match the written
-data only if the read can be proven to have occurred after a write of
-that data.  Concurrency is very much left in the air, only provably
-serial operations matter.
-
-(There is also language that talks about "after the write has
-successfully returned" etc - again, it's about reads that occur
-_after_ the write, not concurrently with the write).
-
-The only atomicity guarantees are about the usual pipe writes and
-PIPE_BUF. Those are very explicit.
-
-Of course, there are lots of standards outside of just the POSIX
-read/write thing, so you may be thinking of some other stricter
-standard. POSIX itself has always been pretty permissive.
-
-And as mentioned, I do agree from a QoI standpoint that atomicity is
-nice, and that the XFS behavior is better. However, it does seem that
-nobody really cares, because I'm not sure we've ever done it in
-general (although we do have that i_rwsem, but I think it's mainly
-used to give the proper lseek behavior). And so the XFS behavior may
-not necessarily be *worth* it, although I presume you have some test
-for this as part of xfstests.
-
-                Linus
+Acked-by: Chen-Yu Tsai <wens@csie.org>
