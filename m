@@ -2,178 +2,164 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C93B1C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7EAC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A949220673
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:17:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F19CB2183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726167AbfFNQRW (ORCPT
+        id S1726178AbfFNQSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:17:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:37330 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725801AbfFNQRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:17:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E495128;
-        Fri, 14 Jun 2019 09:17:20 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id A76A73F694;
-        Fri, 14 Jun 2019 09:17:18 -0700 (PDT)
-From:   Will Deacon <will.deacon@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Will Deacon <will.deacon@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
+        Fri, 14 Jun 2019 12:18:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45060 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725801AbfFNQSg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:18:36 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EGHRXM041733
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:18:34 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t4c3vfycx-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:18:33 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
+        Fri, 14 Jun 2019 17:18:31 +0100
+Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 17:18:28 +0100
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EGIRsn35258832
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 16:18:27 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D371D6E056;
+        Fri, 14 Jun 2019 16:18:27 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C28226E04C;
+        Fri, 14 Jun 2019 16:18:25 +0000 (GMT)
+Received: from [9.199.60.77] (unknown [9.199.60.77])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 16:18:25 +0000 (GMT)
+Subject: Re: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     Qian Cai <cai@lca.pw>, Dan Williams <dan.j.williams@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joerg Roedel <joro@8bytes.org>, arm-soc <arm@kernel.org>
-Subject: [PATCH] MAINTAINERS: Update my email address to use @kernel.org
-Date:   Fri, 14 Jun 2019 17:17:07 +0100
-Message-Id: <20190614161707.24380-1-will.deacon@arm.com>
-X-Mailer: git-send-email 2.11.0
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <1560366952-10660-1-git-send-email-cai@lca.pw>
+ <CAPcyv4hn0Vz24s5EWKr39roXORtBTevZf7dDutH+jwapgV3oSw@mail.gmail.com>
+ <CAPcyv4iuNYXmF0-EMP8GF5aiPsWF+pOFMYKCnr509WoAQ0VNUA@mail.gmail.com>
+ <1560376072.5154.6.camel@lca.pw> <87lfy4ilvj.fsf@linux.ibm.com>
+ <20190614153535.GA9900@linux>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Date:   Fri, 14 Jun 2019 21:48:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190614153535.GA9900@linux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061416-8235-0000-0000-00000EA7C32A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011261; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01217912; UDB=6.00640490; IPR=6.00999034;
+ MB=3.00027312; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-14 16:18:30
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061416-8236-0000-0000-00004604C626
+Message-Id: <c3f2c05d-e42f-c942-1385-664f646ddd33@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=27 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-My @arm.com address will stop working at the end of August, so update to
-my @kernel.org address where you'll still be able to reach me.
+On 6/14/19 9:05 PM, Oscar Salvador wrote:
+> On Fri, Jun 14, 2019 at 02:28:40PM +0530, Aneesh Kumar K.V wrote:
+>> Can you check with this change on ppc64.  I haven't reviewed this series yet.
+>> I did limited testing with change . Before merging this I need to go
+>> through the full series again. The vmemmap poplulate on ppc64 needs to
+>> handle two translation mode (hash and radix). With respect to vmemap
+>> hash doesn't setup a translation in the linux page table. Hence we need
+>> to make sure we don't try to setup a mapping for a range which is
+>> arleady convered by an existing mapping.
+>>
+>> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+>> index a4e17a979e45..15c342f0a543 100644
+>> --- a/arch/powerpc/mm/init_64.c
+>> +++ b/arch/powerpc/mm/init_64.c
+>> @@ -88,16 +88,23 @@ static unsigned long __meminit vmemmap_section_start(unsigned long page)
+>>    * which overlaps this vmemmap page is initialised then this page is
+>>    * initialised already.
+>>    */
+>> -static int __meminit vmemmap_populated(unsigned long start, int page_size)
+>> +static bool __meminit vmemmap_populated(unsigned long start, int page_size)
+>>   {
+>>   	unsigned long end = start + page_size;
+>>   	start = (unsigned long)(pfn_to_page(vmemmap_section_start(start)));
+>>   
+>> -	for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page)))
+>> -		if (pfn_valid(page_to_pfn((struct page *)start)))
+>> -			return 1;
+>> +	for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page))) {
+>>   
+>> -	return 0;
+>> +		struct mem_section *ms;
+>> +		unsigned long pfn = page_to_pfn((struct page *)start);
+>> +
+>> +		if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
+>> +			return 0;
+> 
+> I might be missing something, but is this right?
+> Having a section_nr above NR_MEM_SECTIONS is invalid, but if we return 0 here,
+> vmemmap_populate will go on and populate it.
 
-When I say "stop working" I really mean "will go to my line manager", so
-send patches there at your peril because they may reply with roadmaps
-and spreadsheets. You have been warned.
+I should drop that completely. We should not hit that condition at all. 
+I will send a final patch once I go through the full patch series making 
+sure we are not breaking any ppc64 details.
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>
-Cc: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: arm-soc <arm@kernel.org>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
----
+Wondering why we did the below
 
-Unless Linus wants to pick this up directly, I can include it in the
-arm64 pull request next week. Just thought I'd send it out now as an
-'FYI' for the people on CC.
+#if defined(ARCH_SUBSECTION_SHIFT)
+#define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
+#elif defined(PMD_SHIFT)
+#define SUBSECTION_SHIFT (PMD_SHIFT)
+#else
+/*
+  * Memory hotplug enabled platforms avoid this default because they
+  * either define ARCH_SUBSECTION_SHIFT, or PMD_SHIFT is a constant, but
+  * this is kept as a backstop to allow compilation on
+  * !ARCH_ENABLE_MEMORY_HOTPLUG archs.
+  */
+#define SUBSECTION_SHIFT 21
+#endif
 
- .mailmap    |  1 +
- MAINTAINERS | 16 ++++++++--------
- 2 files changed, 9 insertions(+), 8 deletions(-)
+why not
 
-diff --git a/.mailmap b/.mailmap
-index 07a777f9d687..6b06a19e5033 100644
---- a/.mailmap
-+++ b/.mailmap
-@@ -238,6 +238,7 @@ Vlad Dogaru <ddvlad@gmail.com> <vlad.dogaru@intel.com>
- Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@virtuozzo.com>
- Vladimir Davydov <vdavydov.dev@gmail.com> <vdavydov@parallels.com>
- Takashi YOSHII <takashi.yoshii.zj@renesas.com>
-+Will Deacon <will@kernel.org> <will.deacon@arm.com>
- Yakir Yang <kuankuan.y@gmail.com> <ykk@rock-chips.com>
- Yusuke Goda <goda.yusuke@renesas.com>
- Gustavo Padovan <gustavo@las.ic.unicamp.br>
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 5cfbea4ce575..651545fc87ca 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1233,7 +1233,7 @@ F:	arch/arm/lib/floppydma.S
- F:	arch/arm/include/asm/floppy.h
- 
- ARM PMU PROFILING AND DEBUGGING
--M:	Will Deacon <will.deacon@arm.com>
-+M:	Will Deacon <will@kernel.org>
- M:	Mark Rutland <mark.rutland@arm.com>
- S:	Maintained
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-@@ -1305,7 +1305,7 @@ F:	Documentation/devicetree/bindings/interrupt-controller/arm,vic.txt
- F:	drivers/irqchip/irq-vic.c
- 
- ARM SMMU DRIVERS
--M:	Will Deacon <will.deacon@arm.com>
-+M:	Will Deacon <will@kernel.org>
- R:	Robin Murphy <robin.murphy@arm.com>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
-@@ -2539,7 +2539,7 @@ F:	drivers/i2c/busses/i2c-xiic.c
- 
- ARM64 PORT (AARCH64 ARCHITECTURE)
- M:	Catalin Marinas <catalin.marinas@arm.com>
--M:	Will Deacon <will.deacon@arm.com>
-+M:	Will Deacon <will@kernel.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
- S:	Maintained
-@@ -2723,7 +2723,7 @@ S:	Maintained
- F:	drivers/net/wireless/atmel/atmel*
- 
- ATOMIC INFRASTRUCTURE
--M:	Will Deacon <will.deacon@arm.com>
-+M:	Will Deacon <will@kernel.org>
- M:	Peter Zijlstra <peterz@infradead.org>
- R:	Boqun Feng <boqun.feng@gmail.com>
- L:	linux-kernel@vger.kernel.org
-@@ -9110,7 +9110,7 @@ F:	drivers/misc/lkdtm/*
- LINUX KERNEL MEMORY CONSISTENCY MODEL (LKMM)
- M:	Alan Stern <stern@rowland.harvard.edu>
- M:	Andrea Parri <andrea.parri@amarulasolutions.com>
--M:	Will Deacon <will.deacon@arm.com>
-+M:	Will Deacon <will@kernel.org>
- M:	Peter Zijlstra <peterz@infradead.org>
- M:	Boqun Feng <boqun.feng@gmail.com>
- M:	Nicholas Piggin <npiggin@gmail.com>
-@@ -9218,7 +9218,7 @@ F:	Documentation/admin-guide/LSM/LoadPin.rst
- LOCKING PRIMITIVES
- M:	Peter Zijlstra <peterz@infradead.org>
- M:	Ingo Molnar <mingo@redhat.com>
--M:	Will Deacon <will.deacon@arm.com>
-+M:	Will Deacon <will@kernel.org>
- L:	linux-kernel@vger.kernel.org
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git locking/core
- S:	Maintained
-@@ -10539,7 +10539,7 @@ F:	arch/arm/boot/dts/mmp*
- F:	arch/arm/mach-mmp/
- 
- MMU GATHER AND TLB INVALIDATION
--M:	Will Deacon <will.deacon@arm.com>
-+M:	Will Deacon <will@kernel.org>
- M:	"Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
- M:	Andrew Morton <akpm@linux-foundation.org>
- M:	Nick Piggin <npiggin@gmail.com>
-@@ -12029,7 +12029,7 @@ S:	Maintained
- F:	drivers/pci/controller/dwc/*layerscape*
- 
- PCI DRIVER FOR GENERIC OF HOSTS
--M:	Will Deacon <will.deacon@arm.com>
-+M:	Will Deacon <will@kernel.org>
- L:	linux-pci@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
--- 
-2.11.0
+#if defined(ARCH_SUBSECTION_SHIFT)
+#define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
+#else
+#define SUBSECTION_SHIFT  SECTION_SHIFT
+#endif
+
+ie, if SUBSECTION is not supported by arch we have one sub-section per 
+section?
+
+
+-aneesh
 
