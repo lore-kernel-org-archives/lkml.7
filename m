@@ -2,109 +2,133 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8564C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7932FC31E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DC7F208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:48:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="I8MPAgx2"
+	by mail.kernel.org (Postfix) with ESMTP id 58CA5208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:51:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726582AbfFNBr7 (ORCPT
+        id S1726519AbfFNBvf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 21:47:59 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19332 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725997AbfFNBr7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 21:47:59 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d02fcce0000>; Thu, 13 Jun 2019 18:47:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 13 Jun 2019 18:47:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 18:47:58 -0700
-Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 01:47:57 +0000
-Subject: Re: [PATCH 05/22] mm: export alloc_pages_vma
-To:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-CC:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-nvdimm@lists.01.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190613094326.24093-1-hch@lst.de>
- <20190613094326.24093-6-hch@lst.de>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <d83280b5-8cca-3b28-1727-58a70648e2b9@nvidia.com>
-Date:   Thu, 13 Jun 2019 18:47:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 13 Jun 2019 21:51:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52946 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725813AbfFNBve (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 21:51:34 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3B19210C94;
+        Fri, 14 Jun 2019 01:51:34 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1B16860FBD;
+        Fri, 14 Jun 2019 01:51:33 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 20:51:31 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 2/9] objtool: Fix ORC unwinding in non-JIT BPF generated
+ code
+Message-ID: <20190614015131.wmw63qwzjyzack7f@treble>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <99c22bbd79e72855f4bc9049981602d537a54e70.1560431531.git.jpoimboe@redhat.com>
+ <20190613205710.et5fywop4gfalsa6@ast-mbp.dhcp.thefacebook.com>
+ <20190614012030.b6eujm7b4psu62kj@treble>
+ <20190614013719.eqwpqfxukh6nhgec@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613094326.24093-6-hch@lst.de>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560476879; bh=W7HIzAAq5sQ4cds9yVoSXH+lwR7EoHWX9W6ILDXWS68=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=I8MPAgx2vYT6KwhZqE7Iz0XmBDUAPkhjJ2muXoBXvyuvRRzqt+N/vYMC8nbdYG25/
-         WSlmXfyDpPT5QeLCb+OCPbYjTfqvYqP4DCyLjNUFaxdOx4cGM1afGuLLi0esWZSgMu
-         A8GQ9BiCgUF44kc2o88bVgpXE3mC+ZezmwWJQmLHcMqWujgPfAbqMUvlo+s7Iiq7sU
-         WHoYSAAnR0/4orH9jeAbwNklddZnxg4UewSkrDUWY6MGnu9yd4bNKuRV1sh4wBzCNg
-         U+IAYEyyzX1/h2C96Uiqk0lQ+n/ZSuk409t8qWCUpSU856fphT2d9dv2ddj3jG5GUT
-         /1wLT1eB7j1+w==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190614013719.eqwpqfxukh6nhgec@ast-mbp.dhcp.thefacebook.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 14 Jun 2019 01:51:34 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 2:43 AM, Christoph Hellwig wrote:
-> noveau is currently using this through an odd hmm wrapper, and I plan
-
-  "nouveau"
-
-> to switch it to the real thing later in this series.
+On Thu, Jun 13, 2019 at 06:37:21PM -0700, Alexei Starovoitov wrote:
+> On Thu, Jun 13, 2019 at 08:20:30PM -0500, Josh Poimboeuf wrote:
+> > On Thu, Jun 13, 2019 at 01:57:11PM -0700, Alexei Starovoitov wrote:
+> > > On Thu, Jun 13, 2019 at 08:20:59AM -0500, Josh Poimboeuf wrote:
+> > > > Objtool currently ignores ___bpf_prog_run() because it doesn't
+> > > > understand the jump table.  This results in the ORC unwinder not being
+> > > > able to unwind through non-JIT BPF code.
+> > > > 
+> > > > Luckily, the BPF jump table resembles a GCC switch jump table, which
+> > > > objtool already knows how to read.
+> > > > 
+> > > > Add generic support for reading any static local jump table array named
+> > > > "jump_table", and rename the BPF variable accordingly, so objtool can
+> > > > generate ORC data for ___bpf_prog_run().
+> > > > 
+> > > > Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> > > > Reported-by: Song Liu <songliubraving@fb.com>
+> > > > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > > > ---
+> > > >  kernel/bpf/core.c     |  5 ++---
+> > > >  tools/objtool/check.c | 16 ++++++++++++++--
+> > > >  2 files changed, 16 insertions(+), 5 deletions(-)
+> > > > 
+> > > > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> > > > index 7c473f208a10..aa546ef7dbdc 100644
+> > > > --- a/kernel/bpf/core.c
+> > > > +++ b/kernel/bpf/core.c
+> > > > @@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> > > >  {
+> > > >  #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+> > > >  #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+> > > > -	static const void *jumptable[256] = {
+> > > > +	static const void *jump_table[256] = {
+> > > 
+> > > Nack to the change like above
+> > 
+> > "jump table" is two words, so does it not make sense to separate them
+> > with an underscore for readability?
+> > 
+> > I created a generic feature in objtool for this so that other code can
+> > also use it.  So a generic name (and typical Linux naming convention --
+> > separating words with an underscore) makes sense here.
+> > 
+> > > and to patches 8 and 9.
+> > 
+> > Well, it's your code, but ... can I ask why?  AT&T syntax is the
+> > standard for Linux, which is in fact the OS we are developing for.
+> > 
+> > It makes the code extra confusing for it to be annotated differently
+> > than all other Linux asm code.  And due to the inherent complexity of
+> > generating code at runtime, I'd think we'd want to make the code as
+> > readable as possible, for as many people as possible (i.e. other Linux
+> > developers).
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
+> imo your changes make it less readable.
 
-Reviewed-by: John Hubbard <jhubbard@nvidia.com> 
+How does introducing an underscore between two words make them less
+readable?
 
-thanks,
+> please do not randomly change names and style based on your own preferences.
+
+These are Linux standards, not my own preferences.
+
+> dst=src
+> mov(dst,src)
+> memcpy(dst,src)
+> if people want to have more bugs in assembler code. it's their call.
+> bpf_jit_comp.c is C code. dest is on the left.
+
+So you don't like the ordering of the src,dst function arguments?  Ok.
+
+But what do you think about the AT&T syntax comments?
+
 -- 
-John Hubbard
-NVIDIA
-
->  mm/mempolicy.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 01600d80ae01..f9023b5fba37 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -2098,6 +2098,7 @@ alloc_pages_vma(gfp_t gfp, int order, struct vm_area_struct *vma,
->  out:
->  	return page;
->  }
-> +EXPORT_SYMBOL_GPL(alloc_pages_vma);
->  
->  /**
->   * 	alloc_pages_current - Allocate pages.
-> 
+Josh
