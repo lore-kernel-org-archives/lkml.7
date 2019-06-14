@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC348C31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:34:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2494FC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:34:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9E4C21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:34:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E211621848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:34:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544465;
-	bh=vuw+uJ5WwLvUR/WCwd5/tNkzmFWQiBSGoSYrf9EzZ7g=;
+	s=default; t=1560544469;
+	bh=4ap3G6QYA0AlbM7TFNTIg90RS+nGkjFkZ491krXxId0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eC0eqN+8v+bWmu05/hDrGtws/EPJb4pfCKc/sbKVKjcL/ncUIZg64ErcIfQk4X5bC
-	 84frWru/MaoNaZe9vBXnbJiTIEPKLmsE8LlBz+fcmF81jNn5pfjDS4PwXsqbZpBXBw
-	 cqSGfIrw+ewd0Kitnxuq1mUtONks/UNoRCc9OeFs=
+	b=EZ0oB87eiee8yrwQwZjCrNAMSKgbIKM2i7lLJK0JgFFGbPKV3/DtYWbm07rCDL9w9
+	 bI9eN7RTIQxl3rV+RQ9YH2EVW5RyNw9qsCBmSGqM1IOKRdLKIvYC9NGtyhAZEaRU2s
+	 tj9i78AAJT6sGtGCXinwdZAOmKZu0EY8SM8XdHlo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbfFNUaU (ORCPT
+        id S1727487AbfFNUaT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:30:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53068 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:30:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53030 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727423AbfFNUaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:16 -0400
+        id S1727394AbfFNUaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:15 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A645021874;
-        Fri, 14 Jun 2019 20:30:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C0EFF2184E;
+        Fri, 14 Jun 2019 20:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544215;
-        bh=vuw+uJ5WwLvUR/WCwd5/tNkzmFWQiBSGoSYrf9EzZ7g=;
+        s=default; t=1560544214;
+        bh=4ap3G6QYA0AlbM7TFNTIg90RS+nGkjFkZ491krXxId0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sZdXb9RxgQwPQ6ny89IRZi7pNA+aVdUOqic6n4ZWKn+jhNtJ7r202TQbaFEMkopHf
-         QOSbxSFlWqLT62FkS80+boU4m7fNlTnnqNuPsOcKu1jfi/zbjY2ggYct1uqZuj/pdH
-         yOtckGxuUNOKpplLEJA0oQ7IToa0OGNQNN/bTZ/g=
+        b=n0GhUcSU5rjzmnEOgAE+K5BHfUw7uQBzetPwXqZPF2Ywj7R7+W7NBW+VOwbRacY4F
+         9uQagZ2ACtGbeETSefi/hp6kAGsRlA6zq4T6HmcHupMHLPLS9pyLc0JDv0/QU7I+fA
+         UgPszQauhLrhdV4OLcf2PuetHK9YrBu/629CghSw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <mark-mc.lee@mediatek.com>,
+Cc:     Gen Zhang <blackgod016574@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 26/39] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
-Date:   Fri, 14 Jun 2019 16:29:31 -0400
-Message-Id: <20190614202946.27385-26-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 23/39] mdesc: fix a missing-check bug in get_vdev_port_node_info()
+Date:   Fri, 14 Jun 2019 16:29:28 -0400
+Message-Id: <20190614202946.27385-23-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202946.27385-1-sashal@kernel.org>
 References: <20190614202946.27385-1-sashal@kernel.org>
@@ -60,42 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Gen Zhang <blackgod016574@gmail.com>
 
-[ Upstream commit 880c2d4b2fdfd580ebcd6bb7240a8027a1d34751 ]
+[ Upstream commit 80caf43549e7e41a695c6d1e11066286538b336f ]
 
-Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
-equals to 2.
+In get_vdev_port_node_info(), 'node_info->vdev_port.name' is allcoated
+by kstrdup_const(), and it returns NULL when fails. So
+'node_info->vdev_port.name' should be checked.
 
-Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/sparc/kernel/mdesc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 0c70fb345f83..1d55f014725e 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -1784,6 +1784,7 @@ static void mtk_poll_controller(struct net_device *dev)
+diff --git a/arch/sparc/kernel/mdesc.c b/arch/sparc/kernel/mdesc.c
+index 39a2503fa3e1..51028abe5e90 100644
+--- a/arch/sparc/kernel/mdesc.c
++++ b/arch/sparc/kernel/mdesc.c
+@@ -357,6 +357,8 @@ static int get_vdev_port_node_info(struct mdesc_handle *md, u64 node,
  
- static int mtk_start_dma(struct mtk_eth *eth)
- {
-+	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
- 	int err;
+ 	node_info->vdev_port.id = *idp;
+ 	node_info->vdev_port.name = kstrdup_const(name, GFP_KERNEL);
++	if (!node_info->vdev_port.name)
++		return -1;
+ 	node_info->vdev_port.parent_cfg_hdl = *parent_cfg_hdlp;
  
- 	err = mtk_dma_init(eth);
-@@ -1800,7 +1801,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
- 		MTK_QDMA_GLO_CFG);
- 
- 	mtk_w32(eth,
--		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
-+		MTK_RX_DMA_EN | rx_2b_offset |
- 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
- 		MTK_PDMA_GLO_CFG);
- 
+ 	return 0;
 -- 
 2.20.1
 
