@@ -2,161 +2,151 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 837E2C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2889CC31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60C5921744
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE4872168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:24:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="kK6Kk2II"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfFNDWS (ORCPT
+        id S1726655AbfFNDYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 23:22:18 -0400
-Received: from lucky1.263xmail.com ([211.157.147.135]:51970 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726635AbfFNDWH (ORCPT
+        Thu, 13 Jun 2019 23:24:03 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47627 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725942AbfFNDYC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 23:22:07 -0400
-Received: from tony.xie?rock-chips.com (unknown [192.168.167.229])
-        by lucky1.263xmail.com (Postfix) with ESMTP id 594E936A2C;
-        Fri, 14 Jun 2019 11:14:44 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 1
-X-SKE-CHECKED: 1
-X-ANTISPAM-LEVEL: 2
-Received: from localhost.localdomain (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P13273T140214467016448S1560482074692142_;
-        Fri, 14 Jun 2019 11:14:43 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <389d14951bffabbc1d871a1212109d1c>
-X-RL-SENDER: tony.xie@rock-chips.com
-X-SENDER: xxx@rock-chips.com
-X-LOGIN-NAME: tony.xie@rock-chips.com
-X-FST-TO: heiko@sntech.de
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-From:   Tony Xie <tony.xie@rock-chips.com>
-To:     heiko@sntech.de
-Cc:     broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, chenjh@rock-chips.com,
-        xsf@rock-chips.com, zhangqing@rock-chips.com,
-        huangtao@rock-chips.com, tony.xie@rock-chips.com
-Subject: [PATCH v9 4/6] dt-bindings: mfd: rk808: Add binding information for RK809 and RK817.
-Date:   Thu, 13 Jun 2019 23:14:23 -0400
-Message-Id: <20190614031425.15741-5-tony.xie@rock-chips.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614031425.15741-1-tony.xie@rock-chips.com>
-References: <20190614031425.15741-1-tony.xie@rock-chips.com>
+        Thu, 13 Jun 2019 23:24:02 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 4F0E9886BF
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 15:23:59 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1560482639;
+        bh=AbZqhinaeDDXdEDPzuAuewpZ+Ugz4DonDu2l7bEltmo=;
+        h=From:To:CC:Subject:Date:References;
+        b=kK6Kk2IISGYuLBUAa5ZgFnskmSHT+XwHWmucjvXoPGeMKvahtzFTF9c+R3FxvPLIS
+         fzq/PYJVIGdfkyJAZWJq32eiGNUJ4wWUewlPLQlYpOyoeijEsmlDH6gOlXvw5sdeaf
+         DLuLVteoGXBnNmWmdXhtocnZ6wQYK1Ac6ydDwYEVHmcnG8eq5V2sdoLPoEaCKlhr5m
+         gd8pcxHEEKDWtOEJa/8jhL+CYF4QzW4xyP5f2n8UvYHIyhEABhxrM+vYtvTvpfshDb
+         gzv6wiBhfe58E4StnYwtgyJYU9BOOsZhSJri9fQMSeE4Ok+e20Q8HLbxaVj2w0RA2w
+         suJUd3UtKXIWQ==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d03134f0000>; Fri, 14 Jun 2019 15:23:59 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1156.6; Fri, 14 Jun 2019 15:23:58 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Fri, 14 Jun 2019 15:23:58 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
+        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "vigneshr@ti.com" <vigneshr@ti.com>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>
+CC:     "sr@denx.de" <sr@denx.de>,
+        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mtd: cfi_cmdset_0002: dynamically determine the max
+ sectors
+Thread-Topic: [PATCH] mtd: cfi_cmdset_0002: dynamically determine the max
+ sectors
+Thread-Index: AQHVEDI+CoqUJR97jEy7wwMr7iI19Q==
+Date:   Fri, 14 Jun 2019 03:23:57 +0000
+Message-ID: <8e80d911f0dd4759b3edc72fb76530d6@svr-chch-ex1.atlnz.lc>
+References: <20190522000628.13073-1-chris.packham@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree bindings documentation for Rockchip's RK809 & RK817 PMIC.
-
-Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
----
- .../devicetree/bindings/mfd/rk808.txt         | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/rk808.txt b/Documentation/devicetree/bindings/mfd/rk808.txt
-index 1683ec3245bc..04df07f6f793 100644
---- a/Documentation/devicetree/bindings/mfd/rk808.txt
-+++ b/Documentation/devicetree/bindings/mfd/rk808.txt
-@@ -3,11 +3,15 @@ RK8XX Power Management Integrated Circuit
- The rk8xx family current members:
- rk805
- rk808
-+rk809
-+rk817
- rk818
- 
- Required properties:
- - compatible: "rockchip,rk805"
- - compatible: "rockchip,rk808"
-+- compatible: "rockchip,rk809"
-+- compatible: "rockchip,rk817"
- - compatible: "rockchip,rk818"
- - reg: I2C slave address
- - interrupts: the interrupt outputs of the controller.
-@@ -45,6 +49,23 @@ Optional RK808 properties:
-   the gpio controller. If DVS GPIOs aren't present, voltage changes will happen
-   very quickly with no slow ramp time.
- 
-+Optional shared RK809 and RK817 properties:
-+- vcc1-supply:  The input supply for DCDC_REG1
-+- vcc2-supply:  The input supply for DCDC_REG2
-+- vcc3-supply:  The input supply for DCDC_REG3
-+- vcc4-supply:  The input supply for DCDC_REG4
-+- vcc5-supply:  The input supply for LDO_REG1, LDO_REG2, LDO_REG3
-+- vcc6-supply:  The input supply for LDO_REG4, LDO_REG5, LDO_REG6
-+- vcc7-supply:  The input supply for LDO_REG7, LDO_REG8, LDO_REG9
-+
-+Optional RK809 properties:
-+- vcc8-supply:  The input supply for SWITCH_REG1
-+- vcc9-supply:  The input supply for DCDC_REG5, SWITCH_REG2
-+
-+Optional RK817 properties:
-+- vcc8-supply:  The input supply for BOOST
-+- vcc9-supply:  The input supply for OTG_SWITCH
-+
- Optional RK818 properties:
- - vcc1-supply:  The input supply for DCDC_REG1
- - vcc2-supply:  The input supply for DCDC_REG2
-@@ -86,6 +107,21 @@ number as described in RK808 datasheet.
- 	- SWITCH_REGn
- 		- valid values for n are 1 to 2
- 
-+Following regulators of the RK809 and RK817 PMIC blocks are supported. Note that
-+the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
-+number as described in RK809 and RK817 datasheets.
-+
-+	- DCDC_REGn
-+		- valid values for n are 1 to 5 for RK809.
-+		- valid values for n are 1 to 4 for RK817.
-+	- LDO_REGn
-+		- valid values for n are 1 to 9 for RK809.
-+		- valid values for n are 1 to 9 for RK817.
-+	- SWITCH_REGn
-+		- valid values for n are 1 to 2 for RK809.
-+	- BOOST for RK817
-+	- OTG_SWITCH for RK817
-+
- Following regulators of the RK818 PMIC block are supported. Note that
- the 'n' in regulator name, as in DCDC_REGn or LDOn, represents the DCDC or LDO
- number as described in RK818 datasheet.
-@@ -98,6 +134,14 @@ number as described in RK818 datasheet.
- 	- HDMI_SWITCH
- 	- OTG_SWITCH
- 
-+It is necessary to configure three pins for both the RK809 and RK817, the three
-+pins are "gpio_ts" "gpio_gt" "gpio_slp".
-+	The gpio_gt and gpio_ts pins support the gpio function.
-+	The gpio_slp pin is for controlling the pmic states, as below:
-+		- reset
-+		- power down
-+		- sleep
-+
- Standard regulator bindings are used inside regulator subnodes. Check
-   Documentation/devicetree/bindings/regulator/regulator.txt
- for more details
--- 
-2.17.1
-
-
-
+Hi All,=0A=
+=0A=
+I think this may have got lost in the change of maintainer for mtd.=0A=
+=0A=
+On 22/05/19 12:06 PM, Chris Packham wrote:=0A=
+> Because PPB unlocking unlocks the whole chip cfi_ppb_unlock() needs to=0A=
+> remember the locked status for each sector so it can re-lock the=0A=
+> unaddressed sectors. Dynamically calculate the maximum number of sectors=
+=0A=
+> rather than using a hardcoded value that is too small for larger chips.=
+=0A=
+> =0A=
+> Tested with Spansion S29GL01GS11TFI flash device.=0A=
+> =0A=
+> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
+> ---=0A=
+>   drivers/mtd/chips/cfi_cmdset_0002.c | 13 ++++++++-----=0A=
+>   1 file changed, 8 insertions(+), 5 deletions(-)=0A=
+> =0A=
+> diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_=
+cmdset_0002.c=0A=
+> index c8fa5906bdf9..a1a7d334aa82 100644=0A=
+> --- a/drivers/mtd/chips/cfi_cmdset_0002.c=0A=
+> +++ b/drivers/mtd/chips/cfi_cmdset_0002.c=0A=
+> @@ -2533,8 +2533,6 @@ struct ppb_lock {=0A=
+>   	int locked;=0A=
+>   };=0A=
+>   =0A=
+> -#define MAX_SECTORS			512=0A=
+> -=0A=
+>   #define DO_XXLOCK_ONEBLOCK_LOCK		((void *)1)=0A=
+>   #define DO_XXLOCK_ONEBLOCK_UNLOCK	((void *)2)=0A=
+>   #define DO_XXLOCK_ONEBLOCK_GETLOCK	((void *)3)=0A=
+> @@ -2633,6 +2631,7 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd=
+_info *mtd, loff_t ofs,=0A=
+>   	int i;=0A=
+>   	int sectors;=0A=
+>   	int ret;=0A=
+> +	int max_sectors;=0A=
+>   =0A=
+>   	/*=0A=
+>   	 * PPB unlocking always unlocks all sectors of the flash chip.=0A=
+> @@ -2640,7 +2639,11 @@ static int __maybe_unused cfi_ppb_unlock(struct mt=
+d_info *mtd, loff_t ofs,=0A=
+>   	 * first check the locking status of all sectors and save=0A=
+>   	 * it for future use.=0A=
+>   	 */=0A=
+> -	sect =3D kcalloc(MAX_SECTORS, sizeof(struct ppb_lock), GFP_KERNEL);=0A=
+> +	max_sectors =3D 0;=0A=
+> +	for (i =3D 0; i < mtd->numeraseregions; i++)=0A=
+> +		max_sectors +=3D regions[i].numblocks;=0A=
+> +=0A=
+> +	sect =3D kcalloc(max_sectors, sizeof(struct ppb_lock), GFP_KERNEL);=0A=
+>   	if (!sect)=0A=
+>   		return -ENOMEM;=0A=
+>   =0A=
+> @@ -2689,9 +2692,9 @@ static int __maybe_unused cfi_ppb_unlock(struct mtd=
+_info *mtd, loff_t ofs,=0A=
+>   		}=0A=
+>   =0A=
+>   		sectors++;=0A=
+> -		if (sectors >=3D MAX_SECTORS) {=0A=
+> +		if (sectors >=3D max_sectors) {=0A=
+>   			printk(KERN_ERR "Only %d sectors for PPB locking supported!\n",=0A=
+> -			       MAX_SECTORS);=0A=
+> +			       max_sectors);=0A=
+>   			kfree(sect);=0A=
+>   			return -EINVAL;=0A=
+>   		}=0A=
+> =0A=
+=0A=
