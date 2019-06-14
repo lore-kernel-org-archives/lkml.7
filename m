@@ -2,190 +2,112 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DC4C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA7CC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C0A4208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:10:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="igk9dt/v"
+	by mail.kernel.org (Postfix) with ESMTP id 8D122208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727816AbfFNMKY (ORCPT
+        id S1727833AbfFNML2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:10:24 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:35697 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727217AbfFNMKX (ORCPT
+        Fri, 14 Jun 2019 08:11:28 -0400
+Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:53912 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfFNML2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:10:23 -0400
-Received: by mail-vs1-f65.google.com with SMTP id u124so1618108vsu.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F5D+HakwAE2WgxfHyzl83ZwTB437sX3wIDlJ8qrfryI=;
-        b=igk9dt/vAQdzxT8QzdZI/Ievysa9xK3WPDJK4vcC3mDYTCNmuMk9blJgU6OL9Yc0dK
-         Tio9BFMzxl///10xMQOIVDRbhF/nM/Hlu2UzObSKzWbdltAQYn565CyrftqwwoLEd33B
-         Cr7ROv4Q0dHUiigBi2fHNGkoZUZUg1UIePaijaE5FoQNP4Rj7BRVnnrvi3b8R3WX/hJu
-         CM8fh8LGVg8luPx2wjcpony8vE0jjzt/t5njqGuSo/mVk/E4Zw+RG33ExdPs2KeVtCjq
-         cOiCldbH6KD71Pzci41unZHGuT1+Ngh7l43T59JmGfcQNXWayyQYrKADlRuNeU7nV5CB
-         2Apg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F5D+HakwAE2WgxfHyzl83ZwTB437sX3wIDlJ8qrfryI=;
-        b=hH3bqRhOP0hzZ0FiD/QDMgcnBzukCDn6CdT6HCVkTEbQi+CptGkOVe16+u1BKPZDe2
-         7yw3NJHY+dDokRqv+fsrdeh+dQAAskwDqqyrrcVbjvkxyjzQVSPx567M3z4kwbBEXJiv
-         0sPIvzbCgPQaycmlE67O17SLpSQK37WTy2w1NphiSwhisiGWWK2OERQdOo9dLBAbwCKk
-         tHgnd/LrWaPMO54YIHWNrit0GyfEedSk+Fps6qOhrHARFJDvn5fO4T3svGMX/9VAJGEl
-         /cf67BKY1V3dytpYxxNbLyeqOwJ6aR28A3DRvmO31/FOq1hmIRvIDq2r9PcoBPgDSlFt
-         ubZg==
-X-Gm-Message-State: APjAAAXd+cKsscFSkjRCGSJUkqkWmZyW+KXDnAG3hJjRl+CUY07iMt33
-        tEzztebTint4sKh5dk94q3rekGnSYoZ/W1McB5UC5A==
-X-Google-Smtp-Source: APXvYqydln8EpljbWUJIef2R+juyAWV3U5n+26y/5MI0AqXoz3GwtqMW3kyvstIYiC/7nRtirT+2WiUXP5SR66PbMWA=
-X-Received: by 2002:a67:ed8b:: with SMTP id d11mr52752594vsp.35.1560514222446;
- Fri, 14 Jun 2019 05:10:22 -0700 (PDT)
+        Fri, 14 Jun 2019 08:11:28 -0400
+Received: from [192.168.1.41] ([92.148.209.44])
+        by mwinf5d40 with ME
+        id QcBN2000a0y1A8U03cBNc2; Fri, 14 Jun 2019 14:11:26 +0200
+X-ME-Helo: [192.168.1.41]
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Fri, 14 Jun 2019 14:11:26 +0200
+X-ME-IP: 92.148.209.44
+Subject: Re: [PATCH net-next] hinic: Use devm_kasprintf instead of hard coding
+ it
+To:     aviad.krawczyk@huawei.com, davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190613195412.1702-1-christophe.jaillet@wanadoo.fr>
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Message-ID: <c55cd76d-2d3e-d9b2-1f1b-4881102c407d@wanadoo.fr>
+Date:   Fri, 14 Jun 2019 14:11:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190613234153.59309-1-dianders@chromium.org> <20190613234153.59309-5-dianders@chromium.org>
-In-Reply-To: <20190613234153.59309-5-dianders@chromium.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Fri, 14 Jun 2019 14:09:45 +0200
-Message-ID: <CAPDyKFrJ4+zn7Ak0tYHkBfXUtH3N7erb5R7Q+hgugchZmCRGrw@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
-To:     Douglas Anderson <dianders@chromium.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Avri Altman <avri.altman@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190613195412.1702-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: fr
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 01:42, Douglas Anderson <dianders@chromium.org> wrote:
+Hi,
+
+I got a:
+
+<aviad.krawczyk@huawei.com>: host huawei.com[103.218.216.136] said: 550
+5.1.1 Error: invalid recipients is found from 80.12.242.127
+
+However, MAINTAINERS has:
+   HUAWEI ETHERNET DRIVER
+   M:	Aviad Krawczyk <aviad.krawczyk@huawei.com>
+   L:	netdev@vger.kernel.org
+   S:	Supported
+   F:	Documentation/networking/hinic.txt
+   F:	drivers/net/ethernet/huawei/hinic/
+
+I don't know how this should be fixed (neither if it should be...), so if s.o. knows, please do.
+
+Best regards,
+Christophe Jaillet
+
+Le 13/06/2019 à 21:54, Christophe JAILLET a écrit :
+> 'devm_kasprintf' is less verbose than:
+>     snprintf(NULL, 0, ...);
+>     devm_kzalloc(...);
+>     sprintf
+> so use it instead.
 >
-> We want SDIO drivers to be able to temporarily stop retuning when the
-> driver knows that the SDIO card is not in a state where retuning will
-> work (maybe because the card is asleep).  We'll move the relevant
-> functions to a place where drivers can call them.
->
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-
-This looks good to me.
-
-BTW, seems like this series is best funneled via my mmc tree, no? In
-such case, I need acks for the brcmfmac driver patches.
-
-Kind regards
-Uffe
-
-
-
-
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 > ---
+>   drivers/net/ethernet/huawei/hinic/hinic_rx.c | 8 +++-----
+>   1 file changed, 3 insertions(+), 5 deletions(-)
 >
-> Changes in v4:
-> - Moved retune hold/release to SDIO API (Adrian).
->
-> Changes in v3:
-> - ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
->
-> Changes in v2: None
->
->  drivers/mmc/core/sdio_io.c    | 40 +++++++++++++++++++++++++++++++++++
->  include/linux/mmc/sdio_func.h |  3 +++
->  2 files changed, 43 insertions(+)
->
-> diff --git a/drivers/mmc/core/sdio_io.c b/drivers/mmc/core/sdio_io.c
-> index f822a9630b0e..1b6fe737bd72 100644
-> --- a/drivers/mmc/core/sdio_io.c
-> +++ b/drivers/mmc/core/sdio_io.c
-> @@ -15,6 +15,7 @@
->  #include "sdio_ops.h"
->  #include "core.h"
->  #include "card.h"
-> +#include "host.h"
->
->  /**
->   *     sdio_claim_host - exclusively claim a bus for a certain SDIO function
-> @@ -770,3 +771,42 @@ void sdio_retune_crc_enable(struct sdio_func *func)
->         func->card->host->retune_crc_disable = false;
->  }
->  EXPORT_SYMBOL_GPL(sdio_retune_crc_enable);
-> +
-> +/**
-> + *     sdio_retune_hold_now - start deferring retuning requests till release
-> + *     @func: SDIO function attached to host
-> + *
-> + *     This function can be called if it's currently a bad time to do
-> + *     a retune of the SDIO card.  Retune requests made during this time
-> + *     will be held and we'll actually do the retune sometime after the
-> + *     release.
-> + *
-> + *     This function could be useful if an SDIO card is in a power state
-> + *     where it can respond to a small subset of commands that doesn't
-> + *     include the retuning command.  Care should be taken when using
-> + *     this function since (presumably) the retuning request we might be
-> + *     deferring was made for a good reason.
-> + *
-> + *     This function should be called while the host is claimed.
-> + */
-> +void sdio_retune_hold_now(struct sdio_func *func)
-> +{
-> +       mmc_retune_hold_now(func->card->host);
-> +}
-> +EXPORT_SYMBOL_GPL(sdio_retune_hold_now);
-> +
-> +/**
-> + *     sdio_retune_release - signal that it's OK to retune now
-> + *     @func: SDIO function attached to host
-> + *
-> + *     This is the complement to sdio_retune_hold_now().  Calling this
-> + *     function won't make a retune happen right away but will allow
-> + *     them to be scheduled normally.
-> + *
-> + *     This function should be called while the host is claimed.
-> + */
-> +void sdio_retune_release(struct sdio_func *func)
-> +{
-> +       mmc_retune_release(func->card->host);
-> +}
-> +EXPORT_SYMBOL_GPL(sdio_retune_release);
-> diff --git a/include/linux/mmc/sdio_func.h b/include/linux/mmc/sdio_func.h
-> index 4820e6d09dac..5a177f7a83c3 100644
-> --- a/include/linux/mmc/sdio_func.h
-> +++ b/include/linux/mmc/sdio_func.h
-> @@ -170,4 +170,7 @@ extern int sdio_set_host_pm_flags(struct sdio_func *func, mmc_pm_flag_t flags);
->  extern void sdio_retune_crc_disable(struct sdio_func *func);
->  extern void sdio_retune_crc_enable(struct sdio_func *func);
->
-> +extern void sdio_retune_hold_now(struct sdio_func *func);
-> +extern void sdio_retune_release(struct sdio_func *func);
-> +
->  #endif /* LINUX_MMC_SDIO_FUNC_H */
-> --
-> 2.22.0.rc2.383.gf4fbbf30c2-goog
->
+> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+> index 9b4082557ad5..95b09fd110d3 100644
+> --- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+> +++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+> @@ -493,7 +493,7 @@ int hinic_init_rxq(struct hinic_rxq *rxq, struct hinic_rq *rq,
+>   		   struct net_device *netdev)
+>   {
+>   	struct hinic_qp *qp = container_of(rq, struct hinic_qp, rq);
+> -	int err, pkts, irqname_len;
+> +	int err, pkts;
+>   
+>   	rxq->netdev = netdev;
+>   	rxq->rq = rq;
+> @@ -502,13 +502,11 @@ int hinic_init_rxq(struct hinic_rxq *rxq, struct hinic_rq *rq,
+>   
+>   	rxq_stats_init(rxq);
+>   
+> -	irqname_len = snprintf(NULL, 0, "hinic_rxq%d", qp->q_id) + 1;
+> -	rxq->irq_name = devm_kzalloc(&netdev->dev, irqname_len, GFP_KERNEL);
+> +	rxq->irq_name = devm_kasprintf(&netdev->dev, GFP_KERNEL,
+> +				       "hinic_rxq%d", qp->q_id);
+>   	if (!rxq->irq_name)
+>   		return -ENOMEM;
+>   
+> -	sprintf(rxq->irq_name, "hinic_rxq%d", qp->q_id);
+> -
+>   	pkts = rx_alloc_pkts(rxq);
+>   	if (!pkts) {
+>   		err = -ENOMEM;
+
+
