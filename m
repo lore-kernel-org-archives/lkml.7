@@ -2,137 +2,208 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C29DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB556C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:19:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12E77208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:18:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="B7prBGnC"
+	by mail.kernel.org (Postfix) with ESMTP id 92283208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:19:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726238AbfFNERy (ORCPT
+        id S1726449AbfFNETy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 00:17:54 -0400
-Received: from mail-oi1-f202.google.com ([209.85.167.202]:33766 "EHLO
-        mail-oi1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfFNERv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 00:17:51 -0400
-Received: by mail-oi1-f202.google.com with SMTP id h67so403031oic.0
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 21:17:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=yAz3k7OzPjxwzR5iBZENxEm1ewgrxin9ITMqtF0yTXk=;
-        b=B7prBGnC/4Vibzh1aRMKAwrh4wPptRavvQYdcbMm4wH18w6FJ+mN2XrQWOTokqNNE1
-         2YQEPr15HP9wSksf1WcGXsHnVfqqqegk1AI4eEiroIavNFnRETAd2J8oE0N+RDr4nh6n
-         AmmAr7cJQDsTXFqCR3AJrrk/CmgU6adsljmLmVCSPy0Y0sYMKMcgVM3kHNlj+tUdSMD/
-         BPjdbxJNKW2RflGqJzrpzuZ7sMm8HwAor8bGvpDaFEBr23p78S/TZxhHyFUjGMyT61Ng
-         WGTkhSqWIQLHWc8uOIJGFcDV9ynqnhDOGqTgQwDVWczkizWy5FMQN2ha/gtdILPLq3uB
-         rbJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=yAz3k7OzPjxwzR5iBZENxEm1ewgrxin9ITMqtF0yTXk=;
-        b=f6vhxPG+bom19QR+/iPGGjznY+9vlTcCG/mi3EeUbSmJ3TxbhLQLA6QsyObhHNTuzv
-         /FO+6yH5IL1cB3pYzTFkwB6rRaBbNxPXNPVjDL8pufDG7Yt43J1YCF75eD32quKne5BA
-         rNtshjjzbIBWLD6eoFRnIQiWi0IUaB7umcXBwlmY8GkJu6j4/j4nNSPciwseR6vvy0OB
-         DoZPxJns8pr67Sbg9mII2VEfNsauPfbM9CNULrOF6ezblGMXCcMw57OVLns4OK7HBgQQ
-         uNXrxPrI6pp+L3a3FGZ5qIQNZR4XcFzxwTOCojWrk8Vij9PcVslHbP6rgm/ykk6mzCYV
-         tlgA==
-X-Gm-Message-State: APjAAAUUI7Ux5Q43zldybAMPGkPBSrmp5OHY8+KtsbYbgppq1DcDn3YA
-        SYRxjhLbn6auhWoeW2CfU8Job5FGpbHCb0A=
-X-Google-Smtp-Source: APXvYqxpQN0vGQmlYfHsDs37QAiaPht93jr4MuA/NrskO8HXbTJIyWknXV3GfSjQiUsAjTLL2awJ0YqhP7X0mIc=
-X-Received: by 2002:aca:b8d7:: with SMTP id i206mr618247oif.25.1560485870342;
- Thu, 13 Jun 2019 21:17:50 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 21:17:26 -0700
-In-Reply-To: <20190614041733.120807-1-saravanak@google.com>
-Message-Id: <20190614041733.120807-5-saravanak@google.com>
-Mime-Version: 1.0
-References: <20190614041733.120807-1-saravanak@google.com>
-X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
-Subject: [PATCH v2 04/11] dt-bindings: opp: Introduce opp-peak-KBps and
- opp-avg-KBps bindings
-From:   Saravana Kannan <saravanak@google.com>
-To:     Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Saravana Kannan <saravanak@google.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        vincent.guittot@linaro.org, bjorn.andersson@linaro.org,
-        amit.kucheria@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, evgreen@chromium.org,
-        sibis@codeaurora.org, kernel-team@android.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Jun 2019 00:19:54 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:47890 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725767AbfFNETx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 00:19:53 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8F5159BC077B7B45EA24;
+        Fri, 14 Jun 2019 12:19:50 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
+ 12:19:50 +0800
+Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
+ same tuples
+To:     Eric Dumazet <edumazet@google.com>
+References: <20190612035715.166676-1-maowenan@huawei.com>
+ <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
+ <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com>
+CC:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <a674e90e-d06f-cb67-604f-30cb736d7c72@huawei.com>
+Date:   Fri, 14 Jun 2019 12:19:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Interconnects often quantify their performance points in terms of
-bandwidth. So, add opp-peak-KBps (required) and opp-avg-KBps (optional) to
-allow specifying Bandwidth OPP tables in DT.
+>>> diff --git a/net/ipv4/inet_connection_sock.c b/net/ipv4/inet_connection_sock.c
+>>> index 13ec7c3a9c49..fd45ed2fd985 100644
+>>> --- a/net/ipv4/inet_connection_sock.c
+>>> +++ b/net/ipv4/inet_connection_sock.c
+>>> @@ -749,7 +749,7 @@ static void reqsk_timer_handler(struct timer_list *t)
+>>>         inet_csk_reqsk_queue_drop_and_put(sk_listener, req);
+>>>  }
+>>>
+>>> -static void reqsk_queue_hash_req(struct request_sock *req,
+>>> +static bool reqsk_queue_hash_req(struct request_sock *req,
+>>>                                  unsigned long timeout)
+>>>  {
+>>>         req->num_retrans = 0;
+>>> @@ -759,19 +759,27 @@ static void reqsk_queue_hash_req(struct request_sock *req,
+>>>         timer_setup(&req->rsk_timer, reqsk_timer_handler, TIMER_PINNED);
+>>>         mod_timer(&req->rsk_timer, jiffies + timeout);
+>>>
+>>> -       inet_ehash_insert(req_to_sk(req), NULL);
+>>> +       if (!inet_ehash_insert(req_to_sk(req), NULL)) {
+>>> +               if (timer_pending(&req->rsk_timer))
+>>> +                       del_timer_sync(&req->rsk_timer);
+>>> +               return false;
+>>> +       }
+>>>         /* before letting lookups find us, make sure all req fields
+>>>          * are committed to memory and refcnt initialized.
+>>>          */
+>>>         smp_wmb();
+>>>         refcount_set(&req->rsk_refcnt, 2 + 1);
+>>> +       return true;
+>>>  }
+>>>
+>>> -void inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
+>>> +bool inet_csk_reqsk_queue_hash_add(struct sock *sk, struct request_sock *req,
+>>>                                    unsigned long timeout)
+>>>  {
+>>> -       reqsk_queue_hash_req(req, timeout);
+>>> +       if (!reqsk_queue_hash_req(req, timeout))
+>>> +               return false;
+>>> +
+>>>         inet_csk_reqsk_queue_added(sk);
+>>> +       return true;
+>>>  }
+>>>  EXPORT_SYMBOL_GPL(inet_csk_reqsk_queue_hash_add);
+>>>
+>>> diff --git a/net/ipv4/inet_hashtables.c b/net/ipv4/inet_hashtables.c
+>>> index c4503073248b..b6a1b5334565 100644
+>>> --- a/net/ipv4/inet_hashtables.c
+>>> +++ b/net/ipv4/inet_hashtables.c
+>>> @@ -477,6 +477,7 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
+>>>         struct inet_ehash_bucket *head;
+>>>         spinlock_t *lock;
+>>>         bool ret = true;
+>>> +       struct sock *reqsk = NULL;
+>>>
+>>>         WARN_ON_ONCE(!sk_unhashed(sk));
+>>>
+>>> @@ -486,6 +487,18 @@ bool inet_ehash_insert(struct sock *sk, struct sock *osk)
+>>>         lock = inet_ehash_lockp(hashinfo, sk->sk_hash);
+>>>
+>>>         spin_lock(lock);
+>>> +       if (!osk)
+>>> +               reqsk = __inet_lookup_established(sock_net(sk), &tcp_hashinfo,
+>>> +                                                       sk->sk_daddr, sk->sk_dport,
+>>> +                                                       sk->sk_rcv_saddr, sk->sk_num,
+>>> +                                                       sk->sk_bound_dev_if, sk->sk_bound_dev_if);
+>>> +       if (unlikely(reqsk)) {
+>>
+>> What reqsk would be a SYN_RECV socket, and not a ESTABLISH one (or a
+>> TIME_WAIT ?)
+> 
+> It wouldn't be SYN_RECV,ESTABLISH or TIME_WAIT, just TCP_NEW_SYN_RECV.
+> 
+> When server receives the third handshake packet ACK, SYN_RECV sk will insert to hash with osk(!= NULL).
+> The looking up here just avoid to create two or more request sk with TCP_NEW_SYN_RECV when receive syn packet.
+> 
 
-opp-peak-KBps is a required property that replace opp-hz for Bandwidth OPP
-tables.
 
-opp-avg-KBps is an optional property that can be used in Bandwidth OPP
-tables.
+@Eric, for this issue I only want to check TCP_NEW_SYN_RECV sk, is it OK like below?
+ +       if (!osk && sk->sk_state == TCP_NEW_SYN_RECV)
+ +               reqsk = __inet_lookup_established(sock_net(sk), &tcp_hashinfo,
+ +                                                       sk->sk_daddr, sk->sk_dport,
+ +                                                       sk->sk_rcv_saddr, sk->sk_num,
+ +                                                       sk->sk_bound_dev_if, sk->sk_bound_dev_if);
+ +       if (unlikely(reqsk)) {
 
-Signed-off-by: Saravana Kannan <saravanak@google.com>
----
- Documentation/devicetree/bindings/opp/opp.txt | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index 76b6c79604a5..c869e87caa2a 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -83,9 +83,14 @@ properties.
- 
- Required properties:
- - opp-hz: Frequency in Hz, expressed as a 64-bit big-endian integer. This is a
--  required property for all device nodes but devices like power domains. The
--  power domain nodes must have another (implementation dependent) property which
--  uniquely identifies the OPP nodes.
-+  required property for all device nodes but for devices like power domains or
-+  bandwidth opp tables. The power domain nodes must have another (implementation
-+  dependent) property which uniquely identifies the OPP nodes. The interconnect
-+  opps are required to have the opp-peak-bw property.
-+
-+- opp-peak-KBps: Peak bandwidth in kilobytes per second, expressed as a 32-bit
-+  big-endian integer. This is a required property for all devices that don't
-+  have opp-hz. For example, bandwidth OPP tables for interconnect paths.
- 
- Optional properties:
- - opp-microvolt: voltage in micro Volts.
-@@ -132,6 +137,10 @@ Optional properties:
- - opp-level: A value representing the performance level of the device,
-   expressed as a 32-bit integer.
- 
-+- opp-avg-KBps: Average bandwidth in kilobytes per second, expressed as a
-+  32-bit big-endian integer. This property is only meaningful in OPP tables
-+  where opp-peak-KBps is present.
-+
- - clock-latency-ns: Specifies the maximum possible transition latency (in
-   nanoseconds) for switching to this OPP from any other OPP.
- 
--- 
-2.22.0.rc2.383.gf4fbbf30c2-goog
+
+
+>>
+>>> +               ret = false;
+>>> +               reqsk_free(inet_reqsk(sk));
+>>> +               spin_unlock(lock);
+>>> +               return ret;
+>>> +       }
+>>> +
+>>>         if (osk) {
+>>
+>> This test should have be a hint here : Sometime we _expect_ to have an
+>> old socket (TIMEWAIT) and remove it
+> I will check TIMEWAIT sk.
+>>
+>>
+>>>                 WARN_ON_ONCE(sk->sk_hash != osk->sk_hash);
+>>>                 ret = sk_nulls_del_node_init_rcu(osk);
+>>> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+>>> index 38dfc308c0fb..358272394590 100644
+>>> --- a/net/ipv4/tcp_input.c
+>>> +++ b/net/ipv4/tcp_input.c
+>>> @@ -6570,9 +6570,10 @@ int tcp_conn_request(struct request_sock_ops *rsk_ops,
+>>>                 sock_put(fastopen_sk);
+>>>         } else {
+>>>                 tcp_rsk(req)->tfo_listener = false;
+>>> -               if (!want_cookie)
+>>> -                       inet_csk_reqsk_queue_hash_add(sk, req,
+>>> -                               tcp_timeout_init((struct sock *)req));
+>>> +               if (!want_cookie && !inet_csk_reqsk_queue_hash_add(sk, req,
+>>> +                                       tcp_timeout_init((struct sock *)req)))
+>>> +                       return 0;
+>>> +
+>>>                 af_ops->send_synack(sk, dst, &fl, req, &foc,
+>>>                                     !want_cookie ? TCP_SYNACK_NORMAL :
+>>>                                                    TCP_SYNACK_COOKIE);
+>>> --
+>>> 2.20.1
+>>>
+>>
+>> I believe the proper fix is more complicated.
+> yes, pretty complicated.
+>>
+>> Probably we need to move the locking in a less deeper location.
+
+
+Currently, I find inet_ehash_insert is the most suitable location to do hash looking up,
+because the sk's lock can be found from sk_hash, and there has already existed spin_lock code
+In v1, I put the hash looking up in tcp_connect_request, there will be redundant lock to do looking up.
+
+
+> 
+>>
+>> (Also a similar fix would be needed in IPv6)
+> ok
+
+I find IPv6 has the same call trace, so this fix seems good to IPv6?
+tcp_v6_conn_request
+	tcp_conn_request
+		inet_csk_reqsk_queue_hash_add
+			reqsk_queue_hash_req
+				inet_ehash_insert
+					
+		
+
+>>
+>> Thanks.
+>>
+>> .
+>>
 
