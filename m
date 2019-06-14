@@ -2,101 +2,259 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A3CEC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:46:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF0AC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D1A12133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:46:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E90D2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:47:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="oPDvL0p0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726346AbfFNFqY (ORCPT
+        id S1726115AbfFNFrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 01:46:24 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44204 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725843AbfFNFqJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 01:46:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 038FEAEB8;
-        Fri, 14 Jun 2019 05:46:07 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, iommu@lists.linux-foundation.org,
+        Fri, 14 Jun 2019 01:47:33 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42138 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfFNFrc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 01:47:32 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5E5hhfN102544;
+        Fri, 14 Jun 2019 05:47:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=y4vtHQoiiaREBCPC6LRq84b/VbCs7dfxb6NU71+a3aY=;
+ b=oPDvL0p0p8BVA/lt9uP5C9oJLaqWoDhtqCOpUPycdmg4L3g3d8u+joIeROsDunTvitQ4
+ l0/mqLRAEaNQefcWjwEQT2SbFeHFV+WV2um3edU9iL/6uIXHrtwv6jA0gjEyJFzJrywc
+ KKVCjeD6fAJp7uvUNrBGxaPVZBN2J+/CWgFpLLg/zXh2vrF73pbtdGMn4MHzsuBaKL6Y
+ Z9lGHdZes7cdit1bSABFytYw/y5DSYF356L1fsrG0KL5sk63BCkBrV3Ta1tjeDQ5VQWf
+ 6UvG121ZAyKV2K0pFKGmtSoJAqnuvc8iy+Niwapy4dNe8OtdsyzBt7enizkHMpL8ood6 7g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t05nr5943-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 05:47:16 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5E5ixSJ126795;
+        Fri, 14 Jun 2019 05:45:15 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2t04j0v4d3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 05:45:15 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5E5jDIL026575;
+        Fri, 14 Jun 2019 05:45:14 GMT
+Received: from dhcp-10-65-137-200.vpn.oracle.com (/10.65.137.200)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 13 Jun 2019 22:45:13 -0700
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: [PATCH v2] RDMA/cma: Make CM response timeout and # CM retries
+ configurable
+From:   =?utf-8?Q?H=C3=A5kon_Bugge?= <haakon.bugge@oracle.com>
+In-Reply-To: <6e586118ad154204ad2e2cf2c1391b916cb4ee54.camel@redhat.com>
+Date:   Fri, 14 Jun 2019 07:44:57 +0200
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Leon Romanovsky <leon@kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Steve Wise <swise@opengridcomputing.com>,
+        OFED mailing list <linux-rdma@vger.kernel.org>,
         linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Stefano Stabellini <sstabellini@kernel.org>
-Subject: [PATCH v3 2/3] xen/swiotlb: simplify range_straddles_page_boundary()
-Date:   Fri, 14 Jun 2019 07:46:03 +0200
-Message-Id: <20190614054604.30101-3-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190614054604.30101-1-jgross@suse.com>
-References: <20190614054604.30101-1-jgross@suse.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <9B7C9353-39B6-4193-9ACD-AD0FA62E9433@oracle.com>
+References: <20190226075722.1692315-1-haakon.bugge@oracle.com>
+ <174ccd37a9ffa05d0c7c03fe80ff7170a9270824.camel@redhat.com>
+ <67B4F337-4C3A-4193-B1EF-42FD4765CBB7@oracle.com>
+ <6e586118ad154204ad2e2cf2c1391b916cb4ee54.camel@redhat.com>
+To:     Doug Ledford <dledford@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.11)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906140047
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906140047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-range_straddles_page_boundary() is open coding several macros from
-include/xen/page.h. Use those instead. Additionally there is no need
-to have check_pages_physically_contiguous() as a separate function as
-it is used only once, so merge it into range_straddles_page_boundary().
 
-Signed-off-by: Juergen Gross <jgross@suse.com>
-Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
----
- drivers/xen/swiotlb-xen.c | 28 ++++++----------------------
- 1 file changed, 6 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-index 50fd7de54969..37ddcfcfbb21 100644
---- a/drivers/xen/swiotlb-xen.c
-+++ b/drivers/xen/swiotlb-xen.c
-@@ -83,34 +83,18 @@ static inline dma_addr_t xen_virt_to_bus(void *address)
- 	return xen_phys_to_bus(virt_to_phys(address));
- }
- 
--static int check_pages_physically_contiguous(unsigned long xen_pfn,
--					     unsigned int offset,
--					     size_t length)
-+static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
- {
--	unsigned long next_bfn;
--	int i;
--	int nr_pages;
-+	unsigned long next_bfn, xen_pfn = XEN_PFN_DOWN(p);
-+	unsigned int i, nr_pages = XEN_PFN_UP(xen_offset_in_page(p) + size);
- 
- 	next_bfn = pfn_to_bfn(xen_pfn);
--	nr_pages = (offset + length + XEN_PAGE_SIZE-1) >> XEN_PAGE_SHIFT;
- 
--	for (i = 1; i < nr_pages; i++) {
-+	for (i = 1; i < nr_pages; i++)
- 		if (pfn_to_bfn(++xen_pfn) != ++next_bfn)
--			return 0;
--	}
--	return 1;
--}
-+			return 1;
- 
--static inline int range_straddles_page_boundary(phys_addr_t p, size_t size)
--{
--	unsigned long xen_pfn = XEN_PFN_DOWN(p);
--	unsigned int offset = p & ~XEN_PAGE_MASK;
--
--	if (offset + size <= XEN_PAGE_SIZE)
--		return 0;
--	if (check_pages_physically_contiguous(xen_pfn, offset, size))
--		return 0;
--	return 1;
-+	return 0;
- }
- 
- static int is_xen_swiotlb_buffer(dma_addr_t dma_addr)
--- 
-2.16.4
+> On 13 Jun 2019, at 22:25, Doug Ledford <dledford@redhat.com> wrote:
+>=20
+> On Thu, 2019-06-13 at 18:58 +0200, H=C3=A5kon Bugge wrote:
+>>> On 13 Jun 2019, at 16:25, Doug Ledford <dledford@redhat.com> wrote:
+>>>=20
+>>> On Tue, 2019-02-26 at 08:57 +0100, H=C3=A5kon Bugge wrote:
+>>>> During certain workloads, the default CM response timeout is too
+>>>> short, leading to excessive retries. Hence, make it configurable
+>>>> through sysctl. While at it, also make number of CM retries
+>>>> configurable.
+>>>>=20
+>>>> The defaults are not changed.
+>>>>=20
+>>>> Signed-off-by: H=C3=A5kon Bugge <haakon.bugge@oracle.com>
+>>>> ---
+>>>> v1 -> v2:
+>>>>  * Added unregister_net_sysctl_table() in cma_cleanup()
+>>>> ---
+>>>> drivers/infiniband/core/cma.c | 52
+>>>> ++++++++++++++++++++++++++++++---
+>>>> --
+>>>> 1 file changed, 45 insertions(+), 7 deletions(-)
+>>>=20
+>>> This has been sitting on patchworks since forever.  Presumably
+>>> because
+>>> Jason and I neither one felt like we really wanted it, but also
+>>> couldn't justify flat refusing it.
+>>=20
+>> I thought the agreement was to use NL and iproute2. But I haven't had
+>> the capacity.
+>=20
+> To be fair, the email thread was gone from my linux-rdma folder.  So, =
+I
+> just had to review the entry in patchworks, and there was no captured
+> discussion there.  So, if the agreement was made, it must have been
+> face to face some time and if I was involed, I had certainly forgotten
+> by now.  But I still needed to clean up patchworks, hence my email =
+;-).
+
+This is the "agreement" I was referring too:
+
+> On 4 Mar 2019, at 07:27, Parav Pandit <parav@mellanox.com> wrote:
+>=20
+>> []
+>=20
+> I think we should use rdma_nl_register(RDMA_NL_RDMA_CM, cma_cb_table) =
+which was removed as part of ID stats removal.
+> Because of below reasons.
+> 1. rdma netlink command auto loads the module
+> 2. we don't need to write any extra code to do register_net_sysctl () =
+in each netns.
+> Caller's skb's netns will read/write value of response_timeout in =
+'struct cma_pernet'.
+> 3. last time sysctl added in ipv6 was in 2017 in net/ipv6/addrconf.c, =
+however ipv4 was done in 2018.
+>=20
+> Currently rdma_cm/rdma_ucma has configfs, sysctl.
+> We are adding netlink sys params to ib_core.
+>=20
+> We already have 3 clients and infra built using rdma_nl_register() =
+netlink , so hooking up to netlink will provide unified way to set rdma =
+params.
+> Let's just use netlink for any new params unless it is not doable.
+
+
+
+>=20
+>>> Well, I've made up my mind, so
+>>> unless Jason wants to argue the other side, I'm rejecting this
+>>> patch.=20
+>>> Here's why.  The whole concept of a timeout is to help recovery in
+>>> a
+>>> situation that overloads one end of the connection.  There is a
+>>> relationship between the max queue backlog on the one host and the
+>>> timeout on the other host. =20
+>>=20
+>> If you refer to the backlog parameter in rdma_listen(), I cannot see
+>> it being used at all for IB.
+>=20
+> No, not exactly.  I was more referring to heavy load causing an
+> overflow in the mad packet receive processing.  We have
+> IB_MAD_QP_RECV_SIZE set to 512 by default, but it can be changed at
+> module load time of the ib_core module and that represents the maximum
+> number of backlogged mad packets we can have waiting to be processed
+> before we just drop them on the floor.  There can be other places to
+> drop them too, but this is the one I was referring to.
+
+That is another scenario than what I try to solve. What I see, is that =
+the MAD packets are delayed, not lost. The delay is longer than the CMA =
+timeout. Hence, the MAD packets are retried, adding more burden to the =
+PF proxying and inducing even longer delays. And excessive CM retries =
+are observed. See 2612d723aadc ("IB/mlx4: Increase the timeout for CM =
+cache") where I have some quantification thereof.
+
+Back to your scenario above, yes indeed, the queue sizes are module =
+params. If the MADs are tossed, we will see rq_num_udsdprd incrementing =
+on a CX-3.
+
+But I do not understand how the dots are connected. Assume one client =
+does rdma_listen(, backlog =3D 1000); Where are those 1000 REQs stored, =
+assuming an "infinite slow processor"?
+
+
+Thxs, H=C3=A5kon
+
+
+>=20
+>> For CX-3, which is paravirtualized wrt. MAD packets, it is the proxy
+>> UD receive queue length for the PF driver that can be construed as a
+>> backlog. Remember that any MAD packet being sent from a VF or the PF
+>> itself, is sent to a proxy UD QP in the PF. Those packets are then
+>> multiplexed out on the real QP0/1. Incoming MAD packets are
+>> demultiplexed and sent once more to the proxy QP in the VF.
+>>=20
+>>> Generally, in order for a request to get
+>>> dropped and us to need to retransmit, the queue must already have a
+>>> full backlog.  So, how long does it take a heavily loaded system to
+>>> process a full backlog?  That, plus a fuzz for a margin of error,
+>>> should be our timeout.  We shouldn't be asking users to configure
+>>> it.
+>>=20
+>> Customer configures #VMs and different workload may lead to way
+>> different number of CM connections. The proxying of MAD packet
+>> through the PF driver has a finite packet rate. With 64 VMs, 10.000
+>> QPs on each, all going down due to a switch failing or similar, you
+>> have 640.000 DREQs to be sent, and with the finite packet rate of MA
+>> packets through the PF, this takes more than the current CM timeout.
+>> And then you re-transmit and increase the burden of the PF proxying.
+>>=20
+>> So, we can change the default to cope with this. But, a MAD packet is
+>> unreliable, we may have transient loss. In this case, we want a short
+>> timeout.
+>>=20
+>>> However, if users change the default backlog queue on their
+>>> systems,
+>>> *then* it would make sense to have the users also change the
+>>> timeout
+>>> here, but I think guidance would be helpful.
+>>>=20
+>>> So, to revive this patch, what I'd like to see is some attempt to
+>>> actually quantify a reasonable timeout for the default backlog
+>>> depth,
+>>> then the patch should actually change the default to that
+>>> reasonable
+>>> timeout, and then put in the ability to adjust the timeout with
+>>> some
+>>> sort of doc guidance on how to calculate a reasonable timeout based
+>>> on
+>>> configured backlog depth.
+>>=20
+>> I can agree to this :-)
+>>=20
+>>=20
+>> Thxs, H=C3=A5kon
+>>=20
+>>> --=20
+>>> Doug Ledford <dledford@redhat.com>
+>>>   GPG KeyID: B826A3330E572FDD
+>>>   Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
+>>> 2FDD
+>=20
+> --=20
+> Doug Ledford <dledford@redhat.com>
+>    GPG KeyID: B826A3330E572FDD
+>    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
+> 2FDD
 
