@@ -2,88 +2,88 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D46C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E73C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0820620866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:21:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="j+hEwIBv"
+	by mail.kernel.org (Postfix) with ESMTP id EF94A2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728252AbfFNOVt (ORCPT
+        id S1728557AbfFNOVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:21:49 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:46268 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727729AbfFNOVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:21:49 -0400
-Received: from zn.tnic (p200300EC2F097F0010F3CEDA9C41B474.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:10f3:ceda:9c41:b474])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 496A71EC0911;
-        Fri, 14 Jun 2019 16:21:47 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560522107;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Kd2BmJ/VXblZTT3gLSLXJLYjaN5iAPtQd3WhH81IpNQ=;
-        b=j+hEwIBvwfZ4djUkW4ZqQmh+IwRxMijTvkTpmILg7VM0tA9fOP1FGYv4iyTSomge7xNqXR
-        kckp2rCvweIbLiOmAA5/GItGHhF8sYkTnN0xOa4zg3AOEkszNJdD1T3IRUGsPRejFr37TA
-        XT5j79Vy6cFtC82tPBNpn0eZ7YyvUbk=
-Date:   Fri, 14 Jun 2019 16:21:39 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
- scattered features word 11
-Message-ID: <20190614142139.GH2586@zn.tnic>
-References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
- <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
- <20190614114410.GD2586@zn.tnic>
- <20190614122749.GE2586@zn.tnic>
- <20190614131701.GA198207@romley-ivt3.sc.intel.com>
- <20190614134123.GF2586@zn.tnic>
- <20190614141424.GA12191@linux.intel.com>
+        Fri, 14 Jun 2019 10:21:52 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:38289 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727729AbfFNOVv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:21:51 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbn5M-0007a1-1S; Fri, 14 Jun 2019 16:21:44 +0200
+Date:   Fri, 14 Jun 2019 16:21:43 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@amacapital.net>
+cc:     Dave Hansen <dave.hansen@intel.com>,
+        Marius Hillenbrand <mhillenb@amazon.de>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com,
+        linux-mm@kvack.org, Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
+ secrets
+In-Reply-To: <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
+Message-ID: <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
+References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com> <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190614141424.GA12191@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/mixed; boundary="8323329-1104140577-1560522104=:1722"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 07:14:24AM -0700, Sean Christopherson wrote:
-> This is wrong.  KVM isn't complaining about shuffling the order of feature
-> words, it's complaining that code is trying to do a reverse CPUID lookup
-> to a feature that isn't in the reverse_cpuid table.   Filtering out
-> checks dynamically is just hiding bugs.
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
-No no, reverse_cpuid is hardcoding our feature leafs. This is wrong as
-we want to be able to change those. And reverse_cpuid[] should be able
-to handle that.
+--8323329-1104140577-1560522104=:1722
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-KVM is complaining because he removed one leaf. He adds it later in
-patch 3 as a Linux-defined leaf.
+On Wed, 12 Jun 2019, Andy Lutomirski wrote:
+> > On Jun 12, 2019, at 12:55 PM, Dave Hansen <dave.hansen@intel.com> wrote:
+> > 
+> >> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
+> >> This patch series proposes to introduce a region for what we call
+> >> process-local memory into the kernel's virtual address space. 
+> > 
+> > It might be fun to cc some x86 folks on this series.  They might have
+> > some relevant opinions. ;)
+> > 
+> > A few high-level questions:
+> > 
+> > Why go to all this trouble to hide guest state like registers if all the
+> > guest data itself is still mapped?
+> > 
+> > Where's the context-switching code?  Did I just miss it?
+> > 
+> > We've discussed having per-cpu page tables where a given PGD is only in
+> > use from one CPU at a time.  I *think* this scheme still works in such a
+> > case, it just adds one more PGD entry that would have to context-switched.
+>
+> Fair warning: Linus is on record as absolutely hating this idea. He might
+> change his mind, but it’s an uphill battle.
 
-All that doesn't matter for KVM - if KVM wants to do reverse lookup,
-then it should handle Linux-defined leafs just fine.
+Yes I know, but as a benefit we could get rid of all the GSBASE horrors in
+the entry code as we could just put the percpu space into the local PGD.
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks,
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+	tglx
+--8323329-1104140577-1560522104=:1722--
