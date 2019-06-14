@@ -2,135 +2,113 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE85C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D644FC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E83D821537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0fqh/To"
+	by mail.kernel.org (Postfix) with ESMTP id B46CE21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728478AbfFNOJJ (ORCPT
+        id S1728611AbfFNOJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:09:09 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37311 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfFNOJJ (ORCPT
+        Fri, 14 Jun 2019 10:09:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44076 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727382AbfFNOJ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:09:09 -0400
-Received: by mail-ed1-f66.google.com with SMTP id w13so3711520eds.4;
-        Fri, 14 Jun 2019 07:09:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GQTbMofHx6ihnY6hv/q/Pjtwumkc7ogl2iTrngkVtvc=;
-        b=V0fqh/ToYT65uEuFt6uNfdklxYbXJW90bygOIQrCOe1G5s+fy3oUGD74h+NjAMMeB3
-         BBZHRgx1vzsnOGS/nstZAzpBV7gMG0ZqrG/36RAfHZAgQocOeBa+sTuLgU3VgU2uZDx/
-         Ffc98er/pmLyyxcYbLRUsx5q+p08rd6mpMEXDvxojsXq52XzYDiIBVtGRLUo3ITFouNL
-         M176HRXmPGUyjFRBy8Od7R31GNWv1JpggyPfrQuUSA2puNj7aoLcdfFpOkJQ1unGJQKM
-         ufptnveFLuUASMzZsWdjoRvGXL0xkEoz9+krC3mBJgiKGhYisySboo8jK/71mutI3Sd9
-         jK6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GQTbMofHx6ihnY6hv/q/Pjtwumkc7ogl2iTrngkVtvc=;
-        b=GXV9zdCp0xNYIXemUahFfhLV2jbDmg9afQAFzQe1GnWCMg+owRdkgTT3xj3foekTLO
-         hReEpc4a7wcVtdPDyYsaeWoSqJvce8KlIVcvaK+Uv64iJ3w//5b83jNkA1SsSHLvU1ET
-         qZjiXHhnywXO4xTgQw8rbpVBiRi5SP5Ko0Nt7ELmb1U0vvg1fJtUOu7JsOEW6nQC+yu2
-         X+kl3JCaZy0IuVi2YRxqp1RxhXBjyxRhsOh+kEgkvjaNukOGeoZe1dfoF3rg+lg/Uizf
-         0nn7LJlv0a7XmJchnhUlJp02Vdk4rykJBlXI8FY564ZYx09TCQp1k0ttz+WYPpObs+DV
-         lUIg==
-X-Gm-Message-State: APjAAAXCRCBbY1zJoo00o1UjkGvSxV74oj/6XcL8OOT2DaaVnlvIJ4nd
-        hhCR/GsQYbF8odAECSryHp/UNAJPXFCy/3TgHsI=
-X-Google-Smtp-Source: APXvYqxLabx2dayIi0z0mrk5mYOCWKcsBoXZf+gdfmFIbIEppEoh4K9PusScfsC/Ujb/OusUUWU5Okr0/cgVa9nC+zE=
-X-Received: by 2002:a17:906:583:: with SMTP id 3mr14648315ejn.278.1560521346837;
- Fri, 14 Jun 2019 07:09:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
- <20190612212748.32246-1-jeffrey.l.hugo@gmail.com> <CAF6AEGvAkCqNXg-NwxfpYJteWs6hfBnOb0yJN6vQOnmMck-HDQ@mail.gmail.com>
-In-Reply-To: <CAF6AEGvAkCqNXg-NwxfpYJteWs6hfBnOb0yJN6vQOnmMck-HDQ@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Fri, 14 Jun 2019 07:08:52 -0700
-Message-ID: <CAF6AEGtUjxuL3y5pyzKz5HJV7KyXmKxmVxqcm3DraAKvkB0xmw@mail.gmail.com>
-Subject: Re: [PATCH v6 3/5] arm64: dts: qcom: Add Lenovo Miix 630
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>, jikos@kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Fri, 14 Jun 2019 10:09:26 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EE7fcd083904
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 10:09:24 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t4b9acwxp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 10:09:24 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 14 Jun 2019 15:09:22 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 15:09:20 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EE9JIx34341126
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 14:09:19 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0AC1DA405B;
+        Fri, 14 Jun 2019 14:09:19 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 36580A4054;
+        Fri, 14 Jun 2019 14:09:18 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.199])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 14:09:18 +0000 (GMT)
+Subject: Re: linux-next: build failure after merge of the integrity tree
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Janne Karhunen <janne.karhunen@gmail.com>
+Date:   Fri, 14 Jun 2019 10:09:07 -0400
+In-Reply-To: <20190614153459.49c3d075@canb.auug.org.au>
+References: <20190614153459.49c3d075@canb.auug.org.au>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061414-0028-0000-0000-0000037A52F7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061414-0029-0000-0000-0000243A5037
+Message-Id: <1560521347.4072.2.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 6:44 AM Rob Clark <robdclark@gmail.com> wrote:
->
-> On Thu, Jun 13, 2019 at 10:17 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
-> >
-> > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
-> > functionality includes USB (host), microSD-card, keyboard, and trackpad.
-> >
-> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> > ---
->
-> [snip]
->
-> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> > new file mode 100644
-> > index 000000000000..407c6a32911c
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-> > @@ -0,0 +1,30 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include "msm8998-clamshell.dtsi"
-> > +
-> > +/ {
-> > +       model = "Lenovo Miix 630";
-> > +       compatible = "lenovo,miix-630", "qcom,msm8998";
-> > +};
->
->
-> So, I'm not sure if there is some precedent for this (but maybe we
-> haven't really had this problem before).. but as I mentioned on
-> #arch64-laptops, I think we should put vendor/product/board-id strings
-> from SMBIOS table in the dts files.  That could be used by grub to
-> find the correct dtb file to load in a generic way.  (Ie, look for a
-> match of all three strings, and maybe fallback to a match on just
-> vendor+product??)
->
-> At any rate, how the strings are used can be refined later.  But I
-> think we should include the strings from the beginning for anything
-> that is booting via UEFI.  It's perhaps more useful than the
-> compatible string.
->
+Hi Stephen,
 
+On Fri, 2019-06-14 at 15:34 +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the integrity tree, today's linux-next build (powerpc
+> ppc64_defconfig) failed like this:
+> 
+> drivers/infiniband/core/device.c: In function 'ib_core_init':
+> drivers/infiniband/core/device.c:2531:8: error: implicit declaration of function 'register_blocking_lsm_notifier'; did you mean 'register_lsm_notifier'? [-Werror=implicit-function-declaration]
+>   ret = register_blocking_lsm_notifier(&ibdev_lsm_nb);
+>         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>         register_lsm_notifier
+> drivers/infiniband/core/device.c:2550:2: error: implicit declaration of function 'unregister_blocking_lsm_notifier'; did you mean 'unregister_lsm_notifier'? [-Werror=implicit-function-declaration]
+>   unregister_blocking_lsm_notifier(&ibdev_lsm_nb);
+>   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>   unregister_lsm_notifier
+> 
+> Caused by commit
+> 
+>   bafe78e69508 ("LSM: switch to blocking policy update notifiers")
+> 
+> CONFIG_SECURITY is not set for this build and the !CONFIG_SECURITY
+> declarations were not fixed up in linux/security.h.
+> 
+> I have used the integrity tree from next-20190613 for today.
 
-perhaps something like:
+Thank you!  A new version of the patch has been push to the next-
+integrity branch.
 
-   dmi-compatible = "LENOVO 81JL/LNVNB161216", "LENOVO 81JL";
+Mimi
 
-??
-
-(well, those are the strings from my yoga c630, not sure what they are
-on the miix 630.. but you get the idea)
-
-BR,
--R
