@@ -2,96 +2,91 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6937C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:35:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35B9DC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:36:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A394208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:35:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fijeBxJq"
+	by mail.kernel.org (Postfix) with ESMTP id 13E45208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:36:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfFNLfh (ORCPT
+        id S1727567AbfFNLf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:35:37 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:37794 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfFNLfg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:35:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=WWQ52tqaiCP0C1KYMNijF1HDqWlxTu5XvaRlCuBtZ3g=; b=fijeBxJqngGRNGgiX1l6dheAA
-        g0a+TA0qsbMnKPf3UF9mnTF+NJ8o2HHDxZGyQokqmbnkrBWxh2nwJAMMhedacfoexc3lD+yUgcstb
-        b58/Ies68J3GZLFKZdMLki9pYdHx5s9bTGYQntRYkltMpfp80uHWFFwUnBfxeqzhumHdFR1jsim+Q
-        Fcvnxn8kZXVv9SmjYvxD82ay1KdB3V7FWOTlZPdCFHVficpEuxVn3l5p4ZgEs+myHgUEcfUwux4Y/
-        xrCDihiDGQ2n0gR2hsnJIoV+HwI5A4h+me8DTlf+jEwCC3bHxoTlS1/sjfQOuLkYYJyhSLIyuA12r
-        fc9HqHw7w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbkUO-0007E2-VL; Fri, 14 Jun 2019 11:35:25 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7156220A15636; Fri, 14 Jun 2019 13:35:23 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 13:35:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Fri, 14 Jun 2019 07:35:59 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58272 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727054AbfFNLf7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 07:35:59 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 981DA5945B;
+        Fri, 14 Jun 2019 11:35:58 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A5EA5D9D2;
+        Fri, 14 Jun 2019 11:35:52 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 26/62] keys/mktme: Move the MKTME payload into a
- cache aligned structure
-Message-ID: <20190614113523.GC3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-27-kirill.shutemov@linux.intel.com>
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
+        <87o93d4lqb.fsf@oldenburg2.str.redhat.com>
+        <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com>
+        <87wohzorj0.fsf@oldenburg2.str.redhat.com>
+        <c16c9785-7f8c-430b-a4df-a53e47bf1600@redhat.com>
+        <914051741.43025.1560348011775.JavaMail.zimbra@efficios.com>
+        <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com>
+        <87ftocwkei.fsf@oldenburg2.str.redhat.com>
+        <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com>
+Date:   Fri, 14 Jun 2019 13:35:51 +0200
+In-Reply-To: <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com>
+        (Mathieu Desnoyers's message of "Fri, 14 Jun 2019 06:14:09 -0400
+        (EDT)")
+Message-ID: <87tvcsv1pk.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-27-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Fri, 14 Jun 2019 11:35:58 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:43:46PM +0300, Kirill A. Shutemov wrote:
+* Mathieu Desnoyers:
 
-> +/* Copy the payload to the HW programming structure and program this KeyID */
-> +static int mktme_program_keyid(int keyid, struct mktme_payload *payload)
-> +{
-> +	struct mktme_key_program *kprog = NULL;
-> +	int ret;
-> +
-> +	kprog = kmem_cache_zalloc(mktme_prog_cache, GFP_ATOMIC);
+> * Makefile:
+>
+> LIBCPATH=/home/efficios/glibc-test/lib
+> KERNEL_HEADERS=/home/efficios/git/linux-percpu-dev/usr/include
+> CFLAGS=-I${KERNEL_HEADERS} -L${LIBCPATH} -Wl,--rpath=${LIBCPATH} -Wl,--dynamic-linker=${LIBCPATH}/ld-linux-x86-64.so.2
+>
+> all:
+> 	gcc ${CFLAGS} -o a a.c
+> 	gcc ${CFLAGS} -shared -fPIC -o s.so s.c
 
-Why GFP_ATOMIC, afaict neither of the usage is with a spinlock held.
+For me, that does not correctly link against the built libc because the
+system dynamic loader seeps into the link.
 
-> +	if (!kprog)
-> +		return -ENOMEM;
-> +
-> +	/* Hardware programming requires cached aligned struct */
-> +	kprog->keyid = keyid;
-> +	kprog->keyid_ctrl = payload->keyid_ctrl;
-> +	memcpy(kprog->key_field_1, payload->data_key, MKTME_AES_XTS_SIZE);
-> +	memcpy(kprog->key_field_2, payload->tweak_key, MKTME_AES_XTS_SIZE);
-> +
-> +	ret = MKTME_PROG_SUCCESS;	/* Future programming call */
-> +	kmem_cache_free(mktme_prog_cache, kprog);
-> +	return ret;
-> +}
+> specifically this commit:
+> https://github.com/compudj/glibc-dev/commit/c49a286497d065a7fc00aafd846e6edce14f97fc
+
+This commit links __rseq_handled into libc.so.6 via rseq-sym.c, but does
+not export it from there.
+
+Thanks,
+Florian
