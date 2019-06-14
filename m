@@ -2,99 +2,149 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5D26C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39923C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B3DB2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:19:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="TmdQYMTv"
+	by mail.kernel.org (Postfix) with ESMTP id 0FE03208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:22:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727498AbfFNLTf (ORCPT
+        id S1727360AbfFNLWt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:19:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:32973 "EHLO ozlabs.org"
+        Fri, 14 Jun 2019 07:22:49 -0400
+Received: from smtp3-g21.free.fr ([212.27.42.3]:2408 "EHLO smtp3-g21.free.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727083AbfFNLTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:19:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45QJ6D0Sp4z9s5c;
-        Fri, 14 Jun 2019 21:19:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560511172;
-        bh=uZ3RAGOHsQDifx+zrw9Js8DEAlD50ILUiOwesbXlfpE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=TmdQYMTv23JCFVjh0jBk8o7zQeyAb8qWAMVIwS7ul2voArQ4EECmF1Xp0fN8U+zp3
-         fQkApzx5aVYlEPJ36NLx/r+ueuVYGujRY2LiQzXpFCwN8hc1mGVAnB9mJlaO7N14cd
-         i1zIROvVTgH1g88S/QDIrYg+BdjrwJKxnlUR0A34D9DGxA2mJ39hzwEJYamDuvvADH
-         r8QFO7BZTngsa6XRmhoFiM64RAlIp8lOd9pKHzqK+zoYdY1PUvP07u7YT6HG8mJ96H
-         L0gRKWH+KZUt1/XEXyndfltRrOjPhEYZsaLMdGJ0wySbYD/wmqvSy1t57PdNW6satn
-         nuI0HwD3v3qGA==
-Date:   Fri, 14 Jun 2019 21:19:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the thunderbolt-fixes tree
-Message-ID: <20190614211933.25c1b792@canb.auug.org.au>
+        id S1727119AbfFNLWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 07:22:49 -0400
+Received: from anisse-station (unknown [213.36.7.13])
+        by smtp3-g21.free.fr (Postfix) with ESMTPS id 517A013F84C;
+        Fri, 14 Jun 2019 13:22:23 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 13:22:22 +0200
+From:   Anisse Astier <aastier@freebox.fr>
+To:     Dave Martin <Dave.Martin@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Rich Felker <dalias@aerifal.cx>, linux-kernel@vger.kernel.org,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Ricardo Salveti <ricardo@foundries.io>
+Subject: Re: [PATCH] arm64/sve: <uapi/asm/ptrace.h> should not depend on
+ <uapi/linux/prctl.h>
+Message-ID: <20190614112222.GA47082@anisse-station>
+References: <20190613163801.21949-1-aastier@freebox.fr>
+ <20190613171432.GA2790@e103592.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/Z.bdmrdMD1yR5mO_Q8AvQhX"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613171432.GA2790@e103592.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Z.bdmrdMD1yR5mO_Q8AvQhX
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Hi Dave,
 
-Hi Mika,
+Thanks for taking the time to review this patch,
 
-In commit
+On Thu, Jun 13, 2019 at 06:14:44PM +0100, Dave Martin wrote:
+> On Thu, Jun 13, 2019 at 06:38:01PM +0200, Anisse Astier wrote:
+> > Otherwise this will create userspace build issues for any program
+> > (strace, qemu) that includes both <sys/prctl.h> (with musl libc) and
+> > <linux/ptrace.h> (which then includes <asm/ptrace.h>), like this:
+> > 
+> > 	error: redefinition of 'struct prctl_mm_map'
+> > 	 struct prctl_mm_map {
+> > 
+> > See https://github.com/foundriesio/meta-lmp/commit/6d4a106e191b5d79c41b9ac78fd321316d3013c0
+> > for a public example of people working around this issue.
+> > 
+> > This fixes an UAPI regression introduced in commit 43d4da2c45b2
+> > ("arm64/sve: ptrace and ELF coredump support").
+> > 
+> > Cc: stable@vger.kernel.org
+> 
+> Consider adding a Fixes: tag.
 
-  e00367a43c56 ("thunderbolt: Implement CIO reset correctly for Titan Ridge=
-")
+Will do in v2.
 
-Fixes tag
+> 
+> > Signed-off-by: Anisse Astier <aastier@freebox.fr>
+> > ---
+> >  arch/arm64/include/uapi/asm/ptrace.h | 8 +++-----
+> >  1 file changed, 3 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
+> > index d78623acb649..03b6d6f029fc 100644
+> > --- a/arch/arm64/include/uapi/asm/ptrace.h
+> > +++ b/arch/arm64/include/uapi/asm/ptrace.h
+> > @@ -65,8 +65,6 @@
+> >  
+> >  #ifndef __ASSEMBLY__
+> >  
+> > -#include <linux/prctl.h>
+> > -
+> >  /*
+> >   * User structures for general purpose, floating point and debug registers.
+> >   */
+> > @@ -113,10 +111,10 @@ struct user_sve_header {
+> >  
+> >  /*
+> >   * Common SVE_PT_* flags:
+> > - * These must be kept in sync with prctl interface in <linux/ptrace.h>
+> > + * These must be kept in sync with prctl interface in <linux/prctl.h>
+> 
+> Ack
+> 
+> >   */
+> > -#define SVE_PT_VL_INHERIT		(PR_SVE_VL_INHERIT >> 16)
+> > -#define SVE_PT_VL_ONEXEC		(PR_SVE_SET_VL_ONEXEC >> 16)
+> > +#define SVE_PT_VL_INHERIT		(1 << 1) /* PR_SVE_VL_INHERIT */
+> > +#define SVE_PT_VL_ONEXEC		(1 << 2) /* PR_SVE_SET_VL_ONEXEC */
+> 
+> Makes sense, but...
+> 
+> Since sve_context.h was already introduced to solve a closely related
+> problem, I wonder whether we can provide shadow definitions there,
+> similarly to way the arm64/include/uapi/asm/ptrace.h definitions are
+> derived.  Although it's a slight abuse of that header, I think that
+> would be my preferred approach.
 
-  Fixes: 4630d6ae6e3 ("thunderbolt: Start firmware on Titan Ridge Apple sys=
-tems")
 
-has these problem(s):
+Yes I saw this, and I considered doing something similar. But, those
+defines are in uapi/linux/prctl.h, which does not include any asm/*.h
+header. This would have then required adding a full infrastructure for
+asm/prctl.h (that could then include sve_context.h for example), which
+does not exist yet, instead of copying these two values.
 
-  - Target SHA1 does not exist
+Since this is part of the kernel-userspace ABI, I don't see this values
+changing anytime soon, which is why I thought copying them shouldn't be
+a big issue.
 
-Did you mean
+A simple solution would be to to include sve_context.h or a third
+header, maybe linux/prctl_arm64_sve.h (with only these two/five
+defines), in linux/prctl.h, and reuse it in uapi/asm/ptrace.h; but this
+would break the self-contained nature of linux/prctl.h.
 
-Fixes: c4630d6ae6e3 ("thunderbolt: Start firmware on Titan Ridge Apple syst=
-ems")
+> 
+> Otherwise, at least make the required relationship between ptrace.h and
+> prctl.h constants a bit more obvious, say,
+> 
+> 	#define SVE_PT_VL_INHERIT ((1 << 17) /* PR_SVE_SET_VL_INHERIT */ >> 16)
 
---=20
-Cheers,
-Stephen Rothwell
+This one is much simpler and closer to what I had in mind with this
+patch.
 
---Sig_/Z.bdmrdMD1yR5mO_Q8AvQhX
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Will, what do you think of this second approach Dave proposed ?
 
------BEGIN PGP SIGNATURE-----
+Regards,
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0DgsUACgkQAVBC80lX
-0Gx+9Af/ek1HD2otkBRS6n9j/qNHooKsOpWbzV1fsNAemXkhHRWD1fBYUdOfDQBU
-a86EF+ugdGhN1Mbx0Z5Dua0qaEaWeOGugCjhNr4a5QiAp77vFt6I7yq5ejPApcAs
-HiuXpPpT7alZ/CP6nKgC+HN7pQG5z7FoPO0d2ag1N3zTmRdPRI3PFFgNG4cVz59g
-ictQDPPd10QozObuOWhG74Cihj+4WHZYDjlJB+iBCx3TWcrSWe52qbC2qxr+cnUQ
-638U63d0lISzImj9jFNGUuewDLG/3DUer6at8M0GY08a8+t+uEp6Ems8pZmxvLaq
-05Qdw3J8njtjlEnKVoTdRjszmPT7vA==
-=mVJ1
------END PGP SIGNATURE-----
-
---Sig_/Z.bdmrdMD1yR5mO_Q8AvQhX--
+Anisse
