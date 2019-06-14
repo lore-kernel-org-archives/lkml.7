@@ -2,286 +2,214 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF730C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20304C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9962183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9CA217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:49:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NxwD+XN0"
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="Egwi3XNQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726184AbfFNQtS (ORCPT
+        id S1726318AbfFNQtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:49:18 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:44909 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfFNQtS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:49:18 -0400
-Received: by mail-vs1-f67.google.com with SMTP id v129so2148535vsb.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:49:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=P57lZleFMEVvVu0eYFutZNaOn5WMh5DoQZ1UItFmSi8=;
-        b=NxwD+XN01kLskZRwzfUeYUym063Szl2JsZYwnev0tiTf5V0+dj2a62Ss8w9cDLONIX
-         7l9Q6edc6Wb+/Bt3OA1hHdWvwwGMvgfejBZw/9FYUiqyQM+/mn/mEY7WSDSNv6Jxdv3o
-         Y9ezv4cR+VNFOHvleZrFpDcOSwY+OVDs2vVHU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=P57lZleFMEVvVu0eYFutZNaOn5WMh5DoQZ1UItFmSi8=;
-        b=CSVlyeXpA6XB94J+DRUllKDNU05z/S2LJCPEnlRmyzVZZaLFHIXo8QHTobF8MNMC9N
-         uP5dE9DL+ptXZKSXBeJOB2kxMEXquSjc6MUIfc5aOYWNMvFMgRj3UcZO4Z0jHhaJ8hZx
-         u59PZUP4vloB6l2PLzUQz3wOENTLfFOjfrD50ba+FhWiOzoVgWva/SaOhkQkrNcRBZts
-         VMJOmWItBjEQ7Avkg//1kYhYtsF27dzec5dlNRf+ApVTC2RqrzgiXbGHOGOrNi7o9w2D
-         67HSY0o2v4n2vcF6TTLdI9O843oxAvIFTQ4S7gi1upeoeMTW9gMA0hVnw0D769d4OOM4
-         M6Yw==
-X-Gm-Message-State: APjAAAWbc9QheF1N3Kr7LnGvuQlFUXKTJFLbz4ZHqNo6IO3Diq8yPFKN
-        24sh2c/NEgX0Me26g7+SNFV2WOs2gy0=
-X-Google-Smtp-Source: APXvYqzN0/E1OH1VDyXK9GRCmxjN9S+ixLw/wQlImj9yg01W00jr1XKY1aKz50ZippaOYDyDXoaTBw==
-X-Received: by 2002:a67:db89:: with SMTP id f9mr25521657vsk.150.1560530956666;
-        Fri, 14 Jun 2019 09:49:16 -0700 (PDT)
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com. [209.85.222.47])
-        by smtp.gmail.com with ESMTPSA id f66sm687280vkh.9.2019.06.14.09.49.16
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 09:49:16 -0700 (PDT)
-Received: by mail-ua1-f47.google.com with SMTP id s4so1178515uad.7
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:49:16 -0700 (PDT)
-X-Received: by 2002:ab0:2a49:: with SMTP id p9mr2189748uar.0.1560530496822;
- Fri, 14 Jun 2019 09:41:36 -0700 (PDT)
+        Fri, 14 Jun 2019 12:49:55 -0400
+Received: from mx.kolabnow.com ([95.128.36.42]:16012 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725868AbfFNQtz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:49:55 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out001.mykolab.com (Postfix) with ESMTP id AC7E2299;
+        Fri, 14 Jun 2019 18:49:52 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received:received:received; s=dkim20160331; t=
+        1560530992; x=1562345393; bh=LIwM9+9dIB18u+6tFJEox7KnVEIbAhaN9hk
+        yl/cMLRc=; b=Egwi3XNQAxx7dDzMNX1XL4gQLSuDNwfnmaviMbNzC+yP2/nJ6k4
+        xp0cQ3Pp8rMUajbUGIePrvotrcUiH9HFs5Da86wUOUg0uic/Wc4PzJcLN0FvBsLa
+        /H5qYywdEHgIDdBjbMQrYrH2MB/BEmmrJTZj/86lgBeQKoMmUmEnUBVXqaDKOurg
+        1K5FOnIL1+5dRBR0bMNC5e+rdSUpQ4wZgl/nI2dYymxzBiV7gtFbAQuy22aYf/K2
+        fFecvX+/Lt9OP2JQ1zxKjgavkjcI5TZnti6jouRmtKa0I0TjVUjc0SSZr+uaZ5Rg
+        xhVhdt5NgQswMDqHqqFOX9gygSIYWiu09UhD9aXd1MP5d+7sSutsCrGBtfQBnZHY
+        mQs+3jpMBy6olxrnkSsODYd+QYuR/kM4/uuSF9zJqHC4fySvu1wKZilQ1k08ON82
+        hmn76LKNLxRAuSlNiXA52VSO+6OyXL9YBgo39Vj5vR1Jatr2TgRRb2vW3LtAMNcZ
+        nvXj5qcjMOy+ig59AmHdiZgqxpiiT4D0ZsVqTMuF2rOefYZsalWS/SxmIVQkJC9j
+        KLTaAb0KiwdYSlk5N5a+RVyTIXnL1/rGoPWCXAHHU1OKVdMk/uDBdMfUmbVa84Kl
+        xR+6WwJfympI884LEaIJfXfPRfrCOPsbLoewXVOkl/j0Wgjt6YZ6qo58=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out001.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id QOVTgGi62AZn; Fri, 14 Jun 2019 18:49:52 +0200 (CEST)
+Received: from int-mx003.mykolab.com (unknown [10.9.13.3])
+        by ext-mx-out001.mykolab.com (Postfix) with ESMTPS id F41D01E2;
+        Fri, 14 Jun 2019 18:49:51 +0200 (CEST)
+Received: from ext-subm001.mykolab.com (unknown [10.9.6.1])
+        by int-mx003.mykolab.com (Postfix) with ESMTPS id 9496E2AB8;
+        Fri, 14 Jun 2019 18:49:51 +0200 (CEST)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Stephen Kitt <steve@sk2.org>
+Cc:     corbet@lwn.net, linux-doc@vger.kernel.org, keescook@chromium.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] docs: stop suggesting strlcpy
+Date:   Fri, 14 Jun 2019 18:49:50 +0200
+Message-ID: <2414416.tHVI2ZYGNv@harkonnen>
+In-Reply-To: <20190613162548.19792-1-steve@sk2.org>
+References: <20190613162548.19792-1-steve@sk2.org>
 MIME-Version: 1.0
-References: <20190613234153.59309-1-dianders@chromium.org> <20190613234153.59309-3-dianders@chromium.org>
- <CAPDyKFrgXGf_9=H7G40fiUQj=da5WWRys_oim2azgL4FEOeUVA@mail.gmail.com>
-In-Reply-To: <CAPDyKFrgXGf_9=H7G40fiUQj=da5WWRys_oim2azgL4FEOeUVA@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Fri, 14 Jun 2019 09:41:24 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=UA9i1eEi3Mx0WF-DnCnr4O4-MfOxa=axZOJtXzxbV7Tw@mail.gmail.com>
-Message-ID: <CAD=FV=UA9i1eEi3Mx0WF-DnCnr4O4-MfOxa=axZOJtXzxbV7Tw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/5] mmc: core: API to temporarily disable retuning for
- SDIO CRC errors
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Allison Randal <allison@lohutok.net>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Avri Altman <avri.altman@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+In data Thursday, June 13, 2019 6:25:48 PM CEST, Stephen Kitt ha scritto:
+> Since strlcpy is deprecated, the documentation shouldn't suggest using
+> it. This patch fixes the examples to use strscpy instead. It also uses
+> sizeof instead of underlying constants as far as possible, to simplify
+> future changes to the corresponding data structures.
+> 
+> Signed-off-by: Stephen Kitt <steve@sk2.org>
 
-On Fri, Jun 14, 2019 at 5:04 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Fri, 14 Jun 2019 at 01:42, Douglas Anderson <dianders@chromium.org> wrote:
-> >
-> > Normally when the MMC core sees an "-EILSEQ" error returned by a host
-> > controller then it will trigger a retuning of the card.  This is
-> > generally a good idea.
-> >
-> > However, if a command is expected to sometimes cause transfer errors
-> > then these transfer errors shouldn't cause a re-tuning.  This
-> > re-tuning will be a needless waste of time.  One example case where a
-> > transfer is expected to cause errors is when transitioning between
-> > idle (sometimes referred to as "sleep" in Broadcom code) and active
-> > state on certain Broadcom WiFi SDIO cards.  Specifically if the card
-> > was already transitioning between states when the command was sent it
-> > could cause an error on the SDIO bus.
-> >
-> > Let's add an API that the SDIO function drivers can call that will
-> > temporarily disable the auto-tuning functionality.  Then we can add a
-> > call to this in the Broadcom WiFi driver and any other driver that
-> > might have similar needs.
-> >
-> > NOTE: this makes the assumption that the card is already tuned well
-> > enough that it's OK to disable the auto-retuning during one of these
-> > error-prone situations.  Presumably the driver code performing the
-> > error-prone transfer knows how to recover / retry from errors.  ...and
-> > after we can get back to a state where transfers are no longer
-> > error-prone then we can enable the auto-retuning again.  If we truly
-> > find ourselves in a case where the card needs to be retuned sometimes
-> > to handle one of these error-prone transfers then we can always try a
-> > few transfers first without auto-retuning and then re-try with
-> > auto-retuning if the first few fail.
-> >
-> > Without this change on rk3288-veyron-minnie I periodically see this in
-> > the logs of a machine just sitting there idle:
-> >   dwmmc_rockchip ff0d0000.dwmmc: Successfully tuned phase to XYZ
-> >
-> > Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
-> > Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> > Changes in v4:
-> > - Moved to SDIO API only (Adrian, Ulf).
-> > - Renamed to make it less generic, now retune_crc_disable (Ulf).
-> > - Function header makes it clear host must be claimed (Ulf).
-> > - No more WARN_ON (Ulf).
-> >
-> > Changes in v3:
-> > - Took out the spinlock since I believe this is all in one context.
-> >
-> > Changes in v2:
-> > - Updated commit message to clarify based on discussion of v1.
-> >
-> >  drivers/mmc/core/core.c       |  5 +++--
-> >  drivers/mmc/core/sdio_io.c    | 36 +++++++++++++++++++++++++++++++++++
-> >  include/linux/mmc/core.h      |  2 ++
-> >  include/linux/mmc/host.h      |  1 +
-> >  include/linux/mmc/sdio_func.h |  3 +++
-> >  5 files changed, 45 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
-> > index 6db36dc870b5..9020cb2490f7 100644
-> > --- a/drivers/mmc/core/core.c
-> > +++ b/drivers/mmc/core/core.c
-> > @@ -144,8 +144,9 @@ void mmc_request_done(struct mmc_host *host, struct mmc_request *mrq)
-> >         int err = cmd->error;
-> >
-> >         /* Flag re-tuning needed on CRC errors */
-> > -       if ((cmd->opcode != MMC_SEND_TUNING_BLOCK &&
-> > -           cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200) &&
-> > +       if (cmd->opcode != MMC_SEND_TUNING_BLOCK &&
-> > +           cmd->opcode != MMC_SEND_TUNING_BLOCK_HS200 &&
-> > +           !host->retune_crc_disable &&
-> >             (err == -EILSEQ || (mrq->sbc && mrq->sbc->error == -EILSEQ) ||
-> >             (mrq->data && mrq->data->error == -EILSEQ) ||
-> >             (mrq->stop && mrq->stop->error == -EILSEQ)))
-> > diff --git a/drivers/mmc/core/sdio_io.c b/drivers/mmc/core/sdio_io.c
-> > index f79f0b0caab8..f822a9630b0e 100644
-> > --- a/drivers/mmc/core/sdio_io.c
-> > +++ b/drivers/mmc/core/sdio_io.c
-> > @@ -734,3 +734,39 @@ int sdio_set_host_pm_flags(struct sdio_func *func, mmc_pm_flag_t flags)
-> >         return 0;
-> >  }
-> >  EXPORT_SYMBOL_GPL(sdio_set_host_pm_flags);
-> > +
-> > +/**
-> > + *     sdio_retune_crc_disable - temporarily disable retuning on CRC errors
-> > + *     @func: SDIO function attached to host
-> > + *
-> > + *     If the SDIO card is known to be in a state where it might produce
-> > + *     CRC errors on the bus in response to commands (like if we know it is
-> > + *     transitioning between power states), an SDIO function driver can
-> > + *     call this function to temporarily disable the SD/MMC core behavior of
-> > + *     triggering an automatic retuning.
-> > + *
-> > + *     This function should be called while the host is claimed and the host
-> > + *     should remain claimed until sdio_retune_crc_enable() is called.
-> > + *     Specifically, the expected sequence of calls is:
-> > + *     - sdio_claim_host()
-> > + *     - sdio_retune_crc_disable()
-> > + *     - some number of calls like sdio_writeb() and sdio_readb()
->
-> sdio_retune_crc_enable()
->
-> > + *     - sdio_release_host()
-> > + */
-> > +void sdio_retune_crc_disable(struct sdio_func *func)
-> > +{
-> > +       func->card->host->retune_crc_disable = true;
-> > +}
-> > +EXPORT_SYMBOL_GPL(sdio_retune_crc_disable);
-> > +
-> > +/**
-> > + *     sdio_retune_crc_enable - reneable retuning on CRC errors
->
-> /s/reneable/re-enable
->
-> > + *     @func: SDIO function attached to host
-> > + *
-> > + *     This is the compement to sdio_retune_crc_disable().
-> > + */
-> > +void sdio_retune_crc_enable(struct sdio_func *func)
-> > +{
-> > +       func->card->host->retune_crc_disable = false;
-> > +}
-> > +EXPORT_SYMBOL_GPL(sdio_retune_crc_enable);
-> > diff --git a/include/linux/mmc/core.h b/include/linux/mmc/core.h
-> > index 134a6483347a..02a13abf0cda 100644
-> > --- a/include/linux/mmc/core.h
-> > +++ b/include/linux/mmc/core.h
-> > @@ -178,6 +178,8 @@ int mmc_wait_for_cmd(struct mmc_host *host, struct mmc_command *cmd,
-> >
-> >  int mmc_hw_reset(struct mmc_host *host);
-> >  int mmc_sw_reset(struct mmc_host *host);
-> > +void mmc_expect_errors_begin(struct mmc_host *host);
-> > +void mmc_expect_errors_end(struct mmc_host *host);
->
-> Leftovers for earlier versions.
-
-Oops!
+Acked-by: Federico Vaga <federico.vaga@vaga.pv.it>
 
 
-> >  void mmc_set_data_timeout(struct mmc_data *data, const struct mmc_card *card);
-> >
-> >  #endif /* LINUX_MMC_CORE_H */
-> > diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> > index 43d0f0c496f6..ecb7972e2423 100644
-> > --- a/include/linux/mmc/host.h
-> > +++ b/include/linux/mmc/host.h
-> > @@ -398,6 +398,7 @@ struct mmc_host {
-> >         unsigned int            retune_now:1;   /* do re-tuning at next req */
-> >         unsigned int            retune_paused:1; /* re-tuning is temporarily disabled */
-> >         unsigned int            use_blk_mq:1;   /* use blk-mq */
-> > +       unsigned int            retune_crc_disable:1; /* don't trigger retune upon crc */
-> >
-> >         int                     rescan_disable; /* disable card detection */
-> >         int                     rescan_entered; /* used with nonremovable devices */
-> > diff --git a/include/linux/mmc/sdio_func.h b/include/linux/mmc/sdio_func.h
-> > index e9dfdd501cd1..4820e6d09dac 100644
-> > --- a/include/linux/mmc/sdio_func.h
-> > +++ b/include/linux/mmc/sdio_func.h
-> > @@ -167,4 +167,7 @@ extern void sdio_f0_writeb(struct sdio_func *func, unsigned char b,
-> >  extern mmc_pm_flag_t sdio_get_host_pm_caps(struct sdio_func *func);
-> >  extern int sdio_set_host_pm_flags(struct sdio_func *func, mmc_pm_flag_t flags);
-> >
-> > +extern void sdio_retune_crc_disable(struct sdio_func *func);
-> > +extern void sdio_retune_crc_enable(struct sdio_func *func);
-> > +
-> >  #endif /* LINUX_MMC_SDIO_FUNC_H */
-> > --
-> > 2.22.0.rc2.383.gf4fbbf30c2-goog
-> >
->
-> Besides the minor comments, this looks good to me.
+> ---
+>  Documentation/hid/hid-transport.txt                         | 6 +++---
+>  Documentation/i2c/instantiating-devices                     | 2 +-
+>  Documentation/i2c/upgrading-clients                         | 4 ++--
+>  Documentation/kernel-hacking/locking.rst                    | 6 +++---
+>  Documentation/translations/it_IT/kernel-hacking/locking.rst | 6 +++---
+>  5 files changed, 12 insertions(+), 12 deletions(-)
+> 
+> diff --git a/Documentation/hid/hid-transport.txt
+> b/Documentation/hid/hid-transport.txt index 3dcba9fd4a3a..4f41d67f1b4b
+> 100644
+> --- a/Documentation/hid/hid-transport.txt
+> +++ b/Documentation/hid/hid-transport.txt
+> @@ -194,9 +194,9 @@ with HID core:
+>  		goto err_<...>;
+>  	}
+> 
+> -	strlcpy(hid->name, <device-name-src>, 127);
+> -	strlcpy(hid->phys, <device-phys-src>, 63);
+> -	strlcpy(hid->uniq, <device-uniq-src>, 63);
+> +	strscpy(hid->name, <device-name-src>, sizeof(hid->name));
+> +	strscpy(hid->phys, <device-phys-src>, sizeof(hid->phys));
+> +	strscpy(hid->uniq, <device-uniq-src>, sizeof(hid->uniq));
+> 
+>  	hid->ll_driver = &custom_ll_driver;
+>  	hid->bus = <device-bus>;
+> diff --git a/Documentation/i2c/instantiating-devices
+> b/Documentation/i2c/instantiating-devices index 0d85ac1935b7..8bc7d99133e3
+> 100644
+> --- a/Documentation/i2c/instantiating-devices
+> +++ b/Documentation/i2c/instantiating-devices
+> @@ -137,7 +137,7 @@ static int usb_hcd_nxp_probe(struct platform_device
+> *pdev) (...)
+>  	i2c_adap = i2c_get_adapter(2);
+>  	memset(&i2c_info, 0, sizeof(struct i2c_board_info));
+> -	strlcpy(i2c_info.type, "isp1301_nxp", I2C_NAME_SIZE);
+> +	strscpy(i2c_info.type, "isp1301_nxp", sizeof(i2c_info.type));
+>  	isp1301_i2c_client = i2c_new_probed_device(i2c_adap, &i2c_info,
+>  						   
+normal_i2c, NULL);
+>  	i2c_put_adapter(i2c_adap);
+> diff --git a/Documentation/i2c/upgrading-clients
+> b/Documentation/i2c/upgrading-clients index ccba3ffd6e80..96392cc5b5c7
+> 100644
+> --- a/Documentation/i2c/upgrading-clients
+> +++ b/Documentation/i2c/upgrading-clients
+> @@ -43,7 +43,7 @@ static int example_attach(struct i2c_adapter *adap, int
+> addr, int kind) example->client.adapter = adap;
+> 
+>  	i2c_set_clientdata(&state->i2c_client, state);
+> -	strlcpy(client->i2c_client.name, "example", I2C_NAME_SIZE);
+> +	strscpy(client->i2c_client.name, "example",
+> sizeof(client->i2c_client.name));
+> 
+>  	ret = i2c_attach_client(&state->i2c_client);
+>  	if (ret < 0) {
+> @@ -138,7 +138,7 @@ can be removed:
+>  -	example->client.flags   = 0;
+>  -	example->client.adapter = adap;
+>  -
+> --	strlcpy(client->i2c_client.name, "example", I2C_NAME_SIZE);
+> +-	strscpy(client->i2c_client.name, "example",
+> sizeof(client->i2c_client.name));
+> 
+>  The i2c_set_clientdata is now:
+> 
+> diff --git a/Documentation/kernel-hacking/locking.rst
+> b/Documentation/kernel-hacking/locking.rst index 519673df0e82..dc698ea456e0
+> 100644
+> --- a/Documentation/kernel-hacking/locking.rst
+> +++ b/Documentation/kernel-hacking/locking.rst
+> @@ -451,7 +451,7 @@ to protect the cache and all the objects within it.
+> Here's the code:: if ((obj = kmalloc(sizeof(*obj), GFP_KERNEL)) == NULL)
+> return -ENOMEM;
+> 
+> -            strlcpy(obj->name, name, sizeof(obj->name));
+> +            strscpy(obj->name, name, sizeof(obj->name));
+>              obj->id = id;
+>              obj->popularity = 0;
+> 
+> @@ -660,7 +660,7 @@ Here is the code::
+>       }
+> 
+>      @@ -63,6 +94,7 @@
+> -             strlcpy(obj->name, name, sizeof(obj->name));
+> +             strscpy(obj->name, name, sizeof(obj->name));
+>               obj->id = id;
+>               obj->popularity = 0;
+>      +        obj->refcnt = 1; /* The cache holds a reference */
+> @@ -774,7 +774,7 @@ the lock is no longer used to protect the reference
+> count itself. }
+> 
+>      @@ -94,7 +76,7 @@
+> -             strlcpy(obj->name, name, sizeof(obj->name));
+> +             strscpy(obj->name, name, sizeof(obj->name));
+>               obj->id = id;
+>               obj->popularity = 0;
+>      -        obj->refcnt = 1; /* The cache holds a reference */
+> diff --git a/Documentation/translations/it_IT/kernel-hacking/locking.rst
+> b/Documentation/translations/it_IT/kernel-hacking/locking.rst index
+> 0ef31666663b..5fd8a1abd2be 100644
+> --- a/Documentation/translations/it_IT/kernel-hacking/locking.rst
+> +++ b/Documentation/translations/it_IT/kernel-hacking/locking.rst
+> @@ -468,7 +468,7 @@ e tutti gli oggetti che contiene. Ecco il codice::
+>              if ((obj = kmalloc(sizeof(*obj), GFP_KERNEL)) == NULL)
+>                      return -ENOMEM;
+> 
+> -            strlcpy(obj->name, name, sizeof(obj->name));
+> +            strscpy(obj->name, name, sizeof(obj->name));
+>              obj->id = id;
+>              obj->popularity = 0;
+> 
+> @@ -678,7 +678,7 @@ Ecco il codice::
+>       }
+> 
+>      @@ -63,6 +94,7 @@
+> -             strlcpy(obj->name, name, sizeof(obj->name));
+> +             strscpy(obj->name, name, sizeof(obj->name));
+>               obj->id = id;
+>               obj->popularity = 0;
+>      +        obj->refcnt = 1; /* The cache holds a reference */
+> @@ -792,7 +792,7 @@ contatore stesso.
+>       }
+> 
+>      @@ -94,7 +76,7 @@
+> -             strlcpy(obj->name, name, sizeof(obj->name));
+> +             strscpy(obj->name, name, sizeof(obj->name));
+>               obj->id = id;
+>               obj->popularity = 0;
+>      -        obj->refcnt = 1; /* The cache holds a reference */
 
-Thank you for the reviews!
 
-I'll plan to send a v5 on my Monday with the fixes assuming no new
-heated discussion starts up.  If it's less work for you, I'm also
-happy if you just want to make the trivial fixes yourself when
-applying.
 
--Doug
+
