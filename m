@@ -2,166 +2,124 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2FFC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E5EC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C888E21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D39FA21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728987AbfFNOO4 (ORCPT
+        id S1728816AbfFNOPs convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:14:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34754 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728555AbfFNOO4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:14:56 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 08FA2AEB3;
-        Fri, 14 Jun 2019 14:14:54 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 16:14:53 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, Steven Rostedt <rostedt@goodmis.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Miroslav Benes <mbenes@suse.cz>,
-        Joe Lawrence <joe.lawrence@redhat.com>,
-        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        Johannes Erdfelt <johannes@erdfelt.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 3/3] module: Improve module __ro_after_init handling
-Message-ID: <20190614141453.fjtvk7uvux6vcmlp@pathway.suse.cz>
-References: <cover.1560474114.git.jpoimboe@redhat.com>
- <1b72f40d863a1444f687b3e1b958bdc6925882ed.1560474114.git.jpoimboe@redhat.com>
+        Fri, 14 Jun 2019 10:15:48 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:49727 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728268AbfFNOPr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:15:47 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-171-6ZL5OlDfPHWG6RvRpXiEQg-1; Fri, 14 Jun 2019 15:15:45 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 14 Jun 2019 15:15:44 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 14 Jun 2019 15:15:44 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        "Ian Abbott" <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>
+CC:     Intel Linux Wireless <linuxwifi@intel.com>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 16/16] dma-mapping: use exact allocation in
+ dma_alloc_contiguous
+Thread-Topic: [PATCH 16/16] dma-mapping: use exact allocation in
+ dma_alloc_contiguous
+Thread-Index: AQHVIrfpTFjppS25RkWUhwqPPyqZ4qabLzdw
+Date:   Fri, 14 Jun 2019 14:15:44 +0000
+Message-ID: <a90cf7ec5f1c4166b53c40e06d4d832a@AcuMS.aculab.com>
+References: <20190614134726.3827-1-hch@lst.de>
+ <20190614134726.3827-17-hch@lst.de>
+In-Reply-To: <20190614134726.3827-17-hch@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1b72f40d863a1444f687b3e1b958bdc6925882ed.1560474114.git.jpoimboe@redhat.com>
-User-Agent: NeoMutt/20170912 (1.9.0)
+X-MC-Unique: 6ZL5OlDfPHWG6RvRpXiEQg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 2019-06-13 20:07:24, Josh Poimboeuf wrote:
-> module_enable_ro() can be called in the following scenario:
+From: Christoph Hellwig
+> Sent: 14 June 2019 14:47
 > 
->   [load livepatch module]
->     initcall
->       klp_enable_patch()
->         klp_init_patch()
->           klp_init_object()
->             klp_init_object_loaded()
->               module_enable_ro(pmod, true)
+> Many architectures (e.g. arm, m68 and sh) have always used exact
+> allocation in their dma coherent allocator, which avoids a lot of
+> memory waste especially for larger allocations.  Lift this behavior
+> into the generic allocator so that dma-direct and the generic IOMMU
+> code benefit from this behavior as well.
 > 
-> In this case, module_enable_ro()'s 'after_init' argument is true, which
-> prematurely changes the module's __ro_after_init area to read-only.
-> 
-> If, theoretically, a registrant of the MODULE_STATE_LIVE module notifier
-> tried to write to the livepatch module's __ro_after_init section, an
-> oops would occur.
-> 
-> Remove the 'after_init' argument and instead make __module_enable_ro()
-> smart enough to only frob the __ro_after_init section after the module
-> has gone live.
-> 
-> Reported-by: Petr Mladek <pmladek@suse.com>
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 > ---
->  arch/arm64/kernel/ftrace.c |  2 +-
->  include/linux/module.h     |  4 ++--
->  kernel/livepatch/core.c    |  4 ++--
->  kernel/module.c            | 14 +++++++-------
->  4 files changed, 12 insertions(+), 12 deletions(-)
+>  include/linux/dma-contiguous.h |  8 +++++---
+>  kernel/dma/contiguous.c        | 17 +++++++++++------
+>  2 files changed, 16 insertions(+), 9 deletions(-)
 > 
-> diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
-> index 65a51331088e..c17d98aafc93 100644
-> --- a/arch/arm64/kernel/ftrace.c
-> +++ b/arch/arm64/kernel/ftrace.c
-> @@ -120,7 +120,7 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
->  			/* point the trampoline to our ftrace entry point */
->  			module_disable_ro(mod);
->  			*mod->arch.ftrace_trampoline = trampoline;
-> -			module_enable_ro(mod, true);
-> +			module_enable_ro(mod);
->  
->  			/* update trampoline before patching in the branch */
->  			smp_wmb();
-> diff --git a/include/linux/module.h b/include/linux/module.h
-> index 188998d3dca9..4d6922f3760e 100644
-> --- a/include/linux/module.h
-> +++ b/include/linux/module.h
-> @@ -844,12 +844,12 @@ extern int module_sysfs_initialized;
->  #ifdef CONFIG_STRICT_MODULE_RWX
->  extern void set_all_modules_text_rw(void);
->  extern void set_all_modules_text_ro(void);
-> -extern void module_enable_ro(const struct module *mod, bool after_init);
-> +extern void module_enable_ro(const struct module *mod);
->  extern void module_disable_ro(const struct module *mod);
->  #else
->  static inline void set_all_modules_text_rw(void) { }
->  static inline void set_all_modules_text_ro(void) { }
-> -static inline void module_enable_ro(const struct module *mod, bool after_init) { }
-> +static inline void module_enable_ro(const struct module *mod) { }
->  static inline void module_disable_ro(const struct module *mod) { }
->  #endif
->  
-> diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> index c4ce08f43bd6..f9882ffa2f44 100644
-> --- a/kernel/livepatch/core.c
-> +++ b/kernel/livepatch/core.c
-> @@ -724,13 +724,13 @@ static int klp_init_object_loaded(struct klp_patch *patch,
->  	module_disable_ro(patch->mod);
->  	ret = klp_write_object_relocations(patch->mod, obj);
->  	if (ret) {
-> -		module_enable_ro(patch->mod, true);
-> +		module_enable_ro(patch->mod);
->  		mutex_unlock(&text_mutex);
->  		return ret;
->  	}
->  
->  	arch_klp_init_object_loaded(patch, obj);
-> -	module_enable_ro(patch->mod, true);
-> +	module_enable_ro(patch->mod);
->  
->  	mutex_unlock(&text_mutex);
->  
-> diff --git a/kernel/module.c b/kernel/module.c
-> index e43a90ee2d23..fb3561e0c5b0 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -1956,7 +1956,7 @@ void module_disable_ro(const struct module *mod)
->  	frob_rodata(&mod->init_layout, set_memory_rw);
->  }
->  
-> -void __module_enable_ro(const struct module *mod, bool after_init)
-> +static void __module_enable_ro(const struct module *mod)
+> diff --git a/include/linux/dma-contiguous.h b/include/linux/dma-contiguous.h
+> index c05d4e661489..2e542e314acf 100644
+> --- a/include/linux/dma-contiguous.h
+> +++ b/include/linux/dma-contiguous.h
+> @@ -161,15 +161,17 @@ static inline struct page *dma_alloc_contiguous(struct device *dev, size_t size,
+>  		gfp_t gfp)
 >  {
->  	if (!rodata_enabled)
->  		return;
-> @@ -1973,15 +1973,15 @@ void __module_enable_ro(const struct module *mod, bool after_init)
->  
->  	frob_rodata(&mod->init_layout, set_memory_ro);
->  
-> -	if (after_init)
-> +	if (mod->state == MODULE_STATE_LIVE)
->  		frob_ro_after_init(&mod->core_layout, set_memory_ro);
+>  	int node = dev ? dev_to_node(dev) : NUMA_NO_NODE;
+> -	size_t align = get_order(PAGE_ALIGN(size));
+> +	void *cpu_addr = alloc_pages_exact_node(node, size, gfp);
+> 
+> -	return alloc_pages_node(node, gfp, align);
+> +	if (!cpu_addr)
+> +		return NULL;
+> +	return virt_to_page(p);
+>  }
 
-This works only now because __module_enable_ro() is called only from
-three locations (klp_init_object_loaded(),  complete_formation(),
-and do_init_module(). And they all are called in a well defined order
-from load_module().
+Does this still guarantee that requests for 16k will not cross a 16k boundary?
+It looks like you are losing the alignment parameter.
 
-Only the final call in do_init_module() should touch the after_init
-section.
+There may be drivers and hardware that also require 12k allocates
+to not cross 16k boundaries (etc).
 
-IMHO, the most clean solutiuon would be to call frob_ro_after_init()
-from extra __module_after_init_enable_ro() or so. This should be
-called only from the single place.
+	David
 
-Best Regards,
-Petr
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
+
