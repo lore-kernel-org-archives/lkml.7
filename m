@@ -2,75 +2,111 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 280E4C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E958C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0115421537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6709620866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:09:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560524973;
+	bh=YlnbKY76MU++cPKthpCvz9e6XM7nVGVURhmpeatu9B4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XfNQbURgr3zX3vBlw/mI9e0hRx7/VgmGM2qe5KueSqKohJTCa/uHCwqRGu+83SgF/
+	 BVk7ME8fRbc7p6I/T0ewllcbKhJxOqLfVAt0FVQsy7a1hRUZpdTW0c9sm4lKv6b0hT
+	 riCcbbdpYiufuuT/V3FahHKHIuyTv49Ld0bWrUsg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726358AbfFNPJC (ORCPT
+        id S1726377AbfFNPJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:09:02 -0400
-Received: from verein.lst.de ([213.95.11.211]:47751 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfFNPJC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:09:02 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id EDC7268B05; Fri, 14 Jun 2019 17:08:27 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 17:08:27 +0200
-From:   'Christoph Hellwig' <hch@lst.de>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     'Christoph Hellwig' <hch@lst.de>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Sean Paul <sean@poorly.run>,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH 16/16] dma-mapping: use exact allocation in
- dma_alloc_contiguous
-Message-ID: <20190614150827.GA9460@lst.de>
-References: <20190614134726.3827-1-hch@lst.de> <20190614134726.3827-17-hch@lst.de> <a90cf7ec5f1c4166b53c40e06d4d832a@AcuMS.aculab.com> <20190614145001.GB9088@lst.de> <4113cd5f-5c13-e9c7-bc5e-dcf0b60e7054@arm.com>
+        Fri, 14 Jun 2019 11:09:31 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46993 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFNPJb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:09:31 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e5so1128901pls.13;
+        Fri, 14 Jun 2019 08:09:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=+I9U1GODgSkyxPAIv5uSBlih1n/pRySECC43JZGkdsQ=;
+        b=iGhc4xzitJMk67sXbQMyBo8eYE8TxhKJEDf+KuuPxlnOLUZFysidCzwr54Kzzy0K2J
+         D+GJRX71MpXYgXx2M6apuBILbtB+nlVv2HxnXhyaQJh8VlGfzYaUAn2jZSunbRUcJP+x
+         iOB3D7jvu5eEN6YbwgH60SuKTejWz4B6PizS20cko5zfs7ZiBvyTkCfK/CSqY5Bns3l8
+         Ro6EsJZk30weiEJY/Uk5TEteCCGXB8XYvuQXqPh/3FoevGvIok7Er3BS5HLnUo9gdnw3
+         FP2pyydyRWD6S3lNwlB6S79WFXpwubyELDGZOmGBXGY7MLSjmvWneimvwEkDnHpcmFWV
+         0G/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=+I9U1GODgSkyxPAIv5uSBlih1n/pRySECC43JZGkdsQ=;
+        b=HyJqtfDS72O5+9b4rUTlWezjRoRGjZcozrgUUZAu/pHK3Ra2m5TzIiRFzDuS26+PtL
+         BrTEV7VCmGA6vZkz0pXKdvVNAv25hJ+TR3tbOs4mLP/wmzmrVQEjBenljYN9TsRRumrC
+         e51XXRACUySdMtCGx+CMvJ3baFsoIv2nGjl3RrKEsxNYfWBrkDkNURBPUJ6YgqHRISny
+         lGSZGSV3l2vNFsKq5bYdRSeykmffCti5Cl1MT5soFduDfrcDLD3bdkXEBwi2GSdZjBha
+         oxF0bnd2MGzqz1jGCdKtf0fJ3r18iudr7oV9NdarQp9dM0Ld0IWQuSJWMS7CYOf3HwVC
+         EdNg==
+X-Gm-Message-State: APjAAAXJQhL/2ux5JThI5KGU1SoHqOQv9PkNNXpkEs48awzC58nuDUEH
+        8F2s0wQiWoe0Q73tZmHsO0Y=
+X-Google-Smtp-Source: APXvYqxzOCKBrFEtUYYWecwehqGBRjbcRqqz2d1PNNKgZEyBo102COqcOPB0Jz3DOPgdv6CXMm9Xlg==
+X-Received: by 2002:a17:902:b70f:: with SMTP id d15mr12366371pls.318.1560524969921;
+        Fri, 14 Jun 2019 08:09:29 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:180::1:b330])
+        by smtp.gmail.com with ESMTPSA id a22sm4039041pfn.173.2019.06.14.08.09.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 08:09:28 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 08:09:24 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Toke =?iso-8859-1?Q?H=F8iland-J=F8rgensen?= <toke@redhat.com>
+Cc:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
+        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com, cgroups@vger.kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, bpf@vger.kernel.org, Josef Bacik <jbacik@fb.com>
+Subject: Re: [PATCH 08/10] blkcg: implement blk-ioweight
+Message-ID: <20190614150924.GB538958@devbig004.ftw2.facebook.com>
+References: <20190614015620.1587672-1-tj@kernel.org>
+ <20190614015620.1587672-9-tj@kernel.org>
+ <87pnngbbti.fsf@toke.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <4113cd5f-5c13-e9c7-bc5e-dcf0b60e7054@arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87pnngbbti.fsf@toke.dk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:05:33PM +0100, Robin Murphy wrote:
-> That said, I don't believe this particular patch should make any 
-> appreciable difference - alloc_pages_exact() is still going to give back 
-> the same base address as the rounded up over-allocation would, and 
-> PAGE_ALIGN()ing the size passed to get_order() already seemed to be 
-> pointless.
+Hello, Toke.
 
-True, we actually do get the right alignment just about anywhere.
-Not 100% sure about the various static pool implementations, but we
-can make sure if any didn't we'll do that right thing once those
-get consolidated.
+On Fri, Jun 14, 2019 at 02:17:45PM +0200, Toke Høiland-Jørgensen wrote:
+> One question: How are equal-weight cgroups scheduled relative to each
+> other? Or requests from different processes within a single cgroup for
+> that matter? FIFO? Round-robin? Something else?
+
+Once each cgroup got their hierarchical weight and current vtime for
+the period, they don't talk to each other.  Each is expected to do the
+right thing on their own.  When the period ends, the timer looks at
+how the device is performing, how much each used and so on and then
+make necessary adjustments.  So, there's no direct cross-cgroup
+synchronization.  Each is throttled to their target level
+independently.
+
+Within a single cgroup, the IOs are FIFO.  When an IO has enough vtime
+credit, it just passes through.  When it doesn't, it always waits
+behind any other IOs which are already waiting.
+
+Thanks.
+
+-- 
+tejun
