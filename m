@@ -2,912 +2,143 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F2C3C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24FD9C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16FE12177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E71282177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:19:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JP8YVs6C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726793AbfFNSR7 (ORCPT
+        id S1726183AbfFNSTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:17:59 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18577 "EHLO huawei.com"
+        Fri, 14 Jun 2019 14:19:48 -0400
+Received: from mail-eopbgr710136.outbound.protection.outlook.com ([40.107.71.136]:44189
+        "EHLO NAM05-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726094AbfFNSRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:17:16 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4F4CFB3C2BDD34F8DE7D;
-        Sat, 15 Jun 2019 02:17:13 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 15 Jun
- 2019 02:17:05 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     <chao@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [RFC PATCH 2/8] staging: erofs: add compacted compression indexes support
-Date:   Sat, 15 Jun 2019 02:16:13 +0800
-Message-ID: <20190614181619.64905-3-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614181619.64905-1-gaoxiang25@huawei.com>
-References: <20190614181619.64905-1-gaoxiang25@huawei.com>
+        id S1725802AbfFNSTr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:19:47 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=JKim6Gk3e54uBoMi1zB0p1QrU8S5HlLWGqvIBfwsYk9bp8TLEENa0ekZNi3B8jgeTzUHvUvWNBNvwapRSmVv85LVx9vFNQByDPQjYYYB1juUVYONqS/2KL6bxba9RzN+5L4azgqF2aLQcx7rcRJebs5iUo0XUIlQBxuXi3xnRao=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IfnSm+uyDSk/87q8SgbHR6zZYTWV63CAj8z/ql0Ki1Y=;
+ b=L/tPJDK5YRQOvs3Ge4lknEHDR9JJTG3WfdkwmTOMHdd8N+qq/o+p1d1oAXy0m4dftX0uSJXaQCZWDCIJ9fTIhN8XPcVSODMCc1fDyvO+ZiZHFjPcLRzcFIzUMGqw+PnO1JSYfz4D2TobaLuHTIBBzVL/vCu6gmFK6EpDgMQrvQ0=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IfnSm+uyDSk/87q8SgbHR6zZYTWV63CAj8z/ql0Ki1Y=;
+ b=JP8YVs6CBdnLeaNQF8uaaP+U6RnuupmaRjQ7zHXMdr8bhULHlqJJAqVx7FjELLPwA4rfcjIqf4xXGgd/QU2mCm4WEU81m6XWAdmS8lWDqKmlw0Wsc/Bwm/r/rBNNlJonBwkGHOcmysnuKrwA+a4Lcioj/0lx4ymauwb+AEXY/wg=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (2603:10b6:805:4::19)
+ by SN6PR2101MB1085.namprd21.prod.outlook.com (2603:10b6:805:6::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.2; Fri, 14 Jun
+ 2019 18:19:04 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::d8f0:bc1e:20d2:9bf6]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::d8f0:bc1e:20d2:9bf6%3]) with mapi id 15.20.2008.002; Fri, 14 Jun 2019
+ 18:19:04 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "robert.moore@intel.com" <robert.moore@intel.com>,
+        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH] ACPI: PM: Export the function acpi_sleep_state_supported()
+Thread-Topic: [PATCH] ACPI: PM: Export the function
+ acpi_sleep_state_supported()
+Thread-Index: AQHVIt2lUviLbUjfZEmzRslUu7e03g==
+Date:   Fri, 14 Jun 2019 18:19:04 +0000
+Message-ID: <1560536224-35338-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MW2PR16CA0008.namprd16.prod.outlook.com (2603:10b6:907::21)
+ To SN6PR2101MB0942.namprd21.prod.outlook.com (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f371868e-e028-41f3-102c-08d6f0f4c807
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1085;
+x-ms-traffictypediagnostic: SN6PR2101MB1085:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SN6PR2101MB10852A5E231210CC27D3D94ABFEE0@SN6PR2101MB1085.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(346002)(366004)(136003)(396003)(39860400002)(189003)(199004)(53936002)(478600001)(2616005)(6512007)(10090500001)(476003)(5660300002)(486006)(14454004)(68736007)(107886003)(4720700003)(50226002)(4326008)(8676002)(6636002)(2501003)(3846002)(6116002)(6486002)(7736002)(305945005)(81156014)(8936002)(81166006)(25786009)(66066001)(7416002)(256004)(14444005)(26005)(71190400001)(10290500003)(6506007)(3450700001)(2906002)(316002)(2201001)(54906003)(110136005)(86362001)(6436002)(22452003)(186003)(1511001)(99286004)(71200400001)(386003)(36756003)(52116002)(52396003)(73956011)(43066004)(66556008)(66476007)(64756008)(66946007)(66446008)(102836004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1085;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: X5xGRrHxVFUTTUcYUe4+9L1TLAO/JTpBPJcBa/AgsUtILDS18sMFSR54C1K0tsYdY6qoxG8JRKheGyCVnbe1zKLohxnlK2lvXdUTqeYxAzsGjmpAd/6P5bQQyIOOaUiwrM/fuu7TDl8UB+CINEvCmvOj7HJ4gyq0+L6yUi7FcnaH/kUcJ86m0ABA5SbsGN9xez8sa+RIncpO/Jvaq1KDdPnEl8yTI3SPRIYsN7L+GAsjNnWks0daDRSmYiObu+RZGwSoQwAn5XrNE54GAeTTBe4epwOb1eJT13pbozrIjeocYcE+xvnx33Bkv7Jt7k0pFqrMNPe35KG1sdGuIfEhq1td8fvsylHFk7m7L2pnhUlDXty0/zjr58vgoUqORW2bcQa6dKKqsgjYEeorFl2pG2jxKXVrabweY/nluvhCTHg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f371868e-e028-41f3-102c-08d6f0f4c807
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 18:19:04.4762
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lkmldc@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch aims at compacted compression indexes:
- 1) cleanup z_erofs_map_blocks_iter and move into zmap.c;
- 2) add compacted 4/2B decoding support.
-
-On kirin980 platform, sequential read is increased about
-6% (725MiB/s -> 770MiB/s) on enwik9 dataset if compacted 2B
-feature is enabled.
-
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- drivers/staging/erofs/Makefile    |   2 +-
- drivers/staging/erofs/inode.c     |   7 +-
- drivers/staging/erofs/internal.h  |  18 +-
- drivers/staging/erofs/unzip_vle.c | 286 ------------------
- drivers/staging/erofs/zmap.c      | 461 ++++++++++++++++++++++++++++++
- 5 files changed, 479 insertions(+), 295 deletions(-)
- create mode 100644 drivers/staging/erofs/zmap.c
-
-diff --git a/drivers/staging/erofs/Makefile b/drivers/staging/erofs/Makefile
-index a34248a2a16a..84b412c7a991 100644
---- a/drivers/staging/erofs/Makefile
-+++ b/drivers/staging/erofs/Makefile
-@@ -9,5 +9,5 @@ obj-$(CONFIG_EROFS_FS) += erofs.o
- ccflags-y += -I $(srctree)/$(src)/include
- erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
- erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
--erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o unzip_vle_lz4.o
-+erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o unzip_vle_lz4.o zmap.o
- 
-diff --git a/drivers/staging/erofs/inode.c b/drivers/staging/erofs/inode.c
-index 3539290b8e45..1d467322bacf 100644
---- a/drivers/staging/erofs/inode.c
-+++ b/drivers/staging/erofs/inode.c
-@@ -210,12 +210,7 @@ static int fill_inode(struct inode *inode, int isdir)
- 		}
- 
- 		if (is_inode_layout_compression(inode)) {
--#ifdef CONFIG_EROFS_FS_ZIP
--			inode->i_mapping->a_ops =
--				&z_erofs_vle_normalaccess_aops;
--#else
--			err = -ENOTSUPP;
--#endif
-+			err = z_erofs_fill_inode(inode);
- 			goto out_unlock;
- 		}
- 
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index c851d0be6cf6..f3063b13c117 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -339,9 +339,11 @@ static inline erofs_off_t iloc(struct erofs_sb_info *sbi, erofs_nid_t nid)
- 
- /* atomic flag definitions */
- #define EROFS_V_EA_INITED_BIT	0
-+#define EROFS_V_Z_INITED_BIT	1
- 
- /* bitlock definitions (arranged in reverse order) */
- #define EROFS_V_BL_XATTR_BIT	(BITS_PER_LONG - 1)
-+#define EROFS_V_BL_Z_BIT	(BITS_PER_LONG - 2)
- 
- struct erofs_vnode {
- 	erofs_nid_t nid;
-@@ -356,8 +358,17 @@ struct erofs_vnode {
- 	unsigned xattr_shared_count;
- 	unsigned *xattr_shared_xattrs;
- 
--	erofs_blk_t raw_blkaddr;
--
-+	union {
-+		erofs_blk_t raw_blkaddr;
-+#ifdef CONFIG_EROFS_FS_ZIP
-+		struct {
-+			unsigned short z_advise;
-+			unsigned char  z_algorithmtype[2];
-+			unsigned char  z_logical_clusterbits;
-+			unsigned char  z_physical_clusterbits[2];
-+		};
-+#endif
-+	};
- 	/* the corresponding vfs inode */
- 	struct inode vfs_inode;
- };
-@@ -447,11 +458,14 @@ struct erofs_map_blocks {
- /* Flags used by erofs_map_blocks() */
- #define EROFS_GET_BLOCKS_RAW    0x0001
- 
-+/* zmap.c */
- #ifdef CONFIG_EROFS_FS_ZIP
-+int z_erofs_fill_inode(struct inode *inode);
- int z_erofs_map_blocks_iter(struct inode *inode,
- 			    struct erofs_map_blocks *map,
- 			    int flags);
- #else
-+static inline int z_erofs_fill_inode(struct inode *inode) { return -ENOTSUPP; }
- static inline int z_erofs_map_blocks_iter(struct inode *inode,
- 					  struct erofs_map_blocks *map,
- 					  int flags)
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index 0db9bc50f67c..8aea938172df 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -1600,289 +1600,3 @@ const struct address_space_operations z_erofs_vle_normalaccess_aops = {
- 	.readpages = z_erofs_vle_normalaccess_readpages,
- };
- 
--/*
-- * Variable-sized Logical Extent (Fixed Physical Cluster) Compression Mode
-- * ---
-- * VLE compression mode attempts to compress a number of logical data into
-- * a physical cluster with a fixed size.
-- * VLE compression mode uses "struct z_erofs_vle_decompressed_index".
-- */
--#define __vle_cluster_advise(x, bit, bits) \
--	((le16_to_cpu(x) >> (bit)) & ((1 << (bits)) - 1))
--
--#define __vle_cluster_type(advise) __vle_cluster_advise(advise, \
--	Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT, Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS)
--
--#define vle_cluster_type(di)	\
--	__vle_cluster_type((di)->di_advise)
--
--static int
--vle_decompressed_index_clusterofs(unsigned int *clusterofs,
--				  unsigned int clustersize,
--				  struct z_erofs_vle_decompressed_index *di)
--{
--	switch (vle_cluster_type(di)) {
--	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
--		*clusterofs = clustersize;
--		break;
--	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
--	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
--		*clusterofs = le16_to_cpu(di->di_clusterofs);
--		break;
--	default:
--		DBG_BUGON(1);
--		return -EIO;
--	}
--	return 0;
--}
--
--static inline erofs_blk_t
--vle_extent_blkaddr(struct inode *inode, pgoff_t index)
--{
--	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
--	struct erofs_vnode *vi = EROFS_V(inode);
--
--	unsigned int ofs = Z_EROFS_VLE_EXTENT_ALIGN(vi->inode_isize +
--						    vi->xattr_isize) +
--		16 + index * sizeof(struct z_erofs_vle_decompressed_index);
--
--	return erofs_blknr(iloc(sbi, vi->nid) + ofs);
--}
--
--static inline unsigned int
--vle_extent_blkoff(struct inode *inode, pgoff_t index)
--{
--	struct erofs_sb_info *sbi = EROFS_I_SB(inode);
--	struct erofs_vnode *vi = EROFS_V(inode);
--
--	unsigned int ofs = Z_EROFS_VLE_EXTENT_ALIGN(vi->inode_isize +
--						    vi->xattr_isize) +
--		16 + index * sizeof(struct z_erofs_vle_decompressed_index);
--
--	return erofs_blkoff(iloc(sbi, vi->nid) + ofs);
--}
--
--struct vle_map_blocks_iter_ctx {
--	struct inode *inode;
--	struct super_block *sb;
--	unsigned int clusterbits;
--
--	struct page **mpage_ret;
--	void **kaddr_ret;
--};
--
--static int
--vle_get_logical_extent_head(const struct vle_map_blocks_iter_ctx *ctx,
--			    unsigned int lcn,	/* logical cluster number */
--			    unsigned long long *ofs,
--			    erofs_blk_t *pblk,
--			    unsigned int *flags)
--{
--	const unsigned int clustersize = 1 << ctx->clusterbits;
--	const erofs_blk_t mblk = vle_extent_blkaddr(ctx->inode, lcn);
--	struct page *mpage = *ctx->mpage_ret;	/* extent metapage */
--
--	struct z_erofs_vle_decompressed_index *di;
--	unsigned int cluster_type, delta0;
--
--	if (mpage->index != mblk) {
--		kunmap_atomic(*ctx->kaddr_ret);
--		unlock_page(mpage);
--		put_page(mpage);
--
--		mpage = erofs_get_meta_page(ctx->sb, mblk, false);
--		if (IS_ERR(mpage)) {
--			*ctx->mpage_ret = NULL;
--			return PTR_ERR(mpage);
--		}
--		*ctx->mpage_ret = mpage;
--		*ctx->kaddr_ret = kmap_atomic(mpage);
--	}
--
--	di = *ctx->kaddr_ret + vle_extent_blkoff(ctx->inode, lcn);
--
--	cluster_type = vle_cluster_type(di);
--	switch (cluster_type) {
--	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
--		delta0 = le16_to_cpu(di->di_u.delta[0]);
--		if (unlikely(!delta0 || delta0 > lcn)) {
--			errln("invalid NONHEAD dl0 %u at lcn %u of nid %llu",
--			      delta0, lcn, EROFS_V(ctx->inode)->nid);
--			DBG_BUGON(1);
--			return -EIO;
--		}
--		return vle_get_logical_extent_head(ctx,
--			lcn - delta0, ofs, pblk, flags);
--	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
--		*flags ^= EROFS_MAP_ZIPPED;
--		/* fallthrough */
--	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
--		/* clustersize should be a power of two */
--		*ofs = ((u64)lcn << ctx->clusterbits) +
--			(le16_to_cpu(di->di_clusterofs) & (clustersize - 1));
--		*pblk = le32_to_cpu(di->di_u.blkaddr);
--		break;
--	default:
--		errln("unknown cluster type %u at lcn %u of nid %llu",
--		      cluster_type, lcn, EROFS_V(ctx->inode)->nid);
--		DBG_BUGON(1);
--		return -EIO;
--	}
--	return 0;
--}
--
--int z_erofs_map_blocks_iter(struct inode *inode,
--			    struct erofs_map_blocks *map,
--			    int flags)
--{
--	void *kaddr;
--	const struct vle_map_blocks_iter_ctx ctx = {
--		.inode = inode,
--		.sb = inode->i_sb,
--		.clusterbits = EROFS_I_SB(inode)->clusterbits,
--		.mpage_ret = &map->mpage,
--		.kaddr_ret = &kaddr
--	};
--	const unsigned int clustersize = 1 << ctx.clusterbits;
--	/* if both m_(l,p)len are 0, regularize l_lblk, l_lofs, etc... */
--	const bool initial = !map->m_llen;
--
--	/* logicial extent (start, end) offset */
--	unsigned long long ofs, end;
--	unsigned int lcn;
--	u32 ofs_rem;
--
--	/* initialize `pblk' to keep gcc from printing foolish warnings */
--	erofs_blk_t mblk, pblk = 0;
--	struct page *mpage = map->mpage;
--	struct z_erofs_vle_decompressed_index *di;
--	unsigned int cluster_type, logical_cluster_ofs;
--	int err = 0;
--
--	trace_z_erofs_map_blocks_iter_enter(inode, map, flags);
--
--	/* when trying to read beyond EOF, leave it unmapped */
--	if (unlikely(map->m_la >= inode->i_size)) {
--		DBG_BUGON(!initial);
--		map->m_llen = map->m_la + 1 - inode->i_size;
--		map->m_la = inode->i_size;
--		map->m_flags = 0;
--		goto out;
--	}
--
--	debugln("%s, m_la %llu m_llen %llu --- start", __func__,
--		map->m_la, map->m_llen);
--
--	ofs = map->m_la + map->m_llen;
--
--	/* clustersize should be power of two */
--	lcn = ofs >> ctx.clusterbits;
--	ofs_rem = ofs & (clustersize - 1);
--
--	mblk = vle_extent_blkaddr(inode, lcn);
--
--	if (!mpage || mpage->index != mblk) {
--		if (mpage)
--			put_page(mpage);
--
--		mpage = erofs_get_meta_page(ctx.sb, mblk, false);
--		if (IS_ERR(mpage)) {
--			err = PTR_ERR(mpage);
--			goto out;
--		}
--		map->mpage = mpage;
--	} else {
--		lock_page(mpage);
--		DBG_BUGON(!PageUptodate(mpage));
--	}
--
--	kaddr = kmap_atomic(mpage);
--	di = kaddr + vle_extent_blkoff(inode, lcn);
--
--	debugln("%s, lcn %u mblk %u e_blkoff %u", __func__, lcn,
--		mblk, vle_extent_blkoff(inode, lcn));
--
--	err = vle_decompressed_index_clusterofs(&logical_cluster_ofs,
--						clustersize, di);
--	if (unlikely(err))
--		goto unmap_out;
--
--	if (!initial) {
--		/* [walking mode] 'map' has been already initialized */
--		map->m_llen += logical_cluster_ofs;
--		goto unmap_out;
--	}
--
--	/* by default, compressed */
--	map->m_flags |= EROFS_MAP_ZIPPED;
--
--	end = ((u64)lcn + 1) * clustersize;
--
--	cluster_type = vle_cluster_type(di);
--
--	switch (cluster_type) {
--	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
--		if (ofs_rem >= logical_cluster_ofs)
--			map->m_flags ^= EROFS_MAP_ZIPPED;
--		/* fallthrough */
--	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
--		if (ofs_rem == logical_cluster_ofs) {
--			pblk = le32_to_cpu(di->di_u.blkaddr);
--			goto exact_hitted;
--		}
--
--		if (ofs_rem > logical_cluster_ofs) {
--			ofs = (u64)lcn * clustersize | logical_cluster_ofs;
--			pblk = le32_to_cpu(di->di_u.blkaddr);
--			break;
--		}
--
--		/* logical cluster number should be >= 1 */
--		if (unlikely(!lcn)) {
--			errln("invalid logical cluster 0 at nid %llu",
--			      EROFS_V(inode)->nid);
--			err = -EIO;
--			goto unmap_out;
--		}
--		end = ((u64)lcn-- * clustersize) | logical_cluster_ofs;
--		/* fallthrough */
--	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
--		/* get the correspoinding first chunk */
--		err = vle_get_logical_extent_head(&ctx, lcn, &ofs,
--						  &pblk, &map->m_flags);
--		mpage = map->mpage;
--
--		if (unlikely(err)) {
--			if (mpage)
--				goto unmap_out;
--			goto out;
--		}
--		break;
--	default:
--		errln("unknown cluster type %u at offset %llu of nid %llu",
--		      cluster_type, ofs, EROFS_V(inode)->nid);
--		err = -EIO;
--		goto unmap_out;
--	}
--
--	map->m_la = ofs;
--exact_hitted:
--	map->m_llen = end - ofs;
--	map->m_plen = clustersize;
--	map->m_pa = blknr_to_addr(pblk);
--	map->m_flags |= EROFS_MAP_MAPPED;
--unmap_out:
--	kunmap_atomic(kaddr);
--	unlock_page(mpage);
--out:
--	debugln("%s, m_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o",
--		__func__, map->m_la, map->m_pa,
--		map->m_llen, map->m_plen, map->m_flags);
--
--	trace_z_erofs_map_blocks_iter_exit(inode, map, flags, err);
--
--	/* aggressively BUG_ON iff CONFIG_EROFS_FS_DEBUG is on */
--	DBG_BUGON(err < 0 && err != -ENOMEM);
--	return err;
--}
--
-diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
-new file mode 100644
-index 000000000000..fea3717bf605
---- /dev/null
-+++ b/drivers/staging/erofs/zmap.c
-@@ -0,0 +1,461 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * linux/drivers/staging/erofs/zmap.c
-+ *
-+ * Copyright (C) 2018-2019 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#include "internal.h"
-+#include <asm/unaligned.h>
-+#include <trace/events/erofs.h>
-+
-+int z_erofs_fill_inode(struct inode *inode)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	struct super_block *const sb = inode->i_sb;
-+
-+	if (vi->datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY) {
-+		vi->z_advise = 0;
-+		vi->z_algorithmtype[0] = 0;
-+		vi->z_algorithmtype[1] = 0;
-+		vi->z_logical_clusterbits = EROFS_SB(sb)->clusterbits;
-+		vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits;
-+		vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits;
-+		set_bit(EROFS_V_Z_INITED_BIT, &vi->flags);
-+	}
-+
-+	inode->i_mapping->a_ops = &z_erofs_vle_normalaccess_aops;
-+	return 0;
-+}
-+
-+static int fill_inode_lazy(struct inode *inode)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	struct super_block *const sb = inode->i_sb;
-+	int err;
-+	erofs_off_t pos;
-+	struct page *page;
-+	void *kaddr;
-+	struct z_erofs_map_header *h;
-+
-+	if (test_bit(EROFS_V_Z_INITED_BIT, &vi->flags))
-+		return 0;
-+
-+	if (wait_on_bit_lock(&vi->flags, EROFS_V_BL_Z_BIT, TASK_KILLABLE))
-+		return -ERESTARTSYS;
-+
-+	err = 0;
-+	if (test_bit(EROFS_V_Z_INITED_BIT, &vi->flags))
-+		goto out_unlock;
-+
-+	DBG_BUGON(vi->datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY);
-+
-+	pos = ALIGN(iloc(EROFS_SB(sb), vi->nid) + vi->inode_isize +
-+		    vi->xattr_isize, 8);
-+	page = erofs_get_meta_page(sb, erofs_blknr(pos), false);
-+	if (IS_ERR(page)) {
-+		err = PTR_ERR(page);
-+		goto out_unlock;
-+	}
-+
-+	kaddr = kmap_atomic(page);
-+
-+	h = kaddr + erofs_blkoff(pos);
-+	vi->z_advise = le16_to_cpu(h->h_advise);
-+	vi->z_algorithmtype[0] = h->h_algorithmtype & 15;
-+	vi->z_algorithmtype[1] = h->h_algorithmtype >> 4;
-+
-+	if (vi->z_algorithmtype[0] >= Z_EROFS_COMPRESSION_MAX) {
-+		errln("unknown compression format %u for nid %llu, please upgrade kernel",
-+		      vi->z_algorithmtype[0], vi->nid);
-+		err = -ENOTSUPP;
-+		goto unmap_done;
-+	}
-+
-+	vi->z_logical_clusterbits = LOG_BLOCK_SIZE + (h->h_clusterbits & 7);
-+	vi->z_physical_clusterbits[0] = vi->z_logical_clusterbits +
-+					((h->h_clusterbits >> 3) & 3);
-+
-+	if (vi->z_physical_clusterbits[0] != LOG_BLOCK_SIZE) {
-+		errln("unsupported physical clusterbits %u for nid %llu, please upgrade kernel",
-+		      vi->z_physical_clusterbits[0], vi->nid);
-+		err = -ENOTSUPP;
-+		goto unmap_done;
-+	}
-+
-+	vi->z_physical_clusterbits[1] = vi->z_logical_clusterbits +
-+					((h->h_clusterbits >> 5) & 7);
-+unmap_done:
-+	kunmap_atomic(kaddr);
-+	unlock_page(page);
-+	put_page(page);
-+
-+	set_bit(EROFS_V_Z_INITED_BIT, &vi->flags);
-+out_unlock:
-+	clear_and_wake_up_bit(EROFS_V_BL_Z_BIT, &vi->flags);
-+	return err;
-+}
-+
-+struct z_erofs_maprecorder {
-+	struct inode *inode;
-+	struct erofs_map_blocks *map;
-+	void *kaddr;
-+
-+	unsigned long lcn;
-+	/* compression extent information gathered */
-+	u8  type;
-+	u16 clusterofs;
-+	u16 delta[2];
-+	erofs_blk_t pblk;
-+};
-+
-+static int z_erofs_reload_indexes(struct z_erofs_maprecorder *m,
-+				  erofs_blk_t eblk)
-+{
-+	struct super_block *const sb = m->inode->i_sb;
-+	struct erofs_map_blocks *const map = m->map;
-+	struct page *mpage = map->mpage;
-+
-+	if (mpage) {
-+		if (mpage->index == eblk) {
-+			if (!m->kaddr)
-+				m->kaddr = kmap_atomic(mpage);
-+			return 0;
-+		}
-+
-+		if (m->kaddr) {
-+			kunmap_atomic(m->kaddr);
-+			m->kaddr = NULL;
-+		}
-+		put_page(mpage);
-+	}
-+
-+	mpage = erofs_get_meta_page(sb, eblk, false);
-+	if (IS_ERR(mpage)) {
-+		map->mpage = NULL;
-+		return PTR_ERR(mpage);
-+	}
-+	m->kaddr = kmap_atomic(mpage);
-+	unlock_page(mpage);
-+	map->mpage = mpage;
-+	return 0;
-+}
-+
-+static int vle_legacy_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+					     unsigned long lcn)
-+{
-+	struct inode *const inode = m->inode;
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	const erofs_off_t ibase = iloc(EROFS_I_SB(inode), vi->nid);
-+	const erofs_off_t pos = Z_EROFS_VLE_EXTENT_ALIGN(ibase +
-+							 vi->inode_isize +
-+							 vi->xattr_isize) +
-+		16 + lcn * sizeof(struct z_erofs_vle_decompressed_index);
-+	struct z_erofs_vle_decompressed_index *di;
-+	unsigned int advise, type;
-+	int err;
-+
-+	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
-+	if (err)
-+		return err;
-+
-+	m->lcn = lcn;
-+	di = m->kaddr + erofs_blkoff(pos);
-+
-+	advise = le16_to_cpu(di->di_advise);
-+	type = (advise >> Z_EROFS_VLE_DI_CLUSTER_TYPE_BIT) &
-+		((1 << Z_EROFS_VLE_DI_CLUSTER_TYPE_BITS) - 1);
-+	switch (type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		m->clusterofs = 1 << vi->z_logical_clusterbits;
-+		m->delta[0] = le16_to_cpu(di->di_u.delta[0]);
-+		m->delta[1] = le16_to_cpu(di->di_u.delta[1]);
-+		break;
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		m->clusterofs = le16_to_cpu(di->di_clusterofs);
-+		m->pblk = le32_to_cpu(di->di_u.blkaddr);
-+		break;
-+	default:
-+		DBG_BUGON(1);
-+		return -EIO;
-+	}
-+	m->type = type;
-+	return 0;
-+}
-+
-+static unsigned int decode_compactedbits(unsigned int lobits,
-+					 unsigned int lomask,
-+					 u8 *in, unsigned int pos, u8 *type)
-+{
-+	const unsigned int v = get_unaligned_le32(in + pos / 8) >> (pos & 7);
-+	const unsigned int lo = v & lomask;
-+
-+	*type = (v >> lobits) & 3;
-+	return lo;
-+}
-+
-+static int unpack_compacted_index(struct z_erofs_maprecorder *m,
-+				  unsigned int amortizedshift,
-+				  unsigned int eofs)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(m->inode);
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	const unsigned int lomask = (1 << lclusterbits) - 1;
-+	unsigned int vcnt, base, lo, encodebits, nblk;
-+	int i;
-+	u8 *in, type;
-+
-+	if (1 << amortizedshift == 4)
-+		vcnt = 2;
-+	else if (1 << amortizedshift == 2 && lclusterbits == 12)
-+		vcnt = 16;
-+	else
-+		return -ENOTSUPP;
-+
-+	encodebits = ((vcnt << amortizedshift) * 8 - 32) / vcnt;
-+	base = round_down(eofs, vcnt << amortizedshift);
-+	in = m->kaddr + base;
-+
-+	i = (eofs - base) >> amortizedshift;
-+
-+	lo = decode_compactedbits(lclusterbits, lomask,
-+				  in, encodebits * i, &type);
-+	m->type = type;
-+	if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD) {
-+		m->clusterofs = 1 << lclusterbits;
-+		if (i + 1 != vcnt) {
-+			m->delta[0] = lo;
-+			return 0;
-+		}
-+		/*
-+		 * since the last lcluster in the pack is special,
-+		 * of which lo saves delta[1] rather than delta[0].
-+		 * Hence, get delta[0] by the previous lcluster indirectly.
-+		 */
-+		lo = decode_compactedbits(lclusterbits, lomask,
-+					  in, encodebits * (i - 1), &type);
-+		if (type != Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+			lo = 0;
-+		m->delta[0] = lo + 1;
-+		return 0;
-+	}
-+	m->clusterofs = lo;
-+	/* blkaddr (pblk) calculation */
-+	nblk = 1;
-+	while (i > 0) {
-+		--i;
-+		lo = decode_compactedbits(lclusterbits, lomask,
-+					  in, encodebits * i, &type);
-+		if (type == Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD)
-+			i -= lo;
-+
-+		if (i >= 0)
-+			++nblk;
-+	}
-+	in += (vcnt << amortizedshift) - 4;
-+	m->delta[0] = 0;
-+	m->pblk = le32_to_cpu(*(__le32 *)in) + nblk;
-+	return 0;
-+}
-+
-+static int compacted_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+					    unsigned long lcn)
-+{
-+	struct inode *const inode = m->inode;
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	const erofs_off_t ebase = ALIGN(iloc(EROFS_I_SB(inode), vi->nid) +
-+					vi->inode_isize + vi->xattr_isize, 8) +
-+		sizeof(struct z_erofs_map_header);
-+	const unsigned int totalidx = DIV_ROUND_UP(inode->i_size, EROFS_BLKSIZ);
-+	unsigned int compacted_4b_initial, compacted_2b;
-+	unsigned int amortizedshift;
-+	erofs_off_t pos;
-+	int err;
-+
-+	if (lclusterbits != 12)
-+		return -ENOTSUPP;
-+
-+	if (lcn >= totalidx)
-+		return -EINVAL;
-+
-+	m->lcn = lcn;
-+	compacted_4b_initial = (32 - ebase % 32) / 4;
-+	if (compacted_4b_initial == 32 / 4)
-+		compacted_4b_initial = 0;
-+
-+	if (vi->z_advise & Z_EROFS_ADVISE_COMPACTED_2B)
-+		compacted_2b = rounddown(totalidx - compacted_4b_initial, 16);
-+	else
-+		compacted_2b = 0;
-+
-+	pos = ebase;
-+	if (lcn < compacted_4b_initial) {
-+		amortizedshift = 2;
-+		goto out;
-+	}
-+	pos += compacted_4b_initial * 4;
-+	lcn -= compacted_4b_initial;
-+
-+	if (lcn < compacted_2b) {
-+		amortizedshift = 1;
-+		goto out;
-+	}
-+	pos += compacted_2b * 2;
-+	lcn -= compacted_2b;
-+	amortizedshift = 2;
-+out:
-+	pos += lcn * (1 << amortizedshift);
-+	err = z_erofs_reload_indexes(m, erofs_blknr(pos));
-+	if (err)
-+		return err;
-+	return unpack_compacted_index(m, amortizedshift, erofs_blkoff(pos));
-+}
-+
-+static int vle_load_cluster_from_disk(struct z_erofs_maprecorder *m,
-+				      unsigned int lcn)
-+{
-+	const unsigned int datamode = EROFS_V(m->inode)->datamode;
-+
-+	if (datamode == EROFS_INODE_FLAT_COMPRESSION_LEGACY)
-+		return vle_legacy_load_cluster_from_disk(m, lcn);
-+
-+	if (datamode == EROFS_INODE_FLAT_COMPRESSION)
-+		return compacted_load_cluster_from_disk(m, lcn);
-+
-+	return -EINVAL;
-+}
-+
-+static int vle_extent_lookback(struct z_erofs_maprecorder *m,
-+			       unsigned int lookback_distance)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(m->inode);
-+	struct erofs_map_blocks *const map = m->map;
-+	const unsigned int lclusterbits = vi->z_logical_clusterbits;
-+	unsigned long lcn = m->lcn;
-+	int err;
-+
-+	if (lcn < lookback_distance) {
-+		DBG_BUGON(1);
-+		return -EIO;
-+	}
-+
-+	/* load extent head logical cluster if needed */
-+	lcn -= lookback_distance;
-+	err = vle_load_cluster_from_disk(m, lcn);
-+	if (err)
-+		return err;
-+
-+	switch (m->type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		return vle_extent_lookback(m, m->delta[0]);
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+		map->m_flags &= ~EROFS_MAP_ZIPPED;
-+		/* fallthrough */
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		map->m_la = (lcn << lclusterbits) | m->clusterofs;
-+		break;
-+	default:
-+		errln("unknown type %u at lcn %lu of nid %llu",
-+		      m->type, lcn, vi->nid);
-+		DBG_BUGON(1);
-+		return -EIO;
-+	}
-+	return 0;
-+}
-+
-+int z_erofs_map_blocks_iter(struct inode *inode,
-+			    struct erofs_map_blocks *map,
-+			    int flags)
-+{
-+	struct erofs_vnode *const vi = EROFS_V(inode);
-+	struct z_erofs_maprecorder m = {
-+		.inode = inode,
-+		.map = map,
-+	};
-+	int err = 0;
-+	unsigned int lclusterbits, endoff;
-+	unsigned long long ofs, end;
-+
-+	trace_z_erofs_map_blocks_iter_enter(inode, map, flags);
-+
-+	/* when trying to read beyond EOF, leave it unmapped */
-+	if (unlikely(map->m_la >= inode->i_size)) {
-+		map->m_llen = map->m_la + 1 - inode->i_size;
-+		map->m_la = inode->i_size;
-+		map->m_flags = 0;
-+		goto out;
-+	}
-+
-+	err = fill_inode_lazy(inode);
-+	if (err)
-+		goto out;
-+
-+	lclusterbits = vi->z_logical_clusterbits;
-+	ofs = map->m_la;
-+	m.lcn = ofs >> lclusterbits;
-+	endoff = ofs & ((1 << lclusterbits) - 1);
-+
-+	err = vle_load_cluster_from_disk(&m, m.lcn);
-+	if (err)
-+		goto unmap_out;
-+
-+	map->m_flags = EROFS_MAP_ZIPPED;	/* by default, compressed */
-+	end = (m.lcn + 1ULL) << lclusterbits;
-+
-+	switch (m.type) {
-+	case Z_EROFS_VLE_CLUSTER_TYPE_PLAIN:
-+		if (endoff >= m.clusterofs)
-+			map->m_flags &= ~EROFS_MAP_ZIPPED;
-+		/* fallthrough */
-+	case Z_EROFS_VLE_CLUSTER_TYPE_HEAD:
-+		if (endoff >= m.clusterofs) {
-+			map->m_la = (m.lcn << lclusterbits) | m.clusterofs;
-+			break;
-+		}
-+		/* m.lcn should be >= 1 if endoff < m.clusterofs */
-+		if (unlikely(!m.lcn)) {
-+			errln("invalid logical cluster 0 at nid %llu",
-+			      vi->nid);
-+			err = -EIO;
-+			goto unmap_out;
-+		}
-+		end = (m.lcn << lclusterbits) | m.clusterofs;
-+		m.delta[0] = 1;
-+		/* fallthrough */
-+	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
-+		/* get the correspoinding first chunk */
-+		err = vle_extent_lookback(&m, m.delta[0]);
-+		if (unlikely(err))
-+			goto unmap_out;
-+		break;
-+	default:
-+		errln("unknown type %u at offset %llu of nid %llu",
-+		      m.type, ofs, vi->nid);
-+		err = -EIO;
-+		goto unmap_out;
-+	}
-+
-+	map->m_llen = end - map->m_la;
-+	map->m_plen = 1 << lclusterbits;
-+	map->m_pa = blknr_to_addr(m.pblk);
-+	map->m_flags |= EROFS_MAP_MAPPED;
-+
-+unmap_out:
-+	if (m.kaddr)
-+		kunmap_atomic(m.kaddr);
-+
-+out:
-+	debugln("%s, m_la %llu m_pa %llu m_llen %llu m_plen %llu m_flags 0%o",
-+		__func__, map->m_la, map->m_pa,
-+		map->m_llen, map->m_plen, map->m_flags);
-+
-+	trace_z_erofs_map_blocks_iter_exit(inode, map, flags, err);
-+
-+	/* aggressively BUG_ON iff CONFIG_EROFS_FS_DEBUG is on */
-+	DBG_BUGON(err < 0 && err != -ENOMEM);
-+	return err;
-+}
-+
--- 
-2.17.1
-
+SW4gYSBMaW51eCBWTSBydW5uaW5nIG9uIEh5cGVyLVYsIHdoZW4gQUNQSSBTNCBpcyBlbmFibGVk
+LCB0aGUgYmFsbG9vbg0KZHJpdmVyIChkcml2ZXJzL2h2L2h2X2JhbGxvb24uYykgbmVlZHMgdG8g
+YXNrIHRoZSBob3N0IG5vdCB0byBkbyBtZW1vcnkNCmhvdC1hZGQvcmVtb3ZlLg0KDQpTbyBsZXQn
+cyBleHBvcnQgYWNwaV9zbGVlcF9zdGF0ZV9zdXBwb3J0ZWQoKSBmb3IgdGhlIGh2X2JhbGxvb24g
+ZHJpdmVyLg0KVGhpcyBtaWdodCBhbHNvIGJlIHVzZWZ1bCB0byB0aGUgb3RoZXIgZHJpdmVycyBp
+biB0aGUgZnV0dXJlLg0KDQpTaWduZWQtb2ZmLWJ5OiBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNyb3Nv
+ZnQuY29tPg0KLS0tDQogZHJpdmVycy9hY3BpL3NsZWVwLmMgICAgfCAzICsrLQ0KIGluY2x1ZGUv
+YWNwaS9hY3BpX2J1cy5oIHwgMiArKw0KIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCsp
+LCAxIGRlbGV0aW9uKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2FjcGkvc2xlZXAuYyBiL2Ry
+aXZlcnMvYWNwaS9zbGVlcC5jDQppbmRleCBhMzRkZWNjZDczMTcuLjY5NzU1NDExZTAwOCAxMDA2
+NDQNCi0tLSBhL2RyaXZlcnMvYWNwaS9zbGVlcC5jDQorKysgYi9kcml2ZXJzL2FjcGkvc2xlZXAu
+Yw0KQEAgLTc5LDcgKzc5LDcgQEAgc3RhdGljIGludCBhY3BpX3NsZWVwX3ByZXBhcmUodTMyIGFj
+cGlfc3RhdGUpDQogCXJldHVybiAwOw0KIH0NCiANCi1zdGF0aWMgYm9vbCBhY3BpX3NsZWVwX3N0
+YXRlX3N1cHBvcnRlZCh1OCBzbGVlcF9zdGF0ZSkNCitib29sIGFjcGlfc2xlZXBfc3RhdGVfc3Vw
+cG9ydGVkKHU4IHNsZWVwX3N0YXRlKQ0KIHsNCiAJYWNwaV9zdGF0dXMgc3RhdHVzOw0KIAl1OCB0
+eXBlX2EsIHR5cGVfYjsNCkBAIC04OSw2ICs4OSw3IEBAIHN0YXRpYyBib29sIGFjcGlfc2xlZXBf
+c3RhdGVfc3VwcG9ydGVkKHU4IHNsZWVwX3N0YXRlKQ0KIAkJfHwgKGFjcGlfZ2JsX0ZBRFQuc2xl
+ZXBfY29udHJvbC5hZGRyZXNzDQogCQkJJiYgYWNwaV9nYmxfRkFEVC5zbGVlcF9zdGF0dXMuYWRk
+cmVzcykpOw0KIH0NCitFWFBPUlRfU1lNQk9MX0dQTChhY3BpX3NsZWVwX3N0YXRlX3N1cHBvcnRl
+ZCk7DQogDQogI2lmZGVmIENPTkZJR19BQ1BJX1NMRUVQDQogc3RhdGljIHUzMiBhY3BpX3Rhcmdl
+dF9zbGVlcF9zdGF0ZSA9IEFDUElfU1RBVEVfUzA7DQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9hY3Bp
+L2FjcGlfYnVzLmggYi9pbmNsdWRlL2FjcGkvYWNwaV9idXMuaA0KaW5kZXggMzFiNmM4N2Q2MjQw
+Li41YjEwMmU3YmJmMjUgMTAwNjQ0DQotLS0gYS9pbmNsdWRlL2FjcGkvYWNwaV9idXMuaA0KKysr
+IGIvaW5jbHVkZS9hY3BpL2FjcGlfYnVzLmgNCkBAIC02NTEsNiArNjUxLDggQEAgc3RhdGljIGlu
+bGluZSBpbnQgYWNwaV9wbV9zZXRfYnJpZGdlX3dha2V1cChzdHJ1Y3QgZGV2aWNlICpkZXYsIGJv
+b2wgZW5hYmxlKQ0KIH0NCiAjZW5kaWYNCiANCitib29sIGFjcGlfc2xlZXBfc3RhdGVfc3VwcG9y
+dGVkKHU4IHNsZWVwX3N0YXRlKTsNCisNCiAjaWZkZWYgQ09ORklHX0FDUElfU0xFRVANCiB1MzIg
+YWNwaV90YXJnZXRfc3lzdGVtX3N0YXRlKHZvaWQpOw0KICNlbHNlDQotLSANCjIuMTkuMQ0KDQo=
