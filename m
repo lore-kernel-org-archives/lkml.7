@@ -2,119 +2,95 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B576AC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B738C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:40:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84E222168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F83220866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:40:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TBo/puD0"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="HyoWdc02"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728414AbfFNNkh (ORCPT
+        id S1728435AbfFNNko (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:40:37 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:44161 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfFNNkh (ORCPT
+        Fri, 14 Jun 2019 09:40:44 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:37149 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728419AbfFNNkk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:40:37 -0400
-Received: by mail-wr1-f68.google.com with SMTP id r16so2564619wrl.11;
-        Fri, 14 Jun 2019 06:40:35 -0700 (PDT)
+        Fri, 14 Jun 2019 09:40:40 -0400
+Received: by mail-qk1-f193.google.com with SMTP id d15so1672042qkl.4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:40:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=O95rFqLmx1gqmD991RSkp9dv9JMLhJuRBvQiIY9txys=;
-        b=TBo/puD0AiTUj7kjtDuN2aDY14/t3jTB1niCkcBBUxESNbse7A7m6G20K1Yhp1VLVu
-         mLpv8ZsVu6FYT0UxrLNvQbfyFtZzox3o/IO+0l1XQZFkjqlXl1NJ12c7zn7nGpvlrnlM
-         C3QMnlXe/tTNjQq+xuMHV4dnBR8kQq/oJlnh1UXRIwRORgskahTZHznv7glWGnALwIc+
-         MIXPdLTjs3Wr4m9QCcuIt05CAqPCcjo1x22Cn5/YDhjwgkcekxtWMwgx43U8m5r2VHz7
-         eG4jyipd02vIOGRkZtn1lNQqIss7hhhFF0KRCi91fQgqfranOV0xWVBL05Izl2+qtnvP
-         VbyA==
+        bh=G9SAo/9m3Ee6pfPkvimz/VQaTFNGe+yHp2e4LnZeqWc=;
+        b=HyoWdc02XVOEpU8YXclbrtD3Mxp3j/f6lp6SQRUm/QWlC7SbxwAiZLFB9O3cLeJx5x
+         xU66//NZQoe+f5s3bcyN3j+B5gqMJDlidXSnpTRHpwzHE+AwJA6s07gU8sNqKWknaBbu
+         9+sJrYu+wYlWvFHPEP9JQ7hFiMfVkpnswCaknWua47sUyBWB0xFkUdakvVRcJsn1i3ze
+         8LKYZrR2kXnUIo59cVEl2Xp6hBNNv3uZJCcPPSoHskfty31e1iCbUuU0eMOcUuNRWK7W
+         tdE2Uy+hqzYBJTXAako63k5qtREdmHFQ2fUvdJI50HjzP3qRT6+EP2E0d1ItChlTuayx
+         ocvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O95rFqLmx1gqmD991RSkp9dv9JMLhJuRBvQiIY9txys=;
-        b=RAl6KLD4SdtCS2OkDTt8zFrbttVAB6E8mcGt8I3oiaZEfBFzuq5kuu9aSRXo2ef7F5
-         gCQSpWf9pivhW2bb7lZb8Cmlg4mBslPKwNZs3IN9A8ckRAXB/Jq2LKzSMYEwaU8x7Zn8
-         2emh+EB8m0ubhJ+J5xSFfN2X//UHQ2WqoIZs/aYyZkJKmCJS/UsW+KLtGvARCD70fWsx
-         i0hEHbB+/iXGSfLPwACLZfxhvfgQFdrHaBY3YinwNYOokXALFVu0UEsV6qbhSPD8tjjt
-         9zdbKzV+ozWMbTNnwq2L9ArPfnKptXxLwRO2I6qVJTa102976pOuD6gEwr3EyWQH4yL5
-         Jw0A==
-X-Gm-Message-State: APjAAAWjKDdtbQv7+inMBnZpmSKQpfkE0QwUn/Tzymf7vFjSnGuyNzug
-        6xuBDuu/43wm0ZV9JMAdOZp9ADTP
-X-Google-Smtp-Source: APXvYqwzmbPwga2XEwdlUs1cn3pn+IMhBq1GeEEfryrM3dZCSdwqikTbPz3P7LgC6VCpsfauNimzCg==
-X-Received: by 2002:adf:81c8:: with SMTP id 66mr62002750wra.261.1560519635241;
-        Fri, 14 Jun 2019 06:40:35 -0700 (PDT)
-Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
-        by smtp.googlemail.com with ESMTPSA id v204sm4946108wma.20.2019.06.14.06.40.32
+        bh=G9SAo/9m3Ee6pfPkvimz/VQaTFNGe+yHp2e4LnZeqWc=;
+        b=mJcOcpg8JXah6BzwEeghS6m3sexDUT7Sfz49ul2Tnc5WeBa9vX/Eh8254dSf2HtXtQ
+         bP0VETZbZ+mf3CVg65P2mwfYYMJI5tUzmWbgfKGBBCZU5EpeFXlSCtnSzdQM8f422Q+Y
+         pKO2IlsKZ4WkjXpYGbEBedEUxMWzwD379H/3vC1m55sD9wZXAgZdit3oW1v2JdH6YJZo
+         gINxLSEs7vm2DUNb4cCfAnF0vMo0r7bP4KmYa5QVElhCKaVMl9OzEh8XXuilpUr9927c
+         DjiwFc7vmP39ddmYwubYwdndvFDdJEr/eK202Qyj4ZFP6AXPKqGrnEsKYD0/LjWvAfmq
+         7kgw==
+X-Gm-Message-State: APjAAAXIK45ohiWF4s0DE1jiliWCsdkvs25g/okxqkOwk5xKPPQQ9ufG
+        u25b3Z3ffnFI+dybWb53WS+gSQ==
+X-Google-Smtp-Source: APXvYqz4I5m3TPqusrXwcRcNEOsw8WOBPlVFlSUGuzCF4txMKFyf9UoWPfKOzmQddUa3z4XbMAcwdA==
+X-Received: by 2002:a37:4914:: with SMTP id w20mr44894944qka.156.1560519639020;
+        Fri, 14 Jun 2019 06:40:39 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::a658])
+        by smtp.gmail.com with ESMTPSA id e133sm1106145qkb.76.2019.06.14.06.40.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 06:40:34 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 15:40:28 +0200
-From:   Corentin Labbe <clabbe.montjoie@gmail.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH net-next 0/3] net: stmmac: Convert to phylink
-Message-ID: <20190614134028.GB23409@Red>
-References: <cover.1560266175.git.joabreu@synopsys.com>
+        Fri, 14 Jun 2019 06:40:38 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 09:40:37 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, josef@toxicpanda.com,
+        dennis@kernel.org
+Subject: Re: [PATCH 0/2] Fix misuse of blk_rq_stats in blk-iolatency
+Message-ID: <20190614134037.ie7zs4rb4oyesifr@MacBook-Pro-91.local>
+References: <cover.1560510935.git.asml.silence@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1560266175.git.joabreu@synopsys.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <cover.1560510935.git.asml.silence@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 05:18:44PM +0200, Jose Abreu wrote:
-> [ Hope this diff looks better (generated with --minimal) ]
+On Fri, Jun 14, 2019 at 02:44:11PM +0300, Pavel Begunkov (Silence) wrote:
+> From: Pavel Begunkov <asml.silence@gmail.com>
 > 
-> This converts stmmac to use phylink. Besides the code redution this will
-> allow to gain more flexibility.
+> There are implicit assumptions about struct blk_rq_stats, which make
+> it's very easy to misuse. The first patch fixes consequences, and the
+> second employs type-system to prevent recurrences.
 > 
-> Cc: Joao Pinto <jpinto@synopsys.com>
-> Cc: David S. Miller <davem@davemloft.net>
-> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-> Cc: Alexandre Torgue <alexandre.torgue@st.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Heiner Kallweit <hkallweit1@gmail.com>
 > 
-> Jose Abreu (3):
->   net: stmmac: Prepare to convert to phylink
->   net: stmmac: Start adding phylink support
->   net: stmmac: Convert to phylink and remove phylib logic
-> 
->  drivers/net/ethernet/stmicro/stmmac/Kconfig   |   3 +-
->  drivers/net/ethernet/stmicro/stmmac/stmmac.h  |   7 +-
->  .../ethernet/stmicro/stmmac/stmmac_ethtool.c  |  81 +---
->  .../net/ethernet/stmicro/stmmac/stmmac_main.c | 391 ++++++++----------
->  .../ethernet/stmicro/stmmac/stmmac_platform.c |  21 +-
->  5 files changed, 190 insertions(+), 313 deletions(-)
-> 
-> -- 
-> 2.21.0
+> Pavel Begunkov (2):
+>   blk-iolatency: Fix zero mean in previous stats
+>   blk-stats: Introduce explicit stat staging buffers
 > 
 
-Hello
+I don't have a problem with this, but it's up to Jens I suppose
 
-since this patch I hit
-dwmac-sun8i 1c30000.ethernet: ethernet@1c30000 PHY address 29556736 is too large
+Acked-by: Josef Bacik <josef@toxicpanda.com>
 
-any idea ?
+Thanks,
+
+Josef
