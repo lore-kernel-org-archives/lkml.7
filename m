@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE16CC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 376E9C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C12D21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0481521841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544288;
-	bh=D9b/7X9oxhaDHGQaCUiHHrgplBGMmMNcuw3wzSV43W4=;
+	s=default; t=1560544294;
+	bh=Zco/AWbpCh4AwsjBYaclLcW+sC1chKVLjFBvVH2lZyU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BUMvpPZZuzUjPHSsmksekecRsl3X5f1+QHY7fbZMmO1uw2P46Ibim4hzBl+n62TeM
-	 3VwqtWTRVeGnCXgCxz/ayHRQ2J479b/7TuRxbvQzxu87qsbi9aCHbAyJcMoj3tnqze
-	 0V9UFmnpGt0zJDp8Rc2mQgR6VnQLeqFqlQlbs3TU=
+	b=yUHUgaXCmjVWwFYxlABw+vaqb+C/LAvugsFmKKnSaKs8q0mUuH9GegU0rUZsmdchy
+	 ZD3UUSXldacp18VhcD5qKYyURPQpHLEaPefG22AyxV5U9OZJQKWQWuggN6E3zoA1Wf
+	 1MJwugjC9ppoI+G1j0024Mf7FD80+JR6iePVfeZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfFNUb1 (ORCPT
+        id S1727966AbfFNUaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:31:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54768 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:30:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727998AbfFNUaz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:55 -0400
+        id S1727884AbfFNUap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:45 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56CB72184C;
-        Fri, 14 Jun 2019 20:30:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68366218BB;
+        Fri, 14 Jun 2019 20:30:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544255;
-        bh=D9b/7X9oxhaDHGQaCUiHHrgplBGMmMNcuw3wzSV43W4=;
+        s=default; t=1560544245;
+        bh=Zco/AWbpCh4AwsjBYaclLcW+sC1chKVLjFBvVH2lZyU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=g1aciGO/rnYaiMRg2vIJ9P/lTFshh0J6L09t5H2N5tt55kea3Emen7WJynItugAvP
-         xLk2SLEahdFxys5elJEmxlGSLzWvEq1hln8N2wi36G4MOikNAF/ijM4MJquYKnM48R
-         Zt/aMIhvDCSnvy5UGSz04+cZVaJrs9R1QF6NFyxQ=
+        b=KlSLAMT2wOUUpKz71VU7d+boOcVvR45vX0Ux0nZ2VGo4QYOdzr/rrcCGiD2OwCmAH
+         8zqgVXaPFkVIUfiIoz5yJFxnwS7ky6J6DIT02Uwpxty0GrZ4Jy6KqMebLZ1lBgxsI1
+         +SW53j4i2rVZG+AtLv9Ae4wOwk8og5HDpni9AJZE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     "George G. Davis" <george_davis@mentor.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 07/10] scripts/checkstack.pl: Fix arm64 wrong or unknown architecture
-Date:   Fri, 14 Jun 2019 16:30:43 -0400
-Message-Id: <20190614203046.28077-7-sashal@kernel.org>
+Cc:     Sean Wang <sean.wang@mediatek.com>,
+        Mark Lee <mark-mc.lee@mediatek.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 12/18] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
+Date:   Fri, 14 Jun 2019 16:30:28 -0400
+Message-Id: <20190614203037.27910-12-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614203046.28077-1-sashal@kernel.org>
-References: <20190614203046.28077-1-sashal@kernel.org>
+In-Reply-To: <20190614203037.27910-1-sashal@kernel.org>
+References: <20190614203037.27910-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,42 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "George G. Davis" <george_davis@mentor.com>
+From: Sean Wang <sean.wang@mediatek.com>
 
-[ Upstream commit 4f45d62a52297b10ded963412a158685647ecdec ]
+[ Upstream commit 880c2d4b2fdfd580ebcd6bb7240a8027a1d34751 ]
 
-The following error occurs for the `make ARCH=arm64 checkstack` case:
+Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
+equals to 2.
 
-aarch64-linux-gnu-objdump -d vmlinux $(find . -name '*.ko') | \
-perl ./scripts/checkstack.pl arm64
-wrong or unknown architecture "arm64"
-
-As suggested by Masahiro Yamada, fix the above error using regular
-expressions in the same way it was fixed for the `ARCH=x86` case via
-commit fda9f9903be6 ("scripts/checkstack.pl: automatically handle
-32-bit and 64-bit mode for ARCH=x86").
-
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
+Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- scripts/checkstack.pl | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/scripts/checkstack.pl b/scripts/checkstack.pl
-index 12a6940741fe..b8f616545277 100755
---- a/scripts/checkstack.pl
-+++ b/scripts/checkstack.pl
-@@ -45,7 +45,7 @@ my (@stack, $re, $dre, $x, $xs, $funcre);
- 	$x	= "[0-9a-f]";	# hex character
- 	$xs	= "[0-9a-f ]";	# hex character or space
- 	$funcre = qr/^$x* <(.*)>:$/;
--	if ($arch eq 'aarch64') {
-+	if ($arch =~ '^(aarch|arm)64$') {
- 		#ffffffc0006325cc:       a9bb7bfd        stp     x29, x30, [sp, #-80]!
- 		$re = qr/^.*stp.*sp, \#-([0-9]{1,8})\]\!/o;
- 	} elsif ($arch eq 'arm') {
+diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+index 03b599109619..d10c8a8156bc 100644
+--- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
++++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
+@@ -1700,6 +1700,7 @@ static void mtk_poll_controller(struct net_device *dev)
+ 
+ static int mtk_start_dma(struct mtk_eth *eth)
+ {
++	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
+ 	int err;
+ 
+ 	err = mtk_dma_init(eth);
+@@ -1714,7 +1715,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
+ 		MTK_QDMA_GLO_CFG);
+ 
+ 	mtk_w32(eth,
+-		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
++		MTK_RX_DMA_EN | rx_2b_offset |
+ 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
+ 		MTK_PDMA_GLO_CFG);
+ 
 -- 
 2.20.1
 
