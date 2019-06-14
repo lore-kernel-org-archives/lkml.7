@@ -2,78 +2,80 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90743C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:13:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A9DC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:15:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6818421537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:13:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="DnjUInTH"
+	by mail.kernel.org (Postfix) with ESMTP id 0AF0521473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:15:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727435AbfFNLNF (ORCPT
+        id S1727460AbfFNLPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:13:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47758 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727119AbfFNLNF (ORCPT
+        Fri, 14 Jun 2019 07:15:30 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:37537 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727216AbfFNLP3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:13:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=i1QliRSRssHtMj47mzR6P+jISSuYGuhNkArj40f45F8=; b=DnjUInTHYTgYwyh7pongXj5/T
-        Ay8lbubOYGhAWlhVvM886c+bKs/VCukcuX65+3paFYKGGBEeGVcsJIe2KC7j00yZd6L2aKstuoSKu
-        3fBIKkyP/CFoy+Q3If93I8UX68YZmXW6qMiO06TBw/NRzwl9/nqXH6s5ZLrD6t3JxDh61Anxa+EcA
-        ZaR6RGKOmIUeg9XOimSWcemzSR1iRSOxKbLooKwqeiarY03HnJauyAnA4lOuxvby+wb18EZL0YA2j
-        Z1uw0FsV4IKCM8P717wtGATtTFbXI3LzDPvs4QzF/9BWifaGUkYR1xyAV60XwsvT3L7IJNsQ+IFvn
-        M5ejZNvJg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbk8j-00013Z-1D; Fri, 14 Jun 2019 11:13:01 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 58A1420A29B4F; Fri, 14 Jun 2019 13:12:59 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 13:12:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 20/62] mm/page_ext: Export lookup_page_ext() symbol
-Message-ID: <20190614111259.GA3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-21-kirill.shutemov@linux.intel.com>
+        Fri, 14 Jun 2019 07:15:29 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbkB2-0000Rx-2w; Fri, 14 Jun 2019 13:15:24 +0200
+Date:   Fri, 14 Jun 2019 13:15:23 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Michael Kelley <mikelley@microsoft.com>
+cc:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: RE: [PATCH v6 18/19] x86: Add support for generic vDSO
+In-Reply-To: <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+Message-ID: <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com> <20190530141531.43462-19-vincenzo.frascino@arm.com> <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-21-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:43:40PM +0300, Kirill A. Shutemov wrote:
-> page_keyid() is inline funcation that uses lookup_page_ext(). KVM is
-> going to use page_keyid() and since KVM can be built as a module
-> lookup_page_ext() has to be exported.
+On Thu, 30 May 2019, Michael Kelley wrote:
+> Vincenzo -- these changes for Hyper-V are a subset of a larger patch set
+> I have that moves all of the Hyper-V clock/timer code into a separate
+> clocksource driver in drivers/clocksource, with an include file in
+> includes/clocksource.  That new include file should be able to work
+> instead of your new mshyperv-tsc.h.  It also has the benefit of being
+> ISA neutral, so it will work with my in-progress patch set to support
+> Linux on Hyper-V on ARM64.  See https://lkml.org/lkml/2019/5/27/231
+> for the new clocksource driver patch set.
 
-I _really_ hate having to export world+dog for KVM. This one might not
-be a real issue, but I itch every time I see an export for KVM these
-days.
+Grrr. That's queued in hyperv-next for whatever reasons.
+
+Sasha, can you please provide me the branch to pull from so I can have a
+common base for all the various changes floating around?
+
+Thanks,
+
+	tglx
