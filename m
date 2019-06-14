@@ -2,121 +2,88 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB0BC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C039C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE2C208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64C0A208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:40:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="NqXdVm1l"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="v31V7xH3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727597AbfFNKkU (ORCPT
+        id S1727608AbfFNKkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:40:20 -0400
-Received: from mail-eopbgr10051.outbound.protection.outlook.com ([40.107.1.51]:47842
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726931AbfFNKkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:40:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=tU6UMKygDXTyhPtQhhaWcowdl9X2b4kaHu1DeoXO+70=;
- b=NqXdVm1lh0awjs5w3Y5/S5wdpa8yh5lq3NI8E9bfRQGvmc4ERJ50TMF8L7B0z2LjT7OEjkTGAPSRVrruT8LhDNhLq23OoWqkt52sm87yk6eQ//IznX+7qIP6VbFCDmDvEQjjD5e6NfphqmSgDsZG9WKebDctRwHGXBG5wPt1HEo=
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
- VI1PR0401MB2543.eurprd04.prod.outlook.com (10.168.66.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Fri, 14 Jun 2019 10:40:14 +0000
-Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::3408:f7f9:7f82:c67c]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
- ([fe80::3408:f7f9:7f82:c67c%7]) with mapi id 15.20.1987.013; Fri, 14 Jun 2019
- 10:40:14 +0000
-From:   "Y.b. Lu" <yangbo.lu@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: RE: [PATCH 1/6] ptp: add QorIQ PTP support for DPAA2
-Thread-Topic: [PATCH 1/6] ptp: add QorIQ PTP support for DPAA2
-Thread-Index: AQHVHztS7fz1CkTI/EyG9roH6EAQXaaU3AqAgAKPkpCAAJZvgIAC+lZw
-Date:   Fri, 14 Jun 2019 10:40:13 +0000
-Message-ID: <VI1PR0401MB223763F5537C0E5F3A9C33DAF8EE0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
-References: <20190610032108.5791-1-yangbo.lu@nxp.com>
- <20190610032108.5791-2-yangbo.lu@nxp.com> <20190610130601.GD8247@lunn.ch>
- <VI1PR0401MB2237247525AB5DB5B5F275A8F8EC0@VI1PR0401MB2237.eurprd04.prod.outlook.com>
- <20190612131049.GC23615@lunn.ch>
-In-Reply-To: <20190612131049.GC23615@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=yangbo.lu@nxp.com; 
-x-originating-ip: [92.121.36.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f583ea9e-1f55-4931-6763-08d6f0b4af10
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR0401MB2543;
-x-ms-traffictypediagnostic: VI1PR0401MB2543:
-x-microsoft-antispam-prvs: <VI1PR0401MB2543C4FE3D70B048930FD9B8F8EE0@VI1PR0401MB2543.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(136003)(366004)(376002)(39860400002)(199004)(189003)(13464003)(3846002)(6116002)(5660300002)(6436002)(76176011)(52536014)(9686003)(55016002)(229853002)(256004)(6246003)(53936002)(99286004)(76116006)(102836004)(73956011)(66946007)(64756008)(53546011)(66476007)(6506007)(66556008)(7736002)(478600001)(66446008)(66066001)(7696005)(86362001)(8936002)(26005)(486006)(11346002)(71190400001)(71200400001)(446003)(476003)(54906003)(6916009)(305945005)(186003)(4326008)(25786009)(14454004)(68736007)(33656002)(2906002)(74316002)(81156014)(81166006)(8676002)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2543;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tGS5RpKA5PpoXDR/4bOew20p0nEJZTzBygC3+9K6chodcj24aA031+LCv1hTGwfCxV4d8sDoWVpV4+HPpKfal8pGaoeS6y8tFq5WfK7ejm4CwuShaqzkWIUcFCwN8eBeXOvYTtLoUY/FKuBSLykQCw/Kci6YtYYM+2nEx1eXGPnj9y4E4uTOu2Nie881eXFrHYLxBUAZIvbkGDvSYkIekjG3p8Itv2dibM01OHDIHgyt+8vDpShbCjJNm90nEYDhO9pNHN97UdCYayjYhylwqsk7z7Z7IaQ2So3WGNbzRaVFtgOqXimdgPXJME22RMMJxnk72yxj41AKEHFHnFDuwT35E9J520dyshbovWILIFcQYIJwIcMe0EfQUaOiHv8IJiVcDiRXAmrkcOkHDxyrFjXiEly8rnEE0vr0ciYnu9E=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Fri, 14 Jun 2019 06:40:37 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37538 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfFNKkh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:40:37 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5EAdTdi073520;
+        Fri, 14 Jun 2019 05:39:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560508769;
+        bh=NG3g5iBJojJvfS8oHJGjK9j/D53U+mYMaMjCd+j3xgo=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=v31V7xH3WPORvTexs7qp9uWWLKxufg+y1SGh1XVJUcxYreTgapec554Dxj8nHPxv+
+         Sg3slNaNDarlzjW1s004t78Cl9hkzMvHws41Rv/8rTas/svh+FsXbuD3J2Pu+MIkbG
+         ZhnR8cEWTnXDt0XUI4jUSirSq1hkqwsUwqJugIAs=
+Received: from DFLE114.ent.ti.com (dfle114.ent.ti.com [10.64.6.35])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5EAdTPB073450
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Jun 2019 05:39:29 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
+ Jun 2019 05:39:29 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 14 Jun 2019 05:39:29 -0500
+Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5EAdQei077731;
+        Fri, 14 Jun 2019 05:39:27 -0500
+Subject: Re: [RFC v3 0/2] clocksource: davinci-timer: new driver
+To:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kevin Hilman <khilman@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        David Lechner <david@lechnology.com>
+CC:     <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190605083334.22383-1-brgl@bgdev.pl>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <1ac8cfcf-1d77-9b6b-4aab-4171f6cf80fc@ti.com>
+Date:   Fri, 14 Jun 2019 16:09:26 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f583ea9e-1f55-4931-6763-08d6f0b4af10
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 10:40:14.0070
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: yangbo.lu@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2543
+In-Reply-To: <20190605083334.22383-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBBbmRyZXcgTHVubiA8YW5kcmV3
-QGx1bm4uY2g+DQo+IFNlbnQ6IDIwMTnE6jbUwjEyyNUgMjE6MTENCj4gVG86IFkuYi4gTHUgPHlh
-bmdiby5sdUBueHAuY29tPg0KPiBDYzogbmV0ZGV2QHZnZXIua2VybmVsLm9yZzsgRGF2aWQgUyAu
-IE1pbGxlciA8ZGF2ZW1AZGF2ZW1sb2Z0Lm5ldD47DQo+IFJpY2hhcmQgQ29jaHJhbiA8cmljaGFy
-ZGNvY2hyYW5AZ21haWwuY29tPjsgUm9iIEhlcnJpbmcNCj4gPHJvYmgrZHRAa2VybmVsLm9yZz47
-IFNoYXduIEd1byA8c2hhd25ndW9Aa2VybmVsLm9yZz47DQo+IGRldmljZXRyZWVAdmdlci5rZXJu
-ZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAxLzZdIHB0cDogYWRk
-IFFvcklRIFBUUCBzdXBwb3J0IGZvciBEUEFBMg0KPiANCj4gPiA+ID4gZGlmZiAtLWdpdCBhL2Ry
-aXZlcnMvcHRwL0tjb25maWcgYi9kcml2ZXJzL3B0cC9LY29uZmlnIGluZGV4DQo+ID4gPiA+IDli
-OGZlZTUuLmIxYjQ1NGYgMTAwNjQ0DQo+ID4gPiA+IC0tLSBhL2RyaXZlcnMvcHRwL0tjb25maWcN
-Cj4gPiA+ID4gKysrIGIvZHJpdmVycy9wdHAvS2NvbmZpZw0KPiA+ID4gPiBAQCAtNDQsNyArNDQs
-NyBAQCBjb25maWcgUFRQXzE1ODhfQ0xPQ0tfRFRFDQo+ID4gPiA+DQo+ID4gPiA+ICBjb25maWcg
-UFRQXzE1ODhfQ0xPQ0tfUU9SSVENCj4gPiA+ID4gIAl0cmlzdGF0ZSAiRnJlZXNjYWxlIFFvcklR
-IDE1ODggdGltZXIgYXMgUFRQIGNsb2NrIg0KPiA+ID4gPiAtCWRlcGVuZHMgb24gR0lBTkZBUiB8
-fCBGU0xfRFBBQV9FVEggfHwgRlNMX0VORVRDIHx8DQo+IEZTTF9FTkVUQ19WRg0KPiA+ID4gPiAr
-CWRlcGVuZHMgb24gR0lBTkZBUiB8fCBGU0xfRFBBQV9FVEggfHwgRlNMX0RQQUEyX0VUSCB8fA0K
-PiA+ID4gRlNMX0VORVRDIHx8DQo+ID4gPiA+ICtGU0xfRU5FVENfVkYNCj4gPiA+ID4gIAlkZXBl
-bmRzIG9uIFBUUF8xNTg4X0NMT0NLDQo+ID4gPg0KPiA+ID4gSGkgWWFuZ2JvDQo+ID4gPg0KPiA+
-ID4gQ291bGQgQ09NUElMRV9URVNUIGFsc28gYmUgYWRkZWQ/DQo+ID4NCj4gPiBbWS5iLiBMdV0g
-Q09NUElMRV9URVNUIGlzIHVzdWFsbHkgZm9yIG90aGVyIEFSQ0hzIGJ1aWxkIGNvdmVyYWdlLg0K
-PiA+IERvIHlvdSB3YW50IG1lIHRvIGFwcGVuZCBpdCBhZnRlciB0aGVzZSBFdGhlcm5ldCBkcml2
-ZXIgZGVwZW5kZW5jaWVzPw0KPiANCj4gSGlpIFkuYi4gTHUNCj4gDQo+IE5vcm1hbGx5LCBkcml2
-ZXJzIGxpa2UgdGhpcyBzaG91bGQgYmUgYWJsZSB0byBjb21waWxlIGluZGVwZW5kZW50IG9mIHRo
-ZSBNQUMNCj4gZHJpdmVyLiBTbyB5b3Ugc2hvdWxkIGJlIGFibGUgdG8gYWRkIENPTVBJTEVfVEVT
-VCBoZXJlLg0KDQpbWS5iLiBMdV0gVGhhbmtzIEFuZHJldy4gSSBoYWQgc2VudCBvdXQgdjIgd2l0
-aCB0aGUgY2hhbmdlLg0KDQo+IA0KPiAgICAgQW5kcmV3DQo=
+Hi Daniel,
+
+On 05/06/19 2:03 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> This is another version of the new davinci clocksource driver. After much
+> discussion this contains many changes to simplify and improve the driver.
+
+Does this look good to you now? If yes, can you please merge and provide
+an immutable branch to me so I can merge dependent mach-davinci patches?
+
+Thanks,
+Sekhar
