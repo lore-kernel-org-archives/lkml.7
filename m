@@ -7,50 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA8AC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88284C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 247E12184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B57721848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544586;
-	bh=fBomxnnpTQhou0FHVuASFGMxuW+Dxcx9mP4d2DjZGAc=;
+	s=default; t=1560544592;
+	bh=KKYH9BGJ4VGKUCyRJKTlgi3ZCPu5H0tuZNbJsslSLw0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tanlULhP3OfLNFv+TALjQpK42kdIk4e33yb71ydZQgAhYzrYeEOq55rZcphaNZqMH
-	 l9HjJmC5ZLcqSRZzeqzVz6as9ru+Fm0oYP+zm37FHGAhttFDPFOsaMQky19+36tnSP
-	 l/Q8Sn1ME7P9hqCrcIKUk+KcMt1ml3GxafAT+05A=
+	b=ulZRAuWNMU4M52QVlIx5bT11bryWaPzR51RD86z4UbKcRkRAkKFW9YGOHUR0hhkrz
+	 QWyXfXEsGbad2I6Y85YWeUAcKpYvMOsXBDEpyDUizDaGMh+PK+qekrITB6t2JDL9KD
+	 Au8hpWspZxAoTHITptMWfTlhUZgKRTCF9YxXKX1o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfFNU3n (ORCPT
+        id S1728369AbfFNUga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:29:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51024 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:36:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726792AbfFNU3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:08 -0400
+        id S1727071AbfFNU3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:40 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1390217F9;
-        Fri, 14 Jun 2019 20:29:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85DA82184B;
+        Fri, 14 Jun 2019 20:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544147;
-        bh=fBomxnnpTQhou0FHVuASFGMxuW+Dxcx9mP4d2DjZGAc=;
+        s=default; t=1560544179;
+        bh=KKYH9BGJ4VGKUCyRJKTlgi3ZCPu5H0tuZNbJsslSLw0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=spyPYdM0af+Stnh/IP9R0F5n/3pTdXld2VEvXFrwpit1HUJZW0mIS8cpdWSz1bdmo
-         Zq8khSqpGzjCFtwm3+BOgTlO+0nNM0GFuI4W67jKOyz/M1GUzxOxY+Pc4fvTVVALZH
-         lBWfCXQ8pKb6LLmo0usQV4HreveioAnL6Z0iHWPE=
+        b=zoVQAQzW+aPveniH704Bcz1PS8BkkLc23zskoydff9FUXgEBeHtOrowbDuOrrNjsr
+         8EHXvL4ABN2cJWUGz97wDH50cZU/aTCgzCDp0LXUr/bOLy7NQCYjl1vUmuwElFIPj1
+         7r1Zd3rMxEapwlKDP1hgo45KMzdH0GXQ4hezJOBg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
-        Shuah Khan <shuah@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Tejun Heo <tj@kernel.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jay Kamat <jgkamat@fb.com>, linux-kselftest@vger.kernel.org,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 28/59] kselftest/cgroup: fix unexpected testing failure on test_memcontrol
-Date:   Fri, 14 Jun 2019 16:28:12 -0400
-Message-Id: <20190614202843.26941-28-sashal@kernel.org>
+Cc:     Young Xiao <92siuyang@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 37/59] sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
+Date:   Fri, 14 Jun 2019 16:28:21 -0400
+Message-Id: <20190614202843.26941-37-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -63,62 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alex Shi <alex.shi@linux.alibaba.com>
+From: Young Xiao <92siuyang@gmail.com>
 
-[ Upstream commit f6131f28057d4fd8922599339e701a2504e0f23d ]
+[ Upstream commit 56cd0aefa475079e9613085b14a0f05037518fed ]
 
-The cgroup testing relies on the root cgroup's subtree_control setting,
-If the 'memory' controller isn't set, all test cases will be failed
-as following:
+The PERF_EVENT_IOC_PERIOD ioctl command can be used to change the
+sample period of a running perf_event. Consequently, when calculating
+the next event period, the new period will only be considered after the
+previous one has overflowed.
 
-$ sudo ./test_memcontrol
-not ok 1 test_memcg_subtree_control
-not ok 2 test_memcg_current
-ok 3 # skip test_memcg_min
-not ok 4 test_memcg_low
-not ok 5 test_memcg_high
-not ok 6 test_memcg_max
-not ok 7 test_memcg_oom_events
-ok 8 # skip test_memcg_swap_max
-not ok 9 test_memcg_sock
-not ok 10 test_memcg_oom_group_leaf_events
-not ok 11 test_memcg_oom_group_parent_events
-not ok 12 test_memcg_oom_group_score_events
+This patch changes the calculation of the remaining event ticks so that
+they are offset if the period has changed.
 
-To correct this unexpected failure, this patch write the 'memory' to
-subtree_control of root to get a right result.
+See commit 3581fe0ef37c ("ARM: 7556/1: perf: fix updated event period in
+response to PERF_EVENT_IOC_PERIOD") for details.
 
-Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
-Cc: Shuah Khan <shuah@kernel.org>
-Cc: Roman Gushchin <guro@fb.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Jay Kamat <jgkamat@fb.com>
-Cc: linux-kselftest@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/cgroup/test_memcontrol.c | 4 ++++
+ arch/sparc/kernel/perf_event.c | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
-index 6f339882a6ca..c19a97dd02d4 100644
---- a/tools/testing/selftests/cgroup/test_memcontrol.c
-+++ b/tools/testing/selftests/cgroup/test_memcontrol.c
-@@ -1205,6 +1205,10 @@ int main(int argc, char **argv)
- 	if (cg_read_strstr(root, "cgroup.controllers", "memory"))
- 		ksft_exit_skip("memory controller isn't available\n");
+diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
+index 6de7c684c29f..a58ae9c42803 100644
+--- a/arch/sparc/kernel/perf_event.c
++++ b/arch/sparc/kernel/perf_event.c
+@@ -891,6 +891,10 @@ static int sparc_perf_event_set_period(struct perf_event *event,
+ 	s64 period = hwc->sample_period;
+ 	int ret = 0;
  
-+	if (cg_read_strstr(root, "cgroup.subtree_control", "memory"))
-+		if (cg_write(root, "cgroup.subtree_control", "+memory"))
-+			ksft_exit_skip("Failed to set memory controller\n");
++	/* The period may have been changed by PERF_EVENT_IOC_PERIOD */
++	if (unlikely(period != hwc->last_period))
++		left = period - (hwc->last_period - left);
 +
- 	for (i = 0; i < ARRAY_SIZE(tests); i++) {
- 		switch (tests[i].fn(root)) {
- 		case KSFT_PASS:
+ 	if (unlikely(left <= -period)) {
+ 		left = period;
+ 		local64_set(&hwc->period_left, left);
 -- 
 2.20.1
 
