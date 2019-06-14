@@ -2,171 +2,217 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D901C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:16:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E99E4C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5D47208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4857208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:18:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="e1E4Btx1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="pEQ1c09f";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AoX5xdq1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726984AbfFNJQT (ORCPT
+        id S1726855AbfFNJSP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:16:19 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54039 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbfFNJQT (ORCPT
+        Fri, 14 Jun 2019 05:18:15 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37460 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725859AbfFNJSP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:16:19 -0400
-Received: by mail-wm1-f65.google.com with SMTP id x15so1546578wmj.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 02:16:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:openpgp:autocrypt:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=skSuQndny9OcFC0qC8PTPOb35g+5uN9t5jVARmPgyjE=;
-        b=e1E4Btx1qcjqRNkSP39UkoAFrgZj+Xb7HbMbvCSPR8DAIXKcSVVEBvy90PwIDWr7mh
-         UcFi/+qgVgFQkiyPffxWPcUFOddtvpASIbExY071B/3tcQrQovg9LUUx9SsgpawR49E9
-         /g8lyjO80O9kp7NRq0bTk4WfQofLG1QKW8Xgc9fOkCAnGoTii5XIiWK/Kazl8WoGQXA6
-         EfTmJwakWUxs2xQ48crGcZAXIgYEe9OPKgg9zBWKppejU/TdpveHnoRWvqRmK044GsSs
-         eVFc0B54wKVRxncwAUm5NcH2XgMtQOIV0Th8i+2xyRpRW3CbEKj0l4t3aQGBqebSrlEK
-         EIFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=skSuQndny9OcFC0qC8PTPOb35g+5uN9t5jVARmPgyjE=;
-        b=dQNkrqIgzbA7UeEohGBegkoP++fBS0ZE9doj3VwVkUh5Aw1VQWh6ojalQFt92PiUFE
-         Uu8z22kv7XEl0w37nAzdeuEGHA7h8Mt4jbNDEZqXVckxsuFI5z3xLHzGFepQrlCwga1x
-         1Ejp+5Ff6bziHSHShRe0uNjv7UOGcwChcUBX/fjt4hwEkQbW28YGaSE7GpEb/DmNwMtd
-         aXhpBUGt2APvmZx17kfYYmP35PYkFTxSWtmLdzSs7dQGYGcTd95AgPi8LCL1tLZqTYSP
-         /kscImwceflLI7F7bKjV2IWQGgnaMT4/fNlAAZ6cab/OwPmNKfHu1///VXx8Y6BPqg2O
-         +LCg==
-X-Gm-Message-State: APjAAAXG1+bZH+cy1NXrYX3J6u9vuMt7/dM+xLwAH4jaes/o8IsgRoTM
-        Qx7SZCQGq84RreBCPbcYX2CwwQ==
-X-Google-Smtp-Source: APXvYqyIWfdh+bMKfmFpQjxNfctIVrMndMDb852nreA+48Ey6C2noa5XQsGEDAErXMrpYSqfE/KVxw==
-X-Received: by 2002:a1c:e109:: with SMTP id y9mr6702298wmg.35.1560503775697;
-        Fri, 14 Jun 2019 02:16:15 -0700 (PDT)
-Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id v204sm3904983wma.20.2019.06.14.02.16.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 02:16:15 -0700 (PDT)
-Subject: Re: [PATCH 1/2] arm64: dts: meson: g12b: odroid-n2: add the Ethernet
- PHY interrupt line
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        linux-amlogic@lists.infradead.org, khilman@baylibre.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20190610164531.8303-1-martin.blumenstingl@googlemail.com>
- <20190610164531.8303-2-martin.blumenstingl@googlemail.com>
-From:   Neil Armstrong <narmstrong@baylibre.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
- 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
- ZaTUOEkgIor5losDrePdPgE=
-Organization: Baylibre
-Message-ID: <f480393f-87ef-9777-5933-7fa8fc707c95@baylibre.com>
-Date:   Fri, 14 Jun 2019 11:16:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Fri, 14 Jun 2019 05:18:15 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 73DC46077A; Fri, 14 Jun 2019 09:18:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560503893;
+        bh=taSQc6f1m1AC8F98FAk930Z3ywbNtZl5ILcL7UVyjhs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=pEQ1c09f6zfhNlwI5YmRf74pwGbSf2YMZ7/9Fthqo29HbW69Gu61EC8qZL0q+Xwzr
+         U6Pg05xUkqXQpSmhC4YZuY1fe4v8aVfVV+rkTGnFSeeQQrQO1WA6WDWGyXJpZuiaWH
+         zfHaAIsgWz6AQ49bKkG6AWMR4ikCpTDSM9G0+lEg=
+Received: from [10.79.128.120] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 357616077A;
+        Fri, 14 Jun 2019 09:18:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560503892;
+        bh=taSQc6f1m1AC8F98FAk930Z3ywbNtZl5ILcL7UVyjhs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AoX5xdq17xYg0YcWjvvqziLsWUom6VVdEsYv3KTljOZhSx7q4ZBGQt3getF0EyuA/
+         oesoLl2U2AdUzviGmzbx71xIXozouLobRVSD+TpjCLHn8lqe7A+2PhFUZjhbxk75o7
+         dk39cd1qBml2CcPSGZjy/NlL4HnJPhqbXHTMGzLU=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 357616077A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
+Subject: Re: [PATCH v3 3/4] iommu/arm-smmu: Add support to handle Qcom's
+ wait-for-safe logic
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>, will.deacon@arm.com,
+        robin.murphy@arm.com
+Cc:     agross@kernel.org, robh+dt@kernel.org, joro@8bytes.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        david.brown@linaro.org
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-4-vivek.gautam@codeaurora.org>
+ <20190614040520.GK22737@tuxbook-pro>
+From:   Vivek Gautam <vivek.gautam@codeaurora.org>
+Message-ID: <3e1f5e03-6448-8730-056d-fc47bdd71b3f@codeaurora.org>
+Date:   Fri, 14 Jun 2019 14:48:07 +0530
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190610164531.8303-2-martin.blumenstingl@googlemail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190614040520.GK22737@tuxbook-pro>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/06/2019 18:45, Martin Blumenstingl wrote:
-> The interrupt line of the RTL8211F PHY is routed to the GPIOZ_14 pad.
-> Describe this in the device tree so the PHY framework doesn't have to
-> poll the PHY status.
-> 
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> ---
->  arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> index 0d9ec45b8059..8c9535880007 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts
-> @@ -190,6 +190,10 @@
->  		reset-assert-us = <10000>;
->  		reset-deassert-us = <10000>;
->  		reset-gpios = <&gpio GPIOZ_15 (GPIO_ACTIVE_LOW | GPIO_OPEN_DRAIN)>;
-> +
-> +		interrupt-parent = <&gpio_intc>;
-> +		/* MAC_INTR on GPIOZ_14 */
-> +		interrupts = <26 IRQ_TYPE_LEVEL_LOW>;
->  	};
->  };
->  
+
+
+On 6/14/2019 9:35 AM, Bjorn Andersson wrote:
+> On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
 >
+>> Qcom's implementation of arm,mmu-500 adds a WAIT-FOR-SAFE logic
+>> to address under-performance issues in real-time clients, such as
+>> Display, and Camera.
+>> On receiving an invalidation requests, the SMMU forwards SAFE request
+>> to these clients and waits for SAFE ack signal from real-time clients.
+>> The SAFE signal from such clients is used to qualify the start of
+>> invalidation.
+>> This logic is controlled by chicken bits, one for each - MDP (display),
+>> IFE0, and IFE1 (camera), that can be accessed only from secure software
+>> on sdm845.
+>>
+>> This configuration, however, degrades the performance of non-real time
+>> clients, such as USB, and UFS etc. This happens because, with wait-for-safe
+>> logic enabled the hardware tries to throttle non-real time clients while
+>> waiting for SAFE ack signals from real-time clients.
+>>
+>> On MTP sdm845 devices, with wait-for-safe logic enabled at the boot time
+>> by the bootloaders we see degraded performance of USB and UFS when kernel
+>> enables the smmu stage-1 translations for these clients.
+>> Turn off this wait-for-safe logic from the kernel gets us back the perf
+>> of USB and UFS devices until we re-visit this when we start seeing perf
+>> issues on display/camera on upstream supported SDM845 platforms.
+>>
+>> Now, different bootloaders with their access control policies allow this
+>> register access differently through secure monitor calls -
+>> 1) With one we can issue io-read/write secure monitor call (qcom-scm)
+>>     to update the register, while,
+>> 2) With other, such as one on MTP sdm845 we should use the specific
+>>     qcom-scm command to send request to do the complete register
+>>     configuration.
+>> Adding a separate device tree flag for arm-smmu to identify which
+>> firmware configuration of the two mentioned above we use.
+>> Not adding code change to allow type-(1) bootloaders to toggle the
+>> safe using io-read/write qcom-scm call.
+>>
+>> This change is inspired by the downstream change from Patrick Daly
+>> to address performance issues with display and camera by handling
+>> this wait-for-safe within separte io-pagetable ops to do TLB
+>> maintenance. So a big thanks to him for the change.
+>>
+>> Without this change the UFS reads are pretty slow:
+>> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=10 conv=sync
+>> 10+0 records in
+>> 10+0 records out
+>> 10485760 bytes (10.0MB) copied, 22.394903 seconds, 457.2KB/s
+>> real    0m 22.39s
+>> user    0m 0.00s
+>> sys     0m 0.01s
+>>
+>> With this change they are back to rock!
+>> $ time dd if=/dev/sda of=/dev/zero bs=1048576 count=300 conv=sync
+>> 300+0 records in
+>> 300+0 records out
+>> 314572800 bytes (300.0MB) copied, 1.030541 seconds, 291.1MB/s
+>> real    0m 1.03s
+>> user    0m 0.00s
+>> sys     0m 0.54s
+>>
+>> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+>> ---
+>>   drivers/iommu/arm-smmu.c | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+>> index 0ad086da399c..3c3ad43eda97 100644
+>> --- a/drivers/iommu/arm-smmu.c
+>> +++ b/drivers/iommu/arm-smmu.c
+>> @@ -39,6 +39,7 @@
+>>   #include <linux/pci.h>
+>>   #include <linux/platform_device.h>
+>>   #include <linux/pm_runtime.h>
+>> +#include <linux/qcom_scm.h>
+>>   #include <linux/slab.h>
+>>   #include <linux/spinlock.h>
+>>   
+>> @@ -177,6 +178,7 @@ struct arm_smmu_device {
+>>   	u32				features;
+>>   
+>>   #define ARM_SMMU_OPT_SECURE_CFG_ACCESS (1 << 0)
+>> +#define ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA (1 << 1)
+>>   	u32				options;
+>>   	enum arm_smmu_arch_version	version;
+>>   	enum arm_smmu_implementation	model;
+>> @@ -262,6 +264,7 @@ static bool using_legacy_binding, using_generic_binding;
+>>   
+>>   static struct arm_smmu_option_prop arm_smmu_options[] = {
+>>   	{ ARM_SMMU_OPT_SECURE_CFG_ACCESS, "calxeda,smmu-secure-config-access" },
+>> +	{ ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA, "qcom,smmu-500-fw-impl-safe-errata" },
+> This should be added to the DT binding as well.
 
-[   13.505835] RTL8211F Gigabit Ethernet 0.0:00: attached PHY driver [RTL8211F Gigabit Ethernet] (mii_bus:phy_addr=0.0:00, irq=26)
+Ah right. I missed that. Will add this and respin unless Robin and Will 
+have concerns with this change.
 
+>
+>>   	{ 0, NULL},
+>>   };
+>>   
+>> @@ -2292,6 +2295,19 @@ static int arm_smmu_device_probe(struct platform_device *pdev)
+>>   	arm_smmu_device_reset(smmu);
+>>   	arm_smmu_test_smr_masks(smmu);
+>>   
+>> +	/*
+>> +	 * To address performance degradation in non-real time clients,
+>> +	 * such as USB and UFS, turn off wait-for-safe on sdm845 platforms,
+>> +	 * such as MTP, whose firmwares implement corresponding secure monitor
+>> +	 * call handlers.
+>> +	 */
+>> +	if (of_device_is_compatible(smmu->dev->of_node, "qcom,sdm845-smmu-500") &&
+>> +	    smmu->options & ARM_SMMU_OPT_QCOM_FW_IMPL_SAFE_ERRATA) {
+>> +		err = qcom_scm_qsmmu500_wait_safe_toggle(0);
+>> +		if (err)
+>> +			dev_warn(dev, "Failed to turn off SAFE logic\n");
+>> +	}
+>> +
+> This looks good, I presume at some point we can profile things and
+> review if it's worth toggling this on the fly, but given that this is
+> conditioned on smmu->options that should be an implementation detail..
+>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-# cat /proc/interrupts
-           CPU0       CPU1       CPU2       CPU3       CPU4       CPU5
-...
- 26:          3          0          0          0          0          0  meson-gpio-irqchip  26 Level     0.0:00
-...
+Thanks Bjorn.
 
+Best regards
+Vivek
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
-Tested-by: Neil Armstrong <narmstrong@baylibre.com>
+> Regards,
+> Bjorn
+>
+>>   	/*
+>>   	 * We want to avoid touching dev->power.lock in fastpaths unless
+>>   	 * it's really going to do something useful - pm_runtime_enabled()
+>> -- 
+>> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>> of Code Aurora Forum, hosted by The Linux Foundation
+>>
+
