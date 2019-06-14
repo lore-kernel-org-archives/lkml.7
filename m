@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3814EC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C40C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D9421874
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E8D62186A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544143;
-	bh=v1aZ80rCPAZc/VTMHWYtYVRdyC/Tp44TTIvq+21x6MQ=;
+	s=default; t=1560544145;
+	bh=qR5JCwyplkv1yPDzgu3yOYplWe/C6DistE/iQ1nO/3Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R0/LzVQ3UIRxlaVE2hJRMDjfnuI2xBVruSMA8VsTpdi901Wr9nEjg4l9D+RUtLftE
-	 FgY4yPP4bljE5LP5Vh3BK6RrK4sclSBFatgTH8GvTvgyK6eZfwU+57GKJdmThCf1vB
-	 XinxusRx2UBJ1lzcPOHFf9tquXHHXdkuzF2HPJ2c=
+	b=z37tz9o5aGhLp+CmMEouFWN7aE2OFaEYFjpl/ph4v70ni0gCQMpvo53phxJEbzYBN
+	 oQMdCbBvePkpeQk40n6HJ467Ul1oSjWAZJoMfRmBmGCV8t5aP0kVXwS5p/Vbqx8GVB
+	 kws/wpE/jodGVuH6bpq2WIkIOAkBi501hBK3uO6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726693AbfFNU3B (ORCPT
+        id S1726750AbfFNU3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:29:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50538 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:29:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726429AbfFNU2x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:28:53 -0400
+        id S1726622AbfFNU27 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:28:59 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 517E52186A;
-        Fri, 14 Jun 2019 20:28:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 535B0217F9;
+        Fri, 14 Jun 2019 20:28:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544131;
-        bh=v1aZ80rCPAZc/VTMHWYtYVRdyC/Tp44TTIvq+21x6MQ=;
+        s=default; t=1560544138;
+        bh=qR5JCwyplkv1yPDzgu3yOYplWe/C6DistE/iQ1nO/3Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=YCngdZZ8qHpBjwTCDazCL8Zw8TYv5/1p00yWJuHjWAYAzPpnlnfhKbPBn0fvd/T4e
-         cW4XhwwE4ikP1ipHGmljzObY/YoE0QwNlp8cpXuUNMVXOHr3sbg1XzL1vspcQWYpM5
-         QKmysU5sWPaVL79vV6C5VJ0rBnH346Nu+klUCKGg=
+        b=lG7O3sObDZuCH4TTEcXc6lyhHP0qwW7WwRnbHNWi0T/jCfXAMXF9MsSucOW5R+SkO
+         4NaFmnAX74InHyC4Qky7zWfmzzN3x7Oh+8qPfTr9j03+m92OjOn8BdacLWw7unGYCA
+         N8YAli58OyO1PvNPl3knQBhTMNfFPqcSZn4Oar0w=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Long <eric.long@unisoc.com>,
-        Baolin Wang <baolin.wang@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 09/59] dmaengine: sprd: Fix block length overflow
-Date:   Fri, 14 Jun 2019 16:27:53 -0400
-Message-Id: <20190614202843.26941-9-sashal@kernel.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Paul Burton <paul.burton@mips.com>, linux-mips@vger.kernel.org,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 13/59] MIPS: mark ginvt() as __always_inline
+Date:   Fri, 14 Jun 2019 16:27:57 -0400
+Message-Id: <20190614202843.26941-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -60,38 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Long <eric.long@unisoc.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-[ Upstream commit 89d03b3c126d683f7b2cd5b07178493993d12448 ]
+[ Upstream commit 6074c33c6b2eabc70867ef76d57ca256e9ea9da7 ]
 
-The maximum value of block length is 0xffff, so if the configured transfer length
-is more than 0xffff, that will cause block length overflow to lead a configuration
-error.
+To meet the 'i' (immediate) constraint for the asm operands,
+this function must be always inlined.
 
-Thus we can set block length as the maximum burst length to avoid this issue, since
-the maximum burst length will not be a big value which is more than 0xffff.
-
-Signed-off-by: Eric Long <eric.long@unisoc.com>
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: linux-mips@vger.kernel.org
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sprd-dma.c | 2 +-
+ arch/mips/include/asm/ginvt.h | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index 0f92e60529d1..a01c23246632 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -778,7 +778,7 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
- 	temp |= slave_cfg->src_maxburst & SPRD_DMA_FRG_LEN_MASK;
- 	hw->frg_len = temp;
+diff --git a/arch/mips/include/asm/ginvt.h b/arch/mips/include/asm/ginvt.h
+index 49c6dbe37338..6eb7c2b94dc7 100644
+--- a/arch/mips/include/asm/ginvt.h
++++ b/arch/mips/include/asm/ginvt.h
+@@ -19,7 +19,7 @@ _ASM_MACRO_1R1I(ginvt, rs, type,
+ # define _ASM_SET_GINV
+ #endif
  
--	hw->blk_len = len & SPRD_DMA_BLK_LEN_MASK;
-+	hw->blk_len = slave_cfg->src_maxburst & SPRD_DMA_BLK_LEN_MASK;
- 	hw->trsc_len = len & SPRD_DMA_TRSC_LEN_MASK;
- 
- 	temp = (dst_step & SPRD_DMA_TRSF_STEP_MASK) << SPRD_DMA_DEST_TRSF_STEP_OFFSET;
+-static inline void ginvt(unsigned long addr, enum ginvt_type type)
++static __always_inline void ginvt(unsigned long addr, enum ginvt_type type)
+ {
+ 	asm volatile(
+ 		".set	push\n"
 -- 
 2.20.1
 
