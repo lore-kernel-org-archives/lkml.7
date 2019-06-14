@@ -2,97 +2,110 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE8E6C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 201B8C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85CED20851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:29:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0206A21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:31:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728241AbfFNN3d (ORCPT
+        id S1728053AbfFNNbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:29:33 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:40003 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728067AbfFNN3c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:29:32 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-94-RqD6NxA4PzKkGGWAwFsofQ-1; Fri, 14 Jun 2019 14:29:30 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri,
- 14 Jun 2019 14:29:29 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 14 Jun 2019 14:29:29 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Mathieu Desnoyers' <mathieu.desnoyers@efficios.com>,
-        Florian Weimer <fweimer@redhat.com>
-CC:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: RE: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and
- thread creation (v10)
-Thread-Topic: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and
- thread creation (v10)
-Thread-Index: AdUitTFqJqb3c4uCSB28nMsheH09dA==
-Date:   Fri, 14 Jun 2019 13:29:29 +0000
-Message-ID: <69a53ec2ce184af29c4cae58e0b2fb57@AcuMS.aculab.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
- <c16c9785-7f8c-430b-a4df-a53e47bf1600@redhat.com>
- <914051741.43025.1560348011775.JavaMail.zimbra@efficios.com>
- <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com>
- <87ftocwkei.fsf@oldenburg2.str.redhat.com>
- <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com>
- <87tvcsv1pk.fsf@oldenburg2.str.redhat.com>
- <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com>
- <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 14 Jun 2019 09:31:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34012 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727673AbfFNNbi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:31:38 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A2758308219E;
+        Fri, 14 Jun 2019 13:31:37 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 620DC1798D;
+        Fri, 14 Jun 2019 13:31:36 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 08:31:34 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
+ for generated code
+Message-ID: <20190614132615.qsbnvvnidba7cl55@treble>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+ <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
+ <20190614013051.6gnwduy4dsygbamj@treble>
+ <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
+ <20190614015848.todgfogryjn573nd@treble>
+ <20190614022848.ly4vlgsz6fa4bcbl@treble>
+ <20190614045037.zinbi2sivthcfrtg@treble>
+ <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
+ <20190614074136.GR3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-X-MC-Unique: RqD6NxA4PzKkGGWAwFsofQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190614074136.GR3436@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Fri, 14 Jun 2019 13:31:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTWF0aGlldSBEZXNub3llcnMNCj4gU2VudDogMTQgSnVuZSAyMDE5IDE0OjAyDQouLi4N
-Cj4gQnV0IG15IG9yaWdpbmFsIGlzc3VlIHJlbWFpbnM6IGlmIEkgZGVmaW5lIGEgdmFyaWFibGUg
-Y2FsbGVkIF9fcnNlcV9oYW5kbGVkDQo+IHdpdGhpbiBlaXRoZXIgdGhlIG1haW4gZXhlY3V0YWJs
-ZSBvciB0aGUgcHJlbG9hZGVkIGxpYnJhcnksIGl0IG92ZXJzaGFkb3dzDQo+IHRoZSBsaWJjIG9u
-ZToNCg0KMSkgVGhhdCBpcyB0aGUgd2FzIGVsZiBzeW1ib2wgcmVzb2x1dGlvbiBpcyByZXF1aXJl
-ZCB0byB3b3JrLg0KICAgT3RoZXJ3aXNlIHZhcmlhYmxlcyBsaWtlICdlcnJubycgKG5vbi10aHJl
-YWQgc2FmZSBmb3JtKSB3b3VsZG4ndCB3b3JrLg0KDQoyKSBEb24ndCBkbyBpdCB0aGVuIDotKQ0K
-ICAgTmFtZXMgc3RhcnRpbmcgd2l0aCBfXyB3aWxsIGJlIHJlc2VydmVkIChwcm9iYWJseSAnZm9y
-IHRoZSBpbXBsZW1lbnRhdGlvbicpLg0KDQpUaGUgcmVhbCAnZnVuJyBzdGFydHMgYmVjYXVzZSwg
-dW5kZXIgc29tZSBjaXJjdW1zdGFuY2VzLCBsb29raW5nIHVwIGEgc3ltYm9sIGFzOg0KCWZvbyA9
-IGRsc3ltKGxpYl9oYW5kbGUsICJmb28iKTsNCkNhbiBmaW5kIHRoZSBkYXRhIGl0ZW0gaW5zdGVh
-ZCBvZiB0aGUgZnVuY3Rpb24hDQpVc3VhbGx5IGl0IHdvcmtzIChldmVuIHdoZW4gZm9vIGlzIGds
-b2JhbCBkYXRhKSBiZWNhdXNlICdsaWJfaGFuZGxlJyByZWZlcnMNCnRvIGEgZGlmZmVyZW50IHN5
-bWJvbCB0YWJsZS4NCkJ1dCBpdCBjYW4gZ28gaG9ycmlibHkgd3JvbmcuDQoNCglEYXZpZA0KDQot
-DQpSZWdpc3RlcmVkIEFkZHJlc3MgTGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwg
-TWlsdG9uIEtleW5lcywgTUsxIDFQVCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2Fs
-ZXMpDQo=
+On Fri, Jun 14, 2019 at 09:41:37AM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 13, 2019 at 11:00:09PM -0700, Alexei Starovoitov wrote:
+> 
+> > There is something wrong with
+> > commit d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> 
+> It assumes we can always unwind stack, which is, imo, not a weird thing.
+> 
+> > If I simply revert it and have CONFIG_UNWINDER_FRAME_POINTER=y
+> > JITed stacks work just fine, because
+> > bpf_get_stackid()->get_perf_callchain()
+> > need to start unwinding before any bpf stuff.
+> 
+> How does stack unwinding work if we try and unwind from an interrupt
+> that hits inside a BPF program? That too needs to work properly.
+>
+> > After that commit it needs to go through which is a bug on its own.
+> > imo patch 1 doesn't really fix that issue.
+> 
+> This we agree on, patch 1 doesn't solve that at all. But we also should
+> not loose the initial regs->ip value.
+> 
+> > As far as mangled rbp can we partially undo old
+> > commit 177366bf7ceb ("bpf: change x86 JITed program stack layout")
+> > that introduced that rbp adjustment.
+> 
+> > Going through bpf code is only interesting in case of panics somewhere
+> > in bpf helpers. Back then we didn't even have ksym of jited code.
+> 
+> I disagree here, interrupts/NMIs hitting inside BPF should be able to
+> reliably unwind the entire stack. Back then is irrelevant, these days we
+> expect a reliable unwind.
 
+Right.  Also, JIT code can call into C code, which could
+
+a) try to unwind
+b) call WARN()
+c) hit a panic
+d) get preempted by code which does any of the above
+e) etc
+
+> > Anyhow I agree that we need to make the jited frame proper,
+> > but unwinding need to start before any bpf stuff.
+> > That's a bigger issue.
+> 
+> I strongly disagree, we should be able to unwind through bpf.
+
+-- 
+Josh
