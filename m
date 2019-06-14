@@ -2,493 +2,105 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C9A3C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84027C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:26:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5129F20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:12:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E9Gy+3Oa"
+	by mail.kernel.org (Postfix) with ESMTP id 5D3CE21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:26:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfFNCMP (ORCPT
+        id S1726734AbfFNC0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 22:12:15 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44306 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726167AbfFNCMP (ORCPT
+        Thu, 13 Jun 2019 22:26:44 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:47019 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726283AbfFNC0n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 22:12:15 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t7so308016plr.11
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=OMzQEEA4rvMSLIpJ0N3saoDnOderGwUWT5O2u6Z2qjw=;
-        b=E9Gy+3OaAtXdKxNiYQXDziTgIZXrz1/89oNJI7MJurAT5P0IQD2WjPC1TRAJXtLBmS
-         GNNd7y/ZrxNymi6wHz6pwpceMDTMP+PeZZjjEwZ8Do50UsisncAXzcxTBdT5WecATjK/
-         ++rCOnbcPHDh3aLuQHw9kTtmYufBkZsa82yK+uFNs8YL1QzuoAlp9+M1yn2zJrkvDk/X
-         moWXey7aPjsHQoFpk2669IHGs0ayR/uuZSBGgbQuZnok7ofA3Yni2+u0Z2OHJnMy7fMV
-         cHlqB653URmccf/AqaoJKCyDzr6oMpkwGnzIJScA/kcytGhavPwhMAsOdh2kKipCEQsH
-         CBgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=OMzQEEA4rvMSLIpJ0N3saoDnOderGwUWT5O2u6Z2qjw=;
-        b=M7OWRw1fFhRe4AalpDZcukv6PUBvxeRywngSWtSg3+juL+PzH06BDASmlCiTqv+Ubq
-         4eF+jueRP3Hrz83WR0tA0AfL9pmbpEZu1R2S+Q4t9Z08DgVLy/MKM7kMZWV4wOdVoby0
-         cU0YEzrHAG1xqBfP4AWNPCAqEabPufh+dye7fXIrhqCJVq2UT+qpwbW0Pw9LOJkNFA/r
-         0Ev+F0fkDzgACyYmpYTOMg4H4zFtPHyAnPxalCYJhOQySxlZEz2Sc0xFc4qDKbHKWZa2
-         hf+kBrqf8himpZ7PMkbIZxX0yNt74T1mR4wA0RPSqG0+sMQLwhwVTUJUrQWO8HAh0tHs
-         wi+w==
-X-Gm-Message-State: APjAAAWnG3kka8DhTu0UAXdsfY8FbV0F2lIh+buIYaCCv+W7rxzan4dN
-        6gnEZZ5fVdtzLvy4y+RZTHjHen8sVKI=
-X-Google-Smtp-Source: APXvYqzEf8RT0RLuiqNiUXEFuiQjEaPGgCVkcyq++ePD1O8c9xA29xwm/wHBCiKXNOYcWfE3+eqsAw==
-X-Received: by 2002:a17:902:f087:: with SMTP id go7mr64693138plb.330.1560478334249;
-        Thu, 13 Jun 2019 19:12:14 -0700 (PDT)
-Received: from t-1000 (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
-        by smtp.gmail.com with ESMTPSA id w4sm924914pfw.97.2019.06.13.19.12.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 19:12:13 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 19:12:10 -0700
-From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Bastien Nocera <hadess@hadess.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Cc:     shobhitkukreti@gmail.com
-Subject: [PATCH] staging: rtl8723bs: Resolve checkpatch error "that open
- brace { should be on the previous line" in the rtl8723bs driver
-Message-ID: <20190614021206.GA895@t-1000>
+        Thu, 13 Jun 2019 22:26:43 -0400
+X-UUID: c99698b1d3e04bd8a8ead6e2c9b27021-20190614
+X-UUID: c99698b1d3e04bd8a8ead6e2c9b27021-20190614
+Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1399065455; Fri, 14 Jun 2019 10:26:35 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 14 Jun 2019 10:26:34 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 14 Jun 2019 10:26:34 +0800
+Message-ID: <1560479194.16718.5.camel@mtksdaap41>
+Subject: Re: [PATCH v3, 10/27] drm/mediatek: split DISP_REG_CONFIG_DSI_SEL
+ setting into another use case
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>, <bibby.hsieh@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 14 Jun 2019 10:26:34 +0800
+In-Reply-To: <1559734986-7379-11-git-send-email-yongqiang.niu@mediatek.com>
+References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1559734986-7379-11-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cleaned up the code from the following files to get rid of
-check patch error "that open brace { should be on the previous line"
++Bibby:
 
-drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-drivers/staging/rtl8723bs/os_dep/recv_linux.c
-drivers/staging/rtl8723bs/os_dep/rtw_proc.c
-drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
+Hi, Yongqiang:
 
-Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/mlme_linux.c     | 14 ++---
- drivers/staging/rtl8723bs/os_dep/recv_linux.c     | 76 ++++++++---------------
- drivers/staging/rtl8723bs/os_dep/rtw_proc.c       |  6 +-
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c      | 15 ++---
- drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c | 24 +++----
- 5 files changed, 47 insertions(+), 88 deletions(-)
+On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> Here is two modifition in this patch:
+> 1.bls->dpi0 and rdma1->dsi are differen usecase,
+> Split DISP_REG_CONFIG_DSI_SEL setting into anther usecase
+> 2.remove DISP_REG_CONFIG_DPI_SEL setting, DPI_SEL_IN_BLS is 0 and
+> this is same with hardware defautl setting,
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 717609d..1bbabe6 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -401,10 +401,9 @@ static void mtk_ddp_sout_sel(void __iomem *config_regs,
+>  	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+>  		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+>  			       config_regs + DISP_REG_CONFIG_OUT_SEL);
 
-diff --git a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-index aa2499f..6799ed4 100644
---- a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-@@ -46,8 +46,7 @@ void rtw_os_indicate_connect(struct adapter *adapter)
- 	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
- 
- 	if ((check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == true) ||
--		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true))
--	{
-+		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true)) {
- 		rtw_cfg80211_ibss_indicate_connect(adapter);
- 	}
- 	else
-@@ -77,8 +76,8 @@ void rtw_reset_securitypriv(struct adapter *adapter)
- 
- 	spin_lock_bh(&adapter->security_key_mutex);
- 
--	if (adapter->securitypriv.dot11AuthAlgrthm == dot11AuthAlgrthm_8021X)/* 802.1x */
--	{
-+	if (adapter->securitypriv.dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) { /* 802.1x */
-+
- 		/*  Added by Albert 2009/02/18 */
- 		/*  We have to backup the PMK information for WiFi PMK Caching test item. */
- 		/*  */
-@@ -106,8 +105,8 @@ void rtw_reset_securitypriv(struct adapter *adapter)
- 		adapter->securitypriv.ndisencryptstatus = Ndis802_11WEPDisabled;
- 
- 	}
--	else /* reset values in securitypriv */
--	{
-+	else { /* reset values in securitypriv */
-+	
- 		/* if (adapter->mlmepriv.fw_state & WIFI_STATION_STATE) */
- 		/*  */
- 		struct security_priv *psec_priv = &adapter->securitypriv;
-@@ -150,8 +149,7 @@ void rtw_report_sec_ie(struct adapter *adapter, u8 authmode, u8 *sec_ie)
- 	RT_TRACE(_module_mlme_osdep_c_, _drv_info_, ("+rtw_report_sec_ie, authmode =%d\n", authmode));
- 
- 	buff = NULL;
--	if (authmode == _WPA_IE_ID_)
--	{
-+	if (authmode == _WPA_IE_ID_) {
- 		RT_TRACE(_module_mlme_osdep_c_, _drv_info_, ("rtw_report_sec_ie, authmode =%d\n", authmode));
- 
- 		buff = rtw_zmalloc(IW_CUSTOM_MAX);
-diff --git a/drivers/staging/rtl8723bs/os_dep/recv_linux.c b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-index 3fe9c22..44a8920 100644
---- a/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-@@ -12,8 +12,7 @@
- 
- void rtw_os_free_recvframe(union recv_frame *precvframe)
- {
--	if (precvframe->u.hdr.pkt)
--	{
-+	if (precvframe->u.hdr.pkt) {
- 		dev_kfree_skb_any(precvframe->u.hdr.pkt);/* free skb by driver */
- 
- 		precvframe->u.hdr.pkt = NULL;
-@@ -34,10 +33,8 @@ void rtw_os_recv_resource_free(struct recv_priv *precvpriv)
- 
- 	precvframe = (union recv_frame*) precvpriv->precv_frame_buf;
- 
--	for (i = 0; i < NR_RECVFRAME; i++)
--	{
--		if (precvframe->u.hdr.pkt)
--		{
-+	for (i = 0; i < NR_RECVFRAME; i++) {
-+		if (precvframe->u.hdr.pkt) {
- 			dev_kfree_skb_any(precvframe->u.hdr.pkt);/* free skb by driver */
- 			precvframe->u.hdr.pkt = NULL;
- 		}
-@@ -48,8 +45,7 @@ void rtw_os_recv_resource_free(struct recv_priv *precvpriv)
- /* free os related resource in struct recv_buf */
- void rtw_os_recvbuf_resource_free(struct adapter *padapter, struct recv_buf *precvbuf)
- {
--	if (precvbuf->pskb)
--	{
-+	if (precvbuf->pskb) {
- 		dev_kfree_skb_any(precvbuf->pskb);
- 	}
- }
-@@ -63,22 +59,18 @@ _pkt *rtw_os_alloc_msdu_pkt(union recv_frame *prframe, u16 nSubframe_Length, u8
- 	pattrib = &prframe->u.hdr.attrib;
- 
- 	sub_skb = rtw_skb_alloc(nSubframe_Length + 12);
--	if (sub_skb)
--	{
-+	if (sub_skb) {
- 		skb_reserve(sub_skb, 12);
- 		skb_put_data(sub_skb, (pdata + ETH_HLEN), nSubframe_Length);
- 	}
--	else
--	{
-+	else {
- 		sub_skb = rtw_skb_clone(prframe->u.hdr.pkt);
--		if (sub_skb)
--		{
-+		if (sub_skb) {
- 			sub_skb->data = pdata + ETH_HLEN;
- 			sub_skb->len = nSubframe_Length;
- 			skb_set_tail_pointer(sub_skb, nSubframe_Length);
- 		}
--		else
--		{
-+		else {
- 			DBG_871X("%s(): rtw_skb_clone() Fail!!!\n", __func__);
- 			return NULL;
- 		}
-@@ -113,8 +105,7 @@ void rtw_os_recv_indicate_pkt(struct adapter *padapter, _pkt *pkt, struct rx_pkt
- 
- 	/* Indicat the packets to upper layer */
- 	if (pkt) {
--		if (check_fwstate(pmlmepriv, WIFI_AP_STATE) == true)
--		{
-+		if (check_fwstate(pmlmepriv, WIFI_AP_STATE) == true) {
- 			_pkt *pskb2 = NULL;
- 			struct sta_info *psta = NULL;
- 			struct sta_priv *pstapriv = &padapter->stapriv;
-@@ -122,20 +113,17 @@ void rtw_os_recv_indicate_pkt(struct adapter *padapter, _pkt *pkt, struct rx_pkt
- 
- 			/* DBG_871X("bmcast =%d\n", bmcast); */
- 
--			if (memcmp(pattrib->dst, myid(&padapter->eeprompriv), ETH_ALEN))
--			{
-+			if (memcmp(pattrib->dst, myid(&padapter->eeprompriv), ETH_ALEN)) {
- 				/* DBG_871X("not ap psta =%p, addr =%pM\n", psta, pattrib->dst); */
- 
--				if (bmcast)
--				{
-+				if (bmcast) {
- 					psta = rtw_get_bcmc_stainfo(padapter);
- 					pskb2 = rtw_skb_clone(pkt);
- 				} else {
- 					psta = rtw_get_stainfo(pstapriv, pattrib->dst);
- 				}
- 
--				if (psta)
--				{
-+				if (psta) {
- 					struct net_device *pnetdev = (struct net_device*)padapter->pnetdev;
- 
- 					/* DBG_871X("directly forwarding to the rtw_xmit_entry\n"); */
-@@ -155,8 +143,8 @@ void rtw_os_recv_indicate_pkt(struct adapter *padapter, _pkt *pkt, struct rx_pkt
- 					}
- 				}
- 			}
--			else/*  to APself */
--			{
-+			else { /*  to APself */
-+			
- 				/* DBG_871X("to APSelf\n"); */
- 				DBG_COUNTER(padapter->rx_logs.os_indicate_ap_self);
- 			}
-@@ -192,32 +180,26 @@ void rtw_handle_tkip_mic_err(struct adapter *padapter, u8 bgroup)
- 	struct security_priv *psecuritypriv = &padapter->securitypriv;
- 	unsigned long cur_time = 0;
- 
--	if (psecuritypriv->last_mic_err_time == 0)
--	{
-+	if (psecuritypriv->last_mic_err_time == 0) {
- 		psecuritypriv->last_mic_err_time = jiffies;
- 	}
--	else
--	{
-+	else {
- 		cur_time = jiffies;
- 
--		if (cur_time - psecuritypriv->last_mic_err_time < 60*HZ)
--		{
-+		if (cur_time - psecuritypriv->last_mic_err_time < 60*HZ) {
- 			psecuritypriv->btkip_countermeasure = true;
- 			psecuritypriv->last_mic_err_time = 0;
- 			psecuritypriv->btkip_countermeasure_time = cur_time;
- 		}
--		else
--		{
-+		else {
- 			psecuritypriv->last_mic_err_time = jiffies;
- 		}
- 	}
- 
--	if (bgroup)
--	{
-+	if (bgroup) {
- 		key_type |= NL80211_KEYTYPE_GROUP;
- 	}
--	else
--	{
-+	else {
- 		key_type |= NL80211_KEYTYPE_PAIRWISE;
- 	}
- 
-@@ -225,12 +207,10 @@ void rtw_handle_tkip_mic_err(struct adapter *padapter, u8 bgroup)
- 		NULL, GFP_ATOMIC);
- 
- 	memset(&ev, 0x00, sizeof(ev));
--	if (bgroup)
--	{
-+	if (bgroup) {
- 	    ev.flags |= IW_MICFAILURE_GROUP;
- 	}
--	else
--	{
-+	else {
- 	    ev.flags |= IW_MICFAILURE_PAIRWISE;
- 	}
- 
-@@ -250,8 +230,7 @@ static void rtw_os_ksocket_send(struct adapter *padapter, union recv_frame *prec
- 
- 	DBG_871X("eth rx: got eth_type = 0x%x\n", pattrib->eth_type);
- 
--	if (psta && psta->isrc && psta->pid>0)
--	{
-+	if (psta && psta->isrc && psta->pid>0) {
- 		u16 rx_pid;
- 
- 		rx_pid = *(u16*)(skb->data+ETH_HLEN);
-@@ -259,8 +238,7 @@ static void rtw_os_ksocket_send(struct adapter *padapter, union recv_frame *prec
- 		DBG_871X("eth rx(pid = 0x%x): sta("MAC_FMT") pid = 0x%x\n",
- 			rx_pid, MAC_ARG(psta->hwaddr), psta->pid);
- 
--		if (rx_pid == psta->pid)
--		{
-+		if (rx_pid == psta->pid) {
- 			int i;
- 			u16 len = *(u16*)(skb->data+ETH_HLEN+2);
- 			/* u16 ctrl_type = *(u16*)(skb->data+ETH_HLEN+4); */
-@@ -293,8 +271,7 @@ int rtw_recv_indicatepkt(struct adapter *padapter, union recv_frame *precv_frame
- 	pfree_recv_queue = &(precvpriv->free_recv_queue);
- 
- 	skb = precv_frame->u.hdr.pkt;
--	if (skb == NULL)
--	{
-+	if (skb == NULL) {
- 		RT_TRACE(_module_recv_osdep_c_, _drv_err_, ("rtw_recv_indicatepkt():skb == NULL something wrong!!!!\n"));
- 		goto _recv_indicatepkt_drop;
- 	}
-@@ -312,8 +289,7 @@ int rtw_recv_indicatepkt(struct adapter *padapter, union recv_frame *precv_frame
- 	RT_TRACE(_module_recv_osdep_c_, _drv_info_, ("\n skb->head =%p skb->data =%p skb->tail =%p skb->end =%p skb->len =%d\n", skb->head, skb->data, skb_tail_pointer(skb), skb_end_pointer(skb), skb->len));
- 
- #ifdef CONFIG_AUTO_AP_MODE
--	if (0x8899 == pattrib->eth_type)
--	{
-+	if (0x8899 == pattrib->eth_type) {
- 		rtw_os_ksocket_send(padapter, precv_frame);
- 
- 		/* goto _recv_indicatepkt_drop; */
-diff --git a/drivers/staging/rtl8723bs/os_dep/rtw_proc.c b/drivers/staging/rtl8723bs/os_dep/rtw_proc.c
-index d6862e8..5f950fd 100644
---- a/drivers/staging/rtl8723bs/os_dep/rtw_proc.c
-+++ b/drivers/staging/rtl8723bs/os_dep/rtw_proc.c
-@@ -63,8 +63,7 @@ static ssize_t proc_set_log_level(struct file *file, const char __user *buffer,
- 
- 	if (buffer && !copy_from_user(tmp, buffer, sizeof(tmp))) {
- 		sscanf(tmp, "%d ", &log_level);
--		if (log_level >= _drv_always_ && log_level <= _drv_debug_)
--		{
-+		if (log_level >= _drv_always_ && log_level <= _drv_debug_) {
- 			GlobalDebugLevel = log_level;
- 			printk("%d\n", GlobalDebugLevel);
- 		}
-@@ -224,8 +223,7 @@ static ssize_t proc_set_linked_info_dump(struct file *file, const char __user *b
- 		return -EFAULT;
- 
- 	if (buffer && !copy_from_user(tmp, buffer, sizeof(tmp))) {
--		if (padapter)
--		{
-+		if (padapter) {
- 			/* padapter->bLinkInfoDump = mode; */
- 			/* DBG_871X("linked_info_dump =%s\n", (padapter->bLinkInfoDump)?"enable":"disable"); */
- 			 linked_info_dump(padapter, mode);
-diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-index 101a22f..c60f13c 100644
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -85,13 +85,11 @@ static int sdio_alloc_irq(struct dvobj_priv *dvobj)
- 	sdio_claim_host(func);
- 
- 	err = sdio_claim_irq(func, &sd_sync_int_hdl);
--	if (err)
--	{
-+	if (err) {
- 		dvobj->drv_dbg.dbg_sdio_alloc_irq_error_cnt++;
- 		printk(KERN_CRIT "%s: sdio_claim_irq FAIL(%d)!\n", __func__, err);
- 	}
--	else
--	{
-+	else {
- 		dvobj->drv_dbg.dbg_sdio_alloc_irq_cnt++;
- 		dvobj->irq_alloc = 1;
- 	}
-@@ -114,8 +112,7 @@ static void sdio_free_irq(struct dvobj_priv *dvobj)
-         if (func) {
-             sdio_claim_host(func);
-             err = sdio_release_irq(func);
--            if (err)
--            {
-+            if (err) {
- 				dvobj->drv_dbg.dbg_sdio_free_irq_error_cnt++;
- 				DBG_871X_LEVEL(_drv_err_,"%s: sdio_release_irq FAIL(%d)!\n", __func__, err);
-             }
-@@ -225,16 +222,14 @@ static void sdio_deinit(struct dvobj_priv *dvobj)
- 	if (func) {
- 		sdio_claim_host(func);
- 		err = sdio_disable_func(func);
--		if (err)
--		{
-+		if (err) {
- 			dvobj->drv_dbg.dbg_sdio_deinit_error_cnt++;
- 			DBG_8192C(KERN_ERR "%s: sdio_disable_func(%d)\n", __func__, err);
- 		}
- 
- 		if (dvobj->irq_alloc) {
- 			err = sdio_release_irq(func);
--			if (err)
--			{
-+			if (err) {
- 				dvobj->drv_dbg.dbg_sdio_free_irq_error_cnt++;
- 				DBG_8192C(KERN_ERR "%s: sdio_release_irq(%d)\n", __func__, err);
- 			}
-diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c b/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
-index 1787534..50b8934 100644
---- a/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
-@@ -257,15 +257,13 @@ u32 sd_read32(struct intf_hdl *pintfhdl, u32 addr, s32 *err)
- 	if (claim_needed)
- 		sdio_release_host(func);
- 
--	if (err && *err)
--	{
-+	if (err && *err) {
- 		int i;
- 
- 		DBG_871X(KERN_ERR "%s: (%d) addr = 0x%05x, val = 0x%x\n", __func__, *err, addr, v);
- 
- 		*err = 0;
--		for (i = 0; i < SD_IO_TRY_CNT; i++)
--		{
-+		for (i = 0; i < SD_IO_TRY_CNT; i++) {
- 			if (claim_needed) sdio_claim_host(func);
- 			v = sdio_readl(func, addr, err);
- 			if (claim_needed) sdio_release_host(func);
-@@ -350,15 +348,13 @@ void sd_write32(struct intf_hdl *pintfhdl, u32 addr, u32 v, s32 *err)
- 	if (claim_needed)
- 		sdio_release_host(func);
- 
--	if (err && *err)
--	{
-+	if (err && *err) {
- 		int i;
- 
- 		DBG_871X(KERN_ERR "%s: (%d) addr = 0x%05x val = 0x%08x\n", __func__, *err, addr, v);
- 
- 		*err = 0;
--		for (i = 0; i < SD_IO_TRY_CNT; i++)
--		{
-+		for (i = 0; i < SD_IO_TRY_CNT; i++) {
- 			if (claim_needed) sdio_claim_host(func);
- 			sdio_writel(func, v, addr, err);
- 			if (claim_needed) sdio_release_host(func);
-@@ -420,13 +416,11 @@ s32 _sd_read(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
- 
- 	func = psdio->func;
- 
--	if (unlikely((cnt == 1) || (cnt == 2)))
--	{
-+	if (unlikely((cnt == 1) || (cnt == 2))) {
- 		int i;
- 		u8 *pbuf = pdata;
- 
--		for (i = 0; i < cnt; i++)
--		{
-+		for (i = 0; i < cnt; i++) {
- 			*(pbuf+i) = sdio_readb(func, addr+i, &err);
- 
- 			if (err) {
-@@ -523,13 +517,11 @@ s32 _sd_write(struct intf_hdl *pintfhdl, u32 addr, u32 cnt, void *pdata)
- 	func = psdio->func;
- /*	size = sdio_align_size(func, cnt); */
- 
--	if (unlikely((cnt == 1) || (cnt == 2)))
--	{
-+	if (unlikely((cnt == 1) || (cnt == 2))) {
- 		int i;
- 		u8 *pbuf = pdata;
- 
--		for (i = 0; i < cnt; i++)
--		{
-+		for (i = 0; i < cnt; i++) {
- 			sdio_writeb(func, *(pbuf+i), addr+i, &err);
- 			if (err) {
- 				DBG_871X(KERN_ERR "%s: FAIL!(%d) addr = 0x%05x val = 0x%02x\n", __func__, err, addr, *(pbuf+i));
--- 
-2.7.4
+You move 2 register setting out of the path from BLS to DPI0, does this
+path still work? Please make sure that all modification could work on
+all supported SoC.
+
+Regards,
+CK
+
+> +	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+>  		writel_relaxed(DSI_SEL_IN_RDMA,
+>  			       config_regs + DISP_REG_CONFIG_DSI_SEL);
+> -		writel_relaxed(DPI_SEL_IN_BLS,
+> -			       config_regs + DISP_REG_CONFIG_DPI_SEL);
+>  	}
+>  }
+>  
+
 
