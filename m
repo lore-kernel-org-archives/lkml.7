@@ -2,128 +2,180 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34780C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD22C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02B3A2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:15:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="NbXyTVK3"
+	by mail.kernel.org (Postfix) with ESMTP id 49BD62183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:17:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbfFNROy (ORCPT
+        id S1726185AbfFNRQ7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:14:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37824 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725802AbfFNROy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:14:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 19so1842370pfa.4
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 10:14:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=r5tXhiANsxn6YQdl37418WiLHhdChm3AD299PfiCsoU=;
-        b=NbXyTVK3WaxmIeOt1OopzS29eKK5sL0zVVNJL08beb9YGBPHrdMbO43tYK1Gb99EyA
-         S9hkqIewhwbzU0RvY8QzoINoWW3/iA5SsDzApt/AWknhXmBJHBWWa0UksTvw7a3OpCOz
-         /eZiD50teroJQ2NCRVjKhypUDil5wslWZEWsY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=r5tXhiANsxn6YQdl37418WiLHhdChm3AD299PfiCsoU=;
-        b=UR42JLWaz3hLboPzgVJ/8qGJ9thcbmzLzVY7IqPMtn/yFLfOfaa9+/Y2exVFHUWqL/
-         liXRx3/JbkkMVZLmiWRhzqC8vX/BNpaUIxp2ZjO/Ol3mksS6kf6NWLduavc2J7JoTQBt
-         uPlzmnMp1ONA4tspYY/k8Yd1jDPtLNTSaxd+lWQuJzXdXGSSaxIFKQMQZhfWTwzjcIrE
-         D49A5l+HTRNq9o4rN18USXd/4iVJExJCfOLvDdF7o4Ed9EzNNIjk5UtBr2/Q2P4NrgDZ
-         jxGwdzJ3ewMx7YQhmsx/coU6x+CGflzIZ5Ty/pnPh1F+w2DskANbklD8Wb6sOcMvY6Lc
-         izLg==
-X-Gm-Message-State: APjAAAWKCvlcUCBr5G7uIKfA1cY3opBkUaaNHvIuH+8yv45LL2had4hu
-        +Mymf+vLVZmSpRpB1uxT3mCI3w==
-X-Google-Smtp-Source: APXvYqxsi04hmYAh6uAF7MpkalRo5RRTNCaD8ZvmYUW26pTiZVJfnw21mkvJkIZ5A+XCCpS6vgQHlQ==
-X-Received: by 2002:a17:90a:1b48:: with SMTP id q66mr11665697pjq.83.1560532493642;
-        Fri, 14 Jun 2019 10:14:53 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id l44sm3870729pje.29.2019.06.14.10.14.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 10:14:52 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 10:14:50 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Qais.Yousef@arm.com, juri.lelli@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 5/5] cpufreq: Add QoS requests for userspace
- constraints
-Message-ID: <20190614171450.GQ137143@google.com>
-References: <cover.1560163748.git.viresh.kumar@linaro.org>
- <d1a7585539ad2ced2bfcc9e232cf859b1ec9c71a.1560163748.git.viresh.kumar@linaro.org>
+        Fri, 14 Jun 2019 13:16:59 -0400
+Received: from mga18.intel.com ([134.134.136.126]:6857 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725852AbfFNRQ7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:16:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 10:16:57 -0700
+X-ExtLoop1: 1
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Jun 2019 10:16:55 -0700
+Received: from orsmsx116.amr.corp.intel.com ([169.254.7.166]) by
+ ORSMSX106.amr.corp.intel.com ([169.254.1.121]) with mapi id 14.03.0415.000;
+ Fri, 14 Jun 2019 10:16:56 -0700
+From:   "Xing, Cedric" <cedric.xing@intel.com>
+To:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "Stephen Smalley" <sds@tycho.nsa.gov>
+CC:     "linux-security-module@vger.kernel.org" 
+        <linux-security-module@vger.kernel.org>,
+        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
+        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "jmorris@namei.org" <jmorris@namei.org>,
+        "serge@hallyn.com" <serge@hallyn.com>,
+        "paul@paul-moore.com" <paul@paul-moore.com>,
+        "eparis@parisplace.org" <eparis@parisplace.org>,
+        "jethro@fortanix.com" <jethro@fortanix.com>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "nhorman@redhat.com" <nhorman@redhat.com>,
+        "pmccallum@redhat.com" <pmccallum@redhat.com>,
+        "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        "andriy.shevchenko@linux.intel.com" 
+        <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
+        "josh@joshtriplett.org" <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        "rientjes@google.com" <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Subject: RE: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
+ SELinux
+Thread-Topic: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks
+ in SELinux
+Thread-Index: AQHVH1ilvNGS2ZisK0eWTCWidam/YaaW7RmAgACMWICAAtC5gIAAgY8AgACfZrA=
+Date:   Fri, 14 Jun 2019 17:16:55 +0000
+Message-ID: <960B34DE67B9E140824F1DCDEC400C0F65504665@ORSMSX116.amr.corp.intel.com>
+References: <cover.1560131039.git.cedric.xing@intel.com>
+ <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
+ <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
+ <20190611220243.GB3416@linux.intel.com>
+ <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
+ <20190614004600.GF18385@linux.intel.com>
+In-Reply-To: <20190614004600.GF18385@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMWE0YzkzNzUtZjZlZS00Y2EzLTg2ZTktOGE4MGExZDU2YzRhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiOTkzQ0VCMnlHNU1RcllOWVlwalhGUnU1U2R0UXRPd3E2cnRId2FlMFF0QnNObFdKWU9WS1hSQVk5MXoyZW5tNSJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <d1a7585539ad2ced2bfcc9e232cf859b1ec9c71a.1560163748.git.viresh.kumar@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Viresh,
-
-On Mon, Jun 10, 2019 at 04:21:36PM +0530, Viresh Kumar wrote:
-> This implements QoS requests to manage userspace configuration of min
-> and max frequency.
+> From: Christopherson, Sean J
+> Sent: Thursday, June 13, 2019 5:46 PM
 > 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq.c | 92 +++++++++++++++++++--------------------
->  include/linux/cpufreq.h   |  8 +---
->  2 files changed, 47 insertions(+), 53 deletions(-)
+> On Thu, Jun 13, 2019 at 01:02:17PM -0400, Stephen Smalley wrote:
+> > On 6/11/19 6:02 PM, Sean Christopherson wrote:
+> > >On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
+> > >>I haven't looked at this code closely, but it feels like a lot of
+> > >>SGX-specific logic embedded into SELinux that will have to be
+> > >>repeated or reused for every security module.  Does SGX not track
+> this state itself?
+> > >
+> > >SGX does track equivalent state.
+> > >
+> > >There are three proposals on the table (I think):
+> > >
+> > >   1. Require userspace to explicitly specificy (maximal) enclave
+> page
+> > >      permissions at build time.  The enclave page permissions are
+> provided
+> > >      to, and checked by, LSMs at enclave build time.
+> > >
+> > >      Pros: Low-complexity kernel implementation, straightforward
+> auditing
+> > >      Cons: Sullies the SGX UAPI to some extent, may increase
+> complexity of
+> > >            SGX2 enclave loaders.
+> > >
+> > >   2. Pre-check LSM permissions and dynamically track mappings to
+> enclave
+> > >      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
+> > >      based on the pre-checked permissions.
+> > >
+> > >      Pros: Does not impact SGX UAPI, medium kernel complexity
+> > >      Cons: Auditing is complex/weird, requires taking enclave-
+> specific
+> > >            lock during mprotect() to query/update tracking.
+> > >
+> > >   3. Implement LSM hooks in SGX to allow LSMs to track enclave
+> regions
+> > >      from cradle to grave, but otherwise defer everything to LSMs.
+> > >
+> > >      Pros: Does not impact SGX UAPI, maximum flexibility, precise
+> auditing
+> > >      Cons: Most complex and "heaviest" kernel implementation of the
+> three,
+> > >            pushes more SGX details into LSMs.
+> > >
+> > >My RFC series[1] implements #1.  My understanding is that Andy
+> > >(Lutomirski) prefers #2.  Cedric's RFC series implements #3.
+> > >
+> > >Perhaps the easiest way to make forward progress is to rule out the
+> > >options we absolutely *don't* want by focusing on the potentially
+> > >blocking issue with each option:
+> > >
+> > >   #1 - SGX UAPI funkiness
+> > >
+> > >   #2 - Auditing complexity, potential enclave lock contention
+> > >
+> > >   #3 - Pushing SGX details into LSMs and complexity of kernel
+> > > implementation
+> > >
+> > >
+> > >[1]
+> > >https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherso
+> > >n@intel.com
+> >
+> > Given the complexity tradeoff, what is the clear motivating example
+> > for why
+> > #1 isn't the obvious choice? That the enclave loader has no way of
+> > knowing a priori whether the enclave will require W->X or WX?  But
+> > aren't we better off requiring enclaves to be explicitly marked as
+> > needing such so that we can make a more informed decision about
+> > whether to load them in the first place?
 > 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 547d221b2ff2..ff754981fcb4 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -720,23 +720,15 @@ static ssize_t show_scaling_cur_freq(struct cpufreq_policy *policy, char *buf)
->  static ssize_t store_##file_name					\
->  (struct cpufreq_policy *policy, const char *buf, size_t count)		\
->  {									\
-> -	int ret, temp;							\
-> -	struct cpufreq_policy new_policy;				\
-> +	unsigned long val;						\
-> +	int ret;							\
->  									\
-> -	memcpy(&new_policy, policy, sizeof(*policy));			\
-> -	new_policy.min = policy->user_policy.min;			\
-> -	new_policy.max = policy->user_policy.max;			\
-> -									\
-> -	ret = sscanf(buf, "%u", &new_policy.object);			\
-> +	ret = sscanf(buf, "%lu", &val);					\
->  	if (ret != 1)							\
->  		return -EINVAL;						\
->  									\
-> -	temp = new_policy.object;					\
-> -	ret = cpufreq_set_policy(policy, &new_policy);		\
-> -	if (!ret)							\
-> -		policy->user_policy.object = temp;			\
-> -									\
-> -	return ret ? ret : count;					\
-> +	ret = dev_pm_qos_update_request(policy->object##_freq_req, val);\
-> +	return ret && ret != 1 ? ret : count;				\
+> Andy and/or Cedric, can you please weigh in with a concrete (and
+> practical) use case that will break if we go with #1?  The auditing
+> issues for #2/#3 are complex to say the least...
 
-nit: I wonder if
+How does enclave loader provide per-page ALLOW_* flags? And a related question is why they are necessary for enclaves but unnecessary for regular executables or shared objects.
 
-  return (ret >= 0) ? count : ret;
+What's the story for SGX2 if mmap()'ing non-existing pages is not allowed?
 
-would be clearer.
+What's the story for auditing?
 
-Other than that:
+After everything above has been taken care of properly, will #1 still be simpler than #2/#3?
 
-Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
