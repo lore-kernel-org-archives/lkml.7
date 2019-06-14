@@ -2,114 +2,143 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 488E6C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48CDFC31E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:41:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2178420850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:38:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21EE020B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:41:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727130AbfFNAiA (ORCPT
+        id S1726881AbfFNAlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:38:00 -0400
-Received: from mga06.intel.com ([134.134.136.31]:13724 "EHLO mga06.intel.com"
+        Thu, 13 Jun 2019 20:41:55 -0400
+Received: from mga01.intel.com ([192.55.52.88]:1575 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfFNAiA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:38:00 -0400
-X-Amp-Result: UNSCANNABLE
+        id S1725778AbfFNAlz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 20:41:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
 Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 17:37:59 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 17:41:55 -0700
 X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga002.jf.intel.com with ESMTP; 13 Jun 2019 17:37:59 -0700
-Date:   Thu, 13 Jun 2019 17:37:59 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     "Xing, Cedric" <cedric.xing@intel.com>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga002.jf.intel.com with ESMTP; 13 Jun 2019 17:41:53 -0700
+Date:   Thu, 13 Jun 2019 17:43:15 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Ralph Campbell <rcampbell@nvidia.com>,
+        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
+        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        "paul@paul-moore.com" <paul@paul-moore.com>,
-        "eparis@parisplace.org" <eparis@parisplace.org>,
-        "jethro@fortanix.com" <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "pmccallum@redhat.com" <pmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Message-ID: <20190614003759.GE18385@linux.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
- <960B34DE67B9E140824F1DCDEC400C0F65502A85@ORSMSX116.amr.corp.intel.com>
- <b7f3decf-b1d2-01b1-6294-ccf9ba2d5df4@tycho.nsa.gov>
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 18/22] mm: mark DEVICE_PUBLIC as broken
+Message-ID: <20190614004314.GD783@iweiny-DESK2.sc.intel.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-19-hch@lst.de>
+ <20190613194430.GY22062@mellanox.com>
+ <a27251ad-a152-f84d-139d-e1a3bf01c153@nvidia.com>
+ <20190613195819.GA22062@mellanox.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b7f3decf-b1d2-01b1-6294-ccf9ba2d5df4@tycho.nsa.gov>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190613195819.GA22062@mellanox.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 02:00:29PM -0400, Stephen Smalley wrote:
-> On 6/11/19 6:55 PM, Xing, Cedric wrote:
-> >*_noaudit() is exactly what I wanted. But I couldn't find
-> >selinux_file_mprotect_noaudit()/file_has_perm_noaudit(), and I'm reluctant
-> >to duplicate code. Any suggestions?
+On Thu, Jun 13, 2019 at 07:58:29PM +0000, Jason Gunthorpe wrote:
+> On Thu, Jun 13, 2019 at 12:53:02PM -0700, Ralph Campbell wrote:
+> > 
+> > On 6/13/19 12:44 PM, Jason Gunthorpe wrote:
+> > > On Thu, Jun 13, 2019 at 11:43:21AM +0200, Christoph Hellwig wrote:
+> > > > The code hasn't been used since it was added to the tree, and doesn't
+> > > > appear to actually be usable.  Mark it as BROKEN until either a user
+> > > > comes along or we finally give up on it.
+> > > > 
+> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > > >   mm/Kconfig | 1 +
+> > > >   1 file changed, 1 insertion(+)
+> > > > 
+> > > > diff --git a/mm/Kconfig b/mm/Kconfig
+> > > > index 0d2ba7e1f43e..406fa45e9ecc 100644
+> > > > +++ b/mm/Kconfig
+> > > > @@ -721,6 +721,7 @@ config DEVICE_PRIVATE
+> > > >   config DEVICE_PUBLIC
+> > > >   	bool "Addressable device memory (like GPU memory)"
+> > > >   	depends on ARCH_HAS_HMM
+> > > > +	depends on BROKEN
+> > > >   	select HMM
+> > > >   	select DEV_PAGEMAP_OPS
+> > > 
+> > > This seems a bit harsh, we do have another kconfig that selects this
+> > > one today:
+> > > 
+> > > config DRM_NOUVEAU_SVM
+> > >          bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
+> > >          depends on ARCH_HAS_HMM
+> > >          depends on DRM_NOUVEAU
+> > >          depends on STAGING
+> > >          select HMM_MIRROR
+> > >          select DEVICE_PRIVATE
+> > >          default n
+> > >          help
+> > >            Say Y here if you want to enable experimental support for
+> > >            Shared Virtual Memory (SVM).
+> > > 
+> > > Maybe it should be depends on STAGING not broken?
+> > > 
+> > > or maybe nouveau_svm doesn't actually need DEVICE_PRIVATE?
+> > > 
+> > > Jason
+> > 
+> > I think you are confusing DEVICE_PRIVATE for DEVICE_PUBLIC.
+> > DRM_NOUVEAU_SVM does use DEVICE_PRIVATE but not DEVICE_PUBLIC.
 > 
-> I would have no objection to adding _noaudit() variants of these, either
-> duplicating code (if sufficiently small/simple) or creating a common helper
-> with a bool audit flag that gets used for both. But the larger issue would
-> be to resolve how to ultimately ensure that a denial is audited later if the
-> denied permission is actually requested and blocked via sgxsec_mprotect().
+> Indeed you are correct, never mind
+> 
+> Hum, so the only thing this config does is short circuit here:
+> 
+> static inline bool is_device_public_page(const struct page *page)
+> {
+>         return IS_ENABLED(CONFIG_DEV_PAGEMAP_OPS) &&
+>                 IS_ENABLED(CONFIG_DEVICE_PUBLIC) &&
+>                 is_zone_device_page(page) &&
+>                 page->pgmap->type == MEMORY_DEVICE_PUBLIC;
+> }
+> 
+> Which is called all over the place.. 
 
-I too would like to see a solution to the auditing issue.  I wrongly
-assumed Cedric's approach (option #3) didn't suffer the same auditing
-problem as Andy's dynamic tracking proposal (option #2).  After reading
-through the code more carefully (trying to steal ideas to finish off an
-implementation of #2), I've come to realize options #2 (Andy) and #3
-(Cedric) are basically identical concepts, the only difference being who
-tracks state.
+<sigh>  yes but the earlier patch:
 
-We can use the f_security blob sizes to identify which LSM denied
-something, but I haven't the faintest idea how to track the auditing
-information in a sane fashion.  We'd basically have to do a deep copy on
-struct common_audit_data, or pre-generate and store the audit message.
-For SELinux, a deep copy is somewhat feasible because selinux_audit_data
-distills everything down to basic types.  AppArmor on the other hand has
-'struct aa_label *label', which at a glance all but requires pre-generating
-the audit message, and since AppArmor logs denials from every profile, it's 
-possible the "sgx audit blob" will consume a non-trivial amount of data.
+[PATCH 03/22] mm: remove hmm_devmem_add_resource
 
-Even if we figure out a way to store the audit messages without exploding
-memory consumption or making things horrendously complex, we still have a
-problem of reporting state info.  Any number of things could be removed or
-modified by the time the audit is actually triggered, e.g. files removed,
-AppArmor profiles modified, etc...  Any such change means we're logging
-garbage.
+Removes the only place type is set to MEMORY_DEVICE_PUBLIC.
+
+So I think it is ok.  Frankly I was wondering if we should remove the public
+type altogether but conceptually it seems ok.  But I don't see any users of it
+so...  should we get rid of it in the code rather than turning the config off?
+
+Ira
+
+> 
+> So, yes, we really don't want any distro or something to turn this on
+> until it has a use.
+> 
+> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+> 
+> Jason
+> _______________________________________________
+> Linux-nvdimm mailing list
+> Linux-nvdimm@lists.01.org
+> https://lists.01.org/mailman/listinfo/linux-nvdimm
