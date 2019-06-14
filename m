@@ -2,46 +2,107 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A405BC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50ABAC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F292084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:50:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B0512133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfFNHt7 (ORCPT
+        id S1725942AbfFNHxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:49:59 -0400
-Received: from verein.lst.de ([213.95.11.211]:44900 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfFNHt6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:49:58 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 9112068B02; Fri, 14 Jun 2019 09:49:28 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 09:49:28 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>
-Cc:     x86@kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-sh@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: remove asm-generic/ptrace.h v2
-Message-ID: <20190614074928.GA9631@lst.de>
-References: <20190520060018.25569-1-hch@lst.de> <20190604070205.GA15438@lst.de>
+        Fri, 14 Jun 2019 03:53:15 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45861 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfFNHxP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 03:53:15 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so1399668wre.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 00:53:13 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=8fphykZty4ByRRDrabr8kIG4WtC4MdL+z6VNpErB0g0=;
+        b=UzTUo77tL7VNandOU3L2bwWda6pDjgVF85WT2GnEwoMAwfx8hIgZ1Sb3N680xh0LV4
+         iSQQW/vIuBQ6XM61AI4TbU9KJtRGdBn9IlJcMdauvWgoIKCacJZ2qSsI6iLSDCu3uEk0
+         RYG4zgOpiQIaGtQfQp5PzrIYdc2YwBB6j0/UKKs+ZGXlrscQ2QtBVyTpnU8h/UYUabQf
+         V7RyuhizBID5At9LQdTW3BuNXkbC5ygOpE8RQj4c1AcOe6RSv7K3BVWZfleGJE+Divkw
+         QFf8WpltNMRSz5fBLL2omfeB2LtZW5YaTh9lUq+WU9RXXnQ+hw0Go4XG4huc5GvOiJK1
+         njmw==
+X-Gm-Message-State: APjAAAV+SgiEU4SOJsb4zTqXDzYZMFPbBr8aW6njocBvZKTqBJgdgVuX
+        Iibo4jDgLI6JYcvlpwboVZr/9w==
+X-Google-Smtp-Source: APXvYqwudq3lF4n8Rq0cC6F8jfIcXcCrwvwQ7V8kVVjpQeinklynWmw5QYHdkRp6uBhckMxPdXxU9g==
+X-Received: by 2002:adf:e9c6:: with SMTP id l6mr4390021wrn.216.1560498793342;
+        Fri, 14 Jun 2019 00:53:13 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id n10sm2013838wrw.83.2019.06.14.00.53.12
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 00:53:12 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "m.maya.nakamura" <m.maya.nakamura@gmail.com>
+Cc:     "x86\@kernel.org" <x86@kernel.org>,
+        "linux-hyperv\@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal\@kernel.org" <sashal@kernel.org>
+Subject: RE: [PATCH v2 4/5] HID: hv: Remove dependencies on PAGE_SIZE for ring buffer
+In-Reply-To: <BL0PR2101MB134877ED5DCB9F23033C92D9D7EF0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+References: <cover.1559807514.git.m.maya.nakamura@gmail.com> <0e9385a241dc7c26445eb7e104d08e2e2c5d30de.1559807514.git.m.maya.nakamura@gmail.com> <87h88vdr36.fsf@vitty.brq.redhat.com> <BL0PR2101MB134877ED5DCB9F23033C92D9D7EF0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+Date:   Fri, 14 Jun 2019 09:53:11 +0200
+Message-ID: <87ftoc7gd4.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604070205.GA15438@lst.de>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 09:02:05AM +0200, Christoph Hellwig wrote:
-> Is anyone going to pick this series up?
+Michael Kelley <mikelley@microsoft.com> writes:
 
-ping?  Arnd, this might be asm-generic tree material?
+> From: Vitaly Kuznetsov <vkuznets@redhat.com> Sent: Wednesday, June 12, 2019 3:40 AM
+>> Maya Nakamura <m.maya.nakamura@gmail.com> writes:
+>> 
+>> > Define the ring buffer size as a constant expression because it should
+>> > not depend on the guest page size.
+>> >
+>> > Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+>> > ---
+>> >  drivers/hid/hid-hyperv.c | 4 ++--
+>> >  1 file changed, 2 insertions(+), 2 deletions(-)
+>> >
+>> > diff --git a/drivers/hid/hid-hyperv.c b/drivers/hid/hid-hyperv.c
+>> > index d3311d714d35..e8b154fa38e2 100644
+>> > --- a/drivers/hid/hid-hyperv.c
+>> > +++ b/drivers/hid/hid-hyperv.c
+>> > @@ -112,8 +112,8 @@ struct synthhid_input_report {
+>> >
+>> >  #pragma pack(pop)
+>> >
+>> > -#define INPUTVSC_SEND_RING_BUFFER_SIZE		(10*PAGE_SIZE)
+>> > -#define INPUTVSC_RECV_RING_BUFFER_SIZE		(10*PAGE_SIZE)
+>> > +#define INPUTVSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
+>> > +#define INPUTVSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
+>> >
+>> 
+>> My understanding is that this size is pretty arbitrary and as I see you
+>> use it for hyperv-keyboard.c as well. It may make sense to have a
+>> define, something like HYPERV_STD_RINGBUFFER_SIZE.
+>
+> Yes, the size is pretty arbitrary because it hasn't been important enough
+> from a memory consumption or performance standpoint to run experiments
+> to see if a smaller value could be used.  That said, I would not want to
+> link these two devices (keyboard and mouse) by using a shared ring buffer
+> size definition.  Logically, the ring buffer sizes are independent of each other,
+> and using a common #define implies that they are somehow linked.
+
+Ok, makes sense, let's keep them separate.
+
+-- 
+Vitaly
