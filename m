@@ -2,113 +2,91 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 735DEC31E50
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:15:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FD2C31E52
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481FD2184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:15:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sdp/0ej3"
+	by mail.kernel.org (Postfix) with ESMTP id 7593121848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:17:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726368AbfFNXPI (ORCPT
+        id S1726185AbfFNXR1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 19:15:08 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:46649 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfFNXPA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 19:15:00 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 81so2252575pfy.13
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 16:15:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=QDDURWlUIkBem+8Px1iuYauus00ZwA+eO174Z2pwlBA=;
-        b=sdp/0ej3rTCJaEMMi7NPSSimBJnCnh9meuvszGKdQx0N8fq3z7KoSt9YKiuIzepVam
-         khf0r2UBtCtNxVWXPsG1uK4h0gTqPqM1Fh7pX0AJMRQRO3YtkXDpDynnSzt5AsogxRBg
-         /OWopd3+QFf5k4B8zzfzfNfz6bZOD4fYeLoTBzCLVaIRrZYxMgQTiqlwo6NA9V0HDf+z
-         I/3QR9xV0ycb4dYuEQOIhHpaaQ2iC36wLnF5IWcRZUG/bvsucXQIUIB1oeb77WcgAWF5
-         wgSK7zzb1YiPng3iIGf5owzX8dv1t0lxerWQt4TbaViSYzff4vwdrBcSd7ql5bfk89YF
-         iwBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=QDDURWlUIkBem+8Px1iuYauus00ZwA+eO174Z2pwlBA=;
-        b=HKUN/9Al7bGEyWBeB8Rcdd/f6d8gSkoGJVjQdQT63pQbaRyiaIvFucgP9lgXyj8qgU
-         cvgpVKiQLN8sq3UYaiU5rNrY6FPBrjH5WilzNXLDv+O0VnZ3g4cWLDxP9+rULUrhEer2
-         vrOIRs9ZXT2EKrBcXsbgkhCAcOVCf3+m37MQO7Smk7a42Da4mz9GubJpaQSqiCu5dx7X
-         7YvxBX7ILfRVvo8GDPeng4fjRoX3MkmgAK7eDzDQTGfZzBggi9o1UbXOVGU9OhrkqVbc
-         AG0SilTUdMFeDMR4peVN6QPdzdlR6LGEHmWeKfLSeBO54h62k7QekV5y+z2BpWmTfcZJ
-         fqMg==
-X-Gm-Message-State: APjAAAWqmPNumCyvdVtzYPzWCsdZU5/JieVC5xL/eyHegGyMR3hceK5R
-        bw8Yd+EWFoYr4v7ls1kAi+GwpSxiNE8=
-X-Google-Smtp-Source: APXvYqx9jnjWVJBhIcrRWaOSM4DlC1VnTWIPv6OcbVnNMdbv99MXOwW3fuo59oqYVp1rS24CjZVhhQ==
-X-Received: by 2002:aa7:956d:: with SMTP id x13mr62314991pfq.132.1560554099521;
-        Fri, 14 Jun 2019 16:14:59 -0700 (PDT)
-Received: from localhost.localdomain ([2601:1c2:680:1319:692:26ff:feda:3a81])
-        by smtp.gmail.com with ESMTPSA id w187sm4486445pfb.4.2019.06.14.16.14.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 16:14:58 -0700 (PDT)
-From:   John Stultz <john.stultz@linaro.org>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     John Stultz <john.stultz@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Amit Pundir <amit.pundir@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
-Subject: [PATCH v3 3/3] arm64: dts: qcom: pm8998: Use qcom,pm8998-pon binding for second gen pon
-Date:   Fri, 14 Jun 2019 23:14:51 +0000
-Message-Id: <20190614231451.45998-3-john.stultz@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614231451.45998-1-john.stultz@linaro.org>
-References: <20190614231451.45998-1-john.stultz@linaro.org>
+        Fri, 14 Jun 2019 19:17:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45108 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbfFNXR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 19:17:26 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 31D74368E3;
+        Fri, 14 Jun 2019 23:17:26 +0000 (UTC)
+Received: from treble (ovpn-112-39.rdu2.redhat.com [10.10.112.39])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0C2B65C29A;
+        Fri, 14 Jun 2019 23:17:20 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 18:17:17 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@aculab.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF
+ generated code
+Message-ID: <20190614231717.xukbfpc2cy47s4xh@treble>
+References: <cover.1560534694.git.jpoimboe@redhat.com>
+ <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
+ <20190614205841.s4utbpurntpr6aiq@ast-mbp.dhcp.thefacebook.com>
+ <20190614210745.kwiqm5pkgabruzuj@treble>
+ <CAADnVQLK3ixK1JWF_mfScZoFzFF=6O8f1WcqkYqiejKeex1GSQ@mail.gmail.com>
+ <20190614211929.drnnawbi7guqj2ck@treble>
+ <CAADnVQ+BCxsKEK=ZzYOZkgTJAg_7jz1_f+FCX+Ms0vTOuW8Mxw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAADnVQ+BCxsKEK=ZzYOZkgTJAg_7jz1_f+FCX+Ms0vTOuW8Mxw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Fri, 14 Jun 2019 23:17:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This changes pm8998 to use the new qcom,pm8998-pon compatible
-string for the pon in order to support the gen2 pon
-functionality properly.
+On Fri, Jun 14, 2019 at 02:22:59PM -0700, Alexei Starovoitov wrote:
+> On Fri, Jun 14, 2019 at 2:19 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > > > >
+> > > > > > +#define JUMP_TABLE_SYM_PREFIX "jump_table."
+> > > > >
+> > > > > since external tool will be looking at it should it be named
+> > > > > "bpf_jump_table." to avoid potential name conflicts?
+> > > > > Or even more unique name?
+> > > > > Like "bpf_interpreter_jump_table." ?
+> > > >
+> > > > No, the point is that it's a generic feature which can also be used any
+> > > > non-BPF code which might also have a jump table.
+> > >
+> > > and you're proposing to name all such jump tables in the kernel
+> > > as static foo jump_table[] ?
+> >
+> > That's the idea.
+> 
+> Then it needs much wider discussion.
 
-Cc: Andy Gross <agross@kernel.org>
-Cc: David Brown <david.brown@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Amit Pundir <amit.pundir@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- arch/arm64/boot/dts/qcom/pm8998.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Why would it need wider discussion?  It only has one user.  If you
+honestly believe that it will be controversial to require future users
+to call a static jump table "jump_table" then we can have that
+discussion when it comes up.
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-index d3ca35a940fb6..051a52df80f9e 100644
---- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
-@@ -39,7 +39,7 @@
- 		#size-cells = <0>;
- 
- 		pm8998_pon: pon@800 {
--			compatible = "qcom,pm8916-pon";
-+			compatible = "qcom,pm8998-pon";
- 
- 			reg = <0x800>;
- 			mode-bootloader = <0x2>;
 -- 
-2.17.1
-
+Josh
