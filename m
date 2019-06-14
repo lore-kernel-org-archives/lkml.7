@@ -2,166 +2,444 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8160BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87802C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4ADE32183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="NVPU6cUC";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="UxzpnnnC"
+	by mail.kernel.org (Postfix) with ESMTP id 516062183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfFNQh3 (ORCPT
+        id S1726369AbfFNQg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:37:29 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:47880 "EHLO
-        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725996AbfFNQh1 (ORCPT
+        Fri, 14 Jun 2019 12:36:58 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34806 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfFNQg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:37:27 -0400
-Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EGIGhI023443;
-        Fri, 14 Jun 2019 09:36:10 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=jNRW9EmWXHDKfmPq7ZRz6M8ppAhae7tV4WfQ4SRKB3U=;
- b=NVPU6cUCj7go4ZN7SujSkagzKLFGRAvTuDJxxXSZB551P6cFcWPJuPwECHFebknecsd4
- VyTjACWDRkD/Ouv+sm+sw+Ql2iLP+0b1ymlfnFHd7a0jHw39898gM8V04SDPjzKQ+YxT
- KzH5nTOncGkuUTD31BffwEFwXWm9edhr+ME= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t4ds0rbv0-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Fri, 14 Jun 2019 09:36:10 -0700
-Received: from ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) by
- ash-exhub101.TheFacebook.com (2620:10d:c0a8:82::e) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Fri, 14 Jun 2019 09:35:40 -0700
-Received: from NAM05-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.173) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Fri, 14 Jun 2019 09:35:39 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jNRW9EmWXHDKfmPq7ZRz6M8ppAhae7tV4WfQ4SRKB3U=;
- b=UxzpnnnC3dfgmaTf592qdGW5mOmgO2x/XYv25lANqMZL3QcJdoCabA2Z8gB0L3ts1nMo0eBc5rA+YSINSgi0O6MBPcR3RM3GGulxT9rRNSyK4gX/zeaH5wrEE23+LB5QtmRO0pHiUY76oNkx1ihN2Eg7n36BfISVxTM+ux5k/iE=
-Received: from BYAPR15MB2501.namprd15.prod.outlook.com (52.135.196.11) by
- BYAPR15MB2421.namprd15.prod.outlook.com (52.135.198.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Fri, 14 Jun 2019 16:35:35 +0000
-Received: from BYAPR15MB2501.namprd15.prod.outlook.com
- ([fe80::60a3:8bdd:1ea2:3702]) by BYAPR15MB2501.namprd15.prod.outlook.com
- ([fe80::60a3:8bdd:1ea2:3702%7]) with mapi id 15.20.1987.012; Fri, 14 Jun 2019
- 16:35:35 +0000
-From:   Alexei Starovoitov <ast@fb.com>
-To:     Tejun Heo <tj@kernel.org>,
-        Quentin Monnet <quentin.monnet@netronome.com>
-CC:     "axboe@kernel.dk" <axboe@kernel.dk>, Andy Newell <newella@fb.com>,
-        "Chris Mason" <clm@fb.com>,
-        "josef@toxicpanda.com" <josef@toxicpanda.com>,
-        "Dennis Zhou" <dennisz@fb.com>,
-        "lizefan@huawei.com" <lizefan@huawei.com>,
-        "hannes@cmpxchg.org" <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        "ast@kernel.org" <ast@kernel.org>,
-        "daniel@iogearbox.net" <daniel@iogearbox.net>,
-        Martin Lau <kafai@fb.com>, Song Liu <songliubraving@fb.com>,
-        Yonghong Song <yhs@fb.com>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>
-Subject: Re: [PATCH 10/10] blkcg: implement BPF_PROG_TYPE_IO_COST
-Thread-Topic: [PATCH 10/10] blkcg: implement BPF_PROG_TYPE_IO_COST
-Thread-Index: AQHVIlSgdAmsTapt/U2E3GyZX/rb/6abBPGAgAA4BYCAABy+AA==
-Date:   Fri, 14 Jun 2019 16:35:35 +0000
-Message-ID: <bed0a66a-7aa6-ac36-9182-31a4937257e5@fb.com>
-References: <20190614015620.1587672-1-tj@kernel.org>
- <20190614015620.1587672-11-tj@kernel.org>
- <e4d1df7b-66bb-061a-8ecb-ff1e5be3ab1d@netronome.com>
- <20190614145239.GA538958@devbig004.ftw2.facebook.com>
-In-Reply-To: <20190614145239.GA538958@devbig004.ftw2.facebook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR14CA0060.namprd14.prod.outlook.com
- (2603:10b6:300:81::22) To BYAPR15MB2501.namprd15.prod.outlook.com
- (2603:10b6:a02:88::11)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::1:6345]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 64d84e9b-9c9d-474a-b66e-08d6f0e6536d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB2421;
-x-ms-traffictypediagnostic: BYAPR15MB2421:
-x-microsoft-antispam-prvs: <BYAPR15MB242115226704274B4D51FE19D7EE0@BYAPR15MB2421.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(136003)(376002)(396003)(366004)(189003)(199004)(66556008)(478600001)(229853002)(7416002)(66946007)(46003)(68736007)(6436002)(6116002)(66446008)(53936002)(66476007)(53546011)(36756003)(76176011)(110136005)(71190400001)(54906003)(64756008)(2906002)(6506007)(73956011)(31686004)(102836004)(52116002)(71200400001)(386003)(256004)(81156014)(8936002)(31696002)(6512007)(6246003)(186003)(6486002)(5024004)(86362001)(99286004)(316002)(7736002)(486006)(476003)(14444005)(4326008)(25786009)(5660300002)(305945005)(446003)(11346002)(81166006)(2616005)(14454004)(8676002);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB2421;H:BYAPR15MB2501.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dhOBio5kMMhD9ql1AjrOLSGGX0Sg+BDYCH1tzLPOoGtxGJRQEV5ekhpTZBG3+27VGMaSCVp5+6AK/Ac+9ggCxXUtnlB4s3mOyomxsYHVHVUMNLs/rf/YgtKAMLFtqMScDxnZ6Xw3HoUjKg+YIOz++Kro1xgNOMp8bX9BCujtSRlke9oIaJ1J9uzhdpRnKBfZQmHYPTcz3dXZXYbQZd6ezRbnA1509u0KXNv2d2zsaWA1hx6X2z/R9WeByrzlSBirN0ejkrUC4zBkONA1gw6ozfjvsjv7bfpoLcHcwMUkGqqqXHxnzUcif5pg+PLhjFV/nyER4FeREEGycQlYYDsqnQGxlkDLE7OCBCcqhDVypTudRBNFjuN7WaoFNh2DEDEcW4NJBj3Jnje5CIFfJ0diQZJ8UlrKvO18D3bCrPWT7rU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <28B576F5DD3F7F42A8E9DFABB8D25258@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Fri, 14 Jun 2019 12:36:57 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id E3443285C05
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     gwendal@chromium.org, Guenter Roeck <groeck@chromium.org>,
+        Benson Leung <bleung@chromium.org>,
+        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
+        dtor@chromium.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
+        Guido Kiener <guido@kiener-muenchen.de>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        linux-doc@vger.kernel.org, Enno Luebbers <enno.luebbers@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>, Wu Hao <hao.wu@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Gerd Hoffmann <kraxel@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v2 03/10] mfd / platform: cros_ec: Miscellaneous character device to talk with the EC
+Date:   Fri, 14 Jun 2019 18:36:28 +0200
+Message-Id: <20190614163635.22413-4-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190614163635.22413-1-enric.balletbo@collabora.com>
+References: <20190614163635.22413-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 64d84e9b-9c9d-474a-b66e-08d6f0e6536d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 16:35:35.6095
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ast@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB2421
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=850 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906140134
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi8xNC8xOSA3OjUyIEFNLCBUZWp1biBIZW8gd3JvdGU6DQo+IEhlbGxvLCBRdWVudGluLg0K
-PiANCj4gT24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMTI6MzI6MDlQTSArMDEwMCwgUXVlbnRpbiBN
-b25uZXQgd3JvdGU6DQo+PiBQbGVhc2UgbWFrZSBzdXJlIHRvIHVwZGF0ZSB0aGUgZG9jdW1lbnRh
-dGlvbiBhbmQgYmFzaA0KPj4gY29tcGxldGlvbiB3aGVuIGFkZGluZyB0aGUgbmV3IHR5cGUgdG8g
-YnBmdG9vbC4gWW91DQo+PiBwcm9iYWJseSB3YW50IHNvbWV0aGluZyBsaWtlIHRoZSBkaWZmIGJl
-bG93Lg0KPiANCj4gVGhhbmsgeW91IHNvIG11Y2guICBXaWxsIGluY29ycG9yYXRlIHRoZW0uICBK
-dXN0IGluIGNhc2UsIHdoaWxlIGl0J3MNCj4gbm90ZWQgaW4gdGhlIGhlYWQgbWVzc2FnZSwgSSBs
-b3N0IHRoZSBSRkMgbWFya2VyIHdoaWxlIHByZXBwaW5nIHRoaXMNCj4gcGF0Y2guICBJdCBpc24n
-dCB5ZXQgY2xlYXIgd2hldGhlciB3ZSdkIHJlYWxseSBuZWVkIGN1c3RvbSBjb3N0DQo+IGZ1bmN0
-aW9ucyBhbmQgdGhpcyBwYXRjaCBpcyBpbmNsdWRlZCBtb3JlIGFzIGEgcHJvb2Ygb2YgY29uY2Vw
-dC4gIA0KDQp0aGUgZXhhbXBsZSBicGYgcHJvZyBsb29rcyBmbGV4aWJsZSBlbm91Z2ggdG8gYWxs
-b3cgc29tZSBkZWdyZWUNCm9mIGV4cGVyaW1lbnRzLiBUaGUgcXVlc3Rpb24gaXMgd2hhdCBraW5k
-IG9mIG5ldyBhbGdvcml0aG1zIHlvdSBlbnZpc2lvbg0KaXQgd2lsbCBkbz8gd2hhdCBvdGhlciBp
-bnB1dHMgaXQgd291bGQgbmVlZCB0byBtYWtlIGEgZGVjaXNpb24/DQpJIHRoaW5rIGl0J3Mgb2sg
-dG8gc3RhcnQgd2l0aCB3aGF0IGl0IGRvZXMgbm93IGFuZCBleHRlbmQgZnVydGhlcg0Kd2hlbiBu
-ZWVkIGFyaXNlcy4NCg0KPiBJZg0KPiBpdCB0dXJucyBvdXQgdGhhdCB0aGlzIGlzIGJlbmVmaWNp
-YWwgZW5vdWdoLCB0aGUgZm9sbG93aW5ncyBuZWVkIHRvIGJlDQo+IGFuc3dlcmVkLg0KPiANCj4g
-KiBJcyBibG9jayBpb2N0bCB0aGUgcmlnaHQgbWVjaGFuaXNtIHRvIGF0dGFjaCB0aGVzZSBwcm9n
-cmFtcz8NCg0KaW1vIGlvY3RsIGlzIGEgYml0IHdlaXJkLCBidXQgc2luY2UgaXRzIG9ubHkgb25l
-IHByb2dyYW0gcGVyIGJsb2NrDQpkZXZpY2UgaXQncyBwcm9iYWJseSBvaz8gVW5sZXNzIHlvdSBz
-ZWUgaXQgYmVpbmcgY2dyb3VwIHNjb3BlZCBpbg0KdGhlIGZ1dHVyZT8gVGhlbiBjZ3JvdXAtYnBm
-IHN0eWxlIGhvb2tzIHdpbGwgYmUgbW9yZSBzdWl0YWJsZQ0KYW5kIGFsbG93IGEgY2hhaW4gb2Yg
-cHJvZ3JhbXMuDQoNCj4gKiBBcmUgdGhlcmUgbW9yZSBwYXJhbWV0ZXJzIHRoYXQgbmVlZCB0byBi
-ZSBleHBvc2VkIHRvIHRoZSBwcm9ncmFtcz8NCj4gDQo+ICogSXQnZCBiZSBncmVhdCB0byBoYXZl
-IGVmZmljaWVudCBhY2Nlc3MgdG8gcGVyLWJsb2NrZGV2IGFuZA0KPiAgICBwZXItYmxvY2tkZXYt
-Y2dyb3VwLXBhaXIgc3RvcmFnZXMgYXZhaWxhYmxlIHRvIHRoZXNlIHByb2dyYW1zIHNvDQo+ICAg
-IHRoYXQgdGhleSBjYW4ga2VlcCB0cmFjayBvZiBoaXN0b3J5LiAgV2hhdCdkIGJlIHRoZSBiZXN0
-IG9mIHdheSBvZg0KPiAgICBkb2luZyB0aGF0IGNvbnNpZGVyaW5nIHRoZSBmYWN0IHRoYXQgdGhl
-c2UgcHJvZ3JhbXMgd2lsbCBiZSBjYWxsZWQNCj4gICAgcGVyIGVhY2ggSU8gYW5kIHRoZSBvdmVy
-aGVhZCBjYW4gYWRkIHVwIHF1aWNrbHk/DQoNCk1hcnRpbidzIHNvY2tldCBsb2NhbCBzdG9yYWdl
-IHNvbHZlZCB0aGF0IGlzc3VlIGZvciBzb2NrZXRzLg0KU29tZXRoaW5nIHZlcnkgc2ltaWxhciBj
-YW4gd29yayBmb3IgcGVyLWJsb2NrZGV2LXBlci1jZ3JvdXAuDQo=
+That's a driver to talk with the ChromeOS Embedded Controller via a
+miscellaneous character device, it creates an entry in /dev for every
+instance and implements basic file operations for communicating with the
+Embedded Controller with an userspace application. The API is moved to
+the uapi folder, which is supposed to contain the user space API of the
+kernel.
+
+Note that this will replace current character device interface
+implemented in the cros-ec-dev driver in the MFD subsystem. The idea is
+to move all the functionality that extends the bounds of what MFD was
+designed to platform/chrome subsystem.
+
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+
+Changes in v2:
+- Remove the list, and the lock, as are not needed (Greg Kroah-Hartman)
+- Remove dev_info in probe, anyway we will see the chardev or not if the
+  probe fails (Greg Kroah-Hartman)
+
+ Documentation/ioctl/ioctl-number.txt          |   2 +-
+ drivers/mfd/cros_ec_dev.c                     |   2 +-
+ drivers/platform/chrome/Kconfig               |  11 +
+ drivers/platform/chrome/Makefile              |   1 +
+ drivers/platform/chrome/cros_ec_chardev.c     | 253 ++++++++++++++++++
+ .../uapi/linux/cros_ec_chardev.h              |  20 +-
+ 6 files changed, 271 insertions(+), 18 deletions(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_chardev.c
+ rename drivers/mfd/cros_ec_dev.h => include/uapi/linux/cros_ec_chardev.h (52%)
+
+diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
+index c9558146ac58..8bd7907ee36d 100644
+--- a/Documentation/ioctl/ioctl-number.txt
++++ b/Documentation/ioctl/ioctl-number.txt
+@@ -340,7 +340,7 @@ Code  Seq#(hex)	Include File		Comments
+ 0xDD	00-3F	ZFCP device driver	see drivers/s390/scsi/
+ 					<mailto:aherrman@de.ibm.com>
+ 0xE5	00-3F	linux/fuse.h
+-0xEC	00-01	drivers/platform/chrome/cros_ec_dev.h	ChromeOS EC driver
++0xEC	00-01	include/uapi/linux/cros_ec_chardev.h	ChromeOS EC driver
+ 0xF3	00-3F	drivers/usb/misc/sisusbvga/sisusb.h	sisfb (in development)
+ 					<mailto:thomas@winischhofer.net>
+ 0xF4	00-1F	video/mbxfb.h		mbxfb
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index d992365472b8..21d7f0ed2fd5 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -27,7 +27,7 @@
+ #include <linux/slab.h>
+ #include <linux/uaccess.h>
+ 
+-#include "cros_ec_dev.h"
++#include <uapi/linux/cros_ec_chardev.h>
+ 
+ #define DRV_NAME "cros-ec-dev"
+ 
+diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
+index 1e7a10500b3f..221e709358c0 100644
+--- a/drivers/platform/chrome/Kconfig
++++ b/drivers/platform/chrome/Kconfig
+@@ -133,6 +133,17 @@ config CROS_KBD_LED_BACKLIGHT
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called cros_kbd_led_backlight.
+ 
++config CROS_EC_CHARDEV
++	tristate "ChromeOS EC miscdevice"
++	depends on MFD_CROS_EC_CHARDEV
++	default MFD_CROS_EC_CHARDEV
++	help
++	  This driver adds file operations support to talk with the
++	  ChromeOS EC from userspace via a character device.
++
++	  To compile this driver as a module, choose M here: the
++	  module will be called cros_ec_chardev.
++
+ config CROS_EC_LIGHTBAR
+ 	tristate "Chromebook Pixel's lightbar support"
+ 	depends on MFD_CROS_EC_CHARDEV
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index f69e0be98bd6..e6758e967ac5 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -15,6 +15,7 @@ cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)	+= cros_ec_lpc_mec.o
+ obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+ obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+ obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
++obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
+ obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
+ obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
+ obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
+diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
+new file mode 100644
+index 000000000000..e5f95d77dbed
+--- /dev/null
++++ b/drivers/platform/chrome/cros_ec_chardev.c
+@@ -0,0 +1,253 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Miscellaneous character driver for ChromeOS Embedded Controller
++ *
++ * Copyright 2014 Google, Inc.
++ * Copyright 2019 Google LLC
++ *
++ * This file is a rework and part of the code is ported from
++ * drivers/mfd/cros_ec_dev.c that was originally written by
++ * Bill Richardson.
++ */
++
++#include <linux/init.h>
++#include <linux/device.h>
++#include <linux/fs.h>
++#include <linux/miscdevice.h>
++#include <linux/module.h>
++#include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
++#include <linux/types.h>
++#include <linux/uaccess.h>
++
++#include <uapi/linux/cros_ec_chardev.h>
++
++#define DRV_NAME		"cros-ec-chardev"
++
++struct chardev_data {
++	struct cros_ec_dev *ec_dev;
++	struct miscdevice misc;
++};
++
++static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
++{
++	static const char * const current_image_name[] = {
++		"unknown", "read-only", "read-write", "invalid",
++	};
++	struct ec_response_get_version *resp;
++	struct cros_ec_command *msg;
++	int ret;
++
++	msg = kzalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
++	if (!msg)
++		return -ENOMEM;
++
++	msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
++	msg->insize = sizeof(*resp);
++
++	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
++	if (ret < 0) {
++		snprintf(str, maxlen,
++			 "Unknown EC version, returned error: %d\n",
++			 msg->result);
++		goto exit;
++	}
++
++	resp = (struct ec_response_get_version *)msg->data;
++	if (resp->current_image >= ARRAY_SIZE(current_image_name))
++		resp->current_image = 3; /* invalid */
++
++	snprintf(str, maxlen, "%s\n%s\n%s\n",
++		 resp->version_string_ro,
++		 resp->version_string_rw,
++		 current_image_name[resp->current_image]);
++
++	ret = 0;
++exit:
++	kfree(msg);
++	return ret;
++}
++
++/*
++ * Device file ops
++ */
++static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
++{
++	struct miscdevice *mdev = filp->private_data;
++	struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
++
++	filp->private_data = ec_dev;
++	nonseekable_open(inode, filp);
++
++	return 0;
++}
++
++static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
++				     size_t length, loff_t *offset)
++{
++	char msg[sizeof(struct ec_response_get_version) +
++		 sizeof(CROS_EC_DEV_VERSION)];
++	struct cros_ec_dev *ec = filp->private_data;
++	size_t count;
++	int ret;
++
++	if (*offset != 0)
++		return 0;
++
++	ret = ec_get_version(ec, msg, sizeof(msg));
++	if (ret)
++		return ret;
++
++	count = min(length, strlen(msg));
++
++	if (copy_to_user(buffer, msg, count))
++		return -EFAULT;
++
++	*offset = count;
++	return count;
++}
++
++/*
++ * Ioctls
++ */
++static long cros_ec_chardev_ioctl_xcmd(struct cros_ec_dev *ec, void __user *arg)
++{
++	struct cros_ec_command *s_cmd;
++	struct cros_ec_command u_cmd;
++	long ret;
++
++	if (copy_from_user(&u_cmd, arg, sizeof(u_cmd)))
++		return -EFAULT;
++
++	if (u_cmd.outsize > EC_MAX_MSG_BYTES ||
++	    u_cmd.insize > EC_MAX_MSG_BYTES)
++		return -EINVAL;
++
++	s_cmd = kmalloc(sizeof(*s_cmd) + max(u_cmd.outsize, u_cmd.insize),
++			GFP_KERNEL);
++	if (!s_cmd)
++		return -ENOMEM;
++
++	if (copy_from_user(s_cmd, arg, sizeof(*s_cmd) + u_cmd.outsize)) {
++		ret = -EFAULT;
++		goto exit;
++	}
++
++	if (u_cmd.outsize != s_cmd->outsize ||
++	    u_cmd.insize != s_cmd->insize) {
++		ret = -EINVAL;
++		goto exit;
++	}
++
++	s_cmd->command += ec->cmd_offset;
++	ret = cros_ec_cmd_xfer(ec->ec_dev, s_cmd);
++	/* Only copy data to userland if data was received. */
++	if (ret < 0)
++		goto exit;
++
++	if (copy_to_user(arg, s_cmd, sizeof(*s_cmd) + s_cmd->insize))
++		ret = -EFAULT;
++exit:
++	kfree(s_cmd);
++	return ret;
++}
++
++static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
++					   void __user *arg)
++{
++	struct cros_ec_device *ec_dev = ec->ec_dev;
++	struct cros_ec_readmem s_mem = { };
++	long num;
++
++	/* Not every platform supports direct reads */
++	if (!ec_dev->cmd_readmem)
++		return -ENOTTY;
++
++	if (copy_from_user(&s_mem, arg, sizeof(s_mem)))
++		return -EFAULT;
++
++	num = ec_dev->cmd_readmem(ec_dev, s_mem.offset, s_mem.bytes,
++				  s_mem.buffer);
++	if (num <= 0)
++		return num;
++
++	if (copy_to_user((void __user *)arg, &s_mem, sizeof(s_mem)))
++		return -EFAULT;
++
++	return num;
++}
++
++static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
++				   unsigned long arg)
++{
++	struct cros_ec_dev *ec = filp->private_data;
++
++	if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
++		return -ENOTTY;
++
++	switch (cmd) {
++	case CROS_EC_DEV_IOCXCMD:
++		return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
++	case CROS_EC_DEV_IOCRDMEM:
++		return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
++	}
++
++	return -ENOTTY;
++}
++
++static const struct file_operations chardev_fops = {
++	.open		= cros_ec_chardev_open,
++	.read		= cros_ec_chardev_read,
++	.unlocked_ioctl	= cros_ec_chardev_ioctl,
++#ifdef CONFIG_COMPAT
++	.compat_ioctl	= cros_ec_chardev_ioctl,
++#endif
++};
++
++static int cros_ec_chardev_probe(struct platform_device *pdev)
++{
++	struct cros_ec_dev *ec_dev = dev_get_drvdata(pdev->dev.parent);
++	struct cros_ec_platform *ec_platform = dev_get_platdata(ec_dev->dev);
++	struct chardev_data *data;
++
++	/* Create a char device: we want to create it anew */
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
++
++	data->ec_dev = ec_dev;
++	data->misc.minor = MISC_DYNAMIC_MINOR;
++	data->misc.fops = &chardev_fops;
++	data->misc.name = ec_platform->ec_name;
++	data->misc.parent = pdev->dev.parent;
++
++	dev_set_drvdata(&pdev->dev, data);
++
++	return misc_register(&data->misc);
++}
++
++static int cros_ec_chardev_remove(struct platform_device *pdev)
++{
++	struct chardev_data *data = dev_get_drvdata(&pdev->dev);
++
++	misc_deregister(&data->misc);
++
++	return 0;
++}
++
++static struct platform_driver cros_ec_chardev_driver = {
++	.driver = {
++		.name = DRV_NAME,
++	},
++	.probe = cros_ec_chardev_probe,
++	.remove = cros_ec_chardev_remove,
++};
++
++module_platform_driver(cros_ec_chardev_driver);
++
++MODULE_ALIAS("platform:" DRV_NAME);
++MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
++MODULE_DESCRIPTION("ChromeOS EC Miscellaneous Character Driver");
++MODULE_LICENSE("GPL");
+diff --git a/drivers/mfd/cros_ec_dev.h b/include/uapi/linux/cros_ec_chardev.h
+similarity index 52%
+rename from drivers/mfd/cros_ec_dev.h
+rename to include/uapi/linux/cros_ec_chardev.h
+index ec750433455a..ea4d90083ff7 100644
+--- a/drivers/mfd/cros_ec_dev.h
++++ b/include/uapi/linux/cros_ec_chardev.h
+@@ -1,24 +1,12 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+ /*
+- * cros_ec_dev - expose the Chrome OS Embedded Controller to userspace
++ * ChromeOS EC device interface.
+  *
+  * Copyright (C) 2014 Google, Inc.
+- *
+- * This program is free software; you can redistribute it and/or modify
+- * it under the terms of the GNU General Public License as published by
+- * the Free Software Foundation; either version 2 of the License, or
+- * (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program. If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
+-#ifndef _CROS_EC_DEV_H_
+-#define _CROS_EC_DEV_H_
++#ifndef _UAPI_LINUX_CROS_EC_DEV_H_
++#define _UAPI_LINUX_CROS_EC_DEV_H_
+ 
+ #include <linux/ioctl.h>
+ #include <linux/types.h>
+-- 
+2.20.1
+
