@@ -2,204 +2,276 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F6CC31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 644E5C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A94A20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:50:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LZajKbx8"
+	by mail.kernel.org (Postfix) with ESMTP id 24FD621744
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:50:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560520240;
+	bh=WFBozKxYqQEonoT4h0aSSk2Zmh1qoKLPSOxNH5ODZ9M=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x+B16yVVl+raj6GbfJRQZfYQrVxsaD9EGKgZkxXs7/Dss7YZvVzZnfEFGSBpyAzHT
+	 pyCzscXf2TzAbBJRNmZj9g5de5YI6Zvlr4WCo3ss9jmBS44hOOnInxVRbyOJ5N35OB
+	 RqlnhioxbtcYRaSPd7sppM4FbvmAhZQBZgc8yql8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfFNNr7 (ORCPT
+        id S1728578AbfFNNrn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:47:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51742 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728227AbfFNNr6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:47:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+xs8xEvecIN+pidhw5Y71rlRjZmb8fJOnZhp8o/DsSw=; b=LZajKbx8vMWmoPyPihl3W8b1II
-        oarEXVrrz2rxvZ0BgXTxaFSJ89DHAoMwNs46qftGPIs2iOcmI3PGUZe+ESDrKJqwk8Pn/9InuTjbe
-        w/TkgWs39UEZl5gAqGPQNkS8QJr9eK5xRj4GSD3z1xgEem0WZvNMx/y06DWCWoiPPtMn6DV1KJtT4
-        3dephzfXQQJVrhS8KA9VAcX9i7Lqdp6j+6fd+Du7mG+QFzmKyVufezvRPWVqUb7kH/R5PAyOXYi6v
-        YOEZa1MgatXouQX+rfRB0aOlbZAvy1un6+StmE3Bzk1C+2JjRxYHzmpazpOIF5cCv5pJpncKedcmm
-        mul+NSrA==;
-Received: from 213-225-9-13.nat.highway.a1.net ([213.225.9.13] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbmYQ-0004jF-5L; Fri, 14 Jun 2019 13:47:42 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>
-Cc:     Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 03/16] drm/i915: stop using drm_pci_alloc
-Date:   Fri, 14 Jun 2019 15:47:13 +0200
-Message-Id: <20190614134726.3827-4-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614134726.3827-1-hch@lst.de>
-References: <20190614134726.3827-1-hch@lst.de>
+        Fri, 14 Jun 2019 09:47:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42668 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727898AbfFNNrm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:47:42 -0400
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E0C82173C;
+        Fri, 14 Jun 2019 13:47:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560520060;
+        bh=WFBozKxYqQEonoT4h0aSSk2Zmh1qoKLPSOxNH5ODZ9M=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=FYatgmTAcCkPXky//dCZs0Trtr0rqG3p6svkCrePUqAi+M5Zzof+VnnjbQd4DR5cY
+         F6fS1cw7CnN9t1nUhYjjU6/8V/qpntZ/Dz/qWbUpSz3c6X8Fpd6vLOVJH7cK+H2z6m
+         hS0cPX/f5+oyqjr+ea1I1ByLWAJGXcHI4XIQdr8A=
+Received: by mail-lf1-f54.google.com with SMTP id a25so1801070lfg.2;
+        Fri, 14 Jun 2019 06:47:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAUML4FTNlvb5fXPUnkbZGqGCDJLRRKJ2cMxvns/7EhTQOzsT+We
+        RZ/WqCO3UGTCLSnkr7MJQxjQCoHHdkoj9AbS0QU=
+X-Google-Smtp-Source: APXvYqx2ZETgwnfahYusNzjsSqNLovsXo1qYbm72cWLYRguPHT5ZcoKjFKqSKIXCs8HuPhTbNDMgWwrAtYJVmJPaVGI=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr12871311lfc.60.1560520058567;
+ Fri, 14 Jun 2019 06:47:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
+ <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
+In-Reply-To: <20190614095309.24100-9-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 14 Jun 2019 15:47:27 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPdjXhfcNRL-XMS6K1jrUQoqoNHXGirjXoeoL4GyXzarpg@mail.gmail.com>
+Message-ID: <CAJKOXPdjXhfcNRL-XMS6K1jrUQoqoNHXGirjXoeoL4GyXzarpg@mail.gmail.com>
+Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove usage of the legacy drm PCI DMA wrappers, and with that the
-incorrect usage cocktail of __GFP_COMP, virt_to_page on DMA allocation
-and SetPageReserved.
+On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> This patch adds driver for Exynos5422 Dynamic Memory Controller.
+> The driver provides support for dynamic frequency and voltage scaling for
+> DMC and DRAM. It supports changing timings of DRAM running with different
+> frequency. There is also an algorithm to calculate timigns based on
+> memory description provided in DT.
+> The patch also contains needed MAINTAINERS file update.
+>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  MAINTAINERS                             |    8 +
+>  drivers/memory/samsung/Kconfig          |   17 +
+>  drivers/memory/samsung/Makefile         |    1 +
+>  drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
+>  4 files changed, 1288 insertions(+)
+>  create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 57f496cff999..6ffccfd95351 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3470,6 +3470,14 @@ S:       Maintained
+>  F:     drivers/devfreq/exynos-bus.c
+>  F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>
+> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
+> +M:     Lukasz Luba <l.luba@partner.samsung.com>
+> +L:     linux-pm@vger.kernel.org
+> +L:     linux-samsung-soc@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/memory/samsung/exynos5422-dmc.c
+> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +
+>  BUSLOGIC SCSI DRIVER
+>  M:     Khalid Aziz <khalid@gonehiking.org>
+>  L:     linux-scsi@vger.kernel.org
+> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
+> index 79ce7ea58903..c93baa029654 100644
+> --- a/drivers/memory/samsung/Kconfig
+> +++ b/drivers/memory/samsung/Kconfig
+> @@ -5,6 +5,23 @@ config SAMSUNG_MC
+>           Support for the Memory Controller (MC) devices found on
+>           Samsung Exynos SoCs.
+>
+> +config ARM_EXYNOS5422_DMC
+> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
+> +       depends on ARCH_EXYNOS
+> +       select DDR
+> +       select PM_DEVFREQ
+> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
+> +       select DEVFREQ_GOV_USERSPACE
+> +       select PM_DEVFREQ_EVENT
+> +       select PM_OPP
+> +       help
+> +         This adds driver for Exynos5422 DMC (Dynamic Memory Controller).
+> +         The driver provides support for Dynamic Voltage and Frequency Scaling in
+> +         DMC and DRAM. It also supports changing timings of DRAM running with
+> +         different frequency. The timings are calculated based on DT memory
+> +         information.
+> +
+> +
+>  if SAMSUNG_MC
+>
+>  config EXYNOS_SROM
+> diff --git a/drivers/memory/samsung/Makefile b/drivers/memory/samsung/Makefile
+> index 00587be66211..4f6e4383bab7 100644
+> --- a/drivers/memory/samsung/Makefile
+> +++ b/drivers/memory/samsung/Makefile
+> @@ -1,2 +1,3 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +obj-$(CONFIG_ARM_EXYNOS5422_DMC)       += exynos5422-dmc.o
+>  obj-$(CONFIG_EXYNOS_SROM)      += exynos-srom.o
+> diff --git a/drivers/memory/samsung/exynos5422-dmc.c b/drivers/memory/samsung/exynos5422-dmc.c
+> new file mode 100644
+> index 000000000000..b397efe0da57
+> --- /dev/null
+> +++ b/drivers/memory/samsung/exynos5422-dmc.c
+> @@ -0,0 +1,1262 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2019 Samsung Electronics Co., Ltd.
+> + * Author: Lukasz Luba <l.luba@partner.samsung.com>
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/devfreq.h>
+> +#include <linux/devfreq-event.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/module.h>
+> +#include <linux/of_device.h>
+> +#include <linux/pm_opp.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regmap.h>
+> +#include <linux/regulator/consumer.h>
+> +#include <linux/slab.h>
+> +#include <memory/jedec_ddr.h>
+> +#include "../of_memory.h"
+> +
+> +#define EXYNOS5_DREXI_TIMINGAREF               (0x0030)
+> +#define EXYNOS5_DREXI_TIMINGROW0               (0x0034)
+> +#define EXYNOS5_DREXI_TIMINGDATA0              (0x0038)
+> +#define EXYNOS5_DREXI_TIMINGPOWER0             (0x003C)
+> +#define EXYNOS5_DREXI_TIMINGROW1               (0x00E4)
+> +#define EXYNOS5_DREXI_TIMINGDATA1              (0x00E8)
+> +#define EXYNOS5_DREXI_TIMINGPOWER1             (0x00EC)
+> +#define CDREX_PAUSE                            (0x2091c)
+> +#define CDREX_LPDDR3PHY_CON3                   (0x20a20)
+> +#define EXYNOS5_TIMING_SET_SWI                 (1UL << 28)
+> +#define USE_MX_MSPLL_TIMINGS                   (1)
+> +#define USE_BPLL_TIMINGS                       (0)
+> +#define EXYNOS5_AREF_NORMAL                    (0x2e)
+> +
+> +/**
+> + * struct dmc_opp_table - Operating level desciption
+> + *
+> + * Covers frequency and voltage settings of the DMC operating mode.
+> + */
+> +struct dmc_opp_table {
+> +       u32 freq_hz;
+> +       u32 volt_uv;
+> +};
+> +
+> +/**
+> + * struct exynos5_dmc - main structure describing DMC device
+> + *
+> + * The main structure for the Dynamic Memory Controller which covers clocks,
+> + * memory regions, HW information, parameters and current operating mode.
+> + */
+> +struct exynos5_dmc {
+> +       struct device *dev;
+> +       struct devfreq *df;
+> +       struct devfreq_simple_ondemand_data gov_data;
+> +       void __iomem *base_drexi0;
+> +       void __iomem *base_drexi1;
+> +       struct regmap *clk_regmap;
+> +       struct mutex lock;
+> +       unsigned long curr_rate;
+> +       unsigned long curr_volt;
+> +       unsigned long bypass_rate;
+> +       struct dmc_opp_table *opp;
+> +       struct dmc_opp_table opp_bypass;
+> +       int opp_count;
+> +       u32 timings_arr_size;
+> +       u32 *timing_row;
+> +       u32 *timing_data;
+> +       u32 *timing_power;
+> +       const struct lpddr3_timings *timings;
+> +       const struct lpddr3_min_tck *min_tck;
+> +       u32 bypass_timing_row;
+> +       u32 bypass_timing_data;
+> +       u32 bypass_timing_power;
+> +       struct regulator *vdd_mif;
+> +       struct clk *fout_spll;
+> +       struct clk *fout_bpll;
+> +       struct clk *mout_spll;
+> +       struct clk *mout_bpll;
+> +       struct clk *mout_mclk_cdrex;
+> +       struct clk *mout_mx_mspll_ccore;
+> +       struct clk *mx_mspll_ccore_phy;
+> +       struct clk *mout_mx_mspll_ccore_phy;
+> +       struct devfreq_event_dev **counter;
+> +       int num_counters;
+> +};
+> +
+> +#define TIMING_FIELD(t_name, t_bit_beg, t_bit_end) \
+> +       { .name = t_name, .bit_beg = t_bit_beg, .bit_end = t_bit_end }
+> +
+> +#define TIMING_VAL(timing_array, id, t_val)                    \
+> +({                                                             \
+> +               u32 __val;                              \
+> +               __val = t_val << timing_array[id].bit_beg;      \
+> +               __val;                                          \
+> +})
+> +
+> +#define TIMING_VAL2REG(timing, t_val)                  \
+> +({                                                             \
+> +               u32 __val;                              \
+> +               __val = t_val << timing->bit_beg;       \
+> +               __val;                                          \
+> +})
+> +
+> +#define TIMING_REG2VAL(reg, timing)                    \
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/gpu/drm/i915/i915_gem.c        | 30 +++++++++++++-------------
- drivers/gpu/drm/i915/i915_gem_object.h |  3 ++-
- drivers/gpu/drm/i915/intel_display.c   |  2 +-
- 3 files changed, 18 insertions(+), 17 deletions(-)
+It seems that only some of these defines are used. Please clean them up.
+You have also a lot of checkpatch --strict suggestions:
+    CHECK: Macro argument 'reg' may be better as '(reg)' to avoid
+precedence issues
+which seems to be valid.
 
-diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
-index ad01c92aaf74..8f2053c91aff 100644
---- a/drivers/gpu/drm/i915/i915_gem.c
-+++ b/drivers/gpu/drm/i915/i915_gem.c
-@@ -228,7 +228,6 @@ i915_gem_get_aperture_ioctl(struct drm_device *dev, void *data,
- static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
- {
- 	struct address_space *mapping = obj->base.filp->f_mapping;
--	drm_dma_handle_t *phys;
- 	struct sg_table *st;
- 	struct scatterlist *sg;
- 	char *vaddr;
-@@ -242,13 +241,13 @@ static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
- 	 * to handle all possible callers, and given typical object sizes,
- 	 * the alignment of the buddy allocation will naturally match.
- 	 */
--	phys = drm_pci_alloc(obj->base.dev,
--			     roundup_pow_of_two(obj->base.size),
--			     roundup_pow_of_two(obj->base.size));
--	if (!phys)
-+	obj->phys_vaddr = dma_alloc_coherent(&obj->base.dev->pdev->dev,
-+			roundup_pow_of_two(obj->base.size),
-+			&obj->phys_handle, GFP_KERNEL);
-+	if (!obj->phys_vaddr)
- 		return -ENOMEM;
- 
--	vaddr = phys->vaddr;
-+	vaddr = obj->phys_vaddr;
- 	for (i = 0; i < obj->base.size / PAGE_SIZE; i++) {
- 		struct page *page;
- 		char *src;
-@@ -286,18 +285,17 @@ static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
- 	sg->offset = 0;
- 	sg->length = obj->base.size;
- 
--	sg_dma_address(sg) = phys->busaddr;
-+	sg_dma_address(sg) = obj->phys_handle;
- 	sg_dma_len(sg) = obj->base.size;
- 
--	obj->phys_handle = phys;
--
- 	__i915_gem_object_set_pages(obj, st, sg->length);
- 
- 	return 0;
- 
- err_phys:
--	drm_pci_free(obj->base.dev, phys);
--
-+	dma_free_coherent(&obj->base.dev->pdev->dev,
-+			roundup_pow_of_two(obj->base.size), obj->phys_vaddr,
-+			obj->phys_handle);
- 	return err;
- }
- 
-@@ -335,7 +333,7 @@ i915_gem_object_put_pages_phys(struct drm_i915_gem_object *obj,
- 
- 	if (obj->mm.dirty) {
- 		struct address_space *mapping = obj->base.filp->f_mapping;
--		char *vaddr = obj->phys_handle->vaddr;
-+		char *vaddr = obj->phys_vaddr;
- 		int i;
- 
- 		for (i = 0; i < obj->base.size / PAGE_SIZE; i++) {
-@@ -363,7 +361,9 @@ i915_gem_object_put_pages_phys(struct drm_i915_gem_object *obj,
- 	sg_free_table(pages);
- 	kfree(pages);
- 
--	drm_pci_free(obj->base.dev, obj->phys_handle);
-+	dma_free_coherent(&obj->base.dev->pdev->dev,
-+			roundup_pow_of_two(obj->base.size), obj->phys_vaddr,
-+			obj->phys_handle);
- }
- 
- static void
-@@ -603,7 +603,7 @@ i915_gem_phys_pwrite(struct drm_i915_gem_object *obj,
- 		     struct drm_i915_gem_pwrite *args,
- 		     struct drm_file *file)
- {
--	void *vaddr = obj->phys_handle->vaddr + args->offset;
-+	void *vaddr = obj->phys_vaddr + args->offset;
- 	char __user *user_data = u64_to_user_ptr(args->data_ptr);
- 
- 	/* We manually control the domain here and pretend that it
-@@ -1431,7 +1431,7 @@ i915_gem_pwrite_ioctl(struct drm_device *dev, void *data,
- 		ret = i915_gem_gtt_pwrite_fast(obj, args);
- 
- 	if (ret == -EFAULT || ret == -ENOSPC) {
--		if (obj->phys_handle)
-+		if (obj->phys_vaddr)
- 			ret = i915_gem_phys_pwrite(obj, args, file);
- 		else
- 			ret = i915_gem_shmem_pwrite(obj, args);
-diff --git a/drivers/gpu/drm/i915/i915_gem_object.h b/drivers/gpu/drm/i915/i915_gem_object.h
-index ca93a40c0c87..14bd2d61d0f6 100644
---- a/drivers/gpu/drm/i915/i915_gem_object.h
-+++ b/drivers/gpu/drm/i915/i915_gem_object.h
-@@ -290,7 +290,8 @@ struct drm_i915_gem_object {
- 	};
- 
- 	/** for phys allocated objects */
--	struct drm_dma_handle *phys_handle;
-+	dma_addr_t phys_handle;
-+	void *phys_vaddr;
- 
- 	struct reservation_object __builtin_resv;
- };
-diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-index 5098228f1302..4f8b368ac4e2 100644
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -10066,7 +10066,7 @@ static u32 intel_cursor_base(const struct intel_plane_state *plane_state)
- 	u32 base;
- 
- 	if (INTEL_INFO(dev_priv)->display.cursor_needs_physical)
--		base = obj->phys_handle->busaddr;
-+		base = obj->phys_handle;
- 	else
- 		base = intel_plane_ggtt_offset(plane_state);
- 
--- 
-2.20.1
+While at it please also fix few other --strict errors:
+CHECK: Please don't use multiple blank lines
+CHECK: Alignment should match open parenthesis
+CHECK: Prefer using the BIT macro
+CHECK: struct mutex definition without comment
 
+Best regards,
+Krzysztof
