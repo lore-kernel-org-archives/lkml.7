@@ -2,149 +2,133 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D88D0C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:59:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5CA1C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:59:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A75D721773
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:59:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89D3B21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:59:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MZkFaZwA"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=azazel.net header.i=@azazel.net header.b="EJlBGeh1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727266AbfFNJ7U (ORCPT
+        id S1727341AbfFNJ7d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:59:20 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:33688 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726767AbfFNJ7T (ORCPT
+        Fri, 14 Jun 2019 05:59:33 -0400
+Received: from kadath.azazel.net ([81.187.231.250]:41598 "EHLO
+        kadath.azazel.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726767AbfFNJ7c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:59:19 -0400
-Received: by mail-io1-f65.google.com with SMTP id u13so4560902iop.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 02:59:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=v08nuKUfobTwd9D7NtlanDgmE4+9veHqDzK9gkjWjHE=;
-        b=MZkFaZwAToCoJEP3nJq0oa9mk36X9an2xiMkrPu8xw6Rz2dyJe45mmOVeT18XSJypO
-         dwiNzTPJByz5UDj/uc2jri8E6L+pqvBDRAOQHgI3x5upjWRJuJsA0CzezYmvIh/30XSz
-         JARV0ZhDnfIBuyy7INNRJZdvvy2UmiUQF2eXnrzirjFXs6kBoNX44vM2u04kdFUeStMZ
-         o+9fkcYpBhXMciQwMCDfRsZA6EyjPeeQdSru7sNhaiLjAHckp6osYMxd8c+BwCBwg0Ba
-         wzHPpGaKPv+h+qHNzfFJNxFFPn32tCQkHqxei+ewy4bTiTcqYMrSEeb5zoil3uPioSRh
-         su3g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=v08nuKUfobTwd9D7NtlanDgmE4+9veHqDzK9gkjWjHE=;
-        b=CReYmpBWCCfv0FtXEnbnaAVF97QReaDdX88Uj4iX81XAcSwBB8Zho1JZsAM6kncAnf
-         yYDts+uR5htNfB/fRkOSVSqPprw5dnBLwu0Z1Lf50p67KQDK2Oim5PSearcU13WQv882
-         gDu9wxZiwA6ClLggMbQArzx2Kf7FvdP51dntdbqRFzClv4iyFM9dVwiTUStSfTG+mNvM
-         kANR53iM413l1N7lSScZqJMee5cZlRc8HMA5xBdN8zTaNTq/Vj5BXtgq/5Ie9xk4LdKW
-         q+hXJ3qRu2OJ/n47adyF7Nj5OXXzFqw1uMxBxcZdWvtUSRYRbYugkq3bCMWO3I6GiECh
-         wRig==
-X-Gm-Message-State: APjAAAVFZO5ui/zIn3kO+TqKHF+dwtSUP3YoLA0v2R0JuOuZA7J+Ufk4
-        pTWdyH6/pMJv/7wvo25BCQc0/EDopFC1d46OvyGnEU9wjWmX4w==
-X-Google-Smtp-Source: APXvYqw9qxqlAhjSCVYTqc0xE1/aiBP2Qv62atE/WzzptsuybOA1c8mBygpoIWXNnFCKzrTzRaLDoAjAyO8SBTfpvww=
-X-Received: by 2002:a5d:80d6:: with SMTP id h22mr11341347ior.231.1560506358552;
- Fri, 14 Jun 2019 02:59:18 -0700 (PDT)
+        Fri, 14 Jun 2019 05:59:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=azazel.net;
+         s=20190108; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=+SqYUowZr52aqAdLPxRNaayVXCYX/FhSATpPUJOhNrw=; b=EJlBGeh1c7hJ9Ws6hHNTKAepg/
+        tgaD0qi533U8Qu9foxsKUShJesrorJjYJNOgEqDWQUtG4vFR2Zb03OMDqWK8TdZGxhLCGQGwebKd8
+        pq+euhq83cOJHmesuPoikyW7vzgsJP6jLvfXKVlIiDF4Ec4+o65kLduKheMcXMmWK869T85lagj2z
+        3SniQ/Gz3ePrx+6k1+aKnO8JqJ/ZCHPTA3fNoNj66ncUYCeka+uEifFIKagcD4N2XBXCgmWTMyRRG
+        7+sQ9vjH/WVuydB0MbDhki5nfmw8j4yc0+64HNCYqYf7yqbvNSNFeyLjkAlcqHR28qOg779JYaLeF
+        DQsVL/0A==;
+Received: from kadath.azazel.net ([2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608] helo=azazel.net)
+        by kadath.azazel.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <jeremy@azazel.net>)
+        id 1hbizT-0006xV-OC; Fri, 14 Jun 2019 10:59:23 +0100
+Date:   Fri, 14 Jun 2019 10:59:22 +0100
+From:   Jeremy Sowden <jeremy@azazel.net>
+To:     Steffen Klassert <steffen.klassert@secunet.com>, g@azazel.net
+Cc:     Young Xiao <92siuyang@gmail.com>, herbert@gondor.apana.org.au,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] af_key: Fix memory leak in key_notify_policy.
+Message-ID: <20190614095922.k5yzeyew2zhrfp7e@azazel.net>
+References: <1560500786-572-1-git-send-email-92siuyang@gmail.com>
+ <20190614085346.GN17989@gauss3.secunet.de>
 MIME-Version: 1.0
-References: <20190612094503.120f699a@lwn.net>
-In-Reply-To: <20190612094503.120f699a@lwn.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Fri, 14 Jun 2019 11:59:03 +0200
-Message-ID: <CACT4Y+avfTeZTmhti=7nEadthZZpTnOCTdEuG2S7PovmAMkhZQ@mail.gmail.com>
-Subject: Re: [PATCH v3] Add a document on rebasing and merging
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Rientjes <rientjes@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="okvcvc2i7gz2dbyk"
+Content-Disposition: inline
+In-Reply-To: <20190614085346.GN17989@gauss3.secunet.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:8b0:135f:bcd1:e2cb:4eff:fedf:e608
+X-SA-Exim-Mail-From: jeremy@azazel.net
+X-SA-Exim-Scanned: No (on kadath.azazel.net); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 5:45 PM Jonathan Corbet <corbet@lwn.net> wrote:
->
-> Every merge window seems to involve at least one episode where subsystem
-> maintainers don't manage their trees as Linus would like.  Document the
-> expectations so that at least he has something to point people to.
->
-> Acked-by: David Rientjes <rientjes@google.com>
-> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-> ---
-> I intend to apply this version unless somebody really screams.
->
-> Changes in v3
->   - Fill out discussion on back merges and topic branches as suggested by
->     Jani.
->
-> Changes in v2:
->   - Try to clear up "reparenting" v. "history modification"
->   - Make the "don't rebase public branches" rule into more of a guideline
->   - Fix typos noted by Geert
->   - Rename the document to better reflect its contents
->
->  Documentation/maintainer/index.rst            |   1 +
->  .../maintainer/rebasing-and-merging.rst       | 226 ++++++++++++++++++
->  2 files changed, 227 insertions(+)
->  create mode 100644 Documentation/maintainer/rebasing-and-merging.rst
->
-> diff --git a/Documentation/maintainer/index.rst b/Documentation/maintainer/index.rst
-> index 2a14916930cb..56e2c09dfa39 100644
-> --- a/Documentation/maintainer/index.rst
-> +++ b/Documentation/maintainer/index.rst
-> @@ -10,5 +10,6 @@ additions to this manual.
->     :maxdepth: 2
->
->     configure-git
-> +   rebasing-and-merging
->     pull-requests
->
-> diff --git a/Documentation/maintainer/rebasing-and-merging.rst b/Documentation/maintainer/rebasing-and-merging.rst
-> new file mode 100644
-> index 000000000000..5da9da7a2c51
-> --- /dev/null
-> +++ b/Documentation/maintainer/rebasing-and-merging.rst
-> @@ -0,0 +1,226 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +====================
-> +Rebasing and merging
-> +====================
-> +
-> +Maintaining a subsystem, as a general rule, requires a familiarity with the
-> +Git source-code management system.  Git is a powerful tool with a lot of
-> +features; as is often the case with such tools, there are right and wrong
-> +ways to use those features.  This document looks in particular at the use
-> +of rebasing and merging.  Maintainers often get in trouble when they use
-> +those tools incorrectly, but avoiding problems is not actually all that
-> +hard.
-> +
-> +One thing to be aware of in general is that, unlike many other projects,
-> +the kernel community is not scared by seeing merge commits in its
-> +development history.  Indeed, given the scale of the project, avoiding
-> +merges would be nearly impossible.
 
-Hi Jonathan,
+--okvcvc2i7gz2dbyk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I will appreciate if you elaborate a bit on this "scale of the
-project". I wondered about reasons for having the current hierarchy of
-trees and complex merging for a while, but wasn't able to find any
-rationale. What exactly scale do you mean? I know a number of projects
-that are comparable to Linux kernel, with the largest being 2 orders
-of magnitude larger than kernel both in terms of code size and rate of
-change, that use single tree and linear history. So these scales do
-not seem to inherently require multiple trees and non-linear history.
-Maybe this is already documented somewhere?
+On 2019-06-14, at 10:53:46 +0200, Steffen Klassert wrote:
+> On Fri, Jun 14, 2019 at 04:26:26PM +0800, Young Xiao wrote:
+> > We leak the allocated out_skb in case pfkey_xfrm_policy2msg() fails.
+> > Fix this by freeing it on error.
+> >
+> > Signed-off-by: Young Xiao <92siuyang@gmail.com>
+> > ---
+> >  net/key/af_key.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/net/key/af_key.c b/net/key/af_key.c
+> > index 4af1e1d..ec414f6 100644
+> > --- a/net/key/af_key.c
+> > +++ b/net/key/af_key.c
+> > @@ -2443,6 +2443,7 @@ static int key_pol_get_resp(struct sock *sk, struct xfrm_policy *xp, const struc
+> >  	}
+> >  	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
+> >  	if (err < 0)
+> > +		kfree_skb(out_skb);
+> >  		goto out;
+>
+> Did you test this?
+>
+> You need to add braces, otherwise 'goto out' will happen unconditionally.
+>
+> >
+> >  	out_hdr = (struct sadb_msg *) out_skb->data;
+> > @@ -2695,6 +2696,7 @@ static int dump_sp(struct xfrm_policy *xp, int dir, int count, void *ptr)
+> >
+> >  	err = pfkey_xfrm_policy2msg(out_skb, xp, dir);
+> >  	if (err < 0)
+> > +		kfree_skb(out_skb);
+> >  		return err;
+>
+> Same here.
 
-Thanks
+There's already a patch for this:
+
+  https://git.kernel.org/pub/scm/linux/kernel/git/klassert/ipsec.git/commit/?id=7c80eb1c7e2b8420477fbc998971d62a648035d9
+
+J.
+
+--okvcvc2i7gz2dbyk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEZ8d+2N/NBLDbUxIF0Z7UzfnX9sMFAl0Db/kACgkQ0Z7UzfnX
+9sO+dg//X5IBarNnBL4+mJo1PVkihtoJNZib7SkyNpJjU74rQ5lfILTPWBKkxOHD
+LFQt62krPp/IUE328UQthubS8BbJWSDJ7BF9HUtHlme2nZoxjgfPxvn3EvAkhQTn
+DjoeP9hOrRgn1ufCqU09n+drVOl/tTxOZIuGK4XT0j0Ycp4PpW3fPng3gs5x4eNS
+YPrLZU51nOU46GQW8b60BSgoG5h2YytLwJ4kicaJGjZxhZZOtKycrX5oc5YnnU8Z
+ki7zUF/eU5Hni231wjhJBLs8uNTtll7g8Nl8oYogDlCo1EwFukScqS9dPXev7SKZ
+4W9Xm8xP2aHAGvylJJhvFpqQ/gR5U9MkXr+gmc6uachuiZrbp3zCDyKgYt+hxZG9
+lnLjLKxNm4Bc+Wwn38BvoBcg03q850BEUGdfANpM1l/aFS+va27MFGX0wnWFsVfV
+ChOS0BfrqrOwpvLFUjFN7Ojvli+9Qs+KWiwHzp7dJFltnntif1J8i27T6v0cjQBL
+irphre+3e96UgilQ/1+ygZQi/h4SwQzt8yEfGXo3Gx8sGb7VSaYS43oW3jzhH4Rm
+WgQWyFnlzbUtaz/SZMXvj5vUaQhTUjpVHG/Ws5vkEE+ED7CGdu0r4J1j0+EfLQOi
+TJPyklntEQv4rzJHQK18+InPJgQ7HTox2Yft8rfjEZ2dSa2R6UI=
+=Llij
+-----END PGP SIGNATURE-----
+
+--okvcvc2i7gz2dbyk--
