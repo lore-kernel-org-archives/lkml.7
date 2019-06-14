@@ -2,105 +2,143 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 614EEC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A56C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363F421473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:31:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="i2iXEMeu"
+	by mail.kernel.org (Postfix) with ESMTP id EA92F20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727915AbfFNMbq (ORCPT
+        id S1727927AbfFNMbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:31:46 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:13611 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfFNMbq (ORCPT
+        Fri, 14 Jun 2019 08:31:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43040 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727544AbfFNMbw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:31:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0393b10000>; Fri, 14 Jun 2019 05:31:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Jun 2019 05:31:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 05:31:45 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 12:31:44 +0000
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 12:31:44 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 14 Jun 2019 12:31:43 +0000
-Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0393ae0001>; Fri, 14 Jun 2019 05:31:44 -0700
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Sivaram Nair <sivaramn@nvidia.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Bitan Biswas <bbiswas@nvidia.com>
-Subject: [PATCH V1] firmware: tegra: early resume bpmp
-Date:   Fri, 14 Jun 2019 05:31:39 -0700
-Message-ID: <1560515499-1015-1-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Fri, 14 Jun 2019 08:31:52 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5ECVd6q099187
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:31:50 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t4bfvgdpg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:31:43 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <srikar@linux.vnet.ibm.com>;
+        Fri, 14 Jun 2019 13:30:02 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 13:30:00 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5ECTxPW15139008
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 12:29:59 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C0EBA404D;
+        Fri, 14 Jun 2019 12:29:59 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DE914A4040;
+        Fri, 14 Jun 2019 12:29:57 +0000 (GMT)
+Received: from linux.vnet.ibm.com (unknown [9.126.150.29])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with SMTP;
+        Fri, 14 Jun 2019 12:29:57 +0000 (GMT)
+Date:   Fri, 14 Jun 2019 17:59:57 +0530
+From:   Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+To:     Eiichi Tsukata <devel@etsukata.com>
+Cc:     rostedt@goodmis.org, mingo@redhat.com, mhiramat@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] tracing/uprobe: Fix NULL pointer dereference in
+ trace_uprobe_create()
+Reply-To: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+References: <20190614074026.8045-1-devel@etsukata.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560515505; bh=exJ9JHFPJP+5N/mN9hpEt8WRKiK/ZQdiCxv0VhMcx2E=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=i2iXEMeuyb1JUvpjOVLCFhUjKeIu9f+3JyfYdf2Q1GK83hfu1fo5IxcIAZymXQfdg
-         WveAlyu5pvBl76zU0kud2Gi4tUwtjPXZRpQZkFXo71oXYAN4jl+lww3/LZgihUOIz4
-         Od/CdXebOvfG9+ODlsh0rU1IgvORAO80a4mZHNMx1j7HNAiMStqBl26uNL2MDr7iPW
-         VvMTPArzFW3UZoCfXT4pv0DabrQUpBtdr8oINBKXf+Lq9BbQk3jKJ/g2C63AKULkeM
-         GwcaS7ggT1A51Hn3x0mryvVNGE26LEJ2LWdNfPKoSbGCdCc5WF531GPYYOyUVJQZm3
-         HjoBzzDfzfHmg==
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+In-Reply-To: <20190614074026.8045-1-devel@etsukata.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-TM-AS-GCONF: 00
+x-cbid: 19061412-0020-0000-0000-0000034A199C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061412-0021-0000-0000-0000219D55E5
+Message-Id: <20190614122957.GA16523@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140105
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Early resume Tegra bpmp to fix Xavier clock rate error as follows:
-[  159.017101] of_serial 3110000.serial: calling platform_pm_resume+0x0/0x58 @ 317, parent: cbb
-[  159.025501] of_serial 3110000.serial: platform_pm_resume+0x0/0x58 returned 0 after 14 usecs
-[  159.033694] tegra-i2c 31c0000.i2c: calling platform_pm_resume+0x0/0x58 @ 317, parent: cbb
-[  159.042254] tegra-i2c 31c0000.i2c: failed changing clock rate: -22
-[  159.048216] PM: dpm_run_callback(): platform_pm_resume+0x0/0x58 returns -22
-[  159.055553] tegra-i2c 31c0000.i2c: platform_pm_resume+0x0/0x58 returned -22 after 13072 usecs
-[  159.063875] PM: Device 31c0000.i2c failed to resume: error -22
+* Eiichi Tsukata <devel@etsukata.com> [2019-06-14 16:40:25]:
 
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
----
- drivers/firmware/tegra/bpmp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+> Just like the case of commit 8b05a3a7503c ("tracing/kprobes: Fix NULL
+> pointer dereference in trace_kprobe_create()"), writing an incorrectly
+> formatted string to uprobe_events can trigger NULL pointer dereference.
+> 
+> Reporeducer:
+> 
+>   # echo r > /sys/kernel/debug/tracing/uprobe_events
+> 
+> dmesg:
+> 
+>   BUG: kernel NULL pointer dereference, address: 0000000000000000
+>   #PF: supervisor read access in kernel mode
+>   #PF: error_code(0x0000) - not-present page
+>   PGD 8000000079d12067 P4D 8000000079d12067 PUD 7b7ab067 PMD 0
+>   Oops: 0000 [#1] PREEMPT SMP PTI
+>   CPU: 0 PID: 1903 Comm: bash Not tainted 5.2.0-rc3+ #15
+>   Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+>   RIP: 0010:strchr+0x0/0x30
+>   Code: c0 eb 0d 84 c9 74 18 48 83 c0 01 48 39 d0 74 0f 0f b6 0c 07 3a 0c 06 74 ea 19 c0 83 c8 01 c3 31 c0 c3 0f 1f 84 00 00 00 00 00 <0f> b6 07 89 f2 40 38 f0 75 0e eb 13 0f b6 47 01 48 83 c
+>   RSP: 0018:ffffb55fc0403d10 EFLAGS: 00010293
+> 
+>   RAX: ffff993ffb793400 RBX: 0000000000000000 RCX: ffffffffa4852625
+>   RDX: 0000000000000000 RSI: 000000000000002f RDI: 0000000000000000
+>   RBP: ffffb55fc0403dd0 R08: ffff993ffb793400 R09: 0000000000000000
+>   R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+>   R13: ffff993ff9cc1668 R14: 0000000000000001 R15: 0000000000000000
+>   FS:  00007f30c5147700(0000) GS:ffff993ffda00000(0000) knlGS:0000000000000000
+>   CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+>   CR2: 0000000000000000 CR3: 000000007b628000 CR4: 00000000000006f0
+>   Call Trace:
+>    trace_uprobe_create+0xe6/0xb10
+>    ? __kmalloc_track_caller+0xe6/0x1c0
+>    ? __kmalloc+0xf0/0x1d0
+>    ? trace_uprobe_create+0xb10/0xb10
+>    create_or_delete_trace_uprobe+0x35/0x90
+>    ? trace_uprobe_create+0xb10/0xb10
+>    trace_run_command+0x9c/0xb0
+>    trace_parse_run_command+0xf9/0x1eb
+>    ? probes_open+0x80/0x80
+>    __vfs_write+0x43/0x90
+>    vfs_write+0x14a/0x2a0
+>    ksys_write+0xa2/0x170
+>    do_syscall_64+0x7f/0x200
+>    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Fixes: 0597c49c69d5 ("tracing/uprobes: Use dyn_event framework for uprobe events")
+> Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+> ---
+>  kernel/trace/trace_uprobe.c | 13 ++++++++++---
+>  1 file changed, 10 insertions(+), 3 deletions(-)
+> 
 
-diff --git a/drivers/firmware/tegra/bpmp.c b/drivers/firmware/tegra/bpmp.c
-index dd775e8..de09036 100644
---- a/drivers/firmware/tegra/bpmp.c
-+++ b/drivers/firmware/tegra/bpmp.c
-@@ -811,7 +811,9 @@ static int __maybe_unused tegra_bpmp_resume(struct device *dev)
- 		return 0;
- }
- 
--static SIMPLE_DEV_PM_OPS(tegra_bpmp_pm_ops, NULL, tegra_bpmp_resume);
-+const struct dev_pm_ops tegra_bpmp_pm_ops = {
-+	.resume_early = tegra_bpmp_resume
-+};
- 
- #if IS_ENABLED(CONFIG_ARCH_TEGRA_186_SOC) || \
-     IS_ENABLED(CONFIG_ARCH_TEGRA_194_SOC)
+
+Good Catch.
+
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+
 -- 
-2.7.4
+Thanks and Regards
+Srikar Dronamraju
 
