@@ -2,145 +2,99 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7431FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27E5C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:56:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AFB2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4972183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560535010;
+	bh=u7A2glWdDsI2x2SgfHUUq2LVtrXCaDuJkwVjBKKrUo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HmOjzvyuDBp/SPePnNhAunfyo3549x9Welfc6QeS4pvX8F09C5XjVW76mTfyO/QKu
+	 ZcvoN3BdXE7n3cu4PnYXqv49Fv42WtRPN8hCjnhOVgfqOTg58dNeAOLXD5k1WbOPJ7
+	 gIYH1aXhmyzJQzilnNuusU60fQmbLa8i6Tmm6Ijo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfFNRzu (ORCPT
+        id S1726979AbfFNR4t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:55:50 -0400
-Received: from foss.arm.com ([217.140.110.172]:39682 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727675AbfFNRz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:55:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 318493EF;
-        Fri, 14 Jun 2019 10:55:26 -0700 (PDT)
-Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 49C813F718;
-        Fri, 14 Jun 2019 10:55:25 -0700 (PDT)
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com, Lee Jones <lee.jones@linaro.org>,
-        Thor Thayer <thor.thayer@linux.intel.com>
-Subject: [PATCH v2 23/28] drivers: Introduce driver_find_device_by_of_node() helper
-Date:   Fri, 14 Jun 2019 18:54:18 +0100
-Message-Id: <1560534863-15115-24-git-send-email-suzuki.poulose@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+        Fri, 14 Jun 2019 13:56:49 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]:34591 "EHLO
+        mail-qk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726389AbfFNR4r (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:56:47 -0400
+Received: by mail-qk1-f172.google.com with SMTP id t8so2251674qkt.1;
+        Fri, 14 Jun 2019 10:56:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=rr4DhL8mkbmYJTu+prptdDL5l4mcP175r2QLE+Qn8CA=;
+        b=cLJE6Rf50VcaPIRaV80FOsBwRwK4nUuYdTa5x8SSx7ww6xsZtzmNPaHRzNFTqODvt6
+         /hDunowkAFc2MbCFwhosFbE8+tPmvxmQRmpC52XUQF980dU32Z/0oL5rfh3XNrTNYbFv
+         KriO0fhfVsUT+A9lhgqJbmINYpztEe4MklT1Ldi/Vti1KUej1yYg4tDVt3hgO+0jTOpz
+         5Fj80H6LyQIWI99RhAp20XnOEHvpU96YrUa8/k5wkGWwVitKTO6pO/6rPbClA3iQm2IW
+         4fu7vDzS8uvA/oeFzyyU9Ar2Hi+EglXMSWAaTbVT0DVcRnsuLKZdJlnI/97tTg2cJhpu
+         KCAA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=rr4DhL8mkbmYJTu+prptdDL5l4mcP175r2QLE+Qn8CA=;
+        b=KebvoWhKRM0aSt+WSLpMLhu2XJ8iQgggI0djTeL6CGayR+zWhhhyArkODirBXA3XT+
+         0JxXHsU2YcUj9WGIQdWyY7nYQblTZWOGFcBTIpimCbdY6t0qE9rPybXrtpZ0rH5vtL9a
+         u1U/sxt2TaaEiEtqgT0s3KfHYo88uWGL3w02Vf0xiZqxa0WcN5rN9fQarnM1LTAcZ5Aa
+         aFn9H4ZYS5lMsQtr8BKdfZ0fojQypcZ2JffWDn9UAXwjajhMqqQ54udpBsBRx75NC7sv
+         IbfOf7/dMEWIicDBwf20AB9nlKYlu6S0fqqRfgKvqNyiI7CEgmrt2ly6yki1HOFOBLy0
+         BgMQ==
+X-Gm-Message-State: APjAAAV0RcvJv174bkSSjwvOcofaEdzzM79TnPw6+k4SeFv04xveZcTf
+        VeaycOzZ0rD6KAEvJT0CZYU=
+X-Google-Smtp-Source: APXvYqyur5VtexgQTx8OWTjFE9G5cpfspjCCJpY9hNeZ4lleSYHrVILXqbnzUXo5x1BF6SWDHMdQ/Q==
+X-Received: by 2002:a37:7646:: with SMTP id r67mr57567827qkc.249.1560535005491;
+        Fri, 14 Jun 2019 10:56:45 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::6bab])
+        by smtp.gmail.com with ESMTPSA id t187sm1843362qkh.10.2019.06.14.10.56.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 10:56:44 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 10:56:42 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
+        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com, cgroups@vger.kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
+        yhs@fb.com, bpf@vger.kernel.org
+Subject: Re: [PATCHSET block/for-next] IO cost model based work-conserving
+ porportional controller
+Message-ID: <20190614175642.GA657710@devbig004.ftw2.facebook.com>
+References: <20190614015620.1587672-1-tj@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614015620.1587672-1-tj@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a wrapper to driver_find_device() to search for a device
-by the of_node pointer, reusing the generic match function.
-Also convert the existing users to make use of the new helper.
+On Thu, Jun 13, 2019 at 06:56:10PM -0700, Tejun Heo wrote:
+...
+> The patchset is also available in the following git branch.
+> 
+>  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-iow
 
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Thor Thayer <thor.thayer@linux.intel.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
-Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
----
- drivers/amba/tegra-ahb.c    | 11 +----------
- drivers/mfd/altera-sysmgr.c | 14 ++------------
- include/linux/device.h      | 13 +++++++++++++
- 3 files changed, 16 insertions(+), 22 deletions(-)
+Updated patchset available in the following branch.  Just build fixes
+and cosmetic changes for now.
 
-diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
-index aa64eec..57d3b2e 100644
---- a/drivers/amba/tegra-ahb.c
-+++ b/drivers/amba/tegra-ahb.c
-@@ -134,22 +134,13 @@ static inline void gizmo_writel(struct tegra_ahb *ahb, u32 value, u32 offset)
- }
- 
- #ifdef CONFIG_TEGRA_IOMMU_SMMU
--static int tegra_ahb_match_by_smmu(struct device *dev, const void *data)
--{
--	struct tegra_ahb *ahb = dev_get_drvdata(dev);
--	const struct device_node *dn = data;
--
--	return (ahb->dev->of_node == dn) ? 1 : 0;
--}
--
- int tegra_ahb_enable_smmu(struct device_node *dn)
- {
- 	struct device *dev;
- 	u32 val;
- 	struct tegra_ahb *ahb;
- 
--	dev = driver_find_device(&tegra_ahb_driver.driver, NULL, dn,
--				 tegra_ahb_match_by_smmu);
-+	dev = driver_find_device_by_of_node(&tegra_ahb_driver.driver, dn);
- 	if (!dev)
- 		return -EPROBE_DEFER;
- 	ahb = dev_get_drvdata(dev);
-diff --git a/drivers/mfd/altera-sysmgr.c b/drivers/mfd/altera-sysmgr.c
-index 2ee14d8..d2a13a5 100644
---- a/drivers/mfd/altera-sysmgr.c
-+++ b/drivers/mfd/altera-sysmgr.c
-@@ -88,16 +88,6 @@ static struct regmap_config altr_sysmgr_regmap_cfg = {
- };
- 
- /**
-- * sysmgr_match_phandle
-- * Matching function used by driver_find_device().
-- * Return: True if match is found, otherwise false.
-- */
--static int sysmgr_match_phandle(struct device *dev, const void *data)
--{
--	return dev->of_node == (const struct device_node *)data;
--}
--
--/**
-  * altr_sysmgr_regmap_lookup_by_phandle
-  * Find the sysmgr previous configured in probe() and return regmap property.
-  * Return: regmap if found or error if not found.
-@@ -117,8 +107,8 @@ struct regmap *altr_sysmgr_regmap_lookup_by_phandle(struct device_node *np,
- 	if (!sysmgr_np)
- 		return ERR_PTR(-ENODEV);
- 
--	dev = driver_find_device(&altr_sysmgr_driver.driver, NULL,
--				 (void *)sysmgr_np, sysmgr_match_phandle);
-+	dev = driver_find_device_by_of_node(&altr_sysmgr_driver.driver,
-+					    (void *)sysmgr_np);
- 	of_node_put(sysmgr_np);
- 	if (!dev)
- 		return ERR_PTR(-EPROBE_DEFER);
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 0d3958e..f929671 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -437,6 +437,19 @@ static inline struct device *driver_find_device_by_name(struct device_driver *dr
- 	return driver_find_device(drv, NULL, name, device_match_name);
- }
- 
-+/**
-+ * driver_find_device_by_of_node- device iterator for locating a particular device
-+ * by of_node pointer.
-+ * @driver: the driver we're iterating
-+ * @np: of_node pointer to match.
-+ */
-+static inline struct device *
-+driver_find_device_by_of_node(struct device_driver *drv,
-+			      const struct device_node *np)
-+{
-+	return driver_find_device(drv, NULL, np, device_match_of_node);
-+}
-+
- void driver_deferred_probe_add(struct device *dev);
- int driver_deferred_probe_check_state(struct device *dev);
- 
+  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-iow-v2
+
+Thanks.
+
 -- 
-2.7.4
-
+tejun
