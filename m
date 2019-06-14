@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 610EAC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:39:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C26DC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:39:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E0002084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:39:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338212173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:39:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544773;
-	bh=kOj2ED/pks+yCY9Anj6LUlMl2iZ4JhcYhRf7j7D8cwc=;
+	s=default; t=1560544780;
+	bh=ZX08YHl2FZ35ikq0OIWHJWth0qvr2WIkpo3dvqXdO1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=c671HDIAsbn5nY3uy/6rbOgTUkvP7ZLmUhOYcl0W8sVLn86NdATZEO6Z+KZl5Pvuf
-	 fejNQSOIiCp0CNakCUcKkmcOcG1Z5q42xbjG05U/uVtCEHf15slMA0MQSPMDWJHtOh
-	 x43RYKyXVtpDdOR2h1uKCU4emBHsMFohU8MV6CpM=
+	b=BKCkTIUrLWZS5/GERK8Rsu/RpOXoT0fnDLvVGd0CuFBjtHMRpUtEMY9bvLIsmZ6R0
+	 g1mlXA7IlMLq6I4rNCyspkDOzCDHSahjXFr+V6ltDyJkIoyiQlhusxiLO3ITYjLYaR
+	 qd8jFkbax+053mVO0N2/ct9NPESJQteG4V1O7T3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfFNUjX (ORCPT
+        id S1728538AbfFNUji (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:39:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50434 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:39:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726392AbfFNU2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:28:51 -0400
+        id S1725991AbfFNU2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:28:50 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE17121850;
-        Fri, 14 Jun 2019 20:28:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AAC7F217F9;
+        Fri, 14 Jun 2019 20:28:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544130;
-        bh=kOj2ED/pks+yCY9Anj6LUlMl2iZ4JhcYhRf7j7D8cwc=;
+        s=default; t=1560544129;
+        bh=ZX08YHl2FZ35ikq0OIWHJWth0qvr2WIkpo3dvqXdO1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gcuvFwGBOVKYpzwc8HQVfWCan9JVm3+UIl4rHWNMIj3YB0p4ewOIFgTiG5lXg1u3a
-         0sd1io1M6CAYW1FPQRE2xzBX0IvArtsuSNyq/S64v8ntPiGSNx2C18oVbWZ8aCtFnR
-         RMeqFxOqDcby5yHrthXrM1iZPzgRH42GRGfU3wms=
+        b=NzLhsyGDIplL0ENyb6e0QXtlc+uwAcQ7LeTI3DkcJyYTbxTA0hqXFqjcrW0gBlUNJ
+         m6omIIwBTz7XaZKylH9s5cDs2ttNnjdICkUL6LQsgge2S5H7x3HfCS9Lql0/ieHbch
+         mqH8AlqAStsv2E2ujV+ZtYbDmtqg/u7dbPuh9qvs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Baolin Wang <baolin.wang@linaro.org>,
+Cc:     Colin Ian King <colin.king@canonical.com>,
         Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
         dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 07/59] dmaengine: sprd: Add validation of current descriptor in irq handler
-Date:   Fri, 14 Jun 2019 16:27:51 -0400
-Message-Id: <20190614202843.26941-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 04/59] dmaengine: dw-axi-dmac: fix null dereference when pointer first is null
+Date:   Fri, 14 Jun 2019 16:27:48 -0400
+Message-Id: <20190614202843.26941-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -59,46 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baolin Wang <baolin.wang@linaro.org>
+From: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 58152b0e573e5581c4b9ef7cf06d2e9fafae27d4 ]
+[ Upstream commit 0788611c9a0925c607de536b2449de5ed98ef8df ]
 
-When user terminates one DMA channel to free all its descriptors, but
-at the same time one transaction interrupt was triggered possibly, now
-we should not handle this interrupt by validating if the 'schan->cur_desc'
-was set as NULL to avoid crashing the kernel.
+In the unlikely event that axi_desc_get returns a null desc in the
+very first iteration of the while-loop the error exit path ends
+up calling axi_desc_put on a null pointer 'first' and this causes
+a null pointer dereference.  Fix this by adding a null check on
+pointer 'first' before calling axi_desc_put.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Addresses-Coverity: ("Explicit null dereference")
+Fixes: 1fe20f1b8454 ("dmaengine: Introduce DW AXI DMAC driver")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/sprd-dma.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index e29342ab85f6..431e289d59a5 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -552,12 +552,17 @@ static irqreturn_t dma_irq_handle(int irq, void *dev_id)
- 		schan = &sdev->channels[i];
+diff --git a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+index b2ac1d2c5b86..a1ce307c502f 100644
+--- a/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
++++ b/drivers/dma/dw-axi-dmac/dw-axi-dmac-platform.c
+@@ -512,7 +512,8 @@ dma_chan_prep_dma_memcpy(struct dma_chan *dchan, dma_addr_t dst_adr,
+ 	return vchan_tx_prep(&chan->vc, &first->vd, flags);
  
- 		spin_lock(&schan->vc.lock);
-+
-+		sdesc = schan->cur_desc;
-+		if (!sdesc) {
-+			spin_unlock(&schan->vc.lock);
-+			return IRQ_HANDLED;
-+		}
-+
- 		int_type = sprd_dma_get_int_type(schan);
- 		req_type = sprd_dma_get_req_type(schan);
- 		sprd_dma_clear_int(schan);
+ err_desc_get:
+-	axi_desc_put(first);
++	if (first)
++		axi_desc_put(first);
+ 	return NULL;
+ }
  
--		sdesc = schan->cur_desc;
--
- 		/* cyclic mode schedule callback */
- 		cyclic = schan->linklist.phy_addr ? true : false;
- 		if (cyclic == true) {
 -- 
 2.20.1
 
