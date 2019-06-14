@@ -2,95 +2,93 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D22BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B89C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0CDC21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1485F2183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:57:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560531450;
+	bh=ZrMxzjNpJdxFQLDipvH3qic7BLlICi19F43lUocjQQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=khy8cDBkVmz/8UCCW498lNk93f+8bt7fWxtK+D58f8ZgFlCbDuhuNjWpDpQo3tkZG
+	 YkLly4SeyJnh108VYBzNlF6yGxFkLipHaqev6AJw+2pkMRO+44GhrmhnGiq8xVsYsn
+	 Yv/u1XFIy+SYtaNiozzlJNS6pEELf8hHu5jtS3fQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfFNQ4q (ORCPT
+        id S1726402AbfFNQ52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:56:46 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:41780 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfFNQ4q (ORCPT
+        Fri, 14 Jun 2019 12:57:28 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34175 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfFNQ52 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:56:46 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 107so3268138otj.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:56:45 -0700 (PDT)
+        Fri, 14 Jun 2019 12:57:28 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m29so3287566qtu.1;
+        Fri, 14 Jun 2019 09:57:27 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cNzgw8zU6lYxY9116+VTCavjD+4v/EZJ92kV6MCy3Hw=;
-        b=s/5eC/OJh3nz2/Aj9YrYRVi6F6dv1odBaUTahO++IAPH2Tdb4trqt0Dg4kHvUrNMd1
-         4STt5E105y7IcCO/v6O7LkRc7hjTeKeMUhb0XriPB5lIJGuCzRGPkS3FSBipt0YSCP+J
-         wMHm7eyrFPrG2kOWeAql8GiFGD2MQ5BgNagzd5lXP3fMNoeM02Utfsiu0X4gT7bbqytK
-         4WEqGORuuZxcEkxDXv8WwFnWmWETxWMKNqRMpejYLjog/+yQ+OtiAmGEC4u7bZg2hZUJ
-         U5kXRNNnOTIF1/gbGmiuN/5NzG1W16e3f5Yiklk4xWFy/NKArraHBpZIpyqUZJPNsGrr
-         AbxA==
-X-Gm-Message-State: APjAAAUqZgvucR+S99Ecdpac6dHrAy9Mi04ljAD2XPdsB0EdZ8aM3xI2
-        YM5LGUAQDD0sFLFp9eRBveyyNWDFNIEXtNNF1uFxsQ==
-X-Google-Smtp-Source: APXvYqy2rNq9+R6u/xnYlzAgf1nwxm3PpCU3YNzHzhAoC+UXWr4Wmm6PlURMQyQ3rNfDdi+Dv87oUDmHrlRke6mba2A=
-X-Received: by 2002:a9d:704f:: with SMTP id x15mr17973354otj.297.1560531405363;
- Fri, 14 Jun 2019 09:56:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kuAEv/PlG/wLUd5sE7CBGEhgBQkunbAzlunVIqZV/qs=;
+        b=IhTXspyw4NA6GWCH0hQu+YoTfNm0PqsKuvlY4OrTBhlTPZSBjCxgkEvZCPNcF+a8Da
+         VsAq92zV6hfPu26qYYTTmtpV8jo7KmgYUjSVFnyKMiy08ypirlOuK247ldsvu/VprX+W
+         WdJ+/0XnfLmwElsdxw1jnuK5Cq/dA5z8hXdL8lwLgpcLguVXtOTUIvyZZjp1fuiPNeNR
+         sDaDwdzwnQQ3ciDdwQnELNKvZlqm2KaWNSDFpQ3um8L8K2vgvp0Pm/ua1WerS9HiAxO3
+         nWFogAsphkwH3tVDoE3rKU1wrj7mbc4AVa3t5h3+gCqwpEIE0bGiDw6hFBPBB3lu911S
+         7K3Q==
+X-Gm-Message-State: APjAAAU1+L97SrkKTlHziMLiZn5ju3zCn7AC4lgWehSPMVwMidch52Dj
+        3ZLL/oHmdpFkIurH/0gZng==
+X-Google-Smtp-Source: APXvYqxkCzR6nUY+HgvZWIHjhjgEC1kMxIXehNr9VUSu1DnVOQd08FOUe0jGEMuy2YJFBFjI6vNo/g==
+X-Received: by 2002:a0c:8b54:: with SMTP id d20mr9239221qvc.1.1560531446638;
+        Fri, 14 Jun 2019 09:57:26 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id f189sm1925498qkj.13.2019.06.14.09.57.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 09:57:26 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 10:57:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] soc: qcom: apr: Don't use reg for domain id
+Message-ID: <20190614165724.GA3083@bogus>
+References: <20190523150153.13136-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
-References: <20190614134625.6870-1-jlayton@kernel.org>
-In-Reply-To: <20190614134625.6870-1-jlayton@kernel.org>
-From:   Andreas Gruenbacher <agruenba@redhat.com>
-Date:   Fri, 14 Jun 2019 18:56:34 +0200
-Message-ID: <CAHc6FU5QVQQ43TZNZ7A53D3Ka3e_qq9GEtV_fZt7C5A+xrWm_A@mail.gmail.com>
-Subject: Re: [PATCH 0/3] ceph: don't NULL terminate virtual xattr values
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Ceph Development <ceph-devel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>,
-        "Yan, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523150153.13136-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 15:46, Jeff Layton <jlayton@kernel.org> wrote:
-> kcephfs has several "virtual" xattrs that return strings that are
-> currently populated using snprintf(), which always NULL terminates the
-> string.
->
-> This leads to the string being truncated when we use a buffer length
-> acquired by calling getxattr with a 0 size first. The last character
-> of the string ends up being clobbered by the termination.
->
-> The convention with xattrs is to not store the termination with string
-> data, given that we have the length. This is how setfattr/getfattr
-> operate.
->
-> This patch makes ceph's virtual xattrs not include NULL termination
-> when formatting their values. In order to handle this, a new
-> snprintf_noterm function is added, and ceph is changed over to use
-> this to populate the xattr value buffer. Finally, we fix ceph to
-> return -ERANGE properly when the string didn't fit in the buffer.
+On Thu, 23 May 2019 08:01:53 -0700, Bjorn Andersson wrote:
+> The reg property represents the address and size on the bus that a
+> device lives, but for APR the parent is a rpmsg bus, which does not have
+> numerical addresses. Simply defining #address/#size-cells to 1 and 0,
+> respectively, to silence the compiler is not an appropriate solution.
+> 
+> Replace the use of "reg" with an APR specific property.
+> 
+> Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v1:
+> - Fixed example to match change
+> 
+>  Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 6 +++---
+>  drivers/soc/qcom/apr.c                                  | 2 +-
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
 
-This looks reasonable from an xattr point of view.
-
-Thanks,
-Andreas
-
-> Jeff Layton (3):
->   lib/vsprintf: add snprintf_noterm
->   ceph: don't NULL terminate virtual xattr strings
->   ceph: return -ERANGE if virtual xattr value didn't fit in buffer
->
->  fs/ceph/xattr.c        |  49 +++++++-------
->  include/linux/kernel.h |   2 +
->  lib/vsprintf.c         | 145 ++++++++++++++++++++++++++++-------------
->  3 files changed, 130 insertions(+), 66 deletions(-)
->
-> --
-> 2.21.0
->
+Reviewed-by: Rob Herring <robh@kernel.org>
