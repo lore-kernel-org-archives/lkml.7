@@ -2,218 +2,269 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CCCC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:53:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A86A5C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9CEB21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:53:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aampusa.onmicrosoft.com header.i=@aampusa.onmicrosoft.com header.b="pHY41RnJ"
+	by mail.kernel.org (Postfix) with ESMTP id 782D12184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:53:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560534792;
+	bh=P01JkKh2EwDIKOkKeZ63M1fuJyDYnZHPDcjEI+Lqenc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pCjKRh1s30J7s9yTNcuA0oLiRuHQSLKYxIzu6GFW3NyFrm/Wv+23pg2hy2+4ZE4cG
+	 gOqMXF6w8HLir3oTHj+TCLm2PuXi7d0kzUAGH7TCnBwLdA5WRwnbeD130mwKue/Knz
+	 akRLUDPbLUXi01kMchcrMktme16Qa6TGF4MXHnCA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfFNRxI (ORCPT
+        id S1727167AbfFNRwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:53:08 -0400
-Received: from mail-eopbgr750127.outbound.protection.outlook.com ([40.107.75.127]:36567
-        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726393AbfFNRxG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:53:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=aampusa.onmicrosoft.com; s=selector2-aampusa-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=EktKp3FM/TYhopDrmc4FHkZWPxJilSUv8KXU9GDkTtQ=;
- b=pHY41RnJm4QzIrthtIGZVqOpL8TaCZ8e5903pYZ7o9T2OKCsKNJRM9u9HmtsG9x4CMOOIRAh1MGUC+hpiVAVLNBW9NRfj2Uj9hqiwESZlkXAoyUSUdGvLhIoa7DnYAR7heMVOAxWIWbTHIESD30MFUAB2zNxfabvxgIf6n6+o4Y=
-Received: from BL0PR07MB4115.namprd07.prod.outlook.com (52.132.10.149) by
- BL0PR07MB4034.namprd07.prod.outlook.com (52.132.10.24) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Fri, 14 Jun 2019 17:53:02 +0000
-Received: from BL0PR07MB4115.namprd07.prod.outlook.com
- ([fe80::f064:5129:63c6:d3e]) by BL0PR07MB4115.namprd07.prod.outlook.com
- ([fe80::f064:5129:63c6:d3e%6]) with mapi id 15.20.1965.019; Fri, 14 Jun 2019
- 17:53:02 +0000
-From:   Ken Sloat <KSloat@aampglobal.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-CC:     "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
- watchdog on system suspend
-Thread-Topic: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
- watchdog on system suspend
-Thread-Index: AQHVIrAmpSe7ef5LPkq+gtVGV8yaCKabW/WAgAAQIfA=
-Date:   Fri, 14 Jun 2019 17:53:01 +0000
-Message-ID: <BL0PR07MB4115E99D065FD9BEA4C43BB5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
-References: <20190614125310.29458-1-ksloat@aampglobal.com>
- <20190614164609.GA29814@roeck-us.net>
-In-Reply-To: <20190614164609.GA29814@roeck-us.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=KSloat@aampglobal.com; 
-x-originating-ip: [100.3.71.115]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0930e3a5-75c0-4c09-553b-08d6f0f12546
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR07MB4034;
-x-ms-traffictypediagnostic: BL0PR07MB4034:
-x-microsoft-antispam-prvs: <BL0PR07MB403422AF5E3C1EEE01DE79DCADEE0@BL0PR07MB4034.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(346002)(376002)(136003)(366004)(39850400004)(396003)(189003)(199004)(13464003)(68736007)(76176011)(26005)(7696005)(33656002)(8676002)(305945005)(54906003)(316002)(102836004)(74316002)(99286004)(81156014)(52536014)(6916009)(478600001)(15650500001)(72206003)(71200400001)(71190400001)(81166006)(6506007)(53546011)(80792005)(14454004)(66066001)(6246003)(2906002)(66476007)(6436002)(256004)(73956011)(55016002)(53936002)(86362001)(14444005)(76116006)(186003)(229853002)(66556008)(66946007)(66446008)(64756008)(5660300002)(476003)(4326008)(486006)(8936002)(11346002)(446003)(7736002)(25786009)(6116002)(3846002)(9686003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR07MB4034;H:BL0PR07MB4115.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: aampglobal.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: M4JaadTdGtAewidarsw/8y7QUS5qeDhCPW1LOIwU8hAgI6t5cRIc69rIv/Csm4pBKLVZzPcx+FdLIN5Agkn99qJNsgtJ4MTVd8ECt47hQRzdLM9eQuPwSf1+WhdDLAzZ83VqjA0V9wgw00RobI8E3PpjnCQ9oKp4nx48kGYeEQAn+20rOWoyZdo8eBUdnxK5xAoSqVlfLNMryj6zw1CWRiB79a5HvI6vtkYaf4TevtoCPbbO2CgWpchhKCJh7Z2FEyAPB5XG9eRpzAhC+IQJHRyUoeq+E6txLwlGeWkY6hTlcq1mwD9v9hGbikiyUU256bZ3tbe+d86qTPBS6l+Ng1O1Q/s21WoI/A5KAj6Wxi3Mj/KFooTFlqxD8c8LNi0pOqqJ4y3Vke7afYL2gBmOwYLbLNTGWNiBDCuELXOgfWs=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Fri, 14 Jun 2019 13:52:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38638 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfFNRwf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:52:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=wEP/uGZbmvWdMQQ7lu7aU2Sw4lu0L8oVUgCmRRiaIis=; b=eWnC65zpmteRaqF/2scUGNXGlP
+        L41iutrDh3i3DVhMhKhrJml77ULhM5wqRR6Qw51tqnAH1+FW+GhIq438iGbBIt5TbzIIXrv75Hg65
+        Qo/d21RWeFQcJLHvBeX5ItDPKkkXZPLx+jzRoldNMO4DpbYcfqXxtPMQ7DIaYetbeyTHTnNSy9GIR
+        UFRV770P3ywX6EbekynkS4nUfOHG0LUENHOD1vMC6YiK+liXVKLg5vxhzIJiAlMgEiV6GpRZ5HWaD
+        99BZLysYhovEjB+5FzgOr2GxJ3zKnS7FgMo+gh2YP3eTcY7EKDw4f/FAs73s+DOeOjo6ODC/qrXsR
+        49uDKgsQ==;
+Received: from 177.133.85.52.dynamic.adsl.gvt.net.br ([177.133.85.52] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbqNO-0000PY-KX; Fri, 14 Jun 2019 17:52:34 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hbqNL-0002Oi-QH; Fri, 14 Jun 2019 14:52:31 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 05/16] scripts/get_abi.pl: avoid use literal blocks when not needed
+Date:   Fri, 14 Jun 2019 14:52:19 -0300
+Message-Id: <5964e0e4e93dc6582a8a1662116c015f07247a36.1560534648.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <3b8d7c64f887ddea01df3c4eeabc745c8ec45406.1560534648.git.mchehab+samsung@kernel.org>
+References: <3b8d7c64f887ddea01df3c4eeabc745c8ec45406.1560534648.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: aampglobal.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0930e3a5-75c0-4c09-553b-08d6f0f12546
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 17:53:02.1265
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e20e3a66-8b9e-46e9-b859-cb654c1ec6ea
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ken.sloat@aampglobal.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB4034
-X-MS-Exchange-CrossPremises-AuthAs: Internal
-X-MS-Exchange-CrossPremises-AuthMechanism: 04
-X-MS-Exchange-CrossPremises-AuthSource: BL0PR07MB4115.namprd07.prod.outlook.com
-X-MS-Exchange-CrossPremises-TransportTrafficType: Email
-X-MS-Exchange-CrossPremises-TransportTrafficSubType: 
-X-MS-Exchange-CrossPremises-SCL: 1
-X-MS-Exchange-CrossPremises-messagesource: StoreDriver
-X-MS-Exchange-CrossPremises-BCC: 
-X-MS-Exchange-CrossPremises-originalclientipaddress: 100.3.71.115
-X-MS-Exchange-CrossPremises-transporttraffictype: Email
-X-MS-Exchange-CrossPremises-transporttrafficsubtype: 
-X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
-X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
-X-OrganizationHeadersPreserved: BL0PR07MB4034.namprd07.prod.outlook.com
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: Guenter Roeck <groeck7@gmail.com> On Behalf Of Guenter Roeck
-> Sent: Friday, June 14, 2019 12:46 PM
-> To: Ken Sloat <KSloat@aampglobal.com>
-> Cc: nicolas.ferre@microchip.com; alexandre.belloni@bootlin.com;
-> ludovic.desroches@microchip.com; wim@linux-watchdog.org; linux-arm-
-> kernel@lists.infradead.org; linux-watchdog@vger.kernel.org; linux-
-> kernel@vger.kernel.org
-> Subject: Re: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
-> watchdog on system suspend
->=20
-> [This is an EXTERNAL EMAIL]
-> ________________________________
->=20
-> On Fri, Jun 14, 2019 at 12:53:22PM +0000, Ken Sloat wrote:
-> > From: Ken Sloat <ksloat@aampglobal.com>
-> >
-> > Currently, the atmel-sama5d4-wdt continues to run after system suspend.
-> > Unless the system resumes within the watchdog timeout period so the
-> > userspace can kick it, the system will be reset. This change disables
-> > the watchdog on suspend if it is active and re-enables on resume.
-> > These actions occur during the late and early phases of suspend and
-> > resume respectively to minimize chances where a lock could occur while
-> > the watchdog is disabled.
-> >
-> > Signed-off-by: Ken Sloat <ksloat@aampglobal.com>
-> > ---
-> >  Changes in v2:
-> >  -Consolidate resume and resume early statements.
-> >
-> >  drivers/watchdog/sama5d4_wdt.c | 21 ++++++++++++++++++---
-> >  1 file changed, 18 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/watchdog/sama5d4_wdt.c
-> > b/drivers/watchdog/sama5d4_wdt.c index 111695223aae..0d123f8cbcc6
-> > 100644
-> > --- a/drivers/watchdog/sama5d4_wdt.c
-> > +++ b/drivers/watchdog/sama5d4_wdt.c
-> > @@ -280,7 +280,17 @@ static const struct of_device_id
-> > sama5d4_wdt_of_match[] =3D {  MODULE_DEVICE_TABLE(of,
-> > sama5d4_wdt_of_match);
-> >
-> >  #ifdef CONFIG_PM_SLEEP
-> > -static int sama5d4_wdt_resume(struct device *dev)
-> > +static int sama5d4_wdt_suspend_late(struct device *dev) {
-> > +     struct sama5d4_wdt *wdt =3D dev_get_drvdata(dev);
-> > +
-> > +     if (watchdog_active(&wdt->wdd))
-> > +             sama5d4_wdt_stop(&wdt->wdd);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int sama5d4_wdt_resume_early(struct device *dev)
-> >  {
-> >       struct sama5d4_wdt *wdt =3D dev_get_drvdata(dev);
-> >
-> > @@ -291,12 +301,17 @@ static int sama5d4_wdt_resume(struct device
-> *dev)
-> >        */
-> >       sama5d4_wdt_init(wdt);
-> >
-> > +     if (watchdog_active(&wdt->wdd))
-> > +             sama5d4_wdt_start(&wdt->wdd);
-> > +
->=20
-> The call to sama5d4_wdt_init() above now explicitly stops the watchdog
-> even if we want to (re)start it. I think this would be better handled wit=
-h an
-> else case here
->=20
->         else
->                 sama5d4_wdt_stop(&wdt->wdd);
->=20
+The usage of literal blocks make the document very complex,
+causing the browser to take a long time to load.
 
-So we completely remove the sama5d4_wdt_init() call then correct?
+On most ABI descriptions, they're a plain text, and don't
+require a literal block.
 
-To leave the code as it behaves today with the addition
-of wdt stop/start, shouldn't we call init in the else instead?
+So, add a logic there with identifies when a literal block
+is needed.
 
-	if (watchdog_active(&wdt->wdd))
-		sama5d4_wdt_start(&wdt->wdd);
-	else
-		sama5d4_wdt_init();
+As, on literal blocks, we need to respect the original
+document space, the most complex part of this patch is
+to preserve the original spacing where needed.
 
-I guess I don't really understand the purpose of having the init statement =
-in resume
-in the first place. I agree, calling this first does end up essentially res=
-etting the wdt
-it will start again if it was running before, but the count will be reset.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ scripts/get_abi.pl | 104 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 78 insertions(+), 26 deletions(-)
 
-> Guenter
->=20
-> >       return 0;
-> >  }
-> >  #endif
-> >
-> > -static SIMPLE_DEV_PM_OPS(sama5d4_wdt_pm_ops, NULL,
-> > -                      sama5d4_wdt_resume);
-> > +static const struct dev_pm_ops sama5d4_wdt_pm_ops =3D {
-> > +     SET_LATE_SYSTEM_SLEEP_PM_OPS(sama5d4_wdt_suspend_late,
-> > +                     sama5d4_wdt_resume_early) };
-> >
-> >  static struct platform_driver sama5d4_wdt_driver =3D {
-> >       .probe          =3D sama5d4_wdt_probe,
-> > --
-> > 2.17.1
-> >
+diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
+index ef9b6e108973..0ede9593c639 100755
+--- a/scripts/get_abi.pl
++++ b/scripts/get_abi.pl
+@@ -59,29 +59,34 @@ sub parse_abi {
+ 	my $ln;
+ 	my $has_file;
+ 	my $xrefs;
++	my $space;
+ 
+ 	print STDERR "Opening $file\n" if ($debug > 1);
+ 	open IN, $file;
+ 	while(<IN>) {
+ 		$ln++;
+-		if (m/^(\S+):\s*(.*)/i) {
++		if (m/^(\S+)(:\s*)(.*)/i) {
+ 			my $new_tag = lc($1);
+-			my $content = $2;
++			my $sep = $2;
++			my $content = $3;
+ 
+ 			if (!($new_tag =~ m/(what|date|kernelversion|contact|description|users)/)) {
+ 				if ($tag eq "description") {
+-					$data{$what}->{$tag} .= "\n$content";
+-					$data{$what}->{$tag} =~ s/\n+$//;
+-					next;
++					# New "tag" is actually part of
++					# description. Don't consider it a tag
++					$new_tag = "";
+ 				} else {
+ 					parse_error($file, $ln, "tag '$tag' is invalid", $_);
+ 				}
+ 			}
+ 
+ 			if ($new_tag =~ m/what/) {
++				$space = "";
+ 				if ($tag =~ m/what/) {
+ 					$what .= ", " . $content;
+ 				} else {
++					parse_error($file, $ln, "What '$what' doesn't have a description", "") if ($what && !$data{$what}->{description});
++
+ 					$what = $content;
+ 					$new_what = 1;
+ 				}
+@@ -108,25 +113,38 @@ sub parse_abi {
+ 				next;
+ 			}
+ 
+-			$tag = $new_tag;
++			if ($new_tag) {
++				$tag = $new_tag;
+ 
+-			if ($new_what) {
+-				$new_what = 0;
++				if ($new_what) {
++					$new_what = 0;
+ 
+-				$data{$what}->{type} = $type;
+-				$data{$what}->{file} = $name;
+-				print STDERR "\twhat: $what\n" if ($debug > 1);
+-			}
++					$data{$what}->{type} = $type;
++					$data{$what}->{file} = $name;
++					print STDERR "\twhat: $what\n" if ($debug > 1);
++				}
+ 
+-			if (!$what) {
+-				parse_error($file, $ln, "'What:' should come first:", $_);
++				if (!$what) {
++					parse_error($file, $ln, "'What:' should come first:", $_);
++					next;
++				}
++				if ($tag eq "description") {
++					next if ($content =~ m/^\s*$/);
++					if ($content =~ m/^(\s*)(.*)/) {
++						my $new_content = $2;
++						$space = $new_tag . $sep . $1;
++						while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
++						$space =~ s/./ /g;
++						$data{$what}->{$tag} .= "$new_content\n";
++					}
++				} else {
++					$data{$what}->{$tag} = $content;
++				}
+ 				next;
+ 			}
+-			$data{$what}->{$tag} = $content;
+-			next;
+ 		}
+ 
+-		# Store any contents before the database
++		# Store any contents before tags at the database
+ 		if (!$tag) {
+ 			next if (/^\n/);
+ 
+@@ -139,6 +157,32 @@ sub parse_abi {
+ 			next;
+ 		}
+ 
++		if ($tag eq "description") {
++			if (!$data{$what}->{description}) {
++				next if (m/^\s*\n/);
++				if (m/^(\s*)(.*)/) {
++					$space = $1;
++					while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
++					$data{$what}->{$tag} .= "$2\n";
++				}
++			} else {
++				my $content = $_;
++				if (m/^\s*\n/) {
++					$data{$what}->{$tag} .= $content;
++					next;
++				}
++
++				while ($content =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
++				$space = "" if (!($content =~ s/^($space)//));
++
++				# Compress spaces with tabs
++				$content =~ s<^ {8}> <\t>;
++				$content =~ s<^ {1,7}\t> <\t>;
++				$content =~ s< {1,7}\t> <\t>;
++				$data{$what}->{$tag} .= $content;
++			}
++			next;
++		}
+ 		if (m/^\s*(.*)/) {
+ 			$data{$what}->{$tag} .= "\n$1";
+ 			$data{$what}->{$tag} =~ s/\n+$//;
+@@ -165,6 +209,9 @@ sub output_rest {
+ 		my $w = $what;
+ 		$w =~ s/([\(\)\_\-\*\=\^\~\\])/\\$1/g;
+ 
++		my $bar = $w;
++		$bar =~ s/./-/g;
++
+ 		if ($data{$what}->{label}) {
+ 			my @labels = split(/\s/, $data{$what}->{label});
+ 			foreach my $label (@labels) {
+@@ -172,10 +219,9 @@ sub output_rest {
+ 			}
+ 		}
+ 
+-		print "$w\n\n";
++		print "$w\n$bar\n\n";
+ 
+ 		print "- defined on file $file (type: $type)\n\n" if ($type ne "File");
+-		print "::\n\n";
+ 
+ 		my $desc = $data{$what}->{description};
+ 		$desc =~ s/^\s+//;
+@@ -183,18 +229,24 @@ sub output_rest {
+ 		# Remove title markups from the description, as they won't work
+ 		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
+ 
+-		# put everything inside a code block
+-		$desc =~ s/\n/\n /g;
+-
+-
+ 		if (!($desc =~ /^\s*$/)) {
+-			print " $desc\n\n";
++			if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
++				# put everything inside a code block
++				$desc =~ s/\n/\n /g;
++
++				print "::\n\n";
++				print " $desc\n\n";
++			} else {
++				# Escape any special chars from description
++				$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
++
++				print "$desc\n\n";
++			}
+ 		} else {
+-			print " DESCRIPTION MISSING for $what\n\n";
++			print "DESCRIPTION MISSING for $what\n\n";
+ 		}
+ 
+ 		printf "Has the following ABI:\n\n%s", $data{$what}->{xrefs} if ($data{$what}->{xrefs});
+-
+ 	}
+ }
+ 
+-- 
+2.21.0
 
-Thanks,
-Ken Sloat
