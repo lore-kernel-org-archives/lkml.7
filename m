@@ -2,122 +2,188 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB62AC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D15EC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EEDC21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544328;
-	bh=BHDdNrpsIq8jeknUsZ5Uj2PKfzn0wluPDnaSJXxsYpc=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=D4QsozYkM8bwujFznCVjuOolMhF2g0FSmBHN1baY0BKOAIuZ5taZjNmZo0dlPr8G+
-	 iRCeAcA8tUIoIio2f3+nq94rZNWRHP5VmPnndtOtWwckZDPP3YP4HoP+gO9P14IMLv
-	 aw8fh7GNSrUBNs1mbWts50qfgwGW4nKdi4XhIFHM=
+	by mail.kernel.org (Postfix) with ESMTP id 436472184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VWM2vYLh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFNUcH (ORCPT
+        id S1728196AbfFNUcF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:32:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727906AbfFNUar (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:32:05 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:35566 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726811AbfFNUar (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 16:30:47 -0400
-Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A3F02184B;
-        Fri, 14 Jun 2019 20:30:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544246;
-        bh=BHDdNrpsIq8jeknUsZ5Uj2PKfzn0wluPDnaSJXxsYpc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=UaiKXMmleVXEUhgYrsSIHYQTFjOzfPTCha5/4ioPr9PE1DL0ob4Dd7Ddzng7qIJmE
-         kK4Vp3TVbd+G5N0JBlxOvSg3ulRF+B3xoarNCEyQSvB44cUAiLK9A5yPDEphggRGSu
-         US6/r1+2eeeBS3ZslcANrJjghxuKZH0ZVTfujTvQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.4 01/10] parport: Fix mem leak in parport_register_dev_model
-Date:   Fri, 14 Jun 2019 16:30:37 -0400
-Message-Id: <20190614203046.28077-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
+Received: by mail-ed1-f67.google.com with SMTP id p26so5248375edr.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 13:30:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=KN+MMrJdiVIVfoSWWn55ZRF9gbRyuAu71YCJdRQFpRk=;
+        b=VWM2vYLhPQHrafSrDQJFyDSau+89Xxt/kk+glA2qwPxZ29ccExYoJtEyKzVb7qHMSq
+         OF07IqqDGmEAfuCzoUagcSNT4jOb7KzHyf8utimEHOAZIrVJ73/igURZAId4d4hwLd/8
+         YpNRjV2z2ylXops4uWCelR0CmBXYmQqv0uhJA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=KN+MMrJdiVIVfoSWWn55ZRF9gbRyuAu71YCJdRQFpRk=;
+        b=Piaf3aZcYmddUaWezsZBe83GwOpRuuz7pilk8My+wby6jSvWKbXKCNS4H9BUx0Z7Ul
+         1c5exd86gK7MHvc9QMvpIwCBPgoAh1oezl93i2EubqmvYEqfLb5OuVbCgXWwkcWuIVvF
+         FIXbzKmhlgc6Rz8YUJ+1yJQjFKK2mq0fzm5V32I7EG2SHCVY65pRaSgfFaB7WDZfLbzA
+         F/Zr3svUjNnVXMwgKrqo2wtn4OsCmYa1Rh7KUILOA2GzVAzrV4bweUNzDKJHjO48jdFr
+         vTd6wU1csKpPn5mMdQrzhMXo3ua8ZnoD4soBxEPi+ZoVe78tMbmTzMxerxPaDwijye0o
+         lKaw==
+X-Gm-Message-State: APjAAAULudyRzxvuOE/vamtgYFMlqIDSqAq1cWEoWr2nXjFMlPfD3xpO
+        vyxIFvW7jo9G9ndeRstbgXWkxQ==
+X-Google-Smtp-Source: APXvYqzs5TtIkPYbwFylQmX4JfL716O72INnTisyVLZpVam1/N8EkPIy/YAYosSNlQ0xCI+3ngip/A==
+X-Received: by 2002:a17:906:63c1:: with SMTP id u1mr83393976ejk.173.1560544244991;
+        Fri, 14 Jun 2019 13:30:44 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id 17sm1184399edu.21.2019.06.14.13.30.42
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 13:30:43 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 22:30:40 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     christian.koenig@amd.com
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Qiang Yu <yuq825@gmail.com>, "Anholt, Eric" <eric@anholt.net>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        lima@lists.freedesktop.org
+Subject: Re: [PATCH 3/6] drm/gem: use new ww_mutex_(un)lock_for_each macros
+Message-ID: <20190614203040.GE23020@phenom.ffwll.local>
+Mail-Followup-To: christian.koenig@amd.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Qiang Yu <yuq825@gmail.com>, "Anholt, Eric" <eric@anholt.net>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        lima@lists.freedesktop.org
+References: <20190614124125.124181-1-christian.koenig@amd.com>
+ <20190614124125.124181-4-christian.koenig@amd.com>
+ <20190614131916.GQ3436@hirez.programming.kicks-ass.net>
+ <20190614152242.GC23020@phenom.ffwll.local>
+ <094da0f7-a0f0-9ed4-d2da-8c6e6d165380@gmail.com>
+ <CAKMK7uFcDCJ9sozny1RqqRATwcK39doZNq+NZekvrzuO63ap-Q@mail.gmail.com>
+ <d97212dc-367c-28e9-6961-9b99110a4d2e@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <d97212dc-367c-28e9-6961-9b99110a4d2e@gmail.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+On Fri, Jun 14, 2019 at 08:51:11PM +0200, Christian König wrote:
+> Am 14.06.19 um 20:24 schrieb Daniel Vetter:
+> > 
+> > On Fri, Jun 14, 2019 at 8:10 PM Christian König <ckoenig.leichtzumerken@gmail.com> wrote:
+> > > [SNIP]
+> > > WW_MUTEX_LOCK_BEGIN()
+> > > 
+> > > lock(lru_lock);
+> > > 
+> > > while (bo = list_first(lru)) {
+> > > 	if (kref_get_unless_zero(bo)) {
+> > > 		unlock(lru_lock);
+> > > 		WW_MUTEX_LOCK(bo->ww_mutex);
+> > > 		lock(lru_lock);
+> > > 	} else {
+> > > 		/* bo is getting freed, steal it from the freeing process
+> > > 		 * or just ignore */
+> > > 	}
+> > > }
+> > > unlock(lru_lock)
+> > > 
+> > > WW_MUTEX_LOCK_END;
+> 
+> Ah, now I know what you mean. And NO, that approach doesn't work.
+> 
+> See for the correct ww_mutex dance we need to use the iterator multiple
+> times.
+> 
+> Once to give us the BOs which needs to be locked and another time to give us
+> the BOs which needs to be unlocked in case of a contention.
+> 
+> That won't work with the approach you suggest here.
 
-[ Upstream commit 1c7ebeabc9e5ee12e42075a597de40fdb9059530 ]
+A right, drat.
 
-BUG: memory leak
-unreferenced object 0xffff8881df48cda0 (size 16):
-  comm "syz-executor.0", pid 5077, jiffies 4295994670 (age 22.280s)
-  hex dump (first 16 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000d2d0d5fe>] parport_register_dev_model+0x141/0x6e0 [parport]
-    [<00000000782f6dab>] 0xffffffffc15d1196
-    [<00000000d2ca6ae4>] platform_drv_probe+0x7e/0x100
-    [<00000000628c2a94>] really_probe+0x342/0x4d0
-    [<000000006874f5da>] driver_probe_device+0x8c/0x170
-    [<00000000424de37a>] __device_attach_driver+0xda/0x100
-    [<000000002acab09a>] bus_for_each_drv+0xfe/0x170
-    [<000000003d9e5f31>] __device_attach+0x190/0x230
-    [<0000000035d32f80>] bus_probe_device+0x123/0x140
-    [<00000000a05ba627>] device_add+0x7cc/0xce0
-    [<000000003f7560bf>] platform_device_add+0x230/0x3c0
-    [<000000002a0be07d>] 0xffffffffc15d0949
-    [<000000007361d8d2>] port_check+0x3b/0x50 [parport]
-    [<000000004d67200f>] bus_for_each_dev+0x115/0x180
-    [<000000003ccfd11c>] __parport_register_driver+0x1f0/0x210 [parport]
-    [<00000000987f06fc>] 0xffffffffc15d803e
+Maybe give up on the idea to make this work for ww_mutex in general, and
+just for drm_gem_buffer_object? I'm just about to send out a patch series
+which makes sure that a lot more drivers set gem_bo.resv correctly (it
+will alias with ttm_bo.resv for ttm drivers ofc). Then we could add a
+list_head to gem_bo (won't really matter, but not something we can do with
+ww_mutex really), so that the unlock walking doesn't need to reuse the
+same iterator. That should work I think ...
 
-After commit 4e5a74f1db8d ("parport: Revert "parport: fix
-memory leak""), free_pardevice do not free par_dev->state,
-we should free it in error path of parport_register_dev_model
-before return.
+Also, it would almost cover everything you want to do. For ttm we'd need
+to make ttm_bo a subclass of gem_bo (and maybe not initialize that
+embedded gem_bo for vmwgfx and shadow bo and driver internal stuff).
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 4e5a74f1db8d ("parport: Revert "parport: fix memory leak"")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/parport/share.c | 2 ++
- 1 file changed, 2 insertions(+)
+Just some ideas, since copypasting the ww_mutex dance into all drivers is
+indeed not great.
+-Daniel
 
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index 754f21fd9768..f26af0214ab3 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -892,6 +892,7 @@ parport_register_dev_model(struct parport *port, const char *name,
- 	par_dev->devmodel = true;
- 	ret = device_register(&par_dev->dev);
- 	if (ret) {
-+		kfree(par_dev->state);
- 		put_device(&par_dev->dev);
- 		goto err_put_port;
- 	}
-@@ -909,6 +910,7 @@ parport_register_dev_model(struct parport *port, const char *name,
- 			spin_unlock(&port->physport->pardevice_lock);
- 			pr_debug("%s: cannot grant exclusive access for device %s\n",
- 				 port->name, name);
-+			kfree(par_dev->state);
- 			device_unregister(&par_dev->dev);
- 			goto err_put_port;
- 		}
+> 
+> Regards,
+> Christian.
+> 
+> > 
+> > 
+> > Also I think if we allow this we could perhaps use this to implement the
+> > modeset macros too.
+> > -Daniel
+> > 
+> > 
+> > 
+> > 
+> > > > This is kinda what we went with for modeset locks with
+> > > > DRM_MODESET_LOCK_ALL_BEGIN/END, you can grab more locks in between the
+> > > > pair at least. But it's a lot more limited use-cases, maybe too fragile an
+> > > > idea for ww_mutex in full generality.
+> > > > 
+> > > > Not going to type this out because too much w/e mode here already, but I
+> > > > can give it a stab next week.
+> > > > -Daniel
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > 
+> > 
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 -- 
-2.20.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
