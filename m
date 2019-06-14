@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F395DC31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:28:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 564DAC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C759A217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:28:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10A5D21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544135;
-	bh=9lGgRzI3zEztZ1I/AYHiU7Qsz3qwOIwZ3463BMGqp94=;
+	s=default; t=1560544140;
+	bh=1HGdhCg+X7QjWZ0ru0HNK30pWjUIRmD03jsKByQxeyA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PmMz9rvC1OMVzx54/JftHe2bomSppgorenvc2Hm5FfqcomTwBZVum/TAu616LHYfp
-	 CUGHWCMvEotXKS0ll+/Ky6AN8z2uWBLVJssD3/0ZJgJIifUwFR47NpvS/zurpCxA0N
-	 V5iYu82nkpMfs5BTWerK7DuzJ6dAgPIiVfUY7QRs=
+	b=SODpS4i2+o4PSlujimiYfXlGdIJ6qzD2N/nAKIs+FUaNzDMkcXq38xgrWAKMeA7R8
+	 TtB8vEruIP5+pL1xNXEWYXE3uxqN9KMOo6wHsiX6eYTz2qXEhB2RZR+JrQd8MNc4EC
+	 GWe1eb2TjjcwRyC91M+ewqToDOnSWEL4CZko7YLo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfFNU2z (ORCPT
+        id S1726599AbfFNU25 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:28:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50320 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:28:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50550 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726073AbfFNU2s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:28:48 -0400
+        id S1726435AbfFNU2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:28:54 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB6962184C;
-        Fri, 14 Jun 2019 20:28:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DE7FE21874;
+        Fri, 14 Jun 2019 20:28:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544128;
-        bh=9lGgRzI3zEztZ1I/AYHiU7Qsz3qwOIwZ3463BMGqp94=;
+        s=default; t=1560544132;
+        bh=1HGdhCg+X7QjWZ0ru0HNK30pWjUIRmD03jsKByQxeyA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lcuXPMSYH1jGR84d/g6k2ejCuxcjW/HN4SWq3FJkMWGDw2dt8hmGFDWiNKhcWATAs
-         +P1+rbXik5H/aAgJfm8gM+250P++cztQ4kzCKLoYjpY3cJ2upcqcCGXMI1/deFEa9H
-         dxLTyvLJEFx/VPlaCdyMkxh5j7SGkDHlFcwD9Zgs=
+        b=watoa0adhB72GAKmPX2HmYoQBKX8oMBiLM2dxHEfslhPBUqQXbdAoOlT3ij4N1H/F
+         9pDEJdpzKhKmqJPKd0ZAVPLMC5x19S7TdjS6vE+TKvJxiG2Rp/nMKwD6ry1+yo2H19
+         9ks64aJoETzFVfP5BDv/BABKiPiGRTdwbbm1jcKM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Paul Cercueil <paul@crapouillou.net>,
-        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
-        dmaengine@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 03/59] dmaengine: jz4780: Fix transfers being ACKed too soon
-Date:   Fri, 14 Jun 2019 16:27:47 -0400
-Message-Id: <20190614202843.26941-3-sashal@kernel.org>
+Cc:     Jose Abreu <joabreu@synopsys.com>,
+        Joao Pinto <jpinto@synopsys.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        Alexey Brodkin <abrodkin@synopsys.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 5.1 11/59] ARC: [plat-hsdk]: Add missing multicast filter bins number to GMAC node
+Date:   Fri, 14 Jun 2019 16:27:55 -0400
+Message-Id: <20190614202843.26941-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -59,108 +65,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Paul Cercueil <paul@crapouillou.net>
+From: Jose Abreu <joabreu@synopsys.com>
 
-[ Upstream commit 4e4106f5e942bff65548e82fc330d40385c89220 ]
+[ Upstream commit ecc906a11c2a0940e1a380debd8bd5bc09faf454 ]
 
-When a multi-descriptor DMA transfer is in progress, the "IRQ pending"
-flag will apparently be set for that channel as soon as the last
-descriptor loads, way before the IRQ actually happens. This behaviour
-has been observed on the JZ4725B, but maybe other SoCs are affected.
+GMAC controller on HSDK boards supports 256 Hash Table size so we need to
+add the multicast filter bins property. This allows for the Hash filter
+to work properly using stmmac driver.
 
-In the case where another DMA transfer is running into completion on a
-separate channel, the IRQ handler would then run the completion handler
-for our previous channel even if the transfer didn't actually finish.
-
-Fix this by checking in the completion handler that we're indeed done;
-if not the interrupted DMA transfer will simply be resumed.
-
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Cc: Joao Pinto <jpinto@synopsys.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Acked-by: Alexey Brodkin <abrodkin@synopsys.com>
+Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/dma/dma-jz4780.c | 32 +++++++++++++++++++++-----------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+ arch/arc/boot/dts/hsdk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/dma/dma-jz4780.c b/drivers/dma/dma-jz4780.c
-index 9ce0a386225b..f49534019d37 100644
---- a/drivers/dma/dma-jz4780.c
-+++ b/drivers/dma/dma-jz4780.c
-@@ -666,10 +666,11 @@ static enum dma_status jz4780_dma_tx_status(struct dma_chan *chan,
- 	return status;
- }
- 
--static void jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
--	struct jz4780_dma_chan *jzchan)
-+static bool jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
-+				struct jz4780_dma_chan *jzchan)
- {
- 	uint32_t dcs;
-+	bool ack = true;
- 
- 	spin_lock(&jzchan->vchan.lock);
- 
-@@ -692,12 +693,20 @@ static void jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
- 		if ((dcs & (JZ_DMA_DCS_AR | JZ_DMA_DCS_HLT)) == 0) {
- 			if (jzchan->desc->type == DMA_CYCLIC) {
- 				vchan_cyclic_callback(&jzchan->desc->vdesc);
--			} else {
-+
-+				jz4780_dma_begin(jzchan);
-+			} else if (dcs & JZ_DMA_DCS_TT) {
- 				vchan_cookie_complete(&jzchan->desc->vdesc);
- 				jzchan->desc = NULL;
--			}
- 
--			jz4780_dma_begin(jzchan);
-+				jz4780_dma_begin(jzchan);
-+			} else {
-+				/* False positive - continue the transfer */
-+				ack = false;
-+				jz4780_dma_chn_writel(jzdma, jzchan->id,
-+						      JZ_DMA_REG_DCS,
-+						      JZ_DMA_DCS_CTE);
-+			}
- 		}
- 	} else {
- 		dev_err(&jzchan->vchan.chan.dev->device,
-@@ -705,21 +714,22 @@ static void jz4780_dma_chan_irq(struct jz4780_dma_dev *jzdma,
- 	}
- 
- 	spin_unlock(&jzchan->vchan.lock);
-+
-+	return ack;
- }
- 
- static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
- {
- 	struct jz4780_dma_dev *jzdma = data;
-+	unsigned int nb_channels = jzdma->soc_data->nb_channels;
- 	uint32_t pending, dmac;
- 	int i;
- 
- 	pending = jz4780_dma_ctrl_readl(jzdma, JZ_DMA_REG_DIRQP);
- 
--	for (i = 0; i < jzdma->soc_data->nb_channels; i++) {
--		if (!(pending & (1<<i)))
--			continue;
--
--		jz4780_dma_chan_irq(jzdma, &jzdma->chan[i]);
-+	for_each_set_bit(i, (unsigned long *)&pending, nb_channels) {
-+		if (jz4780_dma_chan_irq(jzdma, &jzdma->chan[i]))
-+			pending &= ~BIT(i);
- 	}
- 
- 	/* Clear halt and address error status of all channels. */
-@@ -728,7 +738,7 @@ static irqreturn_t jz4780_dma_irq_handler(int irq, void *data)
- 	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DMAC, dmac);
- 
- 	/* Clear interrupt pending status. */
--	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DIRQP, 0);
-+	jz4780_dma_ctrl_writel(jzdma, JZ_DMA_REG_DIRQP, pending);
- 
- 	return IRQ_HANDLED;
- }
+diff --git a/arch/arc/boot/dts/hsdk.dts b/arch/arc/boot/dts/hsdk.dts
+index 7425bb0f2d1b..699f372b2a6f 100644
+--- a/arch/arc/boot/dts/hsdk.dts
++++ b/arch/arc/boot/dts/hsdk.dts
+@@ -187,6 +187,7 @@
+ 			interrupt-names = "macirq";
+ 			phy-mode = "rgmii";
+ 			snps,pbl = <32>;
++			snps,multicast-filter-bins = <256>;
+ 			clocks = <&gmacclk>;
+ 			clock-names = "stmmaceth";
+ 			phy-handle = <&phy0>;
 -- 
 2.20.1
 
