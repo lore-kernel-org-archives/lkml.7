@@ -2,148 +2,122 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 226B2C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEDE9C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8F0921721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A788F2177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:51:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DVVkim1o"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="W4N6jtac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfFNJug (ORCPT
+        id S1727236AbfFNJvk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:50:36 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7478 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfFNJug (ORCPT
+        Fri, 14 Jun 2019 05:51:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37232 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfFNJvk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:50:36 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d036de90000>; Fri, 14 Jun 2019 02:50:33 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Jun 2019 02:50:33 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 02:50:33 -0700
-Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 09:50:30 +0000
-Subject: Re: [PATCH V5 6/7] i2c: tegra: fix PIO rx/tx residual transfer check
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560250274-18499-1-git-send-email-bbiswas@nvidia.com>
- <1560250274-18499-6-git-send-email-bbiswas@nvidia.com>
- <42ce2523-dab9-0cdf-e8ff-42631dd161b7@gmail.com>
- <78140337-dca0-e340-a501-9e37eca6cc87@nvidia.com>
- <9cb7123a-1ebd-3a93-60dc-c8f57f60270b@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <e795ddcf-dd11-4e39-2a94-b663e5ecb35b@nvidia.com>
-Date:   Fri, 14 Jun 2019 02:50:27 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 05:51:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=eyC03vikXiwWfawO7Qlmx4pYoHpj/VV0tTc9G1eO/2M=; b=W4N6jtac4NDjjqmz5HnAxAouh
+        InHuflpblor7GHBWlLRdnNuT+ez7uTV5koHf3E14IuTEfmEj/L809EEQc/yLOHQhar2VHzWpgkzh3
+        Buzls+HHqkjXm+FiA2UAibkmrYNt/auf+rnYm7aG+UhusetsJSmeKWZPpMQsrISdsaQzoYGHdoOpM
+        qOjcb8wb2uhGYCWSjf/EFgVFzgUH3MUxM2i/Z9TcGfc/a1WdFwvDL8Ouem6Ou5YMjsU3X2yaVOmOL
+        /cSIaAAlXxDZz1t8vlgF14JmpQeGTd/ZoREYDN4MZvmXwoqSU/OoAxEiQdENGWRIwoEawlIZ0ZyLK
+        ItPRrqLYA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbirt-0000GE-T3; Fri, 14 Jun 2019 09:51:34 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 1254E20A26CE6; Fri, 14 Jun 2019 11:51:32 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 11:51:32 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 18/62] x86/mm: Implement syncing per-KeyID direct
+ mappings
+Message-ID: <20190614095131.GY3436@hirez.programming.kicks-ass.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-19-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <9cb7123a-1ebd-3a93-60dc-c8f57f60270b@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560505833; bh=dGTgHQykk8jjvblnk+qeivA9BFZLXLPF1/akzFWONSg=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=DVVkim1ofihgybXPoOwhLLaGQtOofCb3Fc084JU3veDx1hLbL6UF05lF5f9xSGuSG
-         lDN1/rdZ+XoOQTg0BEve/RPDWADoaAyzCaZtZ2BAVakBwwGGgqJOWg9LekCcdO+FV4
-         JG96ZRe5dDJ3wdFsMrOC4OcmIfM/fZxwl3/AbUzLLS8LMX7u2BggknsfU8FZOgno+o
-         d8Vlbd8Hys1S9nz+Z9iy9KnSibRye4IhyARfRTmH39jqJp2IkaVVOqgq78GzJjFQe1
-         dbOQIuoGIRXQIqvshp45F0fKyMCWvQhbtdxCJHR6OLYrN7z0novUCfTpPSJMMVD0Zf
-         IE95Ppx/aa0FQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508144422.13171-19-kirill.shutemov@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, May 08, 2019 at 05:43:38PM +0300, Kirill A. Shutemov wrote:
+> For MKTME we use per-KeyID direct mappings. This allows kernel to have
+> access to encrypted memory.
+> 
+> sync_direct_mapping() sync per-KeyID direct mappings with a canonical
+> one -- KeyID-0.
+> 
+> The function tracks changes in the canonical mapping:
+>  - creating or removing chunks of the translation tree;
+>  - changes in mapping flags (i.e. protection bits);
+>  - splitting huge page mapping into a page table;
+>  - replacing page table with a huge page mapping;
+> 
+> The function need to be called on every change to the direct mapping:
+> hotplug, hotremove, changes in permissions bits, etc.
+
+And yet I don't see anything in pageattr.c.
+
+Also, this seems like an expensive scheme; if you know where the changes
+where, a more fine-grained update would be faster.
+
+> The function is nop until MKTME is enabled.
+> 
+> Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> ---
+>  arch/x86/include/asm/mktme.h |   6 +
+>  arch/x86/mm/init_64.c        |  10 +
+>  arch/x86/mm/mktme.c          | 441 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 457 insertions(+)
 
 
-On 6/13/19 5:28 AM, Dmitry Osipenko wrote:
-> 13.06.2019 14:30, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->>
->> On 6/12/19 7:30 AM, Dmitry Osipenko wrote:
->>> 11.06.2019 13:51, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> Fix expression for residual bytes(less than word) transfer
->>>> in I2C PIO mode RX/TX.
->>>>
->>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->>>> ---
->>>
->>> [snip]
->>>
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Update state befor=
-e writing to FIFO.=C2=A0 If this casues us
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * Update state befor=
-e writing to FIFO.=C2=A0 If this causes us
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * to fin=
-ish writing all bytes (AKA buf_remaining goes to
->>>> 0) we
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * have a=
- potential for an interrupt (PACKET_XFER_COMPLETE is
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * not maskable).=C2=
-=A0 We need to make sure that the isr sees
->>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * buf_remaining as 0=
- and doesn't call us back re-entrantly.
->>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * not maskable).
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
->>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 buf_remaining =
--=3D words_to_transfer * BYTES_PER_FIFO_WORD;
->>>
->>> Looks like the comment could be removed altogether because it doesn't
->>> make sense since interrupt handler is under xfer_lock which is kept
->>> locked during of tegra_i2c_xfer_msg().
->> I would push a separate patch to remove this comment because of
->> xfer_lock in ISR now.
->>
->>>
->>> Moreover the comment says that "PACKET_XFER_COMPLETE is not maskable",
->>> but then what I2C_INT_PACKET_XFER_COMPLETE masking does?
->>>
->> I2C_INT_PACKET_XFER_COMPLETE masking support available in Tegra chips
->> newer than Tegra30 allows one to not see interrupt after Packet transfer
->> complete. With the xfer_lock in ISR the scenario discussed in comment
->> can be ignored.
->=20
-> Also note that xfer_lock could be removed and replaced with a just
-> irq_enable/disable() calls in tegra_i2c_xfer_msg() because we only care
-> about IRQ not firing during of the preparation process.
-This should need sufficient testing hence let us do it in a different=20
-series.
+> @@ -1247,6 +1254,7 @@ void mark_rodata_ro(void)
+>  	unsigned long text_end = PFN_ALIGN(&__stop___ex_table);
+>  	unsigned long rodata_end = PFN_ALIGN(&__end_rodata);
+>  	unsigned long all_end;
+> +	int ret;
+>  
+>  	printk(KERN_INFO "Write protecting the kernel read-only data: %luk\n",
+>  	       (end - start) >> 10);
+> @@ -1280,6 +1288,8 @@ void mark_rodata_ro(void)
+>  	free_kernel_image_pages((void *)text_end, (void *)rodata_start);
+>  	free_kernel_image_pages((void *)rodata_end, (void *)_sdata);
+>  
+> +	ret = sync_direct_mapping();
+> +	WARN_ON(ret);
+>  	debug_checkwx();
+>  }
+>  
 
->=20
-> It also looks like tegra_i2c_[un]nmask_irq isn't really needed and all
-> IRQ's could be simply unmasked during the driver's probe, in that case
-> it may worth to add a kind of "in-progress" flag to catch erroneous
-> interrupts.
->=20
-TX interrupt needs special handling if this change is done. Hence I=20
-think it should be taken up after sufficient testing in a separate patch.
-
--regards,
-  Bitan
-
+If you'd done pageattr, the above would not be needed.
