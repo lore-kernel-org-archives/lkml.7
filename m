@@ -2,90 +2,87 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C272C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3B6C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C86A2184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:20:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560529214;
-	bh=+miqeMfSWkr4moUYw1GPgzK89cG9rhNix4a208bvm+U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vvFw2Lg7BEhpLoSGiXrqHpK4hfPzX/D4NSyFXVkhSV1oMmHybDOA+XgTni/5Y+9nu
-	 HWU5DfNjBrEoq0+7hbCp7ZuAu/VjZXrP60RnXw6wERYEspINx1qwoB/j5j1LsQdApI
-	 +sb+WsNHBkdpLNWe1ucLiDUC9hJM6U/iy/tQEgHY=
+	by mail.kernel.org (Postfix) with ESMTP id AB55721848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfFNQUM (ORCPT
+        id S1726319AbfFNQU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53458 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 12:20:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3513 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbfFNQUM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:20:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9B8542183E;
-        Fri, 14 Jun 2019 16:20:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560529212;
-        bh=+miqeMfSWkr4moUYw1GPgzK89cG9rhNix4a208bvm+U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=L8qaLG22aoUH7W2zcf+EYqbggukwbugLjLyWZxukMUkndtgnt54icT8hgjuaOGrRJ
-         O4kIGE/19aFlytfdvWsRaBhik8fY3OvW0GjKuHkAygAWFcVyaM6ZtLp9PB561shqVy
-         I58hBLwe97fgUUV+D1oi9Q2q9NrujVPxy8kR7cYk=
-Date:   Fri, 14 Jun 2019 18:20:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linuxppc-dev@lists.ozlabs.org,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Anton Vorontsov <anton@enomsg.org>, linux-pm@vger.kernel.org,
-        Colin Cross <ccross@android.com>, linux-iio@vger.kernel.org,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Sebastian Reichel <sre@kernel.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Tony Luck <tony.luck@intel.com>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 00/14] Add support to generate ABI documentation at
- admin-guide
-Message-ID: <20190614162009.GA25572@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+        id S1725825AbfFNQU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:20:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 09:20:27 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by orsmga001.jf.intel.com with ESMTP; 14 Jun 2019 09:20:27 -0700
+Date:   Fri, 14 Jun 2019 09:20:27 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
+ scattered features word 11
+Message-ID: <20190614162027.GF12191@linux.intel.com>
+References: <20190614114410.GD2586@zn.tnic>
+ <20190614122749.GE2586@zn.tnic>
+ <20190614131701.GA198207@romley-ivt3.sc.intel.com>
+ <20190614134123.GF2586@zn.tnic>
+ <20190614141424.GA12191@linux.intel.com>
+ <20190614142139.GH2586@zn.tnic>
+ <20190614143912.GB12191@linux.intel.com>
+ <20190614145734.GJ2586@zn.tnic>
+ <20190614152458.GA22634@linux.intel.com>
+ <20190614160659.GM2586@zn.tnic>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <cover.1560477540.git.mchehab+samsung@kernel.org>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190614160659.GM2586@zn.tnic>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:04:06PM -0300, Mauro Carvalho Chehab wrote:
-> Greg,
+On Fri, Jun 14, 2019 at 06:10:12PM +0200, Borislav Petkov wrote:
+> On Fri, Jun 14, 2019 at 08:24:58AM -0700, Sean Christopherson wrote:
+> > On Fri, Jun 14, 2019 at 04:57:34PM +0200, Borislav Petkov wrote:
+> > > On Fri, Jun 14, 2019 at 07:39:12AM -0700, Sean Christopherson wrote:
+> > > > KVM can't handle Linux-defined leafs without extra tricks
+> > > 
+> > > and that's what I'm proposing - an extra trick.
+> > 
+> > It's not a trick, it's bug suppression.
+> > 
+> > Try running a kernel built with only patches 1/2 and 2/2 applied, along
+> > with KVM's assertions removed.  It'll probably boot fine since most of the
+> > affected features are option things, but Linux's feature reporting will be
+> > all kinds of screwed up.
+> > 
+> > E.g. this WARN triggers because CPUID_7_EDX is 17, not 18 as expected,
 > 
-> As promised, I'm resending the patch series with adds the Kernel ABI to
-> Documentation/admin-guide.
+> We can decrement NCAPINTS and word 18 in the header. The BUILD_BUG_ONs
+> should not fire then too.
 > 
-> Those patches are basically the version 3 patchset I sent back in 2017,
-> rebased on the top of linux-next (next-20190613), and with some fixes
-> in order for it to work.
-> 
-> - The 4 initial patches to fix some ABI descriptions that are violating 
->   the syntax described at Documentation/ABI/README;
+> But the easier thing is to not remove any defines in the enum
+> cpuid_leafs thing so that the capabilities array has the proper size for
+> after patch 2.
 
-These 4 are now applied to my driver-core tree, thanks.
-
-greg k-h
+Agreed, Fenghua's proposed CPUID_DUMMY is way easier.
