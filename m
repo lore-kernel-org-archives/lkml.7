@@ -2,61 +2,119 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E802EC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:32:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2426C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:34:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAFA92133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:32:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 972C02133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:34:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OtGVlkde"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726930AbfFNJcs (ORCPT
+        id S1727125AbfFNJeQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:32:48 -0400
-Received: from verein.lst.de ([213.95.11.211]:45475 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726083AbfFNJcs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:32:48 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id F075D227A82; Fri, 14 Jun 2019 11:32:18 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 11:32:18 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Greg Ungerer <gerg@snapgear.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: Re: linux-next: manual merge of the akpm-current tree with the
- m68knommu tree
-Message-ID: <20190614093218.GA17214@lst.de>
-References: <20190614190606.559dc8dc@canb.auug.org.au>
+        Fri, 14 Jun 2019 05:34:16 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43121 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727073AbfFNJeO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 05:34:14 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5E9Y2Nc1628507
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 14 Jun 2019 02:34:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5E9Y2Nc1628507
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560504843;
+        bh=ToGepS8t5druAqk7Q+F02KI+kL55oP+dZQHYZ1vqyYs=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=OtGVlkdemUCvmDCuHvmXR2T5JONDhdaTcyxIEHentMwcfe/61B2k9jXNv46qawGyg
+         RkbcorKOpxBByeSEXJfbtWqkYDfEA4wtPgR18hxWjImVxi1Q6yimr8EDkkqTCmYVxT
+         giMQgjk3Ca8xvD+bghl6HM+Tj/KCY8rIrkuku190ne6uVFi6Ifdm+w5JDVm5Xho9X7
+         NIOLpXl//Oi+xP5+y4luwSFj7UgrL6BkJPZF/OG47A8wL+qayy4XXk52W6YnZNkq7d
+         anjuSHHz8pS/75o6V3qLptGN1/jVNTC9p6G9dj62YJIe+edThL3GFDXLUNqi8qBdvC
+         qpAdKcxQqlaVw==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5E9Y2vb1628498;
+        Fri, 14 Jun 2019 02:34:02 -0700
+Date:   Fri, 14 Jun 2019 02:34:02 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Rajneesh Bhardwaj <tipbot@zytor.com>
+Message-ID: <tip-5f4318c1b1d23a9290e4def78ee76017c288bf60@git.kernel.org>
+Cc:     qiuxu.zhuo@intel.com, hpa@zytor.com, lenb@kernel.org,
+        linux-kernel@vger.kernel.org, peterz@infradead.org,
+        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
+        rajneesh.bhardwaj@linux.intel.com, mingo@kernel.org,
+        srinivas.pandruvada@linux.intel.com, kan.liang@linux.intel.com,
+        linux-pm@vger.kernel.org, dave.hansen@linux.intel.com
+Reply-To: srinivas.pandruvada@linux.intel.com, kan.liang@linux.intel.com,
+          linux-pm@vger.kernel.org, dave.hansen@linux.intel.com,
+          lenb@kernel.org, hpa@zytor.com, qiuxu.zhuo@intel.com,
+          linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com,
+          peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
+          rajneesh.bhardwaj@linux.intel.com
+In-Reply-To: <20190614081701.13828-1-rajneesh.bhardwaj@linux.intel.com>
+References: <20190614081701.13828-1-rajneesh.bhardwaj@linux.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cpu] perf/x86: Add Intel Ice Lake NNPI uncore support
+Git-Commit-ID: 5f4318c1b1d23a9290e4def78ee76017c288bf60
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190614190606.559dc8dc@canb.auug.org.au>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 07:06:06PM +1000, Stephen Rothwell wrote:
-> Hi all,
-> 
-> Today's linux-next merge of the akpm-current tree got a conflict in:
-> 
->   fs/binfmt_flat.c
-> 
-> between commit:
-> 
->   6071ecd874ac ("binfmt_flat: add endianess annotations")
-> 
-> from the m68knommu tree and commit:
-> 
->   db543c385059 ("fs/binfmt_flat.c: remove set but not used variable 'inode'")
+Commit-ID:  5f4318c1b1d23a9290e4def78ee76017c288bf60
+Gitweb:     https://git.kernel.org/tip/5f4318c1b1d23a9290e4def78ee76017c288bf60
+Author:     Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+AuthorDate: Fri, 14 Jun 2019 13:47:01 +0530
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 14 Jun 2019 11:30:47 +0200
 
-Maybe this should better be added to the maintainer tree as well..
+perf/x86: Add Intel Ice Lake NNPI uncore support
+
+Intel Ice Lake uncore support already included IMC PCI ID but ICL-NNPI
+CPUID is missing so add it to fix the probe function.
+
+Fixes: e39875d15ad6 ("perf/x86: add Intel Icelake uncore support")
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Acked-by: Peter Zijlstra <peterz@infradead.org>
+Cc: alexander.shishkin@linux.intel.com
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
+Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
+Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc: Len Brown <lenb@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>
+Link: https://lkml.kernel.org/r/20190614081701.13828-1-rajneesh.bhardwaj@linux.intel.com
+
+---
+ arch/x86/events/intel/uncore.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
+index 9e3fbd47cb56..089bfcdf2f7f 100644
+--- a/arch/x86/events/intel/uncore.c
++++ b/arch/x86/events/intel/uncore.c
+@@ -1400,6 +1400,7 @@ static const struct x86_cpu_id intel_uncore_match[] __initconst = {
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE, skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_uncore_init),
+ 	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE, icl_uncore_init),
++	X86_UNCORE_MODEL_MATCH(INTEL_FAM6_ICELAKE_NNPI, icl_uncore_init),
+ 	{},
+ };
+ 
