@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1510C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8448C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8537217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3140217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544176;
-	bh=DkwTj3lGy+62IaL5sUSt22R/GkKUGMOQMc62lTrrUjc=;
+	s=default; t=1560544181;
+	bh=E3GY73+NvZOKNDdSCl5mj8a8NxwQggH++gAKIFJIZYE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uIO63PjnG3RP2PSBQ0cytsoYsvo6/4YoAAZmCFi6kim4E82sC8QvDfObJr2URp+3b
-	 mTJq0ymbACXglOixLeACN1DNSbK93dR9BbapdwxBGMzXti9m8dhnefaCLSWaKvdH4k
-	 kmp/3sFEtOhphmIl1cbThyCWBUklUCnNWaSH3jSM=
+	b=eLsADNSllnvzPzZ33nC1NFan/waj1BoZ73nvEvpwDHzAO628kGsR7jZgKj3MRgzRi
+	 xLkekqDHw65vzTB0tDHtLCtsvjYMMWtw7G0YXJi62Ytdxn6pU8kBDCe+xbKnclPD/T
+	 imkGfqpLg7lJHKHnjtrD4voWAwhHKDeMy9R3V7uY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726800AbfFNU3J (ORCPT
+        id S1727093AbfFNU3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:29:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50756 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:29:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbfFNU3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:00 -0400
+        id S1726397AbfFNU3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:36 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EBCC021850;
-        Fri, 14 Jun 2019 20:28:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E0E0E21841;
+        Fri, 14 Jun 2019 20:29:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544140;
-        bh=DkwTj3lGy+62IaL5sUSt22R/GkKUGMOQMc62lTrrUjc=;
+        s=default; t=1560544176;
+        bh=E3GY73+NvZOKNDdSCl5mj8a8NxwQggH++gAKIFJIZYE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VcH/ToUZ1UIIL4mXEmxV1+GXMxxyxkcScWFsWF/rx/ti2K7L31AU3uegRpej1uujn
-         BQ1j/pDSxs1bv/FrTnaJT7/R2YRFGC9mqIVnUDzfSXQlY0XwGNL32LKCf5EQqb9OM4
-         QsO4gY04Xq7stZT3jWZPtlvCos6fUIhlBhRM2zX0=
+        b=XA9+nVH/b/ZuNGoHALzD84zpoRTnqMkMFOFK+qLaNX/hIBtrMV7kQNSRwN8hdWxrR
+         CpFblRxqA8b+ZuZPGWfZxOzC830yUr0Wg9ZujtTgbyLMjG24cCxCLzWRB/ubrBs4Nd
+         HeQPaY7CBa6l5Animum2Vawi4VSRhSJoAkm0ZFIY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 18/59] parport: Fix mem leak in parport_register_dev_model
-Date:   Fri, 14 Jun 2019 16:28:02 -0400
-Message-Id: <20190614202843.26941-18-sashal@kernel.org>
+Cc:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 34/59] net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
+Date:   Fri, 14 Jun 2019 16:28:18 -0400
+Message-Id: <20190614202843.26941-34-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -59,67 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 
-[ Upstream commit 1c7ebeabc9e5ee12e42075a597de40fdb9059530 ]
+[ Upstream commit 62394708f3e01c9f2be6be74eb6305bae1ed924f ]
 
-BUG: memory leak
-unreferenced object 0xffff8881df48cda0 (size 16):
-  comm "syz-executor.0", pid 5077, jiffies 4295994670 (age 22.280s)
-  hex dump (first 16 bytes):
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-    [<00000000d2d0d5fe>] parport_register_dev_model+0x141/0x6e0 [parport]
-    [<00000000782f6dab>] 0xffffffffc15d1196
-    [<00000000d2ca6ae4>] platform_drv_probe+0x7e/0x100
-    [<00000000628c2a94>] really_probe+0x342/0x4d0
-    [<000000006874f5da>] driver_probe_device+0x8c/0x170
-    [<00000000424de37a>] __device_attach_driver+0xda/0x100
-    [<000000002acab09a>] bus_for_each_drv+0xfe/0x170
-    [<000000003d9e5f31>] __device_attach+0x190/0x230
-    [<0000000035d32f80>] bus_probe_device+0x123/0x140
-    [<00000000a05ba627>] device_add+0x7cc/0xce0
-    [<000000003f7560bf>] platform_device_add+0x230/0x3c0
-    [<000000002a0be07d>] 0xffffffffc15d0949
-    [<000000007361d8d2>] port_check+0x3b/0x50 [parport]
-    [<000000004d67200f>] bus_for_each_dev+0x115/0x180
-    [<000000003ccfd11c>] __parport_register_driver+0x1f0/0x210 [parport]
-    [<00000000987f06fc>] 0xffffffffc15d803e
+When non-bridged, non-vlan'ed mv88e6xxx port is moving down, error
+message is logged:
 
-After commit 4e5a74f1db8d ("parport: Revert "parport: fix
-memory leak""), free_pardevice do not free par_dev->state,
-we should free it in error path of parport_register_dev_model
-before return.
+failed to kill vid 0081/0 for device eth_cu_1000_4
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 4e5a74f1db8d ("parport: Revert "parport: fix memory leak"")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This is caused by call from __vlan_vid_del() with vin set to zero, over
+call chain this results into _mv88e6xxx_port_vlan_del() called with
+vid=0, and mv88e6xxx_vtu_get() called from there returns -EINVAL.
+
+On symmetric path moving port up, call goes through
+mv88e6xxx_port_vlan_prepare() that calls mv88e6xxx_port_check_hw_vlan()
+that returns -EOPNOTSUPP for zero vid.
+
+This patch changes mv88e6xxx_vtu_get() to also return -EOPNOTSUPP for
+zero vid, then this error code is explicitly cleared in
+dsa_slave_vlan_rx_kill_vid() and error message is no longer logged.
+
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/parport/share.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/parport/share.c b/drivers/parport/share.c
-index 5dc53d420ca8..7b4ee33c1935 100644
---- a/drivers/parport/share.c
-+++ b/drivers/parport/share.c
-@@ -895,6 +895,7 @@ parport_register_dev_model(struct parport *port, const char *name,
- 	par_dev->devmodel = true;
- 	ret = device_register(&par_dev->dev);
- 	if (ret) {
-+		kfree(par_dev->state);
- 		put_device(&par_dev->dev);
- 		goto err_put_port;
- 	}
-@@ -912,6 +913,7 @@ parport_register_dev_model(struct parport *port, const char *name,
- 			spin_unlock(&port->physport->pardevice_lock);
- 			pr_debug("%s: cannot grant exclusive access for device %s\n",
- 				 port->name, name);
-+			kfree(par_dev->state);
- 			device_unregister(&par_dev->dev);
- 			goto err_put_port;
- 		}
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index 720f1dde2c2d..ae750ab9a4d7 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -1517,7 +1517,7 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
+ 	int err;
+ 
+ 	if (!vid)
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 
+ 	entry->vid = vid - 1;
+ 	entry->valid = false;
 -- 
 2.20.1
 
