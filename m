@@ -2,104 +2,109 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F3BCC31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:44:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5697C31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:45:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42DC52184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:44:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B541921848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:45:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="Y2t0/2mr"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E73Caugs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfFNWop (ORCPT
+        id S1726551AbfFNWpp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 18:44:45 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:43017 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfFNWop (ORCPT
+        Fri, 14 Jun 2019 18:45:45 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:46723 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbfFNWpo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 18:44:45 -0400
-Received: by mail-ed1-f66.google.com with SMTP id e3so5591116edr.10
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 15:44:43 -0700 (PDT)
+        Fri, 14 Jun 2019 18:45:44 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 81so2220661pfy.13
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 15:45:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h2YsZJ/hpz/dktPd7lJ9/WdLKqP8cOEcDv4gWF/xH7M=;
-        b=Y2t0/2mr8aihOd4yjitVfbPHHMKDHwZD9B6ADKgMF/1yloLEFDKbVCRHfVvaojZBhW
-         X9iJJUE6HuWUrExWayDRtjj+0OY9xfenQmbiD65VYnZPJOUFGdTbi3xuEA07tqg3ncbv
-         ajDe+y4rUbN/CGxSwjohrEi6tZZ+rb0czHc523vfaeBuj/plC1g5QA1E/xwdWDUbC4Hd
-         RklEBmoxmZUKNVrU/LEZqMvsSeLzhM9NmIDLrG2hAKwrIZM2QBMIxo1U2J3pm1Yk5ZQ5
-         p0ydX7NAPzB8rkCRYyO5wZUKpOOL548iP7pggw258oF7RxeVGfPE4TrDcwadMkWMbA1a
-         BUNQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CmE6N4JKzhXb5lHoVXsuD5qj8tmeCrMDzU4ePEIWm0Y=;
+        b=E73CaugswLEoSnRUob/BsIpit8Tpx/hMYrnG1PMqIuPtY3H8B5BMGazNT5uoypDBWx
+         osOLOrWmYS78KuZdurwrMG5aU1Y229O/IYHb/YcPh8YQIb9gbtbFQLqx5utdsF24L0cP
+         CMPNavVjwHgO3gIr+WTWuV2HWsmZ2/Og89tlk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h2YsZJ/hpz/dktPd7lJ9/WdLKqP8cOEcDv4gWF/xH7M=;
-        b=Pkm+dx8g7Wa9ngB87eo9+b+GjiHV/iqY6pNia0ea9fT4fjT6MICKXPzG9FC7OSncWb
-         anz8wPcgKilrarPEhnFcCt8nI8k+uNCK50Qky7pr3no+mmF9be3BwEA6TqCFdjA73A4q
-         rPehK+ZCfuVGJ/xDaQYYBpdQgm8AL+meGA+hgL4aIbPSaITXvJMbxFh5TuajI+0WanUn
-         d3R16rjrgrJxPZbIEvKgU3ARignmuUed7jEiLkWbAFPjUgBgfNsic7zw0F44OCsBG7S5
-         9LUUyVKFN+WyuxcGIVo2Pb/FgcWsqv1kH5EmNyDhlkKuL5Bc/O4SysjYltUbyFBOXIwd
-         lGxg==
-X-Gm-Message-State: APjAAAUcL9G7joonQnh+qGM8uZBauT/7I2KBSo1uId3BKz/XTrWtJrl+
-        LYqXWom5pnhC7J1X8n0g6Jr7ug==
-X-Google-Smtp-Source: APXvYqzu11aNlHQ8Ctnz/nojH1rYOSaIZ8gUOC9DmalwLiJMfeuh07K661B4hMO+kTvku1uEQp/sMw==
-X-Received: by 2002:a17:906:b2c6:: with SMTP id cf6mr66162140ejb.274.1560552283205;
-        Fri, 14 Jun 2019 15:44:43 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id j19sm1212825edr.69.2019.06.14.15.44.42
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=CmE6N4JKzhXb5lHoVXsuD5qj8tmeCrMDzU4ePEIWm0Y=;
+        b=ddyHeCCSauGI8cwoAKmFZ8SB+lFwSy1/EaNQCd4Nh9lvAnht3tQLNyZDmca7bkQM1O
+         tuU9F3o1dxerBkRzJR5JyjKzIe2TngS7pQjgzuIEeXQgKYnkNPQp56+MIIjl82omPKdb
+         ey6osF6T3Ly5SLDO8MID8mUScEW0FyfGIGCkH86VzDLjJLxRK20BQ1uOmqJuDU+doDHP
+         diqsMnONtzYfBPjpUzrXet//hks5cfHpDUb1JCF5yuxafQkx1gsiNvo8XiIUKqfkpWnE
+         vAPWhB+jDz7zEXWJy8sV6J+TzQVlRUifI8QfW5f8v8LXNbv2Jgkfod2P3m/E5xRuDXDw
+         pjQA==
+X-Gm-Message-State: APjAAAX+FhXSevFZ5u6IS05WvdzfOlDAH3XMZ5M2mlqHeIfy4ZIi3IMx
+        dQO8RzWMhj3qs1WpF0HMZsmXhQ==
+X-Google-Smtp-Source: APXvYqyN12JRzQIV0hm4tLUoGW9KOz1B4YaxPa5FrSR+r+v1H8arhpYH9PjobRBRAWHrn53K5WiajQ==
+X-Received: by 2002:a17:90a:37ac:: with SMTP id v41mr12841194pjb.6.1560552344085;
+        Fri, 14 Jun 2019 15:45:44 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id x129sm4099537pfb.29.2019.06.14.15.45.43
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 15:44:42 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 42D7D1032BB; Sat, 15 Jun 2019 01:44:43 +0300 (+03)
-Date:   Sat, 15 Jun 2019 01:44:43 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 20/62] mm/page_ext: Export lookup_page_ext() symbol
-Message-ID: <20190614224443.qmqolaigu5wnf75p@box>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-21-kirill.shutemov@linux.intel.com>
- <20190614111259.GA3436@hirez.programming.kicks-ass.net>
+        Fri, 14 Jun 2019 15:45:43 -0700 (PDT)
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Douglas Anderson <dianders@chromium.org>,
+        Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight settings for Minnie"
+Date:   Fri, 14 Jun 2019 15:45:33 -0700
+Message-Id: <20190614224533.169881-1-mka@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614111259.GA3436@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 01:12:59PM +0200, Peter Zijlstra wrote:
-> On Wed, May 08, 2019 at 05:43:40PM +0300, Kirill A. Shutemov wrote:
-> > page_keyid() is inline funcation that uses lookup_page_ext(). KVM is
-> > going to use page_keyid() and since KVM can be built as a module
-> > lookup_page_ext() has to be exported.
-> 
-> I _really_ hate having to export world+dog for KVM. This one might not
-> be a real issue, but I itch every time I see an export for KVM these
-> days.
+This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
 
-Is there any better way? Do we need to invent EXPORT_SYMBOL_KVM()? :P
+According to the commit message the AUO B101EAN01 panel on minnie
+requires a PWM delay of 200 ms, however this is not what the
+datasheet says. The datasheet mentions a *max* delay of 200 ms
+for T2 ("delay from LCDVDD to black video generation") and T3
+("delay from LCDVDD to HPD high"), which aren't related to the
+PWM. The backlight power sequence does not specify min/max
+constraints for T15 (time from PWM on to BL enable) or T16
+(time from BL disable to PWM off).
 
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+Enric, if you think I misinterpreted the datasheet please holler!
+---
+ arch/arm/boot/dts/rk3288-veyron-minnie.dts | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/rk3288-veyron-minnie.dts b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+index 468a1818545d..28cbe07f96ec 100644
+--- a/arch/arm/boot/dts/rk3288-veyron-minnie.dts
++++ b/arch/arm/boot/dts/rk3288-veyron-minnie.dts
+@@ -86,8 +86,6 @@
+ 			240 241 242 243 244 245 246 247
+ 			248 249 250 251 252 253 254 255>;
+ 	power-supply = <&backlight_regulator>;
+-	post-pwm-on-delay-ms = <200>;
+-	pwm-off-delay-ms = <200>;
+ };
+ 
+ &emmc {
 -- 
- Kirill A. Shutemov
+2.22.0.410.gd8fdbe21b5-goog
+
