@@ -2,152 +2,106 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD40FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:33:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DC1C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A3A32175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:33:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560526385;
-	bh=PlrYtUM8SsBJO30qWgKCkRG4AST4y0JO6i8RIppeDKU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FP/bZylHZoVxZmo7ZV3PDgHpx61VvFpTAnMJu0BKmmnZfmp1bDZCLsagebfHOTZn7
-	 l2s7jnuhTJHfEnBZoTSrwvdAwFHNsTFIo71sInGoF4tQkwqXKpmnfSDzhiFwRXqc5M
-	 qpygCDNoDgsYfoDiE5T8N1AsrHS5Dsbpu7Sv7yPA=
+	by mail.kernel.org (Postfix) with ESMTP id B59162175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:33:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfFNPdE (ORCPT
+        id S1726772AbfFNPdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:33:04 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33032 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725780AbfFNPdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:33:03 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so1182125plo.0;
-        Fri, 14 Jun 2019 08:33:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=94FnoFCGinxKIVI488xScEWQQ1X2y9NyRvuM1e8VR9g=;
-        b=JHykRz/yv1ZeAaVIebzGDc1gORj9rH2a8l7aAyECo3Nx+UvrJuoAth4rLNJPXxdXb0
-         nOhWWYPz25XqLYUrf/1jAsZDix8XVdiC58vYN8xosL3dQPjyq7TD9IlMZV33gxAgR7zK
-         oZcB+ZZMtQhLhotyD4rIkNl29/GszIKMwfLK/xD5w+CV/Q0SIGU4ZG1l5UcYv97MiQ0B
-         tn2zH0YrjCMd0ltmU/JHKX2yKRupyUKSIjb0kNoNzg4Nb1aXrRSiLUk1wuEA7Azh5bxT
-         MlgMULdIqZ5MXqNpaq6IK6owfyJD1lUeeBhR/kfljnQbwJdDFAjfx6zWnM39xfICnv4z
-         TEZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=94FnoFCGinxKIVI488xScEWQQ1X2y9NyRvuM1e8VR9g=;
-        b=pzV5SnZrB/HQF7/bH3SZ0yILUX/rE3tpK1oIIsTVlvzZKmxI+UzqusBewrGOwGofe4
-         3LKLQ5jpLqYrP326/q6iJmc5EkRmNsVGWvmdMKqjFQ6J/P9UWCZM47HzrwSrEZKUMlSN
-         Tt5m8CnaXcUSLUGZZtgdnYahJUCIocqXSJV8h+K7QpnyqsL6aMX85EOrX4DKBp7qDRC1
-         SzzGI5ruHHccOVM5zI7lkc2p56zbpaHuMnhDbkvu+wF5XZYDx2uN/ERiPb+Y/O4QX5Jv
-         CU8sGFJ9RqIA9IT5YOSkNSvGk4p0y1TAjyoBGE2kzwYG+0z3EfjY/d9rbCYBRiu6ExGl
-         qJZw==
-X-Gm-Message-State: APjAAAVttYur9Lh6R7jKoLct1/eTZ4crvxeqlQI+9T94mx3FaegqqIj4
-        p951PBj2x+iZw0O88PFON2o=
-X-Google-Smtp-Source: APXvYqwfqCfExW0GEUt9P4RalfBCPWeXn5IPAkbmIRSBmOW9d6Y+luQHM0Nl7xy2v0c4pe7a2BdKhw==
-X-Received: by 2002:a17:902:aa83:: with SMTP id d3mr70465260plr.74.1560526382836;
-        Fri, 14 Jun 2019 08:33:02 -0700 (PDT)
-Received: from localhost ([2620:10d:c090:180::1:b330])
-        by smtp.gmail.com with ESMTPSA id l1sm3206498pgj.67.2019.06.14.08.33.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 08:33:02 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 08:32:58 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
-        axboe@kernel.dk, jack@suse.cz
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, kernel-team@fb.com
-Subject: [PATCH v2 8/8] Btrfs: extent_write_locked_range() should attach
- inode->i_wb
-Message-ID: <20190614153258.GC538958@devbig004.ftw2.facebook.com>
-References: <20190614003350.1178444-1-tj@kernel.org>
- <20190614003350.1178444-9-tj@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614003350.1178444-9-tj@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        Fri, 14 Jun 2019 11:33:22 -0400
+Received: from mga18.intel.com ([134.134.136.126]:64871 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725780AbfFNPdV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:33:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 08:33:20 -0700
+X-ExtLoop1: 1
+Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Jun 2019 08:33:20 -0700
+Message-ID: <cf0d1470e95e0a8b88742651d06601a53d6655c1.camel@intel.com>
+Subject: Re: [PATCH v7 03/14] x86/cet/ibt: Add IBT legacy code bitmap setup
+ function
+From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@amacapital.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-mm@kvack.org,
+        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>,
+        Dave Martin <Dave.Martin@arm.com>
+Date:   Fri, 14 Jun 2019 08:25:16 -0700
+In-Reply-To: <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
+References: <20190606200926.4029-1-yu-cheng.yu@intel.com>
+         <20190606200926.4029-4-yu-cheng.yu@intel.com>
+         <20190607080832.GT3419@hirez.programming.kicks-ass.net>
+         <aa8a92ef231d512b5c9855ef416db050b5ab59a6.camel@intel.com>
+         <20190607174336.GM3436@hirez.programming.kicks-ass.net>
+         <b3de4110-5366-fdc7-a960-71dea543a42f@intel.com>
+         <34E0D316-552A-401C-ABAA-5584B5BC98C5@amacapital.net>
+         <7e0b97bf1fbe6ff20653a8e4e147c6285cc5552d.camel@intel.com>
+         <25281DB3-FCE4-40C2-BADB-B3B05C5F8DD3@amacapital.net>
+         <e26f7d09376740a5f7e8360fac4805488b2c0a4f.camel@intel.com>
+         <3f19582d-78b1-5849-ffd0-53e8ca747c0d@intel.com>
+         <5aa98999b1343f34828414b74261201886ec4591.camel@intel.com>
+         <0665416d-9999-b394-df17-f2a5e1408130@intel.com>
+         <5c8727dde9653402eea97bfdd030c479d1e8dd99.camel@intel.com>
+         <ac9a20a6-170a-694e-beeb-605a17195034@intel.com>
+         <328275c9b43c06809c9937c83d25126a6e3efcbd.camel@intel.com>
+         <92e56b28-0cd4-e3f4-867b-639d9b98b86c@intel.com>
+         <1b961c71d30e31ecb22da2c5401b1a81cb802d86.camel@intel.com>
+         <ea5e333f-8cd6-8396-635f-a9dc580d5364@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.1-2 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-extent_write_locked_range() is used when we're falling back to buffered
-IO from inside of compression.  It allocates its own wbc and should
-associate it with the inode's i_wb to make sure the IO goes down from
-the correct cgroup.
+On Mon, 2019-06-10 at 15:59 -0700, Dave Hansen wrote:
+> On 6/10/19 3:40 PM, Yu-cheng Yu wrote:
+> > Ok, we will go back to do_mmap() with MAP_PRIVATE, MAP_NORESERVE and
+> > VM_DONTDUMP.  The bitmap will cover only 48-bit address space.
+> 
+> Could you make sure to discuss the downsides of only doing a 48-bit
+> address space?
 
-Also, export the needed symbols from fs-writeback.c.
+The downside is that we cannot load legacy lib's above 48-bit address space, but
+currently ld-linux does not do that.  Should ld-linux do that in the future,
+dlopen() fails.  Considering CRIU migration, we probably need to do this anyway?
 
-Signed-off-by: Chris Mason <clm@fb.com>
-Build-Breakage-Reported-by: kbuild test robot <lkp@intel.com>
----
-v2: Module build fix.
+> What are the reasons behind and implications of VM_DONTDUMP?
 
- fs/btrfs/extent_io.c |   10 ++++++----
- fs/fs-writeback.c    |    3 +++
- 2 files changed, 9 insertions(+), 4 deletions(-)
+The bitmap is very big.
 
---- a/fs/btrfs/extent_io.c
-+++ b/fs/btrfs/extent_io.c
-@@ -4178,6 +4178,7 @@ int extent_write_locked_range(struct ino
- 		.no_wbc_acct	= 1,
- 	};
- 
-+	wbc_attach_fdatawrite_inode(&wbc_writepages, inode);
- 	while (start <= end) {
- 		page = find_get_page(mapping, start >> PAGE_SHIFT);
- 		if (clear_page_dirty_for_io(page))
-@@ -4192,11 +4193,12 @@ int extent_write_locked_range(struct ino
- 	}
- 
- 	ASSERT(ret <= 0);
--	if (ret < 0) {
-+	if (ret == 0)
-+		ret = flush_write_bio(&epd);
-+	else
- 		end_write_bio(&epd, ret);
--		return ret;
--	}
--	ret = flush_write_bio(&epd);
-+
-+	wbc_detach_inode(&wbc_writepages);
- 	return ret;
- }
- 
---- a/fs/fs-writeback.c
-+++ b/fs/fs-writeback.c
-@@ -270,6 +270,7 @@ void __inode_attach_wb(struct inode *ino
- 	if (unlikely(cmpxchg(&inode->i_wb, NULL, wb)))
- 		wb_put(wb);
- }
-+EXPORT_SYMBOL_GPL(__inode_attach_wb);
- 
- /**
-  * locked_inode_to_wb_and_lock_list - determine a locked inode's wb and lock it
-@@ -582,6 +583,7 @@ void wbc_attach_and_unlock_inode(struct
- 	if (unlikely(wb_dying(wbc->wb)))
- 		inode_switch_wbs(inode, wbc->wb_id);
- }
-+EXPORT_SYMBOL_GPL(wbc_attach_and_unlock_inode);
- 
- /**
-  * wbc_detach_inode - disassociate wbc from inode and perform foreign detection
-@@ -701,6 +703,7 @@ void wbc_detach_inode(struct writeback_c
- 	wb_put(wbc->wb);
- 	wbc->wb = NULL;
- }
-+EXPORT_SYMBOL_GPL(wbc_detach_inode);
- 
- /**
-  * wbc_account_io - account IO issued during writeback
+In GDB, it should be easy to tell why a control-protection fault occurred
+without the bitmap.
+
+Yu-cheng
