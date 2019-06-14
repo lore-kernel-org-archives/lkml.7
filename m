@@ -2,109 +2,127 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1019C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFD2C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:26:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F1762133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EFE32133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:26:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728094AbfFNNYi (ORCPT
+        id S1728063AbfFNN03 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:24:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40634 "EHLO mx1.redhat.com"
+        Fri, 14 Jun 2019 09:26:29 -0400
+Received: from mga17.intel.com ([192.55.52.151]:23651 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727729AbfFNNYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:24:37 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E82FD31628E1;
-        Fri, 14 Jun 2019 13:24:31 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 918A339C3;
-        Fri, 14 Jun 2019 13:24:25 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
-        <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com>
-        <87ftocwkei.fsf@oldenburg2.str.redhat.com>
-        <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com>
-        <87tvcsv1pk.fsf@oldenburg2.str.redhat.com>
-        <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com>
-        <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com>
-        <87d0jguxdk.fsf@oldenburg2.str.redhat.com>
-        <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com>
-Date:   Fri, 14 Jun 2019 15:24:24 +0200
-In-Reply-To: <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Fri, 14 Jun 2019 09:18:38 -0400
-        (EDT)")
-Message-ID: <87wohoti47.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        id S1727737AbfFNN03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:26:29 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 06:26:28 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga006.jf.intel.com with ESMTP; 14 Jun 2019 06:26:27 -0700
+Date:   Fri, 14 Jun 2019 06:17:02 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
+ scattered features word 11
+Message-ID: <20190614131701.GA198207@romley-ivt3.sc.intel.com>
+References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
+ <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
+ <20190614114410.GD2586@zn.tnic>
+ <20190614122749.GE2586@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 14 Jun 2019 13:24:37 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614122749.GE2586@zn.tnic>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+On Fri, Jun 14, 2019 at 02:27:50PM +0200, Borislav Petkov wrote:
+> On Fri, Jun 14, 2019 at 01:44:10PM +0200, Borislav Petkov wrote:
+> > On Thu, Jun 13, 2019 at 01:51:03PM -0700, Fenghua Yu wrote:
+> > > It's a waste for the four X86_FEATURE_CQM_* features to occupy two
+> > > pure feature bits words. To better utilize feature words, re-define
+> > > word 11 to host scattered features and move the four X86_FEATURE_CQM_*
+> > > features into word 11. More scattered features can be added in word 11
+> > > in the future.
+> > > 
+> > > KVM doesn't support resctrl now. So it's safe to move the
+> > > X86_FEATURE_CQM_* features to scattered features word 11 for KVM.
+> > > 
+> > > Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> > 
+> > ...
+> > 
+> > > diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+> > > index 9a327d5b6d1f..d78a61408243 100644
+> > > --- a/arch/x86/kvm/cpuid.h
+> > > +++ b/arch/x86/kvm/cpuid.h
+> > > @@ -47,8 +47,6 @@ static const struct cpuid_reg reverse_cpuid[] = {
+> > >  	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
+> > >  	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
+> > >  	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
+> > > -	[CPUID_F_0_EDX]       = {       0xf, 0, CPUID_EDX},
+> > > -	[CPUID_F_1_EDX]       = {       0xf, 1, CPUID_EDX},
+> > 
+> > I think you're going to have to change those to:
+> > 
+> >         [CPUID_LNX_4]         = {         0, 0, 0},
+> >         [CPUID_7_1_EAX]       = {         7, 1, CPUID_EAX },
+> > 
+> > instead of removing them because kvm is basically hardcoding the feature
+> > words and then bitches when array elements in the middle get removed:
+> 
+> Alternatively - and what I think is the better solution - would be to
+> remove those BUILD_BUG_ONs in x86_feature_cpuid and filter out the
+> Linux-defined leafs dynamically. This way the array won't have holes in
+> it.
 
-> ----- On Jun 14, 2019, at 3:09 PM, Florian Weimer fweimer@redhat.com wrote:
->
->> * Mathieu Desnoyers:
->> 
->>> But my original issue remains: if I define a variable called __rseq_handled
->>> within either the main executable or the preloaded library, it overshadows
->>> the libc one:
->>>
->>> efficios@compudjdev:~/test/libc-sym$ ./a
->>> __rseq_handled main: 0 0x56135fd5102c
->>> __rseq_abi.cpu_id main: 29 0x7fcbeca6d5a0
->>> efficios@compudjdev:~/test/libc-sym$ LD_PRELOAD=./s.so ./a
->>> __rseq_handled s.so: 0 0x558f70aeb02c
->>> __rseq_abi.cpu_id s.so: -1 0x7fdca78b7760
->>> __rseq_handled main: 0 0x558f70aeb02c
->>> __rseq_abi.cpu_id main: 27 0x7fdca78b7760
->>>
->>> Which is unexpected.
->> 
->> Why is this unexpected?  It has to be this way if the main program uses
->> a copy relocation of __rseq_handled.  As long as there is just one
->> address across the entire program and ld.so initializes the copy of the
->> variable that is actually used, everything will be fine.
->
-> Here is a printout of the __rseq_handled address observed by ld.so, it
-> does not match:
->
-> LD_PRELOAD=./s.so ./a
-> elf: __rseq_handled addr: 7f501c98a140
-> __rseq_handled s.so: 0 0x55817a88d02c
-> __rseq_abi.cpu_id s.so: -1 0x7f501c983760
-> __rseq_handled main: 0 0x55817a88d02c
-> __rseq_abi.cpu_id main: 27 0x7f501c983760
+Maybe adding a dummy slot in cpuid_leafs in patch 0002 to avoid the
+compilation errors?
 
-Where do you print the address?  Before or after the self-relocation of
-the dynamic loader?  The address is only correct after self-relocation.
+Those KVM BUILD_BUG_ON() want to find out any empty leaf in
+reverse_cpuid (and also cpuid_leafs).
 
-Thanks,
-Florian
+The patch 0002 actually creates such empty leaf 12 in cpuid_leafs. So
+CPUID_7_EDX=17 instead of NCAPINTS-1=18 in cpuid_leafs. It's not
+desired.
+
+After applying patch 0003, the hole is filled in and there is no
+compilation error from the KVM BUILD_BUG_ON() checks. So the compilation
+errors only happens in bisect.
+
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 526619906305..403f70c2e431 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -23,6 +23,7 @@ enum cpuid_leafs
+        CPUID_7_0_EBX,
+        CPUID_D_1_EAX,
+        CPUID_LNX_4,
++       CPUID_DUMMY,
+        CPUID_8000_0008_EBX,
+        CPUID_6_EAX,
+        CPUID_8000_000A_EDX,
+
+Is it OK to add the above patch to the patch 0002 to solve the
+compilation errors? If it's ok, I will explain in commit message why add
+CPUID_DUMMY.
+
+Thanks.
+
+-Fenghua
