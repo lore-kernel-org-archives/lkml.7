@@ -2,130 +2,163 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D23C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08768C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7738B21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7CC621473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="kAZWZizh"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B5CHbTqH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfFNMCy (ORCPT
+        id S1727689AbfFNMDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:02:54 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:50706 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727378AbfFNMCy (ORCPT
+        Fri, 14 Jun 2019 08:03:30 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52918 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfFNMDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:02:54 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5EC2mVo121156;
-        Fri, 14 Jun 2019 07:02:48 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560513768;
-        bh=kTOOVS4lzR0ZGAawOm/QCWHiNqtFPNN7v2karhZmd94=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=kAZWZizhqg3dOKfeofrqT3kWX9NE99xhqM4m+tZjB1flTyVksciCTz7JLxjOVkzFc
-         MwS/IIzpwHfykNmxNQqvwxYWMhMVNmHQgQ0ol6vGxG0aw/lH2llMf9rkc4CWGFsvJC
-         POweS/21SYewNz3Ro+hEkdj98d4BKPukrhrlEaTk=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5EC2mSA083103
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Jun 2019 07:02:48 -0500
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
- Jun 2019 07:02:47 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 14 Jun 2019 07:02:47 -0500
-Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5EC2jcQ038250;
-        Fri, 14 Jun 2019 07:02:45 -0500
-Subject: Re: [PATCH] ARM: davinci: da8xx: specify dma_coherent_mask for lcdc
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kevin Hilman <khilman@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190607143350.11214-1-brgl@bgdev.pl>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <a437ee74-6e1d-c8cd-d9ad-7ccaf28faf9c@ti.com>
-Date:   Fri, 14 Jun 2019 17:32:44 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 08:03:30 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s3so2089076wms.2;
+        Fri, 14 Jun 2019 05:03:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=cShyFkkmWiHnsjmUQgXX28LcVYfBv8SOqWlH6SPYRUQ=;
+        b=B5CHbTqHgazRv85fYB6qcW/DGkY6lv6fwiiiSu0OBHcgweSNDpZyIW9F2RN6VrIcIW
+         38rllu0/vNktkMaesiFUHr2i8JuWl/hbG4SdQKM9WJA9Jt95TjwBoJHQRroRg2uwkVhx
+         qz6JFi/NFuYO5p6hi11fSIIy8tYGriGfrQSWGGOrmaWhrin+ZDWzQ1Obrm/KKwd+tI1B
+         bOa+M/FzAXsGpYQywfHA9bnPZn9KZHrcgIN1So9SI+RStILzW/2pmJCyvrtRLJ00Lhtj
+         4LDUtsHIhm4789TBidIsDrf3+F4XulU2mS2PWJsYnDSiv7JFVoGCTR1HXxxMWSPMUk6U
+         4suA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cShyFkkmWiHnsjmUQgXX28LcVYfBv8SOqWlH6SPYRUQ=;
+        b=LAD2veHMdCA/Sn3tQ2y6hEJoroGhU3iTs2+kbhfq+ZLhDvPxD4xbwxv5z071Gy66mV
+         erUkdlIXb4Xwj+A2Kp7iTQknX08+2PHbFjEjnactEHDliENaXDrJSbgoXJZr/sWWvvX3
+         1ml3PT2E8vBgwV7qzONTojqOBvN7N6cWZEU2hIREHSTCkyWeBxGSdC11M8Uy/8CZUQVA
+         gdtvZ3QfI9Uns13Sq8i1imOUvHY0ugNAsCLelE19jNVYMo0Ynd1XuOe9vV53o4HpqxfB
+         IvI80WzFkuBnn6LKVSxZl0DmutaNQS1jHy+JRc5nEn0yD7ihHN++zR4TyolDbb6XGFxN
+         sZYg==
+X-Gm-Message-State: APjAAAXDVjaqqgSlXa4GyxSAf1btrHmE4tgmCzBGdFwnf8FMNmOqDoad
+        yqGAoiof1f1eStzAlxeC+SYJDP2SJB1a0dT+FyI=
+X-Google-Smtp-Source: APXvYqxHOhGAxfhtTTPi6t7uAwRltrvjH/NqXqmw08VpXZpoMAYhTdcpPhC1ZS6CKEf9eePZKkmmvwD3J6yNEDTd0Yg=
+X-Received: by 2002:a7b:c247:: with SMTP id b7mr8209757wmj.13.1560513807708;
+ Fri, 14 Jun 2019 05:03:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190607143350.11214-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <1560513063-24995-1-git-send-email-robert.chiras@nxp.com> <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <1560513063-24995-3-git-send-email-robert.chiras@nxp.com>
+From:   Daniel Baluta <daniel.baluta@gmail.com>
+Date:   Fri, 14 Jun 2019 15:03:15 +0300
+Message-ID: <CAEnQRZA0yB8KKU8zcZU1CgPE5x9bYtp_4ESQ+miMkwuYKRkbJQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] drm/panel: Add support for Raydium RM67191 panel driver
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        Devicetree List <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/19 8:03 PM, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> The lcdc device is missing the dma_coherent_mask definition causing the
-> following warning on da850-evm:
-> 
-> da8xx_lcdc da8xx_lcdc.0: found Sharp_LK043T1DG01 panel
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 1 at kernel/dma/mapping.c:247 dma_alloc_attrs+0xc8/0x110
-> Modules linked in:
-> CPU: 0 PID: 1 Comm: swapper Not tainted 5.2.0-rc3-00077-g16d72dd4891f #18
-> Hardware name: DaVinci DA850/OMAP-L138/AM18x EVM
-> [<c000fce8>] (unwind_backtrace) from [<c000d900>] (show_stack+0x10/0x14)
-> [<c000d900>] (show_stack) from [<c001a4f8>] (__warn+0xec/0x114)
-> [<c001a4f8>] (__warn) from [<c001a634>] (warn_slowpath_null+0x3c/0x48)
-> [<c001a634>] (warn_slowpath_null) from [<c0065860>] (dma_alloc_attrs+0xc8/0x110)
-> [<c0065860>] (dma_alloc_attrs) from [<c02820f8>] (fb_probe+0x228/0x5a8)
-> [<c02820f8>] (fb_probe) from [<c02d3e9c>] (platform_drv_probe+0x48/0x9c)
-> [<c02d3e9c>] (platform_drv_probe) from [<c02d221c>] (really_probe+0x1d8/0x2d4)
-> [<c02d221c>] (really_probe) from [<c02d2474>] (driver_probe_device+0x5c/0x168)
-> [<c02d2474>] (driver_probe_device) from [<c02d2728>] (device_driver_attach+0x58/0x60)
-> [<c02d2728>] (device_driver_attach) from [<c02d27b0>] (__driver_attach+0x80/0xbc)
-> [<c02d27b0>] (__driver_attach) from [<c02d047c>] (bus_for_each_dev+0x64/0xb4)
-> [<c02d047c>] (bus_for_each_dev) from [<c02d1590>] (bus_add_driver+0xe4/0x1d8)
-> [<c02d1590>] (bus_add_driver) from [<c02d301c>] (driver_register+0x78/0x10c)
-> [<c02d301c>] (driver_register) from [<c000a5c0>] (do_one_initcall+0x48/0x1bc)
-> [<c000a5c0>] (do_one_initcall) from [<c05cae6c>] (kernel_init_freeable+0x10c/0x1d8)
-> [<c05cae6c>] (kernel_init_freeable) from [<c048a000>] (kernel_init+0x8/0xf4)
-> [<c048a000>] (kernel_init) from [<c00090e0>] (ret_from_fork+0x14/0x34)
-> Exception stack(0xc6837fb0 to 0xc6837ff8)
-> 7fa0:                                     00000000 00000000 00000000 00000000
-> 7fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> 7fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> ---[ end trace 8a8073511be81dd2 ]---
-> 
-> Add a 32-bit mask to the platform device's definition.
-> 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Hi Robert,
+
+Minor comment. See inline:
+
+On Fri, Jun 14, 2019 at 2:52 PM Robert Chiras <robert.chiras@nxp.com> wrote:
+>
+> This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
+> protocol).
+>
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
 > ---
->  arch/arm/mach-davinci/devices-da8xx.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-> index 9ff02de448c6..767cc6f7834c 100644
-> --- a/arch/arm/mach-davinci/devices-da8xx.c
-> +++ b/arch/arm/mach-davinci/devices-da8xx.c
-> @@ -683,6 +683,9 @@ static struct platform_device da8xx_lcdc_device = {
->  	.id		= 0,
->  	.num_resources	= ARRAY_SIZE(da8xx_lcdc_resources),
->  	.resource	= da8xx_lcdc_resources,
-> +	.dev		= {
-> +		.coherent_dma_mask	= DMA_BIT_MASK(32)
+>  drivers/gpu/drm/panel/Kconfig                 |   9 +
+>  drivers/gpu/drm/panel/Makefile                |   1 +
+>  drivers/gpu/drm/panel/panel-raydium-rm67191.c | 730 ++++++++++++++++++++++++++
+>  3 files changed, 740 insertions(+)
+>  create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
+>
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index d9d931a..8be1ac1 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -159,6 +159,15 @@ config DRM_PANEL_RASPBERRYPI_TOUCHSCREEN
+>           Pi 7" Touchscreen.  To compile this driver as a module,
+>           choose M here.
+>
+> +config DRM_PANEL_RAYDIUM_RM67191
+> +       tristate "Raydium RM67191 FHD 1080x1920 DSI video mode panel"
+> +       depends on OF
+> +       depends on DRM_MIPI_DSI
+> +       depends on BACKLIGHT_CLASS_DEVICE
+> +       help
+> +         Say Y here if you want to enable support for Raydium RM67191 FHD
+> +         (1080x1920) DSI panel.
+> +
+>  config DRM_PANEL_RAYDIUM_RM68200
+>         tristate "Raydium RM68200 720x1280 DSI video mode panel"
+>         depends on OF
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index fb0cb3a..1fc0f68 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
+>  obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
+>  obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
+>  obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
+> +obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
+>  obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
+>  obj-$(CONFIG_DRM_PANEL_ROCKTECH_JH057N00900) += panel-rocktech-jh057n00900.o
+>  obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
+> diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67191.c b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
+> new file mode 100644
+> index 0000000..75bfb03
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
+> @@ -0,0 +1,730 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * i.MX drm driver - Raydium MIPI-DSI panel driver
+> + *
+> + * Copyright (C) 2017 NXP
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * as published by the Free Software Foundation; either version 2
+> + * of the License, or (at your option) any later version.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
 
-Applied to fixes for v5.2 with a ',' added at the end so next
-initialization can be added without changing this line.
+Please remove the license text once you already added the SPDX identifier.
 
-Thanks,
-Sekhar
+Also preferred copyright for NXP is:
+
+Copyright 2019 NXP
+
+So, the file should look like this:
+
+// SPDX-License-Identifier: GPL-2.0
+/*
+ * i.MX drm driver - Raydium MIPI-DSI panel driver
+ *
+ * Copyright 2019 NXP
+ */
