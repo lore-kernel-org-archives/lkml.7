@@ -2,186 +2,124 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F170AC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:32:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4A8C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:34:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C619920866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:32:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59ED720866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:34:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZNQQg+I9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="da6OKv1A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfFNOco (ORCPT
+        id S1728514AbfFNOen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:32:44 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51318 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728686AbfFNOca (ORCPT
+        Fri, 14 Jun 2019 10:34:43 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44208 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728208AbfFNOen (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:32:30 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 207so2617122wma.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:32:29 -0700 (PDT)
+        Fri, 14 Jun 2019 10:34:43 -0400
+Received: by mail-pl1-f195.google.com with SMTP id t7so1091626plr.11;
+        Fri, 14 Jun 2019 07:34:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=tXKT5ral/nl9+HtiFFVBF6lhcj4AzBHp0GEsDCkDxuc=;
-        b=ZNQQg+I9sMBruYVnXh9+GCR9U6s0Za4MBghxSh2kQgDiOZPEhxMmkJdUcu2+Wby4n8
-         sR5+aciqY9FQDF++Mk4BDDopp57/hpSi2W7hg9GRwMSZOT/T8zTEGS3W0oSwiJScDGcM
-         GUsY7zl+swRo+n0MLMZcEVMR8UnJ44Efedz3chYPdgGaujTbEOE+RlFSNB502cIjQGLB
-         Q8is1qkd7d4RIWQkatn+JDrxYFmltk2TAG4hcm9rsykKuYoQ1i/kKaq0nixHfNdP12wm
-         K7SCpuB/ahzENq7ALAnuKxYEQzscouepQWFdkNb6O7+k/JpXN5T+XT+XZdnjg7IfwOxD
-         Auew==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hQ/2TCsgHd63qdgIeQy8ojRYEa5SdLlsBJg9pFxbgEs=;
+        b=da6OKv1AnE6d1/z1ZGsq0j5uJ1whVPCoD3uYZVLLWfq9nZMg8Bt9jtBI6EREwpRdzq
+         J4hhbpNC9nLg9fnKfGAYoNwTBxpOowltBZnDS6tyAsPOAwezJTi5TdhkXntxkA/mRLeq
+         wE77tHiEGlS0c1mM3lVr1Wj4i5B8WPZQFaehdndEC2SW7iqcJEKrMwcukU+SPy7Cyv81
+         tpDau0+IoHSfGyWZWC6DGUAc3/xseYVon1P67Mjgpx1OuqoyuDuKypEwmJC8XNpoSBoT
+         tcWKjJCQXvNVHTTXkQcrOjI7sUsXUGTbtWB09xZmtZnrgtXAJ6Es0f36340+AaxWf2nt
+         IEVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=tXKT5ral/nl9+HtiFFVBF6lhcj4AzBHp0GEsDCkDxuc=;
-        b=umCTG705o6g7mP41QVzCptXT3iilBkgiND7tJrMFTPLoGoi5p+8//c7xsyTV3k+Xsc
-         BTvcIddyojsHK1I+9eVbLgJ7TjxZg8hc6l+ooS8TaHvrg4phQMdXvIfn+9UQOhc0CV6j
-         PEd8/r6yAA8xUD9FvzVKz0bAVB3yC3tv8xPvnkMPkQjcZesE9AfaRhMFc8nEYUHSDvF8
-         J7Ul4mDQ+cwUVL2QShayqBMyj+3Y6UNqbT9gR67/VvttAQuQkss4BUcAe699ZKhTq3++
-         FEnYsIrUHyeATepf9SaOv3IK624sxXdDRr1O8CyAIZXI0lTHXmpuPEELVI2rprcesTmN
-         1VOw==
-X-Gm-Message-State: APjAAAVA2iqptA60XJ5kwvtp/utMV0Z9aaqVFkxMunz21BqzRXiAVztJ
-        Ofz919EIVEjZ4tZAwTxh57KF/F/Kslt7KA==
-X-Google-Smtp-Source: APXvYqxLxJJyWdBBSjAswGMU//ZhPrN5wz9Zei5JLXI0/VjguFhIzHWuIQK6o2P/IVMGuTZeTDwjjQ==
-X-Received: by 2002:a1c:a7ca:: with SMTP id q193mr8963049wme.150.1560522749256;
-        Fri, 14 Jun 2019 07:32:29 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id t6sm4738007wmb.29.2019.06.14.07.32.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 07:32:28 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 6/6] dt-bindings: nvmem: Convert Allwinner SID to a schema
-Date:   Fri, 14 Jun 2019 15:32:21 +0100
-Message-Id: <20190614143221.32035-7-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190614143221.32035-1-srinivas.kandagatla@linaro.org>
-References: <20190614143221.32035-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hQ/2TCsgHd63qdgIeQy8ojRYEa5SdLlsBJg9pFxbgEs=;
+        b=nKUjYJIBLcNRlKSQ5Jq3aGcFvl1tueBRKA2M/I+Rgd/y1+IrYRuEZGED97CHIHDL3B
+         J8+V8/FeB/T+vkg0a/MA27iDTDL3lVe7reW1GNAglwIISCKnqlElLtJAm974N6YekMqW
+         hN03r2oFkN+416KslySNWCVznhzEtoldemo5SuMzobfMZV0BpbpfwhL6Bw3qbcw6r9Td
+         4IWqt2pT0GiCoP+dypUNjmvcPlO6R1xhXiwLB1iAuGopYnL19hVe4iRPkAfKMH/ZDBrl
+         YA3OprTCkWiK5qhqhjpmQ3IO+iElWqlcGIwFlcQ8B+00/1aaTkZnHIHfcYo/02e3fEpd
+         bRRw==
+X-Gm-Message-State: APjAAAVkT1q0E3Cp0Ci6bKi05SsJHts96nlBl/y52ost/EwkM7d4LiDp
+        mZSA0OD+qQ+UxvAQ9dsfaMmSAz6j
+X-Google-Smtp-Source: APXvYqzNduItYPKPOV2+opTZ/P0fS0QMPWDWCD9fy67Rk/gk9whLzREGuPsnI/NXjZ2Ja8qZwrUlvQ==
+X-Received: by 2002:a17:902:a516:: with SMTP id s22mr54018004plq.178.1560522882345;
+        Fri, 14 Jun 2019 07:34:42 -0700 (PDT)
+Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
+        by smtp.gmail.com with ESMTPSA id e26sm3196627pfn.94.2019.06.14.07.34.40
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 07:34:41 -0700 (PDT)
+Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
+ same tuples
+To:     Eric Dumazet <edumazet@google.com>, maowenan <maowenan@huawei.com>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190612035715.166676-1-maowenan@huawei.com>
+ <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
+ <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com>
+ <a674e90e-d06f-cb67-604f-30cb736d7c72@huawei.com>
+ <6aa69ab5-ed81-6a7f-2b2b-214e44ff0ada@gmail.com>
+ <52025f94-04d3-2a44-11cd-7aa66ebc7e27@huawei.com>
+ <CANn89iKzfvZqZRo1pEwqW11DQk1YOPkoAR4tLbjRG9qbKOYEMw@mail.gmail.com>
+ <7d0f5a21-717c-74ee-18ad-fc0432dfbe33@huawei.com>
+ <CANn89iJW0DHBg=RKgdLq1r33THL15UO3c2n4MkR6DdD7-QwP1w@mail.gmail.com>
+From:   Eric Dumazet <eric.dumazet@gmail.com>
+Message-ID: <0202f817-bd59-918e-96d5-ddf692f5e140@gmail.com>
+Date:   Fri, 14 Jun 2019 07:34:37 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CANn89iJW0DHBg=RKgdLq1r33THL15UO3c2n4MkR6DdD7-QwP1w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Ripard <maxime.ripard@bootlin.com>
 
-The Allwinner SoCs have an efuse supported in Linux, with a matching Device
-Tree binding.
 
-Now that we have the DT validation in place, let's convert the device tree
-bindings for that controller over to a YAML schemas.
+On 6/14/19 7:25 AM, Eric Dumazet wrote:
+> On Fri, Jun 14, 2019 at 7:04 AM maowenan <maowenan@huawei.com> wrote:
+>> I agree that this is a special case.
+>> I propose one point about the sequence of synack, if two synack with two different
+>> sequence since the time elapse 64ns, this issue disappear.
+>>
+>> tcp_conn_request->tcp_v4_init_seq->secure_tcp_seq->seq_scale
+>> static u32 seq_scale(u32 seq)
+>> {
+>>         /*
+>>          *      As close as possible to RFC 793, which
+>>          *      suggests using a 250 kHz clock.
+>>          *      Further reading shows this assumes 2 Mb/s networks.
+>>          *      For 10 Mb/s Ethernet, a 1 MHz clock is appropriate.
+>>          *      For 10 Gb/s Ethernet, a 1 GHz clock should be ok, but
+>>          *      we also need to limit the resolution so that the u32 seq
+>>          *      overlaps less than one time per MSL (2 minutes).
+>>          *      Choosing a clock of 64 ns period is OK. (period of 274 s)
+>>          */
+>>         return seq + (ktime_get_real_ns() >> 6);
+>> }
+>>
+>> So if the long delay larger than 64ns, the seq is difference.
+> 
+> The core issue has nothing to do with syncookies.
+> 
+> Are you sure you really understand this stack ?
+> 
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- .../nvmem/allwinner,sun4i-a10-sid.yaml        | 51 +++++++++++++++++++
- .../bindings/nvmem/allwinner,sunxi-sid.txt    | 29 -----------
- 2 files changed, 51 insertions(+), 29 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
- delete mode 100644 Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
+Oh well, maybe I should not have answered before my breakfast/coffee.
 
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-new file mode 100644
-index 000000000000..c9efd6e2c134
---- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/allwinner,sun4i-a10-sid.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/nvmem/allwinner,sun4i-a10-sid.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Allwinner A10 Security ID Device Tree Bindings
-+
-+maintainers:
-+  - Chen-Yu Tsai <wens@csie.org>
-+  - Maxime Ripard <maxime.ripard@bootlin.com>
-+
-+allOf:
-+  - $ref: "nvmem.yaml#"
-+
-+properties:
-+  compatible:
-+    enum:
-+      - allwinner,sun4i-a10-sid
-+      - allwinner,sun7i-a20-sid
-+      - allwinner,sun8i-a83t-sid
-+      - allwinner,sun8i-h3-sid
-+      - allwinner,sun50i-a64-sid
-+      - allwinner,sun50i-h5-sid
-+      - allwinner,sun50i-h6-sid
-+
-+  reg:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+
-+# FIXME: We should set it, but it would report all the generic
-+# properties as additional properties.
-+# additionalProperties: false
-+
-+examples:
-+  - |
-+    sid@1c23800 {
-+        compatible = "allwinner,sun4i-a10-sid";
-+        reg = <0x01c23800 0x10>;
-+    };
-+
-+  - |
-+    sid@1c23800 {
-+        compatible = "allwinner,sun7i-a20-sid";
-+        reg = <0x01c23800 0x200>;
-+    };
-+
-+...
-diff --git a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt b/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-deleted file mode 100644
-index cfb18b4ef8f7..000000000000
---- a/Documentation/devicetree/bindings/nvmem/allwinner,sunxi-sid.txt
-+++ /dev/null
-@@ -1,29 +0,0 @@
--Allwinner sunxi-sid
--
--Required properties:
--- compatible: Should be one of the following:
--  "allwinner,sun4i-a10-sid"
--  "allwinner,sun7i-a20-sid"
--  "allwinner,sun8i-a83t-sid"
--  "allwinner,sun8i-h3-sid"
--  "allwinner,sun50i-a64-sid"
--  "allwinner,sun50i-h5-sid"
--  "allwinner,sun50i-h6-sid"
--
--- reg: Should contain registers location and length
--
--= Data cells =
--Are child nodes of sunxi-sid, bindings of which as described in
--bindings/nvmem/nvmem.txt
--
--Example for sun4i:
--	sid@1c23800 {
--		compatible = "allwinner,sun4i-a10-sid";
--		reg = <0x01c23800 0x10>
--	};
--
--Example for sun7i:
--	sid@1c23800 {
--		compatible = "allwinner,sun7i-a20-sid";
--		reg = <0x01c23800 0x200>
--	};
--- 
-2.21.0
+What I meant to say is that we do not want to fix this problem by working around
+the issue you noticed (which leads to RST packets)
 
