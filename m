@@ -2,100 +2,118 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E46B6C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A869C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB3832184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544693;
-	bh=zAHSL8lMf9ibQlvky8Qqu2bROjW1/JN7MkBf5X00ZA0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PgRVrkoiHuI7sW1rJT0JBsntzRtH6wX4TmLNEoDjnf/fj1NCk9vGHu6mvfLFuvsug
-	 M5ZqEZsODjAlpaiaE/RJDoA83+vy9CwOw64G8LHLd/FYmduBoevKNfGElRGreiCrSR
-	 xY52I2mrP8eG3vjJd6BhTvMdnoRMQO95rrd+149g=
+	by mail.kernel.org (Postfix) with ESMTP id 40D9E21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Wx04VyZX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfFNUiL (ORCPT
+        id S1728518AbfFNUiQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:38:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50888 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726732AbfFNU3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:03 -0400
-Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA0052184E;
-        Fri, 14 Jun 2019 20:29:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544143;
-        bh=zAHSL8lMf9ibQlvky8Qqu2bROjW1/JN7MkBf5X00ZA0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OXl6T011IuJCdTP69Y/J1W8wZPQ6WKTCKQ/J5NyaAukULcUbiHB4smxidvi+WkW3c
-         RAa4MyLclGQCTA5LoLfyO6POBh+H6orNjPK8Ggk7eGXCkZ0zmXDzlv8qmoj3oOyLaE
-         6WvF+Gvpf9YodK05tji1hEVRji/G/dV6M7dVIrFk=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Kamenee Arumugam <kamenee.arumugam@intel.com>,
-        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 24/59] IB/hfi1: Validate page aligned for a given virtual address
-Date:   Fri, 14 Jun 2019 16:28:08 -0400
-Message-Id: <20190614202843.26941-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
-References: <20190614202843.26941-1-sashal@kernel.org>
+        Fri, 14 Jun 2019 16:38:16 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36880 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727365AbfFNUhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:37:20 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 20so2165313pgr.4
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 13:37:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6vrmhhZaEzM19h9Zlx4Mo9l21Q8Z/1tpB8JbdgO/6Q0=;
+        b=Wx04VyZXSi7uEkn+qcquHj3EoBnN4m9FX9vJIgJ6cgeChrc10QLuaKpp7+rGSiDvGN
+         Sk53gojxneIiAZ8hn+pPpC6+ljGcvOasLCV6lMxQw1+3d6Tp7bsi0XiXzlyoQRZ2r0b1
+         rCNafT3ZKZUrDMLDEKZq4H1mERd0VafFAJUpw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6vrmhhZaEzM19h9Zlx4Mo9l21Q8Z/1tpB8JbdgO/6Q0=;
+        b=ibwRuIbb9kBCKoW1DFr4/gWkQaj37drPlzeg+iTVfqKIEta0xbmvw1oNFCHy/z00DT
+         qmlpaNPYzwAh4S3glQ7g24h4kCGmbrNkZL8YHlFbqcUVRMc+MygMhoVaNJl+v/ZjrZ1i
+         Rdtk3EPovA/xE7Bk8VKBGJbRpGpDUVwtaDDkjW3CTl1VrpKoOonl9elhq+mAbBppVhS8
+         evQbpYaVTdVCMOh7N+X+BricKmyU4ziy1L2zvD2Q+sb5XTNQDLf1DsycLRIwuUsNUr9m
+         0PrTARyDFeLB4y3ScSKXg/DqtrbNehVqZ5tKdDQMyVKLXCwoH1IFvNs292ChTBQ+FEcm
+         0EpA==
+X-Gm-Message-State: APjAAAUDVqUtUaFjL5GQ+jLicPm47UvOsxE7XOQcsukbyoKviu4lb9qp
+        ZYpMITdLwhTIKLpuY/vtZQTAgw==
+X-Google-Smtp-Source: APXvYqzfpvXhgutGtT3dFx0GfX5kTtc8h04BE0rk7Qac+K8Ljsdx6ZzVsIxdzlj/CBTPmUiseBZrxw==
+X-Received: by 2002:a63:6005:: with SMTP id u5mr28274041pgb.123.1560544639097;
+        Fri, 14 Jun 2019 13:37:19 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x5sm3673187pjp.21.2019.06.14.13.37.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 13:37:18 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH v2 0/5] Read-only memremap()
+Date:   Fri, 14 Jun 2019 13:37:12 -0700
+Message-Id: <20190614203717.75479-1-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kamenee Arumugam <kamenee.arumugam@intel.com>
+This patch series implements a read-only version of memremap() via
+a new MEMREMAP_RO flag. If this is passed in the mapping call, we'll
+try to map the memory region as read-only if it doesn't intersect
+with an existing mapping. Otherwise, we'll try to fallback to other
+flags to try to map the memory that way.
 
-[ Upstream commit 97736f36dbebf2cda2799db3b54717ba5b388255 ]
+The main use case I have is to map the command-db memory region on
+Qualcomm devices with a read-only mapping. It's already a const marked
+pointer and the API returns const pointers as well, so this series makes
+sure that even stray writes can't modify the memory. To get there we
+introduce a devm version of memremap() for a reserved memory region, add
+a memremap() flag, and implement support for that flag on arm64.
 
-User applications can register memory regions for TID buffers that are not
-aligned on page boundaries. Hfi1 is expected to pin those pages in memory
-and cache the pages with mmu_rb. The rb tree will fail to insert pages
-that are not aligned correctly.
+Changes from v1:
+ * Picked up tags and rebased to v5.2-rc3
 
-Validate whether a given virtual address is page aligned before pinning.
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
 
-Fixes: 7e7a436ecb6e ("staging/hfi1: Add TID entry program function body")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Signed-off-by: Kamenee Arumugam <kamenee.arumugam@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/hfi1/user_exp_rcv.c | 3 +++
- 1 file changed, 3 insertions(+)
+Stephen Boyd (5):
+  reserved_mem: Add a devm_memremap_reserved_mem() API
+  soc: qcom: cmd-db: Migrate to devm_memremap_reserved_mem()
+  memremap: Add support for read-only memory mappings
+  arm64: Add support for arch_memremap_ro()
+  soc: qcom: cmd-db: Map with read-only mappings
 
-diff --git a/drivers/infiniband/hw/hfi1/user_exp_rcv.c b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-index 0cd71ce7cc71..3592a9ec155e 100644
---- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-+++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
-@@ -324,6 +324,9 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
- 	u32 *tidlist = NULL;
- 	struct tid_user_buf *tidbuf;
- 
-+	if (!PAGE_ALIGNED(tinfo->vaddr))
-+		return -EINVAL;
-+
- 	tidbuf = kzalloc(sizeof(*tidbuf), GFP_KERNEL);
- 	if (!tidbuf)
- 		return -ENOMEM;
+ arch/arm64/include/asm/io.h     |  1 +
+ drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
+ drivers/soc/qcom/cmd-db.c       | 14 +++-------
+ include/linux/io.h              |  1 +
+ include/linux/of_reserved_mem.h |  6 +++++
+ kernel/iomem.c                  | 15 +++++++++--
+ 6 files changed, 70 insertions(+), 12 deletions(-)
+
+
+base-commit: f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a
 -- 
-2.20.1
+Sent by a computer through tubes
 
