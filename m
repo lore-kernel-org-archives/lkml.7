@@ -2,77 +2,79 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4832BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D1C0C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:26:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A4E820866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E043B20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:26:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Q5JdFeam"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbfFNOZp (ORCPT
+        id S1728528AbfFNO0Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:25:45 -0400
-Received: from ms.lwn.net ([45.79.88.28]:52266 "EHLO ms.lwn.net"
+        Fri, 14 Jun 2019 10:26:16 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:46994 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728050AbfFNOZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:25:44 -0400
-Received: from lwn.net (localhost [127.0.0.1])
+        id S1728050AbfFNO0P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:26:15 -0400
+Received: from zn.tnic (p200300EC2F097F0010F3CEDA9C41B474.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:10f3:ceda:9c41:b474])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 73B88128A;
-        Fri, 14 Jun 2019 14:25:43 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 08:25:42 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Theodore Ts'o" <tytso@mit.edu>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        David Rientjes <rientjes@google.com>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v3] Add a document on rebasing and merging
-Message-ID: <20190614082542.3f8674eb@lwn.net>
-In-Reply-To: <CACT4Y+avfTeZTmhti=7nEadthZZpTnOCTdEuG2S7PovmAMkhZQ@mail.gmail.com>
-References: <20190612094503.120f699a@lwn.net>
-        <CACT4Y+avfTeZTmhti=7nEadthZZpTnOCTdEuG2S7PovmAMkhZQ@mail.gmail.com>
-Organization: LWN.net
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C06AC1EC0911;
+        Fri, 14 Jun 2019 16:26:14 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560522374;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=OSJnJtgvlv86JDASrS75f58l3MnD0cd7dy0VUfgdRyM=;
+        b=Q5JdFeambtaYqfPt3SpnoxULCkNyprE6wCl3gfx3wmNngFKLrx7YogwQkv3T/cX8RDt9PC
+        nXejrXCTItlKu05KVlsVD73mK+Q0neFQT2uLUVk63f360vZFyQkw9w70Jzbu2SHwAQ0v5F
+        HAe9JXun3vUjonZFWVFGxh5PeL+rrvQ=
+Date:   Fri, 14 Jun 2019 16:26:11 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
+ scattered features word 11
+Message-ID: <20190614142611.GI2586@zn.tnic>
+References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
+ <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
+ <20190614114410.GD2586@zn.tnic>
+ <20190614122749.GE2586@zn.tnic>
+ <20190614131701.GA198207@romley-ivt3.sc.intel.com>
+ <20190614134123.GF2586@zn.tnic>
+ <20190614141424.GA12191@linux.intel.com>
+ <20190614141519.GC198207@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190614141519.GC198207@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 11:59:03 +0200
-Dmitry Vyukov <dvyukov@google.com> wrote:
+On Fri, Jun 14, 2019 at 07:15:20AM -0700, Fenghua Yu wrote:
+> Adding this small patch into patch 0002 will solve the build errors without
+> changing the build checks.
 
-> I will appreciate if you elaborate a bit on this "scale of the
-> project". I wondered about reasons for having the current hierarchy of
-> trees and complex merging for a while, but wasn't able to find any
-> rationale. What exactly scale do you mean? I know a number of projects
-> that are comparable to Linux kernel, with the largest being 2 orders
-> of magnitude larger than kernel both in terms of code size and rate of
-> change, that use single tree and linear history. 
+There's no need for that if you remove the BUILD_BUG_ON checks first.
 
-I'm not sure what projects you're talking about, so it's hard to compare.
+-- 
+Regards/Gruss,
+    Boris.
 
-During the 5.2 merge window, Linus did 209 pulls, bringing in just over
-12,000 changesets, from on the order of 1600 developers.  Even if, at the
-beginning of the window, each of those pulls was set up to be a
-fast-forward, they would no longer be positioned that way once the first
-pull was done.
-
-Are you really saying that subsystem maintainers should be continuously
-rebasing their trees to avoid merges at the top level?  Do you see how
-much work that would take, how badly it would obscure the development
-history, and how many bugs it would introduce?  Or perhaps I misunderstood
-what you're arguing for?
-
-Thanks,
-
-jon
+Good mailing practices for 400: avoid top-posting and trim the reply.
