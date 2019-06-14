@@ -2,100 +2,173 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE90DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA1F0C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78A192133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 988C02133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sUp4PNm0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U/ZYFKjr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfFNNWA (ORCPT
+        id S1727996AbfFNNW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:22:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38194 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbfFNNV7 (ORCPT
+        Fri, 14 Jun 2019 09:22:59 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38005 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727737AbfFNNW6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:21:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=BLef20GVw4MoTfiVzpLfCs64UYHDEIOk/MMjB+e9V0s=; b=sUp4PNm0UlGY6gGWIuw3RPxmUV
-        Adb3VTZgQSN7aSag0MwXLaRvK0LiJeN7csWmb4E+CvX+R6KS0yOUwTAp70G9/HUhNmKEe5qZRyhaU
-        xa/jKBkVbLf+pt2xlw+t4sbbscFf+9nFYhJvBTxSHD6dxs943UC9blcGOrKqFI2UuvD+O5HlLx0K7
-        aPysM441FvEEEdCbsYthyqVghB9SFas4CbTIU9jVMHgyj+8SrqD2rCtbSYK/FBZPsY0ufzAUdrBZX
-        wG6ydnj3Sj2jWTTA2TyVZ+oshoU9pSw4MjsMDNAgnPaOG0w2UrwRsZ2HsTHh8IHQND00uHzCM+WiP
-        DwmBRIww==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbm9T-0007v7-MV; Fri, 14 Jun 2019 13:21:55 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DDD2E2013F73E; Fri, 14 Jun 2019 15:21:53 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 15:21:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     christian.koenig@amd.com
-Cc:     daniel@ffwll.ch, l.stach@pengutronix.de,
-        linux+etnaviv@armlinux.org.uk, christian.gmeiner@gmail.com,
-        yuq825@gmail.com, eric@anholt.net, thellstrom@vmware.com,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        etnaviv@lists.freedesktop.org, lima@lists.freedesktop.org
-Subject: Re: [PATCH 3/6] drm/gem: use new ww_mutex_(un)lock_for_each macros
-Message-ID: <20190614132153.GR3436@hirez.programming.kicks-ass.net>
-References: <20190614124125.124181-1-christian.koenig@amd.com>
- <20190614124125.124181-4-christian.koenig@amd.com>
- <20190614125940.GP3436@hirez.programming.kicks-ass.net>
- <6f2084ae-61d5-8cb9-c975-901456eed7e3@gmail.com>
+        Fri, 14 Jun 2019 09:22:58 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so2323088wmj.3;
+        Fri, 14 Jun 2019 06:22:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ySmWvTMy24JYMEY2fm0WrThoqAo/IopZvxmjJBqJZKs=;
+        b=U/ZYFKjryZbd5Pvj2EN9qdY2Q/DJOV9rgtn/doU6na1X5BrtZ2+CQ4JGoPnvcNJthN
+         eAVTvwzM0t+a6d+rz3SKoHyQwnQqbPBPjoG19lcpgxtGuBkf5s2JGByIOdRahZCiynfr
+         nrsiRSwKGVmDKO8gCVh7lOVqTfkffwBnfM6qYVaqffiyyEcZxNRR27O9MBvypbhU93LK
+         GBNXArMzs413uRIPwy3bQJ9ks7BN9kzjkK9mE44s56Ro3SCRGEX2LlBF+lqcJlld44s5
+         LvXPX8HUxYeAOP65mb0EyLT2X0d87aTWAWmJhMY7XZcq11YorGwYfcfJMp+ITzVdHAfz
+         jGGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ySmWvTMy24JYMEY2fm0WrThoqAo/IopZvxmjJBqJZKs=;
+        b=WvBe7TiiEh6vRzlWULKvsgTlv19sascK/s/slNe4FxScofWSuepH8R+tUELJZpgF3l
+         WCInDXU1L6Mw8VdHNxUOIMPam+7wyTDKwaAgCgA7d0mUKhBcW8ogGGc7il+t68ypeNCN
+         YmxfnTxbr8vc1cTq/RPsl9nRaIioc3oHUM49HHgL+evM/vH2ZM0psr57w/vOOEyGq91P
+         gBvQYSNawDKVDixUlRpGu8+D6TRIWddKA2YXGwROJmHz8RQsqiW2fLASsCkyQy64wQAX
+         1kSepxDiUwT+JAyPL8JQSyymutkcmuJR3HfVwbkv81sK9mmE8IeE+sbiHgyC06vnjGGM
+         vMyA==
+X-Gm-Message-State: APjAAAU2llACIDHyfsDKYMP8xVvP5KmA5c3qwmztfMJ5L1UDp0y0S0Pv
+        wwQamIy1nuEH/Ff6DEBmSpi6VCgj
+X-Google-Smtp-Source: APXvYqzxbMKSDsq5jqg0ihigtY5gH+Ed50D7d0BUG542gKPZJB7z8t4zcB1xzmvSqbdISBkp4vyW3w==
+X-Received: by 2002:a1c:c305:: with SMTP id t5mr7812376wmf.163.1560518574909;
+        Fri, 14 Jun 2019 06:22:54 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id z5sm2735022wrh.16.2019.06.14.06.22.54
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 06:22:54 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 15:22:53 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/2] clocksource: tegra: Use rating when registering
+ clock source
+Message-ID: <20190614132253.GE15526@ulmo>
+References: <20190614104747.19712-1-thierry.reding@gmail.com>
+ <8ff5d2da-907e-611c-ec82-bbe50197c2f4@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="idY8LE8SD6/8DnRI"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6f2084ae-61d5-8cb9-c975-901456eed7e3@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8ff5d2da-907e-611c-ec82-bbe50197c2f4@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 03:06:10PM +0200, Christian König wrote:
-> Am 14.06.19 um 14:59 schrieb Peter Zijlstra:
-> > +#define ww_mutex_lock_for_each(loop, pos, contended, ret, intr, ctx)   \
-> > +       for (contended = ERR_PTR(-ENOENT); ({                           \
-> > +               __label__ relock, next;                                 \
-> > +               ret = -ENOENT;                                          \
-> > +               if (contended == ERR_PTR(-ENOENT))                      \
-> > +                       contended = NULL;                               \
-> > +               else if (contended == ERR_PTR(-EDEADLK))                \
-> > +                       contended = (pos);                              \
-> > +               else                                                    \
-> > +                       goto next;                                      \
-> > +               loop {                                                  \
-> > +                       if (contended == (pos)) {                       \
-> > +                               contended = NULL;                       \
-> > +                               continue;                               \
-> > +                       }                                               \
-> > +relock:                                                                        \
-> > +                       ret = !(intr) ? ww_mutex_lock(pos, ctx) :       \
-> > +                               ww_mutex_lock_interruptible(pos, ctx);  \
-> > +                       if (ret == -EDEADLK) {                          \
-> > +                               ww_mutex_unlock_for_each(loop, pos,     \
-> > +                                                        contended);    \
-> > +                               contended = ERR_PTR(-EDEADLK);          \
-> > +                               goto relock;                            \
-> > 
-> > while relock here continues where it left of and doesn't restart @loop.
-> > Or am I reading this monstrosity the wrong way?
-> 
-> contended = ERR_PTR(-EDEADLK) makes sure that the whole loop is restarted
-> after retrying to acquire the lock.
-> 
-> See the "if" above "loop".
 
-ARGH, the loop inside the loop... Yeah, maybe, brain hurts.
+--idY8LE8SD6/8DnRI
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jun 14, 2019 at 03:24:07PM +0300, Dmitry Osipenko wrote:
+> 14.06.2019 13:47, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> > From: Thierry Reding <treding@nvidia.com>
+> >=20
+> > The rating is parameterized depending on SoC generation to make sure it
+> > takes precedence on implementations where the architected timer can't be
+> > used. This rating is already used for the clock event device. Use the
+> > same rating for the clock source to be consistent.
+> >=20
+> > Signed-off-by: Thierry Reding <treding@nvidia.com>
+> > ---
+> >  drivers/clocksource/timer-tegra.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >=20
+> > diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/ti=
+mer-tegra.c
+> > index f6a8eb0d7322..e6608141cccb 100644
+> > --- a/drivers/clocksource/timer-tegra.c
+> > +++ b/drivers/clocksource/timer-tegra.c
+> > @@ -318,7 +318,7 @@ static int __init tegra_init_timer(struct device_no=
+de *np, bool tegra20,
+> >  	sched_clock_register(tegra_read_sched_clock, 32, TIMER_1MHz);
+> > =20
+> >  	ret =3D clocksource_mmio_init(timer_reg_base + TIMERUS_CNTR_1US,
+> > -				    "timer_us", TIMER_1MHz, 300, 32,
+> > +				    "timer_us", TIMER_1MHz, rating, 32,
+> >  				    clocksource_mmio_readl_up);
+> >  	if (ret)
+> >  		pr_err("failed to register clocksource: %d\n", ret);
+> >=20
+>=20
+> Looks good. Although, could you please clarify whether arch-timer stops o=
+n T210 when CPU
+> enters deepest (powerdown) idle state? I'm starting to lose track a bit a=
+lready. Because
+> if arch-timer stops in the deepest idle state, then it's a bit odd that J=
+oseph didn't add
+> the clocksource for T210 in the first place and v5.1 probably shouldn't w=
+ork well because
+> of that already.
+
+Yes, the architected timer doesn't work across an SC7 (which is what the
+deepest idle state is called on Tegra210) transition, hence why we can't
+use it as a suspend clocksource. I actually sent out a patch to do that,
+earlier.
+
+And yes, it's entirely possible that v5.1 doesn't work in this regard,
+but we're not noticing that because we don't have suspend/resume support
+for Tegra210 anyway. There are a couple of missing pieces that we need
+in order to make it work.
+
+This change in particular is only going to affect the CPU idle state
+(CC7). Since the architected timer doesn't survive that either, we need
+the Tegra timer to be preferred over the architected timer for normal
+operation.
+
+All of these issues go away on Tegra186 and later, where the architected
+timer is in an always-on partition and has a PLL that remains on during
+SC7 (and CC7).
+
+Thierry
+
+--idY8LE8SD6/8DnRI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Dn6kACgkQ3SOs138+
+s6GWiBAAkYEeolDw2tllrVQFDf/ZmeLxHHy6pAh9DsxdalcYjpX8Twg1q3rUnVut
+beWoisjLjgGnPeEDpATd8Gth0SK4dF65dVsNlhzJR/o+VhZ60XWrCQTvGWtnK0p+
+IPfLDwHebxymb/d7iYfNde8mWXSvT4kFjcgx0g3H3c3lVRlWgTqqCmzMuV2EbbUT
+fspE5pSsn5dce8E81ncb98medX7BNEHPZId0QsCnebZG6d2O5VWNkvn2fJSPMvor
+SckKEY4E4zmth55mSxmJoIW3oZlwRpU34DvhyxocyfvLxEu7dz4co4w59oFPInpc
+QUXifr71D0IcwUqvT9I8Q+AAsXMuhG01zBv7s/VmHrN5t6t02QBE0OScHHkoaiWI
+jxcpKOJsfMbVt7z4ot7jcq7TbXPANsisZjBlYPbDtVzx4qfRd0qhrkuvI0ha3Abs
++0x9aLCwhMmS5JqHPCnkcD2+1tviLwqL5D6oRMWFUBDQbRsYD312sdSQx0cNlImU
+tPYrSusbKmoh9gJKeRIMgHkA2kITLeM7VqwQOWNsow9fF2BJ6yjU99+ynfZN+qKs
+1rJgZkkV2XE7yCMemQeZaNSHguL+7hdk2vAWdxWEwXjCLruv5iN4k6U+UOMPStJS
+C1Nbqt6h9/NjkT/6iSKsZhW3lx/nMqnYEJg6Nt+2G/hmJnsL+F0=
+=DrMZ
+-----END PGP SIGNATURE-----
+
+--idY8LE8SD6/8DnRI--
