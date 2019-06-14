@@ -2,159 +2,190 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 284E1C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39147C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA492168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:50:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116FE2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:50:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+anzo/0"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="L940xItt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725981AbfFNPur (ORCPT
+        id S1726160AbfFNPuu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:50:47 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36026 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfFNPuq (ORCPT
+        Fri, 14 Jun 2019 11:50:50 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:7989 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfFNPur (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:50:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id u8so2817316wmm.1;
-        Fri, 14 Jun 2019 08:50:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=e2XcDuwIyNAh57NBRLkL6rwxqRee1n0foFF5ZrRtRWI=;
-        b=m+anzo/0NhjK3a5J5QJExf6oEWBHOxnYsrV0KdY0yuTaZqWMTK7J9rbAgyd1Yyn9vE
-         D3JOz6hm0mAKACo4/i4FXmljdjPipx2c9x2eRO+9AO1Yw3iaJAQpV7QIJNkLvqmPMGlx
-         8ZQN18xIZ0MmUSNc2mGipMKi5a9Ec51ZTbmmnM0hLo/6tvXZkK6l3WgMUrlIHw3xJEer
-         9ireQccv3r69JxMkZUSkq8k6ZX4guI/BJn4qisfaFPjwHBp5z+hJyC62t9W9cwGRhH10
-         19nEmqHJ8BdpmGQ+i3bNp+vy7oPMAuAijRiUYw1EbzebMUdrnrHGaHCTs91kwJj1OxRA
-         JxoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=e2XcDuwIyNAh57NBRLkL6rwxqRee1n0foFF5ZrRtRWI=;
-        b=H1AR8lwlYLQE6wFEYrVi4iwpAYjfD/TzZHzWyTy+JAUZLZ6HW47/1lnTXetNbYHwke
-         NKis+Z4n29Rvok0wPKO/tF7opOI3bN0jcE6CSE8zeCCDoiVJoHtQTEaDoH/6mdkQCdWk
-         KZpJPX4l73ltOPMoyRfymURvgMcT8u8+78MUR9nlYcVjwTFxZmVc2Sc4077QfBsC7Ix/
-         6GAW1GO3sWC/98VOMNCgag/vnXg/yxTOr4QYGr3pb7GhyIqkIexx/iT1UK0tb7xktnkP
-         NNiZ7dO1w9P/cSu8yRTsB1iynpp6iVoRV6lquKsCGgNm2kz1Ah+UrbYB0VkDIfIp8yym
-         P1dw==
-X-Gm-Message-State: APjAAAX/biChPecDDtvVpUKG/pNoFDpRTnNipOBDyy27QQiiwd1BPsud
-        CZSZw7ZN8ALIpGHdUTjmC+E=
-X-Google-Smtp-Source: APXvYqzhXBKor0kJbtvKDs5JRHIZCcjiyXGB01F6+CP/8GkLUmVUKV0LSx/on4F1VppkAP45EcMxZg==
-X-Received: by 2002:a7b:c247:: with SMTP id b7mr9038345wmj.13.1560527443712;
-        Fri, 14 Jun 2019 08:50:43 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id b6sm2419009wrx.85.2019.06.14.08.50.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 08:50:42 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 17:50:41 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Bitan Biswas <bbiswas@nvidia.com>
-Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Fri, 14 Jun 2019 11:50:47 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d03c2550000>; Fri, 14 Jun 2019 08:50:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 14 Jun 2019 08:50:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 08:50:45 -0700
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
+ 2019 15:50:44 +0000
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
+ 2019 15:50:44 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Fri, 14 Jun 2019 15:50:44 +0000
+Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d03c2510004>; Fri, 14 Jun 2019 08:50:44 -0700
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
         Thierry Reding <treding@nvidia.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH V1 1/2] mailbox: tegra: hsp: add noirq resume
-Message-ID: <20190614155041.GB26922@ulmo>
-References: <1560515734-2085-1-git-send-email-bbiswas@nvidia.com>
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Dmitry Osipenko <digetx@gmail.com>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>,
+        "Bitan Biswas" <bbiswas@nvidia.com>
+Subject: [PATCH V6] i2c: tegra: remove BUG, BUG_ON
+Date:   Fri, 14 Jun 2019 08:50:38 -0700
+Message-ID: <1560527438-30150-1-git-send-email-bbiswas@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
-Content-Disposition: inline
-In-Reply-To: <1560515734-2085-1-git-send-email-bbiswas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560527445; bh=k0/FGNhaiuQT5uSJnlKbfm8ntLZBEkYD5mjmowbcmhs=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=L940xIttGTR88qLZX/7zwora/nJJ5LqctM4jkPX9fs0rndxmogIcUidCL0JxXThB9
+         EjEgcxDwvv6v2PeXYI5/kOCE9xIpAflqqYEvRmu+43oYnaWyWTPSbGNE+fIiOcaKSR
+         l2MC4IkquN4Rw1ABBYICteQUGV86g0K6nuh4xhG7qAwkOrTZtXBPdi4qXsvebG3wAo
+         moJCaTwp0R7z6iittCZPQ9+Ce9sfNWmUFrzbYtcqwUhqjXGiQOqWmSbSlznK8iFvyx
+         KNiBqJUTpOOW5ytRhIJxo9vZas/C+flKAeHO/65W2SArXd7ys3bdIRBpJSTu9tCuC8
+         XjGRiOCatzqFQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+as needed. Remove BUG() and mask Rx interrupt similar as Tx
+for message fully sent case. Add WARN_ON_ONCE check
+for non-zero rx_fifo_avail in tegra_i2c_empty_rx_fifo()
+after all processing. Error handling in tegra_i2c_empty_rx_fifo
+caller is also added.
 
---7ZAtKRhVyVSsbBD2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 46 ++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 38 insertions(+), 8 deletions(-)
 
-On Fri, Jun 14, 2019 at 05:35:33AM -0700, Bitan Biswas wrote:
-> Add noirq resume instead of resume callback for Tegra HSP. Tegra HSP
-> resume needs tegra_hsp_doorbell_startup() call to fix timeout error for
-> tegra_bpmp_transfer() during genpd resume noirq on jetson-tx2.
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 4dfb4c1..26a7c8c 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -73,6 +73,7 @@
+ #define I2C_ERR_NO_ACK				BIT(0)
+ #define I2C_ERR_ARBITRATION_LOST		BIT(1)
+ #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
++#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
+ 
+ #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+ #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+@@ -515,15 +516,23 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+ 	 * prevent overwriting past the end of buf
+ 	 */
+ 	if (rx_fifo_avail > 0 && buf_remaining > 0) {
+-		BUG_ON(buf_remaining > 3);
++		/* buf_remaining > 3 check not needed as rx_fifo_avail == 0
++		 * when (words_to_transfer was > rx_fifo_avail) earlier
++		 * in this function
++		 */
+ 		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
+ 		val = cpu_to_le32(val);
+ 		memcpy(buf, &val, buf_remaining);
+ 		buf_remaining = 0;
+ 		rx_fifo_avail--;
+ 	}
++	if (WARN_ON_ONCE(rx_fifo_avail))
++		return -EINVAL;
+ 
+-	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
++	/* buf_remaining > 0 at this point can only have rx_fifo_avail == 0
++	 * as this corresponds to (words_to_transfer was > rx_fifo_avail)
++	 * case earlier in this function
++	 */
+ 	i2c_dev->msg_buf_remaining = buf_remaining;
+ 	i2c_dev->msg_buf = buf;
+ 
+@@ -581,7 +590,10 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+ 	 * boundary and fault.
+ 	 */
+ 	if (tx_fifo_avail > 0 && buf_remaining > 0) {
+-		BUG_ON(buf_remaining > 3);
++		/* buf_remaining > 3 check not needed as tx_fifo_avail == 0
++		 * when (words_to_transfer was > tx_fifo_avail) earlier
++		 * in this function for non-zero words_to_transfer
++		 */
+ 		memcpy(&val, buf, buf_remaining);
+ 		val = le32_to_cpu(val);
+ 
+@@ -811,6 +823,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 	u32 status;
+ 	const u32 status_err = I2C_INT_NO_ACK | I2C_INT_ARBITRATION_LOST;
+ 	struct tegra_i2c_dev *i2c_dev = dev_id;
++	int err_val;
+ 
+ 	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
+ 
+@@ -847,10 +860,21 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 
+ 	if (!i2c_dev->is_curr_dma_xfer) {
+ 		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
+-			if (i2c_dev->msg_buf_remaining)
+-				tegra_i2c_empty_rx_fifo(i2c_dev);
+-			else
+-				BUG();
++			err_val = tegra_i2c_empty_rx_fifo(i2c_dev);
++			if ((!(i2c_dev->msg_buf_remaining)) &&
++			    (!(status & I2C_INT_PACKET_XFER_COMPLETE)) &&
++			    err_val) {
++				/*
++				 * Overflow error condition: message fully sent,
++				 * with no XFER_COMPLETE interrupt but hardware
++				 * asks to transfer more.
++				 */
++				tegra_i2c_mask_irq(i2c_dev,
++						   I2C_INT_RX_FIFO_DATA_REQ);
++				i2c_dev->msg_err |=
++					I2C_ERR_UNEXPECTED_STATUS;
++				goto err;
++			}
+ 		}
+ 
+ 		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
+@@ -876,7 +900,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
+ 		if (i2c_dev->is_curr_dma_xfer)
+ 			i2c_dev->msg_buf_remaining = 0;
+-		BUG_ON(i2c_dev->msg_buf_remaining);
++		/* Underflow error condition: XFER_COMPLETE before message
++		 * fully sent.
++		 */
++		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
++			i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
++			goto err;
++		}
+ 		complete(&i2c_dev->msg_complete);
+ 	}
+ 	goto done;
+-- 
+2.7.4
 
-s/jetson-tx2/Jetson TX2/?
-
->=20
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->  drivers/mailbox/tegra-hsp.c | 12 ++++++++++--
->  1 file changed, 10 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
-> index 91f1a0c..f147374 100644
-> --- a/drivers/mailbox/tegra-hsp.c
-> +++ b/drivers/mailbox/tegra-hsp.c
-> @@ -771,10 +771,16 @@ static int tegra_hsp_probe(struct platform_device *=
-pdev)
->  	return 0;
->  }
-> =20
-> -static int __maybe_unused tegra_hsp_resume(struct device *dev)
-> +static int __maybe_unused tegra_hsp_noirq_resume(struct device *dev)
-
-Maybe call this tegra_hsp_resume_noirq() to match the naming of the
-dev_pm_ops callback?
-
->  {
->  	struct tegra_hsp *hsp =3D dev_get_drvdata(dev);
->  	unsigned int i;
-> +	struct tegra_hsp_doorbell *db;
-> +
-> +	list_for_each_entry(db, &hsp->doorbells, list) {
-> +		if (db && db->channel.chan)
-> +			tegra_hsp_doorbell_startup(db->channel.chan);
-> +	}
-> =20
->  	for (i =3D 0; i < hsp->num_sm; i++) {
->  		struct tegra_hsp_mailbox *mb =3D &hsp->mailboxes[i];
-> @@ -786,7 +792,9 @@ static int __maybe_unused tegra_hsp_resume(struct dev=
-ice *dev)
->  	return 0;
->  }
-> =20
-> -static SIMPLE_DEV_PM_OPS(tegra_hsp_pm_ops, NULL, tegra_hsp_resume);
-> +static const struct dev_pm_ops tegra_hsp_pm_ops =3D {
-> +	.resume_noirq   =3D tegra_hsp_noirq_resume,
-
-There seems to be two extra spaces before that =3D.
-
-Thierry
-
---7ZAtKRhVyVSsbBD2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0DwlEACgkQ3SOs138+
-s6FF9hAAiJ4bYQf3muX8DROz4Scc57EGDwt0MelsUs6uPgSREWy1pruYby4Ynmub
-9bT2rhXcUZYDRHZTKqnwhgl1juMnbMMjfCWfjrbE68/2sX/6td5/qYhwCiUVq0uK
-4j0rlF1SgzlqIoeEWaZaVVpxiWGuh192MH1NVacIYQvJvanWhlFxJzeO9yUKX5eb
-5hDxA6MrLsU9hGx3GS8GJ64Df8mfHJOy3kZ6sACOaBY/w03oB3kU3GB6LIW3B/ck
-ds5wx6VLvrfw1OCuM0jlijd7aFM72/u3Gv6U0kGLmXhAaptOZtSYYGVCTcbKlCL6
-mwY6ryNasRgWIIk7S7Ni2ilTo9AJaHzmf4dL/XlXgPVAK7QDHKzRm3CYu5hjCmMx
-c/WBwP9Cme+/ZtI3TK/gvEBtWwdHOsLDb+kpfE8GFHCFQ2exigovGEqMy+Fscqrl
-9Vs7wGoVHFEKZafXike8rFB6otmdEhRhEh0+nFVXFmn4kqa2ZeTdsettOGRmXowR
-o0FB4D4bHESnGmPzv2DpD8ievqDM9jFy2blj762OjxwITNw3V6AtQ47Ay9IYNOz0
-L609ZNxyqi45+6PyYUkuIIj6XR0Ny/TaAHQCkzIUDMtbg4guV9qnVr9XQxytgm9H
-hnCI5uBSdK4M9nv3eFFGSsgwBnIf9sc3+Zxl12TELCvroW5MJEQ=
-=IXnu
------END PGP SIGNATURE-----
-
---7ZAtKRhVyVSsbBD2--
