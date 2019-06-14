@@ -2,104 +2,121 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29E8C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA23BC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:27:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B42120850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E33F21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:27:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Jhve8YJc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfFNMYn (ORCPT
+        id S1727718AbfFNM1i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:24:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:32980 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727634AbfFNMYn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:24:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 957F83EF;
-        Fri, 14 Jun 2019 05:24:42 -0700 (PDT)
-Received: from [192.168.1.18] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C78263F246;
-        Fri, 14 Jun 2019 05:24:39 -0700 (PDT)
-Subject: Re: [PATCH v6 03/19] kernel: Unify update_vsyscall implementation
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-kselftest@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Mark Salyzyn <salyzyn@android.com>,
-        Peter Collingbourne <pcc@google.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Huw Davies <huw@codeweavers.com>
-References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
- <20190530141531.43462-4-vincenzo.frascino@arm.com>
- <alpine.DEB.2.21.1906141307430.1722@nanos.tec.linutronix.de>
- <a69e48a2-575d-255c-2653-d3e99b7ba760@arm.com>
- <alpine.DEB.2.21.1906141416100.1722@nanos.tec.linutronix.de>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <9371eabc-ed74-3db8-794c-44c37ada2163@arm.com>
-Date:   Fri, 14 Jun 2019 13:25:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 08:27:38 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38294 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727575AbfFNM1h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:27:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QxUKDdY2dKpoYGcE4+TvUL/5FWjEOYf2V7NOvYst/OY=; b=Jhve8YJcuersR0vM8sELxrHaP
+        GfdkAw8sRhMjj2lQASFIotkwAlHdA0Aacss9m4SyklG6PGhfdT11lREyD7IoOZ/Rbwd7jvU7RSL2I
+        NwSxQ4Vj/txHuukYGmgNxwTRvqPpX3fo8CWcTSwSwdSxceji+sxS8N6ybSVSv9qcP8cBViYJkgX/a
+        cn4yquF7ua1eLa48mNq+b8CTEH+EibrtV63t1nMVgdKA6jHmCyv2DXNpE7If8uZSnJK7aDRHyLGi6
+        AQdSMsmihP2b3AFGHWK6RgtDeolehY1tN4w4k04Hwj2rWXSyP+dKejiQNCWL+NJtJo5TXX8UBElGk
+        U8/wu12Tg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hblIm-0007fe-0U; Fri, 14 Jun 2019 12:27:28 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C62FC2040DE62; Fri, 14 Jun 2019 14:27:26 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 14:27:26 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        linux-kernel@vger.kernel.org,
+        Prasanna Panchamukhi <panchamukhi@arista.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Cathy Avery <cavery@redhat.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        "Michael Kelley (EOSG)" <Michael.H.Kelley@microsoft.com>,
+        Mohammed Gamal <mmorsy@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Roman Kagan <rkagan@virtuozzo.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        devel@linuxdriverproject.org, kvm@vger.kernel.org,
+        linux-hyperv@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] x86/hyperv: Disable preemption while setting
+ reenlightenment vector
+Message-ID: <20190614122726.GL3436@hirez.programming.kicks-ass.net>
+References: <20190611212003.26382-1-dima@arista.com>
+ <8736kff6q3.fsf@vitty.brq.redhat.com>
+ <20190614082807.GV3436@hirez.programming.kicks-ass.net>
+ <877e9o7a4e.fsf@vitty.brq.redhat.com>
+ <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906141416100.1722@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cb9e1645-98c2-4341-d6da-4effa4f57fb1@arista.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/14/19 1:19 PM, Thomas Gleixner wrote:
-> On Fri, 14 Jun 2019, Vincenzo Frascino wrote:
->> On 6/14/19 12:10 PM, Thomas Gleixner wrote:
->>> On Thu, 30 May 2019, Vincenzo Frascino wrote:
->>>> +
->>>> +	if (__arch_use_vsyscall(vdata)) {
->>>> +		vdata[CS_HRES_COARSE].cycle_last	=
->>>> +						tk->tkr_mono.cycle_last;
->>>> +		vdata[CS_HRES_COARSE].mask		=
->>>> +						tk->tkr_mono.mask;
->>>> +		vdata[CS_HRES_COARSE].mult		=
->>>> +						tk->tkr_mono.mult;
->>>
->>> These line breaks make it really hard to read. Can you fold in the patch
->>> below please?
->>>
->>
->> Thanks for this. I will do it in v7.
+On Fri, Jun 14, 2019 at 12:50:51PM +0100, Dmitry Safonov wrote:
+> On 6/14/19 11:08 AM, Vitaly Kuznetsov wrote:
+> > Peter Zijlstra <peterz@infradead.org> writes:
+> > 
+> >> @@ -182,7 +182,7 @@ void set_hv_tscchange_cb(void (*cb)(void))
+> >>  	struct hv_reenlightenment_control re_ctrl = {
+> >>  		.vector = HYPERV_REENLIGHTENMENT_VECTOR,
+> >>  		.enabled = 1,
+> >> -		.target_vp = hv_vp_index[smp_processor_id()]
+> >> +		.target_vp = hv_vp_index[raw_smp_processor_id()]
+> >>  	};
+> >>  	struct hv_tsc_emulation_control emu_ctrl = {.enabled = 1};
+> >>  
+> > 
+> > Yes, this should do, thanks! I'd also suggest to leave a comment like
+> > 	/* 
+> >          * This function can get preemted and migrate to a different CPU
+> > 	 * but this doesn't matter. We just need to assign
+> > 	 * reenlightenment notification to some online CPU. In case this
+> >          * CPU goes offline, hv_cpu_die() will re-assign it to some
+> >  	 * other online CPU.
+> > 	 */
 > 
-> Talking about v7. I'd like to get this into 5.3. That means you'd have to
-> rebase it on
+> What if the cpu goes down just before wrmsrl()?
+> I mean, hv_cpu_die() will reassign another cpu, but this thread will be
+> resumed on some other cpu and will write cpu number which is at that
+> moment already down?
 > 
->   git://git.kernel.org/pub/scm/linux/kernel/git/hyperv/linux.git hyperv-next
+> (probably I miss something)
 > 
-> to avoid the hyperv conflict. I'll sort this out with the hyperv folks how
-> I can get these bits as a base for a tip branch which holds all the vdso
-> pieces.
->
+> And I presume it's guaranteed that during hv_cpu_die() no other cpu may
+> go down:
+> :	new_cpu = cpumask_any_but(cpu_online_mask, cpu);
+> :	re_ctrl.target_vp = hv_vp_index[new_cpu];
+> :	wrmsrl(HV_X64_MSR_REENLIGHTENMENT_CONTROL, *((u64 *)&re_ctrl));
 
-Ok, I will rebase and test the patches against the hyperv-next branch. Could you
-please let me know when all the bits are sorted?
+Then cpus_read_lock() is the right interface, not preempt_disable().
 
-> Thanks,
-> 
-> 	tglx
-> 
-
--- 
-Regards,
-Vincenzo
+I know you probably can't change the HV interface, but I'm thinking its
+rather daft you have to specify a CPU at all for this. The HV can just
+pick one and send the notification there, who cares.
