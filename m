@@ -2,86 +2,109 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E91C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60698C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:28:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C7D21773
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:26:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3405220851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Rc/9DKEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727410AbfFNK0V (ORCPT
+        id S1727107AbfFNK2T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:26:21 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18572 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726884AbfFNK0V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:26:21 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 2E17F8C56086200B960B;
-        Fri, 14 Jun 2019 18:26:17 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 14 Jun 2019 18:26:08 +0800
-From:   John Garry <john.garry@huawei.com>
-To:     <xuwei5@huawei.com>
-CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <joe@perches.com>,
-        John Garry <john.garry@huawei.com>
-Subject: [PATCH v2] bus: hisi_lpc: Don't use devm_kzalloc() to allocate logical PIO range
-Date:   Fri, 14 Jun 2019 18:24:53 +0800
-Message-ID: <1560507893-42553-1-git-send-email-john.garry@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        Fri, 14 Jun 2019 06:28:19 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:13103 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfFNK2T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:28:19 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0376c20000>; Fri, 14 Jun 2019 03:28:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 14 Jun 2019 03:28:18 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 03:28:18 -0700
+Received: from [10.26.11.12] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
+ 2019 10:28:14 +0000
+Subject: Re: [PATCH 5.1 000/155] 5.1.10-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190613075652.691765927@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <80f289fa-2a01-7a88-eedf-82534ef265be@nvidia.com>
+Date:   Fri, 14 Jun 2019 11:28:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190613075652.691765927@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560508098; bh=px7EtzbJftUuFGYB3SHkAyINM9vKlBssKX6Z0ynN2Xk=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Rc/9DKEUvWgQgV8MebOEHgbmcjUjpaDmFNVcATg8g2gdB3aXRnD2WLRu2gzOqUnzX
+         mM0pASLpz67XQLOD+egNxAZQCr2mdMS5k9laMJLxHhTNlplY8d/c0a+I9AFpb5/hl4
+         FwbUbCy7GScOeSo5U+d5XJIqZwCaOys1SixFogcW/KlUjkNJswwzclcFvLqAM+kH9/
+         0+tjOC4/VReeNhSc53uu8GTvAgUo8wtKw8erTI1jtdF1KipjpUITxDFWhAxCIbLe3w
+         xMU5gCgS/afOQvitdbguVlCWJHTwHv6+QhknlSHBM8yhb0n0inAv/geX1pHk8gqZEv
+         dJPsoDpXu8eBQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If, after registering a logical PIO range, the driver probe later fails,
-the logical PIO range memory will be released automatically.
 
-This causes an issue, in that the logical PIO range is not unregistered
-(that is not supported) and the released range memory may be later
-referenced
+On 13/06/2019 09:31, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.10 release.
+> There are 155 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Sat 15 Jun 2019 07:54:40 AM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.10-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Allocate the logical PIO range with kzalloc() to avoid this potential
-issue.
+All tests are passing for Tegra ...
 
-Fixes: adf38bb0b5956 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
-Signed-off-by: John Garry <john.garry@huawei.com>
----
+Test results for stable-v5.1:
+    12 builds:	12 pass, 0 fail
+    22 boots:	22 pass, 0 fail
+    32 tests:	32 pass, 0 fail
 
-Change to v1:
-- add comment, as advised by Joe Perches
+Linux version:	5.1.10-rc2-gb7eabc3862b8
+Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
+                tegra194-p2972-0000, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-index 19d7b6ff2f17..5f0130a693fe 100644
---- a/drivers/bus/hisi_lpc.c
-+++ b/drivers/bus/hisi_lpc.c
-@@ -599,7 +599,8 @@ static int hisi_lpc_probe(struct platform_device *pdev)
- 	if (IS_ERR(lpcdev->membase))
- 		return PTR_ERR(lpcdev->membase);
- 
--	range = devm_kzalloc(dev, sizeof(*range), GFP_KERNEL);
-+	/* Logical PIO may reference 'range' memory even if the probe fails */
-+	range = kzalloc(sizeof(*range), GFP_KERNEL);
- 	if (!range)
- 		return -ENOMEM;
- 
-@@ -610,6 +611,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
- 	ret = logic_pio_register_range(range);
- 	if (ret) {
- 		dev_err(dev, "register IO range failed (%d)!\n", ret);
-+		kfree(range);
- 		return ret;
- 	}
- 	lpcdev->io_host = range;
+Cheers
+Jon
+
 -- 
-2.17.1
-
+nvpublic
