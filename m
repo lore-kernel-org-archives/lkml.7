@@ -6,35 +6,33 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B29C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7431FC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FB0621873
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55AFB2184E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727208AbfFNRzw (ORCPT
+        id S1727805AbfFNRzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:55:52 -0400
-Received: from foss.arm.com ([217.140.110.172]:39668 "EHLO foss.arm.com"
+        Fri, 14 Jun 2019 13:55:50 -0400
+Received: from foss.arm.com ([217.140.110.172]:39682 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727611AbfFNRz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727675AbfFNRz0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 13:55:26 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1686F11B3;
-        Fri, 14 Jun 2019 10:55:25 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 318493EF;
+        Fri, 14 Jun 2019 10:55:26 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id EC39D3F718;
-        Fri, 14 Jun 2019 10:55:23 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 49C813F718;
+        Fri, 14 Jun 2019 10:55:25 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
         suzuki.poulose@arm.com, Lee Jones <lee.jones@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Subject: [PATCH v2 22/28] drivers: Introduce driver_find_device_by_name() helper
-Date:   Fri, 14 Jun 2019 18:54:17 +0100
-Message-Id: <1560534863-15115-23-git-send-email-suzuki.poulose@arm.com>
+        Thor Thayer <thor.thayer@linux.intel.com>
+Subject: [PATCH v2 23/28] drivers: Introduce driver_find_device_by_of_node() helper
+Date:   Fri, 14 Jun 2019 18:54:18 +0100
+Message-Id: <1560534863-15115-24-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
 References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
@@ -44,104 +42,100 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Add a wrapper to driver_find_device() to search for a device
-by name, similar to the other iterators, reusing the generic
-match function. Also convert the existing users to make use of
-the new helper.
+by the of_node pointer, reusing the generic match function.
+Also convert the existing users to make use of the new helper.
 
 Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc: Thor Thayer <thor.thayer@linux.intel.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/s390/cio/ccwgroup.c | 10 +---------
- drivers/s390/cio/device.c   | 17 +----------------
- include/linux/device.h      | 12 ++++++++++++
- 3 files changed, 14 insertions(+), 25 deletions(-)
+ drivers/amba/tegra-ahb.c    | 11 +----------
+ drivers/mfd/altera-sysmgr.c | 14 ++------------
+ include/linux/device.h      | 13 +++++++++++++
+ 3 files changed, 16 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/s390/cio/ccwgroup.c b/drivers/s390/cio/ccwgroup.c
-index ea176157..d843e36 100644
---- a/drivers/s390/cio/ccwgroup.c
-+++ b/drivers/s390/cio/ccwgroup.c
-@@ -608,13 +608,6 @@ void ccwgroup_driver_unregister(struct ccwgroup_driver *cdriver)
+diff --git a/drivers/amba/tegra-ahb.c b/drivers/amba/tegra-ahb.c
+index aa64eec..57d3b2e 100644
+--- a/drivers/amba/tegra-ahb.c
++++ b/drivers/amba/tegra-ahb.c
+@@ -134,22 +134,13 @@ static inline void gizmo_writel(struct tegra_ahb *ahb, u32 value, u32 offset)
  }
- EXPORT_SYMBOL(ccwgroup_driver_unregister);
  
--static int __ccwgroupdev_check_busid(struct device *dev, const void *id)
+ #ifdef CONFIG_TEGRA_IOMMU_SMMU
+-static int tegra_ahb_match_by_smmu(struct device *dev, const void *data)
 -{
--	char *bus_id = id;
+-	struct tegra_ahb *ahb = dev_get_drvdata(dev);
+-	const struct device_node *dn = data;
 -
--	return (strcmp(bus_id, dev_name(dev)) == 0);
+-	return (ahb->dev->of_node == dn) ? 1 : 0;
 -}
 -
- /**
-  * get_ccwgroupdev_by_busid() - obtain device from a bus id
-  * @gdrv: driver the device is owned by
-@@ -631,8 +624,7 @@ struct ccwgroup_device *get_ccwgroupdev_by_busid(struct ccwgroup_driver *gdrv,
+ int tegra_ahb_enable_smmu(struct device_node *dn)
  {
  	struct device *dev;
+ 	u32 val;
+ 	struct tegra_ahb *ahb;
  
--	dev = driver_find_device(&gdrv->driver, NULL, bus_id,
--				 __ccwgroupdev_check_busid);
-+	dev = driver_find_device_by_name(&gdrv->driver, bus_id);
+-	dev = driver_find_device(&tegra_ahb_driver.driver, NULL, dn,
+-				 tegra_ahb_match_by_smmu);
++	dev = driver_find_device_by_of_node(&tegra_ahb_driver.driver, dn);
+ 	if (!dev)
+ 		return -EPROBE_DEFER;
+ 	ahb = dev_get_drvdata(dev);
+diff --git a/drivers/mfd/altera-sysmgr.c b/drivers/mfd/altera-sysmgr.c
+index 2ee14d8..d2a13a5 100644
+--- a/drivers/mfd/altera-sysmgr.c
++++ b/drivers/mfd/altera-sysmgr.c
+@@ -88,16 +88,6 @@ static struct regmap_config altr_sysmgr_regmap_cfg = {
+ };
  
- 	return dev ? to_ccwgroupdev(dev) : NULL;
- }
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index f27536b..df29d7e 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -1649,20 +1649,6 @@ int ccw_device_force_console(struct ccw_device *cdev)
- EXPORT_SYMBOL_GPL(ccw_device_force_console);
- #endif
- 
--/*
-- * get ccw_device matching the busid, but only if owned by cdrv
+ /**
+- * sysmgr_match_phandle
+- * Matching function used by driver_find_device().
+- * Return: True if match is found, otherwise false.
 - */
--static int
--__ccwdev_check_busid(struct device *dev, const void *id)
+-static int sysmgr_match_phandle(struct device *dev, const void *data)
 -{
--	char *bus_id;
--
--	bus_id = id;
--
--	return (strcmp(bus_id, dev_name(dev)) == 0);
+-	return dev->of_node == (const struct device_node *)data;
 -}
 -
--
- /**
-  * get_ccwdev_by_busid() - obtain device from a bus id
-  * @cdrv: driver the device is owned by
-@@ -1679,8 +1665,7 @@ struct ccw_device *get_ccwdev_by_busid(struct ccw_driver *cdrv,
- {
- 	struct device *dev;
+-/**
+  * altr_sysmgr_regmap_lookup_by_phandle
+  * Find the sysmgr previous configured in probe() and return regmap property.
+  * Return: regmap if found or error if not found.
+@@ -117,8 +107,8 @@ struct regmap *altr_sysmgr_regmap_lookup_by_phandle(struct device_node *np,
+ 	if (!sysmgr_np)
+ 		return ERR_PTR(-ENODEV);
  
--	dev = driver_find_device(&cdrv->driver, NULL, (void *)bus_id,
--				 __ccwdev_check_busid);
-+	dev = driver_find_device_by_name(&cdrv->driver, bus_id);
- 
- 	return dev ? to_ccwdev(dev) : NULL;
- }
+-	dev = driver_find_device(&altr_sysmgr_driver.driver, NULL,
+-				 (void *)sysmgr_np, sysmgr_match_phandle);
++	dev = driver_find_device_by_of_node(&altr_sysmgr_driver.driver,
++					    (void *)sysmgr_np);
+ 	of_node_put(sysmgr_np);
+ 	if (!dev)
+ 		return ERR_PTR(-EPROBE_DEFER);
 diff --git a/include/linux/device.h b/include/linux/device.h
-index 6768e2b..0d3958e 100644
+index 0d3958e..f929671 100644
 --- a/include/linux/device.h
 +++ b/include/linux/device.h
-@@ -425,6 +425,18 @@ struct device *driver_find_device(struct device_driver *drv,
- 				  struct device *start, const void *data,
- 				  int (*match)(struct device *dev, const void *data));
+@@ -437,6 +437,19 @@ static inline struct device *driver_find_device_by_name(struct device_driver *dr
+ 	return driver_find_device(drv, NULL, name, device_match_name);
+ }
  
 +/**
-+ * driver_find_device_by_name - device iterator for locating a particular device
-+ * of a specific name.
++ * driver_find_device_by_of_node- device iterator for locating a particular device
++ * by of_node pointer.
 + * @driver: the driver we're iterating
-+ * @name: name of the device to match
++ * @np: of_node pointer to match.
 + */
-+static inline struct device *driver_find_device_by_name(struct device_driver *drv,
-+							const char *name)
++static inline struct device *
++driver_find_device_by_of_node(struct device_driver *drv,
++			      const struct device_node *np)
 +{
-+	return driver_find_device(drv, NULL, name, device_match_name);
++	return driver_find_device(drv, NULL, np, device_match_of_node);
 +}
 +
  void driver_deferred_probe_add(struct device *dev);
