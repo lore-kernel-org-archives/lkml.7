@@ -2,124 +2,80 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B4A8C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:34:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A7DC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59ED720866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:34:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="da6OKv1A"
+	by mail.kernel.org (Postfix) with ESMTP id EBC8A2064A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:35:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbfFNOen (ORCPT
+        id S1728569AbfFNOfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:34:43 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:44208 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728208AbfFNOen (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:34:43 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t7so1091626plr.11;
-        Fri, 14 Jun 2019 07:34:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=hQ/2TCsgHd63qdgIeQy8ojRYEa5SdLlsBJg9pFxbgEs=;
-        b=da6OKv1AnE6d1/z1ZGsq0j5uJ1whVPCoD3uYZVLLWfq9nZMg8Bt9jtBI6EREwpRdzq
-         J4hhbpNC9nLg9fnKfGAYoNwTBxpOowltBZnDS6tyAsPOAwezJTi5TdhkXntxkA/mRLeq
-         wE77tHiEGlS0c1mM3lVr1Wj4i5B8WPZQFaehdndEC2SW7iqcJEKrMwcukU+SPy7Cyv81
-         tpDau0+IoHSfGyWZWC6DGUAc3/xseYVon1P67Mjgpx1OuqoyuDuKypEwmJC8XNpoSBoT
-         tcWKjJCQXvNVHTTXkQcrOjI7sUsXUGTbtWB09xZmtZnrgtXAJ6Es0f36340+AaxWf2nt
-         IEVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hQ/2TCsgHd63qdgIeQy8ojRYEa5SdLlsBJg9pFxbgEs=;
-        b=nKUjYJIBLcNRlKSQ5Jq3aGcFvl1tueBRKA2M/I+Rgd/y1+IrYRuEZGED97CHIHDL3B
-         J8+V8/FeB/T+vkg0a/MA27iDTDL3lVe7reW1GNAglwIISCKnqlElLtJAm974N6YekMqW
-         hN03r2oFkN+416KslySNWCVznhzEtoldemo5SuMzobfMZV0BpbpfwhL6Bw3qbcw6r9Td
-         4IWqt2pT0GiCoP+dypUNjmvcPlO6R1xhXiwLB1iAuGopYnL19hVe4iRPkAfKMH/ZDBrl
-         YA3OprTCkWiK5qhqhjpmQ3IO+iElWqlcGIwFlcQ8B+00/1aaTkZnHIHfcYo/02e3fEpd
-         bRRw==
-X-Gm-Message-State: APjAAAVkT1q0E3Cp0Ci6bKi05SsJHts96nlBl/y52ost/EwkM7d4LiDp
-        mZSA0OD+qQ+UxvAQ9dsfaMmSAz6j
-X-Google-Smtp-Source: APXvYqzNduItYPKPOV2+opTZ/P0fS0QMPWDWCD9fy67Rk/gk9whLzREGuPsnI/NXjZ2Ja8qZwrUlvQ==
-X-Received: by 2002:a17:902:a516:: with SMTP id s22mr54018004plq.178.1560522882345;
-        Fri, 14 Jun 2019 07:34:42 -0700 (PDT)
-Received: from [192.168.86.235] (c-73-241-150-70.hsd1.ca.comcast.net. [73.241.150.70])
-        by smtp.gmail.com with ESMTPSA id e26sm3196627pfn.94.2019.06.14.07.34.40
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 07:34:41 -0700 (PDT)
-Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
- same tuples
-To:     Eric Dumazet <edumazet@google.com>, maowenan <maowenan@huawei.com>
-Cc:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190612035715.166676-1-maowenan@huawei.com>
- <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
- <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com>
- <a674e90e-d06f-cb67-604f-30cb736d7c72@huawei.com>
- <6aa69ab5-ed81-6a7f-2b2b-214e44ff0ada@gmail.com>
- <52025f94-04d3-2a44-11cd-7aa66ebc7e27@huawei.com>
- <CANn89iKzfvZqZRo1pEwqW11DQk1YOPkoAR4tLbjRG9qbKOYEMw@mail.gmail.com>
- <7d0f5a21-717c-74ee-18ad-fc0432dfbe33@huawei.com>
- <CANn89iJW0DHBg=RKgdLq1r33THL15UO3c2n4MkR6DdD7-QwP1w@mail.gmail.com>
-From:   Eric Dumazet <eric.dumazet@gmail.com>
-Message-ID: <0202f817-bd59-918e-96d5-ddf692f5e140@gmail.com>
-Date:   Fri, 14 Jun 2019 07:34:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 10:35:17 -0400
+Received: from mga09.intel.com ([134.134.136.24]:15426 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728341AbfFNOfR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:35:17 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 07:35:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,373,1557212400"; 
+   d="scan'208";a="184978464"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga002.fm.intel.com with ESMTP; 14 Jun 2019 07:35:16 -0700
+Date:   Fri, 14 Jun 2019 07:25:51 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
+ scattered features word 11
+Message-ID: <20190614142550.GD198207@romley-ivt3.sc.intel.com>
+References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
+ <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
+ <20190614114410.GD2586@zn.tnic>
+ <20190614122749.GE2586@zn.tnic>
+ <20190614131701.GA198207@romley-ivt3.sc.intel.com>
+ <20190614134123.GF2586@zn.tnic>
+ <20190614141424.GA12191@linux.intel.com>
+ <20190614141519.GC198207@romley-ivt3.sc.intel.com>
+ <20190614142611.GI2586@zn.tnic>
 MIME-Version: 1.0
-In-Reply-To: <CANn89iJW0DHBg=RKgdLq1r33THL15UO3c2n4MkR6DdD7-QwP1w@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614142611.GI2586@zn.tnic>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/14/19 7:25 AM, Eric Dumazet wrote:
-> On Fri, Jun 14, 2019 at 7:04 AM maowenan <maowenan@huawei.com> wrote:
->> I agree that this is a special case.
->> I propose one point about the sequence of synack, if two synack with two different
->> sequence since the time elapse 64ns, this issue disappear.
->>
->> tcp_conn_request->tcp_v4_init_seq->secure_tcp_seq->seq_scale
->> static u32 seq_scale(u32 seq)
->> {
->>         /*
->>          *      As close as possible to RFC 793, which
->>          *      suggests using a 250 kHz clock.
->>          *      Further reading shows this assumes 2 Mb/s networks.
->>          *      For 10 Mb/s Ethernet, a 1 MHz clock is appropriate.
->>          *      For 10 Gb/s Ethernet, a 1 GHz clock should be ok, but
->>          *      we also need to limit the resolution so that the u32 seq
->>          *      overlaps less than one time per MSL (2 minutes).
->>          *      Choosing a clock of 64 ns period is OK. (period of 274 s)
->>          */
->>         return seq + (ktime_get_real_ns() >> 6);
->> }
->>
->> So if the long delay larger than 64ns, the seq is difference.
+On Fri, Jun 14, 2019 at 04:26:11PM +0200, Borislav Petkov wrote:
+> On Fri, Jun 14, 2019 at 07:15:20AM -0700, Fenghua Yu wrote:
+> > Adding this small patch into patch 0002 will solve the build errors without
+> > changing the build checks.
 > 
-> The core issue has nothing to do with syncookies.
-> 
-> Are you sure you really understand this stack ?
-> 
+> There's no need for that if you remove the BUILD_BUG_ON checks first.
 
-Oh well, maybe I should not have answered before my breakfast/coffee.
+But without this small patch, CPUID_7_EDX is 17 instead of
+NCAPINTS(19)-1=18 in patch 0002. Of course CPUID_7_EDX is 18 correctly
+evetually after applying patch 0003 which add the word 12 back.
 
-What I meant to say is that we do not want to fix this problem by working around
-the issue you noticed (which leads to RST packets)
+KVM reports this CPUID_7_EDX is not 18 in bisect (as Sena also pointed
+out). I think even native kernel should have some check to report this
+error (similar to other checks of NCAPINTS).
 
+Thanks.
+
+-Fenghua
