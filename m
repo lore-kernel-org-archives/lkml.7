@@ -2,79 +2,263 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED46CC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:14:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15047C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6129208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DBEBA208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:14:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727716AbfFNMO0 (ORCPT
+        id S1727845AbfFNMOb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:14:26 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:52478 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727544AbfFNMO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:14:26 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 4CD46B2AEDDC10E6B47A;
-        Fri, 14 Jun 2019 20:14:24 +0800 (CST)
-Received: from huawei.com (10.90.53.225) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
- 20:14:18 +0800
-From:   <chengzhihao1@huawei.com>
-To:     <david.oberhollenzer@sigma-star.at>, <richard@nod.at>,
-        <boris.brezillon@bootlin.com>, <david@sigma-star.at>,
-        <artem.bityutskiy@linux.intel.com>, <yi.zhang@huawei.com>
-CC:     <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <chengzhihao1@huawei.com>
-Subject: [PATCH mtd-utils] ubi-tests: fm_param: Replace 'fm_auto' with 'fm_autoconvert'
-Date:   Fri, 14 Jun 2019 20:19:50 +0800
-Message-ID: <1560514790-55222-1-git-send-email-chengzhihao1@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 14 Jun 2019 08:14:31 -0400
+Received: from foss.arm.com ([217.140.110.172]:60702 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727544AbfFNMOb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:14:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7972B2B;
+        Fri, 14 Jun 2019 05:14:30 -0700 (PDT)
+Received: from [192.168.1.18] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F11DD3F246;
+        Fri, 14 Jun 2019 05:14:27 -0700 (PDT)
+Subject: Re: [PATCH v6 03/19] kernel: Unify update_vsyscall implementation
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-kselftest@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-4-vincenzo.frascino@arm.com>
+ <alpine.DEB.2.21.1906141307430.1722@nanos.tec.linutronix.de>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <a69e48a2-575d-255c-2653-d3e99b7ba760@arm.com>
+Date:   Fri, 14 Jun 2019 13:15:08 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+In-Reply-To: <alpine.DEB.2.21.1906141307430.1722@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhihao Cheng <chengzhihao1@huawei.com>
+Hi Thomas,
 
-The value of fm_param should be 'fm_autoconvert' rather than 'fm_auto' when
-fastmap is supported by kernel. Currently, following verbose will appear in
-dmesg when fm_param is set to 'fm_auto':
+On 6/14/19 12:10 PM, Thomas Gleixner wrote:
+> On Thu, 30 May 2019, Vincenzo Frascino wrote:
+>> +
+>> +	if (__arch_use_vsyscall(vdata)) {
+>> +		vdata[CS_HRES_COARSE].cycle_last	=
+>> +						tk->tkr_mono.cycle_last;
+>> +		vdata[CS_HRES_COARSE].mask		=
+>> +						tk->tkr_mono.mask;
+>> +		vdata[CS_HRES_COARSE].mult		=
+>> +						tk->tkr_mono.mult;
+> 
+> These line breaks make it really hard to read. Can you fold in the patch
+> below please?
+> 
 
-  ubi: unknown parameter 'fm_auto' ignored
+Thanks for this. I will do it in v7.
 
-This patch replace 'fm_auto' with 'fm_autoconvert' for fm_param, so ubi
-kernel module can receive correct parameters.
+> Thanks,
+> 
+> 	tglx
+> 8<-----------
+> --- a/kernel/vdso/vsyscall.c
+> +++ b/kernel/vdso/vsyscall.c
+> @@ -11,6 +11,66 @@
+>  #include <vdso/helpers.h>
+>  #include <vdso/vsyscall.h>
+>  
+> +static inline void udpate_vdata(struct vdso_data *vdata, struct timekeeper *tk)
+> +{
+> +	struct vdso_timestamp *vdso_ts;
+> +	u64 nsec;
+> +
+> +	vdata[CS_HRES_COARSE].cycle_last	= tk->tkr_mono.cycle_last;
+> +	vdata[CS_HRES_COARSE].mask		= tk->tkr_mono.mask;
+> +	vdata[CS_HRES_COARSE].mult		= tk->tkr_mono.mult;
+> +	vdata[CS_HRES_COARSE].shift		= tk->tkr_mono.shift;
+> +	vdata[CS_RAW].cycle_last		= tk->tkr_raw.cycle_last;
+> +	vdata[CS_RAW].mask			= tk->tkr_raw.mask;
+> +	vdata[CS_RAW].mult			= tk->tkr_raw.mult;
+> +	vdata[CS_RAW].shift			= tk->tkr_raw.shift;
+> +
+> +	/* CLOCK_REALTIME */
+> +	vdso_ts		=  &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
+> +	vdso_ts->sec	= tk->xtime_sec;
+> +	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
+> +
+> +	/* CLOCK_MONOTONIC */
+> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC];
+> +	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+> +
+> +	nsec = tk->tkr_mono.xtime_nsec;
+> +	nsec += ((u64)tk->wall_to_monotonic.tv_nsec << tk->tkr_mono.shift);
+> +	while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
+> +		nsec -= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
+> +		vdso_ts->sec++;
+> +	}
+> +	vdso_ts->nsec	= nsec;
+> +
+> +	/* CLOCK_MONOTONIC_RAW */
+> +	vdso_ts		= &vdata[CS_RAW].basetime[CLOCK_MONOTONIC_RAW];
+> +	vdso_ts->sec	= tk->raw_sec;
+> +	vdso_ts->nsec	= tk->tkr_raw.xtime_nsec;
+> +
+> +	/* CLOCK_BOOTTIME */
+> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_BOOTTIME];
+> +	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+> +	nsec = tk->tkr_mono.xtime_nsec;
+> +	nsec += ((u64)(tk->wall_to_monotonic.tv_nsec +
+> +		       ktime_to_ns(tk->offs_boot)) << tk->tkr_mono.shift);
+> +	while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
+> +		nsec -= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
+> +		vdso_ts->sec++;
+> +	}
+> +	vdso_ts->nsec	= nsec;
+> +
+> +	/* CLOCK_TAI */
+> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_TAI];
+> +	vdso_ts->sec	= tk->xtime_sec + (s64)tk->tai_offset;
+> +	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec;
+> +
+> +	/*
+> +	 * Read without the seqlock held by clock_getres().
+> +	 * Note: No need to have a second copy.
+> +	 */
+> +	WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
+> +}
+> +
+>  void update_vsyscall(struct timekeeper *tk)
+>  {
+>  	struct vdso_data *vdata = __arch_get_k_vdso_data();
+> @@ -32,92 +92,23 @@ void update_vsyscall(struct timekeeper *
+>  	vdata[CS_RAW].clock_mode		= __arch_get_clock_mode(tk);
+>  
+>  	/* CLOCK_REALTIME_COARSE */
+> -	vdso_ts			=
+> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
+> -	vdso_ts->sec		= tk->xtime_sec;
+> -	vdso_ts->nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME_COARSE];
+> +	vdso_ts->sec	= tk->xtime_sec;
+> +	vdso_ts->nsec	= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+> +
+>  	/* CLOCK_MONOTONIC_COARSE */
+> -	vdso_ts			=
+> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC_COARSE];
+> -	vdso_ts->sec		= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+> -	nsec			= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+> -	nsec			= nsec + tk->wall_to_monotonic.tv_nsec;
+> +	vdso_ts		= &vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC_COARSE];
+> +	vdso_ts->sec	= tk->xtime_sec + tk->wall_to_monotonic.tv_sec;
+> +	nsec		= tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+> +	nsec		= nsec + tk->wall_to_monotonic.tv_nsec;
+>  	while (nsec >= NSEC_PER_SEC) {
+>  		nsec = nsec - NSEC_PER_SEC;
+>  		vdso_ts->sec++;
+>  	}
+> -	vdso_ts->nsec		= nsec;
+> +	vdso_ts->nsec	= nsec;
+>  
+> -	if (__arch_use_vsyscall(vdata)) {
+> -		vdata[CS_HRES_COARSE].cycle_last	=
+> -						tk->tkr_mono.cycle_last;
+> -		vdata[CS_HRES_COARSE].mask		=
+> -						tk->tkr_mono.mask;
+> -		vdata[CS_HRES_COARSE].mult		=
+> -						tk->tkr_mono.mult;
+> -		vdata[CS_HRES_COARSE].shift		=
+> -						tk->tkr_mono.shift;
+> -		vdata[CS_RAW].cycle_last		=
+> -						tk->tkr_raw.cycle_last;
+> -		vdata[CS_RAW].mask			=
+> -						tk->tkr_raw.mask;
+> -		vdata[CS_RAW].mult			=
+> -						tk->tkr_raw.mult;
+> -		vdata[CS_RAW].shift			=
+> -						tk->tkr_raw.shift;
+> -		/* CLOCK_REALTIME */
+> -		vdso_ts			=
+> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_REALTIME];
+> -		vdso_ts->sec		= tk->xtime_sec;
+> -		vdso_ts->nsec		= tk->tkr_mono.xtime_nsec;
+> -		/* CLOCK_MONOTONIC */
+> -		vdso_ts			=
+> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_MONOTONIC];
+> -		vdso_ts->sec		= tk->xtime_sec +
+> -					  tk->wall_to_monotonic.tv_sec;
+> -		nsec			= tk->tkr_mono.xtime_nsec;
+> -		nsec			= nsec +
+> -					  ((u64)tk->wall_to_monotonic.tv_nsec <<
+> -					  tk->tkr_mono.shift);
+> -		while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
+> -			nsec = nsec -
+> -			       (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
+> -			vdso_ts->sec++;
+> -		}
+> -		vdso_ts->nsec		= nsec;
+> -		/* CLOCK_MONOTONIC_RAW */
+> -		vdso_ts			=
+> -			&vdata[CS_RAW].basetime[CLOCK_MONOTONIC_RAW];
+> -		vdso_ts->sec		= tk->raw_sec;
+> -		vdso_ts->nsec		= tk->tkr_raw.xtime_nsec;
+> -		/* CLOCK_BOOTTIME */
+> -		vdso_ts			=
+> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_BOOTTIME];
+> -		vdso_ts->sec		= tk->xtime_sec +
+> -					  tk->wall_to_monotonic.tv_sec;
+> -		nsec			= tk->tkr_mono.xtime_nsec;
+> -		nsec			= nsec +
+> -					  ((u64)(tk->wall_to_monotonic.tv_nsec +
+> -					  ktime_to_ns(tk->offs_boot)) <<
+> -					  tk->tkr_mono.shift);
+> -		while (nsec >= (((u64)NSEC_PER_SEC) << tk->tkr_mono.shift)) {
+> -			nsec = nsec -
+> -				(((u64)NSEC_PER_SEC) << tk->tkr_mono.shift);
+> -			vdso_ts->sec++;
+> -		}
+> -		vdso_ts->nsec		= nsec;
+> -		/* CLOCK_TAI */
+> -		vdso_ts			=
+> -			&vdata[CS_HRES_COARSE].basetime[CLOCK_TAI];
+> -		vdso_ts->sec		= tk->xtime_sec + (s64)tk->tai_offset;
+> -		vdso_ts->nsec		= tk->tkr_mono.xtime_nsec;
+> -
+> -		/*
+> -		 * Read without the seqlock held by clock_getres().
+> -		 * Note: No need to have a second copy.
+> -		 */
+> -		WRITE_ONCE(vdata[CS_HRES_COARSE].hrtimer_res, hrtimer_resolution);
+> -	}
+> +	if (__arch_use_vsyscall(vdata))
+> +		update_vdata(vdata, tk);
+>  
+>  	__arch_update_vsyscall(vdata, tk);
+>  
+> 
 
-----------------------------------------
-
-Signed-off-by: Zhihao Cheng <chengzhihao1@huawei.com>
----
- tests/ubi-tests/ubi-stress-test.sh.in | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tests/ubi-tests/ubi-stress-test.sh.in b/tests/ubi-tests/ubi-stress-test.sh.in
-index 42ccec5..657ef4b 100755
---- a/tests/ubi-tests/ubi-stress-test.sh.in
-+++ b/tests/ubi-tests/ubi-stress-test.sh.in
-@@ -117,7 +117,7 @@ run_test()
- 		fm_param=
- 	elif [ "$fm_supported" = "yes" ]; then
- 		fastmap="disabled"
--		fm_param="fm_auto"
-+		fm_param="fm_autoconvert"
- 	else
- 		echo "Fastmap is not supported, skip"
- 		return 0
 -- 
-2.7.4
-
+Regards,
+Vincenzo
