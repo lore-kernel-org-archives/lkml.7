@@ -2,408 +2,169 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C20C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CFEEC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77D542084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:30:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560501023;
-	bh=8A/twWu4+oui0WWJo8PjxmZbtfjSwrP+3JUARRVCm+s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=KXn8VIj5HfTlmDmIHCfJPLhNfrYIXMDSMyZeGywLXZJyQNNSuEcxz2qoDz35qX8jg
-	 d0bagnDiWoIOOiyF8QUkWk0eFRPI9UooK0h7VQfkj+o+uB3hjAHufyS0dm/+pJ1s99
-	 g2qvvE6Z61eFWQa9Sr44WSI5M1Z/in8dyDkb4Y6E=
+	by mail.kernel.org (Postfix) with ESMTP id F30B621473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="i23VuOuZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726838AbfFNIaW (ORCPT
+        id S1726652AbfFNIbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:30:22 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:40035 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726259AbfFNIaV (ORCPT
+        Fri, 14 Jun 2019 04:31:38 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34639 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726259AbfFNIbi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:30:21 -0400
-Received: by mail-oi1-f193.google.com with SMTP id w196so1368425oie.7;
-        Fri, 14 Jun 2019 01:30:21 -0700 (PDT)
+        Fri, 14 Jun 2019 04:31:38 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m29so1570480qtu.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 01:31:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WFDrQf4njTwrCLjFsRfgBfcro7/dqMXuf3KcCnlG7eU=;
+        b=i23VuOuZ0hfuRp/LswwKqj7gDp6Tlmafsj4Mm0OMRl4Vx/LbKVjew4IdJyh3RXRsBS
+         oJ/pXT42q4cyS1GSeDiksQD1bOpT84+3YUseJco/7CZjfBO5lFktZvECavHicuyZdmvD
+         u7U+7MQWSzNnpAJaO1w7qNqlIB/B345yxOQ8k=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aBX5S6bgTctWckd9/P2tFIY6izVzBb7AzQ5sf+y29+s=;
-        b=Gyg1d0FpxDBC+CCyh543R9BGLPfy80rPIoRf/MsgcaS0uM1Im9H13jB4HsKCVDtBoB
-         St4bp4/+bsODBPB57uTmdZduDlYV5DVtAWzhhaAtQQ4dgaWeYorGO66Xiu9nxvfdF+cs
-         ojoUl7iQIcnVYpg2NN8Odte7eyBBM9/ip2j7Slt1k61d5k0FeshfQ1Sjx9s3Y3vUhZKF
-         kIkq9wS2Nj1d/JJ/pEMH2c4FGyeMiWgy33Do3osNZmrUpZ8Ridruk0oPYmd7oxzIRT5z
-         R2q68IDyV9aA9c30RtFl+mQpsStnAZVZ/rMZrjOQnyBdvcxnZKydJDkbzT6O1g4TbJVx
-         oY5w==
-X-Gm-Message-State: APjAAAUBEIsVToDoHGzZrr4AAprP+ra4iJYtNu3H1ZuJlya5U36abkOw
-        r1j1yYBIx2d1TTWn5dqpqvVffI4ErnT4/CvsVYk=
-X-Google-Smtp-Source: APXvYqx1omA4R75tw8TDas2oab9KcZIvx/qWC/wiBq28VqDt/zUvgcBSEWWYNiN8xHrBQ36Y0tGYodw0/oHg4FHPCEo=
-X-Received: by 2002:aca:3256:: with SMTP id y83mr1140955oiy.110.1560501020169;
- Fri, 14 Jun 2019 01:30:20 -0700 (PDT)
+        bh=WFDrQf4njTwrCLjFsRfgBfcro7/dqMXuf3KcCnlG7eU=;
+        b=AkisPhYsJ8uTwuRzYFtmPTQwG8+vgZXLV6PQeoqHpQ+mWaZcUO0lJImFpp0911dp+h
+         KKgf5tUyfoFZW4p9bpS2cM1dBJFcdABGv7nkAnhbdHXgIXJAH9cqF+FI5ilbN0So5O81
+         TQItPyf06eDvh+2Xf/E48n/GIZz4FeB2GB/U5H8kZOgwR0qtUMjrKXZiT+VZ1Z0CgSj+
+         uUkkQumLkxNzpSx77dTKt/Vyls0GZFfrAdEulepP6h9J3KDCSDW1ujZKFn9BaGVFefMS
+         JSHrzdS1cicA40IZl6U0IlxWYXX8U8J7PpKuSokmHrgpOd/GlrXLA1tR+YZv3ysC8IYU
+         I2EQ==
+X-Gm-Message-State: APjAAAWstT3D9fUNcG2/E7GGtHO1RD6z14MjQie7oOGPIRzYkqAuRDGp
+        K94OOwkerQB9UhKAIX44YCJSOPxJqw+Ve3ch4jUOLw==
+X-Google-Smtp-Source: APXvYqwJxz2R9C2u4+JZCsLN1H0xVaea7YSFUZIYK7HKRBDxLRfIPlaG5zng2MeCFRi/Ky0Kb1OnwOXd9vUp1mXjvOw=
+X-Received: by 2002:ac8:279b:: with SMTP id w27mr7486636qtw.159.1560501096909;
+ Fri, 14 Jun 2019 01:31:36 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1560477540.git.mchehab+samsung@kernel.org> <b908fc6555df8cae3e4c734b2d5f6284c46a5f14.1560477540.git.mchehab+samsung@kernel.org>
-In-Reply-To: <b908fc6555df8cae3e4c734b2d5f6284c46a5f14.1560477540.git.mchehab+samsung@kernel.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Fri, 14 Jun 2019 10:30:07 +0200
-Message-ID: <CAJZ5v0gYFCXfdPuuPMVU4ccyhPSdPJvEVJM309aQwAeTjSWeVQ@mail.gmail.com>
-Subject: Re: [PATCH 01/14] ABI: fix some syntax issues at the ABI database
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-iio@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux PM <linux-pm@vger.kernel.org>
+References: <20190612085349.21243-1-bibby.hsieh@mediatek.com> <20190612085349.21243-12-bibby.hsieh@mediatek.com>
+In-Reply-To: <20190612085349.21243-12-bibby.hsieh@mediatek.com>
+From:   Nicolas Boichat <drinkcat@chromium.org>
+Date:   Fri, 14 Jun 2019 16:31:26 +0800
+Message-ID: <CANMq1KDWOr8f6nx7CS9Z_0OCwZFSTxaAT=333xXE-R5FJfEyfg@mail.gmail.com>
+Subject: Re: [PATCH v8 11/12] soc: mediatek: cmdq: add cmdq_dev_get_client_reg function
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, CK HU <ck.hu@mediatek.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        YT Shen <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>, ginny.chen@mediatek.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 4:04 AM Mauro Carvalho Chehab
-<mchehab+samsung@kernel.org> wrote:
+On Wed, Jun 12, 2019 at 4:53 PM Bibby Hsieh <bibby.hsieh@mediatek.com> wrote:
 >
-> From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
 >
-> On those three files, the ABI representation described at
-> README are violated.
->
-> - at sysfs-bus-iio-proximity-as3935:
->         a ':' character is missing after "What"
->
-> - at sysfs-class-devfreq:
->         there's a typo at Description
->
-> - at sysfs-class-cxl, it is using the ":" character at a
->         file preamble, causing it to be misinterpreted as a
->         tag.
->
-> - On the other files, instead of "What", they use "Where".
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-
-Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
 > ---
->  Documentation/ABI/testing/pstore              |  2 +-
->  .../sysfs-bus-event_source-devices-format     |  2 +-
->  .../ABI/testing/sysfs-bus-i2c-devices-hm6352  |  6 ++---
->  .../ABI/testing/sysfs-bus-iio-distance-srf08  |  4 ++--
->  .../testing/sysfs-bus-iio-proximity-as3935    |  4 ++--
->  .../ABI/testing/sysfs-bus-pci-devices-cciss   | 22 +++++++++----------
->  .../testing/sysfs-bus-usb-devices-usbsevseg   | 12 +++++-----
->  Documentation/ABI/testing/sysfs-class-cxl     |  6 ++---
->  Documentation/ABI/testing/sysfs-class-devfreq |  2 +-
->  .../ABI/testing/sysfs-class-powercap          |  2 +-
->  Documentation/ABI/testing/sysfs-kernel-fscaps |  2 +-
->  .../ABI/testing/sysfs-kernel-vmcoreinfo       |  2 +-
->  12 files changed, 33 insertions(+), 33 deletions(-)
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 24 ++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 20 ++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
 >
-> diff --git a/Documentation/ABI/testing/pstore b/Documentation/ABI/testing/pstore
-> index 5fca9f5e10a3..8d6e48f4e8ef 100644
-> --- a/Documentation/ABI/testing/pstore
-> +++ b/Documentation/ABI/testing/pstore
-> @@ -1,4 +1,4 @@
-> -Where:         /sys/fs/pstore/... (or /dev/pstore/...)
-> +What:          /sys/fs/pstore/... (or /dev/pstore/...)
->  Date:          March 2011
->  Kernel Version: 2.6.39
->  Contact:       tony.luck@intel.com
-> diff --git a/Documentation/ABI/testing/sysfs-bus-event_source-devices-format b/Documentation/ABI/testing/sysfs-bus-event_source-devices-format
-> index 77f47ff5ee02..b6f8748e0200 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-event_source-devices-format
-> +++ b/Documentation/ABI/testing/sysfs-bus-event_source-devices-format
-> @@ -1,4 +1,4 @@
-> -Where:         /sys/bus/event_source/devices/<dev>/format
-> +What:          /sys/bus/event_source/devices/<dev>/format
->  Date:          January 2012
->  Kernel Version: 3.3
->  Contact:       Jiri Olsa <jolsa@redhat.com>
-> diff --git a/Documentation/ABI/testing/sysfs-bus-i2c-devices-hm6352 b/Documentation/ABI/testing/sysfs-bus-i2c-devices-hm6352
-> index feb2e4a87075..29bd447e50a0 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-i2c-devices-hm6352
-> +++ b/Documentation/ABI/testing/sysfs-bus-i2c-devices-hm6352
-> @@ -1,18 +1,18 @@
-> -Where:         /sys/bus/i2c/devices/.../heading0_input
-> +What:          /sys/bus/i2c/devices/.../heading0_input
->  Date:          April 2010
->  Kernel Version: 2.6.36?
->  Contact:       alan.cox@intel.com
->  Description:   Reports the current heading from the compass as a floating
->                 point value in degrees.
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 70ad4d806fac..fac4d33fd520 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -27,6 +27,30 @@ struct cmdq_instruction {
+>         u8 op;
+>  };
 >
-> -Where:         /sys/bus/i2c/devices/.../power_state
-> +What:          /sys/bus/i2c/devices/.../power_state
->  Date:          April 2010
->  Kernel Version: 2.6.36?
->  Contact:       alan.cox@intel.com
->  Description:   Sets the power state of the device. 0 sets the device into
->                 sleep mode, 1 wakes it up.
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +                           struct cmdq_client_reg *client_reg, int idx)
+> +{
+> +       struct of_phandle_args spec;
+> +
+> +       if (!client_reg)
+> +               return -EINVAL;
+> +
+> +       if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
+> +                                      "#subsys-cells", idx, &spec)) {
+> +               dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
+> +
+> +               return -EINVAL;
+> +       }
+> +
+> +       client_reg->subsys = spec.args[0];
+> +       client_reg->offset = spec.args[1];
+> +       client_reg->size = spec.args[2];
+> +       of_node_put(spec.np);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>         struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a345870a6d10..2e2a2274c231 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -15,6 +15,12 @@
 >
-> -Where:         /sys/bus/i2c/devices/.../calibration
-> +What:          /sys/bus/i2c/devices/.../calibration
->  Date:          April 2010
->  Kernel Version: 2.6.36?
->  Contact:       alan.cox@intel.com
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-distance-srf08 b/Documentation/ABI/testing/sysfs-bus-iio-distance-srf08
-> index 0a1ca1487fa9..a133fd8d081a 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio-distance-srf08
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-distance-srf08
-> @@ -1,4 +1,4 @@
-> -What           /sys/bus/iio/devices/iio:deviceX/sensor_sensitivity
-> +What:          /sys/bus/iio/devices/iio:deviceX/sensor_sensitivity
->  Date:          January 2017
->  KernelVersion: 4.11
->  Contact:       linux-iio@vger.kernel.org
-> @@ -6,7 +6,7 @@ Description:
->                 Show or set the gain boost of the amp, from 0-31 range.
->                 default 31
+>  struct cmdq_pkt;
 >
-> -What           /sys/bus/iio/devices/iio:deviceX/sensor_max_range
-> +What:          /sys/bus/iio/devices/iio:deviceX/sensor_max_range
->  Date:          January 2017
->  KernelVersion: 4.11
->  Contact:       linux-iio@vger.kernel.org
-> diff --git a/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935 b/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
-> index 9a17ab5036a4..c59d95346341 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
-> +++ b/Documentation/ABI/testing/sysfs-bus-iio-proximity-as3935
-> @@ -1,4 +1,4 @@
-> -What           /sys/bus/iio/devices/iio:deviceX/in_proximity_input
-> +What:          /sys/bus/iio/devices/iio:deviceX/in_proximity_input
->  Date:          March 2014
->  KernelVersion: 3.15
->  Contact:       Matt Ranostay <matt.ranostay@konsulko.com>
-> @@ -6,7 +6,7 @@ Description:
->                 Get the current distance in meters of storm (1km steps)
->                 1000-40000 = distance in meters
+> +struct cmdq_client_reg {
+> +       u8 subsys;
+> +       u16 offset;
+> +       u16 size;
+> +};
+> +
+>  struct cmdq_client {
+>         spinlock_t lock;
+>         u32 pkt_cnt;
+> @@ -142,4 +148,18 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>   */
+>  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
 >
-> -What           /sys/bus/iio/devices/iio:deviceX/sensor_sensitivity
-> +What:          /sys/bus/iio/devices/iio:deviceX/sensor_sensitivity
->  Date:          March 2014
->  KernelVersion: 3.15
->  Contact:       Matt Ranostay <matt.ranostay@konsulko.com>
-> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-cciss b/Documentation/ABI/testing/sysfs-bus-pci-devices-cciss
-> index 53d99edd1d75..eb449169c30b 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-cciss
-> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-cciss
-> @@ -1,66 +1,66 @@
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/cXdY/model
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/cXdY/model
->  Date:          March 2009
->  Kernel Version: 2.6.30
->  Contact:       iss_storagedev@hp.com
->  Description:   Displays the SCSI INQUIRY page 0 model for logical drive
->                 Y of controller X.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/cXdY/rev
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/cXdY/rev
->  Date:          March 2009
->  Kernel Version: 2.6.30
->  Contact:       iss_storagedev@hp.com
->  Description:   Displays the SCSI INQUIRY page 0 revision for logical
->                 drive Y of controller X.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/cXdY/unique_id
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/cXdY/unique_id
->  Date:          March 2009
->  Kernel Version: 2.6.30
->  Contact:       iss_storagedev@hp.com
->  Description:   Displays the SCSI INQUIRY page 83 serial number for logical
->                 drive Y of controller X.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/cXdY/vendor
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/cXdY/vendor
->  Date:          March 2009
->  Kernel Version: 2.6.30
->  Contact:       iss_storagedev@hp.com
->  Description:   Displays the SCSI INQUIRY page 0 vendor for logical drive
->                 Y of controller X.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/cXdY/block:cciss!cXdY
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/cXdY/block:cciss!cXdY
->  Date:          March 2009
->  Kernel Version: 2.6.30
->  Contact:       iss_storagedev@hp.com
->  Description:   A symbolic link to /sys/block/cciss!cXdY
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/rescan
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/rescan
->  Date:          August 2009
->  Kernel Version:        2.6.31
->  Contact:       iss_storagedev@hp.com
->  Description:   Kicks of a rescan of the controller to discover logical
->                 drive topology changes.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/cXdY/lunid
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/cXdY/lunid
->  Date:          August 2009
->  Kernel Version: 2.6.31
->  Contact:       iss_storagedev@hp.com
->  Description:   Displays the 8-byte LUN ID used to address logical
->                 drive Y of controller X.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/cXdY/raid_level
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/cXdY/raid_level
->  Date:          August 2009
->  Kernel Version: 2.6.31
->  Contact:       iss_storagedev@hp.com
->  Description:   Displays the RAID level of logical drive Y of
->                 controller X.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/cXdY/usage_count
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/cXdY/usage_count
->  Date:          August 2009
->  Kernel Version: 2.6.31
->  Contact:       iss_storagedev@hp.com
->  Description:   Displays the usage count (number of opens) of logical drive Y
->                 of controller X.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/resettable
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/resettable
->  Date:          February 2011
->  Kernel Version:        2.6.38
->  Contact:       iss_storagedev@hp.com
-> @@ -71,7 +71,7 @@ Description:  Value of 1 indicates the controller can honor the reset_devices
->                 a dump device, as kdump requires resetting the device in order
->                 to work reliably.
->
-> -Where:         /sys/bus/pci/devices/<dev>/ccissX/transport_mode
-> +What:          /sys/bus/pci/devices/<dev>/ccissX/transport_mode
->  Date:          July 2011
->  Kernel Version:        3.0
->  Contact:       iss_storagedev@hp.com
-> diff --git a/Documentation/ABI/testing/sysfs-bus-usb-devices-usbsevseg b/Documentation/ABI/testing/sysfs-bus-usb-devices-usbsevseg
-> index 70d00dfa443d..f6199b314196 100644
-> --- a/Documentation/ABI/testing/sysfs-bus-usb-devices-usbsevseg
-> +++ b/Documentation/ABI/testing/sysfs-bus-usb-devices-usbsevseg
-> @@ -1,12 +1,12 @@
-> -Where:         /sys/bus/usb/.../powered
-> +What:          /sys/bus/usb/.../powered
->  Date:          August 2008
->  Kernel Version:        2.6.26
->  Contact:       Harrison Metzger <harrisonmetz@gmail.com>
->  Description:   Controls whether the device's display will powered.
->                 A value of 0 is off and a non-zero value is on.
->
-> -Where:         /sys/bus/usb/.../mode_msb
-> -Where:         /sys/bus/usb/.../mode_lsb
-> +What:          /sys/bus/usb/.../mode_msb
-> +What:          /sys/bus/usb/.../mode_lsb
->  Date:          August 2008
->  Kernel Version:        2.6.26
->  Contact:       Harrison Metzger <harrisonmetz@gmail.com>
-> @@ -16,7 +16,7 @@ Description:  Controls the devices display mode.
->                 for an 8 character display the values are
->                         MSB 0x08; LSB 0xFF.
->
-> -Where:         /sys/bus/usb/.../textmode
-> +What:          /sys/bus/usb/.../textmode
->  Date:          August 2008
->  Kernel Version:        2.6.26
->  Contact:       Harrison Metzger <harrisonmetz@gmail.com>
-> @@ -25,13 +25,13 @@ Description:        Controls the way the device interprets its text buffer.
->                 hex:    each character is between 0-15
->                 ascii:  each character is between '0'-'9' and 'A'-'F'.
->
-> -Where:         /sys/bus/usb/.../text
-> +What:          /sys/bus/usb/.../text
->  Date:          August 2008
->  Kernel Version:        2.6.26
->  Contact:       Harrison Metzger <harrisonmetz@gmail.com>
->  Description:   The text (or data) for the device to display
->
-> -Where:         /sys/bus/usb/.../decimals
-> +What:          /sys/bus/usb/.../decimals
->  Date:          August 2008
->  Kernel Version:        2.6.26
->  Contact:       Harrison Metzger <harrisonmetz@gmail.com>
-> diff --git a/Documentation/ABI/testing/sysfs-class-cxl b/Documentation/ABI/testing/sysfs-class-cxl
-> index bbbabffc682a..fc7c6f7c21b3 100644
-> --- a/Documentation/ABI/testing/sysfs-class-cxl
-> +++ b/Documentation/ABI/testing/sysfs-class-cxl
-> @@ -1,6 +1,6 @@
-> -Note: Attributes that are shared between devices are stored in the directory
-> -pointed to by the symlink device/.
-> -Example: The real path of the attribute /sys/class/cxl/afu0.0s/irqs_max is
-> +Please notice that attributes that are shared between devices are stored in
-> +the directory pointed to by the symlink device/.
-> +For example, the real path of the attribute /sys/class/cxl/afu0.0s/irqs_max is
->  /sys/class/cxl/afu0.0s/device/irqs_max, i.e. /sys/class/cxl/afu0.0/irqs_max.
->
->
-> diff --git a/Documentation/ABI/testing/sysfs-class-devfreq b/Documentation/ABI/testing/sysfs-class-devfreq
-> index ee39acacf6f8..01196e19afca 100644
-> --- a/Documentation/ABI/testing/sysfs-class-devfreq
-> +++ b/Documentation/ABI/testing/sysfs-class-devfreq
-> @@ -47,7 +47,7 @@ Description:
->  What:          /sys/class/devfreq/.../trans_stat
->  Date:          October 2012
->  Contact:       MyungJoo Ham <myungjoo.ham@samsung.com>
-> -Descrtiption:
-> +Description:
->                 This ABI shows the statistics of devfreq behavior on a
->                 specific device. It shows the time spent in each state and
->                 the number of transitions between states.
-> diff --git a/Documentation/ABI/testing/sysfs-class-powercap b/Documentation/ABI/testing/sysfs-class-powercap
-> index db3b3ff70d84..f333a0ccc29b 100644
-> --- a/Documentation/ABI/testing/sysfs-class-powercap
-> +++ b/Documentation/ABI/testing/sysfs-class-powercap
-> @@ -147,6 +147,6 @@ What:               /sys/class/powercap/.../<power zone>/enabled
->  Date:          September 2013
->  KernelVersion: 3.13
->  Contact:       linux-pm@vger.kernel.org
-> -Description
-> +Description:
->                 This allows to enable/disable power capping at power zone level.
->                 This applies to current power zone and its children.
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-fscaps b/Documentation/ABI/testing/sysfs-kernel-fscaps
-> index 50a3033b5e15..bcff34665192 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-fscaps
-> +++ b/Documentation/ABI/testing/sysfs-kernel-fscaps
-> @@ -2,7 +2,7 @@ What:           /sys/kernel/fscaps
->  Date:          February 2011
->  KernelVersion: 2.6.38
->  Contact:       Ludwig Nussel <ludwig.nussel@suse.de>
-> -Description
-> +Description:
->                 Shows whether file system capabilities are honored
->                 when executing a binary
->
-> diff --git a/Documentation/ABI/testing/sysfs-kernel-vmcoreinfo b/Documentation/ABI/testing/sysfs-kernel-vmcoreinfo
-> index 7bd81168e063..1f1087a5f075 100644
-> --- a/Documentation/ABI/testing/sysfs-kernel-vmcoreinfo
-> +++ b/Documentation/ABI/testing/sysfs-kernel-vmcoreinfo
-> @@ -4,7 +4,7 @@ KernelVersion:  2.6.24
->  Contact:       Ken'ichi Ohmichi <oomichi@mxs.nes.nec.co.jp>
->                 Kexec Mailing List <kexec@lists.infradead.org>
->                 Vivek Goyal <vgoyal@redhat.com>
-> -Description
-> +Description:
->                 Shows physical address and size of vmcoreinfo ELF note.
->                 First value contains physical address of note in hex and
->                 second value contains the size of note in hex. This ELF
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
+
+Minor nit: this line is over 80 chars.
+
+> + * @dev:       device of CMDQ mailbox clienti
+> + * @client_reg: CMDQ client reg pointer
+> + * @idx:       the index of desired reg
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + *
+> + * Help CMDQ client pasing the cmdq client reg
+> + * from the device node of CMDQ client.
+> + */
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +                           struct cmdq_client_reg *client_reg, int idx);
+> +
+>  #endif /* __MTK_CMDQ_H__ */
 > --
-> 2.21.0
+> 2.18.0
 >
