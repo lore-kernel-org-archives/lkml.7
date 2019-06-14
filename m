@@ -8,65 +8,63 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF30C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5B9C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:45:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 500BB2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20DDB2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:45:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESWZ4uf2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZIKYa2CQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727446AbfFNKpT (ORCPT
+        id S1727422AbfFNKpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:45:19 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45055 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbfFNKpQ (ORCPT
+        Fri, 14 Jun 2019 06:45:17 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36548 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727015AbfFNKpP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:45:16 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r16so1976560wrl.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:45:15 -0700 (PDT)
+        Fri, 14 Jun 2019 06:45:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id u8so1836594wmm.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:45:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=1ZO2she5ppWx2Q8JyWUBWFFhbTM0LwZQEDphClt9pDw=;
-        b=ESWZ4uf2DPrhUI+Ux6Pq+ahq6nSiNhZTG8jYcSeneUseGmW75Zj5cES9mKbeDCc6p9
-         rkH9TUYVfFL8T/oqamNBaMdVxz75eLQzbKBMZsyVDT7wiDKSChDULETjtxBqhwuFndPw
-         TZUm26glTE4gMvaJXCT3sjc0RyDuL/6P+RLnKIIgn0BT2T8n4RttoCuuoNLtt1CoROik
-         GuMF+wa/HsH+5732vb8HNOIViJR0mR03XSmuet05ieZmyyFHu2BpUG1BuSUiBN1tDmRq
-         mwldgK0Wp8YJ7vBeg+ehpeG7x1JwT6Bh82aUhVFtz+iLGSW0YravjoQxptNj1fUDc193
-         Ooxg==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M7TbSumAgRBdakEE0RH2h70YxQ0sN1NeoR8pORJvTqI=;
+        b=ZIKYa2CQPuD06mwcr376HaetoRETRAJwxmJoSazagTrJgOHL71hjLaP/042Fb0128I
+         OWo7/1cQ81G5SysUSsBZEDLgM2rdscja9mRTElgI7RNC9j9CQ863TrXIHlxBuP+a4Uq6
+         p6XEtbQhIz7LNKoVvtVaB5n5kC0DFV20yt6C5LUtf6RnPYI5lZXweCA9ms3GAqLj4U2V
+         jx9AFvh3YpZoJ5kSwKN3uvFid/d83D/hrUMGw4eVOPhPQpbVzeepM73HwwwNHAhTAC3X
+         9YYwoaKo1qClqfE8aZ7zca2b1H6Fo81ib54RJAgwnai78R+b1vHZt1IUaFvoreWlX59T
+         Q+XA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=1ZO2she5ppWx2Q8JyWUBWFFhbTM0LwZQEDphClt9pDw=;
-        b=YoMnfW+MICIXJjAH2eTn1rXwezCiFx/RiZAKybYxuNtqL48u3mIecnSoKHwiRG49oM
-         vm/xKdt30muXRcEDHVWmiVQZy30Pds1dTQY+8ExfPsnRYdFPo84nqxerX5xYpfzLRhAD
-         a4cT7Jy43qoxftopD2Yal5ZD1fAjOw00cTIHD1viiUyy9IiVQcueDcbGMka8nmxaUeam
-         NvV6IHRySlezLvBBIMPoKq2AVTdEYMH+oz68REf6tUDjQ7F47OQab5tstFKbsr36G/7Z
-         KnT6eyX11g7sor7OC9NwivDbILSTQdHTEcB0WjtOrar/Fs3kJwmOsYQnJ043d0hOLZV3
-         SivQ==
-X-Gm-Message-State: APjAAAXC19qAiWs7K7LSprWZDadmeNgR8V2IUv1VIsCRgw9lYo42P18H
-        EkflPttPL0rqYR01+A0OQ7I=
-X-Google-Smtp-Source: APXvYqzdB/X7weMKQijAxhOggcNp+q++NTTj+4iEV8DKP91I/m3WEyO8E6DpxM49YTDL0DdPfjL5Mw==
-X-Received: by 2002:adf:c5c1:: with SMTP id v1mr45897548wrg.129.1560509114552;
-        Fri, 14 Jun 2019 03:45:14 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=M7TbSumAgRBdakEE0RH2h70YxQ0sN1NeoR8pORJvTqI=;
+        b=mL7Jw4TSJI3GQCbg7zgBJ7AiZKSI0/33SFq/n3+nkDnnjJNaIXmzOxR8YBj/6Vdfc4
+         sy3hel5pr2ge10wYKvtTK9TSxX39Db2eNSDmvzo9bR1l3EYTDz2jG3/HFXNfgOYiJrec
+         jnCAOiDQtDrSwneYy92zVUpEkLdrpU4xOloLcgTNgpwYNgRh7ntHO5iSD3VfsgFBr7a+
+         2DtTFmZX6mJMDnTMx/mcLrnIF8re4SXoT/yUyXReYUFINUO81hhBkuLyEao5j+oY2UNg
+         qi/ohqvR9koloSUl6CiP6XeFlLdk7NN007udAbWk3dN4tOkZyIkKYnw6bp4BWQjjKDf/
+         0QuQ==
+X-Gm-Message-State: APjAAAWrkLCOAFBfqfaXfNqaiS8UeOUN1GqQ+ts9DrEYQV6S9dNuzlOX
+        974wOLUgM5gyMOAPIg0ED28=
+X-Google-Smtp-Source: APXvYqwHY5Ac2gEgrYvYkIGTMKfrXaZyTh9xeiQ09gQlqd/Wz1iB+5rxbLIlU06afnlwUl1IZmaVbg==
+X-Received: by 2002:a7b:c455:: with SMTP id l21mr7628235wmi.114.1560509113108;
+        Fri, 14 Jun 2019 03:45:13 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id d10sm3746676wrp.74.2019.06.14.03.45.13
+        by smtp.gmail.com with ESMTPSA id n1sm2268037wrx.39.2019.06.14.03.45.12
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 03:45:14 -0700 (PDT)
+        Fri, 14 Jun 2019 03:45:12 -0700 (PDT)
 From:   Thierry Reding <thierry.reding@gmail.com>
 To:     John Stultz <john.stultz@linaro.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] clocksource: Add suspend clocksource sysfs attribute
-Date:   Fri, 14 Jun 2019 12:45:10 +0200
-Message-Id: <20190614104510.19360-2-thierry.reding@gmail.com>
+Subject: [PATCH 1/2] clocksource: Extract clocksource lookup code
+Date:   Fri, 14 Jun 2019 12:45:09 +0200
+Message-Id: <20190614104510.19360-1-thierry.reding@gmail.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190614104510.19360-1-thierry.reding@gmail.com>
-References: <20190614104510.19360-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -76,90 +74,58 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Allow the currently selected suspend clocksource to be inspected via
-sysfs. The suspend clocksource can also be set using this attribute,
-which can be useful for debugging.
+Move the clocksource lookup code into a separate function. This will
+allow subsequent patches to reuse this code.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- kernel/time/clocksource.c | 53 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 52 insertions(+), 1 deletion(-)
+ kernel/time/clocksource.c | 24 ++++++++++++++++++------
+ 1 file changed, 18 insertions(+), 6 deletions(-)
 
 diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index 467b36d2f9f8..d963bcecbc96 100644
+index 3bcc19ceb073..467b36d2f9f8 100644
 --- a/kernel/time/clocksource.c
 +++ b/kernel/time/clocksource.c
-@@ -489,7 +489,8 @@ static void __clocksource_suspend_select(struct clocksource *cs)
- 	}
+@@ -453,6 +453,18 @@ static inline void clocksource_watchdog_unlock(unsigned long *flags) { }
  
- 	/* Pick the best rating. */
--	if (!suspend_clocksource || cs->rating > suspend_clocksource->rating)
-+	if (!suspend_clocksource || cs->rating > suspend_clocksource->rating ||
-+	    (suspend_clocksource->flags & CLOCK_SOURCE_SUSPEND_NONSTOP) == 0)
- 		suspend_clocksource = cs;
- }
+ #endif /* CONFIG_CLOCKSOURCE_WATCHDOG */
  
-@@ -1172,10 +1173,60 @@ static ssize_t available_clocksource_show(struct device *dev,
- }
- static DEVICE_ATTR_RO(available_clocksource);
- 
-+static ssize_t suspend_clocksource_show(struct device *dev,
-+					struct device_attribute *attr,
-+					char *buf)
-+{
-+	struct clocksource *clksrc = suspend_clocksource;
-+	ssize_t count = 0;
-+
-+	if (clksrc)
-+		count += snprintf(buf, PAGE_SIZE, "%s\n", clksrc->name);
-+
-+	return count;
-+}
-+
-+static ssize_t suspend_clocksource_store(struct device *dev,
-+					 struct device_attribute *attr,
-+					 const char *buf, size_t count)
++static struct clocksource *clocksource_lookup(const char *name)
 +{
 +	struct clocksource *cs;
-+	char name[CS_NAME_LEN];
-+	ssize_t ret;
 +
-+	ret = sysfs_get_uname(buf, name, count);
-+	if (ret < 0)
-+		return ret;
-+
-+	mutex_lock(&clocksource_mutex);
-+
-+	if (strlen(name) > 0) {
-+		cs = clocksource_lookup(name);
-+		if (cs) {
-+			if (!(cs->flags & CLOCK_SOURCE_SUSPEND_NONSTOP))
-+				pr_warn("using non-persistent clocksource %s for suspend\n",
-+					cs->name);
-+
-+			suspend_clocksource = cs;
-+		} else {
-+			ret = -ENODEV;
-+		}
-+	} else {
-+		clocksource_suspend_select(false);
++	list_for_each_entry(cs, &clocksource_list, list) {
++		if (strcmp(cs->name, name) == 0)
++			return cs;
 +	}
 +
-+	mutex_unlock(&clocksource_mutex);
-+
-+	return ret ? ret : count;
++	return NULL;
 +}
 +
-+static DEVICE_ATTR_RW(suspend_clocksource);
+ static bool clocksource_is_suspend(struct clocksource *cs)
+ {
+ 	return cs == suspend_clocksource;
+@@ -1110,14 +1122,14 @@ static ssize_t unbind_clocksource_store(struct device *dev,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	ret = -ENODEV;
+ 	mutex_lock(&clocksource_mutex);
+-	list_for_each_entry(cs, &clocksource_list, list) {
+-		if (strcmp(cs->name, name))
+-			continue;
 +
- static struct attribute *clocksource_attrs[] = {
- 	&dev_attr_current_clocksource.attr,
- 	&dev_attr_unbind_clocksource.attr,
- 	&dev_attr_available_clocksource.attr,
-+	&dev_attr_suspend_clocksource.attr,
- 	NULL
- };
- ATTRIBUTE_GROUPS(clocksource);
++	cs = clocksource_lookup(name);
++	if (cs)
+ 		ret = clocksource_unbind(cs);
+-		break;
+-	}
++	else
++		ret = -ENODEV;
++
+ 	mutex_unlock(&clocksource_mutex);
+ 
+ 	return ret ? ret : count;
 -- 
 2.21.0
 
