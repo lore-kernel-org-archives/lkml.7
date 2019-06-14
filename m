@@ -2,199 +2,142 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED88C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBDCC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D832084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CA8120665
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:16:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="hitN2muT"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="sX7cDuPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727283AbfFNKOM (ORCPT
+        id S1727361AbfFNKQ2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:14:12 -0400
-Received: from mail.efficios.com ([167.114.142.138]:37836 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726951AbfFNKOM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:14:12 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 8698325156E;
-        Fri, 14 Jun 2019 06:14:10 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id nA8w-lK6TlPi; Fri, 14 Jun 2019 06:14:10 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id F4175251563;
-        Fri, 14 Jun 2019 06:14:09 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com F4175251563
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1560507250;
-        bh=Mf1RtqNecFmDuZIOTCNNi4jRodfbuTrPr7L+AaQPg5w=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=hitN2muTkDmoGrBacLuoX6vzik6K4AZ0zwjjihSkuuftRsx/VQ9Uyk28KA8+kAZ+E
-         A2O0LVlgq1tfifc74u/BgLBunHHEJiZiWi0KRbW0Md24GX8jbfHI2Bx40z0VgxJOcT
-         /mbl3exRUeBF+lTIcnjuOzDQt7aOUkuLRX8vtj2yT9yZYs2Lw8ePz+X7j386V6xBfd
-         4/ui8urMQ8o+tNtZFE8p5eo6jA6BesW9x2AqfopI+Wb+NCtLZ8PlnVs2sMb24a9b2D
-         I/1fCMZIHkxSixqdWS8rmEtSj4PGzyCiIMDhUesCzWSEZ3PGYQPPqXDIEXynGT0434
-         ++peFSjmP4knw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id 3Hs2xVKoMsEa; Fri, 14 Jun 2019 06:14:09 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id D755B25155D;
-        Fri, 14 Jun 2019 06:14:09 -0400 (EDT)
-Date:   Fri, 14 Jun 2019 06:14:09 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87ftocwkei.fsf@oldenburg2.str.redhat.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <87o93d4lqb.fsf@oldenburg2.str.redhat.com> <117220011.27079.1559663870037.JavaMail.zimbra@efficios.com> <87wohzorj0.fsf@oldenburg2.str.redhat.com> <c16c9785-7f8c-430b-a4df-a53e47bf1600@redhat.com> <914051741.43025.1560348011775.JavaMail.zimbra@efficios.com> <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com> <87ftocwkei.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v10)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-Thread-Index: kYRcFH9aozKT8hkvRfqxQ+J8ADLHgA==
+        Fri, 14 Jun 2019 06:16:28 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:17591 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726841AbfFNKQ1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:16:27 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45QGjM1H2Jz9vDbj;
+        Fri, 14 Jun 2019 12:16:23 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=sX7cDuPN; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id RsZZFblO1owP; Fri, 14 Jun 2019 12:16:23 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45QGjL6tmgz9vDbh;
+        Fri, 14 Jun 2019 12:16:22 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560507383; bh=TY2dCqN2e9LwCfIjpEtnXQ6QZOx6P42BO2JkGX44zKo=;
+        h=From:Subject:To:Cc:Date:From;
+        b=sX7cDuPNCOH3k1NV5WEEAQVIfWziAd8Yttao5/aoEyBT0eSlXHRjPskvTVdPr820M
+         GMCllAQp+pwfGchnsGUjQ24zxvechvXUsYdfgm90jqvm2kG6mvV2/nyUMo0fQ1Awme
+         5YfAXVzfmyFBYJsQRM+ClutAhF5IvooTaDlCYPGw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2C4018B7AD;
+        Fri, 14 Jun 2019 12:16:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id b9t6QDuhCvSj; Fri, 14 Jun 2019 12:16:24 +0200 (CEST)
+Received: from PO15451.localdomain (po15451.idsi0.si.c-s.fr [172.25.230.107])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 08F808B7AC;
+        Fri, 14 Jun 2019 12:16:24 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id DF66968D78; Fri, 14 Jun 2019 10:16:23 +0000 (UTC)
+Message-Id: <1b4946c9e580b51b6ca2ddc5963d66406c013c2d.1560507284.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH v3 1/3] powerpc/boot: don't force gzipped uImage
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Fri, 14 Jun 2019 10:16:23 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 14, 2019, at 12:06 PM, Florian Weimer fweimer@redhat.com wrote:
+This patch modifies the generation of uImage by handing over
+the selected compression type instead of forcing gzip
 
-> * Mathieu Desnoyers:
-> 
->> ----- On Jun 12, 2019, at 4:00 PM, Mathieu Desnoyers
->> mathieu.desnoyers@efficios.com wrote:
->>
->>> ----- On Jun 10, 2019, at 4:43 PM, carlos carlos@redhat.com wrote:
->>> 
->>>> On 6/6/19 7:57 AM, Florian Weimer wrote:
->>>>> Let me ask the key question again: Does it matter if code observes the
->>>>> rseq area first without kernel support, and then with kernel support?
->>>>> If we don't expect any problems immediately, we do not need to worry
->>>>> much about the constructor ordering right now.  I expect that over time,
->>>>> fixing this properly will become easier.
->>>> 
->>>> I just wanted to chime in and say that splitting this into:
->>>> 
->>>> * Ownership (__rseq_handled)
->>>> 
->>>> * Initialization (__rseq_abi)
->>>> 
->>>> Makes sense to me.
->>>> 
->>>> I agree we need an answer to this question of ownership but not yet
->>>> initialized, to owned and initialized.
->>>> 
->>>> I like the idea of having __rseq_handled in ld.so.
->>> 
->>> Very good, so I'll implement this approach. Sorry for the delayed
->>> feedback, I am traveling this week.
->>
->> I had issues with cases where application or LD_PRELOAD library also
->> define the __rseq_handled symbol. They appear not to see the same
->> address as the one initialized by ld.so.
-> 
-> What exactly did you do?  How did you determine the addresses?  How is
-> __rseq_handled defined in ld.so?
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 
-The easiest way to answer these questions is through links to my github
-dev branch:
+---
+ v3: no change
+ v2: no change
+---
+ arch/powerpc/boot/wrapper | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-https://github.com/compudj/glibc-dev/tree/glibc-rseq
-
-specifically this commit:
-https://github.com/compudj/glibc-dev/commit/c49a286497d065a7fc00aafd846e6edce14f97fc
-and this attempt at using GL():
-https://github.com/compudj/glibc-dev/commit/8a02acfbb6943672bfa36b4fc6f61905ee4fa180
-
-My test programs are:
-
-* a.c:
-
-#include <stdio.h>
-#include <linux/rseq.h>
-
-extern __thread struct rseq __rseq_abi
-__attribute__ ((tls_model ("initial-exec")));/* = {
-	.cpu_id = -1,
-};*/
-extern int __rseq_handled;
-
-int main()
-{
-	fprintf(stderr, "__rseq_handled main: %d %p\n", __rseq_handled, &__rseq_handled);
-	fprintf(stderr, "__rseq_abi.cpu_id main: %d %p\n", __rseq_abi.cpu_id, &__rseq_abi);
-	return 0;
-}
-
-* s.c:
-
-#include <stdio.h>
-#include <linux/rseq.h>
-
-#if 0
-__thread struct rseq __rseq_abi
-__attribute__ ((tls_model ("initial-exec"))) = {
-	.cpu_id = -1,
-};
-int __rseq_handled;
-
-#else
-extern __thread struct rseq __rseq_abi
-__attribute__ ((tls_model ("initial-exec")));
-extern int __rseq_handled;
-#endif
-
-void __attribute__((constructor)) myinit(void)
-{
-	fprintf(stderr, "__rseq_handled s.so: %d %p\n", __rseq_handled, &__rseq_handled);
-	fprintf(stderr, "__rseq_abi.cpu_id s.so: %d %p\n", __rseq_abi.cpu_id, &__rseq_abi);
-}
-
-* Makefile:
-
-LIBCPATH=/home/efficios/glibc-test/lib
-KERNEL_HEADERS=/home/efficios/git/linux-percpu-dev/usr/include
-CFLAGS=-I${KERNEL_HEADERS} -L${LIBCPATH} -Wl,--rpath=${LIBCPATH} -Wl,--dynamic-linker=${LIBCPATH}/ld-linux-x86-64.so.2
-
-all:
-	gcc ${CFLAGS} -o a a.c
-	gcc ${CFLAGS} -shared -fPIC -o s.so s.c
-
-Thanks,
-
-Mathieu
-
-> 
-> Thanks,
-> Florian
-
+diff --git a/arch/powerpc/boot/wrapper b/arch/powerpc/boot/wrapper
+index 532d45833396..85d97360b1c9 100755
+--- a/arch/powerpc/boot/wrapper
++++ b/arch/powerpc/boot/wrapper
+@@ -40,6 +40,7 @@ dts=
+ cacheit=
+ binary=
+ compression=.gz
++uboot_comp=gzip
+ pie=
+ format=
+ 
+@@ -130,6 +131,7 @@ while [ "$#" -gt 0 ]; do
+ 	;;
+     -z)
+ 	compression=.gz
++	uboot_comp=gzip
+ 	;;
+     -Z)
+ 	shift
+@@ -137,15 +139,21 @@ while [ "$#" -gt 0 ]; do
+         [ "$1" != "gz" -o "$1" != "xz" -o "$1" != "none" ] || usage
+ 
+ 	compression=".$1"
++	uboot_comp=$1
+ 
+         if [ $compression = ".none" ]; then
+                 compression=
++		uboot_comp=none
+         fi
++	if [ $uboot_comp = "gz" ]; then
++		uboot_comp=gzip
++	fi
+ 	;;
+     --no-gzip)
+         # a "feature" of the the wrapper script is that it can be used outside
+         # the kernel tree. So keeping this around for backwards compatibility.
+         compression=
++	uboot_comp=none
+         ;;
+     -?)
+ 	usage
+@@ -368,6 +376,7 @@ if [ -z "$cacheit" -o ! -f "$vmz$compression" -o "$vmz$compression" -ot "$kernel
+     *)
+         # drop the compression suffix so the stripped vmlinux is used
+         compression=
++	uboot_comp=none
+ 	;;
+     esac
+ 
+@@ -411,7 +420,7 @@ membase=`${CROSS}objdump -p "$kernel" | grep -m 1 LOAD | awk '{print $7}'`
+ case "$platform" in
+ uboot)
+     rm -f "$ofile"
+-    ${MKIMAGE} -A ppc -O linux -T kernel -C gzip -a $membase -e $membase \
++    ${MKIMAGE} -A ppc -O linux -T kernel -C $uboot_comp -a $membase -e $membase \
+ 	$uboot_version -d "$vmz" "$ofile"
+     if [ -z "$cacheit" ]; then
+ 	rm -f "$vmz"
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.13.3
+
