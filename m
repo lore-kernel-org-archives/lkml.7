@@ -4,110 +4,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA7CC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:11:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC77C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:11:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D122208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:11:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8DA8208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:11:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfFNML2 (ORCPT
+        id S1727853AbfFNMLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:11:28 -0400
-Received: from smtp05.smtpout.orange.fr ([80.12.242.127]:53912 "EHLO
-        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfFNML2 (ORCPT
+        Fri, 14 Jun 2019 08:11:42 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:35025 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727217AbfFNMLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:11:28 -0400
-Received: from [192.168.1.41] ([92.148.209.44])
-        by mwinf5d40 with ME
-        id QcBN2000a0y1A8U03cBNc2; Fri, 14 Jun 2019 14:11:26 +0200
-X-ME-Helo: [192.168.1.41]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Fri, 14 Jun 2019 14:11:26 +0200
-X-ME-IP: 92.148.209.44
-Subject: Re: [PATCH net-next] hinic: Use devm_kasprintf instead of hard coding
- it
-To:     aviad.krawczyk@huawei.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-References: <20190613195412.1702-1-christophe.jaillet@wanadoo.fr>
-From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Message-ID: <c55cd76d-2d3e-d9b2-1f1b-4881102c407d@wanadoo.fr>
-Date:   Fri, 14 Jun 2019 14:11:22 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 08:11:42 -0400
+Received: by mail-ot1-f67.google.com with SMTP id j19so2431420otq.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:11:41 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Wo132hdWCXIwgcpI+BIESFxrDjp3/snXhazBuY1tTH4=;
+        b=DtSYyCiRg3C/aIh7Srq40+7/8aNzk3RVs4We7w3NMIo8V6rM5rizq3gsy/JE3g+QQy
+         HEXYXjTElqzZZNpH+yZl7ON3VsHcRy/NTze1k8DSx8YXVIPYBltmmBtFZ9r5a3iioUaM
+         vYsAp6rwjAKGHFaiNQa7F7lTbghWyeNXHyU4I8sAswsW/RepcLrnIPuIuwrz1MtiuKrj
+         ABOiFjxNZV8bMxuCKNuJpemouNB+MTNkto+JbOSpP79nkpdfnhJjYr3fDFB9OyJK7wbX
+         muUONOcTxu6tnVv0JQqi5O5yaSzrHeCdvvUPsHyYt2MrelZ1rZvc0pztBTciAMprZIOq
+         /fow==
+X-Gm-Message-State: APjAAAWLkvXDr13X9X/ClAvnmOtzzNPjKQJskTlxAnf62IwnU+Y8AuVw
+        XEMCV0AaB4ARfW1xZHU0Nnk/UvF6TOWhC5sE8d0=
+X-Google-Smtp-Source: APXvYqxAfLD66F7IClYkztopo8Tbd60ou3yrpfc0M8vDEfmErWhwSsEtxFcJg20RM+/aBedSdH0UTvhaCMxDy3Xea4c=
+X-Received: by 2002:a05:6830:12c7:: with SMTP id a7mr1325643otq.284.1560514301184;
+ Fri, 14 Jun 2019 05:11:41 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190613195412.1702-1-christophe.jaillet@wanadoo.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: fr
+References: <20190114202652.15204-1-malat@debian.org> <20190117204047.1262-1-malat@debian.org>
+In-Reply-To: <20190117204047.1262-1-malat@debian.org>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Fri, 14 Jun 2019 14:11:27 +0200
+Message-ID: <CA+7wUswrBF6k0xv8tPzJbZHj0s0O+KfFBdToyX8UjHwDxQGMhw@mail.gmail.com>
+Subject: Re: [PATCH v2] drm: radeon: add a missing break in evergreen_cs_handle_reg
+To:     Alex Deucher <alexander.deucher@amd.com>
+Cc:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, amd-gfx@lists.freedesktop.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-I got a:
-
-<aviad.krawczyk@huawei.com>: host huawei.com[103.218.216.136] said: 550
-5.1.1 Error: invalid recipients is found from 80.12.242.127
-
-However, MAINTAINERS has:
-   HUAWEI ETHERNET DRIVER
-   M:	Aviad Krawczyk <aviad.krawczyk@huawei.com>
-   L:	netdev@vger.kernel.org
-   S:	Supported
-   F:	Documentation/networking/hinic.txt
-   F:	drivers/net/ethernet/huawei/hinic/
-
-I don't know how this should be fixed (neither if it should be...), so if s.o. knows, please do.
-
-Best regards,
-Christophe Jaillet
-
-Le 13/06/2019 à 21:54, Christophe JAILLET a écrit :
-> 'devm_kasprintf' is less verbose than:
->     snprintf(NULL, 0, ...);
->     devm_kzalloc(...);
->     sprintf
-> so use it instead.
+On Thu, Jan 17, 2019 at 9:40 PM Mathieu Malaterre <malat@debian.org> wrote:
 >
-> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> In commit dd220a00e8bd ("drm/radeon/kms: add support for streamout v7")
+> case statements were added without a terminating break statement. This
+> commit adds the missing break. This was discovered during a compilation
+> with W=1.
+>
+> This commit removes the following warning:
+>
+>   drivers/gpu/drm/radeon/evergreen_cs.c:1301:11: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>
+> Suggested-by: Alex Deucher <alexander.deucher@amd.com>
+> Fixes: dd220a00e8bd ("drm/radeon/kms: add support for streamout v7")
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 > ---
->   drivers/net/ethernet/huawei/hinic/hinic_rx.c | 8 +++-----
->   1 file changed, 3 insertions(+), 5 deletions(-)
+> v2: Add missing break statement, instead of marking it as fall through
+
+Replaced by:
+
+cc5034a5d293 drm/radeon/evergreen_cs: fix missing break in switch statement
+
+>  drivers/gpu/drm/radeon/evergreen_cs.c | 1 +
+>  1 file changed, 1 insertion(+)
 >
-> diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-> index 9b4082557ad5..95b09fd110d3 100644
-> --- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-> +++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
-> @@ -493,7 +493,7 @@ int hinic_init_rxq(struct hinic_rxq *rxq, struct hinic_rq *rq,
->   		   struct net_device *netdev)
->   {
->   	struct hinic_qp *qp = container_of(rq, struct hinic_qp, rq);
-> -	int err, pkts, irqname_len;
-> +	int err, pkts;
->   
->   	rxq->netdev = netdev;
->   	rxq->rq = rq;
-> @@ -502,13 +502,11 @@ int hinic_init_rxq(struct hinic_rxq *rxq, struct hinic_rq *rq,
->   
->   	rxq_stats_init(rxq);
->   
-> -	irqname_len = snprintf(NULL, 0, "hinic_rxq%d", qp->q_id) + 1;
-> -	rxq->irq_name = devm_kzalloc(&netdev->dev, irqname_len, GFP_KERNEL);
-> +	rxq->irq_name = devm_kasprintf(&netdev->dev, GFP_KERNEL,
-> +				       "hinic_rxq%d", qp->q_id);
->   	if (!rxq->irq_name)
->   		return -ENOMEM;
->   
-> -	sprintf(rxq->irq_name, "hinic_rxq%d", qp->q_id);
-> -
->   	pkts = rx_alloc_pkts(rxq);
->   	if (!pkts) {
->   		err = -ENOMEM;
-
-
+> diff --git a/drivers/gpu/drm/radeon/evergreen_cs.c b/drivers/gpu/drm/radeon/evergreen_cs.c
+> index f471537c852f..1e14c6921454 100644
+> --- a/drivers/gpu/drm/radeon/evergreen_cs.c
+> +++ b/drivers/gpu/drm/radeon/evergreen_cs.c
+> @@ -1299,6 +1299,7 @@ static int evergreen_cs_handle_reg(struct radeon_cs_parser *p, u32 reg, u32 idx)
+>                         return -EINVAL;
+>                 }
+>                 ib[idx] += (u32)((reloc->gpu_offset >> 8) & 0xffffffff);
+> +               break;
+>         case CB_TARGET_MASK:
+>                 track->cb_target_mask = radeon_get_ib_value(p, idx);
+>                 track->cb_dirty = true;
+> --
+> 2.19.2
+>
