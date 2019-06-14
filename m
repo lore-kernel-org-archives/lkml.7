@@ -2,93 +2,80 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBB45C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:48:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDE29C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:48:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0A5121537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:48:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 934372177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:48:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfFNJsF (ORCPT
+        id S1727263AbfFNJs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:48:05 -0400
-Received: from verein.lst.de ([213.95.11.211]:45593 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726900AbfFNJsE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:48:04 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 1E342227A82; Fri, 14 Jun 2019 11:47:34 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 11:47:34 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "open list:DMA MAPPING HELPERS" <iommu@lists.linux-foundation.org>,
-        "open list:NETWORKING [GENERAL]" <netdev@vger.kernel.org>
-Subject: Re: [PATCH 2/2] swiotlb: Return consistent SWIOTLB segments/nr_tbl
-Message-ID: <20190614094734.GH17292@lst.de>
-References: <20190611175825.572-1-f.fainelli@gmail.com> <20190611175825.572-3-f.fainelli@gmail.com>
+        Fri, 14 Jun 2019 05:48:26 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:34378 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726900AbfFNJs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 05:48:26 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B4271B86F5AD6BE50AD7;
+        Fri, 14 Jun 2019 17:48:23 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Fri, 14 Jun 2019 17:48:13 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@huawei.com>
+CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
+        <linux-kernel@vger.kernel.org>, John Garry <john.garry@huawei.com>
+Subject: [PATCH] bus: hisi_lpc: Don't use devm_kzalloc() to allocate logical PIO range
+Date:   Fri, 14 Jun 2019 17:47:04 +0800
+Message-ID: <1560505624-39955-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611175825.572-3-f.fainelli@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:58:25AM -0700, Florian Fainelli wrote:
-> With a specifically contrived memory layout where there is no physical
-> memory available to the kernel below the 4GB boundary, we will fail to
-> perform the initial swiotlb_init() call and set no_iotlb_memory to true.
-> 
-> There are drivers out there that call into swiotlb_nr_tbl() to determine
-> whether they can use the SWIOTLB. With the right DMA_BIT_MASK() value
-> for these drivers (say 64-bit), they won't ever need to hit
-> swiotlb_tbl_map_single() so this can go unoticed and we would be
-> possibly lying about those drivers.
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  kernel/dma/swiotlb.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-> index b2b5c5df273c..e906ef2e6315 100644
-> --- a/kernel/dma/swiotlb.c
-> +++ b/kernel/dma/swiotlb.c
-> @@ -129,15 +129,17 @@ setup_io_tlb_npages(char *str)
->  }
->  early_param("swiotlb", setup_io_tlb_npages);
->  
-> +static bool no_iotlb_memory;
-> +
->  unsigned long swiotlb_nr_tbl(void)
->  {
-> -	return io_tlb_nslabs;
-> +	return unlikely(no_iotlb_memory) ? 0 : io_tlb_nslabs;
->  }
->  EXPORT_SYMBOL_GPL(swiotlb_nr_tbl);
->  
->  unsigned int swiotlb_max_segment(void)
->  {
-> -	return max_segment;
-> +	return unlikely(no_iotlb_memory) ? 0 : max_segment;
+If, after registering a logical PIO range, the driver probe later fails,
+the logical PIO range memory will be released automatically.
 
-I wouldn't bother with the unlikely here as anythign querying
-swiotlb details should pretty much be a slow path already.
+This causes an issue, in that the logical PIO range is not unregistered
+(that is not supported) and the released range memory may be later
+referenced
 
-Otherwise looks good:
+Allocate the logical PIO range with kzalloc() to avoid this potential
+issue.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Fixes: adf38bb0b5956 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
+Signed-off-by: John Garry <john.garry@huawei.com>
+
+diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
+index 19d7b6ff2f17..d9ab4e76010d 100644
+--- a/drivers/bus/hisi_lpc.c
++++ b/drivers/bus/hisi_lpc.c
+@@ -599,7 +599,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(lpcdev->membase))
+ 		return PTR_ERR(lpcdev->membase);
+ 
+-	range = devm_kzalloc(dev, sizeof(*range), GFP_KERNEL);
++	range = kzalloc(sizeof(*range), GFP_KERNEL);
+ 	if (!range)
+ 		return -ENOMEM;
+ 
+@@ -610,6 +610,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
+ 	ret = logic_pio_register_range(range);
+ 	if (ret) {
+ 		dev_err(dev, "register IO range failed (%d)!\n", ret);
++		kfree(range);
+ 		return ret;
+ 	}
+ 	lpcdev->io_host = range;
+-- 
+2.17.1
+
