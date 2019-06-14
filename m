@@ -2,56 +2,84 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6E2C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 874B7C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD08E20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B11321721
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:28:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560493737;
+	bh=o6p9lVc+DYilRKtF9pajKsHYMRF8rkewSFkOlAnBRH8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=tn+cOx43InKYtYfc4eadgURaRHfqxDDhk4AbEWwjpbc0siz8xpyO0rk+6Vll5/zvP
+	 Qb0xcAGDhAO2wS53Q43AufkXoxKq0NA7vTb6440ISDKCdXehdoH57TXeD2KqRPhVTa
+	 sybvl/m654slybc86wblkccCm9813kUZjD5TXIIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725852AbfFNGZY (ORCPT
+        id S1725827AbfFNG24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 02:25:24 -0400
-Received: from verein.lst.de ([213.95.11.211]:44359 "EHLO newverein.lst.de"
+        Fri, 14 Jun 2019 02:28:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59156 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725774AbfFNGZX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 02:25:23 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 844DF68B02; Fri, 14 Jun 2019 08:24:55 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 08:24:55 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-nvdimm@lists.01.org" <linux-nvdimm@lists.01.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 06/22] mm: factor out a devm_request_free_mem_region
- helper
-Message-ID: <20190614062455.GH7246@lst.de>
-References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-7-hch@lst.de> <20190613191626.GR22062@mellanox.com>
+        id S1725774AbfFNG24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 02:28:56 -0400
+Received: from mail-lf1-f54.google.com (mail-lf1-f54.google.com [209.85.167.54])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 075B92175B;
+        Fri, 14 Jun 2019 06:28:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560493735;
+        bh=o6p9lVc+DYilRKtF9pajKsHYMRF8rkewSFkOlAnBRH8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=JozXoOb8Ksc6M/jxRWxNQoCuZPK/5IvFkxh+M4O9zoywYnsSjvXltT2rFIopAZGVa
+         8ZxAp9Gd4x/1rIddNzEm4o7sHNxGxeZPGt16LcX6QGhYmPS2av/K81y5kESJTLL6Kb
+         6WEfM0zrV0/lz+O9Drbq/GrlfjzYye/Smlmr/ypM=
+Received: by mail-lf1-f54.google.com with SMTP id y198so924707lfa.1;
+        Thu, 13 Jun 2019 23:28:54 -0700 (PDT)
+X-Gm-Message-State: APjAAAX6Yrp84LuT9kLmqzhtN3u/4nFnU50FfnIjBnRDMMEIYkA60JHO
+        mqBNCxVFAAf6Thr/irUyoz4BGF3XQt0rbuCa8Zk=
+X-Google-Smtp-Source: APXvYqzRXJBwqzBDJLXSnR6wciv/RpnSmt3qlpvlkhRIjxzRerMzGffvz309DswL+/k+vyTpR7UVS0Do0UtSVtBB5qM=
+X-Received: by 2002:ac2:4d1c:: with SMTP id r28mr8998948lfi.159.1560493733233;
+ Thu, 13 Jun 2019 23:28:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613191626.GR22062@mellanox.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+References: <20190613162703.986-1-tiny.windzz@gmail.com>
+In-Reply-To: <20190613162703.986-1-tiny.windzz@gmail.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 14 Jun 2019 08:28:42 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfU+nB-_K3ZP9XBFp5bfk-ZvbfSEW96LD4MbtkyWfQZHg@mail.gmail.com>
+Message-ID: <CAJKOXPfU+nB-_K3ZP9XBFp5bfk-ZvbfSEW96LD4MbtkyWfQZHg@mail.gmail.com>
+Subject: Re: [PATCH 01/10] iommu/exynos: convert to SPDX license tags
+To:     Yangtao Li <tiny.windzz@gmail.com>
+Cc:     joro@8bytes.org, Marek Szyprowski <m.szyprowski@samsung.com>,
+        kgene@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
+        agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
+        heiko@sntech.de, thierry.reding@gmail.com, jonathanh@nvidia.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 07:16:35PM +0000, Jason Gunthorpe wrote:
-> I wonder if IORES_DESC_DEVICE_PRIVATE_MEMORY should be a function
-> argument?
+On Thu, 13 Jun 2019 at 18:27, Yangtao Li <tiny.windzz@gmail.com> wrote:
+>
+> Updates license to use SPDX-License-Identifier.
+>
+> Signed-off-by: Yangtao Li <tiny.windzz@gmail.com>
+> ---
+>  drivers/iommu/exynos-iommu.c | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 
-No.  The only reason to use this function is to allocate the fake
-physical address space for the device private memory case.  If you'd
-deal with real resources you'd use the normal resource allocator.
+Splitting this per driver is too much... it is not necessary. Such
+changes should be done in one patch per subsystem.
+
+Best regards,
+Krzysztof
