@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C635DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:30:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AA64C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9361021848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:30:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D4FD21850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:30:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544249;
-	bh=EIcCMpDEGQUnzftRsw0mrGxajeXmM591lkBNsjhZTjw=;
+	s=default; t=1560544254;
+	bh=F+anLLuCwXvo7UdHUf2b8qxkr5pxdKd/+T5t+Wh0p2Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fsKgEgR15MBNXJxpMMhSgfY816HzcSAqtnm8m3XA8HDNw9Av+CACBcP9BMlaP57OU
-	 urQrkDoYFhtIZYDS0Pd7UgvfLvpvFM5XsnL+oeYfhERbtrAgwtvaB64LPsuZcADKPo
-	 ojrehnQOkhz1ogKITYRLGDFo6J2uKPlBXagwHsns=
+	b=F9o2mqgShhFh7uxfSml5Me5QLPLjdhfM/PnQotxZ3xIWhjExUjAjr5NT4l7M9PtAx
+	 RtoyDobIHVKvybJ2KHb7kJpF07C2+DQtJVydA/UxTKZYVtslnehpw8Gw8a3pn1QPDP
+	 66g99J5RigQ8m7AS7Sv1inrjqiwfjFI4Pkvb/VeA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727928AbfFNUas (ORCPT
+        id S1727984AbfFNUax (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:30:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54290 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:30:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727868AbfFNUap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:45 -0400
+        id S1727963AbfFNUaw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:52 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75B4921881;
-        Fri, 14 Jun 2019 20:30:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A8A7217F9;
+        Fri, 14 Jun 2019 20:30:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544244;
-        bh=EIcCMpDEGQUnzftRsw0mrGxajeXmM591lkBNsjhZTjw=;
+        s=default; t=1560544251;
+        bh=F+anLLuCwXvo7UdHUf2b8qxkr5pxdKd/+T5t+Wh0p2Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HgMpd+8AT8lK0tDvFlDJ80PybW+R2Vvy66k5zsROlSCeQVbVGzGpFADejaSLlR6ES
-         +rpASTRPcPkH5BOaj0A528s7sUvWKQ27ynQZZjGI85Vlbvmd0WzVD+yGa6ADKhBB6K
-         UoJ/y8BsBYcF3LVyVTjXg6EFZQzqz/ImxGFDQwjE=
+        b=PCv/8t90kbpCsFsemava6/k66xUUgdqWSaHND//1zHUwOqUvFQn8wZOBaA1OetMKb
+         YdDL5jyb275VvR76UJDLf6kxcoOuhp+9SY48YtmjWlGmCzdHFiEuD5b33JC4SfwzZm
+         7s0UvlqqjC3/0A//MNEsYju1f9jrC+MXoqih68YY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Yonglong Liu <liuyonglong@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 09/18] net: hns: Fix loopback test failed at copper ports
-Date:   Fri, 14 Jun 2019 16:30:25 -0400
-Message-Id: <20190614203037.27910-9-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 04/10] MIPS: uprobes: remove set but not used variable 'epc'
+Date:   Fri, 14 Jun 2019 16:30:40 -0400
+Message-Id: <20190614203046.28077-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614203037.27910-1-sashal@kernel.org>
-References: <20190614203037.27910-1-sashal@kernel.org>
+In-Reply-To: <20190614203046.28077-1-sashal@kernel.org>
+References: <20190614203046.28077-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,45 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yonglong Liu <liuyonglong@huawei.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2e1f164861e500f4e068a9d909bbd3fcc7841483 ]
+[ Upstream commit f532beeeff0c0a3586cc15538bc52d249eb19e7c ]
 
-When doing a loopback test at copper ports, the serdes loopback
-and the phy loopback will fail, because of the adjust link had
-not finished, and phy not ready.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Adds sleep between adjust link and test process to fix it.
+arch/mips/kernel/uprobes.c: In function 'arch_uprobe_pre_xol':
+arch/mips/kernel/uprobes.c:115:17: warning: variable 'epc' set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Yonglong Liu <liuyonglong@huawei.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+It's never used since introduction in
+commit 40e084a506eb ("MIPS: Add uprobes support.")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: <linux-mips@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/hisilicon/hns/hns_ethtool.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/mips/kernel/uprobes.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-index 4cd163390dcc..f38848c4f69d 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_ethtool.c
-@@ -367,6 +367,7 @@ static int __lb_setup(struct net_device *ndev,
- static int __lb_up(struct net_device *ndev,
- 		   enum hnae_loop loop_mode)
- {
-+#define NIC_LB_TEST_WAIT_PHY_LINK_TIME 300
- 	struct hns_nic_priv *priv = netdev_priv(ndev);
- 	struct hnae_handle *h = priv->ae_handle;
- 	int speed, duplex;
-@@ -393,6 +394,9 @@ static int __lb_up(struct net_device *ndev,
- 
- 	h->dev->ops->adjust_link(h, speed, duplex);
- 
-+	/* wait adjust link done and phy ready */
-+	msleep(NIC_LB_TEST_WAIT_PHY_LINK_TIME);
-+
- 	return 0;
- }
- 
+diff --git a/arch/mips/kernel/uprobes.c b/arch/mips/kernel/uprobes.c
+index 4e7b89f2e244..1363d705cc8c 100644
+--- a/arch/mips/kernel/uprobes.c
++++ b/arch/mips/kernel/uprobes.c
+@@ -164,9 +164,6 @@ int arch_uprobe_pre_xol(struct arch_uprobe *aup, struct pt_regs *regs)
+ 	 */
+ 	aup->resume_epc = regs->cp0_epc + 4;
+ 	if (insn_has_delay_slot((union mips_instruction) aup->insn[0])) {
+-		unsigned long epc;
+-
+-		epc = regs->cp0_epc;
+ 		__compute_return_epc_for_insn(regs,
+ 			(union mips_instruction) aup->insn[0]);
+ 		aup->resume_epc = regs->cp0_epc;
 -- 
 2.20.1
 
