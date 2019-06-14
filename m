@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D920C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAC4C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B3302184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B3E62184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544375;
-	bh=RDi7NUx0l+VvW0cC95RGyMyl/v/L1HkZdUHr8haQOBo=;
+	s=default; t=1560544380;
+	bh=Sr321v4BP5pZp5iG+PgbSBbWJe9bgexhdKhly/P6ryw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rAPksQyIC80tl5NQfqLVdRE2hTYNxzSeyXRuUXXTBtbpCA+1HVYe03+Nt/nCxd5xW
-	 8Ofdk3Wox5MvkvJU9efb0hy9vkUkNq72eQWhyAiuSQamQ0Itf2yuDxnEb5n0CZaoB9
-	 O/Y9bTTKGirj5mEJCOdck1yhuinZ2VPgBorWePa8=
+	b=zZois2KjjJRtHohRQwo0g9CvUll7Re8x1+YI7pdoAGxsAxdhVyWx53Qjz/l3Zmu+y
+	 6rk8PdmfONDAUFy1eh29EULnXwXS+c3M+YdCiBKWcsgwjrVSiS0PI2ElFD7bUNE7oN
+	 HCNaMWOz85uyZqZqLMtWBpGeiLestjSbvLDA1gZk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728256AbfFNUcx (ORCPT
+        id S1728067AbfFNUc7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:32:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53828 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:32:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727808AbfFNUak (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:40 -0400
+        id S1726758AbfFNUai (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:38 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADB9421850;
-        Fri, 14 Jun 2019 20:30:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B873F2184D;
+        Fri, 14 Jun 2019 20:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544239;
-        bh=RDi7NUx0l+VvW0cC95RGyMyl/v/L1HkZdUHr8haQOBo=;
+        s=default; t=1560544237;
+        bh=Sr321v4BP5pZp5iG+PgbSBbWJe9bgexhdKhly/P6ryw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ukYUd6vYexjbNYzDdV3VukkiVsmRtnEF90PuiYZvvaTq8X5g/fC/l1BM935AR1IOD
-         eu2Or6uCygbIMCu1Q8WDthwhMNRxJNt41M0cXN+a5KHGrtL1O7l2T8oD4UrI+bplck
-         EM1bJphyhbnS3boGIG8GkI8DEoN41gjjMotW5gxw=
+        b=GroB6B0kNmdiJ5KjssZ+JVpy44eAxrG50BilgppSpn10CLAX86rbcUkP01pbZYiJU
+         6Omew9OeHHhgePGGEOFWNJBR5JS8Y4Eo/6wI+5EKP+/7EBoJEBMzQLpaId4qQD+2qz
+         zX7+rwU94p+b5a1NAWfs5mOIi/5UnF5JIp5rhbNQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Kaike Wan <kaike.wan@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 04/18] IB/rdmavt: Fix alloc_qpn() WARN_ON()
-Date:   Fri, 14 Jun 2019 16:30:20 -0400
-Message-Id: <20190614203037.27910-4-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 02/18] parport: Fix mem leak in parport_register_dev_model
+Date:   Fri, 14 Jun 2019 16:30:18 -0400
+Message-Id: <20190614203037.27910-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614203037.27910-1-sashal@kernel.org>
 References: <20190614203037.27910-1-sashal@kernel.org>
@@ -61,57 +59,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 2abae62a26a265129b364d8c1ef3be55e2c01309 ]
+[ Upstream commit 1c7ebeabc9e5ee12e42075a597de40fdb9059530 ]
 
-The qpn allocation logic has a WARN_ON() that intends to detect the use of
-an index that will introduce bits in the lower order bits of the QOS bits
-in the QPN.
+BUG: memory leak
+unreferenced object 0xffff8881df48cda0 (size 16):
+  comm "syz-executor.0", pid 5077, jiffies 4295994670 (age 22.280s)
+  hex dump (first 16 bytes):
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+    [<00000000d2d0d5fe>] parport_register_dev_model+0x141/0x6e0 [parport]
+    [<00000000782f6dab>] 0xffffffffc15d1196
+    [<00000000d2ca6ae4>] platform_drv_probe+0x7e/0x100
+    [<00000000628c2a94>] really_probe+0x342/0x4d0
+    [<000000006874f5da>] driver_probe_device+0x8c/0x170
+    [<00000000424de37a>] __device_attach_driver+0xda/0x100
+    [<000000002acab09a>] bus_for_each_drv+0xfe/0x170
+    [<000000003d9e5f31>] __device_attach+0x190/0x230
+    [<0000000035d32f80>] bus_probe_device+0x123/0x140
+    [<00000000a05ba627>] device_add+0x7cc/0xce0
+    [<000000003f7560bf>] platform_device_add+0x230/0x3c0
+    [<000000002a0be07d>] 0xffffffffc15d0949
+    [<000000007361d8d2>] port_check+0x3b/0x50 [parport]
+    [<000000004d67200f>] bus_for_each_dev+0x115/0x180
+    [<000000003ccfd11c>] __parport_register_driver+0x1f0/0x210 [parport]
+    [<00000000987f06fc>] 0xffffffffc15d803e
 
-Unfortunately, it has the following bugs:
-- it misfires when wrapping QPN allocation for non-QOS
-- it doesn't correctly detect low order QOS bits (despite the comment)
+After commit 4e5a74f1db8d ("parport: Revert "parport: fix
+memory leak""), free_pardevice do not free par_dev->state,
+we should free it in error path of parport_register_dev_model
+before return.
 
-The WARN_ON() should not be applied to non-QOS (qos_shift == 1).
-
-Additionally, it SHOULD test the qpn bits per the table below:
-
-2 data VLs:   [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
-              [  0,   0,   0,   0,   0,   0, sc0],  qp bit 1 always 0*
-3-4 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
-              [  0,   0,   0,   0,   0, sc1, sc0], qp bits [21] always 0
-5-8 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
-              [  0,   0,   0,   0, sc2, sc1, sc0] qp bits [321] always 0
-
-Fix by qualifying the warning for qos_shift > 1 and producing the correct
-mask to insure the above bits are zero without generating a superfluous
-warning.
-
-Fixes: 501edc42446e ("IB/rdmavt: Correct warning during QPN allocation")
-Reviewed-by: Kaike Wan <kaike.wan@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 4e5a74f1db8d ("parport: Revert "parport: fix memory leak"")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/sw/rdmavt/qp.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/parport/share.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
-index 6500c3b5a89c..8b330b53d636 100644
---- a/drivers/infiniband/sw/rdmavt/qp.c
-+++ b/drivers/infiniband/sw/rdmavt/qp.c
-@@ -370,7 +370,8 @@ static int alloc_qpn(struct rvt_dev_info *rdi, struct rvt_qpn_table *qpt,
- 			offset = qpt->incr | ((offset & 1) ^ 1);
- 		}
- 		/* there can be no set bits in low-order QoS bits */
--		WARN_ON(offset & (BIT(rdi->dparms.qos_shift) - 1));
-+		WARN_ON(rdi->dparms.qos_shift > 1 &&
-+			offset & ((BIT(rdi->dparms.qos_shift - 1) - 1) << 1));
- 		qpn = mk_qpn(qpt, map, offset);
+diff --git a/drivers/parport/share.c b/drivers/parport/share.c
+index 4399de34054a..daa2eb3050df 100644
+--- a/drivers/parport/share.c
++++ b/drivers/parport/share.c
+@@ -895,6 +895,7 @@ parport_register_dev_model(struct parport *port, const char *name,
+ 	par_dev->devmodel = true;
+ 	ret = device_register(&par_dev->dev);
+ 	if (ret) {
++		kfree(par_dev->state);
+ 		put_device(&par_dev->dev);
+ 		goto err_put_port;
  	}
- 
+@@ -912,6 +913,7 @@ parport_register_dev_model(struct parport *port, const char *name,
+ 			spin_unlock(&port->physport->pardevice_lock);
+ 			pr_debug("%s: cannot grant exclusive access for device %s\n",
+ 				 port->name, name);
++			kfree(par_dev->state);
+ 			device_unregister(&par_dev->dev);
+ 			goto err_put_port;
+ 		}
 -- 
 2.20.1
 
