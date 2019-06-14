@@ -2,167 +2,76 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E34FEC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:39:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2D8C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C832173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 203582173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726827AbfFNPjG (ORCPT
+        id S1726480AbfFNPlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:39:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:36890 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfFNPjF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:39:05 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84DED28;
-        Fri, 14 Jun 2019 08:39:04 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E22873F718;
-        Fri, 14 Jun 2019 08:39:02 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] EDAC: add EDAC driver for DMC520
-To:     "Lei Wang (BSP)" <Wang.Lei@microsoft.com>,
-        Lei Wang <leiwang_git@outlook.com>
-Cc:     "bp@alien8.de" <bp@alien8.de>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        Rui Zhao <ruizhao@outlook.com>,
-        Rui Zhao <ruizhao@microsoft.com>,
-        Hang Li <hangl@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>
-References: <CY1PR0401MB1244FDD9E720C9D9C1F41FEE860A0@CY1PR0401MB1244.namprd04.prod.outlook.com>
- <b1e360bc-2329-3f8b-3c93-65380f62d6fd@arm.com>
- <BYAPR21MB131946E0B469E74D6054C33390EF0@BYAPR21MB1319.namprd21.prod.outlook.com>
-From:   James Morse <james.morse@arm.com>
-Message-ID: <2ca1143b-3251-7a40-5c8f-6c13f445562f@arm.com>
-Date:   Fri, 14 Jun 2019 16:39:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 11:41:36 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44104 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725780AbfFNPlg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:41:36 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id BDF8DA992A2F1DCED3A4;
+        Fri, 14 Jun 2019 23:41:31 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
+ 23:41:23 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <kishon@ti.com>, <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>
+CC:     <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] PCI: dwc: pci-dra7xx: Add missing include file
+Date:   Fri, 14 Jun 2019 23:40:44 +0800
+Message-ID: <20190614154044.4972-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-In-Reply-To: <BYAPR21MB131946E0B469E74D6054C33390EF0@BYAPR21MB1319.namprd21.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lei,
+Fix build error:
 
-On 13/06/2019 19:31, Lei Wang (BSP) wrote:
-> Please see inline(tagged with [Lei]) below. Thanks!
+drivers/pci/controller/dwc/pci-dra7xx.c:
+ In function dra7xx_pcie_probe:
+drivers/pci/controller/dwc/pci-dra7xx.c:777:10:
+ error: implicit declaration of function devm_gpiod_get_optional;
+ did you mean devm_regulator_get_optional? [-Werror=implicit-function-declaration]
 
-Please don't do this. Top posting is discouraged[0]. Creating a reply treasure hunt is
-even worse!
+  reset = devm_gpiod_get_optional(dev, NULL, GPIOD_OUT_HIGH);
 
-You probably need to change your mail client as your mail is also arriving base64 encoded.
-To the maintainer's scripts its going to look like this:
-https://lore.kernel.org/lkml/BYAPR21MB131946E0B469E74D6054C33390EF0@BYAPR21MB1319.namprd21.prod.outlook.com/raw
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/pci/controller/dwc/pci-dra7xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-
-> -----Original Message-----
-> From: James Morse <james.morse@arm.com> 
-> On 16/05/2019 03:55, Lei Wang wrote:
->> New driver supports error detection and correction on the devices with ARM DMC-520 memory controller.
-> 
->> diff --git a/MAINTAINERS b/MAINTAINERS index 7d1246b..23894ac 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -5573,6 +5573,12 @@ F:	Documentation/driver-api/edac.rst
->>  F:	drivers/edac/
->>  F:	include/linux/edac.h
->>  
->> +EDAC-DMC520
->> +M:	Rui Zhao <ruizhao@microsoft.com>
->> +L:	linux-edac@vger.kernel.org
->> +S:	Supported
->> +F:	drivers/edac/dmc520_edac.c
-> 
-> Hmm, you're listing someone else as maintainer of this driver.
-> I think we'd need to see an Ack from Rui Zhao...
-> 
-> This patch was previously posted by Rui Zhao, this version has your changes and you as author. (But how you arrange the attribution is up to the two of you...)
-> [Lei] And Rui and I sync-ed up on this code and this patch was after addressing his feedbacks and his Ack.
-
-And Rui commented that you should be listed as maintainer:
-https://lore.kernel.org/lkml/CY4PR21MB0279BB0E40B86CEA485CF19AB3010@CY4PR21MB0279.namprd21.prod.outlook.com/T/#u
-
-Please don't add someone else!
+diff --git a/drivers/pci/controller/dwc/pci-dra7xx.c b/drivers/pci/controller/dwc/pci-dra7xx.c
+index 419451e..4234ddb 100644
+--- a/drivers/pci/controller/dwc/pci-dra7xx.c
++++ b/drivers/pci/controller/dwc/pci-dra7xx.c
+@@ -26,6 +26,7 @@
+ #include <linux/types.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/regmap.h>
++#include <linux/gpio/consumer.h>
+ 
+ #include "../../pci.h"
+ #include "pcie-designware.h"
+-- 
+2.7.4
 
 
->> diff --git a/drivers/edac/dmc520_edac.c b/drivers/edac/dmc520_edac.c 
->> new file mode 100644 index 0000000..c81bfcc
->> --- /dev/null
->> +++ b/drivers/edac/dmc520_edac.c
-
->> +static void dmc520_handle_dram_ecc_errors(struct mem_ctl_info *mci,
->> +					  bool is_ce)
->> +{
->> +	struct ecc_error_info info;
->> +	struct dmc520_edac *edac;
->> +	u32 cnt;
->> +	char message[EDAC_MSG_BUF_SIZE];
->> +
->> +	edac = mci->pvt_info;
->> +	dmc520_get_dram_ecc_error_info(edac, is_ce, &info);
->> +
->> +	cnt = dmc520_get_dram_ecc_error_count(edac, is_ce);
->> +
->> +	if (cnt > 0) {
->> +		snprintf(message, ARRAY_SIZE(message),
->> +			 "rank:%d bank:%d row:%d col:%d",
->> +			 info.rank, info.bank,
->> +			 info.row, info.col);
->> +
->> +		edac_mc_handle_error((is_ce ? HW_EVENT_ERR_CORRECTED :
->> +				     HW_EVENT_ERR_UNCORRECTED),
->> +				     mci, cnt, 0, 0, 0, info.rank, -1, -1,
->> +				     message, "");
-> 
-> Because you have multiple interrupts, you can be calling edac_mc_handle_error() in
-> parallel on different CPUs, for the same mci.
-> 
-> edac_mc_handle_error() packs all these arguments into mci->error_desc, so two CPUs will
-> stomp over each other's values.
-> 
-> Please add a spinlock in 'struct dmc520_edac' to prevent this.
-> 
-> [Lei] This round of patch moved away from using mci->error_desc, and the message is on stack now. 
-
-It's not just the message buffer this is a problem for. You call edac_mc_handle_error(),
-you can call it with the same mci on two different CPUs, at the same time.
-
-> edac_mc_handle_error() packs all these arguments into mci->error_desc, so two CPUs will
-> stomp over each other's values.
-
-From drivers/edac/edac_mc.c::edac_mc_handle_error():
-|	struct edac_raw_error_desc *e = &mci->error_desc;
-[...]
-|	e->error_count = error_count;
-|	e->top_layer = top_layer;
-|	e->mid_layer = mid_layer;
-|	e->low_layer = low_layer;
-|	e->page_frame_number = page_frame_number;
-|	e->offset_in_page = offset_in_page;
-|	e->syndrome = syndrome;
-|	e->msg = msg;
-|	e->other_detail = other_detail;
-
-If this happens one two CPUs at the same time, e->msg could point to the other CPU's stack.
-
-
-Thanks,
-
-James
-
-[0] The best summary I found after a quick search is:
-https://kernelnewbies.org/PatchCulture 's 'Email etiquette.'
