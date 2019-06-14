@@ -2,212 +2,98 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22BA7C31E4A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2873C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:08:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0323C21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22272073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:08:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfFNDEC (ORCPT
+        id S1726660AbfFNDIO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 23:04:02 -0400
-Received: from mail-io1-f70.google.com ([209.85.166.70]:45454 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfFNDEC (ORCPT
+        Thu, 13 Jun 2019 23:08:14 -0400
+Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:56416 "EHLO
+        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725867AbfFNDIO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 23:04:02 -0400
-Received: by mail-io1-f70.google.com with SMTP id b197so1034470iof.12
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 20:04:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=PHxaNNA+u/QED5OOo6diZIR8nbgzxac97BJz2T2vBYM=;
-        b=T+72IPZ1RsKNCWOPw5PPgivBZLsfUu8YXAKjdFycNAZ5EN022WA/V8bb4pL1BhDyKV
-         X6PFMNMeDQJ0GaMcwB4OKIRXttm6T7skDHb24YpT3fzXHDK0Q47/cT0zc67RmdfOetJw
-         dPKKhwUNwL10kBTie3QqKZflZ7/qxzJ6HLvfxLRmBzATRDVDL2zIfyjPBqUDS5pwViPu
-         e7gr1lzvdShbXHfxKyAcVnTNqWMgbhmNqzHuWBw4mIzgPcFGGCnX243LgWJ9u3eTkyoS
-         VoiUE+W9kzG8tU9WzxDdNlGirAgbD1XezhFpb/tJuQoEs0/R9GNSZvpCl+MJlWGRr6an
-         wMlw==
-X-Gm-Message-State: APjAAAWR0sPB+l41C/QiWsGrM3bRukeaL9Nn+7JoNhAI0vlnIUJuA4p1
-        PRV6SWb3v1ifJtKWACC0nOjS0A4vKdWqywWq5jcnB7veGefB
-X-Google-Smtp-Source: APXvYqx8b/cV+6qlNoRhaqUH0N8de515QwPf+Xv2nvU80JzlYAFYIaaW3fH3gbCXLbR9A4dtUXyuVwMGtTtkuP3r7VbjVUy8BlzK
+        Thu, 13 Jun 2019 23:08:14 -0400
+Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
+        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id ACCE93DD56B;
+        Fri, 14 Jun 2019 13:08:09 +1000 (AEST)
+Received: from dave by dread.disaster.area with local (Exim 4.92)
+        (envelope-from <david@fromorbit.com>)
+        id 1hbcYa-0005cJ-7D; Fri, 14 Jun 2019 13:07:12 +1000
+Date:   Fri, 14 Jun 2019 13:07:12 +1000
+From:   Dave Chinner <david@fromorbit.com>
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Jason Gunthorpe <jgg@ziepe.ca>, Ira Weiny <ira.weiny@intel.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
+        linux-mm@kvack.org, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
+Message-ID: <20190614030712.GO14363@dread.disaster.area>
+References: <20190607110426.GB12765@quack2.suse.cz>
+ <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
+ <20190608001036.GF14308@dread.disaster.area>
+ <20190612123751.GD32656@bombadil.infradead.org>
+ <20190613002555.GH14363@dread.disaster.area>
+ <20190613152755.GI32656@bombadil.infradead.org>
+ <20190613211321.GC32404@iweiny-DESK2.sc.intel.com>
+ <20190613234530.GK22901@ziepe.ca>
+ <20190614020921.GM14363@dread.disaster.area>
+ <20190614023107.GK32656@bombadil.infradead.org>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9613:: with SMTP id w19mr35036580iol.140.1560481441104;
- Thu, 13 Jun 2019 20:04:01 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 20:04:01 -0700
-In-Reply-To: <20190614024519.6224-1-hdanton@sina.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f9d056058b3fe507@google.com>
-Subject: Re: memory leak in vhost_net_ioctl
-From:   syzbot <syzbot+0789f0c7e45efd7bb643@syzkaller.appspotmail.com>
-To:     ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        davem@davemloft.net, dvyukov@google.com, hawk@kernel.org,
-        hdanton@sina.com, jakub.kicinski@netronome.com,
-        jasowang@redhat.com, john.fastabend@gmail.com, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mst@redhat.com,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        virtualization@lists.linux-foundation.org,
-        xdp-newbies@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614023107.GK32656@bombadil.infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
+        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
+        a=7-415B0cAAAA:8 a=8i7XV5XKZheqFIjFUW4A:9 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Thu, Jun 13, 2019 at 07:31:07PM -0700, Matthew Wilcox wrote:
+> On Fri, Jun 14, 2019 at 12:09:21PM +1000, Dave Chinner wrote:
+> > If the lease holder modifies the mapping in a way that causes it's
+> > own internal state to screw up, then that's a bug in the lease
+> > holder application.
+> 
+> Sounds like the lease semantics aren't the right ones for the longterm
+> GUP users then.  The point of the longterm GUP is so the pages can be
+> written to, and if the filesystem is going to move the pages around when
+> they're written to, that just won't work.
 
-syzbot has tested the proposed patch but the reproducer still triggered  
-crash:
-memory leak in batadv_tvlv_handler_register
+And now we go full circle back to the constraints we decided on long
+ago because we can't rely on demand paging RDMA hardware any time
+soon to do everything we need to transparently support long-term GUP
+on file-backed mappings. i.e.:
 
-   484.626788][  T156] bond0 (unregistering): Releasing backup interface  
-bond_slave_1
-Warning: Permanently added '10.128.0.87' (ECDSA) to the list of known hosts.
-BUG: memory leak
-unreferenced object 0xffff88811d25c4c0 (size 64):
-   comm "softirq", pid 0, jiffies 4294943668 (age 434.830s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 e0 fc 5b 20 81 88 ff ff  ..........[ ....
-     00 00 00 00 00 00 00 00 20 91 15 83 ff ff ff ff  ........ .......
-   backtrace:
-     [<000000000045bc9d>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000197d773e>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000197d773e>] kzalloc include/linux/slab.h:742 [inline]
-     [<00000000197d773e>] batadv_tvlv_handler_register+0xae/0x140  
-net/batman-adv/tvlv.c:529
-     [<00000000fa9f11af>] batadv_tt_init+0x78/0x180  
-net/batman-adv/translation-table.c:4411
-     [<000000008c50839d>] batadv_mesh_init+0x196/0x230  
-net/batman-adv/main.c:208
-     [<000000001c5a74a3>] batadv_softif_init_late+0x1ca/0x220  
-net/batman-adv/soft-interface.c:861
-     [<000000004e676cd1>] register_netdevice+0xbf/0x600 net/core/dev.c:8635
-     [<000000005601497b>] __rtnl_newlink+0xaca/0xb30  
-net/core/rtnetlink.c:3199
-     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80 net/core/rtnetlink.c:3245
-     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0  
-net/core/rtnetlink.c:5214
-     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170  
-net/netlink/af_netlink.c:2482
-     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5232
-     [<000000000d47c000>] netlink_unicast_kernel  
-net/netlink/af_netlink.c:1307 [inline]
-     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0  
-net/netlink/af_netlink.c:1333
-     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480  
-net/netlink/af_netlink.c:1922
-     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
-     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
-     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
-     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
-     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
-     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
+	RDMA to file backed mappings must first preallocate and
+	write zeros to the range of the file they are mapping so
+	that the filesystem block mapping is complete and static for
+	the life of the RDMA mapping that will pin it.
 
-BUG: memory leak
-unreferenced object 0xffff8881024a3340 (size 64):
-   comm "softirq", pid 0, jiffies 4294943678 (age 434.730s)
-   hex dump (first 32 bytes):
-     00 00 00 00 00 00 00 00 e0 2c 66 04 81 88 ff ff  .........,f.....
-     00 00 00 00 00 00 00 00 20 91 15 83 ff ff ff ff  ........ .......
-   backtrace:
-     [<000000000045bc9d>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000197d773e>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000197d773e>] kzalloc include/linux/slab.h:742 [inline]
-     [<00000000197d773e>] batadv_tvlv_handler_register+0xae/0x140  
-net/batman-adv/tvlv.c:529
-     [<00000000fa9f11af>] batadv_tt_init+0x78/0x180  
-net/batman-adv/translation-table.c:4411
-     [<000000008c50839d>] batadv_mesh_init+0x196/0x230  
-net/batman-adv/main.c:208
-     [<000000001c5a74a3>] batadv_softif_init_late+0x1ca/0x220  
-net/batman-adv/soft-interface.c:861
-     [<000000004e676cd1>] register_netdevice+0xbf/0x600 net/core/dev.c:8635
-     [<000000005601497b>] __rtnl_newlink+0xaca/0xb30  
-net/core/rtnetlink.c:3199
-     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80 net/core/rtnetlink.c:3245
-     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0  
-net/core/rtnetlink.c:5214
-     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170  
-net/netlink/af_netlink.c:2482
-     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5232
-     [<000000000d47c000>] netlink_unicast_kernel  
-net/netlink/af_netlink.c:1307 [inline]
-     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0  
-net/netlink/af_netlink.c:1333
-     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480  
-net/netlink/af_netlink.c:1922
-     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
-     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
-     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
-     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
-     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
-     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
+IOWs, the layout lease will tell the RDMA application that the
+static setup it has already done  to work correctly with a file
+backed mapping may be about to be broken by a third party.....
 
-BUG: memory leak
-unreferenced object 0xffff888108a71b80 (size 128):
-   comm "syz-executor.3", pid 7367, jiffies 4294943696 (age 434.550s)
-   hex dump (first 32 bytes):
-     f0 f8 bf 02 81 88 ff ff f0 f8 bf 02 81 88 ff ff  ................
-     1a dc 77 da 54 a0 be 41 64 20 e9 56 ff ff ff ff  ..w.T..Ad .V....
-   backtrace:
-     [<000000000045bc9d>] kmemleak_alloc_recursive  
-include/linux/kmemleak.h:43 [inline]
-     [<000000000045bc9d>] slab_post_alloc_hook mm/slab.h:439 [inline]
-     [<000000000045bc9d>] slab_alloc mm/slab.c:3326 [inline]
-     [<000000000045bc9d>] kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     [<00000000cc6863ae>] kmalloc include/linux/slab.h:547 [inline]
-     [<00000000cc6863ae>] hsr_create_self_node+0x42/0x150  
-net/hsr/hsr_framereg.c:84
-     [<000000000e2bb6b0>] hsr_dev_finalize+0xa4/0x233  
-net/hsr/hsr_device.c:441
-     [<000000003b100a4a>] hsr_newlink+0xf3/0x140 net/hsr/hsr_netlink.c:69
-     [<00000000b5efb0eb>] __rtnl_newlink+0x892/0xb30  
-net/core/rtnetlink.c:3187
-     [<00000000ad02cf5e>] rtnl_newlink+0x4e/0x80 net/core/rtnetlink.c:3245
-     [<00000000eceb53af>] rtnetlink_rcv_msg+0x178/0x4b0  
-net/core/rtnetlink.c:5214
-     [<00000000140451f6>] netlink_rcv_skb+0x61/0x170  
-net/netlink/af_netlink.c:2482
-     [<00000000237e38f7>] rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5232
-     [<000000000d47c000>] netlink_unicast_kernel  
-net/netlink/af_netlink.c:1307 [inline]
-     [<000000000d47c000>] netlink_unicast+0x1ec/0x2d0  
-net/netlink/af_netlink.c:1333
-     [<0000000098503d79>] netlink_sendmsg+0x26a/0x480  
-net/netlink/af_netlink.c:1922
-     [<000000009263e868>] sock_sendmsg_nosec net/socket.c:646 [inline]
-     [<000000009263e868>] sock_sendmsg+0x54/0x70 net/socket.c:665
-     [<000000007791ad47>] __sys_sendto+0x148/0x1f0 net/socket.c:1958
-     [<00000000d6f3807d>] __do_sys_sendto net/socket.c:1970 [inline]
-     [<00000000d6f3807d>] __se_sys_sendto net/socket.c:1966 [inline]
-     [<00000000d6f3807d>] __x64_sys_sendto+0x2a/0x30 net/socket.c:1966
-     [<000000003ba31db7>] do_syscall_64+0x76/0x1a0  
-arch/x86/entry/common.c:301
-     [<0000000075c8daad>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-
-
-Tested on:
-
-commit:         c11fb13a Merge branch 'for-linus' of git://git.kernel.org/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15c8f3b6a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=cb38d33cd06d8d48
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-patch:          https://syzkaller.appspot.com/x/patch.diff?x=12477101a00000
-
+-Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
