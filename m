@@ -3,94 +3,84 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A666C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EA43C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58AFE208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E21EE21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfFNKtr (ORCPT
+        id S1727358AbfFNKu3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:49:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:59482 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726767AbfFNKtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:49:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C8EC2B;
-        Fri, 14 Jun 2019 03:49:46 -0700 (PDT)
-Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9D6C3F246;
-        Fri, 14 Jun 2019 03:51:27 -0700 (PDT)
-Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
-From:   James Morse <james.morse@arm.com>
-To:     "Hawa, Hanna" <hhhawa@amazon.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
-        mchehab@kernel.org, davem@davemloft.net,
-        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
-        paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com,
-        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
-        hanochu@amazon.com, linux-edac@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
- <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
- <3129ed19-0259-d227-0cff-e9f165ce5964@arm.com>
- <4514bfa2-68b2-2074-b817-2f5037650c4e@amazon.com>
- <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
-Message-ID: <fb5c11b4-6fd1-830b-7a3a-ccf4b31ec337@arm.com>
-Date:   Fri, 14 Jun 2019 11:49:42 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 06:50:29 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:49450 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726767AbfFNKu2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:50:28 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-84-SRaRB_jZPHixQ5QjJdckwQ-1; Fri, 14 Jun 2019 11:50:24 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 14 Jun 2019 11:50:23 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 14 Jun 2019 11:50:23 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Alexei Starovoitov' <alexei.starovoitov@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        "Kairui Song" <kasong@redhat.com>
+Subject: RE: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
+Thread-Topic: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
+Thread-Index: AQHVIjMat8Fq1dO6sUKm4aXwvliIEKaa+Ndg
+Date:   Fri, 14 Jun 2019 10:50:23 +0000
+Message-ID: <57f6e69da6b3461a9c39d71aa1b58662@AcuMS.aculab.com>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
+ <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-In-Reply-To: <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+X-MC-Unique: SRaRB_jZPHixQ5QjJdckwQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hawa,
+On Thu, Jun 13, 2019 at 08:21:03AM -0500, Josh Poimboeuf wrote:
+> The BPF JIT code clobbers RBP.  This breaks frame pointer convention and
+> thus prevents the FP unwinder from unwinding through JIT generated code.
+>
+> RBP is currently used as the BPF stack frame pointer register.  The
+> actual register used is opaque to the user, as long as it's a
+> callee-saved register.  Change it to use R12 instead.
 
-On 13/06/2019 18:05, James Morse wrote:
-> On 11/06/2019 20:56, Hawa, Hanna wrote:
->> James Morse wrote:
->>> Hawa, Hanna wrote:
->>>> +        if (cluster != last_cluster) {
->>>> +            smp_call_function_single(cpu, al_a57_edac_l2merrsr,
->>>> +                         edac_dev, 0);
->>>> +            last_cluster = cluster;
->>>> +        }
->>> Here you depend on the CPUs being listed in cluster-order in the DT. I'm fairly sure the
->>> numbering is arbitrary: On my Juno 0,3,4,5 are the A53 cluster, and 1,2 are the A57
->>> cluster.
->>>
->>> If 1,3,5 were cluster-a and 2,4,6 were cluster-b, you would end up calling
->>> al_a57_edac_l2merrsr() for each cpu. As you don't wait, they could race.
->>>
->>> If you can get a cpu-mask for each cluster, smp_call_function_any() would to the
->>> pick-one-online-cpu work for you.
+Could you maintain the system %rbp chain through the BPF stack?
+It might even be possible to put something relevant in the %rip
+location.
 
->> Again, I rely on that it's alpine SoC specific driver.
+	David
 
-An example of where this goes wrong is kexec:
-If you offline CPU0, then kexec, the new kernel will start up on the lowest numbered
-online CPU, which won't be zero. But the new kernel will call it CPU0.
-
-Kdump is even better, as it starts up on whichever CPU called panic(), and calls it CPU0.
-
-
-Thanks,
-
-James
-
-
->> How can I get cpu-mask for each cluster? from DT?
-
-> Its not cluster you want, its the L2. Cacheinfo has this for online CPUs, and you're
-> already holding the cpus_read_lock().
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
