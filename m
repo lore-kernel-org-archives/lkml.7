@@ -2,176 +2,433 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A258C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D93C31E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:28:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D3BF208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:26:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="YLYUJXLC"
+	by mail.kernel.org (Postfix) with ESMTP id 36C23208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:28:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfFND0J (ORCPT
+        id S1725972AbfFND2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 23:26:09 -0400
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:47643 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725793AbfFND0J (ORCPT
+        Thu, 13 Jun 2019 23:28:46 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:44900 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725616AbfFND2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 23:26:09 -0400
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9CF60886BF
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 15:26:06 +1200 (NZST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1560482766;
-        bh=7cuNjAUOasNNcdtTHWPsfOhv3qMjbKvxs9MCbv9O5Ug=;
-        h=From:To:CC:Subject:Date:References;
-        b=YLYUJXLC8jQj0CxFuDLhFcOR0xnZ9SRStohsLsmY7DAoSCf8pDCvG1J5fFDQJO3yq
-         vcZ++Z4S8R/wA8RsqUPYpVwBzz7fVnAB6TgdDa4YhljxI1/FhkHnYSXpS9LG43EqnV
-         wh8G0vGziGTS6zKRD36HkWxBNLFGyHBM4LHiNINR1ttbLmaPILzz7YG7mwGVFFE42c
-         Y9pNmORSfIogM0SWgT044OUpkXlrnejbKzBNfyyMdFv12D8OqJYCOjWyTacN2EOt1a
-         m/w6MXRy+LOX/u27t0lA0IXrbS49lsqgo9XEhe+hGUb18kmo3MMs7xvpiblixZerXP
-         bUtGMALmfNLVQ==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5d0313ce0000>; Fri, 14 Jun 2019 15:26:06 +1200
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
- svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
- (TLS) id 15.0.1156.6; Fri, 14 Jun 2019 15:26:04 +1200
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Fri, 14 Jun 2019 15:26:04 +1200
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "computersforpeace@gmail.com" <computersforpeace@gmail.com>,
-        "marek.vasut@gmail.com" <marek.vasut@gmail.com>,
-        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
-        "richard@nod.at" <richard@nod.at>,
-        "vigneshr@ti.com" <vigneshr@ti.com>
-CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/2] mtd: concat: refactor concat_lock/concat_unlock
-Thread-Topic: [PATCH v2 1/2] mtd: concat: refactor concat_lock/concat_unlock
-Thread-Index: AQHVEPTbCX8jgKCQ/EWiWr4BFnYFGQ==
-Date:   Fri, 14 Jun 2019 03:26:03 +0000
-Message-ID: <355dad1321ed46baa98ca6f47b4d00b5@svr-chch-ex1.atlnz.lc>
-References: <20190522231948.17559-1-chris.packham@alliedtelesis.co.nz>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Thu, 13 Jun 2019 23:28:46 -0400
+X-UUID: f5442dd0405841f38aa3be646fd1d638-20190614
+X-UUID: f5442dd0405841f38aa3be646fd1d638-20190614
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1372137683; Fri, 14 Jun 2019 11:28:36 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 14 Jun 2019 11:28:34 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 14 Jun 2019 11:28:34 +0800
+Message-ID: <1560482914.16718.10.camel@mtksdaap41>
+Subject: Re: [PATCH v3, 11/27] drm/mediatek: add mmsys private data for ddp
+ path config
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 14 Jun 2019 11:28:34 +0800
+In-Reply-To: <1559734986-7379-12-git-send-email-yongqiang.niu@mediatek.com>
+References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1559734986-7379-12-git-send-email-yongqiang.niu@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,=0A=
-=0A=
-Ping?=0A=
-=0A=
-On 23/05/19 11:19 AM, Chris Packham wrote:=0A=
-> concat_lock() and concat_unlock() only differed in terms of the mtd_xx=0A=
-> operation they called. Refactor them to use a common helper function and=
-=0A=
-> pass a boolean flag to indicate whether lock or unlock is needed.=0A=
-> =0A=
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>=0A=
-> ---=0A=
-> Changes in v2:=0A=
-> - Use a boolean flag instead of passing a function pointer.=0A=
-> =0A=
->   drivers/mtd/mtdconcat.c | 44 +++++++++++------------------------------=
-=0A=
->   1 file changed, 12 insertions(+), 32 deletions(-)=0A=
-> =0A=
-> diff --git a/drivers/mtd/mtdconcat.c b/drivers/mtd/mtdconcat.c=0A=
-> index cbc5925e6440..6cb60dea509a 100644=0A=
-> --- a/drivers/mtd/mtdconcat.c=0A=
-> +++ b/drivers/mtd/mtdconcat.c=0A=
-> @@ -451,7 +451,8 @@ static int concat_erase(struct mtd_info *mtd, struct =
-erase_info *instr)=0A=
->   	return err;=0A=
->   }=0A=
->   =0A=
-> -static int concat_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)=
-=0A=
-> +static int concat_xxlock(struct mtd_info *mtd, loff_t ofs, uint64_t len,=
-=0A=
-> +			 bool is_lock)=0A=
->   {=0A=
->   	struct mtd_concat *concat =3D CONCAT(mtd);=0A=
->   	int i, err =3D -EINVAL;=0A=
-> @@ -470,7 +471,10 @@ static int concat_lock(struct mtd_info *mtd, loff_t =
-ofs, uint64_t len)=0A=
->   		else=0A=
->   			size =3D len;=0A=
->   =0A=
-> -		err =3D mtd_lock(subdev, ofs, size);=0A=
-> +		if (is_lock)=0A=
-> +			err =3D mtd_lock(subdev, ofs, size);=0A=
-> +		else=0A=
-> +			err =3D mtd_unlock(subdev, ofs, size);=0A=
->   		if (err)=0A=
->   			break;=0A=
->   =0A=
-> @@ -485,38 +489,14 @@ static int concat_lock(struct mtd_info *mtd, loff_t=
- ofs, uint64_t len)=0A=
->   	return err;=0A=
->   }=0A=
->   =0A=
-> -static int concat_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)=
-=0A=
-> +static int concat_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)=
-=0A=
->   {=0A=
-> -	struct mtd_concat *concat =3D CONCAT(mtd);=0A=
-> -	int i, err =3D 0;=0A=
-> -=0A=
-> -	for (i =3D 0; i < concat->num_subdev; i++) {=0A=
-> -		struct mtd_info *subdev =3D concat->subdev[i];=0A=
-> -		uint64_t size;=0A=
-> -=0A=
-> -		if (ofs >=3D subdev->size) {=0A=
-> -			size =3D 0;=0A=
-> -			ofs -=3D subdev->size;=0A=
-> -			continue;=0A=
-> -		}=0A=
-> -		if (ofs + len > subdev->size)=0A=
-> -			size =3D subdev->size - ofs;=0A=
-> -		else=0A=
-> -			size =3D len;=0A=
-> -=0A=
-> -		err =3D mtd_unlock(subdev, ofs, size);=0A=
-> -		if (err)=0A=
-> -			break;=0A=
-> -=0A=
-> -		len -=3D size;=0A=
-> -		if (len =3D=3D 0)=0A=
-> -			break;=0A=
-> -=0A=
-> -		err =3D -EINVAL;=0A=
-> -		ofs =3D 0;=0A=
-> -	}=0A=
-> +	return concat_xxlock(mtd, ofs, len, true);=0A=
-> +}=0A=
->   =0A=
-> -	return err;=0A=
-> +static int concat_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)=
-=0A=
-> +{=0A=
-> +	return concat_xxlock(mtd, ofs, len, false);=0A=
->   }=0A=
->   =0A=
->   static void concat_sync(struct mtd_info *mtd)=0A=
-> =0A=
-=0A=
+Hi, Yongqiang:
+
+On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add mmsys private data for ddp path config
+> all these register offset and value will be different in future SOC
+> add these define into mmsys private data
+> 	u32 ovl0_mout_en;
+> 	u32 rdma0_sout_sel_in;
+> 	u32 rdma0_sout_color0;
+> 	u32 rdma1_sout_sel_in;
+> 	u32 rdma1_sout_dpi0;
+> 	u32 rdma1_sout_dsi0;
+> 	u32 dpi0_sel_in;
+> 	u32 dpi0_sel_in_rdma1;
+> 	u32 dsi0_sel_in;
+> 	u32 dsi0_sel_in_rdma1;
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  drivers/gpu/drm/mediatek/mtk_drm_crtc.c |   4 ++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.c  | 100 ++++++++++++++++++++++++--------
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp.h  |   5 ++
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.c  |   5 ++
+>  drivers/gpu/drm/mediatek/mtk_drm_drv.h  |   4 ++
+>  5 files changed, 93 insertions(+), 25 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> index acad088..11e3404 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
+> @@ -50,6 +50,7 @@ struct mtk_drm_crtc {
+>  	bool				pending_planes;
+>  
+>  	void __iomem			*config_regs;
+> +	const struct mtk_mmsys_reg_data *mmsys_reg_data;
+>  	struct mtk_disp_mutex		*mutex;
+>  	unsigned int			ddp_comp_nr;
+>  	struct mtk_ddp_comp		**ddp_comp;
+> @@ -271,6 +272,7 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+>  	DRM_DEBUG_DRIVER("mediatek_ddp_ddp_path_setup\n");
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+>  		mtk_ddp_add_comp_to_path(mtk_crtc->config_regs,
+> +					 mtk_crtc->mmsys_reg_data,
+>  					 mtk_crtc->ddp_comp[i]->id,
+>  					 mtk_crtc->ddp_comp[i + 1]->id);
+>  		mtk_disp_mutex_add_comp(mtk_crtc->mutex,
+> @@ -319,6 +321,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
+>  	mtk_disp_mutex_disable(mtk_crtc->mutex);
+>  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
+>  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
+> +					      mtk_crtc->mmsys_reg_data,
+>  					      mtk_crtc->ddp_comp[i]->id,
+>  					      mtk_crtc->ddp_comp[i + 1]->id);
+>  		mtk_disp_mutex_remove_comp(mtk_crtc->mutex,
+> @@ -561,6 +564,7 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
+>  		return -ENOMEM;
+>  
+>  	mtk_crtc->config_regs = priv->config_regs;
+> +	mtk_crtc->mmsys_reg_data = priv->reg_data;
+>  	mtk_crtc->ddp_comp_nr = path_len;
+>  	mtk_crtc->ddp_comp = devm_kmalloc_array(dev, mtk_crtc->ddp_comp_nr,
+>  						sizeof(*mtk_crtc->ddp_comp),
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> index 1bbabe6..c8ac892 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.c
+> @@ -145,6 +145,17 @@
+>  #define DPI_SEL_IN_BLS			0x0
+>  #define DSI_SEL_IN_RDMA			0x1
+>  
+> +#define DISP_REG_OVL0_MOUT_EN(data)		((data)->ovl0_mout_en)
+> +#define DISP_REG_DPI0_SEL_IN(data)		((data)->dpi0_sel_in)
+> +#define DISP_REG_DPI0_SEL_IN_RDMA1(data)	((data)->dpi0_sel_in_rdma1)
+> +#define DISP_REG_DSI0_SEL_IN(data)		((data)->dsi0_sel_in)
+> +#define DISP_REG_DSI0_SEL_IN_RDMA1(data)	((data)->dsi0_sel_in_rdma1)
+> +#define DISP_REG_RDMA0_SOUT_SEL_IN(data)	((data)->rdma0_sout_sel_in)
+> +#define DISP_REG_RDMA0_SOUT_COLOR0(data)	((data)->rdma0_sout_color0)
+> +#define DISP_REG_RDMA1_SOUT_SEL_IN(data)	((data)->rdma1_sout_sel_in)
+> +#define DISP_REG_RDMA1_SOUT_DPI0(data)		((data)->rdma1_sout_dpi0)
+> +#define DISP_REG_RDMA1_SOUT_DSI0(data)		((data)->rdma1_sout_dsi0)
+
+I does not see any benefit to invent these macro, caller could directly
+use data->xxx.
+
+rdma0_sout_sel_in, rdma0_sout_color0, and rdma1_sout_dsi0 are not used
+in this patch, so remove from this patch.
+
+> +
+>  struct mtk_disp_mutex {
+>  	int id;
+>  	bool claimed;
+> @@ -176,6 +187,19 @@ struct mtk_ddp {
+>  	const struct mtk_ddp_data	*data;
+>  };
+>  
+> +struct mtk_mmsys_reg_data {
+> +	u32 ovl0_mout_en;
+> +	u32 rdma0_sout_sel_in;
+> +	u32 rdma0_sout_color0;
+> +	u32 rdma1_sout_sel_in;
+> +	u32 rdma1_sout_dpi0;
+> +	u32 rdma1_sout_dsi0;
+> +	u32 dpi0_sel_in;
+> +	u32 dpi0_sel_in_rdma1;
+> +	u32 dsi0_sel_in;
+> +	u32 dsi0_sel_in_rdma1;
+> +};
+> +
+>  static const unsigned int mt2701_mutex_mod[DDP_COMPONENT_ID_MAX] = {
+>  	[DDP_COMPONENT_BLS] = MT2701_MUTEX_MOD_DISP_BLS,
+>  	[DDP_COMPONENT_COLOR0] = MT2701_MUTEX_MOD_DISP_COLOR,
+> @@ -254,17 +278,34 @@ struct mtk_ddp {
+>  	.mutex_sof_reg = MT2701_DISP_MUTEX0_SOF0,
+>  };
+>  
+> -static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+> +const struct mtk_mmsys_reg_data mt2701_mmsys_reg_data = {
+> +	.ovl0_mout_en = DISP_REG_CONFIG_DISP_OVL_MOUT_EN,
+> +	.dsi0_sel_in = DISP_REG_CONFIG_DSI_SEL,
+> +	.dsi0_sel_in_rdma1 = DSI_SEL_IN_RDMA,
+> +};
+> +
+> +const struct mtk_mmsys_reg_data mt8173_mmsys_reg_data = {
+> +	.ovl0_mout_en = DISP_REG_CONFIG_DISP_OVL0_MOUT_EN,
+> +	.rdma1_sout_sel_in = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN,
+> +	.rdma1_sout_dpi0 = RDMA1_SOUT_DPI0,
+> +	.dpi0_sel_in = DISP_REG_CONFIG_DPI_SEL_IN,
+> +	.dpi0_sel_in_rdma1 = DPI0_SEL_IN_RDMA1,
+> +	.dsi0_sel_in = DISP_REG_CONFIG_DSIE_SEL_IN,
+> +	.dsi0_sel_in_rdma1 = DSI0_SEL_IN_RDMA1,
+> +};
+> +
+> +static unsigned int mtk_ddp_mout_en(const struct mtk_mmsys_reg_data *data,
+> +				    enum mtk_ddp_comp_id cur,
+>  				    enum mtk_ddp_comp_id next,
+>  				    unsigned int *addr)
+>  {
+>  	unsigned int value;
+>  
+>  	if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_COLOR0) {
+> -		*addr = DISP_REG_CONFIG_DISP_OVL0_MOUT_EN;
+> +		*addr = DISP_REG_OVL0_MOUT_EN(data);
+>  		value = OVL0_MOUT_EN_COLOR0;
+>  	} else if (cur == DDP_COMPONENT_OVL0 && next == DDP_COMPONENT_RDMA0) {
+> -		*addr = DISP_REG_CONFIG_DISP_OVL_MOUT_EN;
+> +		*addr = DISP_REG_OVL0_MOUT_EN(data);
+>  		value = OVL_MOUT_EN_RDMA;
+>  	} else if (cur == DDP_COMPONENT_OD0 && next == DDP_COMPONENT_RDMA0) {
+>  		*addr = DISP_REG_CONFIG_DISP_OD_MOUT_EN;
+> @@ -306,8 +347,8 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>  		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>  		value = RDMA1_SOUT_DSI3;
+>  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+> -		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+> -		value = RDMA1_SOUT_DPI0;
+> +		*addr = DISP_REG_RDMA1_SOUT_SEL_IN(data);
+> +		value = DISP_REG_RDMA1_SOUT_DPI0(data);
+>  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+>  		*addr = DISP_REG_CONFIG_DISP_RDMA1_SOUT_EN;
+>  		value = RDMA1_SOUT_DPI1;
+> @@ -333,7 +374,8 @@ static unsigned int mtk_ddp_mout_en(enum mtk_ddp_comp_id cur,
+>  	return value;
+>  }
+>  
+> -static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
+> +static unsigned int mtk_ddp_sel_in(const struct mtk_mmsys_reg_data *data,
+> +				   enum mtk_ddp_comp_id cur,
+>  				   enum mtk_ddp_comp_id next,
+>  				   unsigned int *addr)
+>  {
+> @@ -343,14 +385,14 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
+>  		*addr = DISP_REG_CONFIG_DISP_COLOR0_SEL_IN;
+>  		value = COLOR0_SEL_IN_OVL0;
+>  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI0) {
+> -		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+> -		value = DPI0_SEL_IN_RDMA1;
+> +		*addr = DISP_REG_DPI0_SEL_IN(data);
+> +		value = DISP_REG_DPI0_SEL_IN_RDMA1(data);
+>  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DPI1) {
+>  		*addr = DISP_REG_CONFIG_DPI_SEL_IN;
+>  		value = DPI1_SEL_IN_RDMA1;
+>  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+> -		*addr = DISP_REG_CONFIG_DSIE_SEL_IN;
+> -		value = DSI0_SEL_IN_RDMA1;
+> +		*addr = DISP_REG_DSI0_SEL_IN(data);
+> +		value = DISP_REG_DSI0_SEL_IN_RDMA1(data);
+>  	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI1) {
+>  		*addr = DISP_REG_CONFIG_DSIO_SEL_IN;
+>  		value = DSI1_SEL_IN_RDMA1;
+> @@ -391,37 +433,44 @@ static unsigned int mtk_ddp_sel_in(enum mtk_ddp_comp_id cur,
+>  	return value;
+>  }
+>  
+> -static void mtk_ddp_sout_sel(void __iomem *config_regs,
+> -			     enum mtk_ddp_comp_id cur,
+> -			     enum mtk_ddp_comp_id next)
+> +static unsigned int mtk_ddp_sout_sel(const struct mtk_mmsys_reg_data *data,
+> +				     enum mtk_ddp_comp_id cur,
+> +				     enum mtk_ddp_comp_id next,
+> +				     unsigned int *addr)
+>  {
+> +	unsigned int value;
+> +
+>  	if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DSI0) {
+> -		writel_relaxed(BLS_TO_DSI_RDMA1_TO_DPI1,
+> -			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+> +		*addr = DISP_REG_CONFIG_OUT_SEL;
+> +		value = BLS_TO_DSI_RDMA1_TO_DPI1;
+>  	} else if (cur == DDP_COMPONENT_BLS && next == DDP_COMPONENT_DPI0) {
+> -		writel_relaxed(BLS_TO_DPI_RDMA1_TO_DSI,
+> -			       config_regs + DISP_REG_CONFIG_OUT_SEL);
+> -	} else if (cur == DDP_COMPONENT_RDMA1 && next == DDP_COMPONENT_DSI0) {
+> -		writel_relaxed(DSI_SEL_IN_RDMA,
+> -			       config_regs + DISP_REG_CONFIG_DSI_SEL);
+> +		*addr = DISP_REG_CONFIG_OUT_SEL;
+> +		value = BLS_TO_DPI_RDMA1_TO_DSI;
+> +	} else {
+> +		value = 0;
+>  	}
+> +
+> +	return value;
+>  }
+>  
+>  void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+> +			      const struct mtk_mmsys_reg_data *reg_data,
+>  			      enum mtk_ddp_comp_id cur,
+>  			      enum mtk_ddp_comp_id next)
+>  {
+>  	unsigned int addr, value, reg;
+>  
+> -	value = mtk_ddp_mout_en(cur, next, &addr);
+> +	value = mtk_ddp_mout_en(reg_data, cur, next, &addr);
+>  	if (value) {
+>  		reg = readl_relaxed(config_regs + addr) | value;
+>  		writel_relaxed(reg, config_regs + addr);
+>  	}
+>  
+> -	mtk_ddp_sout_sel(config_regs, cur, next);
+> +	value = mtk_ddp_sout_sel(reg_data, cur, next, &addr);
+> +	if (value)
+> +		writel_relaxed(value, config_regs + addr);
+
+I think the register could be written inside mtk_ddp_sout_sel(), why do
+you move out of that function?
+
+>  
+> -	value = mtk_ddp_sel_in(cur, next, &addr);
+> +	value = mtk_ddp_sel_in(reg_data, cur, next, &addr);
+>  	if (value) {
+>  		reg = readl_relaxed(config_regs + addr) | value;
+>  		writel_relaxed(reg, config_regs + addr);
+> @@ -429,18 +478,19 @@ void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+>  }
+>  
+>  void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
+> +				   const struct mtk_mmsys_reg_data *reg_data,
+>  				   enum mtk_ddp_comp_id cur,
+>  				   enum mtk_ddp_comp_id next)
+>  {
+>  	unsigned int addr, value, reg;
+>  
+> -	value = mtk_ddp_mout_en(cur, next, &addr);
+> +	value = mtk_ddp_mout_en(reg_data, cur, next, &addr);
+>  	if (value) {
+>  		reg = readl_relaxed(config_regs + addr) & ~value;
+>  		writel_relaxed(reg, config_regs + addr);
+>  	}
+>  
+> -	value = mtk_ddp_sel_in(cur, next, &addr);
+> +	value = mtk_ddp_sel_in(reg_data, cur, next, &addr);
+>  	if (value) {
+>  		reg = readl_relaxed(config_regs + addr) & ~value;
+>  		writel_relaxed(reg, config_regs + addr);
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+> index f9a7991..43dabb6 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp.h
+> @@ -19,11 +19,16 @@
+>  struct regmap;
+>  struct device;
+>  struct mtk_disp_mutex;
+> +struct mtk_mmsys_reg_data;
+>  
+> +extern const struct mtk_mmsys_reg_data mt2701_mmsys_reg_data;
+> +extern const struct mtk_mmsys_reg_data mt8173_mmsys_reg_data;
+>  void mtk_ddp_add_comp_to_path(void __iomem *config_regs,
+> +			      const struct mtk_mmsys_reg_data *reg_data,
+>  			      enum mtk_ddp_comp_id cur,
+>  			      enum mtk_ddp_comp_id next);
+>  void mtk_ddp_remove_comp_from_path(void __iomem *config_regs,
+> +				   const struct mtk_mmsys_reg_data *reg_data,
+>  				   enum mtk_ddp_comp_id cur,
+>  				   enum mtk_ddp_comp_id next);
+>  
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.c b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> index 57ce470..f260aa7 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.c
+> @@ -197,6 +197,7 @@ static int mtk_atomic_commit(struct drm_device *drm,
+>  	.main_len = ARRAY_SIZE(mt2701_mtk_ddp_main),
+>  	.ext_path = mt2701_mtk_ddp_ext,
+>  	.ext_len = ARRAY_SIZE(mt2701_mtk_ddp_ext),
+> +	.reg_data = &mt2701_mmsys_reg_data,
+>  	.shadow_register = true,
+>  };
+>  
+> @@ -207,6 +208,7 @@ static int mtk_atomic_commit(struct drm_device *drm,
+>  	.ext_len = ARRAY_SIZE(mt2712_mtk_ddp_ext),
+>  	.third_path = mt2712_mtk_ddp_third,
+>  	.third_len = ARRAY_SIZE(mt2712_mtk_ddp_third),
+> +	.reg_data = &mt8173_mmsys_reg_data,
+>  };
+>  
+>  static const struct mtk_mmsys_driver_data mt8173_mmsys_driver_data = {
+> @@ -214,6 +216,7 @@ static int mtk_atomic_commit(struct drm_device *drm,
+>  	.main_len = ARRAY_SIZE(mt8173_mtk_ddp_main),
+>  	.ext_path = mt8173_mtk_ddp_ext,
+>  	.ext_len = ARRAY_SIZE(mt8173_mtk_ddp_ext),
+> +	.reg_data = &mt8173_mmsys_reg_data,
+>  };
+>  
+>  static int mtk_drm_kms_init(struct drm_device *drm)
+> @@ -468,6 +471,8 @@ static int mtk_drm_probe(struct platform_device *pdev)
+>  	INIT_WORK(&private->commit.work, mtk_atomic_work);
+>  	private->data = of_device_get_match_data(dev);
+>  
+> +	private->reg_data = private->data->reg_data;
+> +
+>  	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	private->config_regs = devm_ioremap_resource(dev, mem);
+>  	if (IS_ERR(private->config_regs)) {
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_drv.h b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> index ecc00ca..b6544a2 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_drv.h
+> @@ -15,6 +15,7 @@
+>  #define MTK_DRM_DRV_H
+>  
+>  #include <linux/io.h>
+> +#include "mtk_drm_ddp.h"
+>  #include "mtk_drm_ddp_comp.h"
+>  
+>  #define MAX_CRTC	3
+> @@ -36,6 +37,8 @@ struct mtk_mmsys_driver_data {
+>  	const enum mtk_ddp_comp_id *third_path;
+>  	unsigned int third_len;
+>  
+> +	const struct mtk_mmsys_reg_data *reg_data;
+> +
+>  	bool shadow_register;
+>  };
+>  
+> @@ -48,6 +51,7 @@ struct mtk_drm_private {
+>  	struct device_node *mutex_node;
+>  	struct device *mutex_dev;
+>  	void __iomem *config_regs;
+> +	const struct mtk_mmsys_reg_data *reg_data;
+
+This is identical to the same one in struct mtk_mmsys_driver_data, so
+you need not to create this one.
+
+Regards,
+CK
+
+>  	struct device_node *comp_node[DDP_COMPONENT_ID_MAX];
+>  	struct mtk_ddp_comp *ddp_comp[DDP_COMPONENT_ID_MAX];
+>  	const struct mtk_mmsys_driver_data *data;
+
+
