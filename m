@@ -2,119 +2,109 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9362C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A247C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97F6721537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28EEE21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:14:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfFNOOZ (ORCPT
+        id S1728859AbfFNOOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:14:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:13630 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727698AbfFNOOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:14:25 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 07:14:24 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga007.jf.intel.com with ESMTP; 14 Jun 2019 07:14:24 -0700
-Date:   Fri, 14 Jun 2019 07:14:24 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
- scattered features word 11
-Message-ID: <20190614141424.GA12191@linux.intel.com>
-References: <1560459064-195037-1-git-send-email-fenghua.yu@intel.com>
- <1560459064-195037-3-git-send-email-fenghua.yu@intel.com>
- <20190614114410.GD2586@zn.tnic>
- <20190614122749.GE2586@zn.tnic>
- <20190614131701.GA198207@romley-ivt3.sc.intel.com>
- <20190614134123.GF2586@zn.tnic>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+        Fri, 14 Jun 2019 10:14:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42374 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727698AbfFNOOb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:14:31 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EE8Iq6105485
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 10:14:30 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t4d3489pp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 10:14:29 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 14 Jun 2019 15:14:28 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 15:14:24 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EEEN2H20840506
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 14:14:23 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8DC59AE053;
+        Fri, 14 Jun 2019 14:14:23 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A5240AE051;
+        Fri, 14 Jun 2019 14:14:22 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.110.199])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 14:14:22 +0000 (GMT)
+Subject: Re: [PATCH V8 2/3] Define a new ima template field buf
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     roberto.sassu@huawei.com,
+        thiago Jung Bauermann <bauerman@linux.ibm.com>
+Date:   Fri, 14 Jun 2019 10:14:11 -0400
+In-Reply-To: <1560509860.4171.13.camel@linux.ibm.com>
+References: <20190612221549.28399-1-prsriva02@gmail.com>
+         <20190612221549.28399-3-prsriva02@gmail.com>
+         <1560455980.4805.57.camel@linux.ibm.com>
+         <1560509860.4171.13.camel@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190614134123.GF2586@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19061414-0008-0000-0000-000002F3C76B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061414-0009-0000-0000-00002260D213
+Message-Id: <1560521651.4072.7.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 03:41:23PM +0200, Borislav Petkov wrote:
-> + Radim and Paolo. See upthread for context.
-> 
-> On Fri, Jun 14, 2019 at 06:17:02AM -0700, Fenghua Yu wrote:
-> > > Alternatively - and what I think is the better solution - would be to
-> > > remove those BUILD_BUG_ONs in x86_feature_cpuid and filter out the
-> > > Linux-defined leafs dynamically. This way the array won't have holes in
-> > > it.
+> > > diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+> > > index 993d0f1915ff..c8591406c0e2 100644
+> > > --- a/security/integrity/ima/ima_init.c
+> > > +++ b/security/integrity/ima/ima_init.c
+> > > @@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
+> > >  	struct ima_template_entry *entry;
+> > >  	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+> > >  	struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
+> > > -					    NULL, 0, NULL};
+> > > +					    NULL, 0, NULL, NULL, 0};
 > > 
-> > Maybe adding a dummy slot in cpuid_leafs in patch 0002 to avoid the
-> > compilation errors?
+> > here, don't belong in this patch.  It belongs in "IMA: support for per
+> > policy rule template formats", in case it should ever be backported.
+> >  Please post this as a separate patch, that will be squashed with
+> > "IMA: support for per policy rule template formats".
 > 
-> Maybe you didn't read what you're replying to: "This way the array
-> won't have holes in it". Ontop of yours:
-> 
-> diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-> index d78a61408243..03d6f3f7b27c 100644
-> --- a/arch/x86/kvm/cpuid.h
-> +++ b/arch/x86/kvm/cpuid.h
-> @@ -47,6 +47,7 @@ static const struct cpuid_reg reverse_cpuid[] = {
->  	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
->  	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
->  	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
-> +	[CPUID_7_1_EAX]       = {         7, 1, CPUID_EAX},
->  	[CPUID_8000_0008_EBX] = {0x80000008, 0, CPUID_EBX},
->  	[CPUID_6_EAX]         = {         6, 0, CPUID_EAX},
->  	[CPUID_8000_000A_EDX] = {0x8000000a, 0, CPUID_EDX},
-> @@ -59,8 +60,9 @@ static __always_inline struct cpuid_reg x86_feature_cpuid(unsigned x86_feature)
->  {
->  	unsigned x86_leaf = x86_feature / 32;
->  
-> -	BUILD_BUG_ON(x86_leaf >= ARRAY_SIZE(reverse_cpuid));
-> -	BUILD_BUG_ON(reverse_cpuid[x86_leaf].function == 0);
-> +	if (x86_leaf == CPUID_LNX_1 ||
-> +	    x86_leaf == CPUID_LNX_4)
-> +		return NULL;
->  
->  	return reverse_cpuid[x86_leaf];
->  }
-> 
-> That's what I mean with filter out dynamically.
+> My mistake.  I should have picked up Thaigo's "ima: Use designated
+> initializers for struct ima_event_data".  Please drop these changes
+> instead.
 
-This is wrong.  KVM isn't complaining about shuffling the order of feature
-words, it's complaining that code is trying to do a reverse CPUID lookup
-to a feature that isn't in the reverse_cpuid table.   Filtering out
-checks dynamically is just hiding bugs.
+Sorry for the confusion.  I just pushed out Thiago's patch.
 
->In function ‘x86_feature_cpuid’,
->     inlined from ‘guest_cpuid_get_register’ at arch/x86/kvm/cpuid.h:71:33,
->     inlined from ‘guest_cpuid_has’ at arch/x86/kvm/cpuid.h:100:8,
->     inlined from ‘kvm_get_msr_common’ at arch/x86/kvm/x86.c:2804:8:
+thanks,
 
-This corresponds to "guest_cpuid_has(vcpu, X86_FEATURE_ARCH_CAPABILITIES)",
-i.e. KVM is trying to query X86_FEATURE_ARCH_CAPABILITIES and is yelling
-that there is no reverse_cpuid entry for CPUID_7_EDX.
+Mimi
 
-The problem is that 'enum cpuid_leafs' no longer matches up with the
-word numbers defined in cpufeatures.h, e.g. CPUID_7_EDX == 17 or so, but
-the entries in cpufeatures.h defined CPUID_7_EDX flags using word 18.
-
-This patch also needs to modify NCAPINTS.
