@@ -2,174 +2,106 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C41CC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D85F5C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:58:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 228E5204FD
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:57:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560477444;
-	bh=Idppx86jx2/JgI/B+OUo5Gsr3H3ssRVoDWCPR+4ZpAQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ffIUPnWbkRP9qchbdc3p1IeLVm/jIyLYN98ue31tLcdwJUrYIePkH9kmIpLNew0Qk
-	 lCOO2w6t1py4jDXlZBRzMSI96T5vqO2jgbc7Oxt7Nxapr8Rsr4MAU5I9irDqbGi5NQ
-	 M0tq6WMMBO2jO5W6v2YDwKnLSmTXbDCCtq1HGevw=
+	by mail.kernel.org (Postfix) with ESMTP id B7399204FD
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:58:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727006AbfFNB4q (ORCPT
+        id S1726800AbfFNB6w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 21:56:46 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40616 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfFNB4o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 21:56:44 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so384064pfp.7;
-        Thu, 13 Jun 2019 18:56:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=x9k+i8/yjn1FnDiqnqxeuqzHrHlaZhjhqT7rlMgp6Jo=;
-        b=sNTdvHamDWegVotZF5FTov7T1Gxp3fJ0AXA/cpZtRV1WXzHSbuwE7f5eFwqTMl3K83
-         lfhRlCSRcc+/atTEiEmKW84J7S46M1Blj5eVfGDlM3ro5BE5v7uSno4vY5L1cFO2+Ywe
-         56MgJowlPT8gsjmuL+P/+tP/siy3DzHBUiQCt4f0q2JE3rq02Yapf0n4Cy1lje35xNhZ
-         2aFiOWvrsxymR9r/LjwMzoKAjPZ/k4mWzoQUBcqgM2I/jDmJJQy9aIpd0MpxLKrako2q
-         6E0cGc/R0Pj3fDUqbC4/AW5rRYKwmJA923N39FpivTFUZ9eluTC/8FtwEyB1WHhetpKm
-         C/iw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=x9k+i8/yjn1FnDiqnqxeuqzHrHlaZhjhqT7rlMgp6Jo=;
-        b=DONb7WwfB1Mf1r6LmoG+xwahb3Tv/HuX9sQNEPfJ86Ed6+Xzp+podYHgUg25K1n2hs
-         NX2oyiN362JWAIHvz1xfk67KaxsGzfvzt5uE5RcPVuLyaYQkaAdZqCvkVFfJlVJTtFAA
-         HWHSjo/8hhRf4mBllOOTuF0R5DWkASCZM7p0uHEGMpWTfVRldOq0bAPa5Yo3FlfYAW06
-         acwVwK+DEcd3rww1oKuafgRtWcB1DAdSB5hAseU5DKV/xsQBPevNLzRgTUcK8gfbxx6u
-         +dqZ/lxhRooGn9QKFmnkIb9LtuLLrc1GM61/nTw8HHYsetU8PzVssbKrv6TvY0J2tTvX
-         42XQ==
-X-Gm-Message-State: APjAAAW6Q/takuDpIPsYDcuzQ7CaZvUHYdPapqmY9aV4d3NE3aOQH509
-        9sk18i4jSDJiZkU/LIuIP8MMRzX3
-X-Google-Smtp-Source: APXvYqwN+b6fNv5DclHQ/nYyvabSb01H3lkt+uEJQOxBxc6NOYkRARjUbNH0oU2vF/EhHgCQN4wWwQ==
-X-Received: by 2002:a17:90a:2648:: with SMTP id l66mr8319889pje.65.1560477403162;
-        Thu, 13 Jun 2019 18:56:43 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::2:9d14])
-        by smtp.gmail.com with ESMTPSA id e16sm1094106pga.11.2019.06.13.18.56.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 18:56:42 -0700 (PDT)
-From:   Tejun Heo <tj@kernel.org>
-To:     axboe@kernel.dk, newella@fb.com, clm@fb.com, josef@toxicpanda.com,
-        dennisz@fb.com, lizefan@huawei.com, hannes@cmpxchg.org
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com, cgroups@vger.kernel.org, ast@kernel.org,
-        daniel@iogearbox.net, kafai@fb.com, songliubraving@fb.com,
-        yhs@fb.com, bpf@vger.kernel.org, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 04/10] block/rq_qos: add rq_qos_merge()
-Date:   Thu, 13 Jun 2019 18:56:14 -0700
-Message-Id: <20190614015620.1587672-5-tj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614015620.1587672-1-tj@kernel.org>
-References: <20190614015620.1587672-1-tj@kernel.org>
+        Thu, 13 Jun 2019 21:58:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42832 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726011AbfFNB6w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 21:58:52 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A6CBB3083394;
+        Fri, 14 Jun 2019 01:58:51 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9918119C67;
+        Fri, 14 Jun 2019 01:58:50 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 20:58:48 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
+ for generated code
+Message-ID: <20190614015848.todgfogryjn573nd@treble>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+ <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
+ <20190614013051.6gnwduy4dsygbamj@treble>
+ <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 14 Jun 2019 01:58:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a merge hook for rq_qos.  This will be used by io.weight.
+On Thu, Jun 13, 2019 at 06:42:45PM -0700, Alexei Starovoitov wrote:
+> On Thu, Jun 13, 2019 at 08:30:51PM -0500, Josh Poimboeuf wrote:
+> > On Thu, Jun 13, 2019 at 03:00:55PM -0700, Alexei Starovoitov wrote:
+> > > > @@ -392,8 +402,16 @@ bool unwind_next_frame(struct unwind_state *state)
+> > > >  	 * calls and calls to noreturn functions.
+> > > >  	 */
+> > > >  	orc = orc_find(state->signal ? state->ip : state->ip - 1);
+> > > > -	if (!orc)
+> > > > -		goto err;
+> > > > +	if (!orc) {
+> > > > +		/*
+> > > > +		 * As a fallback, try to assume this code uses a frame pointer.
+> > > > +		 * This is useful for generated code, like BPF, which ORC
+> > > > +		 * doesn't know about.  This is just a guess, so the rest of
+> > > > +		 * the unwind is no longer considered reliable.
+> > > > +		 */
+> > > > +		orc = &orc_fp_entry;
+> > > > +		state->error = true;
+> > > 
+> > > That seems fragile.
+> > 
+> > I don't think so.  The unwinder has sanity checks to make sure it
+> > doesn't go off the rails.  And it works just fine.  The beauty is that
+> > it should work for all generated code (not just BPF).
+> > 
+> > > Can't we populate orc_unwind tables after JIT ?
+> > 
+> > As I mentioned it would introduce a lot more complexity.  For each JIT
+> > function, BPF would have to tell ORC the following:
+> > 
+> > - where the BPF function lives
+> > - how big the stack frame is
+> > - where RBP and other callee-saved regs are on the stack
+> 
+> that sounds like straightforward addition that ORC should have anyway.
+> right now we're not using rbp in the jit-ed code,
+> but one day we definitely will.
+> Same goes for r12. It's reserved right now for 'strategic use'.
+> We've been thinking to add another register to bpf isa.
+> It will map to r12 on x86. arm64 and others have plenty of regs to use.
+> The programs are getting bigger and register spill/fill starting to
+> become a performance concern. Extra register will give us more room.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
- block/blk-core.c   | 4 ++++
- block/blk-rq-qos.c | 9 +++++++++
- block/blk-rq-qos.h | 9 +++++++++
- 3 files changed, 22 insertions(+)
+With CONFIG_FRAME_POINTER, RBP isn't available.  If you look at all the
+code in the entire kernel you'll notice that BPF JIT is pretty much the
+only one still clobbering it.
 
-diff --git a/block/blk-core.c b/block/blk-core.c
-index aad32071fa67..1dcf679c4b44 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -559,6 +559,7 @@ bool bio_attempt_back_merge(struct request_queue *q, struct request *req,
- 		return false;
- 
- 	trace_block_bio_backmerge(q, req, bio);
-+	rq_qos_merge(q, req, bio);
- 
- 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
- 		blk_rq_set_mixed_merge(req);
-@@ -580,6 +581,7 @@ bool bio_attempt_front_merge(struct request_queue *q, struct request *req,
- 		return false;
- 
- 	trace_block_bio_frontmerge(q, req, bio);
-+	rq_qos_merge(q, req, bio);
- 
- 	if ((req->cmd_flags & REQ_FAILFAST_MASK) != ff)
- 		blk_rq_set_mixed_merge(req);
-@@ -605,6 +607,8 @@ bool bio_attempt_discard_merge(struct request_queue *q, struct request *req,
- 	    blk_rq_get_max_sectors(req, blk_rq_pos(req)))
- 		goto no_merge;
- 
-+	rq_qos_merge(q, req, bio);
-+
- 	req->biotail->bi_next = bio;
- 	req->biotail = bio;
- 	req->__data_len += bio->bi_iter.bi_size;
-diff --git a/block/blk-rq-qos.c b/block/blk-rq-qos.c
-index 659ccb8b693f..7debcaf1ee53 100644
---- a/block/blk-rq-qos.c
-+++ b/block/blk-rq-qos.c
-@@ -83,6 +83,15 @@ void __rq_qos_track(struct rq_qos *rqos, struct request *rq, struct bio *bio)
- 	} while (rqos);
- }
- 
-+void __rq_qos_merge(struct rq_qos *rqos, struct request *rq, struct bio *bio)
-+{
-+	do {
-+		if (rqos->ops->merge)
-+			rqos->ops->merge(rqos, rq, bio);
-+		rqos = rqos->next;
-+	} while (rqos);
-+}
-+
- void __rq_qos_done_bio(struct rq_qos *rqos, struct bio *bio)
- {
- 	do {
-diff --git a/block/blk-rq-qos.h b/block/blk-rq-qos.h
-index 2300e038b9fa..8e426a8505b6 100644
---- a/block/blk-rq-qos.h
-+++ b/block/blk-rq-qos.h
-@@ -35,6 +35,7 @@ struct rq_qos {
- struct rq_qos_ops {
- 	void (*throttle)(struct rq_qos *, struct bio *);
- 	void (*track)(struct rq_qos *, struct request *, struct bio *);
-+	void (*merge)(struct rq_qos *, struct request *, struct bio *);
- 	void (*issue)(struct rq_qos *, struct request *);
- 	void (*requeue)(struct rq_qos *, struct request *);
- 	void (*done)(struct rq_qos *, struct request *);
-@@ -135,6 +136,7 @@ void __rq_qos_issue(struct rq_qos *rqos, struct request *rq);
- void __rq_qos_requeue(struct rq_qos *rqos, struct request *rq);
- void __rq_qos_throttle(struct rq_qos *rqos, struct bio *bio);
- void __rq_qos_track(struct rq_qos *rqos, struct request *rq, struct bio *bio);
-+void __rq_qos_merge(struct rq_qos *rqos, struct request *rq, struct bio *bio);
- void __rq_qos_done_bio(struct rq_qos *rqos, struct bio *bio);
- 
- static inline void rq_qos_cleanup(struct request_queue *q, struct bio *bio)
-@@ -185,6 +187,13 @@ static inline void rq_qos_track(struct request_queue *q, struct request *rq,
- 		__rq_qos_track(q->rq_qos, rq, bio);
- }
- 
-+static inline void rq_qos_merge(struct request_queue *q, struct request *rq,
-+				struct bio *bio)
-+{
-+	if (q->rq_qos)
-+		__rq_qos_merge(q->rq_qos, rq, bio);
-+}
-+
- void rq_qos_exit(struct request_queue *);
- 
- #endif
 -- 
-2.17.1
-
+Josh
