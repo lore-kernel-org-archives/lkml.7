@@ -2,111 +2,152 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA887C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:47:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFAC9C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA1D20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:47:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7EDA20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:47:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="WP5wmVF8"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O+TbJCIv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfFNNrQ (ORCPT
+        id S1728607AbfFNNro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:47:16 -0400
-Received: from mail.efficios.com ([167.114.142.138]:43596 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727898AbfFNNrP (ORCPT
+        Fri, 14 Jun 2019 09:47:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50438 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728078AbfFNNrm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:47:15 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 76B3B2517E2;
-        Fri, 14 Jun 2019 09:47:14 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id E1TuGgOUa87X; Fri, 14 Jun 2019 09:47:14 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 19F7F2517DB;
-        Fri, 14 Jun 2019 09:47:14 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 19F7F2517DB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1560520034;
-        bh=81EpfFNjP6SvW3w5jVIET8nZSw4QEAdPUWyGh9rrrk0=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=WP5wmVF8o+loCPX8mYQM0wAdEPJvADvYrEjChO39wLC+vtYpIZxQuRACD3Kgpe7Zq
-         yhLb+4GcQ7C1oJH+sDD40TqSWG3P42Q+5Pcc8M28ejSkaIRm0sg+t465+rlB++q6Gn
-         m1uywQpEaIDmT3u+1QZqmeKgaI5D30aIo2kFFsg+8ey0ccxACsRsz2ozANcftu/sUn
-         jB+oiHAEw5jFqmOTTOXQk/CMPgmyamBGMz5xOaH7UYn8J7FY2v6qHyeh+fBLZo3JK2
-         MXBEtnwG5IJbvsUUqMouiENJR5j9pJ68XHzbGN8JAzxgrFje6wyjfArbPkO+mMVa/W
-         UdJlAmp2tJ4nw==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id j3nKT3CEgr1y; Fri, 14 Jun 2019 09:47:14 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id EF45F2517D4;
-        Fri, 14 Jun 2019 09:47:13 -0400 (EDT)
-Date:   Fri, 14 Jun 2019 09:47:13 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <26171199.3391.1560520033825.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87imt8tha5.fsf@oldenburg2.str.redhat.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com> <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com> <87d0jguxdk.fsf@oldenburg2.str.redhat.com> <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com> <87wohoti47.fsf@oldenburg2.str.redhat.com> <189377747.3315.1560519247118.JavaMail.zimbra@efficios.com> <87imt8tha5.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v10)
+        Fri, 14 Jun 2019 09:47:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8y6h8N73FB5NENGJmXuBWpySrRWBuNuuherB6ijj6q8=; b=O+TbJCIvZxITqhhJGk19PgKDVb
+        zP/cXr3k3gVNVyNuIZZ1EUainJIi7wVTUxXsQtP55j6fTBfcF7Sa+btFSjlOoBpdFax1u6ZazzUaz
+        FPx/YcvbrcmM0hj9iSxxr66wiPpIo2CQcbBfULKCswmUhdFlmoDtWAaHV5c6chhQgW7u9cc4uUrYi
+        +YgK5P2yi8DIc4PxIDTgNB0H2HMyfDDjSri1AD09oFbVupeMjadiOSOnAJwBO5Fva8F5W4du1//3V
+        PC6NEPWuGSXf3Iz9K+nbMDUlMTGN745meRSObE6d5NxDDUuRnYJGChXPFHVxfA6Pw0enVfuoGJDnu
+        q+P8IvBA==;
+Received: from 213-225-9-13.nat.highway.a1.net ([213.225.9.13] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbmYJ-0004Xw-Il; Fri, 14 Jun 2019 13:47:36 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc:     Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
+        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 01/16] media: videobuf-dma-contig: use dma_mmap_coherent
+Date:   Fri, 14 Jun 2019 15:47:11 +0200
+Message-Id: <20190614134726.3827-2-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190614134726.3827-1-hch@lst.de>
+References: <20190614134726.3827-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-Thread-Index: wOBWzLotZbvRJLIS40uVtgojXXE/sQ==
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 14, 2019, at 3:42 PM, Florian Weimer fweimer@redhat.com wrote:
+dma_alloc_coherent does not return a physical address, but a DMA
+address, which might be remapped or have an offset.  Passing this
+DMA address to vm_iomap_memory is completely bogus.  Use the proper
+dma_mmap_coherent helper instead, and stop passing __GFP_COMP
+to dma_alloc_coherent, as the memory management inside the DMA
+allocator is hidden from the callers.
 
-> * Mathieu Desnoyers:
-> 
->> +  /* Publicize rseq registration ownership.  This must be performed
->> +     after rtld re-relocation, before invoking constructors of
->> +     preloaded libraries.  */
->> +  rseq_init ();
-> 
-> Please add a comment that IFUNC resolvers do not see the initialized
-> value.  I think this is okay because we currently do not support access
-> to extern variables in IFUNC resolvers.
+Fixes: a8f3c203e19b ("[media] videobuf-dma-contig: add cache support")
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/media/v4l2-core/videobuf-dma-contig.c | 23 +++++++------------
+ 1 file changed, 8 insertions(+), 15 deletions(-)
 
-Do IFUNC resolvers happen to observe the __rseq_handled address that
-was internal to ld.so ?
-
-If so, we could simply initialize __rseq_handled twice: early before calling
-IFUNC resolvers, and after ld.so re-relocation.
-
-Thanks,
-
-Mathieu
-
-
+diff --git a/drivers/media/v4l2-core/videobuf-dma-contig.c b/drivers/media/v4l2-core/videobuf-dma-contig.c
+index e1bf50df4c70..a5942ea38f1f 100644
+--- a/drivers/media/v4l2-core/videobuf-dma-contig.c
++++ b/drivers/media/v4l2-core/videobuf-dma-contig.c
+@@ -39,11 +39,11 @@ struct videobuf_dma_contig_memory {
+ 
+ static int __videobuf_dc_alloc(struct device *dev,
+ 			       struct videobuf_dma_contig_memory *mem,
+-			       unsigned long size, gfp_t flags)
++			       unsigned long size)
+ {
+ 	mem->size = size;
+-	mem->vaddr = dma_alloc_coherent(dev, mem->size,
+-					&mem->dma_handle, flags);
++	mem->vaddr = dma_alloc_coherent(dev, mem->size, &mem->dma_handle,
++			GFP_KERNEL);
+ 
+ 	if (!mem->vaddr) {
+ 		dev_err(dev, "memory alloc size %ld failed\n", mem->size);
+@@ -260,8 +260,7 @@ static int __videobuf_iolock(struct videobuf_queue *q,
+ 			return videobuf_dma_contig_user_get(mem, vb);
+ 
+ 		/* allocate memory for the read() method */
+-		if (__videobuf_dc_alloc(q->dev, mem, PAGE_ALIGN(vb->size),
+-					GFP_KERNEL))
++		if (__videobuf_dc_alloc(q->dev, mem, PAGE_ALIGN(vb->size)))
+ 			return -ENOMEM;
+ 		break;
+ 	case V4L2_MEMORY_OVERLAY:
+@@ -280,7 +279,6 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+ 	struct videobuf_dma_contig_memory *mem;
+ 	struct videobuf_mapping *map;
+ 	int retval;
+-	unsigned long size;
+ 
+ 	dev_dbg(q->dev, "%s\n", __func__);
+ 
+@@ -298,23 +296,18 @@ static int __videobuf_mmap_mapper(struct videobuf_queue *q,
+ 	BUG_ON(!mem);
+ 	MAGIC_CHECK(mem->magic, MAGIC_DC_MEM);
+ 
+-	if (__videobuf_dc_alloc(q->dev, mem, PAGE_ALIGN(buf->bsize),
+-				GFP_KERNEL | __GFP_COMP))
++	if (__videobuf_dc_alloc(q->dev, mem, PAGE_ALIGN(buf->bsize)))
+ 		goto error;
+ 
+-	/* Try to remap memory */
+-	size = vma->vm_end - vma->vm_start;
+-	vma->vm_page_prot = pgprot_noncached(vma->vm_page_prot);
+-
+ 	/* the "vm_pgoff" is just used in v4l2 to find the
+ 	 * corresponding buffer data structure which is allocated
+ 	 * earlier and it does not mean the offset from the physical
+ 	 * buffer start address as usual. So set it to 0 to pass
+-	 * the sanity check in vm_iomap_memory().
++	 * the sanity check in dma_mmap_coherent().
+ 	 */
+ 	vma->vm_pgoff = 0;
+-
+-	retval = vm_iomap_memory(vma, mem->dma_handle, size);
++	retval = dma_mmap_coherent(q->dev, vma, mem->vaddr, mem->dma_handle,
++			vma->vm_end - vma->vm_start);
+ 	if (retval) {
+ 		dev_err(q->dev, "mmap: remap failed with error %d. ",
+ 			retval);
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+2.20.1
+
