@@ -2,190 +2,72 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39147C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:50:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E63A5C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 116FE2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:50:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="L940xItt"
+	by mail.kernel.org (Postfix) with ESMTP id C60952168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726160AbfFNPuu (ORCPT
+        id S1726063AbfFNPvj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:50:50 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:7989 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfFNPur (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:50:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d03c2550000>; Fri, 14 Jun 2019 08:50:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Jun 2019 08:50:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 08:50:45 -0700
-Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL103.nvidia.com
- (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 15:50:44 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL109.nvidia.com
- (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 15:50:44 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Fri, 14 Jun 2019 15:50:44 +0000
-Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d03c2510004>; Fri, 14 Jun 2019 08:50:44 -0700
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>,
-        "Bitan Biswas" <bbiswas@nvidia.com>
-Subject: [PATCH V6] i2c: tegra: remove BUG, BUG_ON
-Date:   Fri, 14 Jun 2019 08:50:38 -0700
-Message-ID: <1560527438-30150-1-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Fri, 14 Jun 2019 11:51:39 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18611 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbfFNPvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:51:38 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 63FCCF5455CB3C68DAB6;
+        Fri, 14 Jun 2019 23:51:35 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
+ 23:51:26 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <tyhicks@canonical.com>, <viro@zeniv.linux.org.uk>,
+        <agruenba@redhat.com>
+CC:     <linux-kernel@vger.kernel.org>, <ecryptfs@vger.kernel.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ecryptfs: Make ecryptfs_xattr_handler static
+Date:   Fri, 14 Jun 2019 23:51:17 +0800
+Message-ID: <20190614155117.28988-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
 Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560527445; bh=k0/FGNhaiuQT5uSJnlKbfm8ntLZBEkYD5mjmowbcmhs=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=L940xIttGTR88qLZX/7zwora/nJJ5LqctM4jkPX9fs0rndxmogIcUidCL0JxXThB9
-         EjEgcxDwvv6v2PeXYI5/kOCE9xIpAflqqYEvRmu+43oYnaWyWTPSbGNE+fIiOcaKSR
-         l2MC4IkquN4Rw1ABBYICteQUGV86g0K6nuh4xhG7qAwkOrTZtXBPdi4qXsvebG3wAo
-         moJCaTwp0R7z6iittCZPQ9+Ce9sfNWmUFrzbYtcqwUhqjXGiQOqWmSbSlznK8iFvyx
-         KNiBqJUTpOOW5ytRhIJxo9vZas/C+flKAeHO/65W2SArXd7ys3bdIRBpJSTu9tCuC8
-         XjGRiOCatzqFQ==
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
-as needed. Remove BUG() and mask Rx interrupt similar as Tx
-for message fully sent case. Add WARN_ON_ONCE check
-for non-zero rx_fifo_avail in tegra_i2c_empty_rx_fifo()
-after all processing. Error handling in tegra_i2c_empty_rx_fifo
-caller is also added.
+Fix sparse warning:
 
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+fs/ecryptfs/inode.c:1138:28: warning:
+ symbol 'ecryptfs_xattr_handler' was not declared. Should it be static?
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/i2c/busses/i2c-tegra.c | 46 ++++++++++++++++++++++++++++++++++--------
- 1 file changed, 38 insertions(+), 8 deletions(-)
+ fs/ecryptfs/inode.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 4dfb4c1..26a7c8c 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -73,6 +73,7 @@
- #define I2C_ERR_NO_ACK				BIT(0)
- #define I2C_ERR_ARBITRATION_LOST		BIT(1)
- #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
-+#define I2C_ERR_UNEXPECTED_STATUS		BIT(3)
- 
- #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
- #define PACKET_HEADER0_PACKET_ID_SHIFT		16
-@@ -515,15 +516,23 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * prevent overwriting past the end of buf
- 	 */
- 	if (rx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
-+		/* buf_remaining > 3 check not needed as rx_fifo_avail == 0
-+		 * when (words_to_transfer was > rx_fifo_avail) earlier
-+		 * in this function
-+		 */
- 		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
- 		val = cpu_to_le32(val);
- 		memcpy(buf, &val, buf_remaining);
- 		buf_remaining = 0;
- 		rx_fifo_avail--;
+diff --git a/fs/ecryptfs/inode.c b/fs/ecryptfs/inode.c
+index 1e994d7..18426f4 100644
+--- a/fs/ecryptfs/inode.c
++++ b/fs/ecryptfs/inode.c
+@@ -1121,7 +1121,7 @@ static int ecryptfs_xattr_set(const struct xattr_handler *handler,
  	}
-+	if (WARN_ON_ONCE(rx_fifo_avail))
-+		return -EINVAL;
+ }
  
--	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
-+	/* buf_remaining > 0 at this point can only have rx_fifo_avail == 0
-+	 * as this corresponds to (words_to_transfer was > rx_fifo_avail)
-+	 * case earlier in this function
-+	 */
- 	i2c_dev->msg_buf_remaining = buf_remaining;
- 	i2c_dev->msg_buf = buf;
- 
-@@ -581,7 +590,10 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * boundary and fault.
- 	 */
- 	if (tx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
-+		/* buf_remaining > 3 check not needed as tx_fifo_avail == 0
-+		 * when (words_to_transfer was > tx_fifo_avail) earlier
-+		 * in this function for non-zero words_to_transfer
-+		 */
- 		memcpy(&val, buf, buf_remaining);
- 		val = le32_to_cpu(val);
- 
-@@ -811,6 +823,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 	u32 status;
- 	const u32 status_err = I2C_INT_NO_ACK | I2C_INT_ARBITRATION_LOST;
- 	struct tegra_i2c_dev *i2c_dev = dev_id;
-+	int err_val;
- 
- 	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
- 
-@@ -847,10 +860,21 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 
- 	if (!i2c_dev->is_curr_dma_xfer) {
- 		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
--			if (i2c_dev->msg_buf_remaining)
--				tegra_i2c_empty_rx_fifo(i2c_dev);
--			else
--				BUG();
-+			err_val = tegra_i2c_empty_rx_fifo(i2c_dev);
-+			if ((!(i2c_dev->msg_buf_remaining)) &&
-+			    (!(status & I2C_INT_PACKET_XFER_COMPLETE)) &&
-+			    err_val) {
-+				/*
-+				 * Overflow error condition: message fully sent,
-+				 * with no XFER_COMPLETE interrupt but hardware
-+				 * asks to transfer more.
-+				 */
-+				tegra_i2c_mask_irq(i2c_dev,
-+						   I2C_INT_RX_FIFO_DATA_REQ);
-+				i2c_dev->msg_err |=
-+					I2C_ERR_UNEXPECTED_STATUS;
-+				goto err;
-+			}
- 		}
- 
- 		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-@@ -876,7 +900,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
- 		if (i2c_dev->is_curr_dma_xfer)
- 			i2c_dev->msg_buf_remaining = 0;
--		BUG_ON(i2c_dev->msg_buf_remaining);
-+		/* Underflow error condition: XFER_COMPLETE before message
-+		 * fully sent.
-+		 */
-+		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
-+			i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
-+			goto err;
-+		}
- 		complete(&i2c_dev->msg_complete);
- 	}
- 	goto done;
+-const struct xattr_handler ecryptfs_xattr_handler = {
++static const struct xattr_handler ecryptfs_xattr_handler = {
+ 	.prefix = "",  /* match anything */
+ 	.get = ecryptfs_xattr_get,
+ 	.set = ecryptfs_xattr_set,
 -- 
 2.7.4
+
 
