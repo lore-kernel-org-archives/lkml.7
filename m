@@ -2,92 +2,102 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EACC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C838C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B71ED2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:04:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jQiHhG3v"
+	by mail.kernel.org (Postfix) with ESMTP id 51A6C2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:04:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560513884;
+	bh=kGiv727/oSO2xcvvP5CUDpg/Ry7P4YoUM9FlJGN0arI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Pt7bzZ8PG1Pm5IxBnkyRl4jgSvUen9A8EEJRNPIlAF2UDxYmrEM7R/+TKIuGUshg2
+	 CBul5u6AfbZzzRDbVrGeW4PwERfuOWwKoxIe1CHg/0Gf/0uWDfHE8+szRRZ641/I1F
+	 JbNBnUg6n23M7AucgZdvPhBr19Dpy2MGg/92gJZw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfFNMEb (ORCPT
+        id S1727828AbfFNMEm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:04:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38700 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727488AbfFNMEb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:04:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=alVHZlU/yeIna7DaDwxabV9QPdfrwUg7lNOiHL0K7hc=; b=jQiHhG3v7EnRCAKQJ2BUOiOxw
-        BldbzF3Z7igBVgDE13rSdJP5Xm+EPAMWgYZ7B948eJIxJR26at4A0gEjvCsyqG4jhIoSTRQTHy66F
-        q1Lp5wYqW5JnFDHmW9wfQvUH2yXpgHlV+3pK6H5xe+rfQxW6fSzVKBMZLKc2ykaJlJ5m30So5TAVR
-        s78XezV2gDn8USUKISzydWIp5yu23olD9M4tPQF/yw8sqkbQFdQ1mcpjttqeXZMNdqQDDP0SMA6ko
-        ZLAb6gdVgKb/pkijrewfJeEBT6079GT5Q4uuE2BiL2XhqJMetnqruL8j2dVPJTtj2Pm4gScClcHcm
-        iDydIt+cQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbkwT-0006qX-QL; Fri, 14 Jun 2019 12:04:25 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4BD1920A29B58; Fri, 14 Jun 2019 14:04:24 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 14:04:24 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 51/62] iommu/vt-d: Support MKTME in DMA remapping
-Message-ID: <20190614120424.GJ3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-52-kirill.shutemov@linux.intel.com>
+        Fri, 14 Jun 2019 08:04:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727488AbfFNMEl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:04:41 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7DCC52133D;
+        Fri, 14 Jun 2019 12:04:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560513880;
+        bh=kGiv727/oSO2xcvvP5CUDpg/Ry7P4YoUM9FlJGN0arI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=pTpBBLV0MqxSpEyI9bzDDW8Zqjd6oothO2n0qrb6/E8VlRaIalUuyeuUZM01L/3z0
+         7eExfwj1sMwzt+XccavUioo0XBT8AJ0hKMzo8UAig8BRYPtnD8Bc4UjYgtS2tbdmI/
+         +XyoEVnqR9Q/ZYwGhl5X2kb3jNYxSxTTV3Uyj+n8=
+Received: by mail-lj1-f171.google.com with SMTP id p17so2160916ljg.1;
+        Fri, 14 Jun 2019 05:04:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAXyD5gihRCAole+pn+LWUDnCTkXbmnBXsL7TCg+kAzb5F2sz0qJ
+        5SjCRuq7QGXGmzzrTjuF534lGdw5hjlnFhm9vtc=
+X-Google-Smtp-Source: APXvYqyRrG8KU2Nodtv4PV8elpWy8ybJND0YDPhJ4V+FfX6qkFAt8W4A+VZMXPQ3fDrV2pshGC4N9PtVAltpOyJFO3o=
+X-Received: by 2002:a2e:3008:: with SMTP id w8mr14024186ljw.13.1560513878828;
+ Fri, 14 Jun 2019 05:04:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-52-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CGME20190614095320eucas1p2919a6169c997bb81c80416e8a0ede538@eucas1p2.samsung.com>
+ <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-2-l.luba@partner.samsung.com>
+In-Reply-To: <20190614095309.24100-2-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 14 Jun 2019 14:04:27 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPeeVhHS62jiUgwySf5EYzW2Rkvu=HxyA7NjpGZFp=fWYQ@mail.gmail.com>
+Message-ID: <CAJKOXPeeVhHS62jiUgwySf5EYzW2Rkvu=HxyA7NjpGZFp=fWYQ@mail.gmail.com>
+Subject: Re: [PATCH v10 01/13] clk: samsung: add needed IDs for DMC clocks in Exynos5420
+To:     Lukasz Luba <l.luba@partner.samsung.com>,
+        linux-clk@vger.kernel.org, s.nawrocki@samsung.com
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, mturquette@baylibre.com,
+        sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
+        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
+        gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:44:11PM +0300, Kirill A. Shutemov wrote:
-> @@ -603,7 +605,12 @@ static inline void dma_clear_pte(struct dma_pte *pte)
->  static inline u64 dma_pte_addr(struct dma_pte *pte)
->  {
->  #ifdef CONFIG_64BIT
-> -	return pte->val & VTD_PAGE_MASK;
+On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> Define new IDs for clocks used by Dynamic Memory Controller in
+> Exynos5422 SoC.
+>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  include/dt-bindings/clock/exynos5420.h | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
 
-I don't know this code, but going by the below cmpxchg64, this wants to
-be READ_ONCE().
+I do not quite understand why this patch is still being resent instead
+of have been applied some time ago. Are there any issues here? Or are
+there any issues with the entire patchset (except some review comments
+to be resolved)? If not, then this is a dependency which should go
+regardless of other patches. There is no point to keep it pending...
+All other changes, e.g. DTS will have to wait for more cycles till
+this gets in.
 
-> +	u64 addr = pte->val;
-> +	addr &= VTD_PAGE_MASK;
-> +#ifdef CONFIG_X86_INTEL_MKTME
-> +	addr &= ~mktme_keyid_mask;
-> +#endif
-> +	return addr;
->  #else
->  	/* Must have a full atomic 64-bit read */
->  	return  __cmpxchg64(&pte->val, 0ULL, 0ULL) & VTD_PAGE_MASK;
-> -- 
-> 2.20.1
-> 
+Therefore either please apply this or please comment what is stopping
+dependencies from being applied.
+
+Best regards,
+Krzysztof
