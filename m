@@ -2,147 +2,133 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D86A3C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:53:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C45BC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A15F8208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:53:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4E6F208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:55:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aampusa.onmicrosoft.com header.i=@aampusa.onmicrosoft.com header.b="FtuccU55"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="WK+aVbRq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727776AbfFNMx3 (ORCPT
+        id S1727865AbfFNMzN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:53:29 -0400
-Received: from mail-eopbgr730119.outbound.protection.outlook.com ([40.107.73.119]:6334
-        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726874AbfFNMx2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:53:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=aampusa.onmicrosoft.com; s=selector2-aampusa-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MrLeNhTOMV/5b5VUsNtYNMV9IHI5LroPmp/odYruiOA=;
- b=FtuccU556ayc6hnWqXgj/B1T8KdfPMsuV7CpbFJlsRDTPv4i5pcvnCaoVNqyFYDnokx6UaeTOBPqoDjNilSmtiGbaL9Ed+n9D76Ihyf+WWc1RPFxozvNjIIzD06s3vz+Vs/8shlCROG2c/pdufoGMM/8Rib5dnI2Eghcp8MAbuE=
-Received: from BL0PR07MB4115.namprd07.prod.outlook.com (52.132.10.149) by
- BL0PR07MB5713.namprd07.prod.outlook.com (20.177.243.16) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.17; Fri, 14 Jun 2019 12:53:22 +0000
-Received: from BL0PR07MB4115.namprd07.prod.outlook.com
- ([fe80::f064:5129:63c6:d3e]) by BL0PR07MB4115.namprd07.prod.outlook.com
- ([fe80::f064:5129:63c6:d3e%6]) with mapi id 15.20.1965.019; Fri, 14 Jun 2019
- 12:53:22 +0000
-From:   Ken Sloat <KSloat@aampglobal.com>
-To:     "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>
-CC:     "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        Ken Sloat <KSloat@aampglobal.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable watchdog
- on system suspend
-Thread-Topic: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
- watchdog on system suspend
-Thread-Index: AQHVIrAmpSe7ef5LPkq+gtVGV8yaCA==
-Date:   Fri, 14 Jun 2019 12:53:22 +0000
-Message-ID: <20190614125310.29458-1-ksloat@aampglobal.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [100.3.71.115]
-x-clientproxiedby: BN6PR2001CA0008.namprd20.prod.outlook.com
- (2603:10b6:404:b4::18) To BL0PR07MB4115.namprd07.prod.outlook.com
- (2603:10b6:207:4c::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=KSloat@aampglobal.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: defbe8bb-55e7-4ea6-771c-08d6f0c7484e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR07MB5713;
-x-ms-traffictypediagnostic: BL0PR07MB5713:
-x-microsoft-antispam-prvs: <BL0PR07MB571385E3D0B3A804456B66F3ADEE0@BL0PR07MB5713.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(366004)(396003)(136003)(39850400004)(199004)(189003)(66066001)(305945005)(81166006)(4326008)(6486002)(66946007)(81156014)(80792005)(486006)(8936002)(72206003)(2501003)(7736002)(478600001)(476003)(6916009)(14454004)(2351001)(8676002)(50226002)(2616005)(99286004)(6512007)(68736007)(6436002)(86362001)(15650500001)(66556008)(6116002)(71190400001)(386003)(316002)(66476007)(53936002)(102836004)(3846002)(2906002)(71200400001)(25786009)(5640700003)(36756003)(5660300002)(256004)(1076003)(73956011)(26005)(186003)(66446008)(14444005)(52116002)(64756008)(54906003)(6506007);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR07MB5713;H:BL0PR07MB4115.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: aampglobal.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tQ3SjGDxPiV0Bm0djYMEuUhQuCYzxUvFDkWyGq0yOeNWanhqqF2ZF5wrQJVhNQYSKUTPUc/vSPA7g7XgPcWDT/A+zBRI/Ylg+pqkdzgqoJsBiw4l9HUtHeo6pR4Osz+HsB2vkB+Z2rhmKw4Mp9XJ6bvRoR0TC1Mj9ssph3nk0bALi7Tyvjs+e5iyYj+Tt9gUGt4d5cGH5d1WBdekUzOu9/r+Ee7NTIzIzBXoyengA/svowvkKqJR/QqxBpwuLK1VADPWIBqNBwAsRQId+D4bNLU0WQKMq9YakeFAjaexDNYatObiX3LjtVg+7LFBKlrCPaVc8UFfSrIWORRKWJC5ySUhy87KCe3Sk8bhAu3cQfT2Yoy0F3tbGIUB8DAQ0Mic9VJrAraGFwg/PgqTMTIGPbIVIq5wSJ369EVvgKAIXcg=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 14 Jun 2019 08:55:13 -0400
+Received: from mail.efficios.com ([167.114.142.138]:53076 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfFNMzN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:55:13 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id AD255251A81;
+        Fri, 14 Jun 2019 08:55:11 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id vjOPiLiBh4EO; Fri, 14 Jun 2019 08:55:11 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 3702A251A7D;
+        Fri, 14 Jun 2019 08:55:11 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 3702A251A7D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560516911;
+        bh=1jNGz+08JhCbBTSKtCKZD6e/5y7z6m/+et2U9s4q3DY=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=WK+aVbRqZX3GWZkCTNmBmkP06UmdScAi7xxO/4Yxj1vGiMaXhMdeODn41ULeNGet9
+         KU+WLE6OikqBK+5fRtI0l9Mj/ZITrs/JRZ/RmIpazdPM/ebTIz1JCgtp6cNPAlLPFy
+         OPUwAjqTTpsvIsgBAuaCwsfFNEByeJo5LUFCeNcozs+TR5DEMk7x8jL25TYCyvzNRu
+         IVkLLouOcbVcMiTnEOyoF+o+H7U/4xxFUQX/IiSrWIIgN0iKXl/KCduwNHXgMAdg39
+         ZPPQ/magsSzUzlCC26sMk3S3veIWUIUDXAwGN4tfmdzKyy60TepO7FSHbL/VTnN2D/
+         5RaEN5Bb26b1Q==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id UZGT-TPhGr3m; Fri, 14 Jun 2019 08:55:11 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 1B658251A71;
+        Fri, 14 Jun 2019 08:55:11 -0400 (EDT)
+Date:   Fri, 14 Jun 2019 08:55:10 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87tvcsv1pk.fsf@oldenburg2.str.redhat.com>
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <87wohzorj0.fsf@oldenburg2.str.redhat.com> <c16c9785-7f8c-430b-a4df-a53e47bf1600@redhat.com> <914051741.43025.1560348011775.JavaMail.zimbra@efficios.com> <802638054.3032.1560506584705.JavaMail.zimbra@efficios.com> <87ftocwkei.fsf@oldenburg2.str.redhat.com> <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com> <87tvcsv1pk.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v10)
 MIME-Version: 1.0
-X-OriginatorOrg: aampglobal.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: defbe8bb-55e7-4ea6-771c-08d6f0c7484e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 12:53:22.6691
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e20e3a66-8b9e-46e9-b859-cb654c1ec6ea
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ken.sloat@aampglobal.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5713
-X-MS-Exchange-CrossPremises-AuthAs: Internal
-X-MS-Exchange-CrossPremises-AuthMechanism: 06
-X-MS-Exchange-CrossPremises-AuthSource: BL0PR07MB4115.namprd07.prod.outlook.com
-X-MS-Exchange-CrossPremises-TransportTrafficType: Email
-X-MS-Exchange-CrossPremises-TransportTrafficSubType: 
-X-MS-Exchange-CrossPremises-SCL: 1
-X-MS-Exchange-CrossPremises-mapi-admin-submission: 
-X-MS-Exchange-CrossPremises-messagesource: StoreDriver
-X-MS-Exchange-CrossPremises-BCC: 
-X-MS-Exchange-CrossPremises-originalclientipaddress: 100.3.71.115
-X-MS-Exchange-CrossPremises-transporttraffictype: Email
-X-MS-Exchange-CrossPremises-transporttrafficsubtype: 
-X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
-X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
-X-OrganizationHeadersPreserved: BL0PR07MB5713.namprd07.prod.outlook.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+Thread-Index: nxhND8m/7T2GVm9h2nQ+6XKFJSEm7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogS2VuIFNsb2F0IDxrc2xvYXRAYWFtcGdsb2JhbC5jb20+DQoNCkN1cnJlbnRseSwgdGhl
-IGF0bWVsLXNhbWE1ZDQtd2R0IGNvbnRpbnVlcyB0byBydW4gYWZ0ZXIgc3lzdGVtIHN1c3BlbmQu
-DQpVbmxlc3MgdGhlIHN5c3RlbSByZXN1bWVzIHdpdGhpbiB0aGUgd2F0Y2hkb2cgdGltZW91dCBw
-ZXJpb2Qgc28gdGhlDQp1c2Vyc3BhY2UgY2FuIGtpY2sgaXQsIHRoZSBzeXN0ZW0gd2lsbCBiZSBy
-ZXNldC4gVGhpcyBjaGFuZ2UgZGlzYWJsZXMNCnRoZSB3YXRjaGRvZyBvbiBzdXNwZW5kIGlmIGl0
-IGlzIGFjdGl2ZSBhbmQgcmUtZW5hYmxlcyBvbiByZXN1bWUuIFRoZXNlDQphY3Rpb25zIG9jY3Vy
-IGR1cmluZyB0aGUgbGF0ZSBhbmQgZWFybHkgcGhhc2VzIG9mIHN1c3BlbmQgYW5kIHJlc3VtZQ0K
-cmVzcGVjdGl2ZWx5IHRvIG1pbmltaXplIGNoYW5jZXMgd2hlcmUgYSBsb2NrIGNvdWxkIG9jY3Vy
-IHdoaWxlIHRoZQ0Kd2F0Y2hkb2cgaXMgZGlzYWJsZWQuDQoNClNpZ25lZC1vZmYtYnk6IEtlbiBT
-bG9hdCA8a3Nsb2F0QGFhbXBnbG9iYWwuY29tPg0KLS0tDQogQ2hhbmdlcyBpbiB2MjoNCiAtQ29u
-c29saWRhdGUgcmVzdW1lIGFuZCByZXN1bWUgZWFybHkgc3RhdGVtZW50cy4NCg0KIGRyaXZlcnMv
-d2F0Y2hkb2cvc2FtYTVkNF93ZHQuYyB8IDIxICsrKysrKysrKysrKysrKysrKy0tLQ0KIDEgZmls
-ZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy93YXRjaGRvZy9zYW1hNWQ0X3dkdC5jIGIvZHJpdmVycy93YXRjaGRvZy9zYW1h
-NWQ0X3dkdC5jDQppbmRleCAxMTE2OTUyMjNhYWUuLjBkMTIzZjhjYmNjNiAxMDA2NDQNCi0tLSBh
-L2RyaXZlcnMvd2F0Y2hkb2cvc2FtYTVkNF93ZHQuYw0KKysrIGIvZHJpdmVycy93YXRjaGRvZy9z
-YW1hNWQ0X3dkdC5jDQpAQCAtMjgwLDcgKzI4MCwxNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9m
-X2RldmljZV9pZCBzYW1hNWQ0X3dkdF9vZl9tYXRjaFtdID0gew0KIE1PRFVMRV9ERVZJQ0VfVEFC
-TEUob2YsIHNhbWE1ZDRfd2R0X29mX21hdGNoKTsNCiANCiAjaWZkZWYgQ09ORklHX1BNX1NMRUVQ
-DQotc3RhdGljIGludCBzYW1hNWQ0X3dkdF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KK3N0
-YXRpYyBpbnQgc2FtYTVkNF93ZHRfc3VzcGVuZF9sYXRlKHN0cnVjdCBkZXZpY2UgKmRldikNCit7
-DQorCXN0cnVjdCBzYW1hNWQ0X3dkdCAqd2R0ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQorDQor
-CWlmICh3YXRjaGRvZ19hY3RpdmUoJndkdC0+d2RkKSkNCisJCXNhbWE1ZDRfd2R0X3N0b3AoJndk
-dC0+d2RkKTsNCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KK3N0YXRpYyBpbnQgc2FtYTVkNF93ZHRf
-cmVzdW1lX2Vhcmx5KHN0cnVjdCBkZXZpY2UgKmRldikNCiB7DQogCXN0cnVjdCBzYW1hNWQ0X3dk
-dCAqd2R0ID0gZGV2X2dldF9kcnZkYXRhKGRldik7DQogDQpAQCAtMjkxLDEyICszMDEsMTcgQEAg
-c3RhdGljIGludCBzYW1hNWQ0X3dkdF9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQ0KIAkgKi8N
-CiAJc2FtYTVkNF93ZHRfaW5pdCh3ZHQpOw0KIA0KKwlpZiAod2F0Y2hkb2dfYWN0aXZlKCZ3ZHQt
-PndkZCkpDQorCQlzYW1hNWQ0X3dkdF9zdGFydCgmd2R0LT53ZGQpOw0KKw0KIAlyZXR1cm4gMDsN
-CiB9DQogI2VuZGlmDQogDQotc3RhdGljIFNJTVBMRV9ERVZfUE1fT1BTKHNhbWE1ZDRfd2R0X3Bt
-X29wcywgTlVMTCwNCi0JCQkgc2FtYTVkNF93ZHRfcmVzdW1lKTsNCitzdGF0aWMgY29uc3Qgc3Ry
-dWN0IGRldl9wbV9vcHMgc2FtYTVkNF93ZHRfcG1fb3BzID0gew0KKwlTRVRfTEFURV9TWVNURU1f
-U0xFRVBfUE1fT1BTKHNhbWE1ZDRfd2R0X3N1c3BlbmRfbGF0ZSwNCisJCQlzYW1hNWQ0X3dkdF9y
-ZXN1bWVfZWFybHkpDQorfTsNCiANCiBzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciBzYW1h
-NWQ0X3dkdF9kcml2ZXIgPSB7DQogCS5wcm9iZQkJPSBzYW1hNWQ0X3dkdF9wcm9iZSwNCi0tIA0K
-Mi4xNy4xDQoNCg==
+----- On Jun 14, 2019, at 1:35 PM, Florian Weimer fweimer@redhat.com wrote:
+
+> * Mathieu Desnoyers:
+> 
+>> * Makefile:
+>>
+>> LIBCPATH=/home/efficios/glibc-test/lib
+>> KERNEL_HEADERS=/home/efficios/git/linux-percpu-dev/usr/include
+>> CFLAGS=-I${KERNEL_HEADERS} -L${LIBCPATH} -Wl,--rpath=${LIBCPATH}
+>> -Wl,--dynamic-linker=${LIBCPATH}/ld-linux-x86-64.so.2
+>>
+>> all:
+>> 	gcc ${CFLAGS} -o a a.c
+>> 	gcc ${CFLAGS} -shared -fPIC -o s.so s.c
+> 
+> For me, that does not correctly link against the built libc because the
+> system dynamic loader seeps into the link.
+
+I have the same issue. I tried adding "-B${LIBCPATH}" as well, but it did
+not seem to help. I still have this ldd output:
+
+ldd a
+./a: /lib64/ld-linux-x86-64.so.2: version `GLIBC_2.30' not found (required by ./a)
+	linux-vdso.so.1 (0x00007fffaa7e9000)
+	libc.so.6 => /home/efficios/glibc-test/lib/libc.so.6 (0x00007fac5d479000)
+	/home/efficios/glibc-test/lib/ld-linux-x86-64.so.2 => /lib64/ld-linux-x86-64.so.2 (0x00007fac5da33000)
+
+Still no luck there. Any idea what compiler/linker flag I am missing ?
+
+> 
+>> specifically this commit:
+>> https://github.com/compudj/glibc-dev/commit/c49a286497d065a7fc00aafd846e6edce14f97fc
+> 
+> This commit links __rseq_handled into libc.so.6 via rseq-sym.c, but does
+> not export it from there.
+
+Moving __rseq_handled to elf/dl-support.c and elf/rtld.c was part a commit on top.
+I've force-pushed on the dev branch, and the commit moving __rseq_handled to the
+dynamic linker it now appears as:
+https://github.com/compudj/glibc-dev/commit/f0d4e60e5d0ceb0c2642f99da5af61b6ad988531
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
