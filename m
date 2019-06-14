@@ -2,98 +2,96 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D0B9C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:53:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D25C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B6182084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:53:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F03720850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:53:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560520423;
+	bh=iN+BVC7Js+mX3MoobKi+DcEa7AcS0a2jYmhECn22uIc=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=F75Q4CHZHfuyuPMQNSAf1N/b3dO44RiMNIoJO3T67pohoc6iUoJXgfWWl/qUT/raj
+	 lQpnRT/5K/m79Q7vad/VJcEw8X7Md4xu4twIIlaUvEVcNCchP8jshZlyFQQOq9+ts5
+	 OtRe/7FLcS4RxqbFkW2JZXTVWMWYeMv7aE3ixcyU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728596AbfFNNxc (ORCPT
+        id S1728564AbfFNNxl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:53:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52376 "EHLO mx1.redhat.com"
+        Fri, 14 Jun 2019 09:53:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47246 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728539AbfFNNxY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:53:24 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727587AbfFNNxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:53:41 -0400
+Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AAA9181F2F;
-        Fri, 14 Jun 2019 13:53:23 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 71F6D60BE0;
-        Fri, 14 Jun 2019 13:53:16 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
-        <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com>
-        <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com>
-        <87d0jguxdk.fsf@oldenburg2.str.redhat.com>
-        <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com>
-        <87wohoti47.fsf@oldenburg2.str.redhat.com>
-        <189377747.3315.1560519247118.JavaMail.zimbra@efficios.com>
-        <87imt8tha5.fsf@oldenburg2.str.redhat.com>
-        <26171199.3391.1560520033825.JavaMail.zimbra@efficios.com>
-Date:   Fri, 14 Jun 2019 15:53:15 +0200
-In-Reply-To: <26171199.3391.1560520033825.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Fri, 14 Jun 2019 09:47:13 -0400
-        (EDT)")
-Message-ID: <87ef3wtgs4.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F51F2173C;
+        Fri, 14 Jun 2019 13:53:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560520420;
+        bh=iN+BVC7Js+mX3MoobKi+DcEa7AcS0a2jYmhECn22uIc=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nbrN0WLSp6HT8EFxw2suvzAGJ2y4ugHSkmg9mi2F8dAUG/6+tN4RQD5uINI4GbA//
+         X/MP8Dp6bgwd8NofNxmADhmut+aJJrUxzj31HIFSUzLPozkCFFxmQMQK3p8uKLZ649
+         VmTupy0ZsiK3VwZ868voFn2Lzfg+71Q1DBn4ft7Y=
+Received: by mail-qt1-f181.google.com with SMTP id x47so2483798qtk.11;
+        Fri, 14 Jun 2019 06:53:40 -0700 (PDT)
+X-Gm-Message-State: APjAAAVO9BJPVMn9a+1phflmyBCaynYYNEIV8ZOmTHkDi/BZY1Lwnvly
+        2F9kq+3Nj5zM4XcsyrfhBRNA63DAhSo/SFw+Mw==
+X-Google-Smtp-Source: APXvYqxTD8kzLZOkPVP2CAljRyH/HAP/N5Lx3hq13DLW9NmQXLYZ+UmFKpgn9wwUIR0Y4foZTDrn8V2n23JvB6/KT/E=
+X-Received: by 2002:a0c:acef:: with SMTP id n44mr8626569qvc.39.1560520419707;
+ Fri, 14 Jun 2019 06:53:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 14 Jun 2019 13:53:23 +0000 (UTC)
+References: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+ <0702fa2d-1952-e9fc-8e17-a93f3b90a958@gmail.com> <CAL_JsqKsjK237W+-Yz4McxSZG=Gd3Pfp2JtgMnfAqiNRUcCg1g@mail.gmail.com>
+ <41acc800-1ab8-c715-2674-c1204d546b4f@gmail.com>
+In-Reply-To: <41acc800-1ab8-c715-2674-c1204d546b4f@gmail.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Fri, 14 Jun 2019 07:53:27 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+EVO9OiEK5bidywgKsfOCK+BgWvKehCNonqogegRfikA@mail.gmail.com>
+Message-ID: <CAL_Jsq+EVO9OiEK5bidywgKsfOCK+BgWvKehCNonqogegRfikA@mail.gmail.com>
+Subject: Re: [PATCH next] of/fdt: Fix defined but not used compiler warning
+To:     Frank Rowand <frowand.list@gmail.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Stephen Boyd <swboyd@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
-
-> ----- On Jun 14, 2019, at 3:42 PM, Florian Weimer fweimer@redhat.com wrote:
+On Wed, Jun 12, 2019 at 12:29 PM Frank Rowand <frowand.list@gmail.com> wrote:
 >
->> * Mathieu Desnoyers:
->> 
->>> +  /* Publicize rseq registration ownership.  This must be performed
->>> +     after rtld re-relocation, before invoking constructors of
->>> +     preloaded libraries.  */
->>> +  rseq_init ();
->> 
->> Please add a comment that IFUNC resolvers do not see the initialized
->> value.  I think this is okay because we currently do not support access
->> to extern variables in IFUNC resolvers.
+> On 6/12/19 10:00 AM, Rob Herring wrote:
+> > On Wed, Jun 12, 2019 at 10:45 AM Frank Rowand <frowand.list@gmail.com> wrote:
+> >>
+> >> Hi Kefeng,
+> >>
+> >> If Rob agrees, I'd like to see one more change in this patch.
+> >>
+> >> Since the only caller of of_fdt_match() is of_flat_dt_match(),
+> >> can you move the body of of_fdt_match() into  of_flat_dt_match()
+> >> and eliminate of_fdt_match()?
+> >
+> > That's fine as long as we think there's never any use for of_fdt_match
+> > after init? Fixup of nodes in an overlay for example.
 >
-> Do IFUNC resolvers happen to observe the __rseq_handled address that
-> was internal to ld.so ?
+> We can always re-expose the functionality as of_fdt_match() in the future
+> if the need arises.  But Stephen's recent patch was moving in the opposite
+> direction, removing of_fdt_match() from the header file and making it
+> static.
 
-They should observe the correct address, but they can access the
-variable before initialization.  An initializer in ld.so will not have
-an effect if an interposed definition initalized the variable to
-something else.
+Yes, we can, but it is just churn if we think it is likely needed.
 
-> If so, we could simply initialize __rseq_handled twice: early before calling
-> IFUNC resolvers, and after ld.so re-relocation.
+OTOH, we probably want users to just use libfdt API directly and
+should add this to libfdt if needed.
 
-No, I don't think this will make a difference.
+So yes, please implement Frank's suggestion.
 
-Thanks,
-Florian
+Rob
