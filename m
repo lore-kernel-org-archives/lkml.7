@@ -2,77 +2,117 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E93C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E07DAC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05F972175B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:35:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDA392173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:35:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726801AbfFNPfA (ORCPT
+        id S1726705AbfFNPfk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:35:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:47942 "EHLO newverein.lst.de"
+        Fri, 14 Jun 2019 11:35:40 -0400
+Received: from mga01.intel.com ([192.55.52.88]:34880 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfFNPfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:35:00 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id DF91968AFE; Fri, 14 Jun 2019 17:34:28 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 17:34:28 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 12/16] staging/comedi: mark as broken
-Message-ID: <20190614153428.GA10008@lst.de>
-References: <20190614134726.3827-1-hch@lst.de> <20190614134726.3827-13-hch@lst.de> <20190614140239.GA7234@kroah.com> <20190614144857.GA9088@lst.de> <20190614153032.GD18049@kroah.com>
+        id S1725780AbfFNPfj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:35:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 08:35:38 -0700
+X-ExtLoop1: 1
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by fmsmga004.fm.intel.com with ESMTP; 14 Jun 2019 08:35:38 -0700
+Received: from orsmsx116.amr.corp.intel.com (10.22.240.14) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 14 Jun 2019 08:35:38 -0700
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.60]) by
+ ORSMSX116.amr.corp.intel.com ([169.254.7.166]) with mapi id 14.03.0415.000;
+ Fri, 14 Jun 2019 08:35:37 -0700
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Nikolaus Voss <nv@vosn.de>, "Rafael J. Wysocki" <rafael@kernel.org>
+CC:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "ACPI Devel Maling List" <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+Thread-Topic: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+Thread-Index: AQHVIPn/qqDB5Bv4z0aSsleXlAnDw6abVhaAgAADpwD///G0sA==
+Date:   Fri, 14 Jun 2019 15:35:36 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
+References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+ <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+ <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+ <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
+In-Reply-To: <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMjNjOGUyNzEtODllMy00MDgxLWE0MmYtZTE5ZDRlOTBjZDFmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieHMzbXMwTW5xdTg0dUJueHJ5aWNNR0dQTDNaSWk1T0FNYlRldUk0TW0wMUlzWnp6cFwvN0dqNlAraXlyaTVweG0ifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614153032.GD18049@kroah.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 05:30:32PM +0200, Greg KH wrote:
-> On Fri, Jun 14, 2019 at 04:48:57PM +0200, Christoph Hellwig wrote:
-> > On Fri, Jun 14, 2019 at 04:02:39PM +0200, Greg KH wrote:
-> > > Perhaps a hint as to how we can fix this up?  This is the first time
-> > > I've heard of the comedi code not handling dma properly.
-> > 
-> > It can be fixed by:
-> > 
-> >  a) never calling virt_to_page (or vmalloc_to_page for that matter)
-> >     on dma allocation
-> >  b) never remapping dma allocation with conflicting cache modes
-> >     (no remapping should be doable after a) anyway).
-> 
-> Ok, fair enough, have any pointers of drivers/core code that does this
-> correctly?  I can put it on my todo list, but might take a week or so...
 
-Just about everyone else.  They just need to remove the vmap and
-either do one large allocation, or live with the fact that they need
-helpers to access multiple array elements instead of one net vmap,
-which most of the users already seem to do anyway, with just a few
-using the vmap (which might explain why we didn't see blowups yet).
+
+-----Original Message-----
+From: Nikolaus Voss [mailto:nv@vosn.de] 
+Sent: Friday, June 14, 2019 2:26 AM
+To: Rafael J. Wysocki <rafael@kernel.org>
+Cc: Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Moore, Robert <robert.moore@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>; linux-leds@vger.kernel.org; Linux PWM List <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table loads
+
+Hi Rafael,
+
+On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
+> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss 
+> <nikolaus.voss@loewensteinmedical.de> wrote:
+>>
+>> If an ACPI SSDT overlay is loaded after built-in tables have been 
+>> loaded e.g. via configfs or efivar_ssdt_load() it is necessary to 
+>> rewalk the namespace to resolve references. Without this, relative 
+>> and absolute paths like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved 
+>> correctly.
+>>
+>> Make configfs load use the same method as efivar_ssdt_load().
+>>
+>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+>
+> This is fine by me, so
+>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Or if you want me to take this patch (without the other two in the 
+> series), please let me know.
+
+thanks. I think it would be the best if you take up this patch as it is an independent topic. In retrospect it wasn't a good idea to put it into this series.
+
+Kind regards,
+Niko
+
+I would have to ask, why is additional code needed for package initialization/resolution? It already happens elsewhere in acpica.
+Bob
+
+[...]
