@@ -2,101 +2,118 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C2BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:37:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F00E5C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CAE2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:37:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64F32133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HiSqWCoF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TiKrOZty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfFNMhY (ORCPT
+        id S1727902AbfFNMiC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:37:24 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:46894 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfFNMhY (ORCPT
+        Fri, 14 Jun 2019 08:38:02 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36239 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfFNMiB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:37:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=X5kiLvzH4A2kXwX2WbAsnS3AXNMt9B2M908qddkdC5A=; b=HiSqWCoFBzQ5GZWrs5tqx2fGG
-        8CCEt/bAzBJixXPKI92rUhULmJRitb63MDLddk1imhtq8JE6hywHes/O9NskZZK5Wnoh8SvTh4wh1
-        phy4rrG3Y1Zqs5vjw3I8N83nA2PCK+QNiuXc3kx5ZGGY3GqcKUdMhylSM9/vpBzgN3V9qxMhRmVFW
-        ak6r0VbljIgr/7di4eUE/B9+MbdajNEpJnfWihMGnp4NRho2de9fOidkZCFx5rxhn6ixH9aoj8Cno
-        4EsMiN9CHz/FvruGNDW7DOjn++OI+ebWwVOAIY2ZZmceehn/z2zPMqL/8ciy4jy4lAnIH3UDPai0N
-        Sp+TMJGIw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hblSH-0005dC-Sx; Fri, 14 Jun 2019 12:37:18 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C545D2013F720; Fri, 14 Jun 2019 14:37:15 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 14:37:15 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCHv2 0/8] perf/x86: Rework msr probe interface
-Message-ID: <20190614123715.GN3436@hirez.programming.kicks-ass.net>
-References: <20190531120958.29601-1-jolsa@kernel.org>
- <20190614102046.GB4325@krava>
+        Fri, 14 Jun 2019 08:38:01 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so1404818pfl.3;
+        Fri, 14 Jun 2019 05:38:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=811RVFyTr6F8u8h7/A4hNm78OD+rFY8gNrRGiFGCcyc=;
+        b=TiKrOZtyl9+vWpiT5YYolR6ngPiktA5IY0pwmwXKG0SFnY+UrnqWD913FONkLs4cOD
+         wtANWRUeFKygUVRAKReZkNJBdtRS+/U9cHjoAmVaEMXfRadFQxLW6BbLkPIeieU4NVfF
+         gy5jKPdvd0qQhLaS1j98zfnCTOc+Fr+L6PYveSJS+AlhM2tVtUldhM5Ffedc0xXl4cJi
+         qcgzr7qgit2RJLWx+13isHKFM39Ow33I2wz/GsDco8re4SljjGt+5tWuCHawC51MQebK
+         /oqdhRHanTzAFs7Iqw6nCWYONSWkyS/fBEE3dwquBcap40JJeYmh1tRwuEOmk6utG0VJ
+         i2FQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=811RVFyTr6F8u8h7/A4hNm78OD+rFY8gNrRGiFGCcyc=;
+        b=enQEFBEQdo4bJ3s6oF9ATgmCHhU6x0WCL5F/o2EpPsdw+h30RBxawqxUZJMh/ryYiC
+         YGVw/ZxuGb/vQNrZXXTOjvSK9qYvzh5eLSXMIK8K9HbCeXCoorINstGlwQeR40mQC5Ho
+         oR0nBAjcJH+ybEp0Zo7ZWDeCC/j98gZBzj/8mOofr5rkOWA/o/SHOKCQgTp4Af+wAmVJ
+         3ZK7pwaxHHejixBEZb79iJnLmbZG2YsnmfmMFI1ALEI1mWLAOS6WTTiV4lf+cu/7oOXG
+         t34Jy6CiDp0+NdLQu9Q3BNdlXo3wdXOik4ES8sgzE2fDxKVdLQvXSMfdvSGrOOIKjZk7
+         /etw==
+X-Gm-Message-State: APjAAAWZ8E6RDOT6FRD1VpjemKhc1f2zaNk2BJktuPNZL2Nlatv4aN+Q
+        dQbttXF0p6oonz5yWLtk7Bqnoz4Y
+X-Google-Smtp-Source: APXvYqzzSc73CYWprv76l28hLngz0aYVGIWZv6m9dj1x4KjW1GW04Z3NedfaC2mRPEFVMV8fvqnSKw==
+X-Received: by 2002:a17:90a:bb8a:: with SMTP id v10mr11109361pjr.78.1560515881083;
+        Fri, 14 Jun 2019 05:38:01 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id a21sm4272797pfi.27.2019.06.14.05.37.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 05:37:59 -0700 (PDT)
+Subject: Re: [PATCH v10 3/3] watchdog: make the device time out at
+ open_deadline when open_timeout is used
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Esben Haabendal <esben@haabendal.dk>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+References: <20190605140628.618-1-rasmus.villemoes@prevas.dk>
+ <20190605140628.618-4-rasmus.villemoes@prevas.dk>
+ <20190607183827.GA32475@roeck-us.net>
+ <56280052-9437-9813-a24e-125abb876762@prevas.dk>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <e63a0468-656f-0a8d-45a8-5236c42942b1@roeck-us.net>
+Date:   Fri, 14 Jun 2019 05:37:57 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614102046.GB4325@krava>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <56280052-9437-9813-a24e-125abb876762@prevas.dk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:20:46PM +0200, Jiri Olsa wrote:
-> On Fri, May 31, 2019 at 02:09:50PM +0200, Jiri Olsa wrote:
-> > hi,
-> > following up on [1], [2] and [3], this patchset adds update
-> > attribute groups to pmu, factors out the MSR probe code and
-> > use it in msr,cstate* and rapl PMUs.
-> > 
-> > The functionality stays the same with one exception:
-> > for msr PMU: the event is not exported if the rdmsr return zero
-> > on event's msr, cstate* and rapl pmu functionality stays.
-> > 
-> > And also: ;-)
-> > > Somewhere along the line you lost the explanation of _why_ we're doing
-> > > this; namely: virt sucks.
-> > 
-> > Also available in:
-> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
-> >   perf/msr
-> > 
-> > Tested on snb and skylake servers.
-> > 
-> > v2 changes:
-> >   - checking zero rdmsr only for msr PMU events,
-> >     cstate* and rapl pmu functionality stays unchanged
+On 6/14/19 1:41 AM, Rasmus Villemoes wrote:
+> On 07/06/2019 20.38, Guenter Roeck wrote:
+>> On Wed, Jun 05, 2019 at 02:06:44PM +0000, Rasmus Villemoes wrote:
+>>> When the watchdog device is not open by userspace, the kernel takes
+>>> care of pinging it. When the open_timeout feature is in use, we should
+>>> ensure that the hardware fires close to open_timeout seconds after the
+>>> kernel has assumed responsibility for the device.
+>>>
+>>> To do this, simply reuse the logic that is already in place for
+>>> ensuring the same thing when userspace is responsible for regularly
+>>> pinging the device:
+>>>
+>>> - When watchdog_active(wdd), this patch doesn't change anything.
+>>>
+>>> - When !watchdoc_active(wdd), the "virtual timeout" should be taken to
+>>
+>> s/watchdoc_active/watchdog_active/
+>>
+>> otherwise
+>>
+>> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 > 
-> ping
+> Thanks! Wim, can you fix up if/when applying, or do you prefer I resend?
+> 
 
-I was waiting a new post because you mentioned something about some
-people not being happy with this, something about a wonky BIOS failing
-this on native.
+I made the change when applying the patch to my watchdog-next branch,
+and Wim usually picks up patches from there, so we should be good.
+
+Thanks,
+Guenter
+
