@@ -2,188 +2,218 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9903C31E50
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B23C31E4F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D3F12183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:19:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="VvD/+D5J"
+	by mail.kernel.org (Postfix) with ESMTP id DA9322184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 22:22:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726211AbfFNWTW (ORCPT
+        id S1726202AbfFNWWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 18:19:22 -0400
-Received: from mail-eopbgr1310130.outbound.protection.outlook.com ([40.107.131.130]:21920
-        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725812AbfFNWTV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 18:19:21 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=ogeGsfe+ZtMT16Q/r4haEFDZtxbS4J8d92FYF+ZvYw7qjoHkYfmb4cXEjh7Qm+s9GXDquE0hN99EeWqP7AxSVby6PX4kuy4+leL4bHXdp6ZPr3/13BKJM6YxiNdzNWDwYPrB/Pb/d5ejr95kwBcoYRmGDpJtTF/R+wyCFZ1TnH8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vUDi3W1CBUPbXEsYkrtO70MRx+jfZ4Ts9Y5Wx6bRtzE=;
- b=lyhGLtlYv0JMdIWqsID8sOY0ySabAVU19cfUO8Lv7Ri+0gQeh6whO8Mzw9z5f2vULqn4zH2EyrCUQq/xb0Ug6Mb2lN16FvwwRT4Umlfq+UXEsk0t90x/P8oatHrFkgmXIqBxYfzQ2k8e5Cu8ckecHq2a5wCb0mqIqnJvlOSYR74=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vUDi3W1CBUPbXEsYkrtO70MRx+jfZ4Ts9Y5Wx6bRtzE=;
- b=VvD/+D5JMLTwwnzciAiWqx8EZ9PP/f86MWprMX7DecZZlWq60BK/cKN4xFX24lbILd7CPq4S9ijJRQrP74xr8oWsTgzajONIrg+ZYuwPYoVZYS8HnlfuqpMWQVmZN4mbW+2UpK9apkm9sU6vL8zBnKBLv+OAnorpkiOjlGdVsVo=
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
- PU1P153MB0204.APCP153.PROD.OUTLOOK.COM (52.133.194.151) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.0; Fri, 14 Jun 2019 22:19:03 +0000
-Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
- ([fe80::d896:4219:e493:b04%4]) with mapi id 15.20.2008.007; Fri, 14 Jun 2019
- 22:19:03 +0000
-From:   Dexuan Cui <decui@microsoft.com>
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Russ Dill <Russ.Dill@ti.com>,
-        Sebastian Capella <sebastian.capella@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: RE: [PATCH] ACPI: PM: Export the function
- acpi_sleep_state_supported()
-Thread-Topic: [PATCH] ACPI: PM: Export the function
- acpi_sleep_state_supported()
-Thread-Index: AQHVIt2lUviLbUjfZEmzRslUu7e03qabnRQggAAYmbA=
-Date:   Fri, 14 Jun 2019 22:19:02 +0000
-Message-ID: <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
- <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
-In-Reply-To: <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-14T20:48:03.8463956Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=1e15e098-66cc-41b5-9a88-268aec453091;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=decui@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:f:a444:4515:ca58:8eeb]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: dcc86434-2de0-4844-a738-08d6f1164ef8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:PU1P153MB0204;
-x-ms-traffictypediagnostic: PU1P153MB0204:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <PU1P153MB0204332A65A3D6ACA3F8CB3EBFEE0@PU1P153MB0204.APCP153.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(366004)(39860400002)(346002)(396003)(13464003)(189003)(199004)(478600001)(2501003)(5660300002)(486006)(52536014)(54906003)(10290500003)(99286004)(316002)(186003)(11346002)(22452003)(2906002)(7696005)(8990500004)(256004)(14444005)(446003)(68736007)(476003)(33656002)(110136005)(14454004)(46003)(6116002)(66946007)(73956011)(66446008)(66476007)(66556008)(64756008)(76116006)(8676002)(229853002)(1511001)(71190400001)(8936002)(7416002)(10090500001)(55016002)(81166006)(81156014)(71200400001)(2201001)(74316002)(102836004)(305945005)(86362001)(76176011)(7736002)(53546011)(6506007)(9686003)(53936002)(6436002)(4326008)(25786009)(6246003)(921003)(1121003);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0204;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gH4thvTIx9QbHRNzzVbsY775i4gIgTVa26pRxnZrnu/qpw7aZ+fe03+iwZTOvx3ei3GR0eAwiACwG7WAYlcLUAmVSRlsI52YkFlKVnvW9DBePGx/qz74/z9C4Lu9UDci/BstM11A5yDw2rIGKO+HYMSocsaUmf7I/bkX5e8WvIYOrZ1X0cVNOVJIOnbbwva0NFZZSESv5UknZ/2zs6ZDXW8A6lHPKIbf4S8W7jR0Y4aWPq8SmnEvkI6oVWoaJivIZRJrKv6OGJPggtPt1qu/kR8pLI1uq0zlNYwEVg2WWVFoQuGzSe/3vY7WEy/4ECYi2rhxIM+atgzZDymC0gzY9BiornAQ7SsB2rrTBUMcog8ydDX42to/X9Ja/8scsxv8n5N6JIewiN/9itjQxHp3v3ugwhssNBna7F5cfHmhcSQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Fri, 14 Jun 2019 18:22:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34466 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725825AbfFNWWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 18:22:38 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EMLnAA134358
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 18:22:37 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t4hx8nr43-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 18:22:37 -0400
+Received: from localhost
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <nayna@linux.vnet.ibm.com>;
+        Fri, 14 Jun 2019 23:22:36 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 23:22:31 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EMMUt628836136
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 22:22:30 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 534F6B20B4;
+        Fri, 14 Jun 2019 22:22:30 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E768FB20AE;
+        Fri, 14 Jun 2019 22:22:28 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.80.231.131])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 22:22:28 +0000 (GMT)
+Subject: Re: [PATCH v3 1/3] powerpc/powernv: Add OPAL API interface to get
+ secureboot state
+To:     Daniel Axtens <dja@axtens.net>
+Cc:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        Matthew Garret <matthew.garret@nebula.com>,
+        Mimi Zohar <zohar@linux.ibm.com>,
+        Claudio Carvalho <cclaudio@linux.ibm.com>,
+        Eric Richter <erichte@linux.ibm.com>
+References: <1560198837-18857-1-git-send-email-nayna@linux.ibm.com>
+ <1560198837-18857-2-git-send-email-nayna@linux.ibm.com>
+ <87ftofpbth.fsf@dja-thinkpad.axtens.net>
+ <eaa37bd0-a77d-d70a-feb5-c0e73ce231bf@linux.vnet.ibm.com>
+ <87d0jipfr9.fsf@dja-thinkpad.axtens.net>
+From:   Nayna <nayna@linux.vnet.ibm.com>
+Date:   Fri, 14 Jun 2019 18:22:28 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: dcc86434-2de0-4844-a738-08d6f1164ef8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 22:19:02.9820
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0204
+In-Reply-To: <87d0jipfr9.fsf@dja-thinkpad.axtens.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19061422-0064-0000-0000-000003EE45E4
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011263; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01218034; UDB=6.00640562; IPR=6.00999155;
+ MB=3.00027315; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-14 22:22:34
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061422-0065-0000-0000-00003DE4DAA6
+Message-Id: <b2cedb05-6373-b357-f35c-bc112c78a6fc@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140175
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNaWNoYWVsIEtlbGxleSA8bWlr
-ZWxsZXlAbWljcm9zb2Z0LmNvbT4NCj4gU2VudDogRnJpZGF5LCBKdW5lIDE0LCAyMDE5IDE6NDgg
-UE0NCj4gVG86IERleHVhbiBDdWkgPGRlY3VpQG1pY3Jvc29mdC5jb20+OyBsaW51eC1hY3BpQHZn
-ZXIua2VybmVsLm9yZzsNCj4gcmp3QHJqd3lzb2NraS5uZXQ7IGxlbmJAa2VybmVsLm9yZzsgcm9i
-ZXJ0Lm1vb3JlQGludGVsLmNvbTsNCj4gZXJpay5zY2htYXVzc0BpbnRlbC5jb20NCj4gQ2M6IGxp
-bnV4LWh5cGVydkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7
-IEtZIFNyaW5pdmFzYW4NCj4gPGt5c0BtaWNyb3NvZnQuY29tPjsgU3RlcGhlbiBIZW1taW5nZXIg
-PHN0aGVtbWluQG1pY3Jvc29mdC5jb20+Ow0KPiBIYWl5YW5nIFpoYW5nIDxoYWl5YW5nekBtaWNy
-b3NvZnQuY29tPjsgU2FzaGEgTGV2aW4NCj4gPEFsZXhhbmRlci5MZXZpbkBtaWNyb3NvZnQuY29t
-Pjsgb2xhZkBhZXBmbGUuZGU7IGFwd0BjYW5vbmljYWwuY29tOw0KPiBqYXNvd2FuZ0ByZWRoYXQu
-Y29tOyB2a3V6bmV0cyA8dmt1em5ldHNAcmVkaGF0LmNvbT47DQo+IG1hcmNlbG8uY2VycmlAY2Fu
-b25pY2FsLmNvbQ0KPiBTdWJqZWN0OiBSRTogW1BBVENIXSBBQ1BJOiBQTTogRXhwb3J0IHRoZSBm
-dW5jdGlvbg0KPiBhY3BpX3NsZWVwX3N0YXRlX3N1cHBvcnRlZCgpDQo+IA0KPiBGcm9tOiBEZXh1
-YW4gQ3VpIDxkZWN1aUBtaWNyb3NvZnQuY29tPiAgU2VudDogRnJpZGF5LCBKdW5lIDE0LCAyMDE5
-IDExOjE5DQo+IEFNDQo+ID4NCj4gPiBJbiBhIExpbnV4IFZNIHJ1bm5pbmcgb24gSHlwZXItViwg
-d2hlbiBBQ1BJIFM0IGlzIGVuYWJsZWQsIHRoZSBiYWxsb29uDQo+ID4gZHJpdmVyIChkcml2ZXJz
-L2h2L2h2X2JhbGxvb24uYykgbmVlZHMgdG8gYXNrIHRoZSBob3N0IG5vdCB0byBkbyBtZW1vcnkN
-Cj4gPiBob3QtYWRkL3JlbW92ZS4NCj4gPg0KPiA+IFNvIGxldCdzIGV4cG9ydCBhY3BpX3NsZWVw
-X3N0YXRlX3N1cHBvcnRlZCgpIGZvciB0aGUgaHZfYmFsbG9vbiBkcml2ZXIuDQo+ID4gVGhpcyBt
-aWdodCBhbHNvIGJlIHVzZWZ1bCB0byB0aGUgb3RoZXIgZHJpdmVycyBpbiB0aGUgZnV0dXJlLg0K
-PiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4N
-Cj4gPiAtLS0NCj4gPiAgZHJpdmVycy9hY3BpL3NsZWVwLmMgICAgfCAzICsrLQ0KPiA+ICBpbmNs
-dWRlL2FjcGkvYWNwaV9idXMuaCB8IDIgKysNCj4gPiAgMiBmaWxlcyBjaGFuZ2VkLCA0IGluc2Vy
-dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2Fj
-cGkvc2xlZXAuYyBiL2RyaXZlcnMvYWNwaS9zbGVlcC5jDQo+ID4gaW5kZXggYTM0ZGVjY2Q3MzE3
-Li42OTc1NTQxMWUwMDggMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9hY3BpL3NsZWVwLmMNCj4g
-PiArKysgYi9kcml2ZXJzL2FjcGkvc2xlZXAuYw0KPiA+IEBAIC03OSw3ICs3OSw3IEBAIHN0YXRp
-YyBpbnQgYWNwaV9zbGVlcF9wcmVwYXJlKHUzMiBhY3BpX3N0YXRlKQ0KPiA+ICAJcmV0dXJuIDA7
-DQo+ID4gIH0NCj4gPg0KPiA+IC1zdGF0aWMgYm9vbCBhY3BpX3NsZWVwX3N0YXRlX3N1cHBvcnRl
-ZCh1OCBzbGVlcF9zdGF0ZSkNCj4gPiArYm9vbCBhY3BpX3NsZWVwX3N0YXRlX3N1cHBvcnRlZCh1
-OCBzbGVlcF9zdGF0ZSkNCj4gPiAgew0KPiA+ICAJYWNwaV9zdGF0dXMgc3RhdHVzOw0KPiA+ICAJ
-dTggdHlwZV9hLCB0eXBlX2I7DQo+ID4gQEAgLTg5LDYgKzg5LDcgQEAgc3RhdGljIGJvb2wgYWNw
-aV9zbGVlcF9zdGF0ZV9zdXBwb3J0ZWQodTggc2xlZXBfc3RhdGUpDQo+ID4gIAkJfHwgKGFjcGlf
-Z2JsX0ZBRFQuc2xlZXBfY29udHJvbC5hZGRyZXNzDQo+ID4gIAkJCSYmIGFjcGlfZ2JsX0ZBRFQu
-c2xlZXBfc3RhdHVzLmFkZHJlc3MpKTsNCj4gPiAgfQ0KPiA+ICtFWFBPUlRfU1lNQk9MX0dQTChh
-Y3BpX3NsZWVwX3N0YXRlX3N1cHBvcnRlZCk7DQo+ID4NCj4gPiAgI2lmZGVmIENPTkZJR19BQ1BJ
-X1NMRUVQDQo+ID4gIHN0YXRpYyB1MzIgYWNwaV90YXJnZXRfc2xlZXBfc3RhdGUgPSBBQ1BJX1NU
-QVRFX1MwOw0KPiA+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2FjcGkvYWNwaV9idXMuaCBiL2luY2x1
-ZGUvYWNwaS9hY3BpX2J1cy5oDQo+ID4gaW5kZXggMzFiNmM4N2Q2MjQwLi41YjEwMmU3YmJmMjUg
-MTAwNjQ0DQo+ID4gLS0tIGEvaW5jbHVkZS9hY3BpL2FjcGlfYnVzLmgNCj4gPiArKysgYi9pbmNs
-dWRlL2FjcGkvYWNwaV9idXMuaA0KPiA+IEBAIC02NTEsNiArNjUxLDggQEAgc3RhdGljIGlubGlu
-ZSBpbnQgYWNwaV9wbV9zZXRfYnJpZGdlX3dha2V1cChzdHJ1Y3QNCj4gZGV2aWNlICpkZXYsDQo+
-ID4gYm9vbCBlbmFibGUpDQo+ID4gIH0NCj4gPiAgI2VuZGlmDQo+ID4NCj4gPiArYm9vbCBhY3Bp
-X3NsZWVwX3N0YXRlX3N1cHBvcnRlZCh1OCBzbGVlcF9zdGF0ZSk7DQo+ID4gKw0KPiA+ICAjaWZk
-ZWYgQ09ORklHX0FDUElfU0xFRVANCj4gPiAgdTMyIGFjcGlfdGFyZ2V0X3N5c3RlbV9zdGF0ZSh2
-b2lkKTsNCj4gPiAgI2Vsc2UNCj4gPiAtLQ0KPiA+IDIuMTkuMQ0KPiANCj4gSXQgc2VlbXMgdGhh
-dCBzbGVlcC5jIGlzbid0IGJ1aWx0IHdoZW4gb24gdGhlIEFSTTY0IGFyY2hpdGVjdHVyZS4gIFVz
-aW5nDQo+IGFjcGlfc2xlZXBfc3RhdGVfc3VwcG9ydGVkKCkgZGlyZWN0bHkgaW4gaHZfYmFsbG9v
-bi5jIHdpbGwgYmUgcHJvYmxlbWF0aWMNCj4gc2luY2UgaHZfYmFsbG9vbi5jIG5lZWRzIHRvIGJl
-IGFyY2hpdGVjdHVyZSBpbmRlcGVuZGVudCB3aGVuIHRoZQ0KPiBIeXBlci1WIEFSTTY0IHN1cHBv
-cnQgaXMgYWRkZWQuICBJZiB0aGF0IGRvZXNuJ3QgY2hhbmdlLCBhIHBlci1hcmNoaXRlY3R1cmUN
-Cj4gd3JhcHBlciB3aWxsIGJlIG5lZWRlZCB0byBnaXZlIGh2X2JhbGxvb24uYyB0aGUgY29ycmVj
-dCBpbmZvcm1hdGlvbi4gIFRoaXMNCj4gbWF5IGFmZmVjdCB3aGV0aGVyIGFjcGlfc2xlZXBfc3Rh
-dGVfc3VwcG9ydGVkKCkgbmVlZHMgdG8gYmUgZXhwb3J0ZWQgdnMuDQo+IGp1c3QgcmVtb3Zpbmcg
-dGhlICJzdGF0aWMiLiAgIEknbSBub3Qgc3VyZSB3aGF0IHRoZSBiZXN0IGFwcHJvYWNoIGlzLg0K
-PiANCj4gTWljaGFlbA0KDQorIHNvbWUgQVJNIGV4cGVydHMgd2hvIHdvcmtlZCBvbiBhcmNoL2Fy
-bS9rZXJuZWwvaGliZXJuYXRlLmMuDQoNCmRyaXZlcnMvYWNwaS9zbGVlcC5jIGlzIG9ubHkgYnVp
-bHQgaWYgQUNQSV9TWVNURU1fUE9XRVJfU1RBVEVTX1NVUFBPUlQNCmlzIGRlZmluZWQsIGJ1dCBp
-dCBsb29rcyB0aGlzIG9wdGlvbiBpcyBub3QgZGVmaW5lZCBvbiBBUk0uDQoNCkl0IGxvb2tzIEFS
-TSBkb2VzIG5vdCBzdXBwb3J0IHRoZSBBQ1BJIFM0IHN0YXRlLCB0aGVuIGhvdyBkbyB3ZSBrbm93
-IA0KaWYgYW4gQVJNIGhvc3Qgc3VwcG9ydHMgaGliZXJuYXRpb24gb3Igbm90Pw0KDQpUaGFua3Ms
-DQotLSBEZXh1YW4NCg==
+
+
+On 06/12/2019 07:04 PM, Daniel Axtens wrote:
+> Hi Nayna,
+>
+>>>> Since OPAL can support different types of backend which can vary in the
+>>>> variable interpretation, a new OPAL API call named OPAL_SECVAR_BACKEND, is
+>>>> added to retrieve the supported backend version. This helps the consumer
+>>>> to know how to interpret the variable.
+>>>>
+>>> (Firstly, apologies that I haven't got around to asking about this yet!)
+>>>
+>>> Are pluggable/versioned backend a good idea?
+>>>
+>>> There are a few things that worry me about the idea:
+>>>
+>>>    - It adds complexity in crypto (or crypto-adjacent) code, and that
+>>>      increases the likelihood that we'll accidentally add a bug with bad
+>>>      consequences.
+>> Sorry, I think I am not clear on what exactly you mean here.Can you
+>> please elaborate or give specifics ?
+> Cryptosystems with greater flexibility can have new kinds of
+> vulnerabilities arise from the greater complexity. The first sort of
+> thing that comes to mind is a downgrade attack like from TLS. I think
+> you're protected from this because the mode cannot be negotiatied at run
+> time, but in general it's security sensitive code so I'd like it to be
+> as simple as possible.
+>
+>>>    - If we are worried about a long-term-future change to how secure-boot
+>>>      works, would it be better to just add more get/set calls to opal at
+>>>      the point at which we actually implement the new system?
+>> The intention is to avoid to re-implement the key/value interface for
+>> each scheme. Do you mean to deprecate the old APIs and add new APIs with
+>> every scheme ?
+> Yes, because I expect the scheme would change very, very rarely.
+
+So, the design is not making the assumption that a particular scheme 
+will change often. It is just allowing the flexibility for addition of 
+new schemes or enhancements if needed.
+
+>
+>>>    - Under what circumstances would would we change the kernel-visible
+>>>      behaviour of skiboot? Are we expecting to change the behaviour,
+>>>      content or names of the variables in future? Otherwise the only
+>>>      relevant change I can think of is a change to hardware platforms, and
+>>>      I'm not sure how a change in hardware would lead to change in
+>>>      behaviour in the kernel. Wouldn't Skiboot hide h/w differences?
+>> Backends are intended to be an agreement for firmware, kernel and
+>> userspace on what the format of variables are, what variables should be
+>> expected, how they should be signed, etc. Though we don't expect it to
+>> happen very often, we want to anticipate possible changes in the
+>> firmware which may affect the kernel such as new features, support of
+>> new authentication mechanisms, addition of new variables. Corresponding
+>> skiboot patches are on -
+>> https://lists.ozlabs.org/pipermail/skiboot/2019-June/014641.html
+> I still feel like this is holding onto ongoing complexity for very
+> little gain, but perhaps this is because I can't picture a specific
+> change that would actually require a wholesale change to the scheme.
+
+That is the exact reason for having pluggable backend, because we cannot 
+determine now if there will be a need of new scheme in future or not.
+
+
+>
+> You mention new features, support for new authentication mechanisms, and
+> addition of new variables.
+>
+>   - New features is a bit too generic to answer specifically. In general
+>     I accept that there exists some new feature that would be
+>     sufficiently backwards-incompatible as to require a new version. I
+>     just can't think of one off the top of my head and so I'm not
+>     convinced it's worth the complexity. Did you have something in mind?
+
+That is the idea to keep the design flexible to be able to handle future 
+additions with maximum reuse. Example, supporting new algorithms or a 
+different handling of secure variable updates by different vendors.
+
+
+>
+>   - By support for new authentication mechanisms, I assume you mean new
+>     mechanisms for authenticating variable updates? This is communicated
+>     in edk2 via the attributes field. Looking at patch 5 from the skiboot
+>     series:
+>
+> + * When the attribute EFI_VARIABLE_TIME_BASED_AUTHENTICATED_WRITE_ACCESS is set,
+> + * then the Data buffer shall begin with an instance of a complete (and
+> + * serialized) EFI_VARIABLE_AUTHENTICATION_2 descriptor.
+>
+>     Could a new authentication scheme be communicated by setting a
+>     different attribute value? Or are we not carrying attributes in the
+>     metadata blob?
+>
+>   - For addition of new variables, I'm confused as to why this would
+>     require a new API - wouldn't it just be exposed in the normal way via
+>     opal_secvar_get(_next)?
+
+Sorry, probably it wasn't clear. By addition of new variables, we meant 
+that over time we might have to add new "volatile" variables that "fine 
+tunes" secure boot state. This might impact the kernel if it needs to 
+understand new variables to define its policies. However, this will not 
+result in change of API, it will result in change of the version.
+
+
+>
+> I guess I also somewhat object to calling it a 'backend' if we're using
+> it as a version scheme. I think the skiboot storage backends are true
+> backends - they provide different implementations of the same
+> functionality with the same API, but this seems like you're using it to
+> indicate different functionality. It seems like we're using it as if it
+> were called OPAL_SECVAR_VERSION.
+
+We are changing how we are exposing the version to the kernel. The 
+version will be exposed as device-tree entry rather than a OPAL runtime 
+service. We are not tied to the name "backend", we can switch to calling 
+it as "scheme" unless there is a better name.
+
+Thanks & Regards,
+       - Nayna
+
