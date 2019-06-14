@@ -2,87 +2,68 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 527D9C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:43:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A093C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271CD2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:43:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GUalq9Rt"
+	by mail.kernel.org (Postfix) with ESMTP id 2CA362084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:44:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726392AbfFNHnB (ORCPT
+        id S1725996AbfFNHoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:43:01 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35424 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfFNHnB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:43:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=nXnEEiNY+lMHz0FD6eOUxvG6zddBANH1BMFzA31kGM0=; b=GUalq9RtnbNgX/TS40RS2QM4S
-        BlNBeH4Hqf5ia/FIjTbFYMUx6z7obuR4j50Pstq4SQgex1E7iy8dfzSn5TTclW0Z+f7wwLVFFX8md
-        zwV+oTiQy3WVoSMh/FxKU2rG2WNJOQmy0HbsuYuDp2n7QDzyr4hMNZQmnKLddTsIlqNSJeaevhy6z
-        22eynMpu6lVaYGHKhyCF+tbanCjRRnsn8B3XQ3lOp1KrHT/FgeWlQgWpnwm0FDpxskm6Hm8T0CByK
-        RFiq//qqaprlJdcGf6a++oDZSfYkII3YabMEd+UtR/UnAce1e11w181Ld+jV5Zy+kDZTYD5h6rp2/
-        YZSVwx6sw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbgrG-0004oc-Qv; Fri, 14 Jun 2019 07:42:47 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4D76A209C9EB8; Fri, 14 Jun 2019 09:42:45 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 09:42:45 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 8/9] x86/bpf: Convert asm comments to AT&T syntax
-Message-ID: <20190614074245.GS3436@hirez.programming.kicks-ass.net>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <77fe02f7d575091b06f68f8eed256da94aee653f.1560431531.git.jpoimboe@redhat.com>
- <E8372F56-269A-48A4-B80B-14FA664F8D41@fb.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <E8372F56-269A-48A4-B80B-14FA664F8D41@fb.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Fri, 14 Jun 2019 03:44:38 -0400
+Received: from mga09.intel.com ([134.134.136.24]:49698 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725775AbfFNHoi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 03:44:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 00:44:37 -0700
+X-ExtLoop1: 1
+Received: from rajneesh-desk.iind.intel.com ([10.66.234.53])
+  by orsmga003.jf.intel.com with ESMTP; 14 Jun 2019 00:44:35 -0700
+From:   Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+To:     rjw@rjwysocki.net, linux-kernel@vger.kernel.org
+Cc:     len.brown@intel.com, rafael.j.wysocki@intel.com,
+        Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Subject: [PATCH 1/2] tools/power turbostat: Add Ice Lake NNPI support
+Date:   Fri, 14 Jun 2019 13:09:46 +0530
+Message-Id: <20190614073947.12270-1-rajneesh.bhardwaj@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 06:52:24PM +0000, Song Liu wrote:
-> > On Jun 13, 2019, at 6:21 AM, Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+This enables turbostat utility on Ice Lake NNPI SoC.
 
-> > @@ -403,11 +403,11 @@ static void emit_mov_imm64(u8 **pprog, u32 dst_reg,
-> > 		 * For emitting plain u32, where sign bit must not be
-> > 		 * propagated LLVM tends to load imm64 over mov32
-> > 		 * directly, so save couple of bytes by just doing
-> > -		 * 'mov %eax, imm32' instead.
-> > +		 * 'mov imm32, %eax' instead.
-> > 		 */
-> > 		emit_mov_imm32(&prog, false, dst_reg, imm32_lo);
-> > 	} else {
-> > -		/* movabsq %rax, imm64 */
-> > +		/* movabs imm64, %rax */
-> 
-> 		^^^^^ Should this be moveabsq? 
-> 
-> > 		EMIT2(add_1mod(0x48, dst_reg), add_1reg(0xB8, dst_reg));
-> > 		EMIT(imm32_lo, 4);
-> > 		EMIT(imm32_hi, 4);
+Cc: Len Brown <lenb@kernel.org>
+Cc: Linux PM <linux-pm@vger.kernel.org>
+Link: https://lkml.org/lkml/2019/6/5/1034
+Signed-off-by: Rajneesh Bhardwaj <rajneesh.bhardwaj@linux.intel.com>
+---
+ tools/power/x86/turbostat/turbostat.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Song, can you please trim replies; I only found what you said because of
-Josh's reply.
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index c7727be9719f..d225cd373966 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -4594,6 +4594,7 @@ unsigned int intel_model_duplicates(unsigned int model)
+ 		return INTEL_FAM6_SKYLAKE_MOBILE;
+ 
+ 	case INTEL_FAM6_ICELAKE_MOBILE:
++	case INTEL_FAM6_ICELAKE_NNPI:
+ 		return INTEL_FAM6_CANNONLAKE_MOBILE;
+ 	}
+ 	return model;
+-- 
+2.17.1
+
