@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D20D8C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:43:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5E21C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A778F2183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:43:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B6602183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="dZXH9NvK"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="J8Xp1Wt+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfFNQnz (ORCPT
+        id S1726325AbfFNQoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:43:55 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44667 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfFNQnx (ORCPT
+        Fri, 14 Jun 2019 12:44:00 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42607 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfFNQn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:43:53 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so1778287pfe.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:43:53 -0700 (PDT)
+        Fri, 14 Jun 2019 12:43:58 -0400
+Received: by mail-pl1-f196.google.com with SMTP id go2so1237318plb.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:43:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=amarulasolutions.com; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=848PkAQSuqGBV9d1ZE22q9YEz/y0k4xnXoRXzpZqX+0=;
-        b=dZXH9NvKdmO0bTsLkbJzcgWsuOWrWooI8HoZvgEnDZAITMfdSO31becAdutXgCndye
-         MHderODMAFVl3kDDQUpeEvuaZoNXhqkGysP/vFvCfDg3SYV3HcMKFSS9NMVFDDhAaFDG
-         eJI66CGb5Ses9xXU+ojj0rPo/6FtA8Nuaz1Pk=
+        bh=nMcHhUCCSqrQ8w5r0SBOHVWgQpyokTTOxyC10sE/a4o=;
+        b=J8Xp1Wt+5I1Gk1+MvTX47WWZdXOHu/eA8HUtP8XrZIbLeH3QH5ChGzKZ/+Lk0j7X+F
+         V8guvVzYksa4ijBm/m24OaE53k64yUpEFhyMxUSWfN/OX9yhzdD/HrIUIkdztBzUyZor
+         tVj5UEVaiSYmpYHiQulYUu+OfiruHFD1rF2Lg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=848PkAQSuqGBV9d1ZE22q9YEz/y0k4xnXoRXzpZqX+0=;
-        b=BBJhOHC04MfUTDRrxchFvWGU9JmOjwrZ21swYBWp1ucC7yqnjo0x1sRsfXg+6/GL8R
-         M4gwyBjpsPJhKHkb841TjRrZwv+8wxv9aQQsTm/RBu08UUSNA+JqG7XMDFHfi9pBlIAF
-         KR7M6MEAOMomSY0RI0yvv8q0ohgbbIzNggkMPWSeyd15hRhUaNQuwat5g0oibrw+S5hY
-         8GLeCGNiSjyW7142tWBRaRiGuh4Edmo6CyWB8dFCGIyxN9HRQcOhIQSv7ADeF1CjyWWz
-         9sEP/ZQpm+ppgnITBz1RZ8x2GfgNMx4vLlYXBKH3ARClN6zd7jD9PGMherZPPozX0Bns
-         tUPA==
-X-Gm-Message-State: APjAAAUmWI94xgQ/5odOKD9lHh34Q68WMZMAiRlADiRyBflfgBVvAcyO
-        sMHnFihLo38Mrn8f/XdThfe0Rg==
-X-Google-Smtp-Source: APXvYqwUHYYxZ/0pN9i06WfooF6JJ94tywE4LYJ0JGGICFTLtuW3GCdvLxxtuIbnkkx9sC5rpEpZNA==
-X-Received: by 2002:a63:2349:: with SMTP id u9mr10900061pgm.410.1560530633068;
-        Fri, 14 Jun 2019 09:43:53 -0700 (PDT)
+        bh=nMcHhUCCSqrQ8w5r0SBOHVWgQpyokTTOxyC10sE/a4o=;
+        b=Q+L6VAm5z/+6qS++FOe1BLmed1uQoT2dg7Jg97OQoOyJXJwlAA+1MkPkdxli5oM9C9
+         zymDYW/gTxlPRb7OZXxNPeAQpT9GZrKZ1YTa840Cm5T66XiyZihERMKSdXuZol25b01j
+         DeMBEdWWQ8avOHdOea7P5SvsTzfEZCN65ik34wAeMMoQbv8QH5SxLOtBpbasUT+mVanA
+         +B1jwIyvKXrsh19LpZ9O9/XL8H1kzmbzY2uDSzVg3qqJYd2PXWQ64LvOBExqVUKBEx39
+         wfGv594Yz2I7EdYysf+aGNb2owHoFLqs2ATHXlsizSYpgnlYy/nf1Jt7G+Ztv2Ozyl2G
+         4tjQ==
+X-Gm-Message-State: APjAAAX5kLPzb7zPYqUpqEl8BvyDVU0+PGnKbLuiP1XANCjI5zyKlYaK
+        +dRac3cKlx1+cLHmdW/QWV//Tw==
+X-Google-Smtp-Source: APXvYqyFy8nCAnBwgIJRSJDDpBab+N09/m7BqSCnT6KVMvRVAN91roqAIbiRAuIW+l+mzB70c4EWpQ==
+X-Received: by 2002:a17:902:fa2:: with SMTP id 31mr70064172plz.38.1560530637426;
+        Fri, 14 Jun 2019 09:43:57 -0700 (PDT)
 Received: from localhost.localdomain ([115.97.180.18])
-        by smtp.gmail.com with ESMTPSA id 85sm1639583pfv.130.2019.06.14.09.43.49
+        by smtp.gmail.com with ESMTPSA id 85sm1639583pfv.130.2019.06.14.09.43.53
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 09:43:52 -0700 (PDT)
+        Fri, 14 Jun 2019 09:43:57 -0700 (PDT)
 From:   Jagan Teki <jagan@amarulasolutions.com>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         David Airlie <airlied@linux.ie>,
@@ -64,9 +64,9 @@ To:     Maxime Ripard <maxime.ripard@bootlin.com>,
 Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
         linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
         Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v2 3/9] ARM: dts: sun8i: r40: Use tcon top clock index macros
-Date:   Fri, 14 Jun 2019 22:13:18 +0530
-Message-Id: <20190614164324.9427-4-jagan@amarulasolutions.com>
+Subject: [PATCH v2 4/9] drm/sun4i: tcon_top: Use clock name index macros
+Date:   Fri, 14 Jun 2019 22:13:19 +0530
+Message-Id: <20190614164324.9427-5-jagan@amarulasolutions.com>
 X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
 In-Reply-To: <20190614164324.9427-1-jagan@amarulasolutions.com>
 References: <20190614164324.9427-1-jagan@amarulasolutions.com>
@@ -77,50 +77,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tcon_tv0, tcon_tv1 nodes have a clock names of tcon-ch0,
-tcon-ch1 which are referring tcon_top clocks via index
-numbers like 0, 1 with CLK_TCON_TV0 and CLK_TCON_TV1
-respectively.
+TCON TOP mux blocks in R40 are registering clock using
+tcon top clock index numbers.
 
-Use the macro in place of index numbers, for more code
-readability.
+Right now the code is using, real numbers start with 0, but
+we have proper macros that defined these name index numbers.
+
+Use the existing macros, instead of real numbers for more
+code readability.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-Reviewed-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index bb856e53b806..219d2dca16b3 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -44,6 +44,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/clock/sun8i-de2.h>
- #include <dt-bindings/clock/sun8i-r40-ccu.h>
-+#include <dt-bindings/clock/sun8i-tcon-top.h>
- #include <dt-bindings/reset/sun8i-r40-ccu.h>
- #include <dt-bindings/reset/sun8i-de2.h>
+diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+index 3267d0f9b9b2..465e9b0cdfee 100644
+--- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
++++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+@@ -194,19 +194,22 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+ 	clk_data->hws[CLK_TCON_TOP_TV0] =
+ 		sun8i_tcon_top_register_gate(dev, "tcon-tv0", regs,
+ 					     &tcon_top->reg_lock,
+-					     TCON_TOP_TCON_TV0_GATE, 0);
++					     TCON_TOP_TCON_TV0_GATE,
++					     CLK_TCON_TOP_TV0);
  
-@@ -704,7 +705,7 @@
- 			compatible = "allwinner,sun8i-r40-tcon-tv";
- 			reg = <0x01c73000 0x1000>;
- 			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_TCON_TV0>, <&tcon_top 0>;
-+			clocks = <&ccu CLK_BUS_TCON_TV0>, <&tcon_top CLK_TCON_TOP_TV0>;
- 			clock-names = "ahb", "tcon-ch1";
- 			resets = <&ccu RST_BUS_TCON_TV0>;
- 			reset-names = "lcd";
-@@ -747,7 +748,7 @@
- 			compatible = "allwinner,sun8i-r40-tcon-tv";
- 			reg = <0x01c74000 0x1000>;
- 			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
--			clocks = <&ccu CLK_BUS_TCON_TV1>, <&tcon_top 1>;
-+			clocks = <&ccu CLK_BUS_TCON_TV1>, <&tcon_top CLK_TCON_TOP_TV1>;
- 			clock-names = "ahb", "tcon-ch1";
- 			resets = <&ccu RST_BUS_TCON_TV1>;
- 			reset-names = "lcd";
+ 	if (quirks->has_tcon_tv1)
+ 		clk_data->hws[CLK_TCON_TOP_TV1] =
+ 			sun8i_tcon_top_register_gate(dev, "tcon-tv1", regs,
+ 						     &tcon_top->reg_lock,
+-						     TCON_TOP_TCON_TV1_GATE, 1);
++						     TCON_TOP_TCON_TV1_GATE,
++						     CLK_TCON_TOP_TV1);
+ 
+ 	if (quirks->has_dsi)
+ 		clk_data->hws[CLK_TCON_TOP_DSI] =
+ 			sun8i_tcon_top_register_gate(dev, "dsi", regs,
+ 						     &tcon_top->reg_lock,
+-						     TCON_TOP_TCON_DSI_GATE, 2);
++						     TCON_TOP_TCON_DSI_GATE,
++						     CLK_TCON_TOP_DSI);
+ 
+ 	for (i = 0; i < CLK_NUM; i++)
+ 		if (IS_ERR(clk_data->hws[i])) {
 -- 
 2.18.0.321.gffc6fa0e3
 
