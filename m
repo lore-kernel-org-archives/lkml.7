@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697C9C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:30:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46438C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373CC2184E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:30:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 099A92184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:30:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544234;
-	bh=t/QL7rQQS81BCKNxb3aP6y6xDLkPzYik+JuAG6nPLHQ=;
+	s=default; t=1560544237;
+	bh=OG2a7VMG5z5jIVJknxckUrEivgArjIq1V+A3jrVfaTY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nZHb8qsr5OlgLD815mAsoLDQbx+QtOPR/lmFWR5KyV2nsuwEE3m4CvzfmY2Ge54ji
-	 X2VwQFcMxry+Jz3kNWCBaFwgunY+QrVCBiEMfy/s2mL4GjwtTHss1Kk8EwWp0PQhZ8
-	 v+HH0m2n8tX13wuWsclNRM0Bu8UKXBqsKwBJMMbM=
+	b=vIAbonyoX9uI06IJsWLbrIMJRTmdt/d7gANgHDKOHGl81WuCrRc609mRKTIie98ws
+	 o48tspZEzKBfm13vkHj17x+YUClp1y/aXs990JJon9a/k8y64vfqp7E+qx9Ssy7JJa
+	 30QY/r08Co1TdMcBdr2CwPwSne+ooV0prz/Xl9RU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727721AbfFNUac (ORCPT
+        id S1727774AbfFNUaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:30:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53488 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:30:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbfFNUab (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:31 -0400
+        id S1727708AbfFNUac (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:32 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F26F21850;
+        by mail.kernel.org (Postfix) with ESMTPSA id F2AA421851;
         Fri, 14 Jun 2019 20:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544230;
-        bh=t/QL7rQQS81BCKNxb3aP6y6xDLkPzYik+JuAG6nPLHQ=;
+        s=default; t=1560544232;
+        bh=OG2a7VMG5z5jIVJknxckUrEivgArjIq1V+A3jrVfaTY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LMZZ9/8gCAx+hXuONTp90pUH88XH9bj6gBWc8fyum0P6xkpD6X/q0ivVoaKKiGTO4
-         oyNOlp/y9lB/IKtepRchqQJLFdfz77b5ZmiWOufvLzHRmXfWn0iEll23I5XixRmAx1
-         bZ/9IH8P1cbyn4LVwonoshbB3aYUDccNlhCvIt4o=
+        b=tTy0DqFuTxEDE4iTx3s3hZnXXou0l8cQnJzhAqqcDci8yp/OloNGKP4UQTzF5JxTs
+         woy8ESeQy3yUzPTuh0qErC2TaNg88pc1pMXH4RED2akvVZL8JqhxLkqbB0Ily7XVk6
+         u5mhNNNLOSBoCXZpL38cK0o9ZESgQrHmOtrI+LbQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gen Zhang <blackgod016574@gmail.com>,
+Cc:     Young Xiao <92siuyang@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 14/27] mdesc: fix a missing-check bug in get_vdev_port_node_info()
-Date:   Fri, 14 Jun 2019 16:30:03 -0400
-Message-Id: <20190614203018.27686-14-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 15/27] sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
+Date:   Fri, 14 Jun 2019 16:30:04 -0400
+Message-Id: <20190614203018.27686-15-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614203018.27686-1-sashal@kernel.org>
 References: <20190614203018.27686-1-sashal@kernel.org>
@@ -59,34 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gen Zhang <blackgod016574@gmail.com>
+From: Young Xiao <92siuyang@gmail.com>
 
-[ Upstream commit 80caf43549e7e41a695c6d1e11066286538b336f ]
+[ Upstream commit 56cd0aefa475079e9613085b14a0f05037518fed ]
 
-In get_vdev_port_node_info(), 'node_info->vdev_port.name' is allcoated
-by kstrdup_const(), and it returns NULL when fails. So
-'node_info->vdev_port.name' should be checked.
+The PERF_EVENT_IOC_PERIOD ioctl command can be used to change the
+sample period of a running perf_event. Consequently, when calculating
+the next event period, the new period will only be considered after the
+previous one has overflowed.
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+This patch changes the calculation of the remaining event ticks so that
+they are offset if the period has changed.
+
+See commit 3581fe0ef37c ("ARM: 7556/1: perf: fix updated event period in
+response to PERF_EVENT_IOC_PERIOD") for details.
+
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/mdesc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/sparc/kernel/perf_event.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/sparc/kernel/mdesc.c b/arch/sparc/kernel/mdesc.c
-index 1ef6156b1530..8f24f3d60b8c 100644
---- a/arch/sparc/kernel/mdesc.c
-+++ b/arch/sparc/kernel/mdesc.c
-@@ -355,6 +355,8 @@ static int get_vdev_port_node_info(struct mdesc_handle *md, u64 node,
+diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
+index eceb0215bdee..58ea64a29d5f 100644
+--- a/arch/sparc/kernel/perf_event.c
++++ b/arch/sparc/kernel/perf_event.c
+@@ -891,6 +891,10 @@ static int sparc_perf_event_set_period(struct perf_event *event,
+ 	s64 period = hwc->sample_period;
+ 	int ret = 0;
  
- 	node_info->vdev_port.id = *idp;
- 	node_info->vdev_port.name = kstrdup_const(name, GFP_KERNEL);
-+	if (!node_info->vdev_port.name)
-+		return -1;
- 	node_info->vdev_port.parent_cfg_hdl = *parent_cfg_hdlp;
- 
- 	return 0;
++	/* The period may have been changed by PERF_EVENT_IOC_PERIOD */
++	if (unlikely(period != hwc->last_period))
++		left = period - (hwc->last_period - left);
++
+ 	if (unlikely(left <= -period)) {
+ 		left = period;
+ 		local64_set(&hwc->period_left, left);
 -- 
 2.20.1
 
