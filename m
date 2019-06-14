@@ -2,118 +2,195 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C421AC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:09:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCA04C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:11:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9330D20851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:09:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qvDhRojV"
+	by mail.kernel.org (Postfix) with ESMTP id 8AE2720851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:11:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560503464;
+	bh=9DKZ646a4J6ATQ//CaFVDnj6Wq0/JkbKY3qgoAIFXmM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Smhb2kf0IREWfc5CSPAIAup6mRRIj5uJgylMGVRJaG9rGfKFdn5kWKcloOCZwhN/B
+	 qQ3juBfgQBhEC56ik/VDUuILDwYBfKwAhTcTN4CNMhkhSHQNOTWVbjv7oQvFhvyaUT
+	 bd7wXsP0XYSqzotSmRNLD4gFvPbAvLEUFm7hOWhE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfFNJJd (ORCPT
+        id S1726876AbfFNJLD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:09:33 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1261 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfFNJJc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:09:32 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d03644b0000>; Fri, 14 Jun 2019 02:09:31 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Jun 2019 02:09:30 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 02:09:30 -0700
-Received: from localhost (10.124.1.5) by HQMAIL107.nvidia.com (172.20.187.13)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun 2019 09:09:29
- +0000
-Date:   Fri, 14 Jun 2019 11:09:27 +0200
-From:   Thierry Reding <treding@nvidia.com>
-To:     Nathan Huckleberry <nhuck@google.com>
-CC:     <mathias.nyman@intel.com>, <gregkh@linuxfoundation.org>,
-        <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <linux-usb@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <clang-built-linux@googlegroups.com>
-Subject: Re: Cleanup of -Wunused-const-variable in
- drivers/usb/host/xhci-tegra.c
-Message-ID: <20190614090926.GB14954@ulmo>
-References: <CAJkfWY4nKwyPDh=MuCURst2SZceceeR2v3qrT9UY=VbvLnEmFg@mail.gmail.com>
+        Fri, 14 Jun 2019 05:11:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34154 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfFNJLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 05:11:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D39B520851;
+        Fri, 14 Jun 2019 09:11:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560503461;
+        bh=9DKZ646a4J6ATQ//CaFVDnj6Wq0/JkbKY3qgoAIFXmM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lO3D+aYTQvrsKpC3zOC9Lt5GXQnDhM5/Re9/ndXSd3LMTIT3CavcxmV/lv+1iYMmC
+         ITVhafnbM31AcJrFSw8coTLe8F66wch64DQ58gM+B7s0cJ+Uu3q+bDUfrophmZhTb/
+         HnrQDcSrRzh4Dl8plsWQqu8XRGKkEwFyjzDda4l4=
+Date:   Fri, 14 Jun 2019 11:10:58 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     "Rafael J . Wysocki" <rafael@kernel.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh@kernel.org>, linux-pm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] driver: core: Allow subsystems to continue deferring
+ probe
+Message-ID: <20190614091058.GA25912@kroah.com>
+References: <20190613170011.9647-1-thierry.reding@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAJkfWY4nKwyPDh=MuCURst2SZceceeR2v3qrT9UY=VbvLnEmFg@mail.gmail.com>
-X-NVConfidentiality: public
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p4qYPpj5QlsIQJ0K"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560503371; bh=NPpw3g7qJwORXH5hMJclNUm2tbMB0d7doKYfsHOg8pE=;
-        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
-         MIME-Version:In-Reply-To:X-NVConfidentiality:User-Agent:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:
-         Content-Disposition;
-        b=qvDhRojV/C+y2ywvNC6e4ah8nVRW1G8qKbom1K4ep04P/sp6bWcwwpwhY7knEGWJP
-         wDe555zTeqjuzfxYkQhVHy0oZJgDcS2mWHF4veDa1Xy7vWEFN/o0DwOL8wd8Q8LfSA
-         /5hqz3spsa0Bfmz5iUeo2HzCn/0sSNVxDM9p4ojZlkhsiKU3m7Kkl2F6Xmhvp3BQZx
-         UbD0OCUk8Ka6NZm87Xig198n8ljAb+bXrXpvnEJAzh2x/369RNfXVxrofQdh/6Mk+b
-         0bcUCE9Ke42pAphU1IuneJ7zqVjZA1kOYU0ovPKj1tH2/ICqr1s/XDJ7URDVVFFWPR
-         AfuhMjPGnRIOQ==
+In-Reply-To: <20190613170011.9647-1-thierry.reding@gmail.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---p4qYPpj5QlsIQJ0K
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, Jun 13, 2019 at 07:00:11PM +0200, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> Some subsystems, such as pinctrl, allow continuing to defer probe
+> indefinitely. This is useful for devices that depend on resources
+> provided by devices that are only probed after the init stage.
+> 
+> One example of this can be seen on Tegra, where the DPAUX hardware
+> contains pinmuxing controls for pins that it shares with an I2C
+> controller. The I2C controller is typically used for communication
+> with a monitor over HDMI (DDC). However, other instances of the I2C
+> controller are used to access system critical components, such as a
+> PMIC. The I2C controller driver will therefore usually be a builtin
+> driver, whereas the DPAUX driver is part of the display driver that
+> is loaded from a module to avoid bloating the kernel image with all
+> of the DRM/KMS subsystem.
+> 
+> In this particular case the pins used by this I2C/DDC controller
+> become accessible very late in the boot process. However, since the
+> controller is only used in conjunction with display, that's not an
+> issue.
+> 
+> Unfortunately the driver core currently outputs a warning message
+> when a device fails to get the pinctrl before the end of the init
+> stage. That can be confusing for the user because it may sound like
+> an unwanted error occurred, whereas it's really an expected and
+> harmless situation.
+> 
+> In order to eliminate this warning, this patch allows callers of the
+> driver_deferred_probe_check_state() helper to specify that they want
+> to continue deferring probe, regardless of whether we're past the
+> init stage or not. All of the callers of that function are updated
+> for the new signature, but only the pinctrl subsystem passes a true
+> value in the new persist parameter if appropriate.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
+> Changes in v2:
+> - pass persist flag via flags parameter to make the function call easier
+>   to understand
+> 
+>  drivers/base/dd.c            | 19 ++++++++++++++-----
+>  drivers/base/power/domain.c  |  2 +-
+>  drivers/iommu/of_iommu.c     |  2 +-
+>  drivers/pinctrl/devicetree.c |  9 +++++----
+>  include/linux/device.h       | 18 +++++++++++++++++-
+>  5 files changed, 38 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/base/dd.c b/drivers/base/dd.c
+> index 0df9b4461766..0399a6f6c479 100644
+> --- a/drivers/base/dd.c
+> +++ b/drivers/base/dd.c
+> @@ -238,23 +238,32 @@ __setup("deferred_probe_timeout=", deferred_probe_timeout_setup);
+>  /**
+>   * driver_deferred_probe_check_state() - Check deferred probe state
+>   * @dev: device to check
+> + * @flags: Flags used to control the behavior of this function. Drivers can
+> + *   set the DRIVER_DEFER_PROBE_PERSIST flag to indicate that they want to
+> + *   keep trying to probe after built-in drivers have had a chance to probe.
+> + *   This is useful for built-in drivers that rely on resources provided by
+> + *   modular drivers.
+>   *
+>   * Returns -ENODEV if init is done and all built-in drivers have had a chance
+> - * to probe (i.e. initcalls are done), -ETIMEDOUT if deferred probe debug
+> - * timeout has expired, or -EPROBE_DEFER if none of those conditions are met.
+> + * to probe (i.e. initcalls are done) and unless the DRIVER_DEFER_PROBE_PERSIST
+> + * flag is set, -ETIMEDOUT if deferred probe debug timeout has expired, or
+> + * -EPROBE_DEFER if none of those conditions are met.
+>   *
+>   * Drivers or subsystems can opt-in to calling this function instead of directly
+>   * returning -EPROBE_DEFER.
+>   */
+> -int driver_deferred_probe_check_state(struct device *dev)
+> +int driver_deferred_probe_check_state(struct device *dev, unsigned long flags)
+>  {
+>  	if (initcalls_done) {
+>  		if (!deferred_probe_timeout) {
+>  			dev_WARN(dev, "deferred probe timeout, ignoring dependency");
+>  			return -ETIMEDOUT;
+>  		}
+> -		dev_warn(dev, "ignoring dependency for device, assuming no driver");
+> -		return -ENODEV;
+> +
+> +		if ((flags & DRIVER_DEFER_PROBE_PERSIST) == 0) {
+> +			dev_warn(dev, "ignoring dependency for device, assuming no driver");
+> +			return -ENODEV;
+> +		}
+>  	}
+>  	return -EPROBE_DEFER;
+>  }
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index 33c30c1e6a30..6198c6a30fe2 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -2423,7 +2423,7 @@ static int __genpd_dev_pm_attach(struct device *dev, struct device *base_dev,
+>  		mutex_unlock(&gpd_list_lock);
+>  		dev_dbg(dev, "%s() failed to find PM domain: %ld\n",
+>  			__func__, PTR_ERR(pd));
+> -		return driver_deferred_probe_check_state(base_dev);
+> +		return driver_deferred_probe_check_state(base_dev, 0);
 
-On Thu, Jun 13, 2019 at 11:38:38AM -0700, Nathan Huckleberry wrote:
-> Hey all,
->=20
-> I'm looking into cleaning up ignored warnings in the kernel so we can
-> remove compiler flags to ignore warnings.
->=20
-> There's an unused variable ('mbox_cmd_name') in xhci-tegra.c. Looks
-> like it was intended for logging or debugging, but never used. Just
-> wanted to reach out to ask the best steps for cleaning this up.
->=20
-> If the variable is no longer needed I'd like to send a patch to remove it.
->=20
-> https://github.com/ClangBuiltLinux/linux/issues/533
+Again, I said no odd flags for functions, how is anyone supposed to know
+what "0" means here?
 
-Feel free to send that patch. If we ever need this debug information
-again we can easily add it back by reverting.
+You just swapped a boolean for a bitmapped flag, right?  That did not
+make the api any easier to understand at all.
 
-Thierry
+> +/*
+> + * This can be use to continue to defer probe after the init stage and after
+> + * all the built-in drivers have had a chance to probe. This is useful if a
+> + * built-in driver requires resources provided by a modular driver.
+> + *
+> + * One such example is the pinctrl subsystem, where for example the DPAUX
+> + * hardware on Tegra provides pinmuxing controls for pins shared between DPAUX
+> + * and I2C controllers. Only a subset of I2C controllers need the DPAUX
+> + * pinmuxing, and some I2C controllers are used during early boot for critical
+> + * tasks (such as communicating with the system PMIC). The I2C controllers
+> + * that don't share pins with a DPAUX block will want to be driven by a built-
+> + * in driver to make sure they are available early on.
+> + */
+> +#define DRIVER_DEFER_PROBE_PERSIST (1 << 0)
 
---p4qYPpj5QlsIQJ0K
-Content-Type: application/pgp-signature; name="signature.asc"
+In the future, please always use BIT() for stuff like this.
 
------BEGIN PGP SIGNATURE-----
+Anyway, this isn't ok, do it correctly please, like I asked for the
+first time...
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0DZEYACgkQ3SOs138+
-s6F0tw//W5cSvT/bzIDSSWLG2gWjBGan521TaQV9D62U4c5bYKIDMGBGyXKIQkPC
-yL81T65cFTzuAD/+4isvxTihI42lYK5CbI1JyjKdE2SGjrMOQQkrm7+O02FGye4w
-TDje5ir0HRUx2KtjfuDbjvRKlUY3Q/gp8255k4KPSY3ZozepzO1FrjaaXMew6bn1
-xcWtVh8LVqcsGbP0Ifp0bMrHx7mKHajEnhtPtevnH1/11ELJE86l/iOOekjL151m
-feA9Vs5v4NB84NRFE3HVx9c5N8DBdmuLfDHgrECIbP/xvbgGrqKQi+6a0cZOMZcB
-LJ9oTATYH/FpbmFOg7MCrfjkU4eKP6xVUjL+Y3qD7iha7IWuWxGuK+QtrWhq3Bxq
-qiE4r5eFdRVAu44dl0GoNIuNzlHqiuOvZ52DyTzHuBqEkyLYQYm4NqHsFgjHMwnd
-cz2oALUYAcrhFv8qfSVeqDIg23PK7ulrAt2hBUaDDDD8hYOc2WIdVw3xg7wCa9qb
-ZW07rRakhLV1xsoIhcbKhKzSpVNymchyI5HvrRQyY5nVdx99N4dyHO6rDrMHWAQE
-VUautrjtchnOkHpIPQi+rkcZjCqtGK1GNfpljSP42WSZCYeOZJMoFbkdfU5AVRVu
-wSxU5NEnY4uo4Xm31cvUXd+DU14SuF+kicc02+fU9GuKnVfc/Is=
-=BAJT
------END PGP SIGNATURE-----
+thanks,
 
---p4qYPpj5QlsIQJ0K--
+greg k-h
