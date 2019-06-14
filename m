@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC51BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C9EBC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66482084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA5652084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544558;
-	bh=8R9UtRUVNBE2uIU81fb/ltKXzKjxnCFxSjBtWSZH3o0=;
+	s=default; t=1560544560;
+	bh=kUk3t82gGuHnL4aXnqL39UfdmXFerfyJYy1vpHjk6rg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tZiXQNwgNO2rDDOaMpB6Dt6dUBQkpHwsrheFqyZto8Q1usFHZOtAihsQ3A60E2jSs
-	 PKWlwDRvFBcQtiQikuXbkcnKiwakHUO6fFPNKYHUA53TM8sPi9uJWHyGq8KFzDTuaU
-	 /E3UEauCiIXSm0K8ZIasaP8gDpxxOOldLQ3Nlmgc=
+	b=t3DTRR8KR76yB5gE2wn/j5oWOHybC4Q+Q5wNq0c00J2SAn90rTABW2QjUtNSjkHUP
+	 n7yLmpc8xynIihMJ+N/Xnf/bwZxrjZ/hZrywfbT3YFtDmkuGKI4/S1DdsyGYID2pkb
+	 cNMZnEx1hojq1jxJyRk2AKMiGQpyZebRJ8efNZi8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfFNUf6 (ORCPT
+        id S1727224AbfFNUf7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:35:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52128 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:35:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52108 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbfFNU3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:50 -0400
+        id S1727179AbfFNU3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:49 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6D2E21872;
-        Fri, 14 Jun 2019 20:29:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D8FED21852;
+        Fri, 14 Jun 2019 20:29:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544190;
-        bh=8R9UtRUVNBE2uIU81fb/ltKXzKjxnCFxSjBtWSZH3o0=;
+        s=default; t=1560544189;
+        bh=kUk3t82gGuHnL4aXnqL39UfdmXFerfyJYy1vpHjk6rg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uyjacr4+JNUkqvxRjsRnDFq+zWmoCxKlTuBEvXw+canJyDJYfIf1oGxGIWepKjYX8
-         Vq6G0KX3Q1T7FZ+9kthOiEgoBFZl8wFSKsphnEIDymIRT7wT4pYRTohBlJ3JR0yxJ8
-         vmwc4SlFcQ9GhGdptvW60E01eCTmckfBCm2uNnjg=
+        b=JAR0Lx4sxp33kVbAC2FJpbTOk8R/ei+36yzIEnlMT+soWVOWKjG3ALYXifQCS/PJ4
+         jTXoq9ONtcExXiPd7dSs8ZvaQ+hvU5e+R0LBwP0qI1NBp55tLwifIRccutXgaIpHsU
+         1bGnu+RnwkvK7yRjrGzY5ni3POf6lvmodoP6Lliw=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Scott Wood <swood@redhat.com>, Wu Hao <hao.wu@intel.com>,
-        Moritz Fischer <mdf@kernel.org>, Alan Tull <atull@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sasha Levin <sashal@kernel.org>, linux-fpga@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/39] fpga: dfl: afu: Pass the correct device to dma_mapping_error()
-Date:   Fri, 14 Jun 2019 16:29:11 -0400
-Message-Id: <20190614202946.27385-6-sashal@kernel.org>
+Cc:     Eric Long <eric.long@unisoc.com>,
+        Baolin Wang <baolin.wang@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>, Sasha Levin <sashal@kernel.org>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 03/39] dmaengine: sprd: Fix block length overflow
+Date:   Fri, 14 Jun 2019 16:29:08 -0400
+Message-Id: <20190614202946.27385-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202946.27385-1-sashal@kernel.org>
 References: <20190614202946.27385-1-sashal@kernel.org>
@@ -60,37 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Scott Wood <swood@redhat.com>
+From: Eric Long <eric.long@unisoc.com>
 
-[ Upstream commit 13069847a475b60069918dc9971f5adb42811ce3 ]
+[ Upstream commit 89d03b3c126d683f7b2cd5b07178493993d12448 ]
 
-dma_mapping_error() was being called on a different device struct than
-what was passed to map/unmap.  Besides rendering the error checking
-ineffective, it caused a debug splat with CONFIG_DMA_API_DEBUG.
+The maximum value of block length is 0xffff, so if the configured transfer length
+is more than 0xffff, that will cause block length overflow to lead a configuration
+error.
 
-Signed-off-by: Scott Wood <swood@redhat.com>
-Acked-by: Wu Hao <hao.wu@intel.com>
-Acked-by: Moritz Fischer <mdf@kernel.org>
-Acked-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Thus we can set block length as the maximum burst length to avoid this issue, since
+the maximum burst length will not be a big value which is more than 0xffff.
+
+Signed-off-by: Eric Long <eric.long@unisoc.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/fpga/dfl-afu-dma-region.c | 2 +-
+ drivers/dma/sprd-dma.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
-index 0e81d33af856..c9a613dc9eb7 100644
---- a/drivers/fpga/dfl-afu-dma-region.c
-+++ b/drivers/fpga/dfl-afu-dma-region.c
-@@ -399,7 +399,7 @@ int afu_dma_map_region(struct dfl_feature_platform_data *pdata,
- 				    region->pages[0], 0,
- 				    region->length,
- 				    DMA_BIDIRECTIONAL);
--	if (dma_mapping_error(&pdata->dev->dev, region->iova)) {
-+	if (dma_mapping_error(dfl_fpga_pdata_to_parent(pdata), region->iova)) {
- 		dev_err(&pdata->dev->dev, "failed to map for dma\n");
- 		ret = -EFAULT;
- 		goto unpin_pages;
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 55df0d41355b..1ed1c7efa288 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -663,7 +663,7 @@ static int sprd_dma_fill_desc(struct dma_chan *chan,
+ 	temp |= slave_cfg->src_maxburst & SPRD_DMA_FRG_LEN_MASK;
+ 	hw->frg_len = temp;
+ 
+-	hw->blk_len = len & SPRD_DMA_BLK_LEN_MASK;
++	hw->blk_len = slave_cfg->src_maxburst & SPRD_DMA_BLK_LEN_MASK;
+ 	hw->trsc_len = len & SPRD_DMA_TRSC_LEN_MASK;
+ 
+ 	temp = (dst_step & SPRD_DMA_TRSF_STEP_MASK) << SPRD_DMA_DEST_TRSF_STEP_OFFSET;
 -- 
 2.20.1
 
