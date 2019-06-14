@@ -2,299 +2,148 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EBDEC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:54:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEEAC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6E57208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:54:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="EISvg+X6"
+	by mail.kernel.org (Postfix) with ESMTP id AC898208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727555AbfFNJyO (ORCPT
+        id S1727569AbfFNJyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:54:14 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:54535 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727327AbfFNJx2 (ORCPT
+        Fri, 14 Jun 2019 05:54:18 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45135 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727551AbfFNJyP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:53:28 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190614095326euoutp02596ffc67fe1b81a2b85b52fdf66e1b34~oB-H6CsoF1678516785euoutp02w
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:53:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190614095326euoutp02596ffc67fe1b81a2b85b52fdf66e1b34~oB-H6CsoF1678516785euoutp02w
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560506006;
-        bh=V2RxqnmrrTg838z/OUohhOWlIB6UFsk0++imMcaiW7Y=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EISvg+X6sMh/bEZAtt4Y4SDAlnc34k69JJRC/R8ndtNjMwrlrPGBCuS/dI6tT8KYh
-         CxmutZjQ62sY1wytcJpQg2WL4XGDq+BjDDx2Pf8nxlQm+EQBYvSbDOlqatsgump787
-         M7AO27qDCviDTQbRrg7H1KByoMiXtXimyk4BczEg=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190614095325eucas1p17a76899b483bd548c7881b38c4afc8e0~oB-G-yM291133311333eucas1p1c;
-        Fri, 14 Jun 2019 09:53:25 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id E2.F1.04325.59E630D5; Fri, 14
-        Jun 2019 10:53:25 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190614095324eucas1p247ee87a9ca69733e7aebd601f5d96a94~oB-GN28p-0495004950eucas1p2B;
-        Fri, 14 Jun 2019 09:53:24 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190614095324eusmtrp2f9f81e2a4fdaff2ea3e577ef9611731e~oB-F9iMyp2148521485eusmtrp25;
-        Fri, 14 Jun 2019 09:53:24 +0000 (GMT)
-X-AuditID: cbfec7f5-b8fff700000010e5-15-5d036e95a93a
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 00.40.04146.49E630D5; Fri, 14
-        Jun 2019 10:53:24 +0100 (BST)
-Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190614095323eusmtip2313b2f8017cd1795998122da6d712ddf~oB-FDUi9V2320823208eusmtip2P;
-        Fri, 14 Jun 2019 09:53:23 +0000 (GMT)
-From:   Lukasz Luba <l.luba@partner.samsung.com>
-To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org
-Cc:     mturquette@baylibre.com, sboyd@kernel.org,
-        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
-        cw00.choi@samsung.com, kyungmin.park@samsung.com,
-        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
-        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
-        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
-        gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com,
-        Lukasz Luba <l.luba@partner.samsung.com>
-Subject: [PATCH v10 05/13] dt-bindings: ddr: add LPDDR3 memories
-Date:   Fri, 14 Jun 2019 11:53:01 +0200
-Message-Id: <20190614095309.24100-6-l.luba@partner.samsung.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614095309.24100-1-l.luba@partner.samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA0WSe0hTURzHO/etObkty4Op0SJ7UPamQ0ZWJFz6ozcEldTKi4pu5q4zy/5Y
-        2sOm66GkopmVhras6TQfEWWmLWa2RuEjNUsJw9eyWaGZ5fVO+u9zvt/v73x/HA6Dy7tJHyZS
-        Hcdr1MpoBeVOVL4cta24rsZDV1375YPKsk0kahnpJVF+/RsS3R/uASi5wEShDGsehl6nqtCV
-        nn4c2WylNGpKGqDRB50vGk77SKJ3j29QyGmoByjb9hRDD+o7aWS3hqD2s8UUejFwkUQTzWUE
-        evZ+B2r/7Yl+vuoGW7y5nz/SCc7Rep7mcnV2gqvJ6aQ5s/ESxT3LK6E5Q/IQxT0feoJxlyuM
-        gCtvTOScZv/dMw+6bwrjoyPjec3KzUfdIwzZjdSJsoCEP33jtA50+euBGwPZdfBRygipB+6M
-        nC0GcKLQiUuHEQBNqfUuxwlg0q9hbHpkqOoVJRlFAFrHvk8ZUyOjjjV6wDAUGwirjbGi7MVm
-        A5j7dZ+Yx9kqHA62dwDRmM1ugWODtbTIBLsIdtTqCZFlbDBsK7hMS2Xz4f3SWlxkt8l8Q/7A
-        VDFkLzHQWtiES6Ht8FrzPULi2bDPUuEa9oV/a/JdWwtQZ7gNJD4De67kuTJB8IXFTopL4+xS
-        aHq8UpK3Qv2XGkyUIesJWwdniTI+iemVWbgky2DKBbmUXgIr0t66iubCopJM1+UcHDaWYtJT
-        ZQA4NubEroL5Of/LbgFgBN68VlCF88JaNX8yUFCqBK06PPB4jMoMJn9e44TlRzV4On6sDrAM
-        UHjIajdioXJSGS+cUtUByOAKL9nNIDxULgtTnjrNa2KOaLTRvFAH5jGEwluWOOPTITkbrozj
-        o3j+BK+ZdjHGzUcHmnV+bz6Zi9rKs86lKFru2tItmoY5pd/X3zmwa16ENWwk3iEE39zQUK7p
-        VHvtX9A1mJaCbH29hvbdn8PTWxb7lHhcONx/1MFYvj00248YfTNVC7Eo73Htkz2xWiq5yiPE
-        0bOtuu3weOzSgAT73spEedPO4haVf8wqv+WOssIhE6sghAjl6mW4RlD+A6z9UHJ1AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKIsWRmVeSWpSXmKPExsVy+t/xe7pT8phjDW6/VrHYOGM9q8X1L89Z
-        LeYfOcdqsfrjY0aL5sXr2Swmn5rLZHGmO9ei//FrZovz5zewW5xtesNucatBxuJjzz1Wi8u7
-        5rBZfO49wmgx4/w+Jou1R+6yW1w85Wpxu3EFm8XhN+2sFv+ubWSx2H/Fy+L2bz6LbyceMTqI
-        e3z7OonF4/2NVnaP2Q0XWTx2zrrL7rFpVSebx/65a9g9epvfsXkcfLeHyaNvyypGj82nqz0+
-        b5IL4I7SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQ
-        y+idcZqtYKNaxd9Xf9gbGO/LdTFyckgImEi8236CrYuRi0NIYCmjxJ8T55ghEmISk/ZtZ4ew
-        hSX+XOuCKvrEKPHxVR9LFyMHB5uAnsSOVYUgcRGBOYwSP7u2MYI4zAJnmSV2r3jDBNItLOAg
-        8evtAbBJLAKqEncOdLGA2LwC9hI3F/dBbZCXWL3hANhmTqD6o/PfsIEsEAKq+T6DfwIj3wJG
-        hlWMIqmlxbnpucWGesWJucWleel6yfm5mxiBUbjt2M/NOxgvbQw+xCjAwajEw3vAiilWiDWx
-        rLgy9xCjBAezkgjvPGvmWCHelMTKqtSi/Pii0pzU4kOMpkA3TWSWEk3OByaIvJJ4Q1NDcwtL
-        Q3Njc2MzCyVx3g6BgzFCAumJJanZqakFqUUwfUwcnFINjKlnHp0SytxbqtSh4ssdZKXyh0G2
-        tKv9U7SM8pYnqxK/8u/7FvqmSUDrcVnTtvgL3/dJpzWI7uXhTxRqL5q3Vu5T/0GLrZ+3m2ny
-        6fxb6PPqpOpWxuk5DEFJr55d0o9taX5dt0r78rbs1liuCwx7uCxer7rw9/bdt7eOrWNh+KuX
-        xbGwnn9vshJLcUaioRZzUXEiAMZaAnHYAgAA
-X-CMS-MailID: 20190614095324eucas1p247ee87a9ca69733e7aebd601f5d96a94
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190614095324eucas1p247ee87a9ca69733e7aebd601f5d96a94
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190614095324eucas1p247ee87a9ca69733e7aebd601f5d96a94
-References: <20190614095309.24100-1-l.luba@partner.samsung.com>
-        <CGME20190614095324eucas1p247ee87a9ca69733e7aebd601f5d96a94@eucas1p2.samsung.com>
+        Fri, 14 Jun 2019 05:54:15 -0400
+Received: by mail-ed1-f68.google.com with SMTP id a14so2622293edv.12;
+        Fri, 14 Jun 2019 02:54:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qHuGCrXRTUkFQGayB4c7fw1V8CKP+g27HnNUqp7luJE=;
+        b=A61E+uFgn8g+uIiDes5z+O80mUf9mAy/dPoIP93za8g2WnuMP9LU+jI95OG1ls79Kx
+         yDnDx7RhzSuvjPyLxRjg8nzluuiy7QKz6T7IitCjR9TuDlS6HuiDbmDOn4r0UzAF7NGN
+         rcnlm8IHYqnWYpux0ZWee8fDYKKLJo/QlVDTl9nJ6w1ox5KaD8ov5oJNOE0BBRk0uwhX
+         PrYGOG+ZBhddM1MJ3K4D2aIZdb5FLWBmXTBUbAAUkWkjRFOUd7MGeAgD77xY1E9eJits
+         /gwOePblt3QG1L3MDiaTz/fTDrxhNm6tASrrT4ZVCMZrz6nT2GfUac3VcAOGfP7/eD5g
+         1YOw==
+X-Gm-Message-State: APjAAAVSS2i2sKYjImsKi9wQpzsJO0M/Y8/VoEWlZ0sG89LCiBX473+I
+        x5P60eU0xONYWUitHtk3uqz1u+m+4u8=
+X-Google-Smtp-Source: APXvYqwbflIiWpIZ18fe2y9eLll7EthUnohzkEFO5UdPG4ILKM1Dc6YIpEUU1uVRF1oIgJnB5da2nw==
+X-Received: by 2002:a05:6402:652:: with SMTP id u18mr7218160edx.85.1560506053022;
+        Fri, 14 Jun 2019 02:54:13 -0700 (PDT)
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
+        by smtp.gmail.com with ESMTPSA id a17sm710461edt.63.2019.06.14.02.54.11
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 02:54:12 -0700 (PDT)
+Received: by mail-wm1-f46.google.com with SMTP id z23so1652146wma.4;
+        Fri, 14 Jun 2019 02:54:11 -0700 (PDT)
+X-Received: by 2002:a1c:a186:: with SMTP id k128mr7440554wme.125.1560506051478;
+ Fri, 14 Jun 2019 02:54:11 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190613185241.22800-1-jagan@amarulasolutions.com>
+ <20190613185241.22800-6-jagan@amarulasolutions.com> <CAGb2v654p=HZuXCTJkrbWbFP_kEkpRWHwj-7_Ck_=XbyMFmvFw@mail.gmail.com>
+ <CAMty3ZD0atS2uWJmPB-n1wmy324JEpwt42=_wpKeF-8uxM-GbQ@mail.gmail.com>
+In-Reply-To: <CAMty3ZD0atS2uWJmPB-n1wmy324JEpwt42=_wpKeF-8uxM-GbQ@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Fri, 14 Jun 2019 17:53:58 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66BOOydMRQprKAo87F2rpr+xgqWgpGt_cccoHf8+9AoNA@mail.gmail.com>
+Message-ID: <CAGb2v66BOOydMRQprKAo87F2rpr+xgqWgpGt_cccoHf8+9AoNA@mail.gmail.com>
+Subject: Re: [PATCH 5/9] ARM: dts: sun8i: r40: Add TCON TOP LCD clocking
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Specifies the AC timing parameters of the LPDDR3 memory device.
+On Fri, Jun 14, 2019 at 5:48 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> On Fri, Jun 14, 2019 at 9:16 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Fri, Jun 14, 2019 at 2:54 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > >
+> > > According to Fig 7-2. TCON Top Block Diagram in User manual.
+> > >
+> > > TCON TOP can have an hierarchy for TCON_LCD0, LCD1 like
+> > > TCON_TV0, TV1 so, the tcon top would handle the clocks of
+> > > TCON_LCD0, LCD1 similar like TV0, TV1.
+> >
+> > That is not guaranteed. The diagram shows the pixel data path,
+> > not necessarily the clocks. In addition, the LCD TCONs have an
+> > internal clock gate for the dot-clock output, which the TV variants
+> > do not. That might explain the need for the gates in TCON TOP.
+>
+> Correct, the actual idea about explanation here is to mention the
+> clocks definition in tcon top level and internal tv and lcd can handle
+> as you explained.
+>
+> >
+> > > But, the current tcon_top node is using dsi clock name with
+> > > CLK_DSI_DPHY which is ideally handle via dphy which indeed
+> > > a separate interface block.
+> > >
+> > > So, use tcon-lcd0 instead of dsi which would refer the
+> > > CLK_TCON_LCD0 similar like CLK_TCON_TV0 with tcon-tv0.
+> > >
+> > > This way we can refer CLK_TCON_LCD0 from tcon_top clock in
+> > > tcon_lcd0 node and the actual DSI_DPHY clock node would
+> > > refer in dphy node.
+> >
+> > That doesn't make sense. What about TCON_LCD1?
+> >
+> > The CCU already has CLK_TCON_LCD0 and CLK_TCON_LCD1. What makes
+> > you think that the TCONs don't use them directly?
+> >
+> > Or maybe they do go through TCON_TOP, but there's no gate,
+> > so we don't know about it.
+> >
+> > You need to rethink this. What are you trying to deal with?
+>
+> Yes, I understand what your asking for and indeed this is where I get
+> confused and tried this way initially and attach the dsi reference in
+> dphy something like
+>
+> tcon_lcd0 {
+>                 clocks = <&ccu CLK_BUS_TCON_LCD0>, <&ccu CLK_TCON_LCD0>;
+>                 clock-names = "ahb", "tcon-ch0";
+> };
+>
+> dphy {
+>                clocks = <&ccu CLK_BUS_MIPI_DSI>,
+>                               <&tcon_top CLK_TCON_TOP_DSI>;
+>                clock-names = "bus", "mod";
+> };
+>
+> This would ended-up, phy wont getting the mod clock keep probing for
+> -EPROBE-DEFER since tcon top driver might not be loaded at the time
+> mipi driver. This way we have tv0, tv1 and dsi gates supported as
+> existed. Does it make sense?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
----
- .../bindings/ddr/lpddr3-timings.txt           | 58 +++++++++++
- .../devicetree/bindings/ddr/lpddr3.txt        | 97 +++++++++++++++++++
- 2 files changed, 155 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
- create mode 100644 Documentation/devicetree/bindings/ddr/lpddr3.txt
+Looks like that happens because the clocks are only registered at
+the component bind phase, rather than the probe phase. And to bind
+all the components, the DSI controller wants the DPHY available,
+which isn't because it's still waiting for the clock.
 
-diff --git a/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt b/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
-new file mode 100644
-index 000000000000..84705e50a3fd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ddr/lpddr3-timings.txt
-@@ -0,0 +1,58 @@
-+* AC timing parameters of LPDDR3 memories for a given speed-bin.
-+
-+The structures are based on LPDDR2 and extended where needed.
-+
-+Required properties:
-+- compatible : Should be "jedec,lpddr3-timings"
-+- min-freq : minimum DDR clock frequency for the speed-bin. Type is <u32>
-+- reg : maximum DDR clock frequency for the speed-bin. Type is <u32>
-+
-+Optional properties:
-+
-+The following properties represent AC timing parameters from the memory
-+data-sheet of the device for a given speed-bin. All these properties are
-+of type <u32> and the default unit is ps (pico seconds).
-+- tRFC
-+- tRRD
-+- tRPab
-+- tRPpb
-+- tRCD
-+- tRC
-+- tRAS
-+- tWTR
-+- tWR
-+- tRTP
-+- tW2W-C2C
-+- tR2R-C2C
-+- tFAW
-+- tXSR
-+- tXP
-+- tCKE
-+- tCKESR
-+- tMRD
-+
-+Example:
-+
-+timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@800000000 {
-+	compatible	= "jedec,lpddr3-timings";
-+	reg		= <800000000>; /* workaround: it shows max-freq */
-+	min-freq	= <100000000>;
-+	tRFC		= <65000>;
-+	tRRD		= <6000>;
-+	tRPab		= <12000>;
-+	tRPpb		= <12000>;
-+	tRCD		= <10000>;
-+	tRC		= <33750>;
-+	tRAS		= <23000>;
-+	tWTR		= <3750>;
-+	tWR		= <7500>;
-+	tRTP		= <3750>;
-+	tW2W-C2C	= <0>;
-+	tR2R-C2C	= <0>;
-+	tFAW		= <25000>;
-+	tXSR		= <70000>;
-+	tXP		= <3750>;
-+	tCKE		= <3750>;
-+	tCKESR		= <3750>;
-+	tMRD		= <7000>;
-+};
-diff --git a/Documentation/devicetree/bindings/ddr/lpddr3.txt b/Documentation/devicetree/bindings/ddr/lpddr3.txt
-new file mode 100644
-index 000000000000..3b2485b84b3f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ddr/lpddr3.txt
-@@ -0,0 +1,97 @@
-+* LPDDR3 SDRAM memories compliant to JEDEC JESD209-3C
-+
-+Required properties:
-+- compatible : Should be  - "jedec,lpddr3"
-+- density  : <u32> representing density in Mb (Mega bits)
-+- io-width : <u32> representing bus width. Possible values are 8, 16, 32, 64
-+- #address-cells: Must be set to 1
-+- #size-cells: Must be set to 0
-+
-+Optional properties:
-+
-+The following optional properties represent the minimum value of some AC
-+timing parameters of the DDR device in terms of number of clock cycles.
-+These values shall be obtained from the device data-sheet.
-+- tRFC-min-tck
-+- tRRD-min-tck
-+- tRPab-min-tck
-+- tRPpb-min-tck
-+- tRCD-min-tck
-+- tRC-min-tck
-+- tRAS-min-tck
-+- tWTR-min-tck
-+- tWR-min-tck
-+- tRTP-min-tck
-+- tW2W-C2C-min-tck
-+- tR2R-C2C-min-tck
-+- tWL-min-tck
-+- tDQSCK-min-tck
-+- tRL-min-tck
-+- tFAW-min-tck
-+- tXSR-min-tck
-+- tXP-min-tck
-+- tCKE-min-tck
-+- tCKESR-min-tck
-+- tMRD-min-tck
-+
-+Child nodes:
-+- The lpddr3 node may have one or more child nodes of type "lpddr3-timings".
-+  "lpddr3-timings" provides AC timing parameters of the device for
-+  a given speed-bin. Please see Documentation/devicetree/
-+  bindings/ddr/lpddr3-timings.txt for more information on "lpddr3-timings"
-+
-+Example:
-+
-+samsung_K3QF2F20DB: lpddr3 {
-+	compatible	= "Samsung,K3QF2F20DB", "jedec,lpddr3";
-+	density		= <16384>;
-+	io-width	= <32>;
-+	#address-cells	= <1>;
-+	#size-cells	= <0>;
-+
-+	tRFC-min-tck		= <17>;
-+	tRRD-min-tck		= <2>;
-+	tRPab-min-tck		= <2>;
-+	tRPpb-min-tck		= <2>;
-+	tRCD-min-tck		= <3>;
-+	tRC-min-tck		= <6>;
-+	tRAS-min-tck		= <5>;
-+	tWTR-min-tck		= <2>;
-+	tWR-min-tck		= <7>;
-+	tRTP-min-tck		= <2>;
-+	tW2W-C2C-min-tck	= <0>;
-+	tR2R-C2C-min-tck	= <0>;
-+	tWL-min-tck		= <8>;
-+	tDQSCK-min-tck		= <5>;
-+	tRL-min-tck		= <14>;
-+	tFAW-min-tck		= <5>;
-+	tXSR-min-tck		= <12>;
-+	tXP-min-tck		= <2>;
-+	tCKE-min-tck		= <2>;
-+	tCKESR-min-tck		= <2>;
-+	tMRD-min-tck		= <5>;
-+
-+	timings_samsung_K3QF2F20DB_800mhz: lpddr3-timings@800000000 {
-+		compatible	= "jedec,lpddr3-timings";
-+		reg		= <800000000>; /* workaround: it shows max-freq */
-+		min-freq	= <100000000>;
-+		tRFC		= <65000>;
-+		tRRD		= <6000>;
-+		tRPab		= <12000>;
-+		tRPpb		= <12000>;
-+		tRCD		= <10000>;
-+		tRC		= <33750>;
-+		tRAS		= <23000>;
-+		tWTR		= <3750>;
-+		tWR		= <7500>;
-+		tRTP		= <3750>;
-+		tW2W-C2C	= <0>;
-+		tR2R-C2C	= <0>;
-+		tFAW		= <25000>;
-+		tXSR		= <70000>;
-+		tXP		= <3750>;
-+		tCKE		= <3750>;
-+		tCKESR		= <3750>;
-+		tMRD		= <7000>;
-+	};
-+}
--- 
-2.17.1
+So you could try moving the bits that register the clocks in the
+TCON TOP driver to the probe function, and see if that solves
+the circular dependency issue.
 
+ChenYu
