@@ -2,101 +2,130 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 239E5C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23DDFC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 019FC21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC4FA21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:59:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="ExDF2YU3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728702AbfFNN6Z (ORCPT
+        id S1728726AbfFNN7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:58:25 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:34868 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728182AbfFNN6Z (ORCPT
+        Fri, 14 Jun 2019 09:59:06 -0400
+Received: from mail.efficios.com ([167.114.142.138]:48010 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbfFNN7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:58:25 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-222-0dLfJHaUN2mjadwXspBVlg-1; Fri, 14 Jun 2019 14:58:22 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri,
- 14 Jun 2019 14:58:21 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Fri, 14 Jun 2019 14:58:21 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Josh Poimboeuf' <jpoimboe@redhat.com>
-CC:     'Alexei Starovoitov' <alexei.starovoitov@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        "Kairui Song" <kasong@redhat.com>
-Subject: RE: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
-Thread-Topic: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
-Thread-Index: AQHVIjMat8Fq1dO6sUKm4aXwvliIEKaa+NdggAAgcYCAABJOQA==
-Date:   Fri, 14 Jun 2019 13:58:21 +0000
-Message-ID: <9b8aa912df694d25b581786100d3e2e2@AcuMS.aculab.com>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
- <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
- <57f6e69da6b3461a9c39d71aa1b58662@AcuMS.aculab.com>
- <20190614134401.q2wbh6mvo4nzmw2o@treble>
-In-Reply-To: <20190614134401.q2wbh6mvo4nzmw2o@treble>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Fri, 14 Jun 2019 09:59:06 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id ADE6D251CCD;
+        Fri, 14 Jun 2019 09:59:04 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id rJOHjntNcuT9; Fri, 14 Jun 2019 09:59:04 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 4EA47251CC8;
+        Fri, 14 Jun 2019 09:59:04 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 4EA47251CC8
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560520744;
+        bh=jpmp9DG8eHAyLVISapjfq/tN+v/idvmpwbfusJBMqP4=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=ExDF2YU3NUQJA2JcFDQjaJL1g9CCnkPixcgar3BbM9emiOPEPyaUyLowwGJ9pBilS
+         oKpc3GQ4S3kA3Avor0qnfp+nck1hSotR9n11BoNA0nmQDITQW53BtfhVrKZaIRDD8h
+         kkwSz7zkEbhkR3CsBO6PJjWn/AXU1abrrjlolvpcHEEQonPzjSqqc6yHs8xXp4BUue
+         gusO4b/erzcWJ06zLebUyvki5ZHoP+hMlse0PAfCDlaNLNBNJiPWCEGRPnvt6CcEZl
+         rPT2RISu2jlS/WujZUTwxT4/S+PWcCe9nt5o06JnF9zGmUGXPukd2sJoE1B6i5dPVo
+         YU/SE4Aj3kaWA==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id Mv1VjGbPs8-l; Fri, 14 Jun 2019 09:59:04 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 32072251CBE;
+        Fri, 14 Jun 2019 09:59:04 -0400 (EDT)
+Date:   Fri, 14 Jun 2019 09:59:04 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <634912958.3582.1560520744040.JavaMail.zimbra@efficios.com>
+In-Reply-To: <87ef3wtgs4.fsf@oldenburg2.str.redhat.com>
+References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <87d0jguxdk.fsf@oldenburg2.str.redhat.com> <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com> <87wohoti47.fsf@oldenburg2.str.redhat.com> <189377747.3315.1560519247118.JavaMail.zimbra@efficios.com> <87imt8tha5.fsf@oldenburg2.str.redhat.com> <26171199.3391.1560520033825.JavaMail.zimbra@efficios.com> <87ef3wtgs4.fsf@oldenburg2.str.redhat.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v10)
 MIME-Version: 1.0
-X-MC-Unique: 0dLfJHaUN2mjadwXspBVlg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
+Thread-Index: bTcDxImi7N70vGPu1EOcYFTLIBF+3A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9zaCBQb2ltYm9ldWYNCj4gU2VudDogMTQgSnVuZSAyMDE5IDE0OjQ0DQo+IA0KPiBP
-biBGcmksIEp1biAxNCwgMjAxOSBhdCAxMDo1MDoyM0FNICswMDAwLCBEYXZpZCBMYWlnaHQgd3Jv
-dGU6DQo+ID4gT24gVGh1LCBKdW4gMTMsIDIwMTkgYXQgMDg6MjE6MDNBTSAtMDUwMCwgSm9zaCBQ
-b2ltYm9ldWYgd3JvdGU6DQo+ID4gPiBUaGUgQlBGIEpJVCBjb2RlIGNsb2JiZXJzIFJCUC4gIFRo
-aXMgYnJlYWtzIGZyYW1lIHBvaW50ZXIgY29udmVudGlvbiBhbmQNCj4gPiA+IHRodXMgcHJldmVu
-dHMgdGhlIEZQIHVud2luZGVyIGZyb20gdW53aW5kaW5nIHRocm91Z2ggSklUIGdlbmVyYXRlZCBj
-b2RlLg0KPiA+ID4NCj4gPiA+IFJCUCBpcyBjdXJyZW50bHkgdXNlZCBhcyB0aGUgQlBGIHN0YWNr
-IGZyYW1lIHBvaW50ZXIgcmVnaXN0ZXIuICBUaGUNCj4gPiA+IGFjdHVhbCByZWdpc3RlciB1c2Vk
-IGlzIG9wYXF1ZSB0byB0aGUgdXNlciwgYXMgbG9uZyBhcyBpdCdzIGENCj4gPiA+IGNhbGxlZS1z
-YXZlZCByZWdpc3Rlci4gIENoYW5nZSBpdCB0byB1c2UgUjEyIGluc3RlYWQuDQo+ID4NCj4gPiBD
-b3VsZCB5b3UgbWFpbnRhaW4gdGhlIHN5c3RlbSAlcmJwIGNoYWluIHRocm91Z2ggdGhlIEJQRiBz
-dGFjaz8NCj4gDQo+IERvIHlvdSBtZWFuIHRvIHNhdmUgUkJQIGFnYWluIGJlZm9yZSBjaGFuZ2lu
-ZyBpdCBhZ2Fpbiwgc28gdGhhdCB3ZQ0KPiBjcmVhdGUgYW5vdGhlciBzdGFjayBmcmFtZSBpbnNp
-ZGUgdGhlIEJQRiBzdGFjaz8gIFRoYXQgbWlnaHQgd29yay4NCg0KVGhlIHVud2luZGVyIHdpbGwg
-KElJUkMpIGV4cGVjdCAqJXJicCB0byBiZSB0aGUgcHJldmlvdXMgJXJicCB2YWx1ZS4NCklmIHlv
-dSBtYWludGFpbiB0aGF0IGl0IHdpbGwgcHJvYmFibHkgYWxsIHdvcmsuDQoNCj4gPiBJdCBtaWdo
-dCBldmVuIGJlIHBvc3NpYmxlIHRvIHB1dCBzb21ldGhpbmcgcmVsZXZhbnQgaW4gdGhlICVyaXAN
-Cj4gPiBsb2NhdGlvbi4NCj4gDQo+IEknbSBub3Qgc3VyZSB3aGF0IHlvdSBtZWFuIGhlcmUuDQoN
-ClRoZSByZXR1cm4gYWRkcmVzcyBpcyAoYWdhaW4gSUlSQykgJXJicFstOF0gc28gdGhlIHVud2lu
-ZGVyIHdpbGwNCmV4cGVjdCB0aGF0IGFkZHJlc3MgdG8gYmUgYSBzeW1ib2wuDQoNCkkgZG8gcmVt
-ZW1iZXIgYSBzdGFjayB0cmFjZSBwcmludGVyIGZvciB4ODYgdGhpcyBkaWRuJ3QgbmVlZA0KYW55
-IGFubm90YXRpb24gb2YgdGhlIG9iamVjdCBjb2RlIGFuZCBkaWRuJ3QgbmVlZCBmcmFtZSBwb2lu
-dGVycy4NClRoZSBvbmx5IGRvd25zaWRlIHdhcyB0aGF0IGl0IGhhZCB0byAnZ3Vlc3MnIChpZSBz
-Y2FuIHRoZSBzdGFjaykNCnRvIGdldCBvdXQgb2YgZnVuY3Rpb25zIHRoYXQgY291bGRuJ3QgcmV0
-dXJuLg0KQmFzaWNhbGx5IGl0IGZvbGxvd2VkIHRoZSBjb250cm9sIGZsb3cgZm9yd2FyZHMgdHJh
-Y2tpbmcgdGhlDQp2YWx1ZXMgb2YgJXNwIGFuZCAlYnAgdW50aWwgaXQgZm91bmQgYSByZXR1cm4g
-aW5zdHVjdGlvbi4NCkFsbCBpdCBoYXMgdG8gZG8gaXMgZGV0ZWN0IGxvb3BzIGFuZCByZXRyeSBm
-cm9tIHRoZSBvdGhlcg0KdGFyZ2V0IG9mIGNvbmRpdGlvbmFsIGJyYW5jaGVzLg0KDQoJRGF2aWQN
-Cg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZh
-cm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYg
-KFdhbGVzKQ0K
+----- On Jun 14, 2019, at 3:53 PM, Florian Weimer fweimer@redhat.com wrote:
 
+> * Mathieu Desnoyers:
+> 
+>> ----- On Jun 14, 2019, at 3:42 PM, Florian Weimer fweimer@redhat.com wrote:
+>>
+>>> * Mathieu Desnoyers:
+>>> 
+>>>> +  /* Publicize rseq registration ownership.  This must be performed
+>>>> +     after rtld re-relocation, before invoking constructors of
+>>>> +     preloaded libraries.  */
+>>>> +  rseq_init ();
+>>> 
+>>> Please add a comment that IFUNC resolvers do not see the initialized
+>>> value.  I think this is okay because we currently do not support access
+>>> to extern variables in IFUNC resolvers.
+>>
+>> Do IFUNC resolvers happen to observe the __rseq_handled address that
+>> was internal to ld.so ?
+> 
+> They should observe the correct address, but they can access the
+> variable before initialization.  An initializer in ld.so will not have
+> an effect if an interposed definition initalized the variable to
+> something else.
+> 
+>> If so, we could simply initialize __rseq_handled twice: early before calling
+>> IFUNC resolvers, and after ld.so re-relocation.
+> 
+> No, I don't think this will make a difference.
+
+So comment it is:
+
+  /* Publicize rseq registration ownership.  This must be performed
+     after rtld re-relocation, before invoking constructors of
+     preloaded libraries. IFUNC resolvers are called before this
+     initialization, so they may not observe the initialized state.  */
+  rseq_init ();
+
+Thanks,
+
+Mathieu
+
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
