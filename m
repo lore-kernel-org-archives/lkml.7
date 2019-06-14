@@ -2,134 +2,136 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FC8C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C644C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:34:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB48020851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D0F21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:34:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfFNIdG (ORCPT
+        id S1726797AbfFNIei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:33:06 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:50851 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726435AbfFNIdF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:33:05 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c66so1418200wmf.0;
-        Fri, 14 Jun 2019 01:33:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=tMBYk/iki1NC0NM+/8I2xpo6ne6QbknqGB0Lfw93ZgE=;
-        b=Tw1k93fKT+Xl/gNTRof9WFxmc2HZXYE3rSdu0CA8iVFS5XKM/wVn8QperoygtVsHTM
-         s9qE6E8Xj4mYrWLj0cyoaRM7whHrE7vjI5YPT/ZwuYq5uudPp37lord5UMI6f6Ydaaqh
-         VahouYhSgNjsKxLvTa0IULvREDYOnoW0WMiptzb3gj0+yCH6Xqz92Jy0SfqzfoxEpMxx
-         NuV5L7thavYY8ruNFwudqd78ab6v098PwWLrnOZ2PhhdpYbFT6hNU8njn7aLQAHT9dGl
-         kTEVcAF7sf18ispbmb/Ti8wwqMB8qpKM44B+uefvX+QSKTEi3oqQnImOk2w6x6udYZbl
-         Z7IA==
-X-Gm-Message-State: APjAAAUBwThZ9DSh4UMbntfOZX22/6gaCLX3DjTLgrJ9yjjmVg6G26vs
-        i7JdN753tNbUgQviZcc0Mr5vTEyC
-X-Google-Smtp-Source: APXvYqwBz7/m51ixTsf7W4YcxNsZHdMARxusualqKjtASgioRFtQ858t6401aYvWhMHHoYFVpyH/nA==
-X-Received: by 2002:a1c:be12:: with SMTP id o18mr6801364wmf.21.1560501183455;
-        Fri, 14 Jun 2019 01:33:03 -0700 (PDT)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id c5sm3153278wma.19.2019.06.14.01.33.02
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 01:33:02 -0700 (PDT)
-Subject: Re: [RFC 3/3] ata: sata_mv, avoid trigerrable BUG_ON
-To:     Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        axboe@kernel.dk
-Cc:     linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org
-References: <20190614071140.6233-1-jslaby@suse.cz>
- <20190614071140.6233-3-jslaby@suse.cz>
- <0e9f8a3b-65b9-4d87-21f1-684f7e44b166@cogentembedded.com>
-From:   Jiri Slaby <jslaby@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jslaby@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <75a4a778-6862-a0d0-1033-cd5fe57d6dbf@suse.cz>
-Date:   Fri, 14 Jun 2019 10:33:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 04:34:38 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43676 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726259AbfFNIeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 04:34:37 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 96AE4ADFA;
+        Fri, 14 Jun 2019 08:34:35 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 10:34:35 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Miroslav Benes <mbenes@suse.cz>, linux-kernel@vger.kernel.org,
+        live-patching@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] klp-convert livepatch build tooling
+Message-ID: <20190614083435.uq3mk6mprbatysol@pathway.suse.cz>
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <alpine.LSU.2.21.1906131451560.22698@pobox.suse.cz>
+ <b1a627a4-3702-9689-6c03-0c2123c06a2d@redhat.com>
+ <c9021573-11c6-b576-0aa6-97754c98a06e@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <0e9f8a3b-65b9-4d87-21f1-684f7e44b166@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c9021573-11c6-b576-0aa6-97754c98a06e@redhat.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14. 06. 19, 10:24, Sergei Shtylyov wrote:
->> --- a/drivers/ata/sata_mv.c
->> +++ b/drivers/ata/sata_mv.c
->> @@ -2098,12 +2098,10 @@ static int mv_qc_prep(struct ata_queued_cmd *qc)
->>            * non-NCQ mode are: [RW] STREAM DMA and W DMA FUA EXT, none
->>            * of which are defined/used by Linux.  If we get here, this
->>            * driver needs work.
->> -         *
->> -         * FIXME: modify libata to give qc_prep a return value and
->> -         * return error here.
->>            */
->> -        BUG_ON(tf->command);
->> -        break;
->> +        ata_port_err(ap, "%s: unsupported command: %d\n", __func__,
->> +                tf->command);
+On Thu 2019-06-13 16:48:02, Joe Lawrence wrote:
+> On 6/13/19 9:15 AM, Joe Lawrence wrote:
+> > On 6/13/19 9:00 AM, Miroslav Benes wrote:
+> >> Hi Joe,
+> >>
+> >> first, I'm sorry for the lack of response so far.
+> >>
+> >> Maybe you've already noticed but the selftests fail. Well, at least in
+> >> my VM. When test_klp_convert1.ko is loaded, the process is killed with
+> >>
+> >> [  518.041826] BUG: kernel NULL pointer dereference, address: 0000000000000000
+> >> [  518.042816] #PF: supervisor read access in kernel mode
+> >> [  518.043393] #PF: error_code(0x0000) - not-present page
+> >> [  518.043981] PGD 0 P4D 0
+> >> [  518.044185] Oops: 0000 [#1] SMP PTI
+> >> [  518.044518] CPU: 2 PID: 2255 Comm: insmod Tainted: G           O  K   5.1.0-klp_convert_v4-193435-g67748576637e #2
+> >> [  518.045784] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58-prebuilt.qemu.org 04/01/2014
+> >> [  518.046940] RIP: 0010:test_klp_convert_init+0x1c/0x40 [test_klp_convert1]
+> >> [  518.047611] Code: 1b a0 48 89 c6 e9 a8 c0 f4 e0 0f 1f 40 00 0f 1f 44 00 00 53 48 c7 c7 00 30 1b a0 e8 5e 33 f6 e0 85 c0 89 c3 74 04 89 d8 5b c3 <48> 8b 35 5d ef e4 5f 48 c7 c7 28 20 1b a0 e8 75 c0 f4 e0 e8 6c ff
+> >> [  518.049779] RSP: 0018:ffffc90000f37cc8 EFLAGS: 00010246
+> >> [  518.050243] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000027de0
+> >> [  518.050922] RDX: 0000000000000000 RSI: 0000000000000006 RDI: ffff88807ab54f40
+> >> [  518.051619] RBP: ffffffffa01b1080 R08: 0000000096efde7a R09: 0000000000000001
+> >> [  518.052332] R10: 0000000000000000 R11: 0000000000000000 R12: 00000000ffffffff
+> >> [  518.053012] R13: 0000000000000000 R14: ffff888078b55000 R15: ffffc90000f37ea0
+> >> [  518.053714] FS:  00007febece1fb80(0000) GS:ffff88807d400000(0000) knlGS:0000000000000000
+> >> [  518.054514] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >> [  518.055078] CR2: 0000000000000000 CR3: 000000007a56a000 CR4: 00000000000006e0
+> >> [  518.055818] Call Trace:
+> >> [  518.056007]  do_one_initcall+0x6a/0x2da
+> >> [  518.056340]  ? do_init_module+0x22/0x230
+> >> [  518.056702]  ? rcu_read_lock_sched_held+0x96/0xa0
+> >> [  518.057125]  ? kmem_cache_alloc_trace+0x284/0x2e0
+> >> [  518.057493]  do_init_module+0x5a/0x230
+> >> [  518.057900]  load_module+0x17bc/0x1f50
+> >> [  518.058214]  ? __symbol_put+0x40/0x40
+> >> [  518.058499]  ? vfs_read+0x12d/0x160
+> >> [  518.058766]  __do_sys_finit_module+0x83/0xc0
+> >> [  518.059122]  do_syscall_64+0x57/0x190
+> >> [  518.059407]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >> ...
+> >>
+> >> It crashes right in test_klp_convert_init() when print_*() using
+> >> supposed-to-be-converted symbols are called. I'll debug it next week. Can
+> >> you reproduce it too?
+> > 
+> > Hey, thanks for the report..
+> > 
+> > I don't recall the tests crashing, but I had put this patchset on the
+> > side for a few weeks now.  I'll try to fire up a VM and see what happens
+> > today.
+> > 
 > 
->    I'd use "%x" here instead of "%d".
+> Hmm, I haven't been able to reproduce using my original base (Linux 5.1-rc6)
+> or when rebased ontop of livepatching.git/master + 997a55f3fb6d("stacktrace: Unbreak stack_trace_save_tsk_reliable()")
 
-Hi, that makes sense. Fixed locally to %.2x as the commands are defined
-as such. Waiting for more comments before [v2] :).
+I stared into the code a bit but I did not find any bug. Let's hope
+that it was just some pre-vacation last minute mistake (system
+inconsistency or so ;-)
 
-thanks,
--- 
-js
-suse labs
+Anyway, I am curious about one thing. I saw:
+
+function __load_mod() {
+	local mod="$1"; shift
+
+	local msg="% modprobe $mod $*"
+	log "${msg%% }"
+	ret=$(modprobe "$mod" "$@" 2>&1)
+	if [[ "$ret" != "" ]]; then
+		die "$ret"
+	fi
+
+	# Wait for module in sysfs ...
+	loop_until '[[ -e "/sys/module/$mod" ]]' ||
+		die "failed to load module $mod"
+}
+
+Is the waiting for sysfs really necessary here?
+
+Note that it is /sys/module and not /sys/kernel/livepatch/.
+
+My understanding is that modprobe waits until the module succesfully
+loaded. mod_sysfs_setup() is called before the module init callback.
+Therefore the sysfs interface should be read before modprobe returns.
+Do I miss something?
+
+If it works different way then there might be some races because
+mod_sysfs_setup() is called before the module is alive.
+
+Best Regards,
+Petr
