@@ -2,113 +2,172 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16B1DC31E49
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:36:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 383E0C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:36:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E902021721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:36:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 087C820B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:36:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YRTBrlE2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726767AbfFNAgW (ORCPT
+        id S1726318AbfFNAgq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:36:22 -0400
-Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:60257 "EHLO
-        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725777AbfFNAgV (ORCPT
+        Thu, 13 Jun 2019 20:36:46 -0400
+Received: from mail-vs1-f67.google.com ([209.85.217.67]:45341 "EHLO
+        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfFNAgq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:36:21 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 7F8AF43B354;
-        Fri, 14 Jun 2019 10:36:16 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hbaBa-0004jE-EB; Fri, 14 Jun 2019 10:35:18 +1000
-Date:   Fri, 14 Jun 2019 10:35:18 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Kent Overstreet <kent.overstreet@gmail.com>
-Cc:     Andreas Dilger <adilger@dilger.ca>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-Message-ID: <20190614003518.GL14363@dread.disaster.area>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel>
- <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel>
- <AE838C22-1A11-4F93-AB88-80CF009BD301@dilger.ca>
- <20190613212112.GB28171@kmo-pixel>
+        Thu, 13 Jun 2019 20:36:46 -0400
+Received: by mail-vs1-f67.google.com with SMTP id n21so655448vsp.12
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 17:36:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Kvz44rB7tgJ0lFfHfKXCBCgyFSEqMN4h+J2Mv3vvphI=;
+        b=YRTBrlE2LA8uxN3PfDev4WOSZ4TCRgathqM3/1KwUpGO755YbZ7mnN+QeS3kbrUx+m
+         Z4HBVjV4H2pV1hTuQOtYcKJkpVd8+sXJdy4ASJAr8xzPotDqIxxySu2jgYytgEpTQ0vq
+         Bl7zFudutTrWJYi7GuLOXu6X27Uc6/ypFvM9Q=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Kvz44rB7tgJ0lFfHfKXCBCgyFSEqMN4h+J2Mv3vvphI=;
+        b=oINeoGJn6Pa4n5bo4K+1I7Czm5Ll6GOaUKxT4yLMAVB2RucuTpkgY9fvBA1IrqzefO
+         ZhSkQB5CNrN2TcBeJqePgKv3h2XxzARlf0IgN4Utewd/hR6Q53BYNyzd6qTJrAOdfkS7
+         59nar5aFhnenOmIGTfcgFvgB0+btO1fICx8Lnn30irSbBJynEHJzbLOIenFR8DK6gxFq
+         QzRqQJk6uGlDcKhTcnvodmevjm4Acw/4VXCeKkVEycOLOIbWrge6FMluKHPttM0KybF+
+         bQkIJK07ALYvNUEP7vW4vENGIe2Clg+8AX5d7mlDBg1T10lDFgiMZ2ZzA9+Zii1sTCjs
+         NBrw==
+X-Gm-Message-State: APjAAAWpdLJShgqSERAspcZUd3zXJGsGPt5oqLBKg3AbOhu//4RHE0uI
+        /Yi0mvAiSo/tsTGVbVQUIbfyO7+B6esD/LFKKF/bRg==
+X-Google-Smtp-Source: APXvYqwTL6POXul88bkWpISrGlVLaKAoVDJaFXMv89Ef1GdZT2k2cGQZJDTzBLr/6j7plsyb3Poj9HWMfiJa4fFKTHk=
+X-Received: by 2002:a67:ea42:: with SMTP id r2mr40062385vso.207.1560472604694;
+ Thu, 13 Jun 2019 17:36:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613212112.GB28171@kmo-pixel>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=FNpr/6gs c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=6_0dh5WEKKik7Vn-M0YA:9 a=FsNm7XV4SpkFqOcW:21
-        a=cFAAwf0Rn3E3QlG0:21 a=CjuIK1q_8ugA:10 a=biEYGPWJfzWAr4FL6Ov7:22
+References: <20190611040350.90064-1-dbasehore@chromium.org>
+ <20190611040350.90064-5-dbasehore@chromium.org> <87zhmoy270.fsf@intel.com>
+ <01636500-0be5-acf8-5f93-a57383bf4b20@redhat.com> <CAGAzgsoxpsft-vmVOuKSAbLJqR-EZvcceLpMeWkz6ikJEKGJHg@mail.gmail.com>
+ <fe774952-6fd5-b4ec-56c9-32fd30546313@redhat.com>
+In-Reply-To: <fe774952-6fd5-b4ec-56c9-32fd30546313@redhat.com>
+From:   "dbasehore ." <dbasehore@chromium.org>
+Date:   Thu, 13 Jun 2019 17:36:33 -0700
+Message-ID: <CAGAzgsrYAaHTuxpt2rQAVbCtx_fCZAd99hX19H4V4h6ZyHwbkw@mail.gmail.com>
+Subject: Re: [PATCH 4/5] drm/connector: Split out orientation quirk detection
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        CK Hu <ck.hu@mediatek.com>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        devicetree@vger.kernel.org,
+        Intel Graphics <intel-gfx@lists.freedesktop.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        =?UTF-8?B?VmlsbGUgU3lyasOkbMOk?= <ville.syrjala@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:21:12PM -0400, Kent Overstreet wrote:
-> On Thu, Jun 13, 2019 at 03:13:40PM -0600, Andreas Dilger wrote:
-> > There are definitely workloads that require multiple threads doing non-overlapping
-> > writes to a single file in HPC.  This is becoming an increasingly common problem
-> > as the number of cores on a single client increase, since there is typically one
-> > thread per core trying to write to a shared file.  Using multiple files (one per
-> > core) is possible, but that has file management issues for users when there are a
-> > million cores running on the same job/file (obviously not on the same client node)
-> > dumping data every hour.
-> 
-> Mixed buffered and O_DIRECT though? That profile looks like just buffered IO to
-> me.
-> 
-> > We were just looking at this exact problem last week, and most of the threads are
-> > spinning in grab_cache_page_nowait->add_to_page_cache_lru() and set_page_dirty()
-> > when writing at 1.9GB/s when they could be writing at 5.8GB/s (when threads are
-> > writing O_DIRECT instead of buffered).  Flame graph is attached for 16-thread case,
-> > but high-end systems today easily have 2-4x that many cores.
-> 
-> Yeah I've been spending some time on buffered IO performance too - 4k page
-> overhead is a killer.
-> 
-> bcachefs has a buffered write path that looks up multiple pages at a time and
-> locks them, and then copies the data to all the pages at once (I stole the idea
-> from btrfs). It was a very significant performance increase.
+On Wed, Jun 12, 2019 at 5:33 AM Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi,
+>
+> On 12-06-19 02:16, dbasehore . wrote:
+> > On Tue, Jun 11, 2019 at 1:54 AM Hans de Goede <hdegoede@redhat.com> wrote:
+> >>
+> >> Hi,
+> >>
+> >> On 11-06-19 10:08, Jani Nikula wrote:
+> >>> On Mon, 10 Jun 2019, Derek Basehore <dbasehore@chromium.org> wrote:
+> >>>> This removes the orientation quirk detection from the code to add
+> >>>> an orientation property to a panel. This is used only for legacy x86
+> >>>> systems, yet we'd like to start using this on devicetree systems where
+> >>>> quirk detection like this is not needed.
+> >>>
+> >>> Not needed, but no harm done either, right?
+> >>>
+> >>> I guess I'll defer judgement on this to Hans and Ville (Cc'd).
+> >>
+> >> Hmm, I'm not big fan of this change. It adds code duplication and as
+> >> other models with the same issue using a different driver or panel-type
+> >> show up we will get more code duplication.
+> >>
+> >> Also I'm not convinced that devicetree based platforms will not need
+> >> this. The whole devicetree as an ABI thing, which means that all
+> >> devicetree bindings need to be set in stone before things are merged
+> >> into the mainline, is done solely so that we can get vendors to ship
+> >> hardware with the dtb files included in the firmware.
+> >
+> > We've posted fixes to the devicetree well after the initial merge into
+> > mainline before, so I don't see what you mean about the bindings being
+> > set in stone.
+>
+> That was just me repeating the official party line about devicetree.
+>
+> > I also don't really see the point. The devicetree is in
+> > the kernel. If there's some setting in the devicetree that we want to
+> > change, it's effectively the same to make the change in the devicetree
+> > versus some quirk setting. The only difference seems to be that making
+> > the change in the devicetree is cleaner.
+>
+> I agree with you that devicetree in practice is easy to update after
+> shipping. But at least whenever I tried to get new bindings reviewed
+> I was always told that I was not allowed to count on that.
+>
+> >> I'm 100% sure that there is e.g. ARM hardware out there which uses
+> >> non upright mounted LCD panels (I used to have a few Allwinner
+> >> tablets which did this). And given my experience with the quality
+> >> of firmware bundled tables like ACPI tables I'm quite sure that
+> >> if we ever move to firmware included dtb files that we will need
+> >> quirks for those too.
+> >
+> > Is there a timeline to start using firmware bundled tables?
+>
+> Nope, as I said "if we ever move to ...".
+>
+> > Since the
+> > quirk code only uses DMI, it will need to be changed anyways for
+> > firmware bundled devicetree files anyways.
+> >
+> > We could consolidate the duplicated code into another function that
+> > calls drm_get_panel_orientation_quirks too. The only reason it's like
+> > it is is because I initially only had the call to
+> > drm_get_panel_orientation_quirk once in the code.
+>
+> Yes if you can add a new helper for the current callers, then
+> I'm fine with dropping the quirk handling from
+> drm_connector_init_panel_orientation_property()
+>
 
-Careful with that - locking multiple pages is also a deadlock vector
-that triggers unexpectedly when something conspires to lock pages in
-non-ascending order. e.g.
+Ok, it sounds like having a special callback for quirks in the panel
+orientation property is the best way to go. The handles the duplicate
+code and devicetree bundles. If we need to fix something that's
+specified in a devicetree, and we aren't willing to change it, we can
+write the quirk code for that later.
 
-64081362e8ff mm/page-writeback.c: fix range_cyclic writeback vs writepages deadlock
+> Regards,
+>
+> Hans
 
-The fs/iomap.c code avoids this problem by mapping the IO first,
-then iterating pages one at a time until the mapping is consumed,
-then it gets another mapping. It also avoids needing to put a page
-array on stack....
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Thanks for the feedback
