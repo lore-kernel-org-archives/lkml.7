@@ -2,104 +2,69 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A676DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:56:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300A1C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88C1B2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:56:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E15E2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:58:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfFNP4Y (ORCPT
+        id S1725942AbfFNP6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:56:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45598 "EHLO mx1.redhat.com"
+        Fri, 14 Jun 2019 11:58:39 -0400
+Received: from mga18.intel.com ([134.134.136.126]:2001 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfFNP4X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:56:23 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6D010CA1FF;
-        Fri, 14 Jun 2019 15:56:23 +0000 (UTC)
-Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 159A173D3B;
-        Fri, 14 Jun 2019 15:56:21 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 10:56:20 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
- for generated code
-Message-ID: <20190614155620.f2kdlh4ttrxyyzuc@treble>
-References: <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
- <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
- <20190614013051.6gnwduy4dsygbamj@treble>
- <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
- <20190614015848.todgfogryjn573nd@treble>
- <20190614022848.ly4vlgsz6fa4bcbl@treble>
- <20190614045037.zinbi2sivthcfrtg@treble>
- <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
- <20190614133004.gopjz64vbqmbbzqn@treble>
- <CAADnVQLp+Eq3fz6u+Q3_2UxDwdn1hKESwS5O856BabJE4wfPJw@mail.gmail.com>
+        id S1725775AbfFNP6j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:58:39 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 08:58:39 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga001.fm.intel.com with ESMTP; 14 Jun 2019 08:58:38 -0700
+Date:   Fri, 14 Jun 2019 08:58:38 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: [PATCH 8/9] x86/tlb: Privatize cpu_tlbstate
+Message-ID: <20190614155838.GD12191@linux.intel.com>
+References: <20190613064813.8102-1-namit@vmware.com>
+ <20190613064813.8102-9-namit@vmware.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAADnVQLp+Eq3fz6u+Q3_2UxDwdn1hKESwS5O856BabJE4wfPJw@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 14 Jun 2019 15:56:23 +0000 (UTC)
+In-Reply-To: <20190613064813.8102-9-namit@vmware.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 08:31:53AM -0700, Alexei Starovoitov wrote:
-> On Fri, Jun 14, 2019 at 6:34 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Thu, Jun 13, 2019 at 11:00:09PM -0700, Alexei Starovoitov wrote:
-> > > > +   if (src_reg == BPF_REG_FP) {
-> > > > +           /*
-> > > > +            * If the value was copied from RBP (real frame pointer),
-> > > > +            * adjust it to the BPF program's frame pointer value.
-> > > > +            *
-> > > > +            * add dst, -40
-> > > > +            */
-> > > > +           EMIT4(add_1mod(0x48, dst_reg), 0x83, add_1reg(0xC0, dst_reg),
-> > > > +                 0xD8);
-> > > > +   }
-> > > > +
-> > >
-> > > That won't work. Any register can point to a stack.
-> >
-> > Right, but if the stack pointer comes from BPF_REG_FP then won't the
-> > above correct it?  Then if the pointer gets passed around to other
-> > registers it will have the correct value.  Or did I miss your point?
-> 
-> At the beginning of the program frame pointer is bpf_reg_fp,
-> but later it can be in any register. It can be spilled into stack.
-> Some math done on it and that adjusted pointer passed into
-> another jited function.
-> It's perfectly fine for one bpf program to modify stack of
-> another bpf program. The verifier checks the safety bounds, etc.
+On Wed, Jun 12, 2019 at 11:48:12PM -0700, Nadav Amit wrote:
+> diff --git a/arch/x86/include/asm/tlbflush.h b/arch/x86/include/asm/tlbflush.h
+> index 79272938cf79..a1fea36d5292 100644
+> --- a/arch/x86/include/asm/tlbflush.h
+> +++ b/arch/x86/include/asm/tlbflush.h
 
-I still don't get what you're saying.  The above patch attempted to
-cover all those scenarios by always subtracting an offset from all movs
-and stack accesses relating to BPF_REG_FP.  It might be missing a case
-or two but it seems like it should work.  From the program's point of
-view, BPF_REG_FP should always show the right value no matter where it
-gets moved to.
+...
 
-But anyway, David L's nested frame idea might be a much simpler change.
-I'll look at that.
+> @@ -439,6 +442,7 @@ static inline void __native_flush_tlb_one_user(unsigned long addr)
+>  {
+>  	u32 loaded_mm_asid = this_cpu_read(cpu_tlbstate.loaded_mm_asid);
+>  
+> +	//invpcid_flush_one(kern_pcid(loaded_mm_asid), addr);
 
--- 
-Josh
+Leftover debug/testing code.
+
+>  	asm volatile("invlpg (%0)" ::"r" (addr) : "memory");
+>  
+>  	if (!static_cpu_has(X86_FEATURE_PTI))
