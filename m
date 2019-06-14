@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD25C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:41:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABF8EC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:41:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 105762133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:41:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 846F721473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:41:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PdP8kCT5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J4wmh8s2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfFNMle (ORCPT
+        id S1728045AbfFNMlt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:41:34 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34443 "EHLO
+        Fri, 14 Jun 2019 08:41:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:40309 "EHLO
         mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727892AbfFNMlc (ORCPT
+        with ESMTP id S1727905AbfFNMle (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:41:32 -0400
-Received: by mail-wm1-f68.google.com with SMTP id w9so8833505wmd.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:41:31 -0700 (PDT)
+        Fri, 14 Jun 2019 08:41:34 -0400
+Received: by mail-wm1-f68.google.com with SMTP id v19so2173074wmj.5
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:41:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=5qK3v8M0/COPEJ7SsWz/6CEIKUUGZmlWZtaz7Lhp+Ls=;
-        b=PdP8kCT5pZ4KuRLTSoxZDOpMV9pdkl9OgGbCB5RREx+hw6lGRrZeeEjtwwZX2q7vN3
-         QHlwzO/9Feq+CAo1OidLVlETLzyZ3/F1BoGXW/ESOq77VmJoQbfgTow6jbZpg0ncFkCN
-         3E4OMqjqtCGnXGW0fPe139Q5uvVm1LtbwPEEzy3SWD4JEXg5rHZbMl1+8DSwpDaye8ob
-         xJ/yxsr0KAGGq16zjraeEe0RRQBNEf7YO/xyoBgg4ZtptfRKqW1mpgPBbgwbtXHYQUjq
-         fZ4xVaTOHSsjfkOm3zOCoRTeFZPiiM5hZ0EXVdSc/gv1/EorkEtXNZBOqinC2C9icEFl
-         saQg==
+        bh=ikrEbSutjHRTcQQg/Oha1wtsctApdZhOcWN+4xePnrs=;
+        b=J4wmh8s2eFE78lNG3SgNS9fKgrTvJi8/54g0IibJPJZZLJSZZroXgvM3cDQBfax8gC
+         BI0uYyZq8q5SE+NG2+C8YcNagSzCtbkp1rHtnOpRlGdSUODFpU5nfNb3iC9TX9wPwyew
+         43aXDF8/CA9PR86IJm8dsl6uzj4ZyRKba312BUdmjUrVObB2pOxgt4h/veMHB3y3LuvR
+         vbWfh1k0LPuH0co5IF4onLQmH0BxKNWm6j/T2nqQUKLYlM1wkSyYqdj2/+K53Kl2RcS9
+         dZEpfI1sRPZhEdIDHoHIDrD4gMlw9sWFF9uDD2bdNzXIWFkXcSMnkaggJHataqIUW5+W
+         Jycg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=5qK3v8M0/COPEJ7SsWz/6CEIKUUGZmlWZtaz7Lhp+Ls=;
-        b=MDFVqaxZr1LRWl3GWxFyuU++e5Q/hG29wDtjVtWlEsMH9BMKy/q6IcjleUWgczxb2k
-         nxsMDBSojFiW+EPAoB3vX4+vEJAvCwMB5ymzBcajW93Km6N0WwvxRjwNKOmVWwB6Wpga
-         5IOJ1BOvfWkuzEHEproB2zar8zuz/KFYgOBBdYRZiipytsqfgrUMLGKErS9r2M882uD1
-         w9k02AzKdhqYdhOpl2WzKuDBdD7kHc5bgH1f2vZTnV633z+lYZBOvDyXw1Ny0DzVJpUK
-         TKqmPBXNw8xFh0S1O6U2tlwHtKOheLaXMo9otOtTIbJOLg8EO5gWYx3D4T8VrZPlhaOB
-         uHvw==
-X-Gm-Message-State: APjAAAWwMQoL7urwDUjLZcwJWLtjsvakogdA5idHLeGglpqtLGczdQ0P
-        8RQOFtNlZRsx7c52nXgFxyc=
-X-Google-Smtp-Source: APXvYqx3TdkTr2PERaWPaBgxNyn5HROu2JC1tdlF95OhuMaMEztonewEfp/JX5KXsP6wDZyP4C46VA==
-X-Received: by 2002:a1c:7d4e:: with SMTP id y75mr7935115wmc.169.1560516090704;
-        Fri, 14 Jun 2019 05:41:30 -0700 (PDT)
+        bh=ikrEbSutjHRTcQQg/Oha1wtsctApdZhOcWN+4xePnrs=;
+        b=C1ClqH7HvenmQxJa/ZCaSuzbCmx96hqOqDIQ6p4kysaQFYlLBNAf6IxyDSt25YuvH8
+         doyamJv2x4kZax2e1kvznGWUGEfkSuUMrwqAhPHsFPH8wDEL+WoYwHG2DqiSsiCSLBhO
+         bD1Gc0CVhrZYwWySd/O0FVZ7dcbPW+GN5ptmbuQa4+5MODoaUtekgSsgxTCA8/tlEADp
+         T11pUt/cERPSkkBPT/0shrTxIIPk/wLcfFLt2FzksGSp/XkOGa+paUTEw6y7quH45Iae
+         acRN1hoyxE11QWghLzUtmPgHYb/DTFFrOEsSauRMg5KWMystCnwgK/Xdy3z0mjb4qkGL
+         i/Og==
+X-Gm-Message-State: APjAAAVoEZphTUJK8ahDPlpXRDQpyhlhJweNAIZGvve51GDRSn+9c73G
+        fVXCU0t/8v3phuGD2oxcySQ=
+X-Google-Smtp-Source: APXvYqzBD/dbXM9Coe83f5O64MsEtVJFQksKIgSL9I3SUrQShnBIHgrA7EisTvPuUH3e/3GJB6jZGQ==
+X-Received: by 2002:a1c:b68a:: with SMTP id g132mr8217905wmf.66.1560516092658;
+        Fri, 14 Jun 2019 05:41:32 -0700 (PDT)
 Received: from abel.fritz.box ([2a02:908:1252:fb60:e0eb:ed4e:b781:3e9f])
-        by smtp.gmail.com with ESMTPSA id n1sm2648209wrx.39.2019.06.14.05.41.29
+        by smtp.gmail.com with ESMTPSA id n1sm2648209wrx.39.2019.06.14.05.41.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 05:41:30 -0700 (PDT)
+        Fri, 14 Jun 2019 05:41:32 -0700 (PDT)
 From:   "=?UTF-8?q?Christian=20K=C3=B6nig?=" 
         <ckoenig.leichtzumerken@gmail.com>
 X-Google-Original-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
@@ -66,9 +66,9 @@ To:     daniel@ffwll.ch, l.stach@pengutronix.de,
         thellstrom@vmware.com, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, etnaviv@lists.freedesktop.org,
         lima@lists.freedesktop.org
-Subject: [PATCH 3/6] drm/gem: use new ww_mutex_(un)lock_for_each macros
-Date:   Fri, 14 Jun 2019 14:41:22 +0200
-Message-Id: <20190614124125.124181-4-christian.koenig@amd.com>
+Subject: [PATCH 5/6] drm/lima: use new ww_mutex_(un)lock_for_each macros
+Date:   Fri, 14 Jun 2019 14:41:24 +0200
+Message-Id: <20190614124125.124181-6-christian.koenig@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190614124125.124181-1-christian.koenig@amd.com>
 References: <20190614124125.124181-1-christian.koenig@amd.com>
@@ -84,77 +84,68 @@ Use the provided macros instead of implementing deadlock handling on our own.
 
 Signed-off-by: Christian König <christian.koenig@amd.com>
 ---
- drivers/gpu/drm/drm_gem.c | 49 ++++++++++-----------------------------
- 1 file changed, 12 insertions(+), 37 deletions(-)
+ drivers/gpu/drm/lima/lima_gem.c | 41 +++++++++------------------------
+ 1 file changed, 11 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/gpu/drm/drm_gem.c b/drivers/gpu/drm/drm_gem.c
-index 50de138c89e0..6e4623d3bee2 100644
---- a/drivers/gpu/drm/drm_gem.c
-+++ b/drivers/gpu/drm/drm_gem.c
-@@ -1307,51 +1307,26 @@ int
- drm_gem_lock_reservations(struct drm_gem_object **objs, int count,
- 			  struct ww_acquire_ctx *acquire_ctx)
+diff --git a/drivers/gpu/drm/lima/lima_gem.c b/drivers/gpu/drm/lima/lima_gem.c
+index 477c0f766663..6a51f100c29e 100644
+--- a/drivers/gpu/drm/lima/lima_gem.c
++++ b/drivers/gpu/drm/lima/lima_gem.c
+@@ -151,43 +151,24 @@ static int lima_gem_sync_bo(struct lima_sched_task *task, struct lima_bo *bo,
+ static int lima_gem_lock_bos(struct lima_bo **bos, u32 nr_bos,
+ 			     struct ww_acquire_ctx *ctx)
  {
--	int contended = -1;
+-	int i, ret = 0, contended, slow_locked = -1;
 +	struct ww_mutex *contended;
- 	int i, ret;
++	int i, ret = 0;
  
- 	ww_acquire_init(acquire_ctx, &reservation_ww_class);
+ 	ww_acquire_init(ctx, &reservation_ww_class);
  
 -retry:
--	if (contended != -1) {
--		struct drm_gem_object *obj = objs[contended];
--
--		ret = ww_mutex_lock_slow_interruptible(&obj->resv->lock,
--						       acquire_ctx);
--		if (ret) {
--			ww_acquire_done(acquire_ctx);
--			return ret;
--		}
--	}
--
--	for (i = 0; i < count; i++) {
--		if (i == contended)
+-	for (i = 0; i < nr_bos; i++) {
+-		if (i == slow_locked) {
+-			slow_locked = -1;
 -			continue;
+-		}
 -
--		ret = ww_mutex_lock_interruptible(&objs[i]->resv->lock,
--						  acquire_ctx);
--		if (ret) {
--			int j;
--
--			for (j = 0; j < i; j++)
--				ww_mutex_unlock(&objs[j]->resv->lock);
--
--			if (contended != -1 && contended >= i)
--				ww_mutex_unlock(&objs[contended]->resv->lock);
--
--			if (ret == -EDEADLK) {
--				contended = i;
--				goto retry;
--			}
--
--			ww_acquire_done(acquire_ctx);
--			return ret;
+-		ret = ww_mutex_lock_interruptible(&bos[i]->gem.resv->lock, ctx);
+-		if (ret < 0) {
+-			contended = i;
+-			goto err;
 -		}
 -	}
-+	ww_mutex_lock_for_each(for (i = 0; i < count; i++),
-+			       &objs[i]->resv->lock, contended, ret, true,
-+			       acquire_ctx)
++	ww_mutex_lock_for_each(for (i = 0; i < nr_bos; i++),
++			       &bos[i]->gem.resv->lock, contended, ret, true,
++			       ctx)
 +		if (ret)
 +			goto error;
  
- 	ww_acquire_done(acquire_ctx);
+ 	ww_acquire_done(ctx);
+-	return 0;
  
- 	return 0;
-+
+-err:
+-	for (i--; i >= 0; i--)
+-		ww_mutex_unlock(&bos[i]->gem.resv->lock);
+-
+-	if (slow_locked >= 0)
+-		ww_mutex_unlock(&bos[slow_locked]->gem.resv->lock);
++	return 0;
+ 
+-	if (ret == -EDEADLK) {
+-		/* we lost out in a seqno race, lock and retry.. */
+-		ret = ww_mutex_lock_slow_interruptible(
+-			&bos[contended]->gem.resv->lock, ctx);
+-		if (!ret) {
+-			slow_locked = contended;
+-			goto retry;
+-		}
+-	}
 +error:
-+	ww_mutex_unlock_for_each(for (i = 0; i < count; i++),
-+				 &objs[i]->resv->lock, contended);
-+	ww_acquire_done(acquire_ctx);
-+	return ret;
- }
- EXPORT_SYMBOL(drm_gem_lock_reservations);
++	ww_mutex_unlock_for_each(for (i = 0; i < nr_bos; i++),
++				 &bos[i]->gem.resv->lock, contended);
+ 	ww_acquire_fini(ctx);
  
+ 	return ret;
 -- 
 2.17.1
 
