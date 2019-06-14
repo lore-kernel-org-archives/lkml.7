@@ -2,141 +2,163 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DCBC31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:48:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49AE3C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF39A21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:48:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17FA120866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="InfZ/wOT"
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="X5T/IQ42"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728518AbfFNNsx (ORCPT
+        id S1729216AbfFNNtD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:48:53 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54110 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729061AbfFNNsk (ORCPT
+        Fri, 14 Jun 2019 09:49:03 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:43816 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729194AbfFNNs7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:48:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=RVKpwDD7wUATUASeNR+XdAkTqCzdoA7nasScp5npHqs=; b=InfZ/wOT5rvjRmLvAJ5YP0wj7w
-        MnY2l6T7U9OKNQHOpXU4ecx11Q/eDpbs9QZcUEk1J6VapmhpcCqvhL8/4NsVudmklSgaa2WcxVUBe
-        waQaOUcUb4RL/2HYzMKDhBFk0TbOCBJW2bM1HFoiaO8f2Ig4hC482NJbLtwEkvvRfYlxTkYB8GZfS
-        F0h9hjSdleNEn2dTrk1H5znVe9s/hC3c40GaTOTSLSDPoVROxZizHibMU3rX0xz8EOQplEK9nB80Z
-        xPVZaB3uqh4bQkuTonc69uqBuDRYzL7doJGRuaJI4LbV+3+NfJQNVhZazRojfRluUXrQDfyvbPdjZ
-        6hG3FXUA==;
-Received: from 213-225-9-13.nat.highway.a1.net ([213.225.9.13] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbmZ7-0005kh-Ep; Fri, 14 Jun 2019 13:48:26 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>
-Cc:     Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 15/16] dma-mapping: clear __GFP_COMP in dma_alloc_attrs
-Date:   Fri, 14 Jun 2019 15:47:25 +0200
-Message-Id: <20190614134726.3827-16-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614134726.3827-1-hch@lst.de>
-References: <20190614134726.3827-1-hch@lst.de>
+        Fri, 14 Jun 2019 09:48:59 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z24so2461979qtj.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:48:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3vLfyiqRUkXZUsAV0iIyqHmGnWOma05/FT7nB53fGO4=;
+        b=X5T/IQ42Rw/TYJOtDwczmS/r4/vXC6WSn5Sbjg+XQgW4XuBh5Ug4oluDQlImwQLSX+
+         MS4m1CETGtD1o+Iqc1JKAbn1egr9P1BRpmzHODTWItUKIKJmqGdKGOaYUYMmYKq4FY46
+         BtK0kPxbUPNajiyd6oH6quYiYVsFlJt9OjHdSrTJzziw4oE3Xqtug3LI42YtW+bMh7dj
+         gFzgJU/JPW3A5XDZ06Ll3utuN8CKlnZy8yFoxA3xs2adLn1TJkqroF2iUM1lWb+Eghwz
+         r1ZN5Hl6ubobMhI7WwKRKDalIHZ3J12RheT28lJ8T1zWAwgV/rv2L4AhcZrLg6VQpWZf
+         0Mrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3vLfyiqRUkXZUsAV0iIyqHmGnWOma05/FT7nB53fGO4=;
+        b=Foo6ccVNkrbRYSKsFoZ4ZlaUQeI7m1DBWnXHF2YR/Fbbo9XEBQdXSHAjgGh1vhOII/
+         4wbWkt4L/YjUjlHYl5pmKY/uCXD8O810UkzOd015jt15Z12DOIBFVs3J2Vhih/LzHa1P
+         zl8/9t78B6fz6N+ExG2O9Mr0FP00xTdLCHnrm7EWzgkDvx7pcKtGaGJ+jK75d0fVJ406
+         xZ+j0//OIotjoELcLV60ItTCMH8BR/Asn/3d60svPwKpt6XEhYgTUH65f6a8A+NU9iaN
+         Y8mFM4mf91tbkE6ZOCpDvPGoZLTZe0n0bfDoQQ96PBb0DN5gycNgsobbu9+YmJUWyvpC
+         qFWA==
+X-Gm-Message-State: APjAAAU4GjPB+EkE/izQ2k6x6fUtOSd9ZuuaXOxfDFIXgGiGSEQG9/zi
+        5tcpPwM3B+gCrL8kwbsNWMU4fw==
+X-Google-Smtp-Source: APXvYqxXpZ8x6G9q3jVBsULkNrXCbgEf+i5HLKC/qRz+XuuUrdKpecvnVK3M5VtWu0Lwi5MSEjw9+g==
+X-Received: by 2002:ac8:2c33:: with SMTP id d48mr82416237qta.40.1560520138294;
+        Fri, 14 Jun 2019 06:48:58 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::a658])
+        by smtp.gmail.com with ESMTPSA id 41sm2004456qtp.32.2019.06.14.06.48.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:48:58 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 09:48:56 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 6/8] Btrfs: only associate the locked page with one
+ async_cow struct
+Message-ID: <20190614134856.jnjw4p3lfcqhrmmj@MacBook-Pro-91.local>
+References: <20190614003350.1178444-1-tj@kernel.org>
+ <20190614003350.1178444-7-tj@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614003350.1178444-7-tj@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Lift the code to clear __GFP_COMP from arm into the common DMA
-allocator path.  For one this fixes the various other patches that
-call alloc_pages_exact or split_page in case a bogus driver passes
-the argument, and it also prepares for doing exact allocation in
-the generic dma-direct allocator.
+On Thu, Jun 13, 2019 at 05:33:48PM -0700, Tejun Heo wrote:
+> From: Chris Mason <clm@fb.com>
+> 
+> The btrfs writepages function collects a large range of pages flagged
+> for delayed allocation, and then sends them down through the COW code
+> for processing.  When compression is on, we allocate one async_cow
+> structure for every 512K, and then run those pages through the
+> compression code for IO submission.
+> 
+> writepages starts all of this off with a single page, locked by
+> the original call to extent_write_cache_pages(), and it's important to
+> keep track of this page because it has already been through
+> clear_page_dirty_for_io().
+> 
+> The btrfs async_cow struct has a pointer to the locked_page, and when
+> we're redirtying the page because compression had to fallback to
+> uncompressed IO, we use page->index to decide if a given async_cow
+> struct really owns that page.
+> 
+> But, this is racey.  If a given delalloc range is broken up into two
+> async_cows (cow_A and cow_B), we can end up with something like this:
+> 
+> compress_file_range(cowA)
+> submit_compress_extents(cowA)
+> submit compressed bios(cowA)
+> put_page(locked_page)
+> 
+> 				compress_file_range(cowB)
+> 				...
+> 
+> The end result is that cowA is completed and cleaned up before cowB even
+> starts processing.  This means we can free locked_page() and reuse it
+> elsewhere.  If we get really lucky, it'll have the same page->index in
+> its new home as it did before.
+> 
+> While we're processing cowB, we might decide we need to fall back to
+> uncompressed IO, and so compress_file_range() will call
+> __set_page_dirty_nobufers() on cowB->locked_page.
+> 
+> Without cgroups in use, this creates as a phantom dirty page, which
+> isn't great but isn't the end of the world.  With cgroups in use, we
+> might crash in the accounting code because page->mapping->i_wb isn't
+> set.
+> 
+> [ 8308.523110] BUG: unable to handle kernel NULL pointer dereference at 00000000000000d0
+> [ 8308.531084] IP: percpu_counter_add_batch+0x11/0x70
+> [ 8308.538371] PGD 66534e067 P4D 66534e067 PUD 66534f067 PMD 0
+> [ 8308.541750] Oops: 0000 [#1] SMP DEBUG_PAGEALLOC
+> [ 8308.551948] CPU: 16 PID: 2172 Comm: rm Not tainted
+> [ 8308.566883] RIP: 0010:percpu_counter_add_batch+0x11/0x70
+> [ 8308.567891] RSP: 0018:ffffc9000a97bbe0 EFLAGS: 00010286
+> [ 8308.568986] RAX: 0000000000000005 RBX: 0000000000000090 RCX: 0000000000026115
+> [ 8308.570734] RDX: 0000000000000030 RSI: ffffffffffffffff RDI: 0000000000000090
+> [ 8308.572543] RBP: 0000000000000000 R08: fffffffffffffff5 R09: 0000000000000000
+> [ 8308.573856] R10: 00000000000260c0 R11: ffff881037fc26c0 R12: ffffffffffffffff
+> [ 8308.580099] R13: ffff880fe4111548 R14: ffffc9000a97bc90 R15: 0000000000000001
+> [ 8308.582520] FS:  00007f5503ced480(0000) GS:ffff880ff7200000(0000) knlGS:0000000000000000
+> [ 8308.585440] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> [ 8308.587951] CR2: 00000000000000d0 CR3: 00000001e0459005 CR4: 0000000000360ee0
+> [ 8308.590707] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> [ 8308.592865] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> [ 8308.594469] Call Trace:
+> [ 8308.595149]  account_page_cleaned+0x15b/0x1f0
+> [ 8308.596340]  __cancel_dirty_page+0x146/0x200
+> [ 8308.599395]  truncate_cleanup_page+0x92/0xb0
+> [ 8308.600480]  truncate_inode_pages_range+0x202/0x7d0
+> [ 8308.617392]  btrfs_evict_inode+0x92/0x5a0
+> [ 8308.619108]  evict+0xc1/0x190
+> [ 8308.620023]  do_unlinkat+0x176/0x280
+> [ 8308.621202]  do_syscall_64+0x63/0x1a0
+> [ 8308.623451]  entry_SYSCALL_64_after_hwframe+0x42/0xb7
+> 
+> The fix here is to make asyc_cow->locked_page NULL everywhere but the
+> one async_cow struct that's allowed to do things to the locked page.
+> 
+> Signed-off-by: Chris Mason <clm@fb.com>
+> Fixes: 771ed689d2cd ("Btrfs: Optimize compressed writeback and reads")
+> ---
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/arm/mm/dma-mapping.c | 17 -----------------
- kernel/dma/mapping.c      |  9 +++++++++
- 2 files changed, 9 insertions(+), 17 deletions(-)
+Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index 0a75058c11f3..86135feb2c05 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -759,14 +759,6 @@ static void *__dma_alloc(struct device *dev, size_t size, dma_addr_t *handle,
- 	if (mask < 0xffffffffULL)
- 		gfp |= GFP_DMA;
- 
--	/*
--	 * Following is a work-around (a.k.a. hack) to prevent pages
--	 * with __GFP_COMP being passed to split_page() which cannot
--	 * handle them.  The real problem is that this flag probably
--	 * should be 0 on ARM as it is not supported on this
--	 * platform; see CONFIG_HUGETLBFS.
--	 */
--	gfp &= ~(__GFP_COMP);
- 	args.gfp = gfp;
- 
- 	*handle = DMA_MAPPING_ERROR;
-@@ -1527,15 +1519,6 @@ static void *__arm_iommu_alloc_attrs(struct device *dev, size_t size,
- 		return __iommu_alloc_simple(dev, size, gfp, handle,
- 					    coherent_flag, attrs);
- 
--	/*
--	 * Following is a work-around (a.k.a. hack) to prevent pages
--	 * with __GFP_COMP being passed to split_page() which cannot
--	 * handle them.  The real problem is that this flag probably
--	 * should be 0 on ARM as it is not supported on this
--	 * platform; see CONFIG_HUGETLBFS.
--	 */
--	gfp &= ~(__GFP_COMP);
--
- 	pages = __iommu_alloc_buffer(dev, size, gfp, attrs, coherent_flag);
- 	if (!pages)
- 		return NULL;
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index f7afdadb6770..4b618e1abbc1 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -252,6 +252,15 @@ void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
- 	/* let the implementation decide on the zone to allocate from: */
- 	flag &= ~(__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM);
- 
-+	/*
-+	 * __GFP_COMP interacts badly with splitting up a larger order
-+	 * allocation.  But as our allocations might not even come from the
-+	 * page allocator, the callers can't rely on the fact that they
-+	 * even get pages, never mind which kind.
-+	 */
-+	if (WARN_ON_ONCE(flag & __GFP_COMP))
-+		flag &= ~__GFP_COMP;
-+
- 	if (dma_is_direct(ops))
- 		cpu_addr = dma_direct_alloc(dev, size, dma_handle, flag, attrs);
- 	else if (ops->alloc)
--- 
-2.20.1
+Thanks,
 
+Josef
