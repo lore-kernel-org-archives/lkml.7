@@ -2,120 +2,187 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2773DC31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AD63C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F340B20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:50:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CunEZYdz"
+	by mail.kernel.org (Postfix) with ESMTP id D35D220866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728801AbfFNNsF (ORCPT
+        id S1728758AbfFNNuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:48:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52034 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728396AbfFNNsE (ORCPT
+        Fri, 14 Jun 2019 09:50:08 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:38121 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728199AbfFNNuF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:48:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/4FoCDBLnzPb2XMaauyatStM9o0VD0yD5rKIYuMBQ0E=; b=CunEZYdzj1zjPFvQ9vuv6tDtLy
-        vk2B+7o+RESYX/Uj9YE1WPSM8gIuTAZ9+l9/VP7ellxJPLL3OCZwLpPkkg4YXW6iAK1W1D1NsQkRe
-        R9/3wcIyp1y1J0ATOjHMugtXv7Iico5Aonf2oieKVDzXwypDKvx97YYahLtJLN0gNdbS9nFF40L8G
-        5KFWLhTktOcQms4JvV3KcOo/4hbUdJHHZjKi58NphDT1sJOTHGcRUAlsD9UdoyaNfz245j984aH/g
-        Vo2b1kxQcOlsnjlGFpHDFC20bvIYQtaIn5fpgbXQD6ANRo9p6tKP0Uc1+axVpGGcAW40+eMu8FIaS
-        wqAUuf8Q==;
-Received: from 213-225-9-13.nat.highway.a1.net ([213.225.9.13] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbmYW-0004tD-Fb; Fri, 14 Jun 2019 13:47:49 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>
-Cc:     Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM PORT),
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 05/16] drm: don't mark pages returned from drm_pci_alloc reserved
-Date:   Fri, 14 Jun 2019 15:47:15 +0200
-Message-Id: <20190614134726.3827-6-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614134726.3827-1-hch@lst.de>
-References: <20190614134726.3827-1-hch@lst.de>
+        Fri, 14 Jun 2019 09:50:05 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbmaD-000634-8y; Fri, 14 Jun 2019 15:49:33 +0200
+Date:   Fri, 14 Jun 2019 15:49:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv4 08/28] timens/kernel: Take into account timens clock
+ offsets in clock_nanosleep
+In-Reply-To: <20190612192628.23797-9-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1906141542520.1722@nanos.tec.linutronix.de>
+References: <20190612192628.23797-1-dima@arista.com> <20190612192628.23797-9-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are not allowed to call virt_to_page on pages returned from
-dma_alloc_coherent, as in many cases the virtual address returned
-is aactually a kernel direct mapping.  Also there generally is no
-need to mark dma memory as reserved.
+On Wed, 12 Jun 2019, Dmitry Safonov wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/gpu/drm/drm_bufs.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+Again the subsystem prefix is something pulled out of thin air.
 
-diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
-index 7418872d87c6..b640437ce90f 100644
---- a/drivers/gpu/drm/drm_bufs.c
-+++ b/drivers/gpu/drm/drm_bufs.c
-@@ -77,13 +77,6 @@ drm_dma_handle_t *drm_pci_alloc(struct drm_device * dev, size_t size, size_t ali
- 		return NULL;
- 	}
- 
--	/* XXX - Is virt_to_page() legal for consistent mem? */
--	/* Reserve */
--	for (addr = (unsigned long)dmah->vaddr, sz = size;
--	     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
--		SetPageReserved(virt_to_page((void *)addr));
--	}
--
- 	return dmah;
- }
- 
-@@ -97,16 +90,9 @@ void __drm_legacy_pci_free(struct drm_device * dev, drm_dma_handle_t * dmah)
- 	unsigned long addr;
- 	size_t sz;
- 
--	if (dmah->vaddr) {
--		/* XXX - Is virt_to_page() legal for consistent mem? */
--		/* Unreserve */
--		for (addr = (unsigned long)dmah->vaddr, sz = dmah->size;
--		     sz > 0; addr += PAGE_SIZE, sz -= PAGE_SIZE) {
--			ClearPageReserved(virt_to_page((void *)addr));
--		}
-+	if (dmah->vaddr)
- 		dma_free_coherent(&dev->pdev->dev, dmah->size, dmah->vaddr,
- 				  dmah->busaddr);
--	}
- }
- 
- /**
--- 
-2.20.1
+> From: Andrei Vagin <avagin@gmail.com>
+> 
+> Wire up clock_nanosleep() to timens offsets.
+> 
+> Signed-off-by: Andrei Vagin <avagin@openvz.org>
+> Co-developed-by: Dmitry Safonov <dima@arista.com>
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
+> ---
+>  include/linux/hrtimer.h    |  2 +-
+>  kernel/time/alarmtimer.c   |  2 ++
+>  kernel/time/hrtimer.c      |  8 ++++----
+>  kernel/time/posix-stubs.c  | 12 ++++++++++--
+>  kernel/time/posix-timers.c | 19 ++++++++++++++++---
+>  5 files changed, 33 insertions(+), 10 deletions(-)
+> 
+> diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
+> index 2e8957eac4d4..5a3b3e17d0e8 100644
+> --- a/include/linux/hrtimer.h
+> +++ b/include/linux/hrtimer.h
+> @@ -473,7 +473,7 @@ static inline u64 hrtimer_forward_now(struct hrtimer *timer,
+>  /* Precise sleep: */
+>  
+>  extern int nanosleep_copyout(struct restart_block *, struct timespec64 *);
+> -extern long hrtimer_nanosleep(const struct timespec64 *rqtp,
+> +extern long hrtimer_nanosleep(ktime_t rqtp,
+>  			      const enum hrtimer_mode mode,
+>  			      const clockid_t clockid);
+>  
+> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+> index 6346e6ee0d32..f1f42df179d0 100644
+> --- a/kernel/time/alarmtimer.c
+> +++ b/kernel/time/alarmtimer.c
+> @@ -819,6 +819,8 @@ static int alarm_timer_nsleep(const clockid_t which_clock, int flags,
+>  		ktime_t now = alarm_bases[type].gettime();
+>  
+>  		exp = ktime_add_safe(now, exp);
+> +	} else {
+> +		exp = timens_ktime_to_host(which_clock, exp);
+>  	}
 
+This one is independent of the hrtimer part. Please split it out into
+
+ Subject: alarmtimer: Make nanosleep time namespace aware
+
+ 
+>  	ret = alarmtimer_do_nsleep(&alarm, exp, type);
+> diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+> index 41dfff23c1f9..b245f6ff9c8f 100644
+> --- a/kernel/time/hrtimer.c
+> +++ b/kernel/time/hrtimer.c
+> @@ -1716,7 +1716,7 @@ static long __sched hrtimer_nanosleep_restart(struct restart_block *restart)
+>  	return ret;
+>  }
+>  
+> -long hrtimer_nanosleep(const struct timespec64 *rqtp,
+> +long hrtimer_nanosleep(ktime_t rqtp,
+>  		       const enum hrtimer_mode mode, const clockid_t clockid)
+
+This signature change wants to be separate.
+
+  Subject: hrtimers: Prepare hrtimer_nanosleep() for time namespaces
+
+>  {
+>  	struct restart_block *restart;
+> @@ -1729,7 +1729,7 @@ long hrtimer_nanosleep(const struct timespec64 *rqtp,
+>  		slack = 0;
+>  
+>  	hrtimer_init_on_stack(&t.timer, clockid, mode);
+> -	hrtimer_set_expires_range_ns(&t.timer, timespec64_to_ktime(*rqtp), slack);
+> +	hrtimer_set_expires_range_ns(&t.timer, rqtp, slack);
+>  	ret = do_nanosleep(&t, mode);
+>  	if (ret != -ERESTART_RESTARTBLOCK)
+>  		goto out;
+> @@ -1764,7 +1764,7 @@ SYSCALL_DEFINE2(nanosleep, struct __kernel_timespec __user *, rqtp,
+>  
+>  	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+>  	current->restart_block.nanosleep.rmtp = rmtp;
+> -	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
+> +	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL, CLOCK_MONOTONIC);
+>  }
+>  
+>  #endif
+> @@ -1784,7 +1784,7 @@ SYSCALL_DEFINE2(nanosleep_time32, struct old_timespec32 __user *, rqtp,
+>  
+>  	current->restart_block.nanosleep.type = rmtp ? TT_COMPAT : TT_NONE;
+>  	current->restart_block.nanosleep.compat_rmtp = rmtp;
+> -	return hrtimer_nanosleep(&tu, HRTIMER_MODE_REL, CLOCK_MONOTONIC);
+> +	return hrtimer_nanosleep(timespec64_to_ktime(tu), HRTIMER_MODE_REL, CLOCK_MONOTONIC);
+>  }
+>  #endif
+>  
+> diff --git a/kernel/time/posix-stubs.c b/kernel/time/posix-stubs.c
+> index edaf075d1ee4..4ee0dc180866 100644
+> --- a/kernel/time/posix-stubs.c
+> +++ b/kernel/time/posix-stubs.c
+> @@ -129,6 +129,7 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+>  		struct __kernel_timespec __user *, rmtp)
+>  {
+>  	struct timespec64 t;
+> +	ktime_t texp;
+>  
+>  	switch (which_clock) {
+>  	case CLOCK_REALTIME:
+> @@ -147,7 +148,10 @@ SYSCALL_DEFINE4(clock_nanosleep, const clockid_t, which_clock, int, flags,
+>  		rmtp = NULL;
+>  	current->restart_block.nanosleep.type = rmtp ? TT_NATIVE : TT_NONE;
+>  	current->restart_block.nanosleep.rmtp = rmtp;
+> -	return hrtimer_nanosleep(&t, flags & TIMER_ABSTIME ?
+> +	texp = timespec64_to_ktime(t);
+> +	if (flags & TIMER_ABSTIME)
+> +		texp = timens_ktime_to_host(clockid, texp;
+
+And then add actual name space support with:
+
+  Subject: posix-timers: Make clock_nanosleep() time namespace aware
+
+> +	return hrtimer_nanosleep(texp, flags & TIMER_ABSTIME ?
+>  				 HRTIMER_MODE_ABS : HRTIMER_MODE_REL,
+>  				 which_clock);
+>  }
+
+Thanks,
+
+	tglx
