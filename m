@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F4BC31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA8AC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 617F82184D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 247E12184B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:36:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544577;
-	bh=CW+R9mtmL5tZ4dqbeQ7eWnMNZOmFSCvy9csAYnyIzSg=;
+	s=default; t=1560544586;
+	bh=fBomxnnpTQhou0FHVuASFGMxuW+Dxcx9mP4d2DjZGAc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dc/xojtdxVFV6cMMa0WjsHS0O+sHQ43kJPuqNKqxs4+szMR5HYh2nmnf47dgfD7Oq
-	 iDf0kp+GqjCtHcBSTeEJXVLHxuaIo2lkyTZr2dw0bWTWYdtvtcbH/eEb9Kl37RQuNV
-	 kJS5bcAlAguWNEnX3kOwMYHvrEIr1XzcFq4nqgeI=
+	b=tanlULhP3OfLNFv+TALjQpK42kdIk4e33yb71ydZQgAhYzrYeEOq55rZcphaNZqMH
+	 l9HjJmC5ZLcqSRZzeqzVz6as9ru+Fm0oYP+zm37FHGAhttFDPFOsaMQky19+36tnSP
+	 l/Q8Sn1ME7P9hqCrcIKUk+KcMt1ml3GxafAT+05A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728332AbfFNUgP (ORCPT
+        id S1727119AbfFNU3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:36:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51948 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:29:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51024 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727137AbfFNU3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:44 -0400
+        id S1726792AbfFNU3I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:08 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A7621841;
-        Fri, 14 Jun 2019 20:29:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1390217F9;
+        Fri, 14 Jun 2019 20:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544183;
-        bh=CW+R9mtmL5tZ4dqbeQ7eWnMNZOmFSCvy9csAYnyIzSg=;
+        s=default; t=1560544147;
+        bh=fBomxnnpTQhou0FHVuASFGMxuW+Dxcx9mP4d2DjZGAc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZx57lLMhvnOy8MnYeVfSPsD/O1jjhyPJfLOskhr9sjeoAGIA4re0+aZpmV74HtG1
-         EpQNJXS6+MVE7Oc+Tj6UUzHTKUHUa//CYeQ/y8UMzc3hwY7nSIJHWaWaIH0TkUEowt
-         VvGNMnQzEp3iVQVFF6E5rP1Nudtl8ncJXSphF+DU=
+        b=spyPYdM0af+Stnh/IP9R0F5n/3pTdXld2VEvXFrwpit1HUJZW0mIS8cpdWSz1bdmo
+         Zq8khSqpGzjCFtwm3+BOgTlO+0nNM0GFuI4W67jKOyz/M1GUzxOxY+Pc4fvTVVALZH
+         lBWfCXQ8pKb6LLmo0usQV4HreveioAnL6Z0iHWPE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Xin Long <lucien.xin@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 40/59] selftests: set sysctl bc_forwarding properly in router_broadcast.sh
-Date:   Fri, 14 Jun 2019 16:28:24 -0400
-Message-Id: <20190614202843.26941-40-sashal@kernel.org>
+Cc:     Alex Shi <alex.shi@linux.alibaba.com>,
+        Shuah Khan <shuah@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Tejun Heo <tj@kernel.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jay Kamat <jgkamat@fb.com>, linux-kselftest@vger.kernel.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 28/59] kselftest/cgroup: fix unexpected testing failure on test_memcontrol
+Date:   Fri, 14 Jun 2019 16:28:12 -0400
+Message-Id: <20190614202843.26941-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -60,65 +63,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Alex Shi <alex.shi@linux.alibaba.com>
 
-[ Upstream commit 67c0aaa1eaec60e9dab301012bdebe6726ae04bd ]
+[ Upstream commit f6131f28057d4fd8922599339e701a2504e0f23d ]
 
-sysctl setting bc_forwarding for $rp2 is needed when ping_test_from h2,
-otherwise the bc packets from $rp2 won't be forwarded. This patch is to
-add this setting for $rp2.
+The cgroup testing relies on the root cgroup's subtree_control setting,
+If the 'memory' controller isn't set, all test cases will be failed
+as following:
 
-Also, as ping_test_from does grep "$from" only, which could match some
-unexpected output, some test case doesn't really work, like:
+$ sudo ./test_memcontrol
+not ok 1 test_memcg_subtree_control
+not ok 2 test_memcg_current
+ok 3 # skip test_memcg_min
+not ok 4 test_memcg_low
+not ok 5 test_memcg_high
+not ok 6 test_memcg_max
+not ok 7 test_memcg_oom_events
+ok 8 # skip test_memcg_swap_max
+not ok 9 test_memcg_sock
+not ok 10 test_memcg_oom_group_leaf_events
+not ok 11 test_memcg_oom_group_parent_events
+not ok 12 test_memcg_oom_group_score_events
 
-  # ping_test_from $h2 198.51.200.255 198.51.200.2
-    PING 198.51.200.255 from 198.51.100.2 veth3: 56(84) bytes of data.
-    64 bytes from 198.51.100.1: icmp_seq=1 ttl=64 time=0.336 ms
+To correct this unexpected failure, this patch write the 'memory' to
+subtree_control of root to get a right result.
 
-When doing grep $form (198.51.200.2), the output could still match.
-So change to grep "bytes from $from" instead.
-
-Fixes: 40f98b9af943 ("selftests: add a selftest for directed broadcast forwarding")
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Alex Shi <alex.shi@linux.alibaba.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Roman Gushchin <guro@fb.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Jay Kamat <jgkamat@fb.com>
+Cc: linux-kselftest@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/net/forwarding/router_broadcast.sh | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ tools/testing/selftests/cgroup/test_memcontrol.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/net/forwarding/router_broadcast.sh b/tools/testing/selftests/net/forwarding/router_broadcast.sh
-index 9a678ece32b4..4eac0a06f451 100755
---- a/tools/testing/selftests/net/forwarding/router_broadcast.sh
-+++ b/tools/testing/selftests/net/forwarding/router_broadcast.sh
-@@ -145,16 +145,19 @@ bc_forwarding_disable()
- {
- 	sysctl_set net.ipv4.conf.all.bc_forwarding 0
- 	sysctl_set net.ipv4.conf.$rp1.bc_forwarding 0
-+	sysctl_set net.ipv4.conf.$rp2.bc_forwarding 0
- }
+diff --git a/tools/testing/selftests/cgroup/test_memcontrol.c b/tools/testing/selftests/cgroup/test_memcontrol.c
+index 6f339882a6ca..c19a97dd02d4 100644
+--- a/tools/testing/selftests/cgroup/test_memcontrol.c
++++ b/tools/testing/selftests/cgroup/test_memcontrol.c
+@@ -1205,6 +1205,10 @@ int main(int argc, char **argv)
+ 	if (cg_read_strstr(root, "cgroup.controllers", "memory"))
+ 		ksft_exit_skip("memory controller isn't available\n");
  
- bc_forwarding_enable()
- {
- 	sysctl_set net.ipv4.conf.all.bc_forwarding 1
- 	sysctl_set net.ipv4.conf.$rp1.bc_forwarding 1
-+	sysctl_set net.ipv4.conf.$rp2.bc_forwarding 1
- }
- 
- bc_forwarding_restore()
- {
-+	sysctl_restore net.ipv4.conf.$rp2.bc_forwarding
- 	sysctl_restore net.ipv4.conf.$rp1.bc_forwarding
- 	sysctl_restore net.ipv4.conf.all.bc_forwarding
- }
-@@ -171,7 +174,7 @@ ping_test_from()
- 	log_info "ping $dip, expected reply from $from"
- 	ip vrf exec $(master_name_get $oif) \
- 		$PING -I $oif $dip -c 10 -i 0.1 -w $PING_TIMEOUT -b 2>&1 \
--		| grep $from &> /dev/null
-+		| grep "bytes from $from" > /dev/null
- 	check_err_fail $fail $?
- }
- 
++	if (cg_read_strstr(root, "cgroup.subtree_control", "memory"))
++		if (cg_write(root, "cgroup.subtree_control", "+memory"))
++			ksft_exit_skip("Failed to set memory controller\n");
++
+ 	for (i = 0; i < ARRAY_SIZE(tests); i++) {
+ 		switch (tests[i].fn(root)) {
+ 		case KSFT_PASS:
 -- 
 2.20.1
 
