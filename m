@@ -2,133 +2,76 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D8FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:44:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A448AC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 575C02173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:44:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A6322173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:45:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726389AbfFNPou (ORCPT
+        id S1726486AbfFNPpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:44:50 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46544 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725807AbfFNPot (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:44:49 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D24A61DFBA62986F1C44;
-        Fri, 14 Jun 2019 23:44:46 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
- 23:44:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <nm@ti.com>, <t-kristo@ti.com>, <ssantosh@kernel.org>,
-        <s-anna@ti.com>, <santosh.shilimkar@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH -next] firmware: ti_sci: remove set but not used variable 'dev'
-Date:   Fri, 14 Jun 2019 23:44:21 +0800
-Message-ID: <20190614154421.17556-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Fri, 14 Jun 2019 11:45:24 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:33267 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfFNPpX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:45:23 -0400
+Received: from [192.168.1.110] ([77.4.92.40]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MD9nd-1hkMym2NO5-0098ca; Fri, 14 Jun 2019 17:45:21 +0200
+Subject: Re: Help with reviewing dosfstools patches
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
+        util-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190614102513.4uwsu2wkigg3pimq@pali>
+ <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
+Organization: metux IT consult
+Message-ID: <9e81aa56-358a-71e1-edc1-50781062f3a4@metux.net>
+Date:   Fri, 14 Jun 2019 17:45:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+In-Reply-To: <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:qac5b9bV7zvSd7iQ4X0pCft/q2EJPLi7mfSiZbmTpE0sPDGhAC1
+ VRNMAmKV36VozMyK3rWKT7sjIpddFXl8+8x2CHvrKhpMbxmYzvl1NoVwe571TmeQEecoPdd
+ DovXLwbrtAq9WZLC19n+ZGnf3x/CaScxt6QLWiVlIAiPBzjVWmrfKAxWf0pmdnqSlv6YL4w
+ 6DvyI6Ff0MTUYJXdgdC8Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:wjdDE5rA/mI=:gEuP1f7JUa24CM5jb4oOe+
+ sD2m3zN9pW1yiixDOZ+/BJ5JIiHUV92VLznT91iaUp9iTozKGSTvf33nVmAhwSUQUDNMFrLou
+ 1SKVnufEN40n5extwnYZ80cr1GG4JBZ4TD+ZwFFw0E7amq1OiGoQbV/aP/hFD0P7AvitkEwfK
+ +XocfTWUMhz+pWh9taQMupi9XRo/vBiypNXHxw3FJUO0CEjUDUOrt/20l9D8z3fnhym/2cjRE
+ QcUof+png9r7t2Hbc3J4IL+Jygn+oqmmG7thzGEA4KM7dymvY393GSPE9jvAXOcUMoGyqii6v
+ zRnP7HEORP7tOFtgtz3Ubx2OAvAr8OXrDgUqmzB5iN4I40+rywJMzOpN4cA2y/DRtDEaYh/Y9
+ DinhCpaBT9A4Q2gaj0D6IUFzBhs0IjJNzW1carOcebqe+u5GUyK4PnEYDT3U8Vekn4oauv+iH
+ z+3qoV8hm7swc73sB7s+TmXbSDbAreprvWtGZNuFddY9wszKgoC1xbUPR9JeO6R1r4QGzSee4
+ ucHRPC5pdAJSpd+bTB3g6shDdEH9MYuj+e8EwHK0s+cUMoEKPLKEDzZeUvT+zilPMfiU9qpCw
+ B1kveLg4HX62JhFUcQhpFBMTvRzmsP6LLy8qQxJwjz+ZanHfCUx0t9lZzWQA3D025WBVjWB9I
+ SjLhPmnFmQX9yZ6i24fwR354nhbPOguOXE3Gl2YVC268xO2zMaMRkiT4IuxOtUQB6l/4BWFBX
+ vbTqY8ANnKyjH2TUx/IU3zaxRR3S9TYqDWTHGoPokFtgOCLZm9+dBJW/7M8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On 14.06.19 16:20, Enrico Weigelt, metux IT consult wrote:
 
-drivers/firmware/ti_sci.c: In function ti_sci_cmd_ring_config:
-drivers/firmware/ti_sci.c:2035:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-drivers/firmware/ti_sci.c: In function ti_sci_cmd_ring_get_config:
-drivers/firmware/ti_sci.c:2104:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-drivers/firmware/ti_sci.c: In function ti_sci_cmd_rm_udmap_tx_ch_cfg:
-drivers/firmware/ti_sci.c:2287:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-drivers/firmware/ti_sci.c: In function ti_sci_cmd_rm_udmap_rx_ch_cfg:
-drivers/firmware/ti_sci.c:2357:17: warning: variable dev set but not used [-Wunused-but-set-variable]
+<snip>
 
-It is never used since commit 1e407f337f40 ("firmware:
-ti_sci: Add support for processor control")
+Currently working through your branches. Smells like they really deserve
+a rebase and signed-off lines.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- drivers/firmware/ti_sci.c | 8 --------
- 1 file changed, 8 deletions(-)
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 86b2727..8c1a961 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -2032,14 +2032,12 @@ static int ti_sci_cmd_ring_config(const struct ti_sci_handle *handle,
- 	struct ti_sci_msg_hdr *resp;
- 	struct ti_sci_xfer *xfer;
- 	struct ti_sci_info *info;
--	struct device *dev;
- 	int ret = 0;
- 
- 	if (IS_ERR_OR_NULL(handle))
- 		return -EINVAL;
- 
- 	info = handle_to_ti_sci_info(handle);
--	dev = info->dev;
- 
- 	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_RM_RING_CFG,
- 				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-@@ -2101,14 +2099,12 @@ static int ti_sci_cmd_ring_get_config(const struct ti_sci_handle *handle,
- 	struct ti_sci_msg_rm_ring_get_cfg_req *req;
- 	struct ti_sci_xfer *xfer;
- 	struct ti_sci_info *info;
--	struct device *dev;
- 	int ret = 0;
- 
- 	if (IS_ERR_OR_NULL(handle))
- 		return -EINVAL;
- 
- 	info = handle_to_ti_sci_info(handle);
--	dev = info->dev;
- 
- 	xfer = ti_sci_get_one_xfer(info, TI_SCI_MSG_RM_RING_GET_CFG,
- 				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-@@ -2284,14 +2280,12 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
- 	struct ti_sci_msg_hdr *resp;
- 	struct ti_sci_xfer *xfer;
- 	struct ti_sci_info *info;
--	struct device *dev;
- 	int ret = 0;
- 
- 	if (IS_ERR_OR_NULL(handle))
- 		return -EINVAL;
- 
- 	info = handle_to_ti_sci_info(handle);
--	dev = info->dev;
- 
- 	xfer = ti_sci_get_one_xfer(info, TISCI_MSG_RM_UDMAP_TX_CH_CFG,
- 				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
-@@ -2354,14 +2348,12 @@ static int ti_sci_cmd_rm_udmap_rx_ch_cfg(const struct ti_sci_handle *handle,
- 	struct ti_sci_msg_hdr *resp;
- 	struct ti_sci_xfer *xfer;
- 	struct ti_sci_info *info;
--	struct device *dev;
- 	int ret = 0;
- 
- 	if (IS_ERR_OR_NULL(handle))
- 		return -EINVAL;
- 
- 	info = handle_to_ti_sci_info(handle);
--	dev = info->dev;
- 
- 	xfer = ti_sci_get_one_xfer(info, TISCI_MSG_RM_UDMAP_RX_CH_CFG,
- 				   TI_SCI_FLAG_REQ_ACK_ON_PROCESSED,
+--mtx
+
 -- 
-2.7.4
-
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
