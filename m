@@ -2,65 +2,96 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD3F6C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6937C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:35:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC3D2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A394208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:35:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fijeBxJq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfFNLcr (ORCPT
+        id S1727520AbfFNLfh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:32:47 -0400
-Received: from gloria.sntech.de ([185.11.138.130]:39726 "EHLO gloria.sntech.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727307AbfFNLcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:32:46 -0400
-Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
-        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <heiko@sntech.de>)
-        id 1hbkRm-0004mJ-74; Fri, 14 Jun 2019 13:32:42 +0200
-From:   Heiko Stuebner <heiko@sntech.de>
-To:     xieqinick@gmail.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        nick@khadas.com
-Subject: Re: [PATCH v2] arm64: dts: rockchip: Add support for Khadas Edge/Edge-V/Captain boards
-Date:   Fri, 14 Jun 2019 13:32:41 +0200
-Message-ID: <4566563.QzcLDyM7tj@phil>
-In-Reply-To: <1560153473-17190-1-git-send-email-xieqinick@gmail.com>
-References: <1559035267-1884-1-git-send-email-xieqinick@gmail.com> <1560153473-17190-1-git-send-email-xieqinick@gmail.com>
+        Fri, 14 Jun 2019 07:35:37 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37794 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbfFNLfg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 07:35:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=WWQ52tqaiCP0C1KYMNijF1HDqWlxTu5XvaRlCuBtZ3g=; b=fijeBxJqngGRNGgiX1l6dheAA
+        g0a+TA0qsbMnKPf3UF9mnTF+NJ8o2HHDxZGyQokqmbnkrBWxh2nwJAMMhedacfoexc3lD+yUgcstb
+        b58/Ies68J3GZLFKZdMLki9pYdHx5s9bTGYQntRYkltMpfp80uHWFFwUnBfxeqzhumHdFR1jsim+Q
+        Fcvnxn8kZXVv9SmjYvxD82ay1KdB3V7FWOTlZPdCFHVficpEuxVn3l5p4ZgEs+myHgUEcfUwux4Y/
+        xrCDihiDGQ2n0gR2hsnJIoV+HwI5A4h+me8DTlf+jEwCC3bHxoTlS1/sjfQOuLkYYJyhSLIyuA12r
+        fc9HqHw7w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbkUO-0007E2-VL; Fri, 14 Jun 2019 11:35:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7156220A15636; Fri, 14 Jun 2019 13:35:23 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 13:35:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 26/62] keys/mktme: Move the MKTME payload into a
+ cache aligned structure
+Message-ID: <20190614113523.GC3436@hirez.programming.kicks-ass.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-27-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508144422.13171-27-kirill.shutemov@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, 10. Juni 2019, 09:57:53 CEST schrieb xieqinick@gmail.com:
-> From: Nick Xie <nick@khadas.com>
-> 
-> Add devicetree support for Khadas Edge/Edge-V/Captain boards.
-> Khadas Edge is an expandable Rockchip RK3399 board with goldfinger.
-> Khadas Captain is the carrier board for Khadas Edge.
-> Khadas Edge-V is a Khadas VIM form factor Rockchip RK3399 board.
-> 
-> Signed-off-by: Nick Xie <nick@khadas.com>
+On Wed, May 08, 2019 at 05:43:46PM +0300, Kirill A. Shutemov wrote:
 
-applied for 5.3 after doing some style-fixes to the edge.dtsi
-(2 missing gpio constants, some newlines and sdio-regulator
-references were missing "<..>")
+> +/* Copy the payload to the HW programming structure and program this KeyID */
+> +static int mktme_program_keyid(int keyid, struct mktme_payload *payload)
+> +{
+> +	struct mktme_key_program *kprog = NULL;
+> +	int ret;
+> +
+> +	kprog = kmem_cache_zalloc(mktme_prog_cache, GFP_ATOMIC);
 
-Please double-check the result
+Why GFP_ATOMIC, afaict neither of the usage is with a spinlock held.
 
-
-Thanks
-Heiko
-
-
+> +	if (!kprog)
+> +		return -ENOMEM;
+> +
+> +	/* Hardware programming requires cached aligned struct */
+> +	kprog->keyid = keyid;
+> +	kprog->keyid_ctrl = payload->keyid_ctrl;
+> +	memcpy(kprog->key_field_1, payload->data_key, MKTME_AES_XTS_SIZE);
+> +	memcpy(kprog->key_field_2, payload->tweak_key, MKTME_AES_XTS_SIZE);
+> +
+> +	ret = MKTME_PROG_SUCCESS;	/* Future programming call */
+> +	kmem_cache_free(mktme_prog_cache, kprog);
+> +	return ret;
+> +}
