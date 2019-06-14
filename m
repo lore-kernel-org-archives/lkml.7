@@ -7,23 +7,23 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B19ADC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7416CC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945DC2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2742082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfFNQhE (ORCPT
+        id S1726701AbfFNQhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:37:04 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34836 "EHLO
+        Fri, 14 Jun 2019 12:37:21 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:34906 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726218AbfFNQg6 (ORCPT
+        with ESMTP id S1726160AbfFNQhE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:36:58 -0400
+        Fri, 14 Jun 2019 12:37:04 -0400
 Received: from [127.0.0.1] (localhost [127.0.0.1])
         (Authenticated sender: eballetbo)
-        with ESMTPSA id 34C5828616E
+        with ESMTPSA id 11A7E28617D
 From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gwendal@chromium.org, Guenter Roeck <groeck@chromium.org>,
@@ -31,9 +31,9 @@ Cc:     gwendal@chromium.org, Guenter Roeck <groeck@chromium.org>,
         Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
         dtor@chromium.org,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 05/10] mfd / platform: cros_ec: Rename config to a better name
-Date:   Fri, 14 Jun 2019 18:36:30 +0200
-Message-Id: <20190614163635.22413-6-enric.balletbo@collabora.com>
+Subject: [PATCH v2 09/10] mfd: cros_ec: Add convenience struct to define autodetectable CrOS EC subdevices
+Date:   Fri, 14 Jun 2019 18:36:34 +0200
+Message-Id: <20190614163635.22413-10-enric.balletbo@collabora.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614163635.22413-1-enric.balletbo@collabora.com>
 References: <20190614163635.22413-1-enric.balletbo@collabora.com>
@@ -44,10 +44,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cros-ec-dev is a multifunction device that now doesn't implement any
-chardev communication interface. MFD_CROS_EC_CHARDEV doesn't look
-a good name to describe that device and can cause confusion. Hence
-rename it to CROS_EC_DEV.
+The CrOS EC is gaining lots of subdevices that are autodetectable by
+sending the EC_FEATURE_GET_CMD, it takes fair amount of boiler plate
+code to add those devices. So, add a struct that can be used to quickly
+add new subdevices without having to duplicate code.
 
 Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
@@ -55,112 +55,175 @@ Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
 Changes in v2: None
 
- drivers/mfd/Kconfig             | 16 ++++++++++------
- drivers/mfd/Makefile            |  2 +-
- drivers/platform/chrome/Kconfig | 20 ++++++++++----------
- 3 files changed, 21 insertions(+), 17 deletions(-)
+ drivers/mfd/cros_ec_dev.c | 132 +++++++++++++++++++++-----------------
+ 1 file changed, 74 insertions(+), 58 deletions(-)
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 5bcf0af6471d..490d9e0bedd9 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -210,14 +210,18 @@ config MFD_AXP20X_RSB
- 	  components like regulators or the PEK (Power Enable Key) under the
- 	  corresponding menus.
+diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
+index 68fa3a0ba4d6..a8e02a33f82b 100644
+--- a/drivers/mfd/cros_ec_dev.c
++++ b/drivers/mfd/cros_ec_dev.c
+@@ -46,6 +46,18 @@ struct cros_feature_to_name {
+ 	const char *desc;
+ };
  
--config MFD_CROS_EC_CHARDEV
--	tristate "Chrome OS Embedded Controller userspace device interface"
-+config MFD_CROS_EC_DEV
-+	tristate "ChromeOS Embedded Controller multifunction device"
-+	select MFD_CORE
- 	depends on CROS_EC
--	---help---
--	  This driver adds support to talk with the ChromeOS EC from userspace.
-+	default CROS_EC
-+	help
-+	  Select this to get support for ChromeOS Embedded Controller
-+	  sub-devices. This driver will instantiate additional drivers such
-+	  as RTC, USBPD, etc. but you have to select the individual drivers.
++/**
++ * cros_feature_to_cells - CrOS feature id to mfd cells association.
++ * @id: The feature identifier.
++ * @mfd_cells: Pointer to the array of mfd cells that needs to be added.
++ * @num_cells: Number of mfd cells into the array.
++ */
++struct cros_feature_to_cells {
++	unsigned int id;
++	const struct mfd_cell *mfd_cells;
++	unsigned int num_cells;
++};
++
+ static const struct cros_feature_to_name cros_mcu_devices[] = {
+ 	{
+ 		.id	= EC_FEATURE_FINGERPRINT,
+@@ -64,6 +76,48 @@ static const struct cros_feature_to_name cros_mcu_devices[] = {
+ 	},
+ };
  
--	  If you have a supported Chromebook, choose Y or M here.
--	  The module will be called cros_ec_dev.
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called cros-ec-dev.
++static const struct mfd_cell cros_ec_cec_cells[] = {
++	{ .name = "cros-ec-cec", },
++};
++
++static const struct mfd_cell cros_ec_rtc_cells[] = {
++	{ .name = "cros-ec-rtc", },
++};
++
++static const struct mfd_cell cros_usbpd_charger_cells[] = {
++	{ .name = "cros-usbpd-charger", },
++	{ .name = "cros-usbpd-logger", },
++};
++
++static const struct cros_feature_to_cells cros_subdevices[] = {
++	{
++		.id		= EC_FEATURE_CEC,
++		.mfd_cells	= cros_ec_cec_cells,
++		.num_cells	= ARRAY_SIZE(cros_ec_cec_cells),
++	},
++	{
++		.id		= EC_FEATURE_RTC,
++		.mfd_cells	= cros_ec_rtc_cells,
++		.num_cells	= ARRAY_SIZE(cros_ec_rtc_cells),
++	},
++	{
++		.id		= EC_FEATURE_USB_PD,
++		.mfd_cells	= cros_usbpd_charger_cells,
++		.num_cells	= ARRAY_SIZE(cros_usbpd_charger_cells),
++	},
++};
++
++static const struct mfd_cell cros_ec_platform_cells[] = {
++	{ .name = "cros-ec-chardev", },
++	{ .name = "cros-ec-debugfs", },
++	{ .name = "cros-ec-lightbar", },
++	{ .name = "cros-ec-sysfs", },
++};
++
++static const struct mfd_cell cros_ec_vbc_cells[] = {
++	{ .name = "cros-ec-vbc", }
++};
++
+ static int cros_ec_check_features(struct cros_ec_dev *ec, int feature)
+ {
+ 	struct cros_ec_command *msg;
+@@ -223,30 +277,6 @@ static void cros_ec_sensors_register(struct cros_ec_dev *ec)
+ 	kfree(msg);
+ }
  
- config MFD_MADERA
- 	tristate "Cirrus Logic Madera codecs"
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 32327dc6bb45..7d2bb3f98894 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -13,7 +13,7 @@ obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
- obj-$(CONFIG_ARCH_BCM2835)	+= bcm2835-pm.o
- obj-$(CONFIG_MFD_BCM590XX)	+= bcm590xx.o
- obj-$(CONFIG_MFD_BD9571MWV)	+= bd9571mwv.o
--obj-$(CONFIG_MFD_CROS_EC_CHARDEV) += cros_ec_dev.o
-+obj-$(CONFIG_MFD_CROS_EC_DEV)	+= cros_ec_dev.o
- obj-$(CONFIG_MFD_EXYNOS_LPASS)	+= exynos-lpass.o
+-static const struct mfd_cell cros_ec_cec_cells[] = {
+-	{ .name = "cros-ec-cec" }
+-};
+-
+-static const struct mfd_cell cros_ec_rtc_cells[] = {
+-	{ .name = "cros-ec-rtc" }
+-};
+-
+-static const struct mfd_cell cros_usbpd_charger_cells[] = {
+-	{ .name = "cros-usbpd-charger" },
+-	{ .name = "cros-usbpd-logger" },
+-};
+-
+-static const struct mfd_cell cros_ec_platform_cells[] = {
+-	{ .name = "cros-ec-chardev" },
+-	{ .name = "cros-ec-debugfs" },
+-	{ .name = "cros-ec-lightbar" },
+-	{ .name = "cros-ec-sysfs" },
+-};
+-
+-static const struct mfd_cell cros_ec_vbc_cells[] = {
+-	{ .name = "cros-ec-vbc" }
+-};
+-
+ static int ec_device_probe(struct platform_device *pdev)
+ {
+ 	int retval = -ENOMEM;
+@@ -304,42 +334,28 @@ static int ec_device_probe(struct platform_device *pdev)
+ 	if (cros_ec_check_features(ec, EC_FEATURE_MOTION_SENSE))
+ 		cros_ec_sensors_register(ec);
  
- obj-$(CONFIG_HTC_PASIC3)	+= htc-pasic3.o
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 221e709358c0..dd30fe14222d 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -135,8 +135,8 @@ config CROS_KBD_LED_BACKLIGHT
+-	/* Check whether this EC instance has CEC host command support */
+-	if (cros_ec_check_features(ec, EC_FEATURE_CEC)) {
+-		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-					 cros_ec_cec_cells,
+-					 ARRAY_SIZE(cros_ec_cec_cells),
+-					 NULL, 0, NULL);
+-		if (retval)
+-			dev_err(ec->dev,
+-				"failed to add cros-ec-cec device: %d\n",
+-				retval);
+-	}
+-
+-	/* Check whether this EC instance has RTC host command support */
+-	if (cros_ec_check_features(ec, EC_FEATURE_RTC)) {
+-		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-					 cros_ec_rtc_cells,
+-					 ARRAY_SIZE(cros_ec_rtc_cells),
+-					 NULL, 0, NULL);
+-		if (retval)
+-			dev_err(ec->dev,
+-				"failed to add cros-ec-rtc device: %d\n",
+-				retval);
+-	}
+-
+-	/* Check whether this EC instance has the PD charge manager */
+-	if (cros_ec_check_features(ec, EC_FEATURE_USB_PD)) {
+-		retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+-					 cros_usbpd_charger_cells,
+-					 ARRAY_SIZE(cros_usbpd_charger_cells),
+-					 NULL, 0, NULL);
+-		if (retval)
+-			dev_err(ec->dev,
+-				"failed to add cros-usbpd-charger device: %d\n",
+-				retval);
++	/*
++	 * The following subdevices can be detected by sending the
++	 * EC_FEATURE_GET_CMD Embedded Controller device.
++	 */
++	for (i = 0; i < ARRAY_SIZE(cros_subdevices); i++) {
++		if (cros_ec_check_features(ec, cros_subdevices[i].id)) {
++			retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
++						 cros_subdevices[i].mfd_cells,
++						 cros_subdevices[i].num_cells,
++						 NULL, 0, NULL);
++			if (retval)
++				dev_err(ec->dev,
++					"failed to add %s subdevice: %d\n",
++					cros_subdevices[i].mfd_cells->name,
++					retval);
++		}
+ 	}
  
- config CROS_EC_CHARDEV
- 	tristate "ChromeOS EC miscdevice"
--	depends on MFD_CROS_EC_CHARDEV
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This driver adds file operations support to talk with the
- 	  ChromeOS EC from userspace via a character device.
-@@ -146,8 +146,8 @@ config CROS_EC_CHARDEV
- 
- config CROS_EC_LIGHTBAR
- 	tristate "Chromebook Pixel's lightbar support"
--	depends on MFD_CROS_EC_CHARDEV
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This option exposes the Chromebook Pixel's lightbar to
- 	  userspace.
-@@ -157,8 +157,8 @@ config CROS_EC_LIGHTBAR
- 
- config CROS_EC_VBC
- 	tristate "ChromeOS EC vboot context support"
--	depends on MFD_CROS_EC_CHARDEV && OF
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV && OF
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This option exposes the ChromeOS EC vboot context nvram to
- 	  userspace.
-@@ -168,8 +168,8 @@ config CROS_EC_VBC
- 
- config CROS_EC_DEBUGFS
- 	tristate "Export ChromeOS EC internals in DebugFS"
--	depends on MFD_CROS_EC_CHARDEV && DEBUG_FS
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV && DEBUG_FS
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This option exposes the ChromeOS EC device internals to
- 	  userspace.
-@@ -179,8 +179,8 @@ config CROS_EC_DEBUGFS
- 
- config CROS_EC_SYSFS
- 	tristate "ChromeOS EC control and information through sysfs"
--	depends on MFD_CROS_EC_CHARDEV && SYSFS
--	default MFD_CROS_EC_CHARDEV
-+	depends on MFD_CROS_EC_DEV && SYSFS
-+	default MFD_CROS_EC_DEV
- 	help
- 	  This option exposes some sysfs attributes to control and get
- 	  information from ChromeOS EC.
++	/*
++	 * The following subdevices cannot be detected by sending the
++	 * EC_FEATURE_GET_CMD to the Embedded Controller device.
++	 */
+ 	retval = mfd_add_devices(ec->dev, PLATFORM_DEVID_AUTO,
+ 				 cros_ec_platform_cells,
+ 				 ARRAY_SIZE(cros_ec_platform_cells),
 -- 
 2.20.1
 
