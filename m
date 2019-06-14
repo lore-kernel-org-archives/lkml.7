@@ -2,125 +2,85 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CD0BC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0C8C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3898A2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B202921473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726305AbfFNHXQ (ORCPT
+        id S1726333AbfFNHX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:23:16 -0400
-Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:56431 "EHLO
-        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725837AbfFNHXQ (ORCPT
+        Fri, 14 Jun 2019 03:23:57 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:59537 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725845AbfFNHX4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:23:16 -0400
-Received: from [192.168.2.10] ([46.9.252.75])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id bgYIhW1VS5qKabgYLhKgPi; Fri, 14 Jun 2019 09:23:14 +0200
-Subject: Re: [PATCH 3/4] media: vimc: stream: add missing function
- documentation
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, helen.koike@collabora.com,
-        kernel@collabora.com, lkcamp@lists.libreplanetbr.org,
-        linux-kernel@vger.kernel.org
-References: <20190613150616.19336-1-andrealmeid@collabora.com>
- <20190613150616.19336-4-andrealmeid@collabora.com>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <45507691-4836-8443-62f1-382383aa6e67@xs4all.nl>
-Date:   Fri, 14 Jun 2019 09:23:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 14 Jun 2019 03:23:56 -0400
+Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hbgYz-0000qV-R7; Fri, 14 Jun 2019 09:23:53 +0200
+Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
+        (envelope-from <sha@pengutronix.de>)
+        id 1hbgYz-0006Nl-3b; Fri, 14 Jun 2019 09:23:53 +0200
+From:   Sascha Hauer <s.hauer@pengutronix.de>
+To:     linux-bluetooth@vger.kernel.org
+Cc:     Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Loic Poulain <loic.poulain@intel.com>, kernel@pengutronix.de,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Subject: [PATCH 2/3] Bluetooth: hci_mrvl: Wait for final ack before switching baudrate
+Date:   Fri, 14 Jun 2019 09:23:50 +0200
+Message-Id: <20190614072351.17390-3-s.hauer@pengutronix.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190614072351.17390-1-s.hauer@pengutronix.de>
+References: <20190614072351.17390-1-s.hauer@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190613150616.19336-4-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-CMAE-Envelope: MS4wfDg67Wp2kITHzjx4Hzs4089/ThUiPmc3f+shUNgu1ZcZa6cgVZDRk44Rc7/uxRl2GATyGDTyDUuG5YoS4dw/MpRr7l+5vYZW/thL7i/wmeuZNEGkVGlu
- r0SDuuQmownbExThgRsaxwivduWFErIgp2CJSJVxdlMmNezDXVG7/BWnM6J7mT3jV7URMHdZEseSzu/H6btBrnqlwaTofo9N5igKi+Rc3e7a7xsKwwvz8mTW
- ++KuZ9tJ8sFuk+2UMxhCozWFRBOfS/dP2LRCM50wGRe66CKiTtbks8YHtOeOtbYuRLKBQuRE+nmiyITLgXG5MuviEbBKT7yfdeNKrcu0mUPRUgaqNrM+fv+S
- xceOIfNTp+jnsGE++fYmLbyVm+BT627WnrBgDHGRmYMBKhkSXzI=
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
+X-SA-Exim-Mail-From: sha@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 5:06 PM, André Almeida wrote:
-> Add comments at vimc_streamer_s_stream and vimc_streamer_thread, making
-> the vimc-stream totally documented.
-> 
-> Signed-off-by: André Almeida <andrealmeid@collabora.com>
-> ---
->  drivers/media/platform/vimc/vimc-streamer.c | 22 +++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-> index 236ade38f1da..8556cc6e8654 100644
-> --- a/drivers/media/platform/vimc/vimc-streamer.c
-> +++ b/drivers/media/platform/vimc/vimc-streamer.c
-> @@ -122,6 +122,14 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
->  	return -EINVAL;
->  }
->  
-> +/*
-> + * vimc_streamer_thread - process frames through the pipeline
-> + *
-> + * @data:	vimc_stream struct of the current streaming
-> + *
-> + * From the source to the sink, gets a frame from each subdevice and send to
-> + * the next one of the pipeline in a fixed framerate.
-> + */
->  static int vimc_streamer_thread(void *data)
->  {
->  	struct vimc_stream *stream = data;
-> @@ -149,6 +157,20 @@ static int vimc_streamer_thread(void *data)
->  	return 0;
->  }
->  
-> +/*
-> + * vimc_streamer_s_stream - start/stop the streaming on the media pipeline
-> + *
-> + * @stream:	the pointer to the stream structure of the current stream
-> + * @ved:	pointer to the vimc entity of the entity of the stream
-> + * @enable:	flag to determine if stream should start/stop
-> + *
-> + * When starting, checks if there's no stream->kthread allocated. This should
+For the Marvell HCI UART we have to upload two firmware files. The first
+one is only for switching the baudrate of the device to a higher
+baudrate. After the baudrate switching firmware has been uploaded the
+device waits for a final ack (0x5a) before actually switching the
+baudrate. To send this final ack with the old baudrate give the hci
+ldisc workqueue a chance to run before switching the baudrate. Without
+this the final ack will never be received by the device and firmware
+upload fails.
 
-checks -> check
-there's -> there is
+Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/bluetooth/hci_mrvl.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> + * indicates that a streaming is already running. Then, it's initialize
+diff --git a/drivers/bluetooth/hci_mrvl.c b/drivers/bluetooth/hci_mrvl.c
+index 50212ac629e3..a0a74362455e 100644
+--- a/drivers/bluetooth/hci_mrvl.c
++++ b/drivers/bluetooth/hci_mrvl.c
+@@ -339,6 +339,9 @@ static int mrvl_setup(struct hci_uart *hu)
+ 		return -EINVAL;
+ 	}
+ 
++	/* Let the final ack go out before switching the baudrate */
++	hci_uart_wait_until_sent(hu);
++
+ 	hci_uart_set_baudrate(hu, 3000000);
+ 	hci_uart_set_flow_control(hu, false);
+ 
+-- 
+2.20.1
 
-indicates -> indicate
-it's initialize -> it initializes
-
-> + * the pipeline, create and run a kthread to consume buffers through the
-
-create and run -> creates and runs
-
-> + * pipeline.
-> + * When stopping, analogously check's it there's a streaming running, stops
-
-check's it there's a streaming -> check if there is a stream
-
-
-
-> + * the thread and terminate the pipeline.
-
-terminate -> terminates
-
-> + */
->  int vimc_streamer_s_stream(struct vimc_stream *stream,
->  			   struct vimc_ent_device *ved,
->  			   int enable)
-> 
-
-Regards,
-
-	Hans
