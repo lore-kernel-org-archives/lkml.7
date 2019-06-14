@@ -2,85 +2,96 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64744C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA57CC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:35:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CA6621537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:34:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="znWyHu/m"
+	by mail.kernel.org (Postfix) with ESMTP id 977CE2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:35:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727158AbfFNJez (ORCPT
+        id S1727182AbfFNJfK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:34:55 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45796 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726083AbfFNJey (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:34:54 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m206so1458811oib.12
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 02:34:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IAxytmldJ+LQ9oXsinyPkN3ds2MZTOAfP2wyBRBDeRg=;
-        b=znWyHu/m14+5GXaF3gP7yu7SWXJTq+Wsj2nJNhc8A0PpJXKWYMOxGBSzVgS3mNhdto
-         pIVE++2S8C4JJTU4WjXsC1kHn7wjVXe46T1Q6kfftlp7QWt09aT1nNuG2RkrQEB/cwUE
-         BN5szDO+xZfoBJzWbSPWpS/dcQxVeL1F9QpTJSU12unEdVDilC3LI0FWMn5LQa6QoF62
-         IyLlVJD452ywDx+di8zbmOYrjVE0AYWCczQVyNnuNZbTqPg2w1bPhp5TGL+dG3+zm4vh
-         Rnvs6oqsivrAR6bIwx8FKP6rEVsUh+jFuN9GlkQ8Jvs4KmgDFlinHxXOP+H4zL/k15fV
-         XHhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IAxytmldJ+LQ9oXsinyPkN3ds2MZTOAfP2wyBRBDeRg=;
-        b=IFzRHpaILUtGzjJM33wOA5GIHH2S/J5drMg8VQOlW1W9XJq8HIPWcM+Kze/9Wrc8Lx
-         D3MPjUOtb2LqU5UayFQlJ2aSARueofvCdhXrzyaDR+E6mlSBNFL7guO89Wq2Yv5R6DlX
-         M+JoqlbZV6neew10WTwS26zuASJXSvaG5kXZWszdXgY2Zdve9kJ8SjIsZILvaKvh5c8V
-         hxWGpQXpJzd53JAaYII6LxlX5gWh51N+ivW8pJ3dmWJDJdPSpLmz3YGXihSPfRDRSRVM
-         yFBBWTFIUpk0de4iY2KEDR+74OvYAUrAKQIOQv1+dUeSsci/0HzDnFr96NV7iBE9DOiI
-         omtg==
-X-Gm-Message-State: APjAAAXU4Xjk8YwO167sUiNmc6bm6rryaQZ7f+sY1uq/ezV8EKPrAVLJ
-        I9iZU5lUDeLfmnkInTldqosbDk6qGXVSz4o4DvJ+PAqF1+s=
-X-Google-Smtp-Source: APXvYqx0gEvUPXqD1kFmi82P0JHBq+bBkwG2UJTph0n99wSE1/UssVfy4El7T5U0s3E2JMVdYGMfQQOJu9WMwgcxsYc=
-X-Received: by 2002:aca:f513:: with SMTP id t19mr1276030oih.76.1560504894070;
- Fri, 14 Jun 2019 02:34:54 -0700 (PDT)
+        Fri, 14 Jun 2019 05:35:10 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18605 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726083AbfFNJfJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 05:35:09 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 975DA7D693A28A8183BE;
+        Fri, 14 Jun 2019 17:35:03 +0800 (CST)
+Received: from [127.0.0.1] (10.177.96.96) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
+ 17:35:01 +0800
+Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
+ same tuples
+To:     Eric Dumazet <eric.dumazet@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+References: <20190612035715.166676-1-maowenan@huawei.com>
+ <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
+ <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com>
+ <a674e90e-d06f-cb67-604f-30cb736d7c72@huawei.com>
+ <6aa69ab5-ed81-6a7f-2b2b-214e44ff0ada@gmail.com>
+CC:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+From:   maowenan <maowenan@huawei.com>
+Message-ID: <52025f94-04d3-2a44-11cd-7aa66ebc7e27@huawei.com>
+Date:   Fri, 14 Jun 2019 17:35:01 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-References: <20190613223408.139221-1-fengc@google.com>
-In-Reply-To: <20190613223408.139221-1-fengc@google.com>
-From:   Sumit Semwal <sumit.semwal@linaro.org>
-Date:   Fri, 14 Jun 2019 15:04:42 +0530
-Message-ID: <CAO_48GF1qzJFHavwt384MBcyyJRrFiZgYj1OHonUWMAcrm6DTw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Improve the dma-buf tracking
-To:     Chenbo Feng <fengc@google.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Android Kernel Team <kernel-team@android.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <6aa69ab5-ed81-6a7f-2b2b-214e44ff0ada@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.96.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chenbo,
 
-On Fri, 14 Jun 2019 at 04:04, Chenbo Feng <fengc@google.com> wrote:
->
-> Currently, all dma-bufs share the same anonymous inode. While we can count
-> how many dma-buf fds or mappings a process has, we can't get the size of
-> the backing buffers or tell if two entries point to the same dma-buf. And
-> in debugfs, we can get a per-buffer breakdown of size and reference count,
-> but can't tell which processes are actually holding the references to each
-> buffer.
 
-Thanks for the series; applied to drm-misc-next.
->
+On 2019/6/14 12:28, Eric Dumazet wrote:
+> 
+> 
+> On 6/13/19 9:19 PM, maowenan wrote:
+>>
+>>
+>> @Eric, for this issue I only want to check TCP_NEW_SYN_RECV sk, is it OK like below?
+>>  +       if (!osk && sk->sk_state == TCP_NEW_SYN_RECV)
+>>  +               reqsk = __inet_lookup_established(sock_net(sk), &tcp_hashinfo,
+>>  +                                                       sk->sk_daddr, sk->sk_dport,
+>>  +                                                       sk->sk_rcv_saddr, sk->sk_num,
+>>  +                                                       sk->sk_bound_dev_if, sk->sk_bound_dev_if);
+>>  +       if (unlikely(reqsk)) {
+>>
+> 
+> Not enough.
+> 
+> If we have many cpus here, there is a chance another cpu has inserted a request socket, then
+> replaced it by an ESTABLISH socket for the same 4-tuple.
 
-Best,
-Sumit.
+I try to get more clear about the scene you mentioned. And I have do some testing about this, it can work well
+when I use multiple cpus.
+
+The ESTABLISH socket would be from tcp_check_req->tcp_v4_syn_recv_sock->tcp_create_openreq_child,
+and for this path, inet_ehash_nolisten pass osk(NOT NULL), my patch won't call __inet_lookup_established in inet_ehash_insert().
+
+When TCP_NEW_SYN_RECV socket try to inset to hash table, it will pass osk with NULL, my patch will check whether reqsk existed
+in hash table or not. If reqsk is existed, it just removes this reqsk and dose not insert to hash table. Then the synack for this
+reqsk can't be sent to client, and there is no chance to receive the ack from client, so ESTABLISH socket can't be replaced in hash table.
+
+So I don't see the race when there are many cpus. Can you show me some clue?
+
+thank you.
+> 
+> We need to take the per bucket spinlock much sooner.
+> 
+> And this is fine, all what matters is that we do no longer grab the listener spinlock.
+> 
+> 
+
