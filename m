@@ -2,117 +2,71 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB95C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F57C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 364D02173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6715F2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:49:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726447AbfFNPtE (ORCPT
+        id S1726484AbfFNPt1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:49:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37860 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726184AbfFNPsn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:48:43 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B356EC057E65;
-        Fri, 14 Jun 2019 15:48:40 +0000 (UTC)
-Received: from ceranb.redhat.com (ovpn-204-86.brq.redhat.com [10.40.204.86])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9BC7054696;
-        Fri, 14 Jun 2019 15:48:37 +0000 (UTC)
-From:   Ivan Vecera <ivecera@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     Tianhao <tizhao@redhat.com>,
-        Sathya Perla <sathya.perla@broadcom.com>,
-        Ajit Khaparde <ajit.khaparde@broadcom.com>,
-        Sriharsha Basavapatna <sriharsha.basavapatna@broadcom.com>,
-        Somnath Kotur <somnath.kotur@broadcom.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH net] be2net: Fix number of Rx queues used for flow hashing
-Date:   Fri, 14 Jun 2019 17:48:36 +0200
-Message-Id: <20190614154836.22172-1-ivecera@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 14 Jun 2019 15:48:42 +0000 (UTC)
+        Fri, 14 Jun 2019 11:49:27 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:45350 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfFNPt0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:49:26 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6BA23148BD7FF;
+        Fri, 14 Jun 2019 08:49:26 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 08:49:25 -0700 (PDT)
+Message-Id: <20190614.084925.1041124966442067512.davem@davemloft.net>
+To:     mkubecek@suse.cz
+Cc:     xuechaojing@huawei.com, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, luoshaokai@huawei.com,
+        cloud.wangxiaoyun@huawei.com, chiqijun@huawei.com,
+        wulike1@huawei.com
+Subject: Re: [PATCH net-next v3 2/2] hinic: add support for rss parameters
+ with ethtool
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190614073209.GN31797@unicorn.suse.cz>
+References: <20190613015802.3916-1-xuechaojing@huawei.com>
+        <20190613015802.3916-3-xuechaojing@huawei.com>
+        <20190614073209.GN31797@unicorn.suse.cz>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 14 Jun 2019 08:49:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Number of Rx queues used for flow hashing returned by the driver is
-incorrect and this bug prevents user to use the last Rx queue in
-indirection table.
+From: Michal Kubecek <mkubecek@suse.cz>
+Date: Fri, 14 Jun 2019 09:32:09 +0200
 
-Let's say we have a NIC with 6 combined queues:
+> On Thu, Jun 13, 2019 at 01:58:02AM +0000, Xue Chaojing wrote:
+>> This patch adds support rss parameters with ethtool,
+>> user can change hash key, hash indirection table, hash
+>> function by ethtool -X, and show rss parameters by ethtool -x.
+>> 
+>> Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
+>> ---
+> 
+> If you are going to submit a new version, please split the patch into
+> one moving the existing ethtool code into a new file and one with the
+> new features so that it's clear what is new.
+> 
+> I'm also not sure if an error lever message in kernel log is an
+> appropriate response to user trying to perform an unsupported operation,
+> in particular if it can be triggered by a regular user.
 
-[root@sm-03 ~]# ethtool -l enp4s0f0
-Channel parameters for enp4s0f0:
-Pre-set maximums:
-RX:             5
-TX:             5
-Other:          0
-Combined:       6
-Current hardware settings:
-RX:             0
-TX:             0
-Other:          0
-Combined:       6
-
-Default indirection table maps all (6) queues equally but the driver
-reports only 5 rings available.
-
-[root@sm-03 ~]# ethtool -x enp4s0f0
-RX flow hash indirection table for enp4s0f0 with 5 RX ring(s):
-    0:      0     1     2     3     4     5     0     1
-    8:      2     3     4     5     0     1     2     3
-   16:      4     5     0     1     2     3     4     5
-   24:      0     1     2     3     4     5     0     1
-...
-
-Now change indirection table somehow:
-
-[root@sm-03 ~]# ethtool -X enp4s0f0 weight 1 1
-[root@sm-03 ~]# ethtool -x enp4s0f0
-RX flow hash indirection table for enp4s0f0 with 6 RX ring(s):
-    0:      0     0     0     0     0     0     0     0
-...
-   64:      1     1     1     1     1     1     1     1
-...
-
-Now it is not possible to change mapping back to equal (default) state:
-
-[root@sm-03 ~]# ethtool -X enp4s0f0 equal 6
-Cannot set RX flow hash configuration: Invalid argument
-
-Fixes: 594ad54a2c3b ("be2net: Add support for setting and getting rx flow hash options")
-Reported-by: Tianhao <tizhao@redhat.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
----
- drivers/net/ethernet/emulex/benet/be_ethtool.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-index 4c218341c51b..6e635debc7fd 100644
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -1105,7 +1105,7 @@ static int be_get_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *cmd,
- 		cmd->data = be_get_rss_hash_opts(adapter, cmd->flow_type);
- 		break;
- 	case ETHTOOL_GRXRINGS:
--		cmd->data = adapter->num_rx_qs - 1;
-+		cmd->data = adapter->num_rx_qs;
- 		break;
- 	default:
- 		return -EINVAL;
--- 
-2.21.0
-
+I think no log message should be reported.
