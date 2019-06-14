@@ -2,187 +2,115 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A30C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:32:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4E03C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:34:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6204B20851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:32:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A94F20851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:34:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="RqOZRS7u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFNNcw (ORCPT
+        id S1728108AbfFNNeF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:32:52 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:38005 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfFNNcv (ORCPT
+        Fri, 14 Jun 2019 09:34:05 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:38994 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727842AbfFNNeE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:32:51 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hbmJY-0005Aq-Ov; Fri, 14 Jun 2019 15:32:21 +0200
-Date:   Fri, 14 Jun 2019 15:32:20 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Dmitry Safonov <dima@arista.com>
-cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Andrei Vagin <avagin@openvz.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCHv4 03/28] posix-clocks: add another call back to return
- clock time in ktime_t
-In-Reply-To: <20190612192628.23797-4-dima@arista.com>
-Message-ID: <alpine.DEB.2.21.1906141511440.1722@nanos.tec.linutronix.de>
-References: <20190612192628.23797-1-dima@arista.com> <20190612192628.23797-4-dima@arista.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 14 Jun 2019 09:34:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=C0nBHLDkMzGog27NgS5rehy1Wv/08uCW/YzQiNw7nNs=; b=RqOZRS7urkSMLctNG2/1Ak12G
+        f/4kQHDb+UbN4+940BDAXkw1woJik4UQ0ENEMnpn29ly5gI/CXJdX+l08QcStbFkmC0zMpWNGjc4C
+        WEk5rb584twn+em5U7jBNkLRnOLXdnSoKmJzLWr5MOv/hEv/jGeWsDCFM4fe0ZKCQPzAMmm2+DDAa
+        HwPEfLEaIUktNrPdwIKJ4a6E58LjOYEDRRGDcxDDJpiH9chmHcjMMzS7cfxAacSXSzFrdBbDhteHl
+        GfdnjQgCFpUYAhbI88l+XnPm8iSKqpuDlMnxBcMLo5SMoBRwmD7NLqJJtqQBtdQRQBPcp5J+DrcXR
+        TkIwqv4fw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbmL2-00082H-Eq; Fri, 14 Jun 2019 13:33:52 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id EAAE520A3149A; Fri, 14 Jun 2019 15:33:50 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 15:33:50 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Kan Liang <kan.liang@intel.com>, Jiri Olsa <jolsa@kernel.org>,
+        David Carrillo-Cisneros <davidcc@google.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>, Tom Vaden <tom.vaden@hpe.com>
+Subject: Re: [RFC] perf/x86/intel: Disable check_msr for real hw
+Message-ID: <20190614133350.GT3436@hirez.programming.kicks-ass.net>
+References: <20190614112853.GC4325@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614112853.GC4325@krava>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dmitry,
-
-On Wed, 12 Jun 2019, Dmitry Safonov wrote:
-
-> From: Andrei Vagin <avagin@gmail.com>
+On Fri, Jun 14, 2019 at 01:28:53PM +0200, Jiri Olsa wrote:
+> hi,
+> the HPE server can do POST tracing and have enabled LBR
+> tracing during the boot, which makes check_msr fail falsly.
 > 
-> The callsite in common_timer_get() has already a comment:
->         /*
->          * The timespec64 based conversion is suboptimal, but it's not
->          * worth to implement yet another callback.
->          */
->         kc->clock_get(timr->it_clock, &ts64);
->         now = timespec64_to_ktime(ts64);
+> It looks like check_msr code was added only to check on guests
+> MSR access, would it be then ok to disable check_msr for real
+> hardware? (as in patch below)
 > 
-> Now we are going to add time namespaces and we need to be able to get:
-
-Please avoid 'we' and try to describe the changes in a neutral technical
-form, e.g.:
-
- The upcoming support for time namespaces requires to have access to:
-
-> * clock value in a task time namespace to return it from the clock_gettime
->   syscall.
-
-  - The time in a tasks time namespace for sys_clock_gettime()
-
-> * clock valuse in the root time namespace to use it in
->   common_timer_get().
-
-  - The time in the root name space for common_timer_get()
-
-> It looks like another reason why we need a separate callback to return
-> clock value in ktime_t.
-
- That adds a valid reason to finally implement a separate callback which
- returns the time in ktime_t format.
-
-Hmm?
-
-> +int posix_get_timespec(clockid_t which_clock, struct timespec64 *tp);
-> +int posix_get_boottime_timespec(const clockid_t which_clock, struct timespec64 *tp);
->  #endif
-> diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-> index 0519a8805aab..68a163c8b4f2 100644
-> --- a/kernel/time/alarmtimer.c
-> +++ b/kernel/time/alarmtimer.c
-> @@ -43,6 +43,8 @@ static struct alarm_base {
->  	spinlock_t		lock;
->  	struct timerqueue_head	timerqueue;
->  	ktime_t			(*gettime)(void);
-> +	int			(*get_timespec)(const clockid_t which_clock,
-> +						struct timespec64 *tp);
->  	clockid_t		base_clockid;
->  } alarm_bases[ALARM_NUMTYPE];
+> We could also check if LBR tracing is enabled and make
+> appropriate checks, but this change is simpler ;-)
+> 
+> ideas? thanks,
+> jirka
+> 
+> 
+> ---
+>  arch/x86/events/intel/core.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+> index 71001f005bfe..1194ae7e1992 100644
+> --- a/arch/x86/events/intel/core.c
+> +++ b/arch/x86/events/intel/core.c
+> @@ -20,6 +20,7 @@
+>  #include <asm/intel-family.h>
+>  #include <asm/apic.h>
+>  #include <asm/cpu_device_id.h>
+> +#include <asm/hypervisor.h>
 >  
-> @@ -645,21 +647,30 @@ static int alarm_clock_getres(const clockid_t which_clock, struct timespec64 *tp
->  }
+>  #include "../perf_event.h"
 >  
->  /**
-> - * alarm_clock_get - posix clock_get interface
-> + * alarm_clock_get_timespec - posix clock_get_timespec interface
->   * @which_clock: clockid
->   * @tp: timespec to fill.
->   *
->   * Provides the underlying alarm base time.
->   */
-> -static int alarm_clock_get(clockid_t which_clock, struct timespec64 *tp)
-> +static int alarm_clock_get_timespec(clockid_t which_clock, struct timespec64 *tp)
+> @@ -4050,6 +4051,13 @@ static bool check_msr(unsigned long msr, u64 mask)
 >  {
->  	struct alarm_base *base = &alarm_bases[clock2alarm(which_clock)];
+>  	u64 val_old, val_new, val_tmp;
 >  
->  	if (!alarmtimer_get_rtcdev())
->  		return -EINVAL;
->  
-> -	*tp = ktime_to_timespec64(base->gettime());
-> -	return 0;
-> +	return base->get_timespec(base->base_clockid, tp);
-> +}
-> +
-> +static ktime_t alarm_clock_get_ktime(clockid_t which_clock)
+> +	/*
+> +	 * Disable the check for real HW, so we don't
+> +	 * mess up with potentionaly enabled regs.
+> +	 */
+> +	if (hypervisor_is_type(X86_HYPER_NATIVE))
+> +		return true;
 
-Please add kernel doc for this function. It does not make sense to have one
-documented and the other not.
+Yeah, I think that works, or !boot_cpu_has(X86_FEATURE_HYPERVISOR).
 
-> +{
-> +	struct alarm_base *base = &alarm_bases[clock2alarm(which_clock)];
-> +
-> +	if (!alarmtimer_get_rtcdev())
-> +		return -EINVAL;
-> +
-> +	return base->gettime();
->  }
-  
-> --- a/kernel/time/posix-timers.h
-> +++ b/kernel/time/posix-timers.h
-> @@ -6,8 +6,11 @@ struct k_clock {
->  				struct timespec64 *tp);
->  	int	(*clock_set)(const clockid_t which_clock,
->  			     const struct timespec64 *tp);
-> -	int	(*clock_get)(const clockid_t which_clock,
-> -			     struct timespec64 *tp);
-> +	/* return the clock value in the current time namespace. */
-> +	int	(*clock_get_timespec)(const clockid_t which_clock,
-> +				      struct timespec64 *tp);
-> +	/* return the clock value in the root time namespace. */
-> +	ktime_t	(*clock_get_ktime)(const clockid_t which_clock);
->  	int	(*clock_adj)(const clockid_t which_clock, struct __kernel_timex *tx);
->  	int	(*timer_create)(struct k_itimer *timer);
->  	int	(*nsleep)(const clockid_t which_clock, int flags,
-
-TBH, this patch is way to big. It changes too many things at once. Can you
-please structure it this way:
-
- 1) Rename k_clock::clock_get to k_clock::clock_get_timespec and fix up all
-    struct initializers
-
- 2) Rename the clock_get_timespec functions per instance
-
- 3) Add the new callback
-
- 4) Add the new functions per instance and add them to the corresponding
-    struct initializers
-
- 5) Use the new callback
-
-Thanks,
-
-	tglx
+>  	/*
+>  	 * Read the current value, change it and read it back to see if it
+>  	 * matches, this is needed to detect certain hardware emulators
+> -- 
+> 2.21.0
+> 
