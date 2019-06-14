@@ -2,70 +2,104 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82837C31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A70BC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6303A2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E57922184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:17:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560547033;
+	bh=3qZBnSeXO8K4oYa3/N25KQYrBFfoH3IDbPh/Ayhnk1s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TtLjdMLW0rkBrcJJh1YqE/J5f8/ArzaZshlcXidB1fkepeM6OeClv057si5UMHQWy
+	 ZYoSSBQaEbB49MlcELNzo4NPl5+PErml2jlFEOegpUHfsTX1Z65Au6K1pFWkbIsvBY
+	 I7vNyZrHW7Ofv2OyE/waM0T7xvXP0je1r1FpR2M8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726944AbfFNVQ3 (ORCPT
+        id S1726801AbfFNVRL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59806 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 17:17:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726836AbfFNVQ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:16:28 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726349AbfFNVRL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:17:11 -0400
+Received: from localhost (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D25652183E;
-        Fri, 14 Jun 2019 21:16:26 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 17:16:25 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>, x86@kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v2 1/5] perf/x86: Always store regs->ip in
- perf_callchain_kernel()
-Message-ID: <20190614171625.470c9e3e@gandalf.local.home>
-In-Reply-To: <20190614210619.su5cr55eah5ks7ur@treble>
-References: <cover.1560534694.git.jpoimboe@redhat.com>
-        <81b0cdc5aa276dac315a0536df384cc82da86243.1560534694.git.jpoimboe@redhat.com>
-        <20190614205614.zr6awljx3qdg2fnb@ast-mbp.dhcp.thefacebook.com>
-        <20190614210619.su5cr55eah5ks7ur@treble>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CEBA2184B;
+        Fri, 14 Jun 2019 21:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560547030;
+        bh=3qZBnSeXO8K4oYa3/N25KQYrBFfoH3IDbPh/Ayhnk1s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wSQKJ/fpvZ2VNMj+Ci4k6VkUSRmnCwxH0B3QSi4pAXHaafCyjkLk5Ay1FlTE8nu4t
+         G9JhtzPQKgDEUCIAmnZTe5zgfu4bvGevKrkwx5eb89dokUpJIBwpcuH1xlDk/nCpvt
+         xMI4C4u1OBkryDfNx63vmnnkfSFUTeuK+DAqJlh4=
+Date:   Fri, 14 Jun 2019 17:17:10 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Michael Kelley <mikelley@microsoft.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>
+Subject: Re: [PATCH v6 18/19] x86: Add support for generic vDSO
+Message-ID: <20190614211710.GQ1513@sasha-vm>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <20190530141531.43462-19-vincenzo.frascino@arm.com>
+ <BYAPR21MB1221D54FCEC97509EEF7395CD7180@BYAPR21MB1221.namprd21.prod.outlook.com>
+ <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906141313150.1722@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 16:06:19 -0500
-Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+On Fri, Jun 14, 2019 at 01:15:23PM +0200, Thomas Gleixner wrote:
+>On Thu, 30 May 2019, Michael Kelley wrote:
+>> Vincenzo -- these changes for Hyper-V are a subset of a larger patch set
+>> I have that moves all of the Hyper-V clock/timer code into a separate
+>> clocksource driver in drivers/clocksource, with an include file in
+>> includes/clocksource.  That new include file should be able to work
+>> instead of your new mshyperv-tsc.h.  It also has the benefit of being
+>> ISA neutral, so it will work with my in-progress patch set to support
+>> Linux on Hyper-V on ARM64.  See https://lkml.org/lkml/2019/5/27/231
+>> for the new clocksource driver patch set.
+>
+>Grrr. That's queued in hyperv-next for whatever reasons.
 
-> > It's not cool to remove people's SOB.
-> > It's Song's patch. His should be first and your second.  
-> 
-> His original patch didn't have an SOB.  I preserved the "From" field.
+I queue up our future pull requests there to give them some soaking in
+-next.
 
-Then it can't be accepted. It needs an SOB from the original author.
+>Sasha, can you please provide me the branch to pull from so I can have a
+>common base for all the various changes floating around?
 
-Song, Please reply with a Signed-off-by tag.
+I'll send you a unified pull request for these changes.
 
-Thanks!
-
--- Steve
+--
+Thanks,
+Sasha
