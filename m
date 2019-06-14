@@ -2,124 +2,219 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2B5C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:45:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF85DC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:45:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BC75217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:45:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKtf4ik0"
+	by mail.kernel.org (Postfix) with ESMTP id A547A217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:45:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726349AbfFNQpx (ORCPT
+        id S1726693AbfFNQp6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:45:53 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:36120 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbfFNQpx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:45:53 -0400
-Received: by mail-lf1-f65.google.com with SMTP id q26so2193788lfc.3;
-        Fri, 14 Jun 2019 09:45:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Gw/MY9qgeDsiVUyYG0Da4jLf/gn9jRPqLU0qfk6Sj5Q=;
-        b=JKtf4ik0NbeTHSwAa8PoMb/iH5wstiMFSAQunFYk7cnjB9bgV5KUW7Ah3WUaqfhe9P
-         OalXwS/wUotbFM27YlsEFBd4tUzBYXicRvag3cIqEUCNXfd2tZubtzt/JwEnfCT43Xd4
-         eleGs+wceM9fI+PxzoUfNiOFXp1IqAllWqEg1HPX4bvZMHqMjTkGKaZLYE9TmjSKgQjp
-         Ms5UbG5Ux1Z+SBgqgWSvkWPF+U31fRkiLHKpurUmdTzOhq8w3AgLiHhMgovwJ5kzTELK
-         Lmh0amtVAM11mmWVBc69RPrYpwY28KqKC+F6yBYbhebvPo9KvVwE5P7nMXig83rlGD+r
-         zRsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gw/MY9qgeDsiVUyYG0Da4jLf/gn9jRPqLU0qfk6Sj5Q=;
-        b=H/ayDzYTqZKecw8bXV3/uz2Y2GwOH/iMXYfAkqL7hZAlumrDArOerq+slohbcZ+Gk1
-         zEKjwhUGdwnVWOOxo/kXXnT/wWieWXwBd2Vn3BRwrVBziFzz3S4RYtOFAxFoJ6BC3OvP
-         2yMyL0YFddKoGqn5AXcJ/auAyIzQmlSQ/LfiWwIK28xDyxYJCZ+6bdY+NWxbVcF9q6G+
-         6NDgXGgsFJuJNwqDqZfrL7ejX9qJ19pX2KB4aswmkeEWJBq/b30DP6LjSk4EBeYsD+p3
-         GxJWh6OZb35yBZiUaXvuxiUyC4vQv6sz4b1IMkn/9NNuUaM8Br/la3xJhMUNl/xm+qyY
-         l82A==
-X-Gm-Message-State: APjAAAWLdMEE1hfUOfNxCdienK68/uYmdASlm6fyZFQ+Jb+FCHs5Vuow
-        7FYV/KSjrhN1mQ7gpNU/uFOB2wMB
-X-Google-Smtp-Source: APXvYqwnFkQTMrM/Hf9/rBogPFsz1fFn1ZMbAuJJDGYIGVOFc2HhOfBS9lTDIk9PGEKSOk5UqPDsrQ==
-X-Received: by 2002:ac2:4209:: with SMTP id y9mr7701278lfh.83.1560530750347;
-        Fri, 14 Jun 2019 09:45:50 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id f1sm202518ljf.53.2019.06.14.09.45.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 09:45:49 -0700 (PDT)
-Subject: Re: [PATCH v2 3/6] clocksource/drivers/tegra: Set and use timer's
- period
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190610164400.11830-1-digetx@gmail.com>
- <20190610164400.11830-4-digetx@gmail.com>
- <ac8a1da8-9b82-3d5a-5fa6-0c1cc7f627f1@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <3e941c50-ac62-719e-aac1-7072e9a3bcd0@gmail.com>
-Date:   Fri, 14 Jun 2019 19:45:48 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 12:45:58 -0400
+Received: from mga14.intel.com ([192.55.52.115]:49994 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725846AbfFNQp5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:45:57 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 09:45:57 -0700
+X-ExtLoop1: 1
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 14 Jun 2019 09:45:50 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 14 Jun 2019 19:45:49 +0300
+Date:   Fri, 14 Jun 2019 19:45:49 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [Intel-gfx] [PATCH 03/16] drm/i915: stop using drm_pci_alloc
+Message-ID: <20190614164549.GD5942@intel.com>
+References: <20190614134726.3827-1-hch@lst.de>
+ <20190614134726.3827-4-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <ac8a1da8-9b82-3d5a-5fa6-0c1cc7f627f1@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190614134726.3827-4-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.06.2019 18:48, Jon Hunter пишет:
+On Fri, Jun 14, 2019 at 03:47:13PM +0200, Christoph Hellwig wrote:
+> Remove usage of the legacy drm PCI DMA wrappers, and with that the
+> incorrect usage cocktail of __GFP_COMP, virt_to_page on DMA allocation
+> and SetPageReserved.
 > 
-> On 10/06/2019 17:43, Dmitry Osipenko wrote:
->> The of_clk structure has a period field that is set up initially by
->> timer_of_clk_init(), that period value need to be adjusted for a case of
->> TIMER1-9 that are running at a fixed rate that doesn't match the clock's
->> rate. Note that the period value is currently used only by some of the
->> clocksource drivers internally and hence this is just a minor cleanup
->> change that doesn't fix anything.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/clocksource/timer-tegra.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
->> index 810b4e7435cf..646b3530c2d2 100644
->> --- a/drivers/clocksource/timer-tegra.c
->> +++ b/drivers/clocksource/timer-tegra.c
->> @@ -71,9 +71,9 @@ static int tegra_timer_shutdown(struct clock_event_device *evt)
->>  static int tegra_timer_set_periodic(struct clock_event_device *evt)
->>  {
->>  	void __iomem *reg_base = timer_of_base(to_timer_of(evt));
->> +	unsigned long period = timer_of_period(to_timer_of(evt));
->>  
->> -	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER |
->> -		       ((timer_of_rate(to_timer_of(evt)) / HZ) - 1),
->> +	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER | (period - 1),
->>  		       reg_base + TIMER_PTV);
->>  
->>  	return 0;
->> @@ -297,6 +297,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
->>  		cpu_to->clkevt.rating = rating;
->>  		cpu_to->clkevt.cpumask = cpumask_of(cpu);
->>  		cpu_to->of_base.base = timer_reg_base + base;
->> +		cpu_to->of_clk.period = DIV_ROUND_UP(rate, HZ);
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/gpu/drm/i915/i915_gem.c        | 30 +++++++++++++-------------
+>  drivers/gpu/drm/i915/i915_gem_object.h |  3 ++-
+>  drivers/gpu/drm/i915/intel_display.c   |  2 +-
+>  3 files changed, 18 insertions(+), 17 deletions(-)
 > 
-> Any reason you made this a round-up?
+> diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+> index ad01c92aaf74..8f2053c91aff 100644
+> --- a/drivers/gpu/drm/i915/i915_gem.c
+> +++ b/drivers/gpu/drm/i915/i915_gem.c
+> @@ -228,7 +228,6 @@ i915_gem_get_aperture_ioctl(struct drm_device *dev, void *data,
+>  static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
+>  {
+>  	struct address_space *mapping = obj->base.filp->f_mapping;
+> -	drm_dma_handle_t *phys;
+>  	struct sg_table *st;
+>  	struct scatterlist *sg;
+>  	char *vaddr;
+> @@ -242,13 +241,13 @@ static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
+>  	 * to handle all possible callers, and given typical object sizes,
+>  	 * the alignment of the buddy allocation will naturally match.
+>  	 */
+> -	phys = drm_pci_alloc(obj->base.dev,
+> -			     roundup_pow_of_two(obj->base.size),
+> -			     roundup_pow_of_two(obj->base.size));
+> -	if (!phys)
+> +	obj->phys_vaddr = dma_alloc_coherent(&obj->base.dev->pdev->dev,
+> +			roundup_pow_of_two(obj->base.size),
+> +			&obj->phys_handle, GFP_KERNEL);
+> +	if (!obj->phys_vaddr)
+>  		return -ENOMEM;
+>  
+> -	vaddr = phys->vaddr;
+> +	vaddr = obj->phys_vaddr;
+>  	for (i = 0; i < obj->base.size / PAGE_SIZE; i++) {
+>  		struct page *page;
+>  		char *src;
+> @@ -286,18 +285,17 @@ static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
+>  	sg->offset = 0;
+>  	sg->length = obj->base.size;
+>  
+> -	sg_dma_address(sg) = phys->busaddr;
+> +	sg_dma_address(sg) = obj->phys_handle;
+>  	sg_dma_len(sg) = obj->base.size;
+>  
+> -	obj->phys_handle = phys;
+> -
+>  	__i915_gem_object_set_pages(obj, st, sg->length);
+>  
+>  	return 0;
+>  
+>  err_phys:
+> -	drm_pci_free(obj->base.dev, phys);
+> -
+> +	dma_free_coherent(&obj->base.dev->pdev->dev,
+> +			roundup_pow_of_two(obj->base.size), obj->phys_vaddr,
+> +			obj->phys_handle);
 
-That's what timer_of_clk_init() does, I assume it should be a more correct variant.
+Need to undo the damage to obj->phys_vaddr here since
+i915_gem_pwrite_ioctl() will now use that to determine if it's
+dealing with a phys obj.
+
+>  	return err;
+>  }
+>  
+> @@ -335,7 +333,7 @@ i915_gem_object_put_pages_phys(struct drm_i915_gem_object *obj,
+>  
+>  	if (obj->mm.dirty) {
+>  		struct address_space *mapping = obj->base.filp->f_mapping;
+> -		char *vaddr = obj->phys_handle->vaddr;
+> +		char *vaddr = obj->phys_vaddr;
+>  		int i;
+>  
+>  		for (i = 0; i < obj->base.size / PAGE_SIZE; i++) {
+> @@ -363,7 +361,9 @@ i915_gem_object_put_pages_phys(struct drm_i915_gem_object *obj,
+>  	sg_free_table(pages);
+>  	kfree(pages);
+>  
+> -	drm_pci_free(obj->base.dev, obj->phys_handle);
+> +	dma_free_coherent(&obj->base.dev->pdev->dev,
+> +			roundup_pow_of_two(obj->base.size), obj->phys_vaddr,
+> +			obj->phys_handle);
+
+This one is fine I think since the object remains a phys obj once
+turned into one. At least the current code isn't clearing
+phys_handle here. But my memory is a bit hazy on the details. Chris?
+
+Also maybe s/phys_handle/phys_busaddr/ all over?
+
+>  }
+>  
+>  static void
+> @@ -603,7 +603,7 @@ i915_gem_phys_pwrite(struct drm_i915_gem_object *obj,
+>  		     struct drm_i915_gem_pwrite *args,
+>  		     struct drm_file *file)
+>  {
+> -	void *vaddr = obj->phys_handle->vaddr + args->offset;
+> +	void *vaddr = obj->phys_vaddr + args->offset;
+>  	char __user *user_data = u64_to_user_ptr(args->data_ptr);
+>  
+>  	/* We manually control the domain here and pretend that it
+> @@ -1431,7 +1431,7 @@ i915_gem_pwrite_ioctl(struct drm_device *dev, void *data,
+>  		ret = i915_gem_gtt_pwrite_fast(obj, args);
+>  
+>  	if (ret == -EFAULT || ret == -ENOSPC) {
+> -		if (obj->phys_handle)
+> +		if (obj->phys_vaddr)
+>  			ret = i915_gem_phys_pwrite(obj, args, file);
+>  		else
+>  			ret = i915_gem_shmem_pwrite(obj, args);
+> diff --git a/drivers/gpu/drm/i915/i915_gem_object.h b/drivers/gpu/drm/i915/i915_gem_object.h
+> index ca93a40c0c87..14bd2d61d0f6 100644
+> --- a/drivers/gpu/drm/i915/i915_gem_object.h
+> +++ b/drivers/gpu/drm/i915/i915_gem_object.h
+> @@ -290,7 +290,8 @@ struct drm_i915_gem_object {
+>  	};
+>  
+>  	/** for phys allocated objects */
+> -	struct drm_dma_handle *phys_handle;
+> +	dma_addr_t phys_handle;
+> +	void *phys_vaddr;
+>  
+>  	struct reservation_object __builtin_resv;
+>  };
+> diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+> index 5098228f1302..4f8b368ac4e2 100644
+> --- a/drivers/gpu/drm/i915/intel_display.c
+> +++ b/drivers/gpu/drm/i915/intel_display.c
+> @@ -10066,7 +10066,7 @@ static u32 intel_cursor_base(const struct intel_plane_state *plane_state)
+>  	u32 base;
+>  
+>  	if (INTEL_INFO(dev_priv)->display.cursor_needs_physical)
+> -		base = obj->phys_handle->busaddr;
+> +		base = obj->phys_handle;
+>  	else
+>  		base = intel_plane_ggtt_offset(plane_state);
+>  
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Intel-gfx mailing list
+> Intel-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
+
+-- 
+Ville Syrj�l�
+Intel
