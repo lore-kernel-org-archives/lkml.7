@@ -2,123 +2,135 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBE3C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:07:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CE85C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D01221537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:07:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E83D821537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QJy/6Mns"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V0fqh/To"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728800AbfFNOHL (ORCPT
+        id S1728478AbfFNOJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:07:11 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43485 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfFNOHK (ORCPT
+        Fri, 14 Jun 2019 10:09:09 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:37311 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfFNOJJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:07:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i189so1520525pfg.10;
-        Fri, 14 Jun 2019 07:07:09 -0700 (PDT)
+        Fri, 14 Jun 2019 10:09:09 -0400
+Received: by mail-ed1-f66.google.com with SMTP id w13so3711520eds.4;
+        Fri, 14 Jun 2019 07:09:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LJg9268+LDPIRhGrkFTLGpEAlX1lCnLtO8bJQ4QN05M=;
-        b=QJy/6MnsHsECy1HYz/rqZ3HHq3OQroAc6nX9BCwm9YFf2YbvaicxGQ6bvxsH5aqSZa
-         6yEn9yuIgjL95131ax2bk6Pe0PoU3AeVPdqf2QS1c19ftcVhh5zHh1wq7wvqwGxu4MvP
-         O4s1ytatGdrM1WwgTMFFgxxyEVplOnOrE3ydAcx+o9F1Dw3n5E4uHMbJqtLK8zKEJjmY
-         42i0Umlo3Z+ig8IkvNchp8izRNDzR4Mr6YoT9wb5iO+PuscND4uR+e/Fq6S8mKsFykpB
-         bInllyf25qaS7Vgi5WvgHtvepVsxg+HmjvOEycPObi0biMGp1BsUEqhg0MSF2oaKEN8V
-         hpOw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=GQTbMofHx6ihnY6hv/q/Pjtwumkc7ogl2iTrngkVtvc=;
+        b=V0fqh/ToYT65uEuFt6uNfdklxYbXJW90bygOIQrCOe1G5s+fy3oUGD74h+NjAMMeB3
+         BBZHRgx1vzsnOGS/nstZAzpBV7gMG0ZqrG/36RAfHZAgQocOeBa+sTuLgU3VgU2uZDx/
+         Ffc98er/pmLyyxcYbLRUsx5q+p08rd6mpMEXDvxojsXq52XzYDiIBVtGRLUo3ITFouNL
+         M176HRXmPGUyjFRBy8Od7R31GNWv1JpggyPfrQuUSA2puNj7aoLcdfFpOkJQ1unGJQKM
+         ufptnveFLuUASMzZsWdjoRvGXL0xkEoz9+krC3mBJgiKGhYisySboo8jK/71mutI3Sd9
+         jK6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LJg9268+LDPIRhGrkFTLGpEAlX1lCnLtO8bJQ4QN05M=;
-        b=rRQfi4eOIYRHtLcmGARFp/JWGvoHqxOQRTz86tUVhFb+u4Qcrg3pMLjDcYQbW33Yy7
-         ZbOA4fyGxmcFwGSTh1oLMOFUnNuIqJESZWJS80zwsiY+ojaOojy0RijuqCJO0JUTaSpE
-         jD+hjQ5RLW1n5ANg0dR0UhRMBP85kQEfmNJDd3qUC2LOKKb4FZcEzUwCUGg/ne8ANJuy
-         NUKGl7Dch5/doIInl0fpBAyk+u4eSO+jLr8xFNmSONIKnkjTnrJZZiY4xN6DQfTbuj54
-         RdE8v8j8UMtvRINRp6l6aIaiD4BPGcI3Rq0T3CTeerX5d4o/KhcEjARjvBX9t1JiayGC
-         IZLg==
-X-Gm-Message-State: APjAAAVX8iLJT+MShvgQ3lgQbOPReFpzKupXw13BNhUXCUi89dkCea6x
-        SyryCSsUjuzbTnttIVdwMH+SXWoZQ9U=
-X-Google-Smtp-Source: APXvYqzcEOiZIn73KTG+EBoUQLrcnli4yGKqfYpCbo2WD10sB9flhtjQ3YZWE5gdb0osUBpoEcTbUA==
-X-Received: by 2002:a62:1ec1:: with SMTP id e184mr8001336pfe.185.1560521229311;
-        Fri, 14 Jun 2019 07:07:09 -0700 (PDT)
-Received: from [172.27.227.167] ([216.129.126.118])
-        by smtp.googlemail.com with ESMTPSA id i3sm3418766pfo.138.2019.06.14.07.07.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 07:07:08 -0700 (PDT)
-Subject: Re: [PATCH net] mpls: fix af_mpls dependencies
-To:     Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>
-Cc:     Matteo Croce <mcroce@redhat.com>,
-        David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>
-References: <20190608125019.417-1-mcroce@redhat.com>
- <20190609.195742.739339469351067643.davem@davemloft.net>
- <d19abcd4-799c-ac2f-ffcb-fa749d17950c@infradead.org>
- <CAGnkfhyS15NPEO2ygkjazECULtUDkJgPk8wCYFhA9zL2+w27pg@mail.gmail.com>
- <49b58181-90da-4ee4-cbb0-80e226d040fc@infradead.org>
- <CAK8P3a1mwnDFeD3xnQ6bm1x8C6yX=YEccxN2jknvTbRiCfD=Bg@mail.gmail.com>
-From:   David Ahern <dsahern@gmail.com>
-Message-ID: <47f1889a-e919-e3fd-f90c-39c26cb1ccbb@gmail.com>
-Date:   Fri, 14 Jun 2019 08:07:06 -0600
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
- Gecko/20100101 Thunderbird/52.9.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=GQTbMofHx6ihnY6hv/q/Pjtwumkc7ogl2iTrngkVtvc=;
+        b=GXV9zdCp0xNYIXemUahFfhLV2jbDmg9afQAFzQe1GnWCMg+owRdkgTT3xj3foekTLO
+         hReEpc4a7wcVtdPDyYsaeWoSqJvce8KlIVcvaK+Uv64iJ3w//5b83jNkA1SsSHLvU1ET
+         qZjiXHhnywXO4xTgQw8rbpVBiRi5SP5Ko0Nt7ELmb1U0vvg1fJtUOu7JsOEW6nQC+yu2
+         X+kl3JCaZy0IuVi2YRxqp1RxhXBjyxRhsOh+kEgkvjaNukOGeoZe1dfoF3rg+lg/Uizf
+         0nn7LJlv0a7XmJchnhUlJp02Vdk4rykJBlXI8FY564ZYx09TCQp1k0ttz+WYPpObs+DV
+         lUIg==
+X-Gm-Message-State: APjAAAXCRCBbY1zJoo00o1UjkGvSxV74oj/6XcL8OOT2DaaVnlvIJ4nd
+        hhCR/GsQYbF8odAECSryHp/UNAJPXFCy/3TgHsI=
+X-Google-Smtp-Source: APXvYqxLabx2dayIi0z0mrk5mYOCWKcsBoXZf+gdfmFIbIEppEoh4K9PusScfsC/Ujb/OusUUWU5Okr0/cgVa9nC+zE=
+X-Received: by 2002:a17:906:583:: with SMTP id 3mr14648315ejn.278.1560521346837;
+ Fri, 14 Jun 2019 07:09:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1mwnDFeD3xnQ6bm1x8C6yX=YEccxN2jknvTbRiCfD=Bg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
+ <20190612212748.32246-1-jeffrey.l.hugo@gmail.com> <CAF6AEGvAkCqNXg-NwxfpYJteWs6hfBnOb0yJN6vQOnmMck-HDQ@mail.gmail.com>
+In-Reply-To: <CAF6AEGvAkCqNXg-NwxfpYJteWs6hfBnOb0yJN6vQOnmMck-HDQ@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 14 Jun 2019 07:08:52 -0700
+Message-ID: <CAF6AEGtUjxuL3y5pyzKz5HJV7KyXmKxmVxqcm3DraAKvkB0xmw@mail.gmail.com>
+Subject: Re: [PATCH v6 3/5] arm64: dts: qcom: Add Lenovo Miix 630
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>, jikos@kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/14/19 8:01 AM, Arnd Bergmann wrote:
-> On Wed, Jun 12, 2019 at 9:41 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->> On 6/11/19 5:08 PM, Matteo Croce wrote:
->>> On Wed, Jun 12, 2019 at 1:07 AM Randy Dunlap <rdunlap@infradead.org> wrote:
->>> * Configure standard kernel features (expert users)
->>> *
->>> Configure standard kernel features (expert users) (EXPERT) [Y/?] y
->>>   Multiple users, groups and capabilities support (MULTIUSER) [Y/n/?] y
->>>   sgetmask/ssetmask syscalls support (SGETMASK_SYSCALL) [N/y/?] n
->>>   Sysfs syscall support (SYSFS_SYSCALL) [N/y/?] n
->>>   Sysctl syscall support (SYSCTL_SYSCALL) [N/y/?] (NEW)
->>
->> So I still say that MPLS_ROUTING should depend on PROC_SYSCTL,
->> not select it.
-> 
-> It clearly shouldn't select PROC_SYSCTL, but I think it should not
-> have a 'depends on' statement either. I think the correct fix for the
-> original problem would have been something like
-> 
-> --- a/net/mpls/af_mpls.c
-> +++ b/net/mpls/af_mpls.c
-> @@ -2659,6 +2659,9 @@ static int mpls_net_init(struct net *net)
->         net->mpls.ip_ttl_propagate = 1;
->         net->mpls.default_ttl = 255;
-> 
-> +       if (!IS_ENABLED(CONFIG_PROC_SYSCTL))
-> +               return 0;
-> +
->         table = kmemdup(mpls_table, sizeof(mpls_table), GFP_KERNEL);
->         if (table == NULL)
->                 return -ENOMEM;
-> 
+On Fri, Jun 14, 2019 at 6:44 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> On Thu, Jun 13, 2019 at 10:17 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+> >
+> > This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> > functionality includes USB (host), microSD-card, keyboard, and trackpad.
+> >
+> > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > ---
+>
+> [snip]
+>
+> > diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> > new file mode 100644
+> > index 000000000000..407c6a32911c
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> > @@ -0,0 +1,30 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "msm8998-clamshell.dtsi"
+> > +
+> > +/ {
+> > +       model = "Lenovo Miix 630";
+> > +       compatible = "lenovo,miix-630", "qcom,msm8998";
+> > +};
+>
+>
+> So, I'm not sure if there is some precedent for this (but maybe we
+> haven't really had this problem before).. but as I mentioned on
+> #arch64-laptops, I think we should put vendor/product/board-id strings
+> from SMBIOS table in the dts files.  That could be used by grub to
+> find the correct dtb file to load in a generic way.  (Ie, look for a
+> match of all three strings, and maybe fallback to a match on just
+> vendor+product??)
+>
+> At any rate, how the strings are used can be refined later.  But I
+> think we should include the strings from the beginning for anything
+> that is booting via UEFI.  It's perhaps more useful than the
+> compatible string.
+>
 
-Without sysctl, the entire mpls_router code is disabled. So if sysctl is
-not enabled there is no point in building this file.
+
+perhaps something like:
+
+   dmi-compatible = "LENOVO 81JL/LNVNB161216", "LENOVO 81JL";
+
+??
+
+(well, those are the strings from my yoga c630, not sure what they are
+on the miix 630.. but you get the idea)
+
+BR,
+-R
