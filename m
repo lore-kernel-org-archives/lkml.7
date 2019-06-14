@@ -2,68 +2,96 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 793CEC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:15:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC60C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506332173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:15:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22B802177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:16:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560528910;
-	bh=2+K1vZzfZH05W3JJSs2Pul0tXH3bGKmc3kyN/HUe408=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=kgnB6b/Yxz7YelkqOmEH+cV+CTn6dH/tiPugwD/8Kf3wUnToDIzMSFILORpRy1wve
-	 2g3IwA1Q+UH+6wimYpAG5LJeLFumOEcqVGX+Dxafqzw4PdR3nUBtI+4AbHNFXIE7LV
-	 2VyodFSTb57vfPhaUYVYs3utZFxg7JaopFE+PVWY=
+	s=default; t=1560528983;
+	bh=nc6Gu5WBuukhttllfbWpI15h3ZGPSrpGNeXbIbz0ozA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LRtwdZre273njHuXYikAQg+lcVWKwI2aNGvvi+fO2CSJuVFGNSljw9vnKM06zGmq3
+	 tHwWsDmoqkW965nMEF7U+gGF+EPYQr0XADp5WyuT00hcSiO3rn+AV7R8LeHS2sQ310
+	 wtKn1IWM953PEaiN7rjWXqAelkfbLxebu1F5DbKM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726185AbfFNQPJ (ORCPT
+        id S1726449AbfFNQQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:15:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 12:16:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51468 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726052AbfFNQPH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:15:07 -0400
-Subject: Re: [git pull] IOMMU Fixes for Linux v5.2-rc4
+        id S1725869AbfFNQQV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:16:21 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5AFD12084E;
+        Fri, 14 Jun 2019 16:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560528907;
-        bh=2+K1vZzfZH05W3JJSs2Pul0tXH3bGKmc3kyN/HUe408=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=YucqWFdDpXXrp06J+Ete4AZ/0gdaFlsf+io5xEBba/4HmcJ1KS/cR1v3i5/NoZLdZ
-         gNbUo8OmYCNFAi+CdvrxdTTFKRdkKBaCGs3z359JmXRistAxlpoivmTuwL0N3GWyaA
-         J+5HhOZNKtE7cz9e6QTm0lLmO81bHBuQ38MVYP5Q=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190614093854.GA10155@8bytes.org>
-References: <20190614093854.GA10155@8bytes.org>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190614093854.GA10155@8bytes.org>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git
- tags/iommu-fixes-v5.2-rc4
-X-PR-Tracked-Commit-Id: 4e4abae311e4b44aaf61f18a826fd7136037f199
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c78ad1be4b4d65eb214421b90a788abf3c85c3ea
-Message-Id: <156052890740.10292.7234479296212051919.pr-tracker-bot@kernel.org>
-Date:   Fri, 14 Jun 2019 16:15:07 +0000
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+        s=default; t=1560528981;
+        bh=nc6Gu5WBuukhttllfbWpI15h3ZGPSrpGNeXbIbz0ozA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W3HqbykgRzdLv007Fa8DMJ6Kl9yBBdM5dM7hEe6w6/BmYne48hzMVGPojn41NRg+X
+         XFl3RtVlQ6wQmWCQ26AzbUtsa1a3EzKI/xREY4FW1fTjzKYCyGiqINBlk2M+nLJMQy
+         UD3crjifc+POF6aRF0+jbAnSYZenE2AX1jpaSB1w=
+Date:   Fri, 14 Jun 2019 18:16:18 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Andrew Donnellan <ajd@linux.ibm.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Andreas Klinger <ak@it-klinger.de>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Sebastian Reichel <sre@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-iio@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 01/14] ABI: fix some syntax issues at the ABI database
+Message-ID: <20190614161618.GA23190@kroah.com>
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+ <b908fc6555df8cae3e4c734b2d5f6284c46a5f14.1560477540.git.mchehab+samsung@kernel.org>
+ <1ef7b765-da34-c65b-a226-f17969935ce2@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1ef7b765-da34-c65b-a226-f17969935ce2@linux.ibm.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 14 Jun 2019 11:39:15 +0200:
+On Fri, Jun 14, 2019 at 05:20:29PM +1000, Andrew Donnellan wrote:
+> On 14/6/19 12:04 pm, Mauro Carvalho Chehab wrote:
+> > diff --git a/Documentation/ABI/testing/sysfs-class-cxl b/Documentation/ABI/testing/sysfs-class-cxl
+> > index bbbabffc682a..fc7c6f7c21b3 100644
+> > --- a/Documentation/ABI/testing/sysfs-class-cxl
+> > +++ b/Documentation/ABI/testing/sysfs-class-cxl
+> > @@ -1,6 +1,6 @@
+> > -Note: Attributes that are shared between devices are stored in the directory
+> > -pointed to by the symlink device/.
+> > -Example: The real path of the attribute /sys/class/cxl/afu0.0s/irqs_max is
+> > +Please notice that attributes that are shared between devices are stored in
+> 
+> Would prefer "Please note" over "Please notice".
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git tags/iommu-fixes-v5.2-rc4
+Now changed, but that's a minor grammer thing, both are correct. :)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c78ad1be4b4d65eb214421b90a788abf3c85c3ea
+> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>  # cxl
 
-Thank you!
+thanks,
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+greg k-h
