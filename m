@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AB58C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CCDC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D53B621473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADCEF21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544670;
-	bh=m79AlYi3re8rFJQ1KfyQmZFmj5NMIiRS/z9ktijr5tk=;
+	s=default; t=1560544676;
+	bh=1UHtruAhcIKtbxyrI9yPCM/Ec1ZsP54ZaoOnGt4gJt4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CzHLSfjhKlVO+NILAPegzp3h1DPHZDbt0XyPP2+r3eFdeU4WqwDaJ8Hw9fLSJB7/X
-	 WHO+rEU4Zux5rOXX8mkA8EhNy0ap8h/s1BTapF6jBH4s6XAb57Rw7okenyqtjesepk
-	 Isu1RF7AXxefl08gIYRN87I0y2R7/YsM5yt3A4Sk=
+	b=2lqckrJhcwSbsEU+idvGi5O1V6Dk2+cRva9ttr6BozbsiMYU/AQIqZMLvvTnWBWk1
+	 7wU7ZVV8RLpuNQ89htdRhs5clzjgK2jUQLJQCIIfFA6j5cUg/ik1OrOdypXUIxsdsJ
+	 b4P0oYK4hyieX5Jsu99dzUxENbwrb7h9S0hm6lm4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfFNUht (ORCPT
+        id S1728490AbfFNUhy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:37:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51002 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:37:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50956 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726771AbfFNU3H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:07 -0400
+        id S1726762AbfFNU3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:05 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4250D2184E;
-        Fri, 14 Jun 2019 20:29:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C8F7821872;
+        Fri, 14 Jun 2019 20:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544146;
-        bh=m79AlYi3re8rFJQ1KfyQmZFmj5NMIiRS/z9ktijr5tk=;
+        s=default; t=1560544144;
+        bh=1UHtruAhcIKtbxyrI9yPCM/Ec1ZsP54ZaoOnGt4gJt4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Egdn3e9nFEjR/XfcOQJkxCzxYsvM913x5zYgjhwSNST0sLZ8HEdMk+ZugTyrHxkWy
-         bt2O+fiIvrWafiSYgo5lunCu79FJ7aQjgECnBjJXI1y31xd7KSTbQVv1xHl+CD3gGS
-         +x4+MW+ZTC7cDn5S7qb4PdPnQgdXThCXp9WIRzHM=
+        b=RZ9TzDrh0rZq9lMzmld85Jz8N/6bxUAsD6kG3LtefVhq9ay/jY+5U0OCsnJ2yJoVw
+         Ysj9iJ7F0j5jc50y3O/m4O9wvqOpyI53o1YUdVMbtmq0HzvWYLLf4v5X9Cy1VfV9aA
+         h/cJfDZCte7kwV4ZoKU+e4dt/rz3iUous+XPtcdI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 5.1 27/59] xtensa: Fix section mismatch between memblock_reserve and mem_reserve
-Date:   Fri, 14 Jun 2019 16:28:11 -0400
-Message-Id: <20190614202843.26941-27-sashal@kernel.org>
+Cc:     Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 26/59] crypto: hmac - fix memory leak in hmac_init_tfm()
+Date:   Fri, 14 Jun 2019 16:28:10 -0400
+Message-Id: <20190614202843.26941-26-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -59,50 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Eric Biggers <ebiggers@google.com>
 
-[ Upstream commit adefd051a6707a6ca0ebad278d3c1c05c960fc3b ]
+[ Upstream commit 7829a0c1cb9c80debfb4fdb49b4d90019f2ea1ac ]
 
-Since commit 9012d011660ea5cf2 ("compiler: allow all arches to enable
-CONFIG_OPTIMIZE_INLINING"), xtensa:tinyconfig fails to build with section
-mismatch errors.
+When I added the sanity check of 'descsize', I missed that the child
+hash tfm needs to be freed if the sanity check fails.  Of course this
+should never happen, hence the use of WARN_ON(), but it should be fixed.
 
-WARNING: vmlinux.o(.text.unlikely+0x68): Section mismatch in reference
-	from the function ___pa()
-	to the function .meminit.text:memblock_reserve()
-WARNING: vmlinux.o(.text.unlikely+0x74): Section mismatch in reference
-	from the function mem_reserve()
-	to the function .meminit.text:memblock_reserve()
-FATAL: modpost: Section mismatches detected.
-
-This was not seen prior to the above mentioned commit because mem_reserve()
-was always inlined.
-
-Mark mem_reserve(() as __init_memblock to have it reside in the same
-section as memblock_reserve().
-
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Message-Id: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Fixes: e1354400b25d ("crypto: hash - fix incorrect HASH_MAX_DESCSIZE")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ crypto/hmac.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 4ec6fbb696bf..a5139f1d9220 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -310,7 +310,8 @@ extern char _SecondaryResetVector_text_start;
- extern char _SecondaryResetVector_text_end;
- #endif
+diff --git a/crypto/hmac.c b/crypto/hmac.c
+index 4b8c8ee8f15c..c623778b36ba 100644
+--- a/crypto/hmac.c
++++ b/crypto/hmac.c
+@@ -168,8 +168,10 @@ static int hmac_init_tfm(struct crypto_tfm *tfm)
  
--static inline int mem_reserve(unsigned long start, unsigned long end)
-+static inline int __init_memblock mem_reserve(unsigned long start,
-+					      unsigned long end)
- {
- 	return memblock_reserve(start, end - start);
- }
+ 	parent->descsize = sizeof(struct shash_desc) +
+ 			   crypto_shash_descsize(hash);
+-	if (WARN_ON(parent->descsize > HASH_MAX_DESCSIZE))
++	if (WARN_ON(parent->descsize > HASH_MAX_DESCSIZE)) {
++		crypto_free_shash(hash);
+ 		return -EINVAL;
++	}
+ 
+ 	ctx->hash = hash;
+ 	return 0;
 -- 
 2.20.1
 
