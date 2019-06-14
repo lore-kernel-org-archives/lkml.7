@@ -2,116 +2,99 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CC2C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:23:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A23E1C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C34A217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A55A217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:23:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JpUb+/3G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726622AbfFNRXX (ORCPT
+        id S1726658AbfFNRX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:23:23 -0400
-Received: from lnfm1.sai.msu.ru ([93.180.26.255]:50801 "EHLO lnfm1.sai.msu.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfFNRXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:23:20 -0400
-X-Greylist: delayed 2129 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Jun 2019 13:23:05 EDT
-Received: from dragon.sai.msu.ru (dragon.sai.msu.ru [93.180.26.172])
-        by lnfm1.sai.msu.ru (8.14.1/8.12.8) with ESMTP id x5EGl5kL020143;
-        Fri, 14 Jun 2019 19:47:10 +0300
-Received: from oak.local (unknown [92.243.181.209])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client did not present a certificate)
-        by dragon.sai.msu.ru (Postfix) with ESMTPSA id 9152ABCE4;
-        Fri, 14 Jun 2019 19:46:58 +0300 (MSK)
-From:   "Matwey V. Kornilov" <matwey@sai.msu.ru>
-To:     b-liu@ti.com, gregkh@linuxfoundation.org, stern@rowland.harvard.edu
-Cc:     matwey.kornilov@gmail.com,
-        "Matwey V. Kornilov" <matwey@sai.msu.ru>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2 0/6] musb: Improve performance for hub-attached webcams
-Date:   Fri, 14 Jun 2019 19:45:48 +0300
-Message-Id: <20190614164554.27679-1-matwey@sai.msu.ru>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20190403185310.8437-1-matwey@sai.msu.ru>
-References: <20190403185310.8437-1-matwey@sai.msu.ru>
-In-Reply-To: <20190403185310.8437-1-matwey@sai.msu.ru>
-References: <20190403185310.8437-1-matwey@sai.msu.ru>
+        Fri, 14 Jun 2019 13:23:26 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42818 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfFNRXS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:23:18 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x17so3324948wrl.9;
+        Fri, 14 Jun 2019 10:23:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jzZPVNKvIqUnLAnTZJfqYcJAqoVMUTg4RgDz59BwLdo=;
+        b=JpUb+/3G7vn8sY5/+Dq8rBZn6qOeoQXPV+rexL0ETfp4lK+SrRDqsnA+D6sfs03HIP
+         2V7vH+Lo1K6UMwx2qBpp+XBifHJadBX/7WVFtmeHSfmVmpHFSPq2Ll5f6DAs3mFXdizh
+         /qL33pIFXYLoUi1mNITzoX+PJQxiwD4pnkkCOQcWG2Bax5KlZEzONEtIyalouBOgxnvL
+         tGgNfmMyFm7YYA0mwUDuE0kAH+LwaPy/BHiW7LOhQX0cdIoeqWwMk1cZwcbdOXSLgN99
+         9qgR1hQCOwL5KWS94YPi/acIm1vwK2YyEVgoqJJ3bpFI+NYn7cH7fbvbDSKCZ1hhGiAY
+         Bc1A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jzZPVNKvIqUnLAnTZJfqYcJAqoVMUTg4RgDz59BwLdo=;
+        b=UjqZgpEkCd8ZRBGUvqGreOqckUzDgGS5qBrBvFV5QR2LuGD6zHhDG+R+4fd6OBe7H8
+         SLS89mQR4SOui3bAeyhYqqPAXaawyQjvbxFodT7YfIc1MwXBqZQPtM4ect1NQmFntAt9
+         Y/gsgZPjQkHKnlAyvfw08ocCbYfNI2bzRWVagRbGFZJxE3s0Fi+gZwmrLRRYaRSrdhhF
+         l3fBghHs+Y9NVUQ6jmZE0sUd+cUyCVsKEtmY53y7AoutaWafPjGwdEPHlQeKa58+pMq/
+         RP1/3S83jROyODGQRCtFkVxJEGTtPHeOhc7KgkRxchu2fubGbH5aeqfOel3uoEJx1C4n
+         9HfQ==
+X-Gm-Message-State: APjAAAWE1Vkkwr0Y8HItRHj4PY1t/SKwj78DsvB/WlkmEYyr5qJhdhWX
+        ni854ky4MpEhepD59mFarKs=
+X-Google-Smtp-Source: APXvYqzxYP1cbsOOCYPWmIbvJ1xl5Lko+tCkE0rpk+wdhu18dJhKiS/EwaA9FDMz67KxPa+Dn7N5Jg==
+X-Received: by 2002:adf:8044:: with SMTP id 62mr17657298wrk.20.1560532996451;
+        Fri, 14 Jun 2019 10:23:16 -0700 (PDT)
+Received: from Red ([2a01:cb1d:147:7200:2e56:dcff:fed2:c6d6])
+        by smtp.googlemail.com with ESMTPSA id r12sm4387641wrt.95.2019.06.14.10.23.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 10:23:15 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 19:23:13 +0200
+From:   Corentin Labbe <clabbe.montjoie@gmail.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH net-next] net: stmmac: Fix wrapper drivers not detecting
+ PHY
+Message-ID: <20190614172313.GA24955@Red>
+References: <f4f524805a81c6f680b55d8fb084b1070294a0a8.1560524776.git.joabreu@synopsys.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f4f524805a81c6f680b55d8fb084b1070294a0a8.1560524776.git.joabreu@synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The series is concerned to issues with isochronous transfer while
-streaming the USB webcam data. I discovered the issue first time
-when attached PWC USB webcam to AM335x-based BeagleBone Black SBC.
-It appeared that the root issue was in numerous missed IN requests
-during isochronous transfer where each missing leaded to the frame
-drop. Since every IN request is triggered in MUSB driver
-individually, it is important to queue the send IN request as
-earlier as possible when the previous IN completed. At the same
-time the URB giveback handler of the device driver has also to be
-called there, that leads to arbitrarily delay depending on the
-device driver performance. The details with the references are
-described in [1].
+On Fri, Jun 14, 2019 at 05:06:57PM +0200, Jose Abreu wrote:
+> Because of PHYLINK conversion we stopped parsing the phy-handle property
+> from DT. Unfortunatelly, some wrapper drivers still rely on this phy
+> node to configure the PHY.
+> 
+> Let's restore the parsing of PHY handle while these wrapper drivers are
+> not fully converted to PHYLINK.
+> 
+> Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
+> Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
+> Signed-off-by: Jose Abreu <joabreu@synopsys.com>
+> Cc: Joao Pinto <jpinto@synopsys.com>
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Alexandre Torgue <alexandre.torgue@st.com>
 
-The issue has two parts:
+Thanks for the quick fix
 
-  1) peripheral driver URB callback performance
-  2) MUSB host driver performance
-
-It appeared that the first part is related to the wrong memory
-allocation strategy in the most USB webcam drivers. Non-cached
-memory is used in assumption that coherent DMA memory leads to
-the better performance than non-coherent memory in conjunction with
-the proper synchronization. Yet the assumption might be valid for
-x86 platforms some time ago, the issue was fixed for PWC driver in:
-
-    1161db6776bd ("media: usb: pwc: Don't use coherent DMA buffers for ISO transfer")
-
-that leads to 3.5x performance gain. The more generic fix for this
-common issue are coming for the rest drivers [2].
-
-The patch allowed successfully running full-speed USB PWC webcams
-attached directly to BeagleBone Black USB port.
-
-However, the second part of the issue is still present for
-peripheral device attached through the high-speed USB hub due to
-its 125us frame time. The patch series is intended to reorganize
-musb_advance_schedule() to allow host to send IN request quicker.
-
-The patch series is organized as the following. First three patches
-improve readability of the existing code in
-musb_advance_schedule(). Patches 4 and 5 introduce updated
-signature for musb_start_urb(). The last patch introduce new
-code-path in musb_advance_schedule() which allows for faster
-response.
-
-References:
-
-[1] https://www.spinics.net/lists/linux-usb/msg165735.html
-[2] https://www.spinics.net/lists/linux-media/msg144279.html
-
-Changes since v1:
- - Patch 6 was redone to keep URB giveback order and stop transmission at
-   erroneous URB.
-
-Matwey V. Kornilov (6):
-  usb: musb: Use USB_DIR_IN when calling musb_advance_schedule()
-  usb: musb: Introduce musb_qh_empty() helper function
-  usb: musb: Introduce musb_qh_free() helper function
-  usb: musb: Rename musb_start_urb() to musb_start_next_urb()
-  usb: musb: Introduce musb_start_urb()
-  usb: musb: Decrease URB starting latency in musb_advance_schedule()
-
- drivers/usb/musb/musb_host.c | 132 ++++++++++++++++++++++++++++---------------
- drivers/usb/musb/musb_host.h |   1 +
- 2 files changed, 86 insertions(+), 47 deletions(-)
-
--- 
-2.16.4
-
+Tested-by: Corentin Labbe <clabbe.montjoie@gmail.com>
