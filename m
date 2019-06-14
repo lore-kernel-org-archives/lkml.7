@@ -2,87 +2,213 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 774FFC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:15:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EEEDC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C481208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:15:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="plUvNd2h"
+	by mail.kernel.org (Postfix) with ESMTP id 3D574208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfFNJP0 (ORCPT
+        id S1726971AbfFNJPk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:15:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52570 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfFNJPZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:15:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bjuICrJxhqbVE3btlCQ3iZkvBOpZmXqWH1hsHhR0vEs=; b=plUvNd2hsauOJNdMcJW7PtfGU
-        ToeAUBkrbzKvJm2BUG/yf8dWjbaAvX7Q4lidDs0ithX9OI2WVuXyjfjTLnReR0Y0BKcgCuAYiXgBC
-        OYMfDsUCaba/eGhvG5pmOg+CVacs6ilSRsk2Vm9Q+cjRnTCoZahKJFZHX8emllCfCdfoOQyfYYpgd
-        8P3NvVIEryL7h01oXhpMERwBy1+5j/J65bjKgYr8HqalG4n/8K5kG47A0w9CyIaEfbCm+XdyPqqR2
-        +SODATdKf9VGfFZV7w3Vcr9SwOJUqEoqFkjC3/4Q1Bw12ultXg+EeVpqKI0Vp+ZCPmsLTqaO2Mazw
-        5m/hAaOGg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbiIm-0004MH-MW; Fri, 14 Jun 2019 09:15:16 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0E80820245BD7; Fri, 14 Jun 2019 11:15:14 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 11:15:14 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        Fri, 14 Jun 2019 05:15:40 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:37664 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725907AbfFNJPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 05:15:40 -0400
+Received: from we0305.dip.tu-dresden.de ([141.76.177.49] helo=phil.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hbiJ0-00040c-GM; Fri, 14 Jun 2019 11:15:30 +0200
+From:   Heiko Stuebner <heiko@sntech.de>
+To:     Justin Swartz <justin.swartz@risingedge.co.za>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 09/62] x86/mm: Preserve KeyID on pte_modify() and
- pgprot_modify()
-Message-ID: <20190614091513.GW3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-10-kirill.shutemov@linux.intel.com>
+Subject: Re: [PATCH] ARM: dts: rockchip: add display nodes for rk322x
+Date:   Fri, 14 Jun 2019 11:15:29 +0200
+Message-ID: <1854794.0zkvb3x0FP@phil>
+In-Reply-To: <20190613101305.30491-1-justin.swartz@risingedge.co.za>
+References: <20190613101305.30491-1-justin.swartz@risingedge.co.za>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-10-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:43:29PM +0300, Kirill A. Shutemov wrote:
-> + * Cast PAGE_MASK to a signed type so that it is sign-extended if
-> + * virtual addresses are 32-bits but physical addresses are larger
-> + * (ie, 32-bit PAE).
+Hi Justin,
 
-On 32bit, 'long' is still 32bit, did you want to cast to 'long long'
-instead? Ideally we'd use pteval_t here, but I see that is unsigned.
+Am Donnerstag, 13. Juni 2019, 12:13:04 CEST schrieb Justin Swartz:
+> Add display_subsystem, hdmi_phy, vop, and hdmi device nodes plus
+> a few hdmi pinctrl entries to allow for HDMI output.
+> 
+> Signed-off-by: Justin Swartz <justin.swartz@risingedge.co.za>
 
->   */
-> -#define _PAGE_CHG_MASK	(PTE_PFN_MASK | _PAGE_PCD | _PAGE_PWT |		\
-> +#define PTE_PFN_MASK_MAX \
-> +	(((signed long)PAGE_MASK) & ((1ULL << __PHYSICAL_MASK_SHIFT) - 1))
-> +#define _PAGE_CHG_MASK	(PTE_PFN_MASK_MAX | _PAGE_PCD | _PAGE_PWT |		\
->  			 _PAGE_SPECIAL | _PAGE_ACCESSED | _PAGE_DIRTY |	\
->  			 _PAGE_SOFT_DIRTY | _PAGE_DEVMAP)
->  #define _HPAGE_CHG_MASK (_PAGE_CHG_MASK | _PAGE_PSE)
+Overall looks good, but in combination with the clock-patch you posted,
+I'd really prefer if we could try a slightly different approach.
+
+Hard register-level settings in the clock driver look bad and tend to
+cause problems later on, so I've adapted things a bit in [0] (untested)
+and would be glad if you could give it a try on actual hardware.
+
+The hdmiphy itself is a clock-provider for its pll and therefore the
+assigned-clock* properties into the hdmi controller, as the phy needs
+to probe before trying to set clocks.
+But in theory this should achieve the same result of reparenting the
+system's hdmiphy clock to the actual output of the phy-pll.
+
+I've also moved the iommu-cells fix to a separate commit.
+
+Please test, thanks
+Heiko
+
+
+[0] https://github.com/mmind/linux-rockchip/commits/wip/rk3229-hdmi
+
+> ---
+>  arch/arm/boot/dts/rk322x.dtsi | 83 ++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 82 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/rk322x.dtsi b/arch/arm/boot/dts/rk322x.dtsi
+> index da102fff96a2..7eb883eec126 100644
+> --- a/arch/arm/boot/dts/rk322x.dtsi
+> +++ b/arch/arm/boot/dts/rk322x.dtsi
+> @@ -143,6 +143,11 @@
+>  		#clock-cells = <0>;
+>  	};
+>  
+> +	display_subsystem: display-subsystem {
+> +		compatible = "rockchip,display-subsystem";
+> +		ports = <&vop_out>;
+> +	};
+> +
+>  	i2s1: i2s1@100b0000 {
+>  		compatible = "rockchip,rk3228-i2s", "rockchip,rk3066-i2s";
+>  		reg = <0x100b0000 0x4000>;
+> @@ -529,6 +534,17 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	hdmi_phy: hdmi-phy@12030000 {
+> +		compatible = "rockchip,rk3228-hdmi-phy";
+> +		reg = <0x12030000 0x10000>;
+> +		clocks = <&cru PCLK_HDMI_PHY>, <&xin24m>, <&cru DCLK_HDMI_PHY>;
+> +		clock-names = "sysclk", "refoclk", "refpclk";
+> +		#clock-cells = <0>;
+> +		clock-output-names = "hdmiphy_phy";
+> +		#phy-cells = <0>;
+> +		status = "disabled";
+> +	};
+> +
+>  	gpu: gpu@20000000 {
+>  		compatible = "rockchip,rk3228-mali", "arm,mali-400";
+>  		reg = <0x20000000 0x10000>;
+> @@ -572,6 +588,28 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	vop: vop@20050000 {
+> +		compatible = "rockchip,rk3228-vop";
+> +		reg = <0x20050000 0x1ffc>;
+> +		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru ACLK_VOP>, <&cru DCLK_VOP>, <&cru HCLK_VOP>;
+> +		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
+> +		resets = <&cru SRST_VOP_A>, <&cru SRST_VOP_H>, <&cru SRST_VOP_D>;
+> +		reset-names = "axi", "ahb", "dclk";
+> +		iommus = <&vop_mmu>;
+> +		status = "disabled";
+> +
+> +		vop_out: port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			vop_out_hdmi: endpoint@0 {
+> +				reg = <0>;
+> +				remote-endpoint = <&hdmi_in_vop>;
+> +			};
+> +		};
+> +	};
+> +
+>  	vop_mmu: iommu@20053f00 {
+>  		compatible = "rockchip,iommu";
+>  		reg = <0x20053f00 0x100>;
+> @@ -579,7 +617,7 @@
+>  		interrupt-names = "vop_mmu";
+>  		clocks = <&cru ACLK_VOP>, <&cru HCLK_VOP>;
+>  		clock-names = "aclk", "iface";
+> -		iommu-cells = <0>;
+> +		#iommu-cells = <0>;
+>  		status = "disabled";
+>  	};
+>  
+> @@ -594,6 +632,34 @@
+>  		status = "disabled";
+>  	};
+>  
+> +	hdmi: hdmi@200a0000 {
+> +		compatible = "rockchip,rk3228-dw-hdmi";
+> +		reg = <0x200a0000 0x20000>;
+> +		reg-io-width = <4>;
+> +		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&cru SCLK_HDMI_HDCP>, <&cru PCLK_HDMI_CTRL>, <&cru SCLK_HDMI_CEC>;
+> +		clock-names = "isfr", "iahb", "cec";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&hdmii2c_xfer &hdmi_hpd &hdmi_cec>;
+> +		resets = <&cru SRST_HDMI_P>;
+> +		reset-names = "hdmi";
+> +		phys = <&hdmi_phy>;
+> +		phy-names = "hdmi";
+> +		rockchip,grf = <&grf>;
+> +		status = "disabled";
+> +
+> +		ports {
+> +			hdmi_in: port {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				hdmi_in_vop: endpoint@0 {
+> +					reg = <0>;
+> +					remote-endpoint = <&vop_out_hdmi>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+>  	sdmmc: dwmmc@30000000 {
+>  		compatible = "rockchip,rk3228-dw-mshc", "rockchip,rk3288-dw-mshc";
+>  		reg = <0x30000000 0x4000>;
+> @@ -922,6 +988,21 @@
+>  			};
+>  		};
+>  
+> +		hdmi {
+> +			hdmi_hpd: hdmi-hpd {
+> +				rockchip,pins = <0 RK_PB7 1 &pcfg_pull_down>;
+> +			};
+> +
+> +			hdmii2c_xfer: hdmii2c-xfer {
+> +				rockchip,pins = <0 RK_PA6 2 &pcfg_pull_none>,
+> +						<0 RK_PA7 2 &pcfg_pull_none>;
+> +			};
+> +
+> +			hdmi_cec: hdmi-cec {
+> +				rockchip,pins = <0 RK_PC4 1 &pcfg_pull_none>;
+> +			};
+> +		};
+> +
+>  		i2c0 {
+>  			i2c0_xfer: i2c0-xfer {
+>  				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_none>,
+> 
+
+
+
+
