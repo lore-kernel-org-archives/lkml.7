@@ -2,118 +2,353 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCD9C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:45:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BDFBC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:50:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCD321537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:45:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1050E2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:50:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="NO5yUNM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726707AbfFNIpH (ORCPT
+        id S1726660AbfFNIu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:45:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60522 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726255AbfFNIpG (ORCPT
+        Fri, 14 Jun 2019 04:50:28 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:33102 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726185AbfFNIu1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:45:06 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5E8hLnp083429
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 04:45:05 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t46jfm71q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 04:45:05 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Fri, 14 Jun 2019 09:45:02 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Jun 2019 09:44:52 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5E8ioUG58589432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jun 2019 08:44:50 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C533CAE051;
-        Fri, 14 Jun 2019 08:44:50 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 641BDAE045;
-        Fri, 14 Jun 2019 08:44:48 +0000 (GMT)
-Received: from [9.145.160.23] (unknown [9.145.160.23])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Jun 2019 08:44:48 +0000 (GMT)
-Subject: Re: [PATCH v12 00/31] Speculative page faults
-From:   Laurent Dufour <ldufour@linux.ibm.com>
-To:     Haiyan Song <haiyanx.song@intel.com>
-Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
-        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
-        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
-        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
-        mpe@ellerman.id.au, paulus@samba.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
-        Will Deacon <will.deacon@arm.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        sergey.senozhatsky.work@gmail.com,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
-        David Rientjes <rientjes@google.com>,
-        Jerome Glisse <jglisse@redhat.com>,
-        Ganesh Mahendran <opensource.ganesh@gmail.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Punit Agrawal <punitagrawal@gmail.com>,
-        vinayak menon <vinayakm.list@gmail.com>,
-        Yang Shi <yang.shi@linux.alibaba.com>,
-        zhong jiang <zhongjiang@huawei.com>,
-        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
-        Michel Lespinasse <walken@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        haren@linux.vnet.ibm.com, npiggin@gmail.com,
-        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-References: <20190416134522.17540-1-ldufour@linux.ibm.com>
- <20190606065129.d5s3534p23twksgp@haiyan.sh.intel.com>
- <3d3cefa2-0ebb-e86d-b060-7ba67c48a59f@linux.ibm.com>
-Date:   Fri, 14 Jun 2019 10:44:47 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Fri, 14 Jun 2019 04:50:27 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190614085023euoutp02dc16ad68f10451860bdfa75e894a2a42~oBIEhdS3-1641716417euoutp02D
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:50:23 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190614085023euoutp02dc16ad68f10451860bdfa75e894a2a42~oBIEhdS3-1641716417euoutp02D
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560502223;
+        bh=iw69xWGrEDzd6kQc72slduKlGfkg0GvEU2aINsokIJQ=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=NO5yUNM123Pav9iRsVsSKEraOyoEOFxXNezV/KMhGuYNwn/QPgwdus/DtErn/DRpl
+         oFCbzxqKu/zr5I1iKWSBItiNVv6R5LTKzbw0NB5eZYMnQX2VxgibxBjqJSZdOuShai
+         3pTnftbj3QY+/D42vF4hmxxD9WOJ5GrG0v827aEA=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190614085022eucas1p2f8426082971818ceae9b91cfc40c5b9b~oBIDlwqzf1418714187eucas1p28;
+        Fri, 14 Jun 2019 08:50:22 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 3A.F6.04377.ECF530D5; Fri, 14
+        Jun 2019 09:50:22 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190614085021eucas1p2ab5681c242a14f22e3bc7494a5884f75~oBICw_zlV2692926929eucas1p2H;
+        Fri, 14 Jun 2019 08:50:21 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190614085021eusmtrp29828bbdae6956daecb6f35f1e7b2fb34~oBIChGDRi1742017420eusmtrp2Y;
+        Fri, 14 Jun 2019 08:50:21 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-60-5d035fce040b
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 54.21.04140.DCF530D5; Fri, 14
+        Jun 2019 09:50:21 +0100 (BST)
+Received: from [106.120.51.20] (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190614085020eusmtip1fbf314d3e6b1e736d0c82b2803a6ce61~oBIBqRJkp1761917619eusmtip1I;
+        Fri, 14 Jun 2019 08:50:20 +0000 (GMT)
+Subject: Re: [PATCH v9 08/13] drivers: memory: add DMC driver for Exynos5422
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+Message-ID: <4a88b188-eee9-2a16-82cf-ead94a3c24da@partner.samsung.com>
+Date:   Fri, 14 Jun 2019 10:50:18 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <3d3cefa2-0ebb-e86d-b060-7ba67c48a59f@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <CAJKOXPdKGG25T46d+SmES7wyQ=kAMj2jdT3GCYa+z87wpYKNEQ@mail.gmail.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061408-0008-0000-0000-000002F3B0D9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061408-0009-0000-0000-00002260BA09
-Message-Id: <1c412ebe-c213-ee67-d261-c70ddcd34b79@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=775 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906140071
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+3aujrZO87KXioJFokbrQsGXXejOSSrqjygysaUnjdyynbTs
+        QiuzMjNr3WxpSxSsZS0vmZuloday0imFllKU2l27uZTo6jxG/vfwPL/vfd8HPpZQpdAj2I2G
+        rYLRoIvT0HKy9O5394T6SCJiUknvMFyYaadws+cNha019RS+/KUd4eRcO41P3M+W4YdpepzR
+        /oHAbvc1Btft62TwlyPPKfzImUXj7vQahDPdFTJ8peYZgxvvL8Stey/SuLrzIIV/NxWSuPJx
+        GG79ocQ999rQnAC+55uZ5D89SWH4c6ZGkndYnjF8kS2V5iuzCxg+PfkjzR8tsSG++MFOvrto
+        9HL5GvnMaCFuY6JgnDh7nTzWYVHGH5i1vfhaIW1CdSGHkQ8L3FTIMucRh5GcVXEXEbSZDiFv
+        oOI8CMxNtBR0I0g+foX49yLzayolQfkIXE9jJagLwTtbA+0NfLklkFfazHi1HxcMzb96KS9E
+        cKcouNlb3wexLM1pocy2xcsouEWQUpDWP5TkxkHq3aekV/tzq8HjKEISMxxqz3b0+z7cCnA4
+        y/vnE5waWjqsMkmPgRtdWQOH3mah/rRe0gugp/KmTNK+8N5Vwkh6FPxxWAd8EUzpOUjSu6A9
+        I3uAmQHVrkbKezLR18XunCjZc+FVRQbptYFTwpOu4dIFSjCXniEkWwGHDqgkOghKjjQMLAqA
+        /ILTzDGksQzqZRnUxTKoi+X/3guItCG1kCDqYwRxikHYphV1ejHBEKON2qwvQn2f88Fvl6cM
+        OX+ur0IcizRDFbdDZREqSpcoJumrELCExk9xfgYRoVJE65J2CMbNkcaEOEGsQiNZUqNW7Bzy
+        IlzFxei2CpsEIV4w/ktlrM8IE9JOGJ+0b3y4JTB5rTHtpb0hAKnLl1Z82xM27k+8MsC42C90
+        oWXDu+7J21tiPK7Pi6zV2ulXrzuWhapPtqmU1lXzo9Aa+cOOU7ecfu6V/mN3mfYHx9cO4fa+
+        fx3WqX9rjmu6lJubGDJ3WuDu8I/RyqY7hW3Pc4IMduJgXeSJ8sR5l0UNKcbqJocQRlH3F5YJ
+        bSuYAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprNKsWRmVeSWpSXmKPExsVy+t/xu7pn45ljDRbvFrHYOGM9q8X1L89Z
+        LeYfOcdqsfrjY0aL5sXr2Swmn5rLZHGmO9ei//FrZovz5zewW5xtesNu8bHnHqvF5V1z2Cw+
+        9x5htJhxfh+Txdojd9ktLp5ytbjduILN4vCbdlaLf9c2sljsv+Jlcfs3n8W3E48YHcQ8vn2d
+        xOLx/kYru8fshossHjtn3WX32LSqk81j/9w17B69ze/YPPq2rGL02Hy62uPzJrkArig9m6L8
+        0pJUhYz84hJbpWhDCyM9Q0sLPSMTSz1DY/NYKyNTJX07m5TUnMyy1CJ9uwS9jJ2z+ArabCs2
+        b9jI1sB4VquLkZNDQsBEYsanTtYuRi4OIYGljBK73yxghkiISUzat50dwhaW+HOtiw2i6DWj
+        xKuXZ8GKhAV8JJZsuw5WJCKgKXH973ewScwCU1klJjw/DZYQEpjAJHHrLE8XIwcHm4CexI5V
+        hSBhXgE3idY13awgNouAqkTnsZssILaoQITE7F0NLBA1ghInZz4BszkFAiV27toNNpJZwExi
+        3uaHzBC2uMStJ/OZIGx5ie1v5zBPYBSahaR9FpKWWUhaZiFpWcDIsopRJLW0ODc9t9hIrzgx
+        t7g0L10vOT93EyMwYWw79nPLDsaud8GHGAU4GJV4eA9YMcUKsSaWFVfmHmKU4GBWEuGdZ80c
+        K8SbklhZlVqUH19UmpNafIjRFOi5icxSosn5wGSWVxJvaGpobmFpaG5sbmxmoSTO2yFwMEZI
+        ID2xJDU7NbUgtQimj4mDU6qBsXbCyY+9ex5GR39gLGB4Xzuhvp6Ll8nfZ9LtoP/9dxIlzUOD
+        X9rfSfvD7mOTu2CaQ4/ky0/dUdELuR2MFpmdjIlNqDpS7LdSLq9JyMVee/E/AU6LY+FObZNO
+        CE7x03sU5mDgpMmp+mRqQEBT6tHvTWeCnu5o1LmnprhWZlnHzJhqq38fao4rsRRnJBpqMRcV
+        JwIAnQ4s0y4DAAA=
+X-CMS-MailID: 20190614085021eucas1p2ab5681c242a14f22e3bc7494a5884f75
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190607143531eucas1p11f6b3a63068d529dae8be16abaa60ed0
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190607143531eucas1p11f6b3a63068d529dae8be16abaa60ed0
+References: <CGME20190607143531eucas1p11f6b3a63068d529dae8be16abaa60ed0@eucas1p1.samsung.com>
+        <20190607143507.30286-1-l.luba@partner.samsung.com>
+        <20190607143507.30286-9-l.luba@partner.samsung.com>
+        <CAJKOXPdKGG25T46d+SmES7wyQ=kAMj2jdT3GCYa+z87wpYKNEQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 14/06/2019 à 10:37, Laurent Dufour a écrit :
-> Please find attached the script I run to get these numbers.
-> This would be nice if you could give it a try on your victim node and share the result.
+Hi Krzysztof,
 
-Sounds that the Intel mail fitering system doesn't like the attached shell script.
-Please find it there: https://gist.github.com/ldu4/a5cc1a93f293108ea387d43d5d5e7f44
+On 6/11/19 8:18 AM, Krzysztof Kozlowski wrote:
+> On Fri, 7 Jun 2019 at 16:35, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>>
+>> This patch adds driver for Exynos5422 Dynamic Memory Controller.
+>> The driver provides support for dynamic frequency and voltage scaling for
+>> DMC and DRAM. It supports changing timings of DRAM running with different
+>> frequency. There is also an algorithm to calculate timigns based on
+>> memory description provided in DT.
+>> The patch also contains needed MAINTAINERS file update.
+>>
+>> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+>> ---
+>>   MAINTAINERS                             |    8 +
+>>   drivers/memory/samsung/Kconfig          |   17 +
+>>   drivers/memory/samsung/Makefile         |    1 +
+>>   drivers/memory/samsung/exynos5422-dmc.c | 1261 +++++++++++++++++++++++
+>>   4 files changed, 1287 insertions(+)
+>>   create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+> 
+> (...)
+> 
+>> +
+>> +/**
+>> + * exynos5_performance_counters_init() - Initializes performance DMC's counters
+>> + * @dmc:       DMC for which it does the setup
+>> + *
+>> + * Initialization of performance counters in DMC for estimating usage.
+>> + * The counter's values are used for calculation of a memory bandwidth and based
+>> + * on that the governor changes the frequency.
+>> + * The counters are not used when the governor is GOVERNOR_USERSPACE.
+>> + */
+>> +static int exynos5_performance_counters_init(struct exynos5_dmc *dmc)
+>> +{
+>> +       int counters_size;
+>> +       int ret, i;
+>> +
+>> +       dmc->num_counters = devfreq_event_get_edev_count(dmc->dev);
+>> +       if (dmc->num_counters < 0) {
+>> +               dev_err(dmc->dev, "could not get devfreq-event counters\n");
+>> +               return dmc->num_counters;
+>> +       }
+>> +
+>> +       counters_size = sizeof(struct devfreq_event_dev) * dmc->num_counters;
+>> +       dmc->counter = devm_kzalloc(dmc->dev, counters_size, GFP_KERNEL);
+>> +       if (!dmc->counter)
+>> +               return -ENOMEM;
+>> +
+>> +       for (i = 0; i < dmc->num_counters; i++) {
+>> +               dmc->counter[i] =
+>> +                       devfreq_event_get_edev_by_phandle(dmc->dev, i);
+>> +               if (IS_ERR_OR_NULL(dmc->counter[i]))
+>> +                       return -EPROBE_DEFER;
+>> +       }
+>> +
+>> +       ret = exynos5_counters_enable_edev(dmc);
+>> +       if (ret < 0) {
+>> +               dev_err(dmc->dev, "could not enable event counter\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret = exynos5_counters_set_event(dmc);
+>> +       if (ret < 0) {
+>> +               dev_err(dmc->dev, "counld not set event counter\n");
+> 
+> Missing cleanup - edev counters disable.
+right
+> 
+>> +               return ret;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +/**
+>> + * exynos5_dmc_set_pause_on_switching() - Controls a pause feature in DMC
+>> + * @dmc:       device which is used for changing this feature
+>> + * @set:       a boolean state passing enable/disable request
+>> + *
+>> + * There is a need of pausing DREX DMC when divider or MUX in clock tree
+>> + * changes its configuration. In such situation access to the memory is blocked
+>> + * in DMC automatically. This feature is used when clock frequency change
+>> + * request appears and touches clock tree.
+>> + */
+>> +static inline int exynos5_dmc_set_pause_on_switching(struct exynos5_dmc *dmc)
+>> +{
+>> +       unsigned int val;
+>> +       int ret;
+>> +
+>> +       ret = regmap_read(dmc->clk_regmap, CDREX_PAUSE, &val);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       val |= 1UL;
+>> +       regmap_write(dmc->clk_regmap, CDREX_PAUSE, val);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +/**
+>> + * exynos5_dmc_probe() - Probe function for the DMC driver
+>> + * @pdev:      platform device for which the driver is going to be initialized
+>> + *
+>> + * Initialize basic components: clocks, regulators, performance counters, etc.
+>> + * Read out product version and based on the information setup
+>> + * internal structures for the controller (frequency and voltage) and for DRAM
+>> + * memory parameters: timings for each operating frequency.
+>> + * Register new devfreq device for controlling DVFS of the DMC.
+>> + */
+>> +static int exynos5_dmc_probe(struct platform_device *pdev)
+>> +{
+>> +       int ret = 0;
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *np = dev->of_node;
+>> +       struct exynos5_dmc *dmc;
+>> +       struct resource *res;
+>> +
+>> +       dmc = devm_kzalloc(dev, sizeof(*dmc), GFP_KERNEL);
+>> +       if (!dmc)
+>> +               return -ENOMEM;
+>> +
+>> +       mutex_init(&dmc->lock);
+>> +
+>> +       dmc->dev = dev;
+>> +       platform_set_drvdata(pdev, dmc);
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       dmc->base_drexi0 = devm_ioremap_resource(dev, res);
+>> +       if (IS_ERR(dmc->base_drexi0))
+>> +               return PTR_ERR(dmc->base_drexi0);
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>> +       dmc->base_drexi1 = devm_ioremap_resource(dev, res);
+>> +       if (IS_ERR(dmc->base_drexi1))
+>> +               return PTR_ERR(dmc->base_drexi1);
+>> +
+>> +       dmc->clk_regmap = syscon_regmap_lookup_by_phandle(np,
+>> +                               "samsung,syscon-clk");
+>> +       if (IS_ERR(dmc->clk_regmap))
+>> +               return PTR_ERR(dmc->clk_regmap);
+>> +
+>> +       ret = exynos5_init_freq_table(dmc, &exynos5_dmc_df_profile);
+>> +       if (ret) {
+>> +               dev_warn(dev, "couldn't initialize frequency settings\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       dmc->vdd_mif = devm_regulator_get(dev, "vdd");
+>> +       if (IS_ERR(dmc->vdd_mif)) {
+>> +               ret = PTR_ERR(dmc->vdd_mif);
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret = exynos5_dmc_init_clks(dmc);
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       ret = of_get_dram_timings(dmc);
+>> +       if (ret) {
+>> +               dev_warn(dev, "couldn't initialize timings settings\n");
+> 
+> goto remove_clocks;
+OK
+> 
+>> +               return ret;
+>> +       }
+>> +
+>> +       ret = exynos5_performance_counters_init(dmc);
+>> +       if (ret) {
+>> +               dev_warn(dev, "couldn't probe performance counters\n");
+>> +               goto remove_clocks;
+>> +       }
+>> +
+>> +       ret = exynos5_dmc_set_pause_on_switching(dmc);
+>> +       if (ret) {
+>> +               dev_warn(dev, "couldn't get access to PAUSE register\n");
+>> +               goto remove_clocks;
+> 
+> goto err_devfreq_add;
+Agree.
 
-Thanks,
-Laurent.
+Thank you for the review.
 
+Regards,
+Lukasz
+
+> Best regards,
+> Krzysztof
+> 
+>> +       }
+>> +
+>> +       /*
+>> +        * Setup default thresholds for the devfreq governor.
+>> +        * The values are chosen based on experiments.
+>> +        */
+>> +       dmc->gov_data.upthreshold = 30;
+>> +       dmc->gov_data.downdifferential = 5;
+>> +
+>> +       dmc->df = devm_devfreq_add_device(dev, &exynos5_dmc_df_profile,
+>> +                                         DEVFREQ_GOV_USERSPACE,
+>> +                                         &dmc->gov_data);
+>> +
+>> +       if (IS_ERR(dmc->df)) {
+>> +               ret = PTR_ERR(dmc->df);
+>> +               goto err_devfreq_add;
+>> +       }
+>> +
+>> +       dev_info(dev, "DMC initialized\n");
+>> +
+>> +       return 0;
+>> +
+>> +err_devfreq_add:
+>> +       exynos5_counters_disable_edev(dmc);
+>> +remove_clocks:
+>> +       clk_disable_unprepare(dmc->mout_bpll);
+>> +       clk_disable_unprepare(dmc->fout_bpll);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>>
+> 
+> 
