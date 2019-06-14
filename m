@@ -2,118 +2,134 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A716C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A96AC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5902D2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59FDB21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:21:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="RRkaeU9j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfFNHUp (ORCPT
+        id S1726300AbfFNHVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:20:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36488 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725846AbfFNHUp (ORCPT
+        Fri, 14 Jun 2019 03:21:07 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:45318 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbfFNHVG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:20:45 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5E7HfC2095426
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:20:44 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t469d9uwr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:20:43 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Fri, 14 Jun 2019 08:20:41 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Jun 2019 08:20:35 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5E7KYOd52428980
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 03:21:06 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5E7JgB6173884;
         Fri, 14 Jun 2019 07:20:34 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AAD5D52054;
-        Fri, 14 Jun 2019 07:20:34 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 5972E52051;
-        Fri, 14 Jun 2019 07:20:34 +0000 (GMT)
-Received: from [9.81.220.157] (unknown [9.81.220.157])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 1C95CA00A5;
-        Fri, 14 Jun 2019 17:20:30 +1000 (AEST)
-Subject: Re: [PATCH 01/14] ABI: fix some syntax issues at the ABI database
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Andreas Klinger <ak@it-klinger.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Sebastian Reichel <sre@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Anton Vorontsov <anton@enomsg.org>,
-        Colin Cross <ccross@android.com>,
-        Tony Luck <tony.luck@intel.com>, linux-iio@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-pm@vger.kernel.org
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <b908fc6555df8cae3e4c734b2d5f6284c46a5f14.1560477540.git.mchehab+samsung@kernel.org>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Fri, 14 Jun 2019 17:20:29 +1000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=9I+ncWkor52T8oCqNraH/iCCFApD8a7mN8UnT5aGO8M=;
+ b=RRkaeU9j0O98lbjPYTOH+b76Maf+K81uyZU0mEUY4asywOt34hhuN4tTIDJSbluz/Ogb
+ /OHnWnoJcOjiDae81LQXmADxO03SQugEnn3OSu8jhy2x+admu/AOOwwfwtOwQRu+tL8x
+ MIkijUVBtxGGLOFYLLU4UeQasNrSPcngxD+bkalmN0utbDJQiGYUAlCxqq5Rmr0bjQwC
+ JKCQLz+lGQV6SMyJoZsg5i+0YpoSj5sd8UP8eTNwQVDABN0hjTWnuBloGOt+yPVvXOfi
+ kx6Qlr3x+SLbL4IBYXRsmqsDL1be6KnIr9U7y0i8L7u2xcB/2x02ypYhqFbQBzSLr/6y VQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2t05nr5mrw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 07:20:34 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5E7JejA190190;
+        Fri, 14 Jun 2019 07:20:34 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2t024vy053-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 07:20:33 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5E7KVaU023497;
+        Fri, 14 Jun 2019 07:20:31 GMT
+Received: from [10.159.225.204] (/10.159.225.204)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Jun 2019 00:20:30 -0700
+Subject: Re: [Xen-devel] [RFC PATCH 04/16] x86/xen: hypercall support for
+ xenhost_t
+To:     Andrew Cooper <andrew.cooper3@citrix.com>,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+Cc:     jgross@suse.com, sstabellini@kernel.org, konrad.wilk@oracle.com,
+        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
+        joao.m.martins@oracle.com
+References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
+ <20190509172540.12398-5-ankur.a.arora@oracle.com>
+ <11f8b620-11ac-7075-019a-30d6bad7583c@citrix.com>
+From:   Ankur Arora <ankur.a.arora@oracle.com>
+Message-ID: <fbfc0a0c-3707-7f17-9f2a-6c9d2c7b05b1@oracle.com>
+Date:   Fri, 14 Jun 2019 00:20:28 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <b908fc6555df8cae3e4c734b2d5f6284c46a5f14.1560477540.git.mchehab+samsung@kernel.org>
+In-Reply-To: <11f8b620-11ac-7075-019a-30d6bad7583c@citrix.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061407-0028-0000-0000-0000037A350D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061407-0029-0000-0000-0000243A3096
-Message-Id: <1ef7b765-da34-c65b-a226-f17969935ce2@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906140057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906140057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9287 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906140058
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/6/19 12:04 pm, Mauro Carvalho Chehab wrote:
-> diff --git a/Documentation/ABI/testing/sysfs-class-cxl b/Documentation/ABI/testing/sysfs-class-cxl
-> index bbbabffc682a..fc7c6f7c21b3 100644
-> --- a/Documentation/ABI/testing/sysfs-class-cxl
-> +++ b/Documentation/ABI/testing/sysfs-class-cxl
-> @@ -1,6 +1,6 @@
-> -Note: Attributes that are shared between devices are stored in the directory
-> -pointed to by the symlink device/.
-> -Example: The real path of the attribute /sys/class/cxl/afu0.0s/irqs_max is
-> +Please notice that attributes that are shared between devices are stored in
+On 2019-06-12 2:15 p.m., Andrew Cooper wrote:
+> On 09/05/2019 18:25, Ankur Arora wrote:
+>> Allow for different hypercall implementations for different xenhost types.
+>> Nested xenhost, which has two underlying xenhosts, can use both
+>> simultaneously.
+>>
+>> The hypercall macros (HYPERVISOR_*) implicitly use the default xenhost.x
+>> A new macro (hypervisor_*) takes xenhost_t * as a parameter and does the
+>> right thing.
+>>
+>> TODO:
+>>    - Multicalls for now assume the default xenhost
+>>    - xen_hypercall_* symbols are only generated for the default xenhost.
+>>
+>> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
+> 
+> Again, what is the hypervisor nesting and/or guest layout here?
+Two hypervisors, L0 and L1, and the guest is a child of the L1
+hypervisor but could have PV devices attached to both L0 and L1
+hypervisors.
 
-Would prefer "Please note" over "Please notice".
+> 
+> I can't think of any case where a single piece of software can
+> legitimately have two hypercall pages, because if it has one working
+> one, it is by definition a guest, and therefore not privileged enough to
+> use the outer one.
+Depending on which hypercall page is used, the hypercall would
+(eventually) land in the corresponding hypervisor.
 
-Acked-by: Andrew Donnellan <ajd@linux.ibm.com>  # cxl
+Juergen elsewhere pointed out proxying hypercalls is a better approach,
+so I'm not really considering this any more but, given this layout, and
+assuming that the hypercall pages could be encoded differently would it
+still not work?
 
+Ankur
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+> 
+> ~Andrew
+> 
+> _______________________________________________
+> Xen-devel mailing list
+> Xen-devel@lists.xenproject.org
+> https://lists.xenproject.org/mailman/listinfo/xen-devel
+> 
 
