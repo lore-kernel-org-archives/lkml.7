@@ -7,55 +7,54 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DC73C31E45
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA805C31E4A
 	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:04:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FCE217F5
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2DC217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:04:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1560477873;
-	bh=+vgKx1AE3tGNddVJBZYJ5OVj13QyWDtL7SBzjnQ82AI=;
+	bh=+WwkXnZof3YrQ31yW8YU1YDFU9Blnb+rgRYMU8wpGFg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qZCbdWyxhYWdcK00Qq4FUGvjA60rnhaSbof5DQ3hf0tbrWoQSM39gkilLqnN3fMey
-	 q5otrdYY5HUobnSJPeM9YsK0SMiI6J7cogk/DMHyua3yMDh9KjvmBXeNswPrKhF+IG
-	 5lhwj40iJC7LoKBm/Mf3IY/S1gcNlLbfcEiO8r5Y=
+	b=XRT0VleHpP2wrd5dcNJ8jq/0u7VjTnrLL0KP0MOtjhGGECs4jnb9uBwV4jvng7Cvz
+	 eIWJ1QJ+H4akxAVnbBnNn3Od29PcwpAUml30aquMWB9nktXyVs3i9r86SG6yJMVucs
+	 CPFmUaWZIQ1LbUPXSxW5W9JZOkKeGn9mvdTWpO0g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727177AbfFNCEb (ORCPT
+        id S1727234AbfFNCEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 22:04:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52852 "EHLO
+        Thu, 13 Jun 2019 22:04:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52934 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726011AbfFNCE2 (ORCPT
+        with ESMTP id S1727181AbfFNCEb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 22:04:28 -0400
+        Thu, 13 Jun 2019 22:04:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=cxCNuO2nj6UOWSJ3ZVH67ZvrtAllPRKaWjv6GIZxBS0=; b=jAkNoOYRkwLpHFWntdrHnQm3gx
-        T1cfXXSVFOAWY0t3NxU+FLvhQQpvS93FMHND+dkPYcefbgcTjdsnbt92gD9TmybngwxURNIyhGf4h
-        QfdYKtFGiZhYp8/9yoaa67DlxL0a0JQsgkLjLNOKdIxcI0TZrvxRoQqx14+ZpVQWp/T361YT+7iVs
-        CxbvgsD0Z8q/Te/ZApyaPFms4XhMI4nuUEqjm1isXqhfxULOHFF5fr6zwzy9Pmar7jSW4/N+8pJ0Y
-        hFlhFGM6b0oJ5r4uElIr/IkbszdX8UrwDA/L1GJJSliUnsT92fBGSHGOKrNdiY9HYBcECugrfLGl1
-        WWdQQ8dQ==;
+        bh=Adj83HLbKRJj7XLx7jpL+lI7fvcVNLKp9k5DjItzJhU=; b=Q3iqr37tz9MPM8xOPTJ7pljBhd
+        /VfeHOfBP7FkSWnbfDNcPLT5BfYY+q3J1os6noOwsLzLsl9QaR3P8WaaHoDJ06qnOv3IFSm3B2YgI
+        wa7gSxZPZTAgm/e0HaEBrInh5qSfd5ca0nV9FG0Z6QMl1hYp1QnJny0zJSuM2b7srZaqVNNoIXGAz
+        HCyCnls4mk361YHTjJoLJhDyOHPTn3Th/urmtfITyS++NV58LysO0DgGrQk7yvT3nqY8bL0oC8u+r
+        AxapBrhMU9jz4n9sgsWNk++QgGD8zB6Ht/n8UfQR3jPyopId4PTQFuVsOXdQm4/fbbgzmUwjpMZ2q
+        Wl1SJ1Vg==;
 Received: from 201.86.169.251.dynamic.adsl.gvt.net.br ([201.86.169.251] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbbZr-0000E8-FW; Fri, 14 Jun 2019 02:04:27 +0000
+        id 1hbbZv-0000EH-0U; Fri, 14 Jun 2019 02:04:31 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hbbZn-0002nw-Rz; Thu, 13 Jun 2019 23:04:23 -0300
+        id 1hbbZo-0002oP-1r; Thu, 13 Jun 2019 23:04:24 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: [PATCH 07/14] scripts/get_abi.pl: avoid use literal blocks when not needed
-Date:   Thu, 13 Jun 2019 23:04:13 -0300
-Message-Id: <b5242302c0ba49be016f076e727b3f4889cd32f0.1560477540.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 14/14] docs: sphinx/kernel_abi.py: fix UTF-8 support
+Date:   Thu, 13 Jun 2019 23:04:20 -0300
+Message-Id: <62c8ffe86df40c90299e80619a1cb5d50971c2c6.1560477540.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560477540.git.mchehab+samsung@kernel.org>
 References: <cover.1560477540.git.mchehab+samsung@kernel.org>
@@ -66,209 +65,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+The parser breaks with UTF-8 characters with Sphinx 1.4.
 
-The usage of literal blocks make the document very complex,
-causing the browser to take a long time to load.
-
-On most ABI descriptions, they're a plain text, and don't
-require a literal block.
-
-So, add a logic there with identifies when a literal block
-is needed.
-
-As, on literal blocks, we need to respect the original
-document space, the most complex part of this patch is
-to preserve the original spacing where needed.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab@s-opensource.com>
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/get_abi.pl | 104 +++++++++++++++++++++++++++++++++------------
- 1 file changed, 78 insertions(+), 26 deletions(-)
+ Documentation/sphinx/kernel_abi.py | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
-index ac0f057fa3ca..ba8a7466f896 100755
---- a/scripts/get_abi.pl
-+++ b/scripts/get_abi.pl
-@@ -59,29 +59,34 @@ sub parse_abi {
- 	my $ln;
- 	my $has_file;
- 	my $xrefs;
-+	my $space;
+diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
+index 7fa7806532dc..460cee48a245 100644
+--- a/Documentation/sphinx/kernel_abi.py
++++ b/Documentation/sphinx/kernel_abi.py
+@@ -1,4 +1,5 @@
+-# -*- coding: utf-8; mode: python -*-
++# coding=utf-8
++#
+ u"""
+     kernel-abi
+     ~~~~~~~~~~
+@@ -28,6 +29,7 @@ u"""
  
- 	print STDERR "Opening $file\n" if ($debug > 1);
- 	open IN, $file;
- 	while(<IN>) {
- 		$ln++;
--		if (m/^(\S+):\s*(.*)/i) {
-+		if (m/^(\S+)(:\s*)(.*)/i) {
- 			my $new_tag = lc($1);
--			my $content = $2;
-+			my $sep = $2;
-+			my $content = $3;
+ """
  
- 			if (!($new_tag =~ m/(what|date|kernelversion|contact|description|users)/)) {
- 				if ($tag eq "description") {
--					$data{$what}->{$tag} .= "\n$content";
--					$data{$what}->{$tag} =~ s/\n+$//;
--					next;
-+					# New "tag" is actually part of
-+					# description. Don't consider it a tag
-+					$new_tag = "";
- 				} else {
- 					parse_error($file, $ln, "tag '$tag' is invalid", $_);
- 				}
- 			}
- 
- 			if ($new_tag =~ m/what/) {
-+				$space = "";
- 				if ($tag =~ m/what/) {
- 					$what .= ", " . $content;
- 				} else {
-+					parse_error($file, $ln, "What '$what' doesn't have a description", "") if ($what && !$data{$what}->{description});
++import codecs
+ import sys
+ import os
+ from os import path
+@@ -124,12 +126,12 @@ class KernelCmd(Directive):
+                 cmd
+                 , stdout = subprocess.PIPE
+                 , stderr = subprocess.PIPE
+-                , universal_newlines = True
+                 , **kwargs
+             )
+             out, err = proc.communicate()
+-            if err:
+-                self.warn(err)
 +
- 					$what = $content;
- 					$new_what = 1;
- 				}
-@@ -108,25 +113,38 @@ sub parse_abi {
- 				next;
- 			}
- 
--			$tag = $new_tag;
-+			if ($new_tag) {
-+				$tag = $new_tag;
- 
--			if ($new_what) {
--				$new_what = 0;
-+				if ($new_what) {
-+					$new_what = 0;
- 
--				$data{$what}->{type} = $type;
--				$data{$what}->{file} = $name;
--				print STDERR "\twhat: $what\n" if ($debug > 1);
--			}
-+					$data{$what}->{type} = $type;
-+					$data{$what}->{file} = $name;
-+					print STDERR "\twhat: $what\n" if ($debug > 1);
-+				}
- 
--			if (!$what) {
--				parse_error($file, $ln, "'What:' should come first:", $_);
-+				if (!$what) {
-+					parse_error($file, $ln, "'What:' should come first:", $_);
-+					next;
-+				}
-+				if ($tag eq "description") {
-+					next if ($content =~ m/^\s*$/);
-+					if ($content =~ m/^(\s*)(.*)/) {
-+						my $new_content = $2;
-+						$space = $new_tag . $sep . $1;
-+						while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+						$space =~ s/./ /g;
-+						$data{$what}->{$tag} .= "$new_content\n";
-+					}
-+				} else {
-+					$data{$what}->{$tag} = $content;
-+				}
- 				next;
- 			}
--			$data{$what}->{$tag} = $content;
--			next;
- 		}
- 
--		# Store any contents before the database
-+		# Store any contents before tags at the database
- 		if (!$tag) {
- 			next if (/^\n/);
- 
-@@ -139,6 +157,32 @@ sub parse_abi {
- 			next;
- 		}
- 
-+		if ($tag eq "description") {
-+			if (!$data{$what}->{description}) {
-+				next if (m/^\s*\n/);
-+				if (m/^(\s*)(.*)/) {
-+					$space = $1;
-+					while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+					$data{$what}->{$tag} .= "$2\n";
-+				}
-+			} else {
-+				my $content = $_;
-+				if (m/^\s*\n/) {
-+					$data{$what}->{$tag} .= $content;
-+					next;
-+				}
++            out, err = codecs.decode(out, 'utf-8'), codecs.decode(err, 'utf-8')
 +
-+				while ($content =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+				$space = "" if (!($content =~ s/^($space)//));
-+
-+				# Compress spaces with tabs
-+				$content =~ s<^ {8}> <\t>;
-+				$content =~ s<^ {1,7}\t> <\t>;
-+				$content =~ s< {1,7}\t> <\t>;
-+				$data{$what}->{$tag} .= $content;
-+			}
-+			next;
-+		}
- 		if (m/^\s*(.*)/) {
- 			$data{$what}->{$tag} .= "\n$1";
- 			$data{$what}->{$tag} =~ s/\n+$//;
-@@ -165,6 +209,9 @@ sub output_rest {
- 		my $w = $what;
- 		$w =~ s/([\(\)\_\-\*\=\^\~\\])/\\$1/g;
- 
-+		my $bar = $w;
-+		$bar =~ s/./-/g;
-+
- 		if ($data{$what}->{label}) {
- 			my @labels = split(/\s/, $data{$what}->{label});
- 			foreach my $label (@labels) {
-@@ -172,10 +219,9 @@ sub output_rest {
- 			}
- 		}
- 
--		print "$w\n\n";
-+		print "$w\n$bar\n\n";
- 
- 		print "- defined on file $file (type: $type)\n\n" if ($type ne "File");
--		print "::\n\n";
- 
- 		my $desc = $data{$what}->{description};
- 		$desc =~ s/^\s+//;
-@@ -183,18 +229,24 @@ sub output_rest {
- 		# Remove title markups from the description, as they won't work
- 		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
- 
--		# put everything inside a code block
--		$desc =~ s/\n/\n /g;
--
--
- 		if (!($desc =~ /^\s*$/)) {
--			print " $desc\n\n";
-+	                if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
-+				# put everything inside a code block
-+				$desc =~ s/\n/\n /g;
-+
-+				print "::\n\n";
-+				print " $desc\n\n";
-+			} else {
-+				# Escape any special chars from description
-+				$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
-+
-+				print "$desc\n\n";
-+			}
- 		} else {
--			print " DESCRIPTION MISSING for $what\n\n";
-+			print "DESCRIPTION MISSING for $what\n\n";
- 		}
- 
- 		printf "Has the following ABI:\n\n%s", $data{$what}->{xrefs} if ($data{$what}->{xrefs});
--
- 	}
- }
- 
+             if proc.returncode != 0:
+                 raise self.severe(
+                     u"command '%s' failed with return code %d"
 -- 
 2.21.0
 
