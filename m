@@ -2,101 +2,153 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6169C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70911C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9E3206BB
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VelSsATD"
+	by mail.kernel.org (Postfix) with ESMTP id 3C7E12183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 21:30:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560547837;
+	bh=ZxDW8K6J+radmhN5Vs7dffyGWwY56OXzv8PYXR/lauo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nZcOISdQ6lbpPS8vwsQ4vOdgp7XKPO5/wZ05Ug1GI02Xz3Rr3FexTw9LqOb9MS8+o
+	 LjqBfPu74Xy/wotIvSYRgt/DSOpztwOw4r46X1MVIYbOSwqE3e39tvj9VHJoF8BUh2
+	 +ZHKNBqASMak0NqCgzeQgshslEj6jBXHH0F3K+1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726404AbfFNV1o (ORCPT
+        id S1726445AbfFNVag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 17:27:44 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46433 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfFNV1o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:27:44 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z15so2628725lfh.13;
-        Fri, 14 Jun 2019 14:27:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hXEFS2n2BenNiS8o/HgLZ/cSdtim9gLmbaKcrbohmt0=;
-        b=VelSsATDpC6oRP+ofTLsRbOEDPENrLAKSU+cqejoD8r87nuIw7FzMo/z0+7v1unUCR
-         tvQgCTLFXQtjsMK3NEBKPyzzfNpH5R6TdGG1fk94tcbm0ARDN2VZiJj/A828dSmw5Xtk
-         xhhEJHaDMwSVQ+0OKlHN2a+/v59Pd6qvDX8Zq1k/c24iMDmvOLmF/H5BhU/cpLN2Lxe/
-         mJcoFkUa0WFWSLE3nL6uEdSxf4ncWI1urAbobup1YG/PKtRjTA9F+nYz2zkpOhSC3jY2
-         X5CXxYePOP2WMMfz0WESDK10e+w7fEVv4vlhzDX/nPWn68fzk57JBy5m6VsAMNK4kozj
-         r9Gg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hXEFS2n2BenNiS8o/HgLZ/cSdtim9gLmbaKcrbohmt0=;
-        b=AMwnXbj0ahiVOrzH1bueiQW1rz7WZ6/BAQun2M6arfxrWi7P+PPWqhXQVnJ1rkYRZK
-         wM37QNLmIl/JTtsTwXDvqi5MZB+oh4WFmGo9BH9iwarDy4+BRIGLXkbeffvRgjEtxhm5
-         sT4hZ84FpnYJdwi/SPboxwr2RUmpMRMYt7J8+ZaqgPKrRU0KliGg0jD27swvWa3voms5
-         Cm8W+Yqh2dRTZrIWiRVRskJDv2kkYPGU4YXJVP+Lck0rWeWKnbl5CXV9ilB16U8Na1CB
-         uTlkulIOxTivO4b2N7aq/mQyRolRa9+EuP+M9W9NtNsEJyziRHe+EXOabz8M4T15BUI2
-         eKag==
-X-Gm-Message-State: APjAAAUiIjaUau2TgXAFAjHhpkA+BXDGNtaF/+tnxygCea3GFe+DMIzD
-        ey9ucPp/8BI/FDsasF/fHUGYtwytdDVL16hIupM=
-X-Google-Smtp-Source: APXvYqzqPlY0pE2jaUkC6jYMj65kVioh7KwMCjP5u1JUkxbvnByqfBSXhHorBDPiIhDs/9eOdNi/Jb8UmzJAlssKTUQ=
-X-Received: by 2002:ac2:5337:: with SMTP id f23mr9302265lfh.15.1560547662196;
- Fri, 14 Jun 2019 14:27:42 -0700 (PDT)
+        Fri, 14 Jun 2019 17:30:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36850 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725809AbfFNVaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 17:30:35 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E908206BB;
+        Fri, 14 Jun 2019 21:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560547834;
+        bh=ZxDW8K6J+radmhN5Vs7dffyGWwY56OXzv8PYXR/lauo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=D/zHigl6AEHgfKDfYaQUw48nJ0lJIJi63bv2MJ+d8wmz+4j43FfzZUkMaIGPzY7VV
+         n+W7xyxXoFe8ifSY15/YHLd5tqvHKjYOYq243asXrG4VkaF+IKjYq4SNTJiVqGGVD3
+         isDi+ABOK/k1Q25bBsPQ+LT1tqvlis8g776GBz60=
+Date:   Fri, 14 Jun 2019 16:30:33 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        Linas Vepstas <linasvepstas@gmail.com>,
+        Russell Currey <ruscur@russell.cc>,
+        Sam Bobroff <sbobroff@linux.ibm.com>,
+        Oliver O'Halloran <oohall@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        "Manoj N. Kumar" <manoj@linux.ibm.com>,
+        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
+        Uma Krishnan <ukrishn@linux.ibm.com>,
+        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, linux-pci@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+Subject: Re: [PATCH v4 19/28] docs: powerpc: convert docs to ReST and rename
+ to *.rst
+Message-ID: <20190614213033.GV13533@google.com>
+References: <cover.1560361364.git.mchehab+samsung@kernel.org>
+ <63560c1ee7174952e148a353840a17969fe0be2d.1560361364.git.mchehab+samsung@kernel.org>
+ <20190614143635.3aff154d@lwn.net>
 MIME-Version: 1.0
-References: <cover.1560534694.git.jpoimboe@redhat.com> <178097de8c1bd6a877342304f3469eac4067daa4.1560534694.git.jpoimboe@redhat.com>
- <20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com> <20190614211916.jnxakyfwilcv6r57@treble>
-In-Reply-To: <20190614211916.jnxakyfwilcv6r57@treble>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 14 Jun 2019 14:27:30 -0700
-Message-ID: <CAADnVQJ0dmxYTnaQC1UiSo7MhcTy2KRWJWJKw4jyxFWby-JgRg@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] x86/bpf: Fix 64-bit JIT frame pointer usage
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614143635.3aff154d@lwn.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:19 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, Jun 14, 2019 at 02:05:56PM -0700, Alexei Starovoitov wrote:
-> > Have you tested it ?
-> > I really doubt, since in my test both CONFIG_UNWINDER_ORC and
-> > CONFIG_UNWINDER_FRAME_POINTER failed to unwind through such odd frame.
->
-> Hm, are you seeing selftest failures?  They seem to work for me.
->
-> > Here is much simple patch that I mentioned in the email yesterday,
-> > but you failed to listen instead of focusing on perceived 'code readability'.
-> >
-> > It makes one proper frame and both frame and orc unwinders are happy.
->
-> I'm on my way out the door and I just skimmed it, but it looks fine.
->
-> Some of the code and patch description look familiar, please be sure to
-> give me proper credit.
+On Fri, Jun 14, 2019 at 02:36:35PM -0600, Jonathan Corbet wrote:
+> On Wed, 12 Jun 2019 14:52:55 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > Convert docs to ReST and add them to the arch-specific
+> > book.
+> > 
+> > The conversion here was trivial, as almost every file there
+> > was already using an elegant format close to ReST standard.
+> > 
+> > The changes were mostly to mark literal blocks and add a few
+> > missing section title identifiers.
+> > 
+> > One note with regards to "--": on Sphinx, this can't be used
+> > to identify a list, as it will format it badly. This can be
+> > used, however, to identify a long hyphen - and "---" is an
+> > even longer one.
+> > 
+> > At its new index.rst, let's add a :orphan: while this is not linked to
+> > the main index.rst file, in order to avoid build warnings.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com> # cxl
+> 
+> This one fails to apply because ...
+> 
+> [...]
+> 
+> > diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
+> > index 83db42092935..acc21ecca322 100644
+> > --- a/Documentation/PCI/pci-error-recovery.rst
+> > +++ b/Documentation/PCI/pci-error-recovery.rst
+> > @@ -403,7 +403,7 @@ That is, the recovery API only requires that:
+> >  .. note::
+> >  
+> >     Implementation details for the powerpc platform are discussed in
+> > -   the file Documentation/powerpc/eeh-pci-error-recovery.txt
+> > +   the file Documentation/powerpc/eeh-pci-error-recovery.rst
+> >  
+> >     As of this writing, there is a growing list of device drivers with
+> >     patches implementing error recovery. Not all of these patches are in
+> > @@ -422,3 +422,24 @@ That is, the recovery API only requires that:
+> >     - drivers/net/cxgb3
+> >     - drivers/net/s2io.c
+> >     - drivers/net/qlge
+> > +
+> > +>>> As of this writing, there is a growing list of device drivers with
+> > +>>> patches implementing error recovery. Not all of these patches are in
+> > +>>> mainline yet. These may be used as "examples":
+> > +>>>
+> > +>>> drivers/scsi/ipr
+> > +>>> drivers/scsi/sym53c8xx_2
+> > +>>> drivers/scsi/qla2xxx
+> > +>>> drivers/scsi/lpfc
+> > +>>> drivers/next/bnx2.c
+> > +>>> drivers/next/e100.c
+> > +>>> drivers/net/e1000
+> > +>>> drivers/net/e1000e
+> > +>>> drivers/net/ixgb
+> > +>>> drivers/net/ixgbe
+> > +>>> drivers/net/cxgb3
+> > +>>> drivers/net/s2io.c
+> > +>>> drivers/net/qlge  
+> 
+> ...of this, which has the look of a set of conflict markers that managed
+> to get committed...?
 
-credit means something positive.
-your contribution to bpf jit fix was negative.
-I'm going to rewrite the fix from relying on patch 3.
+I don't see these conflict markers in my local branch or in
+linux-next (next-20190614).
+
+Let me know if I need to do something.
+
+Bjorn
