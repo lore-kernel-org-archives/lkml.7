@@ -2,104 +2,141 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1338C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:56:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5171C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03412082C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:56:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="ooZzfFJD"
+	by mail.kernel.org (Postfix) with ESMTP id A78912082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfFNK4n (ORCPT
+        id S1727347AbfFNK6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:56:43 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34257 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfFNK4m (ORCPT
+        Fri, 14 Jun 2019 06:58:00 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47148 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727262AbfFNK6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:56:42 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so4864158iot.1
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:56:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=06iI6z4cthU4ce66OeHWQkRCnmuFyEIHHZ9Es1yn3sc=;
-        b=ooZzfFJD2u9j2LussEGHFOPOfLBkJ+BU0GJHPBhgAJ/vkF6JbiQbi3Z9LCSduATYrm
-         pmqk7dvkdE04MoEJvLFEsmWLKI31BrB0lbpcgBa7PmY2Pqee615LcMhMjtdzFAWkeAol
-         te7vdgYxjdEddafQhiDTatljo0z/1a5LRul94=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=06iI6z4cthU4ce66OeHWQkRCnmuFyEIHHZ9Es1yn3sc=;
-        b=KFZBOf1xB6qy7k0lRpNqI8S6Fkx7L3IoUOhast9ERJ8A6/zbzxosTdJMjogZ2Q1cQv
-         sm31jW4zS7rW8SnCftYJXa94X8cfkSo1Nx+QSqiStfNkum4eRfNGDNzecEj2pu5WJ9+j
-         g8rjSGue0LIfrM1YZd3qN+tDsmGDvPQDUYii7MxcXzCFF55wn2YdAZ+pLtAJ0ShSLQHF
-         r7j8CR/vEI/ghcGk4+0mU8lPCFbfPcHhILTYvu1DIXnF3o2lD3L43UW40JEnNeoxeRtX
-         JJzjcCR4eqihO+4qSYSy7ShjNHTXtjwhIk4OGM1WHjKeDNUscvP2Ra1MUpCblFLIOSrG
-         Bc3A==
-X-Gm-Message-State: APjAAAV5zhiTPdaMkVBmP3n/F4HbNYdVY5ajOJRCv10pvRwJc6M3dYwU
-        UrfumPpjLqULQkJhVQ27NeQ69IAVqpbFKcY/36O1tw==
-X-Google-Smtp-Source: APXvYqwkcIwVPtfblhejh6xHVBtwFYzc9v3JjBjZavec/51f+nlxxqOghRWbuFOJBMDNowUmrcO58Fw+cwukMr5fTSU=
-X-Received: by 2002:a05:6602:2253:: with SMTP id o19mr14463706ioo.297.1560509801785;
- Fri, 14 Jun 2019 03:56:41 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613185241.22800-1-jagan@amarulasolutions.com>
- <20190613185241.22800-3-jagan@amarulasolutions.com> <CAGb2v65xuXc4C1jOyM1GbEFVDam5P-6NN0ZhtzwzA7qU5F3nJQ@mail.gmail.com>
- <CAGb2v67DY534hXrx2H4jnZXA7jJS7sq2UwYCqw1iAgyLKdNzgA@mail.gmail.com>
-In-Reply-To: <CAGb2v67DY534hXrx2H4jnZXA7jJS7sq2UwYCqw1iAgyLKdNzgA@mail.gmail.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Fri, 14 Jun 2019 16:26:30 +0530
-Message-ID: <CAMty3ZBc-AqbNGZCxRhOPw46iMvEZxoq1oATA46=K29gRYi4Sg@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH 2/9] drm/sun4i: tcon: Add TCON LCD support
- for R40
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
+        Fri, 14 Jun 2019 06:58:00 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EAvnPc143650
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:57:59 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t4a9tr054-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:57:58 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Fri, 14 Jun 2019 11:57:56 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 11:57:53 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EAvq1P34210172
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 10:57:52 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7753A4C04A;
+        Fri, 14 Jun 2019 10:57:52 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8073A4C040;
+        Fri, 14 Jun 2019 10:57:51 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.81.115])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 10:57:51 +0000 (GMT)
+Subject: Re: [PATCH V8 2/3] Define a new ima template field buf
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     roberto.sassu@huawei.com, vgoyal@redhat.com
+Date:   Fri, 14 Jun 2019 06:57:40 -0400
+In-Reply-To: <1560455980.4805.57.camel@linux.ibm.com>
+References: <20190612221549.28399-1-prsriva02@gmail.com>
+         <20190612221549.28399-3-prsriva02@gmail.com>
+         <1560455980.4805.57.camel@linux.ibm.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061410-0008-0000-0000-000002F3B999
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061410-0009-0000-0000-00002260C358
+Message-Id: <1560509860.4171.13.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 9:05 AM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Fri, Jun 14, 2019 at 11:19 AM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > On Fri, Jun 14, 2019 at 2:53 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > >
-> > > TCON LCD0, LCD1 in allwinner R40, are used for managing
-> > > LCD interfaces like RGB, LVDS and DSI.
-> > >
-> > > Like TCON TV0, TV1 these LCD0, LCD1 are also managed via
-> > > tcon top.
-> > >
-> > > Add support for it, in tcon driver.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> >
-> > Reviewed-by: Chen-Yu Tsai <wens@csie.org>
->
-> I take that back.
->
-> The TCON output muxing (which selects whether TCON LCD or TCON TV
-> outputs to the GPIO pins)
-> is not supported yet. Please at least add TODO notes, or ideally,
+Hi Prakhar,
 
-Are you referring about port selection? it is support in
-sun8i_tcon_top_de_config.
+> > diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+> > index ea7d8cbf712f..83ca99d65e4b 100644
+> > --- a/security/integrity/ima/ima_api.c
+> > +++ b/security/integrity/ima/ima_api.c
+> > @@ -140,7 +140,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+> >  	struct ima_template_entry *entry;
+> >  	struct inode *inode = file_inode(file);
+> >  	struct ima_event_data event_data = {iint, file, filename, NULL, 0,
+> > -					    cause};
+> > +					    cause, NULL, 0};
+> 
+> This change here and
+> 
+> >  	int violation = 1;
+> >  	int result;
+> >  
+> > @@ -296,7 +296,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint,
+> >  	struct inode *inode = file_inode(file);
+> >  	struct ima_template_entry *entry;
+> >  	struct ima_event_data event_data = {iint, file, filename, xattr_value,
+> > -					    xattr_len, NULL};
+> > +					    xattr_len, NULL, NULL, 0};
+> 
+> here and 
+> 
+> >  	int violation = 0;
+> >  
+> >  	if (iint->measured_pcrs & (0x1 << pcr))
+> > diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+> > index 993d0f1915ff..c8591406c0e2 100644
+> > --- a/security/integrity/ima/ima_init.c
+> > +++ b/security/integrity/ima/ima_init.c
+> > @@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
+> >  	struct ima_template_entry *entry;
+> >  	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+> >  	struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
+> > -					    NULL, 0, NULL};
+> > +					    NULL, 0, NULL, NULL, 0};
+> 
+> here, don't belong in this patch.  It belongs in "IMA: support for per
+> policy rule template formats", in case it should ever be backported.
+>  Please post this as a separate patch, that will be squashed with
+> "IMA: support for per policy rule template formats".
+
+Might mistake.  I should have picked up Thaigo's "ima: Use designated
+initializers for struct ima_event_data".  Please drop these changes
+instead.
+
+thanks,
+
+Mimi
+
+> 
+> >  	int result = -ENOMEM;
+> >  	int violation = 0;
+> >  	struct {
+> 
+
