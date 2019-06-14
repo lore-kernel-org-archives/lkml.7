@@ -2,340 +2,184 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2C25C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120D2C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 736DB21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544635;
-	bh=OWfOvjKfm+DMPP0AcpZ5CvHE+tPRYDFGoBHOsimhRBM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KQpJ6uc/rDpOdQIAtUdwhmBC0K4ZcdGiLtPHpVhCe0W9h+xcRWmOG45K7p9ErJtI/
-	 fcODZp3Rn9mxzmW2H19pCUP1fuaYJXDf8q9Xiq/75HddjQIInUdBwpGM5oqFZMCNU+
-	 uJ4EvIvA3tT2K7tHYOBA0zPBx1Av2hJxhYmcIrOU=
+	by mail.kernel.org (Postfix) with ESMTP id DA9FC205ED
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dBlquXhP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727042AbfFNU3i (ORCPT
+        id S1727150AbfFNUhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:29:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726126AbfFNU3h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:37 -0400
-Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9DA7821848;
-        Fri, 14 Jun 2019 20:29:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544175;
-        bh=OWfOvjKfm+DMPP0AcpZ5CvHE+tPRYDFGoBHOsimhRBM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LqKBEg0Y9evcT87HtP0X+sgLojsJ567wbrCRpadKnuFgl+xhzaHPHX7gYiYdYQNzI
-         VjcrUDwVik4AGFYptqFnbrX658pboI/3Azv5VBLGnYHUce6w3HbY2l9OBURx7Sacbk
-         Uw/C6GK0etj/9wzs7P//Mrlk67QFn2AyaZS/SxZ0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vincent Chen <vincentc@andestech.com>,
-        Greentime Hu <greentime@andestech.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.1 33/59] nds32: Avoid IEX status being incorrectly modified
-Date:   Fri, 14 Jun 2019 16:28:17 -0400
-Message-Id: <20190614202843.26941-33-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
-References: <20190614202843.26941-1-sashal@kernel.org>
+        Fri, 14 Jun 2019 16:37:23 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34747 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727484AbfFNUhU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:37:20 -0400
+Received: by mail-pf1-f194.google.com with SMTP id c85so2106089pfc.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 13:37:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=A+t0h4nVblVvZYulUBGn9aN/xZy5FOwJcbo8LMPh4qQ=;
+        b=dBlquXhPjgGgLvr7m4AgCAuAPPcUJUHxskD4pnuikxR7pXr7hUJfCLa9ImBlrh+a/A
+         85yxyyeDjFl05BHs5z9eNQqBNs1L4Fv+ctswWOsZOMoj//qEqVrKrAM+POANyKqn2UQQ
+         9vNgzMGXylqJ5dSFM97EcpL/sJq4aIzApJ/zA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=A+t0h4nVblVvZYulUBGn9aN/xZy5FOwJcbo8LMPh4qQ=;
+        b=a/ulH0lJzrqF+y6BHZPov3y7mlgUYmGyQQ/0jYccB5Sm6H+WI2pkMoTLSo5l3UwFTa
+         4eAv19TJyi63ZlYSNYMcmopO4xLv9A8Cnl8qYvZVF99HxCH5ARFUMV5bZA3w1F9YMVda
+         TM/oPiyRrciMSqc4B/n2mvssKvy+OsignhRxiltnZveXeE4iVlVy1ljWyh4Uz4ksZL5/
+         8ThK0tQsF3Ny9KpVxE4vewzMzcZlehaTuq7DNru3gsC9/zY2pxOrVWVwa25xzBo1/fD1
+         WuVVISYa+bBlhxFEfOzp3XRO1WHqcMDKAkHBeoYc2D/IPn7IATSYe7LDgUBuj5m++U7Z
+         JJnA==
+X-Gm-Message-State: APjAAAUmboE8/Q6ARUTmMqiS2R3OHEf1aNU9FLU9rGf4Icotee26sRyq
+        lHkPBgZ6NgUiSIvhJzlav+w7Qg==
+X-Google-Smtp-Source: APXvYqwiXfjpuAggV25+7Xk3+IrXycT32y/V7hOuLWra++ebdAXpx24dHgMCsaR6GqV4FUtSjU7zDQ==
+X-Received: by 2002:aa7:8143:: with SMTP id d3mr98294624pfn.143.1560544640065;
+        Fri, 14 Jun 2019 13:37:20 -0700 (PDT)
+Received: from smtp.gmail.com ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x5sm3673187pjp.21.2019.06.14.13.37.19
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 13:37:19 -0700 (PDT)
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        Evan Green <evgreen@chromium.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Rob Herring <robh@kernel.org>
+Subject: [PATCH v2 1/5] reserved_mem: Add a devm_memremap_reserved_mem() API
+Date:   Fri, 14 Jun 2019 13:37:13 -0700
+Message-Id: <20190614203717.75479-2-swboyd@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+In-Reply-To: <20190614203717.75479-1-swboyd@chromium.org>
+References: <20190614203717.75479-1-swboyd@chromium.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Chen <vincentc@andestech.com>
+We have a few drivers that need to get a reserved memory region, request
+the region, and map the reserved memory with memremap(). Add an API to
+do this all in one function call.
 
-[ Upstream commit ed32949e0acb73e7bc054bb02e0453d4d561ceda ]
-
-In order for kernel to capture each denormalized output, the UDF
-trapping enable bit is always raised in $fpcsr. Because underflow case will
-issue not an underflow exception but also an inexact exception, it causes
-that the IEX, IEX cumulative exception, flag in $fpcsr to be raised in each
-denormalized output handling. To make the emulation transparent to the
-user, the emulator needs to clear the IEX flag in $fpcsr if the result is a
-denormalized number. However, if the IEX flag has been raised before this
-floating point emulation, this cleanup may be incorrect. To avoid the IEX
-flags in $fpcsr be raised in each denormalized output handling, the IEX
-trap shall be always enabled.
-
-Signed-off-by: Vincent Chen <vincentc@andestech.com>
-Acked-by: Greentime Hu <greentime@andestech.com>
-Signed-off-by: Greentime Hu <greentime@andestech.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <agross@kernel.org>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- arch/nds32/include/asm/bitfield.h            |  2 +-
- arch/nds32/include/asm/fpu.h                 |  2 +-
- arch/nds32/include/asm/syscalls.h            |  2 +-
- arch/nds32/include/uapi/asm/fp_udfiex_crtl.h | 16 ++++++++++++
- arch/nds32/include/uapi/asm/sigcontext.h     | 24 ++++++++++++------
- arch/nds32/include/uapi/asm/udftrap.h        | 13 ----------
- arch/nds32/include/uapi/asm/unistd.h         |  4 +--
- arch/nds32/kernel/fpu.c                      | 15 +++++------
- arch/nds32/kernel/sys_nds32.c                | 26 +++++++++++---------
- 9 files changed, 58 insertions(+), 46 deletions(-)
- create mode 100644 arch/nds32/include/uapi/asm/fp_udfiex_crtl.h
- delete mode 100644 arch/nds32/include/uapi/asm/udftrap.h
+ drivers/of/of_reserved_mem.c    | 45 +++++++++++++++++++++++++++++++++
+ include/linux/of_reserved_mem.h |  6 +++++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/arch/nds32/include/asm/bitfield.h b/arch/nds32/include/asm/bitfield.h
-index 7414fcbbab4e..03bbb6d27828 100644
---- a/arch/nds32/include/asm/bitfield.h
-+++ b/arch/nds32/include/asm/bitfield.h
-@@ -937,7 +937,7 @@
- #define FPCSR_mskDNIT           ( 0x1  << FPCSR_offDNIT )
- #define FPCSR_mskRIT		( 0x1  << FPCSR_offRIT )
- #define FPCSR_mskALL		(FPCSR_mskIVO | FPCSR_mskDBZ | FPCSR_mskOVF | FPCSR_mskUDF | FPCSR_mskIEX)
--#define FPCSR_mskALLE_NO_UDFE	(FPCSR_mskIVOE | FPCSR_mskDBZE | FPCSR_mskOVFE | FPCSR_mskIEXE)
-+#define FPCSR_mskALLE_NO_UDF_IEXE (FPCSR_mskIVOE | FPCSR_mskDBZE | FPCSR_mskOVFE)
- #define FPCSR_mskALLE		(FPCSR_mskIVOE | FPCSR_mskDBZE | FPCSR_mskOVFE | FPCSR_mskUDFE | FPCSR_mskIEXE)
- #define FPCSR_mskALLT           (FPCSR_mskIVOT | FPCSR_mskDBZT | FPCSR_mskOVFT | FPCSR_mskUDFT | FPCSR_mskIEXT |FPCSR_mskDNIT | FPCSR_mskRIT)
+diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+index 89e190e94af7..bff932a3b80a 100644
+--- a/drivers/of/of_reserved_mem.c
++++ b/drivers/of/of_reserved_mem.c
+@@ -12,6 +12,7 @@
+ #define pr_fmt(fmt)	"OF: reserved mem: " fmt
  
-diff --git a/arch/nds32/include/asm/fpu.h b/arch/nds32/include/asm/fpu.h
-index 019f1bcfc5ee..8294ed4aaa2c 100644
---- a/arch/nds32/include/asm/fpu.h
-+++ b/arch/nds32/include/asm/fpu.h
-@@ -36,7 +36,7 @@ extern int do_fpuemu(struct pt_regs *regs, struct fpu_struct *fpu);
-  * enabled by default and kerenl will re-execute it by fpu emulator
-  * when getting underflow exception.
-  */
--#define FPCSR_INIT  FPCSR_mskUDFE
-+#define FPCSR_INIT  (FPCSR_mskUDFE | FPCSR_mskIEXE)
- #else
- #define FPCSR_INIT  0x0UL
- #endif
-diff --git a/arch/nds32/include/asm/syscalls.h b/arch/nds32/include/asm/syscalls.h
-index da32101b455d..b9c9becce5d6 100644
---- a/arch/nds32/include/asm/syscalls.h
-+++ b/arch/nds32/include/asm/syscalls.h
-@@ -7,7 +7,7 @@
- asmlinkage long sys_cacheflush(unsigned long addr, unsigned long len, unsigned int op);
- asmlinkage long sys_fadvise64_64_wrapper(int fd, int advice, loff_t offset, loff_t len);
- asmlinkage long sys_rt_sigreturn_wrapper(void);
--asmlinkage long sys_udftrap(int option);
-+asmlinkage long sys_fp_udfiex_crtl(int cmd, int act);
- 
- #include <asm-generic/syscalls.h>
- 
-diff --git a/arch/nds32/include/uapi/asm/fp_udfiex_crtl.h b/arch/nds32/include/uapi/asm/fp_udfiex_crtl.h
-new file mode 100644
-index 000000000000..d54a5d6c6538
---- /dev/null
-+++ b/arch/nds32/include/uapi/asm/fp_udfiex_crtl.h
-@@ -0,0 +1,16 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (C) 2005-2019 Andes Technology Corporation */
-+#ifndef	_FP_UDF_IEX_CRTL_H
-+#define	_FP_UDF_IEX_CRTL_H
-+
-+/*
-+ * The cmd list of sys_fp_udfiex_crtl()
-+ */
-+/* Disable UDF or IEX trap based on the content of parameter act */
-+#define DISABLE_UDF_IEX_TRAP	0
-+/* Enable UDF or IEX trap based on the content of parameter act */
-+#define ENABLE_UDF_IEX_TRAP	1
-+/* Get current status of UDF and IEX trap */
-+#define GET_UDF_IEX_TRAP	2
-+
-+#endif /* _FP_UDF_IEX_CRTL_H */
-diff --git a/arch/nds32/include/uapi/asm/sigcontext.h b/arch/nds32/include/uapi/asm/sigcontext.h
-index 58afc416473e..b53634033e32 100644
---- a/arch/nds32/include/uapi/asm/sigcontext.h
-+++ b/arch/nds32/include/uapi/asm/sigcontext.h
-@@ -13,14 +13,24 @@ struct fpu_struct {
- 	unsigned long long fd_regs[32];
- 	unsigned long fpcsr;
- 	/*
--	 * UDF_trap is used to recognize whether underflow trap is enabled
--	 * or not. When UDF_trap == 1, this process will be traped and then
--	 * get a SIGFPE signal when encountering an underflow exception.
--	 * UDF_trap is only modified through setfputrap syscall. Therefore,
--	 * UDF_trap needn't be saved or loaded to context in each context
--	 * switch.
-+	 * When CONFIG_SUPPORT_DENORMAL_ARITHMETIC is defined, kernel prevents
-+	 * hardware from treating the denormalized output as an underflow case
-+	 * and rounding it to a normal number. Hence kernel enables the UDF and
-+	 * IEX trap in the fpcsr register to step in the calculation.
-+	 * However, the UDF and IEX trap enable bit in $fpcsr also lose
-+	 * their use.
-+	 *
-+	 * UDF_IEX_trap replaces the feature of UDF and IEX trap enable bit in
-+	 * $fpcsr to control the trap of underflow and inexact. The bit filed
-+	 * of UDF_IEX_trap is the same as $fpcsr, 10th bit is used to enable UDF
-+	 * exception trapping and 11th bit is used to enable IEX exception
-+	 * trapping.
-+	 *
-+	 * UDF_IEX_trap is only modified through fp_udfiex_crtl syscall.
-+	 * Therefore, UDF_IEX_trap needn't be saved and restored in each
-+	 * context switch.
- 	 */
--	unsigned long UDF_trap;
-+	unsigned long UDF_IEX_trap;
- };
- 
- struct zol_struct {
-diff --git a/arch/nds32/include/uapi/asm/udftrap.h b/arch/nds32/include/uapi/asm/udftrap.h
-deleted file mode 100644
-index 433f79d679c0..000000000000
---- a/arch/nds32/include/uapi/asm/udftrap.h
-+++ /dev/null
-@@ -1,13 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0 */
--/* Copyright (C) 2005-2018 Andes Technology Corporation */
--#ifndef	_ASM_SETFPUTRAP
--#define	_ASM_SETFPUTRAP
--
--/*
-- * Options for setfputrap system call
-- */
--#define	DISABLE_UDFTRAP	0	/* disable underflow exception trap */
--#define	ENABLE_UDFTRAP	1	/* enable undeflos exception trap */
--#define	GET_UDFTRAP	2	/* only get undeflos exception trap status */
--
--#endif /* _ASM_CACHECTL */
-diff --git a/arch/nds32/include/uapi/asm/unistd.h b/arch/nds32/include/uapi/asm/unistd.h
-index 4ec8f543103f..6b9ff90e3ae5 100644
---- a/arch/nds32/include/uapi/asm/unistd.h
-+++ b/arch/nds32/include/uapi/asm/unistd.h
-@@ -11,6 +11,6 @@
- 
- /* Additional NDS32 specific syscalls. */
- #define __NR_cacheflush		(__NR_arch_specific_syscall)
--#define __NR_udftrap		(__NR_arch_specific_syscall + 1)
-+#define __NR_fp_udfiex_crtl	(__NR_arch_specific_syscall + 1)
- __SYSCALL(__NR_cacheflush, sys_cacheflush)
--__SYSCALL(__NR_udftrap, sys_udftrap)
-+__SYSCALL(__NR_fp_udfiex_crtl, sys_fp_udfiex_crtl)
-diff --git a/arch/nds32/kernel/fpu.c b/arch/nds32/kernel/fpu.c
-index fddd40c7a16f..cf0b8760f261 100644
---- a/arch/nds32/kernel/fpu.c
-+++ b/arch/nds32/kernel/fpu.c
-@@ -14,7 +14,7 @@ const struct fpu_struct init_fpuregs = {
- 	.fd_regs = {[0 ... 31] = sNAN64},
- 	.fpcsr = FPCSR_INIT,
- #if IS_ENABLED(CONFIG_SUPPORT_DENORMAL_ARITHMETIC)
--	.UDF_trap = 0
-+	.UDF_IEX_trap = 0
- #endif
- };
- 
-@@ -178,7 +178,7 @@ inline void do_fpu_context_switch(struct pt_regs *regs)
- 		/* First time FPU user.  */
- 		load_fpu(&init_fpuregs);
- #if IS_ENABLED(CONFIG_SUPPORT_DENORMAL_ARITHMETIC)
--		current->thread.fpu.UDF_trap = init_fpuregs.UDF_trap;
-+		current->thread.fpu.UDF_IEX_trap = init_fpuregs.UDF_IEX_trap;
- #endif
- 		set_used_math();
- 	}
-@@ -206,7 +206,7 @@ inline void handle_fpu_exception(struct pt_regs *regs)
- 	unsigned int fpcsr;
- 	int si_code = 0, si_signo = SIGFPE;
- #if IS_ENABLED(CONFIG_SUPPORT_DENORMAL_ARITHMETIC)
--	unsigned long redo_except = FPCSR_mskDNIT|FPCSR_mskUDFT;
-+	unsigned long redo_except = FPCSR_mskDNIT|FPCSR_mskUDFT|FPCSR_mskIEXT;
- #else
- 	unsigned long redo_except = FPCSR_mskDNIT;
- #endif
-@@ -215,21 +215,18 @@ inline void handle_fpu_exception(struct pt_regs *regs)
- 	fpcsr = current->thread.fpu.fpcsr;
- 
- 	if (fpcsr & redo_except) {
--#if IS_ENABLED(CONFIG_SUPPORT_DENORMAL_ARITHMETIC)
--		if (fpcsr & FPCSR_mskUDFT)
--			current->thread.fpu.fpcsr &= ~FPCSR_mskIEX;
--#endif
- 		si_signo = do_fpuemu(regs, &current->thread.fpu);
- 		fpcsr = current->thread.fpu.fpcsr;
--		if (!si_signo)
-+		if (!si_signo) {
-+			current->thread.fpu.fpcsr &= ~(redo_except);
- 			goto done;
-+		}
- 	} else if (fpcsr & FPCSR_mskRIT) {
- 		if (!user_mode(regs))
- 			do_exit(SIGILL);
- 		si_signo = SIGILL;
- 	}
- 
--
- 	switch (si_signo) {
- 	case SIGFPE:
- 		fill_sigfpe_signo(fpcsr, &si_code);
-diff --git a/arch/nds32/kernel/sys_nds32.c b/arch/nds32/kernel/sys_nds32.c
-index 0835277636ce..cb2d1e219bb3 100644
---- a/arch/nds32/kernel/sys_nds32.c
-+++ b/arch/nds32/kernel/sys_nds32.c
-@@ -6,8 +6,8 @@
- 
- #include <asm/cachectl.h>
- #include <asm/proc-fns.h>
--#include <asm/udftrap.h>
- #include <asm/fpu.h>
-+#include <asm/fp_udfiex_crtl.h>
- 
- SYSCALL_DEFINE6(mmap2, unsigned long, addr, unsigned long, len,
- 	       unsigned long, prot, unsigned long, flags,
-@@ -51,31 +51,33 @@ SYSCALL_DEFINE3(cacheflush, unsigned int, start, unsigned int, end, int, cache)
- 	return 0;
+ #include <linux/err.h>
++#include <linux/io.h>
+ #include <linux/of.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of_platform.h>
+@@ -407,3 +408,47 @@ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np)
+ 	return NULL;
  }
- 
--SYSCALL_DEFINE1(udftrap, int, option)
-+SYSCALL_DEFINE2(fp_udfiex_crtl, unsigned int, cmd, unsigned int, act)
- {
- #if IS_ENABLED(CONFIG_SUPPORT_DENORMAL_ARITHMETIC)
--	int old_udftrap;
-+	int old_udf_iex;
- 
- 	if (!used_math()) {
- 		load_fpu(&init_fpuregs);
--		current->thread.fpu.UDF_trap = init_fpuregs.UDF_trap;
-+		current->thread.fpu.UDF_IEX_trap = init_fpuregs.UDF_IEX_trap;
- 		set_used_math();
- 	}
- 
--	old_udftrap = current->thread.fpu.UDF_trap;
--	switch (option) {
--	case DISABLE_UDFTRAP:
--		current->thread.fpu.UDF_trap = 0;
-+	old_udf_iex = current->thread.fpu.UDF_IEX_trap;
-+	act &= (FPCSR_mskUDFE | FPCSR_mskIEXE);
+ EXPORT_SYMBOL_GPL(of_reserved_mem_lookup);
 +
-+	switch (cmd) {
-+	case DISABLE_UDF_IEX_TRAP:
-+		current->thread.fpu.UDF_IEX_trap &= ~act;
- 		break;
--	case ENABLE_UDFTRAP:
--		current->thread.fpu.UDF_trap = FPCSR_mskUDFE;
-+	case ENABLE_UDF_IEX_TRAP:
-+		current->thread.fpu.UDF_IEX_trap |= act;
- 		break;
--	case GET_UDFTRAP:
-+	case GET_UDF_IEX_TRAP:
- 		break;
- 	default:
- 		return -EINVAL;
- 	}
--	return old_udftrap;
-+	return old_udf_iex;
++/**
++ * devm_memremap_reserved_mem() - acquire reserved_mem from a device node,
++ *                                request and memremap it
++ * @dev: device with node pointer of the desired reserved-memory region
++ * @flags: flags to pass to memremap()
++ *
++ * This function allows drivers to acquire a reference to the reserved_mem
++ * struct based on the device's device_node handle, request it and then
++ * memremap() it.
++ *
++ * Returns: A remapped reserved memory region, or an error pointer on failure.
++ */
++void *devm_memremap_reserved_mem(struct device *dev, unsigned long flags)
++{
++	void *dest_ptr;
++	struct reserved_mem *rmem;
++	struct resource *res;
++	const char *name;
++
++	rmem = of_reserved_mem_lookup(dev->of_node);
++	if (!rmem) {
++		dev_err(dev, "failed to acquire memory region\n");
++		return ERR_PTR(-ENODEV);
++	}
++
++	name = rmem->name ? : dev_name(dev);
++
++	res = devm_request_mem_region(dev, rmem->base, rmem->size, name);
++	if (!res) {
++		dev_err(dev, "can't request region for reserved memory\n");
++		return ERR_PTR(-EBUSY);
++	}
++
++	dest_ptr = devm_memremap(dev, rmem->base, rmem->size, flags);
++	if (!dest_ptr) {
++		dev_err(dev, "memremap failed for reserved memory\n");
++		devm_release_mem_region(dev, rmem->base, rmem->size);
++		dest_ptr = ERR_PTR(-ENOMEM);
++	}
++
++	return dest_ptr;
++}
++EXPORT_SYMBOL_GPL(devm_memremap_reserved_mem);
+diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+index 60f541912ccf..a36be60ef67c 100644
+--- a/include/linux/of_reserved_mem.h
++++ b/include/linux/of_reserved_mem.h
+@@ -39,6 +39,7 @@ void fdt_init_reserved_mem(void);
+ void fdt_reserved_mem_save_node(unsigned long node, const char *uname,
+ 			       phys_addr_t base, phys_addr_t size);
+ struct reserved_mem *of_reserved_mem_lookup(struct device_node *np);
++void *devm_memremap_reserved_mem(struct device *dev, unsigned long flags);
  #else
- 	return -ENOTSUPP;
+ static inline int of_reserved_mem_device_init_by_idx(struct device *dev,
+ 					struct device_node *np, int idx)
+@@ -54,6 +55,11 @@ static inline struct reserved_mem *of_reserved_mem_lookup(struct device_node *np
+ {
+ 	return NULL;
+ }
++static inline void *devm_memremap_reserved_mem(struct device *dev,
++					       unsigned long flags)
++{
++	return NULL;
++}
  #endif
+ 
+ /**
 -- 
-2.20.1
+Sent by a computer through tubes
 
