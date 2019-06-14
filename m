@@ -2,204 +2,110 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 323BDC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:38:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB12C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:38:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 079222173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FF32173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560526725;
+	bh=s+Zwd+ONqT1pksANmhQFeU8cIb2gGorOOp+WywyUETo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pZxbYXfrHnf9krx/MM9AndcrPigsnwGOEQAX6a1Sgjkjig+KrkjZzpZ+kVA7xTvf0
+	 xl4MVT80weuvbmEPzoef3ZrXMlGLEzf1Lc0KdqsllawC41A/iOLKDlcVha7160mQgD
+	 WJ80CaN1TM3Pw6vG6hPwTcLqbTtJzWvltd3haVcU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfFNPil (ORCPT
+        id S1726755AbfFNPio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:38:41 -0400
-Received: from mga09.intel.com ([134.134.136.24]:20291 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfFNPil (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:38:41 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 08:38:40 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jun 2019 08:38:40 -0700
-Date:   Fri, 14 Jun 2019 08:38:40 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Stephen Smalley <sds@tycho.nsa.gov>
-Cc:     Cedric Xing <cedric.xing@intel.com>,
-        linux-security-module@vger.kernel.org, selinux@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-sgx@vger.kernel.org,
-        jarkko.sakkinen@linux.intel.com, luto@kernel.org,
-        jmorris@namei.org, serge@hallyn.com, paul@paul-moore.com,
-        eparis@parisplace.org, jethro@fortanix.com, dave.hansen@intel.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, nhorman@redhat.com,
-        pmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, kai.svahn@intel.com,
-        bp@alien8.de, josh@joshtriplett.org, kai.huang@intel.com,
-        rientjes@google.com, william.c.roberts@intel.com,
-        philip.b.tricca@intel.com
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Message-ID: <20190614153840.GC12191@linux.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
- <20190611220243.GB3416@linux.intel.com>
- <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
- <20190614004600.GF18385@linux.intel.com>
+        Fri, 14 Jun 2019 11:38:44 -0400
+Received: from mail-pl1-f178.google.com ([209.85.214.178]:44859 "EHLO
+        mail-pl1-f178.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfFNPin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 11:38:43 -0400
+Received: by mail-pl1-f178.google.com with SMTP id t7so1167139plr.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:38:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KRgtgULPK891tOGG5t4dUW4/Zs8Jf3twwJrLAvaHXCM=;
+        b=o3Lri5DsGsWuggMDg29Bi3ENUTlvH+3GmvfvzTZGh2sF3pkpez5DNm8bBAnAUaEWZZ
+         3c1JTmWV/+H4DwAEWKuf8SIhFlrkKgyxGA08WQUxcLuuBDucCsPpX5ou261vea4IAUD4
+         WQYvESfcDZvmL6S+6IRwxsPQuEsCTmLfTKe3hQlII+Ia2XdlgWmUu3rLDCHGq83/HVlt
+         NK28IS/TYC5hON8cjCk4En/YfFspE72vU+HJ/iEGlOPHFGTMVicpAIpXo9xI/uzf5A0u
+         364X1XL7JKHiGgzJ2Q9GwBwCLBz0Bd91qQovHCccul8GepD3nt7DLEeGJOYTE9baEEe6
+         mZyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KRgtgULPK891tOGG5t4dUW4/Zs8Jf3twwJrLAvaHXCM=;
+        b=O4W0D3GqNkEl1OFZs+XHpQS6yIj8voVI1k4UapHWIh3EIO4zZSeou1ftqtcsT/LzmO
+         b3GdRuE8X7vwSrHQrpvEgoTz5p4C7+21cFYrfFaVzkVXIZcryNqaMen4W6F5FCOygzE0
+         lN2309TLvvDLeEfcpLii58s6FBIAVt5PzaOaEMjyhm5ZtHV8i5XzrUw7zeW/K0toKQLH
+         UZPCujTj863ZzgXEWU6he4C/ht2sH5qJlUDB+OETThrsyQXP93lgulnolUyUK+X/3Lcw
+         YBR3yHY7lpY/QC7XcLYHUjirZDHX+Stt9KrbL3t6TzSqvpRHfacO3tr39NwwJIVn4Tky
+         Y73Q==
+X-Gm-Message-State: APjAAAUuhY7UvSGHTCc9mh3Yth6RZg0y3b3NQaRot9K17/3LTyy0xBN+
+        BqC9txORpeG/pYx9N2bUtc8=
+X-Google-Smtp-Source: APXvYqwiq+8hGeYQ6L6Er98x3qaWhr3zME6PrQeoyZkRUO5Spda7XFFJhNph3wuEpCh6CNK8gyW1Eg==
+X-Received: by 2002:a17:902:b705:: with SMTP id d5mr57674507pls.274.1560526722616;
+        Fri, 14 Jun 2019 08:38:42 -0700 (PDT)
+Received: from localhost ([2620:10d:c090:180::1:b330])
+        by smtp.gmail.com with ESMTPSA id w36sm7563630pgl.62.2019.06.14.08.38.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 08:38:41 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 08:38:37 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Tvrtko Ursulin <tvrtko.ursulin@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org
+Subject: Re: [BUG] lockdep splat with kernfs lockdep annotations and slab
+ mutex from drm patch??
+Message-ID: <20190614153837.GE538958@devbig004.ftw2.facebook.com>
+References: <20190614093914.58f41d8f@gandalf.local.home>
+ <156052491337.7796.17642747687124632554@skylake-alporthouse-com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614004600.GF18385@linux.intel.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <156052491337.7796.17642747687124632554@skylake-alporthouse-com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:46:00PM -0700, Sean Christopherson wrote:
-> On Thu, Jun 13, 2019 at 01:02:17PM -0400, Stephen Smalley wrote:
-> > On 6/11/19 6:02 PM, Sean Christopherson wrote:
-> > >On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
-> > >>I haven't looked at this code closely, but it feels like a lot of
-> > >>SGX-specific logic embedded into SELinux that will have to be repeated or
-> > >>reused for every security module.  Does SGX not track this state itself?
-> > >
-> > >SGX does track equivalent state.
-> > >
-> > >There are three proposals on the table (I think):
-> > >
-> > >   1. Require userspace to explicitly specificy (maximal) enclave page
-> > >      permissions at build time.  The enclave page permissions are provided
-> > >      to, and checked by, LSMs at enclave build time.
-> > >
-> > >      Pros: Low-complexity kernel implementation, straightforward auditing
-> > >      Cons: Sullies the SGX UAPI to some extent, may increase complexity of
-> > >            SGX2 enclave loaders.
-> > >
-> > >   2. Pre-check LSM permissions and dynamically track mappings to enclave
-> > >      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
-> > >      based on the pre-checked permissions.
-> > >
-> > >      Pros: Does not impact SGX UAPI, medium kernel complexity
-> > >      Cons: Auditing is complex/weird, requires taking enclave-specific
-> > >            lock during mprotect() to query/update tracking.
-> > >
-> > >   3. Implement LSM hooks in SGX to allow LSMs to track enclave regions
-> > >      from cradle to grave, but otherwise defer everything to LSMs.
-> > >
-> > >      Pros: Does not impact SGX UAPI, maximum flexibility, precise auditing
-> > >      Cons: Most complex and "heaviest" kernel implementation of the three,
-> > >            pushes more SGX details into LSMs.
-> > >
-> > >My RFC series[1] implements #1.  My understanding is that Andy (Lutomirski)
-> > >prefers #2.  Cedric's RFC series implements #3.
-> > >
-> > >Perhaps the easiest way to make forward progress is to rule out the
-> > >options we absolutely *don't* want by focusing on the potentially blocking
-> > >issue with each option:
-> > >
-> > >   #1 - SGX UAPI funkiness
-> > >
-> > >   #2 - Auditing complexity, potential enclave lock contention
-> > >
-> > >   #3 - Pushing SGX details into LSMs and complexity of kernel implementation
-> > >
-> > >
-> > >[1] https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherson@intel.com
-> > 
-> > Given the complexity tradeoff, what is the clear motivating example for why
-> > #1 isn't the obvious choice? That the enclave loader has no way of knowing a
-> > priori whether the enclave will require W->X or WX?  But aren't we better
-> > off requiring enclaves to be explicitly marked as needing such so that we
-> > can make a more informed decision about whether to load them in the first
-> > place?
+Hello,
+
+On Fri, Jun 14, 2019 at 04:08:33PM +0100, Chris Wilson wrote:
+> #ifdef CONFIG_MEMCG
+>         if (slab_state >= FULL && err >= 0 && is_root_cache(s)) {
+>                 struct kmem_cache *c;
 > 
-> Andy and/or Cedric, can you please weigh in with a concrete (and practical)
-> use case that will break if we go with #1?  The auditing issues for #2/#3
-> are complex to say the least...
+>                 mutex_lock(&slab_mutex);
+> 
+> so it happens to hit the error + FULL case with the additional slabcaches?
+> 
+> Anyway, according to lockdep, it is dangerous to use the slab_mutex inside
+> slab_attr_store().
 
-Follow-up question, is #1 any more palatable if SELinux adds SGX specific
-permissions and ties them to the process (instead of the vma or sigstruct)?
+Didn't really look into the code but it looks like slab_mutex is held
+while trying to remove sysfs files.  sysfs file removal flushes
+on-going accesses, so if a file operation then tries to grab a mutex
+which is held during removal, it leads to a deadlock.
 
-Something like this for SELinux, where the absolute worst case scenario is
-that SGX2 enclave loaders need SGXEXECMEM.  Graphene would need SGXEXECUNMR
-and probably SGXEXECANON.
+Thanks.
 
-static inline int sgx_has_perm(u32 sid, u32 requested)
-{
-        return avc_has_perm(&selinux_state, sid, sid,
-			    SECCLASS_PROCESS2, requested, NULL);
-}
-
-static int selinux_enclave_load(struct vm_area_struct *vma, unsigned long prot,
-				bool measured)
-{
-	const struct cred *cred = current_cred();
-	u32 sid = cred_sid(cred);
-	int ret;
-
-	/* SGX is supported only in 64-bit kernels. */
-	WARN_ON_ONCE(!default_noexec);
-
-	/* Only executable enclave pages are restricted in any way. */
-	if (!(prot & PROT_EXEC))
-		return 0;
-
-	/*
-	 * Private mappings to enclave pages are impossible, ergo we don't
-	 * differentiate between W->X and WX, either case requires EXECMEM.
-	 */
-	if (prot & PROT_WRITE) {
-		ret = sgx_has_perm(sid, PROCESS2__SGXEXECMEM);
-		if (ret)
-			goto out;
-	}
-	if (!measured) {
-		ret = sgx_has_perm(sid, PROCESS2__SGXEXECUNMR);
-		if (ret)
-			goto out;
-	}
-
-	if (!vma->vm_file || !IS_PRIVATE(file_inode(vma->vm_file)) ||
-	    vma->anon_vma) {
-		/*
-		 * Loading enclave code from an anonymous mapping or from a
-		 * modified private file mapping.
-		 */
-		ret = sgx_has_perm(sid, PROCESS2__SGXEXECANON);
-		if (ret)
-			goto out;
-	} else {
-		/* Loading from a shared or unmodified private file mapping. */
-		ret = sgx_has_perm(sid, PROCESS2__SGXEXECFILE);
-		if (ret)
-			goto out;
-
-		/* The source file must be executable in this case. */
-		ret = file_has_perm(cred, vma->vm_file, FILE__EXECUTE);
-		if (ret)
-			goto out;
-	}
-
-out:
-	return ret;
-}
-
-
-Given that AppArmor generally only cares about accessing files, its
-enclave_load() implementation would be something like:
-
-static int apparmor_enclave_load(struct vm_area_struct *vma, unsigned long prot,
-				bool measured)
-{
-	if (!(prot & PROT_EXEC))
-		return 0;
-
-	return common_file_perm(OP_ENCL_LOAD, vma->vm_file, AA_EXEC_MMAP);
-}
+-- 
+tejun
