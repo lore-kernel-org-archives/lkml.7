@@ -2,125 +2,114 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1A9C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:42:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE91C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:46:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C5AE208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:42:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09978208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 01:46:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fP72U4Jz"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hZ/DTJ5k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726763AbfFNBmt (ORCPT
+        id S1726293AbfFNBqj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 21:42:49 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:44104 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfFNBms (ORCPT
+        Thu, 13 Jun 2019 21:46:39 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:2917 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725997AbfFNBqj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 21:42:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id t16so356636pfe.11;
-        Thu, 13 Jun 2019 18:42:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jzpsxDMNS8UK2eBklpzPEuRsJqMsHGf25d9GyayeVBU=;
-        b=fP72U4Jzyu/hdEUfkHd+/kxVS0GZzofrREsXKD5z7ReAmedvFcwhMNgKOlC6OfJLDa
-         V9nlW8T8zIQJDXoay6F2sNIiWLn584W4wd0kQr4jF6aK5yUok1M9rG3u3DfrjpwcWbCc
-         DCKJ4HLttSPBVWs9mdeoIHRgj8gGDNQwaYRmaviigZ6IxBPRVJVg8LJkqMtdbZeparav
-         QRjnSZmbiGWcn1W8ibp9D30d4UyZ4+ELykxQXzMmR54KGcxxS9ES21XUNV3dDbdX8R5K
-         VdJJY2jImistWBp56Od6pZptOGrPwrb3ikDhsdRXwwTIu/bDIEPANBN3EKKfF3oBPDDq
-         pP4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jzpsxDMNS8UK2eBklpzPEuRsJqMsHGf25d9GyayeVBU=;
-        b=gvyBfKysJmokwm0kFzIsgsk89roIaS7gH2j3us9F4dblaD4USYl63M7/J7lIOO5aVT
-         fj0rt1AFAAwf6cbd1kWQJIl0gnDxZqFFnII8z9ByA/85WwblgFh2fkf/ysN+LYEZM+42
-         H/GtZpvYknDJb4wgcKPbtofQYNGBPRy4lK6v0sRDiQTV5i9fK3EZUKBBHKGnnOFTTjJk
-         VCJOm09VdPQBMoSMRJkjzZr6AydgvKMDbdRgjp2WU6sVDY44hXdWs9jsVn1IdWznVVhy
-         dCNdjGNO6ucJCG0aH68+Z/AEgfpfzj8zCwrI53WT+NWwNgHaZMMRjTg0r71Zh7wu39JM
-         GnnA==
-X-Gm-Message-State: APjAAAUed1M9di6Bb4POirLtEV750/OaGhFN6xDfMGpOuNQ0pS2ODVmH
-        vqZfYSEgBrOUGg3xCDrd8wQ=
-X-Google-Smtp-Source: APXvYqxe4jUXdpT8c/VlouFhB7WXfU8y0toA0DuZKPYzHYc5c1XwlppkrZhNCOc2Xo6zRdibOccz/Q==
-X-Received: by 2002:a17:90a:5d09:: with SMTP id s9mr8237778pji.120.1560476567770;
-        Thu, 13 Jun 2019 18:42:47 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::2:e034])
-        by smtp.gmail.com with ESMTPSA id j2sm975015pgq.13.2019.06.13.18.42.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 18:42:46 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 18:42:45 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
- for generated code
-Message-ID: <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
- <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
- <20190614013051.6gnwduy4dsygbamj@treble>
+        Thu, 13 Jun 2019 21:46:39 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d02fc790000>; Thu, 13 Jun 2019 18:46:33 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 13 Jun 2019 18:46:33 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 13 Jun 2019 18:46:33 -0700
+Received: from [10.110.48.28] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
+ 2019 01:46:30 +0000
+Subject: Re: [PATCH 04/22] mm: don't clear ->mapping in hmm_devmem_free
+To:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+CC:     <linux-mm@kvack.org>, <nouveau@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-nvdimm@lists.01.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190613094326.24093-1-hch@lst.de>
+ <20190613094326.24093-5-hch@lst.de>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <b0584ac6-72e3-08d3-6b76-1ac5e5b3bb4f@nvidia.com>
+Date:   Thu, 13 Jun 2019 18:46:29 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614013051.6gnwduy4dsygbamj@treble>
-User-Agent: NeoMutt/20180223
+In-Reply-To: <20190613094326.24093-5-hch@lst.de>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560476793; bh=aWY+o31YpTUXYNCWR/tUiybGk+oQfQT9Eqi8enXkBOQ=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=hZ/DTJ5kKqWdpCL12ZwwtnQNfLWFCFSPcl2k46LOsH4pNokmtsOInOl9+GJ8FKmKO
+         hXZGdDzxG+P+INltKZYs7MH3/UvgeCnHg5hunwwq2bHUiutlLY5os0Z0ZWt+qrOuk9
+         K1Cep9JhG5g0OourqoO6QLKWzZukRM6NdlGEbmjrnoEWvH3YVwufa/VDbhQJ2OHW1T
+         paLBoqcpz6yETgLWr50DBrY8lfihmvAJXfVj+3zCeNHjlAyMFyqJD9rLf7d5TUXr4L
+         SqhY59v6TJmTfzJl0WQ5JTwHaXZZRXMzmrFJGWFYPUDt0cJm6MdR4wx/+QlT3y9K7k
+         1VdCdX4iXd9+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 08:30:51PM -0500, Josh Poimboeuf wrote:
-> On Thu, Jun 13, 2019 at 03:00:55PM -0700, Alexei Starovoitov wrote:
-> > > @@ -392,8 +402,16 @@ bool unwind_next_frame(struct unwind_state *state)
-> > >  	 * calls and calls to noreturn functions.
-> > >  	 */
-> > >  	orc = orc_find(state->signal ? state->ip : state->ip - 1);
-> > > -	if (!orc)
-> > > -		goto err;
-> > > +	if (!orc) {
-> > > +		/*
-> > > +		 * As a fallback, try to assume this code uses a frame pointer.
-> > > +		 * This is useful for generated code, like BPF, which ORC
-> > > +		 * doesn't know about.  This is just a guess, so the rest of
-> > > +		 * the unwind is no longer considered reliable.
-> > > +		 */
-> > > +		orc = &orc_fp_entry;
-> > > +		state->error = true;
-> > 
-> > That seems fragile.
+On 6/13/19 2:43 AM, Christoph Hellwig wrote:
+> ->mapping isn't even used by HMM users, and the field at the same offset
+> in the zone_device part of the union is declared as pad.  (Which btw is
+> rather confusing, as DAX uses ->pgmap and ->mapping from two different
+> sides of the union, but DAX doesn't use hmm_devmem_free).
 > 
-> I don't think so.  The unwinder has sanity checks to make sure it
-> doesn't go off the rails.  And it works just fine.  The beauty is that
-> it should work for all generated code (not just BPF).
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  mm/hmm.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> > Can't we populate orc_unwind tables after JIT ?
+> diff --git a/mm/hmm.c b/mm/hmm.c
+> index 0c62426d1257..e1dc98407e7b 100644
+> --- a/mm/hmm.c
+> +++ b/mm/hmm.c
+> @@ -1347,8 +1347,6 @@ static void hmm_devmem_free(struct page *page, void *data)
+>  {
+>  	struct hmm_devmem *devmem = data;
+>  
+> -	page->mapping = NULL;
+> -
+>  	devmem->ops->free(devmem, page);
+>  }
+>  
 > 
-> As I mentioned it would introduce a lot more complexity.  For each JIT
-> function, BPF would have to tell ORC the following:
-> 
-> - where the BPF function lives
-> - how big the stack frame is
-> - where RBP and other callee-saved regs are on the stack
 
-that sounds like straightforward addition that ORC should have anyway.
-right now we're not using rbp in the jit-ed code,
-but one day we definitely will.
-Same goes for r12. It's reserved right now for 'strategic use'.
-We've been thinking to add another register to bpf isa.
-It will map to r12 on x86. arm64 and others have plenty of regs to use.
-The programs are getting bigger and register spill/fill starting to
-become a performance concern. Extra register will give us more room.
+Yes, I think that line was unnecessary. I see from git history that it was
+originally being set to NULL from within __put_devmap_managed_page(), and then
+in commit 2fa147bdbf672c53386a8f5f2c7fe358004c3ef8, Dan moved it out of there,
+and stashed in specifically here. But it appears to have been unnecessary from
+the beginning.
 
+Reviewed-by: John Hubbard <jhubbard@nvidia.com> 
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
