@@ -6,35 +6,32 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A25C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:54:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63655C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:54:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 785BC21848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:54:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4938021848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:54:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfFNRyq (ORCPT
+        id S1727196AbfFNRyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:54:46 -0400
-Received: from foss.arm.com ([217.140.110.172]:39234 "EHLO foss.arm.com"
+        Fri, 14 Jun 2019 13:54:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:39252 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726693AbfFNRyp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:54:45 -0400
+        id S1726693AbfFNRyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:54:46 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F3577346;
-        Fri, 14 Jun 2019 10:54:44 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F31D8367;
+        Fri, 14 Jun 2019 10:54:45 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id F05FA3F718;
-        Fri, 14 Jun 2019 10:54:43 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 324B93F718;
+        Fri, 14 Jun 2019 10:54:45 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     gregkh@linuxfoundation.org, rafael@kernel.org,
-        suzuki.poulose@arm.com,
-        Christian Gromm <christian.gromm@microchip.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Colin Ian King <colin.king@canonical.com>
-Subject: [PATCH v2 01/28] staging: most-core: Use bus_find_device_by_name
-Date:   Fri, 14 Jun 2019 18:53:56 +0100
-Message-Id: <1560534863-15115-2-git-send-email-suzuki.poulose@arm.com>
+        suzuki.poulose@arm.com, Arnd Bergman <arnd@arnd.de>
+Subject: [PATCH v2 02/28] mfd: Remove unused helper syscon_regmap_lookup_by_pdevname
+Date:   Fri, 14 Jun 2019 18:53:57 +0100
+Message-Id: <1560534863-15115-3-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
 References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
@@ -43,52 +40,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use bus_find_device_by_name() helper instead of writing our
-own helper.
+Nobody uses the exported helper syscon_regmap_lookup_by_pdevname,
+to lookup a device by name. Let us remove it.
 
+Suggested-by: Arnd Bergman <arnd@arnd.de>
+Cc: Arnd Bergman <arnd@arnd.de>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Christian Gromm <christian.gromm@microchip.com>
-Cc: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc: Colin Ian King <colin.king@canonical.com>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-
 ---
 Hi,
 
-This patch can be split from the series. But it will eventually
-conflict with the series. Hence included it here.
+This patch again, could be separate from the series. However, it
+will conflict with the series during the merge. I have included it
+here before the actual series changes appear. Please do the necessary.
 ---
- drivers/staging/most/core.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/mfd/syscon.c       | 21 ---------------------
+ include/linux/mfd/syscon.h |  6 ------
+ 2 files changed, 27 deletions(-)
 
-diff --git a/drivers/staging/most/core.c b/drivers/staging/most/core.c
-index 86a8545..b9841adb 100644
---- a/drivers/staging/most/core.c
-+++ b/drivers/staging/most/core.c
-@@ -561,13 +561,6 @@ static int split_string(char *buf, char **a, char **b, char **c, char **d)
- 	return 0;
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index 8ce1e41..b65e585 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -190,27 +190,6 @@ struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
  }
+ EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_compatible);
  
--static int match_bus_dev(struct device *dev, void *data)
+-static int syscon_match_pdevname(struct device *dev, void *data)
 -{
--	char *mdev_name = data;
--
--	return !strcmp(dev_name(dev), mdev_name);
+-	return !strcmp(dev_name(dev), (const char *)data);
 -}
 -
- /**
-  * get_channel - get pointer to channel
-  * @mdev: name of the device interface
-@@ -579,7 +572,7 @@ static struct most_channel *get_channel(char *mdev, char *mdev_ch)
- 	struct most_interface *iface;
- 	struct most_channel *c, *tmp;
+-struct regmap *syscon_regmap_lookup_by_pdevname(const char *s)
+-{
+-	struct device *dev;
+-	struct syscon *syscon;
+-
+-	dev = driver_find_device(&syscon_driver.driver, NULL, (void *)s,
+-				 syscon_match_pdevname);
+-	if (!dev)
+-		return ERR_PTR(-EPROBE_DEFER);
+-
+-	syscon = dev_get_drvdata(dev);
+-
+-	return syscon->regmap;
+-}
+-EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_pdevname);
+-
+ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
+ 					const char *property)
+ {
+diff --git a/include/linux/mfd/syscon.h b/include/linux/mfd/syscon.h
+index f0273c9..8cfda05 100644
+--- a/include/linux/mfd/syscon.h
++++ b/include/linux/mfd/syscon.h
+@@ -19,7 +19,6 @@ struct device_node;
+ #ifdef CONFIG_MFD_SYSCON
+ extern struct regmap *syscon_node_to_regmap(struct device_node *np);
+ extern struct regmap *syscon_regmap_lookup_by_compatible(const char *s);
+-extern struct regmap *syscon_regmap_lookup_by_pdevname(const char *s);
+ extern struct regmap *syscon_regmap_lookup_by_phandle(
+ 					struct device_node *np,
+ 					const char *property);
+@@ -34,11 +33,6 @@ static inline struct regmap *syscon_regmap_lookup_by_compatible(const char *s)
+ 	return ERR_PTR(-ENOTSUPP);
+ }
  
--	dev = bus_find_device(&mc.bus, NULL, mdev, match_bus_dev);
-+	dev = bus_find_device_by_name(&mc.bus, NULL, mdev);
- 	if (!dev)
- 		return NULL;
- 	iface = to_most_interface(dev);
+-static inline struct regmap *syscon_regmap_lookup_by_pdevname(const char *s)
+-{
+-	return ERR_PTR(-ENOTSUPP);
+-}
+-
+ static inline struct regmap *syscon_regmap_lookup_by_phandle(
+ 					struct device_node *np,
+ 					const char *property)
 -- 
 2.7.4
 
