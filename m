@@ -2,136 +2,144 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A5AFC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47519C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE7D2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C592133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:38:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TzBaIpEc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfFNMiH (ORCPT
+        id S1727959AbfFNMiN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:38:07 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:39624 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727544AbfFNMiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:38:06 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 8613C20A5C;
-        Fri, 14 Jun 2019 14:38:03 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 379C620564;
-        Fri, 14 Jun 2019 14:38:03 +0200 (CEST)
-Subject: Re: [PATCH v1] phy: qcom-qmp: Raise qcom_qmp_phy_enable() polling
- delay
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Kishon Vijay Abraham <kishon@ti.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <92d97c68-d226-6290-37d6-f46f42ea604b@free.fr>
- <a3a50cf5-083a-5aa8-e77c-6feb2f2fd866@codeaurora.org>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <134f4648-682e-5fed-60e7-bc25985dd7e9@free.fr>
-Date:   Fri, 14 Jun 2019 14:38:02 +0200
+        Fri, 14 Jun 2019 08:38:13 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60430 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727938AbfFNMiM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:38:12 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190614123810euoutp01a9cb8f77ec34b21956b790a222665e03~oEO8kPORs3116131161euoutp01U
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 12:38:10 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190614123810euoutp01a9cb8f77ec34b21956b790a222665e03~oEO8kPORs3116131161euoutp01U
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560515890;
+        bh=j9U7/xfbzG3tH4otaa2XZGd/3eo3lkUCRocvGFiU7kc=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=TzBaIpEcxX3EBmGPQb+JgCAR5l4g1jEBVcxv6zkc2aIi9tr9wji24ZURRMg/+MryX
+         XOV09msG3OTynGBRYXOuReDVOJod5ToK9LkyiiaKjFBsj70lJHHuQaV818y0PNA+V/
+         rhdeEnkYEqtZj5Q2NTpq3IjcdTcRsQFaTeryb4fE=
+Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190614123809eucas1p260bd0cce22618c5edbfede1068af4da3~oEO7orhTa0107701077eucas1p2q;
+        Fri, 14 Jun 2019 12:38:09 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges3new.samsung.com (EUCPMTA) with SMTP id 80.66.04325.035930D5; Fri, 14
+        Jun 2019 13:38:08 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190614123808eucas1p2f53cbbe210ea8c0105f0800cbabccbed~oEO6lXyex3177231772eucas1p2o;
+        Fri, 14 Jun 2019 12:38:08 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190614123807eusmtrp1cfa3cfd99ca8d0ff66be8bdb57405b28~oEO6VBfqN1310613106eusmtrp1L;
+        Fri, 14 Jun 2019 12:38:07 +0000 (GMT)
+X-AuditID: cbfec7f5-b8fff700000010e5-57-5d039530a89c
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 99.64.04146.F25930D5; Fri, 14
+        Jun 2019 13:38:07 +0100 (BST)
+Received: from [106.120.51.75] (unknown [106.120.51.75]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190614123806eusmtip18a4aea36406a8dc951b9ed4ce6568ad1~oEO5ekFGu1928019280eusmtip1e;
+        Fri, 14 Jun 2019 12:38:06 +0000 (GMT)
+Subject: Re: [PATCH v10 01/13] clk: samsung: add needed IDs for DMC clocks
+ in Exynos5420
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, mturquette@baylibre.com,
+        sboyd@kernel.org,
+        =?UTF-8?Q?Bart=c5=82omiej_=c5=bbo=c5=82nierkiewicz?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
+        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
+        gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com
+From:   Sylwester Nawrocki <s.nawrocki@samsung.com>
+Message-ID: <cbfa8fab-7cd0-1508-7b9b-482fefdb4de3@samsung.com>
+Date:   Fri, 14 Jun 2019 14:38:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <a3a50cf5-083a-5aa8-e77c-6feb2f2fd866@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Fri Jun 14 14:38:03 2019 +0200 (CEST)
+In-Reply-To: <CAJKOXPeeVhHS62jiUgwySf5EYzW2Rkvu=HxyA7NjpGZFp=fWYQ@mail.gmail.com>
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Sf0yMcRz2vfdnce3rRJ+lsd0wGdH440sYW+xls/GHrbHGW14p3cW9orTp
+        1BjX9WN+5tRpYnKHdFmUVpPT4arTWFKjwmYozTpnOpPuXj/673mez/PZ53m2D09pitlIPlV/
+        QDLoxXQtG0rXtf7oWLTkLJW4pNEaS2pKqxny0vuBIZecHQyxf32HSH5lNUtOPy1XkbYCHSl+
+        95kiHs9tjrTnDXKkxxhFvprfMOR5QxlLRgqdiJR6mlTkpvM1RzqfriO9R6tY8qurhibNLzaS
+        Xn8Y8T1+i9bMEHzfTtHCcPcxTrho7KSFestrTnDYTrJCc/kNTijM/8IKD740qoSiOzYk1Lpz
+        hBHHrM2Tt4Wu3CWlpx6UDItX7wzdM1zWSu37zmTZaj9TRjRAm1AID3gZfK/xcCYUymtwFYIn
+        bj+tEC+C3q5nSCEj46Su59/Kxf4uRhlcQ1D8YJBSyBCCWx/dQdc0vA0qG/q4AA7HW6HVe5MN
+        mCjsp2HgUT4KDFgcC4WPioJYjVdD25lWNoBpPBc+mM3B5ek4Abz1jj+eqfDkwvvxAzwfgreA
+        ryotIFM4AvK81xkFz4a7Q2XBQIDbeHB6fawSOx56ugopBU+DT647nIKjwH3aTCsL+QjM93s5
+        hZQg6HNVIMUVBw9dnUzgMoWjobphsSKvhcYWazAQ4DDoHpqqhAiDU3XnKUVWw4njGsU9B/y2
+        8yoFR0LB+zG6BGktE5pZJtSxTKhj+X+3AtE2FCFlyroUSV6qlw7FyKJOztSnxCRn6Bxo/E3d
+        v1zf7qGmn0ktCPNIO0VdWkQlahjxoJyta0HAU9pwtTVuXFLvErMPS4aMHYbMdEluQTN5Whuh
+        zpnUv12DU8QD0l5J2icZ/k5VfEikES3sePYqa9NItt5gunLfmktWVsw/afUMZyQ9rAXfDH97
+        2qhp0qaagW7Iai/w5Jqi+5wrIuzhG5ryHLvFQXVj/cyrycti7KNjGkOivd+/e3/8q/X2y+3N
+        UUlx+piSeHXu8o1yefFVfMQ4uir1xvr+F/MWueLlc2ni4YSEsZzJ891aWt4jxi6gDLL4Gy9Y
+        T+2iAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprPKsWRmVeSWpSXmKPExsVy+t/xu7r6U5ljDaZ16VhsnLGe1eL6l+es
+        FvOPnGO1WP3xMaNF8+L1bBaTT81lsjjTnWvR//g1s8X58xvYLc42vWG3uNUgY/Gx5x6rxeVd
+        c9gsPvceYbSYcX4fk8XaI3fZLS6ecrW43biCzeLftY0sFvuveFnc/s1n8e3EI0YHMY9vXyex
+        eLy/0cruMbvhIovHzll32T02repk89g/dw27R2/zOzaPg+/2MHn0bVnF6LH5dLXH501yAdxR
+        ejZF+aUlqQoZ+cUltkrRhhZGeoaWFnpGJpZ6hsbmsVZGpkr6djYpqTmZZalF+nYJehnv5xxj
+        LvjOWrFq82vmBsaHLF2MnBwSAiYSsx9cY+1i5OIQEljKKHHhzHmmLkYOoISUxPwWJYgaYYk/
+        17rYIGpeM0qs/XoCrFlYIEriz+9GdhBbRCBU4tPkUywgRcwCf1kkNu/4ywySEBKYwCSxb7MP
+        iM0mYCjRe7SPEcTmFbCTODPlGBuIzSKgKvG8pwdskKhAhMTsXQ0sEDWCEidnPmEBOYhTIFDi
+        24oskDCzgLrEn3mXmCFscYmmLytZIWx5ie1v5zBPYBSahaR7FpKWWUhaZiFpWcDIsopRJLW0
+        ODc9t9hQrzgxt7g0L10vOT93EyMwcWw79nPzDsZLG4MPMQpwMCrx8M7oY44VYk0sK67MPcQo
+        wcGsJMI7zxooxJuSWFmVWpQfX1Sak1p8iNEU6LeJzFKiyfnApJZXEm9oamhuYWlobmxubGah
+        JM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoHRZxv7p/n/Ky3rOeZ9U1p53r1FUV3d6P2CfwXC
+        Pg8Zp2z4eHJCUKCwzvTGJXt2PA0qrTDYxSOcuE3crSZ83eqltUtmzZDavH51Qeza2yyHfFl5
+        Ly5dzBueYvw9ffKpzW1Ldqt+zUhwapFd7nSh7cjKM8dstZl3qXzhsn/yZmrDVc1PpZwSjvoB
+        SizFGYmGWsxFxYkAOjK39jIDAAA=
+X-CMS-MailID: 20190614123808eucas1p2f53cbbe210ea8c0105f0800cbabccbed
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190614095320eucas1p2919a6169c997bb81c80416e8a0ede538
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190614095320eucas1p2919a6169c997bb81c80416e8a0ede538
+References: <CGME20190614095320eucas1p2919a6169c997bb81c80416e8a0ede538@eucas1p2.samsung.com>
+        <20190614095309.24100-1-l.luba@partner.samsung.com>
+        <20190614095309.24100-2-l.luba@partner.samsung.com>
+        <CAJKOXPeeVhHS62jiUgwySf5EYzW2Rkvu=HxyA7NjpGZFp=fWYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Doug (who is familiar with usleep_range quirks)
-
-On 14/06/2019 11:50, Vivek Gautam wrote:
-
-> On 6/13/2019 5:02 PM, Marc Gonzalez wrote:
+On 6/14/19 14:04, Krzysztof Kozlowski wrote:
+> I do not quite understand why this patch is still being resent instead
+> of have been applied some time ago. Are there any issues here? Or are
+> there any issues with the entire patchset (except some review comments
+> to be resolved)? If not, then this is a dependency which should go
+> regardless of other patches. There is no point to keep it pending...
+> All other changes, e.g. DTS will have to wait for more cycles till
+> this gets in.
 > 
->> readl_poll_timeout() calls usleep_range() to sleep between reads.
->> usleep_range() doesn't work efficiently for tiny values.
->>
->> Raise the polling delay in qcom_qmp_phy_enable() to bring it in line
->> with the delay in qcom_qmp_phy_com_init().
->>
->> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->> ---
->> Vivek, do you remember why you didn't use the same delay value in
->> qcom_qmp_phy_enable) and qcom_qmp_phy_com_init() ?
-> 
-> phy_qcom_init() thingy came from the PCIE phy driver from downstream
-> msm-3.18 PCIE did something as below:
+> Therefore either please apply this or please comment what is stopping
+> dependencies from being applied.
 
-FWIW and IMO, drivers/pci/host/pci-msm.c is a good example of how not to write
-a device driver. It's huge (7000+ lines) because it handles multiple platforms
-via ifdefs, and lumps everything together (phy, core IP, SoC specific glue)
-in a single file.
-
-> -----
-> do {
->          if (pcie_phy_is_ready(dev))
->                  break;
->          retries++;
->          usleep_range(REFCLK_STABILIZATION_DELAY_US_MIN,
->                                   REFCLK_STABILIZATION_DELAY_US_MAX);
-> } while (retries < PHY_READY_TIMEOUT_COUNT);
-> 
-> REFCLK_STABILIZATION_DELAY_US_MIN/MAX ==> 1000/1005
-> PHY_READY_TIMEOUT_COUNT ==> 10
-> -----
-
-https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/drivers/pci/host/pci-msm.c?h=LE.UM.1.3.r3.25#n4624
-
-https://source.codeaurora.org/quic/la/kernel/msm-4.4/tree/drivers/pci/host/pci-msm.c?h=LE.UM.1.3.r3.25#n1721
-
-readl_relaxed(dev->phy + PCIE_N_PCS_STATUS(dev->rc_idx, dev->common_phy)) & BIT(6)
-is equivalent to:
-the check in qcom_qmp_phy_enable()
-
-readl_relaxed(dev->phy + PCIE_COM_PCS_READY_STATUS) & 0x1
-is equivalent to:
-the check in qcom_qmp_phy_com_init()
-
-I'll take a closer look, using some printks, to narrow down the run-time
-execution path.
-
-> phy_enable() from the usb phy driver from downstream.
->   /* Wait for PHY initialization to be done */
->   do {
->           if (readl_relaxed(phy->base +
->                   phy->phy_reg[USB3_PHY_PCS_STATUS]) & PHYSTATUS)
->                   usleep_range(1, 2);
-> else
-> break;
->   } while (--init_timeout_usec);
-> 
-> init_timeout_usec ==> 1000
-> -----
-> USB never had a COM_PHY status bit.
-> 
-> So clearly the resolutions were different.
-> 
-> Does this change solve an issue at hand?
-
-The issue is usleep_range() being misused ^_^
-
-Although usleep_range() takes unsigned longs as parameters, it is
-not appropriate over the entire 0-2^64 range.
-
-a) It should not be used with tiny values, because the cost of programming
-the timer interrupt, and processing the resulting IRQ would dominate.
-
-b) It should not be used with large values (above 2000000/HZ) because
-msleep() is more efficient, and is acceptable for these ranges.
-
-Regards.
+Indeed the first 3 (clk) patches should not be part of the series any more,
+I have applied them few days ago - https://lkml.org/lkml/2019/6/6/554
