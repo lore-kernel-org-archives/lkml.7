@@ -2,164 +2,105 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49445C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:00:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DA66C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2394D2177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:00:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560538840;
-	bh=9luYIMc1miTz2FraniCesV9+ZaFoX/edSHhy+mT9JIY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pdKStL9tfnEAbXAJqcP8nmSBJqj4RnAUyzZGlQCioaOtRa//OyQ35+lxnvUdLQwfl
-	 pCh5RdaVRACbvXEX1G54+jig8/CyVs92OX4VP8+eLkfKamgUdEyOF/tB33Tr6DVdR2
-	 2i0SdYMMaS3lHK9bho+LPlvnpcDNpZxdlua/1Yfo=
+	by mail.kernel.org (Postfix) with ESMTP id F2EAB21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:02:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kwr5imp1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726255AbfFNTAi (ORCPT
+        id S1726185AbfFNTCd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 15:00:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbfFNTAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 15:00:38 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C09DD21473;
-        Fri, 14 Jun 2019 19:00:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560538837;
-        bh=9luYIMc1miTz2FraniCesV9+ZaFoX/edSHhy+mT9JIY=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=vyoR8waOE1q5W/EKmFkQ9Obg/5StU3mMk8E+LGCQxdywY0BsyK2eX1sdrt42y9dRV
-         wYeOCumqHytulVpdq9L/T+kBFZ7QQeib24BW3MLVlfdYP1kco4m9Vt74OTz/3IltiR
-         zqJDvkwvBiUrUZcglCfj5SjZmdUbtzRIl2y26arw=
-Date:   Fri, 14 Jun 2019 12:00:36 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Arun KS <arunks@codeaurora.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v1 1/6] mm: Section numbers use the type "unsigned long"
-Message-Id: <20190614120036.00ae392e3f210e7bc9ec6960@linux-foundation.org>
-In-Reply-To: <20190614100114.311-2-david@redhat.com>
-References: <20190614100114.311-1-david@redhat.com>
-        <20190614100114.311-2-david@redhat.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Fri, 14 Jun 2019 15:02:33 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41558 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbfFNTCc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 15:02:32 -0400
+Received: by mail-pg1-f195.google.com with SMTP id 83so2039319pgg.8;
+        Fri, 14 Jun 2019 12:02:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=fIRh2XHogKOPzGlSMAfw0Y3R1r0WmYblJh7xr9zVEVM=;
+        b=Kwr5imp1sJTDpaaM8ydTfG4xZ3PQB4I2YwQP92gtlJPjp+0ir+jnIGIh/kISuAyuId
+         P0lUpzcW3H2YCFEWjyzrc2tL9dwGF/sb6aT53hdGH2IFP1CrbWmc2HNJHWbXb7UBVRy+
+         hnZSbIbzuOwZ5VDeCXeJO4UU+qjD8Jm11L/j1Oj+PvgapNlr/FJHOKwxaSLTFN0PXFbh
+         FwnNYlRxm5Gqg7ZOCc4HG/+l6PGbDnbRMgjY39WD1H4b+Gqk3XBsR87Wmc+Y3wyYtcSi
+         jlE+8oS7hWoZaOo6jdUZqfJlqeqc/0i/igvoI17t1D/abAuJR2DISsHfKG1ND7pkXeYU
+         mjHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=fIRh2XHogKOPzGlSMAfw0Y3R1r0WmYblJh7xr9zVEVM=;
+        b=BIWUbvzfro0EGN7k+42h1C5VYvElcMw/8O/l7I0VfLx7c7bs8jlgd4VMl80S6NAFvt
+         UrjmtfQVmy28ulUU9ibp5uusB5eUXhX4t3HDnfbdEtrHtrm0PuEs6/9BFuoUyj+me5Xg
+         7Gq/zpheHc+cyfR9LYkOyRFu2/V8zwVE8qJ7Gd+z+lXgys43IWradw6BGB0tLJ1yNXcR
+         qFujMNpPdGYHCBUdc/1kl+V/t2d96hgxEScxTnT+om3uyrP6+f40/x5IRn50oZB/ko1T
+         JLD7Q1T+YCCzw6u2xfOH3rW0cdcNP6ghvRbbMwC8bHqeM2t0Edy14IYlJHpASum3jRs7
+         RnSg==
+X-Gm-Message-State: APjAAAUUy86t4UZhiCQLY9VpYnajmlovSfHAa5IjALvT8hCrsUOP/wXf
+        Fji3o8eTghkf5GFc45sNXFBECkZh
+X-Google-Smtp-Source: APXvYqxqU2TQ1aZVb8lHhD8nMe+2Zh0ButW4PhfN5GiSP/wc0SrsCnxeNKFnBk5L6Fx2LidQ8OE7fQ==
+X-Received: by 2002:a17:90a:c481:: with SMTP id j1mr12504510pjt.96.1560538952188;
+        Fri, 14 Jun 2019 12:02:32 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id s15sm4503208pfd.183.2019.06.14.12.02.30
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 12:02:31 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     airlied@linux.ie, daniel@ffwll.ch, robh+dt@kernel.org,
+        mark.rutland@arm.com, thierry.reding@gmail.com, sam@ravnborg.org
+Cc:     bjorn.andersson@linaro.org, dri-devel@lists.freedesktop.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: display: truly: Add MSM8998 MTP panel
+Date:   Fri, 14 Jun 2019 12:02:20 -0700
+Message-Id: <20190614190220.34568-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614185547.34518-1-jeffrey.l.hugo@gmail.com>
+References: <20190614185547.34518-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 12:01:09 +0200 David Hildenbrand <david@redhat.com> wrote:
+The MSM8998 MTP uses the Truly display driver for its panel, but the
+configuration differs slightly from the existing SDM845.  Add a compatible
+to account for the differences.
 
-> We are using a mixture of "int" and "unsigned long". Let's make this
-> consistent by using "unsigned long" everywhere. We'll do the same with
-> memory block ids next.
-> 
-> ...
->
-> -	int i, ret, section_count = 0;
-> +	unsigned long i;
->
-> ...
->
-> -	unsigned int i;
-> +	unsigned long i;
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ .../devicetree/bindings/display/truly,nt35597.txt          | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-Maybe I did too much fortran back in the day, but I think the
-expectation is that a variable called "i" has type "int".
-
-This?
-
-
-
-s/unsigned long i/unsigned long section_nr/
-
---- a/drivers/base/memory.c~mm-section-numbers-use-the-type-unsigned-long-fix
-+++ a/drivers/base/memory.c
-@@ -131,17 +131,17 @@ static ssize_t phys_index_show(struct de
- static ssize_t removable_show(struct device *dev, struct device_attribute *attr,
- 			      char *buf)
- {
--	unsigned long i, pfn;
-+	unsigned long section_nr, pfn;
- 	int ret = 1;
- 	struct memory_block *mem = to_memory_block(dev);
+diff --git a/Documentation/devicetree/bindings/display/truly,nt35597.txt b/Documentation/devicetree/bindings/display/truly,nt35597.txt
+index f39c77ee36ea..fda36c1ad3c3 100644
+--- a/Documentation/devicetree/bindings/display/truly,nt35597.txt
++++ b/Documentation/devicetree/bindings/display/truly,nt35597.txt
+@@ -1,10 +1,11 @@
+ Truly model NT35597 DSI display driver
  
- 	if (mem->state != MEM_ONLINE)
- 		goto out;
+-The Truly NT35597 is a generic display driver, currently only configured
+-for use in the 2K display on the Qualcomm SDM845 MTP board.
++The Truly NT35597 is a generic display driver used for the Qualcomm reference
++platforms.
  
--	for (i = 0; i < sections_per_block; i++) {
--		if (!present_section_nr(mem->start_section_nr + i))
-+	for (section_nr = 0; section_nr < sections_per_block; section_nr++) {
-+		if (!present_section_nr(mem->start_section_nr + section_nr))
- 			continue;
--		pfn = section_nr_to_pfn(mem->start_section_nr + i);
-+		pfn = section_nr_to_pfn(mem->start_section_nr + section_nr);
- 		ret &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
- 	}
- 
-@@ -695,12 +695,12 @@ static int add_memory_block(unsigned lon
- {
- 	int ret, section_count = 0;
- 	struct memory_block *mem;
--	unsigned long i;
-+	unsigned long section_nr;
- 
--	for (i = base_section_nr;
--	     i < base_section_nr + sections_per_block;
--	     i++)
--		if (present_section_nr(i))
-+	for (section_nr = base_section_nr;
-+	     section_nr < base_section_nr + sections_per_block;
-+	     section_nr++)
-+		if (present_section_nr(section_nr))
- 			section_count++;
- 
- 	if (section_count == 0)
-@@ -823,7 +823,7 @@ static const struct attribute_group *mem
-  */
- int __init memory_dev_init(void)
- {
--	unsigned long i;
-+	unsigned long section_nr;
- 	int ret;
- 	int err;
- 	unsigned long block_sz;
-@@ -840,9 +840,9 @@ int __init memory_dev_init(void)
- 	 * during boot and have been initialized
- 	 */
- 	mutex_lock(&mem_sysfs_mutex);
--	for (i = 0; i <= __highest_present_section_nr;
--		i += sections_per_block) {
--		err = add_memory_block(i);
-+	for (section_nr = 0; section_nr <= __highest_present_section_nr;
-+		section_nr += sections_per_block) {
-+		err = add_memory_block(section_nr);
- 		if (!ret)
- 			ret = err;
- 	}
-_
+ Required properties:
+-- compatible: should be "truly,nt35597-2K-display"
++- compatible: should be "truly,nt35597-2K-display" (SDM845)
++	      "truly,nt35597-wqhd-cmd-dsc-display" (MSM8998)
+ - vdda-supply: phandle of the regulator that provides the supply voltage
+   Power IC supply
+ - vdispp-supply: phandle of the regulator that provides the supply voltage
+-- 
+2.17.1
 
