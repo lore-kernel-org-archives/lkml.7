@@ -2,144 +2,107 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9750C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19BC4C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:35:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C81F20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD9B021473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:35:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EpsswAWp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ocmOFEN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfFNMey (ORCPT
+        id S1727858AbfFNMfT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:34:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:38374 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfFNMex (ORCPT
+        Fri, 14 Jun 2019 08:35:19 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:35745 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727544AbfFNMfS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:34:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8zcrmpxMTcFzomBktwD/Lbw3zoalWjEgM0thr5hfWlc=; b=EpsswAWp0F1OGy8+g+3HlkkvV
-        PEEF/0Ryd+wBb81VkRJhMpJBV2T1YpKPTmdooRQt3i1rDEQsM5KRBOsUjxx/LcWrpIORm/H709q+L
-        plNo/BT3PCfcGvIrVUvErYQAwEy3lejpzVkXP7rsE4pTup0+J4jAoZVAmg21RuesHiPDogfHvzBxo
-        AtmIEEfPhTWLfD3iBeOuparYVUWy8UmDrDwwPLPHW5JL4ujl1p+Ch9+Op504B6k76SRphjMkvGf8d
-        35jVdse6nQLxa0Vr4PGK6X0lPNdxWO+k0IDOOLdcIko2+Tn+PBgy7jsVyUR24DHaiZq3ZWgnOvF6e
-        uaiT3UQ+w==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hblPg-0007iR-Vy; Fri, 14 Jun 2019 12:34:37 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BAE8520259523; Fri, 14 Jun 2019 14:34:35 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 14:34:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] perf/x86/intel: Use is_visible callback for default group
-Message-ID: <20190614123435.GM3436@hirez.programming.kicks-ass.net>
-References: <20190512155518.21468-1-jolsa@kernel.org>
- <20190512155518.21468-10-jolsa@kernel.org>
- <20190513093545.GM2623@hirez.programming.kicks-ass.net>
- <20190524132152.GB26617@krava>
- <20190614102017.GA4325@krava>
+        Fri, 14 Jun 2019 08:35:18 -0400
+Received: by mail-lj1-f196.google.com with SMTP id x25so2259007ljh.2;
+        Fri, 14 Jun 2019 05:35:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1kNA1FB4w/lkcMPFwJQ6UiFI1ZjIBIZGglQjoe4iAUs=;
+        b=ocmOFEN8JsrpnDaEcsGswFmg310y4igtpJoHbSyYKbYtP6eA3pxzE6/IguqrLmKbtd
+         enkJhHXrJmfUV01ZITcnbS+84TpSh1Kx5x9ITe2nuQzhfrzzdZZFT7ErtcnFxtNIfGEx
+         FCzgRkGkr1fHeJUJqe1Tp90kFSalyxEdofvBYrwwBIYe7BVdEx7Yk6nj2k4i20B6DyQ+
+         iNfKcNwL2n16CaQN7Siy+oAAxlh4d/SuV0EF9gV/fNaN2Etf3OQOFczonG8jyUIRgjXg
+         70ByDAETbX1TbRfg+V+EKC8nkWWdRHM1+aP188aA2C7ZwVkXiEoKb+j3k9i9TH8ANPd9
+         uXKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=1kNA1FB4w/lkcMPFwJQ6UiFI1ZjIBIZGglQjoe4iAUs=;
+        b=E37fyv//A8uW5W4M9gFVWN7PMTMB6UnUmGHwskIt2Vfsufc8lONa5rIG3td5JJ52aD
+         nStPqcZ3OpX60LycXGEd2iHGpM8Lkr1bQC5lfynj3I45v4kmyMbFMhQY2oDRbYNOM0AC
+         Ox4druzBOZTTbT0JKSe5bG7dV0qYYZztWT6W+HmzbtzN3XtZWicxEtCQgsAnLQ+sLbwF
+         LUWHjSGwHjtKCSxQAkWtbZeLml2Q4RqTY75C3lAkjXiotWcKPGLIBcHjxZrZRUAFh7SJ
+         wN3rm5MIeykihbCuyrv7lDhImPOpSaOtp/4U+wSShkk6EFIguXuwCNkrH+Z4t6TmuU7I
+         +E1w==
+X-Gm-Message-State: APjAAAUzG2861rSjRsnBYKxUWjC8LgUTVjr6iA0hW5s1saipdWq+wlJo
+        MXfzBEiFqafDcW1GNlmYtDk4STKa
+X-Google-Smtp-Source: APXvYqwh4OFKtZvWP7uzgjbU+/ho8VXj0IhWKKKDVkMhRs9y/U3uxnjJ0rLmPYrR+aBTHXTly4uUAQ==
+X-Received: by 2002:a2e:9b10:: with SMTP id u16mr4040443lji.231.1560515715977;
+        Fri, 14 Jun 2019 05:35:15 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id q2sm462739lfj.25.2019.06.14.05.35.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 05:35:15 -0700 (PDT)
+Subject: Re: [PATCH 2/2] rtc: tegra: Implement suspend clock source
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190614104747.19712-1-thierry.reding@gmail.com>
+ <20190614104747.19712-2-thierry.reding@gmail.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <d3de8c42-3718-d87d-3c38-af18c671036c@gmail.com>
+Date:   Fri, 14 Jun 2019 15:35:14 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614102017.GA4325@krava>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190614104747.19712-2-thierry.reding@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 12:20:17PM +0200, Jiri Olsa wrote:
-> On Fri, May 24, 2019 at 03:21:52PM +0200, Jiri Olsa wrote:
+14.06.2019 13:47, Thierry Reding пишет:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> SNIP
+> The suspend clock source for Tegra210 and earlier is currently
+> implemented in the Tegra timer driver. However, the suspend clock source
+> code accesses registers that are part of the RTC hardware block, so both
+> can step on each others' toes. In practice this isn't an issue, but
+> there is no reason why the RTC driver can't implement the clock source,
+> so move the code over to the tegra-rtc driver.
 > 
-> ping
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
+> ---
 
-Well, it looks about right; but last time you asked if someone could
-test, and I've no idea. I don't think I have any testboxes that are
-affected by this stuff.
 
-I can just merge it I suppose, we'll see if anybody complains :-)
+[snip]
 
-> > ---
-> > It's preffered to use group's is_visible callback, so
-> > we do not need to use condition attribute assignment.
-> > 
-> > Cc: Stephane Eranian <eranian@google.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  arch/x86/events/intel/core.c | 15 ++++++++++++---
-> >  1 file changed, 12 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-> > index 85afe7e98c7d..cfd61b71136d 100644
-> > --- a/arch/x86/events/intel/core.c
-> > +++ b/arch/x86/events/intel/core.c
-> > @@ -4386,7 +4386,7 @@ static DEVICE_ATTR(allow_tsx_force_abort, 0644,
-> >  
-> >  static struct attribute *intel_pmu_attrs[] = {
-> >  	&dev_attr_freeze_on_smi.attr,
-> > -	NULL, /* &dev_attr_allow_tsx_force_abort.attr.attr */
-> > +	&dev_attr_allow_tsx_force_abort.attr,
-> >  	NULL,
-> >  };
-> >  
-> > @@ -4414,6 +4414,15 @@ exra_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-> >  	return x86_pmu.version >= 2 ? attr->mode : 0;
-> >  }
-> >  
-> > +static umode_t
-> > +default_is_visible(struct kobject *kobj, struct attribute *attr, int i)
-> > +{
-> > +	if (attr == &dev_attr_allow_tsx_force_abort.attr)
-> > +		return x86_pmu.flags & PMU_FL_TFA ? attr->mode : 0;
-> > +
-> > +	return attr->mode;
-> > +}
-> > +
-> >  static struct attribute_group group_events_td  = {
-> >  	.name = "events",
-> >  };
-> > @@ -4450,7 +4459,8 @@ static struct attribute_group group_format_extra_skl = {
-> >  };
-> >  
-> >  static struct attribute_group group_default = {
-> > -	.attrs = intel_pmu_attrs,
-> > +	.attrs      = intel_pmu_attrs,
-> > +	.is_visible = default_is_visible,
-> >  };
-> >  
-> >  static const struct attribute_group *attr_update[] = {
-> > @@ -4973,7 +4983,6 @@ __init int intel_pmu_init(void)
-> >  			x86_pmu.get_event_constraints = tfa_get_event_constraints;
-> >  			x86_pmu.enable_all = intel_tfa_pmu_enable_all;
-> >  			x86_pmu.commit_scheduling = intel_tfa_commit_scheduling;
-> > -			intel_pmu_attrs[1] = &dev_attr_allow_tsx_force_abort.attr;
-> >  		}
-> >  
-> >  		pr_cont("Skylake events, ");
-> > -- 
-> > 2.20.1
-> > 
+> +static struct tegra_rtc_info *to_tegra_rtc(struct clocksource *clksrc)
+> +{
+> +	return container_of(clksrc, struct tegra_rtc_info, clksrc);
+> +}
+
+Shouldn't hurt to inline this function explicitly because I assume that it won't get
+inlined with a certain kernel configurations, like with enabled ftracing for example.
