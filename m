@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FA63C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE244C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CDE4217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FF352084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544510;
-	bh=x+JefYco3A6Yvnzt0RrXPiD3J4MxTnpAWPvOZNFRnqY=;
+	s=default; t=1560544522;
+	bh=FPYvZGYlugqCpCeTuSTIgp2NKs/nlGzneHEZlYCdQHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NRQnqE1tSc4QxoxECAVGXaJv1AtFUVlJPGPoGKOQWSTfOjfR1Vt/zxcwmOkkrZMq9
-	 LiCd6jM4dzd4LbAgSHGiIyT/0Y4QDDfflpLmQQA5BSHUstFa0SiQl5/nYPc6buE7L9
-	 RBR0OVfIM9957pyVpjqICf1j+BxemAZdYQAtNvuE=
+	b=qYeHIKe+7XWQANZS844L0DSOCOCtaguXjM/xJM4F9mFoQ6IPpHqCLA6TOIsZ21BUk
+	 247O4qBsyGlrYotEUUqU9dbIrJVieh++EFargb5hNTuDuOIBbyRDekUFmp+zi0gkNe
+	 X6Tm4kE4guocPZMU00u3mRQ/cb3kY7xuT7daTlW4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfFNUfI (ORCPT
+        id S1727742AbfFNUfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:35:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52930 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:35:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbfFNUaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:12 -0400
+        id S1727287AbfFNU37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:59 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6BF3F21851;
-        Fri, 14 Jun 2019 20:30:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A46DC21841;
+        Fri, 14 Jun 2019 20:29:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544211;
-        bh=x+JefYco3A6Yvnzt0RrXPiD3J4MxTnpAWPvOZNFRnqY=;
+        s=default; t=1560544198;
+        bh=FPYvZGYlugqCpCeTuSTIgp2NKs/nlGzneHEZlYCdQHA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0iaFoqAPm0VeWS3KQf4C2et7ABgyOMorYSxcva7stjRG8TrMXnaz4Vw6NbEFdLyK7
-         X9SYaQVN6pfzoj6+6CQnz5xJGZ3tQylQaPQo2XhUKxDCgurlX4fVZZTXSDwaHH8M8F
-         Dj6HgfqCQpXH8GZF1EgA0Vy0DPfJTt9quS+h26JE=
+        b=S+F4h7xbqDyurMhbv2tCTtlITgSo/hKwHhJVO1qbYBQ0a7h50EaaT5eOATMWTzkgN
+         UVWmbrhy90Eg/pnEUuWg0c049bx1CCvriL826Yl+CbSLSdkRfRhCh+ge1AphtZA8q3
+         l7Dd4RQ/qiKIa4gIe6J7u5X3/YGUe6QfXC2wW1ws=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 21/39] net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
-Date:   Fri, 14 Jun 2019 16:29:26 -0400
-Message-Id: <20190614202946.27385-21-sashal@kernel.org>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Max Filippov <jcmvbkbc@gmail.com>,
+        Sasha Levin <sashal@kernel.org>, linux-xtensa@linux-xtensa.org
+Subject: [PATCH AUTOSEL 4.19 16/39] xtensa: Fix section mismatch between memblock_reserve and mem_reserve
+Date:   Fri, 14 Jun 2019 16:29:21 -0400
+Message-Id: <20190614202946.27385-16-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202946.27385-1-sashal@kernel.org>
 References: <20190614202946.27385-1-sashal@kernel.org>
@@ -60,48 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-[ Upstream commit 62394708f3e01c9f2be6be74eb6305bae1ed924f ]
+[ Upstream commit adefd051a6707a6ca0ebad278d3c1c05c960fc3b ]
 
-When non-bridged, non-vlan'ed mv88e6xxx port is moving down, error
-message is logged:
+Since commit 9012d011660ea5cf2 ("compiler: allow all arches to enable
+CONFIG_OPTIMIZE_INLINING"), xtensa:tinyconfig fails to build with section
+mismatch errors.
 
-failed to kill vid 0081/0 for device eth_cu_1000_4
+WARNING: vmlinux.o(.text.unlikely+0x68): Section mismatch in reference
+	from the function ___pa()
+	to the function .meminit.text:memblock_reserve()
+WARNING: vmlinux.o(.text.unlikely+0x74): Section mismatch in reference
+	from the function mem_reserve()
+	to the function .meminit.text:memblock_reserve()
+FATAL: modpost: Section mismatches detected.
 
-This is caused by call from __vlan_vid_del() with vin set to zero, over
-call chain this results into _mv88e6xxx_port_vlan_del() called with
-vid=0, and mv88e6xxx_vtu_get() called from there returns -EINVAL.
+This was not seen prior to the above mentioned commit because mem_reserve()
+was always inlined.
 
-On symmetric path moving port up, call goes through
-mv88e6xxx_port_vlan_prepare() that calls mv88e6xxx_port_check_hw_vlan()
-that returns -EOPNOTSUPP for zero vid.
+Mark mem_reserve(() as __init_memblock to have it reside in the same
+section as memblock_reserve().
 
-This patch changes mv88e6xxx_vtu_get() to also return -EOPNOTSUPP for
-zero vid, then this error code is explicitly cleared in
-dsa_slave_vlan_rx_kill_vid() and error message is no longer logged.
-
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Message-Id: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
+Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/xtensa/kernel/setup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index dfaad1c2c2b8..411cfb806459 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -1484,7 +1484,7 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
- 	int err;
+diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
+index 351283b60df6..a285fbd0fd9b 100644
+--- a/arch/xtensa/kernel/setup.c
++++ b/arch/xtensa/kernel/setup.c
+@@ -310,7 +310,8 @@ extern char _SecondaryResetVector_text_start;
+ extern char _SecondaryResetVector_text_end;
+ #endif
  
- 	if (!vid)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
- 
- 	entry->vid = vid - 1;
- 	entry->valid = false;
+-static inline int mem_reserve(unsigned long start, unsigned long end)
++static inline int __init_memblock mem_reserve(unsigned long start,
++					      unsigned long end)
+ {
+ 	return memblock_reserve(start, end - start);
+ }
 -- 
 2.20.1
 
