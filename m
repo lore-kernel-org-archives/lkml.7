@@ -2,211 +2,187 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4EBC31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:04:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E899C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:04:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8490B20644
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:04:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCE7420644
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:04:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="St0by6Bq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfFNSEM (ORCPT
+        id S1727383AbfFNSEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:04:12 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33017 "EHLO huawei.com"
+        Fri, 14 Jun 2019 14:04:38 -0400
+Received: from mail-eopbgr80123.outbound.protection.outlook.com ([40.107.8.123]:46388
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726305AbfFNSEL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:04:11 -0400
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id EADD767C6981C0E7D81F;
-        Fri, 14 Jun 2019 19:04:09 +0100 (IST)
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
- by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 14 Jun 2019 19:03:59 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
-        <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v4 09/14] ima: introduce new securityfs files
-Date:   Fri, 14 Jun 2019 19:55:08 +0200
-Message-ID: <20190614175513.27097-10-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614175513.27097-1-roberto.sassu@huawei.com>
-References: <20190614175513.27097-1-roberto.sassu@huawei.com>
+        id S1726305AbfFNSEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:04:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=LECnJZEsal1Pq84BtcOe/D4UqrqE85B+/KpYnhrFXZI=;
+ b=St0by6BqWkwrQcsJ67WLhNewyMMTZQD5VTcj1fjh+zh8rlTIG3Xeeflvel10xUJiiFRbZqGC2Yu4/WnT/sUrnv2luGo33ffpV/Ay0BuWCzwuXIlSRCxsB/AufN7ox/YC2l6cYsP6s8D9pPKhRC6shQzLnHV0Nw3ImePbXWabPtA=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3323.eurprd02.prod.outlook.com (52.134.65.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Fri, 14 Jun 2019 18:04:33 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1987.010; Fri, 14 Jun 2019
+ 18:04:33 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Serge Semin <fancer.lancer@gmail.com>
+CC:     Peter Korsgaard <peter.korsgaard@barco.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs
+ request code
+Thread-Topic: [PATCH v2 2/3] i2c-mux-gpio: Unpin the platform-specific GPIOs
+ request code
+Thread-Index: AQHU+72dy7EDmo3k6EmkNrf+93yZ3aaUQGEAgAdlaACAABnvgA==
+Date:   Fri, 14 Jun 2019 18:04:33 +0000
+Message-ID: <fb96ba56-4754-a962-ceea-4fd50ee59c69@axentia.se>
+References: <20190425232028.9333-1-fancer.lancer@gmail.com>
+ <20190425232028.9333-3-fancer.lancer@gmail.com>
+ <783250dd-87c0-b3cc-0e90-7978605a9b07@axentia.se>
+ <20190614163134.zs5xyuqvp25ahbng@mobilestation>
+In-Reply-To: <20190614163134.zs5xyuqvp25ahbng@mobilestation>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR0401CA0073.eurprd04.prod.outlook.com
+ (2603:10a6:3:19::41) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 11d99de9-9c10-4d9d-b1bf-08d6f0f2c113
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3323;
+x-ms-traffictypediagnostic: DB3PR0202MB3323:
+x-microsoft-antispam-prvs: <DB3PR0202MB3323BBCCDE8C375D1A1086ABBCEE0@DB3PR0202MB3323.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(136003)(396003)(376002)(366004)(346002)(199004)(189003)(52314003)(71190400001)(66066001)(65956001)(65806001)(2906002)(74482002)(31686004)(4326008)(229853002)(6486002)(54906003)(14454004)(58126008)(25786009)(6246003)(68736007)(256004)(26005)(14444005)(11346002)(2616005)(36756003)(446003)(5024004)(186003)(6916009)(71200400001)(6116002)(3846002)(65826007)(5660300002)(486006)(476003)(305945005)(7736002)(52116002)(64126003)(73956011)(66946007)(102836004)(81166006)(99286004)(66476007)(508600001)(53546011)(6506007)(386003)(76176011)(6436002)(53936002)(31696002)(86362001)(6512007)(66446008)(64756008)(66556008)(81156014)(8676002)(8936002)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3323;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: jhB15HxpHvjYcotksUaQ/9l9UaUNg+De/69tQgYAljWfSCBfOP7Ey2Sy0/52ifP8a0bn5foTKpXpob5eZwDkDtOpAKXmOnSAbg5IoC8W3/3h/9XSavc9LlKQCupHanMBVJKMipWrrmyvE/7oqdDiY3N56Eo9MnPRjhlWzSCMbQC1gFjvEnA0BhYW8Abb20JQ2olwxVrPltb3HJH71Qys2T+DtYEDdF6y6sPU1PjlBTWrG90KThDjqT8Q0qGHmHMRDVqJJoMPvXKNW9D59vxb5ZtpN6cexthKW10m1AHq2f8CovTh41/zfeyB1iYUeLpHywRAIswuugxXIgEO8pJP/x3686f6DNIoFTihu0YPDwd00WpMkAW0kgv6lOGHlwjyPrySyI0BkQySbBWo82NwMlTHPmr1LU/8ifqgC6fKCOI=
+Content-Type: text/plain; charset="Windows-1252"
+Content-ID: <08FE068E0DDD4D4BA3CCFA48B999AAE3@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.154]
-X-CFilter-Loop: Reflected
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 11d99de9-9c10-4d9d-b1bf-08d6f0f2c113
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 18:04:33.4877
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3323
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch introduces two new files in the securityfs filesystem:
-digest_list_data, loads a digest list from the specified path, if it is in
-the compact format, or loads a digest list converted by the user space
-parser; digests_count: shows the number of digests stored in the
-ima_digests_htable hash table.
+On 2019-06-14 18:31, Serge Semin wrote:
+> Hello Peter,
+>=20
+> On Sun, Jun 09, 2019 at 09:34:54PM +0000, Peter Rosin wrote:
+>> On 2019-04-26 01:20, Serge Semin wrote:
+>>> The GPIOs request loop can be safely moved to a separate function.
+>>> First of all it shall improve the code readability. Secondly the
+>>> initialization loop at this point is used for both of- and
+>>> platform_data-based initialization paths, but it will be changed in
+>>> the next patch, so by isolating the code we'll simplify the future
+>>> work.
+>>
+>> This patch is just preparatory for patch 3/3, as I see it. And since
+>> I'm not really fond of the end result after patch 3/3, I'm going to
+>> sum up my issues here, instead of trying do it piecemeal in the two
+>> patches.
+>>
+>> Linus and Jean, for your convenience, link to this patch series [1].
+>>
+>> While I agree with the goal (to use the more flexible gpiod functions
+>> to get at the gpio descriptors), the cost is too high when the init
+>> code for platform and OF is basically completely separated. I much
+>> prefer the approach taken by Linus [2], which instead converts the
+>> platform interface and its single user to use gpio descriptors instead
+>> of the legacy gpio interface. The i2c-mux-gpio code then has the
+>> potential to take a unified approach to the given gpio descriptors,
+>> wherever they are originating from, which is much nicer than the
+>> code-fork in this series.
+>>
+>> I also think it is pretty pointless to first split the code into
+>> platform and OF paths, just so that the next patch (from Linus) can
+>> unify the two paths again. I'd like to skip the intermediate step.
+>>
+>> So, I'm hoping for the following to happen.
+>> 1. Sergey sends a revised patch for patch 1/3.
+>> 2. I put the patch on the for-next branch.
+>> 3. Linus rebases his patch on top of that (while thinking about
+>>    the questions raised by Sergey).
+>> 4. Sergey tests the result, I and Jean review it, then possibly
+>>    go back to 3.
+>> 5. I put the patch on the for-next branch.
+>>
+>> Is that ok? Or is someone insisting that we take a detour?
+>>
+>=20
+> The series was intended to add the gpiod support to the i2c-mux-gpio driv=
+er
+> (see the cover letter of the series). So the last patch is the most valua=
+ble
+> one. Without it the whole series is nothing but a small readability impro=
+vement.
+> So it is pointless to merge the first patch only.
 
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- include/linux/fs.h              |  1 +
- security/integrity/ima/ima_fs.c | 44 ++++++++++++++++++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
+Agreed on all points, except perhaps for the "refuse" part below and
+that the readability improvement of patch 1/3 is perhaps not all that
+pointless.
 
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f7fdfe93e25d..0591a3c3cc2f 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2921,6 +2921,7 @@ extern int do_pipe_flags(int *, int);
- 	id(KEXEC_INITRAMFS, kexec-initramfs)	\
- 	id(POLICY, security-policy)		\
- 	id(X509_CERTIFICATE, x509-certificate)	\
-+	id(DIGEST_LIST, digest-list)	\
- 	id(MAX_ID, )
- 
- #define __fid_enumify(ENUM, dummy) READING_ ## ENUM,
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 0f503b7cd396..b02b9a447d56 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -24,6 +24,7 @@
- #include <linux/vmalloc.h>
- 
- #include "ima.h"
-+#include "ima_digest_list.h"
- 
- static DEFINE_MUTEX(ima_write_mutex);
- 
-@@ -34,6 +35,8 @@ static struct dentry *ascii_runtime_measurements;
- static struct dentry *runtime_measurements_count;
- static struct dentry *violations;
- static struct dentry *ima_policy;
-+static struct dentry *digests_count;
-+static struct dentry *digest_list_data;
- 
- bool ima_canonical_fmt;
- static int __init default_canonical_fmt_setup(char *str)
-@@ -58,6 +61,10 @@ static ssize_t ima_show_htable_value(struct file *filp, char __user *buf,
- 		val = &ima_htable.violations;
- 	else if (filp->f_path.dentry == runtime_measurements_count)
- 		val = &ima_htable.len;
-+#ifdef CONFIG_IMA_DIGEST_LIST
-+	else if (filp->f_path.dentry == digests_count)
-+		val = &ima_digests_htable.len;
-+#endif
- 
- 	len = scnprintf(tmpbuf, sizeof(tmpbuf), "%li\n", atomic_long_read(val));
- 	return simple_read_from_buffer(buf, count, ppos, tmpbuf, len);
-@@ -296,6 +303,9 @@ static ssize_t ima_read_file(char *path, enum kernel_read_file_id file_id)
- 			pr_debug("rule: %s\n", p);
- 			rc = ima_parse_add_rule(p);
- 			break;
-+		case READING_DIGEST_LIST:
-+			rc = ima_parse_compact_list(size, data);
-+			break;
- 		default:
- 			break;
- 		}
-@@ -319,6 +329,10 @@ static ssize_t ima_write_data(struct file *file, const char __user *buf,
- 	char *data;
- 	ssize_t result;
- 	struct dentry *dentry = file_dentry(file);
-+	enum kernel_read_file_id id = READING_POLICY;
-+
-+	if (dentry == digest_list_data)
-+		id = READING_DIGEST_LIST;
- 
- 	/* No partial writes. */
- 	result = -EINVAL;
-@@ -345,7 +359,7 @@ static ssize_t ima_write_data(struct file *file, const char __user *buf,
- 		goto out_free;
- 
- 	if (data[0] == '/') {
--		result = ima_read_file(data, READING_POLICY);
-+		result = ima_read_file(data, id);
- 	} else if (dentry == ima_policy) {
- 		if (ima_appraise & IMA_APPRAISE_POLICY) {
- 			pr_err("signed policy file (specified as an absolute pathname) required\n");
-@@ -357,6 +371,11 @@ static ssize_t ima_write_data(struct file *file, const char __user *buf,
- 		} else {
- 			result = ima_parse_add_rule(data);
- 		}
-+	} else if (dentry == digest_list_data) {
-+		if (ima_check_current_is_parser())
-+			result = ima_parse_compact_list(datalen, data);
-+		else
-+			result = -EACCES;
- 	} else {
- 		pr_err("Unknown data type\n");
- 		result = -EINVAL;
-@@ -373,6 +392,7 @@ static ssize_t ima_write_data(struct file *file, const char __user *buf,
- 
- enum ima_fs_flags {
- 	IMA_POLICY_BUSY,
-+	IMA_DIGEST_LIST_DATA_BUSY,
- 	IMA_FS_BUSY,
- };
- 
-@@ -382,6 +402,8 @@ static enum ima_fs_flags ima_get_dentry_flag(struct dentry *dentry)
- 
- 	if (dentry == ima_policy)
- 		flag = IMA_POLICY_BUSY;
-+	else if (dentry == digest_list_data)
-+		flag = IMA_DIGEST_LIST_DATA_BUSY;
- 
- 	return flag;
- }
-@@ -412,6 +434,8 @@ static int ima_open_data_upload(struct inode *inode, struct file *filp)
- 		read_allowed = true;
- 		seq_ops = &ima_policy_seqops;
- #endif
-+	} else if (dentry == digest_list_data) {
-+		ima_set_parser(current);
- 	}
- 
- 	if (!(filp->f_flags & O_WRONLY)) {
-@@ -444,6 +468,9 @@ static int ima_release_data_upload(struct inode *inode, struct file *file)
- 	if ((file->f_flags & O_ACCMODE) == O_RDONLY)
- 		return seq_release(inode, file);
- 
-+	if (dentry == digest_list_data)
-+		ima_set_parser(NULL);
-+
- 	if (dentry != ima_policy) {
- 		clear_bit(flag, &ima_fs_flags);
- 		return 0;
-@@ -529,8 +556,23 @@ int __init ima_fs_init(void)
- 	if (IS_ERR(ima_policy))
- 		goto out;
- 
-+#ifdef CONFIG_IMA_DIGEST_LIST
-+	digests_count = securityfs_create_file("digests_count",
-+					       S_IRUSR | S_IRGRP, ima_dir,
-+					       NULL, &ima_htable_value_ops);
-+	if (IS_ERR(digests_count))
-+		goto out;
-+
-+	digest_list_data = securityfs_create_file("digest_list_data", S_IWUSR,
-+						  ima_dir, NULL,
-+						  &ima_data_upload_ops);
-+	if (IS_ERR(digest_list_data))
-+		goto out;
-+#endif
- 	return 0;
- out:
-+	securityfs_remove(digest_list_data);
-+	securityfs_remove(digests_count);
- 	securityfs_remove(violations);
- 	securityfs_remove(runtime_measurements_count);
- 	securityfs_remove(ascii_runtime_measurements);
--- 
-2.17.1
+> Anyway since you refuse to add the last patch and the first patch is actu=
+ally
+> pointless without the rest of the series, and I would have to spend my ti=
+me to
+> resubmit the v3 of the first patch anyway, it was much easier to test the
+> current version of the Linus' patch and make it working for OF-based plat=
+forms.
+> Additionally the Linus' patch also reaches the main goal of this patchset=
+.
 
+I'm very pleased that you do not feel totally put off, and are willing
+to help even if we end up storing your series in /dev/null. Kudos!
+
+> I don't know what would be the appropriate way to send the updated versio=
+n of
+> the Linus' patch. So I just attached the v4 of it to this email. Shall I =
+better
+> send it in reply to the Linus' patch series?
+
+I get the impression that you have already done the work? In that case,
+how I would proceed would depend on how big the difference is. If it's
+just a few one-liners here and there, I think I would make a detailed
+review comment so that it is easy for Linus to incorporate the needed
+changes. If it's anything even remotely complex I would post an
+incremental patch. Of course, the former does not exclude the latter,
+but I do think an incremental patch is better than a repost.
+
+Thanks again!
+
+Cheers,
+Peter
