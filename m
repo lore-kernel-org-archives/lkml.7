@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18637C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A489BC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE9CD21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78A5E2084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544717;
-	bh=9q/dweRBeBD1nXD8t6BFSz7qps9Y6DHWLU1CbVVO9Ww=;
+	s=default; t=1560544719;
+	bh=+sGlqvlLqmA22YlA2dqVbaydWxLo8aCW4MixVvyHZdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AHMSja7Zk8Pp+6xFwpmNgAtyc4QjR98d0G2YhF1fi7BcTFjnrQdakaM/96cnI5s4r
-	 8oROmePcK+VBZ6nhLMTW1KIAPgzQzyKZrI5LKgtp5dFEsf6PKAxElX+wGu46RBs/cz
-	 G8+KdVO88UH1K7vt0ieD6P4Rnfb37KGWldw6vOc0=
+	b=FH5SLoYv4LuswFrhfC8eMlMYtc7SoJK2L2nuWf9iE3wRH7AFIXB3mFuBow/knTjVB
+	 ES+0u9v5JZRfOG97fruS4EcOfoISDRdWkI5IkvEZnmWHFe2N8U+dNFabcHJ6U9BTAy
+	 ZXeh1A9aWsqsBhzkbTBn13L5g9tcEKEb16WRTtaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfFNUig (ORCPT
+        id S1728375AbfFNUii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:38:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50870 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:38:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726705AbfFNU3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:03 -0400
+        id S1726688AbfFNU3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:02 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B03421872;
-        Fri, 14 Jun 2019 20:29:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 617112184D;
+        Fri, 14 Jun 2019 20:29:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544142;
-        bh=9q/dweRBeBD1nXD8t6BFSz7qps9Y6DHWLU1CbVVO9Ww=;
+        s=default; t=1560544141;
+        bh=+sGlqvlLqmA22YlA2dqVbaydWxLo8aCW4MixVvyHZdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=srBYP4LyqtYWUn/3X0lJJ4ZIc4Ri9/azc7JhhKmUR7iI7v1DKRCLrw8y49gv/pXMS
-         /xWOG1svWYLw9yGG3v9cjprlIiRcNuRpwGxhZkHAPbj2xGXODJQB3VOimnlhvvQPBP
-         zPukgJeQNp5cQBjAiEdH2QDaE+k/XCkHTQRDfzLM=
+        b=J1+oq9r5f0UucZARlZAhj582JAN3uosja3b3myigP1W8I3ScwJGVsTe56taTVCZeu
+         XGEeRJkcf1XrnqJPuymcD3XWH+7ZCS4tROQM7aYqVmoLU8iqDml2C7m0I1dEVGG2kr
+         r9cNlzKsvB5g1z/85EGzGP9BDIgoWXO/KVWNF0qU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 22/59] IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
-Date:   Fri, 14 Jun 2019 16:28:06 -0400
-Message-Id: <20190614202843.26941-22-sashal@kernel.org>
+Cc:     Helge Deller <deller@gmx.de>, Sasha Levin <sashal@kernel.org>,
+        linux-parisc@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 19/59] parisc: Fix compiler warnings in float emulation code
+Date:   Fri, 14 Jun 2019 16:28:03 -0400
+Message-Id: <20190614202843.26941-19-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -61,38 +59,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
+From: Helge Deller <deller@gmx.de>
 
-[ Upstream commit 6d517353c70bb0818b691ca003afdcb5ee5ea44e ]
+[ Upstream commit 6b98d9134e14f5ef4bcf64b27eedf484ed19a1ec ]
 
-By code inspection, the freeze_work is never canceled.
+Avoid such compiler warnings:
+arch/parisc/math-emu/cnv_float.h:71:27: warning: ‘<<’ in boolean context, did you mean ‘<’ ? [-Wint-in-bool-context]
+     ((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) || Dintp2(dint_valueB))
+arch/parisc/math-emu/fcnvxf.c:257:6: note: in expansion of macro ‘Dint_isinexact_to_sgl’
+  if (Dint_isinexact_to_sgl(srcp1,srcp2)) {
 
-Fix by adding a cancel_work_sync in the shutdown path to insure it is no
-longer running.
-
-Fixes: 7724105686e7 ("IB/hfi1: add driver files")
-Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
-Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Helge Deller <deller@gmx.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/hfi1/chip.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/parisc/math-emu/cnv_float.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
-index 9784c6c0d2ec..403e23c5d08f 100644
---- a/drivers/infiniband/hw/hfi1/chip.c
-+++ b/drivers/infiniband/hw/hfi1/chip.c
-@@ -9848,6 +9848,7 @@ void hfi1_quiet_serdes(struct hfi1_pportdata *ppd)
+diff --git a/arch/parisc/math-emu/cnv_float.h b/arch/parisc/math-emu/cnv_float.h
+index 933423fa5144..b0db61188a61 100644
+--- a/arch/parisc/math-emu/cnv_float.h
++++ b/arch/parisc/math-emu/cnv_float.h
+@@ -60,19 +60,19 @@
+     ((exponent < (SGL_P - 1)) ?				\
+      (Sall(sgl_value) << (SGL_EXP_LENGTH + 1 + exponent)) : FALSE)
  
- 	/* disable the port */
- 	clear_rcvctrl(dd, RCV_CTRL_RCV_PORT_ENABLE_SMASK);
-+	cancel_work_sync(&ppd->freeze_work);
- }
+-#define Int_isinexact_to_sgl(int_value)	(int_value << 33 - SGL_EXP_LENGTH)
++#define Int_isinexact_to_sgl(int_value)	((int_value << 33 - SGL_EXP_LENGTH) != 0)
  
- static inline int init_cpu_counters(struct hfi1_devdata *dd)
+ #define Sgl_roundnearest_from_int(int_value,sgl_value)			\
+     if (int_value & 1<<(SGL_EXP_LENGTH - 2))   /* round bit */		\
+-    	if ((int_value << 34 - SGL_EXP_LENGTH) || Slow(sgl_value))	\
++	if (((int_value << 34 - SGL_EXP_LENGTH) != 0) || Slow(sgl_value)) \
+ 		Sall(sgl_value)++
+ 
+ #define Dint_isinexact_to_sgl(dint_valueA,dint_valueB)		\
+-    ((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) || Dintp2(dint_valueB))
++    (((Dintp1(dint_valueA) << 33 - SGL_EXP_LENGTH) != 0) || Dintp2(dint_valueB))
+ 
+ #define Sgl_roundnearest_from_dint(dint_valueA,dint_valueB,sgl_value)	\
+     if (Dintp1(dint_valueA) & 1<<(SGL_EXP_LENGTH - 2)) 			\
+-    	if ((Dintp1(dint_valueA) << 34 - SGL_EXP_LENGTH) ||		\
++	if (((Dintp1(dint_valueA) << 34 - SGL_EXP_LENGTH) != 0) ||	\
+     	Dintp2(dint_valueB) || Slow(sgl_value)) Sall(sgl_value)++
+ 
+ #define Dint_isinexact_to_dbl(dint_value) 	\
 -- 
 2.20.1
 
