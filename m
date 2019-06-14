@@ -2,175 +2,168 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19271C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:18:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC2EDC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE1B20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:18:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B9420866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:20:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="hsQfGCh9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726581AbfFNISZ (ORCPT
+        id S1726649AbfFNIUg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:18:25 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:37557 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfFNISZ (ORCPT
+        Fri, 14 Jun 2019 04:20:36 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39751 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725999AbfFNIUd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:18:25 -0400
-X-Originating-IP: 37.177.88.254
-Received: from uno.localdomain (unknown [37.177.88.254])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 3EF2DE0005;
-        Fri, 14 Jun 2019 08:18:07 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 10:19:13 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 20/20] drm: rcar-du: kms: Update CMM in atomic commit tail
-Message-ID: <20190614081913.n5yxpotto5fzl7sh@uno.localdomain>
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-21-jacopo+renesas@jmondi.org>
- <20190607120633.GI7593@pendragon.ideasonboard.com>
+        Fri, 14 Jun 2019 04:20:33 -0400
+Received: by mail-lf1-f67.google.com with SMTP id p24so1107209lfo.6
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 01:20:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=42M+YEzd5zf6PM/JEJP1Qt4hv7uQKTp1ClSVToSd+Vk=;
+        b=hsQfGCh9Hj4vN30YEJGpXPlDYptqPkZ0oKEIO7cvEIIPkRT9bNjZ2mk8NII5j4mJ3s
+         KjSoOOLGj6hRynkAMyAK1mD0PjoIy19ID9T8mhurGZdXnNY7SWNB7KZswegcCgVLHWvg
+         UCzNutM5w7Mdc59O4abr4oRX3F8rDXArKU9e7Kqmf+mqjySAdMBUSSTbDsbNa0c6zxWW
+         pcppHkVR48Dx9EHe42rR6Kb7Z8H2r2crcDQQWaMeuX1VS3M23c1e4Yx67Y/EHxvOt93z
+         Oyuo6E4TauvXh7aEbP7IQgf6fLdlSfW0oaOlL+0Gnr9W8SKOjezVwG3HRmRdqluMlcMP
+         VYUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=42M+YEzd5zf6PM/JEJP1Qt4hv7uQKTp1ClSVToSd+Vk=;
+        b=RMrW75+zmWLG1fQFY5wSG68F5bemtsZ74SKwslsyc106l7duFS35JygBM/WKxNxkKo
+         7T1gduu7Fuhtjn+8YXjlR8eyzC46xL5jzdjdgaLQmXpsx019yrUySv6Xev+R6PWNpFoD
+         hv7YMv3tLHj34dmS4gJqtN7febQswkCdcy934lP+TFDe5k1g7qh6Xb0XNuXaOQ3qfXoD
+         m6gWbyH+B7zTYXmkq2ILVty9ZH6wXHXPj9nW7csoXfgZUh6WnORgUSZxUF5uuBsbMOiI
+         GLMq9tUE9tpVQPaT7YgwTYv63AXYXjH+lgNzp2mu5ZB2Jq/hPye/n4r1b5OTBGlQRNVC
+         6skQ==
+X-Gm-Message-State: APjAAAWPn0bU5uaRqiD5WZniuKD+tClqCSGrCKS7qQq4GiOmWaHt7gXs
+        vfJrB4nijV1i4nxFyGcWykDa1g==
+X-Google-Smtp-Source: APXvYqxL/mg5t9siFzHZqSM5diqpEzmbeHManaTNXSuvybmNR+W/nnnIF6zPLGTIJTLwt0nvF6mIgQ==
+X-Received: by 2002:ac2:44a4:: with SMTP id c4mr46671553lfm.116.1560500430653;
+        Fri, 14 Jun 2019 01:20:30 -0700 (PDT)
+Received: from [192.168.1.169] (h-29-16.A159.priv.bahnhof.se. [79.136.29.16])
+        by smtp.gmail.com with ESMTPSA id w1sm495002ljm.81.2019.06.14.01.20.29
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 01:20:29 -0700 (PDT)
+Subject: Re: [PATCH 1/1] Address regression in inet6_validate_link_af
+To:     Maxim Mikityanskiy <maximmi@mellanox.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+References: <20190611100327.16551-1-jonas@norrbonn.se>
+ <58ac6ec1-9255-0e51-981a-195c2b1ac380@mellanox.com>
+ <833019dc-476f-f604-04a6-d77f9f86a5f4@norrbonn.se>
+ <323df302-aa17-df40-846d-3354d4bb126a@mellanox.com>
+From:   Jonas Bonn <jonas@norrbonn.se>
+Message-ID: <0dfcb2ad-0698-b005-b6a2-5d52ee00bf9a@norrbonn.se>
+Date:   Fri, 14 Jun 2019 10:20:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cvgh7guoqqbi6mcf"
-Content-Disposition: inline
-In-Reply-To: <20190607120633.GI7593@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <323df302-aa17-df40-846d-3354d4bb126a@mellanox.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---cvgh7guoqqbi6mcf
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 
-Hi Laurent,
+On 13/06/2019 16:13, Maxim Mikityanskiy wrote:
+> On 2019-06-13 09:45, Jonas Bonn wrote:
+>> Hi Max,
+>>
+>> On 12/06/2019 12:42, Maxim Mikityanskiy wrote:
+>>> On 2019-06-11 13:03, Jonas Bonn wrote:
+>>>> Patch 7dc2bccab0ee37ac28096b8fcdc390a679a15841 introduces a regression
+>>>> with systemd 241.  In that revision, systemd-networkd fails to pass the
+>>>> required flags early enough.  This appears to be addressed in later
+>>>> versions of systemd, but for users of version 241 where systemd-networkd
+>>>> nonetheless worked with earlier kernels, the strict check introduced by
+>>>> the patch causes a regression in behaviour.
+>>>>
+>>>> This patch converts the failure to supply the required flags from an
+>>>> error into a warning.
+>>> The purpose of my patch was to prevent a partial configuration update on
+>>> invalid input. -EINVAL was returned both before and after my patch, the
+>>> difference is that before my patch there was a partial update and a
+>>> warning.
+>>>
+>>> Your patch basically makes mine pointless, because you revert the fix,
+>>> and now we'll have the same partial update and two warnings.
+>>
+>> Unfortunately, yes...
+> 
+> So what you propose is a degradation.
 
-On Fri, Jun 07, 2019 at 03:06:33PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> On Thu, Jun 06, 2019 at 04:22:20PM +0200, Jacopo Mondi wrote:
-> > Update CMM settings at in the atomic commit tail helper method.
-> >
-> > The CMM is updated with new gamma values provided to the driver
-> > in the GAMMA_LUT blob property.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_kms.c | 36 +++++++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_kms.c b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > index 5a910a04e1d9..29a2020a46b5 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_kms.c
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/of_platform.h>
-> >  #include <linux/wait.h>
-> >
-> > +#include "rcar_cmm.h"
-> >  #include "rcar_du_crtc.h"
-> >  #include "rcar_du_drv.h"
-> >  #include "rcar_du_encoder.h"
-> > @@ -367,6 +368,38 @@ rcar_du_fb_create(struct drm_device *dev, struct drm_file *file_priv,
-> >   * Atomic Check and Update
-> >   */
-> >
-> > +static void rcar_du_atomic_commit_update_cmm(struct drm_crtc *crtc,
-> > +					     struct drm_crtc_state *old_state)
-> > +{
-> > +	struct rcar_du_crtc *rcrtc = to_rcar_crtc(crtc);
-> > +	struct rcar_cmm_config cmm_config = {};
-> > +
-> > +	if (!rcrtc->cmm || !crtc->state->color_mgmt_changed)
-> > +		return;
-> > +
-> > +	if (!crtc->state->gamma_lut) {
-> > +		cmm_config.lut.enable = false;
-> > +		rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > +
-> > +		return;
-> > +	}
-> > +
-> > +	cmm_config.lut.enable = true;
-> > +	cmm_config.lut.table = (struct drm_color_lut *)
-> > +			       crtc->state->gamma_lut->data;
-> > +
-> > +	/* Set LUT table size to 0 if entries should not be updated. */
-> > +	if (!old_state->gamma_lut ||
-> > +	    (old_state->gamma_lut->base.id !=
-> > +	    crtc->state->gamma_lut->base.id))
-> > +		cmm_config.lut.size = crtc->state->gamma_lut->length
-> > +				    / sizeof(cmm_config.lut.table[0]);
->
-> Do you need to call rcar_cmm_setup() at all in this case ?
->
+Yes.  You're not going to get an argument out of me here... :)
 
-Do you mean in case the lut.size field is set to 0 ?
-I considered it useful when the CMM has to be re-enabled without
-updateing the LUT table entries? It is not required in your opinion?
+> 
+>>>
+>>> One more thing is that after applying your patch on top of mine, the
+>>> kernel won't return -EINVAL anymore on invalid input. Returning -EINVAL
+>>> is what happened before my patch, and also after my patch.
+>>
+>> Yes, you're right, it would probably be better revert the entire patch
+>> because the checks in set_link_af have been dropped on the assumption
+>> that validate_link_af catches the badness.
+> 
+> We shouldn't introduce workarounds in the kernel for some temporary bugs
+> in old userspace. A regression was introduced in systemd: it started
+> sending invalid messages, didn't check the return code properly and
+> relied on an undefined behavior. It was then fixed in systemd. If the
+> kernel had all kinds of workarounds for all buggy software ever existed,
+> it would be a complete mess. The software used the API in a wrong way,
+> the expected behavior is failure, so it shouldn't expect anything else.
+> For me, the trade-off between fixing the kernel behavior and supporting
+> some old buggy software while keeping a UB in the kernel forever has an
+> obvious resolution.
 
-Thanks
-   j
+You're missing the point:  this is a regression in kernel behaviour. 
+systemd v241 is a tagged release, included in downloadable releases of 
+at least Yocto 2.7 and Fedora 30.  Irregardless of whether systemd's 
+implementation is buggy or not, it's functionality depends on the 
+(undefined but deterministic) behaviour of a released kernel and 
+therefore you can't just change that behaviour.
 
-> > +	else
-> > +		cmm_config.lut.size = 0;
-> > +
-> > +	rcar_cmm_setup(rcrtc->cmm, &cmm_config);
-> > +}
-> > +
-> >  static int rcar_du_atomic_check(struct drm_device *dev,
-> >  				struct drm_atomic_state *state)
-> >  {
-> > @@ -409,6 +442,9 @@ static void rcar_du_atomic_commit_tail(struct drm_atomic_state *old_state)
-> >  			rcdu->dpad1_source = rcrtc->index;
-> >  	}
-> >
-> > +	for_each_old_crtc_in_state(old_state, crtc, crtc_state, i)
-> > +		rcar_du_atomic_commit_update_cmm(crtc, crtc_state);
-> > +
-> >  	/* Apply the atomic update. */
-> >  	drm_atomic_helper_commit_modeset_disables(dev, old_state);
-> >  	drm_atomic_helper_commit_planes(dev, old_state,
->
-> --
-> Regards,
->
-> Laurent Pinchart
+Like I said, I can get past this, so I'm happy to pretend that I didn't 
+discover this and just patch my own system.  Unfortunately, I suspect 
+this isn't the last you'll hear about this.
 
---cvgh7guoqqbi6mcf
-Content-Type: application/pgp-signature; name="signature.asc"
+/Jonas
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DWIEACgkQcjQGjxah
-VjzwpQ//WMAXXg0Iqe84pOeR3FpXuQ4vkqCDArzdNFG5VcdNm4npoe6ZnjnSy7Ae
-dPhB8oQVdcRmjmGbNvre5amsEmxONrfcGwiyzCJhoW8T28sztdv0LGzSoTHV6ejt
-0xY2qG02Ek0UPOWwiCMzvfxCK+hJEbXEukD31pDOoVc1EoB3P7FEI1NLe5MJZVKD
-Encdf+0v8nCnbrRG2oWCvBp3CJy5UuBLbu+EuAr6rawekdHYulJCjtolDqKQO7jr
-fPMR5vfNm2MsWr7em2vdeI2O/zmPw5ixIWyauAz4Kzz2CC+7elXSFona/gMYpry0
-xKKJso48zJ3NcZlwjDhXDtKuu5vE21r4qmvVmxGFFphxGdXIIudOWqIUo+0N+2Jr
-fQKK7HpGK4XsG7Vv/lJkgDEntZYBRj99QqE+2u0fzbAryUv9Sl//RlHBxUZRGdl7
-Vbp3QdCgJZvS7qGsR6s1dMi5lCfWbiP8k3nQGb7MaW1hWmjTeUSswSCdorOxWSfZ
-y4SVNfGKP7g+gWaeBZidUrDiveV8hz8RaB3a84LTPC0UYd78VYJLHUwmgKGtd1Ti
-ipIfzhCoY8UcHJn/3EiiuiQJMd4tiw6b/vkB79fdPp8lMTDlAaglS3uPSW1REsAc
-OS0k2lCyh+L/sW0um5QPM8DeLUa3psCuDgzi0u043tLe1pqFnDk=
-=jqfj
------END PGP SIGNATURE-----
-
---cvgh7guoqqbi6mcf--
+>>
+>> Anyway, for the record, the error is:
+>>
+>> systemd:  Could not bring up interface... (invalid parameter)
+>>
+>> And the solution is:  Linux >= 5.2 requires systemd != v241.
+>>
+>> If nobody else notices, that's good enough for me.
+>>
+>>>
+>>> Please correct me if anything I say is wrong.
+>>
+>> Nothing wrong, but it's still a regression.
+>>
+>> /Jonas
+>>
+>>>
+>>> Thanks,
+>>> Max
+>>>
