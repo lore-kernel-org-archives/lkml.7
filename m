@@ -2,110 +2,155 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6765DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13E87C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49BB22177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E43D12177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfFNSRk (ORCPT
+        id S1726762AbfFNSRn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:17:40 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:39150 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfFNSRi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:17:38 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hbqlM-0006Wc-Mn; Fri, 14 Jun 2019 20:17:20 +0200
-Date:   Fri, 14 Jun 2019 20:17:14 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH v4 04/21] x86/hpet: Add hpet_set_comparator() for
- periodic and one-shot modes
-In-Reply-To: <1558660583-28561-5-git-send-email-ricardo.neri-calderon@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906142010230.1760@nanos.tec.linutronix.de>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-5-git-send-email-ricardo.neri-calderon@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Fri, 14 Jun 2019 14:17:43 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18617 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726429AbfFNSRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:17:21 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 65C475463CF33BAB43D3;
+        Sat, 15 Jun 2019 02:17:18 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 15 Jun
+ 2019 02:17:11 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     <chao@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [RFC PATCH 6/8] staging: erofs: introduce LZ4 decompression inplace
+Date:   Sat, 15 Jun 2019 02:16:17 +0800
+Message-ID: <20190614181619.64905-7-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614181619.64905-1-gaoxiang25@huawei.com>
+References: <20190614181619.64905-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019, Ricardo Neri wrote:
-> +/**
-> + * hpet_set_comparator() - Helper function for setting comparator register
-> + * @num:	The timer ID
-> + * @cmp:	The value to be written to the comparator/accumulator
-> + * @period:	The value to be written to the period (0 = oneshot mode)
-> + *
-> + * Helper function for updating comparator, accumulator and period values.
-> + *
-> + * In periodic mode, HPET needs HPET_TN_SETVAL to be set before writing
-> + * to the Tn_CMP to update the accumulator. Then, HPET needs a second
-> + * write (with HPET_TN_SETVAL cleared) to Tn_CMP to set the period.
-> + * The HPET_TN_SETVAL bit is automatically cleared after the first write.
-> + *
-> + * For one-shot mode, HPET_TN_SETVAL does not need to be set.
-> + *
-> + * See the following documents:
-> + *   - Intel IA-PC HPET (High Precision Event Timers) Specification
-> + *   - AMD-8111 HyperTransport I/O Hub Data Sheet, Publication # 24674
-> + */
-> +void hpet_set_comparator(int num, unsigned int cmp, unsigned int period)
-> +{
-> +	if (period) {
-> +		unsigned int v = hpet_readl(HPET_Tn_CFG(num));
-> +
-> +		hpet_writel(v | HPET_TN_SETVAL, HPET_Tn_CFG(num));
-> +	}
-> +
-> +	hpet_writel(cmp, HPET_Tn_CMP(num));
-> +
-> +	if (!period)
-> +		return;
+compressed data will be usually loaded into last pages of
+the extent (the last page for 4k) for in-place decompression
+(more specifically, in-place IO), as ilustration below,
 
-TBH, I hate this conditional handling. What's wrong with two functions?
+         start of compressed logical extent
+           |                          end of this logical extent
+           |                           |
+     ______v___________________________v________
+... |  page 6  |  page 7  |  page 8  |  page 9  | ...
+    |__________|__________|__________|__________|
+           .                         ^ .        ^
+           .                         |compressed|
+           .                         |   data   |
+           .                           .        .
+           |<          dstsize        >|<margin>|
+                                       oend     iend
+           op                        ip
 
-> +
-> +	/*
-> +	 * This delay is seldom used: never in one-shot mode and in periodic
-> +	 * only when reprogramming the timer.
-> +	 */
-> +	udelay(1);
-> +	hpet_writel(period, HPET_Tn_CMP(num));
-> +}
-> +EXPORT_SYMBOL_GPL(hpet_set_comparator);
+Therefore, it's possible to do decompression inplace (thus no
+memcpy at all) if the margin is sufficient and safe enough [1],
+and it can be implemented only for fixed-size output compression
+compared with fixed-size input compression.
 
-Why is this exported? Which module user needs this?
+No memcpy for most of in-place IO (about 99% of enwik9) after
+decompression inplace is implemented and sequential read will
+be improved of course (see the following patch for test results).
 
-Thanks,
+[1] https://github.com/lz4/lz4/commit/b17f578a919b7e6b078cede2d52be29dd48c8e8c
+    https://github.com/lz4/lz4/commit/5997e139f53169fa3a1c1b4418d2452a90b01602
 
-	tglx
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ drivers/staging/erofs/compress.h     |  1 +
+ drivers/staging/erofs/decompressor.c | 21 ++++++++++++++++++---
+ drivers/staging/erofs/erofs_fs.h     |  3 ++-
+ 3 files changed, 21 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/staging/erofs/compress.h b/drivers/staging/erofs/compress.h
+index ebeccb1f4eae..c43aa3374d28 100644
+--- a/drivers/staging/erofs/compress.h
++++ b/drivers/staging/erofs/compress.h
+@@ -17,6 +17,7 @@ enum {
+ };
+ 
+ struct z_erofs_decompress_req {
++	struct super_block *sb;
+ 	struct page **in, **out;
+ 
+ 	unsigned short pageofs_out;
+diff --git a/drivers/staging/erofs/decompressor.c b/drivers/staging/erofs/decompressor.c
+index 4f644bdea0bc..727bae6a3cb0 100644
+--- a/drivers/staging/erofs/decompressor.c
++++ b/drivers/staging/erofs/decompressor.c
+@@ -14,6 +14,9 @@
+ #endif
+ 
+ #define LZ4_MAX_DISTANCE_PAGES	DIV_ROUND_UP(LZ4_DISTANCE_MAX, PAGE_SIZE)
++#ifndef LZ4_DECOMPRESS_INPLACE_MARGIN
++#define LZ4_DECOMPRESS_INPLACE_MARGIN(srcsize)  (((srcsize) >> 8) + 32)
++#endif
+ 
+ struct z_erofs_decompressor {
+ 	/*
+@@ -131,9 +134,21 @@ static int lz4_decompress(struct z_erofs_decompress_req *rq, u8 *out)
+ 	copied = false;
+ 	inlen = rq->inputsize - inputmargin;
+ 	if (rq->inplace_io) {
+-		src = generic_copy_inplace_data(rq, src, inputmargin);
+-		inputmargin = 0;
+-		copied = true;
++		const uint oend = (rq->pageofs_out +
++				   rq->outputsize) & ~PAGE_MASK;
++		const uint nr = PAGE_ALIGN(rq->pageofs_out +
++					   rq->outputsize) >> PAGE_SHIFT;
++
++		if (rq->partial_decoding ||
++		    !(EROFS_SB(rq->sb)->requirements &
++		      EROFS_REQUIREMENT_LZ4_0PADDING) ||
++		    rq->out[nr - 1] != rq->in[0] ||
++		    rq->inputsize - oend <
++		      LZ4_DECOMPRESS_INPLACE_MARGIN(inlen)) {
++			src = generic_copy_inplace_data(rq, src, inputmargin);
++			inputmargin = 0;
++			copied = true;
++		}
+ 	}
+ 
+ 	ret = LZ4_decompress_safe_partial(src + inputmargin, out,
+diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
+index a05139f1df60..353322a3206c 100644
+--- a/drivers/staging/erofs/erofs_fs.h
++++ b/drivers/staging/erofs/erofs_fs.h
+@@ -21,7 +21,8 @@
+  * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
+  * incompatible with this kernel version.
+  */
+-#define EROFS_ALL_REQUIREMENTS  0
++#define EROFS_REQUIREMENT_LZ4_0PADDING	0x00000001
++#define EROFS_ALL_REQUIREMENTS		EROFS_REQUIREMENT_LZ4_0PADDING
+ 
+ struct erofs_super_block {
+ /*  0 */__le32 magic;           /* in the little endian */
+-- 
+2.17.1
+
