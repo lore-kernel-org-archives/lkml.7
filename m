@@ -7,138 +7,124 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F078C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:42:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7560C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:42:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3317A20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:42:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 888EC20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 06:42:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="R8nj2h+w"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="TGQMgCeE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfFNGmI (ORCPT
+        id S1725864AbfFNGll (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 02:42:08 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:4989 "EHLO pegase1.c-s.fr"
+        Fri, 14 Jun 2019 02:41:41 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:11042 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726063AbfFNGlq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 02:41:46 -0400
+        id S1725822AbfFNGll (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 02:41:41 -0400
 Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45Q9xg0stfz9v16s;
-        Fri, 14 Jun 2019 08:41:43 +0200 (CEST)
+        by localhost (Postfix) with ESMTP id 45Q9xb0JbMz9v16n;
+        Fri, 14 Jun 2019 08:41:39 +0200 (CEST)
 Authentication-Results: localhost; dkim=pass
         reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=R8nj2h+w; dkim-adsp=pass;
+        header.d=c-s.fr header.i=@c-s.fr header.b=TGQMgCeE; dkim-adsp=pass;
         dkim-atps=neutral
 X-Virus-Scanned: Debian amavisd-new at c-s.fr
 Received: from pegase1.c-s.fr ([192.168.12.234])
         by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id oYgfHCk5z3Qa; Fri, 14 Jun 2019 08:41:43 +0200 (CEST)
+        with ESMTP id 6GDuRjF6niS5; Fri, 14 Jun 2019 08:41:38 +0200 (CEST)
 Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45Q9xf6t9vz9v16l;
-        Fri, 14 Jun 2019 08:41:42 +0200 (CEST)
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45Q9xZ6N62z9v16l;
+        Fri, 14 Jun 2019 08:41:38 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560494503; bh=nw7s55nSCE5gZsdfCAQCVWUUIXEzDyTDYLqPEVTErBE=;
+        t=1560494498; bh=FrwEFL562hO53reJv49dWHRcAR33QjLuPY2auIynv5Y=;
         h=In-Reply-To:References:From:Subject:To:Cc:Date:From;
-        b=R8nj2h+wIEEM1sGIYTkCnzBcMDjqgqZJqkPAfTw1XOhoJWksPIMDOT33XgIuPnZ6g
-         4aqaOHJbZPFFruIPkvwyAtXb2Qr/teH8xX2FRsGqNIlJq9tOgKrhRVOKPwNJCmP6Nz
-         Buc4WJiy5+zpDaTwsdUBs+FpVHtPawCOUIsdmx1g=
+        b=TGQMgCeEwwOTTZU0KTBbDhxpFsu9REbBfhngWWIv/I3/9Sghonv7Db6kG4vgQnZj/
+         PK4NrL+MC5ulLXTmEtXw5jKslzKAOg7vZzlSp2OJX/lAIJkyroXq4v8ig6XmJC7qRz
+         LXAZt4NqqJ2qqNeh2lWMo34jS0n4FN2RVUvh19lk=
 Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id E16828B77A;
-        Fri, 14 Jun 2019 08:41:43 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id C1EBC8B77A;
+        Fri, 14 Jun 2019 08:41:39 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at c-s.fr
 Received: from messagerie.si.c-s.fr ([127.0.0.1])
         by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id usLywtSfl1_h; Fri, 14 Jun 2019 08:41:43 +0200 (CEST)
+        with ESMTP id JZIzUdbAlMWf; Fri, 14 Jun 2019 08:41:39 +0200 (CEST)
 Received: from PO15451.localdomain (po15451.idsi0.si.c-s.fr [172.25.230.107])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id C771D8B775;
-        Fri, 14 Jun 2019 08:41:43 +0200 (CEST)
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A4A468B775;
+        Fri, 14 Jun 2019 08:41:39 +0200 (CEST)
 Received: by po16838vm.idsi0.si.c-s.fr (Postfix, from userid 0)
-        id BB91E68D77; Fri, 14 Jun 2019 06:41:43 +0000 (UTC)
-Message-Id: <a1d95337709fb952b91890285ba01e4ec5121a3a.1560494349.git.christophe.leroy@c-s.fr>
+        id 9FE7A68D77; Fri, 14 Jun 2019 06:41:39 +0000 (UTC)
+Message-Id: <d66fe12d1dbe29ceba26b7208664f277c7fbf3a9.1560494348.git.christophe.leroy@c-s.fr>
 In-Reply-To: <04852442b540e73be0a20e13f69ab8427fd102e0.1560494348.git.christophe.leroy@c-s.fr>
 References: <04852442b540e73be0a20e13f69ab8427fd102e0.1560494348.git.christophe.leroy@c-s.fr>
 From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Subject: [PATCH v3 06/10] powerpc/8xx: refactor printing of microcode patch
- name.
+Subject: [PATCH v3 02/10] powerpc/8xx: drop verify_patch()
 To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>, oss@buserror.net
 Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Date:   Fri, 14 Jun 2019 06:41:43 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 06:41:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define patch name together with the patch code, and refactor
-the associated printk() while replacing it by a pr_info()
+verify_patch() has been opted out since many years, and
+the comment suggests it doesn't work. So drop it.
 
 Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
 ---
- arch/powerpc/platforms/8xx/micropatch.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/powerpc/platforms/8xx/micropatch.c | 40 ---------------------------------
+ 1 file changed, 40 deletions(-)
 
 diff --git a/arch/powerpc/platforms/8xx/micropatch.c b/arch/powerpc/platforms/8xx/micropatch.c
-index 410968a0b177..5e5ac2378d3f 100644
+index 33a9042fca80..7bbaf9914f32 100644
 --- a/arch/powerpc/platforms/8xx/micropatch.c
 +++ b/arch/powerpc/platforms/8xx/micropatch.c
-@@ -26,6 +26,8 @@
- 
- #ifdef CONFIG_I2C_SPI_UCODE_PATCH
- 
-+static char patch_name[] __initdata = "I2C/SPI";
-+
- static uint patch_2000[] __initdata = {
- 	0x7FFFEFD9, 0x3FFD0000, 0x7FFB49F7, 0x7FF90000,
- 	0x5FEFADF7, 0x5F89ADF7, 0x5FEFAFF7, 0x5F89AFF7,
-@@ -78,6 +80,8 @@ static uint patch_2e00[] __initdata = {};
- 
- #ifdef CONFIG_I2C_SPI_SMC1_UCODE_PATCH
- 
-+static char patch_name[] __initdata = "I2C/SPI/SMC1";
-+
- static uint patch_2000[] __initdata = {
- 	0x3fff0000, 0x3ffd0000, 0x3ffb0000, 0x3ff90000,
- 	0x5f13eff8, 0x5eb5eff8, 0x5f88adf7, 0x5fefadf7,
-@@ -194,6 +198,8 @@ static uint patch_2e00[] __initdata = {
- 
- #ifdef CONFIG_USB_SOF_UCODE_PATCH
- 
-+static char patch_name[] __initdata = "USB SOF";
-+
- static uint patch_2000[] __initdata = {
- 	0x7fff0000, 0x7ffd0000, 0x7ffb0000, 0x49f7ba5b,
- 	0xba383ffb, 0xf9b8b46d, 0xe5ab4e07, 0xaf77bffe,
-@@ -235,8 +241,6 @@ void __init cpm_load_patch(cpm8xx_t *cp)
- 
- #ifdef CONFIG_USB_SOF_UCODE_PATCH
- 	commproc->cp_rccr = 0x0009;
--
--	printk("USB SOF microcode patch installed\n");
- #endif /* CONFIG_USB_SOF_UCODE_PATCH */
- 
- #if defined(CONFIG_I2C_SPI_UCODE_PATCH) || \
-@@ -257,8 +261,6 @@ void __init cpm_load_patch(cpm8xx_t *cp)
- 	commproc->cp_cpmcr3 = 0x802e;
- 	commproc->cp_cpmcr4 = 0x802c;
- 	commproc->cp_rccr = 1;
--
--	printk("I2C/SPI microcode patch installed.\n");
- # endif /* CONFIG_I2C_SPI_UCODE_PATCH */
- 
- # if defined(CONFIG_I2C_SPI_SMC1_UCODE_PATCH)
-@@ -270,9 +272,9 @@ void __init cpm_load_patch(cpm8xx_t *cp)
- 
- 	smp = (smc_uart_t *)&commproc->cp_dparam[PROFF_SMC1];
- 	smp->smc_rpbase = 0x1FC0;
--
--	printk("I2C/SPI/SMC1 microcode patch installed.\n");
- # endif /* CONFIG_I2C_SPI_SMC1_UCODE_PATCH) */
+@@ -707,43 +707,3 @@ void __init cpm_load_patch(cpm8xx_t *cp)
  
  #endif /* some variation of the I2C/SPI patch was selected */
-+
-+	pr_info("%s microcode patch installed\n", patch_name);
  }
+-
+-/*
+- *  Take this entire routine out, since no one calls it and its
+- * logic is suspect.
+- */
+-
+-#if 0
+-void
+-verify_patch(volatile immap_t *immr)
+-{
+-	volatile uint		*dp;
+-	volatile cpm8xx_t	*commproc;
+-	int i;
+-
+-	commproc = (cpm8xx_t *)&immr->im_cpm;
+-
+-	printk("cp_rccr %x\n", commproc->cp_rccr);
+-	commproc->cp_rccr = 0;
+-
+-	dp = (uint *)(commproc->cp_dpmem);
+-	for (i=0; i<(sizeof(patch_2000)/4); i++)
+-		if (*dp++ != patch_2000[i]) {
+-			printk("patch_2000 bad at %d\n", i);
+-			dp--;
+-			printk("found 0x%X, wanted 0x%X\n", *dp, patch_2000[i]);
+-			break;
+-		}
+-
+-	dp = (uint *)&(commproc->cp_dpmem[0x0f00]);
+-	for (i=0; i<(sizeof(patch_2f00)/4); i++)
+-		if (*dp++ != patch_2f00[i]) {
+-			printk("patch_2f00 bad at %d\n", i);
+-			dp--;
+-			printk("found 0x%X, wanted 0x%X\n", *dp, patch_2f00[i]);
+-			break;
+-		}
+-
+-	commproc->cp_rccr = 0x0009;
+-}
+-#endif
 -- 
 2.13.3
 
