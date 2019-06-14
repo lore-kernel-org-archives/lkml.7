@@ -2,32 +2,32 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DCFC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C139AC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:16:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908462080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:16:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A44312080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:16:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfFNIQF (ORCPT
+        id S1726937AbfFNIQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:16:05 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:58912 "EHLO inva021.nxp.com"
+        Fri, 14 Jun 2019 04:16:10 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:58792 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfFNIPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:15:52 -0400
+        id S1726719AbfFNIPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 04:15:48 -0400
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9DAD92005E8;
-        Fri, 14 Jun 2019 10:15:49 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5EDF42005DE;
+        Fri, 14 Jun 2019 10:15:46 +0200 (CEST)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 53E43200077;
-        Fri, 14 Jun 2019 10:15:43 +0200 (CEST)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 468F52005DF;
+        Fri, 14 Jun 2019 10:15:40 +0200 (CEST)
 Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 9EEC14031C;
-        Fri, 14 Jun 2019 16:15:35 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id ED35D402CA;
+        Fri, 14 Jun 2019 16:15:32 +0800 (SGT)
 From:   yibin.gong@nxp.com
 To:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
         festevam@gmail.com, mark.rutland@arm.com, vkoul@kernel.org,
@@ -35,9 +35,9 @@ To:     robh@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de,
 Cc:     linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org,
         devicetree@vger.kernel.org, kernel@pengutronix.de
-Subject: [PATCH v4 4/6] dt-bindings: dma: fsl-edma: add new i.mx7ulp-edma
-Date:   Fri, 14 Jun 2019 16:17:22 +0800
-Message-Id: <20190614081724.13366-5-yibin.gong@nxp.com>
+Subject: [PATCH v4 2/6] dmaengine: fsl-edma-common: move dmamux register to another single function
+Date:   Fri, 14 Jun 2019 16:17:20 +0800
+Message-Id: <20190614081724.13366-3-yibin.gong@nxp.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190614081724.13366-1-yibin.gong@nxp.com>
 References: <20190614081724.13366-1-yibin.gong@nxp.com>
@@ -49,96 +49,50 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Robin Gong <yibin.gong@nxp.com>
 
-More channel interrupts, one more clock, and only one
-dmamux on i.mx7ulp-edma.
+Prepare for edmav2 on i.mx7ulp whose dmamux register is 32bit. No function
+impacted.
 
 Signed-off-by: Robin Gong <yibin.gong@nxp.com>
 ---
- Documentation/devicetree/bindings/dma/fsl-edma.txt | 44 +++++++++++++++++++---
- 1 file changed, 39 insertions(+), 5 deletions(-)
+ drivers/dma/fsl-edma-common.c | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-edma.txt b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-index 97e213e..29dd3cc 100644
---- a/Documentation/devicetree/bindings/dma/fsl-edma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-edma.txt
-@@ -9,15 +9,16 @@ group, DMAMUX0 or DMAMUX1, but not both.
- Required properties:
- - compatible :
- 	- "fsl,vf610-edma" for eDMA used similar to that on Vybrid vf610 SoC
-+	- "fsl,imx7ulp-edma" for eDMA2 used similar to that on i.mx7ulp
- - reg : Specifies base physical address(s) and size of the eDMA registers.
- 	The 1st region is eDMA control register's address and size.
- 	The 2nd and the 3rd regions are programmable channel multiplexing
- 	control register's address and size.
- - interrupts : A list of interrupt-specifiers, one for each entry in
--	interrupt-names.
--- interrupt-names : Should contain:
--	"edma-tx" - the transmission interrupt
--	"edma-err" - the error interrupt
-+	interrupt-names on vf610 similar SoC. But for i.mx7ulp per channel
-+	per transmission interrupt, total 16 channel interrupt and 1
-+	error interrupt(located in the last), no interrupt-names list on
-+	i.mx7ulp for clean on dts.
- - #dma-cells : Must be <2>.
- 	The 1st cell specifies the DMAMUX(0 for DMAMUX0 and 1 for DMAMUX1).
- 	Specific request source can only be multiplexed by specific channels
-@@ -28,6 +29,7 @@ Required properties:
- - clock-names : A list of channel group clock names. Should contain:
- 	"dmamux0" - clock name of mux0 group
- 	"dmamux1" - clock name of mux1 group
-+	Note: No dmamux0 on i.mx7ulp, but another 'dma' clk added on i.mx7ulp.
- - clocks : A list of phandle and clock-specifier pairs, one for each entry in
- 	clock-names.
+diff --git a/drivers/dma/fsl-edma-common.c b/drivers/dma/fsl-edma-common.c
+index 07d9689..ba74e10 100644
+--- a/drivers/dma/fsl-edma-common.c
++++ b/drivers/dma/fsl-edma-common.c
+@@ -77,6 +77,19 @@ void fsl_edma_disable_request(struct fsl_edma_chan *fsl_chan)
+ }
+ EXPORT_SYMBOL_GPL(fsl_edma_disable_request);
  
-@@ -35,6 +37,10 @@ Optional properties:
- - big-endian: If present registers and hardware scatter/gather descriptors
- 	of the eDMA are implemented in big endian mode, otherwise in little
- 	mode.
-+- interrupt-names : Should contain the below on vf610 similar SoC but not used
-+	on i.mx7ulp similar SoC:
-+	"edma-tx" - the transmission interrupt
-+	"edma-err" - the error interrupt
++static void mux_configure8(struct fsl_edma_chan *fsl_chan, void __iomem *addr,
++			   u32 off, u32 slot, bool enable)
++{
++	u8 val8;
++
++	if (enable)
++		val8 = EDMAMUX_CHCFG_ENBL | slot;
++	else
++		val8 = EDMAMUX_CHCFG_DIS;
++
++	iowrite8(val8, addr + off);
++}
++
+ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 			unsigned int slot, bool enable)
+ {
+@@ -90,10 +103,7 @@ void fsl_edma_chan_mux(struct fsl_edma_chan *fsl_chan,
+ 	muxaddr = fsl_chan->edma->muxbase[ch / chans_per_mux];
+ 	slot = EDMAMUX_CHCFG_SOURCE(slot);
  
+-	if (enable)
+-		iowrite8(EDMAMUX_CHCFG_ENBL | slot, muxaddr + ch_off);
+-	else
+-		iowrite8(EDMAMUX_CHCFG_DIS, muxaddr + ch_off);
++	mux_configure8(fsl_chan, muxaddr, ch_off, slot, enable);
+ }
+ EXPORT_SYMBOL_GPL(fsl_edma_chan_mux);
  
- Examples:
-@@ -52,8 +58,36 @@ edma0: dma-controller@40018000 {
- 	clock-names = "dmamux0", "dmamux1";
- 	clocks = <&clks VF610_CLK_DMAMUX0>,
- 		<&clks VF610_CLK_DMAMUX1>;
--};
-+}; /* vf610 */
- 
-+edma1: dma-controller@40080000 {
-+	#dma-cells = <2>;
-+	compatible = "fsl,imx7ulp-edma";
-+	reg = <0x40080000 0x2000>,
-+		<0x40210000 0x1000>;
-+	dma-channels = <32>;
-+	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-+		     /* last is eDMA2-ERR interrupt */
-+		     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+	clock-names = "dma", "dmamux0";
-+	clocks = <&pcc2 IMX7ULP_CLK_DMA1>,
-+		 <&pcc2 IMX7ULP_CLK_DMA_MUX1>;
-+}; /* i.mx7ulp */
- 
- * DMA clients
- DMA client drivers that uses the DMA function must use the format described
 -- 
 2.7.4
 
