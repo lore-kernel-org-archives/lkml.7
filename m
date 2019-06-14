@@ -2,87 +2,127 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D68EEC31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF8B1C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7E4217D9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:20:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="iWbnwpM3"
+	by mail.kernel.org (Postfix) with ESMTP id AE0F320850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:21:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfFNMUP (ORCPT
+        id S1727771AbfFNMV1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:20:15 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39372 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727362AbfFNMUO (ORCPT
+        Fri, 14 Jun 2019 08:21:27 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:19416
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727619AbfFNMV1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:20:14 -0400
-Received: by mail-qk1-f196.google.com with SMTP id i125so1491832qkd.6;
-        Fri, 14 Jun 2019 05:20:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=jms.id.au; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6rc60klXbDdC4U4/MMrqWt/2TewJnLjQ/8r8hSCMd1s=;
-        b=iWbnwpM3Kxebrp9DARy7xnFW6kr0KF6p8qC4q2EsM9P78mqslIAqRrIUj8ZBTUvZfA
-         UiBAhtpSOHng8d69r5N05E8Pd9q3WGFt2mQ34gwLycRcYSw9+j8M02cm6srnmt9Ei8vU
-         ZkeV7zq719zsUoqI2tf7K64TdVSLi9VimJ680=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6rc60klXbDdC4U4/MMrqWt/2TewJnLjQ/8r8hSCMd1s=;
-        b=mEMDwO0vYNBaWIWCjGKKqUrE7eGIp4QYsJ9q2MhL8CnZiVbt/lzePX/+tYqQOCscJn
-         vCJcXb6w/glaBSQ2T4n+Ynn60GTgpl7pg30zhrbwT/P9COTo4614kpXAn7QqVzN2mfpx
-         YkJcG48kIbadOPS8hzKbiy5CiMkuiTT2CwlE4AmFlvdRZnMZV6KqfHd0m9a3ElyLbbJ5
-         gepyAMGrwuKB4xEqKCKcavxSUC9fQJgUXEACN2vrO7K7mAPlSGEq/qbTQ4hD9fBzwAkw
-         WHsvnFTQZAEEf9WPsQywelGmQRA1g76xoqE1v3vOFtZofa9LdF5m0VUEQRrRntFkDhGc
-         JMTQ==
-X-Gm-Message-State: APjAAAXvKAS+cGXH2yAaZ2CVQxbIQ9XVS8e4YO7y+Fjko7DzjIhA7BRa
-        v9fDNA/BsM6cOmFUyINnxMFwnC0m0S+budQwBFk=
-X-Google-Smtp-Source: APXvYqyGrNC/mqtxIRaAuWze/JoTz2AsfNmSDrq8G4akumQY0TXEILTuIxe67BM5xQ23Pb3umDQ2KTDTek1Fgy9Gk4A=
-X-Received: by 2002:a37:a743:: with SMTP id q64mr74518182qke.236.1560514813660;
- Fri, 14 Jun 2019 05:20:13 -0700 (PDT)
+        Fri, 14 Jun 2019 08:21:27 -0400
+X-IronPort-AV: E=Sophos;i="5.63,373,1557180000"; 
+   d="scan'208";a="309260432"
+Received: from unknown (HELO hadrien.local) ([163.173.90.224])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 14:21:24 +0200
+Date:   Fri, 14 Jun 2019 14:21:23 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+cc:     aviad.krawczyk@huawei.com, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH net-next] hinic: Use devm_kasprintf instead of hard coding
+ it
+In-Reply-To: <c55cd76d-2d3e-d9b2-1f1b-4881102c407d@wanadoo.fr>
+Message-ID: <alpine.DEB.2.20.1906141420280.9068@hadrien>
+References: <20190613195412.1702-1-christophe.jaillet@wanadoo.fr> <c55cd76d-2d3e-d9b2-1f1b-4881102c407d@wanadoo.fr>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-References: <20190509035549.2203169-1-taoren@fb.com> <29d7503b-6c14-4990-aadc-7cbce2897fc2@www.fastmail.com>
-In-Reply-To: <29d7503b-6c14-4990-aadc-7cbce2897fc2@www.fastmail.com>
-From:   Joel Stanley <joel@jms.id.au>
-Date:   Fri, 14 Jun 2019 12:20:01 +0000
-Message-ID: <CACPK8Xe8qNww18hJx2skjYJtsCRLA+uwZsjGUb50u6QLE+wmSg@mail.gmail.com>
-Subject: Re: [PATCH] ARM: dts: aspeed: Add Facebook YAMP BMC
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     Tao Ren <taoren@fb.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; BOUNDARY="8323329-573815791-1560514884=:9068"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 9 May 2019 at 06:06, Andrew Jeffery <andrew@aj.id.au> wrote:
+--8323329-573815791-1560514884=:9068
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+
+
+On Fri, 14 Jun 2019, Christophe JAILLET wrote:
+
+> Hi,
 >
+> I got a:
 >
+> <aviad.krawczyk@huawei.com>: host huawei.com[103.218.216.136] said: 550
+> 5.1.1 Error: invalid recipients is found from 80.12.242.127
 >
-> On Thu, 9 May 2019, at 13:26, Tao Ren wrote:
-> > Add initial version of device tree for Facebook YAMP ast2500 BMC.
+> However, MAINTAINERS has:
+>   HUAWEI ETHERNET DRIVER
+>   M:	Aviad Krawczyk <aviad.krawczyk@huawei.com>
+>   L:	netdev@vger.kernel.org
+>   S:	Supported
+>   F:	Documentation/networking/hinic.txt
+>   F:	drivers/net/ethernet/huawei/hinic/
+>
+> I don't know how this should be fixed (neither if it should be...), so if s.o.
+> knows, please do.
+
+Maybe this person would know, since he is also from Huawei and has signed
+off on a patch by Aviad Krawczyk:
+
+cde66f24c3bf42123647c5233447c5790d92557f
+Signed-off-by: Zhao Chen <zhaochen6@huawei.com>
+
+julia
+
+>
+> Best regards,
+> Christophe Jaillet
+>
+> Le 13/06/2019 à 21:54, Christophe JAILLET a écrit :
+> > 'devm_kasprintf' is less verbose than:
+> >     snprintf(NULL, 0, ...);
+> >     devm_kzalloc(...);
+> >     sprintf
+> > so use it instead.
 > >
-> > Signed-off-by: Tao Ren <taoren@fb.com>
+> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> > ---
+> >   drivers/net/ethernet/huawei/hinic/hinic_rx.c | 8 +++-----
+> >   1 file changed, 3 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+> > b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+> > index 9b4082557ad5..95b09fd110d3 100644
+> > --- a/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+> > +++ b/drivers/net/ethernet/huawei/hinic/hinic_rx.c
+> > @@ -493,7 +493,7 @@ int hinic_init_rxq(struct hinic_rxq *rxq, struct
+> > hinic_rq *rq,
+> >   		   struct net_device *netdev)
+> >   {
+> >   	struct hinic_qp *qp = container_of(rq, struct hinic_qp, rq);
+> > -	int err, pkts, irqname_len;
+> > +	int err, pkts;
+> >     	rxq->netdev = netdev;
+> >   	rxq->rq = rq;
+> > @@ -502,13 +502,11 @@ int hinic_init_rxq(struct hinic_rxq *rxq, struct
+> > hinic_rq *rq,
+> >     	rxq_stats_init(rxq);
+> >   -	irqname_len = snprintf(NULL, 0, "hinic_rxq%d", qp->q_id) + 1;
+> > -	rxq->irq_name = devm_kzalloc(&netdev->dev, irqname_len, GFP_KERNEL);
+> > +	rxq->irq_name = devm_kasprintf(&netdev->dev, GFP_KERNEL,
+> > +				       "hinic_rxq%d", qp->q_id);
+> >   	if (!rxq->irq_name)
+> >   		return -ENOMEM;
+> >   -	sprintf(rxq->irq_name, "hinic_rxq%d", qp->q_id);
+> > -
+> >   	pkts = rx_alloc_pkts(rxq);
+> >   	if (!pkts) {
+> >   		err = -ENOMEM;
 >
-> Acked-by: Andrew Jeffery <andrew@aj.id.au>
-
-Committed to dev-5.1.
-
-Cheers,
-
-Joel
+>
+>
+--8323329-573815791-1560514884=:9068--
