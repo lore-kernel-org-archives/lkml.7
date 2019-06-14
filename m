@@ -2,78 +2,91 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD77C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 819D8C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:15:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F4132080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F60121721
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:15:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wuDWIRG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726535AbfFNIPU (ORCPT
+        id S1726659AbfFNIPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:15:20 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:49740 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726442AbfFNIPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:15:19 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 57B331A05D1;
-        Fri, 14 Jun 2019 10:15:18 +0200 (CEST)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D8CFD1A05D0;
-        Fri, 14 Jun 2019 10:15:11 +0200 (CEST)
-Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A6E2740310;
-        Fri, 14 Jun 2019 16:15:03 +0800 (SGT)
-From:   daniel.baluta@nxp.com
-To:     shawnguo@kernel.org
-Cc:     s.hauer@pengutronix.de, shengjiu.wang@nxp.com, festevam@gmail.com,
-        linux-imx@nxp.com, aisheng.dong@nxp.com, daniel.baluta@nxp.com,
-        daniel.baluta@gmail.com, anson.huang@nxp.com,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, o.rempel@pengutronix.de
-Subject: [PATCH 0/2] Add support for DSP IPC protocol driver
-Date:   Fri, 14 Jun 2019 16:16:48 +0800
-Message-Id: <20190614081650.11880-1-daniel.baluta@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Fri, 14 Jun 2019 04:15:25 -0400
+Received: from mail-lj1-f176.google.com ([209.85.208.176]:39890 "EHLO
+        mail-lj1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726567AbfFNIPV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 04:15:21 -0400
+Received: by mail-lj1-f176.google.com with SMTP id v18so1456705ljh.6
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 01:15:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nbt8Hr9yG7v438JERq8EB5gL57vqsYI/Ggm6Adlr5do=;
+        b=wuDWIRG930ZHMRMENaU+TYPSQ99Y8EAMOFMKEQzW07Elc9V89/arlgiuplmhHayjxO
+         5pFmFL314SpjMiSH/Q5L84SBnMsmK8P/SBSv98fLSomg/vElzTb5RxJ/Go3R+F5nQ0Wh
+         Sp9KqULnrGipKbplbmptnG+48AAVD6vuxoCowBRqKtM+4kWVrRXEFLgTCMycU3ewSROT
+         X7yP+I7DlxVoXdNbojSsNhYNGuvsI/eWpf5Fm114O86MiUqjyhgVM+NtX+TkUUmIlB0n
+         79V+vevZ/dWOa8YbwFZnPwG4tntBG3/zHaHRUK72EtzggDJs7/nHpj/GmfE/fuS5uIfD
+         9GAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nbt8Hr9yG7v438JERq8EB5gL57vqsYI/Ggm6Adlr5do=;
+        b=BkUEMM17Qij+IR2qkLrKTuiezwmAOW5JqDIr3/ICzy+NIW83P1h7bLg8ng2x/06cZq
+         rbyOrPCdwwpSUS/CluZG4Y6DpBildsD4ftuYCQF/MDscH72qAaM/qFHJalsC4ktw8ynR
+         ZuYnL75zTVamVFoRPOYvJjiWNFHRQIO5LX2bU2BLl+t+BUFC1rA7PQvPZya17oZIuq1D
+         wONsu9rKm/gMYbxTs03sPTfnn1fVsJ8JWcKy/IvEz9lCyW5nK0ZN2gLYXdHc8F9eE3vf
+         d7ZVOrUNjUkZfP2Ixk/xX78hbrJUMgHf+xgvXQYarMv5iZS7hur/rQ6ff6lmRfzjd/LI
+         tvTw==
+X-Gm-Message-State: APjAAAVEjBj+GFb0UHOoHkB2jEmaQF2+DcZcUcNEz74+CNOimvNx47wS
+        PSzIg+ipVlNh8ll854lLnMAwbA==
+X-Google-Smtp-Source: APXvYqxAxhe2DP0BuTiG1IaqQX29loAzbMxhotvF+IiNpQPv/BBlMUDVSMR22yknwN6Rmzi/QXipSg==
+X-Received: by 2002:a2e:124c:: with SMTP id t73mr17487617lje.190.1560500119854;
+        Fri, 14 Jun 2019 01:15:19 -0700 (PDT)
+Received: from jax.lan (81-236-179-152-no272.tbcn.telia.com. [81.236.179.152])
+        by smtp.gmail.com with ESMTPSA id b18sm357673lfi.30.2019.06.14.01.15.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 01:15:19 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 10:15:17 +0200
+From:   Jens Wiklander <jens.wiklander@linaro.org>
+To:     Sumit Garg <sumit.garg@linaro.org>
+Cc:     keyrings@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, corbet@lwn.net,
+        dhowells@redhat.com, jejb@linux.ibm.com,
+        jarkko.sakkinen@linux.intel.com, zohar@linux.ibm.com,
+        jmorris@namei.org, serge@hallyn.com, ard.biesheuvel@linaro.org,
+        daniel.thompson@linaro.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, tee-dev@lists.linaro.org
+Subject: Re: [RFC 1/7] tee: optee: allow kernel pages to register as shm
+Message-ID: <20190614081515.GA9347@jax.lan>
+References: <1560421833-27414-1-git-send-email-sumit.garg@linaro.org>
+ <1560421833-27414-2-git-send-email-sumit.garg@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1560421833-27414-2-git-send-email-sumit.garg@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Baluta <daniel.baluta@nxp.com>
+On Thu, Jun 13, 2019 at 04:00:27PM +0530, Sumit Garg wrote:
+> Kernel pages are marked as normal type memory only so allow kernel pages
+> to be registered as shared memory with OP-TEE.
+> 
+> Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
 
-Hifi4 DSP can be found on some i.MX8 platforms (e.g i.MX8QXP, i.MX8QM).
-This patch series introduces the layer that allows Host CPU to
-communicate with DSP.
+Reviewed-by: Jens Wiklander <jens.wiklander@linaro.org>
 
-This layer provides a doorbell and clients can used that to notify DSP
-that a message is placed somewhere in the shared memory.
-
-The protocol used is request - reply. Usually, Host/DSP write a message
-in a shared memory area and notify the other side. The other side will
-also write a reply in a designated shared memory area and then ring
-the doorbell to let the counterpart that a message is ready.
-
-Daniel Baluta (2):
-  firmware: imx: Add DSP IPC protocol driver
-  dt-bindings: arm: fsl: Add DSP IPC binding support
-
- .../bindings/arm/freescale/fsl,dsp.yaml       |  43 +++++
- drivers/firmware/imx/Kconfig                  |  11 ++
- drivers/firmware/imx/Makefile                 |   1 +
- drivers/firmware/imx/imx-dsp.c                | 167 ++++++++++++++++++
- include/linux/firmware/imx/dsp.h              |  61 +++++++
- 5 files changed, 283 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
- create mode 100644 drivers/firmware/imx/imx-dsp.c
- create mode 100644 include/linux/firmware/imx/dsp.h
-
--- 
-2.17.1
-
+Thanks,
+Jens
