@@ -2,97 +2,103 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7524C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8096C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A8C22080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:35:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C003421473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:35:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W1ugtM53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726115AbfFNHf1 (ORCPT
+        id S1726193AbfFNHfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:35:27 -0400
-Received: from mx2.suse.de ([195.135.220.15]:33738 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725802AbfFNHf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:35:26 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0473EAE1B;
-        Fri, 14 Jun 2019 07:35:24 +0000 (UTC)
-Subject: Re: [Xen-devel] [RFC PATCH 04/16] x86/xen: hypercall support for
- xenhost_t
-To:     Ankur Arora <ankur.a.arora@oracle.com>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc:     sstabellini@kernel.org, konrad.wilk@oracle.com,
-        pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        joao.m.martins@oracle.com
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-5-ankur.a.arora@oracle.com>
- <11f8b620-11ac-7075-019a-30d6bad7583c@citrix.com>
- <fbfc0a0c-3707-7f17-9f2a-6c9d2c7b05b1@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <59f7cc19-cd9b-119a-1715-50a947cd995d@suse.com>
-Date:   Fri, 14 Jun 2019 09:35:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 14 Jun 2019 03:35:43 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45557 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfFNHfm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 03:35:42 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so882946pfq.12;
+        Fri, 14 Jun 2019 00:35:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7t+luti4wV9vQmcaMbs7td85lQbR85hqcaLUIAiVWoI=;
+        b=W1ugtM53KzaD8xdpRd7Qz9A000X0MEMoMTKwO4rOT+ukHKvs72fjktZHI2WdbvxqL8
+         CUrxkE7YfIdQZ+jeOQtfL77kNuGwqeeV5RWJXxTqVCjcLYNj1TQICKiY9pJi2Oebz7n5
+         5ytj4Z1uOgPX4/ZaERd5O+rl2o9gFiDJvBUWyjM+T2TZvAv9sEDxjVWYqwO7LHQB7NWK
+         v1MCYnrUD8UJo4+OqL2Ai6N4tXtroBf2kjDNzUmuTiXHZcFDBOKR09LVRj3dFsHBvBua
+         NBn5kJG4x+NmoX7BmHuMOZFuDU7NKE9VLfW+WDCwiaVFvmcQ9lLALJu5xXmTFZumQtkN
+         k5Lg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7t+luti4wV9vQmcaMbs7td85lQbR85hqcaLUIAiVWoI=;
+        b=PVLc5HDUzb/u1gONreU/hZdE1H4/kkQQF9zl7iXZYwNW53fL9LOEqlot4d9bXqDNvI
+         Z55pcEdaUaodJye0aHfB8vMrEcAmPQFeCQnQ3CG5nH3RPePfQVCigKp0iXucUCGyDl80
+         0OlpGL97/Wx5z4lUsIr1cdOLBdn48cSSl9F2jvpu9UN7zC7uAOpmcdXRPJ77jL08r5m6
+         lvokJxZbuiTsbkC8D93TWJGSt6GN6oW2J+kk96YZOaLgthOc2ETUz47GMG+m4J7rlZwG
+         C99ArRIz3/cz5DM5RzPda9LUV8zjmgNXGEfot1eQ5x37+gJXlzW1Vo/UdSFqWahF1UAe
+         +RkA==
+X-Gm-Message-State: APjAAAX7JUt93n2Sd4r/Ycxh37/OVuf/Eq4ikOw9Cf/fTHD5QQIgcAwj
+        S746HC0i7Bcgq6/jElP1yhJ+vGhH
+X-Google-Smtp-Source: APXvYqyv2Iou2lzuE0aE6mHU+9eW90kOnahjxUSoVewloziiQJO8iDhyEuFQn7BTkrc+npfuenI7Tg==
+X-Received: by 2002:a65:4907:: with SMTP id p7mr33957517pgs.288.1560497741637;
+        Fri, 14 Jun 2019 00:35:41 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:180::1:f6f1])
+        by smtp.gmail.com with ESMTPSA id w197sm3563876pfd.41.2019.06.14.00.35.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 00:35:40 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 00:35:38 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 2/9] objtool: Fix ORC unwinding in non-JIT BPF generated
+ code
+Message-ID: <20190614073536.d3xkhwhq3fuivwt5@ast-mbp.dhcp.thefacebook.com>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <99c22bbd79e72855f4bc9049981602d537a54e70.1560431531.git.jpoimboe@redhat.com>
+ <20190613205710.et5fywop4gfalsa6@ast-mbp.dhcp.thefacebook.com>
+ <20190614012030.b6eujm7b4psu62kj@treble>
+ <20190614070852.GQ3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <fbfc0a0c-3707-7f17-9f2a-6c9d2c7b05b1@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614070852.GQ3436@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.06.19 09:20, Ankur Arora wrote:
-> On 2019-06-12 2:15 p.m., Andrew Cooper wrote:
->> On 09/05/2019 18:25, Ankur Arora wrote:
->>> Allow for different hypercall implementations for different xenhost 
->>> types.
->>> Nested xenhost, which has two underlying xenhosts, can use both
->>> simultaneously.
->>>
->>> The hypercall macros (HYPERVISOR_*) implicitly use the default xenhost.x
->>> A new macro (hypervisor_*) takes xenhost_t * as a parameter and does the
->>> right thing.
->>>
->>> TODO:
->>>    - Multicalls for now assume the default xenhost
->>>    - xen_hypercall_* symbols are only generated for the default xenhost.
->>>
->>> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
->>
->> Again, what is the hypervisor nesting and/or guest layout here?
-> Two hypervisors, L0 and L1, and the guest is a child of the L1
-> hypervisor but could have PV devices attached to both L0 and L1
-> hypervisors.
+On Fri, Jun 14, 2019 at 09:08:52AM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 13, 2019 at 08:20:30PM -0500, Josh Poimboeuf wrote:
+> > On Thu, Jun 13, 2019 at 01:57:11PM -0700, Alexei Starovoitov wrote:
 > 
->>
->> I can't think of any case where a single piece of software can
->> legitimately have two hypercall pages, because if it has one working
->> one, it is by definition a guest, and therefore not privileged enough to
->> use the outer one.
-> Depending on which hypercall page is used, the hypercall would
-> (eventually) land in the corresponding hypervisor.
+> > > and to patches 8 and 9.
+> > 
+> > Well, it's your code, but ... can I ask why?  AT&T syntax is the
+> > standard for Linux, which is in fact the OS we are developing for.
 > 
-> Juergen elsewhere pointed out proxying hypercalls is a better approach,
-> so I'm not really considering this any more but, given this layout, and
-> assuming that the hypercall pages could be encoded differently would it
-> still not work?
+> I agree, all assembly in Linux is AT&T, adding Intel notation only
+> serves to cause confusion.
 
-Hypercalls might work, but it is a bad idea and a violation of layering
-to let a L1 guest issue hypercalls to L0 hypervisor, as those hypercalls
-could influence other L1 guests and even the L1 hypervisor.
+It's not assembly. It's C code that generates binary and here
+we're talking about comments.
+I'm sure you're not proposing to do:
+/* mov src, dst */
+#define EMIT_mov(DST, SRC)                                                               \
+right?
+bpf_jit_comp.c stays as-is. Enough of it.
 
-Hmm, thinking more about it, I even doubt those hypercalls could work in
-all cases: when issued from a L1 PV guest the hypercalls would seem to
-be issued from user mode for the L0 hypervisor, and this is not allowed.
-
-
-Juergen
