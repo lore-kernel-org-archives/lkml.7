@@ -2,168 +2,329 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88116C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:59:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEFEDC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60B4321473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:59:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560517152;
-	bh=d5XKOHRlv9JZdac1o7rwUyg/Yr9lYppTOJuFXN+lS4s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=JEHvxSvzu5TeBsV1aG/0gygYkm7EjpwuUFyyvqxJ1rTyWdHe7/LhTqAXp1iAWrBxP
-	 t+FNlC/EgPxgI1CIszHrgtLf8yMswWPwysOFc/Iw9EOzTsMyGzNetdf6WqrcSoJduL
-	 grBySZplZE7tme3TgiXFbYKjnrtNZX4Bx/d57OTQ=
+	by mail.kernel.org (Postfix) with ESMTP id A06D3208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:59:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Qdxpi9Nr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727960AbfFNM7K (ORCPT
+        id S1727999AbfFNM7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:59:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727654AbfFNM7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:59:10 -0400
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F629217D7;
-        Fri, 14 Jun 2019 12:59:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560517148;
-        bh=d5XKOHRlv9JZdac1o7rwUyg/Yr9lYppTOJuFXN+lS4s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=QxTgsjt5ppQyUB47pRpIZqkG891XIXtlnRvxHcD9rgMTioeUc/N/j3eUlvT/ZkwDt
-         uEfm3ZZqSEYsH99v+4sc9jY8rahLSQVh8S+9jkjjAZwCxKjCs0/xb414FLz3cuqI/b
-         0+msLxD6tFOFtktEmJxcDJs17xDVP/M+kubU3PMc=
-Received: by mail-lf1-f46.google.com with SMTP id u10so1648119lfm.12;
-        Fri, 14 Jun 2019 05:59:08 -0700 (PDT)
-X-Gm-Message-State: APjAAAW/Osq9z6M5D2ivv3aNtNgdcMihClVGMRZPuxbBaRCHYLU/ejg0
-        jPtRR1p/nE1Js8Eh5FkUFOSLCNKZg79z2GHlrV0=
-X-Google-Smtp-Source: APXvYqxvwcyD1geWDW+7ip6+JikZT/XjD7yYPtfcmB4v2ZBnUA35p45dCuJsJIJQESJjPfA/4kWIkvSmxx8WzRHb3rg=
-X-Received: by 2002:ac2:4891:: with SMTP id x17mr12738142lfc.60.1560517146467;
- Fri, 14 Jun 2019 05:59:06 -0700 (PDT)
+        Fri, 14 Jun 2019 08:59:36 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:35677 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727978AbfFNM7f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:59:35 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5ECwvLm1697077
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Fri, 14 Jun 2019 05:58:57 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5ECwvLm1697077
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560517137;
+        bh=koCdn7NObztXPGBZw7scb+Fn5KLRsKS7tf++EkW/tQw=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Qdxpi9Nr9mLgGfkSQaj1uB3YXSMM25QpyX0+nIBs6BuPNUtdGr/lKlwRwtQ+9R4Pb
+         4eHUNgTHG7RfGNJktvE1sl/dp2GAvDwjU6ibQTEXy0FVcViu2de0JWs3jrw5qDmYZz
+         ojH3eAXNDP3a3mjtcWweV6OJOqx+Jg9GRwr93Sud44LOv/OYryZaEBs+o6Fe89UVNN
+         +G6IYVGHf7A6tDtYwfG80fOjprfZ8DEEhkurcs5XMc940sxeD7E8we/ePl3qniXDBb
+         TE4kja4Qq3zgwFtMUh2w43av/NZ9JccNbHYtHVcey6GB5MT9C73KYBWRvHnAN5gx4i
+         OL4SJjIQqMzcg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5ECwuSp1697074;
+        Fri, 14 Jun 2019 05:58:56 -0700
+Date:   Fri, 14 Jun 2019 05:58:56 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Waiman Long <tipbot@zytor.com>
+Message-ID: <tip-d86998b17a01050c0232231fa481e65ef8171ca6@git.kernel.org>
+Cc:     akpm@linux-foundation.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, longman@redhat.com,
+        zhongjiang@huawei.com, hpa@zytor.com, joel@joelfernandes.org,
+        cai@gmx.us, yang.shi@linux.alibaba.com, mingo@kernel.org
+Reply-To: mingo@kernel.org, hpa@zytor.com, yang.shi@linux.alibaba.com,
+          cai@gmx.us, joel@joelfernandes.org, longman@redhat.com,
+          zhongjiang@huawei.com, linux-kernel@vger.kernel.org,
+          akpm@linux-foundation.org, tglx@linutronix.de
+In-Reply-To: <20190520141450.7575-2-longman@redhat.com>
+References: <20190520141450.7575-2-longman@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/debugobjects] debugobjects: Add percpu free pools
+Git-Commit-ID: d86998b17a01050c0232231fa481e65ef8171ca6
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
- <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
-In-Reply-To: <20190614095309.24100-9-l.luba@partner.samsung.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Fri, 14 Jun 2019 14:58:55 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
-Message-ID: <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
-Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
-To:     Lukasz Luba <l.luba@partner.samsung.com>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
-        mturquette@baylibre.com, sboyd@kernel.org,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, kgene@kernel.org,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        kyungmin.park@samsung.com,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
-        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
-        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
-        willy.mh.wolff.ml@gmail.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> This patch adds driver for Exynos5422 Dynamic Memory Controller.
-> The driver provides support for dynamic frequency and voltage scaling for
-> DMC and DRAM. It supports changing timings of DRAM running with different
-> frequency. There is also an algorithm to calculate timigns based on
-> memory description provided in DT.
-> The patch also contains needed MAINTAINERS file update.
->
-> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> ---
->  MAINTAINERS                             |    8 +
->  drivers/memory/samsung/Kconfig          |   17 +
->  drivers/memory/samsung/Makefile         |    1 +
->  drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
->  4 files changed, 1288 insertions(+)
->  create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 57f496cff999..6ffccfd95351 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3470,6 +3470,14 @@ S:       Maintained
->  F:     drivers/devfreq/exynos-bus.c
->  F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
->
-> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
+Commit-ID:  d86998b17a01050c0232231fa481e65ef8171ca6
+Gitweb:     https://git.kernel.org/tip/d86998b17a01050c0232231fa481e65ef8171ca6
+Author:     Waiman Long <longman@redhat.com>
+AuthorDate: Mon, 20 May 2019 10:14:46 -0400
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Fri, 14 Jun 2019 14:51:14 +0200
 
-Eh, more comments from my side.
-"For the hard of thinking, this list is meant to remain in alphabetical order."
+debugobjects: Add percpu free pools
 
-> +M:     Lukasz Luba <l.luba@partner.samsung.com>
-> +L:     linux-pm@vger.kernel.org
-> +L:     linux-samsung-soc@vger.kernel.org
-> +S:     Maintained
-> +F:     drivers/memory/samsung/exynos5422-dmc.c
-> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
-> +
->  BUSLOGIC SCSI DRIVER
->  M:     Khalid Aziz <khalid@gonehiking.org>
->  L:     linux-scsi@vger.kernel.org
-> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
-> index 79ce7ea58903..c93baa029654 100644
-> --- a/drivers/memory/samsung/Kconfig
-> +++ b/drivers/memory/samsung/Kconfig
-> @@ -5,6 +5,23 @@ config SAMSUNG_MC
->           Support for the Memory Controller (MC) devices found on
->           Samsung Exynos SoCs.
->
-> +config ARM_EXYNOS5422_DMC
+When a multi-threaded workload does a lot of small memory object
+allocations and deallocations, it may cause the allocation and freeing of
+many debug objects. This will make the global pool_lock a bottleneck in the
+performance of the workload.  Since interrupts are disabled when acquiring
+the pool_lock, it may even cause hard lockups to happen.
 
-Why you added prefix of ARM to CONFIG_? I think none of other Exynos
-Kconfig options follow such convention (except devfreq).
+To reduce contention of the global pool_lock, add a percpu debug object
+free pool that can be used to buffer some of the debug object allocation
+and freeing requests without acquiring the pool_lock.  Each CPU will now
+have a percpu free pool that can hold up to a maximum of 64 debug
+objects. Allocation and freeing requests will go to the percpu free pool
+first. If that fails, the pool_lock will be taken and the global free pool
+will be used.
 
-> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
-> +       depends on ARCH_EXYNOS
-> +       select DDR
+The presence or absence of obj_cache is used as a marker to see if the
+percpu cache should be used.
 
-In general select should be used only for non-visible symbols and DDR
-is visible. Use depends.
+Signed-off-by: Waiman Long <longman@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Yang Shi <yang.shi@linux.alibaba.com>
+Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Cc: Qian Cai <cai@gmx.us>
+Cc: Zhong Jiang <zhongjiang@huawei.com>
+Link: https://lkml.kernel.org/r/20190520141450.7575-2-longman@redhat.com
 
-> +       select PM_DEVFREQ
+---
+ lib/debugobjects.c | 115 ++++++++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 91 insertions(+), 24 deletions(-)
 
-This definitely cannot be select. You do not select entire subsystem
-because some similar driver was chosen.
-
-> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
-> +       select DEVFREQ_GOV_USERSPACE
-
-I think only simple_ondemand is needed. Is userspace governor
-necessary for working? Or actually maybe both could be skipped?
-
-> +       select PM_DEVFREQ_EVENT
-
-Again, depends.
-
-> +       select PM_OPP
-> +       help
-> +         This adds driver for Exynos5422 DMC (Dynamic Memory Controller).
-> +         The driver provides support for Dynamic Voltage and Frequency Scaling in
-> +         DMC and DRAM. It also supports changing timings of DRAM running with
-> +         different frequency. The timings are calculated based on DT memory
-> +         information.
-> +
-> +
->  if SAMSUNG_MC
-
-Why this is outside of SAMSUNG_MC?
-
-Best regards,
-Krzysztof
+diff --git a/lib/debugobjects.c b/lib/debugobjects.c
+index 2ac42286cd08..38c23b528f6f 100644
+--- a/lib/debugobjects.c
++++ b/lib/debugobjects.c
+@@ -25,6 +25,7 @@
+ 
+ #define ODEBUG_POOL_SIZE	1024
+ #define ODEBUG_POOL_MIN_LEVEL	256
++#define ODEBUG_POOL_PERCPU_SIZE	64
+ 
+ #define ODEBUG_CHUNK_SHIFT	PAGE_SHIFT
+ #define ODEBUG_CHUNK_SIZE	(1 << ODEBUG_CHUNK_SHIFT)
+@@ -35,6 +36,17 @@ struct debug_bucket {
+ 	raw_spinlock_t		lock;
+ };
+ 
++/*
++ * Debug object percpu free list
++ * Access is protected by disabling irq
++ */
++struct debug_percpu_free {
++	struct hlist_head	free_objs;
++	int			obj_free;
++};
++
++static DEFINE_PER_CPU(struct debug_percpu_free, percpu_obj_pool);
++
+ static struct debug_bucket	obj_hash[ODEBUG_HASH_SIZE];
+ 
+ static struct debug_obj		obj_static_pool[ODEBUG_POOL_SIZE] __initdata;
+@@ -44,13 +56,19 @@ static DEFINE_RAW_SPINLOCK(pool_lock);
+ static HLIST_HEAD(obj_pool);
+ static HLIST_HEAD(obj_to_free);
+ 
++/*
++ * Because of the presence of percpu free pools, obj_pool_free will
++ * under-count those in the percpu free pools. Similarly, obj_pool_used
++ * will over-count those in the percpu free pools. Adjustments will be
++ * made at debug_stats_show(). Both obj_pool_min_free and obj_pool_max_used
++ * can be off.
++ */
+ static int			obj_pool_min_free = ODEBUG_POOL_SIZE;
+ static int			obj_pool_free = ODEBUG_POOL_SIZE;
+ static int			obj_pool_used;
+ static int			obj_pool_max_used;
+ /* The number of objs on the global free list */
+ static int			obj_nr_tofree;
+-static struct kmem_cache	*obj_cache;
+ 
+ static int			debug_objects_maxchain __read_mostly;
+ static int __maybe_unused	debug_objects_maxchecked __read_mostly;
+@@ -63,6 +81,7 @@ static int			debug_objects_pool_size __read_mostly
+ static int			debug_objects_pool_min_level __read_mostly
+ 				= ODEBUG_POOL_MIN_LEVEL;
+ static struct debug_obj_descr	*descr_test  __read_mostly;
++static struct kmem_cache	*obj_cache __read_mostly;
+ 
+ /*
+  * Track numbers of kmem_cache_alloc()/free() calls done.
+@@ -162,6 +181,21 @@ static struct debug_obj *lookup_object(void *addr, struct debug_bucket *b)
+ 	return NULL;
+ }
+ 
++/*
++ * Allocate a new object from the hlist
++ */
++static struct debug_obj *__alloc_object(struct hlist_head *list)
++{
++	struct debug_obj *obj = NULL;
++
++	if (list->first) {
++		obj = hlist_entry(list->first, typeof(*obj), node);
++		hlist_del(&obj->node);
++	}
++
++	return obj;
++}
++
+ /*
+  * Allocate a new object. If the pool is empty, switch off the debugger.
+  * Must be called with interrupts disabled.
+@@ -169,20 +203,21 @@ static struct debug_obj *lookup_object(void *addr, struct debug_bucket *b)
+ static struct debug_obj *
+ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ {
+-	struct debug_obj *obj = NULL;
+-
+-	raw_spin_lock(&pool_lock);
+-	if (obj_pool.first) {
+-		obj	    = hlist_entry(obj_pool.first, typeof(*obj), node);
+-
+-		obj->object = addr;
+-		obj->descr  = descr;
+-		obj->state  = ODEBUG_STATE_NONE;
+-		obj->astate = 0;
+-		hlist_del(&obj->node);
++	struct debug_percpu_free *percpu_pool;
++	struct debug_obj *obj;
+ 
+-		hlist_add_head(&obj->node, &b->list);
++	if (likely(obj_cache)) {
++		percpu_pool = this_cpu_ptr(&percpu_obj_pool);
++		obj = __alloc_object(&percpu_pool->free_objs);
++		if (obj) {
++			percpu_pool->obj_free--;
++			goto init_obj;
++		}
++	}
+ 
++	raw_spin_lock(&pool_lock);
++	obj = __alloc_object(&obj_pool);
++	if (obj) {
+ 		obj_pool_used++;
+ 		if (obj_pool_used > obj_pool_max_used)
+ 			obj_pool_max_used = obj_pool_used;
+@@ -193,6 +228,14 @@ alloc_object(void *addr, struct debug_bucket *b, struct debug_obj_descr *descr)
+ 	}
+ 	raw_spin_unlock(&pool_lock);
+ 
++init_obj:
++	if (obj) {
++		obj->object = addr;
++		obj->descr  = descr;
++		obj->state  = ODEBUG_STATE_NONE;
++		obj->astate = 0;
++		hlist_add_head(&obj->node, &b->list);
++	}
+ 	return obj;
+ }
+ 
+@@ -247,8 +290,21 @@ static bool __free_object(struct debug_obj *obj)
+ {
+ 	unsigned long flags;
+ 	bool work;
++	struct debug_percpu_free *percpu_pool;
+ 
+-	raw_spin_lock_irqsave(&pool_lock, flags);
++	local_irq_save(flags);
++	/*
++	 * Try to free it into the percpu pool first.
++	 */
++	percpu_pool = this_cpu_ptr(&percpu_obj_pool);
++	if (obj_cache && percpu_pool->obj_free < ODEBUG_POOL_PERCPU_SIZE) {
++		hlist_add_head(&obj->node, &percpu_pool->free_objs);
++		percpu_pool->obj_free++;
++		local_irq_restore(flags);
++		return false;
++	}
++
++	raw_spin_lock(&pool_lock);
+ 	work = (obj_pool_free > debug_objects_pool_size) && obj_cache;
+ 	obj_pool_used--;
+ 
+@@ -259,7 +315,8 @@ static bool __free_object(struct debug_obj *obj)
+ 		obj_pool_free++;
+ 		hlist_add_head(&obj->node, &obj_pool);
+ 	}
+-	raw_spin_unlock_irqrestore(&pool_lock, flags);
++	raw_spin_unlock(&pool_lock);
++	local_irq_restore(flags);
+ 	return work;
+ }
+ 
+@@ -822,13 +879,19 @@ void debug_check_no_obj_freed(const void *address, unsigned long size)
+ 
+ static int debug_stats_show(struct seq_file *m, void *v)
+ {
++	int cpu, obj_percpu_free = 0;
++
++	for_each_possible_cpu(cpu)
++		obj_percpu_free += per_cpu(percpu_obj_pool.obj_free, cpu);
++
+ 	seq_printf(m, "max_chain     :%d\n", debug_objects_maxchain);
+ 	seq_printf(m, "max_checked   :%d\n", debug_objects_maxchecked);
+ 	seq_printf(m, "warnings      :%d\n", debug_objects_warnings);
+ 	seq_printf(m, "fixups        :%d\n", debug_objects_fixups);
+-	seq_printf(m, "pool_free     :%d\n", obj_pool_free);
++	seq_printf(m, "pool_free     :%d\n", obj_pool_free + obj_percpu_free);
++	seq_printf(m, "pool_pcp_free :%d\n", obj_percpu_free);
+ 	seq_printf(m, "pool_min_free :%d\n", obj_pool_min_free);
+-	seq_printf(m, "pool_used     :%d\n", obj_pool_used);
++	seq_printf(m, "pool_used     :%d\n", obj_pool_used - obj_percpu_free);
+ 	seq_printf(m, "pool_max_used :%d\n", obj_pool_max_used);
+ 	seq_printf(m, "on_free_list  :%d\n", obj_nr_tofree);
+ 	seq_printf(m, "objs_allocated:%d\n", debug_objects_allocated);
+@@ -1165,9 +1228,20 @@ free:
+  */
+ void __init debug_objects_mem_init(void)
+ {
++	int cpu;
++
+ 	if (!debug_objects_enabled)
+ 		return;
+ 
++	/*
++	 * Initialize the percpu object pools
++	 *
++	 * Initialization is not strictly necessary, but was done for
++	 * completeness.
++	 */
++	for_each_possible_cpu(cpu)
++		INIT_HLIST_HEAD(&per_cpu(percpu_obj_pool.free_objs, cpu));
++
+ 	obj_cache = kmem_cache_create("debug_objects_cache",
+ 				      sizeof (struct debug_obj), 0,
+ 				      SLAB_DEBUG_OBJECTS | SLAB_NOLEAKTRACE,
+@@ -1179,11 +1253,4 @@ void __init debug_objects_mem_init(void)
+ 		pr_warn("out of memory.\n");
+ 	} else
+ 		debug_objects_selftest();
+-
+-	/*
+-	 * Increase the thresholds for allocating and freeing objects
+-	 * according to the number of possible CPUs available in the system.
+-	 */
+-	debug_objects_pool_size += num_possible_cpus() * 32;
+-	debug_objects_pool_min_level += num_possible_cpus() * 4;
+ }
