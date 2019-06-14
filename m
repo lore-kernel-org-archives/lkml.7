@@ -2,131 +2,91 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 625E1C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:21:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95913C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:21:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EB4A21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:21:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560518474;
-	bh=zSqDfvTWi/91oRnFPmD+sDE1OD8meYbhenxAA0rkJpQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=Lh1BskbWg46lcKFBiE0G61TutaQwT4NnbWlTCoqLcXr7y7y/+cH0ZFXaszLlwC9Sz
-	 ENasDFeVNYlvB55rtd+AvZiIbi2pMLO9vZYNim21qeOPucpHNuSCHrawFUm9DhVz2u
-	 Gd6n/d3jbLAL9CXQBV/2NjZ79azQSb5U1tvoG6GA=
+	by mail.kernel.org (Postfix) with ESMTP id 74E072133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:21:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfFNNVM (ORCPT
+        id S1728118AbfFNNVe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:21:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57308 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727696AbfFNNVM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:21:12 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7F5F121537;
-        Fri, 14 Jun 2019 13:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560518470;
-        bh=zSqDfvTWi/91oRnFPmD+sDE1OD8meYbhenxAA0rkJpQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=R/OivYycKXCrR4qbnGPXhaeUCc8L4u/YFYrA52THSyhzc7IZ/wON5glZJ4BYkkz28
-         cM5y1K7zmj5znbVPQ+rM+TGktxk5HKIq8cBKMnjEirB7nBD5wAU2x7Zo2fEayOuA1b
-         9uyJnkaPsk0m63CXpFrWN38NQwOUSd8J1wr282ZI=
-Received: by mail-qt1-f181.google.com with SMTP id a15so2372779qtn.7;
-        Fri, 14 Jun 2019 06:21:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAWmQDFpaIyIbrVi3zBueyUJigPC0jRCM0qSLAg+bMtNqajvFrQ+
-        TOOBSy+JbXcLrg6VJoYjF4Tb7ZSgN944/fNT0w==
-X-Google-Smtp-Source: APXvYqwPY5Ii8d7b9MpE2fLLzqMQruglLqs18oegyUlcZ2uGTJsB4Rwfi7XLE6zjZcAEozwYHNHmqcKgnXfo9XquaAc=
-X-Received: by 2002:aed:3f10:: with SMTP id p16mr15589221qtf.110.1560518469746;
- Fri, 14 Jun 2019 06:21:09 -0700 (PDT)
+        Fri, 14 Jun 2019 09:21:34 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:58123 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727686AbfFNNVd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:21:33 -0400
+Received: from [192.168.1.110] ([77.4.92.40]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Mr8O8-1iOb1z0gXG-00oGea; Fri, 14 Jun 2019 15:21:29 +0200
+Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-gpio@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-kernel@vger.kernel.org
+References: <20190613015532.19685-1-yamada.masahiro@socionext.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <cc68b375-6011-6bbf-8f0b-c2963237a743@metux.net>
+Date:   Fri, 14 Jun 2019 15:21:27 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com> <20190506123456.6777-10-peter.ujfalusi@ti.com>
- <20190613181626.GA7039@bogus> <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
-In-Reply-To: <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Fri, 14 Jun 2019 07:20:57 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
-Message-ID: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
-Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190613015532.19685-1-yamada.masahiro@socionext.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:168YjOKWpt67/p7AHoIIjNzDbPrZ7/yHr+w4DvyJOMOslvJZ2H3
+ rGRIkE+3BWsG/5/48NVxYVofD6evB7tAxsHqPha/tpo5pCkWHhD2uPeMHXuDQJlGln0BeTW
+ 0lVmjr6Hn75z4Nc7cUK/zLLWHOdoKmZxPkVLE25iKKj8w9R+yLhuz9YQ56Q+K/Txw6dO/OA
+ reCUM6RRlcCiOpeIWCX2w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:iGUQU66y6io=:WLiyvShT7KDQuCnYlioR+/
+ l5LUFmuxtWdQTrTOnmaq8Jmib65fXEFQj9K37JHxSo2OxhmOYY+hYNqZ/o62b/M+b8bwWLw1O
+ sLCW46HC2T2JyP9xbYKjuFalX58k0oWQ28ydWTLN1z5DdfHo8zAC5duy2cTFpVPmwT72W349Z
+ jbvZ8PZAfTKfnXE9avmQEqrtEBSZvV9S7mZjYITd2HXThidwGobnEvYVYAKkS0tqUBCUfsZu1
+ xWvzZNYv4lnC0Ku/h0yRITVqLWQGolIheookTUXju+00yXt9W43alhCJoaF4hRjxPOvt+xU4X
+ JE5KMZis0n5pEmQWSL9IXaFGAvY5uk12NDHYlBnVN3/nk76+piJHaY0KTTObzALuO/7x4HRGZ
+ dnRqUU2tBTR9q2yN0AbKwDy/1cJaxm5e1PTCpN2I8EtrWgsMuVCiiWIFxGovNQQVeLI3BpeKp
+ lchfUcbti3mxQo39x+iKtr/KLlIDWbQYKkDArc8fpmI9aiEMQYDXxYuxpp15Y9r6O6wzR/fox
+ qZNmQ2joY2phJ6v9v5EnhXo6DIe9kZ3n/4hzn4GnFl6nkfRomDsiT8CMSAXFLQAoRQ7EuY9na
+ voIquH2KjxOZUtMEUWvCmsldXxcIgeqAiMx9ReGejJd6RUlZu2jKdHslx2yLISr2QoLg7LLRF
+ eh88g1SxoRVwqk5vzIA0o8rHvBdllJ6zNGUJ3poL7RasQnZw8e+vwFVesy8aJB4knLsElI6zo
+ 9H7bk5QSkCKzN4bVLkCjG21/CxsEgQ8SqV3rJU52YQW3bsKFIiFNTK7Wvk8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->
-> Rob,
->
-> On 13/06/2019 21.16, Rob Herring wrote:
-> >> +Remote PSI-L endpoint
-> >> +
-> >> +Required properties:
-> >> +--------------------
-> >> +- ti,psil-base:             PSI-L thread ID base of the endpoint
-> >> +
-> >> +Within the PSI-L endpoint node thread configuration subnodes must present with:
-> >> +ti,psil-configX naming convention, where X is the thread ID offset.
-> >
-> > Don't use vendor prefixes on node names.
->
-> OK.
->
-> >> +
-> >> +Configuration node Required properties:
-> >> +--------------------
-> >> +- linux,udma-mode:  Channel mode, can be:
-> >> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
-> >> +                    - UDMA_TR_MODE: for Third-Party mode
-> >
-> > This is hardly a common linux thing. What determines the value here.
->
-> Unfortunately it is.
+On 13.06.19 03:55, Masahiro Yamada wrote:
+> What is the point in surrounding the whole of declarations with
+> ifdef like this?
+> 
+>   #ifdef CONFIG_FOO
+>   int foo(void);
+>   #endif
+> 
+> If CONFIG_FOO is not defined, all callers of foo() will fail
+> with implicit declaration errors since the top Makefile adds
+> -Werror-implicit-function-declaration to KBUILD_CFLAGS.
+> 
+> This breaks the build earlier when you are doing something wrong.
+> That's it.
 
-No, it's a feature of your h/w and in no way is something linux
-defined which is the point of 'linux' prefix.
+hmm, in general I like the idea of breaking the build as early as
+possible. depending on your available cpu power, a kernel build can
+take a while, and it could be a huge waste of time when having to
+wait for link stage, just to find out about missing functions.
 
-> Each channel can be configured to Packet or TR mode. For some
-> peripherals it is true that they only support packet mode, these are the
-> newer PSI-L native peripherals.
-> For these channels a udma-mode property would be correct.
->
-> But we have legacy peripherals as well and they are serviced by PDMA
-> (which is a native peripheral designed to talk to the given legacy IP).
-> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
-> most cases clear what to use, but for example for audio (McASP) channels
-> Linux is using TR channel because we need cyclic DMA while for example
-> RTOS is using Packet mode as it fits their needs better.
->
-> Here I need to prefix the udma-mode with linux as the mode is used by
-> Linux, but other OS might opt to use different channel mode.
+@linus: what's your oppinion ?
 
-So you'd need <os>,udma-mode? That doesn't work... If the setting is
-per OS, then it belongs in the OS because the same dtb should work
-across OS's.
 
-> The reason why this needs to be in the DT is that when the channel is
-> requested we need to configure the mode and it can not be swapped
-> runtime easily between Packet and TR mode.
+--mtx
 
-So when the client makes the channel request, why doesn't it specify the mode?
-
-Rob
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
