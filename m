@@ -2,444 +2,112 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87802C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E41C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 516062183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 853822183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:37:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfFNQg6 (ORCPT
+        id S1726340AbfFNQg5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:36:58 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34806 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfFNQg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 12:36:57 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id E3443285C05
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     gwendal@chromium.org, Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
-        dtor@chromium.org,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Gustavo Pimentel <gustavo.pimentel@synopsys.com>,
-        Guido Kiener <guido@kiener-muenchen.de>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        linux-doc@vger.kernel.org, Enno Luebbers <enno.luebbers@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>, Wu Hao <hao.wu@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Gerd Hoffmann <kraxel@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH v2 03/10] mfd / platform: cros_ec: Miscellaneous character device to talk with the EC
-Date:   Fri, 14 Jun 2019 18:36:28 +0200
-Message-Id: <20190614163635.22413-4-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614163635.22413-1-enric.balletbo@collabora.com>
-References: <20190614163635.22413-1-enric.balletbo@collabora.com>
+Received: from mx2.suse.de ([195.135.220.15]:38268 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726063AbfFNQg5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:36:57 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E210FAF58;
+        Fri, 14 Jun 2019 16:36:55 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 18:36:55 +0200
+From:   Libor Pechacek <lpechacek@suse.cz>
+To:     Joe Lawrence <joe.lawrence@redhat.com>
+Cc:     Petr Mladek <pmladek@suse.com>, Miroslav Benes <mbenes@suse.cz>,
+        linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH v4 00/10] klp-convert livepatch build tooling
+Message-ID: <20190614163655.GC15002@fm.suse.cz>
+References: <20190509143859.9050-1-joe.lawrence@redhat.com>
+ <alpine.LSU.2.21.1906131451560.22698@pobox.suse.cz>
+ <b1a627a4-3702-9689-6c03-0c2123c06a2d@redhat.com>
+ <c9021573-11c6-b576-0aa6-97754c98a06e@redhat.com>
+ <20190614083435.uq3mk6mprbatysol@pathway.suse.cz>
+ <a0db1cee-8bba-4093-c3ca-4c2fe61b15ba@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a0db1cee-8bba-4093-c3ca-4c2fe61b15ba@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That's a driver to talk with the ChromeOS Embedded Controller via a
-miscellaneous character device, it creates an entry in /dev for every
-instance and implements basic file operations for communicating with the
-Embedded Controller with an userspace application. The API is moved to
-the uapi folder, which is supposed to contain the user space API of the
-kernel.
+On Fri 14-06-19 10:20:09, Joe Lawrence wrote:
+> On 6/14/19 4:34 AM, Petr Mladek wrote:
+[...]
+> > Anyway, I am curious about one thing. I saw:
+> > 
+> > function __load_mod() {
+> > 	local mod="$1"; shift
+> > 
+> > 	local msg="% modprobe $mod $*"
+> > 	log "${msg%% }"
+> > 	ret=$(modprobe "$mod" "$@" 2>&1)
+> > 	if [[ "$ret" != "" ]]; then
+> > 		die "$ret"
+> > 	fi
+> > 
+> > 	# Wait for module in sysfs ...
+> > 	loop_until '[[ -e "/sys/module/$mod" ]]' ||
+> > 		die "failed to load module $mod"
+> > }
+> > 
+> > Is the waiting for sysfs really necessary here?
+> > 
+> > Note that it is /sys/module and not /sys/kernel/livepatch/.
+> 
+> I can't remember if that was just paranoid-protective-bash coding or
+> actually required.  Libor provided great feedback on the initial patch
+> series that introduced the self-tests, perhaps he remembers.
 
-Note that this will replace current character device interface
-implemented in the cros-ec-dev driver in the MFD subsystem. The idea is
-to move all the functionality that extends the bounds of what MFD was
-designed to platform/chrome subsystem.
+I don't recall analyzing this spot in detail but looking at it now I don't see
+anything wrong with it. While the check is likely superfluous, I'm not against
+keeping it in place.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
+> > My understanding is that modprobe waits until the module succesfully
+> > loaded. mod_sysfs_setup() is called before the module init callback.
+> > Therefore the sysfs interface should be read before modprobe returns.
+> > Do I miss something?
+> >
+> > If it works different way then there might be some races because
+> > mod_sysfs_setup() is called before the module is alive.
+> 
+> All of this is called from a single bash script function, so in a call stack
+> fashion, something like this would occur when loading a livepatch module:
+> 
+>   [ mod_sysfs_setup() ]
+>   modprobe waits for:         .init complete, MODULE_STATE_LIVE
+>   __load_mod() waits for:     /sys/module/$mod
+>   load_lp_nowait() waits for: /sys/kernel/livepatch/$mod
+>   load_lp() waits for:        /sys/kernel/livepatch/$mod/transition = 0
+>   test-script.sh
+> 
+> So I would think that by calling modprobe, we ensure that the module code is
+> ready to go.  The /sys/module/$mod check might be redundant as you say, but
+> because modprobe completed, we should be safe, no?
+> 
+> The only "nowait" function we have is load_lp_nowait(), which would let us
+> march onward before the livepatch transition may have completed.
 
-Changes in v2:
-- Remove the list, and the lock, as are not needed (Greg Kroah-Hartman)
-- Remove dev_info in probe, anyway we will see the chardev or not if the
-  probe fails (Greg Kroah-Hartman)
+And even that one is waiting for the live patch module name appear under
+/sys/kernel/livepatch/. This is IMHO acceptable level of paranoia.
 
- Documentation/ioctl/ioctl-number.txt          |   2 +-
- drivers/mfd/cros_ec_dev.c                     |   2 +-
- drivers/platform/chrome/Kconfig               |  11 +
- drivers/platform/chrome/Makefile              |   1 +
- drivers/platform/chrome/cros_ec_chardev.c     | 253 ++++++++++++++++++
- .../uapi/linux/cros_ec_chardev.h              |  20 +-
- 6 files changed, 271 insertions(+), 18 deletions(-)
- create mode 100644 drivers/platform/chrome/cros_ec_chardev.c
- rename drivers/mfd/cros_ec_dev.h => include/uapi/linux/cros_ec_chardev.h (52%)
-
-diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
-index c9558146ac58..8bd7907ee36d 100644
---- a/Documentation/ioctl/ioctl-number.txt
-+++ b/Documentation/ioctl/ioctl-number.txt
-@@ -340,7 +340,7 @@ Code  Seq#(hex)	Include File		Comments
- 0xDD	00-3F	ZFCP device driver	see drivers/s390/scsi/
- 					<mailto:aherrman@de.ibm.com>
- 0xE5	00-3F	linux/fuse.h
--0xEC	00-01	drivers/platform/chrome/cros_ec_dev.h	ChromeOS EC driver
-+0xEC	00-01	include/uapi/linux/cros_ec_chardev.h	ChromeOS EC driver
- 0xF3	00-3F	drivers/usb/misc/sisusbvga/sisusb.h	sisfb (in development)
- 					<mailto:thomas@winischhofer.net>
- 0xF4	00-1F	video/mbxfb.h		mbxfb
-diff --git a/drivers/mfd/cros_ec_dev.c b/drivers/mfd/cros_ec_dev.c
-index d992365472b8..21d7f0ed2fd5 100644
---- a/drivers/mfd/cros_ec_dev.c
-+++ b/drivers/mfd/cros_ec_dev.c
-@@ -27,7 +27,7 @@
- #include <linux/slab.h>
- #include <linux/uaccess.h>
- 
--#include "cros_ec_dev.h"
-+#include <uapi/linux/cros_ec_chardev.h>
- 
- #define DRV_NAME "cros-ec-dev"
- 
-diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-index 1e7a10500b3f..221e709358c0 100644
---- a/drivers/platform/chrome/Kconfig
-+++ b/drivers/platform/chrome/Kconfig
-@@ -133,6 +133,17 @@ config CROS_KBD_LED_BACKLIGHT
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called cros_kbd_led_backlight.
- 
-+config CROS_EC_CHARDEV
-+	tristate "ChromeOS EC miscdevice"
-+	depends on MFD_CROS_EC_CHARDEV
-+	default MFD_CROS_EC_CHARDEV
-+	help
-+	  This driver adds file operations support to talk with the
-+	  ChromeOS EC from userspace via a character device.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called cros_ec_chardev.
-+
- config CROS_EC_LIGHTBAR
- 	tristate "Chromebook Pixel's lightbar support"
- 	depends on MFD_CROS_EC_CHARDEV
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index f69e0be98bd6..e6758e967ac5 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -15,6 +15,7 @@ cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)	+= cros_ec_lpc_mec.o
- obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
- obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
- obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
-+obj-$(CONFIG_CROS_EC_CHARDEV)		+= cros_ec_chardev.o
- obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
- obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
- obj-$(CONFIG_CROS_EC_DEBUGFS)		+= cros_ec_debugfs.o
-diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform/chrome/cros_ec_chardev.c
-new file mode 100644
-index 000000000000..e5f95d77dbed
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_chardev.c
-@@ -0,0 +1,253 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Miscellaneous character driver for ChromeOS Embedded Controller
-+ *
-+ * Copyright 2014 Google, Inc.
-+ * Copyright 2019 Google LLC
-+ *
-+ * This file is a rework and part of the code is ported from
-+ * drivers/mfd/cros_ec_dev.c that was originally written by
-+ * Bill Richardson.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/device.h>
-+#include <linux/fs.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
-+#include <linux/platform_data/cros_ec_commands.h>
-+#include <linux/platform_data/cros_ec_proto.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/types.h>
-+#include <linux/uaccess.h>
-+
-+#include <uapi/linux/cros_ec_chardev.h>
-+
-+#define DRV_NAME		"cros-ec-chardev"
-+
-+struct chardev_data {
-+	struct cros_ec_dev *ec_dev;
-+	struct miscdevice misc;
-+};
-+
-+static int ec_get_version(struct cros_ec_dev *ec, char *str, int maxlen)
-+{
-+	static const char * const current_image_name[] = {
-+		"unknown", "read-only", "read-write", "invalid",
-+	};
-+	struct ec_response_get_version *resp;
-+	struct cros_ec_command *msg;
-+	int ret;
-+
-+	msg = kzalloc(sizeof(*msg) + sizeof(*resp), GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	msg->command = EC_CMD_GET_VERSION + ec->cmd_offset;
-+	msg->insize = sizeof(*resp);
-+
-+	ret = cros_ec_cmd_xfer_status(ec->ec_dev, msg);
-+	if (ret < 0) {
-+		snprintf(str, maxlen,
-+			 "Unknown EC version, returned error: %d\n",
-+			 msg->result);
-+		goto exit;
-+	}
-+
-+	resp = (struct ec_response_get_version *)msg->data;
-+	if (resp->current_image >= ARRAY_SIZE(current_image_name))
-+		resp->current_image = 3; /* invalid */
-+
-+	snprintf(str, maxlen, "%s\n%s\n%s\n",
-+		 resp->version_string_ro,
-+		 resp->version_string_rw,
-+		 current_image_name[resp->current_image]);
-+
-+	ret = 0;
-+exit:
-+	kfree(msg);
-+	return ret;
-+}
-+
-+/*
-+ * Device file ops
-+ */
-+static int cros_ec_chardev_open(struct inode *inode, struct file *filp)
-+{
-+	struct miscdevice *mdev = filp->private_data;
-+	struct cros_ec_dev *ec_dev = dev_get_drvdata(mdev->parent);
-+
-+	filp->private_data = ec_dev;
-+	nonseekable_open(inode, filp);
-+
-+	return 0;
-+}
-+
-+static ssize_t cros_ec_chardev_read(struct file *filp, char __user *buffer,
-+				     size_t length, loff_t *offset)
-+{
-+	char msg[sizeof(struct ec_response_get_version) +
-+		 sizeof(CROS_EC_DEV_VERSION)];
-+	struct cros_ec_dev *ec = filp->private_data;
-+	size_t count;
-+	int ret;
-+
-+	if (*offset != 0)
-+		return 0;
-+
-+	ret = ec_get_version(ec, msg, sizeof(msg));
-+	if (ret)
-+		return ret;
-+
-+	count = min(length, strlen(msg));
-+
-+	if (copy_to_user(buffer, msg, count))
-+		return -EFAULT;
-+
-+	*offset = count;
-+	return count;
-+}
-+
-+/*
-+ * Ioctls
-+ */
-+static long cros_ec_chardev_ioctl_xcmd(struct cros_ec_dev *ec, void __user *arg)
-+{
-+	struct cros_ec_command *s_cmd;
-+	struct cros_ec_command u_cmd;
-+	long ret;
-+
-+	if (copy_from_user(&u_cmd, arg, sizeof(u_cmd)))
-+		return -EFAULT;
-+
-+	if (u_cmd.outsize > EC_MAX_MSG_BYTES ||
-+	    u_cmd.insize > EC_MAX_MSG_BYTES)
-+		return -EINVAL;
-+
-+	s_cmd = kmalloc(sizeof(*s_cmd) + max(u_cmd.outsize, u_cmd.insize),
-+			GFP_KERNEL);
-+	if (!s_cmd)
-+		return -ENOMEM;
-+
-+	if (copy_from_user(s_cmd, arg, sizeof(*s_cmd) + u_cmd.outsize)) {
-+		ret = -EFAULT;
-+		goto exit;
-+	}
-+
-+	if (u_cmd.outsize != s_cmd->outsize ||
-+	    u_cmd.insize != s_cmd->insize) {
-+		ret = -EINVAL;
-+		goto exit;
-+	}
-+
-+	s_cmd->command += ec->cmd_offset;
-+	ret = cros_ec_cmd_xfer(ec->ec_dev, s_cmd);
-+	/* Only copy data to userland if data was received. */
-+	if (ret < 0)
-+		goto exit;
-+
-+	if (copy_to_user(arg, s_cmd, sizeof(*s_cmd) + s_cmd->insize))
-+		ret = -EFAULT;
-+exit:
-+	kfree(s_cmd);
-+	return ret;
-+}
-+
-+static long cros_ec_chardev_ioctl_readmem(struct cros_ec_dev *ec,
-+					   void __user *arg)
-+{
-+	struct cros_ec_device *ec_dev = ec->ec_dev;
-+	struct cros_ec_readmem s_mem = { };
-+	long num;
-+
-+	/* Not every platform supports direct reads */
-+	if (!ec_dev->cmd_readmem)
-+		return -ENOTTY;
-+
-+	if (copy_from_user(&s_mem, arg, sizeof(s_mem)))
-+		return -EFAULT;
-+
-+	num = ec_dev->cmd_readmem(ec_dev, s_mem.offset, s_mem.bytes,
-+				  s_mem.buffer);
-+	if (num <= 0)
-+		return num;
-+
-+	if (copy_to_user((void __user *)arg, &s_mem, sizeof(s_mem)))
-+		return -EFAULT;
-+
-+	return num;
-+}
-+
-+static long cros_ec_chardev_ioctl(struct file *filp, unsigned int cmd,
-+				   unsigned long arg)
-+{
-+	struct cros_ec_dev *ec = filp->private_data;
-+
-+	if (_IOC_TYPE(cmd) != CROS_EC_DEV_IOC)
-+		return -ENOTTY;
-+
-+	switch (cmd) {
-+	case CROS_EC_DEV_IOCXCMD:
-+		return cros_ec_chardev_ioctl_xcmd(ec, (void __user *)arg);
-+	case CROS_EC_DEV_IOCRDMEM:
-+		return cros_ec_chardev_ioctl_readmem(ec, (void __user *)arg);
-+	}
-+
-+	return -ENOTTY;
-+}
-+
-+static const struct file_operations chardev_fops = {
-+	.open		= cros_ec_chardev_open,
-+	.read		= cros_ec_chardev_read,
-+	.unlocked_ioctl	= cros_ec_chardev_ioctl,
-+#ifdef CONFIG_COMPAT
-+	.compat_ioctl	= cros_ec_chardev_ioctl,
-+#endif
-+};
-+
-+static int cros_ec_chardev_probe(struct platform_device *pdev)
-+{
-+	struct cros_ec_dev *ec_dev = dev_get_drvdata(pdev->dev.parent);
-+	struct cros_ec_platform *ec_platform = dev_get_platdata(ec_dev->dev);
-+	struct chardev_data *data;
-+
-+	/* Create a char device: we want to create it anew */
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->ec_dev = ec_dev;
-+	data->misc.minor = MISC_DYNAMIC_MINOR;
-+	data->misc.fops = &chardev_fops;
-+	data->misc.name = ec_platform->ec_name;
-+	data->misc.parent = pdev->dev.parent;
-+
-+	dev_set_drvdata(&pdev->dev, data);
-+
-+	return misc_register(&data->misc);
-+}
-+
-+static int cros_ec_chardev_remove(struct platform_device *pdev)
-+{
-+	struct chardev_data *data = dev_get_drvdata(&pdev->dev);
-+
-+	misc_deregister(&data->misc);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver cros_ec_chardev_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+	},
-+	.probe = cros_ec_chardev_probe,
-+	.remove = cros_ec_chardev_remove,
-+};
-+
-+module_platform_driver(cros_ec_chardev_driver);
-+
-+MODULE_ALIAS("platform:" DRV_NAME);
-+MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
-+MODULE_DESCRIPTION("ChromeOS EC Miscellaneous Character Driver");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/mfd/cros_ec_dev.h b/include/uapi/linux/cros_ec_chardev.h
-similarity index 52%
-rename from drivers/mfd/cros_ec_dev.h
-rename to include/uapi/linux/cros_ec_chardev.h
-index ec750433455a..ea4d90083ff7 100644
---- a/drivers/mfd/cros_ec_dev.h
-+++ b/include/uapi/linux/cros_ec_chardev.h
-@@ -1,24 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
- /*
-- * cros_ec_dev - expose the Chrome OS Embedded Controller to userspace
-+ * ChromeOS EC device interface.
-  *
-  * Copyright (C) 2014 Google, Inc.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-- * GNU General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program. If not, see <http://www.gnu.org/licenses/>.
-  */
- 
--#ifndef _CROS_EC_DEV_H_
--#define _CROS_EC_DEV_H_
-+#ifndef _UAPI_LINUX_CROS_EC_DEV_H_
-+#define _UAPI_LINUX_CROS_EC_DEV_H_
- 
- #include <linux/ioctl.h>
- #include <linux/types.h>
+Libor
 -- 
-2.20.1
-
+Libor Pechacek
+SUSE Labs
