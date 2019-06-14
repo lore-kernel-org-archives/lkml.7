@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E4C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 446CAC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3104217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1680B2175B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728853AbfFNOJn (ORCPT
+        id S1728865AbfFNOJp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:09:43 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18575 "EHLO huawei.com"
+        Fri, 14 Jun 2019 10:09:45 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18574 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728764AbfFNOJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1728762AbfFNOJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 10:09:36 -0400
 Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id D5F4B8F76EC02D1F2677;
+        by Forcepoint Email with ESMTP id CBC109D5139CFB18DE92;
         Fri, 14 Jun 2019 22:09:34 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
- 14.3.439.0; Fri, 14 Jun 2019 22:09:23 +0800
+ 14.3.439.0; Fri, 14 Jun 2019 22:09:24 +0800
 From:   John Garry <john.garry@huawei.com>
 To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
         <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
@@ -35,9 +35,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <zhangshaokun@hisilicon.com>, "John Garry" <john.garry@huawei.com>
-Subject: [PATCH v2 4/5] perf jevents: Add support for Hisi hip08 HHA PMU aliasing
-Date:   Fri, 14 Jun 2019 22:08:02 +0800
-Message-ID: <1560521283-73314-5-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v2 5/5] perf jevents: Add support for Hisi hip08 L3C PMU aliasing
+Date:   Fri, 14 Jun 2019 22:08:03 +0800
+Message-ID: <1560521283-73314-6-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
 References: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
@@ -50,83 +50,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for Hisi hip08 HHA PMU aliasing.
+Add support for Hisi hip08 L3C PMU aliasing.
 
-The kernel driver is in drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
+The kernel driver is in drivers/perf/hisilicon/hisi_uncore_l3c_pmu.c
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- .../arm64/hisilicon/hip08/uncore-hha.json     | 51 +++++++++++++++++++
+ .../arm64/hisilicon/hip08/uncore-l3c.json     | 37 +++++++++++++++++++
  tools/perf/pmu-events/jevents.c               |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+ 2 files changed, 38 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
 
-diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
 new file mode 100644
-index 000000000000..447d3064de90
+index 000000000000..ca48747642e1
 --- /dev/null
-+++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
-@@ -0,0 +1,51 @@
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-l3c.json
+@@ -0,0 +1,37 @@
 +[
 +   {
 +	    "EventCode": "0x00",
-+	    "EventName": "uncore_hisi_hha.rx_ops_num",
-+	    "BriefDescription": "The number of all operations received by the HHA",
-+	    "PublicDescription": "The number of all operations received by the HHA",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventName": "uncore_hisi_l3c.rd_cpipe",
++	    "BriefDescription": "Total read accesses",
++	    "PublicDescription": "Total read accesses",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +   {
 +	    "EventCode": "0x01",
-+	    "EventName": "uncore_hisi_hha.rx_outer",
-+	    "BriefDescription": "The number of all operations received by the HHA from another socket",
-+	    "PublicDescription": "The number of all operations received by the HHA from another socket",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventName": "uncore_hisi_l3c.wr_cpipe",
++	    "BriefDescription": "Total write accesses",
++	    "PublicDescription": "Total write accesses",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +   {
 +	    "EventCode": "0x02",
-+	    "EventName": "uncore_hisi_hha.rx_sccl",
-+	    "BriefDescription": "The number of all operations received by the HHA from another SCCL in this socket",
-+	    "PublicDescription": "The number of all operations received by the HHA from another SCCL in this socket",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventName": "uncore_hisi_l3c.rd_hit_cpipe",
++	    "BriefDescription": "Total read hits",
++	    "PublicDescription": "Total read hits",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +   {
-+	    "EventCode": "0x1c",
-+	    "EventName": "uncore_hisi_hha.rd_ddr_64b",
-+	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 64 bytes",
-+	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 64bytes",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventCode": "0x03",
++	    "EventName": "uncore_hisi_l3c.wr_hit_cpipe",
++	    "BriefDescription": "Total write hits",
++	    "PublicDescription": "Total write hits",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +   {
-+	    "EventCode": "0x1d",
-+	    "EventName": "uncore_hisi_hha.wr_dr_64b",
-+	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
-+	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
-+	    "Unit": "hisi_sccl,hha",
-+   },
-+   {
-+	    "EventCode": "0x1e",
-+	    "EventName": "uncore_hisi_hha.rd_ddr_128b",
-+	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
-+	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
-+	    "Unit": "hisi_sccl,hha",
-+   },
-+   {
-+	    "EventCode": "0x1f",
-+	    "EventName": "uncore_hisi_hha.wr_ddr_128b",
-+	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
-+	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
-+	    "Unit": "hisi_sccl,hha",
++	    "EventCode": "0x04",
++	    "EventName": "uncore_hisi_l3c.victim_num",
++	    "BriefDescription": "l3c precharge commands",
++	    "PublicDescription": "l3c precharge commands",
++	    "Unit": "hisi_sccl,l3c",
 +   },
 +]
 diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index cf9a60333554..909e53e3b5bd 100644
+index 909e53e3b5bd..7d241efd03de 100644
 --- a/tools/perf/pmu-events/jevents.c
 +++ b/tools/perf/pmu-events/jevents.c
-@@ -237,6 +237,7 @@ static struct map {
- 	{ "CPU-M-SF", "cpum_sf" },
+@@ -238,6 +238,7 @@ static struct map {
  	{ "UPI LL", "uncore_upi" },
  	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
-+	{ "hisi_sccl,hha", "hisi_sccl,hha" },
+ 	{ "hisi_sccl,hha", "hisi_sccl,hha" },
++	{ "hisi_sccl,l3c", "hisi_sccl,l3c" },
  	{}
  };
  
