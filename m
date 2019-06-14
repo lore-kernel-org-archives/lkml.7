@@ -2,114 +2,107 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6EAC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:00:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB5EC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:01:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27CE21537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:00:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="j3ka3syq"
+	by mail.kernel.org (Postfix) with ESMTP id 29F1521537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:01:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfFNPAu (ORCPT
+        id S1727204AbfFNPBc convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:00:50 -0400
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:32538 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfFNPAr (ORCPT
+        Fri, 14 Jun 2019 11:01:32 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:30179 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725852AbfFNPB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:00:47 -0400
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id x5EF0NfZ011606;
-        Sat, 15 Jun 2019 00:00:23 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com x5EF0NfZ011606
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560524423;
-        bh=/s60AkWF0U1BOgzE1pN5P3jd9rwyhwm9G2111VynPfM=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=j3ka3syqoZGnKU6PIqP460OogrN7bfS2KlW/d0g1RrH94g8f+c0RcpyZzmFuWpRBX
-         u8Qduu0UTW/pmCa5kJbCdYYPVvlODQMsAAthu2I8+xS67NsZZ/enduH0BYVSE83YUB
-         +JEdn2Tiia9HBMDfbQNfrfK7J2DdrFFcSzK9LAdTRGsmCjEYu/PQDhhsOHRMVCL3qT
-         O6BmNfJbPNG//EriZjzWF0TuozRBPgbHEQJhKp2pL9JsQvgh96B2xHLji32qeWZ3bd
-         aVej2aN+08Nael3hI9B6Y93Y5B4A3iBBOSQiwvAPmBGzGniRn7D/+AVqgFMWJviQ82
-         mBDdSpdnmkbZA==
-X-Nifty-SrcIP: [209.85.222.52]
-Received: by mail-ua1-f52.google.com with SMTP id o2so995729uae.10;
-        Fri, 14 Jun 2019 08:00:23 -0700 (PDT)
-X-Gm-Message-State: APjAAAWiohvROaBHGZEChGfJz5JUSKLm/jlG68RD6xr8HpXzP4WofUUF
-        M8TPCYc5wwZBlGVKpvBIzvbFxXr1k2b11Rq05DQ=
-X-Google-Smtp-Source: APXvYqzUYCLJOr8aWbp0616zcs4Ga7lShn6QBAoUMQvxu9NG2N+7WApoM0G27MKsghofgy4I6fzNxJ9gMOI/ClIB1eQ=
-X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr24152907uag.40.1560524422353;
- Fri, 14 Jun 2019 08:00:22 -0700 (PDT)
+        Fri, 14 Jun 2019 11:01:28 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id uk-mta-6-Ae-vvi9EMKOPr28p6sbQQA-1;
+ Fri, 14 Jun 2019 16:01:23 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Fri,
+ 14 Jun 2019 16:01:22 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 14 Jun 2019 16:01:22 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Christoph Hellwig' <hch@lst.de>
+CC:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        "Ian Abbott" <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 16/16] dma-mapping: use exact allocation in
+ dma_alloc_contiguous
+Thread-Topic: [PATCH 16/16] dma-mapping: use exact allocation in
+ dma_alloc_contiguous
+Thread-Index: AQHVIrfpTFjppS25RkWUhwqPPyqZ4qabLzdw///7eICAABIeYA==
+Date:   Fri, 14 Jun 2019 15:01:22 +0000
+Message-ID: <d93fd4c2c1584d92a05dd641929f6d63@AcuMS.aculab.com>
+References: <20190614134726.3827-1-hch@lst.de>
+ <20190614134726.3827-17-hch@lst.de>
+ <a90cf7ec5f1c4166b53c40e06d4d832a@AcuMS.aculab.com>
+ <20190614145001.GB9088@lst.de>
+In-Reply-To: <20190614145001.GB9088@lst.de>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-References: <20190613015532.19685-1-yamada.masahiro@socionext.com> <cc68b375-6011-6bbf-8f0b-c2963237a743@metux.net>
-In-Reply-To: <cc68b375-6011-6bbf-8f0b-c2963237a743@metux.net>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 14 Jun 2019 23:59:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ4KmXd0J2UYfi9WiisnfGa4g62BH2S46ELn4fYG05UcA@mail.gmail.com>
-Message-ID: <CAK7LNAQ4KmXd0J2UYfi9WiisnfGa4g62BH2S46ELn4fYG05UcA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-MC-Unique: Ae-vvi9EMKOPr28p6sbQQA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:21 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
-> On 13.06.19 03:55, Masahiro Yamada wrote:
-> > What is the point in surrounding the whole of declarations with
-> > ifdef like this?
-> >
-> >   #ifdef CONFIG_FOO
-> >   int foo(void);
-> >   #endif
-> >
-> > If CONFIG_FOO is not defined, all callers of foo() will fail
-> > with implicit declaration errors since the top Makefile adds
-> > -Werror-implicit-function-declaration to KBUILD_CFLAGS.
-> >
-> > This breaks the build earlier when you are doing something wrong.
-> > That's it.
->
-> hmm, in general I like the idea of breaking the build as early as
-> possible. depending on your available cpu power, a kernel build can
-> take a while, and it could be a huge waste of time when having to
-> wait for link stage, just to find out about missing functions.
->
-> @linus: what's your oppinion ?
->
->
-> --mtx
->
-> --
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+From: 'Christoph Hellwig'
+> Sent: 14 June 2019 15:50
+> To: David Laight
+> On Fri, Jun 14, 2019 at 02:15:44PM +0000, David Laight wrote:
+> > Does this still guarantee that requests for 16k will not cross a 16k boundary?
+> > It looks like you are losing the alignment parameter.
+> 
+> The DMA API never gave you alignment guarantees to start with,
+> and you can get not naturally aligned memory from many of our
+> current implementations.
 
+Hmmm...
+I thought that was even documented.
 
-My previous clean-up (http://patchwork.ozlabs.org/patch/1112656/)
-broke this build.
+I'm pretty sure there is a lot of code out there that makes that assumption.
+Without it many drivers will have to allocate almost double the
+amount of memory they actually need in order to get the required alignment.
+So instead of saving memory you'll actually make more be used.
 
-And, this patch will fix the build issue.
+	David
 
-Did you realize the madness of
-surrounding the forward declarations with #ifdef ?
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-
-All GPIO/pinctrl headers are written in a bad way.
-
-Linus Walleij must realize he was doing *wrong*.
-
-
--- 
-Best Regards
-Masahiro Yamada
