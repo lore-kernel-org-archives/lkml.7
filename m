@@ -2,247 +2,98 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9B91C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:47:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF558C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:48:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81B312133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:47:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884122133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:48:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zi3iP8Qg"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cQGWrX6F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727237AbfFNKrz (ORCPT
+        id S1727298AbfFNKsT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:47:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37645 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfFNKrw (ORCPT
+        Fri, 14 Jun 2019 06:48:19 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:38202 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726900AbfFNKsS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:47:52 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v14so2019888wrr.4;
-        Fri, 14 Jun 2019 03:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ooBSZFxnR/dPszzxCle1YHB8FtLq/QjO6NDm1BiMKMA=;
-        b=Zi3iP8QgPhFS+d20VAcHgPZje4xCDSoj4ulL3j6zP7udO3rmgY9nuQaiTybf+0j+k7
-         nUaKP3b0XdOjClrC6233gAlczWV55HyU9oelRSIcWMuIsAHN891moqcV6uLq3QI0mhov
-         SslNsSvfUOanCNVrS5b60TAunrLyWj2ZvDZ52LLS1U2NSatwb9kO3sXZOR5CRmD7FHy/
-         vT+bkVC+4QkkEsSdqnNNFok4d9NLH3h3zEBBRHG7W3RFQC+2azkODoZ03VkMiIvyCwRM
-         DTYp3lNScrZezb3zrkDVS0/fYEHjqn5XLAmxsqCjQkpWmgUEDOp4yj2xIUjEYhCBQpF8
-         ZuzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ooBSZFxnR/dPszzxCle1YHB8FtLq/QjO6NDm1BiMKMA=;
-        b=jz4XQ+u/jK8Hu6f/D3p8Uviu1VVzOI8HX3jQdXaRKPZZw2gGFlNCDSSglMuqU/+2+2
-         Js3j+ZAh+hEuqsPli2Fn8UyV6hAt899xCHiC8QOn7MmADChTQ9YscU3Ieno0gY7SynQF
-         zPhi/Btj2rMB196Uq0NnADh0JaoceQikqKfOiLDVglbsEHiCt/qYodBs5WNAKqAepFYR
-         rCXyvEPRCjSawfSdYLP9jVHYe4W7jI98njbyDKN39qave6pn8H+x7e3q0fGvfrETbLup
-         SfGJoCXjsJmAUpvNVYFR5PUgWJkKKrfkVkD94VPGasXhNm3JEMR016nRLjlns+PEFqLU
-         bhlw==
-X-Gm-Message-State: APjAAAVx22kHjTAtQN27x+q9ttthLRNgYsTadp43oXQckvzQhKmSv5sV
-        65m1okrdK8GkKdZ7H70RmwM=
-X-Google-Smtp-Source: APXvYqwY69ItL8/qEMLnYgZGPysaKgns2sbuPFe6dWMv8TZiqIdVRAF5PrZNCGjdD/8/+1NL0H7Yiw==
-X-Received: by 2002:adf:fdc2:: with SMTP id i2mr14243116wrs.146.1560509270754;
-        Fri, 14 Jun 2019 03:47:50 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id 11sm3223157wmd.23.2019.06.14.03.47.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 03:47:50 -0700 (PDT)
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Jonathan Hunter <jonathanh@nvidia.com>,
-        Dmitry Osipenko <digetx@gmail.com>,
-        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] rtc: tegra: Implement suspend clock source
-Date:   Fri, 14 Jun 2019 12:47:47 +0200
-Message-Id: <20190614104747.19712-2-thierry.reding@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190614104747.19712-1-thierry.reding@gmail.com>
-References: <20190614104747.19712-1-thierry.reding@gmail.com>
+        Fri, 14 Jun 2019 06:48:18 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5EAlW17075133;
+        Fri, 14 Jun 2019 05:47:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560509252;
+        bh=VO4FVnd5gxYVdAkdALZM4NQ4Jp0vvZIA2wgd7x8xSUs=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=cQGWrX6FBTtB52WDerOTzhblZJzqENMFCgab3pXXu0aCcVMRLLvEY1IJik3EfWciw
+         mzu/3Inn3Jj2XDEyHkbwuF6zomIj//AtSJaz/Ep2KNofCQUQvAVlv1GJLXAkrWLgYm
+         Vr90ralp0fpOXHlahbhUZhLPfW3TXkizb0VNSYTA=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5EAlWP7108465
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Jun 2019 05:47:32 -0500
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
+ Jun 2019 05:47:32 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 14 Jun 2019 05:47:32 -0500
+Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5EAlT9V088764;
+        Fri, 14 Jun 2019 05:47:30 -0500
+Subject: Re: [PATCH] ARM: davinci: da850-evm: call
+ regulator_has_full_constraints()
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Kevin Hilman <khilman@kernel.org>,
+        David Lechner <david@lechnology.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190607090201.5995-1-brgl@bgdev.pl>
+ <CACRpkdYjXq-KV=zW=az+02tvjiHVHgUPiC149gNfkWTb4c29PQ@mail.gmail.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <5dcd0189-2283-fb0d-dd7c-4906f4594d69@ti.com>
+Date:   Fri, 14 Jun 2019 16:17:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdYjXq-KV=zW=az+02tvjiHVHgUPiC149gNfkWTb4c29PQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
+On 08/06/19 7:37 PM, Linus Walleij wrote:
+> On Fri, Jun 7, 2019 at 11:02 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> 
+>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>
+>> The BB expander at 0x21 i2c bus 1 fails to probe on da850-evm because
+>> the board doesn't set has_full_constraints to true in the regulator
+>> API.
+>>
+>> Call regulator_has_full_constraints() at the end of board registration
+>> just like we do in da850-lcdk and da830-evm.
+>>
+>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> I assume Sekhar will queue this and the LED patch?
 
-The suspend clock source for Tegra210 and earlier is currently
-implemented in the Tegra timer driver. However, the suspend clock source
-code accesses registers that are part of the RTC hardware block, so both
-can step on each others' toes. In practice this isn't an issue, but
-there is no reason why the RTC driver can't implement the clock source,
-so move the code over to the tegra-rtc driver.
+Yes, will do. Added this to fixes for v5.2
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- drivers/clocksource/timer-tegra.c | 44 -------------------------------
- drivers/rtc/rtc-tegra.c           | 42 +++++++++++++++++++++++++++++
- 2 files changed, 42 insertions(+), 44 deletions(-)
-
-diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
-index e6608141cccb..87eac618924d 100644
---- a/drivers/clocksource/timer-tegra.c
-+++ b/drivers/clocksource/timer-tegra.c
-@@ -21,10 +21,6 @@
- 
- #include "timer-of.h"
- 
--#define RTC_SECONDS		0x08
--#define RTC_SHADOW_SECONDS	0x0c
--#define RTC_MILLISECONDS	0x10
--
- #define TIMERUS_CNTR_1US	0x10
- #define TIMERUS_USEC_CFG	0x14
- #define TIMERUS_CNTR_FREEZE	0x4c
-@@ -164,34 +160,6 @@ static struct delay_timer tegra_delay_timer = {
- };
- #endif
- 
--static struct timer_of suspend_rtc_to = {
--	.flags = TIMER_OF_BASE | TIMER_OF_CLOCK,
--};
--
--/*
-- * tegra_rtc_read - Reads the Tegra RTC registers
-- * Care must be taken that this function is not called while the
-- * tegra_rtc driver could be executing to avoid race conditions
-- * on the RTC shadow register
-- */
--static u64 tegra_rtc_read_ms(struct clocksource *cs)
--{
--	void __iomem *reg_base = timer_of_base(&suspend_rtc_to);
--
--	u32 ms = readl_relaxed(reg_base + RTC_MILLISECONDS);
--	u32 s = readl_relaxed(reg_base + RTC_SHADOW_SECONDS);
--
--	return (u64)s * MSEC_PER_SEC + ms;
--}
--
--static struct clocksource suspend_rtc_clocksource = {
--	.name	= "tegra_suspend_timer",
--	.rating	= 200,
--	.read	= tegra_rtc_read_ms,
--	.mask	= CLOCKSOURCE_MASK(32),
--	.flags	= CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
--};
--
- static inline unsigned int tegra_base_for_cpu(int cpu, bool tegra20)
- {
- 	if (tegra20) {
-@@ -385,15 +353,3 @@ static int __init tegra20_init_timer(struct device_node *np)
- 	return tegra_init_timer(np, true, rating);
- }
- TIMER_OF_DECLARE(tegra20_timer, "nvidia,tegra20-timer", tegra20_init_timer);
--
--static int __init tegra20_init_rtc(struct device_node *np)
--{
--	int ret;
--
--	ret = timer_of_init(np, &suspend_rtc_to);
--	if (ret)
--		return ret;
--
--	return clocksource_register_hz(&suspend_rtc_clocksource, 1000);
--}
--TIMER_OF_DECLARE(tegra20_rtc, "nvidia,tegra20-rtc", tegra20_init_rtc);
-diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
-index 8fa1b3febf69..6da54264a27a 100644
---- a/drivers/rtc/rtc-tegra.c
-+++ b/drivers/rtc/rtc-tegra.c
-@@ -6,6 +6,7 @@
-  */
- 
- #include <linux/clk.h>
-+#include <linux/clocksource.h>
- #include <linux/delay.h>
- #include <linux/init.h>
- #include <linux/io.h>
-@@ -52,8 +53,15 @@ struct tegra_rtc_info {
- 	struct clk *clk;
- 	int irq; /* alarm and periodic IRQ */
- 	spinlock_t lock;
-+
-+	struct clocksource clksrc;
- };
- 
-+static struct tegra_rtc_info *to_tegra_rtc(struct clocksource *clksrc)
-+{
-+	return container_of(clksrc, struct tegra_rtc_info, clksrc);
-+}
-+
- /*
-  * RTC hardware is busy when it is updating its values over AHB once every
-  * eight 32 kHz clocks (~250 us). Outside of these updates the CPU is free to
-@@ -268,6 +276,17 @@ static const struct rtc_class_ops tegra_rtc_ops = {
- 	.alarm_irq_enable = tegra_rtc_alarm_irq_enable,
- };
- 
-+static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
-+{
-+	struct tegra_rtc_info *info = to_tegra_rtc(clksrc);
-+	u32 ms, s;
-+
-+	ms = readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
-+	s = readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
-+
-+	return (u64)s * MSEC_PER_SEC + ms;
-+}
-+
- static const struct of_device_id tegra_rtc_dt_match[] = {
- 	{ .compatible = "nvidia,tegra20-rtc", },
- 	{}
-@@ -339,6 +358,28 @@ static int tegra_rtc_probe(struct platform_device *pdev)
- 		goto disable_clk;
- 	}
- 
-+	/*
-+	 * The Tegra RTC is the only reliable clock source that persists
-+	 * across an SC7 transition (VDD_CPU and VDD_CORE off) on Tegra210
-+	 * and earlier. Starting with Tegra186, the ARM v8 architected timer
-+	 * is in an always on power partition and its reference clock keeps
-+	 * running during SC7. Therefore, we technically don't need to have
-+	 * the RTC register as a clock source on Tegra186 and later, but it
-+	 * doesn't hurt either, so we just register it unconditionally here.
-+	 */
-+	info->clksrc.name = "tegra_rtc";
-+	info->clksrc.rating = 200;
-+	info->clksrc.read = tegra_rtc_read_ms;
-+	info->clksrc.mask = CLOCKSOURCE_MASK(32);
-+	info->clksrc.flags = CLOCK_SOURCE_SUSPEND_NONSTOP |
-+			     CLOCK_SOURCE_IS_CONTINUOUS;
-+
-+	ret = clocksource_register_hz(&info->clksrc, 1000);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to register clock source: %d\n", ret);
-+		goto disable_clk;
-+	}
-+
- 	dev_notice(&pdev->dev, "Tegra internal Real Time Clock\n");
- 
- 	return 0;
-@@ -352,6 +393,7 @@ static int tegra_rtc_remove(struct platform_device *pdev)
- {
- 	struct tegra_rtc_info *info = platform_get_drvdata(pdev);
- 
-+	clocksource_unregister(&info->clksrc);
- 	clk_disable_unprepare(info->clk);
- 
- 	return 0;
--- 
-2.21.0
-
+Thanks,
+Sekhar
