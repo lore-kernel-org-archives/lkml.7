@@ -2,118 +2,139 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A279FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:10:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5358DC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C8F021773
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:10:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rayG/z2H"
+	by mail.kernel.org (Postfix) with ESMTP id 30A3F2183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:11:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726405AbfFNTK6 (ORCPT
+        id S1726494AbfFNTLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 15:10:58 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:35225 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725812AbfFNTK5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 15:10:57 -0400
-Received: by mail-wr1-f66.google.com with SMTP id m3so3648697wrv.2;
-        Fri, 14 Jun 2019 12:10:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qrggckRqwzqE+687AEU2OojJ8a7zrArb+JSl8o0Vjw4=;
-        b=rayG/z2HRetFZn2HaODu/GrCa4jqHCks19ez5NpHbbndaksHa3GoQiqB06ds312oLG
-         Kj2t6SHd4oV7NoDNG3bPwz7at/o2+xze2B9NiPzxiyd+9P5b+N3sGqdIwHVZfTPdv52A
-         vspLz4ZxvGgNTtKIsm/rgAM8jCmu/Q+FQowFWQa5NqwcTl+VlV512kfiuY6QMsw8kzgn
-         Hm9tdv2O9Og7Loox/ZNmHKfDe+obyLmJ/bfMUY4JRCFchdVzG/fza9fCYjmMVo9jr2Kf
-         Rg8a6lSkcUM+1+hvQ8Zzq2SruIObPwTP6YbKL1FG9j/GkFl2UfSpisI/yekUGX85TKIO
-         2uOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qrggckRqwzqE+687AEU2OojJ8a7zrArb+JSl8o0Vjw4=;
-        b=B1hVwOp/kKrsAehm7z1cyjesTzqpTA2WcbQiC5UgrtQfXoWdczBY0eXp0xWRnkYRs3
-         TxzDBE2RJWOshJo6lr/do+HvMX0Olr8mSkbDvgNxOdm9wFyelNn198XOFl7yLiP+jqv+
-         GwN+OM7oBcWr0sRxFhQZluBjAzkpF/THxIrQlGs8GqESq4hi5H+eHrOMxtZIxO6Ed6yi
-         CDXyCM72anw4zZxS1dPKEGpGwkyADaMAa8fa7pQZp3+xTqcQJMp1iUs/StP1d0sgDfpC
-         cy8ILXVzh0MZQ4lTxDzLVkVsgfnGqbPLtIc6ehx7XnrENHx32X1SSiHxUM6fPrY9SB+u
-         N1cg==
-X-Gm-Message-State: APjAAAWppYY7K7zMxpFsqWB01qNg+l7qc5CEHUhUlqpE1R32n8BJowAU
-        8Xhfuj2aU+alOsiTQdydN98+zQDUjbQ=
-X-Google-Smtp-Source: APXvYqw3BF4lCoCWCq+ma92ACJPhMyodhOncoLwNRZkplMdgZ50n3/jnqZcxn0EKz3JLitAF4Q3llQ==
-X-Received: by 2002:adf:f683:: with SMTP id v3mr5420052wrp.258.1560539455205;
-        Fri, 14 Jun 2019 12:10:55 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id g2sm4825176wmh.0.2019.06.14.12.10.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Jun 2019 12:10:54 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 21:10:53 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     util-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Fri, 14 Jun 2019 15:11:25 -0400
+Received: from mga14.intel.com ([192.55.52.115]:58081 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbfFNTLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 15:11:25 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 12:11:24 -0700
+X-ExtLoop1: 1
+Received: from ray.jf.intel.com (HELO [10.7.201.15]) ([10.7.201.15])
+  by orsmga007.jf.intel.com with ESMTP; 14 Jun 2019 12:11:23 -0700
+Subject: Re: [PATCH, RFC 44/62] x86/mm: Set KeyIDs in encrypted VMAs for MKTME
+To:     Alison Schofield <alison.schofield@intel.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>, linux-mm@kvack.org,
+        kvm@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: Help with reviewing dosfstools patches
-Message-ID: <20190614191053.22whtrb5f5uqis64@pali>
-References: <20190614102513.4uwsu2wkigg3pimq@pali>
- <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
- <9e81aa56-358a-71e1-edc1-50781062f3a4@metux.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-45-kirill.shutemov@linux.intel.com>
+ <20190614114408.GD3436@hirez.programming.kicks-ass.net>
+ <20190614173345.GB5917@alison-desk.jf.intel.com>
+ <e0884a6b-78bc-209d-bc9a-90f69839189e@intel.com>
+ <20190614184602.GB7252@alison-desk.jf.intel.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <ca62a921-e60c-6532-32c3-f02e15ba69aa@intel.com>
+Date:   Fri, 14 Jun 2019 12:11:23 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="in23yynysfbxdhp3"
-Content-Disposition: inline
-In-Reply-To: <9e81aa56-358a-71e1-edc1-50781062f3a4@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190614184602.GB7252@alison-desk.jf.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/14/19 11:46 AM, Alison Schofield wrote:
+> On Fri, Jun 14, 2019 at 11:26:10AM -0700, Dave Hansen wrote:
+>> On 6/14/19 10:33 AM, Alison Schofield wrote:
+>>> Preserving the data across encryption key changes has not
+>>> been a requirement. I'm not clear if it was ever considered
+>>> and rejected. I believe that copying in order to preserve
+>>> the data was never considered.
+>>
+>> We could preserve the data pretty easily.  It's just annoying, though.
+>> Right now, our only KeyID conversions happen in the page allocator.  If
+>> we were to convert in-place, we'd need something along the lines of:
+>>
+>> 	1. Allocate a scratch page
+>> 	2. Unmap target page, or at least make it entirely read-only
+>> 	3. Copy plaintext into scratch page
+>> 	4. Do cache KeyID conversion of page being converted:
+>> 	   Flush caches, change page_ext metadata
+>> 	5. Copy plaintext back into target page from scratch area
+>> 	6. Re-establish PTEs with new KeyID
+> 
+> Seems like the 'Copy plaintext' steps might disappoint the user, as
+> much as the 'we don't preserve your data' design. Would users be happy
+> w the plain text steps ?
 
---in23yynysfbxdhp3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, it got to be plaintext because they wrote it to memory in
+plaintext in the first place, so it's kinda hard to disappoint them. :)
 
-On Friday 14 June 2019 17:45:20 Enrico Weigelt, metux IT consult wrote:
-> On 14.06.19 16:20, Enrico Weigelt, metux IT consult wrote:
->=20
-> <snip>
->=20
-> Currently working through your branches. Smells like they really deserve
-> a rebase and signed-off lines.
-
-Every patch/pull request is mean to be based on current upstream
-"master" branch.
-
-As some of pull requests were opened long time ago, they are out-of-sync
-=66rom upstream "master" branch.
-
-Currently I rebased and force-pushed those changes which had merge
-conflict with upstream master branch.
-
-And now on each pull request passed compilation and 'make check'.
-
---=20
-Pali Roh=C3=A1r
-pali.rohar@gmail.com
-
---in23yynysfbxdhp3
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQS4VrIQdKium2krgIWL8Mk9A+RDUgUCXQPxPAAKCRCL8Mk9A+RD
-UuX5AJ46vqpIet8egkxbo/F0OHqmHeH7kwCgnQQzBB6Nr3uUcwShqXuXpsUIzo8=
-=SZLS
------END PGP SIGNATURE-----
-
---in23yynysfbxdhp3--
+IMNHO, the *vast* majority of cases, folks will allocate memory and then
+put a secret in it.  They aren't going to *get* a secret in some
+mysterious fashion and then later decide they want to protect it.  In
+other words, the inability to convert it is pretty academic and not
+worth the complexity.
