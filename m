@@ -2,126 +2,120 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6C88C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:23:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E5BBC31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE82B2177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:23:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 066A62177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:23:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="EfJK0Cs9"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WPnWyA9d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbfFNSXc (ORCPT
+        id S1726293AbfFNSXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:23:32 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:33442 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbfFNSXc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:23:32 -0400
-Received: from zn.tnic (p200300EC2F097F008D9D08C27DC27982.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:8d9d:8c2:7dc2:7982])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 90A9B1EC0B55;
-        Fri, 14 Jun 2019 20:23:30 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560536610;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:
-         content-transfer-encoding:content-transfer-encoding:in-reply-to:
-         references; bh=Wec5vQanv6yPIqThg8M5yFUSlRvqBHzjjusYTgRF1pI=;
-        b=EfJK0Cs9Ok+OVYrc+KH90xtzobKZ+ONF/fHGMSME9mNSkWE5WVWwYA69HNMjyV0phydi8y
-        IPJ8UJOGDGVvhA/cRkKChS34cLFQkrubeScNbvNID4bA4hDrVB4tcOhSMXOIPCFWLhPyIK
-        drYYh/bqy2VgLuJT8Kx5252KTLT1GPk=
-From:   Borislav Petkov <bp@alien8.de>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Adric Blake <promarbler14@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: [PATCH] x86/microcode, cpuhotplug: Add a microcode loader CPU hotplug callback
-Date:   Fri, 14 Jun 2019 20:23:17 +0200
-Message-Id: <20190614182317.29292-1-bp@alien8.de>
-X-Mailer: git-send-email 2.21.0
+        Fri, 14 Jun 2019 14:23:44 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36616 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725886AbfFNSXn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:23:43 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so3595743qtl.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 11:23:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=JgsixOY7DseFYD9NVhuWLlq7gswhsAh5xxa+izOpaUs=;
+        b=WPnWyA9duJs6z2zS0gnnr9yCluFRiF9wvX43AUxtxoHAHE1f6Z0gGOh3cIe44zhPeR
+         iPlrHPLJUmlRAAVZV9OxdL5/p/dbkWYuhWrwW6plVsIYS1fkTN+0oa8FA1pXi+qw/iEY
+         WFzUSnjxJbiyjgrGE8IeXP9n50e2WK+Sm0D50=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=JgsixOY7DseFYD9NVhuWLlq7gswhsAh5xxa+izOpaUs=;
+        b=laPASwMaPGFJcBQx6+zA3VD1Kq+1JuYofAxsEdAC+tIgQ6exPHtIt7KGERDMOHMLid
+         XxdeSpdctOEj9Xbk3oJNQG9Ku48vjprx2i3/KHRAwINorBRMgTTMzzZHaaZ+cYkqO5TU
+         XBGF5R3tVJ5/ykgArx2JudDPWT5udPrCc5GswmYFVlHsAGMVqYvMFZPLGSl7QxpFqwNd
+         zTeFKdIfyFWcwYXqNfJpAWIoklKfOwQZ3sMEeIVMpzfn/cRUiV2aZUWIEvUGV67Zhxbx
+         hPPNKjxKm+V7c3jqZZF3VYqQromMxkG/xE0Iza5LcDJxX2Ycxf4wBfhBq6Cfuqy1ABh/
+         w8Aw==
+X-Gm-Message-State: APjAAAUPZKqMof/XSr2rHZ7Q5jUWKHH2opqRXR0jBRMRpwW4RxqqGgDh
+        +aKiS0YN93oaKgEBir3PhD771dxc55lQKqwNBTV35Q==
+X-Google-Smtp-Source: APXvYqzE9Uq5Q9fvJC8Ss1UjPNECoEmT3u8p2KzuQNrXJCQrUgkAXIakzzG+4dvUplkr7sJZRtxsr0LLhkaKEzJOK+8=
+X-Received: by 2002:ac8:2f7b:: with SMTP id k56mr70825566qta.376.1560536622857;
+ Fri, 14 Jun 2019 11:23:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190607003735.212291-1-ravisadineni@chromium.org>
+In-Reply-To: <20190607003735.212291-1-ravisadineni@chromium.org>
+From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
+Date:   Fri, 14 Jun 2019 11:23:31 -0700
+Message-ID: <CAEZbON5oRSnOHQrzPcapd=XrK4_ngAY-7hTzxMOyO+=rWJB1bA@mail.gmail.com>
+Subject: Re: [PATCH] power: Do not clear events_check_enabled in pm_wakeup_pending()
+To:     len.brown@intel.com, pavel@ucw.cz, gregkh@linuxfoundation.org,
+        linux-pm@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Todd Broch <tbroch@google.com>,
+        Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+Hi,
 
-Adric Blake reported the following warning during suspend-resume:
+Just wanted to check if this o.k.
 
-  Enabling non-boot CPUs ...
-  x86: Booting SMP configuration:
-  smpboot: Booting Node 0 Processor 1 APIC 0x2
-  unchecked MSR access error: WRMSR to 0x10f (tried to write 0x0000000000000000) \
-   at rIP: 0xffffffff8d267924 (native_write_msr+0x4/0x20)
-  Call Trace:
-   intel_set_tfa
-   intel_pmu_cpu_starting
-   ? x86_pmu_dead_cpu
-   x86_pmu_starting_cpu
-   cpuhp_invoke_callback
-   ? _raw_spin_lock_irqsave
-   notify_cpu_starting
-   start_secondary
-   secondary_startup_64
-  microcode: sig=0x806ea, pf=0x80, revision=0x96
-  microcode: updated to revision 0xb4, date = 2019-04-01
-  CPU1 is up
+Thanks,
+Ravi
 
-The MSR in question is MSR_TFA_RTM_FORCE_ABORT and that MSR is emulated
-by microcode. The log above shows that the microcode loader callback
-happens after the PMU restoration, leading to the conjecture that
-because the microcode hasn't been updated yet, that MSR is not present
-yet, leading to the #GP.
-
-Add a microcode loader-specific hotplug vector which comes before
-the PERF vectors and thus executes earlier and makes sure the MSR is
-present.
-
-Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
-Reported-by: Adric Blake <promarbler14@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203637
----
- arch/x86/kernel/cpu/microcode/core.c | 2 +-
- include/linux/cpuhotplug.h           | 1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index 70a04436380e..a813987b5552 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -872,7 +872,7 @@ int __init microcode_init(void)
- 		goto out_ucode_group;
- 
- 	register_syscore_ops(&mc_syscore_ops);
--	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/microcode:online",
-+	cpuhp_setup_state_nocalls(CPUHP_AP_MICROCODE_LOADER, "x86/microcode:online",
- 				  mc_cpu_online, mc_cpu_down_prep);
- 
- 	pr_info("Microcode Update Driver: v%s.", DRIVER_VERSION);
-diff --git a/include/linux/cpuhotplug.h b/include/linux/cpuhotplug.h
-index 6a381594608c..5c6062206760 100644
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -101,6 +101,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_BCM2836_STARTING,
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
-+	CPUHP_AP_MICROCODE_LOADER,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
- 	CPUHP_AP_PERF_X86_STARTING,
- 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
--- 
-2.21.0
-
+On Thu, Jun 6, 2019 at 5:37 PM Ravi Chandra Sadineni
+<ravisadineni@chromium.org> wrote:
+>
+> events_check_enabled bool is set when wakeup_count sysfs attribute
+> is written. User level daemon is expected to write this attribute
+> just before suspend.
+>
+> When this boolean is set, calls to pm_wakeup_event() will result in
+> increment of per device and global wakeup count that helps in
+> identifying the wake source. global wakeup count is also used by
+> pm_wakeup_pending() to identify if there are any pending events that
+> should result in an suspend abort.
+>
+> Currently calls to pm_wakeup_pending() also clears events_check_enabled.
+> This can be a problem when there are multiple wake events or when the
+> suspend is aborted due to an interrupt on a shared interrupt line.
+> For example an Mfd device can create several platform devices which
+> might fetch the state on resume in the driver resume method and increment
+> the wakeup count if needed. But if events_check_enabled is cleared before
+> resume methods get to execute, wakeup count will not be incremented. Thus
+> let us not reset the bool here.
+>
+> Note that events_check_enabled is also cleared in suspend.c/enter_state()
+> on every resume at the end.
+>
+> Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
+> ---
+>  drivers/base/power/wakeup.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5b2b6a05a4f3..88aade871589 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -838,7 +838,6 @@ bool pm_wakeup_pending(void)
+>
+>                 split_counters(&cnt, &inpr);
+>                 ret = (cnt != saved_count || inpr > 0);
+> -               events_check_enabled = !ret;
+>         }
+>         raw_spin_unlock_irqrestore(&events_lock, flags);
+>
+> --
+> 2.20.1
+>
