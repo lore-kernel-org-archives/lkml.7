@@ -2,157 +2,118 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11A61C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCD9C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:45:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD9621473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:42:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XR58Y3i7"
+	by mail.kernel.org (Postfix) with ESMTP id 8DCD321537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:45:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726742AbfFNIm5 (ORCPT
+        id S1726707AbfFNIpH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:42:57 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44390 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726432AbfFNIm5 (ORCPT
+        Fri, 14 Jun 2019 04:45:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60522 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726255AbfFNIpG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:42:57 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so2329548edr.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 01:42:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QgL2xEAvTit++D3krd05nlqQHQWQMdk7SdHziLACmgM=;
-        b=XR58Y3i7jh0s5ib+GPkWBYx5jkGGKnL6OtPhGMnIBDHFCkRvO/5LSEA0GQVt6euYoc
-         2D8OEuFd0loxWkqqM6jxW3f4fxleyUMo+JEAeloHbyHmGkYy+7cI4/UC2Yq0Ah1Px7bi
-         s0SkPljmpvYKvE4ULlepeye+FGxVL2/x4kvfw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=QgL2xEAvTit++D3krd05nlqQHQWQMdk7SdHziLACmgM=;
-        b=H1wS+aswzOk6MYAtlJeVyYCW4ly3+un147w1gwo5H7yUsrUk9593cyQGN1mNoxftlN
-         2Xl9fPaiJIDxzbl+ui2ca+p2d3aIwZbW2AhMldVYCxn8mVrpd1JK0PG7bFU98ooPDcBM
-         RzgpCuHZKis7qxHD/Mg9JpaOJFJbRxVcN/uTeImfcdPCFOLODb7EEkaxS/uwcvAwt5DR
-         AoQGzv7agWcRL7V9eBwnxXk/Ntkkb5xmJY1sUVfMWewicb10KnaqEvoCuyPXUyL0LYHG
-         BKeDP9Uky9Y/9KV6u9woQOqAjMzzEqn0+kstlighcr4Jy4XVQbby7Pw1yZndXlhO8WRb
-         ymnA==
-X-Gm-Message-State: APjAAAXIsWjxP3A2fv4/3aE4KoC5CxpRZuBG6i27E9acyhJCw7lBWT6A
-        WalhBtFhtvLubEJRQ9XrAcwupw==
-X-Google-Smtp-Source: APXvYqwbZ1p/AAYkMvc204IuHnK2Mme6rVhADerqoPX3axFuelEDR2MDYfkYCclx3wOIYO9+vicaOg==
-X-Received: by 2002:a50:b68f:: with SMTP id d15mr25067320ede.39.1560501775062;
-        Fri, 14 Jun 2019 01:42:55 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id i5sm681242edc.20.2019.06.14.01.42.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 01:42:54 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 10:42:51 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 19/20] drm: rcar-du: crtc: Register GAMMA_LUT properties
-Message-ID: <20190614084251.GW23020@phenom.ffwll.local>
-Mail-Followup-To: Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-20-jacopo+renesas@jmondi.org>
- <20190607120304.GH7593@pendragon.ideasonboard.com>
- <20190614081507.3ky4pcyijjxnr7mp@uno.localdomain>
+        Fri, 14 Jun 2019 04:45:06 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5E8hLnp083429
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 04:45:05 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t46jfm71q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 04:45:05 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
+        Fri, 14 Jun 2019 09:45:02 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Jun 2019 09:44:52 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5E8ioUG58589432
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Jun 2019 08:44:50 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C533CAE051;
+        Fri, 14 Jun 2019 08:44:50 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 641BDAE045;
+        Fri, 14 Jun 2019 08:44:48 +0000 (GMT)
+Received: from [9.145.160.23] (unknown [9.145.160.23])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Jun 2019 08:44:48 +0000 (GMT)
+Subject: Re: [PATCH v12 00/31] Speculative page faults
+From:   Laurent Dufour <ldufour@linux.ibm.com>
+To:     Haiyan Song <haiyanx.song@intel.com>
+Cc:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
+        kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
+        jack@suse.cz, Matthew Wilcox <willy@infradead.org>,
+        aneesh.kumar@linux.ibm.com, benh@kernel.crashing.org,
+        mpe@ellerman.id.au, paulus@samba.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, hpa@zytor.com,
+        Will Deacon <will.deacon@arm.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        sergey.senozhatsky.work@gmail.com,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        kemi.wang@intel.com, Daniel Jordan <daniel.m.jordan@oracle.com>,
+        David Rientjes <rientjes@google.com>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Ganesh Mahendran <opensource.ganesh@gmail.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Punit Agrawal <punitagrawal@gmail.com>,
+        vinayak menon <vinayakm.list@gmail.com>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        zhong jiang <zhongjiang@huawei.com>,
+        Balbir Singh <bsingharora@gmail.com>, sj38.park@gmail.com,
+        Michel Lespinasse <walken@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        haren@linux.vnet.ibm.com, npiggin@gmail.com,
+        paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+References: <20190416134522.17540-1-ldufour@linux.ibm.com>
+ <20190606065129.d5s3534p23twksgp@haiyan.sh.intel.com>
+ <3d3cefa2-0ebb-e86d-b060-7ba67c48a59f@linux.ibm.com>
+Date:   Fri, 14 Jun 2019 10:44:47 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614081507.3ky4pcyijjxnr7mp@uno.localdomain>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <3d3cefa2-0ebb-e86d-b060-7ba67c48a59f@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061408-0008-0000-0000-000002F3B0D9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061408-0009-0000-0000-00002260BA09
+Message-Id: <1c412ebe-c213-ee67-d261-c70ddcd34b79@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=775 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140071
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:15:52AM +0200, Jacopo Mondi wrote:
-> Hi Laurent,
->    thanks for review
-> 
-> On Fri, Jun 07, 2019 at 03:03:04PM +0300, Laurent Pinchart wrote:
-> > Hi Jacopo,
-> >
-> > Thank you for the patch.
-> >
-> > On Thu, Jun 06, 2019 at 04:22:19PM +0200, Jacopo Mondi wrote:
-> > > Enable the GAMMA_LUT KMS property using the framework helpers to
-> > > register the proeprty and the associated gamma table size maximum size.
-> > >
-> > > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > > ---
-> > >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > > index e6d3df37c827..c920fb5dba65 100644
-> > > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > > @@ -1207,6 +1207,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
-> > >  	    rcdu->cmms[swindex]) {
-> > >  		rcrtc->cmm = rcdu->cmms[swindex];
-> > >  		rgrp->cmms_mask |= BIT(hwindex % 2);
-> > > +
-> > > +		drm_mode_crtc_set_gamma_size(crtc, CMM_GAMMA_LUT_SIZE);
-> > > +		drm_crtc_enable_color_mgmt(crtc, 0, false, CMM_GAMMA_LUT_SIZE);
-> >
-> > This change looks good, but you also need to add support for legacy API.
-> > According to the function's documentation,
-> >
-> >  * Drivers should use drm_atomic_helper_legacy_gamma_set() to implement the
-> >  * legacy &drm_crtc_funcs.gamma_set callback.
-> >
-> 
-> Drivers 'shuld' or drivers 'shall' ?
-> Isn't this required only to support the 'legacy APIs' ? Do we want that?
+Le 14/06/2019 à 10:37, Laurent Dufour a écrit :
+> Please find attached the script I run to get these numbers.
+> This would be nice if you could give it a try on your victim node and share the result.
 
-You're calling drm_mode_crtc_set_gamma_size, which is only useful for the
-legacy ioctls. should here = assuming your hw supports something that
-legacy gamma ioctl can use. Feel free to patch up the docs.
--Daniel
+Sounds that the Intel mail fitering system doesn't like the attached shell script.
+Please find it there: https://gist.github.com/ldu4/a5cc1a93f293108ea387d43d5d5e7f44
 
-> 
-> Thanks
->    j
-> 
-> > >  	}
-> > >
-> > >  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
-> > >
-> >
-> > --
-> > Regards,
-> >
-> > Laurent Pinchart
+Thanks,
+Laurent.
 
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
