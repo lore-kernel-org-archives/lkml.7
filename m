@@ -2,124 +2,188 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD18DC31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE18C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00852183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623D02183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727522AbfFNSAr (ORCPT
+        id S1727564AbfFNSAw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:00:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37034 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbfFNSAn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:00:43 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EACA330832F4;
-        Fri, 14 Jun 2019 18:00:42 +0000 (UTC)
-Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1CE865D982;
-        Fri, 14 Jun 2019 18:00:40 +0000 (UTC)
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 5/5] x86/unwind/orc: Fall back to using frame pointers for generated code
-Date:   Fri, 14 Jun 2019 12:56:44 -0500
-Message-Id: <43cce8f734cf8ae1fcd10ea14d67c028c73b1540.1560534694.git.jpoimboe@redhat.com>
-In-Reply-To: <cover.1560534694.git.jpoimboe@redhat.com>
-References: <cover.1560534694.git.jpoimboe@redhat.com>
+        Fri, 14 Jun 2019 14:00:52 -0400
+Received: from lhrrgout.huawei.com ([185.176.76.210]:33011 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726762AbfFNSAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:00:50 -0400
+Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id DE0129E82EEBBC0ED718;
+        Fri, 14 Jun 2019 19:00:46 +0100 (IST)
+Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
+ by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
+ 14.3.408.0; Fri, 14 Jun 2019 19:00:39 +0100
+From:   Roberto Sassu <roberto.sassu@huawei.com>
+To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
+        <mjg59@google.com>
+CC:     <linux-integrity@vger.kernel.org>,
+        <linux-security-module@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
+        Roberto Sassu <roberto.sassu@huawei.com>
+Subject: [PATCH v4 03/14] ima: generalize ima_write_policy() and raise uploaded data size limit
+Date:   Fri, 14 Jun 2019 19:55:02 +0200
+Message-ID: <20190614175513.27097-4-roberto.sassu@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614175513.27097-1-roberto.sassu@huawei.com>
+References: <20190614175513.27097-1-roberto.sassu@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 14 Jun 2019 18:00:43 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.204.65.154]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ORC unwinder can't unwind through BPF JIT generated code because
-there are no ORC entries associated with the code.
+ima_write_policy() is being used to load a new policy from user space. This
+function can be reused to load different types of data.
 
-If an ORC entry isn't available, try to fall back to frame pointers.  If
-BPF and other generated code always do frame pointer setup (even with
-CONFIG_FRAME_POINTERS=n) then this will allow ORC to unwind through most
-generated code despite there being no corresponding ORC entries.
+This patch renames ima_write_policy() to ima_write_data() and executes the
+appropriate actions depending on the opened file in the securityfs
+filesystem.
 
-Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
-Reported-by: Song Liu <songliubraving@fb.com>
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Also, this patch raises the uploaded data size limit to 64M, to accept
+files (e.g. digest lists) larger than a policy. The same limit is used
+for the SELinux policy.
+
+Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
 ---
- arch/x86/kernel/unwind_orc.c | 26 ++++++++++++++++++++++----
- 1 file changed, 22 insertions(+), 4 deletions(-)
+ security/integrity/ima/ima_fs.c | 68 +++++++++++++++++++--------------
+ 1 file changed, 40 insertions(+), 28 deletions(-)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 33b66b5c5aec..72b997eaa1fc 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -82,9 +82,9 @@ static struct orc_entry *orc_find(unsigned long ip);
-  * But they are copies of the ftrace entries that are static and
-  * defined in ftrace_*.S, which do have orc entries.
-  *
-- * If the undwinder comes across a ftrace trampoline, then find the
-+ * If the unwinder comes across a ftrace trampoline, then find the
-  * ftrace function that was used to create it, and use that ftrace
-- * function's orc entrie, as the placement of the return code in
-+ * function's orc entry, as the placement of the return code in
-  * the stack will be identical.
-  */
- static struct orc_entry *orc_ftrace_find(unsigned long ip)
-@@ -128,6 +128,16 @@ static struct orc_entry null_orc_entry = {
- 	.type = ORC_TYPE_CALL
- };
+diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
+index 02980b55a3f1..9a10b62e380f 100644
+--- a/security/integrity/ima/ima_fs.c
++++ b/security/integrity/ima/ima_fs.c
+@@ -27,6 +27,14 @@
  
-+/* Fake frame pointer entry -- used as a fallback for generated code */
-+static struct orc_entry orc_fp_entry = {
-+	.type		= ORC_TYPE_CALL,
-+	.sp_reg		= ORC_REG_BP,
-+	.sp_offset	= 16,
-+	.bp_reg		= ORC_REG_PREV_SP,
-+	.bp_offset	= -16,
-+	.end		= 0,
-+};
+ static DEFINE_MUTEX(ima_write_mutex);
+ 
++static struct dentry *ima_dir;
++static struct dentry *ima_symlink;
++static struct dentry *binary_runtime_measurements;
++static struct dentry *ascii_runtime_measurements;
++static struct dentry *runtime_measurements_count;
++static struct dentry *violations;
++static struct dentry *ima_policy;
 +
- static struct orc_entry *orc_find(unsigned long ip)
+ bool ima_canonical_fmt;
+ static int __init default_canonical_fmt_setup(char *str)
  {
- 	static struct orc_entry *orc;
-@@ -392,8 +402,16 @@ bool unwind_next_frame(struct unwind_state *state)
- 	 * calls and calls to noreturn functions.
- 	 */
- 	orc = orc_find(state->signal ? state->ip : state->ip - 1);
--	if (!orc)
--		goto err;
-+	if (!orc) {
-+		/*
-+		 * As a fallback, try to assume this code uses a frame pointer.
-+		 * This is useful for generated code, like BPF, which ORC
-+		 * doesn't know about.  This is just a guess, so the rest of
-+		 * the unwind is no longer considered reliable.
-+		 */
-+		orc = &orc_fp_entry;
-+		state->error = true;
-+	}
+@@ -319,25 +327,32 @@ static ssize_t ima_read_file(char *path, enum kernel_read_file_id file_id)
+ 		return pathlen;
+ }
  
- 	/* End-of-stack check for kernel threads: */
- 	if (orc->sp_reg == ORC_REG_UNDEFINED) {
+-static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+-				size_t datalen, loff_t *ppos)
++static ssize_t ima_write_data(struct file *file, const char __user *buf,
++			      size_t datalen, loff_t *ppos)
+ {
+ 	char *data;
+ 	ssize_t result;
+-
+-	if (datalen >= PAGE_SIZE)
+-		datalen = PAGE_SIZE - 1;
++	struct dentry *dentry = file_dentry(file);
+ 
+ 	/* No partial writes. */
+ 	result = -EINVAL;
+ 	if (*ppos != 0)
+ 		goto out;
+ 
+-	data = memdup_user_nul(buf, datalen);
+-	if (IS_ERR(data)) {
+-		result = PTR_ERR(data);
++	result = -EFBIG;
++	if (datalen + 1 > 64 * 1024 * 1024)
+ 		goto out;
+-	}
++
++	result = -ENOMEM;
++	data = vmalloc(datalen + 1);
++	if (!data)
++		goto out;
++
++	result = -EFAULT;
++	if (copy_from_user(data, buf, datalen) != 0)
++		goto out_free;
++
++	data[datalen] = '\0';
+ 
+ 	result = mutex_lock_interruptible(&ima_write_mutex);
+ 	if (result < 0)
+@@ -345,34 +360,31 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
+ 
+ 	if (data[0] == '/') {
+ 		result = ima_read_file(data, READING_POLICY);
+-	} else if (ima_appraise & IMA_APPRAISE_POLICY) {
+-		pr_err("signed policy file (specified as an absolute pathname) required\n");
+-		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
+-				    "policy_update", "signed policy required",
+-				    1, 0);
+-		if (ima_appraise & IMA_APPRAISE_ENFORCE)
+-			result = -EACCES;
++	} else if (dentry == ima_policy) {
++		if (ima_appraise & IMA_APPRAISE_POLICY) {
++			pr_err("signed policy file (specified as an absolute pathname) required\n");
++			integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
++					    "policy_update",
++					    "signed policy required", 1, 0);
++			if (ima_appraise & IMA_APPRAISE_ENFORCE)
++				result = -EACCES;
++		} else {
++			result = ima_parse_add_rule(data);
++		}
+ 	} else {
+-		result = ima_parse_add_rule(data);
++		pr_err("Unknown data type\n");
++		result = -EINVAL;
+ 	}
+ 	mutex_unlock(&ima_write_mutex);
+ out_free:
+-	kfree(data);
++	vfree(data);
+ out:
+-	if (result < 0)
++	if (dentry == ima_policy && result < 0)
+ 		valid_policy = 0;
+ 
+ 	return result;
+ }
+ 
+-static struct dentry *ima_dir;
+-static struct dentry *ima_symlink;
+-static struct dentry *binary_runtime_measurements;
+-static struct dentry *ascii_runtime_measurements;
+-static struct dentry *runtime_measurements_count;
+-static struct dentry *violations;
+-static struct dentry *ima_policy;
+-
+ enum ima_fs_flags {
+ 	IMA_FS_BUSY,
+ };
+@@ -453,7 +465,7 @@ static int ima_release_policy(struct inode *inode, struct file *file)
+ 
+ static const struct file_operations ima_measure_policy_ops = {
+ 	.open = ima_open_policy,
+-	.write = ima_write_policy,
++	.write = ima_write_data,
+ 	.read = seq_read,
+ 	.release = ima_release_policy,
+ 	.llseek = generic_file_llseek,
 -- 
-2.20.1
+2.17.1
 
