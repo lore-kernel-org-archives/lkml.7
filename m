@@ -2,117 +2,155 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F55DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:14:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 467AFC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:14:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8ECA2168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 106822168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:14:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EnmKRGmH"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="d5LN2vyr";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="dbBmwI8o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726219AbfFNPOF (ORCPT
+        id S1726366AbfFNPOj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:14:05 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34618 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725808AbfFNPOE (ORCPT
+        Fri, 14 Jun 2019 11:14:39 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:52440 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725822AbfFNPOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:14:04 -0400
-Received: by mail-lj1-f193.google.com with SMTP id p17so2801655ljg.1;
-        Fri, 14 Jun 2019 08:14:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MqdMYxzkiSwMRv+VXImvJdkt4bTiY1sZ1dE3S1yUxjY=;
-        b=EnmKRGmHCP0dd9YCT7Sa1sRiVYY3dIOFQN63iW/HID5nI196Ye+IIbFPDbLFAw2tjc
-         DSCM/UG2Qp44pxaRoiJv5uVkv0U2En2pXA3kSJMe5G+SOINKkfCzLw3gy5wdHir0ulEz
-         7hb+y/ZdIE+J/Rp3mHyG/+sSH11flJuqNNNHuhjJxENX2UBM0bi+wZ/Xdvyiel0Z3Aq4
-         N9hH5SmGQW+J99Nl15imoQVS0XoYywA00dN32EIJb96Da+zWd2GrGlaUqbKQlJAWsWMz
-         +IyzxPtaRk+uHg0jpSLfpk5T53sa9O0eY3eUCjqaSpsh7w31kx+tDIWJr946CNrgo4fg
-         2A0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MqdMYxzkiSwMRv+VXImvJdkt4bTiY1sZ1dE3S1yUxjY=;
-        b=oUmgIXdwjrC/Hx1niRSDzxwVngdIUQIH9zoTJF0I/HMrWSqf4/1m0Hu+2r3faWzydU
-         w+x+gjAwExDLDONUJG7wuqLk4SniCJwLL0FX7BiQqrv2YT2Xn4bRt/yDQRNp3DTcHcdF
-         tLAkbCdHbTQ40ljxS3vllAbqXm6/p0fB7D2d4GX1TieGOmzo+m/4hx0s57SzTGROqXs+
-         3LU1R6UZDef53cYPHLhsqzDGryxnq+UDlf1JO3TVw10tCg8TXW59zZeM0l+VX2nvO6ji
-         ucOfLLPTTHH05z1gv+h5irngUdTvZ6DNUeX7obSxleHmB+OWFMzf0Y53MNPVGywY+Qxo
-         dMRw==
-X-Gm-Message-State: APjAAAVb/ICrvom7xvicaBCxneBNeYdPyIjscGMi9KYRWXooaACfrO4Y
-        MbB/vMcyyambWGQZk6okxaD8p3tomfTHrLFXGcg=
-X-Google-Smtp-Source: APXvYqyVZDAlfPGKBUEBYyP3HR/YFNAMJJLgIQ5RjXnLqmdeAazhXaYhTHPbLX8yCDXTPOB3FWMcjFkg8PSfPbwh4LQ=
-X-Received: by 2002:a2e:9dca:: with SMTP id x10mr19768948ljj.17.1560525242066;
- Fri, 14 Jun 2019 08:14:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1560431531.git.jpoimboe@redhat.com> <99c22bbd79e72855f4bc9049981602d537a54e70.1560431531.git.jpoimboe@redhat.com>
- <20190613205710.et5fywop4gfalsa6@ast-mbp.dhcp.thefacebook.com>
- <20190614012030.b6eujm7b4psu62kj@treble> <20190614070852.GQ3436@hirez.programming.kicks-ass.net>
- <20190614073536.d3xkhwhq3fuivwt5@ast-mbp.dhcp.thefacebook.com> <20190614081116.GU3436@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190614081116.GU3436@hirez.programming.kicks-ass.net>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 14 Jun 2019 08:13:49 -0700
-Message-ID: <CAADnVQJ_-mFCeWoq-Uz9VRFkb3eLgAK+yC5hG=N7t5riGhmLWg@mail.gmail.com>
-Subject: Re: [PATCH 2/9] objtool: Fix ORC unwinding in non-JIT BPF generated code
+        Fri, 14 Jun 2019 11:14:37 -0400
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EF49Zk022999;
+        Fri, 14 Jun 2019 08:13:25 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=yryuILdBwZnK1CyKNgOJsebOGk8n7E1Kyf0D5bEn2Mw=;
+ b=d5LN2vyrypTLi75HEw6JkGoef7T87KdMGcTlHwxT513JsnymgUnrRg2JI4UyjfISLFa+
+ 2pgxKD3ZQTP2xyF+5rpgnkzD04z/q+bMS6WyHgzUIsglkQx/gmjEbHy6mjtrTRJEb+Tk
+ V0oguA5UebTojN3zxMuL1eQlejX5JB+Nu9Q= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t4ds0r2aw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Fri, 14 Jun 2019 08:13:25 -0700
+Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
+ ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Fri, 14 Jun 2019 08:13:24 -0700
+Received: from NAM05-BY2-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Fri, 14 Jun 2019 08:13:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=yryuILdBwZnK1CyKNgOJsebOGk8n7E1Kyf0D5bEn2Mw=;
+ b=dbBmwI8obqTc+QVopdmIMII1d1jfkYO/6+GXwmioxqMGuXrE8gHW+fWFvHmwWb3JcczdIo92Shn+L6n/gK7h1F7JXAsVziPbLX5ZqwIJHfOQCSoy9x1miyMws6/n9+2LlDuEpHdpUHtgA95ls8oknYAAZJ0wyW0bB2Yvv/djyX0=
+Received: from DM5PR15MB1163.namprd15.prod.outlook.com (10.173.215.141) by
+ DM5PR15MB1706.namprd15.prod.outlook.com (10.174.108.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Fri, 14 Jun 2019 15:13:23 +0000
+Received: from DM5PR15MB1163.namprd15.prod.outlook.com
+ ([fe80::38aa:95ca:d50f:9745]) by DM5PR15MB1163.namprd15.prod.outlook.com
+ ([fe80::38aa:95ca:d50f:9745%3]) with mapi id 15.20.1987.012; Fri, 14 Jun 2019
+ 15:13:23 +0000
+From:   Song Liu <songliubraving@fb.com>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
+CC:     Josh Poimboeuf <jpoimboe@redhat.com>, X86 ML <x86@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
         Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 8/9] x86/bpf: Convert asm comments to AT&T syntax
+Thread-Topic: [PATCH 8/9] x86/bpf: Convert asm comments to AT&T syntax
+Thread-Index: AQHVIetLPIU2acwXW0W72I9U+7dGQaaZ7m6AgADXPYCAAH3nAA==
+Date:   Fri, 14 Jun 2019 15:13:23 +0000
+Message-ID: <38F47DBB-F98F-4C12-B7D0-A363085065F3@fb.com>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <77fe02f7d575091b06f68f8eed256da94aee653f.1560431531.git.jpoimboe@redhat.com>
+ <E8372F56-269A-48A4-B80B-14FA664F8D41@fb.com>
+ <20190614074245.GS3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190614074245.GS3436@hirez.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.11)
+x-originating-ip: [2620:10d:c090:200::2:e3f9]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9f9e4c4c-e9a3-4751-f78e-08d6f0dad7e8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM5PR15MB1706;
+x-ms-traffictypediagnostic: DM5PR15MB1706:
+x-microsoft-antispam-prvs: <DM5PR15MB17065AAF7DB3C386288FD2CEB3EE0@DM5PR15MB1706.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(376002)(366004)(346002)(396003)(136003)(199004)(189003)(6916009)(2616005)(305945005)(476003)(11346002)(46003)(71200400001)(71190400001)(486006)(54906003)(14454004)(446003)(316002)(81156014)(36756003)(68736007)(25786009)(2906002)(81166006)(8676002)(33656002)(6246003)(6436002)(256004)(229853002)(5660300002)(53936002)(57306001)(99286004)(50226002)(4326008)(6116002)(6486002)(6512007)(4744005)(91956017)(186003)(86362001)(7736002)(8936002)(76176011)(66446008)(66476007)(64756008)(53546011)(102836004)(478600001)(66946007)(73956011)(66556008)(6506007)(76116006);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR15MB1706;H:DM5PR15MB1163.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UOGSl6SMQCB63dXemZtpAuYVDTrfircjD8Qe550uKjvR77DeuFnM2qdxMLM9ZS53wf4wfQ1e7+K91gx4Ph1G4KsXXUOx20aNrlHyqTAiwhkPJ9I7MTawHzYuC2CotYFU627B5DpVYbYo+R2c63nacj0CrU3zskiZqcCL84PPE5Fnra2CK5EpRo1w/P4v3vZiyvjQKJ2sQeS0vjue9CZKTu5KEllsY+XN6myd0d8ElbYJHuXhO3COKqSdKAxX24lxBgFLLKfeLzrEcMSB+15ndtWQC9q6oycVZnndfAqp2X9SOoBIqiAB+bAOm/tLBGyLD3tuJehq3DKCFG1lCh8W/6GiemwKGrKgnXzLzEwQel+PSKakzUAz2748Zzh7Tsi/FR9Alrt45wd84xcrY0YrPI7TQ7JnIb5+KSeMfXd0PRc=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <2A1DC0A2427F574BB2C824E37D7C26A4@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9f9e4c4c-e9a3-4751-f78e-08d6f0dad7e8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 15:13:23.4008
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: songliubraving@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR15MB1706
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=785 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140125
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 1:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
->
-> On Fri, Jun 14, 2019 at 12:35:38AM -0700, Alexei Starovoitov wrote:
-> > On Fri, Jun 14, 2019 at 09:08:52AM +0200, Peter Zijlstra wrote:
-> > > On Thu, Jun 13, 2019 at 08:20:30PM -0500, Josh Poimboeuf wrote:
-> > > > On Thu, Jun 13, 2019 at 01:57:11PM -0700, Alexei Starovoitov wrote:
-> > >
-> > > > > and to patches 8 and 9.
-> > > >
-> > > > Well, it's your code, but ... can I ask why?  AT&T syntax is the
-> > > > standard for Linux, which is in fact the OS we are developing for.
-> > >
-> > > I agree, all assembly in Linux is AT&T, adding Intel notation only
-> > > serves to cause confusion.
-> >
-> > It's not assembly. It's C code that generates binary and here
-> > we're talking about comments.
->
-> And comments are useless if they don't clarify. Intel syntax confuses.
->
-> > I'm sure you're not proposing to do:
-> > /* mov src, dst */
-> > #define EMIT_mov(DST, SRC)                                                               \
-> > right?
->
-> Which is why Josh reversed both of them. The current Intel order is just
-> terribly confusing. And I don't see any of the other JITs having
-> confusing comments like this.
->
-> > bpf_jit_comp.c stays as-is. Enough of it.
->
-> I think you're forgetting this is also arch/x86 code, and no, it needs
-> changes because its broken wrt unwinding.
 
-See MAINTAINERS file.
-If you guys keep insisting on pointless churn like this
-we'll move arch/x86/net/ into net/ where it probably belongs.
-netdev has its own comment style too.
-And it is also probably confusing to some folks.
+
+> On Jun 14, 2019, at 12:42 AM, Peter Zijlstra <peterz@infradead.org> wrote=
+:
+>=20
+> On Thu, Jun 13, 2019 at 06:52:24PM +0000, Song Liu wrote:
+>>> On Jun 13, 2019, at 6:21 AM, Josh Poimboeuf <jpoimboe@redhat.com> wrote=
+:
+>=20
+>>> @@ -403,11 +403,11 @@ static void emit_mov_imm64(u8 **pprog, u32 dst_re=
+g,
+>>> 		 * For emitting plain u32, where sign bit must not be
+>>> 		 * propagated LLVM tends to load imm64 over mov32
+>>> 		 * directly, so save couple of bytes by just doing
+>>> -		 * 'mov %eax, imm32' instead.
+>>> +		 * 'mov imm32, %eax' instead.
+>>> 		 */
+>>> 		emit_mov_imm32(&prog, false, dst_reg, imm32_lo);
+>>> 	} else {
+>>> -		/* movabsq %rax, imm64 */
+>>> +		/* movabs imm64, %rax */
+>>=20
+>> 		^^^^^ Should this be moveabsq?=20
+>>=20
+>>> 		EMIT2(add_1mod(0x48, dst_reg), add_1reg(0xB8, dst_reg));
+>>> 		EMIT(imm32_lo, 4);
+>>> 		EMIT(imm32_hi, 4);
+>=20
+> Song, can you please trim replies; I only found what you said because of
+> Josh's reply.
+
+Sorry for the problem. I will trim in the future.=20
+
+Song
