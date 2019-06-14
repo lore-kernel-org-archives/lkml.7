@@ -2,188 +2,87 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE18C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32A9BC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 623D02183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 184E721841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfFNSAw (ORCPT
+        id S1727240AbfFNSAf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:00:52 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33011 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726762AbfFNSAu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:00:50 -0400
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id DE0129E82EEBBC0ED718;
-        Fri, 14 Jun 2019 19:00:46 +0100 (IST)
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
- by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 14 Jun 2019 19:00:39 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
-        <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v4 03/14] ima: generalize ima_write_policy() and raise uploaded data size limit
-Date:   Fri, 14 Jun 2019 19:55:02 +0200
-Message-ID: <20190614175513.27097-4-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614175513.27097-1-roberto.sassu@huawei.com>
-References: <20190614175513.27097-1-roberto.sassu@huawei.com>
+        Fri, 14 Jun 2019 14:00:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41486 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726915AbfFNSAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:00:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 652B481F13;
+        Fri, 14 Jun 2019 18:00:29 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DA8B95D982;
+        Fri, 14 Jun 2019 18:00:24 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v2 0/5] x86/bpf: unwinder fixes
+Date:   Fri, 14 Jun 2019 12:56:39 -0500
+Message-Id: <cover.1560534694.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.154]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 14 Jun 2019 18:00:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ima_write_policy() is being used to load a new policy from user space. This
-function can be reused to load different types of data.
+v2:
 
-This patch renames ima_write_policy() to ima_write_data() and executes the
-appropriate actions depending on the opened file in the securityfs
-filesystem.
+- Simplified the frame pointer fixes - instead of using R12, just
+  continue to use RBP for BPF_REG_FP, but use nested frames so the
+  unwinder can understand (suggested by David Laight).
 
-Also, this patch raises the uploaded data size limit to 64M, to accept
-files (e.g. digest lists) larger than a policy. The same limit is used
-for the SELinux policy.
+- Dropped the AT&T syntax patches for now.  I'm about to disappear for a
+  week and I don't have time to argue about whether code readability is
+  a good thing.
 
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
----
- security/integrity/ima/ima_fs.c | 68 +++++++++++++++++++--------------
- 1 file changed, 40 insertions(+), 28 deletions(-)
+- I can do the 32-bit version of the fix when I get back.  It should be
+  easy enough.
 
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 02980b55a3f1..9a10b62e380f 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -27,6 +27,14 @@
- 
- static DEFINE_MUTEX(ima_write_mutex);
- 
-+static struct dentry *ima_dir;
-+static struct dentry *ima_symlink;
-+static struct dentry *binary_runtime_measurements;
-+static struct dentry *ascii_runtime_measurements;
-+static struct dentry *runtime_measurements_count;
-+static struct dentry *violations;
-+static struct dentry *ima_policy;
-+
- bool ima_canonical_fmt;
- static int __init default_canonical_fmt_setup(char *str)
- {
-@@ -319,25 +327,32 @@ static ssize_t ima_read_file(char *path, enum kernel_read_file_id file_id)
- 		return pathlen;
- }
- 
--static ssize_t ima_write_policy(struct file *file, const char __user *buf,
--				size_t datalen, loff_t *ppos)
-+static ssize_t ima_write_data(struct file *file, const char __user *buf,
-+			      size_t datalen, loff_t *ppos)
- {
- 	char *data;
- 	ssize_t result;
--
--	if (datalen >= PAGE_SIZE)
--		datalen = PAGE_SIZE - 1;
-+	struct dentry *dentry = file_dentry(file);
- 
- 	/* No partial writes. */
- 	result = -EINVAL;
- 	if (*ppos != 0)
- 		goto out;
- 
--	data = memdup_user_nul(buf, datalen);
--	if (IS_ERR(data)) {
--		result = PTR_ERR(data);
-+	result = -EFBIG;
-+	if (datalen + 1 > 64 * 1024 * 1024)
- 		goto out;
--	}
-+
-+	result = -ENOMEM;
-+	data = vmalloc(datalen + 1);
-+	if (!data)
-+		goto out;
-+
-+	result = -EFAULT;
-+	if (copy_from_user(data, buf, datalen) != 0)
-+		goto out_free;
-+
-+	data[datalen] = '\0';
- 
- 	result = mutex_lock_interruptible(&ima_write_mutex);
- 	if (result < 0)
-@@ -345,34 +360,31 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
- 
- 	if (data[0] == '/') {
- 		result = ima_read_file(data, READING_POLICY);
--	} else if (ima_appraise & IMA_APPRAISE_POLICY) {
--		pr_err("signed policy file (specified as an absolute pathname) required\n");
--		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
--				    "policy_update", "signed policy required",
--				    1, 0);
--		if (ima_appraise & IMA_APPRAISE_ENFORCE)
--			result = -EACCES;
-+	} else if (dentry == ima_policy) {
-+		if (ima_appraise & IMA_APPRAISE_POLICY) {
-+			pr_err("signed policy file (specified as an absolute pathname) required\n");
-+			integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
-+					    "policy_update",
-+					    "signed policy required", 1, 0);
-+			if (ima_appraise & IMA_APPRAISE_ENFORCE)
-+				result = -EACCES;
-+		} else {
-+			result = ima_parse_add_rule(data);
-+		}
- 	} else {
--		result = ima_parse_add_rule(data);
-+		pr_err("Unknown data type\n");
-+		result = -EINVAL;
- 	}
- 	mutex_unlock(&ima_write_mutex);
- out_free:
--	kfree(data);
-+	vfree(data);
- out:
--	if (result < 0)
-+	if (dentry == ima_policy && result < 0)
- 		valid_policy = 0;
- 
- 	return result;
- }
- 
--static struct dentry *ima_dir;
--static struct dentry *ima_symlink;
--static struct dentry *binary_runtime_measurements;
--static struct dentry *ascii_runtime_measurements;
--static struct dentry *runtime_measurements_count;
--static struct dentry *violations;
--static struct dentry *ima_policy;
--
- enum ima_fs_flags {
- 	IMA_FS_BUSY,
- };
-@@ -453,7 +465,7 @@ static int ima_release_policy(struct inode *inode, struct file *file)
- 
- static const struct file_operations ima_measure_policy_ops = {
- 	.open = ima_open_policy,
--	.write = ima_write_policy,
-+	.write = ima_write_data,
- 	.read = seq_read,
- 	.release = ima_release_policy,
- 	.llseek = generic_file_llseek,
+v1 is here:
+https://lkml.kernel.org/r/cover.1560431531.git.jpoimboe@redhat.com
+
+
+Josh Poimboeuf (4):
+  objtool: Fix ORC unwinding in non-JIT BPF generated code
+  x86/bpf: Move epilogue generation to a dedicated function
+  x86/bpf: Fix 64-bit JIT frame pointer usage
+  x86/unwind/orc: Fall back to using frame pointers for generated code
+
+Song Liu (1):
+  perf/x86: Always store regs->ip in perf_callchain_kernel()
+
+ arch/x86/events/core.c       |  10 +--
+ arch/x86/kernel/unwind_orc.c |  26 ++++++--
+ arch/x86/net/bpf_jit_comp.c  | 115 +++++++++++++++++++----------------
+ kernel/bpf/core.c            |   5 +-
+ tools/objtool/check.c        |  16 ++++-
+ 5 files changed, 107 insertions(+), 65 deletions(-)
+
 -- 
-2.17.1
+2.20.1
 
