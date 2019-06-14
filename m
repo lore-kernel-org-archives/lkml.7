@@ -2,156 +2,109 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1158AC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B23EC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4B642173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 217A52168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:56:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="UYNvvqHs"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZK18+j/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726893AbfFNUy3 (ORCPT
+        id S1726187AbfFNU4T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:54:29 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39938 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726187AbfFNUy2 (ORCPT
+        Fri, 14 Jun 2019 16:56:19 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45502 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbfFNU4T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:54:28 -0400
-Received: by mail-pg1-f193.google.com with SMTP id d30so2176630pgm.7
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 13:54:28 -0700 (PDT)
+        Fri, 14 Jun 2019 16:56:19 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s21so2164273pga.12;
+        Fri, 14 Jun 2019 13:56:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OKHkgrIbFIJQCw8wD1XxUrC5d565aFWlPJdUMDKpdyQ=;
-        b=UYNvvqHsSN3OaOxZAwJbcHL/kAM6bZCt067wRLaW4K0iLAEnyEuF49dvaz4R2zUK11
-         7rG44DxDakEJrq1wsGwvd3paGg/qc/a2juliCIwXm3mrmA0s+IpB93Q0zFwd5ntNN1JC
-         DDiqbbQ4uHNrbwHy8I+7jSU82ex56I/A91uD186Frx7w406ZHmXMf69GhoL6OFtnBZfs
-         81sTgsbYzCOXOuUJ9Ug6qekjUNk+wtcozA3VKnwDhvQO4HHPEoiS9x+4nftynLX3XOpu
-         k/y7UnfgwWcCh0eMSL2wPUzWbe5Pl0H92YIhGvtJ6UTckOAUReRQu1mYr0xEqcVLnhXi
-         i8jQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Yne9fkU6wE/82N/AFeecOPZEhmtxL6CFlvongVG7mfE=;
+        b=DZK18+j/Zl+kVuDlssgW7C9bDCoD1Qr+/Mmke0JecU4VD4daD2/SUDN3/4UOWFDeUI
+         CsLNIKid5hnOv8RX8ROzGtFNVPZW7izEXTz+JkZ43/Ia0Xq6A1+W92ObG/VwuM4hB+Ny
+         uOh/I6BFWw1ds5ZZws3gfzSBzFYdhDVX/D6JVykAcbve6VObBW2ET0dmx3WxSNn0bL/r
+         YDXaPKAPKH150QgCqmFSLdewyGVGOB8KsREwIDh8RGLVGiw343ts1MHXfFYPrUN83rGF
+         v/stxJCqMWqUfgWF6JqqZIEG/4YxONKFqeBYEGIH/Exr4UK7BbWM8C77hvMWAqEcSW6T
+         n/0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OKHkgrIbFIJQCw8wD1XxUrC5d565aFWlPJdUMDKpdyQ=;
-        b=lJ297mSXSZ1oI4r1k4nsa9CEnhLuPWQO1kJlHmyBkTnggPC1eUW8C3Yo94DO2j77B/
-         bgoxkqlG7v+JCU4gJfDXxpy1QN8BL5hyyHQULxAkdv5hqFGEvZujcXKZ/Rt1CR1sOGhH
-         b0B7HV2IWhfljTGZABSOyWFakm3YpUdwl8zOI7KXkL3E0B70rLXB7MfIV+wdY6XBLPCj
-         vX8zuhv0sCjaG3YfFWy9NsuZvirjdxKm2KzfKthfkkfFZrPogzPgF9WbnEi5olO6Za4i
-         0QzUnpWCRUYQ8NpjCS79vX5CPr12D9ch1SGR2+W7zkcdx5j4EYoFAp9oQ3yyk2OuQHxn
-         k6ag==
-X-Gm-Message-State: APjAAAXko4KRsCZ4m/bov3+RtO4Ehk54rVvyv3XT0VImS//H8UfX0CMR
-        +UNxFw+WfNM6lsGWAH6isfRZzu80wuL+fUKAQht5dg==
-X-Google-Smtp-Source: APXvYqxJQiLj537BJ3ZR5Sc93ULFhtds6hlQxqUz2ekknc3TBei1vqS5haeJD3AIue6VRnuxGWBLCLJqsyCPEP1Wv9Y=
-X-Received: by 2002:a63:306:: with SMTP id 6mr24636738pgd.263.1560545667771;
- Fri, 14 Jun 2019 13:54:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Yne9fkU6wE/82N/AFeecOPZEhmtxL6CFlvongVG7mfE=;
+        b=g2jcfqD3a+TDoN+96ZjXBC8gwWmYluMHKh43A8N7Dh5C/oa9JZIU1UXsVZ1cJ20ytA
+         BXhf6wN6ML1k7sBG9H1U2Mkohj+WaeFUN1C67M+6tmlAXvxUW2cNlIcM0bjB11NT9tg8
+         ZJlIFeDL5Z+eT5G2EPckHGAp0f3S74aE99/IqfAWIB5CZWDWc/cJgTCisDLVlMBVafCp
+         Di6SO1xeio5goVk4xVcd223uOlLY7e1F1GK0JktYt74IcyODXyilUfHZPxGN3i459PK/
+         6qoTlnzxeLqiJJ1S8PJO9Yfv+7atMKN/93343zWeYUnfspWWKScqxbRPUpJKur5LrX4t
+         PXZQ==
+X-Gm-Message-State: APjAAAWGYlTBYGEDHe9SfYKzGH86wtJ/YRQDymQQizU2t96l2lMXoedR
+        nddbdVu4tU/OV6nf11USCNc=
+X-Google-Smtp-Source: APXvYqz8fF3d09X3S5MDTl9m8/QKwwEvli9hG2LfLqQI22wUh+UIK5jKnhAhsQgDhY1T7Z/EgREJ0A==
+X-Received: by 2002:a63:fb4b:: with SMTP id w11mr3077734pgj.415.1560545778214;
+        Fri, 14 Jun 2019 13:56:18 -0700 (PDT)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:6345])
+        by smtp.gmail.com with ESMTPSA id y185sm3781367pfy.110.2019.06.14.13.56.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 13:56:17 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 13:56:15 -0700
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 1/5] perf/x86: Always store regs->ip in
+ perf_callchain_kernel()
+Message-ID: <20190614205614.zr6awljx3qdg2fnb@ast-mbp.dhcp.thefacebook.com>
+References: <cover.1560534694.git.jpoimboe@redhat.com>
+ <81b0cdc5aa276dac315a0536df384cc82da86243.1560534694.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-References: <20190614171713.89262-1-nhuck@google.com>
-In-Reply-To: <20190614171713.89262-1-nhuck@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 14 Jun 2019 13:54:16 -0700
-Message-ID: <CAKwvOd=jFYn=7NGPD8UDx3_g30qD+40bCjzmWJJSzmb6pNUusQ@mail.gmail.com>
-Subject: Re: [PATCH] wl18xx: Fix Wunused-const-variable
-To:     Nathan Huckleberry <nhuck@google.com>, eliad@wizery.com,
-        arik@wizery.com
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <81b0cdc5aa276dac315a0536df384cc82da86243.1560534694.git.jpoimboe@redhat.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:17 AM 'Nathan Huckleberry' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> Clang produces the following warning
->
-> drivers/net/wireless/ti/wl18xx/main.c:1850:43: warning: unused variable
-> 'wl18xx_iface_ap_cl_limits' [-Wunused-const-variable] static const struct
-> ieee80211_iface_limit wl18xx_iface_ap_cl_limits[] = { ^
-> drivers/net/wireless/ti/wl18xx/main.c:1869:43: warning: unused variable
-> 'wl18xx_iface_ap_go_limits' [-Wunused-const-variable] static const struct
-> ieee80211_iface_limit wl18xx_iface_ap_go_limits[] = { ^
->
-> The commit that added these variables never used them. Removing them.
+On Fri, Jun 14, 2019 at 12:56:40PM -0500, Josh Poimboeuf wrote:
+> From: Song Liu <songliubraving@fb.com>
+> 
+> The stacktrace_map_raw_tp BPF selftest is failing because the RIP saved
+> by perf_arch_fetch_caller_regs() isn't getting saved by
+> perf_callchain_kernel().
+> 
+> This was broken by the following commit:
+> 
+>   d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> 
+> With that change, when starting with non-HW regs, the unwinder starts
+> with the current stack frame and unwinds until it passes up the frame
+> which called perf_arch_fetch_caller_regs().  So regs->ip needs to be
+> saved deliberately.
+> 
+> Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
-Previous thread, for context:
-https://groups.google.com/forum/#!topic/clang-built-linux/1Lu1GT9ic94
+It's not cool to remove people's SOB.
+It's Song's patch. His should be first and your second.
 
-Looking at drivers/net/wireless/ti/wl18xx/main.c, there 4 globally
-declared `struct ieee80211_iface_limit` but as your patch notes, only
-2 are used.  The thing is, their uses are in a `struct
-ieee80211_iface_limit []`.
-
-Looking at
-$ git blame drivers/net/wireless/ti/wl18xx/main.c -L 1850
-points to
-commit 7845af35e0de ("wlcore: add p2p device support")
-Adding Eliad and Arik to the thread; it's not clear to me what the
-these variables were supposed to do, but seeing as the code in
-question was already dead, this is no functional change from a user's
-perspective.  With that in mind:
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-So I'd at least add the tag.
-Fixes: 7845af35e0de ("wlcore: add p2p device support")
-
-> --- a/drivers/net/wireless/ti/wl18xx/main.c
-> +++ b/drivers/net/wireless/ti/wl18xx/main.c
-> @@ -1847,44 +1847,6 @@ static const struct ieee80211_iface_limit wl18xx_iface_ap_limits[] = {
->         },
->  };
->
-> -static const struct ieee80211_iface_limit wl18xx_iface_ap_cl_limits[] = {
-> -       {
-> -               .max = 1,
-> -               .types = BIT(NL80211_IFTYPE_STATION),
-> -       },
-> -       {
-> -               .max = 1,
-> -               .types = BIT(NL80211_IFTYPE_AP),
-> -       },
-> -       {
-> -               .max = 1,
-> -               .types = BIT(NL80211_IFTYPE_P2P_CLIENT),
-> -       },
-> -       {
-> -               .max = 1,
-> -               .types = BIT(NL80211_IFTYPE_P2P_DEVICE),
-> -       },
-> -};
-> -
-> -static const struct ieee80211_iface_limit wl18xx_iface_ap_go_limits[] = {
-> -       {
-> -               .max = 1,
-> -               .types = BIT(NL80211_IFTYPE_STATION),
-> -       },
-> -       {
-> -               .max = 1,
-> -               .types = BIT(NL80211_IFTYPE_AP),
-> -       },
-> -       {
-> -               .max = 1,
-> -               .types = BIT(NL80211_IFTYPE_P2P_GO),
-> -       },
-> -       {
-> -               .max = 1,
-> -               .types = BIT(NL80211_IFTYPE_P2P_DEVICE),
-> -       },
-> -};
-> -
-
--- 
-Thanks,
-~Nick Desaulniers
