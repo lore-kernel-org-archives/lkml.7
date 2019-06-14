@@ -2,81 +2,88 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0DF3C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E9DC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A15521537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CA7D2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727050AbfFNJXk (ORCPT
+        id S1726944AbfFNJ0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:23:40 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:34117 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726953AbfFNJXk (ORCPT
+        Fri, 14 Jun 2019 05:26:23 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:50578 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfFNJ0W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:23:40 -0400
-X-Originating-IP: 88.190.179.123
-Received: from localhost (unknown [88.190.179.123])
-        (Authenticated sender: repk@triplefau.lt)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 2E5FE240018;
-        Fri, 14 Jun 2019 09:23:34 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 11:33:21 +0200
-From:   Remi Pommarel <repk@triplefau.lt>
-To:     Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        Ellie Reeves <ellierevves@gmail.com>,
-        linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] PCI: aardvark: Fix PCI_EXP_RTCTL conf register writing
-Message-ID: <20190614093320.GC12859@voidbox.localdomain>
-References: <20190614064225.24434-1-repk@triplefau.lt>
- <20190614105854.4c2f270f@windsurf>
+        Fri, 14 Jun 2019 05:26:22 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: by mail.steuer-voss.de (Postfix, from userid 1000)
+        id D56394CEDA; Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id D098E4CDFA;
+        Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 11:25:58 +0200 (CEST)
+From:   Nikolaus Voss <nv@vosn.de>
+X-X-Sender: nv@fox.voss.local
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        linux-leds@vger.kernel.org,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+In-Reply-To: <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+Message-ID: <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
+References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de> <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614105854.4c2f270f@windsurf>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hi Rafael,
 
-On Fri, Jun 14, 2019 at 10:58:54AM +0200, Thomas Petazzoni wrote:
-> Hello,
-> 
-> On Fri, 14 Jun 2019 08:42:25 +0200
-> Remi Pommarel <repk@triplefau.lt> wrote:
-> 
-> > PCI_EXP_RTCTL is used to activate PME interrupt only, so writing into it
-> > should not modify other interrupts' mask. The ISR mask polarity was also
-> > inverted, when PCI_EXP_RTCTL_PMEIE is set PCIE_MSG_PM_PME_MASK mask bit
-> > should actually be cleared.
-> > 
-> > Fixes: 6302bf3ef78d ("PCI: Init PCIe feature bits for managed host bridge alloc")
-> 
-> Are you sure about this Fixes tag ? This commit seems unrelated.
-> 
-> The commit introducing this issue is 8a3ebd8de328301aacbe328650a59253be2ac82c.
+On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
+> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
+> <nikolaus.voss@loewensteinmedical.de> wrote:
+>>
+>> If an ACPI SSDT overlay is loaded after built-in tables
+>> have been loaded e.g. via configfs or efivar_ssdt_load()
+>> it is necessary to rewalk the namespace to resolve
+>> references. Without this, relative and absolute paths
+>> like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
+>> correctly.
+>>
+>> Make configfs load use the same method as efivar_ssdt_load().
+>>
+>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+>
+> This is fine by me, so
+>
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>
+> Or if you want me to take this patch (without the other two in the
+> series), please let me know.
 
-The 6302bf3ef78d commit fixes PCI bridge's PME flag which introduces the
-configuration of PCI_EXP_RTCTL register (which wasn't used before). So,
-yes, PCI_EXP_RTCTL conf was flawed since 8a3ebd8de328 but the infinite
-interrupt loop happens only since that 6302bf3ef78d has fixed this PME
-flag bug.
+thanks. I think it would be the best if you take up this patch as it is an 
+independent topic. In retrospect it wasn't a good idea to put it into this 
+series.
 
-I chose to use 6302bf3ef78d because it was the one commit triggering
-the bug during my bisect process, but yes maybe using the commit that
-introduced (even if it was silently) the problem makes more sense.
+Kind regards,
+Niko
 
-So if you want I can do a v3 with this Fixes tag modification.
-
--- 
-Remi
+[...]
