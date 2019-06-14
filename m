@@ -2,99 +2,77 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48DD5C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4832BC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20FD920866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTTzFtfp"
+	by mail.kernel.org (Postfix) with ESMTP id 2A4E820866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfFNOZj (ORCPT
+        id S1728458AbfFNOZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:25:39 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46489 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728050AbfFNOZi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:25:38 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so2719665wrw.13;
-        Fri, 14 Jun 2019 07:25:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=1Xht2wc6GWx7rzL95f/p5mApKK3FegYBNbBLdEdfnr8=;
-        b=HTTzFtfpAF7+upWVnlS6HBVNxdNCAADrxhNr4kucftYM4HXyFdAvdhyZxI+VeHwMml
-         tpCWY6gmJD8HUgbBkc+253BCWQZ+EKwBarLVFbmzugu1hsPor4xw7UaSuB3fX50ahyeF
-         98A/bSytV5+rUoSWDjrvwqlHAyARUmOvVB1TopUb9S1Oe3HfKH+eCnuiCLhkLzp4aT2Y
-         f3SJIwUVEaHqrNeDpwUTycBzlA2luKc9RKu+ct38kupUocELFqB8akHFXXMH0TyT0S1R
-         DHre7T8ydHY4mLa3ZSteGpRlTAyWh9QS9ibS3245dY+bIiC8yk16FwhWl8lq9BDkeRYh
-         /MCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=1Xht2wc6GWx7rzL95f/p5mApKK3FegYBNbBLdEdfnr8=;
-        b=P0LsrmlvEtCY+2LPOikfguIHNDfeM9nZOelgwefKTWTk7NInK9MOVS7FqF2a6F94Hh
-         1q2MT2V/jS+NUn9EietTKRSx9Jzgb4Sfc+eezv0VU9S00maAZDgs2YdoC+QZktX25Vl6
-         q2XZxwoecaMWy/SMys/eTymUYgEeddvj1Dm4fHzET2IB1GmiBl1mAsFS2fDvwwgFRSiH
-         2L3P3lA7v5B8w+2cQ0aXy5z7wYIbH3hJuXWuU3UflmGADyIWKrcms7QD30ySndociFm6
-         cpvFzTf1xIjFpBZ0wglcmk3smGqmJmx0KFy3QXEH6psDhkHdB/d5X25eQxwIvk6lWtQJ
-         +gVQ==
-X-Gm-Message-State: APjAAAVNXfNMtN4o8Vo6pb62HSrnpyrr1c4V+ygO+7u0qNzvwFgqEduo
-        80W3XQmDvoMYiU/QR2h1PyrkEwqEw/Q=
-X-Google-Smtp-Source: APXvYqzwEPtYyUzAXb5zFSOaN+f0YKpZ4EqTXQYjc8hxuUV7sIsNkAI1Sk65ytkZJVM7eEj1ESqcLA==
-X-Received: by 2002:adf:ebc6:: with SMTP id v6mr3408593wrn.222.1560522336433;
-        Fri, 14 Jun 2019 07:25:36 -0700 (PDT)
-Received: from pali ([2a02:2b88:2:1::5cc6:2f])
-        by smtp.gmail.com with ESMTPSA id z14sm7966501wre.96.2019.06.14.07.25.35
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 14 Jun 2019 07:25:35 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 16:25:34 +0200
-From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     util-linux@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Help with reviewing dosfstools patches
-Message-ID: <20190614142534.4obcytnq4v3ejdni@pali>
-References: <20190614102513.4uwsu2wkigg3pimq@pali>
- <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
+        Fri, 14 Jun 2019 10:25:45 -0400
+Received: from ms.lwn.net ([45.79.88.28]:52266 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728050AbfFNOZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:25:44 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 73B88128A;
+        Fri, 14 Jun 2019 14:25:43 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 08:25:42 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Dmitry Vyukov <dvyukov@google.com>
+Cc:     "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        David Rientjes <rientjes@google.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v3] Add a document on rebasing and merging
+Message-ID: <20190614082542.3f8674eb@lwn.net>
+In-Reply-To: <CACT4Y+avfTeZTmhti=7nEadthZZpTnOCTdEuG2S7PovmAMkhZQ@mail.gmail.com>
+References: <20190612094503.120f699a@lwn.net>
+        <CACT4Y+avfTeZTmhti=7nEadthZZpTnOCTdEuG2S7PovmAMkhZQ@mail.gmail.com>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ae5097ee-12af-2807-d48c-4274b4fc856d@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Friday 14 June 2019 16:20:08 Enrico Weigelt, metux IT consult wrote:
-> On 14.06.19 12:25, Pali Rohár wrote:
-> > Hello!
-> > 
-> > Can somebody help with reviewing existing patches / pull requests for
-> > dosfstools project? https://github.com/dosfstools/dosfstools/pulls
-> 
-> I'll have a look at it. Could you perhaps prepare a (rebased) patch
-> queue ?
-> 
-> Does the project already have a maillist ?
+On Fri, 14 Jun 2019 11:59:03 +0200
+Dmitry Vyukov <dvyukov@google.com> wrote:
 
-No, there is no mailing list. Basically whole development is on github
-via github pull requests where are also put review comments and where is
-also whole discussion, including bug reports.
+> I will appreciate if you elaborate a bit on this "scale of the
+> project". I wondered about reasons for having the current hierarchy of
+> trees and complex merging for a while, but wasn't able to find any
+> rationale. What exactly scale do you mean? I know a number of projects
+> that are comparable to Linux kernel, with the largest being 2 orders
+> of magnitude larger than kernel both in terms of code size and rate of
+> change, that use single tree and linear history. 
 
--- 
-Pali Rohár
-pali.rohar@gmail.com
+I'm not sure what projects you're talking about, so it's hard to compare.
+
+During the 5.2 merge window, Linus did 209 pulls, bringing in just over
+12,000 changesets, from on the order of 1600 developers.  Even if, at the
+beginning of the window, each of those pulls was set up to be a
+fast-forward, they would no longer be positioned that way once the first
+pull was done.
+
+Are you really saying that subsystem maintainers should be continuously
+rebasing their trees to avoid merges at the top level?  Do you see how
+much work that would take, how badly it would obscure the development
+history, and how many bugs it would introduce?  Or perhaps I misunderstood
+what you're arguing for?
+
+Thanks,
+
+jon
