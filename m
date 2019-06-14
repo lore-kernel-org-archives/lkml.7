@@ -2,86 +2,102 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBEA6C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5057CC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:18:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA11C2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DD652168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:18:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560543528;
+	bh=yUw78ab31KsAgb4Dq4yNI0QclpRo4jAujaKvDNXeT30=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=POPuQAEJpZN1SVnaYmTByrbkv7KMDZmsbj18DpDb/oI0pdK0ONcSPafJqPuNvBFHf
+	 cYWrsVn31mcXwniaWLEHQ3ufCagB2qwei6ClC7iH9kfEtM8EZW1WbYWlI2yqaMxpel
+	 /vXmotugIzYTNjRoiRUrghU3xrMolQ2XfjqDTMZA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbfFNUOE (ORCPT
+        id S1726144AbfFNUSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:14:04 -0400
-Received: from ms.lwn.net ([45.79.88.28]:53924 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfFNUOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:14:03 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 2474A128A;
-        Fri, 14 Jun 2019 20:14:02 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 14:14:01 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Jens Axboe <axboe@kernel.dk>, Tejun Heo <tj@kernel.org>,
-        Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>, linux-block@vger.kernel.org,
-        cgroups@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-security-module@vger.kernel.org
-Subject: Re: [PATCH v4 05/28] docs: cgroup-v1: convert docs to ReST and
- rename to *.rst
-Message-ID: <20190614141401.48bfb266@lwn.net>
-In-Reply-To: <c1dd623359f44f05863456b8bceba0d8f3e42f38.1560361364.git.mchehab+samsung@kernel.org>
-References: <cover.1560361364.git.mchehab+samsung@kernel.org>
-        <c1dd623359f44f05863456b8bceba0d8f3e42f38.1560361364.git.mchehab+samsung@kernel.org>
-Organization: LWN.net
+        Fri, 14 Jun 2019 16:18:46 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:33599 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725808AbfFNUSq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:18:46 -0400
+Received: by mail-qk1-f195.google.com with SMTP id r6so2543305qkc.0;
+        Fri, 14 Jun 2019 13:18:45 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=2S0DTzr7T25H6ahTWfAr0eKoReCAR3ggo1mfN8CFCHQ=;
+        b=ZXPPb90LqGM4qxfK8ApOkyeWsu4ywqFSj0R6QWJBxAtrd0Vprwy6N9GHREaZVFYpyq
+         m/Kv7D8foYoWI0l31FU7soeuBmCnv/+SGTYuujLt4chgm/mCHK8WNgoVdCcTkB75k7f+
+         Pu+KbAA1PurYloVqpPofEIrITMxkdw26ArsMFujnm1AJwRXEowUh3vZiufjLxTphGanh
+         nvo+xLC5kOxiMqvzCIgTC80t0FCe2nF2jgdGnyLeI2ii7KPhOTkVUpYccZJixMWyQIok
+         FSpSwuioNPxhdB9Sg/Oz37FUxuTf739p+Y2BYXBRRptgJTcoj4Igjfxx+e9M/STFs+k7
+         j7wQ==
+X-Gm-Message-State: APjAAAUlp3RYnW5m8EDmvxQHWAcYE2A6RyavayhZvgudlX67I+cCaIhQ
+        6p0WYqC9R19vAWin4mVfuQ==
+X-Google-Smtp-Source: APXvYqwsKNTd0AOI6kAgPfjhl2V5K+SFwP4wtJ8cEJEVgj35zYt85Q1VitdZH1kp+GJIOs7FE8KOVw==
+X-Received: by 2002:a37:e40a:: with SMTP id y10mr20766206qkf.303.1560543525092;
+        Fri, 14 Jun 2019 13:18:45 -0700 (PDT)
+Received: from localhost ([64.188.179.243])
+        by smtp.gmail.com with ESMTPSA id l6sm1705339qkc.89.2019.06.14.13.18.43
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 13:18:44 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 14:18:42 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-media@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Subject: Re: [PATCH v3 01/12] dt-bindings: media: sunxi-ir: add A31 compatible
+Message-ID: <20190614201842.GA6768@bogus>
+References: <20190528161440.27172-1-peron.clem@gmail.com>
+ <20190528161440.27172-2-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190528161440.27172-2-peron.clem@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 14:52:41 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-
-> Convert the cgroup-v1 files to ReST format, in order to
-> allow a later addition to the admin-guide.
+On Tue, 28 May 2019 18:14:29 +0200, =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= wrote:
+> Allwinner A31 has introduced a new memory mapping and a
+> reset line.
 > 
-> The conversion is actually:
->   - add blank lines and identation in order to identify paragraphs;
->   - fix tables markups;
->   - add some lists markups;
->   - mark literal blocks;
->   - adjust title markups.
+> The difference in memory mapping are :
 > 
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
+> - In the configure register there is a new sample bit
+>   and Allwinner has introduced the active threshold feature.
 > 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Acked-by: Tejun Heo <tj@kernel.org>
+> - In the status register a new STAT bit is present.
+> 
+> Note: CGPO and DRQ_EN bits are removed on A31 but present on A13
+> and on new SoCs like A64/H6.
+> This is actually not an issue as these bits are togglable and new
+> SoCs have a dedicated bindings.
+> 
+> Introduce this bindings to make a difference since this generation.
+> And declare the reset line required since A31.
+> 
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/media/sunxi-ir.txt | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
 
-This one, too, has linux-next stuff that keeps it from applying to
-docs-next.  Tejun, would you like to carry it on top of your work?
-
-(This means I won't be able to apply #6 either, naturally).
-
-Thanks,
-
-jon
+Reviewed-by: Rob Herring <robh@kernel.org>
