@@ -2,132 +2,441 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0087C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F51C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:07:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EC332173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560542580;
-	bh=okX77Kku7vIZ59hEo1uFUU6M21azpJSVafYd4cQW/aI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=kFBlydJYvWxNMVrk/pqZN9Ofrg7vKSpyBWwYcv/2TSR0k/Z4yupWJ3huUq5MKEMoO
-	 WLqBIZA1AbP1aWAPDbj7qIsP4tBMdM9UzNE0kyR7BT/oNtNSudyDM6vVE2FiFu2fW+
-	 56lDiBSkiUaTSV9pipFurVJfwHs06poeQFhGPsRA=
+	by mail.kernel.org (Postfix) with ESMTP id 295CA20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:07:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfFNUC6 (ORCPT
+        id S1726063AbfFNUHS convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:02:58 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39915 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725825AbfFNUC6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:02:58 -0400
-Received: by mail-qt1-f196.google.com with SMTP id i34so3910640qta.6;
-        Fri, 14 Jun 2019 13:02:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=XcuM7K9cI0UVePrxFlGBexaTFIUHFIVo5KkIzm6e+gw=;
-        b=hLFC2FBQl6ExeriTXWpqg+lTQLNyx7oiqJlcJtW5p7dIVpNR/713tQHUmBcEmbF50g
-         EM9hlT4xym5+VrGtWzQ3zMzigjQOpdKhkdgtmh6SoFGS9voFjFKXorSiHHiA8OUp0xZY
-         q5IErmOUUZV06pBOmI23oJWEpQiiQ5Gcwpd66gYyLF58q0pXzUT1vIvNlQGDPk2SYPrY
-         268F7qjTDcX6v1w53n7RS9r6Cab538jFbIO8QlgZQVkX63Mme8nOe6xDBYvzXZYHRyoY
-         EbkWiwjsLghYr2OPfcQriM+zAFB6cMfj7Q28AJyD+ujDl3Vpu49wXOnOSFfjcG//wVvw
-         9rAw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=XcuM7K9cI0UVePrxFlGBexaTFIUHFIVo5KkIzm6e+gw=;
-        b=dY7/MvoSAC/4kTA08s9AFHSm6ASUisN05M7u/xwQQxf5y9DmrTKBl6n5cZUJZu5hZp
-         jkGVp+G3hKUCpwb44/hN5FHO0KNtv082SoSmKYy1kT5VmrK5b8xSQRm1a67BPwifg+uR
-         cgFU8B51NI0JYvjpX7QGmES+QsLkTAbycYF3Oa5T5h5JFpMaAQlePOgX1MISzLlYUjMJ
-         m7M8lwVT1G/NHbcI7YCDk3n+HDxFfaWjYWshBy3KHNRWm6fj8pnWm3z1hgIzMgG9Ycar
-         gmGZH1Eq1i7JcAcisiLL1KsEiqGjtXb2yKCjrydLpR+KlGUP0zdF6sMgIWZUVu4vKVuI
-         Y3TA==
-X-Gm-Message-State: APjAAAVdJTHcoZwigWOgWCJZh4r4twoEBGtudeygEqmxqQke9l9r2P40
-        MJ9pP93q4VJ7rtsoC1kxyRk=
-X-Google-Smtp-Source: APXvYqyh4Ra8wjNBM8Atf0vg7dQRSKKzmRh5crQ9zIdXkJP4Xw4odpoGuXqurIf62VkSC6gvmR4NvQ==
-X-Received: by 2002:ac8:264a:: with SMTP id v10mr50693866qtv.255.1560542577167;
-        Fri, 14 Jun 2019 13:02:57 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::6bab])
-        by smtp.gmail.com with ESMTPSA id p13sm1765815qkj.4.2019.06.14.13.02.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 13:02:55 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 13:02:53 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org
-Subject: [GIT PULL] cgroup fixes for v5.2-rc4
-Message-ID: <20190614200253.GB657710@devbig004.ftw2.facebook.com>
+        Fri, 14 Jun 2019 16:07:18 -0400
+Received: from mga11.intel.com ([192.55.52.93]:15874 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725802AbfFNUHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:07:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 13:07:13 -0700
+X-ExtLoop1: 1
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by orsmga004.jf.intel.com with ESMTP; 14 Jun 2019 13:07:13 -0700
+Received: from crsmsx103.amr.corp.intel.com (172.18.63.31) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Fri, 14 Jun 2019 13:07:12 -0700
+Received: from crsmsx101.amr.corp.intel.com ([169.254.1.187]) by
+ CRSMSX103.amr.corp.intel.com ([169.254.4.210]) with mapi id 14.03.0439.000;
+ Fri, 14 Jun 2019 14:07:09 -0600
+From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v7 18/18] x86/fsgsbase/64: Add documentation for FSGSBASE
+Thread-Topic: [PATCH v7 18/18] x86/fsgsbase/64: Add documentation for
+ FSGSBASE
+Thread-Index: AQHVBb/wZjduerPLCE6RrgdTn3cIcqabVRAAgADdggA=
+Date:   Fri, 14 Jun 2019 20:07:08 +0000
+Message-ID: <EEACF240-4772-417A-B516-95D9003D0D11@intel.com>
+References: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com>
+ <1557309753-24073-19-git-send-email-chang.seok.bae@intel.com>
+ <alpine.DEB.2.21.1906132246310.1791@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906132246310.1791@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.144.157.111]
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <9D8A8A00E791B2499DC6B3C7940E1749@intel.com>
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-This pull request has unusually high density of tricky fixes.
+> On Jun 13, 2019, at 23:54, Thomas Gleixner <tglx@linutronix.de> wrote:
+> 
+> On Wed, 8 May 2019, Chang S. Bae wrote:
+> 
+>> Subject: x86/fsgsbase/64: Add documentation for FSGSBASE
+> 
+> The proper prefix is Documentation/x86: 
+> 
+>> From: Andi Kleen <ak@linux.intel.com>
+>> 
+>> v2: Minor updates to documentation requested in review.
+>> v3: Update for new gcc and various improvements.
+>> v4: Address the typos pointed by Randy Dunlap
+> 
+> Please move the vX annoations below the --- marker so they are stripped out
+> automatically and I don't have to do it manually. They are not part of the
+> final changelog.
+> 
+>> Documentation/x86/fsgs.txt | 103 +++++++++++++++++++++++++++++++++++++++++++++
+> 
+> The x86 documentation got converted to RST recently. Also as this is a
+> 64bit specific documentation it belongs into Documentation/x86/x86_64 and
+> not into the generic x86 directory.
+> 
+>> +++ b/Documentation/x86/fsgs.txt
+>> @@ -0,0 +1,103 @@
+>> +
+> 
+> Documentation files require a SPDX license identifier as any other file.
+> 
+>> +Using FS and GS prefixes on 64-bit x86 linux
+> 
+> Moving this into the 64 bit specific folder spares all the 'oh this is
+> 64bit only' notices all over the place. 
+> 
+>> +
+>> +The x86 architecture supports segment prefixes per instruction to add an
+> 
+> per instruction? It's only for instructions which access memory, not for
+> instructions which are purely register based.
+> 
+>> +offset to an address.  On 64-bit x86, these are mostly nops, except for FS
+>> +and GS.
+>> +
+>> +This offers an efficient way to reference a global pointer.
+> 
+> That sentence does not make any sense. What has this to do with global
+> pointers?
+> 
+>> +The compiler has to generate special code to use these base registers,
+>> +or they can be accessed with inline assembler.
+>> +
+>> +	mov %gs:offset,%reg
+>> +	mov %fs:offset,%reg
+>> +
+>> +On 64-bit code, FS is used to address the thread local segment (TLS), declared
+> 
+> TLS is Thread Local Storage not Segment.
+> 
+>> +using thread. The compiler then automatically generates the correct prefixes
+> 
+> What means: declared using thread? I assume you meant declared with the
+> __thread storage class specifier. If so, why not using the proper technical
+> terms?
+> 
+>> +and relocations to access these values.
+>> +
+>> +FS is normally managed by the runtime code or the threading library.
+>> +Overwriting it can break a lot of things (including syscalls and gdb),
+>> +but it can make sense to save/restore it for threading purposes.
+>> +
+>> +GS is freely available, but may need special (compiler or inline assembler)
+>> +code to use.
+>> +
+>> +Traditionally 64-bit FS and GS could be set by the arch_prctl system call
+> 
+> I don't see a tradition here and 'could' is just wrong.
+> 
+>> +
+>> +	arch_prctl(ARCH_SET_GS, value)
+>> +	arch_prctl(ARCH_SET_FS, value)
+>> +
+>> +[There was also an older method using modify_ldt(), inherited from 32-bit,
+>> +but this is not discussed here.]
+> 
+> So why is it even mentioned when it's not longer existing?
+> 
+>> +However, using a syscall is problematic for user space threading libraries
+>> +that want to context switch in user space. The whole point of them
+>> +is avoiding the overhead of a syscall.
+> 
+> User space threading libraries are one particular use case and not really
+> interesting for documenting this functionality. Documentation is about the
+> concepts and not about what a particular usecase prefers.
+> 
+>> It's also cleaner for compilers
+>> +wanting to use the extra register to use instructions to write
+>> +it, or read it directly to compute addresses and offsets.
+> 
+> I don't see the value of this either.
+> 
+>> +Newer Intel CPUs (Ivy Bridge and later) added new instructions to directly
+>> +access these registers quickly from user context:
+> 
+> The CPUs added new instructions?
+> 
+>> +	RDFSBASE %reg	read the FS base	(or _readfsbase_u64)
+>> +	RDGSBASE %reg	read the GS base	(or _readgsbase_u64)
+>> +
+>> +	WRFSBASE %reg	write the FS base	(or _writefsbase_u64)
+>> +	WRGSBASE %reg	write the GS base	(or _writegsbase_u64)
+>> +
+>> +If you use the intrinsics, include <immintrin.h> and set the -mfsgsbase option.
+>> +
+>> +The instructions are supported by the CPU when the "fsgsbase" string is shown
+>> +in /proc/cpuinfo (or directly retrieved through the CPUID instruction,
+>> +7:0 (ebx), word 9, bit 0).
+>> +
+>> +The instructions are only available to 64-bit binaries.
+>> +
+>> +In addition the kernel needs to explicitly enable these instructions, as it
+>> +may otherwise not correctly context switch the state. Newer Linux
+>> +kernels enable this. When the kernel does not enable the instruction
+>> +they will fault with a #UD exception.
+> 
+> .....
+> 
+> This is completely unstructured information hastily cobbled together.
+> 
+> As time is pressing for the 5.3 merge window, I reworked the documentation
+> as below. Please review and comment ASAP so I can merge the whole lot.
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+> 8<------------------
+> From: Thomas Gleixner <tglx@linutronix.de>
+> Subject: Documentation/x86/64: Add documentation for GS/FS addressing mode
+> Date: Thu,  13 Jun 2019 22:04:24 +0300
+> 
+> 
+> Originally-by: Andi Kleen <ak@linux.intel.com>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+> Documentation/x86/x86_64/fsgs.rst  |  200 +++++++++++++++++++++++++++++++++++++
+> Documentation/x86/x86_64/index.rst |    1 
+> 2 files changed, 201 insertions(+)
+> create mode 100644 Documentation/x86/fsgs.txt
+> 
+> --- /dev/null
+> +++ b/Documentation/x86/x86_64/fsgs.rst
+> @@ -0,0 +1,200 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +Using FS and GS segments in user space applications
+> +===================================================
+> +
+> +The x86 architecture supports segmentation. Instructions which access
+> +memory can use segment register based addressing mode. The following
+> +notation is used to address a byte within a segment:
+> +
+> +  Segment-register:Byte-address
+> +
+> +The segment base address is added to the Byte-address to compute the
+> +resulting virtual address which is accessed. This allows to access multiple
+> +instances of data with the identical Byte-address, i.e. the same code. The
+> +selection of a particular instance is purely based on the base-address in
+> +the segment register.
+> +
+> +In 32-bit mode the CPU provides 6 segments, which also support segment
+> +limits. The limits can be used to enforce address space protections.
+> +
+> +In 64-bit mode the CS/SS/DS/ES segments are ignored and the base address is
+> +always 0 to provide a full 64bit address space. The FS and GS segments are
+> +still functional in 64-bit mode.
+> +
+> +Common FS and GS usage
+> +------------------------------
+> +
+> +The FS segment is commonly used to address Thread Local Storage (TLS). FS
+> +is usually managed by runtime code or a threading library. Variables
+> +declared with the '__thread' storage class specifier are instantiated per
+> +thread and the compiler emits the FS: address prefix for accesses to these
+> +variables. Each thread has its own FS base address so common code can be
+> +used without complex address offset calculations to access the per thread
+> +instances. Applications should not use FS for other purposes when they use
+> +runtimes or threading libraries which manage the per thread FS.
+> +
+> +The GS segment has no common use and can be used freely by
+> +applications. There is no storage class specifier similar to __thread which
+> +would cause the compiler to use GS based addressing modes. Newer versions
+> +of GCC and Clang support GS based addressing via address space identifiers.
+> +
+> +
+> +Reading and writing the FS/GS base address
+> +------------------------------------------
+> +
+> +There exist two mechanisms to read and write the FS/FS base address:
+> +
+> + - the arch_prctl() system call
+> +
+> + - the FSGSBASE instruction family
+> +
+> +Accessing FS/GS base with arch_prctl()
+> +--------------------------------------
+> +
+> + The arch_prctl(2) based mechanism is available on all 64bit CPUs and all
+> + kernel versions.
+> +
+> + Reading the base:
+> +
+> +   arch_prctl(ARCH_GET_FS, &fsbase);
+> +   arch_prctl(ARCH_GET_GS, &gsbase);
+> +
+> + Writing the base:
+> +
+> +   arch_prctl(ARCH_SET_FS, fsbase);
+> +   arch_prctl(ARCH_SET_GS, gsbase);
+> +
+> + The ARCH_SET_GS prctl may be disabled depending on kernel configuration
+> + and security settings.
+> +
+> +Accessing FS/GS base with the FSGSBASE instructions
+> +---------------------------------------------------
+> +
+> + With the Ivy Bridge CPU generation Intel introduced a new set of
+> + instructions to access the FS and GS base registers directly from user
+> + space. These instructions are also supported on AMD Family 17H CPUs. The
+> + following instructions are available:
+> +
+> +  =============== ===========================
+> +  RDFSBASE %reg   Read the FS base register
+> +  RDGSBASE %reg   Read the GS base register
+> +  WRFSBASE %reg   Write the FS base register
+> +  WRGSBASE %reg   Write the GS base register
+> +  =============== ===========================
+> +
+> + The instructions avoid the overhead of the arch_prctl() syscall and allow
+> + more flexible usage of the FS/GS addressing modes in user space
+> + applications. This does not prevent conflicts between threading libraries
+> + and runtimes which utilize FS and applications which want to use it for
+> + their own purpose.
+> +
+> +FSGSBASE instructions enablement
+> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> + The instructions are enumerated in CPUID leaf 7, bit 0 of EBX. If
+> + available /proc/cpuinfo shows 'fsgsbase' in the flag entry of the CPUs.
+> +
+> + The availability of the instructions is not enabling them
+> + automatically. The kernel has to enable them explicitely in CR4. The
+> + reason for this is that older kernels make assumptions about the values in
+> + the GS register and enforce them when GS base is set via
+> + arch_prctl(). Allowing user space to write arbitrary values to GS base
+> + would violate these assumptions and cause malfunction.
+> +
+> + On kernels which do not enable FSGSBASE the execution of the FSGSBASE
+> + instructions will fault with a #UD exception.
+> +
+> + The kernel provides reliable information about the enabled state in the
+> + ELF AUX vector. If the HWCAP2_FSGSBASE bit is set in the AUX vector, the
+> + kernel has FSGSBASE instructions enabled and applications can use them.
+> + The following code example shows how this detection works::
+> +
+> +   #include <sys/auxv.h>
+> +   #include <elf.h>
+> +
+> +   /* Will be eventually in asm/hwcap.h */
+> +   #ifndef HWCAP2_FSGSBASE
+> +   #define HWCAP2_FSGSBASE        (1 << 1)
+> +   #endif
+> +
+> +   ....
+> +
+> +   unsigned val = getauxval(AT_HWCAP2);
+> +
+> +   if (val & HWCAP2_FSGSBASE)
+> +        printf("FSGSBASE enabled\n");
+> +
+> +FSGSBASE instructions compiler support
+> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> +
+> +GCC version 6 and newer provide instrinsics for the FSGSBASE
+> +instructions. Clang supports them as well.
+> +
 
-* task_get_css() could deadlock when it races against a dying cgroup.
+Looks like GCC-4.6.4 and Clang 5 begin to support the intrinsics with -mfsgsbase,
+according to their documentations:
+	GCC - https://gcc.gnu.org/onlinedocs/gcc-4.6.4/gcc/X86-Built_002din-Functions.html#X86-Built_002din-Functions
+	Clang - https://releases.llvm.org/5.0.0/tools/clang/docs/ClangCommandLineReference.html
 
-* cgroup.procs didn't list thread group leaders with live threads.
-  This could mislead readers to think that a cgroup is empty when it's
-  not.  Fixed by making PROCS iterator include dead tasks.  I made a
-  couple mistakes making this change and this pull request contains a
-  couple follow-up patches.
+> +  =================== ===========================
+> +  _readfsbase_u64()   Read the FS base register
+> +  _readfsbase_u64()   Read the GS base register
+> +  _writefsbase_u64()  Write the FS base register
+> +  _writegsbase_u64()  Write the GS base register
+> +  =================== ===========================
+> +
+> +To utilize these instrinsics <immintrin.h> must be included in the source
+> +code and the compiler option -mfsgsbase has to be added.
+> +
+> +Compiler support for FS/GS based addressing
+> +-------------------------------------------
+> +
+> +GCC version 6 and newer provide support for FS/GS based addressing via
+> +Named Address Spaces. GCC implements the following address space
+> +identifiers for x86:
+> +
+> +  ========= ====================================
+> +  __seg_fs  Variable is addressed relative to FS
+> +  __seg_gs  Variable is addressed relative to GS
+> +  ========= ====================================
+> +
+> +The preprocessor symbols __SEG_FS and __SEG_GS are defined when these
+> +address spaces are supported. Code which implements fallback modes should
+> +check whether these symbols are defined. Usage example::
+> +
+> +  #ifdef __SEG_GS
+> +
+> +  long data0 = 0;
+> +  long data1 = 1;
+> +
+> +  long __seg_gs *ptr;
+> +
+> +  /* Check whether FSGSBASE is enabled by the kernel (HWCAP2_FSGSBASE) */
+> +  ....
+> +
+> +  /* Set GS to point to data0 */
+> +  _writegsbase_u64(&data0);
+> +
+> +  /* Access offset 0 of GS */
+> +  ptr = 0;
+> +  print("data0 = %ld\n", *ptr);
+> +
+> +  /* Set GS to point to data1 */
+> +  _writegsbase_u64(&data1);
+> +  /* ptr still addresses offset 0! */
+> +  print("data1 = %ld\n", *ptr);
+> +
 
-* When cpusets run out of online cpus, it updates cpusmasks of member
-  tasks in bizarre ways.  Joel improved the behavior significantly.
+s/print/printf/
 
-Thanks.
+Tested with GCC and Clang.
 
-The following changes since commit 9fb67d643f6f1892a08ee3a04ea54022d1060bb0:
+> +
+> +Clang does not provide these address space identifiers, but it provides
+> +an attribute based mechanism:
+> +
+> + ==================================== =====================================
+> +  __attribute__((address_space(256))  Variable is addressed relative to GS
+> +  __attribute__((address_space(257))  Variable is addressed relative to FS
+> + ==================================== =====================================
+> +
+> +FS/GS based addressing with inline assembly
+> +-------------------------------------------
+> +
+> +In case the compiler does not support address spaces, inline assembly can
+> +be used for FS/GS based addressing mode::
+> +
+> +	mov %fs:offset, %reg
+> +	mov %gs:offset, %reg
+> +
+> +	mov %reg, %fs:offset
+> +	mov %reg, %gs:offset
+> --- a/Documentation/x86/x86_64/index.rst
+> +++ b/Documentation/x86/x86_64/index.rst
+> @@ -14,3 +14,4 @@ x86_64 Support
+>    fake-numa-for-cpusets
+>    cpu-hotplug-spec
+>    machinecheck
+> +   fsgs
+> 
+> 
+> 
 
-  Merge tag 'pinctrl-v5.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl (2019-05-28 09:35:04 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git for-5.2-fixes
-
-for you to fetch changes up to d477f8c202d1f0d4791ab1263ca7657bbe5cf79e:
-
-  cpuset: restore sanity to cpuset_cpus_allowed_fallback() (2019-06-12 11:00:08 -0700)
-
-----------------------------------------------------------------
-Joel Savitz (1):
-      cpuset: restore sanity to cpuset_cpus_allowed_fallback()
-
-Odin Ugedal (1):
-      docs cgroups: add another example size for hugetlb
-
-Tejun Heo (6):
-      cgroup: Use css_tryget() instead of css_tryget_online() in task_get_css()
-      cgroup: Call cgroup_release() before __exit_signal()
-      cgroup: Implement css_task_iter_skip()
-      cgroup: Include dying leaders with live threads in PROCS iterations
-      cgroup: css_task_iter_skip()'d iterators must be advanced before accessed
-      cgroup: Fix css_task_iter_advance_css_set() cset skip condition
-
- Documentation/cgroup-v1/hugetlb.txt |  22 +++++---
- include/linux/cgroup-defs.h         |   1 +
- include/linux/cgroup.h              |  14 ++++-
- kernel/cgroup/cgroup.c              | 106 ++++++++++++++++++++++++++----------
- kernel/cgroup/cpuset.c              |  15 ++++-
- kernel/exit.c                       |   2 +-
- 6 files changed, 117 insertions(+), 43 deletions(-)
-
--- 
-tejun
