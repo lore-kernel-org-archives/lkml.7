@@ -2,104 +2,106 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7433BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EC3C31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 525E421848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E7AA21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560544321;
+	bh=RAAjmpNtKl3dcwPPtQ6DsSF5L3wkALcUxwx4JUzlU1s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EdCPSC0F5nXj8JYIsjSfhWW19J8VQAf0znXEmEoYC3CzcXCaHiLLSpvkm1S7T8H1L
+	 /JHPEl2HXd641sX5lxnEc7umuR9842edseOAScM4OaUdYsxqKFb6r5uk/twPp0bVaH
+	 +CnSLJ8CLCKLYo91CSdjyNOiX3+2pXgNS8+GND10=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728190AbfFNUbu (ORCPT
+        id S1727913AbfFNUar (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:31:50 -0400
-Received: from sauhun.de ([88.99.104.3]:56706 "EHLO pokefinder.org"
+        Fri, 14 Jun 2019 16:30:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727206AbfFNUbr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:31:47 -0400
-Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
-        by pokefinder.org (Postfix) with ESMTPSA id E6D7B2CF690;
-        Fri, 14 Jun 2019 22:31:44 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 22:31:44 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, Alan Tull <atull@kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>, Daniel Vetter <daniel@ffwll.ch>,
-        David Airlie <airlied@linux.ie>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        Jiri Slaby <jslaby@suse.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-fpga@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-spi@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Moritz Fischer <mdf@kernel.org>, Peter Rosin <peda@axentia.se>,
-        Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 06/28] drivers: Add generic helper to match by of_node
-Message-ID: <20190614203144.GB7991@kunai>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-7-git-send-email-suzuki.poulose@arm.com>
+        id S1727824AbfFNUan (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:43 -0400
+Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D3BF2184B;
+        Fri, 14 Jun 2019 20:30:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560544242;
+        bh=RAAjmpNtKl3dcwPPtQ6DsSF5L3wkALcUxwx4JUzlU1s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=udXeWZK9sEu4BeeRvGcyPygKRolFsy94GFph6TIBhJirB+vxSl4VycdQvrke7j6/4
+         lSq6MUU2zcnBO6HT4gSJJ/Q9IIvwtvwEc6BQ3Gw69IQjKYlCoIf39p9EflYiG6FNnS
+         K0Az/u8uxUbSidKV86dZZcI3mV85D40FlXWdYrEQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 08/18] net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
+Date:   Fri, 14 Jun 2019 16:30:24 -0400
+Message-Id: <20190614203037.27910-8-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190614203037.27910-1-sashal@kernel.org>
+References: <20190614203037.27910-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EuxKj2iCbKjpUGkD"
-Content-Disposition: inline
-In-Reply-To: <1560534863-15115-7-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
 
---EuxKj2iCbKjpUGkD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[ Upstream commit 62394708f3e01c9f2be6be74eb6305bae1ed924f ]
 
-> +
-> +int device_match_of_node(struct device *dev, const void *np)
-> +{
-> +	return dev->of_node == np;
-> +}
-> +EXPORT_SYMBOL_GPL(device_match_of_node);
+When non-bridged, non-vlan'ed mv88e6xxx port is moving down, error
+message is logged:
 
-Is it an option to 'static inline' this simple function in the header,
-saving the EXPORT?
+failed to kill vid 0081/0 for device eth_cu_1000_4
 
+This is caused by call from __vlan_vid_del() with vin set to zero, over
+call chain this results into _mv88e6xxx_port_vlan_del() called with
+vid=0, and mv88e6xxx_vtu_get() called from there returns -EINVAL.
 
---EuxKj2iCbKjpUGkD
-Content-Type: application/pgp-signature; name="signature.asc"
+On symmetric path moving port up, call goes through
+mv88e6xxx_port_vlan_prepare() that calls mv88e6xxx_port_check_hw_vlan()
+that returns -EOPNOTSUPP for zero vid.
 
------BEGIN PGP SIGNATURE-----
+This patch changes mv88e6xxx_vtu_get() to also return -EOPNOTSUPP for
+zero vid, then this error code is explicitly cleared in
+dsa_slave_vlan_rx_kill_vid() and error message is no longer logged.
 
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0EBDAACgkQFA3kzBSg
-KbZQeg/+MjmzU/IJj8oHfL4ndVmHrnLSPM/0OA0J/USTiS12dT9fwVXWkkaLZlRR
-cZkTt2QJ3UkAf+rbhooH8c/uo56rhY/LLFM7CT+4b360BZ1CYaVT8ttPRYSs5jtC
-CV9vMHwMl1kI1vAg5uSMb0EIjR/0dEl4Q8ol4MYMYqR7fusVx+qGRnVPW9zePbEI
-x3F/0woDahhQj0i12ETLSl2ONa8A54M1BgmOHRdcbfrdEnuUnyb0gmnKJDuQu7pz
-MDYW2ILMYPOewsH3DJSHpH7HuzgDTjqlgmWIBlKn0EbpgMT2UqyuoxHJ1lkOh4yk
-llNaipn5AyS6IbodA4F5TZu2NHJkPhwUgfCy9rXUG5/IGYPq43f9DjLNEzNqHhMI
-4nZi5EGx6o8Y5641xf3hZxRjDqu610k19RX3QSOXZxLoOQ9+CSFEwfXxIVDgD11o
-B4NMXI6cD3cddQgHfSyUNKDCn9lNMLk7uqbuXnAGEbreQ5InjVBgeZ3O59mDaVrW
-1qR3/yup3CR/nOLPdfzR2E4yiwTAKc+B4Vo52DP8X6OnQR/u/05CCTKHaeh8SOjT
-uP31ar1Au18BDkCxNuw4NijvDnIGAjqTO/0GLV2m5ViWAeq1nAMpIoCIiR6dhMpK
-naLg0mc136SskefQhRyOrVOmm7rLHV9oQmzG7Lb8maF3BNuStsk=
-=CJt5
------END PGP SIGNATURE-----
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---EuxKj2iCbKjpUGkD--
+diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
+index dc510069d37b..2edd193c96ab 100644
+--- a/drivers/net/dsa/mv88e6xxx/chip.c
++++ b/drivers/net/dsa/mv88e6xxx/chip.c
+@@ -1742,7 +1742,7 @@ static int _mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
+ 	int err;
+ 
+ 	if (!vid)
+-		return -EINVAL;
++		return -EOPNOTSUPP;
+ 
+ 	err = _mv88e6xxx_vtu_vid_write(chip, vid - 1);
+ 	if (err)
+-- 
+2.20.1
+
