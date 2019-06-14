@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE244C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ACA7C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FF352084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49C372084D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:35:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544522;
-	bh=FPYvZGYlugqCpCeTuSTIgp2NKs/nlGzneHEZlYCdQHA=;
+	s=default; t=1560544529;
+	bh=qSVzhz4JaUwIXUhwr10K4KcEBohGrcpzgC1WZjaRHbQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qYeHIKe+7XWQANZS844L0DSOCOCtaguXjM/xJM4F9mFoQ6IPpHqCLA6TOIsZ21BUk
-	 247O4qBsyGlrYotEUUqU9dbIrJVieh++EFargb5hNTuDuOIBbyRDekUFmp+zi0gkNe
-	 X6Tm4kE4guocPZMU00u3mRQ/cb3kY7xuT7daTlW4=
+	b=Z3crRp3Y3fW3uSYgYPtjkNJ8iT2a5ejveKQpdDYtTetPHxdx5ktjPfMRBRrz1ROm8
+	 HZTRjO2PoWW3FVqK1c1L8MjAb/c2rajWkoII0aYrRZSp6XEICmmpLXMGLHahuI/ifj
+	 jgtGdAxpTKCKef3dx+3t/ooMBTqiuyxKJhe6/yyY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727742AbfFNUfU (ORCPT
+        id S1728152AbfFNUf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:35:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52494 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:35:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52374 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727287AbfFNU37 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:59 -0400
+        id S1727254AbfFNU34 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:56 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A46DC21841;
-        Fri, 14 Jun 2019 20:29:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 882BF21841;
+        Fri, 14 Jun 2019 20:29:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544198;
-        bh=FPYvZGYlugqCpCeTuSTIgp2NKs/nlGzneHEZlYCdQHA=;
+        s=default; t=1560544195;
+        bh=qSVzhz4JaUwIXUhwr10K4KcEBohGrcpzgC1WZjaRHbQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S+F4h7xbqDyurMhbv2tCTtlITgSo/hKwHhJVO1qbYBQ0a7h50EaaT5eOATMWTzkgN
-         UVWmbrhy90Eg/pnEUuWg0c049bx1CCvriL826Yl+CbSLSdkRfRhCh+ge1AphtZA8q3
-         l7Dd4RQ/qiKIa4gIe6J7u5X3/YGUe6QfXC2wW1ws=
+        b=BdBHDf6UXchpxtXsh9ZZb4A92UZB/GHL+8o5uTjZdjegutzPUR8Nrkhd0VLtDxom4
+         OicMi0pxjrQMAmnZZTICQhgcJg6YgYjtXrcERloB1pgV1QpWV5Va0osnS58VcMtpJK
+         k6EOYRGp58GF/bkqAeQVhtyZT/n3ZElZ6rO3bPzU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 4.19 16/39] xtensa: Fix section mismatch between memblock_reserve and mem_reserve
-Date:   Fri, 14 Jun 2019 16:29:21 -0400
-Message-Id: <20190614202946.27385-16-sashal@kernel.org>
+Cc:     Kamenee Arumugam <kamenee.arumugam@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 14/39] IB/hfi1: Validate page aligned for a given virtual address
+Date:   Fri, 14 Jun 2019 16:29:19 -0400
+Message-Id: <20190614202946.27385-14-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202946.27385-1-sashal@kernel.org>
 References: <20190614202946.27385-1-sashal@kernel.org>
@@ -59,50 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Kamenee Arumugam <kamenee.arumugam@intel.com>
 
-[ Upstream commit adefd051a6707a6ca0ebad278d3c1c05c960fc3b ]
+[ Upstream commit 97736f36dbebf2cda2799db3b54717ba5b388255 ]
 
-Since commit 9012d011660ea5cf2 ("compiler: allow all arches to enable
-CONFIG_OPTIMIZE_INLINING"), xtensa:tinyconfig fails to build with section
-mismatch errors.
+User applications can register memory regions for TID buffers that are not
+aligned on page boundaries. Hfi1 is expected to pin those pages in memory
+and cache the pages with mmu_rb. The rb tree will fail to insert pages
+that are not aligned correctly.
 
-WARNING: vmlinux.o(.text.unlikely+0x68): Section mismatch in reference
-	from the function ___pa()
-	to the function .meminit.text:memblock_reserve()
-WARNING: vmlinux.o(.text.unlikely+0x74): Section mismatch in reference
-	from the function mem_reserve()
-	to the function .meminit.text:memblock_reserve()
-FATAL: modpost: Section mismatches detected.
+Validate whether a given virtual address is page aligned before pinning.
 
-This was not seen prior to the above mentioned commit because mem_reserve()
-was always inlined.
-
-Mark mem_reserve(() as __init_memblock to have it reside in the same
-section as memblock_reserve().
-
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Message-Id: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Fixes: 7e7a436ecb6e ("staging/hfi1: Add TID entry program function body")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Signed-off-by: Kamenee Arumugam <kamenee.arumugam@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/xtensa/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/infiniband/hw/hfi1/user_exp_rcv.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 351283b60df6..a285fbd0fd9b 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -310,7 +310,8 @@ extern char _SecondaryResetVector_text_start;
- extern char _SecondaryResetVector_text_end;
- #endif
+diff --git a/drivers/infiniband/hw/hfi1/user_exp_rcv.c b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+index dbe7d14a5c76..4e986ca4dd35 100644
+--- a/drivers/infiniband/hw/hfi1/user_exp_rcv.c
++++ b/drivers/infiniband/hw/hfi1/user_exp_rcv.c
+@@ -324,6 +324,9 @@ int hfi1_user_exp_rcv_setup(struct hfi1_filedata *fd,
+ 	u32 *tidlist = NULL;
+ 	struct tid_user_buf *tidbuf;
  
--static inline int mem_reserve(unsigned long start, unsigned long end)
-+static inline int __init_memblock mem_reserve(unsigned long start,
-+					      unsigned long end)
- {
- 	return memblock_reserve(start, end - start);
- }
++	if (!PAGE_ALIGNED(tinfo->vaddr))
++		return -EINVAL;
++
+ 	tidbuf = kzalloc(sizeof(*tidbuf), GFP_KERNEL);
+ 	if (!tidbuf)
+ 		return -ENOMEM;
 -- 
 2.20.1
 
