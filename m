@@ -2,123 +2,108 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97113C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:56:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E27C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:57:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A12621537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:56:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 401AB21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lWrBsnrK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FjvxiB4m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728497AbfFNN4o (ORCPT
+        id S1728366AbfFNN54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:56:44 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:46341 "EHLO
+        Fri, 14 Jun 2019 09:57:56 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:34840 "EHLO
         mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727382AbfFNN4o (ORCPT
+        with ESMTP id S1727382AbfFNN54 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:56:44 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v9so1581627pgr.13;
-        Fri, 14 Jun 2019 06:56:44 -0700 (PDT)
+        Fri, 14 Jun 2019 09:57:56 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s27so1617734pgl.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:57:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F91alA3rwkHuXFHUA9txhLC2FZTSDigq7H39cSQacFY=;
-        b=lWrBsnrKs7L9tfO2+xrpNN67yN3QG659YMGg3gC+E3rgEjxXhy+lJGHKIPe6AIfCoc
-         VXCkJb59QbHbWa6Ta302mtRCsPLJDt1NzwmCzUVQzEzGJJsgLY39v8rmUsU96GWrrGHL
-         +K2i3UxcYPqnBrlXg2Hwfc1cOwI/sRlXNp4c3MRB5CfV7C1iYP8Wf3FaPT0iBSxH9iIt
-         LbtYtUMGg2XOHrok95ufbs+j/vIAf8GTZCEoVmCqoeHSxbcCHo11vMg9s5A1mO0WL3/l
-         vRNONeqpHxIXQBvp/h9Lr8I6gXPjbPA0bQy00DIXRjr6vJ6r9L9HhTAs40CjN/3VH6lT
-         WbFQ==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=MtruUp1oeG0LlHvhP1csrfrOTlear+t2x5W6tuqfW9o=;
+        b=FjvxiB4m662o2o7ihDbvXVjViUXtQk/zRrBeU/gUIaSw1TlRXI6JnyJfn3fu5dtZ6R
+         aIaF+yJ3UoM6FaeOs3csYpHm/yPfjXGru2XL6vh9s/LH2fyRySbxMndioIspefjKTrMN
+         WqV8bXMxY3Y/bFB4Ngnan5KKSs9nM0/bjwaH0G/9Z/g9b4/fJQ03ndLIyFstyZ7UwuLQ
+         hN7mx9JnBHJp2U/7Ne2mCLeVISASVcUERm2xuXhQUKKxspUgatHhCETiWJ21WjLFtxjy
+         gANvQq7yP+pvO16p7yeIuUl+V1hJSlCIe+SuXfjQlxq0swPiI5/orL84Vdg+jFjhmNme
+         FJ9Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F91alA3rwkHuXFHUA9txhLC2FZTSDigq7H39cSQacFY=;
-        b=lNNaVS+Jhn2/YG9aGnFBhfk1Ro7kSjYSGbcIS2VxCB7oTNGnSoWYWEzvMd3uCRWAtG
-         xVU9IPLdVzaONY4zPSQk5vIBgrTIRExz8p+MEr0XP/WcAhZfdNmGRr7mKNkze4QpwWlB
-         3dgvngpy9G+2i5OksgOMIQI7CSaICqwfQCd/IpEKwzoFaCiL4dLW88o7xxEEevqzegh8
-         WYTWbpjzlDPnRRnD1P/+QBFVACkSTHvdkKzRriqUCqhxiYtoqk4a7vE2laR7KHpTziV8
-         nG4NoEmOJDrcfPI51UkrUXrdsI3mqBcv4uH4Yr8r4NZybcOpNlcajdETF+Ulp/TNMyH3
-         N7aQ==
-X-Gm-Message-State: APjAAAVV+ApZY0fV264n22lT+zVTN7t/OeqMfqVnepQ2ciz0S+JKVdGf
-        xM9pYwqN2A/kvBnmfFGPObTuN+fQcfKf/DyZYyDXIU/B
-X-Google-Smtp-Source: APXvYqwemQ+inytAjigoA5rMw/ySmmfF6sH9Nkw1f68mO3cFGYho8raaFj6pvN53H/GgxFLNDtK1rHox0uOsPxmJ2jg=
-X-Received: by 2002:a62:e20a:: with SMTP id a10mr13800745pfi.64.1560520603563;
- Fri, 14 Jun 2019 06:56:43 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=MtruUp1oeG0LlHvhP1csrfrOTlear+t2x5W6tuqfW9o=;
+        b=ieRQCSGOyVWYlJvUQ3KYadbfQEmoMO99hkxX1+UTlRfv+E1xuKjct1OAFjBy3lu4J9
+         qwDl66pExeekyVs3n5PAhD2hUuX8au6mKIOoY5pY623NiL+53nLV34ao/7sp/Zna1dtG
+         3BAOBl+K4H5mC43saJhJT7XtQxrBmG+8wNV1N6FVtwhogwHN3Uzl1GdJO8RUhvX571PX
+         PsyHtq7THIg0iN6qPw6xbFcwunFaU6aC/jmCirrw/B/1Qu3JSFXLl/rJ+j54xt3zbmNz
+         l6Uxl3qJ7hwxPf0q9xLiXFz0WRwFdXzCFFyeKWT+hoMwnAMH+YvHdOKcZcS5z7v/dSx4
+         PC1A==
+X-Gm-Message-State: APjAAAXSFQOPPV+Kv3QNLbfShk5hXkxGg7xPzcTe+C9YAAJGJqqG4Nmy
+        0hxjwMYgWmwoAGv8slApPX4=
+X-Google-Smtp-Source: APXvYqwCuv7QBXZXeFNoRYeEMcV/bSanFhyVUI0XjKQwLWqnlL1ycXZR0IWC1MZ4dRWtWbcidAOa3g==
+X-Received: by 2002:a63:3047:: with SMTP id w68mr18802903pgw.65.1560520675566;
+        Fri, 14 Jun 2019 06:57:55 -0700 (PDT)
+Received: from nishad (p3261240-ipngn21201hodogaya.kanagawa.ocn.ne.jp. [153.202.122.240])
+        by smtp.gmail.com with ESMTPSA id y12sm3064887pgi.10.2019.06.14.06.57.51
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Jun 2019 06:57:55 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 19:27:45 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Nishanth Menon <nm@ti.com>, Tero Kristo <t-kristo@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: ti_sci: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20190614135741.GA7244@nishad>
 MIME-Version: 1.0
-References: <1560516085-3101-1-git-send-email-92siuyang@gmail.com>
-In-Reply-To: <1560516085-3101-1-git-send-email-92siuyang@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Fri, 14 Jun 2019 16:56:32 +0300
-Message-ID: <CAHp75VcnqpQPTEFsG_bDmAJa4EHucgwoGvyw_XukC6vntdDhow@mail.gmail.com>
-Subject: Re: [PATCH] PCI/hotplug: fix potential null pointer deference
-To:     Young Xiao <92siuyang@gmail.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 3:40 PM Young Xiao <92siuyang@gmail.com> wrote:
->
-> There is otherwise a risk of a null pointer dereference.
+This patch corrects the SPDX License Identifier style
+in header file related to Firmware Drivers for Texas
+Instruments SCI Protocol.
+For C header files Documentation/process/license-rules.rst
+mandates C-like comments (opposed to C source files where
+C++ style should be used)
 
-Had you analyze the code?
-How come that prevnode can become NULL?
+Changes made by using a script provided by Joe Perches here:
+https://lkml.org/lkml/2019/2/7/46
 
-> Signed-off-by: Young Xiao <92siuyang@gmail.com>
-> ---
->  drivers/pci/hotplug/cpqphp_ctrl.c | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/pci/hotplug/cpqphp_ctrl.c b/drivers/pci/hotplug/cpqphp_ctrl.c
-> index b7f4e1f..3c8399f 100644
-> --- a/drivers/pci/hotplug/cpqphp_ctrl.c
-> +++ b/drivers/pci/hotplug/cpqphp_ctrl.c
-> @@ -598,10 +598,11 @@ static struct pci_resource *get_io_resource(struct pci_resource **head, u32 size
->                         *head = node->next;
->                 } else {
->                         prevnode = *head;
-> -                       while (prevnode->next != node)
-> +                       while (prevnode && prevnode->next != node)
->                                 prevnode = prevnode->next;
->
-> -                       prevnode->next = node->next;
-> +                       if (prevnode)
-> +                               prevnode->next = node->next;
->                 }
->                 node->next = NULL;
->                 break;
-> @@ -788,10 +789,11 @@ static struct pci_resource *get_resource(struct pci_resource **head, u32 size)
->                         *head = node->next;
->                 } else {
->                         prevnode = *head;
-> -                       while (prevnode->next != node)
-> +                       while (prevnode && prevnode->next != node)
->                                 prevnode = prevnode->next;
->
-> -                       prevnode->next = node->next;
-> +                       if (prevnode)
-> +                               prevnode->next = node->next;
->                 }
->                 node->next = NULL;
->                 break;
-> --
-> 2.7.4
->
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ drivers/firmware/ti_sci.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
+diff --git a/drivers/firmware/ti_sci.h b/drivers/firmware/ti_sci.h
+index 662dcffef311..d7b4cd3fce8f 100644
+--- a/drivers/firmware/ti_sci.h
++++ b/drivers/firmware/ti_sci.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: BSD-3-Clause
++/* SPDX-License-Identifier: BSD-3-Clause */
+ /*
+  * Texas Instruments System Control Interface (TISCI) Protocol
+  *
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
