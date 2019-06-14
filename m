@@ -2,111 +2,208 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6151EC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:06:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C17A1C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:17:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3304320851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:06:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71AA9208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 04:17:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="P2EpDp7q"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="tCXPkAPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725891AbfFNEGO (ORCPT
+        id S1725864AbfFNERk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 00:06:14 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38717 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfFNEGO (ORCPT
+        Fri, 14 Jun 2019 00:17:40 -0400
+Received: from mail-pl1-f201.google.com ([209.85.214.201]:36835 "EHLO
+        mail-pl1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfFNERj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 00:06:14 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f97so427769plb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 21:06:14 -0700 (PDT)
+        Fri, 14 Jun 2019 00:17:39 -0400
+Received: by mail-pl1-f201.google.com with SMTP id a5so846645pla.3
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 21:17:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HYi2Erj5A4oaNpZveV/ioy8G/sKMQ9krWJqQ69RYiWk=;
-        b=P2EpDp7qWge4+8ecQWnVMZOR6neN2WO+Rlvl8kxFBws0yMA8ei6dEqDewubbLCAHZ5
-         vgxHS8aQNp6EOL0mH5yOipqOx1jU8jckeapXz7HXYuqDOmN1ryynO9TAuMiWkak7sYXj
-         sMaM6fkTEMMUp0S6WTJsNjI7LyrIADEgcfLbds3hX/1DV9/z38CKTSArow+3sU3NlEjq
-         j0ZO63hn76UMSLxp4g1JzmaNa0YDkVoi8Lrqr7TPAAgziXokSLLLmN178mLdzkIA9hfu
-         sl+hsLJC8veEGQg23BCh5UBdT3EBjj/jZpUSfrfyNB/4WmvyzfNqGC7vPXpd+byORwDb
-         b8cw==
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=sGT1sw20NjRQQwzZPLiKAFC3XafLsr2WQ0wwPIEim/o=;
+        b=tCXPkAPax/VZHnTqMUdfT8OH8PVDFQqPnz6C/YHQYeIOjzyo8MIYTqyJXdysiQ2t6x
+         DjukMcDCPff9GoAS7CqDQt1owOOgUgVltZfRULTMnfggmNs6fwAu6dzvGM3nH8siPFjx
+         CTouHUYUf3PfTHEv9rkBNA7/3YCrDFWAlVYfcbjNUAp5fFehWmj+xYaZOrWMfDlYRZiq
+         pWC9A6U5QWxSkFhIPtmj1TMbpfd19vqr2Y44YdCUZKFhpUWkYACKXqBQuqO71O1pgkpE
+         yZcN+yGQi4E3xpMOsPby3BHch/2iylwqWc4H+7Q9QC7T7Z3eLKEw7SowO0eyfYEMsYoP
+         IEXA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HYi2Erj5A4oaNpZveV/ioy8G/sKMQ9krWJqQ69RYiWk=;
-        b=ZsaeGTHwbqM4was7g42hDImR//VM2OaYua0bbmNdmk52N6qBI85Y+1F/nY8Bs0h2wG
-         JZ5nrIshTj80FczjZf8hhhZAedeboQSvZrdxbzW0vM84ORmEizN17Yp5c1d3nOz7Amyz
-         xut3KKRb7ewR7sJPXsPUudjEO6U0WIGHYb9hYns69oLDSyWfGRfBhTKgtc0o5XVm8sFL
-         L64X/1aMPeNsR22si6XgYksIsSI5DPqZ9ldEkUIcnUf4nyswTvsCfTXl1GtH1cqQqggb
-         3GFU3f9lGo2YaKgaLA5uge7L+jVQtxHRD/0movoZNn6DLLtO+mRTtilx6vhMliFtD9Oc
-         ENKQ==
-X-Gm-Message-State: APjAAAW+z1ANyMHU+cRgwf7j1TppXh9k+CE3XqTqEuavtMtq1Yo6KBUe
-        I3DWLfApP7B7MdRy1+TpkF25GA==
-X-Google-Smtp-Source: APXvYqyhaMIs28kbVZNlUk+Wgt9nb24TgswP+lgjinRe2HtMOF/hf2X+O3ATUsRqbG7Qqm/WoQqjoA==
-X-Received: by 2002:a17:902:9a49:: with SMTP id x9mr71030064plv.282.1560485173702;
-        Thu, 13 Jun 2019 21:06:13 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id t24sm1115739pfh.113.2019.06.13.21.06.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 13 Jun 2019 21:06:13 -0700 (PDT)
-Date:   Thu, 13 Jun 2019 21:06:59 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, will.deacon@arm.com,
-        robin.murphy@arm.com, joro@8bytes.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        david.brown@linaro.org
-Subject: Re: [PATCH v3 4/4] arm64: dts/sdm845: Enable FW implemented safe
- sequence handler on MTP
-Message-ID: <20190614040659.GL22737@tuxbook-pro>
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-5-vivek.gautam@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612071554.13573-5-vivek.gautam@codeaurora.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=sGT1sw20NjRQQwzZPLiKAFC3XafLsr2WQ0wwPIEim/o=;
+        b=cu+9VfxnYe402Ht7W+g+fPY5sVRnw4ZCy5DytbSPvrvWyTX8SMK+YtIN0ieV7AR7Yk
+         x75a2ea062R7VwIc3EseQOI95YhLjCkF1JmNUeDNdScJG2G3EnVDxUyhndz6lWc9V9uw
+         waR4eFCsCaZGGkpvVkE5whH7/TdWGeE0S4eM1Oo1YwK1dUHgMPqWZwYXOD07pvIU/kgf
+         ztaES1zKBw3C0BFcUyMWxNpXKQuJqTyveJfLsoIBFcun4DUdaArmvIqnprLThITUTK9p
+         JGXVKP59zPEnq2PcZy8WgObq7fy/KQS0oWb55FUr2RrESbWF5Xokrf4I7UHss9iwKGZm
+         Ukag==
+X-Gm-Message-State: APjAAAVYHKGwb+LzOODlRcRkszGZX4LAiD+ozrZUN8CkSw6W8RaORTo1
+        msp/c5SO+fzd1DFCs8arSaTToxsHorcS4rA=
+X-Google-Smtp-Source: APXvYqzUlYsCg9NeaN/PERsgLwAw3KyAYfCl6WExXyjvNXzeISVKpKtii/e5ZKrx8Nj2ZZuIcwvAEdIKPaCxaTI=
+X-Received: by 2002:a65:5302:: with SMTP id m2mr33501735pgq.369.1560485858053;
+ Thu, 13 Jun 2019 21:17:38 -0700 (PDT)
+Date:   Thu, 13 Jun 2019 21:17:22 -0700
+Message-Id: <20190614041733.120807-1-saravanak@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.rc2.383.gf4fbbf30c2-goog
+Subject: [PATCH v2 00/11] Introduce Bandwidth OPPs & interconnect devfreq driver
+From:   Saravana Kannan <saravanak@google.com>
+To:     Georgi Djakov <georgi.djakov@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     Saravana Kannan <saravanak@google.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        vincent.guittot@linaro.org, bjorn.andersson@linaro.org,
+        amit.kucheria@linaro.org, seansw@qti.qualcomm.com,
+        daidavid1@codeaurora.org, evgreen@chromium.org,
+        sibis@codeaurora.org, kernel-team@android.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 12 Jun 00:15 PDT 2019, Vivek Gautam wrote:
+I replied[1] to this patch series[2] and described how I think interconnect
+bandwidth voting should be captured in DT and how it should work.
 
-> Indicate on MTP SDM845 that firmware implements handler to
-> TLB invalidate erratum SCM call where SAFE sequence is toggled
-> to achieve optimum performance on real-time clients, such as
-> display and camera.
-> 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+So sending out a patch series implementing that. This patch series does the
+following:
+- Allow required-opps to point to any device's OPP
+- Add support to devfreq passive governor to look at the "parent"
+  devfreq's required-opps to decide the "slave" device's frequency
+- Adds Bandwidth OPP table support
+- Adds a devfreq library for interconnect paths
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Interconnects and interconnect paths quantify they performance levels in
+terms of bandwidth. So similar to how we have frequency based OPP tables
+in DT and in the OPP framework, this patch series adds bandwidth OPP
+table support in the OPP framework and in DT.
 
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 78ec373a2b18..6a73d9744a71 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -2368,6 +2368,7 @@
->  			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
->  			reg = <0 0x15000000 0 0x80000>;
->  			#iommu-cells = <2>;
-> +			qcom,smmu-500-fw-impl-safe-errata;
->  			#global-interrupts = <1>;
->  			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
->  				     <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>,
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+To simplify voting for interconnects, this patch series adds helper
+functions to create devfreq devices out of interconnect paths. This
+allows drivers to add a single line of code to add interconnect voting
+capability.
+
+To add devfreq device for the "gpu-mem" interconnect path and use
+required OPPs to do decide gpu-mem bandwidth:
+icc_create_devfreq(dev, "gpu-mem", gpu_devfreq);
+
+To add devfreq device for the "gpu-mem" interconnect path and use some
+other governor to device gpu-mem bandwidth:
+icc_create_devfreq(dev, "gpu-mem", NULL);
+
+So with the DT bindings added in this patch series, the DT for a GPU
+that does bandwidth voting from GPU to Cache and GPU to DDR would look
+something like this:
+
+gpu_cache_opp_table: gpu_cache_opp_table {
+	compatible = "operating-points-v2";
+
+	gpu_cache_3000: opp-3000 {
+		opp-peak-KBps = <3000>;
+		opp-avg-KBps = <1000>;
+	};
+	gpu_cache_6000: opp-6000 {
+		opp-peak-KBps = <6000>;
+		opp-avg-KBps = <2000>;
+	};
+	gpu_cache_9000: opp-9000 {
+		opp-peak-KBps = <9000>;
+		opp-avg-KBps = <9000>;
+	};
+};
+
+gpu_ddr_opp_table: gpu_ddr_opp_table {
+	compatible = "operating-points-v2";
+
+	gpu_ddr_1525: opp-1525 {
+		opp-peak-KBps = <1525>;
+		opp-avg-KBps = <452>;
+	};
+	gpu_ddr_3051: opp-3051 {
+		opp-peak-KBps = <3051>;
+		opp-avg-KBps = <915>;
+	};
+	gpu_ddr_7500: opp-7500 {
+		opp-peak-KBps = <7500>;
+		opp-avg-KBps = <3000>;
+	};
+};
+
+gpu_opp_table: gpu_opp_table {
+	compatible = "operating-points-v2";
+	opp-shared;
+
+	opp-200000000 {
+		opp-hz = /bits/ 64 <200000000>;
+		required-opps = <&gpu_cache_3000>, <&gpu_ddr_1525>;
+	};
+	opp-400000000 {
+		opp-hz = /bits/ 64 <400000000>;
+		required-opps = <&gpu_cache_6000>, <&gpu_ddr_3051>;
+	};
+};
+
+gpu@7864000 {
+	...
+	operating-points-v2 = <&gpu_opp_table>, <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>;
+	interconnects = <&mmnoc MASTER_GPU_1 &bimc SLAVE_SYSTEL_CACHE>,
+			<&mmnoc MASTER_GPU_1 &bimc SLAVE_DDR>;
+	interconnect-names = "gpu-cache", "gpu-mem";
+	interconnect-opp-table = <&gpu_cache_opp_table>, <&gpu_ddr_opp_table>
+};
+
+Cheers,
+Saravana
+
+[1] - https://lore.kernel.org/lkml/20190601021228.210574-1-saravanak@google.com/
+[2] - https://lore.kernel.org/lkml/20190423132823.7915-1-georgi.djakov@linaro.org/ 
+
+
+Saravana Kannan (11):
+  OPP: Allow required-opps even if the device doesn't have power-domains
+  OPP: Add function to look up required OPP's for a given OPP
+  PM / devfreq: Add required OPPs support to passive governor
+  dt-bindings: opp: Introduce opp-peak-KBps and opp-avg-KBps bindings
+  OPP: Add support for bandwidth OPP tables
+  OPP: Add helper function for bandwidth OPP tables
+  OPP: Add API to find an OPP table from its DT node
+  dt-bindings: interconnect: Add interconnect-opp-table property
+  interconnect: Add OPP table support for interconnects
+  OPP: Allow copying OPPs tables between devices
+  interconnect: Add devfreq support
+
+ .../bindings/interconnect/interconnect.txt    |   8 +
+ Documentation/devicetree/bindings/opp/opp.txt |  15 +-
+ drivers/devfreq/governor_passive.c            |  25 ++-
+ drivers/interconnect/Makefile                 |   2 +-
+ drivers/interconnect/core.c                   |  27 ++-
+ drivers/interconnect/icc-devfreq.c            | 156 ++++++++++++++++++
+ drivers/opp/core.c                            | 115 ++++++++++++-
+ drivers/opp/of.c                              |  90 +++++++---
+ drivers/opp/opp.h                             |   4 +-
+ include/linux/interconnect.h                  |  21 +++
+ include/linux/pm_opp.h                        |  44 +++++
+ 11 files changed, 474 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/interconnect/icc-devfreq.c
+
+-- 
+2.22.0.rc2.383.gf4fbbf30c2-goog
+
