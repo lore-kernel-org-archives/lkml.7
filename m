@@ -2,88 +2,89 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A20BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:41:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0FF3C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A9AF20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:41:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C64902168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="jQtFbDri"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C/ulpoOj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbfFNNln (ORCPT
+        id S1728368AbfFNNmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:41:43 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:35818 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbfFNNln (ORCPT
+        Fri, 14 Jun 2019 09:42:24 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:46848 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727918AbfFNNmX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:41:43 -0400
-Received: by mail-qk1-f195.google.com with SMTP id l128so1678742qke.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:41:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yb0/sevEMdafr2vXQ3qC01lm6vSKeakGcpjhBltDdpk=;
-        b=jQtFbDrieAPENr34h0NUQDNe209XEw+cgr6byx7mhVe+H/I4OpVT5Rmtkwu7rOTXDf
-         UZyyDSms5H7OeZUnR29dpbgr+m10jg7GwyH4EjG9Ift7e1mZBpK4rQRKA5x4zK9cIUam
-         PFXJWxFZ6irPMweVHfjT48XHVwUaLlv+WO9I8Y36/SMVyJdGBJdbhncsXKKVQ7hH+pq1
-         lqPArqtDo8LoKzaNMBpxhNCABn++pc4m+hJgJEN5Lt2W6uFoh20WmEjYvxnYorDjx7sw
-         aS7oYnV14PWuNtxeFf9la+DtngnBiNQEOROSSRJrSkgZJRuTXnUNfuUU02ZE43H3xx1Y
-         d5eA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yb0/sevEMdafr2vXQ3qC01lm6vSKeakGcpjhBltDdpk=;
-        b=D4pn2VXulVi2K/VFG5WM0dEklZem60BfGnIiwdQ3IOjjzvOstAFwV+2CGjPEE1wcSM
-         oW8Mti8f+T0+mib+hLdJ7We4ns1gJviC19VwqlMm2ledC3eabjs1e2tqutZ4GnUWqfZs
-         bMEslJl99tKnDhjATI+hJJ8RLS2UoEuDnG4FiOvE9ypPf30GYLbBI4jYCB8OuouLqfKT
-         DFrBPF3UByHhKYiJcPi1BWRwmrjlCxLZX3KhzyuEgXWc5hqr/pjmx0c5afcfxvN3oyZC
-         aqljWyUZa0rABkbe5+X3rd6VnrnXdnItCejg5ioivPl5f5m2I9K8qG594EJt+KeqpNQ+
-         oImg==
-X-Gm-Message-State: APjAAAW58cmULvQQ+/NiBcfh2xUoULi8dyXX5a3RixIYzjLohZZdfp3Z
-        uh0/65D8/y3FwbVp+WDZ6ak6Dg==
-X-Google-Smtp-Source: APXvYqy95F8IXy3awZMsVz6XFn2JcaEs7ITo2Lhv35mkO5CbPjyv/eOkl5aUm+OphfRVf0h+M09noQ==
-X-Received: by 2002:a37:4b56:: with SMTP id y83mr32892834qka.338.1560519702426;
-        Fri, 14 Jun 2019 06:41:42 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::a658])
-        by smtp.gmail.com with ESMTPSA id l88sm1602172qte.33.2019.06.14.06.41.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 06:41:41 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 09:41:40 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
-        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 2/8] blkcg, writeback: Implement wbc_blkcg_css()
-Message-ID: <20190614134139.miko2ypm5znqho6f@MacBook-Pro-91.local>
-References: <20190614003350.1178444-1-tj@kernel.org>
- <20190614003350.1178444-3-tj@kernel.org>
+        Fri, 14 Jun 2019 09:42:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=p3fdSrD6/f8+J2jfdFQoF6CbHZtdUBeGJFTtmYRKwYs=; b=C/ulpoOj8tF0DMXgykNNOW20X
+        4Mzm4QmvDAn+j9P8nuhJeRygIqeHOjSWDJY+0+OzKZ1QOxCd16AZBN9sn99xoafwCYsf0SxCAHd1A
+        5kjiC6LnXF8NWX9MRaaHLXEQtSc9mwQ2izH24oV42RKxLUWNbRkwBv0evHaMj4mAHfsOJWq/plo5j
+        c0YcPHAbAKviEhOul5kKUn8wvhSx2e1cRWynTF38u8QKSf61Y8QRiK3tgX92QtBeOrAr6sXrG97P6
+        l+62k64V9qA6RAM5SGJaJWO6SQnHIs6xo4GyoGp4XiUwjTllRucUNGOQaV5yoLXL9aV1vtwrDFKFh
+        1iC6nF3Lw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbmTE-0000Vp-AX; Fri, 14 Jun 2019 13:42:20 +0000
+Date:   Fri, 14 Jun 2019 06:42:20 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Roman Penyaev <rpenyaev@suse.de>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] mm/vmalloc: Check absolute error return from
+ vmap_[p4d|pud|pmd|pte]_range()
+Message-ID: <20190614134220.GL32656@bombadil.infradead.org>
+References: <1560413551-17460-1-git-send-email-anshuman.khandual@arm.com>
+ <7cc6a46c50c2008bfb968c5e48af5a49@suse.de>
+ <406afc57-5a77-a77c-7f71-df1e6837dae1@arm.com>
+ <20190613153141.GJ32656@bombadil.infradead.org>
+ <4b5c0b18-c670-3631-f47f-3f80bae8fe4b@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614003350.1178444-3-tj@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <4b5c0b18-c670-3631-f47f-3f80bae8fe4b@arm.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:33:44PM -0700, Tejun Heo wrote:
-> Add a helper to determine the target blkcg from wbc.
+On Fri, Jun 14, 2019 at 10:57:42AM +0530, Anshuman Khandual wrote:
 > 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
+> 
+> On 06/13/2019 09:01 PM, Matthew Wilcox wrote:
+> > On Thu, Jun 13, 2019 at 08:51:17PM +0530, Anshuman Khandual wrote:
+> >> acceptable ? What we have currently is wrong where vmap_pmd_range() could
+> >> just wrap EBUSY as ENOMEM and send up the call chain.
+> > 
+> > It's not wrong.  We do it in lots of places.  Unless there's a caller
+> > which really needs to know the difference, it's often better than
+> > returning the "real error".
+> 
+> I can understand the fact that because there are no active users of this
+> return code, the current situation has been alright. But then I fail to
+> understand how can EBUSY be made ENOMEM and let the caller to think that
+> vmap_page_rage() failed because of lack of memory when it is clearly not
+> the case. It is really surprising how it can be acceptable inside kernel
+> (init_mm) page table functions which need to be thorough enough.
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-
-Thanks,
-
-Josef
+It's a corollary of Steinbach's Guideline for Systems Programming.
+There is no possible way to handle this error because this error is
+never supposed to happen.  So we may as well return a different error
+that will still lead to the caller doing the right thing.
