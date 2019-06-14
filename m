@@ -2,304 +2,172 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8552C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:14:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 498AAC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0AFB20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:14:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1747E21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:14:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="eFeAcZtg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728081AbfFNNON (ORCPT
+        id S1728085AbfFNNO5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:14:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43118 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726874AbfFNNOM (ORCPT
+        Fri, 14 Jun 2019 09:14:57 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41378 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728121AbfFNNO4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:14:12 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5ED7vRg118625;
-        Fri, 14 Jun 2019 09:13:32 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t4bfvj5v2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Jun 2019 09:13:32 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5EDD25B005527;
-        Fri, 14 Jun 2019 13:13:29 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-        by ppma04dal.us.ibm.com with ESMTP id 2t1xj31bd1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 14 Jun 2019 13:13:29 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5EDDRSK36241758
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Jun 2019 13:13:27 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 88C366A047;
-        Fri, 14 Jun 2019 13:13:27 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 330316A05A;
-        Fri, 14 Jun 2019 13:13:25 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.85.207.125])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Jun 2019 13:13:24 +0000 (GMT)
-Subject: Re: [PATCH 2/2] powerpc: expose secure variables via sysfs
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Nayna Jain <nayna@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-integrity@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Eric Ricther <erichte@linux.ibm.com>
-References: <1560459027-5248-1-git-send-email-nayna@linux.ibm.com>
- <1560459027-5248-3-git-send-email-nayna@linux.ibm.com>
- <20190614063443.GB17056@kroah.com>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Message-ID: <2f4a3ab4-8e9c-a8fc-ba1a-71cf6a9fbb59@linux.vnet.ibm.com>
-Date:   Fri, 14 Jun 2019 09:13:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Fri, 14 Jun 2019 09:14:56 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p15so3437534eds.8
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:14:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lo8jzIeEl3qvMScl2nYeZEzcklK1JpdjNABkHh1fbHg=;
+        b=eFeAcZtgO0/eRC+taEsG3o/626r+gJzLYZLu6JCyggVrs1QqMuSldztZimYV/jdkJJ
+         KpqfmnAYmMswNNumhYoKPsqVbi6oXCsorOhOJsdBSnOChpopGRX1/ui0nf+Nlcf6FXPr
+         gGpw+PJGJIdyx5tMB8ohHf7Qp8YL0Pn4pTIC3KYego9Ujsgpyiq4SkfHbxvn1Rplq1Pp
+         IoST/0AGJDllFkhSDArOhMHcOdLQczefbj/Em08KjBQgqt7nPa6It4nRH8wS9yRppE3g
+         SyL/Y8mhbNTD3QF8XNH0x1JlkrNyAot22I9vIuPdXcIIAhttxk+quH+74xWONAEiEFsY
+         kixQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lo8jzIeEl3qvMScl2nYeZEzcklK1JpdjNABkHh1fbHg=;
+        b=asYUK+eMAZJo7SRD2+aeLAg6CCRuvrYu6NZr08fVvCTqXM1aD+a5wpSrQggXjfTq4/
+         O333emWncafII73K5SVzD26aanybhYsMA/6FLkbQJHD2LwQJBp7KVPOtK+WCwkmE81vn
+         gkioFlbHHMqoOJ8kthggrkr9BSS3h6O8NjaKw2XGtZL974jmOVYSc/T4R/Ko1OLQL7qD
+         35l8UQVjjqBHuLPXHmwD/lCWnTW6NfdmPjwee2tZQBN1hkiONdEIy1KfSrgIpwtKktKf
+         Kvt3hcQUR5ZICmVvxJfF/DZEly4PCI6oKhKxij5mlA6rNUMCD9aw1G7h329QSeX7CJmt
+         KV0A==
+X-Gm-Message-State: APjAAAUxC1BrsvRFLFaCHdDpBhjDins6rHhszPBODuQ4LXe8HghXqb/w
+        9IQfIImpicuForDMDXfbXbNSLg==
+X-Google-Smtp-Source: APXvYqys9UpU3EDiYN8BSuwDi62d18/VihRzxeEm4B3CXY1/sZgOqGoIC2XqSZyXoR/BuWpsRnWF+g==
+X-Received: by 2002:aa7:c619:: with SMTP id h25mr39051647edq.295.1560518094495;
+        Fri, 14 Jun 2019 06:14:54 -0700 (PDT)
+Received: from box.localdomain ([86.57.175.117])
+        by smtp.gmail.com with ESMTPSA id t3sm593997ejk.56.2019.06.14.06.14.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:14:53 -0700 (PDT)
+Received: by box.localdomain (Postfix, from userid 1000)
+        id BB20210086F; Fri, 14 Jun 2019 16:14:53 +0300 (+03)
+Date:   Fri, 14 Jun 2019 16:14:53 +0300
+From:   "Kirill A. Shutemov" <kirill@shutemov.name>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free
+ encrypted pages
+Message-ID: <20190614131453.ludfm4ufzqwa326k@box>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
+ <20190614093409.GX3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190614063443.GB17056@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906140111
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614093409.GX3436@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 14, 2019 at 11:34:09AM +0200, Peter Zijlstra wrote:
+> On Wed, May 08, 2019 at 05:43:33PM +0300, Kirill A. Shutemov wrote:
+> 
+> > +/* Prepare page to be used for encryption. Called from page allocator. */
+> > +void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
+> > +{
+> > +	int i;
+> > +
+> > +	/*
+> > +	 * The hardware/CPU does not enforce coherency between mappings
+> > +	 * of the same physical page with different KeyIDs or
+> > +	 * encryption keys. We are responsible for cache management.
+> > +	 */
+> 
+> On alloc we should flush the unencrypted (key=0) range, while on free
+> (below) we should flush the encrypted (key!=0) range.
+> 
+> But I seem to have missed where page_address() does the right thing
+> here.
 
+As you've seen by now, it will be addressed later in the patchset. I'll
+update the changelog to indicate that page_address() handles KeyIDs
+correctly.
 
-On 06/14/2019 02:34 AM, Greg Kroah-Hartman wrote:
-> On Thu, Jun 13, 2019 at 04:50:27PM -0400, Nayna Jain wrote:
->> As part of PowerNV secure boot support, OS verification keys are stored
->> and controlled by OPAL as secure variables. These need to be exposed to
->> the userspace so that sysadmins can perform key management tasks.
->>
->> This patch adds the support to expose secure variables via a sysfs
->> interface It reuses the the existing efi defined hooks and backend in
->> order to maintain the compatibility with the userspace tools.
->>
->> Though it reuses a great deal of efi, POWER platforms do not use EFI.
->> A new config, POWER_SECVAR_SYSFS, is defined to enable this new sysfs
->> interface.
->>
->> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
->> ---
->>   arch/powerpc/Kconfig                 |   2 +
->>   drivers/firmware/Makefile            |   1 +
->>   drivers/firmware/efi/efivars.c       |   2 +-
->>   drivers/firmware/powerpc/Kconfig     |  12 +
->>   drivers/firmware/powerpc/Makefile    |   3 +
->>   drivers/firmware/powerpc/efi_error.c |  46 ++++
->>   drivers/firmware/powerpc/secvar.c    | 326 +++++++++++++++++++++++++++
->>   7 files changed, 391 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/firmware/powerpc/Kconfig
->>   create mode 100644 drivers/firmware/powerpc/Makefile
->>   create mode 100644 drivers/firmware/powerpc/efi_error.c
->>   create mode 100644 drivers/firmware/powerpc/secvar.c
-> If you add/remove/modify sysfs files, you also need to update the
-> relevant Documentation/ABI/ entry as well.  Please add something there
-> to describe your new files when you resend the next version of this
-> patch series.
->
->> diff --git a/drivers/firmware/powerpc/Kconfig b/drivers/firmware/powerpc/Kconfig
->> new file mode 100644
->> index 000000000000..e0303fc517d5
->> --- /dev/null
->> +++ b/drivers/firmware/powerpc/Kconfig
->> @@ -0,0 +1,12 @@
->> +config POWER_SECVAR_SYSFS
->> +	tristate "Enable sysfs interface for POWER secure variables"
->> +	default n
-> default is always n, no need to list it.
->
->> --- /dev/null
->> +++ b/drivers/firmware/powerpc/efi_error.c
->> @@ -0,0 +1,46 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Copyright (C) 2019 IBM Corporation
->> + * Author: Nayna Jain <nayna@linux.ibm.com>
->> + *
->> + * efi_error.c
->> + *      - Error codes as understood by efi based tools
->> + *      Taken from drivers/firmware/efi/efi.c
-> Why not just export the symbol from the original file instead of
-> duplicating it here?
->
->> +static int convert_buffer_to_efi_guid(u8 *buffer, efi_guid_t *guid)
->> +{
->> +	u32 *a1;
->> +	u16 *a2;
->> +	u16 *a3;
->> +
->> +	a1 = kzalloc(4, GFP_KERNEL);
-> No error checking in this function for memory issues at all?
->
->> +	memcpy(a1, buffer, 4);
->> +	*a1 = be32_to_cpu(*a1);
->> +
->> +	a2 = kzalloc(2, GFP_KERNEL);
->> +	memcpy(a2, buffer+4, 2);
->> +	*a2 = be16_to_cpu(*a2);
->> +
->> +	a3 = kzalloc(2, GFP_KERNEL);
->> +	memcpy(a3, buffer+6, 2);
->> +	*a3 = be16_to_cpu(*a3);
->> +
->> +	*guid = EFI_GUID(*a1, *a2, *a3, *(buffer + 8),
->> +			*(buffer + 9),
->> +			*(buffer + 10),
->> +			*(buffer + 11),
->> +			*(buffer + 12),
->> +			*(buffer + 13),
->> +			*(buffer + 14),
->> +			*(buffer + 15));
->> +
->> +	kfree(a1);
->> +	kfree(a2);
->> +	kfree(a3);
->> +	return 0;
->> +}
->> +static efi_status_t powerpc_get_next_variable(unsigned long *name_size,
->> +					      efi_char16_t *name,
->> +					      efi_guid_t *vendor)
->> +{
->> +	int rc;
->> +	u8 *key;
->> +	int namesize;
->> +	unsigned long keylen;
->> +	unsigned long keysize = 1024;
->> +	unsigned long *mdsize;
->> +	u8 *mdata = NULL;
->> +	efi_guid_t guid;
->> +
->> +	if (ucs2_strnlen(name, 1024) > 0) {
->> +		createkey(name, &key, &keylen);
->> +	} else {
->> +		keylen = 0;
->> +		key = kzalloc(1024, GFP_KERNEL);
->> +	}
->> +
->> +	pr_info("%s: powerpc get next variable, key is %s\n", __func__, key);
-> Don't put debugging info like this in the kernel log of everyone :(
->
->> +
->> +	rc = opal_get_next_variable(key, &keylen, keysize);
->> +	if (rc) {
->> +		kfree(key);
->> +		return opal_to_efi_status(rc);
->> +	}
->> +
->> +	mdsize = kzalloc(sizeof(unsigned long), GFP_KERNEL);
-> No error checking?
->
->> +	rc = opal_get_variable_size(key, keylen, mdsize, NULL);
->> +	if (rc)
->> +		goto out;
->> +
->> +	if (*mdsize <= 0)
->> +		goto out;
->> +
->> +	mdata = kzalloc(*mdsize, GFP_KERNEL);
->> +
->> +	rc = opal_get_variable(key, keylen, mdata, mdsize, NULL, NULL);
->> +	if (rc)
->> +		goto out;
->> +
->> +	if (*mdsize > 0) {
->> +		namesize = *mdsize - sizeof(efi_guid_t) - sizeof(u32);
->> +		if (namesize > 0) {
->> +			memset(&guid, 0, sizeof(efi_guid_t));
->> +			convert_buffer_to_efi_guid(mdata + namesize, &guid);
->> +			memcpy(vendor, &guid, sizeof(efi_guid_t));
->> +			memset(name, 0, namesize + 2);
->> +			memcpy(name, mdata, namesize);
->> +			*name_size = namesize + 2;
->> +			name[namesize++] = 0;
->> +			name[namesize] = 0;
->> +		}
->> +	}
->> +
->> +out:
->> +	kfree(mdsize);
->> +	kfree(mdata);
->> +
->> +	return opal_to_efi_status(rc);
->> +}
->> +
->> +static efi_status_t powerpc_set_variable(efi_char16_t *name, efi_guid_t *vendor,
->> +					 u32 attr, unsigned long data_size,
->> +					 void *data)
->> +{
->> +	int rc;
->> +	u8 *key;
->> +	unsigned long keylen;
->> +	u8 *metadata;
->> +	unsigned long mdsize;
->> +
->> +	if (!name)
->> +		return EFI_INVALID_PARAMETER;
->> +
->> +	if (!vendor)
->> +		return EFI_INVALID_PARAMETER;
->> +
->> +	createkey(name, &key, &keylen);
->> +	pr_info("%s: nayna key is %s\n", __func__, key);
-> Again, please remove all of your debugging code when resending.
->
->> +
->> +	createmetadata(name, vendor, &attr, &metadata, &mdsize);
->> +
->> +	rc = opal_set_variable(key, keylen, metadata, mdsize, data, data_size);
->> +
->> +	return opal_to_efi_status(rc);
->> +}
->> +
->> +
->> +static const struct efivar_operations efivar_ops = {
->> +	.get_variable = powerpc_get_variable,
->> +	.set_variable = powerpc_set_variable,
->> +	.get_next_variable = powerpc_get_next_variable,
->> +};
->> +
->> +
->> +static __init int power_secvar_init(void)
->> +{
->> +	int rc = 0;
->> +	unsigned long ver = 0;
->> +
->> +	rc = opal_variable_version(&ver);
->> +	if (ver != BACKEND_TC_COMPAT_V1) {
->> +		pr_info("Compatible backend unsupported\n");
->> +		return -1;
-> Do not make up error numbers, use the defined values please.
+> > +	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
+> > +
+> > +	for (i = 0; i < (1 << order); i++) {
+> > +		/* All pages coming out of the allocator should have KeyID 0 */
+> > +		WARN_ON_ONCE(lookup_page_ext(page)->keyid);
+> > +		lookup_page_ext(page)->keyid = keyid;
+> > +
+> 
+> So presumably page_address() is affected by this keyid, and the below
+> clear_highpage() then accesses the 'right' location?
 
-Thanks Greg for the review !!
+Yes. clear_highpage() -> kmap_atomic() -> page_address().
 
-I will address everything in the next version.
+> > +		/* Clear the page after the KeyID is set. */
+> > +		if (zero)
+> > +			clear_highpage(page);
+> > +
+> > +		page++;
+> > +	}
+> > +}
+> > +
+> > +/*
+> > + * Handles freeing of encrypted page.
+> > + * Called from page allocator on freeing encrypted page.
+> > + */
+> > +void free_encrypted_page(struct page *page, int order)
+> > +{
+> > +	int i;
+> > +
+> > +	/*
+> > +	 * The hardware/CPU does not enforce coherency between mappings
+> > +	 * of the same physical page with different KeyIDs or
+> > +	 * encryption keys. We are responsible for cache management.
+> > +	 */
+> 
+> I still don't like that comment much; yes the hardware doesn't do it,
+> and yes we have to do it, but it doesn't explain the actual scheme
+> employed to do so.
 
-Thanks & Regards,
-         - Nayna
+Fair enough. I'll do better.
+
+> > +	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
+> > +
+> > +	for (i = 0; i < (1 << order); i++) {
+> > +		/* Check if the page has reasonable KeyID */
+> > +		WARN_ON_ONCE(lookup_page_ext(page)->keyid > mktme_nr_keyids);
+> 
+> It should also check keyid > 0, so maybe:
+> 
+> 	(unsigned)(keyid - 1) > keyids-1
+> 
+> instead?
+
+Makes sense.
+
+-- 
+ Kirill A. Shutemov
