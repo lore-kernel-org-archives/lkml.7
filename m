@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB4CC31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:41:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 961FBC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:41:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A35092133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:41:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A65F2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:41:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQOCCGqA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OGBD+TBx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728005AbfFNMlh (ORCPT
+        id S1727988AbfFNMlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:41:37 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33177 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727573AbfFNMlb (ORCPT
+        Fri, 14 Jun 2019 08:41:36 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:35324 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727572AbfFNMlb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 08:41:31 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n9so2412390wru.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:41:29 -0700 (PDT)
+Received: by mail-wr1-f65.google.com with SMTP id m3so2405736wrv.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 05:41:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:subject:date:message-id:in-reply-to:references:mime-version
          :content-transfer-encoding;
-        bh=ydRvlr8GrTeHWJG9VkVQSxp2WSHz7znDNO6P33s8ZXY=;
-        b=pQOCCGqAMDd6pBzhOwghY/3foEwLP4s4c1Wc1dGov2C4zJBl+VjVFjKY+zhxqdq1Lf
-         zIBsPKYcMbzfB9ZiDJ0x0+Mb04T3GDUtHp/dKTOynwDMMiDcETM16YHXm/T4Z/uZZEcB
-         fOmRqgpEBT0WQ6nV+dK10V64uDR41sjO2GLZrH5RLG3ERGj/gIzpj1fbF5OQryA8w/6X
-         TjYDsXg3Echybd6tIIYKs0U/miL0HLlMPWxnV9FpRHYaVKZC4xj9zYYqBuqvMNj5uQyY
-         /a/w/cw13oDHALmSZU78tClcu7pqqVpeVR0OZQnT+hEDzYnpwZAf7sYhYLKCVHw8n///
-         S0Dw==
+        bh=LQVSIEeD0nQzbNe4535DUZpv1oRub2NRc611Dv3vQ2E=;
+        b=OGBD+TBx8N5h5M7hqo9FLX4pLxhzEZsCYqoAEaTl7ua/mP0uHew+Lqcg9A7yeKJIcJ
+         KNs0dPdBzQH2l/YVDrrvsoWAK7N4/c0BD+0edugp+RFN9ay8P8dmMXS/NiaERFiGk8Og
+         Z2Tl6XU0+Nb8PqL2WodA/Dskr7w9VTedd7TF/W6zbmOTOJaLDe+Z4S0p4KMKB4O61Ghx
+         EOmdsGe7lKv5KG/H8b/dCUxv6Vh4KCorOFGnI5vW2AIEG+28pG1pdiz8p3feCjMsjHmh
+         DJTt8Fjrw9BtvlXIgfMTWOBwZ58TxTogvySRswGvxJnwPfzC7rmEzGbOAIsTN7ljoV7h
+         wLHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ydRvlr8GrTeHWJG9VkVQSxp2WSHz7znDNO6P33s8ZXY=;
-        b=I+xa3tKogoiXz40HBMo30VQElKrpQ+7yzqio9g6jMbigA2LMKdsSK8+94hfMQMYNCg
-         cMDcB1mzmhY5hoyRjrnwd+eyIFraKW5LlWvdT9x8LPo5oJ9HXpjja15dEsCOJsAFXsJ0
-         +r78Jk8y1NjqTYl8HW/jQ0mv2wgXqqTfvJ/FR5XvmAg2WPPwuW3jrpg4p7OLMg0HWYcC
-         tkYBeZV7vXuxf/GY8WB1wl21zHXza8hCUb1tzg1rCr9zsKkD+sx/pSpAdC3F8uO9QPqJ
-         2o4PbkglAEUnC6XWzkuoc6e6baW9xyP4vP6znJfqq2c2TPC9nk6XFJTWYonTS3OjHwNY
-         sU+g==
-X-Gm-Message-State: APjAAAVo+4Tu6QjnjvTYpJ/o1MwwxNOQIMOvpMcCPgrmr+iXA83pG/J6
-        dnNc5UtyE1zUNUyFGod79wY=
-X-Google-Smtp-Source: APXvYqxemwoMWkSm1jSN79GD079pyYew4LokB4mGKgAC5BALG1haYBR1QzGpWEjJCSHvxOAHbuLLzw==
-X-Received: by 2002:adf:df10:: with SMTP id y16mr5861671wrl.302.1560516088657;
-        Fri, 14 Jun 2019 05:41:28 -0700 (PDT)
+        bh=LQVSIEeD0nQzbNe4535DUZpv1oRub2NRc611Dv3vQ2E=;
+        b=RbtmYBE6OyDVNkIAXns+T2psBOM0fc1HCOadaFntL8d5EvfHgakaLZ/P9pPsO0IOMN
+         7czZ8wpX/ED1HeTPH1vuQBPlbuOw+R/ZpuOX0hBdZ4QeXV7cSVfTdGUOgmvxiAvZOZWT
+         DoqNp/HvM/lGxlcGt+BncHTfCnL1Us+6mWdlnRsxSTm1WTg8YWZ8g6gk73MJfuIBwOOW
+         5v3qc4NNeWhgbKoaEzc5ZznH8FWNXJf3MPQpUUFrKEkOLwjXdmtIPBSZlq53wC/kqOmB
+         h8dz4fGHnBXrpw6bqhuDqua5xGzSoj3jAiYCZYOvMxG/I+rS9tfTDPyxGspb9wMjKJxy
+         +WmQ==
+X-Gm-Message-State: APjAAAWS1+CmqekSu8yRf5//piS5PLBEAZPuFrYYE5i+UvFqqQq51ARU
+        dcjSPipGW1PwXaEaUdpISxeBOkzX
+X-Google-Smtp-Source: APXvYqzEdAgdauf41YwPRc3SYhWnz6aN1kSFojwDXPTchHah0RZrzIl9XgaiXofcDmaHzXYGkQX60Q==
+X-Received: by 2002:a5d:6b12:: with SMTP id v18mr65247584wrw.306.1560516089779;
+        Fri, 14 Jun 2019 05:41:29 -0700 (PDT)
 Received: from abel.fritz.box ([2a02:908:1252:fb60:e0eb:ed4e:b781:3e9f])
-        by smtp.gmail.com with ESMTPSA id n1sm2648209wrx.39.2019.06.14.05.41.27
+        by smtp.gmail.com with ESMTPSA id n1sm2648209wrx.39.2019.06.14.05.41.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 05:41:28 -0700 (PDT)
+        Fri, 14 Jun 2019 05:41:29 -0700 (PDT)
 From:   "=?UTF-8?q?Christian=20K=C3=B6nig?=" 
         <ckoenig.leichtzumerken@gmail.com>
 X-Google-Original-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
@@ -66,9 +66,9 @@ To:     daniel@ffwll.ch, l.stach@pengutronix.de,
         thellstrom@vmware.com, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, etnaviv@lists.freedesktop.org,
         lima@lists.freedesktop.org
-Subject: [PATCH 1/6] locking: add ww_mutex_(un)lock_for_each helpers
-Date:   Fri, 14 Jun 2019 14:41:20 +0200
-Message-Id: <20190614124125.124181-2-christian.koenig@amd.com>
+Subject: [PATCH 2/6] drm/ttm: use new ww_mutex_(un)lock_for_each macros
+Date:   Fri, 14 Jun 2019 14:41:21 +0200
+Message-Id: <20190614124125.124181-3-christian.koenig@amd.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190614124125.124181-1-christian.koenig@amd.com>
 References: <20190614124125.124181-1-christian.koenig@amd.com>
@@ -80,106 +80,149 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ww_mutex implementation allows for detection deadlocks when multiple
-threads try to acquire the same set of locks in different order.
-
-The problem is that handling those deadlocks was the burden of the user of
-the ww_mutex implementation and at least some users didn't got that right
-on the first try.
-
-I'm not a big fan of macros, but it still better then implementing the same
-logic at least halve a dozen times. So this patch adds two macros to lock
-and unlock multiple ww_mutex instances with the necessary deadlock handling.
+Use the provided macros instead of implementing deadlock handling on our own.
 
 Signed-off-by: Christian König <christian.koenig@amd.com>
 ---
- include/linux/ww_mutex.h | 75 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
+ drivers/gpu/drm/ttm/ttm_execbuf_util.c | 87 +++++++++-----------------
+ 1 file changed, 30 insertions(+), 57 deletions(-)
 
-diff --git a/include/linux/ww_mutex.h b/include/linux/ww_mutex.h
-index 3af7c0e03be5..a0d893b5b114 100644
---- a/include/linux/ww_mutex.h
-+++ b/include/linux/ww_mutex.h
-@@ -369,4 +369,79 @@ static inline bool ww_mutex_is_locked(struct ww_mutex *lock)
- 	return mutex_is_locked(&lock->base);
- }
+diff --git a/drivers/gpu/drm/ttm/ttm_execbuf_util.c b/drivers/gpu/drm/ttm/ttm_execbuf_util.c
+index 957ec375a4ba..3c3ac6c94d7f 100644
+--- a/drivers/gpu/drm/ttm/ttm_execbuf_util.c
++++ b/drivers/gpu/drm/ttm/ttm_execbuf_util.c
+@@ -33,16 +33,6 @@
+ #include <linux/sched.h>
+ #include <linux/module.h>
  
-+/**
-+ * ww_mutex_unlock_for_each - cleanup after error or contention
-+ * @loop: for loop code fragment iterating over all the locks
-+ * @pos: code fragment returning the currently handled lock
-+ * @contended: the last contended ww_mutex or NULL or ERR_PTR
-+ *
-+ * Helper to make cleanup after error or lock contention easier.
-+ * First unlock the last contended lock and then all other locked ones.
-+ */
-+#define ww_mutex_unlock_for_each(loop, pos, contended)	\
-+	if (!IS_ERR(contended)) {			\
-+		if (contended)				\
-+			ww_mutex_unlock(contended);	\
-+		contended = (pos);			\
-+		loop {					\
-+			if (contended == (pos))		\
-+				break;			\
-+			ww_mutex_unlock(pos);		\
-+		}					\
+-static void ttm_eu_backoff_reservation_reverse(struct list_head *list,
+-					      struct ttm_validate_buffer *entry)
+-{
+-	list_for_each_entry_continue_reverse(entry, list, head) {
+-		struct ttm_buffer_object *bo = entry->bo;
+-
+-		reservation_object_unlock(bo->resv);
+-	}
+-}
+-
+ static void ttm_eu_del_from_lru_locked(struct list_head *list)
+ {
+ 	struct ttm_validate_buffer *entry;
+@@ -96,8 +86,9 @@ int ttm_eu_reserve_buffers(struct ww_acquire_ctx *ticket,
+ 			   struct list_head *list, bool intr,
+ 			   struct list_head *dups, bool del_lru)
+ {
+-	struct ttm_bo_global *glob;
+ 	struct ttm_validate_buffer *entry;
++	struct ww_mutex *contended;
++	struct ttm_bo_global *glob;
+ 	int ret;
+ 
+ 	if (list_empty(list))
+@@ -109,68 +100,39 @@ int ttm_eu_reserve_buffers(struct ww_acquire_ctx *ticket,
+ 	if (ticket)
+ 		ww_acquire_init(ticket, &reservation_ww_class);
+ 
+-	list_for_each_entry(entry, list, head) {
++	ww_mutex_lock_for_each(list_for_each_entry(entry, list, head),
++			       &entry->bo->resv->lock, contended, ret,
++			       intr, ticket)
++	{
+ 		struct ttm_buffer_object *bo = entry->bo;
+ 
+-		ret = __ttm_bo_reserve(bo, intr, (ticket == NULL), ticket);
+ 		if (!ret && unlikely(atomic_read(&bo->cpu_writers) > 0)) {
+ 			reservation_object_unlock(bo->resv);
+-
+ 			ret = -EBUSY;
++			goto error;
++		}
+ 
+-		} else if (ret == -EALREADY && dups) {
++		if (ret == -EALREADY && dups) {
+ 			struct ttm_validate_buffer *safe = entry;
++
+ 			entry = list_prev_entry(entry, head);
+ 			list_del(&safe->head);
+ 			list_add(&safe->head, dups);
+ 			continue;
+ 		}
+ 
+-		if (!ret) {
+-			if (!entry->num_shared)
+-				continue;
+-
+-			ret = reservation_object_reserve_shared(bo->resv,
+-								entry->num_shared);
+-			if (!ret)
+-				continue;
+-		}
++		if (unlikely(ret))
++			goto error;
+ 
+-		/* uh oh, we lost out, drop every reservation and try
+-		 * to only reserve this buffer, then start over if
+-		 * this succeeds.
+-		 */
+-		ttm_eu_backoff_reservation_reverse(list, entry);
+-
+-		if (ret == -EDEADLK) {
+-			if (intr) {
+-				ret = ww_mutex_lock_slow_interruptible(&bo->resv->lock,
+-								       ticket);
+-			} else {
+-				ww_mutex_lock_slow(&bo->resv->lock, ticket);
+-				ret = 0;
+-			}
+-		}
++		if (!entry->num_shared)
++			continue;
+ 
+-		if (!ret && entry->num_shared)
+-			ret = reservation_object_reserve_shared(bo->resv,
+-								entry->num_shared);
+-
+-		if (unlikely(ret != 0)) {
+-			if (ret == -EINTR)
+-				ret = -ERESTARTSYS;
+-			if (ticket) {
+-				ww_acquire_done(ticket);
+-				ww_acquire_fini(ticket);
+-			}
+-			return ret;
++		ret = reservation_object_reserve_shared(bo->resv,
++							entry->num_shared);
++		if (unlikely(ret)) {
++			reservation_object_unlock(bo->resv);
++			goto error;
+ 		}
+-
+-		/* move this item to the front of the list,
+-		 * forces correct iteration of the loop without keeping track
+-		 */
+-		list_del(&entry->head);
+-		list_add(&entry->head, list);
+ 	}
+ 
+ 	if (del_lru) {
+@@ -179,6 +141,17 @@ int ttm_eu_reserve_buffers(struct ww_acquire_ctx *ticket,
+ 		spin_unlock(&glob->lru_lock);
+ 	}
+ 	return 0;
++
++error:
++	ww_mutex_unlock_for_each(list_for_each_entry(entry, list, head),
++				 &entry->bo->resv->lock, contended);
++	if (ret == -EINTR)
++		ret = -ERESTARTSYS;
++	if (ticket) {
++		ww_acquire_done(ticket);
++		ww_acquire_fini(ticket);
 +	}
-+
-+/**
-+ * ww_mutex_lock_for_each - implement ww_mutex deadlock handling
-+ * @loop: for loop code fragment iterating over all the locks
-+ * @pos: code fragment returning the currently handled lock
-+ * @contended: ww_mutex pointer variable for state handling
-+ * @ret: int variable to store the return value of ww_mutex_lock()
-+ * @intr: If true ww_mutex_lock_interruptible() is used
-+ * @ctx: ww_acquire_ctx pointer for the locking
-+ *
-+ * This macro implements the necessary logic to lock multiple ww_mutex
-+ * instances. Lock contention with backoff and re-locking is handled by the
-+ * macro so that the loop body only need to handle other errors and
-+ * successfully acquired locks.
-+ *
-+ * With the @loop and @pos code fragment it is possible to apply this logic
-+ * to all kind of containers (array, list, tree, etc...) holding multiple
-+ * ww_mutex instances.
-+ *
-+ * @contended is used to hold the current state we are in. -ENOENT is used to
-+ * signal that we are just starting the handling. -EDEADLK means that the
-+ * current position is contended and we need to restart the loop after locking
-+ * it. NULL means that there is no contention to be handled. Any other value is
-+ * the last contended ww_mutex.
-+ */
-+#define ww_mutex_lock_for_each(loop, pos, contended, ret, intr, ctx)	\
-+	for (contended = ERR_PTR(-ENOENT); ({				\
-+		__label__ relock, next;					\
-+		ret = -ENOENT;						\
-+		if (contended == ERR_PTR(-ENOENT))			\
-+			contended = NULL;				\
-+		else if (contended == ERR_PTR(-EDEADLK))		\
-+			contended = (pos);				\
-+		else							\
-+			goto next;					\
-+		loop {							\
-+			if (contended == (pos))	{			\
-+				contended = NULL;			\
-+				continue;				\
-+			}						\
-+relock:									\
-+			ret = !(intr) ? ww_mutex_lock(pos, ctx) :	\
-+				ww_mutex_lock_interruptible(pos, ctx);	\
-+			if (ret == -EDEADLK) {				\
-+				ww_mutex_unlock_for_each(loop, pos,	\
-+							 contended);	\
-+				contended = ERR_PTR(-EDEADLK);		\
-+				goto relock;				\
-+			}						\
-+			break;						\
-+next:									\
-+			continue;					\
-+		}							\
-+	}), ret != -ENOENT;)
-+
- #endif
++	return ret;
+ }
+ EXPORT_SYMBOL(ttm_eu_reserve_buffers);
+ 
 -- 
 2.17.1
 
