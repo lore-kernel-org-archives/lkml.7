@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0CCDC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4599FC31E4E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADCEF21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:37:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 119A6217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544676;
-	bh=1UHtruAhcIKtbxyrI9yPCM/Ec1ZsP54ZaoOnGt4gJt4=;
+	s=default; t=1560544680;
+	bh=JcfqUTP6x4yGsT+rMP4Hw8NWJSGWT2N9YWh0L6aHju8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2lqckrJhcwSbsEU+idvGi5O1V6Dk2+cRva9ttr6BozbsiMYU/AQIqZMLvvTnWBWk1
-	 7wU7ZVV8RLpuNQ89htdRhs5clzjgK2jUQLJQCIIfFA6j5cUg/ik1OrOdypXUIxsdsJ
-	 b4P0oYK4hyieX5Jsu99dzUxENbwrb7h9S0hm6lm4=
+	b=0q/75Czs2cu/CzWPomkEe5yw5IW0P8tnaBJPrvt6bmG4pai8atk50LiKB0FH72Eju
+	 coXuFtY8aYhp+hsCN0hEQ4W0iRxfjfeOXQMhtRQFJLrIG6/kMLFM+KwzQWuOUWF3rq
+	 IS9Vdv7hKz+9gAVsvjb6oUEEen7+VI6ENJ6gaTIw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728490AbfFNUhy (ORCPT
+        id S1728496AbfFNUh7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:37:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50956 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:37:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726762AbfFNU3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726755AbfFNU3F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 16:29:05 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8F7821872;
+        by mail.kernel.org (Postfix) with ESMTPSA id 8035B2184D;
         Fri, 14 Jun 2019 20:29:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1560544144;
-        bh=1UHtruAhcIKtbxyrI9yPCM/Ec1ZsP54ZaoOnGt4gJt4=;
+        bh=JcfqUTP6x4yGsT+rMP4Hw8NWJSGWT2N9YWh0L6aHju8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RZ9TzDrh0rZq9lMzmld85Jz8N/6bxUAsD6kG3LtefVhq9ay/jY+5U0OCsnJ2yJoVw
-         Ysj9iJ7F0j5jc50y3O/m4O9wvqOpyI53o1YUdVMbtmq0HzvWYLLf4v5X9Cy1VfV9aA
-         h/cJfDZCte7kwV4ZoKU+e4dt/rz3iUous+XPtcdI=
+        b=AycFfBCoOGVUm55nn3t6nEhvx7WfRKONxYFPxnDoyg2mMe229CUPiRuTBuaQFvl8O
+         JuqrEjD7LVQ7FtNTg8sfIOi1WNdnFfWKT36o/h8nB+czHpP+hXjyoTAr0BB0tNXFr8
+         lX9sa0DQx+VJ9hlUqYTWwgDFJaAIG2nL9wMqq7w0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 26/59] crypto: hmac - fix memory leak in hmac_init_tfm()
-Date:   Fri, 14 Jun 2019 16:28:10 -0400
-Message-Id: <20190614202843.26941-26-sashal@kernel.org>
+Cc:     YueHaibing <yuehaibing@huawei.com>,
+        Paul Burton <paul.burton@mips.com>, ralf@linux-mips.org,
+        jhogan@kernel.org, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.1 25/59] MIPS: uprobes: remove set but not used variable 'epc'
+Date:   Fri, 14 Jun 2019 16:28:09 -0400
+Message-Id: <20190614202843.26941-25-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -59,38 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 7829a0c1cb9c80debfb4fdb49b4d90019f2ea1ac ]
+[ Upstream commit f532beeeff0c0a3586cc15538bc52d249eb19e7c ]
 
-When I added the sanity check of 'descsize', I missed that the child
-hash tfm needs to be freed if the sanity check fails.  Of course this
-should never happen, hence the use of WARN_ON(), but it should be fixed.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Fixes: e1354400b25d ("crypto: hash - fix incorrect HASH_MAX_DESCSIZE")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Herbert Xu <herbert@gondor.apana.org.au>
+arch/mips/kernel/uprobes.c: In function 'arch_uprobe_pre_xol':
+arch/mips/kernel/uprobes.c:115:17: warning: variable 'epc' set but not used [-Wunused-but-set-variable]
+
+It's never used since introduction in
+commit 40e084a506eb ("MIPS: Add uprobes support.")
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: <ralf@linux-mips.org>
+Cc: <jhogan@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: <linux-mips@vger.kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- crypto/hmac.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ arch/mips/kernel/uprobes.c | 3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/crypto/hmac.c b/crypto/hmac.c
-index 4b8c8ee8f15c..c623778b36ba 100644
---- a/crypto/hmac.c
-+++ b/crypto/hmac.c
-@@ -168,8 +168,10 @@ static int hmac_init_tfm(struct crypto_tfm *tfm)
- 
- 	parent->descsize = sizeof(struct shash_desc) +
- 			   crypto_shash_descsize(hash);
--	if (WARN_ON(parent->descsize > HASH_MAX_DESCSIZE))
-+	if (WARN_ON(parent->descsize > HASH_MAX_DESCSIZE)) {
-+		crypto_free_shash(hash);
- 		return -EINVAL;
-+	}
- 
- 	ctx->hash = hash;
- 	return 0;
+diff --git a/arch/mips/kernel/uprobes.c b/arch/mips/kernel/uprobes.c
+index 4aaff3b3175c..6dbe4eab0a0e 100644
+--- a/arch/mips/kernel/uprobes.c
++++ b/arch/mips/kernel/uprobes.c
+@@ -112,9 +112,6 @@ int arch_uprobe_pre_xol(struct arch_uprobe *aup, struct pt_regs *regs)
+ 	 */
+ 	aup->resume_epc = regs->cp0_epc + 4;
+ 	if (insn_has_delay_slot((union mips_instruction) aup->insn[0])) {
+-		unsigned long epc;
+-
+-		epc = regs->cp0_epc;
+ 		__compute_return_epc_for_insn(regs,
+ 			(union mips_instruction) aup->insn[0]);
+ 		aup->resume_epc = regs->cp0_epc;
 -- 
 2.20.1
 
