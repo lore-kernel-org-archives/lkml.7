@@ -2,97 +2,115 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 191D1C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F7CC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59CD21721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893A921721
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="QR/Frpj4"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wJWUaH4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728353AbfFNNnq (ORCPT
+        id S1728462AbfFNNnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:43:46 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41550 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbfFNNnq (ORCPT
+        Fri, 14 Jun 2019 09:43:49 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:39208 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727979AbfFNNnr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:43:46 -0400
-Received: by mail-qt1-f196.google.com with SMTP id 33so2463452qtr.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:43:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=aXm35D07rUjPalP4CfdXm4RG5Oa6TLe+BWj9APerSEg=;
-        b=QR/Frpj4TG8mlIKMQ8x4IzLOAFOk25NuIc41EaC9lVa+w/n88BtrrXCtofyiOLcBhQ
-         Ezeq0yN2wzhUdN1vU2w1zT+V527yXqLZF/+MLPfVmTNAtX7P4rRVe0DL2RGw1IGwvkhj
-         0KDirUSeO28izbosQHeBo0cYVQuorCRyA8FkTx4KP3ZVVmk2W76yy5ocUMvKbrVs7f5E
-         G+deGxfel0FA+FY110QfZw7k7b3xnpeyMTNzP4c19Tm8CffN2A/jkYI/34ElKabeYW5I
-         b0HU2seMrkx9Fzxz2rqbfqxlowdUUvCJuIQL/eGCkPMU4cK5IaFV7RZmAMvH+obj+Kr1
-         xdzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=aXm35D07rUjPalP4CfdXm4RG5Oa6TLe+BWj9APerSEg=;
-        b=cG7gfM4MYP7XPANjZe1B8QXKPN6YqNYbuLR5vz1DzlCGMcQ790RP8i5LLlBWdM646L
-         WxDHqo5UTPd+rivkPeiMFG/8yoPTkao31Bey52oQnKpLOS40VlU0GIKF0FJSFpg23umX
-         oMnjuAky5PrvdYdDFqDSgrwOfcU2WXc1zg5U7416l6arlNPThF/zabklS33c/sgfTKvI
-         SJvxEF2JV/YQGGFSz+9MK+vr7pAbmzA+5ogCLXjWEzCe+mZPxLR49dycmt0zpijF/jwH
-         t4wsVO6/rmwQ3QyOzlpcU4zIRvUOBhfCb4hUMPvetuLENpFjUc9NKuW/YkNpc0ZuzUYK
-         zPUA==
-X-Gm-Message-State: APjAAAWe4l9gdCcVyffxObNUTlidPUuX0DF2nM13b/uJO29T9+JkRmdD
-        iSM0AIImPlPMmWs6FlTUrhSTOg==
-X-Google-Smtp-Source: APXvYqwz2/lYE4zseDXYhlp0RL/XY7Q0dZxV33vLDM4hSXrLx92LsZ3CWxcDYpnpK2WqRaqGxcv0MA==
-X-Received: by 2002:a0c:ba97:: with SMTP id x23mr8397472qvf.133.1560519825110;
-        Fri, 14 Jun 2019 06:43:45 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::a658])
-        by smtp.gmail.com with ESMTPSA id s64sm1507782qkb.56.2019.06.14.06.43.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 06:43:44 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 09:43:43 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
-        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 3/8] blkcg: implement REQ_CGROUP_PUNT
-Message-ID: <20190614134342.rtm4iwxgzbsueyfg@MacBook-Pro-91.local>
-References: <20190614003350.1178444-1-tj@kernel.org>
- <20190614003350.1178444-4-tj@kernel.org>
+        Fri, 14 Jun 2019 09:43:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CEpLzxWl0gVhhE2loe/wZNC7HEFBNtusAecwnKLSC9Y=; b=wJWUaH4KBhaf6FksZmx6YleNS
+        SqJt2t24BqEHD50uiboct62KgbUmDCuQAqSNqCr87Vaizsbh9ww1KCcI+top6ZWkFHX3dyskStBzq
+        UIViB3eY+V4668fgqSO5LtEzseW5ElzpJsd3aNvCMF/RVO9Lg/DIm9iLz357FOEQ+WxQ4pw2Q077W
+        kf4mJRIvgRsBYqbPyY7CtR7XUwXqeFv4KrkG8WnWDVb7ouPheOhasUPP57/2hdI+uSHSKuH4XsfuR
+        +Si9/YiEQVF9qWr46i2A8Hr8Uzh3Su4WRqmqOee1TLNOHja45yFHb/hTiCA++kVXKwxYFFWwXNFqx
+        pH+R4j+Fg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbmUS-00087g-TV; Fri, 14 Jun 2019 13:43:37 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 983BF20292FD5; Fri, 14 Jun 2019 15:43:35 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 15:43:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free
+ encrypted pages
+Message-ID: <20190614134335.GU3436@hirez.programming.kicks-ass.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
+ <20190614093409.GX3436@hirez.programming.kicks-ass.net>
+ <20190614110458.GN3463@hirez.programming.kicks-ass.net>
+ <20190614132836.spl6bmk2kkx65nfr@box>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614003350.1178444-4-tj@kernel.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190614132836.spl6bmk2kkx65nfr@box>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:33:45PM -0700, Tejun Heo wrote:
-> When a shared kthread needs to issue a bio for a cgroup, doing so
-> synchronously can lead to priority inversions as the kthread can be
-> trapped waiting for that cgroup.  This patch implements
-> REQ_CGROUP_PUNT flag which makes submit_bio() punt the actual issuing
-> to a dedicated per-blkcg work item to avoid such priority inversions.
+On Fri, Jun 14, 2019 at 04:28:36PM +0300, Kirill A. Shutemov wrote:
+> On Fri, Jun 14, 2019 at 01:04:58PM +0200, Peter Zijlstra wrote:
+> > On Fri, Jun 14, 2019 at 11:34:09AM +0200, Peter Zijlstra wrote:
+> > > On Wed, May 08, 2019 at 05:43:33PM +0300, Kirill A. Shutemov wrote:
+> > > 
+> > > > +		lookup_page_ext(page)->keyid = keyid;
+> > 
+> > > > +		lookup_page_ext(page)->keyid = 0;
+> > 
+> > Also, perhaps paranoid; but do we want something like:
+> > 
+> > static inline void page_set_keyid(struct page *page, int keyid)
+> > {
+> > 	/* ensure nothing creeps after changing the keyid */
+> > 	barrier();
+> > 	WRITE_ONCE(lookup_page_ext(page)->keyid, keyid);
+> > 	barrier();
+> > 	/* ensure nothing creeps before changing the keyid */
+> > }
+> > 
+> > And this is very much assuming there is no concurrency through the
+> > allocator locks.
 > 
-> This will be used to fix priority inversions in btrfs compression and
-> should be generally useful as we grow filesystem support for
-> comprehensive IO control.
+> There's no concurrency for this page: it has been off the free list, but
+> have not yet passed on to user. Nobody else sees the page before
+> allocation is finished.
 > 
-> Signed-off-by: Tejun Heo <tj@kernel.org>
-> Cc: Chris Mason <clm@fb.com>
+> And barriers/WRITE_ONCE() looks excessive to me. It's just yet another bit
+> of page's metadata and I don't see why it's has to be handled in a special
+> way.
+> 
+> Does it relax your paranoia? :P
 
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+Not really, it all 'works' because clflush_cache_range() includes mb()
+and page_address() has an address dependency on the store, and there are
+no other sites that will ever change 'keyid', which is all kind of
+fragile.
 
-Thanks,
+At the very least that should be explicitly called out in a comment.
 
-Josef
