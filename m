@@ -2,166 +2,198 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51935C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E250C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A00021848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E62921848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dJCVqaYT"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="NxRS0jSV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfFNQoP (ORCPT
+        id S1726596AbfFNQoS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:44:15 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39379 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725859AbfFNQoM (ORCPT
+        Fri, 14 Jun 2019 12:44:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36395 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726482AbfFNQoO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:44:12 -0400
-Received: by mail-lf1-f68.google.com with SMTP id p24so2179111lfo.6;
-        Fri, 14 Jun 2019 09:44:09 -0700 (PDT)
+        Fri, 14 Jun 2019 12:44:14 -0400
+Received: by mail-pl1-f195.google.com with SMTP id k8so272447plt.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:44:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=m9lLYU7jn518ojnFF4nYlS29/w9slDIZ2Qw8HKCiVkg=;
-        b=dJCVqaYTv0Ezro7ql3iIqLgyKhuUvBpEh1thMHwh5XM7Jpe5oSbJp+g5Tmv6RIfn35
-         ndwv2cYqQSWd1cZRp0l8px8y2O9OGXU80ro9JxbQBwEbmwPyx5tueqQcjOKeuAc03yYd
-         8KVPG9MvvpsNSEH7xr/TagGHkiJnCu7+vAQUk9ZBv5XZZ1xa2YwHRnFg5goqC7Tr7Ir+
-         gKx4D83LbUHPY2OlUM1CxbJiq/EkH3q0mwlkUp4cYg/A/1IFyCi/50IHVGYOyKrYNG+s
-         8CwI4ahPhUHbnfl/bVWCzokJWSNGpaIc1PO9bI8U4V1xkFkn9+05U0UEYuGpAgK56AZP
-         pbdA==
+        d=amarulasolutions.com; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=aKv8CY3ZfTC87OfgidzsL+oxrJ/KYUyR5hJ1sg73Mj4=;
+        b=NxRS0jSVSMU9QoyAVgh1BVsCGJofm5X4ZtviIzOFd68haxBmO9IG1AsOz1N5feSORY
+         i+tcwa3vVkGsoDIMkTvG0L84o/R4WE3qfnWtL53buXPBMM6UJcoU3K8bhunfzCsBWVAm
+         ot7YEz/Kc+CgmTNQYUMdBtJDxOVKmHYufJMgM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=m9lLYU7jn518ojnFF4nYlS29/w9slDIZ2Qw8HKCiVkg=;
-        b=pvhIJqh4bwDBYZZmCq94YNgUpfSftgIuHd7QeE3z/hlWxeFIe+XFuvu2hfiH8/B8QK
-         HZnoi6xaKAVbU3CUVayNobExjxxYIHUy+nfJOrIEgoIYSjSnnc6dy6GQKXgFdai1+6cT
-         tjaRgyElsRpySCL+J+SA1O/Z2rgYKlEWn0pWkA8jlldG7r271PAhlE6PDNkgymqtjDzL
-         s+rYmIoFYyRgHm/dE00U0ms45zRFzNDU2CtM9a4k2ZjFuVxn56YzPRnDpiDoM7MCe9k3
-         V7B11t9SoFbdGSAoMsCPyxidceXjXYOtboGmuv2ZfoT2eHJtaAK9ngFRC/SiQC2OslO1
-         eXpQ==
-X-Gm-Message-State: APjAAAXEeNbXBus5j2mC/SYIzqfjijaKMsUlsgChEw/N3sZoBj7k1yg2
-        NI61ho86vwSPndT8DMavocPmjQEQ
-X-Google-Smtp-Source: APXvYqyPAYvifKzpZ0d8kYngJqpcsskzy85z/YO/mz0OJmLmJbvLifzSPv2ay5136cNm6ILxJV71OA==
-X-Received: by 2002:ac2:528e:: with SMTP id q14mr20186797lfm.17.1560530648985;
-        Fri, 14 Jun 2019 09:44:08 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id f10sm676257ljk.95.2019.06.14.09.44.07
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=aKv8CY3ZfTC87OfgidzsL+oxrJ/KYUyR5hJ1sg73Mj4=;
+        b=EPjlSCr6rIv5f5RxzyXiRIo+io6y3RtM3HxbrJ2b/jXEw37cY4BmlhwrrMaQiA3W2z
+         /VDKHgiUV5xNt+VCsi+NyLeefSjXFVCLZZ8ZujILFfkat8e6GjIJqObnfKjv02657lLD
+         5NKDi6Q7HNj5003llS7vdZd7GtuuNfaLsLeSDnjXMImb7E+828MUTotMBG8SRJQ7NlN/
+         r4BseK1OmcaKKPubU1jhMVjdNORlMz2WUvhCO8itRQNSR0IuSiRD/PhrsWqpvjr1hFCY
+         7vKjyWf2gq6ck5z5zUFNyq5piSXcAY6f02klBl20Vj6ytVqdjHFNKrFQjnQN9qN92sZA
+         Pgaw==
+X-Gm-Message-State: APjAAAXO4YHfah5AiSWfDhE7pRIW41R81eY/eiekVIduPVZltAdYf5cO
+        NbPoNVsXhY9/1vHxkmgOK9yPdg==
+X-Google-Smtp-Source: APXvYqxMiswcOeVpyj6jjn8GX8TtC9BLtw38K+dIqWFzUkLrUCWAVI2CE4J1QmRx2OADdXWb0ZNg+w==
+X-Received: by 2002:a17:902:ac1:: with SMTP id 59mr16384176plp.168.1560530653656;
+        Fri, 14 Jun 2019 09:44:13 -0700 (PDT)
+Received: from localhost.localdomain ([115.97.180.18])
+        by smtp.gmail.com with ESMTPSA id 85sm1639583pfv.130.2019.06.14.09.44.10
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 09:44:08 -0700 (PDT)
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190613210849.10382-1-digetx@gmail.com>
- <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
- <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
-Date:   Fri, 14 Jun 2019 19:44:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 09:44:13 -0700 (PDT)
+From:   Jagan Teki <jagan@amarulasolutions.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com,
+        Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v2 8/9] ARM: dts: sun8i: r40: Add MIPI DSI pipeline
+Date:   Fri, 14 Jun 2019 22:13:23 +0530
+Message-Id: <20190614164324.9427-9-jagan@amarulasolutions.com>
+X-Mailer: git-send-email 2.18.0.321.gffc6fa0e3
+In-Reply-To: <20190614164324.9427-1-jagan@amarulasolutions.com>
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
 MIME-Version: 1.0
-In-Reply-To: <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.06.2019 18:24, Jon Hunter пишет:
-> 
-> On 14/06/2019 16:21, Jon Hunter wrote:
->>
->> On 13/06/2019 22:08, Dmitry Osipenko wrote:
->>> Tegra's APB DMA engine updates words counter after each transferred burst
->>> of data, hence it can report transfer's residual with more fidelity which
->>> may be required in cases like audio playback. In particular this fixes
->>> audio stuttering during playback in a chromiuim web browser. The patch is
->>> based on the original work that was made by Ben Dooks [1]. It was tested
->>> on Tegra20 and Tegra30 devices.
->>>
->>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->>>
->>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
->>>  1 file changed, 28 insertions(+), 7 deletions(-)
->>>
->>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>> index 79e9593815f1..c5af8f703548 100644
->>> --- a/drivers/dma/tegra20-apb-dma.c
->>> +++ b/drivers/dma/tegra20-apb-dma.c
->>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>  	return 0;
->>>  }
->>>  
->>> +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
->>> +					      struct tegra_dma_sg_req *sg_req,
->>> +					      struct tegra_dma_desc *dma_desc,
->>> +					      unsigned int residual)
->>> +{
->>> +	unsigned long status, wcount = 0;
->>> +
->>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>> +		return residual;
->>> +
->>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>> +
->>> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>> +
->>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>> +		wcount = status;
->>> +
->>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>> +		return residual - sg_req->req_len;
->>> +
->>> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
->>> +}
->>> +
->>>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->>>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
->>>  {
->>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->>> +	struct tegra_dma_sg_req *sg_req = NULL;
->>>  	struct tegra_dma_desc *dma_desc;
->>> -	struct tegra_dma_sg_req *sg_req;
->>>  	enum dma_status ret;
->>>  	unsigned long flags;
->>>  	unsigned int residual;
->>> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->>>  		residual = dma_desc->bytes_requested -
->>>  			   (dma_desc->bytes_transferred %
->>>  			    dma_desc->bytes_requested);
->>> +		residual = tegra_dma_update_residual(tdc, sg_req, dma_desc,
->>> +						     residual);
->>
->> I had a quick look at this, I am not sure that we want to call
->> tegra_dma_update_residual() here for cases where the dma_desc is on the
->> free_dma_desc list. In fact, couldn't this be simplified a bit for case
->> where the dma_desc is on the free list? In that case I believe that the
->> residual should always be 0.
-> 
-> Actually, no, it could be non-zero in the case the transfer is aborted.
+Add MIPI DSI pipeline for Allwinner R40.
 
-Looks like everything should be fine as-is.
+Unlike conventional Display pipeline in allwinner, R40 have
+TCON TCOP which would interact various block like muxes,
+tcon lcd, tcon_tv for better pipeline fitting.
 
-BTW, it's a bit hard to believe that there is any real benefit from the
-free_dma_desc list at all, maybe worth to just remove it?
+For MIPI DSI pipeline, we have to configure the tcon_lcd0
+block which would interact with tcon_top for upper pipeline
+connections and dsi block for lower pipeline connections.
+
+So, this patch created that pipeline by adding new nodes
+for tcon_lcd0, dsi, dphy and connet them to make proper
+pipeline fitting.
+
+Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+---
+ arch/arm/boot/dts/sun8i-r40.dtsi | 73 ++++++++++++++++++++++++++++++++
+ 1 file changed, 73 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
+index 219d2dca16b3..eb6b2960c700 100644
+--- a/arch/arm/boot/dts/sun8i-r40.dtsi
++++ b/arch/arm/boot/dts/sun8i-r40.dtsi
+@@ -623,6 +623,7 @@
+ 
+ 					tcon_top_mixer0_out_tcon_lcd0: endpoint@0 {
+ 						reg = <0>;
++						remote-endpoint = <&tcon_lcd0_in_tcon_top_mixer0>;
+ 					};
+ 
+ 					tcon_top_mixer0_out_tcon_lcd1: endpoint@1 {
+@@ -701,6 +702,45 @@
+ 			};
+ 		};
+ 
++		tcon_lcd0: lcd-controller@1c71000 {
++			compatible = "allwinner,sun8i-r40-tcon-lcd";
++			reg = <0x01c71000 0x1000>;
++			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_TCON_LCD0>, <&ccu CLK_TCON_LCD0>;
++			clock-names = "ahb", "tcon-ch0";
++			clock-output-names = "tcon-pixel-clock";
++			resets = <&ccu RST_BUS_TCON_LCD0>, <&ccu RST_BUS_LVDS>;
++			reset-names = "lcd", "lvds";
++			status = "disabled";
++
++			ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				tcon_lcd0_in: port@0 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <0>;
++
++					tcon_lcd0_in_tcon_top_mixer0: endpoint@0 {
++						reg = <0>;
++						remote-endpoint = <&tcon_top_mixer0_out_tcon_lcd0>;
++					};
++				};
++
++				tcon_lcd0_out: port@1 {
++					#address-cells = <1>;
++					#size-cells = <0>;
++					reg = <1>;
++
++					tcon_lcd0_out_dsi_out: endpoint@1 {
++						reg = <1>;
++						remote-endpoint = <&dsi_in_tcon_lcd0_out>;
++					};
++				};
++			};
++		};
++
+ 		tcon_tv0: lcd-controller@1c73000 {
+ 			compatible = "allwinner,sun8i-r40-tcon-tv";
+ 			reg = <0x01c73000 0x1000>;
+@@ -798,6 +838,39 @@
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
+ 
++		dsi: dsi@1ca0000 {
++			compatible = "allwinner,sun8i-r40-mipi-dsi",
++				     "allwinner,sun50i-a64-mipi-dsi";
++			reg = <0x01ca0000 0x1000>;
++			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_MIPI_DSI>;
++			clock-names = "bus";
++			resets = <&ccu RST_BUS_MIPI_DSI>;
++			phys = <&dphy>;
++			phy-names = "dphy";
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port {
++				dsi_in_tcon_lcd0_out: endpoint {
++					remote-endpoint = <&tcon_lcd0_out_dsi_out>;
++				};
++			};
++		};
++
++		dphy: d-phy@1ca1000 {
++			compatible = "allwinner,sun8i-r40-mipi-dphy",
++				     "allwinner,sun6i-a31-mipi-dphy";
++			reg = <0x01ca1000 0x1000>;
++			clocks = <&ccu CLK_BUS_MIPI_DSI>,
++				 <&tcon_top CLK_TCON_TOP_DSI>;
++			clock-names = "bus", "mod";
++			resets = <&ccu RST_BUS_MIPI_DSI>;
++			status = "disabled";
++			#phy-cells = <0>;
++		};
++
+ 		hdmi: hdmi@1ee0000 {
+ 			compatible = "allwinner,sun8i-r40-dw-hdmi",
+ 				     "allwinner,sun8i-a83t-dw-hdmi";
+-- 
+2.18.0.321.gffc6fa0e3
+
