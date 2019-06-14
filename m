@@ -2,91 +2,99 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95913C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:21:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661BBC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74E072133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:21:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0E82133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:21:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfFNNVe (ORCPT
+        id S1728157AbfFNNVi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:21:34 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:58123 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727686AbfFNNVd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:21:33 -0400
-Received: from [192.168.1.110] ([77.4.92.40]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1Mr8O8-1iOb1z0gXG-00oGea; Fri, 14 Jun 2019 15:21:29 +0200
-Subject: Re: [PATCH 1/2] pinctrl: remove unneeded #ifdef around declarations
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-gpio@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <cc68b375-6011-6bbf-8f0b-c2963237a743@metux.net>
-Date:   Fri, 14 Jun 2019 15:21:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Fri, 14 Jun 2019 09:21:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40074 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727686AbfFNNVh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:21:37 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3801F308FF32;
+        Fri, 14 Jun 2019 13:21:29 +0000 (UTC)
+Received: from krava (unknown [10.43.17.136])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 6F56C5D9C3;
+        Fri, 14 Jun 2019 13:21:23 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 15:21:22 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Stephane Eranian <eranian@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Vince Weaver <vincent.weaver@maine.edu>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCHv2 0/8] perf/x86: Rework msr probe interface
+Message-ID: <20190614132122.GA3629@krava>
+References: <20190531120958.29601-1-jolsa@kernel.org>
+ <20190614102046.GB4325@krava>
+ <20190614123715.GN3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190613015532.19685-1-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:168YjOKWpt67/p7AHoIIjNzDbPrZ7/yHr+w4DvyJOMOslvJZ2H3
- rGRIkE+3BWsG/5/48NVxYVofD6evB7tAxsHqPha/tpo5pCkWHhD2uPeMHXuDQJlGln0BeTW
- 0lVmjr6Hn75z4Nc7cUK/zLLWHOdoKmZxPkVLE25iKKj8w9R+yLhuz9YQ56Q+K/Txw6dO/OA
- reCUM6RRlcCiOpeIWCX2w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:iGUQU66y6io=:WLiyvShT7KDQuCnYlioR+/
- l5LUFmuxtWdQTrTOnmaq8Jmib65fXEFQj9K37JHxSo2OxhmOYY+hYNqZ/o62b/M+b8bwWLw1O
- sLCW46HC2T2JyP9xbYKjuFalX58k0oWQ28ydWTLN1z5DdfHo8zAC5duy2cTFpVPmwT72W349Z
- jbvZ8PZAfTKfnXE9avmQEqrtEBSZvV9S7mZjYITd2HXThidwGobnEvYVYAKkS0tqUBCUfsZu1
- xWvzZNYv4lnC0Ku/h0yRITVqLWQGolIheookTUXju+00yXt9W43alhCJoaF4hRjxPOvt+xU4X
- JE5KMZis0n5pEmQWSL9IXaFGAvY5uk12NDHYlBnVN3/nk76+piJHaY0KTTObzALuO/7x4HRGZ
- dnRqUU2tBTR9q2yN0AbKwDy/1cJaxm5e1PTCpN2I8EtrWgsMuVCiiWIFxGovNQQVeLI3BpeKp
- lchfUcbti3mxQo39x+iKtr/KLlIDWbQYKkDArc8fpmI9aiEMQYDXxYuxpp15Y9r6O6wzR/fox
- qZNmQ2joY2phJ6v9v5EnhXo6DIe9kZ3n/4hzn4GnFl6nkfRomDsiT8CMSAXFLQAoRQ7EuY9na
- voIquH2KjxOZUtMEUWvCmsldXxcIgeqAiMx9ReGejJd6RUlZu2jKdHslx2yLISr2QoLg7LLRF
- eh88g1SxoRVwqk5vzIA0o8rHvBdllJ6zNGUJ3poL7RasQnZw8e+vwFVesy8aJB4knLsElI6zo
- 9H7bk5QSkCKzN4bVLkCjG21/CxsEgQ8SqV3rJU52YQW3bsKFIiFNTK7Wvk8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614123715.GN3436@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 14 Jun 2019 13:21:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.06.19 03:55, Masahiro Yamada wrote:
-> What is the point in surrounding the whole of declarations with
-> ifdef like this?
+On Fri, Jun 14, 2019 at 02:37:15PM +0200, Peter Zijlstra wrote:
+> On Fri, Jun 14, 2019 at 12:20:46PM +0200, Jiri Olsa wrote:
+> > On Fri, May 31, 2019 at 02:09:50PM +0200, Jiri Olsa wrote:
+> > > hi,
+> > > following up on [1], [2] and [3], this patchset adds update
+> > > attribute groups to pmu, factors out the MSR probe code and
+> > > use it in msr,cstate* and rapl PMUs.
+> > > 
+> > > The functionality stays the same with one exception:
+> > > for msr PMU: the event is not exported if the rdmsr return zero
+> > > on event's msr, cstate* and rapl pmu functionality stays.
+> > > 
+> > > And also: ;-)
+> > > > Somewhere along the line you lost the explanation of _why_ we're doing
+> > > > this; namely: virt sucks.
+> > > 
+> > > Also available in:
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+> > >   perf/msr
+> > > 
+> > > Tested on snb and skylake servers.
+> > > 
+> > > v2 changes:
+> > >   - checking zero rdmsr only for msr PMU events,
+> > >     cstate* and rapl pmu functionality stays unchanged
+> > 
+> > ping
 > 
->   #ifdef CONFIG_FOO
->   int foo(void);
->   #endif
-> 
-> If CONFIG_FOO is not defined, all callers of foo() will fail
-> with implicit declaration errors since the top Makefile adds
-> -Werror-implicit-function-declaration to KBUILD_CFLAGS.
-> 
-> This breaks the build earlier when you are doing something wrong.
-> That's it.
+> I was waiting a new post because you mentioned something about some
+> people not being happy with this, something about a wonky BIOS failing
+> this on native.
 
-hmm, in general I like the idea of breaking the build as early as
-possible. depending on your available cpu power, a kernel build can
-take a while, and it could be a huge waste of time when having to
-wait for link stage, just to find out about missing functions.
+ah, nope, that's unrelated.. I sent RFC about that today:
+  [RFC] perf/x86/intel: Disable check_msr for real hw
 
-@linus: what's your oppinion ?
+but while checking on this one, I realized I need to send v3 ;-)
 
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+jirka
