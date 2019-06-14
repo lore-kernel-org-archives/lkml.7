@@ -2,115 +2,80 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F7CC31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65687C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:44:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 893A921721
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="wJWUaH4K"
+	by mail.kernel.org (Postfix) with ESMTP id 45ECA20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:44:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728462AbfFNNnt (ORCPT
+        id S1728563AbfFNNoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:43:49 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:39208 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727979AbfFNNnr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:43:47 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CEpLzxWl0gVhhE2loe/wZNC7HEFBNtusAecwnKLSC9Y=; b=wJWUaH4KBhaf6FksZmx6YleNS
-        SqJt2t24BqEHD50uiboct62KgbUmDCuQAqSNqCr87Vaizsbh9ww1KCcI+top6ZWkFHX3dyskStBzq
-        UIViB3eY+V4668fgqSO5LtEzseW5ElzpJsd3aNvCMF/RVO9Lg/DIm9iLz357FOEQ+WxQ4pw2Q077W
-        kf4mJRIvgRsBYqbPyY7CtR7XUwXqeFv4KrkG8WnWDVb7ouPheOhasUPP57/2hdI+uSHSKuH4XsfuR
-        +Si9/YiEQVF9qWr46i2A8Hr8Uzh3Su4WRqmqOee1TLNOHja45yFHb/hTiCA++kVXKwxYFFWwXNFqx
-        pH+R4j+Fg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbmUS-00087g-TV; Fri, 14 Jun 2019 13:43:37 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 983BF20292FD5; Fri, 14 Jun 2019 15:43:35 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 15:43:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free
- encrypted pages
-Message-ID: <20190614134335.GU3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
- <20190614093409.GX3436@hirez.programming.kicks-ass.net>
- <20190614110458.GN3463@hirez.programming.kicks-ass.net>
- <20190614132836.spl6bmk2kkx65nfr@box>
+        Fri, 14 Jun 2019 09:44:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57302 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727979AbfFNNoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:44:06 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 63D1A30C1207;
+        Fri, 14 Jun 2019 13:44:06 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F4FA6A4A0;
+        Fri, 14 Jun 2019 13:44:03 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 08:44:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     'Alexei Starovoitov' <alexei.starovoitov@gmail.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
+Message-ID: <20190614134401.q2wbh6mvo4nzmw2o@treble>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
+ <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
+ <57f6e69da6b3461a9c39d71aa1b58662@AcuMS.aculab.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190614132836.spl6bmk2kkx65nfr@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <57f6e69da6b3461a9c39d71aa1b58662@AcuMS.aculab.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 14 Jun 2019 13:44:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:28:36PM +0300, Kirill A. Shutemov wrote:
-> On Fri, Jun 14, 2019 at 01:04:58PM +0200, Peter Zijlstra wrote:
-> > On Fri, Jun 14, 2019 at 11:34:09AM +0200, Peter Zijlstra wrote:
-> > > On Wed, May 08, 2019 at 05:43:33PM +0300, Kirill A. Shutemov wrote:
-> > > 
-> > > > +		lookup_page_ext(page)->keyid = keyid;
-> > 
-> > > > +		lookup_page_ext(page)->keyid = 0;
-> > 
-> > Also, perhaps paranoid; but do we want something like:
-> > 
-> > static inline void page_set_keyid(struct page *page, int keyid)
-> > {
-> > 	/* ensure nothing creeps after changing the keyid */
-> > 	barrier();
-> > 	WRITE_ONCE(lookup_page_ext(page)->keyid, keyid);
-> > 	barrier();
-> > 	/* ensure nothing creeps before changing the keyid */
-> > }
-> > 
-> > And this is very much assuming there is no concurrency through the
-> > allocator locks.
+On Fri, Jun 14, 2019 at 10:50:23AM +0000, David Laight wrote:
+> On Thu, Jun 13, 2019 at 08:21:03AM -0500, Josh Poimboeuf wrote:
+> > The BPF JIT code clobbers RBP.  This breaks frame pointer convention and
+> > thus prevents the FP unwinder from unwinding through JIT generated code.
+> >
+> > RBP is currently used as the BPF stack frame pointer register.  The
+> > actual register used is opaque to the user, as long as it's a
+> > callee-saved register.  Change it to use R12 instead.
 > 
-> There's no concurrency for this page: it has been off the free list, but
-> have not yet passed on to user. Nobody else sees the page before
-> allocation is finished.
-> 
-> And barriers/WRITE_ONCE() looks excessive to me. It's just yet another bit
-> of page's metadata and I don't see why it's has to be handled in a special
-> way.
-> 
-> Does it relax your paranoia? :P
+> Could you maintain the system %rbp chain through the BPF stack?
 
-Not really, it all 'works' because clflush_cache_range() includes mb()
-and page_address() has an address dependency on the store, and there are
-no other sites that will ever change 'keyid', which is all kind of
-fragile.
+Do you mean to save RBP again before changing it again, so that we
+create another stack frame inside the BPF stack?  That might work.
 
-At the very least that should be explicitly called out in a comment.
+> It might even be possible to put something relevant in the %rip
+> location.
 
+I'm not sure what you mean here.
+
+-- 
+Josh
