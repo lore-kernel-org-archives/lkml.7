@@ -2,89 +2,88 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D833FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4662C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B57C720866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C6422168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfFNNmk (ORCPT
+        id S1728398AbfFNNmj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:42:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57304 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728069AbfFNNmi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:42:39 -0400
+Received: from stargate.chelsio.com ([12.32.117.8]:22443 "EHLO
+        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727918AbfFNNmi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 09:42:38 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 44F503086202;
-        Fri, 14 Jun 2019 13:42:33 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A698960469;
-        Fri, 14 Jun 2019 13:42:27 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com>
-        <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com>
-        <87tvcsv1pk.fsf@oldenburg2.str.redhat.com>
-        <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com>
-        <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com>
-        <87d0jguxdk.fsf@oldenburg2.str.redhat.com>
-        <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com>
-        <87wohoti47.fsf@oldenburg2.str.redhat.com>
-        <189377747.3315.1560519247118.JavaMail.zimbra@efficios.com>
-Date:   Fri, 14 Jun 2019 15:42:26 +0200
-In-Reply-To: <189377747.3315.1560519247118.JavaMail.zimbra@efficios.com>
-        (Mathieu Desnoyers's message of "Fri, 14 Jun 2019 09:34:07 -0400
-        (EDT)")
-Message-ID: <87imt8tha5.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+Received: from localhost (varun.asicdesigners.com [10.193.190.56])
+        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id x5EDfkhn025181;
+        Fri, 14 Jun 2019 06:41:47 -0700
+Date:   Fri, 14 Jun 2019 19:11:44 +0530
+From:   Varun Prakash <varun@chelsio.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mike Christie <mchristi@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        varun@chelsio.com
+Subject: Re: [PATCH -next] cxgbit: remove set but not used variable 'ppmax'
+Message-ID: <20190614134143.GA1630@chelsio.com>
+References: <20190614024413.110449-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 14 Jun 2019 13:42:38 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614024413.110449-1-yuehaibing@huawei.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Mathieu Desnoyers:
+On Fri, Jun 14, 2019 at 02:44:13AM +0000, YueHaibing wrote:
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> drivers/target/iscsi/cxgbit/cxgbit_ddp.c: In function 'cxgbit_ddp_init':
+> drivers/target/iscsi/cxgbit/cxgbit_ddp.c:303:15: warning:
+>  variable 'ppmax' set but not used [-Wunused-but-set-variable]
+> 
+> It's not used since commit a248384e6420 ("cxgb4/libcxgb/cxgb4i/cxgbit:
+> enable eDRAM page pods for iSCSI")
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/target/iscsi/cxgbit/cxgbit_ddp.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/target/iscsi/cxgbit/cxgbit_ddp.c b/drivers/target/iscsi/cxgbit/cxgbit_ddp.c
+> index 1443ef045a5f..fe1be5feaf21 100644
+> --- a/drivers/target/iscsi/cxgbit/cxgbit_ddp.c
+> +++ b/drivers/target/iscsi/cxgbit/cxgbit_ddp.c
+> @@ -300,7 +300,6 @@ int cxgbit_ddp_init(struct cxgbit_device *cdev)
+>  	struct cxgb4_lld_info *lldi = &cdev->lldi;
+>  	struct net_device *ndev = cdev->lldi.ports[0];
+>  	struct cxgbi_tag_format tformat;
+> -	unsigned int ppmax;
+>  	int ret, i;
+>  
+>  	if (!lldi->vr->iscsi.size) {
+> @@ -308,8 +307,6 @@ int cxgbit_ddp_init(struct cxgbit_device *cdev)
+>  		return -EACCES;
+>  	}
+>  
+> -	ppmax = lldi->vr->iscsi.size >> PPOD_SIZE_SHIFT;
+> -
+>  	memset(&tformat, 0, sizeof(struct cxgbi_tag_format));
+>  	for (i = 0; i < 4; i++)
+>  		tformat.pgsz_order[i] = (lldi->iscsi_pgsz_order >> (i << 3))
+> 
 
-> +  /* Publicize rseq registration ownership.  This must be performed
-> +     after rtld re-relocation, before invoking constructors of
-> +     preloaded libraries.  */
-> +  rseq_init ();
+Acked-by: Varun Prakash <varun@chelsio.com>
 
-Please add a comment that IFUNC resolvers do not see the initialized
-value.  I think this is okay because we currently do not support access
-to extern variables in IFUNC resolvers.
-
->    /* Do any necessary cleanups for the startup OS interface code.
->       We do these now so that no calls are made after rtld re-relocation
->       which might be resolved to different functions than we expect.
->
-> It works fine now!
-
-Great.
-
-Thanks,
-Florian
+This patch is for net-next tree.
