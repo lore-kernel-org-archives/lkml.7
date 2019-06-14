@@ -2,149 +2,89 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04367C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DFCC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:09:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D468D21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 894FB20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 05:09:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725827AbfFNFGs (ORCPT
+        id S1725845AbfFNFJv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 01:06:48 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:64863 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725767AbfFNFGs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 01:06:48 -0400
-X-UUID: 7fd98b407f5a40f29073a7a6dfa2b499-20190614
-X-UUID: 7fd98b407f5a40f29073a7a6dfa2b499-20190614
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1599817428; Fri, 14 Jun 2019 13:06:37 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Fri, 14 Jun 2019 13:06:35 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Fri, 14 Jun 2019 13:06:35 +0800
-Message-ID: <1560488795.16718.18.camel@mtksdaap41>
-Subject: Re: [PATCH v3, 20/27] drm/mediatek: add background color input
- select function for ovl/ovl_2l
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Date:   Fri, 14 Jun 2019 13:06:35 +0800
-In-Reply-To: <1559734986-7379-21-git-send-email-yongqiang.niu@mediatek.com>
-References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1559734986-7379-21-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Fri, 14 Jun 2019 01:09:51 -0400
+Received: from namei.org ([65.99.196.166]:39104 "EHLO namei.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725767AbfFNFJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 01:09:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by namei.org (8.14.4/8.14.4) with ESMTP id x5E59h5n012192;
+        Fri, 14 Jun 2019 05:09:43 GMT
+Date:   Fri, 14 Jun 2019 15:09:43 +1000 (AEST)
+From:   James Morris <jmorris@namei.org>
+To:     Igor Lubashev <ilubashe@akamai.com>
+cc:     Serge Hallyn <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 0/1] security: add SECURE_KEEP_FSUID to preserve
+ fsuid/fsgid across execve
+In-Reply-To: <1560473087-27754-1-git-send-email-ilubashe@akamai.com>
+Message-ID: <alpine.LRH.2.21.1906141445010.7150@namei.org>
+References: <1560473087-27754-1-git-send-email-ilubashe@akamai.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
+On Thu, 13 Jun 2019, Igor Lubashev wrote:
 
-On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> I've posted this in March but received no response. Reposting.
 > 
-> This patch add background color input select function for ovl/ovl_2l
+> This patch introduces SECURE_KEEP_FSUID to allow fsuid/fsgid to be
+> preserved across execve. It is currently impossible to execve a
+> program such that effective and filesystem uid differ.
 > 
-> ovl include 4 DRAM layer and 1 background color layer
-> ovl_2l include 4 DRAM layer and 1 background color layer
-> DRAM layer frame buffer data from render hardware, GPU for example.
-> backgournd color layer is embed in ovl/ovl_2l, we can only set
-> it color, but not support DRAM frame buffer.
+> The need for this functionality arose from a desire to allow certain
+> non-privileged users to run perf. To do this, we install perf without
+> set-uid-root and have a set-uid-root wrapper decide who is allowed to
+> run perf (and with what arguments).
 > 
-> for ovl0->ovl0_2l direct link usecase,
-> we need set ovl0_2l background color intput select from ovl0
-> if render send DRAM buffer layer number <=4, all these layer read
-> by ovl.
-> layer0 is at the bottom of all layers.
-> layer3 is at the top of all layers.
-> if render send DRAM buffer layer numbfer >=4 && <=6
-> ovl0 read layer0~3
-> ovl0_2l read layer4~5
-> layer5 is at the top ot all these layers.
+> The wrapper must execve perf with real and effective root uid, because
+> perf and KASLR require this. However, that presently resets fsuid to
+> root, giving the user ability to read and overwrite any file owned by
+> root (perf report -i, perf record -o). Also, perf record will create
+> perf.data that cannot be deleted by the user.
 > 
-> the decision of how to setting ovl0/ovl0_2l read these layer data
-> is controlled in mtk crtc, which will be another patch
+> We cannot reset /proc/sys/kernel/perf_event_paranoid to a permissive
+> level, since we must be selective which users have the permissions.
 > 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
-> ---
->  drivers/gpu/drm/mediatek/mtk_disp_ovl.c | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> index a0ab760..b5a9907 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_disp_ovl.c
-> @@ -27,6 +27,8 @@
->  #define DISP_REG_OVL_EN				0x000c
->  #define DISP_REG_OVL_RST			0x0014
->  #define DISP_REG_OVL_ROI_SIZE			0x0020
-> +#define DISP_REG_OVL_DATAPATH_CON		0x0024
-> +#define OVL_BGCLR_SEL_IN				BIT(2)
->  #define DISP_REG_OVL_ROI_BGCLR			0x0028
->  #define DISP_REG_OVL_SRC_CON			0x002c
->  #define DISP_REG_OVL_CON(n)			(0x0030 + 0x20 * (n))
-> @@ -245,6 +247,25 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
->  		mtk_ovl_layer_on(comp, idx);
->  }
->  
-> +static void mtk_ovl_bgclr_in_on(struct mtk_ddp_comp *comp,
-> +				enum mtk_ddp_comp_id prev)
+> Of course, we could fix our problem by a patch to perf to allow
+> passing a username on the command line and having perf execute
+> setfsuid before opening files. However, perf is not the only program
+> that uses kernel features that require root uid/euid, so a general
+> solution that does not involve updating all such programs seems
+> warranted.
 
-prev is useless, so remove it.
+This seems like a very specific corner case, depending on fsuid!=0 for an 
+euid=0 process, along with a whitelist policy for perf arguments. It would 
+be a great way to escalate to root via a bug in an executed app or via a 
+wrapper misconfiguration.
 
-Regards,
-CK
+It also adds complexity to kernel credential handling -- it's yet another 
+thing to consider when trying to reason about this.
 
-> +{
-> +	unsigned int reg;
-> +
-> +	reg = readl(comp->regs + DISP_REG_OVL_DATAPATH_CON);
-> +	reg = reg | OVL_BGCLR_SEL_IN;
-> +	writel(reg, comp->regs + DISP_REG_OVL_DATAPATH_CON);
-> +}
-> +
-> +static void mtk_ovl_bgclr_in_off(struct mtk_ddp_comp *comp)
-> +{
-> +	unsigned int reg;
-> +
-> +	reg = readl(comp->regs + DISP_REG_OVL_DATAPATH_CON);
-> +	reg = reg & ~OVL_BGCLR_SEL_IN;
-> +	writel(reg, comp->regs + DISP_REG_OVL_DATAPATH_CON);
-> +}
-> +
->  static const struct mtk_ddp_comp_funcs mtk_disp_ovl_funcs = {
->  	.config = mtk_ovl_config,
->  	.start = mtk_ovl_start,
-> @@ -255,6 +276,8 @@ static void mtk_ovl_layer_config(struct mtk_ddp_comp *comp, unsigned int idx,
->  	.layer_on = mtk_ovl_layer_on,
->  	.layer_off = mtk_ovl_layer_off,
->  	.layer_config = mtk_ovl_layer_config,
-> +	.bgclr_in_on = mtk_ovl_bgclr_in_on,
-> +	.bgclr_in_off = mtk_ovl_bgclr_in_off,
->  };
->  
->  static int mtk_disp_ovl_bind(struct device *dev, struct device *master,
+Have you considered the example security configuration in 
+Documentation/admin-guide/perf-security.rst ?
 
+What are some other examples of programs that could utilize this scheme?
+
+
+
+-- 
+James Morris
+<jmorris@namei.org>
 
