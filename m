@@ -2,144 +2,93 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E96EBC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18CC7C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBB021537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="dBsQifPE"
+	by mail.kernel.org (Postfix) with ESMTP id DFDE020866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:07:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726327AbfFNPHC (ORCPT
+        id S1726071AbfFNPHJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:07:02 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43456 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725780AbfFNPHB (ORCPT
+        Fri, 14 Jun 2019 11:07:09 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:38429 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725780AbfFNPHJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:07:01 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 15BE3C2390;
-        Fri, 14 Jun 2019 15:07:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560524821; bh=Op4ZxYsnB/J5QGVqA8PvUdINkiagCSQfGiBRXY2o7c0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=dBsQifPEpa85HVcpdeXh7YlLop1tFH1dgbIUVMj/+qGvYBo37np+zKGyj5yGZh/Lz
-         EQLtISnYcXPrDkB5MiXjpzbptFax6EMHsj2XDHt0vqNDdw9ht+VuxwTue1G4W4uA9w
-         pbeKycT5xzRERcspB85uSBJQafSjjbMEGxKN6YEonznaEB7j90ycqm0cKEe2woUQ0w
-         /z05pmZwlr8kRmKmJqDA4U6ekBGsYly3Zay0jKcDdz0E/ekoBL2/Rkh3MoamsaulHd
-         KbLIxbVb8Gams6DsHkRcspDCqOYmughUsZFZEG9cp3Pqe7b77VYLrgh23vT1fNDFom
-         IZY/RIgpNUXUg==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 371EAA022E;
-        Fri, 14 Jun 2019 15:06:58 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id D390E3F849;
-        Fri, 14 Jun 2019 17:06:58 +0200 (CEST)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next] net: stmmac: Fix wrapper drivers not detecting PHY
-Date:   Fri, 14 Jun 2019 17:06:57 +0200
-Message-Id: <f4f524805a81c6f680b55d8fb084b1070294a0a8.1560524776.git.joabreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
+        Fri, 14 Jun 2019 11:07:09 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbnn8-0000iH-6U; Fri, 14 Jun 2019 17:06:58 +0200
+Date:   Fri, 14 Jun 2019 17:06:57 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+cc:     "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: Re: [PATCH v2 0/3] Add support for Zhaoxin Processors
+In-Reply-To: <54fb8565afbe4351adc0e4541463776c@zhaoxin.com>
+Message-ID: <alpine.DEB.2.21.1906141705400.1722@nanos.tec.linutronix.de>
+References: <54fb8565afbe4351adc0e4541463776c@zhaoxin.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Because of PHYLINK conversion we stopped parsing the phy-handle property
-from DT. Unfortunatelly, some wrapper drivers still rely on this phy
-node to configure the PHY.
+Tony,
 
-Let's restore the parsing of PHY handle while these wrapper drivers are
-not fully converted to PHYLINK.
+On Tue, 28 May 2019, Tony W Wang-oc wrote:
 
-Reported-by: Corentin Labbe <clabbe.montjoie@gmail.com>
-Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
-Signed-off-by: Jose Abreu <joabreu@synopsys.com>
-Cc: Joao Pinto <jpinto@synopsys.com>
-Cc: David S. Miller <davem@davemloft.net>
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 4 ++--
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 9 ++++++++-
- include/linux/stmmac.h                                | 1 +
- 3 files changed, 11 insertions(+), 3 deletions(-)
+> As a new x86 CPU Vendor, Shanghai Zhaoxin Semiconductor Co., Ltd.
+>  ("Zhaoxin") provide high performance general-purpose x86 processors.
+> 
+> CPU Vendor ID "Shanghai" belongs to Zhaoxin.
+> 
+> To enable the supports of Linux kernel to Zhaoxin's CPUs, add a new vendor
+> type (X86_VENDOR_ZHAOXIN, with value of 10) in
+> arch/x86/include/asm/processor.h.
+> 
+> To enable the support of Linux kernel's specific configuration to
+> Zhaoxin's CPUs, add a new file arch/x86/kernel/cpu/zhaoxin.c.
+> 
+> This patch series have been applied and tested successfully on Zhaoxin's
+> Soc silicon. Also tested on other processors, it works fine and makes no
+> harm to the existing codes.
+> 
+> v1->v2:
+>  - Rebased on 5.2.0-rc2 and tested against it.
+>  - remove GPL "boilerplate" text in the patch.
+>  - adjust signed-off-by: line match From: line.
+>  - run patch series through checkpatch.pl.
+> 
+> v1:
+>  - Rebased on 5.2.0-rc1 and tested against it.
+>  - Split the patch set to small series of patches.
+>  - Rework patch descriptions.
+> 
+> TonyWWang (3):
+>  x86/cpu: Create Zhaoxin processors architecture support file
+>  ACPI, x86: add Zhaoxin processors support for NONSTOP TSC
+>  x86/acpi/cstate: add Zhaoxin processors support for cache flush policy
+>  in C3
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index ad007d8bf9d7..069951590018 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -958,7 +958,7 @@ static int stmmac_init_phy(struct net_device *dev)
- 	struct device_node *node;
- 	int ret;
- 
--	node = priv->plat->phy_node;
-+	node = priv->plat->phylink_node;
- 
- 	if (node) {
- 		ret = phylink_of_phy_connect(priv->phylink, node, 0);
-@@ -980,7 +980,7 @@ static int stmmac_init_phy(struct net_device *dev)
- 
- static int stmmac_phy_setup(struct stmmac_priv *priv)
- {
--	struct device_node *node = priv->plat->phy_node;
-+	struct device_node *node = priv->plat->phylink_node;
- 	int mode = priv->plat->interface;
- 	struct phylink *phylink;
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 898f94aced53..49adda9b0ad8 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -381,7 +381,13 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 
- 	*mac = of_get_mac_address(np);
- 	plat->interface = of_get_phy_mode(np);
--	plat->phy_node = np;
-+
-+	/* Some wrapper drivers still rely on phy_node. Let's save it while
-+	 * they are not converted to phylink. */
-+	plat->phy_node = of_parse_phandle(np, "phy-handle", 0);
-+
-+	/* PHYLINK automatically parses the phy-handle property */
-+	plat->phylink_node = np;
- 
- 	/* Get max speed of operation from device tree */
- 	if (of_property_read_u32(np, "max-speed", &plat->max_speed))
-@@ -577,6 +583,7 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- void stmmac_remove_config_dt(struct platform_device *pdev,
- 			     struct plat_stmmacenet_data *plat)
- {
-+	of_node_put(plat->phy_node);
- 	of_node_put(plat->mdio_node);
- }
- #else
-diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 4335bd771ce5..1250e737f320 100644
---- a/include/linux/stmmac.h
-+++ b/include/linux/stmmac.h
-@@ -151,6 +151,7 @@ struct plat_stmmacenet_data {
- 	int interface;
- 	struct stmmac_mdio_bus_data *mdio_bus_data;
- 	struct device_node *phy_node;
-+	struct device_node *phylink_node;
- 	struct device_node *mdio_node;
- 	struct stmmac_dma_cfg *dma_cfg;
- 	int clk_csr;
--- 
-2.7.4
+I only got 0/3 and 1/3 of Version 2. Please always send the complete set.
 
+Thanks,
+
+	tglx
