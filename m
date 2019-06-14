@@ -2,142 +2,79 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1A6C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E42EBC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66E992168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rlY+TuF0"
+	by mail.kernel.org (Postfix) with ESMTP id BD4DD2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:43:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728362AbfFNNm5 (ORCPT
+        id S1728559AbfFNNnE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:42:57 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:33794 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728069AbfFNNmz (ORCPT
+        Fri, 14 Jun 2019 09:43:04 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:38068 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728069AbfFNNnC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:42:55 -0400
-Received: by mail-wm1-f67.google.com with SMTP id w9so8950417wmd.1;
-        Fri, 14 Jun 2019 06:42:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=l/PhgC367WTW48nTE7CUMgv0FnvzQmGarbQubvNhqIU=;
-        b=rlY+TuF0/77h4XOCRM4yyvkPFGQGl0v1lkkSkMgTxowZ+mpd4xqtqM8sBeiKEqP6l6
-         zerzbm8PybaQFLC+CT84UN4i8at1bm+7aj0ByayZXWWg/qlAkbhUv/hJklsk2DGm29n8
-         uba7kZqoG25ZzEyr0+Q3lg5NOyOqjyW0WmcGTY5Q5d09LJUcSiRHdq92fq7vOt63GLLi
-         yF6K9ak5pYYhnTsOsPiK1Ijxcp44LMcd8SsLfao+6LVnQxJu4Oobw3vfxY1B5qoHnlOJ
-         zWxIC4yobagxB1rkVMCMIprvv+GW85iGC9KPbXvhxO7FSsbGp97CuMmg02iqsmwHUaon
-         N7GA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=l/PhgC367WTW48nTE7CUMgv0FnvzQmGarbQubvNhqIU=;
-        b=kGrXjy7A5H8WStNBVOr6mK5KzJUp6pUArnS1Q0sm65xhC99IfIxTR7Z+uqAlcE+9De
-         fQx9IsCpR2te2zvA2+frXxFO6HMpb9g8nq6lL5caGwzOmRtAqC5hdmVvZryHMDYHbp1y
-         nFJUc1Ee7c39bBajCt0bbA3yJDwTs3ZBPneiEIQgb/QxYG0ZNVJ/UnyIU8gmuFjxo6Mu
-         UGc2FlW1WnRsW+DLcDe7OgeM/9aTmTodDhTU2HVLeHX4I+KEfgmv7pGlnWOvkE2PeeCp
-         NL1L+l6jU7mDUWlenhqlsUmgg9AfFA6+QZp1rD+5ZMSLuxcxY9nR2cac97yRFVHGGcMc
-         p9AQ==
-X-Gm-Message-State: APjAAAUVGjm+SUCEZyY8+BVP3HWaz4pm9AMwvLbDXV1BV721HNypEdQ4
-        RmxtcfTIMymz8s+hx+tkmAI=
-X-Google-Smtp-Source: APXvYqyliIUpKWGpzVravQmng2PLhnquSdAXIhYNYAbPBuuMJjdrxM7gB7THAsWqEYvQnUz3TC2pnw==
-X-Received: by 2002:a1c:b6d4:: with SMTP id g203mr8068724wmf.19.1560519772962;
-        Fri, 14 Jun 2019 06:42:52 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id 74sm3616332wma.7.2019.06.14.06.42.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 06:42:52 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 15:42:51 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] rtc: tegra: Implement suspend clock source
-Message-ID: <20190614134251.GG15526@ulmo>
-References: <20190614104747.19712-1-thierry.reding@gmail.com>
- <20190614104747.19712-2-thierry.reding@gmail.com>
- <d3de8c42-3718-d87d-3c38-af18c671036c@gmail.com>
+        Fri, 14 Jun 2019 09:43:02 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbmTS-0005an-I9; Fri, 14 Jun 2019 15:42:34 +0200
+Date:   Fri, 14 Jun 2019 15:42:33 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Dmitry Safonov <dima@arista.com>
+cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCHv4 07/28] posix-timers/timens: Take into account clock
+ offsets
+In-Reply-To: <20190612192628.23797-8-dima@arista.com>
+Message-ID: <alpine.DEB.2.21.1906141538240.1722@nanos.tec.linutronix.de>
+References: <20190612192628.23797-1-dima@arista.com> <20190612192628.23797-8-dima@arista.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="m972NQjnE83KvVa/"
-Content-Disposition: inline
-In-Reply-To: <d3de8c42-3718-d87d-3c38-af18c671036c@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 12 Jun 2019, Dmitry Safonov wrote:
 
---m972NQjnE83KvVa/
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Subject: posix-timers/timens: Take into account clock offsets
 
-On Fri, Jun 14, 2019 at 03:35:14PM +0300, Dmitry Osipenko wrote:
-> 14.06.2019 13:47, Thierry Reding =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > The suspend clock source for Tegra210 and earlier is currently
-> > implemented in the Tegra timer driver. However, the suspend clock source
-> > code accesses registers that are part of the RTC hardware block, so both
-> > can step on each others' toes. In practice this isn't an issue, but
-> > there is no reason why the RTC driver can't implement the clock source,
-> > so move the code over to the tegra-rtc driver.
-> >=20
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
->=20
->=20
-> [snip]
->=20
-> > +static struct tegra_rtc_info *to_tegra_rtc(struct clocksource *clksrc)
-> > +{
-> > +	return container_of(clksrc, struct tegra_rtc_info, clksrc);
-> > +}
->=20
-> Shouldn't hurt to inline this function explicitly because I assume that i=
-t won't get
-> inlined with a certain kernel configurations, like with enabled ftracing =
-for example.
+Please avoid that '/timens' appendix. It's not really a new subsystem or
+subfunction of posix-timers.
 
-Yeah, makes sense.
+posix-timers: Add time namespace support to common_timer_set()
 
-Thierry
+> From: Andrei Vagin <avagin@gmail.com>
+> 
+> Wire timer_settime() syscall into time namespace virtualization.
 
---m972NQjnE83KvVa/
-Content-Type: application/pgp-signature; name="signature.asc"
+Please explain why this only affects common_timer_set() and not any other
+incarnation along with an explanation why only ABSTIME timers need to be
+converted.
 
------BEGIN PGP SIGNATURE-----
+Thanks,
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0DpFsACgkQ3SOs138+
-s6EplBAAp8fChDDGmbZBfVk6Q2l6B+DVSC/xTILCrCILX0/KF7FAW2txps1x3BZR
-8H5XNqJ48V2bmQbPG2bG9XpKiVF/2UEYboQEpZ1TVO7ZrZSCUBnPtUZ9qtMpLvFb
-rSGMIWLioh0EOYIxMtenMqgzqpQAVSibHwJaH+rmVhdb8u69JpdQc3ipov5OAkrK
-YT5ySJ9SOdb59l1Mn//SWIMZ4nbNriCXqIVBkna8BCTHK46qtg2P+wDaRBw/iLev
-Rk2N+rqJTsdPjenU2D0aEEupJiWgTP0LX3lbGntHgEnlJOSfVWektOKQb7Qbcsk6
-9EZUBzvW00f1aMehNUsCWpp6Cg3QYAiWz5v0CouyyK56vIImtktHLGfeqdxj5Rnt
-4wNCyPTzzcfSfHitT2hPKaDXtLcF07e0ariEdoLfFhxrSE/ZhlTYI6yFvLsCoZmu
-Ubdvqf49cIx2aulZaVzfzLM9VkxDj3B9wfcsfHsA538O4LSCt8WqD0BqlFEyrCbX
-tLxN/S3VmBiXHhSNZ6xzKS4WIh9EzPt6Oau59r+0XMDLCxaJtXMoRd/BAEq++YAL
-UmpAQtg+0Thaen3XbfhggYDszn8ZBwk+2JrcgkA7f6qpCK9pudYwOnmrAF2APoiP
-rtF8c+lvsdIBI/iZOAq12divdWRrDgQzLQxovgqVdslTjA4ii4k=
-=GzBW
------END PGP SIGNATURE-----
-
---m972NQjnE83KvVa/--
+	tglx
