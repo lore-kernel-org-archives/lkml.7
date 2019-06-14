@@ -2,198 +2,110 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2632C31E4F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6765DC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8CD72177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49BB22177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726598AbfFNSRZ (ORCPT
+        id S1726732AbfFNSRk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:17:25 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18615 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726512AbfFNSRX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:17:23 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 6B758CAB2F02AC7136F2;
-        Sat, 15 Jun 2019 02:17:18 +0800 (CST)
-Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 15 Jun
- 2019 02:17:08 +0800
-From:   Gao Xiang <gaoxiang25@huawei.com>
-To:     <chao@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <devel@driverdev.osuosl.org>
-CC:     LKML <linux-kernel@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        Fang Wei <fangwei1@huawei.com>,
-        Gao Xiang <gaoxiang25@huawei.com>
-Subject: [RFC PATCH 4/8] staging: erofs: move stagingpage operations to compress.h
-Date:   Sat, 15 Jun 2019 02:16:15 +0800
-Message-ID: <20190614181619.64905-5-gaoxiang25@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614181619.64905-1-gaoxiang25@huawei.com>
-References: <20190614181619.64905-1-gaoxiang25@huawei.com>
+        Fri, 14 Jun 2019 14:17:40 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:39150 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbfFNSRi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:17:38 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hbqlM-0006Wc-Mn; Fri, 14 Jun 2019 20:17:20 +0200
+Date:   Fri, 14 Jun 2019 20:17:14 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Stephane Eranian <eranian@google.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: Re: [RFC PATCH v4 04/21] x86/hpet: Add hpet_set_comparator() for
+ periodic and one-shot modes
+In-Reply-To: <1558660583-28561-5-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1906142010230.1760@nanos.tec.linutronix.de>
+References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-5-git-send-email-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.140.130.215]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stagingpages are behaved as bounce pages for temporary use.
-Move to compress.h since the upcoming decompressor will
-allocate stagingpages as well.
+On Thu, 23 May 2019, Ricardo Neri wrote:
+> +/**
+> + * hpet_set_comparator() - Helper function for setting comparator register
+> + * @num:	The timer ID
+> + * @cmp:	The value to be written to the comparator/accumulator
+> + * @period:	The value to be written to the period (0 = oneshot mode)
+> + *
+> + * Helper function for updating comparator, accumulator and period values.
+> + *
+> + * In periodic mode, HPET needs HPET_TN_SETVAL to be set before writing
+> + * to the Tn_CMP to update the accumulator. Then, HPET needs a second
+> + * write (with HPET_TN_SETVAL cleared) to Tn_CMP to set the period.
+> + * The HPET_TN_SETVAL bit is automatically cleared after the first write.
+> + *
+> + * For one-shot mode, HPET_TN_SETVAL does not need to be set.
+> + *
+> + * See the following documents:
+> + *   - Intel IA-PC HPET (High Precision Event Timers) Specification
+> + *   - AMD-8111 HyperTransport I/O Hub Data Sheet, Publication # 24674
+> + */
+> +void hpet_set_comparator(int num, unsigned int cmp, unsigned int period)
+> +{
+> +	if (period) {
+> +		unsigned int v = hpet_readl(HPET_Tn_CFG(num));
+> +
+> +		hpet_writel(v | HPET_TN_SETVAL, HPET_Tn_CFG(num));
+> +	}
+> +
+> +	hpet_writel(cmp, HPET_Tn_CMP(num));
+> +
+> +	if (!period)
+> +		return;
 
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
----
- drivers/staging/erofs/compress.h  | 40 +++++++++++++++++++++++++++++++
- drivers/staging/erofs/unzip_vle.c | 11 +++++----
- drivers/staging/erofs/unzip_vle.h | 20 ----------------
- 3 files changed, 46 insertions(+), 25 deletions(-)
- create mode 100644 drivers/staging/erofs/compress.h
+TBH, I hate this conditional handling. What's wrong with two functions?
 
-diff --git a/drivers/staging/erofs/compress.h b/drivers/staging/erofs/compress.h
-new file mode 100644
-index 000000000000..1dcfc3b35118
---- /dev/null
-+++ b/drivers/staging/erofs/compress.h
-@@ -0,0 +1,40 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * linux/drivers/staging/erofs/compress.h
-+ *
-+ * Copyright (C) 2019 HUAWEI, Inc.
-+ *             http://www.huawei.com/
-+ * Created by Gao Xiang <gaoxiang25@huawei.com>
-+ */
-+#ifndef __EROFS_FS_COMPRESS_H
-+#define __EROFS_FS_COMPRESS_H
-+
-+/*
-+ * - 0x5A110C8D ('sallocated', Z_EROFS_MAPPING_STAGING) -
-+ * used to mark temporary allocated pages from other
-+ * file/cached pages and NULL mapping pages.
-+ */
-+#define Z_EROFS_MAPPING_STAGING         ((void *)0x5A110C8D)
-+
-+/* check if a page is marked as staging */
-+static inline bool z_erofs_page_is_staging(struct page *page)
-+{
-+	return page->mapping == Z_EROFS_MAPPING_STAGING;
-+}
-+
-+static inline bool z_erofs_put_stagingpage(struct list_head *pagepool,
-+					   struct page *page)
-+{
-+	if (!z_erofs_page_is_staging(page))
-+		return false;
-+
-+	/* staging pages should not be used by others at the same time */
-+	if (page_ref_count(page) > 1)
-+		put_page(page);
-+	else
-+		list_add(&page->lru, pagepool);
-+	return true;
-+}
-+
-+#endif
-+
-diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index 08f2d4302ecb..d95f985936b6 100644
---- a/drivers/staging/erofs/unzip_vle.c
-+++ b/drivers/staging/erofs/unzip_vle.c
-@@ -11,6 +11,7 @@
-  * distribution for more details.
-  */
- #include "unzip_vle.h"
-+#include "compress.h"
- #include <linux/prefetch.h>
- 
- #include <trace/events/erofs.h>
-@@ -855,7 +856,7 @@ static inline void z_erofs_vle_read_endio(struct bio *bio)
- 		DBG_BUGON(PageUptodate(page));
- 		DBG_BUGON(!page->mapping);
- 
--		if (unlikely(!sbi && !z_erofs_is_stagingpage(page))) {
-+		if (unlikely(!sbi && !z_erofs_page_is_staging(page))) {
- 			sbi = EROFS_SB(page->mapping->host->i_sb);
- 
- 			if (time_to_inject(sbi, FAULT_READ_IO)) {
-@@ -947,7 +948,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 		DBG_BUGON(!page);
- 		DBG_BUGON(!page->mapping);
- 
--		if (z_erofs_gather_if_stagingpage(page_pool, page))
-+		if (z_erofs_put_stagingpage(page_pool, page))
- 			continue;
- 
- 		if (page_type == Z_EROFS_VLE_PAGE_TYPE_HEAD)
-@@ -977,7 +978,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 		DBG_BUGON(!page);
- 		DBG_BUGON(!page->mapping);
- 
--		if (!z_erofs_is_stagingpage(page)) {
-+		if (!z_erofs_page_is_staging(page)) {
- 			if (erofs_page_is_managed(sbi, page)) {
- 				if (unlikely(!PageUptodate(page)))
- 					err = -EIO;
-@@ -1055,7 +1056,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 			continue;
- 
- 		/* recycle all individual staging pages */
--		(void)z_erofs_gather_if_stagingpage(page_pool, page);
-+		(void)z_erofs_put_stagingpage(page_pool, page);
- 
- 		WRITE_ONCE(compressed_pages[i], NULL);
- 	}
-@@ -1068,7 +1069,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 		DBG_BUGON(!page->mapping);
- 
- 		/* recycle all individual staging pages */
--		if (z_erofs_gather_if_stagingpage(page_pool, page))
-+		if (z_erofs_put_stagingpage(page_pool, page))
- 			continue;
- 
- 		if (unlikely(err < 0))
-diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
-index 9c53009700cf..6c3e0deb63e7 100644
---- a/drivers/staging/erofs/unzip_vle.h
-+++ b/drivers/staging/erofs/unzip_vle.h
-@@ -16,26 +16,6 @@
- #include "internal.h"
- #include "unzip_pagevec.h"
- 
--/*
-- *  - 0x5A110C8D ('sallocated', Z_EROFS_MAPPING_STAGING) -
-- * used for temporary allocated pages (via erofs_allocpage),
-- * in order to seperate those from NULL mapping (eg. truncated pages)
-- */
--#define Z_EROFS_MAPPING_STAGING		((void *)0x5A110C8D)
--
--#define z_erofs_is_stagingpage(page)	\
--	((page)->mapping == Z_EROFS_MAPPING_STAGING)
--
--static inline bool z_erofs_gather_if_stagingpage(struct list_head *page_pool,
--						 struct page *page)
--{
--	if (z_erofs_is_stagingpage(page)) {
--		list_add(&page->lru, page_pool);
--		return true;
--	}
--	return false;
--}
--
- /*
-  * Structure fields follow one of the following exclusion rules.
-  *
--- 
-2.17.1
+> +
+> +	/*
+> +	 * This delay is seldom used: never in one-shot mode and in periodic
+> +	 * only when reprogramming the timer.
+> +	 */
+> +	udelay(1);
+> +	hpet_writel(period, HPET_Tn_CMP(num));
+> +}
+> +EXPORT_SYMBOL_GPL(hpet_set_comparator);
 
+Why is this exported? Which module user needs this?
+
+Thanks,
+
+	tglx
