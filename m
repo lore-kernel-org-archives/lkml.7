@@ -2,131 +2,78 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB0FEC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD77C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1BE21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F4132080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:15:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfFNIPO (ORCPT
+        id S1726535AbfFNIPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:15:14 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:56213 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfFNIPN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:15:13 -0400
-X-Originating-IP: 37.177.88.254
-Received: from uno.localdomain (unknown [37.177.88.254])
-        (Authenticated sender: jacopo@jmondi.org)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id 399AA1BF207;
-        Fri, 14 Jun 2019 08:14:53 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 10:15:52 +0200
-From:   Jacopo Mondi <jacopo@jmondi.org>
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        kieran.bingham+renesas@ideasonboard.com, airlied@linux.ie,
-        daniel@ffwll.ch, koji.matsuoka.xm@renesas.com, muroya@ksk.co.jp,
-        VenkataRajesh.Kalakodima@in.bosch.com,
-        Harsha.ManjulaMallikarjun@in.bosch.com,
-        linux-renesas-soc@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 19/20] drm: rcar-du: crtc: Register GAMMA_LUT properties
-Message-ID: <20190614081507.3ky4pcyijjxnr7mp@uno.localdomain>
-References: <20190606142220.1392-1-jacopo+renesas@jmondi.org>
- <20190606142220.1392-20-jacopo+renesas@jmondi.org>
- <20190607120304.GH7593@pendragon.ideasonboard.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="khgtppfahw6u47d7"
-Content-Disposition: inline
-In-Reply-To: <20190607120304.GH7593@pendragon.ideasonboard.com>
-User-Agent: NeoMutt/20180716
+        Fri, 14 Jun 2019 04:15:20 -0400
+Received: from inva020.nxp.com ([92.121.34.13]:49740 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726442AbfFNIPT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 04:15:19 -0400
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 57B331A05D1;
+        Fri, 14 Jun 2019 10:15:18 +0200 (CEST)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id D8CFD1A05D0;
+        Fri, 14 Jun 2019 10:15:11 +0200 (CEST)
+Received: from localhost.localdomain (mega.ap.freescale.net [10.192.208.232])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id A6E2740310;
+        Fri, 14 Jun 2019 16:15:03 +0800 (SGT)
+From:   daniel.baluta@nxp.com
+To:     shawnguo@kernel.org
+Cc:     s.hauer@pengutronix.de, shengjiu.wang@nxp.com, festevam@gmail.com,
+        linux-imx@nxp.com, aisheng.dong@nxp.com, daniel.baluta@nxp.com,
+        daniel.baluta@gmail.com, anson.huang@nxp.com,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, o.rempel@pengutronix.de
+Subject: [PATCH 0/2] Add support for DSP IPC protocol driver
+Date:   Fri, 14 Jun 2019 16:16:48 +0800
+Message-Id: <20190614081650.11880-1-daniel.baluta@nxp.com>
+X-Mailer: git-send-email 2.17.1
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Daniel Baluta <daniel.baluta@nxp.com>
 
---khgtppfahw6u47d7
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Hifi4 DSP can be found on some i.MX8 platforms (e.g i.MX8QXP, i.MX8QM).
+This patch series introduces the layer that allows Host CPU to
+communicate with DSP.
 
-Hi Laurent,
-   thanks for review
+This layer provides a doorbell and clients can used that to notify DSP
+that a message is placed somewhere in the shared memory.
 
-On Fri, Jun 07, 2019 at 03:03:04PM +0300, Laurent Pinchart wrote:
-> Hi Jacopo,
->
-> Thank you for the patch.
->
-> On Thu, Jun 06, 2019 at 04:22:19PM +0200, Jacopo Mondi wrote:
-> > Enable the GAMMA_LUT KMS property using the framework helpers to
-> > register the proeprty and the associated gamma table size maximum size.
-> >
-> > Signed-off-by: Jacopo Mondi <jacopo+renesas@jmondi.org>
-> > ---
-> >  drivers/gpu/drm/rcar-du/rcar_du_crtc.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > index e6d3df37c827..c920fb5dba65 100644
-> > --- a/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > +++ b/drivers/gpu/drm/rcar-du/rcar_du_crtc.c
-> > @@ -1207,6 +1207,9 @@ int rcar_du_crtc_create(struct rcar_du_group *rgrp, unsigned int swindex,
-> >  	    rcdu->cmms[swindex]) {
-> >  		rcrtc->cmm = rcdu->cmms[swindex];
-> >  		rgrp->cmms_mask |= BIT(hwindex % 2);
-> > +
-> > +		drm_mode_crtc_set_gamma_size(crtc, CMM_GAMMA_LUT_SIZE);
-> > +		drm_crtc_enable_color_mgmt(crtc, 0, false, CMM_GAMMA_LUT_SIZE);
->
-> This change looks good, but you also need to add support for legacy API.
-> According to the function's documentation,
->
->  * Drivers should use drm_atomic_helper_legacy_gamma_set() to implement the
->  * legacy &drm_crtc_funcs.gamma_set callback.
->
+The protocol used is request - reply. Usually, Host/DSP write a message
+in a shared memory area and notify the other side. The other side will
+also write a reply in a designated shared memory area and then ring
+the doorbell to let the counterpart that a message is ready.
 
-Drivers 'shuld' or drivers 'shall' ?
-Isn't this required only to support the 'legacy APIs' ? Do we want that?
+Daniel Baluta (2):
+  firmware: imx: Add DSP IPC protocol driver
+  dt-bindings: arm: fsl: Add DSP IPC binding support
 
-Thanks
-   j
+ .../bindings/arm/freescale/fsl,dsp.yaml       |  43 +++++
+ drivers/firmware/imx/Kconfig                  |  11 ++
+ drivers/firmware/imx/Makefile                 |   1 +
+ drivers/firmware/imx/imx-dsp.c                | 167 ++++++++++++++++++
+ include/linux/firmware/imx/dsp.h              |  61 +++++++
+ 5 files changed, 283 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,dsp.yaml
+ create mode 100644 drivers/firmware/imx/imx-dsp.c
+ create mode 100644 include/linux/firmware/imx/dsp.h
 
-> >  	}
-> >
-> >  	drm_crtc_helper_add(crtc, &crtc_helper_funcs);
-> >
->
-> --
-> Regards,
->
-> Laurent Pinchart
+-- 
+2.17.1
 
---khgtppfahw6u47d7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DV7gACgkQcjQGjxah
-Vjz5Jg//aFLz0tKq8wZCeVMJnKKzD7XcpXLs8B+mK1kVLNxct1Exnl2h4SIPmr1s
-/49MgCXJkN5/Aljw/y0WqifR4S4QvT5jFvuC/hc3Q1ggY0ycGxEICHSXXNyooV/a
-VpxHLQpgtadlRtUWpdxIYErbD/o8idWN39UWueI4zRkDSrfWAbjWjsH/86hrAq3R
-FMmfTaKbzddFytvX1Lh4x3gcKoO/64AvDwZoT/IMrVpINFZRTKw2sT7T7HeUFbh7
-f94rAsGPrX/z0u+xcYucQoUeXLG4XCx3Xy95yzYdmNmLxwy5SW44QF9IVWM+cR6z
-PaSfwATFHDRp5Shaq+kXhdPUlVHQTldm7McKw128xswE3oeChu1mFUseZxzJx6pi
-jUL8aHE4FEdZ1C1fy6F7eaSf6Kha4uklxea5Fdl5gl/uRf9RK+5sJC+T6BaKy2J9
-/fA2xnKXYbxeZabLGkeDp2mHSLv8w7fnv/AxcuW1O4+omnWzCMN364J5oUvfIs61
-aRRi3T5lb7zi16Jcy88yjXnQXOFqNDx9+noFaJ0wv1nUOv4bX4h7l/q+PDd37onE
-fdfxdEd9TsypZaVifSssDMRl1tkLFAgSkTtX1QmeJlqLz9Nfpo9YFeE4xxpiARcc
-Zh6mYjr2gpp7336mA1agpxJgiibvViHLPgh3gBFq9bVdcOza5Hw=
-=G1Ty
------END PGP SIGNATURE-----
-
---khgtppfahw6u47d7--
