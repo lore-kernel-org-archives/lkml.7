@@ -2,207 +2,149 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D619C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:42:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4677FC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:42:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DAC2184C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:42:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EE7C20673
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:42:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="C0NQsVZP"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="TahaLHYT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfFNSmD (ORCPT
+        id S1726389AbfFNSmU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:42:03 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:36162 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726103AbfFNSmC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:42:02 -0400
-Received: from zn.tnic (p200300EC2F097F008D9D08C27DC27982.dip0.t-ipconnect.de [IPv6:2003:ec:2f09:7f00:8d9d:8c2:7dc2:7982])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 046161EC0B6E;
-        Fri, 14 Jun 2019 20:41:59 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560537720;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=8jNYmU8ZmV5gIwr4Ka310b7ILZ/kXzFHtNRzAOhuJl0=;
-        b=C0NQsVZPSMQOsCQZIePl1XYxgcK+EV36NlMfVp2C0KbXgKRltAuIR0ItTT4RQmKqFeOGE8
-        JXa/UD6y8HGv4nOaRFf0vbY1qWZg0yPvhZyZztQQ4W960cP7PhqRSQfHBDD7NxWWHWzRRH
-        K0iGHS6zCKoE72Ir8VmyUEjtfxxtsbc=
-Date:   Fri, 14 Jun 2019 20:41:51 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Shravan Kumar Ramani <sramani@mellanox.com>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Liming Sun <lsun@mellanox.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/1] EDAC, mellanox: Add ECC support for BlueField DDR4
-Message-ID: <20190614184151.GP2586@zn.tnic>
-References: <cover.1560536708.git.sramani@mellanox.com>
- <f320d7926e2a87449c99ca43e8ac2ff52996a6c0.1560536708.git.sramani@mellanox.com>
+        Fri, 14 Jun 2019 14:42:20 -0400
+Received: from mail-eopbgr700109.outbound.protection.outlook.com ([40.107.70.109]:24673
+        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725908AbfFNSmU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:42:20 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=VbFWkM++5VZwbil8F0LJiaL4g2ZBpoMeyyi0OMzipEel8S6VAj8x3cUt0Iqqma4zgLx8uaY+g4TQ3iW2y6jAeXoV2CUr9dkf3G9Avr+a7zQBnQWHOMVFGXdUhtmNVXy24ekYj3zYlQ0RRSxbgylxFyINjFhufWDs986YQdyc2NU=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YHUT39YEn8t6g1BMeeEW2O+kkjs65rFDJZDSf4i4byM=;
+ b=qmSQsGqdhjLwIDjAJ1IuZC0Me6NpJ9BO2ebRaJ2kTr1wB2jqwZBCXScU1sSOxdfCNS91LXz5WL1ZObRQghutoiYptE3Gp8Tmm8oDqLkKm2RzTIljq+VNFMggUErlyet7crbGq49rVjW5Y3ZIuuYQwIUJgBlr8Kd4+25yZ78/98A=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=YHUT39YEn8t6g1BMeeEW2O+kkjs65rFDJZDSf4i4byM=;
+ b=TahaLHYTTjx73HWu1sq1tkFWtuCoq+zK/UH3hf7yqFabEIVeSRUunHCaT56jfPpB8uYNHJt8dHz/PB/bFhWiGi+0PpxZoQgAsJC8LyXvsEFCmXCarzHJ6ZfiXSZbz7ElxaynxE9ttltS1sPMqGohJizNmNOY4XplU5OK0RJg6YA=
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com (2603:10b6:805:4::19)
+ by SN6PR2101MB1056.namprd21.prod.outlook.com (2603:10b6:805:6::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.2; Fri, 14 Jun
+ 2019 18:42:17 +0000
+Received: from SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::d8f0:bc1e:20d2:9bf6]) by SN6PR2101MB0942.namprd21.prod.outlook.com
+ ([fe80::d8f0:bc1e:20d2:9bf6%3]) with mapi id 15.20.2008.002; Fri, 14 Jun 2019
+ 18:42:17 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        Tianyu Lan <Tianyu.Lan@microsoft.com>
+CC:     "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        Dexuan Cui <decui@microsoft.com>
+Subject: [PATCH 1/2] hv_balloon: Use a static page for the balloon_up send
+ buffer
+Thread-Topic: [PATCH 1/2] hv_balloon: Use a static page for the balloon_up
+ send buffer
+Thread-Index: AQHVIuDkOmV0qWRnFkKsFEp6e9leVg==
+Date:   Fri, 14 Jun 2019 18:42:17 +0000
+Message-ID: <1560537692-37400-1-git-send-email-decui@microsoft.com>
+Reply-To: Dexuan Cui <decui@microsoft.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: MWHPR10CA0004.namprd10.prod.outlook.com (2603:10b6:301::14)
+ To SN6PR2101MB0942.namprd21.prod.outlook.com (2603:10b6:805:4::19)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [13.77.154.182]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c8e44370-a4f1-4b5f-200d-08d6f0f80647
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR2101MB1056;
+x-ms-traffictypediagnostic: SN6PR2101MB1056:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <SN6PR2101MB1056DAC1CACD4E6E6DFE72D4BFEE0@SN6PR2101MB1056.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:758;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(376002)(39860400002)(366004)(199004)(189003)(66446008)(8936002)(66476007)(256004)(10290500003)(71190400001)(50226002)(305945005)(86362001)(5660300002)(14454004)(73956011)(14444005)(476003)(25786009)(6506007)(6512007)(6116002)(66556008)(3450700001)(64756008)(66946007)(110136005)(54906003)(71200400001)(478600001)(6636002)(10090500001)(102836004)(2616005)(386003)(81156014)(36756003)(81166006)(186003)(6486002)(107886003)(99286004)(316002)(7736002)(2501003)(3846002)(22452003)(1511001)(2906002)(68736007)(66066001)(4720700003)(53936002)(52116002)(6436002)(8676002)(52396003)(43066004)(26005)(486006)(4326008);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR2101MB1056;H:SN6PR2101MB0942.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: TjKcaYoR/HOjlAe/OkaP20rkKhT9DIqVDeBItpbacMkUx/7VvEVE1ip9G1Xc8FXCVW3hDu4H2bXZDt4P+VV6PBX9fVpzBCV7sYA0Hi9r3F/bJpkJW8pF6wxtUYgprdDn6pSWdtblqjUisWlGHwd4lPjZqateKt+G3Qv1WFPLW/Cduek8XIqUaWt/fbn+si7Anm3XnR91yUD78OeaSQBMnv6mII7ER6YEOaM/80G1A/L1eVykplSUH/jDvJ8s168hYyAxijJ5OsvHEabFaB+gjX3bmTE77wkPG0LQLp9HTJmP+i9bWqYAUMwSyORfFep+anfVKm+bz81/V+2KGhvGYdProX5pAbEz5Ocuf4SMPyGIPS5HWln4ybSG8lFJ6lyRRxv6uU0mJ+0w76mzn+qwkLFxv/fSGxB055/v9cCeaHM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <f320d7926e2a87449c99ca43e8ac2ff52996a6c0.1560536708.git.sramani@mellanox.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c8e44370-a4f1-4b5f-200d-08d6f0f80647
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 18:42:17.2500
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lkmldc@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR2101MB1056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 02:35:53PM -0400, Shravan Kumar Ramani wrote:
-> Add ECC support for Mellanox BlueField SoC DDR controller.
-> This requires SMC to the running Arm Trusted Firmware to report
-> what is the current memory configuration.
-> 
-> Signed-off-by: Shravan Kumar Ramani <sramani@mellanox.com>
-> ---
->  MAINTAINERS                   |   5 +
->  drivers/edac/Kconfig          |   7 +
->  drivers/edac/Makefile         |   1 +
->  drivers/edac/bluefield_edac.c | 404 ++++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 417 insertions(+)
->  create mode 100644 drivers/edac/bluefield_edac.c
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 57f496c..9d04cc4 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -5669,6 +5669,11 @@ S:	Supported
->  F:	drivers/edac/aspeed_edac.c
->  F:	Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
->  
-> +EDAC-BLUEFIELD
-> +M:	Shravan Kumar Ramani <sramani@mellanox.com>
-> +S:	Supported
-> +F:	drivers/edac/bluefield_edac.c
-> +
->  EDAC-CALXEDA
->  M:	Robert Richter <rric@kernel.org>
->  L:	linux-edac@vger.kernel.org
-> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-> index 5e2e034..43df551 100644
-> --- a/drivers/edac/Kconfig
-> +++ b/drivers/edac/Kconfig
-> @@ -504,4 +504,11 @@ config EDAC_ASPEED
->  	  First, ECC must be configured in the bootloader. Then, this driver
->  	  will expose error counters via the EDAC kernel framework.
->  
-> +config EDAC_BLUEFIELD
-> +	tristate "Mellanox BlueField Memory ECC"
-> +	depends on ARM64 && ((MELLANOX_PLATFORM && ACPI) || COMPILE_TEST)
-> +	help
-> +	  Support for error detection and correction on the
-> +	  Mellanox BlueField SoCs.
-> +
->  endif # EDAC
-> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-> index 89ad4a84..0294a67 100644
-> --- a/drivers/edac/Makefile
-> +++ b/drivers/edac/Makefile
-> @@ -84,3 +84,4 @@ obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
->  obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
->  obj-$(CONFIG_EDAC_QCOM)			+= qcom_edac.o
->  obj-$(CONFIG_EDAC_ASPEED)		+= aspeed_edac.o
-> +obj-$(CONFIG_EDAC_BLUEFIELD)		+= bluefield_edac.o
-> diff --git a/drivers/edac/bluefield_edac.c b/drivers/edac/bluefield_edac.c
-> new file mode 100644
-> index 0000000..9c69033
-> --- /dev/null
-> +++ b/drivers/edac/bluefield_edac.c
-> @@ -0,0 +1,404 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Bluefield-specific EDAC driver.
-> + *
-> + * Copyright (c) 2019 Mellanox Technologies.
-> + */
-> +
-> +#include <linux/acpi.h>
-> +#include <linux/arm-smccc.h>
-> +#include <linux/edac.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "edac_module.h"
-> +
-> +#define DRIVER_NAME		"bluefield-edac"
-> +
-> +/*
-> + * Mellanox BlueField EMI (External Memory Interface) register definitions.
-> + */
-> +
-> +#define MLXBF_EMI_DRAM_ECC_COUNT 0x340
-> +#define MLXBF_EMI_DRAM_ECC_COUNT__LENGTH 0x0001
-> +
-> +#define MLXBF_EMI_DRAM_ECC_COUNT__SINGLE_ERROR_COUNT_SHIFT 0
-> +#define MLXBF_EMI_DRAM_ECC_COUNT__SINGLE_ERROR_COUNT_RMASK 0xffff
-> +
-> +#define MLXBF_EMI_DRAM_ECC_COUNT__DOUBLE_ERROR_COUNT_SHIFT 16
-> +#define MLXBF_EMI_DRAM_ECC_COUNT__DOUBLE_ERROR_COUNT_RMASK 0xffff
-> +
-> +#define MLXBF_EMI_DRAM_ECC_ERROR 0x348
-> +
-> +#define MLXBF_EMI_DRAM_ECC_ERROR__DRAM_ECC_SINGLE_SHIFT 0
-> +#define MLXBF_EMI_DRAM_ECC_ERROR__DRAM_ECC_SINGLE_RMASK 0x1
-> +
-> +#define MLXBF_EMI_DRAM_ECC_ERROR__DRAM_ECC_DOUBLE_SHIFT 16
-> +#define MLXBF_EMI_DRAM_ECC_ERROR__DRAM_ECC_DOUBLE_RMASK 0x1
-> +
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT 0x354
-> +
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT__DRAM_ECC_FIRST_SHIFT 0
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT__DRAM_ECC_FIRST_RMASK 0x1
-> +
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT__EDGE_SEL_SHIFT 16
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT__EDGE_SEL_RMASK 0xf
-> +
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT__START_SHIFT 24
-> +#define MLXBF_EMI_DRAM_ECC_LATCH_SELECT__START_RMASK 0x1
-> +
-> +#define MLXBF_EMI_DRAM_ERR_ADDR_0 0x358
-> +
-> +#define MLXBF_EMI_DRAM_ERR_ADDR_1 0x37c
-> +
-> +#define MLXBF_EMI_DRAM_SYNDROM 0x35c
-> +#define MLXBF_EMI_DRAM_SYNDROM__LENGTH 0x0001
-> +
-> +#define MLXBF_EMI_DRAM_SYNDROM__DERR_SHIFT 0
-> +#define MLXBF_EMI_DRAM_SYNDROM__DERR_RMASK 0x1
-> +
-> +#define MLXBF_EMI_DRAM_SYNDROM__SERR_SHIFT 1
-> +#define MLXBF_EMI_DRAM_SYNDROM__SERR_RMASK 0x1
-> +
-> +#define MLXBF_EMI_DRAM_SYNDROM__SYNDROM_SHIFT 16
-> +#define MLXBF_EMI_DRAM_SYNDROM__SYNDROM_RMASK 0x3ff
-> +
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0 0x364
-> +
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0__ERR_BANK_SHIFT 0
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0__ERR_BANK_RMASK 0xf
-> +
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0__ERR_LRANK_SHIFT 4
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0__ERR_LRANK_RMASK 0x3
-> +
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0__ERR_PRANK_SHIFT 8
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0__ERR_PRANK_RMASK 0x3
-> +
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0__ERR_EDGE_SHIFT 16
-> +#define MLXBF_EMI_DRAM_ADDITIONAL_INFO_0__ERR_EDGE_RMASK 0xff
-
-So those are *excessively* long macro names. So long that they impair
-reading the code properly. Please shorten excessively.
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+SXQncyB1bm5lY2Vzc2FyeSB0byBkeW5hbWljYWxseSBhbGxvY2F0ZSB0aGUgYnVmZmVyLg0KDQpT
+aWduZWQtb2ZmLWJ5OiBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNyb3NvZnQuY29tPg0KLS0tDQogZHJp
+dmVycy9odi9odl9iYWxsb29uLmMgfCAxOSArKysrLS0tLS0tLS0tLS0tLS0tDQogMSBmaWxlIGNo
+YW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgMTUgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9k
+cml2ZXJzL2h2L2h2X2JhbGxvb24uYyBiL2RyaXZlcnMvaHYvaHZfYmFsbG9vbi5jDQppbmRleCBk
+ZDQ3NWYzYmNjOGEuLjEzMzgxZWEzZTNlNyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvaHYvaHZfYmFs
+bG9vbi5jDQorKysgYi9kcml2ZXJzL2h2L2h2X2JhbGxvb24uYw0KQEAgLTUwNCw3ICs1MDQsNyBA
+QCBlbnVtIGh2X2RtX3N0YXRlIHsNCiANCiANCiBzdGF0aWMgX191OCByZWN2X2J1ZmZlcltQQUdF
+X1NJWkVdOw0KLXN0YXRpYyBfX3U4ICpzZW5kX2J1ZmZlcjsNCitzdGF0aWMgX191OCBiYWxsb29u
+X3VwX3NlbmRfYnVmZmVyW1BBR0VfU0laRV07DQogI2RlZmluZSBQQUdFU19JTl8yTQk1MTINCiAj
+ZGVmaW5lIEhBX0NIVU5LICgzMiAqIDEwMjQpDQogDQpAQCAtMTMwMiw4ICsxMzAyLDggQEAgc3Rh
+dGljIHZvaWQgYmFsbG9vbl91cChzdHJ1Y3Qgd29ya19zdHJ1Y3QgKmR1bW15KQ0KIAl9DQogDQog
+CXdoaWxlICghZG9uZSkgew0KLQkJYmxfcmVzcCA9IChzdHJ1Y3QgZG1fYmFsbG9vbl9yZXNwb25z
+ZSAqKXNlbmRfYnVmZmVyOw0KLQkJbWVtc2V0KHNlbmRfYnVmZmVyLCAwLCBQQUdFX1NJWkUpOw0K
+KwkJbWVtc2V0KGJhbGxvb25fdXBfc2VuZF9idWZmZXIsIDAsIFBBR0VfU0laRSk7DQorCQlibF9y
+ZXNwID0gKHN0cnVjdCBkbV9iYWxsb29uX3Jlc3BvbnNlICopYmFsbG9vbl91cF9zZW5kX2J1ZmZl
+cjsNCiAJCWJsX3Jlc3AtPmhkci50eXBlID0gRE1fQkFMTE9PTl9SRVNQT05TRTsNCiAJCWJsX3Jl
+c3AtPmhkci5zaXplID0gc2l6ZW9mKHN0cnVjdCBkbV9iYWxsb29uX3Jlc3BvbnNlKTsNCiAJCWJs
+X3Jlc3AtPm1vcmVfcGFnZXMgPSAxOw0KQEAgLTE1ODgsMTkgKzE1ODgsMTEgQEAgc3RhdGljIGlu
+dCBiYWxsb29uX3Byb2JlKHN0cnVjdCBodl9kZXZpY2UgKmRldiwNCiAJZG9faG90X2FkZCA9IGZh
+bHNlOw0KICNlbmRpZg0KIA0KLQkvKg0KLQkgKiBGaXJzdCBhbGxvY2F0ZSBhIHNlbmQgYnVmZmVy
+Lg0KLQkgKi8NCi0NCi0Jc2VuZF9idWZmZXIgPSBrbWFsbG9jKFBBR0VfU0laRSwgR0ZQX0tFUk5F
+TCk7DQotCWlmICghc2VuZF9idWZmZXIpDQotCQlyZXR1cm4gLUVOT01FTTsNCi0NCiAJcmV0ID0g
+dm1idXNfb3BlbihkZXYtPmNoYW5uZWwsIGRtX3Jpbmdfc2l6ZSwgZG1fcmluZ19zaXplLCBOVUxM
+LCAwLA0KIAkJCWJhbGxvb25fb25jaGFubmVsY2FsbGJhY2ssIGRldik7DQogDQogCWlmIChyZXQp
+DQotCQlnb3RvIHByb2JlX2Vycm9yMDsNCisJCXJldHVybiByZXQ7DQogDQogCWRtX2RldmljZS5k
+ZXYgPSBkZXY7DQogCWRtX2RldmljZS5zdGF0ZSA9IERNX0lOSVRJQUxJWklORzsNCkBAIC0xNzI2
+LDggKzE3MTgsNiBAQCBzdGF0aWMgaW50IGJhbGxvb25fcHJvYmUoc3RydWN0IGh2X2RldmljZSAq
+ZGV2LA0KIA0KIHByb2JlX2Vycm9yMToNCiAJdm1idXNfY2xvc2UoZGV2LT5jaGFubmVsKTsNCi1w
+cm9iZV9lcnJvcjA6DQotCWtmcmVlKHNlbmRfYnVmZmVyKTsNCiAJcmV0dXJuIHJldDsNCiB9DQog
+DQpAQCAtMTc0Niw3ICsxNzM2LDYgQEAgc3RhdGljIGludCBiYWxsb29uX3JlbW92ZShzdHJ1Y3Qg
+aHZfZGV2aWNlICpkZXYpDQogDQogCXZtYnVzX2Nsb3NlKGRldi0+Y2hhbm5lbCk7DQogCWt0aHJl
+YWRfc3RvcChkbS0+dGhyZWFkKTsNCi0Ja2ZyZWUoc2VuZF9idWZmZXIpOw0KICNpZmRlZiBDT05G
+SUdfTUVNT1JZX0hPVFBMVUcNCiAJcmVzdG9yZV9vbmxpbmVfcGFnZV9jYWxsYmFjaygmaHZfb25s
+aW5lX3BhZ2UpOw0KIAl1bnJlZ2lzdGVyX21lbW9yeV9ub3RpZmllcigmaHZfbWVtb3J5X25iKTsN
+Ci0tIA0KMi4xOS4xDQoNCg==
