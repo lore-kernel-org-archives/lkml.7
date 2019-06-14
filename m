@@ -2,142 +2,191 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5F1EC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:34:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78FEBC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C4E12133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:34:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CFkz0AWB"
+	by mail.kernel.org (Postfix) with ESMTP id 526512133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:38:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfFNKei (ORCPT
+        id S1727135AbfFNKii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:34:38 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55804 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726693AbfFNKeh (ORCPT
+        Fri, 14 Jun 2019 06:38:38 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:34159 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726784AbfFNKii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:34:37 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so1791112wmj.5
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 03:34:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VQlYOuWw/XgKJ5lYOlgzDNhtem0wEWO83AzsJk5siJw=;
-        b=CFkz0AWBLH3qM/wTX9/0rbnEGIdGMhwqDq25JmOGJSDvCx9ui0dw9bqgpr1ksw+LT6
-         VMXk2sllUNdudRlnQH2Z9jYfoaJjzBK0BdkpGhugaQ59wtMT7Fi1LQBmUAcNx7u/Q6pU
-         woUjMPVk5GtD8+dGjT/59hrYjznvzD+kfru+iCm4Tz+MtFEks/RA/Kl9F9z+YnEp4Rj6
-         sL4tqPfeAmH+cBDQDwBd7Dr9J45Vc23gasoIa+2gUZSSujFqmnL1Cd4a2nk5nisrD3o2
-         zIEygEfF25IlZJQyz3E3gS73g0A/n8nN0PtL72QnwI6a6tCnEqMvkchTeYiJ1eSFbbrZ
-         iG7A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VQlYOuWw/XgKJ5lYOlgzDNhtem0wEWO83AzsJk5siJw=;
-        b=YMvaAfKbxiFLjQL/iF+2bqtdaYR270eJWKiI0YIE2oB4tsirqb7I9ag2eW5cjRY9hB
-         3bJMg1UcF1+ukNKo17BgC+AUiI+lq7Q+6mpRGZ38PPEqgPEzrvYpPGXPsfwXIIB6RSRp
-         v8XILx0Jx1myvD8EZz1Tnb8Lm1qXFktwc5tsqCFvVMOwbzXXyB0BANxmHbC/cYxMf848
-         QH/X/IbmQT4IT9ca4G0VvxwkByuxszyn5/XKZeb6eOJU/UUbCYejU7TW2G4RB3kThmIy
-         UXoF8TpMdbLEcrJnVbXyOQIU8kqCAVKmmUh8FdJhQHuxW8RYwRMGTQHj4Amkzyv1X/nk
-         DVvA==
-X-Gm-Message-State: APjAAAUH+PSkWH7eko1zBjJPEGZe9b98xJ4EibbidkGEQShs8cK6P069
-        jcHERZAbkqVeatSA1iYUIl6yyw==
-X-Google-Smtp-Source: APXvYqzMy7f04xPUuO0lEJs4Zkj7eAmy4TPUQhawhEeebqMCl/nBD1FiRvyH776EUxFte8zki3W9TQ==
-X-Received: by 2002:a7b:c933:: with SMTP id h19mr7726918wml.52.1560508474645;
-        Fri, 14 Jun 2019 03:34:34 -0700 (PDT)
-Received: from apalos (athedsl-4461147.home.otenet.gr. [94.71.2.75])
-        by smtp.gmail.com with ESMTPSA id s10sm3938737wrw.45.2019.06.14.03.34.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 03:34:34 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 13:34:30 +0300
-From:   Ilias Apalodimas <ilias.apalodimas@linaro.org>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Sumit Garg <sumit.garg@linaro.org>, peterhuewe@gmx.de,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        jgg@ziepe.ca, corbet@lwn.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Microsoft Linux Kernel List <linux-kernel@microsoft.com>,
-        Thirupathaiah Annapureddy <thiruan@microsoft.com>,
-        "Bryan Kelly (CSI)" <bryankel@microsoft.com>,
-        tee-dev@lists.linaro.org
-Subject: Re: [PATCH v4 1/2] fTPM: firmware TPM running in TEE
-Message-ID: <20190614103430.GA6108@apalos>
-References: <20190530152758.16628-1-sashal@kernel.org>
- <20190530152758.16628-2-sashal@kernel.org>
- <CAFA6WYM1NrghG9qxUhrm76kopvBx9nmCL9XnRs11ysb2Yr0+Qw@mail.gmail.com>
- <20190604200951.GB29739@sasha-vm>
- <CAFA6WYMOjgHRw9RVrjherNo0ZNbTtEonPwSFFC0dT4CZO=A1NQ@mail.gmail.com>
- <20190613171141.GL1513@sasha-vm>
+        Fri, 14 Jun 2019 06:38:38 -0400
+X-Originating-IP: 37.177.88.254
+Received: from uno.localdomain (unknown [37.177.88.254])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 3EA8240007;
+        Fri, 14 Jun 2019 10:38:26 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 12:39:40 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 5/7] [media] marvell-ccic/mmp: add devicetree support
+Message-ID: <20190614103940.4dg43fo7dmbwnpfs@uno.localdomain>
+References: <20190528090731.10341-1-lkundrak@v3.sk>
+ <20190528090731.10341-6-lkundrak@v3.sk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="afhe6fv3nxwqv4st"
 Content-Disposition: inline
-In-Reply-To: <20190613171141.GL1513@sasha-vm>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190528090731.10341-6-lkundrak@v3.sk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sasha, 
-On Thu, Jun 13, 2019 at 01:11:41PM -0400, Sasha Levin wrote:
-> On Wed, Jun 05, 2019 at 04:39:36PM +0530, Sumit Garg wrote:
-> >On Wed, 5 Jun 2019 at 01:39, Sasha Levin <sashal@kernel.org> wrote:
-> >>
-> >>On Tue, Jun 04, 2019 at 11:45:52AM +0530, Sumit Garg wrote:
-> >>>On Thu, 30 May 2019 at 20:58, Sasha Levin <sashal@kernel.org> wrote:
-> >>>> +       /* Open context with TEE driver */
-> >>>> +       pvt_data->ctx = tee_client_open_context(NULL, ftpm_tee_match, NULL,
-> >>>> +                                               NULL);
-> >>>> +       if (IS_ERR(pvt_data->ctx)) {
-> >>>> +               dev_err(dev, "%s:tee_client_open_context failed\n", __func__);
-> >>>
-> >>>Is this well tested? I see this misleading error multiple times as
-> >>>follows although TEE driver works pretty well.
-> >>
-> >>Yes, this was all functionally tested.
-I did test as well with a DeveloperBox, i can confirm the driver is loading (but
-i have no fTPM support on the OP-TEE side for now)
 
+--afhe6fv3nxwqv4st
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-apalos@mule:~>sudo dmesg | grep optee
-[sudo] password for apalos: 
-[    5.035801] optee: probing for conduit method from DT.
-[    5.041045] optee: revision 3.2 (53bf1c38)
-[    5.041772] optee: initialized driver
-apalos@mule:~>sudo dmesg | grep tpm
-[    5.000674] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_context failed
-[    5.101655] ftpm-tee tpm@0: ftpm_tee_probe:tee_client_open_session failed,
-err=ffff000c
-[    5.109703] ftpm-tee: probe of tpm@0 failed with error -22
+On Tue, May 28, 2019 at 11:07:29AM +0200, Lubomir Rintel wrote:
+> The platform data is actually not used anywhere (along with the CSI
+> support) and should be safe to remove.
+>
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+>
+> ---
+> Changes since v1:
+> - s/This are/These are/ in a comment
+>
+>  .../media/platform/marvell-ccic/mmp-driver.c  | 36 ++++++++++++++-----
+>  1 file changed, 27 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/media/platform/marvell-ccic/mmp-driver.c b/drivers/media/platform/marvell-ccic/mmp-driver.c
+> index 8f1d2a972bc9..54c2dd8c29d8 100644
+> --- a/drivers/media/platform/marvell-ccic/mmp-driver.c
+> +++ b/drivers/media/platform/marvell-ccic/mmp-driver.c
+> @@ -19,6 +19,8 @@
+>  #include <media/v4l2-device.h>
+>  #include <linux/platform_data/media/mmp-camera.h>
+>  #include <linux/device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/gpio.h>
+>  #include <linux/io.h>
+> @@ -196,6 +198,9 @@ static void mmpcam_calc_dphy(struct mcam_camera *mcam)
+>  	struct device *dev = &cam->pdev->dev;
+>  	unsigned long tx_clk_esc;
+>
+> +	if (!pdata)
+> +		return;
+> +
 
+This seems a bit of an hack to me. The caller knows the mcam->bus_type
+and should not try to calc_dphy() if the bus type is not CSI2_DPHY.
+What do you think?
 
-The error -22 is nice since the probe eventually failed (no fTPM support in
-secure world). Can we slightly change the
-'ftpm_tee_probe:tee_client_open_context failed' and indicate this is not a real
-error since the probe gets deferred untill Secure world is alive?
+>  	/*
+>  	 * If CSI2_DPHY3 is calculated dynamically,
+>  	 * pdata->lane_clk should be already set
+> @@ -314,10 +319,6 @@ static int mmpcam_probe(struct platform_device *pdev)
+>  	struct mmp_camera_platform_data *pdata;
+>  	int ret;
+>
+> -	pdata = pdev->dev.platform_data;
+> -	if (!pdata)
+> -		return -ENODEV;
+> -
+>  	cam = devm_kzalloc(&pdev->dev, sizeof(*cam), GFP_KERNEL);
+>  	if (cam == NULL)
+>  		return -ENOMEM;
+> @@ -330,17 +331,29 @@ static int mmpcam_probe(struct platform_device *pdev)
+>  	mcam->calc_dphy = mmpcam_calc_dphy;
+>  	mcam->dev = &pdev->dev;
+>  	mcam->use_smbus = 0;
+> -	mcam->mclk_src = pdata->mclk_src;
+> -	mcam->mclk_div = pdata->mclk_div;
+> -	mcam->bus_type = pdata->bus_type;
+> -	mcam->dphy = pdata->dphy;
+> +	pdata = pdev->dev.platform_data;
+> +	if (pdata) {
+> +		mcam->mclk_src = pdata->mclk_src;
+> +		mcam->mclk_div = pdata->mclk_div;
+> +		mcam->bus_type = pdata->bus_type;
+> +		mcam->dphy = pdata->dphy;
+> +		mcam->lane = pdata->lane;
+> +	} else {
+> +		/*
+> +		 * These are values that used to be hardcoded in mcam-core and
+> +		 * work well on a OLPC XO 1.75 with a parallel bus sensor.
+> +		 * If it turns out other setups make sense, the values should
+> +		 * be obtained from the device tree.
+> +		 */
+> +		mcam->mclk_src = 3;
+> +		mcam->mclk_div = 2;
 
-By the way there is *real* interest for this functionality. I expect to run it
-on a number of Arm boards once i get some free time.
-
-> >Can you share your build instructions and testing approach?
-> 
-> Yes: it looks like you got all the kernel bits, but not the firmware.
-> There are instructions for it here: https://github.com/microsoft/ms-tpm-20-ref
-> 
-> Once it's running, you can test it by running your favorite TPM usecases
-> through /dev/tpm0.
-> 
-> --
-> Thanks,
-> Sasha
+I see these only used in mcam_enable_mipi(). Am I wrong?
 
 Thanks
-/Ilias
+   j
+
+> +	}
+>  	if (mcam->bus_type == V4L2_MBUS_CSI2_DPHY) {
+>  		cam->mipi_clk = devm_clk_get(mcam->dev, "mipi");
+>  		if ((IS_ERR(cam->mipi_clk) && mcam->dphy[2] == 0))
+>  			return PTR_ERR(cam->mipi_clk);
+>  	}
+>  	mcam->mipi_enabled = false;
+> -	mcam->lane = pdata->lane;
+>  	mcam->chip_id = MCAM_ARMADA610;
+>  	mcam->buffer_mode = B_DMA_sg;
+>  	strscpy(mcam->bus_info, "platform:mmp-camera", sizeof(mcam->bus_info));
+> @@ -475,6 +488,10 @@ static int mmpcam_resume(struct platform_device *pdev)
+>
+>  #endif
+>
+> +static const struct of_device_id mmpcam_of_match[] = {
+> +	{ .compatible = "marvell,mmp2-ccic", },
+> +	{},
+> +};
+>
+>  static struct platform_driver mmpcam_driver = {
+>  	.probe		= mmpcam_probe,
+> @@ -485,6 +502,7 @@ static struct platform_driver mmpcam_driver = {
+>  #endif
+>  	.driver = {
+>  		.name	= "mmp-camera",
+> +		.of_match_table = of_match_ptr(mmpcam_of_match),
+>  	}
+>  };
+>
+> --
+> 2.21.0
+>
+
+--afhe6fv3nxwqv4st
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0DeWsACgkQcjQGjxah
+VjyN0w//eJaACnLIgd74jgfWMgGJrJO2ESYgEtFE/sPAVC2bg9CM93nN3/ucTwcd
+EM0efN3gDbUiL3pBvVD9Nqlpqd9CZOjZJxKT2bPSJvsTNG+zXgaf1Iu1imj4kPEw
+zfBr37DzBb5ldvcMv/VgOef4K0OtQIvXTZ2IxndL5jjj9n0qtTnWtMkIxwprRtjR
+2sX+quTJcKJqGQHx6thTM4TPIvgFCaSHpq/ivsKRTF9PnC9S7ij82GDKG8F/HJoi
+xCaLdbEw1SE+CYz65L2ze6TttX+YeWHfZT1ciLTmbE3f0idr897PaRL0Bo9mhc/x
+SOCv0VyxuOhNwO1lMfKiXwWuEnjmIyo6tv4tcFn8Az48YbTjYacEsiRwcPLrSV2/
+AX0N/zISxiPeOvESiNFZzRfhj4nx30DjMTVR0jRFWi2HtzbXBlcTBkH547yI7WlR
+Wir1fstvC3aY7AXeFlZ6efJNPsRgHRojaSbQoFGfebMgw00aust2fOAkJS4opEda
+e0OvH4IY0wgX6tJKauv2M/RNqhzmjPybtgcfwHYjktNjaaP5Rt8MxfeBRCHDMGxF
+FjxEEnzQMX4KIJSk86V24qbcEUehSkbkcy2yySKvRTsqules6CNeEVaLtRZtnr1L
+5es8YRDqM+q0IW7Obbf40CC9DNqkgGrWrjV7EviNStJ/2T7cQQc=
+=Dnfz
+-----END PGP SIGNATURE-----
+
+--afhe6fv3nxwqv4st--
