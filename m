@@ -2,148 +2,169 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEEAC31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D888C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC898208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:54:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CDAF208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:54:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Y0ErruPK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfFNJyS (ORCPT
+        id S1727581AbfFNJyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:54:18 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45135 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727551AbfFNJyP (ORCPT
+        Fri, 14 Jun 2019 05:54:25 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:54512 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727290AbfFNJx0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:54:15 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a14so2622293edv.12;
-        Fri, 14 Jun 2019 02:54:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qHuGCrXRTUkFQGayB4c7fw1V8CKP+g27HnNUqp7luJE=;
-        b=A61E+uFgn8g+uIiDes5z+O80mUf9mAy/dPoIP93za8g2WnuMP9LU+jI95OG1ls79Kx
-         yDnDx7RhzSuvjPyLxRjg8nzluuiy7QKz6T7IitCjR9TuDlS6HuiDbmDOn4r0UzAF7NGN
-         rcnlm8IHYqnWYpux0ZWee8fDYKKLJo/QlVDTl9nJ6w1ox5KaD8ov5oJNOE0BBRk0uwhX
-         PrYGOG+ZBhddM1MJ3K4D2aIZdb5FLWBmXTBUbAAUkWkjRFOUd7MGeAgD77xY1E9eJits
-         /gwOePblt3QG1L3MDiaTz/fTDrxhNm6tASrrT4ZVCMZrz6nT2GfUac3VcAOGfP7/eD5g
-         1YOw==
-X-Gm-Message-State: APjAAAVSS2i2sKYjImsKi9wQpzsJO0M/Y8/VoEWlZ0sG89LCiBX473+I
-        x5P60eU0xONYWUitHtk3uqz1u+m+4u8=
-X-Google-Smtp-Source: APXvYqwbflIiWpIZ18fe2y9eLll7EthUnohzkEFO5UdPG4ILKM1Dc6YIpEUU1uVRF1oIgJnB5da2nw==
-X-Received: by 2002:a05:6402:652:: with SMTP id u18mr7218160edx.85.1560506053022;
-        Fri, 14 Jun 2019 02:54:13 -0700 (PDT)
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com. [209.85.128.46])
-        by smtp.gmail.com with ESMTPSA id a17sm710461edt.63.2019.06.14.02.54.11
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 02:54:12 -0700 (PDT)
-Received: by mail-wm1-f46.google.com with SMTP id z23so1652146wma.4;
-        Fri, 14 Jun 2019 02:54:11 -0700 (PDT)
-X-Received: by 2002:a1c:a186:: with SMTP id k128mr7440554wme.125.1560506051478;
- Fri, 14 Jun 2019 02:54:11 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613185241.22800-1-jagan@amarulasolutions.com>
- <20190613185241.22800-6-jagan@amarulasolutions.com> <CAGb2v654p=HZuXCTJkrbWbFP_kEkpRWHwj-7_Ck_=XbyMFmvFw@mail.gmail.com>
- <CAMty3ZD0atS2uWJmPB-n1wmy324JEpwt42=_wpKeF-8uxM-GbQ@mail.gmail.com>
-In-Reply-To: <CAMty3ZD0atS2uWJmPB-n1wmy324JEpwt42=_wpKeF-8uxM-GbQ@mail.gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 14 Jun 2019 17:53:58 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66BOOydMRQprKAo87F2rpr+xgqWgpGt_cccoHf8+9AoNA@mail.gmail.com>
-Message-ID: <CAGb2v66BOOydMRQprKAo87F2rpr+xgqWgpGt_cccoHf8+9AoNA@mail.gmail.com>
-Subject: Re: [PATCH 5/9] ARM: dts: sun8i: r40: Add TCON TOP LCD clocking
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+        Fri, 14 Jun 2019 05:53:26 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190614095325euoutp02d2988950a12c5f19b678299db4b8ad77~oB-GYizaK1768017680euoutp02G
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:53:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190614095325euoutp02d2988950a12c5f19b678299db4b8ad77~oB-GYizaK1768017680euoutp02G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560506005;
+        bh=3H94DwFFG3R37/yu4OYC3ESOKXTLkDswHp/nkojvINE=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=Y0ErruPK/0zY/0G95uBIcx12PNzMgv27m2YL5aDCMOMpLn5+Apcd+OoSE6br7Dswk
+         LFwzo0wbsYbpn7qN9WBe58ntn7f3mcwk4ubnZTJ7nJgJsza2O+WV8WRt7XDdomtpyu
+         rWtn5C787cwBlzDCvsahGsTWwP56lqwfr6AGQjRM=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190614095323eucas1p2877af9f0d86c307e99f8f608cdefecf5~oB-FVuVhO0491904919eucas1p2z;
+        Fri, 14 Jun 2019 09:53:23 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges1new.samsung.com (EUCPMTA) with SMTP id F6.A5.04298.39E630D5; Fri, 14
+        Jun 2019 10:53:23 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190614095323eucas1p1312dd7bcc5a25cbb3af28ed0f52dc7a6~oB-Eb0Dy01136111361eucas1p1P;
+        Fri, 14 Jun 2019 09:53:23 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190614095322eusmtrp2027306f4afec6a1e88d57f67596639b3~oB-EMLNI32148621486eusmtrp20;
+        Fri, 14 Jun 2019 09:53:22 +0000 (GMT)
+X-AuditID: cbfec7f2-f2dff700000010ca-29-5d036e93987c
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id ED.30.04146.29E630D5; Fri, 14
+        Jun 2019 10:53:22 +0100 (BST)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190614095321eusmtip2e7b6374b4493d1a4e3d17450e10c6cb5~oB-DRv6gO2247122471eusmtip2V;
+        Fri, 14 Jun 2019 09:53:21 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org
+Cc:     mturquette@baylibre.com, sboyd@kernel.org,
+        b.zolnierkie@samsung.com, krzk@kernel.org, kgene@kernel.org,
+        cw00.choi@samsung.com, kyungmin.park@samsung.com,
+        m.szyprowski@samsung.com, s.nawrocki@samsung.com,
+        myungjoo.ham@samsung.com, keescook@chromium.org, tony@atomide.com,
+        jroedel@suse.de, treding@nvidia.com, digetx@gmail.com,
+        gregkh@linuxfoundation.org, willy.mh.wolff.ml@gmail.com,
+        Lukasz Luba <l.luba@partner.samsung.com>
+Subject: [PATCH v10 03/13] clk: samsung: add BPLL rate table for Exynos 5422
+ SoC
+Date:   Fri, 14 Jun 2019 11:52:59 +0200
+Message-Id: <20190614095309.24100-4-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614095309.24100-1-l.luba@partner.samsung.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA0WSf0zMYRzHe+77s+PydbV6JLKLoVEasweNGm1f/EP+sKFx9N2J7qr7Vn5k
+        c7Tq0IkaWnWq2apdUZ2WLlGuCKmUUiS7OjuNZLpwMtL5Xvz3ej6f949nzx4ak1oIXzpGlcip
+        VfJYGSnGax/96FiZo8KiVr1LXYqqcysJ1DfxnkCFLR0EKv9iBSj1RiWJcp7qRejZBSXKsn7E
+        UGdnFYXaz45S6LXGD33JfEugF/UFJLLrWgDK7bwvQjdbBinU9TQCDZwpI1HzaAaBfr+sxlFj
+        zzY08NMDfXs8DMJ82G9fs3H2c38axeZrunDWlDdIsUbDOZJt1FdQrC51jGQfjDWI2Is1BsDe
+        bkth7caFO2btEYdGc7ExyZw6eOMB8eGSBi0e/5k5XlHXLtKAux7ngTsNmTXwyt0h6jwQ01Km
+        DEBTdhouHCYANIw3kk6VlLEDWNy3YMYx1NPqcpQCWHRnkvrncIx3TDtommSCYJ0hwWnwYnIB
+        zB/Z5dRgzB0Mfhp4A5wLTyYSOtJ//WWcWQLf1TowJ0uYTTBn4AkQ2vxheVXT37k7EwYfFo6S
+        wlxHQ9PIIoG3wB7zd0pgT/ihtcbFfnDKVCgSmIcaXbEr8xS0Zuldmg2wubWLcN4ZY5bDyvpg
+        J0ImHN66FymgB+z/NNcpxqYxu/YaJowlUJsuFTKWwZrM564eb1hacdWVzcLHV1+5HicHQO09
+        M34J+Of97yoCwAB8uCReqeD4EBV3LIiXK/kklSLoUJzSCKb/Xdvv1vE68LX7oBkwNJDNljSt
+        F0VJCXkyf0JpBpDGZF6S6xuwKKkkWn7iJKeO269OiuV4M5hP4zIfSYqbZa+UUcgTuaMcF8+p
+        Z7Yi2t1XA8TiPW5JRV4ZY6Grw6DNEvBLkeDoNfoHf7iY/ShGH7Hdd0t33/zNi/Py62MDdt+c
+        SiGao409P32WVPTOy9sXX35kp/146FTICk5XZYkTjQ9b0yJKWrJKdLaCkvcNY9bJRPVlm8LU
+        3zxnneFj+fprWq+RreGB1WuLJh320zpvm1uADOcPy0MCMTUv/wN40tH5cwMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrCIsWRmVeSWpSXmKPExsVy+t/xe7qT8phjDV4s0LbYOGM9q8X1L89Z
+        LeYfOcdqsfrjY0aL5sXr2Swmn5rLZHGmO9ei//FrZovz5zewW5xtesNucatBxuJjzz1Wi8u7
+        5rBZfO49wmgx4/w+Jou1R+6yW1w85Wpxu3EFm8XhN+2sFv+ubWSx2H/Fy+L2bz6LbyceMTqI
+        e3z7OonF4/2NVnaP2Q0XWTx2zrrL7rFpVSebx/65a9g9epvfsXkcfLeHyaNvyypGj82nqz0+
+        b5IL4I7SsynKLy1JVcjILy6xVYo2tDDSM7S00DMysdQzNDaPtTIyVdK3s0lJzcksSy3St0vQ
+        y1i2p4Ol4L1AxZodZ5kaGHfzdTFyckgImEg8vHKcHcQWEljKKLHjRAVEXExi0r7t7BC2sMSf
+        a11sXYxcQDWfGCW2fd8I5HBwsAnoSexYVQgSFxGYwyjxs2sbI4jDLHCWWWL3ijdMIN3CAgES
+        R/atZwWxWQRUJZ5s+8EMYvMK2EtMvn2SEWKDvMTqDQfA4pwCDhJH578BWyAEVPN9Bv8ERr4F
+        jAyrGEVSS4tz03OLDfWKE3OLS/PS9ZLzczcxAmNw27Gfm3cwXtoYfIhRgINRiYf3gBVTrBBr
+        YllxZe4hRgkOZiUR3nnWzLFCvCmJlVWpRfnxRaU5qcWHGE2BbprILCWanA9MD3kl8YamhuYW
+        lobmxubGZhZK4rwdAgdjhATSE0tSs1NTC1KLYPqYODilGhjn991ZwuLT4FEZLmGbfDBk8+qF
+        7Fvczm7dvG2Kdod9uQT7tCqGZbadm789rLEI4rrs23jzyyxXU14W01/sEyV2WhxPKfvwUf79
+        lDrPmXqrdcVSt4YF1389+k5O6pD2s/cZVxzkJkw4N83pkWif0ZkmEQZJ40qPyOZSpc7jAprP
+        7kj5zDWdZajEUpyRaKjFXFScCACc0kpD1wIAAA==
+X-CMS-MailID: 20190614095323eucas1p1312dd7bcc5a25cbb3af28ed0f52dc7a6
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190614095323eucas1p1312dd7bcc5a25cbb3af28ed0f52dc7a6
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190614095323eucas1p1312dd7bcc5a25cbb3af28ed0f52dc7a6
+References: <20190614095309.24100-1-l.luba@partner.samsung.com>
+        <CGME20190614095323eucas1p1312dd7bcc5a25cbb3af28ed0f52dc7a6@eucas1p1.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 5:48 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Fri, Jun 14, 2019 at 9:16 AM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > On Fri, Jun 14, 2019 at 2:54 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > >
-> > > According to Fig 7-2. TCON Top Block Diagram in User manual.
-> > >
-> > > TCON TOP can have an hierarchy for TCON_LCD0, LCD1 like
-> > > TCON_TV0, TV1 so, the tcon top would handle the clocks of
-> > > TCON_LCD0, LCD1 similar like TV0, TV1.
-> >
-> > That is not guaranteed. The diagram shows the pixel data path,
-> > not necessarily the clocks. In addition, the LCD TCONs have an
-> > internal clock gate for the dot-clock output, which the TV variants
-> > do not. That might explain the need for the gates in TCON TOP.
->
-> Correct, the actual idea about explanation here is to mention the
-> clocks definition in tcon top level and internal tv and lcd can handle
-> as you explained.
->
-> >
-> > > But, the current tcon_top node is using dsi clock name with
-> > > CLK_DSI_DPHY which is ideally handle via dphy which indeed
-> > > a separate interface block.
-> > >
-> > > So, use tcon-lcd0 instead of dsi which would refer the
-> > > CLK_TCON_LCD0 similar like CLK_TCON_TV0 with tcon-tv0.
-> > >
-> > > This way we can refer CLK_TCON_LCD0 from tcon_top clock in
-> > > tcon_lcd0 node and the actual DSI_DPHY clock node would
-> > > refer in dphy node.
-> >
-> > That doesn't make sense. What about TCON_LCD1?
-> >
-> > The CCU already has CLK_TCON_LCD0 and CLK_TCON_LCD1. What makes
-> > you think that the TCONs don't use them directly?
-> >
-> > Or maybe they do go through TCON_TOP, but there's no gate,
-> > so we don't know about it.
-> >
-> > You need to rethink this. What are you trying to deal with?
->
-> Yes, I understand what your asking for and indeed this is where I get
-> confused and tried this way initially and attach the dsi reference in
-> dphy something like
->
-> tcon_lcd0 {
->                 clocks = <&ccu CLK_BUS_TCON_LCD0>, <&ccu CLK_TCON_LCD0>;
->                 clock-names = "ahb", "tcon-ch0";
-> };
->
-> dphy {
->                clocks = <&ccu CLK_BUS_MIPI_DSI>,
->                               <&tcon_top CLK_TCON_TOP_DSI>;
->                clock-names = "bus", "mod";
-> };
->
-> This would ended-up, phy wont getting the mod clock keep probing for
-> -EPROBE-DEFER since tcon top driver might not be loaded at the time
-> mipi driver. This way we have tv0, tv1 and dsi gates supported as
-> existed. Does it make sense?
+Add new table rate for BPLL for Exynos5422 SoC supporting Dynamic Memory
+Controller frequencies for driver's DRAM timings.
 
-Looks like that happens because the clocks are only registered at
-the component bind phase, rather than the probe phase. And to bind
-all the components, the DSI controller wants the DPHY available,
-which isn't because it's still waiting for the clock.
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
+Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+---
+ drivers/clk/samsung/clk-exynos5420.c | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
-So you could try moving the bits that register the clocks in the
-TCON TOP driver to the probe function, and see if that solves
-the circular dependency issue.
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index 514e16310227..16ad498e3f3f 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -1334,6 +1334,17 @@ static const struct samsung_pll_rate_table exynos5420_pll2550x_24mhz_tbl[] __ini
+ 	PLL_35XX_RATE(24 * MHZ, 200000000,  200, 3, 3),
+ };
+ 
++static const struct samsung_pll_rate_table exynos5422_bpll_rate_table[] = {
++	PLL_35XX_RATE(24 * MHZ, 825000000, 275, 4, 1),
++	PLL_35XX_RATE(24 * MHZ, 728000000, 182, 3, 1),
++	PLL_35XX_RATE(24 * MHZ, 633000000, 211, 4, 1),
++	PLL_35XX_RATE(24 * MHZ, 543000000, 181, 2, 2),
++	PLL_35XX_RATE(24 * MHZ, 413000000, 413, 6, 2),
++	PLL_35XX_RATE(24 * MHZ, 275000000, 275, 3, 3),
++	PLL_35XX_RATE(24 * MHZ, 206000000, 206, 3, 3),
++	PLL_35XX_RATE(24 * MHZ, 165000000, 110, 2, 3),
++};
++
+ static const struct samsung_pll_rate_table exynos5420_epll_24mhz_tbl[] = {
+ 	PLL_36XX_RATE(24 * MHZ, 600000000U, 100, 2, 1, 0),
+ 	PLL_36XX_RATE(24 * MHZ, 400000000U, 200, 3, 2, 0),
+@@ -1476,9 +1487,13 @@ static void __init exynos5x_clk_init(struct device_node *np,
+ 		exynos5x_plls[apll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+ 		exynos5x_plls[epll].rate_table = exynos5420_epll_24mhz_tbl;
+ 		exynos5x_plls[kpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+-		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
+ 	}
+ 
++	if (soc == EXYNOS5420)
++		exynos5x_plls[bpll].rate_table = exynos5420_pll2550x_24mhz_tbl;
++	else
++		exynos5x_plls[bpll].rate_table = exynos5422_bpll_rate_table;
++
+ 	samsung_clk_register_pll(ctx, exynos5x_plls, ARRAY_SIZE(exynos5x_plls),
+ 					reg_base);
+ 	samsung_clk_register_fixed_rate(ctx, exynos5x_fixed_rate_clks,
+-- 
+2.17.1
 
-ChenYu
