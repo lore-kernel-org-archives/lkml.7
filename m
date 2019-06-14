@@ -2,179 +2,221 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C7FC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 141FDC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9167820866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yvZMu4n2"
+	by mail.kernel.org (Postfix) with ESMTP id E84F220866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfFNOZK (ORCPT
+        id S1728818AbfFNOZN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Fri, 14 Jun 2019 10:25:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37574 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727913AbfFNOZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 10:25:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35255 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727729AbfFNOZJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:25:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id m3so2778313wrv.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:25:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=VyDBdhGftaZbPaEl9I9ydm7cJ7DrPM+9JSJRw8SbgK8=;
-        b=yvZMu4n2UpH27+O/KZzWwWE8SQWx3A35vjfTMUvWzAkfgihFy7ZmFVX0/MqUqRT523
-         VrXqt8xgvOshZ8FOt4ojIy3r+MqL680/blyWmN82MFSfXuO2UyQkY1aEGuttVSQ4yYbM
-         6vr7V79aKx+GVptfWkwxGRSLm8gqkFXUCwvgASO/x4BxFj15iNawFi1A+LNQrDA/u2EV
-         HH7hf6IedLEYinBF3qJmwZ8UpUV3heOEQSxC90d6dEaamUNZlFF2WJqx6tY/9gTVz68t
-         sG0GFpZp9P8xfRmeVTtNkk16aBi7cJACa5nAc9zewljWjXQW1cY6hNeiOOTxWMFmyB6W
-         GjoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=VyDBdhGftaZbPaEl9I9ydm7cJ7DrPM+9JSJRw8SbgK8=;
-        b=OagjohvswUx0AGSGSijmUPfcY0NTpfusFZ3YbX4tyAjlJbiHHV4kPAs5WkQ6SKZzrF
-         KaMduRthgB+cI53ZmtxGoVjwzH6dRJn8kkGJkHEbyS7J4GV6KhUjWkk6/c3W3SaobHBy
-         ywe3IVQxHOln1QO7rwcT51w9rAk0m6a3Cq3Dn6MjEoVF8Oj8tcVGrismKsP1sEA29yKH
-         Y+guYVTxz21z47Lpb2tiArd6Z6uxIIvF/EMVyEes5YkUl3WffD6rylqf+fMxAV6xBT2x
-         pi6XKtQs4lyiqeVDVKBw3M60ZuEw/qYDvqWgGa3ByydwCsrajkzL6Xb0EdIeN/OKy6Gg
-         mUSA==
-X-Gm-Message-State: APjAAAVp30oDydh/EBO98OyMEa4FBEDp0rzM/ki5TAnRV73KQqdY/tpC
-        mTufYlcSuTQcKhOpHll//O6zwA==
-X-Google-Smtp-Source: APXvYqxTy2k5C3afQxVFAuu6hFVKbgPWRGa9lEGeLY/xFLaqrI4AeZU1X0GVcL6atx1S6mTiw7C4zA==
-X-Received: by 2002:a5d:63c9:: with SMTP id c9mr18027137wrw.81.1560522306777;
-        Fri, 14 Jun 2019 07:25:06 -0700 (PDT)
-Received: from [192.168.0.41] (22.194.95.92.rev.sfr.net. [92.95.194.22])
-        by smtp.googlemail.com with ESMTPSA id o13sm4467383wra.92.2019.06.14.07.25.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 07:25:05 -0700 (PDT)
-Subject: Re: [RFC v3 0/2] clocksource: davinci-timer: new driver
-To:     Sekhar Nori <nsekhar@ti.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
-        Kevin Hilman <khilman@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Lechner <david@lechnology.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190605083334.22383-1-brgl@bgdev.pl>
- <1ac8cfcf-1d77-9b6b-4aab-4171f6cf80fc@ti.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=daniel.lezcano@linaro.org; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <67e4688a-09d5-61a3-7406-a91f55045004@linaro.org>
-Date:   Fri, 14 Jun 2019 16:25:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 0C380AD05;
+        Fri, 14 Jun 2019 14:25:09 +0000 (UTC)
+Message-ID: <9ff9f804a2fa3abf1249a358f64c2d39a04c8ed1.camel@suse.de>
+Subject: Re: [PATCH v2] HID: input: fix a4tech horizontal wheel custom usage
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>, wbauer1@a1.net
+Cc:     Jiri Kosina <jikos@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Date:   Fri, 14 Jun 2019 16:25:07 +0200
+In-Reply-To: <CAO-hwJ+Nm+i+ehGurAxD3EQBX8-TFQ7p4J-1rV55fVA=NazgAw@mail.gmail.com>
+References: <20190611121320.30267-1-nsaenzjulienne@suse.de>
+         <CAO-hwJLAiC1o-kZ5epZHtO2GK+zc5x28pYbZH-XsY4yAuBmHWw@mail.gmail.com>
+         <5346893.KeHrH3GHoD@linux-lf90.site>
+         <CAO-hwJ+Nm+i+ehGurAxD3EQBX8-TFQ7p4J-1rV55fVA=NazgAw@mail.gmail.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-S+XhxQRa2pi0efFdyb2D"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-In-Reply-To: <1ac8cfcf-1d77-9b6b-4aab-4171f6cf80fc@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/2019 12:39, Sekhar Nori wrote:
-> Hi Daniel,
-> 
-> On 05/06/19 2:03 PM, Bartosz Golaszewski wrote:
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> This is another version of the new davinci clocksource driver. After much
->> discussion this contains many changes to simplify and improve the driver.
-> 
-> Does this look good to you now? If yes, can you please merge and provide
-> an immutable branch to me so I can merge dependent mach-davinci patches?
 
-Yes, I think it is fine.
+--=-S+XhxQRa2pi0efFdyb2D
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-http://git@git.linaro.org/people/daniel.lezcano/linux.git
-timers/drivers/davinci
+On Fri, 2019-06-14 at 15:36 +0200, Benjamin Tissoires wrote:
+> Hi Wolfgang,
+>=20
+> On Thu, Jun 13, 2019 at 1:49 PM Wolfgang Bauer <wbauer@tmo.at> wrote:
+> > On Tuesday, 11. Juni 2019, 16:42:37 Benjamin Tissoires wrote:
+> > > On Tue, Jun 11, 2019 at 2:13 PM Nicolas Saenz Julienne
+> > >=20
+> > > <nsaenzjulienne@suse.de> wrote:
+> > > > NOTE: I CC'd Wolfgang as he's the one who can test this.
+> > >=20
+> > > I'll wait for Wolfram to confirm that the patch works before pushing =
+then.
+> >=20
+> > My name is Wolfgang, not Wolfram... ;-)
+>=20
+> ouch, sorry for that (I am more used to talk to the I2C maintainer appare=
+ntly)
+>=20
+> > But never mind.
+> >=20
+> > I tested the patch meanwhile on top of kernel 5.2.rc4, where the mouse =
+wheel
+> > actually worked.
+>=20
+> Actually, I am a little bit lost here.
+>
+> The patch mentions a fix of c01908a14bf73, which is in 5.1 final.
+> So if your mouse works in 5.2.rc4, I am not sure how
+> HID-a4tech-fix-horizontal-scrolling.patch could break it.
+>=20
+> Could you be slightly more specific in what "works" and what doesn't?
 
-It is v5.2-rc4 + (2 x patches)
+Hi Benjamin,
 
-It is merged in clockevents/next which is exported to linux-next and for
-kernel-ci.
+First of all here's the descriptor:
+0x05, 0x01, /*  Usage Page (Desktop),               */
+0x09, 0x02, /*  Usage (Mouse),                      */
+0xA1, 0x01, /*  Collection (Application),           */
+0x09, 0x01, /*      Usage (Pointer),                */
+0xA1, 0x00, /*      Collection (Physical),          */
+0x05, 0x09, /*          Usage Page (Button),        */
+0x19, 0x01, /*          Usage Minimum (01h),        */
+0x29, 0x08, /*          Usage Maximum (08h),        */
+0x15, 0x00, /*          Logical Minimum (0),        */
+0x25, 0x01, /*          Logical Maximum (1),        */
+0x75, 0x01, /*          Report Size (1),            */
+0x95, 0x08, /*          Report Count (8),           */
+0x81, 0x02, /*          Input (Variable),           */
+0x05, 0x01, /*          Usage Page (Desktop),       */
+0x09, 0x30, /*          Usage (X),                  */
+0x09, 0x31, /*          Usage (Y),                  */
+0x09, 0x38, /*          Usage (Wheel),              */
+0x09, 0xB8, /*          Usage (B8h),                */
+0x15, 0x81, /*          Logical Minimum (-127),     */
+0x25, 0x7F, /*          Logical Maximum (127),      */
+0x75, 0x08, /*          Report Size (8),            */
+0x95, 0x04, /*          Report Count (4),           */
+0x81, 0x06, /*          Input (Variable, Relative), */
+0xC0,       /*      End Collection,                 */
+0xC0        /*  End Collection
 
-AFAIU, the patch was compiled and tested. If not, please let me know.
 
-Please, wait a couple of days I confirm the tests passed and you can
-consider the branch immutable.
+Sorry for the confusion, I'll try to explain the situation:
+
+In v5.2-rc4 without "HID-a4tech-fix-horizontal-scrolling.patch" the vertica=
+l
+wheel works out of luck as it's mapped to REL_WHEEL_HIGH_RES, which hid-a4t=
+ech
+ignores and lets hid-input process, the horizontal wheel is broken. On top =
+of
+that Usage(0xB8) is also ignored by both hid-a4tech and hid-input as it isn=
+'t
+mapped to anything.
+
+There are two distinct bugs here:
+  - High resolution wheel processing in hid-a4tech not being implemented,
+    breaking horizontal wheels.
+  - hid-a4tech not taking care of Usage(0xB8) correctly as it depended on i=
+t
+    being mapped to "Rel.Misc". That behaviour changed in v5.1 with "HID:
+    input: add mapping for "Toggle Display" key".
+
+Once high resolution wheel reports are fixed and handled in hid-a4tech's cu=
+stom
+event, the mouse breaks as it's the processing of Usage(0xB8) that triggers=
+ the
+input_events, which is being ignored.
+
+You'll probably ask how come we didn't see this when
+"HID-a4tech-fix-horizontal-scrolling.patch" was merged. It's due to the fac=
+t it
+was tested on an older kernel, v5.0.15, that didn't contain "HID: input: ad=
+d
+mapping for "Toggle Display" key"[1].
+
+So that's why I added that specific fix tag. For LTS kernels, it is possibl=
+e
+that "Toggle Display" support was back-ported but not the high resolution
+wheels support.
+
+Hope it made things more clear.
+Regards,
+Nicolas
+
+[1]=20
+https://lkml.kernel.org/lkml/nycvar.YFH.7.76.1906010028440.1962@cbobk.fhfr.=
+pm/T/
+
+>=20
+> Do we have the report descriptors available somewhere?
+> And if not, could you run hid-recorder from
+> https://gitlab.freedesktop.org/libevdev/hid-tools and attach the logs
+> when you move the horizontal wheel?
+>=20
+> Cheers,
+> Benjamin
+>=20
+> > As the patch didn't apply cleanly (it's obviously based upon
+> >=20
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
+?id=3Dabf82e8f7e9af40a49e3d905187c662a43c96c8f
+, called
+> > "HID-
+> > a4tech-fix-horizontal-scrolling.patch" below), I added that patch as we=
+ll.
+> >=20
+> > My results:
+> > kernel 5.2.rc4 works
+> > kernel 5.2.rc4 + HID-a4tech-fix-horizontal-scrolling.patch is broken
+> > kernel 5.2.rc4 + HID-a4tech-fix-horizontal-scrolling.patch +
+> > HID-input-fix-a4tech-horizontal-wheel-custom-usage.patch (i.e. this pat=
+ch)
+> > works again
+> >=20
+> > kernel 5.2.rc4 + HID-input-fix-a4tech-horizontal-wheel-custom-usage.pat=
+ch
+> > works as well.
+> >=20
+> > So AFAICT this patch seems to be fine.
+> >=20
+> > For completeness, this is my mouse as listed by lsusb:
+> > Bus 003 Device 002: ID 09da:000a A4Tech Co., Ltd. Optical Mouse Opto 51=
+0D /
+> > OP-620D
+> >=20
+> > Kind Regards,
+> > Wolfgang
+> >=20
 
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+--=-S+XhxQRa2pi0efFdyb2D
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl0DrkMACgkQlfZmHno8
+x/4PhQf/VKl28QsZ28oS87F3O6GGnTvIKyZK37shy8UhJIlnxT5r9PFiyAXcEmVA
+edpL/1GrPjqtIGuw/iOVduGm808eOF7OogQ/gxJUCX3khJeEfViqOsqDmaymxsso
+hySWYmAk4y6jJC6J9Qv9SXsphc+1fDl1EoDkSGcFswgqra9jQAOaCcO5RizhOhRn
+n0EQZbZ1tVY80UE/9oDXXegb313QqV2GmDdHfBD+9waWez1eHssjV2desiF72ykB
+l4/Jyi+VkfqzSJml7+Z/RjPrMbaldEPfFMwVnVZ/4c3dFRXfTrDdJi2zCbmREP7P
+XFYFcMODIFjKEAzp20U7pj/V/EPicQ==
+=X1K+
+-----END PGP SIGNATURE-----
+
+--=-S+XhxQRa2pi0efFdyb2D--
 
