@@ -2,131 +2,200 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B220C31E50
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:08:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39FCFC31E50
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2CA262184B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:08:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="HNkYrvUL"
+	by mail.kernel.org (Postfix) with ESMTP id 10EAD2184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 23:08:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560553710;
+	bh=246b71o/RAakNQbf/DEwO4hZZYkFxWHiRmhABf0yKUw=;
+	h=From:To:CC:Subject:Date:List-ID:From;
+	b=EMK0/gmZ3XL0Egb4fCAylMXNaQ1Yfngw4KLcWTFuVwNZwK1km6wWFNO08yrRhObgU
+	 quN5E+ngNg2M10cvUo9LRBzqI1Ld317TWWz3sW3WYtyJL4YmVlDNi4wRaK9v0jfVsI
+	 1TWv3vcWZWQEvmww5t1EXjp7K6oIreICMpfN3Vjo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfFNXIR (ORCPT
+        id S1726742AbfFNXI2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 19:08:17 -0400
-Received: from sonic309-22.consmr.mail.bf2.yahoo.com ([74.6.129.196]:40163
-        "EHLO sonic309-22.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726567AbfFNXIR (ORCPT
+        Fri, 14 Jun 2019 19:08:28 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:57118 "EHLO
+        mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726293AbfFNXI1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 19:08:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1560553695; bh=OKi+s+cGxKksz98JVSFiCh7uBDfc1CNpGy2kqM/PdRU=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=HNkYrvUL7VmWSrAJ9qO4p0I1Ghh4lJc7R/Jcd9ZCrQCgFUDj49i2MmQSdq1ALGyl+I/7nz6wCNLndMf7DIXLVDJMlAohNjKijwRtuSAGNXC+tdM9cHuNrh2965kgpLBM386CrhP7nMoIiGylEr5p53WHdTTzTLV64vbDoZX1a3yr2hlGwHQBmFpFoew25hpIDDf8LukUcZd2YZLwhoQqWcDGW4E7qEr8hGsbdFj6E1fWNanQenMzpWMXjRcRGjYzzv+egb1jzVQY9Xf4aF7Cx/dDhVBpixGVIuJky5TyBQQ2kunJ/mUZLDvPG0oB5NO2UrvKgNad8oDLJyas1jpdYA==
-X-YMail-OSG: e6YOzmEVM1mLCV15yMm4P8UUZo_QODMhMEA06RJaZ.Kf5sXQ3L7q1boZVP.tdX7
- cLH60NWUl8UXr1nMUm4xYR0X.lLcZH8.HXirr3YTsn8bvXfKzZszXE7EaZWXa5.PJnImXvwBAtal
- 4.ltfQ9pkoeRv9Z5WpDKBQHyoeQygQ8gtucmEsKF.n00vMNLI_MBx51uEznnHJqVTgPDxR9dzEaZ
- 6pnBBjkGb0DYgi9N5kA3rnyde9cF_ZfUCYpalsGHrsSb0aMaGRP.5fWyWU5NXGGTQQRypnsw8TIt
- ctwjHeMYPwu4C9ZM7hnCIdCfU_ug5ECWgJT_XR1oX0xfJ0HPXoLhvMiIzJKDF4XNP3ZfH2CPyRlz
- C5qYSG9SPhOu2vRv6XBiLY2gRDQcE4nj2EhCSB6g83oH.qS6EMi_p9JMgue4b22O4tqyCvCIEbt3
- Qrs3AhqWnaEqISoFABGK4VM9NAMsT9lOSu1py7fn6JQwLKlvv.3OGWJ5AW4BQcowzy0AkcHEDr3z
- S5ORU_LjBwvApLs_cQhmlWkAe9wKytMynUtSYwZ6.Ibkep3ppt08SptGSoc29dIZofKCat.1e5i2
- hul3nzR3faGH7Lxl4RyF3SCjYffD3tDTAgT8D7PsZJ9BNTxHG6T.TbGc9QterInAlEbAixHjMehk
- i6J_VYdfb8xHTBz_v5PxtzmbR0kJSLVV29qV5ZIyvAhgZZcJl10p6ivSmEKBOt4dqXzEyxiex2Zi
- oAVLDGEHN739Cj.w1fAOPLWQA_uWM6CFGAuGaWCyIM4wb_zc8aksZOl1XpajN9v.ttVzyn4VB4Js
- 5KbgtBtELT7lBvztmSf2cvUZw4pSeFC4ml7_NA2w0HZSOK7ft631F5yZGmZ9VP3kYrqnlLqCN8I6
- ENZab0ShO2vdRFVl79Cq.sJotIDnmOeoavx86oOTQFXuKpVpaDYR0TsT52aXA1IhRY.oIYpiFSoN
- omz9U1xOn4BEAI6mcDvL4VcmZrmXzJPM5YurlphFbjtlRy_hfbo7DWJvrtuoVJKXlLTxyV5ByHHk
- QfNRTW6DV1Blr2EATXTFkeiKPJPDxaeX6FViDXaTZcXILYFobm9aBUBYpEUlReQWCcsBQkDJsBTE
- tntiMyZJ0LP4iAhIKzT6NjeB7hEnR0BzcA_ynBosfwiTlgT2Jy.eYlHb33BK8_Xr.aO306ywNX2j
- 9VODmFKiMUOgn.M4_NItllidV.D.Cuyz_h4PmQFF7Rl_vL2x5jFX96NPLGDiYHkcJWCo.WeaOtwL
- Eu520LZ9bgkfd
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic309.consmr.mail.bf2.yahoo.com with HTTP; Fri, 14 Jun 2019 23:08:15 +0000
-Received: from c-73-223-4-185.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([73.223.4.185])
-          by smtp413.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 993d524de2e3f8c69b010f26dc1e813d;
-          Fri, 14 Jun 2019 23:08:13 +0000 (UTC)
-Subject: Re: [PATCH] Smack: Restore the smackfsdef mount option and add
- missing prefixes
-To:     James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>, viro@zeniv.linux.org.uk
-Cc:     stable@vger.kernel.org, Jose Bollo <jose.bollo@iot.bzh>,
-        torvalds@linux-foundation.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, casey@schaufler-ca.com
-References: <155930001303.17253.2447519598157285098.stgit@warthog.procyon.org.uk>
- <17467.1559300202@warthog.procyon.org.uk>
- <alpine.LRH.2.21.1906040842110.13657@namei.org>
- <6cfd5113-8473-f962-dee7-e490e6f76f9c@schaufler-ca.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- mQINBFzV9HABEAC/mmv3jeJyF7lR7QhILYg1+PeBLIMZv7KCzBSc/4ZZipoWdmr77Lel/RxQ
- 1PrNx0UaM5r6Hj9lJmJ9eg4s/TUBSP67mTx+tsZ1RhG78/WFf9aBe8MSXxY5cu7IUwo0J/CG
- vdSqACKyYPV5eoTJmnMxalu8/oVUHyPnKF3eMGgE0mKOFBUMsb2pLS/enE4QyxhcZ26jeeS6
- 3BaqDl1aTXGowM5BHyn7s9LEU38x/y2ffdqBjd3au2YOlvZ+XUkzoclSVfSR29bomZVVyhMB
- h1jTmX4Ac9QjpwsxihT8KNGvOM5CeCjQyWcW/g8LfWTzOVF9lzbx6IfEZDDoDem4+ZiPsAXC
- SWKBKil3npdbgb8MARPes2DpuhVm8yfkJEQQmuLYv8GPiJbwHQVLZGQAPBZSAc7IidD2zbf9
- XAw1/SJGe1poxOMfuSBsfKxv9ba2i8hUR+PH7gWwkMQaQ97B1yXYxVEkpG8Y4MfE5Vd3bjJU
- kvQ/tOBUCw5zwyIRC9+7zr1zYi/3hk+OG8OryZ5kpILBNCo+aePeAJ44znrySarUqS69tuXd
- a3lMPHUJJpUpIwSKQ5UuYYkWlWwENEWSefpakFAIwY4YIBkzoJ/t+XJHE1HTaJnRk6SWpeDf
- CreF3+LouP4njyeLEjVIMzaEpwROsw++BX5i5vTXJB+4UApTAQARAQABtChDYXNleSBTY2hh
- dWZsZXIgPGNhc2V5QHNjaGF1Zmxlci1jYS5jb20+iQJUBBMBCAA+FiEEC+9tH1YyUwIQzUIe
- OKUVfIxDyBEFAlzV9HACGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQOKUV
- fIxDyBG6ag/6AiRl8yof47YOEVHlrmewbpnlBTaYNfJ5cZflNRKRX6t4bp1B2YV1whlDTpiL
- vNOwFkh+ZE0eI5M4x8Gw2Oiok+4Q5liA9PHTozQYF+Ia+qdL5EehfbLGoEBqklpGvG3h8JsO
- 7SvONJuFDgvab/U/UriDYycJwzwKZuhVtK9EMpnTtUDyP3DY+Q8h7MWsniNBLVXnh4yBIEJg
- SSgDn3COpZoFTPGKE+rIzioo/GJe8CTa2g+ZggJiY/myWTS3quG0FMvwvNYvZ4I2g6uxSl7n
- bZVqAZgqwoTAv1HSXIAn9muwZUJL03qo25PFi2gQmX15BgJKQcV5RL0GHFHRThDS3IyadOgK
- P2j78P8SddTN73EmsG5OoyzwZAxXfck9A512BfVESqapHurRu2qvMoUkQaW/2yCeRQwGTsFj
- /rr0lnOBkyC6wCmPSKXe3dT2mnD5KnCkjn7KxLqexKt4itGjJz4/ynD/qh+gL7IPbifrQtVH
- JI7cr0fI6Tl8V6efurk5RjtELsAlSR6fKV7hClfeDEgLpigHXGyVOsynXLr59uE+g/+InVic
- jKueTq7LzFd0BiduXGO5HbGyRKw4MG5DNQvC//85EWmFUnDlD3WHz7Hicg95D+2IjD2ZVXJy
- x3LTfKWdC8bU8am1fi+d6tVEFAe/KbUfe+stXkgmfB7pxqW5Ag0EXNX0cAEQAPIEYtPebJzT
- wHpKLu1/j4jQcke06Kmu5RNuj1pEje7kX5IKzQSs+CPH0NbSNGvrA4dNGcuDUTNHgb5Be9hF
- zVqRCEvF2j7BFbrGe9jqMBWHuWheQM8RRoa2UMwQ704mRvKr4sNPh01nKT52ASbWpBPYG3/t
- WbYaqfgtRmCxBnqdOx5mBJIBh9Q38i63DjQgdNcsTx2qS7HFuFyNef5LCf3jogcbmZGxG/b7
- yF4OwmGsVc8ufvlKo5A9Wm+tnRjLr/9Mn9vl5Xa/tQDoPxz26+aWz7j1in7UFzAarcvqzsdM
- Em6S7uT+qy5jcqyuipuenDKYF/yNOVSNnsiFyQTFqCPCpFihOnuaWqfmdeUOQHCSo8fD4aRF
- emsuxqcsq0Jp2ODq73DOTsdFxX2ESXYoFt3Oy7QmIxeEgiHBzdKU2bruIB5OVaZ4zWF+jusM
- Uh+jh+44w9DZkDNjxRAA5CxPlmBIn1OOYt1tsphrHg1cH1fDLK/pDjsJZkiH8EIjhckOtGSb
- aoUUMMJ85nVhN1EbU/A3DkWCVFEA//Vu1+BckbSbJKE7Hl6WdW19BXOZ7v3jo1q6lWwcFYth
- esJfk3ZPPJXuBokrFH8kqnEQ9W2QgrjDX3et2WwZFLOoOCItWxT0/1QO4ikcef/E7HXQf/ij
- Dxf9HG2o5hOlMIAkJq/uLNMvABEBAAGJAjwEGAEIACYWIQQL720fVjJTAhDNQh44pRV8jEPI
- EQUCXNX0cAIbDAUJEswDAAAKCRA4pRV8jEPIEWkzEACKFUnpp+wIVHpckMfBqN8BE5dUbWJc
- GyQ7wXWajLtlPdw1nNw0Wrv+ob2RCT7qQlUo6GRLcvj9Fn5tR4hBvR6D3m8aR0AGHbcC62cq
- I7LjaSDP5j/em4oVL2SMgNTrXgE2w33JMGjAx9oBzkxmKUqprhJomPwmfDHMJ0t7y39Da724
- oLPTkQDpJL1kuraM9TC5NyLe1+MyIxqM/8NujoJbWeQUgGjn9uxQAil7o/xSCjrWCP3kZDID
- vd5ZaHpdl8e1mTExQoKr4EWgaMjmD/a3hZ/j3KfTVNpM2cLfD/QwTMaC2fkK8ExMsz+rUl1H
- icmcmpptCwOSgwSpPY1Zfio6HvEJp7gmDwMgozMfwQuT9oxyFTxn1X3rn1IoYQF3P8gsziY5
- qtTxy2RrgqQFm/hr8gM78RhP54UPltIE96VywviFzDZehMvuwzW//fxysIoK97Y/KBZZOQs+
- /T+Bw80Pwk/dqQ8UmIt2ffHEgwCTbkSm711BejapWCfklxkMZDp16mkxSt2qZovboVjXnfuq
- wQ1QL4o4t1hviM7LyoflsCLnQFJh6RSBhBpKQinMJl/z0A6NYDkQi6vEGMDBWX/M2vk9Jvwa
- v0cEBfY3Z5oFgkh7BUORsu1V+Hn0fR/Lqq/Pyq+nTR26WzGDkolLsDr3IH0TiAVH5ZuPxyz6
- abzjfg==
-Message-ID: <cb3749a6-e45b-3e07-27f9-841adf6f4640@schaufler-ca.com>
-Date:   Fri, 14 Jun 2019 16:08:11 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Fri, 14 Jun 2019 19:08:27 -0400
+Received: from pps.filterd (m0109331.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5EN7d19008983
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 16:08:25 -0700
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t4k3n0bb8-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 16:08:25 -0700
+Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Fri, 14 Jun 2019 16:08:23 -0700
+Received: by devbig007.ftw2.facebook.com (Postfix, from userid 572438)
+        id 971A5760C5E; Fri, 14 Jun 2019 16:08:21 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Alexei Starovoitov <ast@kernel.org>
+Smtp-Origin-Hostname: devbig007.ftw2.facebook.com
+To:     <davem@davemloft.net>
+CC:     <daniel@iogearbox.net>, <x86@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <bpf@vger.kernel.org>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH bpf] bpf, x64: fix stack layout of JITed bpf code
+Date:   Fri, 14 Jun 2019 16:08:21 -0700
+Message-ID: <20190614230821.3146272-1-ast@kernel.org>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <6cfd5113-8473-f962-dee7-e490e6f76f9c@schaufler-ca.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8BIT
+X-FB-Internal: Safe
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-14_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=623 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906140183
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/3/2019 4:07 PM, Casey Schaufler wrote:
-> On 6/3/2019 3:42 PM, James Morris wrote:
->> On Fri, 31 May 2019, David Howells wrote:
->>
->>> Should this go via Al's tree, James's tree, Casey's tree or directly to Linus?
->> If it's specific to one LSM (as this is), via Casey, who can decide to 
->> forward to Al or Linus.
-> I would very much appreciate it if Al could send this fix along.
-> I am not fully set up for sending directly to Linus.
+Since commit 177366bf7ceb the %rbp stopped pointing to %rbp of the
+previous stack frame. That broke frame pointer based stack unwinding.
+This commit is a partial revert of it.
+Note that the location of tail_call_cnt is fixed, since the verifier
+enforces MAX_BPF_STACK stack size for programs with tail calls.
 
-Al, are you going to take this, or should I find another way
-to get it in for 5.2?
+Fixes: 177366bf7ceb ("bpf: change x86 JITed program stack layout")
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+---
+ arch/x86/net/bpf_jit_comp.c | 74 +++++++++++--------------------------
+ 1 file changed, 21 insertions(+), 53 deletions(-)
+
+diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
+index afabf597c855..d88bc0935886 100644
+--- a/arch/x86/net/bpf_jit_comp.c
++++ b/arch/x86/net/bpf_jit_comp.c
+@@ -190,9 +190,7 @@ struct jit_context {
+ #define BPF_MAX_INSN_SIZE	128
+ #define BPF_INSN_SAFETY		64
+ 
+-#define AUX_STACK_SPACE		40 /* Space for RBX, R13, R14, R15, tailcnt */
+-
+-#define PROLOGUE_SIZE		37
++#define PROLOGUE_SIZE		20
+ 
+ /*
+  * Emit x86-64 prologue code for BPF program and check its size.
+@@ -203,44 +201,19 @@ static void emit_prologue(u8 **pprog, u32 stack_depth, bool ebpf_from_cbpf)
+ 	u8 *prog = *pprog;
+ 	int cnt = 0;
+ 
+-	/* push rbp */
+-	EMIT1(0x55);
+-
+-	/* mov rbp,rsp */
+-	EMIT3(0x48, 0x89, 0xE5);
+-
+-	/* sub rsp, rounded_stack_depth + AUX_STACK_SPACE */
+-	EMIT3_off32(0x48, 0x81, 0xEC,
+-		    round_up(stack_depth, 8) + AUX_STACK_SPACE);
+-
+-	/* sub rbp, AUX_STACK_SPACE */
+-	EMIT4(0x48, 0x83, 0xED, AUX_STACK_SPACE);
+-
+-	/* mov qword ptr [rbp+0],rbx */
+-	EMIT4(0x48, 0x89, 0x5D, 0);
+-	/* mov qword ptr [rbp+8],r13 */
+-	EMIT4(0x4C, 0x89, 0x6D, 8);
+-	/* mov qword ptr [rbp+16],r14 */
+-	EMIT4(0x4C, 0x89, 0x75, 16);
+-	/* mov qword ptr [rbp+24],r15 */
+-	EMIT4(0x4C, 0x89, 0x7D, 24);
+-
++	EMIT1(0x55);             /* push rbp */
++	EMIT3(0x48, 0x89, 0xE5); /* mov rbp, rsp */
++	/* sub rsp, rounded_stack_depth */
++	EMIT3_off32(0x48, 0x81, 0xEC, round_up(stack_depth, 8));
++	EMIT1(0x53);             /* push rbx */
++	EMIT2(0x41, 0x55);       /* push r13 */
++	EMIT2(0x41, 0x56);       /* push r14 */
++	EMIT2(0x41, 0x57);       /* push r15 */
+ 	if (!ebpf_from_cbpf) {
+-		/*
+-		 * Clear the tail call counter (tail_call_cnt): for eBPF tail
+-		 * calls we need to reset the counter to 0. It's done in two
+-		 * instructions, resetting RAX register to 0, and moving it
+-		 * to the counter location.
+-		 */
+-
+-		/* xor eax, eax */
+-		EMIT2(0x31, 0xc0);
+-		/* mov qword ptr [rbp+32], rax */
+-		EMIT4(0x48, 0x89, 0x45, 32);
+-
++		/* zero init tail_call_cnt */
++		EMIT2(0x6a, 0x00);
+ 		BUILD_BUG_ON(cnt != PROLOGUE_SIZE);
+ 	}
+-
+ 	*pprog = prog;
+ }
+ 
+@@ -285,13 +258,13 @@ static void emit_bpf_tail_call(u8 **pprog)
+ 	 * if (tail_call_cnt > MAX_TAIL_CALL_CNT)
+ 	 *	goto out;
+ 	 */
+-	EMIT2_off32(0x8B, 0x85, 36);              /* mov eax, dword ptr [rbp + 36] */
++	EMIT2_off32(0x8B, 0x85, -36 - MAX_BPF_STACK); /* mov eax, dword ptr [rbp - 548] */
+ 	EMIT3(0x83, 0xF8, MAX_TAIL_CALL_CNT);     /* cmp eax, MAX_TAIL_CALL_CNT */
+ #define OFFSET2 (30 + RETPOLINE_RAX_BPF_JIT_SIZE)
+ 	EMIT2(X86_JA, OFFSET2);                   /* ja out */
+ 	label2 = cnt;
+ 	EMIT3(0x83, 0xC0, 0x01);                  /* add eax, 1 */
+-	EMIT2_off32(0x89, 0x85, 36);              /* mov dword ptr [rbp + 36], eax */
++	EMIT2_off32(0x89, 0x85, -36 - MAX_BPF_STACK); /* mov dword ptr [rbp -548], eax */
+ 
+ 	/* prog = array->ptrs[index]; */
+ 	EMIT4_off32(0x48, 0x8B, 0x84, 0xD6,       /* mov rax, [rsi + rdx * 8 + offsetof(...)] */
+@@ -1040,19 +1013,14 @@ xadd:			if (is_imm8(insn->off))
+ 			seen_exit = true;
+ 			/* Update cleanup_addr */
+ 			ctx->cleanup_addr = proglen;
+-			/* mov rbx, qword ptr [rbp+0] */
+-			EMIT4(0x48, 0x8B, 0x5D, 0);
+-			/* mov r13, qword ptr [rbp+8] */
+-			EMIT4(0x4C, 0x8B, 0x6D, 8);
+-			/* mov r14, qword ptr [rbp+16] */
+-			EMIT4(0x4C, 0x8B, 0x75, 16);
+-			/* mov r15, qword ptr [rbp+24] */
+-			EMIT4(0x4C, 0x8B, 0x7D, 24);
+-
+-			/* add rbp, AUX_STACK_SPACE */
+-			EMIT4(0x48, 0x83, 0xC5, AUX_STACK_SPACE);
+-			EMIT1(0xC9); /* leave */
+-			EMIT1(0xC3); /* ret */
++			if (!bpf_prog_was_classic(bpf_prog))
++				EMIT1(0x5B); /* get rid of tail_call_cnt */
++			EMIT2(0x41, 0x5F);   /* pop r15 */
++			EMIT2(0x41, 0x5E);   /* pop r14 */
++			EMIT2(0x41, 0x5D);   /* pop r13 */
++			EMIT1(0x5B);         /* pop rbx */
++			EMIT1(0xC9);         /* leave */
++			EMIT1(0xC3);         /* ret */
+ 			break;
+ 
+ 		default:
+-- 
+2.20.0
 
