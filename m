@@ -2,112 +2,144 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12CDBC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CD90C31E49
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D69DD208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="a/oW8uBQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4B3862173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:29:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfFNAYK (ORCPT
+        id S1726473AbfFNA3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:24:10 -0400
-Received: from mail-eopbgr60064.outbound.protection.outlook.com ([40.107.6.64]:9298
-        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725801AbfFNAYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:24:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cAImgzXnowv6qDhqtjF71NCMmyzHuhDMrZiDcAdDS44=;
- b=a/oW8uBQB1y3cJMNZOZdFMpTw65gCxejE6t7g+GQEdfiSVYl1g8e8O5bHmyvzR8MZ92W7Mmg4v5Oc4coEY3Q4BrvBplxJWJ6MjIbCpx6OaxRXpxCgRflLiNiy0z8dnm0tP+93f3cg0vF5uKtJHuApzN0nnJsFquSZRVE0sdmPAM=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (10.171.182.144) by
- VI1PR05MB4320.eurprd05.prod.outlook.com (52.133.12.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Fri, 14 Jun 2019 00:24:05 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::c16d:129:4a40:9ba1%6]) with mapi id 15.20.1987.012; Fri, 14 Jun 2019
- 00:24:05 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Ralph Campbell <rcampbell@nvidia.com>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Ben Skeggs <bskeggs@redhat.com>,
+        Thu, 13 Jun 2019 20:29:48 -0400
+Received: from mga09.intel.com ([134.134.136.24]:22235 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbfFNA3s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 20:29:48 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 17:29:46 -0700
+X-ExtLoop1: 1
+Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
+  by orsmga002.jf.intel.com with ESMTP; 13 Jun 2019 17:29:46 -0700
+Date:   Thu, 13 Jun 2019 17:31:08 -0700
+From:   Ira Weiny <ira.weiny@intel.com>
+To:     Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
         "nouveau@lists.freedesktop.org" <nouveau@lists.freedesktop.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm/nouveau/dmem: missing mutex_lock in error path
-Thread-Topic: [PATCH] drm/nouveau/dmem: missing mutex_lock in error path
-Thread-Index: AQHVIkXN8eYXmKvfbEike7oriK2vlaaaSl+A
-Date:   Fri, 14 Jun 2019 00:24:04 +0000
-Message-ID: <20190614002359.GI22062@mellanox.com>
-References: <20190614001121.23950-1-rcampbell@nvidia.com>
-In-Reply-To: <20190614001121.23950-1-rcampbell@nvidia.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: YTOPR0101CA0059.CANPRD01.PROD.OUTLOOK.COM
- (2603:10b6:b00:14::36) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:4d::16)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [156.34.55.100]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4bb8361b-ff68-4286-7658-08d6f05e9b95
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR05MB4320;
-x-ms-traffictypediagnostic: VI1PR05MB4320:
-x-microsoft-antispam-prvs: <VI1PR05MB4320DD8E3FB7FDC1A1C21F98CFEE0@VI1PR05MB4320.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(136003)(396003)(376002)(366004)(39860400002)(199004)(189003)(6506007)(386003)(68736007)(305945005)(54906003)(8936002)(86362001)(81166006)(81156014)(25786009)(8676002)(2906002)(102836004)(7736002)(26005)(186003)(4326008)(3846002)(6116002)(486006)(478600001)(6246003)(6916009)(446003)(11346002)(53936002)(1076003)(76176011)(476003)(2616005)(6436002)(6512007)(52116002)(99286004)(14454004)(64756008)(66556008)(66446008)(66476007)(5660300002)(316002)(73956011)(6486002)(66946007)(71190400001)(71200400001)(33656002)(4744005)(66066001)(229853002)(36756003)(256004)(14444005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4320;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: OH4rhpR5cFF4RnjFeJHTsT/RtqndUbX2mQZUNK2YZeLkTeXw2JdfEoDUDFNkchTzWJxAbjI8Ihv2SjWcNQ0+xjahfkTPm3W3JL2UlSE1+7dRxv5r12z7wySspEoqd3dyLlF33mZI8D1a4hOJ0D7iZ12wvQdEe1va21K8F53LxuNzKWFnx13TOOKvCDhMibYwlRWtNOA593YlS91DjVPjKjCsM4Lyagvz2vRjndxjSTG6K4F/Fz2qe38uDpVaFfTkoqLXQTopAUV2Snyqe3VbZlPTHDkuX6Mt0+X5/9BAjrqKC3Cuoorc65sGvTZ0dH6PGyy6z+MzHW5VTwZocCRE7jDgFdqvY880t071cAhndTqUxdunJ+XKXTcgY89wrGOmy1UCmLBBRwaefWHgNF1bxjIYfZzKiASkzYLVGh4vydM=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <563E69CBF7DBDB4381F3D484B873273B@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>, Linux MM <linux-mm@kvack.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: dev_pagemap related cleanups
+Message-ID: <20190614003107.GC783@iweiny-DESK2.sc.intel.com>
+References: <20190613094326.24093-1-hch@lst.de>
+ <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com>
+ <20190613204043.GD22062@mellanox.com>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4bb8361b-ff68-4286-7658-08d6f05e9b95
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 00:24:04.9798
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: jgg@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4320
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190613204043.GD22062@mellanox.com>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 05:11:21PM -0700, Ralph Campbell wrote:
-> In nouveau_dmem_pages_alloc(), the drm->dmem->mutex is unlocked before
-> calling nouveau_dmem_chunk_alloc().
-> Reacquire the lock before continuing to the next page.
->=20
-> Signed-off-by: Ralph Campbell <rcampbell@nvidia.com>
-> ---
->=20
-> I found this while testing Jason Gunthorpe's hmm tree but this is
-> independant of those changes. I guess it could go through
-> David Airlie's tree for nouveau or Jason's tree.
+On Thu, Jun 13, 2019 at 08:40:46PM +0000, Jason Gunthorpe wrote:
+> On Thu, Jun 13, 2019 at 11:27:39AM -0700, Dan Williams wrote:
+> > On Thu, Jun 13, 2019 at 2:43 AM Christoph Hellwig <hch@lst.de> wrote:
+> > >
+> > > Hi Dan, Jérôme and Jason,
+> > >
+> > > below is a series that cleans up the dev_pagemap interface so that
+> > > it is more easily usable, which removes the need to wrap it in hmm
+> > > and thus allowing to kill a lot of code
+> > >
+> > > Diffstat:
+> > >
+> > >  22 files changed, 245 insertions(+), 802 deletions(-)
+> > 
+> > Hooray!
+> > 
+> > > Git tree:
+> > >
+> > >     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup
+> > 
+> > I just realized this collides with the dev_pagemap release rework in
+> > Andrew's tree (commit ids below are from next.git and are not stable)
+> > 
+> > 4422ee8476f0 mm/devm_memremap_pages: fix final page put race
+> > 771f0714d0dc PCI/P2PDMA: track pgmap references per resource, not globally
+> > af37085de906 lib/genalloc: introduce chunk owners
+> > e0047ff8aa77 PCI/P2PDMA: fix the gen_pool_add_virt() failure path
+> > 0315d47d6ae9 mm/devm_memremap_pages: introduce devm_memunmap_pages
+> > 216475c7eaa8 drivers/base/devres: introduce devm_release_action()
+> > 
+> > CONFLICT (content): Merge conflict in tools/testing/nvdimm/test/iomap.c
+> > CONFLICT (content): Merge conflict in mm/hmm.c
+> > CONFLICT (content): Merge conflict in kernel/memremap.c
+> > CONFLICT (content): Merge conflict in include/linux/memremap.h
+> > CONFLICT (content): Merge conflict in drivers/pci/p2pdma.c
+> > CONFLICT (content): Merge conflict in drivers/nvdimm/pmem.c
+> > CONFLICT (content): Merge conflict in drivers/dax/device.c
+> > CONFLICT (content): Merge conflict in drivers/dax/dax-private.h
+> > 
+> > Perhaps we should pull those out and resend them through hmm.git?
+> 
+> It could be done - but how bad is the conflict resolution?
+> 
+> I'd be more comfortable to take a PR from you to merge into hmm.git,
+> rather than raw patches, then apply CH's series on top. I think.
+> 
+> That way if something goes wrong you can send your PR to Linus
+> directly.
+> 
+> > It also turns out the nvdimm unit tests crash with this signature on
+> > that branch where base v5.2-rc3 passes:
+> > 
+> >     BUG: kernel NULL pointer dereference, address: 0000000000000008
+> >     [..]
+> >     CPU: 15 PID: 1414 Comm: lt-libndctl Tainted: G           OE
+> > 5.2.0-rc3+ #3399
+> >     Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 0.0.0 02/06/2015
+> >     RIP: 0010:percpu_ref_kill_and_confirm+0x1e/0x180
+> >     [..]
+> >     Call Trace:
+> >      release_nodes+0x234/0x280
+> >      device_release_driver_internal+0xe8/0x1b0
+> >      bus_remove_device+0xf2/0x160
+> >      device_del+0x166/0x370
+> >      unregister_dev_dax+0x23/0x50
+> >      release_nodes+0x234/0x280
+> >      device_release_driver_internal+0xe8/0x1b0
+> >      unbind_store+0x94/0x120
+> >      kernfs_fop_write+0xf0/0x1a0
+> >      vfs_write+0xb7/0x1b0
+> >      ksys_write+0x5c/0xd0
+> >      do_syscall_64+0x60/0x240
+> 
+> Too bad the trace didn't say which devm cleanup triggered it.. Did
+> dev_pagemap_percpu_exit get called with a NULL pgmap->ref ?
 
-This seems like a bad enough bug to send it into -rc?
+I would guess something like that.  I did not fully wrap my head around the ref
+counting there but I don't think the patch is correct.  See my review.
 
-It probably should go through the normal nouveau channels, thanks
+Ira
 
-Jason
+> 
+> Jason
+> _______________________________________________
+> Linux-nvdimm mailing list
+> Linux-nvdimm@lists.01.org
+> https://lists.01.org/mailman/listinfo/linux-nvdimm
