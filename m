@@ -2,125 +2,118 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0D25C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:46:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9439CC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:54:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADB7521537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:46:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AA2820850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:54:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725886AbfFNDqv (ORCPT
+        id S1725851AbfFNDyk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 23:46:51 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35393 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfFNDqu (ORCPT
+        Thu, 13 Jun 2019 23:54:40 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:32498 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725616AbfFNDyk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 23:46:50 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p26so1424663edr.2;
-        Thu, 13 Jun 2019 20:46:49 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a8hlfPfnXEjBTjeUfjk+FsaluQO4vebhuMrI7tB+55k=;
-        b=M6VSvjx+Tgs7JBAoAsECcn1dvlUqo2FEYr0eW8fqliIetkc+KRKqs3XIO+SEMumkzp
-         TMW6t2TwmAoKcQs4VeJ7bSu8XUJJqZZWn6CwIR2WFWeagnooGnq72aPgkd9grXQCn42/
-         RAoZLhiRw+tbNxgiLTZ8bC0uwMPuLNRAWRwj2N3gNoCDxPWN1jGD8tvK72exqeGmnSLO
-         Y/r73X4mRBnD47gRw9Rjm6SvGjalqPRSxMVI71uDLT+LW9dgDEQnqhgMXDzRt0xmp8Dt
-         Ksd8C9sCesT/7J37uWjJ1UNOsLXlJId1nvwiVEWumMmJLAhr6Q/SLy1eLkoae2PyNlsX
-         LEYA==
-X-Gm-Message-State: APjAAAV9X3IpYzTVsQUwZtFb33hwsx7Jw3/frPDyMWzS903YHcV6NWR5
-        rNP+O5ovmPZCR1r6JNR0gemhbmMp9OI=
-X-Google-Smtp-Source: APXvYqxNsNzvOX9FquuhGLtfzoWNJVHkotXiwfmCjIb0vcelZE/fIOuNzDVzOiXiHENaZmHiveMsxA==
-X-Received: by 2002:a17:906:670c:: with SMTP id a12mr33568082ejp.290.1560484008644;
-        Thu, 13 Jun 2019 20:46:48 -0700 (PDT)
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com. [209.85.221.45])
-        by smtp.gmail.com with ESMTPSA id y22sm496449edl.29.2019.06.13.20.46.48
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 13 Jun 2019 20:46:48 -0700 (PDT)
-Received: by mail-wr1-f45.google.com with SMTP id x17so898008wrl.9;
-        Thu, 13 Jun 2019 20:46:48 -0700 (PDT)
-X-Received: by 2002:a5d:4311:: with SMTP id h17mr64213816wrq.9.1560484007885;
- Thu, 13 Jun 2019 20:46:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613185241.22800-1-jagan@amarulasolutions.com> <20190613185241.22800-6-jagan@amarulasolutions.com>
-In-Reply-To: <20190613185241.22800-6-jagan@amarulasolutions.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Fri, 14 Jun 2019 11:46:36 +0800
-X-Gmail-Original-Message-ID: <CAGb2v654p=HZuXCTJkrbWbFP_kEkpRWHwj-7_Ck_=XbyMFmvFw@mail.gmail.com>
-Message-ID: <CAGb2v654p=HZuXCTJkrbWbFP_kEkpRWHwj-7_Ck_=XbyMFmvFw@mail.gmail.com>
-Subject: Re: [PATCH 5/9] ARM: dts: sun8i: r40: Add TCON TOP LCD clocking
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula@amarulasolutions.com
+        Thu, 13 Jun 2019 23:54:40 -0400
+X-UUID: c23474d189164252bd8c02aedc45fa34-20190614
+X-UUID: c23474d189164252bd8c02aedc45fa34-20190614
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 708158386; Fri, 14 Jun 2019 11:54:32 +0800
+Received: from mtkcas09.mediatek.inc (172.21.101.178) by
+ MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Fri, 14 Jun 2019 11:54:30 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Fri, 14 Jun 2019 11:54:30 +0800
+Message-ID: <1560484470.16718.13.camel@mtksdaap41>
+Subject: Re: [PATCH v3, 14/27] drm/mediatek: add commponent OVL_2L0
+From:   CK Hu <ck.hu@mediatek.com>
+To:     <yongqiang.niu@mediatek.com>
+CC:     Philipp Zabel <p.zabel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "David Airlie" <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <dri-devel@lists.freedesktop.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>
+Date:   Fri, 14 Jun 2019 11:54:30 +0800
+In-Reply-To: <1559734986-7379-15-git-send-email-yongqiang.niu@mediatek.com>
+References: <1559734986-7379-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1559734986-7379-15-git-send-email-yongqiang.niu@mediatek.com>
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:54 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> According to Fig 7-2. TCON Top Block Diagram in User manual.
->
-> TCON TOP can have an hierarchy for TCON_LCD0, LCD1 like
-> TCON_TV0, TV1 so, the tcon top would handle the clocks of
-> TCON_LCD0, LCD1 similar like TV0, TV1.
+Hi, Yongqiang:
 
-That is not guaranteed. The diagram shows the pixel data path,
-not necessarily the clocks. In addition, the LCD TCONs have an
-internal clock gate for the dot-clock output, which the TV variants
-do not. That might explain the need for the gates in TCON TOP.
+On Wed, 2019-06-05 at 19:42 +0800, yongqiang.niu@mediatek.com wrote:
+> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> 
+> This patch add commponent OVL_2L0
 
-> But, the current tcon_top node is using dsi clock name with
-> CLK_DSI_DPHY which is ideally handle via dphy which indeed
-> a separate interface block.
->
-> So, use tcon-lcd0 instead of dsi which would refer the
-> CLK_TCON_LCD0 similar like CLK_TCON_TV0 with tcon-tv0.
->
-> This way we can refer CLK_TCON_LCD0 from tcon_top clock in
-> tcon_lcd0 node and the actual DSI_DPHY clock node would
-> refer in dphy node.
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
 
-That doesn't make sense. What about TCON_LCD1?
-
-The CCU already has CLK_TCON_LCD0 and CLK_TCON_LCD1. What makes
-you think that the TCONs don't use them directly?
-
-Or maybe they do go through TCON_TOP, but there's no gate,
-so we don't know about it.
-
-You need to rethink this. What are you trying to deal with?
-
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> 
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
 > ---
->  arch/arm/boot/dts/sun8i-r40.dtsi           | 6 +++---
->  drivers/gpu/drm/sun4i/sun8i_tcon_top.c     | 6 +++---
->  include/dt-bindings/clock/sun8i-tcon-top.h | 2 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 2 ++
+>  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> index 310c0b9..8094926 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
+> @@ -227,6 +227,7 @@ static void mtk_gamma_set(struct mtk_ddp_comp *comp,
+>  
+>  static const char * const mtk_ddp_comp_stem[MTK_DDP_COMP_TYPE_MAX] = {
+>  	[MTK_DISP_OVL] = "ovl",
+> +	[MTK_DISP_OVL_2L] = "ovl_2l",
+>  	[MTK_DISP_RDMA] = "rdma",
+>  	[MTK_DISP_WDMA] = "wdma",
+>  	[MTK_DISP_COLOR] = "color",
+> @@ -266,6 +267,7 @@ struct mtk_ddp_comp_match {
+>  	[DDP_COMPONENT_OD1]	= { MTK_DISP_OD,	1, &ddp_od },
+>  	[DDP_COMPONENT_OVL0]	= { MTK_DISP_OVL,	0, NULL },
+>  	[DDP_COMPONENT_OVL1]	= { MTK_DISP_OVL,	1, NULL },
+> +	[DDP_COMPONENT_OVL_2L0]	= { MTK_DISP_OVL_2L,	0, NULL },
+>  	[DDP_COMPONENT_PWM0]	= { MTK_DISP_PWM,	0, NULL },
+>  	[DDP_COMPONENT_PWM1]	= { MTK_DISP_PWM,	1, NULL },
+>  	[DDP_COMPONENT_PWM2]	= { MTK_DISP_PWM,	2, NULL },
+> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> index 87ef290..a81c322 100644
+> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
+> @@ -25,6 +25,7 @@
+>  
+>  enum mtk_ddp_comp_type {
+>  	MTK_DISP_OVL,
+> +	MTK_DISP_OVL_2L,
+>  	MTK_DISP_RDMA,
+>  	MTK_DISP_WDMA,
+>  	MTK_DISP_COLOR,
+> @@ -58,6 +59,7 @@ enum mtk_ddp_comp_id {
+>  	DDP_COMPONENT_OD0,
+>  	DDP_COMPONENT_OD1,
+>  	DDP_COMPONENT_OVL0,
+> +	DDP_COMPONENT_OVL_2L0,
+>  	DDP_COMPONENT_OVL1,
+>  	DDP_COMPONENT_PWM0,
+>  	DDP_COMPONENT_PWM1,
 
-This is going to be a pain to merge.
 
-First, you need to split the driver parts from the DT parts.
-
-Second, you might need to revert CLK_DSI_DPHY back to a raw
-number for now, so that when the patches get merged through
-different trees, nothing breaks.
-
-Third, you'll come back after everything is merged, and change
-the raw number to the new macro.
-
-ChenYu
