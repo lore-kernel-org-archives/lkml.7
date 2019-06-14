@@ -2,68 +2,109 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7AF7C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106F3C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:11:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 962B520850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:10:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C9C20850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:11:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726129AbfFNQKz (ORCPT
+        id S1726204AbfFNQLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:10:55 -0400
-Received: from mga02.intel.com ([134.134.136.20]:48053 "EHLO mga02.intel.com"
+        Fri, 14 Jun 2019 12:11:05 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49318 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfFNQKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:10:55 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 09:10:54 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga008.jf.intel.com with ESMTP; 14 Jun 2019 09:10:54 -0700
-Date:   Fri, 14 Jun 2019 09:10:54 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        vkuznets@redhat.com
-Subject: Re: [PATCH 12/43] KVM: nVMX: Add helpers to identify shadowed VMCS
- fields
-Message-ID: <20190614161054.GE12191@linux.intel.com>
-References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
- <1560445409-17363-13-git-send-email-pbonzini@redhat.com>
+        id S1725868AbfFNQLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:11:05 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id BAE55C057F30;
+        Fri, 14 Jun 2019 16:11:04 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A6595DE00;
+        Fri, 14 Jun 2019 16:11:03 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 11:11:01 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH 2/9] objtool: Fix ORC unwinding in non-JIT BPF generated
+ code
+Message-ID: <20190614161101.vobuleyjap777ol5@treble>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <99c22bbd79e72855f4bc9049981602d537a54e70.1560431531.git.jpoimboe@redhat.com>
+ <20190613205710.et5fywop4gfalsa6@ast-mbp.dhcp.thefacebook.com>
+ <20190614012030.b6eujm7b4psu62kj@treble>
+ <20190614070852.GQ3436@hirez.programming.kicks-ass.net>
+ <20190614073536.d3xkhwhq3fuivwt5@ast-mbp.dhcp.thefacebook.com>
+ <20190614081116.GU3436@hirez.programming.kicks-ass.net>
+ <CAADnVQJ_-mFCeWoq-Uz9VRFkb3eLgAK+yC5hG=N7t5riGhmLWg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1560445409-17363-13-git-send-email-pbonzini@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAADnVQJ_-mFCeWoq-Uz9VRFkb3eLgAK+yC5hG=N7t5riGhmLWg@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 14 Jun 2019 16:11:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 07:02:58PM +0200, Paolo Bonzini wrote:
-> diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-> index fc2b8f4cf45f..a6fe6cfe96f6 100644
-> --- a/arch/x86/kvm/vmx/nested.c
-> +++ b/arch/x86/kvm/vmx/nested.c
-> @@ -4503,41 +4526,27 @@ static int handle_vmwrite(struct kvm_vcpu *vcpu)
->  	vmcs12_write_any(vmcs12, field, offset, field_value);
->  
->  	/*
-> -	 * Do not track vmcs12 dirty-state if in guest-mode
-> -	 * as we actually dirty shadow vmcs12 instead of vmcs12.
-> +	 * Do not track vmcs12 dirty-state if in guest-mode as we actually
-> +	 * dirty shadow vmcs12 instead of vmcs12.  Fields that can be updated
-> +	 * by L1 without a vmexit are always updated in the vmcs02, i.e' don't
+On Fri, Jun 14, 2019 at 08:13:49AM -0700, Alexei Starovoitov wrote:
+> On Fri, Jun 14, 2019 at 1:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Fri, Jun 14, 2019 at 12:35:38AM -0700, Alexei Starovoitov wrote:
+> > > On Fri, Jun 14, 2019 at 09:08:52AM +0200, Peter Zijlstra wrote:
+> > > > On Thu, Jun 13, 2019 at 08:20:30PM -0500, Josh Poimboeuf wrote:
+> > > > > On Thu, Jun 13, 2019 at 01:57:11PM -0700, Alexei Starovoitov wrote:
+> > > >
+> > > > > > and to patches 8 and 9.
+> > > > >
+> > > > > Well, it's your code, but ... can I ask why?  AT&T syntax is the
+> > > > > standard for Linux, which is in fact the OS we are developing for.
+> > > >
+> > > > I agree, all assembly in Linux is AT&T, adding Intel notation only
+> > > > serves to cause confusion.
+> > >
+> > > It's not assembly. It's C code that generates binary and here
+> > > we're talking about comments.
+> >
+> > And comments are useless if they don't clarify. Intel syntax confuses.
+> >
+> > > I'm sure you're not proposing to do:
+> > > /* mov src, dst */
+> > > #define EMIT_mov(DST, SRC)                                                               \
+> > > right?
+> >
+> > Which is why Josh reversed both of them. The current Intel order is just
+> > terribly confusing. And I don't see any of the other JITs having
+> > confusing comments like this.
+> >
+> > > bpf_jit_comp.c stays as-is. Enough of it.
+> >
+> > I think you're forgetting this is also arch/x86 code, and no, it needs
+> > changes because its broken wrt unwinding.
+> 
+> See MAINTAINERS file.
+> If you guys keep insisting on pointless churn like this
+> we'll move arch/x86/net/ into net/ where it probably belongs.
+> netdev has its own comment style too.
+> And it is also probably confusing to some folks.
 
-Minor typo (from my original patch), should be "i.e.", not "i.e'".
+So if I understand correctly, you're proposing that we move x86-specific
+code to net/arch/x86 so you don't have to make your code readable to
+others and adhere to kernel style guidelines?
 
-> +	 * "dirty" vmcs12, all others go down the prepare_vmcs02() slow path.
->  	 */
-> -	if (!is_guest_mode(vcpu)) {
-> -		switch (field) {
+-- 
+Josh
