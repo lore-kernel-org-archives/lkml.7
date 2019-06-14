@@ -2,98 +2,95 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF558C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:48:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A666C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 884122133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:48:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="cQGWrX6F"
+	by mail.kernel.org (Postfix) with ESMTP id 58AFE208CA
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 10:49:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727298AbfFNKsT (ORCPT
+        id S1727287AbfFNKtr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 06:48:19 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:38202 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726900AbfFNKsS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 06:48:18 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5EAlW17075133;
-        Fri, 14 Jun 2019 05:47:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560509252;
-        bh=VO4FVnd5gxYVdAkdALZM4NQ4Jp0vvZIA2wgd7x8xSUs=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=cQGWrX6FBTtB52WDerOTzhblZJzqENMFCgab3pXXu0aCcVMRLLvEY1IJik3EfWciw
-         mzu/3Inn3Jj2XDEyHkbwuF6zomIj//AtSJaz/Ep2KNofCQUQvAVlv1GJLXAkrWLgYm
-         Vr90ralp0fpOXHlahbhUZhLPfW3TXkizb0VNSYTA=
-Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5EAlWP7108465
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Fri, 14 Jun 2019 05:47:32 -0500
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
- Jun 2019 05:47:32 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Fri, 14 Jun 2019 05:47:32 -0500
-Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5EAlT9V088764;
-        Fri, 14 Jun 2019 05:47:30 -0500
-Subject: Re: [PATCH] ARM: davinci: da850-evm: call
- regulator_has_full_constraints()
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190607090201.5995-1-brgl@bgdev.pl>
- <CACRpkdYjXq-KV=zW=az+02tvjiHVHgUPiC149gNfkWTb4c29PQ@mail.gmail.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <5dcd0189-2283-fb0d-dd7c-4906f4594d69@ti.com>
-Date:   Fri, 14 Jun 2019 16:17:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Fri, 14 Jun 2019 06:49:47 -0400
+Received: from foss.arm.com ([217.140.110.172]:59482 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726767AbfFNKtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 06:49:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6C8EC2B;
+        Fri, 14 Jun 2019 03:49:46 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9D6C3F246;
+        Fri, 14 Jun 2019 03:51:27 -0700 (PDT)
+Subject: Re: [PATCH 2/2] edac: add support for Amazon's Annapurna Labs EDAC
+From:   James Morse <james.morse@arm.com>
+To:     "Hawa, Hanna" <hhhawa@amazon.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, bp@alien8.de,
+        mchehab@kernel.org, davem@davemloft.net,
+        gregkh@linuxfoundation.org, nicolas.ferre@microchip.com,
+        paulmck@linux.ibm.com, dwmw@amazon.co.uk, benh@amazon.com,
+        ronenk@amazon.com, talel@amazon.com, jonnyc@amazon.com,
+        hanochu@amazon.com, linux-edac@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1559211329-13098-1-git-send-email-hhhawa@amazon.com>
+ <1559211329-13098-3-git-send-email-hhhawa@amazon.com>
+ <3129ed19-0259-d227-0cff-e9f165ce5964@arm.com>
+ <4514bfa2-68b2-2074-b817-2f5037650c4e@amazon.com>
+ <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
+Message-ID: <fb5c11b4-6fd1-830b-7a3a-ccf4b31ec337@arm.com>
+Date:   Fri, 14 Jun 2019 11:49:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYjXq-KV=zW=az+02tvjiHVHgUPiC149gNfkWTb4c29PQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <fdc3b458-96eb-1734-c294-2463f37f2244@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/06/19 7:37 PM, Linus Walleij wrote:
-> On Fri, Jun 7, 2019 at 11:02 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> 
->> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>
->> The BB expander at 0x21 i2c bus 1 fails to probe on da850-evm because
->> the board doesn't set has_full_constraints to true in the regulator
->> API.
->>
->> Call regulator_has_full_constraints() at the end of board registration
->> just like we do in da850-lcdk and da830-evm.
->>
->> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> 
-> I assume Sekhar will queue this and the LED patch?
+Hi Hawa,
 
-Yes, will do. Added this to fixes for v5.2
+On 13/06/2019 18:05, James Morse wrote:
+> On 11/06/2019 20:56, Hawa, Hanna wrote:
+>> James Morse wrote:
+>>> Hawa, Hanna wrote:
+>>>> +        if (cluster != last_cluster) {
+>>>> +            smp_call_function_single(cpu, al_a57_edac_l2merrsr,
+>>>> +                         edac_dev, 0);
+>>>> +            last_cluster = cluster;
+>>>> +        }
+>>> Here you depend on the CPUs being listed in cluster-order in the DT. I'm fairly sure the
+>>> numbering is arbitrary: On my Juno 0,3,4,5 are the A53 cluster, and 1,2 are the A57
+>>> cluster.
+>>>
+>>> If 1,3,5 were cluster-a and 2,4,6 were cluster-b, you would end up calling
+>>> al_a57_edac_l2merrsr() for each cpu. As you don't wait, they could race.
+>>>
+>>> If you can get a cpu-mask for each cluster, smp_call_function_any() would to the
+>>> pick-one-online-cpu work for you.
+
+>> Again, I rely on that it's alpine SoC specific driver.
+
+An example of where this goes wrong is kexec:
+If you offline CPU0, then kexec, the new kernel will start up on the lowest numbered
+online CPU, which won't be zero. But the new kernel will call it CPU0.
+
+Kdump is even better, as it starts up on whichever CPU called panic(), and calls it CPU0.
+
 
 Thanks,
-Sekhar
+
+James
+
+
+>> How can I get cpu-mask for each cluster? from DT?
+
+> Its not cluster you want, its the L2. Cacheinfo has this for online CPUs, and you're
+> already holding the cpus_read_lock().
+
