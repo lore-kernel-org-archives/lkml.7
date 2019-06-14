@@ -2,130 +2,66 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A26DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A4C4C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:49:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4386C2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:48:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="u17c7vkn"
+	by mail.kernel.org (Postfix) with ESMTP id 273DF2133D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:49:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfFNOs1 (ORCPT
+        id S1728854AbfFNOt2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:48:27 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:44502 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728219AbfFNOs0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:48:26 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190614144825euoutp01a5c73a1c9b2e474ad607b8ddb7718ff2~oGAq-0z9q0194201942euoutp01a
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 14:48:25 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190614144825euoutp01a5c73a1c9b2e474ad607b8ddb7718ff2~oGAq-0z9q0194201942euoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560523705;
-        bh=KbnWEYsgqMns3fL1M6bl1WXvL0vvlacarWBlX2so54A=;
-        h=From:Subject:To:Cc:Date:References:From;
-        b=u17c7vknApsshx78VtoHa92DcoTtt2IZwmtq/UlDVTUB5kYKwl4mVkZRgWJJ5aUL4
-         EOv2RAeXCPaF3ojqnEMDNU79R8O9bbkpW2bApSvydSIpl7xfgvne6Rs+5CAd5qrHxY
-         nWCPZcMo4C2dEEs4r2IhRM2fiM5uZ9DSbHVg/q5w=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190614144824eucas1p28ce4a766238335181118b38c84e7adf9~oGAqZwRvZ1842218422eucas1p2w;
-        Fri, 14 Jun 2019 14:48:24 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges3new.samsung.com (EUCPMTA) with SMTP id 74.96.04325.8B3B30D5; Fri, 14
-        Jun 2019 15:48:24 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f~oGApS6j7R3210832108eucas1p1V;
-        Fri, 14 Jun 2019 14:48:23 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190614144823eusmtrp175a283449c6243ce6a6c4150a43377d9~oGApDaKRT2548325483eusmtrp1J;
-        Fri, 14 Jun 2019 14:48:23 +0000 (GMT)
-X-AuditID: cbfec7f5-b75ff700000010e5-d8-5d03b3b8da7f
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 32.AE.04140.7B3B30D5; Fri, 14
-        Jun 2019 15:48:23 +0100 (BST)
-Received: from [106.120.51.71] (unknown [106.120.51.71]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190614144822eusmtip18c6f39ce9009c2c74240f5194e9a9ae9~oGAoz5tG92907529075eusmtip1F;
-        Fri, 14 Jun 2019 14:48:22 +0000 (GMT)
-From:   Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: [PATCH 2/3] video: fbdev: intelfb: return -ENOMEM on
- framebuffer_alloc() failure
-To:     linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Cc:     Maik Broemme <mbroemme@libmpq.org>
-Message-ID: <a659cb04-b16c-a3a0-30f4-b2f90b0d7196@samsung.com>
-Date:   Fri, 14 Jun 2019 16:48:23 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Fri, 14 Jun 2019 10:49:28 -0400
+Received: from verein.lst.de ([213.95.11.211]:47569 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728208AbfFNOt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:49:28 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id C373F68AFE; Fri, 14 Jun 2019 16:48:57 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 16:48:57 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: [PATCH 12/16] staging/comedi: mark as broken
+Message-ID: <20190614144857.GA9088@lst.de>
+References: <20190614134726.3827-1-hch@lst.de> <20190614134726.3827-13-hch@lst.de> <20190614140239.GA7234@kroah.com>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnleLIzCtJLcpLzFFi42LZduznOd0dm5ljDSY+Fra48vU9m8WJvg+s
-        Fpd3zWGz+HWSyYHF4/rPG0we97uPM3l83iQXwBzFZZOSmpNZllqkb5fAlXHv4lzGghNsFU86
-        DzI1MF5g7WLk5JAQMJG4/6+FrYuRi0NIYAWjRPvTPewQzhdGiUlrJrJAOJ8ZJaY0LmCEaXm/
-        +QJU1XJGiY/H77GBJIQE3jJKrG5TArHZBKwkJravAmrg4BAWiJb4N8cLJCwikCCxYvoMsDCz
-        gJrE9UXVIGFeATuJQ12XmEBsFgFVid6v25lBbFGBCIn7xzawQtQISpyc+YQFxGYWEJe49WQ+
-        E4QtL7H97RxmkHMkBD6zSez60soCcaeLxK2tPUwQtrDEq+Nb2CFsGYnTk3tYIBrWMUr87XgB
-        1b2dUWL55H9sEFXWEoePX2SFuFRTYv0ufYiwo8S5I5tZQMISAnwSN94KQhzBJzFp23RmiDCv
-        REebEES1msSGZRvYYNZ27VzJDGF7SFy+OZdlAqPiLCSvzULy2iwkr81CuGEBI8sqRvHU0uLc
-        9NRi47zUcr3ixNzi0rx0veT83E2MwGRy+t/xrzsY9/1JOsQowMGoxMM7o485Vog1say4MvcQ
-        owQHs5II7zxroBBvSmJlVWpRfnxRaU5q8SFGaQ4WJXHeaoYH0UIC6YklqdmpqQWpRTBZJg5O
-        qQZGP+dFx87cVe/2Ln99m/ekmJrOF4N7OxslI+xk/E/Puh5w9RGXy4x3VX01bHM3+GuWqdzb
-        KDv1mekKRZ9nZ11fsqYemR2gyC0rsv2Ki9X66VpNZ5qZNQJEek3OHCt5ffHMVf7Op/KbNmXn
-        tZZpNcU/SiivTA+O2TUtcON2xRl3zhxPYQtv+eytxFKckWioxVxUnAgAk1mLPiIDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupgkeLIzCtJLcpLzFFi42I5/e/4Xd3tm5ljDRrbeSyufH3PZnGi7wOr
-        xeVdc9gsfp1kcmDxuP7zBpPH/e7jTB6fN8kFMEfp2RTll5akKmTkF5fYKkUbWhjpGVpa6BmZ
-        WOoZGpvHWhmZKunb2aSk5mSWpRbp2yXoZdy7OJex4ARbxZPOg0wNjBdYuxg5OSQETCTeb77A
-        3sXIxSEksJRR4suzjyxdjBxACRmJ4+vLIGqEJf5c62KDqHnNKPH7YAdYM5uAlcTE9lWMIPXC
-        AtES/+Z4gYRFBBIknr6ezwYSZhZQk7i+qBokzCtgJ3Go6xITiM0ioCrR+3U7M4gtKhAhceb9
-        ChaIGkGJkzOfgNnMAuoSf+ZdYoawxSVuPZnPBGHLS2x/O4d5AqPALCQts5C0zELSMgtJywJG
-        llWMIqmlxbnpucVGesWJucWleel6yfm5mxiBsbDt2M8tOxi73gUfYhTgYFTi4Z3RxxwrxJpY
-        VlyZe4hRgoNZSYR3njVQiDclsbIqtSg/vqg0J7X4EKMp0EMTmaVEk/OBcZpXEm9oamhuYWlo
-        bmxubGahJM7bIXAwRkggPbEkNTs1tSC1CKaPiYNTqoFxB8cOpog0E0+OuM4p4q6yL70c+zo+
-        LdTaueT+6QlqyqICa7nYHZgn6a59v9IlbevEOf0PmH4eN39wdp7OjLbf5z8U7xFY5vp+8/3H
-        4VN29Oo8KPM49OaF+dIzB/a9m/Ln65S0Hcv0bfIfmiip83pG6+0MWsRSyp+gUpoz14ax58/K
-        RWbcF//bKbEUZyQaajEXFScCALvnrPmbAgAA
-X-CMS-MailID: 20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f
-References: <CGME20190614144823eucas1p1f6d5ed1905350e9933f4d7fec0a3419f@eucas1p1.samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614140239.GA7234@kroah.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix error code from -ENODEV to -ENOMEM.
+On Fri, Jun 14, 2019 at 04:02:39PM +0200, Greg KH wrote:
+> Perhaps a hint as to how we can fix this up?  This is the first time
+> I've heard of the comedi code not handling dma properly.
 
-Cc: Maik Broemme <mbroemme@libmpq.org>
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
----
- drivers/video/fbdev/intelfb/intelfbdrv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It can be fixed by:
 
-Index: b/drivers/video/fbdev/intelfb/intelfbdrv.c
-===================================================================
---- a/drivers/video/fbdev/intelfb/intelfbdrv.c
-+++ b/drivers/video/fbdev/intelfb/intelfbdrv.c
-@@ -493,7 +493,7 @@ static int intelfb_pci_register(struct p
- 	info = framebuffer_alloc(sizeof(struct intelfb_info), &pdev->dev);
- 	if (!info) {
- 		ERR_MSG("Could not allocate memory for intelfb_info.\n");
--		return -ENODEV;
-+		return -ENOMEM;
- 	}
- 	if (fb_alloc_cmap(&info->cmap, 256, 1) < 0) {
- 		ERR_MSG("Could not allocate cmap for intelfb_info.\n");
+ a) never calling virt_to_page (or vmalloc_to_page for that matter)
+    on dma allocation
+ b) never remapping dma allocation with conflicting cache modes
+    (no remapping should be doable after a) anyway).
