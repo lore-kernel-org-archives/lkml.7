@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C4BC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3BE5C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93D17217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D05A217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544390;
-	bh=QPXgToPXgZyOITULrz9bpMc48Y55BylM1afW4kcTVhg=;
+	s=default; t=1560544397;
+	bh=EdtY/ixIohmX4Bak3RJMtNK7DinyD8AF6I72XlVbPAg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ll8sVM+RwjEv1ahwJEjgCV8yhIqZTXEkeGXLVCFT4h/wCuE+Ou+l/66Eo/SHKkMEJ
-	 dwkJx9c8kNNMHZDWqIBygGsKjSPRy6PadrXE1kgcbXJOxR2z2fOS1q68TwQX7beqMl
-	 za/1xVE1exhtjKsH32uMbYM8lXLEIqXBuI7nbME4=
+	b=yqJu5jTD4i7xsDfRYoW808AQwfWIUkd+7W82ZspAcwVDn/TlexZiSm9dioG3f73/l
+	 t23PuUj6V0/5Qx9xmMyVYfBdlNPzxl2uetGgh4TOSz5j8SWdGPbmJ3kvGzV1krtvBa
+	 QWBWctY/DINfAgwwmmk3uHQJM/fx+6XiMTUAj/GE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfFNUaf (ORCPT
+        id S1727686AbfFNUdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:30:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53572 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:33:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727702AbfFNUad (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:33 -0400
+        id S1726501AbfFNUae (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:34 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E06D2184E;
-        Fri, 14 Jun 2019 20:30:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5CD6C21850;
+        Fri, 14 Jun 2019 20:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544232;
-        bh=QPXgToPXgZyOITULrz9bpMc48Y55BylM1afW4kcTVhg=;
+        s=default; t=1560544233;
+        bh=EdtY/ixIohmX4Bak3RJMtNK7DinyD8AF6I72XlVbPAg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kwGOEQSio4AengmIVtTDxF1/HStD1jH7KXNIO5C6Ik99FJ3o4Q1KRs3zMc+eG1KgX
-         vqGg3/GrXY/IqbWkhXyjeR6YWQKF0Zzf5SMp4RZW8YcYtZMstl1KPuUSru8w3gI3ux
-         uTvExJIkrflyhTzGCIe0DZH7VygvmtT8p03zfL/s=
+        b=AAXbJw2dwEwhZDCuTChbyIVPZVKrFklGBEJ7cGdrBXrZ+aHGtRabvpvt/x28h9/OR
+         ODAtAnVBIvtRuB7ukEkawD2EFdhwo6rxL/IapKwwsMGBqj52/xT663FKJj1HEECZDz
+         22DBb+mW+R9ef/879fWKOzwhBf3YtoWmJpdvH1r4=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Sean Wang <sean.wang@mediatek.com>,
         Mark Lee <mark-mc.lee@mediatek.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 16/27] net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
-Date:   Fri, 14 Jun 2019 16:30:05 -0400
-Message-Id: <20190614203018.27686-16-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 17/27] net: ethernet: mediatek: Use NET_IP_ALIGN to judge if HW RX_2BYTE_OFFSET is enabled
+Date:   Fri, 14 Jun 2019 16:30:06 -0400
+Message-Id: <20190614203018.27686-17-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614203018.27686-1-sashal@kernel.org>
 References: <20190614203018.27686-1-sashal@kernel.org>
@@ -62,67 +62,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Sean Wang <sean.wang@mediatek.com>
 
-[ Upstream commit 9e4f56f1a7f3287718d0083b5cb85298dc05a5fd ]
+[ Upstream commit 880c2d4b2fdfd580ebcd6bb7240a8027a1d34751 ]
 
-Should hw_feature as hardware capability flags to check if hardware LRO
-got support.
+Should only enable HW RX_2BYTE_OFFSET function in the case NET_IP_ALIGN
+equals to 2.
 
 Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
 Signed-off-by: Sean Wang <sean.wang@mediatek.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mediatek/mtk_eth_soc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 3fd71cf5cd60..5208bf61df10 100644
+index 5208bf61df10..9ba699cbdbc5 100644
 --- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
 +++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2304,13 +2304,13 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
+@@ -1788,6 +1788,7 @@ static void mtk_poll_controller(struct net_device *dev)
  
- 	switch (cmd->cmd) {
- 	case ETHTOOL_GRXRINGS:
--		if (dev->features & NETIF_F_LRO) {
-+		if (dev->hw_features & NETIF_F_LRO) {
- 			cmd->data = MTK_MAX_RX_RING_NUM;
- 			ret = 0;
- 		}
- 		break;
- 	case ETHTOOL_GRXCLSRLCNT:
--		if (dev->features & NETIF_F_LRO) {
-+		if (dev->hw_features & NETIF_F_LRO) {
- 			struct mtk_mac *mac = netdev_priv(dev);
+ static int mtk_start_dma(struct mtk_eth *eth)
+ {
++	u32 rx_2b_offset = (NET_IP_ALIGN == 2) ? MTK_RX_2B_OFFSET : 0;
+ 	int err;
  
- 			cmd->rule_cnt = mac->hwlro_ip_cnt;
-@@ -2318,11 +2318,11 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
- 		}
- 		break;
- 	case ETHTOOL_GRXCLSRULE:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_get_fdir_entry(dev, cmd);
- 		break;
- 	case ETHTOOL_GRXCLSRLALL:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_get_fdir_all(dev, cmd,
- 						     rule_locs);
- 		break;
-@@ -2339,11 +2339,11 @@ static int mtk_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
+ 	err = mtk_dma_init(eth);
+@@ -1804,7 +1805,7 @@ static int mtk_start_dma(struct mtk_eth *eth)
+ 		MTK_QDMA_GLO_CFG);
  
- 	switch (cmd->cmd) {
- 	case ETHTOOL_SRXCLSRLINS:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_add_ipaddr(dev, cmd);
- 		break;
- 	case ETHTOOL_SRXCLSRLDEL:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_del_ipaddr(dev, cmd);
- 		break;
- 	default:
+ 	mtk_w32(eth,
+-		MTK_RX_DMA_EN | MTK_RX_2B_OFFSET |
++		MTK_RX_DMA_EN | rx_2b_offset |
+ 		MTK_RX_BT_32DWORDS | MTK_MULTI_EN,
+ 		MTK_PDMA_GLO_CFG);
+ 
 -- 
 2.20.1
 
