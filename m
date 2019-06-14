@@ -2,84 +2,68 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3489C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:00:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEA70C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:02:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7C7A21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560531638;
-	bh=yBR6nMgNC6Bi1AhcaMc4v86CZUjw20i62LZLoi0gQzQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=vozp0mwXCuUFE8pk+Md/VuDRS/pFnG7zDpW5pdkkl0+o2S4pRFtClcvxdCZgn6qfU
-	 v5cCLkbECHnwNf5JO9b7r89qAZJ+WqbpCo/Qwakdv+A4YUhbZFB4jT6/fmFxA68S3h
-	 kgMkTj/fUgTjjx+yExrvbps2nLuCvmznlvBWwt6Q=
+	by mail.kernel.org (Postfix) with ESMTP id 97A7B2183F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 17:02:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726297AbfFNRAh (ORCPT
+        id S1726096AbfFNRCm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 13:00:37 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:44360 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725801AbfFNRAh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 13:00:37 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x47so3239273qtk.11;
-        Fri, 14 Jun 2019 10:00:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=1eI9x8aqHa2g6lRAb8xIaUpLrr30zti0UHmU+FDhYtY=;
-        b=pmb/45gKucIk2xGPGaDtYIsNIRQxKDuQ0s0m19ZddNEm/0nUMKPP4kO6xuqX1zQn+H
-         IA6zufiYT/7har24Wkyj5y1f05ZhugH+yAjeQ188uSsDy9737l1zE7WMD+M6RkVMpP9f
-         jnTpUqOZPUtopu16gyP3yoSucZHah1bdpMHpjMQhdFZIWOgaT+/V1CwP+sfiY61x3uOv
-         IF/1w8aLVyh9/7tcO0MDwwk0LkHqVfoSuihgzTOWE3HUzrFRNnnj9nVyl0aqcxMPhHZr
-         ckL+dD4XAiAX5NDJPPC/xziqkmM3PbOupZxN5x+zuL6ysRt/cdWHvU4OOKuCOTYfAFuE
-         IH2A==
-X-Gm-Message-State: APjAAAVVjAxVhAffn1Ogx/8HL3XXlriRqaq+exAheFTAkNmeFRaSDcCO
-        HzR9Ig7t8L+iUzvPO5808Q==
-X-Google-Smtp-Source: APXvYqwZrdYRPp5o9112ectPkp5A8tin2+VsST5o2plnaFhhOgISNCAl7ax/5gjW4QbLlrcgKJnHpw==
-X-Received: by 2002:ac8:2cfc:: with SMTP id 57mr80288786qtx.194.1560531635897;
-        Fri, 14 Jun 2019 10:00:35 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id d3sm1536126qti.40.2019.06.14.10.00.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 10:00:35 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 11:00:34 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Dan Murphy <dmurphy@ti.com>
-Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, robh+dt@kernel.org,
-        devicetree@vger.kernel.org, linux-leds@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v3 4/9] dt-bindings: leds: Add multicolor ID to the color
- ID  list
-Message-ID: <20190614170034.GA7789@bogus>
-References: <20190523190820.29375-1-dmurphy@ti.com>
- <20190523190820.29375-5-dmurphy@ti.com>
+        Fri, 14 Jun 2019 13:02:42 -0400
+Received: from ms.lwn.net ([45.79.88.28]:53200 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725814AbfFNRCl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 13:02:41 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 38613128A;
+        Fri, 14 Jun 2019 17:02:41 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 11:02:40 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>
+Subject: Re: Documentation: Remove duplicate x86 index entry
+Message-ID: <20190614110240.4a69fd6e@lwn.net>
+In-Reply-To: <alpine.DEB.2.21.1906140902050.1791@nanos.tec.linutronix.de>
+References: <alpine.DEB.2.21.1906140902050.1791@nanos.tec.linutronix.de>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523190820.29375-5-dmurphy@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019 14:08:15 -0500, Dan Murphy wrote:
-> Add a new color ID that is declared as MULTICOLOR as with the
-> multicolor framework declaring a definitive color is not accurate
-> as the node can contain multiple colors.
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> ---
->  include/dt-bindings/leds/common.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
+On Fri, 14 Jun 2019 09:02:49 +0200 (CEST)
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> x86 got added twice to the index via the RST conversion and the MDS
+> documentation changes. Remove one instance.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  Documentation/index.rst |    1 -
+>  1 file changed, 1 deletion(-)
+> 
+> --- a/Documentation/index.rst
+> +++ b/Documentation/index.rst
+> @@ -112,7 +112,6 @@ implementation.
+>  .. toctree::
+>     :maxdepth: 2
+>  
+> -   x86/index
+>     sh/index
+>     x86/index
+
+If one is good, two must be better, right? :)
+
+Applied, thanks.
+
+jon
