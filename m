@@ -2,155 +2,202 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72414C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F35BC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:24:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 442822133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54EDA21744
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:24:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="p8zwtPkK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KnTCmViR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfFNPY0 (ORCPT
+        id S1726519AbfFNPYb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:24:26 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:13227 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725923AbfFNPY0 (ORCPT
+        Fri, 14 Jun 2019 11:24:31 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34837 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725923AbfFNPYa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:24:26 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d03bc280000>; Fri, 14 Jun 2019 08:24:24 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Fri, 14 Jun 2019 08:24:23 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Fri, 14 Jun 2019 08:24:23 -0700
-Received: from [10.26.11.12] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
- 2019 15:24:20 +0000
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
- granularity
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190613210849.10382-1-digetx@gmail.com>
- <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
-Message-ID: <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
-Date:   Fri, 14 Jun 2019 16:24:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 11:24:30 -0400
+Received: by mail-io1-f67.google.com with SMTP id m24so6670743ioo.2
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 08:24:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b5mc7IOtZTIYzG3UEP4sVSXC9GRywSomfDBGG2VeoWI=;
+        b=KnTCmViRin1UgLkXIhzoE2OPV9TlwVESbaXCiEIMM2WNU5h4E9lpY0vF0ycwvoRD/Q
+         Rrwmm35gXN74dCUWB8WvT8bjZ/1ewsxImQA28kH0+htgddgjTH8fyQm+OcR4qiFHOVKC
+         q+d4bgfBXRRCy0RHBkrGVnD0FIBi8h0vKCMXs+gRBz0RPt+yhpG0JRTbh/iVVJSVHc3q
+         N15E8ikRs9oCaIAvlmeDXsA9ylpFj7nVeN/GfY0XCm3Xy+ikuCzkpanl008D2KaUZ7Kr
+         USKoXTAsmfArudlWKCx4S/cMNM3n3zPAhznScDp76DDGGOtaTpKvWnayZ6NHG9WOXRJU
+         Bpag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b5mc7IOtZTIYzG3UEP4sVSXC9GRywSomfDBGG2VeoWI=;
+        b=B902XFx98wOQ8PIqZV5QmZ/nOOY1mjvJrqF8LNp2CZCmvPDVrZ8OwIKO+5hyxSdlM7
+         oX0AZjrh3Lif6XiXgm8pQmcpklOcuhCqnkRxxIr+aZtUln3RajOd71YTOVKDJ+zqOHf2
+         v2GOCwFV0GyMtOq3d4GshuUvds5ja5/yS5kyakwIbHHV9/3JYT5okX+/WZg2cHAye0BU
+         659yVhn65/OoyATsXFyMg0fR0wPxGMfX5AYTg9rjcnS+F/SqltKQwE/wWUzAsU+xaiFm
+         QutL4r0uJ7ghWUmIBXP85nhA1lnlznXUlp6DwL15WMcwW1/Vvjrsh6Mzwv2WbNndDBI8
+         ec9Q==
+X-Gm-Message-State: APjAAAUU7/32iagibW06dUuXA8YMnVDFcBgoOIJlAorVqVqaEYNqO0kJ
+        QpToEjzxEadjNDu6Sz4E484ZEld+xsCaLuUetw==
+X-Google-Smtp-Source: APXvYqyhiF0X4SUWnydncHY4ZbPZUXB3x2O0g2X6ukqLUOc/rcv424wYEFuaQMTf3N8NzMrlA8XSFaybvWmGRvIe9ks=
+X-Received: by 2002:a6b:4107:: with SMTP id n7mr3534566ioa.12.1560525869521;
+ Fri, 14 Jun 2019 08:24:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560525864; bh=0mSBcKWqOYxnxNpld6CfaZzNunQ0sKFY9+OjRr2Ywtk=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=p8zwtPkKM1iChXZx4eQOBwQDgKZWerv8qawpNcGLhzLBCLih1NQVCNz+b8zsK0Hb9
-         6I3m4dtR/hqWTY+AY33YhhIXrOqeZOcpGSEq+IRaEC1bdKYv7QnPzEfjh95MjjIpKi
-         +uVPlgpkQaKMAJ3o5+X9rz4lL3mnkWOrVuX6VNdbTdmui1TQPZ0W2K8BgygxEyxSmY
-         zXWPAIfxWxEWrvuWJh7ieraEwrzCy5HbsjnnICCvtGqEoc9Y2sgR+EGo22uYN/jrk/
-         xai8p9VmnY29FaexIOgLsSjDL5mH5ZDOMr2e3g9fzii6UpM7e8aGAZPah7tY+G2v/C
-         wIlUsAgZP1oHA==
+References: <1560422702-11403-1-git-send-email-kernelfans@gmail.com>
+ <1560422702-11403-3-git-send-email-kernelfans@gmail.com> <20190613213915.GE32404@iweiny-DESK2.sc.intel.com>
+In-Reply-To: <20190613213915.GE32404@iweiny-DESK2.sc.intel.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Fri, 14 Jun 2019 23:24:18 +0800
+Message-ID: <CAFgQCTu2voVPA2U90JjUFc116C9iqDDcDZf9UhErE56CgqxccQ@mail.gmail.com>
+Subject: Re: [PATCHv4 2/3] mm/gup: fix omission of check on FOLL_LONGTERM in
+ gup fast path
+To:     Ira Weiny <ira.weiny@intel.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        John Hubbard <jhubbard@nvidia.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Shuah Khan <shuah@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, mike.kravetz@oracle.com,
+        David Rientjes <rientjes@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Cc Mike, David, who is an expert of hugetlb and thp
 
-On 14/06/2019 16:21, Jon Hunter wrote:
-> 
-> On 13/06/2019 22:08, Dmitry Osipenko wrote:
->> Tegra's APB DMA engine updates words counter after each transferred burst
->> of data, hence it can report transfer's residual with more fidelity which
->> may be required in cases like audio playback. In particular this fixes
->> audio stuttering during playback in a chromiuim web browser. The patch is
->> based on the original work that was made by Ben Dooks [1]. It was tested
->> on Tegra20 and Tegra30 devices.
->>
->> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->>
->> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
->>  1 file changed, 28 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->> index 79e9593815f1..c5af8f703548 100644
->> --- a/drivers/dma/tegra20-apb-dma.c
->> +++ b/drivers/dma/tegra20-apb-dma.c
->> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>  	return 0;
->>  }
->>  
->> +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
->> +					      struct tegra_dma_sg_req *sg_req,
->> +					      struct tegra_dma_desc *dma_desc,
->> +					      unsigned int residual)
->> +{
->> +	unsigned long status, wcount = 0;
->> +
->> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->> +		return residual;
->> +
->> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->> +
->> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->> +
->> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->> +		wcount = status;
->> +
->> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->> +		return residual - sg_req->req_len;
->> +
->> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
->> +}
->> +
->>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
->>  {
->>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
->> +	struct tegra_dma_sg_req *sg_req = NULL;
->>  	struct tegra_dma_desc *dma_desc;
->> -	struct tegra_dma_sg_req *sg_req;
->>  	enum dma_status ret;
->>  	unsigned long flags;
->>  	unsigned int residual;
->> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->>  		residual = dma_desc->bytes_requested -
->>  			   (dma_desc->bytes_transferred %
->>  			    dma_desc->bytes_requested);
->> +		residual = tegra_dma_update_residual(tdc, sg_req, dma_desc,
->> +						     residual);
-> 
-> I had a quick look at this, I am not sure that we want to call
-> tegra_dma_update_residual() here for cases where the dma_desc is on the
-> free_dma_desc list. In fact, couldn't this be simplified a bit for case
-> where the dma_desc is on the free list? In that case I believe that the
-> residual should always be 0.
+On Fri, Jun 14, 2019 at 5:37 AM Ira Weiny <ira.weiny@intel.com> wrote:
+>
+> On Thu, Jun 13, 2019 at 06:45:01PM +0800, Pingfan Liu wrote:
+> > FOLL_LONGTERM suggests a pin which is going to be given to hardware and
+> > can't move. It would truncate CMA permanently and should be excluded.
+> >
+> > FOLL_LONGTERM has already been checked in the slow path, but not checked in
+> > the fast path, which means a possible leak of CMA page to longterm pinned
+> > requirement through this crack.
+> >
+> > Place a check in gup_pte_range() in the fast path.
+> >
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Ira Weiny <ira.weiny@intel.com>
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Mike Rapoport <rppt@linux.ibm.com>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+> > Cc: Keith Busch <keith.busch@intel.com>
+> > Cc: Christoph Hellwig <hch@infradead.org>
+> > Cc: Shuah Khan <shuah@kernel.org>
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  mm/gup.c | 26 ++++++++++++++++++++++++++
+> >  1 file changed, 26 insertions(+)
+> >
+> > diff --git a/mm/gup.c b/mm/gup.c
+> > index 766ae54..de1b03f 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -1757,6 +1757,14 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+> >               VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
+> >               page = pte_page(pte);
+> >
+> > +             /*
+> > +              * FOLL_LONGTERM suggests a pin given to hardware. Prevent it
+> > +              * from truncating CMA area
+> > +              */
+> > +             if (unlikely(flags & FOLL_LONGTERM) &&
+> > +                     is_migrate_cma_page(page))
+> > +                     goto pte_unmap;
+> > +
+> >               head = try_get_compound_head(page, 1);
+> >               if (!head)
+> >                       goto pte_unmap;
+> > @@ -1900,6 +1908,12 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long addr,
+> >               refs++;
+> >       } while (addr += PAGE_SIZE, addr != end);
+> >
+> > +     if (unlikely(flags & FOLL_LONGTERM) &&
+> > +             is_migrate_cma_page(page)) {
+> > +             *nr -= refs;
+> > +             return 0;
+> > +     }
+> > +
+>
+> Why can't we place this check before the while loop and skip subtracting the
+> page count?
+Yes, that will be better.
 
-Actually, no, it could be non-zero in the case the transfer is aborted.
+>
+> Can is_migrate_cma_page() operate on any "subpage" of a compound page?
+For gigantic page, __alloc_gigantic_page() allocate from
+MIGRATE_MOVABLE pageblock. For page order < MAX_ORDER, pages are
+allocated from either free_list[MIGRATE_MOVABLE] or
+free_list[MIGRATE_CMA]. So all subpage have the same migrate type.
 
-Jon
-
--- 
-nvpublic
+Thanks,
+  Pingfan
+>
+> Here this calls is_magrate_cma_page() on the tail page of the compound page.
+>
+> I'm not an expert on compound pages nor cma handling so is this ok?
+>
+> It seems like you need to call is_migrate_cma_page() on each page within the
+> while loop?
+>
+> >       head = try_get_compound_head(pmd_page(orig), refs);
+> >       if (!head) {
+> >               *nr -= refs;
+> > @@ -1941,6 +1955,12 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
+> >               refs++;
+> >       } while (addr += PAGE_SIZE, addr != end);
+> >
+> > +     if (unlikely(flags & FOLL_LONGTERM) &&
+> > +             is_migrate_cma_page(page)) {
+> > +             *nr -= refs;
+> > +             return 0;
+> > +     }
+> > +
+>
+> Same comment here.
+>
+> >       head = try_get_compound_head(pud_page(orig), refs);
+> >       if (!head) {
+> >               *nr -= refs;
+> > @@ -1978,6 +1998,12 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, unsigned long addr,
+> >               refs++;
+> >       } while (addr += PAGE_SIZE, addr != end);
+> >
+> > +     if (unlikely(flags & FOLL_LONGTERM) &&
+> > +             is_migrate_cma_page(page)) {
+> > +             *nr -= refs;
+> > +             return 0;
+> > +     }
+> > +
+>
+> And here.
+>
+> Ira
+>
+> >       head = try_get_compound_head(pgd_page(orig), refs);
+> >       if (!head) {
+> >               *nr -= refs;
+> > --
+> > 2.7.5
+> >
