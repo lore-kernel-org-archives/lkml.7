@@ -2,96 +2,102 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A461C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98D5DC46477
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C7CA21744
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7086F21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 15:16:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfFNPQb (ORCPT
+        id S1726635AbfFNPQr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 11:16:31 -0400
-Received: from hostingweb31-40.netsons.net ([89.40.174.40]:39028 "EHLO
-        hostingweb31-40.netsons.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726297AbfFNPQZ (ORCPT
+        Fri, 14 Jun 2019 11:16:47 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:31988 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725869AbfFNPQq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:16:25 -0400
-Received: from [109.168.11.45] (port=44258 helo=pc-ceresoli.dev.aim)
-        by hostingweb31.netsons.net with esmtpa (Exim 4.92)
-        (envelope-from <luca@lucaceresoli.net>)
-        id 1hbnwE-000D1q-Qn; Fri, 14 Jun 2019 17:16:22 +0200
-From:   Luca Ceresoli <luca@lucaceresoli.net>
-To:     linux-media@vger.kernel.org
-Cc:     Luca Ceresoli <luca@lucaceresoli.net>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: [PATCH v2] media: docs: v4l2-controls: fix sentence rendered in a nonsense way
-Date:   Fri, 14 Jun 2019 17:14:29 +0200
-Message-Id: <20190614151429.15191-1-luca@lucaceresoli.net>
-X-Mailer: git-send-email 2.21.0
+        Fri, 14 Jun 2019 11:16:46 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-68-X-FdWeQ3PqmiCOAg4_EgNg-1; Fri, 14 Jun 2019 16:16:44 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Fri, 14 Jun 2019 16:16:43 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Fri, 14 Jun 2019 16:16:43 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Robin Murphy' <robin.murphy@arm.com>,
+        'Christoph Hellwig' <hch@lst.de>
+CC:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "Maarten Lankhorst" <maarten.lankhorst@linux.intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Sean Paul <sean@poorly.run>,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: RE: [PATCH 16/16] dma-mapping: use exact allocation in
+ dma_alloc_contiguous
+Thread-Topic: [PATCH 16/16] dma-mapping: use exact allocation in
+ dma_alloc_contiguous
+Thread-Index: AQHVIrfpTFjppS25RkWUhwqPPyqZ4qabLzdwgAAQm/2AAAIJEA==
+Date:   Fri, 14 Jun 2019 15:16:43 +0000
+Message-ID: <d8009432a10549bbbda802021562a28b@AcuMS.aculab.com>
+References: <20190614134726.3827-1-hch@lst.de>
+ <20190614134726.3827-17-hch@lst.de>
+ <a90cf7ec5f1c4166b53c40e06d4d832a@AcuMS.aculab.com>
+ <20190614145001.GB9088@lst.de> <4113cd5f-5c13-e9c7-bc5e-dcf0b60e7054@arm.com>
+In-Reply-To: <4113cd5f-5c13-e9c7-bc5e-dcf0b60e7054@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - hostingweb31.netsons.net
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - lucaceresoli.net
-X-Get-Message-Sender-Via: hostingweb31.netsons.net: authenticated_id: luca+lucaceresoli.net/only user confirmed/virtual account not confirmed
-X-Authenticated-Sender: hostingweb31.netsons.net: luca@lucaceresoli.net
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
+X-MC-Unique: X-FdWeQ3PqmiCOAg4_EgNg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This sentence renders as:
-
-> Since such compound controls need to expose more information about
-> themselves than is possible with ioctls VIDIOC_QUERYCTRL,
-> VIDIOC_QUERY_EXT_CTRL and VIDIOC_QUERYMENU the VIDIOC_QUERY_EXT_CTRL
-  ^^^^^^^^^^^^^^^^^^^^^                          ^^^^^^^^^^^^^^^^^^^^^
-> ioctl was added.
-
-This does not make sense. Fix by providing an explicit link text. This
-results in:
-
-> Since such compound controls need to expose more information about
-> themselves than is possible with VIDIOC_QUERYCTRL the
-> VIDIOC_QUERY_EXT_CTRL ioctl was added.
-
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- Documentation/media/uapi/v4l/extended-controls.rst | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
-index 0e9787072a41..655362483730 100644
---- a/Documentation/media/uapi/v4l/extended-controls.rst
-+++ b/Documentation/media/uapi/v4l/extended-controls.rst
-@@ -85,11 +85,10 @@ be able to see such compound controls. In other words, these controls
- with compound types should only be used programmatically.
- 
- Since such compound controls need to expose more information about
--themselves than is possible with
--:ref:`VIDIOC_QUERYCTRL` the
--:ref:`VIDIOC_QUERY_EXT_CTRL <VIDIOC_QUERYCTRL>` ioctl was added. In
--particular, this ioctl gives the dimensions of the N-dimensional array
--if this control consists of more than one element.
-+themselves than is possible with :ref:`VIDIOC_QUERYCTRL <VIDIOC_QUERYCTRL>`
-+the :ref:`VIDIOC_QUERY_EXT_CTRL <VIDIOC_QUERYCTRL>` ioctl was added. In
-+particular, this ioctl gives the dimensions of the N-dimensional array if
-+this control consists of more than one element.
- 
- .. note::
- 
--- 
-2.21.0
+RnJvbTogUm9iaW4gTXVycGh5DQo+IFNlbnQ6IDE0IEp1bmUgMjAxOSAxNjowNg0KLi4uDQo+IFdl
+bGwsIGFwYXJ0IGZyb20gdGhlIGJpdCBpbiBETUEtQVBJLUhPV1RPIHdoaWNoIGhhcyBzYWlkIHRo
+aXMgc2luY2UNCj4gZm9yZXZlciAod2VsbCwgYmVmb3JlIEdpdCBoaXN0b3J5LCBhdCBsZWFzdCk6
+DQo+IA0KPiAiVGhlIENQVSB2aXJ0dWFsIGFkZHJlc3MgYW5kIHRoZSBETUEgYWRkcmVzcyBhcmUg
+Ym90aA0KPiBndWFyYW50ZWVkIHRvIGJlIGFsaWduZWQgdG8gdGhlIHNtYWxsZXN0IFBBR0VfU0la
+RSBvcmRlciB3aGljaA0KPiBpcyBncmVhdGVyIHRoYW4gb3IgZXF1YWwgdG8gdGhlIHJlcXVlc3Rl
+ZCBzaXplLiAgVGhpcyBpbnZhcmlhbnQNCj4gZXhpc3RzIChmb3IgZXhhbXBsZSkgdG8gZ3VhcmFu
+dGVlIHRoYXQgaWYgeW91IGFsbG9jYXRlIGEgY2h1bmsNCj4gd2hpY2ggaXMgc21hbGxlciB0aGFu
+IG9yIGVxdWFsIHRvIDY0IGtpbG9ieXRlcywgdGhlIGV4dGVudCBvZiB0aGUNCj4gYnVmZmVyIHlv
+dSByZWNlaXZlIHdpbGwgbm90IGNyb3NzIGEgNjRLIGJvdW5kYXJ5LiINCg0KSSBrbmV3IGl0IHdh
+cyBzb21ld2hlcmUgOi0pDQpJbnRlcmVzdGluZ2x5IHRoYXQgYWxzbyBpbXBsaWVzIHRoYXQgdGhl
+IGFkZHJlc3MgcmV0dXJuZWQgZm9yIGEgc2l6ZQ0Kb2YgKHNheSkgMTI4IHdpbGwgYWxzbyBiZSBw
+YWdlIGFsaWduZWQuDQpJbiB0aGF0IGNhc2UgMTI4IGJ5dGUgYWxpZ25tZW50IHNob3VsZCBwcm9i
+YWJseSBiZSBvayAtIGJ1dCBpdCBpcyBzdGlsbA0KYW4gQVBJIGNoYW5nZSB0aGF0IGNvdWxkIGhh
+dmUgaG9ycmlkIGNvbnNlcXVlbmNlcy4NCg0KCURhdmlkDQoNCi0NClJlZ2lzdGVyZWQgQWRkcmVz
+cyBMYWtlc2lkZSwgQnJhbWxleSBSb2FkLCBNb3VudCBGYXJtLCBNaWx0b24gS2V5bmVzLCBNSzEg
+MVBULCBVSw0KUmVnaXN0cmF0aW9uIE5vOiAxMzk3Mzg2IChXYWxlcykNCg==
 
