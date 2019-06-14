@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D99EC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:34:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE93C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053D72084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:34:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81CF3217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:34:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544441;
-	bh=Jl/icSq6EgH6FTOGUwUGr0Svl6GWfARq4DweNZ5FRnE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=hIMhJYzVKLAAKoI6OqfSvEV++3ERDTBHv7X33h6yv9CGH3a1MAbk1QqWW8qpLVv0m
-	 eRzbnVwXFSIfqC60x9D7I/xY3BxT45L9hM7TS0bMMFelVdPS9yuZzFnQJGR+LrAp84
-	 dRW6FpD91L4HjMqCd47TLPftQvC54f8Bp8q/9WqY=
+	s=default; t=1560544449;
+	bh=wHQygft2TNFInXq04dYWyFzwWkopCKUSminWUMtUtts=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=JWa0i6v3lLDJRFDmB/0k/Epsw2XxXraVfi6MAQRTEEiliun0V2Ye4BLHt6PC5yFk1
+	 2Lq+H/VZsSgv/ytcNiYyg8bt+0PjvhRhzZ+4HNvkHWmKj8weuqDX4tPFxP8TksSE+3
+	 bhdOgsA1lfbMgFafem2hEaoreErXzHWXJfcbRdxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727564AbfFNUaY (ORCPT
+        id S1726857AbfFNUeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53166 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:34:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727490AbfFNUaU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:20 -0400
+        id S1727532AbfFNUaW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:30:22 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B17E21841;
-        Fri, 14 Jun 2019 20:30:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5BA82184C;
+        Fri, 14 Jun 2019 20:30:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544219;
-        bh=Jl/icSq6EgH6FTOGUwUGr0Svl6GWfARq4DweNZ5FRnE=;
-        h=From:To:Cc:Subject:Date:From;
-        b=ZP/GL9FUjlN/znXdnL4rd/o80dAGnKwfLfQWyOvsffV4nf/YHvSBkjAkf88omu2YQ
-         rD1WdTCLlO2ioZkq4fIQZJFmyJ8EmYb3CLp3Psf815JiRQnzX5jJhnEJbCUA7NNi4r
-         2Wu2V5AloDVhtZW8WtNvS9JwYRYYqxXcqu8deOAc=
+        s=default; t=1560544221;
+        bh=wHQygft2TNFInXq04dYWyFzwWkopCKUSminWUMtUtts=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hmikdLgplz2OrNyh9wOTxLLF2kIZhxm4agn7fcZnSQI3lVSryoveAmvkjPYRz/xhB
+         6+g3kbRF8qzrsrp/PIDE/agdoNXM0qtpX/280JcmCgi/bc1f9FQSleXyl7emSoLK/2
+         g9fxgtg19BBDyI9eTFn7UHJqEvUiZ6aIk0+Kb+Yg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        Sasha Levin <sashal@kernel.org>,
-        linux-snps-arc@lists.infradead.org
-Subject: [PATCH AUTOSEL 4.14 01/27] ARC: fix build warnings
-Date:   Fri, 14 Jun 2019 16:29:50 -0400
-Message-Id: <20190614203018.27686-1-sashal@kernel.org>
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Kaike Wan <kaike.wan@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 06/27] IB/rdmavt: Fix alloc_qpn() WARN_ON()
+Date:   Fri, 14 Jun 2019 16:29:55 -0400
+Message-Id: <20190614203018.27686-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190614203018.27686-1-sashal@kernel.org>
+References: <20190614203018.27686-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -57,98 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vineet Gupta <vgupta@synopsys.com>
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 89c92142f75eb80064f5b9f1111484b1b4d81790 ]
+[ Upstream commit 2abae62a26a265129b364d8c1ef3be55e2c01309 ]
 
-| arch/arc/mm/tlb.c:914:2: warning: variable length array 'pd0' is used [-Wvla]
-| arch/arc/include/asm/cmpxchg.h:95:29: warning: value computed is not used [-Wunused-value]
+The qpn allocation logic has a WARN_ON() that intends to detect the use of
+an index that will introduce bits in the lower order bits of the QOS bits
+in the QPN.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Unfortunately, it has the following bugs:
+- it misfires when wrapping QPN allocation for non-QOS
+- it doesn't correctly detect low order QOS bits (despite the comment)
+
+The WARN_ON() should not be applied to non-QOS (qos_shift == 1).
+
+Additionally, it SHOULD test the qpn bits per the table below:
+
+2 data VLs:   [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0,   0,   0, sc0],  qp bit 1 always 0*
+3-4 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0,   0, sc1, sc0], qp bits [21] always 0
+5-8 data VLs: [qp7, qp6, qp5, qp4, qp3, qp2, qp1] ^
+              [  0,   0,   0,   0, sc2, sc1, sc0] qp bits [321] always 0
+
+Fix by qualifying the warning for qos_shift > 1 and producing the correct
+mask to insure the above bits are zero without generating a superfluous
+warning.
+
+Fixes: 501edc42446e ("IB/rdmavt: Correct warning during QPN allocation")
+Reviewed-by: Kaike Wan <kaike.wan@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arc/include/asm/cmpxchg.h | 14 ++++++++++----
- arch/arc/mm/tlb.c              | 13 ++++++++-----
- 2 files changed, 18 insertions(+), 9 deletions(-)
+ drivers/infiniband/sw/rdmavt/qp.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
-index d819de1c5d10..3ea4112c8302 100644
---- a/arch/arc/include/asm/cmpxchg.h
-+++ b/arch/arc/include/asm/cmpxchg.h
-@@ -92,8 +92,11 @@ __cmpxchg(volatile void *ptr, unsigned long expected, unsigned long new)
- 
- #endif /* CONFIG_ARC_HAS_LLSC */
- 
--#define cmpxchg(ptr, o, n) ((typeof(*(ptr)))__cmpxchg((ptr), \
--				(unsigned long)(o), (unsigned long)(n)))
-+#define cmpxchg(ptr, o, n) ({				\
-+	(typeof(*(ptr)))__cmpxchg((ptr),		\
-+				  (unsigned long)(o),	\
-+				  (unsigned long)(n));	\
-+})
- 
- /*
-  * atomic_cmpxchg is same as cmpxchg
-@@ -198,8 +201,11 @@ static inline unsigned long __xchg(unsigned long val, volatile void *ptr,
- 	return __xchg_bad_pointer();
- }
- 
--#define xchg(ptr, with) ((typeof(*(ptr)))__xchg((unsigned long)(with), (ptr), \
--						 sizeof(*(ptr))))
-+#define xchg(ptr, with) ({				\
-+	(typeof(*(ptr)))__xchg((unsigned long)(with),	\
-+			       (ptr),			\
-+			       sizeof(*(ptr)));		\
-+})
- 
- #endif /* CONFIG_ARC_PLAT_EZNPS */
- 
-diff --git a/arch/arc/mm/tlb.c b/arch/arc/mm/tlb.c
-index 8ceefbf72fb0..e5817b9b2c3f 100644
---- a/arch/arc/mm/tlb.c
-+++ b/arch/arc/mm/tlb.c
-@@ -902,9 +902,11 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 			  struct pt_regs *regs)
- {
- 	struct cpuinfo_arc_mmu *mmu = &cpuinfo_arc700[smp_processor_id()].mmu;
--	unsigned int pd0[mmu->ways];
- 	unsigned long flags;
--	int set;
-+	int set, n_ways = mmu->ways;
-+
-+	n_ways = min(n_ways, 4);
-+	BUG_ON(mmu->ways > 4);
- 
- 	local_irq_save(flags);
- 
-@@ -912,9 +914,10 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 	for (set = 0; set < mmu->sets; set++) {
- 
- 		int is_valid, way;
-+		unsigned int pd0[4];
- 
- 		/* read out all the ways of current set */
--		for (way = 0, is_valid = 0; way < mmu->ways; way++) {
-+		for (way = 0, is_valid = 0; way < n_ways; way++) {
- 			write_aux_reg(ARC_REG_TLBINDEX,
- 					  SET_WAY_TO_IDX(mmu, set, way));
- 			write_aux_reg(ARC_REG_TLBCOMMAND, TLBRead);
-@@ -928,14 +931,14 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
- 			continue;
- 
- 		/* Scan the set for duplicate ways: needs a nested loop */
--		for (way = 0; way < mmu->ways - 1; way++) {
-+		for (way = 0; way < n_ways - 1; way++) {
- 
- 			int n;
- 
- 			if (!pd0[way])
- 				continue;
- 
--			for (n = way + 1; n < mmu->ways; n++) {
-+			for (n = way + 1; n < n_ways; n++) {
- 				if (pd0[way] != pd0[n])
- 					continue;
+diff --git a/drivers/infiniband/sw/rdmavt/qp.c b/drivers/infiniband/sw/rdmavt/qp.c
+index 22df09ae809e..b0309876f4bb 100644
+--- a/drivers/infiniband/sw/rdmavt/qp.c
++++ b/drivers/infiniband/sw/rdmavt/qp.c
+@@ -412,7 +412,8 @@ static int alloc_qpn(struct rvt_dev_info *rdi, struct rvt_qpn_table *qpt,
+ 			offset = qpt->incr | ((offset & 1) ^ 1);
+ 		}
+ 		/* there can be no set bits in low-order QoS bits */
+-		WARN_ON(offset & (BIT(rdi->dparms.qos_shift) - 1));
++		WARN_ON(rdi->dparms.qos_shift > 1 &&
++			offset & ((BIT(rdi->dparms.qos_shift - 1) - 1) << 1));
+ 		qpn = mk_qpn(qpt, map, offset);
+ 	}
  
 -- 
 2.20.1
