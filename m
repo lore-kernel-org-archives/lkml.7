@@ -2,65 +2,92 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE25FC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE7BBC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80DAD2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:12:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="s1QW40cd"
+	by mail.kernel.org (Postfix) with ESMTP id BD4CC21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:14:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfFNHM5 (ORCPT
+        id S1726351AbfFNHOf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:12:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60754 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725843AbfFNHM4 (ORCPT
+        Fri, 14 Jun 2019 03:14:35 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:56791 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725837AbfFNHOe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:12:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=iTqU4HCutRR3uOJUYQ45ZU7506Sl5CfUv5xpSiuoAIU=; b=s1QW40cdUPPbUO6WyXX5MasT2
-        zpUzI0yFs1dQWyfV9pw8s8UglBzqG+hjlADCXiVES4YrjrDEhXQvqU3LokO6gSsZwbjRHmb+6ZyE1
-        FuDxJYef6OyM+Hxt2LP7pNdGVoMXpMHIdsuXRR2OX42DSoYiurBP9/ocQAMN4Eta7uIzpXrzg9fmp
-        Y6r0Be3/EI5gOKvt4DARL3XPteJl0Va8ohPC+ryF0kMr7AlVaHJTI5rRsCiDRjvakeLyezkJsw8fG
-        3bMGg1n2z31C8vbZYnB2aHllCUjOCFyLrkeM3GqhFS7vfUhCcWJNuI/OTr0WLGQyWdFBmmlWt2b+L
-        5rQEFqwrg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbgOE-0000yO-1z; Fri, 14 Jun 2019 07:12:46 +0000
-Date:   Fri, 14 Jun 2019 00:12:46 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Yangtao Li <tiny.windzz@gmail.com>
-Cc:     joro@8bytes.org, m.szyprowski@samsung.com, kgene@kernel.org,
-        krzk@kernel.org, will.deacon@arm.com, robin.murphy@arm.com,
-        agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
-        heiko@sntech.de, thierry.reding@gmail.com, jonathanh@nvidia.com,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-tegra@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 01/10] iommu/exynos: convert to SPDX license tags
-Message-ID: <20190614071245.GA2950@infradead.org>
-References: <20190613162703.986-1-tiny.windzz@gmail.com>
+        Fri, 14 Jun 2019 03:14:34 -0400
+Received: from [192.168.2.10] ([46.9.252.75])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id bgPshVxU75qKabgPwhKdm7; Fri, 14 Jun 2019 09:14:32 +0200
+Subject: Re: [PATCH 1/9] media: docs: v4l2-controls: fix sentence rendered in
+ a nonsense way
+To:     Luca Ceresoli <luca@lucaceresoli.net>, linux-media@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20190613141826.26775-1-luca@lucaceresoli.net>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <069ac18c-7b9e-652a-1ff8-35fca09e6538@xs4all.nl>
+Date:   Fri, 14 Jun 2019 09:14:28 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613162703.986-1-tiny.windzz@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190613141826.26775-1-luca@lucaceresoli.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfLULx6w3UFhlf3J5JCexhb+m+iklOFzmIMMKYRDvzeNKBekzrOFhmeknJxOTmQMdjN9XXfrlhqBoDBMxyopKvpsduSm8E4ZnhyNOYzfyjOTCLMRf2gbJ
+ nFD/I3Y/uQGHROwU5W1NTsxyx+1m5iOUBgTnOppzJbh1+1gOeOOQg6USO0X3NrS4fTWpZtXCtO9D8675Hs8pBfZegACeBdsm++1XHnLzbsmjbwiIOVaAK/hW
+ vWl2Z6B5IOcq/K3hJbooxYhAHKWQuvMYoypRtPhRRzcU3Z30O0a1bW+zQ/R2mReAwhefEiXp/5f5DiZms7Yidg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thomas Gleixner is doing automated SPDX conversion that directly
-got to Linux at the moment.  I'd avoid doing more manual ones for
-now as it will just create conflicts.
+On 6/13/19 4:18 PM, Luca Ceresoli wrote:
+> This sentence renders as:
+> 
+>> Since such compound controls need to expose more information about
+>> themselves than is possible with ioctls VIDIOC_QUERYCTRL,
+>> VIDIOC_QUERY_EXT_CTRL and VIDIOC_QUERYMENU the VIDIOC_QUERY_EXT_CTRL
+>   ^^^^^^^^^^^^^^^^^^^^^                          ^^^^^^^^^^^^^^^^^^^^^
+>> ioctl was added.
+> 
+> This does not make sense. Fix by providing an explicit link text. This
+> results in:
+> 
+>> Since such compound controls need to expose more information about
+>> themselves than is possible with VIDIOC_QUERYCTRL and VIDIOC_QUERYMENU
+>> the VIDIOC_QUERY_EXT_CTRL ioctl was added.
+> 
+> Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
+> ---
+>  Documentation/media/uapi/v4l/extended-controls.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/media/uapi/v4l/extended-controls.rst b/Documentation/media/uapi/v4l/extended-controls.rst
+> index 24274b398e63..0968aa9cd167 100644
+> --- a/Documentation/media/uapi/v4l/extended-controls.rst
+> +++ b/Documentation/media/uapi/v4l/extended-controls.rst
+> @@ -86,7 +86,7 @@ with compound types should only be used programmatically.
+>  
+>  Since such compound controls need to expose more information about
+>  themselves than is possible with
+> -:ref:`VIDIOC_QUERYCTRL` the
+> +:ref:`VIDIOC_QUERYCTRL and VIDIOC_QUERYMENU <VIDIOC_QUERYCTRL>` the
+
+This should just refer to VIDIOC_QUERYCTRL, not QUERYMENU. So this
+becomes: :ref:`VIDIOC_QUERYCTRL <VIDIOC_QUERYCTRL>`
+
+Regards,
+
+	Hans
+
+>  :ref:`VIDIOC_QUERY_EXT_CTRL <VIDIOC_QUERYCTRL>` ioctl was added. In
+>  particular, this ioctl gives the dimensions of the N-dimensional array
+>  if this control consists of more than one element.
+> 
+
