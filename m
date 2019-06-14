@@ -2,67 +2,92 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EC29C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EACC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:04:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1840F2133D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B71ED2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:04:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jQiHhG3v"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727782AbfFNMEP (ORCPT
+        id S1727805AbfFNMEb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:04:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59730 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727617AbfFNMEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:04:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1A226AD0C;
-        Fri, 14 Jun 2019 12:04:14 +0000 (UTC)
-Subject: Re: [RFC PATCH 09/16] xen/evtchn: support evtchn in xenhost_t
-To:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org,
-        joao.m.martins@oracle.com
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-10-ankur.a.arora@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <c91abc40-03e3-2ebd-a878-b251a97869db@suse.com>
-Date:   Fri, 14 Jun 2019 14:04:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Fri, 14 Jun 2019 08:04:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38700 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727488AbfFNMEb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:04:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=alVHZlU/yeIna7DaDwxabV9QPdfrwUg7lNOiHL0K7hc=; b=jQiHhG3v7EnRCAKQJ2BUOiOxw
+        BldbzF3Z7igBVgDE13rSdJP5Xm+EPAMWgYZ7B948eJIxJR26at4A0gEjvCsyqG4jhIoSTRQTHy66F
+        q1Lp5wYqW5JnFDHmW9wfQvUH2yXpgHlV+3pK6H5xe+rfQxW6fSzVKBMZLKc2ykaJlJ5m30So5TAVR
+        s78XezV2gDn8USUKISzydWIp5yu23olD9M4tPQF/yw8sqkbQFdQ1mcpjttqeXZMNdqQDDP0SMA6ko
+        ZLAb6gdVgKb/pkijrewfJeEBT6079GT5Q4uuE2BiL2XhqJMetnqruL8j2dVPJTtj2Pm4gScClcHcm
+        iDydIt+cQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbkwT-0006qX-QL; Fri, 14 Jun 2019 12:04:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 4BD1920A29B58; Fri, 14 Jun 2019 14:04:24 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 14:04:24 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 51/62] iommu/vt-d: Support MKTME in DMA remapping
+Message-ID: <20190614120424.GJ3436@hirez.programming.kicks-ass.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-52-kirill.shutemov@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509172540.12398-10-ankur.a.arora@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190508144422.13171-52-kirill.shutemov@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.05.19 19:25, Ankur Arora wrote:
-> Largely mechanical patch that adds a new param, xenhost_t * to the
-> evtchn interfaces. The evtchn port instead of being domain unique, is
-> now scoped to xenhost_t.
+On Wed, May 08, 2019 at 05:44:11PM +0300, Kirill A. Shutemov wrote:
+> @@ -603,7 +605,12 @@ static inline void dma_clear_pte(struct dma_pte *pte)
+>  static inline u64 dma_pte_addr(struct dma_pte *pte)
+>  {
+>  #ifdef CONFIG_64BIT
+> -	return pte->val & VTD_PAGE_MASK;
+
+I don't know this code, but going by the below cmpxchg64, this wants to
+be READ_ONCE().
+
+> +	u64 addr = pte->val;
+> +	addr &= VTD_PAGE_MASK;
+> +#ifdef CONFIG_X86_INTEL_MKTME
+> +	addr &= ~mktme_keyid_mask;
+> +#endif
+> +	return addr;
+>  #else
+>  	/* Must have a full atomic 64-bit read */
+>  	return  __cmpxchg64(&pte->val, 0ULL, 0ULL) & VTD_PAGE_MASK;
+> -- 
+> 2.20.1
 > 
-> As part of upcall handling we now look at all the xenhosts and, for
-> evtchn_2l, the xenhost's shared_info and vcpu_info. Other than this
-> event handling is largley unchanged.
-> 
-> Note that the IPI, timer, VIRQ, FUNCTION, PMU etc vectors remain
-> attached to xh_default. Only interdomain evtchns are allowable as
-> xh_remote.
-
-I'd do only the interface changes for now (including evtchn FIFO).
-
-The main difference will be how to call the hypervisor for sending an
-event (either direct or via a passthrough-hypercall).
-
-
-Juergen
