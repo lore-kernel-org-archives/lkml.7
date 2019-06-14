@@ -2,240 +2,158 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 127E3C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:24:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EA9BC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D662E2073F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00CFA2073F
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:24:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726501AbfFNHYU (ORCPT
+        id S1726679AbfFNHYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:24:20 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55561 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726353AbfFNHYU (ORCPT
+        Fri, 14 Jun 2019 03:24:30 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42002 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726596AbfFNHY2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:24:20 -0400
-Received: from dude.hi.pengutronix.de ([2001:67c:670:100:1d::7])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hbgYz-0000qW-RE; Fri, 14 Jun 2019 09:23:53 +0200
-Received: from sha by dude.hi.pengutronix.de with local (Exim 4.92)
-        (envelope-from <sha@pengutronix.de>)
-        id 1hbgYz-0006Np-4e; Fri, 14 Jun 2019 09:23:53 +0200
-From:   Sascha Hauer <s.hauer@pengutronix.de>
-To:     linux-bluetooth@vger.kernel.org
-Cc:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Loic Poulain <loic.poulain@intel.com>, kernel@pengutronix.de,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Subject: [PATCH 3/3] Bluetooth: hci_mrvl: Add serdev support
-Date:   Fri, 14 Jun 2019 09:23:51 +0200
-Message-Id: <20190614072351.17390-4-s.hauer@pengutronix.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614072351.17390-1-s.hauer@pengutronix.de>
-References: <20190614072351.17390-1-s.hauer@pengutronix.de>
+        Fri, 14 Jun 2019 03:24:28 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so1713625otn.9
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 00:24:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5uCR24TBOk3OIH8vvM2+dQIPnKS4Tb63WZTvRttfMKk=;
+        b=S4silnyzcvKLBiyu0lRCyTMQHeBSOHFIxvGFxpdqr4ESQEMn2LVL4EBWZGHwfvPg42
+         lUrSxu7w7uygnK8+3CNyUs7gsv9ILpKC6WAkSL3mSbtKuW86R9VtOA2tUxQ0fFHonQ0O
+         0YppPbCJ/swPQpHMwZfljbOMJMjalqTiSCmrROTrR7Y11zPdgPr1hy7tDoeuUH1NTd//
+         mUxXauwBEdRDB9a9SCJRsi4Aw5OVA3VZfa8JrzMCayLuXelqZZBRGtePlXXAce0Bnxyx
+         s+At8i54mnCVI7b1n6LJBZyvW6g2fAMkFGHSj/Ten4iZJ9ck6ht3nZ5S59t/76otIvRc
+         F2Pg==
+X-Gm-Message-State: APjAAAVJcD7P2FwuCa+5RSNlFsKZvdEZUEIpNL/kYP2qjAw82BovCQyz
+        iEnr3F65EM+B4Fe0AsnyI5PWSovru3EBy+I1Yb4=
+X-Google-Smtp-Source: APXvYqwGu1JHa1iz1amVUHNyIUTMhsCShMGjlKbwTjhPIIIdXS77eBjkBE8e5hTiKBm2eFNCEg8mXQSDdNhqnvlUZ8c=
+X-Received: by 2002:a9d:3b76:: with SMTP id z109mr44758163otb.335.1560497067686;
+ Fri, 14 Jun 2019 00:24:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::7
-X-SA-Exim-Mail-From: sha@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20190613082446.18685-1-hch@lst.de>
+In-Reply-To: <20190613082446.18685-1-hch@lst.de>
+From:   Mathieu Malaterre <malat@debian.org>
+Date:   Fri, 14 Jun 2019 09:24:16 +0200
+Message-ID: <CA+7wUswMtpVCoX0H5eF=GUY8jWDAEWa9Z223tKiKHiL69hhHtQ@mail.gmail.com>
+Subject: Re: [PATCH] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>, aaro.koskinen@iki.fi
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds serdev support to the Marvell hci uart driver. Only basic
-serdev support, none of the fancier features like regulator or enable
-GPIO support is added for now.
+On Thu, Jun 13, 2019 at 10:27 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> With the strict dma mask checking introduced with the switch to
+> the generic DMA direct code common wifi chips on 32-bit powerbooks
+> stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
+> to allow them to reliably allocate dma coherent memory.
+>
+> Fixes: 65a21b71f948 ("powerpc/dma: remove dma_nommu_dma_supported")
+> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/powerpc/include/asm/page.h         | 7 +++++++
+>  arch/powerpc/mm/mem.c                   | 3 ++-
+>  arch/powerpc/platforms/powermac/Kconfig | 1 +
+>  3 files changed, 10 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+> index b8286a2013b4..0d52f57fca04 100644
+> --- a/arch/powerpc/include/asm/page.h
+> +++ b/arch/powerpc/include/asm/page.h
+> @@ -319,6 +319,13 @@ struct vm_area_struct;
+>  #endif /* __ASSEMBLY__ */
+>  #include <asm/slice.h>
+>
+> +/*
+> + * Allow 30-bit DMA for very limited Broadcom wifi chips on many powerbooks.
 
-Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
----
- .../bindings/net/marvell-bluetooth.txt        | 25 +++++++
- drivers/bluetooth/Kconfig                     |  1 +
- drivers/bluetooth/hci_mrvl.c                  | 69 ++++++++++++++++++-
- 3 files changed, 94 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/net/marvell-bluetooth.txt
+nit: would it be possible to mention explicit reference to b43-legacy.
+Using b43 on my macmini g4 never showed those symptoms (using
+5.2.0-rc2+)
 
-diff --git a/Documentation/devicetree/bindings/net/marvell-bluetooth.txt b/Documentation/devicetree/bindings/net/marvell-bluetooth.txt
-new file mode 100644
-index 000000000000..0e2842296032
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/marvell-bluetooth.txt
-@@ -0,0 +1,25 @@
-+Marvell Bluetooth Chips
-+-----------------------
-+
-+This documents the binding structure and common properties for serial
-+attached Marvell Bluetooth devices. The following chips are included in
-+this binding:
-+
-+* Marvell 88W8897 Bluetooth devices
-+
-+Required properties:
-+ - compatible: should be:
-+    "mrvl,88w8897"
-+
-+Optional properties:
-+None so far
-+
-+Example:
-+
-+&serial0 {
-+	compatible = "ns16550a";
-+	...
-+	bluetooth {
-+		compatible = "mrvl,88w8897";
-+	};
-+};
-diff --git a/drivers/bluetooth/Kconfig b/drivers/bluetooth/Kconfig
-index b9c34ff9a0d3..a3fafd781aa1 100644
---- a/drivers/bluetooth/Kconfig
-+++ b/drivers/bluetooth/Kconfig
-@@ -237,6 +237,7 @@ config BT_HCIUART_AG6XX
- config BT_HCIUART_MRVL
- 	bool "Marvell protocol support"
- 	depends on BT_HCIUART
-+	depends on BT_HCIUART_SERDEV
- 	select BT_HCIUART_H4
- 	help
- 	  Marvell is serial protocol for communication between Bluetooth
-diff --git a/drivers/bluetooth/hci_mrvl.c b/drivers/bluetooth/hci_mrvl.c
-index a0a74362455e..f98e5cc343b2 100644
---- a/drivers/bluetooth/hci_mrvl.c
-+++ b/drivers/bluetooth/hci_mrvl.c
-@@ -13,6 +13,8 @@
- #include <linux/firmware.h>
- #include <linux/module.h>
- #include <linux/tty.h>
-+#include <linux/of.h>
-+#include <linux/serdev.h>
- 
- #include <net/bluetooth/bluetooth.h>
- #include <net/bluetooth/hci_core.h>
-@@ -40,6 +42,10 @@ struct mrvl_data {
- 	u8 id, rev;
- };
- 
-+struct mrvl_serdev {
-+	struct hci_uart hu;
-+};
-+
- struct hci_mrvl_pkt {
- 	__le16 lhs;
- 	__le16 rhs;
-@@ -49,6 +55,7 @@ struct hci_mrvl_pkt {
- static int mrvl_open(struct hci_uart *hu)
- {
- 	struct mrvl_data *mrvl;
-+	int ret;
- 
- 	BT_DBG("hu %p", hu);
- 
-@@ -62,7 +69,18 @@ static int mrvl_open(struct hci_uart *hu)
- 	set_bit(STATE_CHIP_VER_PENDING, &mrvl->flags);
- 
- 	hu->priv = mrvl;
-+
-+	if (hu->serdev) {
-+		ret = serdev_device_open(hu->serdev);
-+		if (ret)
-+			goto err;
-+	}
-+
- 	return 0;
-+err:
-+	kfree(mrvl);
-+
-+	return ret;
- }
- 
- static int mrvl_close(struct hci_uart *hu)
-@@ -71,6 +89,9 @@ static int mrvl_close(struct hci_uart *hu)
- 
- 	BT_DBG("hu %p", hu);
- 
-+	if (hu->serdev)
-+		serdev_device_close(hu->serdev);
-+
- 	skb_queue_purge(&mrvl->txq);
- 	skb_queue_purge(&mrvl->rawq);
- 	kfree_skb(mrvl->rx_skb);
-@@ -342,7 +363,11 @@ static int mrvl_setup(struct hci_uart *hu)
- 	/* Let the final ack go out before switching the baudrate */
- 	hci_uart_wait_until_sent(hu);
- 
--	hci_uart_set_baudrate(hu, 3000000);
-+	if (hu->serdev)
-+		serdev_device_set_baudrate(hu->serdev, 3000000);
-+	else
-+		hci_uart_set_baudrate(hu, 3000000);
-+
- 	hci_uart_set_flow_control(hu, false);
- 
- 	err = mrvl_load_firmware(hu->hdev, "mrvl/uart8897_bt.bin");
-@@ -365,12 +390,54 @@ static const struct hci_uart_proto mrvl_proto = {
- 	.dequeue	= mrvl_dequeue,
- };
- 
-+static int mrvl_serdev_probe(struct serdev_device *serdev)
-+{
-+	struct mrvl_serdev *mrvldev;
-+
-+	mrvldev = devm_kzalloc(&serdev->dev, sizeof(*mrvldev), GFP_KERNEL);
-+	if (!mrvldev)
-+		return -ENOMEM;
-+
-+	mrvldev->hu.serdev = serdev;
-+	serdev_device_set_drvdata(serdev, mrvldev);
-+
-+	return hci_uart_register_device(&mrvldev->hu, &mrvl_proto);
-+}
-+
-+static void mrvl_serdev_remove(struct serdev_device *serdev)
-+{
-+	struct mrvl_serdev *mrvldev = serdev_device_get_drvdata(serdev);
-+
-+	hci_uart_unregister_device(&mrvldev->hu);
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id mrvl_bluetooth_of_match[] = {
-+	{ .compatible = "mrvl,88w8897" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, mrvl_bluetooth_of_match);
-+#endif
-+
-+static struct serdev_device_driver mrvl_serdev_driver = {
-+	.probe = mrvl_serdev_probe,
-+	.remove = mrvl_serdev_remove,
-+	.driver = {
-+		.name = "hci_uart_mrvl",
-+		.of_match_table = of_match_ptr(mrvl_bluetooth_of_match),
-+	},
-+};
-+
- int __init mrvl_init(void)
- {
-+	serdev_device_driver_register(&mrvl_serdev_driver);
-+
- 	return hci_uart_register_proto(&mrvl_proto);
- }
- 
- int __exit mrvl_deinit(void)
- {
-+	serdev_device_driver_unregister(&mrvl_serdev_driver);
-+
- 	return hci_uart_unregister_proto(&mrvl_proto);
- }
--- 
-2.20.1
+$ dmesg | grep b43
+[   14.327189] bus: 'pci': add driver b43-pci-bridge
+[   14.345354] bus: 'pci': driver_probe_device: matched device
+0001:10:12.0 with driver b43-pci-bridge
+[   14.380110] bus: 'pci': really_probe: probing driver b43-pci-bridge
+with device 0001:10:12.0
+[   14.440295] b43-pci-bridge 0001:10:12.0: enabling device (0004 -> 0006)
+[   14.637223] b43-pci-bridge 0001:10:12.0: Sonics Silicon Backplane
+found on PCI device 0001:10:12.0
+[   14.644858] driver: 'b43-pci-bridge': driver_bound: bound to device
+'0001:10:12.0'
+[   14.743341] bus: 'pci': really_probe: bound device 0001:10:12.0 to
+driver b43-pci-bridge
+[   18.724343] bus: 'bcma': add driver b43
+[   18.728635] bus: 'ssb': add driver b43
+[   18.734305] bus: 'ssb': driver_probe_device: matched device ssb0:0
+with driver b43
+[   18.743155] bus: 'ssb': really_probe: probing driver b43 with device ssb0:0
+[   18.747782] b43-phy0: Broadcom 4306 WLAN found (core revision 5)
+[   18.767439] b43-phy0: Found PHY: Analog 2, Type 2 (G), Revision 2
+[   18.771759] b43-phy0: Found Radio: Manuf 0x17F, ID 0x2050, Revision
+2, Version 0
+[   18.795467] driver: 'b43': driver_bound: bound to device 'ssb0:0'
+[   18.801533] bus: 'ssb': really_probe: bound device ssb0:0 to driver b43
+[   22.143084] b43-phy0: Loading firmware version 666.2 (2011-02-23 01:15:07)
+[   25.133011] b43 ssb0:0 wlan0: disabling HT as WMM/QoS is not
+supported by the AP
+[   25.140221] b43 ssb0:0 wlan0: disabling VHT as WMM/QoS is not
+supported by the AP
 
+
+> + */
+> +#ifdef CONFIG_PPC32
+> +#define ARCH_ZONE_DMA_BITS 30
+> +#else
+>  #define ARCH_ZONE_DMA_BITS 31
+> +#endif
+>
+>  #endif /* _ASM_POWERPC_PAGE_H */
+> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+> index cba29131bccc..2540d3b2588c 100644
+> --- a/arch/powerpc/mm/mem.c
+> +++ b/arch/powerpc/mm/mem.c
+> @@ -248,7 +248,8 @@ void __init paging_init(void)
+>                (long int)((top_of_ram - total_ram) >> 20));
+>
+>  #ifdef CONFIG_ZONE_DMA
+> -       max_zone_pfns[ZONE_DMA] = min(max_low_pfn, 0x7fffffffUL >> PAGE_SHIFT);
+> +       max_zone_pfns[ZONE_DMA] = min(max_low_pfn,
+> +                       ((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
+>  #endif
+>         max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
+>  #ifdef CONFIG_HIGHMEM
+> diff --git a/arch/powerpc/platforms/powermac/Kconfig b/arch/powerpc/platforms/powermac/Kconfig
+> index f834a19ed772..c02d8c503b29 100644
+> --- a/arch/powerpc/platforms/powermac/Kconfig
+> +++ b/arch/powerpc/platforms/powermac/Kconfig
+> @@ -7,6 +7,7 @@ config PPC_PMAC
+>         select PPC_INDIRECT_PCI if PPC32
+>         select PPC_MPC106 if PPC32
+>         select PPC_NATIVE
+> +       select ZONE_DMA if PPC32
+>         default y
+>
+>  config PPC_PMAC64
+> --
+> 2.20.1
+>
