@@ -2,146 +2,85 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1819BC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64744C31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF1D021473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:34:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CA6621537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 09:34:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kH34VcWN"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="znWyHu/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfFNJeZ (ORCPT
+        id S1727158AbfFNJez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 05:34:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38344 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfFNJeY (ORCPT
+        Fri, 14 Jun 2019 05:34:55 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45796 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726083AbfFNJey (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 05:34:24 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=v8sKDZr9w6cVAjaj6YSpqDHjOecR4ISemYmtJwZe3FY=; b=kH34VcWNT4Cav+GjG7CqlXy44
-        JXzqwvLIwTvMinkAO+TRylimlvR57aQTl6R7J8h2IT4P0MA63u6VdOzQDzCbMD9iu/1rxFj9RKZmb
-        o9u06p8ViQ8gJ5dyh2N4jaMWyIT0MJZGbPd9FIUyjWfyRvtbC+nqGDLMKjoHQoItVNnVNETBg3XHa
-        /EFK8hfeCAK0wqta5ky6wI9fQlG4ZeH6B63bsMuP6+A1WJ3DVQE48CdQv5tm0qSB/i6C7Ev/Yco27
-        JReMy3HKsSnOQ3TVN9wgekm5FU1rDzfRGnsiJhXNfi53fnyqodzPmaUbJT/6qnRMCKPprYWDjQ4GG
-        pfErC0P/Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbib5-00058b-5L; Fri, 14 Jun 2019 09:34:11 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5673620A26CE6; Fri, 14 Jun 2019 11:34:09 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 11:34:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 13/62] x86/mm: Add hooks to allocate and free
- encrypted pages
-Message-ID: <20190614093409.GX3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
+        Fri, 14 Jun 2019 05:34:54 -0400
+Received: by mail-oi1-f195.google.com with SMTP id m206so1458811oib.12
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 02:34:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IAxytmldJ+LQ9oXsinyPkN3ds2MZTOAfP2wyBRBDeRg=;
+        b=znWyHu/m14+5GXaF3gP7yu7SWXJTq+Wsj2nJNhc8A0PpJXKWYMOxGBSzVgS3mNhdto
+         pIVE++2S8C4JJTU4WjXsC1kHn7wjVXe46T1Q6kfftlp7QWt09aT1nNuG2RkrQEB/cwUE
+         BN5szDO+xZfoBJzWbSPWpS/dcQxVeL1F9QpTJSU12unEdVDilC3LI0FWMn5LQa6QoF62
+         IyLlVJD452ywDx+di8zbmOYrjVE0AYWCczQVyNnuNZbTqPg2w1bPhp5TGL+dG3+zm4vh
+         Rnvs6oqsivrAR6bIwx8FKP6rEVsUh+jFuN9GlkQ8Jvs4KmgDFlinHxXOP+H4zL/k15fV
+         XHhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IAxytmldJ+LQ9oXsinyPkN3ds2MZTOAfP2wyBRBDeRg=;
+        b=IFzRHpaILUtGzjJM33wOA5GIHH2S/J5drMg8VQOlW1W9XJq8HIPWcM+Kze/9Wrc8Lx
+         D3MPjUOtb2LqU5UayFQlJ2aSARueofvCdhXrzyaDR+E6mlSBNFL7guO89Wq2Yv5R6DlX
+         M+JoqlbZV6neew10WTwS26zuASJXSvaG5kXZWszdXgY2Zdve9kJ8SjIsZILvaKvh5c8V
+         hxWGpQXpJzd53JAaYII6LxlX5gWh51N+ivW8pJ3dmWJDJdPSpLmz3YGXihSPfRDRSRVM
+         yFBBWTFIUpk0de4iY2KEDR+74OvYAUrAKQIOQv1+dUeSsci/0HzDnFr96NV7iBE9DOiI
+         omtg==
+X-Gm-Message-State: APjAAAXU4Xjk8YwO167sUiNmc6bm6rryaQZ7f+sY1uq/ezV8EKPrAVLJ
+        I9iZU5lUDeLfmnkInTldqosbDk6qGXVSz4o4DvJ+PAqF1+s=
+X-Google-Smtp-Source: APXvYqx0gEvUPXqD1kFmi82P0JHBq+bBkwG2UJTph0n99wSE1/UssVfy4El7T5U0s3E2JMVdYGMfQQOJu9WMwgcxsYc=
+X-Received: by 2002:aca:f513:: with SMTP id t19mr1276030oih.76.1560504894070;
+ Fri, 14 Jun 2019 02:34:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190508144422.13171-14-kirill.shutemov@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190613223408.139221-1-fengc@google.com>
+In-Reply-To: <20190613223408.139221-1-fengc@google.com>
+From:   Sumit Semwal <sumit.semwal@linaro.org>
+Date:   Fri, 14 Jun 2019 15:04:42 +0530
+Message-ID: <CAO_48GF1qzJFHavwt384MBcyyJRrFiZgYj1OHonUWMAcrm6DTw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/3] Improve the dma-buf tracking
+To:     Chenbo Feng <fengc@google.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, May 08, 2019 at 05:43:33PM +0300, Kirill A. Shutemov wrote:
+Hi Chenbo,
 
-> +/* Prepare page to be used for encryption. Called from page allocator. */
-> +void __prep_encrypted_page(struct page *page, int order, int keyid, bool zero)
-> +{
-> +	int i;
-> +
-> +	/*
-> +	 * The hardware/CPU does not enforce coherency between mappings
-> +	 * of the same physical page with different KeyIDs or
-> +	 * encryption keys. We are responsible for cache management.
-> +	 */
+On Fri, 14 Jun 2019 at 04:04, Chenbo Feng <fengc@google.com> wrote:
+>
+> Currently, all dma-bufs share the same anonymous inode. While we can count
+> how many dma-buf fds or mappings a process has, we can't get the size of
+> the backing buffers or tell if two entries point to the same dma-buf. And
+> in debugfs, we can get a per-buffer breakdown of size and reference count,
+> but can't tell which processes are actually holding the references to each
+> buffer.
 
-On alloc we should flush the unencrypted (key=0) range, while on free
-(below) we should flush the encrypted (key!=0) range.
+Thanks for the series; applied to drm-misc-next.
+>
 
-But I seem to have missed where page_address() does the right thing
-here.
-
-> +	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
-> +
-> +	for (i = 0; i < (1 << order); i++) {
-> +		/* All pages coming out of the allocator should have KeyID 0 */
-> +		WARN_ON_ONCE(lookup_page_ext(page)->keyid);
-> +		lookup_page_ext(page)->keyid = keyid;
-> +
-
-So presumably page_address() is affected by this keyid, and the below
-clear_highpage() then accesses the 'right' location?
-
-> +		/* Clear the page after the KeyID is set. */
-> +		if (zero)
-> +			clear_highpage(page);
-> +
-> +		page++;
-> +	}
-> +}
-> +
-> +/*
-> + * Handles freeing of encrypted page.
-> + * Called from page allocator on freeing encrypted page.
-> + */
-> +void free_encrypted_page(struct page *page, int order)
-> +{
-> +	int i;
-> +
-> +	/*
-> +	 * The hardware/CPU does not enforce coherency between mappings
-> +	 * of the same physical page with different KeyIDs or
-> +	 * encryption keys. We are responsible for cache management.
-> +	 */
-
-I still don't like that comment much; yes the hardware doesn't do it,
-and yes we have to do it, but it doesn't explain the actual scheme
-employed to do so.
-
-> +	clflush_cache_range(page_address(page), PAGE_SIZE * (1UL << order));
-> +
-> +	for (i = 0; i < (1 << order); i++) {
-> +		/* Check if the page has reasonable KeyID */
-> +		WARN_ON_ONCE(lookup_page_ext(page)->keyid > mktme_nr_keyids);
-
-It should also check keyid > 0, so maybe:
-
-	(unsigned)(keyid - 1) > keyids-1
-
-instead?
-
-> +		lookup_page_ext(page)->keyid = 0;
-> +		page++;
-> +	}
-> +}
-> -- 
-> 2.20.1
-> 
+Best,
+Sumit.
