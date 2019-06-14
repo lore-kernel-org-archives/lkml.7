@@ -2,116 +2,101 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BB97C468B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BDC7C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EECF21841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D8E21848
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727156AbfFNSAN (ORCPT
+        id S1726814AbfFNSAg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:00:13 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:33010 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726627AbfFNSAN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:00:13 -0400
-Received: from lhreml702-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 93CCD93FF28E5468F8ED;
-        Fri, 14 Jun 2019 19:00:11 +0100 (IST)
-Received: from roberto-HP-EliteDesk-800-G2-DM-65W.huawei.com (10.204.65.154)
- by smtpsuk.huawei.com (10.201.108.43) with Microsoft SMTP Server (TLS) id
- 14.3.408.0; Fri, 14 Jun 2019 19:00:04 +0100
-From:   Roberto Sassu <roberto.sassu@huawei.com>
-To:     <zohar@linux.ibm.com>, <dmitry.kasatkin@huawei.com>,
-        <mjg59@google.com>
-CC:     <linux-integrity@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <silviu.vlasceanu@huawei.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Subject: [PATCH v4 02/14] ima: generalize ima_read_policy()
-Date:   Fri, 14 Jun 2019 19:55:01 +0200
-Message-ID: <20190614175513.27097-3-roberto.sassu@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190614175513.27097-1-roberto.sassu@huawei.com>
-References: <20190614175513.27097-1-roberto.sassu@huawei.com>
+        Fri, 14 Jun 2019 14:00:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50046 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726627AbfFNSAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:00:35 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 304F1307D84B;
+        Fri, 14 Jun 2019 18:00:33 +0000 (UTC)
+Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8302A5DE4E;
+        Fri, 14 Jun 2019 18:00:29 +0000 (UTC)
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: [PATCH v2 1/5] perf/x86: Always store regs->ip in perf_callchain_kernel()
+Date:   Fri, 14 Jun 2019 12:56:40 -0500
+Message-Id: <81b0cdc5aa276dac315a0536df384cc82da86243.1560534694.git.jpoimboe@redhat.com>
+In-Reply-To: <cover.1560534694.git.jpoimboe@redhat.com>
+References: <cover.1560534694.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.204.65.154]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 14 Jun 2019 18:00:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename ima_read_policy() to ima_read_file(), and add file_id as a new
-parameter. If file_id is equal to READING_POLICY, ima_read_file() behavior
-remains unchanged. If file_id will be READING_DIGEST_LIST (not yet
-defined), ima_read_file() will read and parse a digest list from a file
-whose path is written to securityfs.
+From: Song Liu <songliubraving@fb.com>
 
-Signed-off-by: Roberto Sassu <roberto.sassu@huawei.com>
+The stacktrace_map_raw_tp BPF selftest is failing because the RIP saved
+by perf_arch_fetch_caller_regs() isn't getting saved by
+perf_callchain_kernel().
+
+This was broken by the following commit:
+
+  d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+
+With that change, when starting with non-HW regs, the unwinder starts
+with the current stack frame and unwinds until it passes up the frame
+which called perf_arch_fetch_caller_regs().  So regs->ip needs to be
+saved deliberately.
+
+Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- security/integrity/ima/ima_fs.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ arch/x86/events/core.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 2000e8df0301..02980b55a3f1 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -272,7 +272,7 @@ static const struct file_operations ima_ascii_measurements_ops = {
- 	.release = seq_release,
- };
- 
--static ssize_t ima_read_policy(char *path)
-+static ssize_t ima_read_file(char *path, enum kernel_read_file_id file_id)
- {
- 	void *data;
- 	char *datap;
-@@ -285,16 +285,26 @@ static ssize_t ima_read_policy(char *path)
- 	datap = path;
- 	strsep(&datap, "\n");
- 
--	rc = kernel_read_file_from_path(path, &data, &size, 0, READING_POLICY);
-+	rc = kernel_read_file_from_path(path, &data, &size, 0, file_id);
- 	if (rc < 0) {
- 		pr_err("Unable to open file: %s (%d)", path, rc);
- 		return rc;
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index f0e4804515d8..6a7cfcadfc1e 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2328,13 +2328,13 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+ 		return;
  	}
  
- 	datap = data;
--	while (size > 0 && (p = strsep(&datap, "\n"))) {
--		pr_debug("rule: %s\n", p);
--		rc = ima_parse_add_rule(p);
-+	while (size > 0) {
-+		switch (file_id) {
-+		case READING_POLICY:
-+			p = strsep(&datap, "\n");
-+			if (p == NULL)
-+				break;
+-	if (perf_hw_regs(regs)) {
+-		if (perf_callchain_store(entry, regs->ip))
+-			return;
++	if (perf_callchain_store(entry, regs->ip))
++		return;
 +
-+			pr_debug("rule: %s\n", p);
-+			rc = ima_parse_add_rule(p);
-+			break;
-+		default:
-+			break;
-+		}
- 		if (rc < 0)
- 			break;
- 		size -= rc;
-@@ -334,7 +344,7 @@ static ssize_t ima_write_policy(struct file *file, const char __user *buf,
- 		goto out_free;
++	if (perf_hw_regs(regs))
+ 		unwind_start(&state, current, regs, NULL);
+-	} else {
++	else
+ 		unwind_start(&state, current, NULL, (void *)regs->sp);
+-	}
  
- 	if (data[0] == '/') {
--		result = ima_read_policy(data);
-+		result = ima_read_file(data, READING_POLICY);
- 	} else if (ima_appraise & IMA_APPRAISE_POLICY) {
- 		pr_err("signed policy file (specified as an absolute pathname) required\n");
- 		integrity_audit_msg(AUDIT_INTEGRITY_STATUS, NULL, NULL,
+ 	for (; !unwind_done(&state); unwind_next_frame(&state)) {
+ 		addr = unwind_get_return_address(&state);
 -- 
-2.17.1
+2.20.1
 
