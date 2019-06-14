@@ -2,221 +2,101 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 141FDC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70B42C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E84F220866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 427DB20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:25:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qdBwUMao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728818AbfFNOZN (ORCPT
+        id S1728310AbfFNOZg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:25:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37574 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727913AbfFNOZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:25:10 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0C380AD05;
-        Fri, 14 Jun 2019 14:25:09 +0000 (UTC)
-Message-ID: <9ff9f804a2fa3abf1249a358f64c2d39a04c8ed1.camel@suse.de>
-Subject: Re: [PATCH v2] HID: input: fix a4tech horizontal wheel custom usage
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>, wbauer1@a1.net
-Cc:     Jiri Kosina <jikos@kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Date:   Fri, 14 Jun 2019 16:25:07 +0200
-In-Reply-To: <CAO-hwJ+Nm+i+ehGurAxD3EQBX8-TFQ7p4J-1rV55fVA=NazgAw@mail.gmail.com>
-References: <20190611121320.30267-1-nsaenzjulienne@suse.de>
-         <CAO-hwJLAiC1o-kZ5epZHtO2GK+zc5x28pYbZH-XsY4yAuBmHWw@mail.gmail.com>
-         <5346893.KeHrH3GHoD@linux-lf90.site>
-         <CAO-hwJ+Nm+i+ehGurAxD3EQBX8-TFQ7p4J-1rV55fVA=NazgAw@mail.gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-S+XhxQRa2pi0efFdyb2D"
-User-Agent: Evolution 3.32.2 
+        Fri, 14 Jun 2019 10:25:36 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:36790 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728050AbfFNOZf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:25:35 -0400
+Received: by mail-yw1-f67.google.com with SMTP id t126so1179486ywf.3
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 07:25:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=LYUOOkbDEtc/n63J16wUInERrQ528yDBZpQw3peOe88=;
+        b=qdBwUMaogc4xCMq8nYw9mw2BMaMCPofGrk0xtOBNrpZEcRu8ecbbJ2gRK++oUcFy5b
+         zAxEFOZ7dWU6kj3Ouu7nkjWPiydd/HSwZxS/h/cGqhS3MtTsHYGuQN5gngcAEM1zFfvt
+         xVTnTxA9dwYp0gMCXIHvKHhQGaYH1fCGFSdEVNMc3UAteWux7Y/PkW9pDXN3mkdJR8GH
+         jY+2SPuU5r3E46sRf3k2E/ocAcEvf1O3JOtjWHiCG6klFVJTxwIXOLK5Mutg+7UP711J
+         lai7oSTxDPCXXYbW8eLZR97IKWFsrUGD7Tlng14vj4yvsBKs7tyP3PIG9rt3QXh1pSnZ
+         8puw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=LYUOOkbDEtc/n63J16wUInERrQ528yDBZpQw3peOe88=;
+        b=THKQUQq0W8508OjoJVNXrMPQrjJXspW5s5w9S8XIQyGthp1QkmTveNSu9eZSesqv13
+         QWphMowAMJxTHtne1gU6RMCMIUd3s4aqXL4tlmmfw/C6vDwEN0m4jbSwsffIA5g/21LZ
+         IhALkd2NHy38I9rJ3dWyAJxMWNnICQ4S8ucgcnqQjMPRRf1mVcLJhWx3uuxz3V6Opz60
+         bmnVG+oLkmKaV5CnXiIBnO4I99XicYDzbH7BKf791G1/CjJ4ildir4UPRqMXhjm8yLu9
+         ZNTN9j4JFTnzOskk638TAO5AcWtfR9drXnl0plR3ECUSsxCHjoqq3zAt1vS+QNXE6L9+
+         A3ww==
+X-Gm-Message-State: APjAAAXsZKxwNQroOpeHMr9HxVZJFXAhY9Kyd22eHKn5BOro8oSjACW1
+        p5EJgamlyTGnoQkeuWrPzm/lJsFB8wu1tQWtsX+m0A==
+X-Google-Smtp-Source: APXvYqx1FaR3U1ZRHnOIFijrW4O3vjCsEduL+I5+YOFpO4Kz+puzSgk1iHxjH/mPPRVyJyb5GOmSOewLXM7BlC+xBRc=
+X-Received: by 2002:a0d:fbc6:: with SMTP id l189mr34021112ywf.135.1560522334672;
+ Fri, 14 Jun 2019 07:25:34 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190612035715.166676-1-maowenan@huawei.com> <CANn89iJH6ZBH774SNrd2sUd_A5OBniiUVX=HBq6H4PXEW4cjwQ@mail.gmail.com>
+ <6de5d6d8-e481-8235-193e-b12e7f511030@huawei.com> <a674e90e-d06f-cb67-604f-30cb736d7c72@huawei.com>
+ <6aa69ab5-ed81-6a7f-2b2b-214e44ff0ada@gmail.com> <52025f94-04d3-2a44-11cd-7aa66ebc7e27@huawei.com>
+ <CANn89iKzfvZqZRo1pEwqW11DQk1YOPkoAR4tLbjRG9qbKOYEMw@mail.gmail.com> <7d0f5a21-717c-74ee-18ad-fc0432dfbe33@huawei.com>
+In-Reply-To: <7d0f5a21-717c-74ee-18ad-fc0432dfbe33@huawei.com>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Fri, 14 Jun 2019 07:25:23 -0700
+Message-ID: <CANn89iJW0DHBg=RKgdLq1r33THL15UO3c2n4MkR6DdD7-QwP1w@mail.gmail.com>
+Subject: Re: [PATCH net v2] tcp: avoid creating multiple req socks with the
+ same tuples
+To:     maowenan <maowenan@huawei.com>
+Cc:     Eric Dumazet <eric.dumazet@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-S+XhxQRa2pi0efFdyb2D
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, 2019-06-14 at 15:36 +0200, Benjamin Tissoires wrote:
-> Hi Wolfgang,
->=20
-> On Thu, Jun 13, 2019 at 1:49 PM Wolfgang Bauer <wbauer@tmo.at> wrote:
-> > On Tuesday, 11. Juni 2019, 16:42:37 Benjamin Tissoires wrote:
-> > > On Tue, Jun 11, 2019 at 2:13 PM Nicolas Saenz Julienne
-> > >=20
-> > > <nsaenzjulienne@suse.de> wrote:
-> > > > NOTE: I CC'd Wolfgang as he's the one who can test this.
-> > >=20
-> > > I'll wait for Wolfram to confirm that the patch works before pushing =
-then.
-> >=20
-> > My name is Wolfgang, not Wolfram... ;-)
->=20
-> ouch, sorry for that (I am more used to talk to the I2C maintainer appare=
-ntly)
->=20
-> > But never mind.
-> >=20
-> > I tested the patch meanwhile on top of kernel 5.2.rc4, where the mouse =
-wheel
-> > actually worked.
->=20
-> Actually, I am a little bit lost here.
+On Fri, Jun 14, 2019 at 7:04 AM maowenan <maowenan@huawei.com> wrote:
+> I agree that this is a special case.
+> I propose one point about the sequence of synack, if two synack with two different
+> sequence since the time elapse 64ns, this issue disappear.
 >
-> The patch mentions a fix of c01908a14bf73, which is in 5.1 final.
-> So if your mouse works in 5.2.rc4, I am not sure how
-> HID-a4tech-fix-horizontal-scrolling.patch could break it.
->=20
-> Could you be slightly more specific in what "works" and what doesn't?
+> tcp_conn_request->tcp_v4_init_seq->secure_tcp_seq->seq_scale
+> static u32 seq_scale(u32 seq)
+> {
+>         /*
+>          *      As close as possible to RFC 793, which
+>          *      suggests using a 250 kHz clock.
+>          *      Further reading shows this assumes 2 Mb/s networks.
+>          *      For 10 Mb/s Ethernet, a 1 MHz clock is appropriate.
+>          *      For 10 Gb/s Ethernet, a 1 GHz clock should be ok, but
+>          *      we also need to limit the resolution so that the u32 seq
+>          *      overlaps less than one time per MSL (2 minutes).
+>          *      Choosing a clock of 64 ns period is OK. (period of 274 s)
+>          */
+>         return seq + (ktime_get_real_ns() >> 6);
+> }
+>
+> So if the long delay larger than 64ns, the seq is difference.
 
-Hi Benjamin,
+The core issue has nothing to do with syncookies.
 
-First of all here's the descriptor:
-0x05, 0x01, /*  Usage Page (Desktop),               */
-0x09, 0x02, /*  Usage (Mouse),                      */
-0xA1, 0x01, /*  Collection (Application),           */
-0x09, 0x01, /*      Usage (Pointer),                */
-0xA1, 0x00, /*      Collection (Physical),          */
-0x05, 0x09, /*          Usage Page (Button),        */
-0x19, 0x01, /*          Usage Minimum (01h),        */
-0x29, 0x08, /*          Usage Maximum (08h),        */
-0x15, 0x00, /*          Logical Minimum (0),        */
-0x25, 0x01, /*          Logical Maximum (1),        */
-0x75, 0x01, /*          Report Size (1),            */
-0x95, 0x08, /*          Report Count (8),           */
-0x81, 0x02, /*          Input (Variable),           */
-0x05, 0x01, /*          Usage Page (Desktop),       */
-0x09, 0x30, /*          Usage (X),                  */
-0x09, 0x31, /*          Usage (Y),                  */
-0x09, 0x38, /*          Usage (Wheel),              */
-0x09, 0xB8, /*          Usage (B8h),                */
-0x15, 0x81, /*          Logical Minimum (-127),     */
-0x25, 0x7F, /*          Logical Maximum (127),      */
-0x75, 0x08, /*          Report Size (8),            */
-0x95, 0x04, /*          Report Count (4),           */
-0x81, 0x06, /*          Input (Variable, Relative), */
-0xC0,       /*      End Collection,                 */
-0xC0        /*  End Collection
-
-
-Sorry for the confusion, I'll try to explain the situation:
-
-In v5.2-rc4 without "HID-a4tech-fix-horizontal-scrolling.patch" the vertica=
-l
-wheel works out of luck as it's mapped to REL_WHEEL_HIGH_RES, which hid-a4t=
-ech
-ignores and lets hid-input process, the horizontal wheel is broken. On top =
-of
-that Usage(0xB8) is also ignored by both hid-a4tech and hid-input as it isn=
-'t
-mapped to anything.
-
-There are two distinct bugs here:
-  - High resolution wheel processing in hid-a4tech not being implemented,
-    breaking horizontal wheels.
-  - hid-a4tech not taking care of Usage(0xB8) correctly as it depended on i=
-t
-    being mapped to "Rel.Misc". That behaviour changed in v5.1 with "HID:
-    input: add mapping for "Toggle Display" key".
-
-Once high resolution wheel reports are fixed and handled in hid-a4tech's cu=
-stom
-event, the mouse breaks as it's the processing of Usage(0xB8) that triggers=
- the
-input_events, which is being ignored.
-
-You'll probably ask how come we didn't see this when
-"HID-a4tech-fix-horizontal-scrolling.patch" was merged. It's due to the fac=
-t it
-was tested on an older kernel, v5.0.15, that didn't contain "HID: input: ad=
-d
-mapping for "Toggle Display" key"[1].
-
-So that's why I added that specific fix tag. For LTS kernels, it is possibl=
-e
-that "Toggle Display" support was back-ported but not the high resolution
-wheels support.
-
-Hope it made things more clear.
-Regards,
-Nicolas
-
-[1]=20
-https://lkml.kernel.org/lkml/nycvar.YFH.7.76.1906010028440.1962@cbobk.fhfr.=
-pm/T/
-
->=20
-> Do we have the report descriptors available somewhere?
-> And if not, could you run hid-recorder from
-> https://gitlab.freedesktop.org/libevdev/hid-tools and attach the logs
-> when you move the horizontal wheel?
->=20
-> Cheers,
-> Benjamin
->=20
-> > As the patch didn't apply cleanly (it's obviously based upon
-> >=20
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/=
-?id=3Dabf82e8f7e9af40a49e3d905187c662a43c96c8f
-, called
-> > "HID-
-> > a4tech-fix-horizontal-scrolling.patch" below), I added that patch as we=
-ll.
-> >=20
-> > My results:
-> > kernel 5.2.rc4 works
-> > kernel 5.2.rc4 + HID-a4tech-fix-horizontal-scrolling.patch is broken
-> > kernel 5.2.rc4 + HID-a4tech-fix-horizontal-scrolling.patch +
-> > HID-input-fix-a4tech-horizontal-wheel-custom-usage.patch (i.e. this pat=
-ch)
-> > works again
-> >=20
-> > kernel 5.2.rc4 + HID-input-fix-a4tech-horizontal-wheel-custom-usage.pat=
-ch
-> > works as well.
-> >=20
-> > So AFAICT this patch seems to be fine.
-> >=20
-> > For completeness, this is my mouse as listed by lsusb:
-> > Bus 003 Device 002: ID 09da:000a A4Tech Co., Ltd. Optical Mouse Opto 51=
-0D /
-> > OP-620D
-> >=20
-> > Kind Regards,
-> > Wolfgang
-> >=20
-
-
---=-S+XhxQRa2pi0efFdyb2D
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl0DrkMACgkQlfZmHno8
-x/4PhQf/VKl28QsZ28oS87F3O6GGnTvIKyZK37shy8UhJIlnxT5r9PFiyAXcEmVA
-edpL/1GrPjqtIGuw/iOVduGm808eOF7OogQ/gxJUCX3khJeEfViqOsqDmaymxsso
-hySWYmAk4y6jJC6J9Qv9SXsphc+1fDl1EoDkSGcFswgqra9jQAOaCcO5RizhOhRn
-n0EQZbZ1tVY80UE/9oDXXegb313QqV2GmDdHfBD+9waWez1eHssjV2desiF72ykB
-l4/Jyi+VkfqzSJml7+Z/RjPrMbaldEPfFMwVnVZ/4c3dFRXfTrDdJi2zCbmREP7P
-XFYFcMODIFjKEAzp20U7pj/V/EPicQ==
-=X1K+
------END PGP SIGNATURE-----
-
---=-S+XhxQRa2pi0efFdyb2D--
-
+Are you sure you really understand this stack ?
