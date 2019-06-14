@@ -2,107 +2,89 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E915C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB466C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 456FF2084D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544420;
-	bh=z8hc2If14umpMNWoQq+tqOqn1Cwo7yZ54o2Weu9Fmrg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rvZYARG5/gToGYSNvFEX5mpQnIFyXWdCPLQ4Yejs89NX40ODVePX57NZHG/cF07EJ
-	 PfqwhIKaropVZX5xlX0qQMJqkvgk3kfdoofqwm+vV2/AHA7DY+GIzW0bJ8/V/gwO5c
-	 2fzWqfAtAlQg54I1iNwZoqTU5dZnJtVexy/XDmLA=
+	by mail.kernel.org (Postfix) with ESMTP id BF021217F9
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:33:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727623AbfFNUdi (ORCPT
+        id S1728018AbfFNUdm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:33:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53406 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727617AbfFNUa1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:27 -0400
-Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F07A2184C;
-        Fri, 14 Jun 2019 20:30:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544226;
-        bh=z8hc2If14umpMNWoQq+tqOqn1Cwo7yZ54o2Weu9Fmrg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uBGf2Fmx7A0ZzOrZgYlXJvaO6WoeG/2kZgFbeOkUNFxxSGQdD+29oyaLTZqy6zq3k
-         imnXtWsAkU01YHdPeo+/inW+jk013H1Gzlu+vhfuZw3h585XtDMrWfVhEztARxhF2s
-         zVnID3JRNQR/21Tps/nluJ7UN36wOPidbvjdWmdw=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+        Fri, 14 Jun 2019 16:33:42 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:56883 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726501AbfFNUdh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:33:37 -0400
+Received: from localhost (unknown [37.205.120.66])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id B9D67200009;
+        Fri, 14 Jun 2019 20:33:30 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 22:33:27 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Ken Sloat <KSloat@aampglobal.com>
 Cc:     Guenter Roeck <linux@roeck-us.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Sasha Levin <sashal@kernel.org>, linux-xtensa@linux-xtensa.org
-Subject: [PATCH AUTOSEL 4.14 11/27] xtensa: Fix section mismatch between memblock_reserve and mem_reserve
-Date:   Fri, 14 Jun 2019 16:30:00 -0400
-Message-Id: <20190614203018.27686-11-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614203018.27686-1-sashal@kernel.org>
-References: <20190614203018.27686-1-sashal@kernel.org>
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
+ watchdog on system suspend
+Message-ID: <20190614203327.GE3369@piout.net>
+References: <20190614125310.29458-1-ksloat@aampglobal.com>
+ <20190614164609.GA29814@roeck-us.net>
+ <BL0PR07MB4115E99D065FD9BEA4C43BB5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
+ <20190614180826.GD3369@piout.net>
+ <BL0PR07MB4115D5ECDEDCC028197637E5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR07MB4115D5ECDEDCC028197637E5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+On 14/06/2019 18:43:22+0000, Ken Sloat wrote:
+> Well I'm a little confused still because there are two separate comments
+> in these statements. The first within resume implies that the init should
+> be called because we might have lost register values for some reason
+> unexplained.
 
-[ Upstream commit adefd051a6707a6ca0ebad278d3c1c05c960fc3b ]
+The sama5d2 has a suspend mode where power to the core is completely
+cut. Only a few IPs remain powered (in the backup power domain).
+Unfortunately, the watchdog is not in that domain and may lose its
+registers.
 
-Since commit 9012d011660ea5cf2 ("compiler: allow all arches to enable
-CONFIG_OPTIMIZE_INLINING"), xtensa:tinyconfig fails to build with section
-mismatch errors.
+> Then within the init it says that the bootloader might have
+> modified the registers so we should check them and then update it or
+> otherwise disable it. I'm not trying to pick apart the logic or anything, 
+> I'm just readily assuming it is good as it was already reviewed before. 
+> 
 
-WARNING: vmlinux.o(.text.unlikely+0x68): Section mismatch in reference
-	from the function ___pa()
-	to the function .meminit.text:memblock_reserve()
-WARNING: vmlinux.o(.text.unlikely+0x74): Section mismatch in reference
-	from the function mem_reserve()
-	to the function .meminit.text:memblock_reserve()
-FATAL: modpost: Section mismatches detected.
+The bootloaders may have started the watchdog (this makes sense if you
+really care about reliability) and so we need to be careful to keep the
+proper parameters.
 
-This was not seen prior to the above mentioned commit because mem_reserve()
-was always inlined.
+> So without digging into that too much, if we don't know if any of the runtime
+> situations above might have occurred, then isn't it best to leave my patch
+> as is? Yes this has the side effect of resetting the timer count, but if 
+> the init call is needed and we don't have any way to know if any
+> of the situations occurred, then we have no choice right?
+> 
 
-Mark mem_reserve(() as __init_memblock to have it reside in the same
-section as memblock_reserve().
+Until we can differentiate between suspend modes, we have no other
+choice.
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Message-Id: <1559220098-9955-1-git-send-email-linux@roeck-us.net>
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/xtensa/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 08175df7a69e..66eefe1919a4 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -310,7 +310,8 @@ extern char _SecondaryResetVector_text_start;
- extern char _SecondaryResetVector_text_end;
- #endif
- 
--static inline int mem_reserve(unsigned long start, unsigned long end)
-+static inline int __init_memblock mem_reserve(unsigned long start,
-+					      unsigned long end)
- {
- 	return memblock_reserve(start, end - start);
- }
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
