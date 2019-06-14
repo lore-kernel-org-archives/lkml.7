@@ -2,216 +2,110 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE0CC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39169C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAF120851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:32:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF3420851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:32:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728117AbfFNNcZ convert rfc822-to-8bit (ORCPT
+        id S1728156AbfFNNcn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:32:25 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36282 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfFNNcZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:32:25 -0400
-Received: by mail-qt1-f195.google.com with SMTP id p15so2446668qtl.3
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:32:23 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=UqHu6bnL2MykLrciT743QGm25pc9Ou6MAliGiUXxKbk=;
-        b=EQktjEOpD0SSlh9np5/CiSf8Xn4mAspAjQYmrWgszXZ5FYsFb1xagpKFtAycVynBQY
-         LvtsCL5K7M4YpLYtH+b206ERTXh7I19MPswlwUhn21l9JfqvYWAkPUAp6DAXleP2TOyz
-         TIKvVL85fH/IKrOqzwp/62iK4XEL7kqjOVfF4cBNWc8IlDe7ZjgoN/R4yONeuq3KjnD5
-         VoA1hWlHxbapv53O0RGlElMJFWvoadfgcrNKQvAp6C0lKhHyP5UhKyUy02o47S4itd6e
-         18v1/W+U8c1sYTwAf67e44R5qCJ/UGbLQANlw1fqlvRQ6wezxFW5GWBHCrHyFo0XDIPX
-         kPUg==
-X-Gm-Message-State: APjAAAXoKN4axBl/L9StRx6lEL34eWBhF2dWwStslOcU/VVbA2Y0vp76
-        asrhdgGABmGGMne8+yzdhD+EuQEfBlI/RzlCb8lu9A==
-X-Google-Smtp-Source: APXvYqzfzZWNJ4Z55P4qdShbPbeTD5roQrFHTZVzBjWxjfPMfKpdUBZOEJELbB0u6eJLCBM/nhJh8QnhvvE+jFIVAFU=
-X-Received: by 2002:a0c:baa7:: with SMTP id x39mr8406578qvf.100.1560519143506;
- Fri, 14 Jun 2019 06:32:23 -0700 (PDT)
+        Fri, 14 Jun 2019 09:32:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:33830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727729AbfFNNcn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:32:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 625AF367;
+        Fri, 14 Jun 2019 06:32:42 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 460C93F718;
+        Fri, 14 Jun 2019 06:32:41 -0700 (PDT)
+Subject: Re: [RFC PATCH 01/57] drivers: s390/cio: Use driver_for_each_device
+To:     linux-kernel@vger.kernel.org, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com
+Cc:     gregkh@linuxfoundation.org, rafael@kernel.org
+References: <1559577023-558-1-git-send-email-suzuki.poulose@arm.com>
+ <1559577023-558-2-git-send-email-suzuki.poulose@arm.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <2e71f1c3-9654-92a0-64e5-e7a2a1081fbb@arm.com>
+Date:   Fri, 14 Jun 2019 14:32:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAEXycp+Y-x7N_Yr==Xy_CT5K_a1DZYc85w1OUV+cKC5ZN+KB1g@mail.gmail.com>
- <CAEXycpKJvSsyDQjeCC4YqmtN5tpmO15g8D-_3mrunY-NL1w4Qw@mail.gmail.com>
- <1ed66b4e9090b802259aa0fce5da1e22bcaeaafc.camel@suse.de> <65865f56882af2baf8389458c5e6f05096f36818.camel@suse.de>
-In-Reply-To: <65865f56882af2baf8389458c5e6f05096f36818.camel@suse.de>
-From:   Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Date:   Fri, 14 Jun 2019 15:32:11 +0200
-Message-ID: <CAO-hwJ+QfEVAkq9j6CoB9Pr3ooVEHGWNn+STyCd5kYgnuGQDEw@mail.gmail.com>
-Subject: Re: Regression post "HID: core: move Usage Page concatenation to Main item"
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     =?UTF-8?Q?Jean=2DBaptiste_Th=C3=A9ou?= <jb@essential.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <1559577023-558-2-git-send-email-suzuki.poulose@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 2:29 PM Nicolas Saenz Julienne
-<nsaenzjulienne@suse.de> wrote:
->
-> On Fri, 2019-06-14 at 10:52 +0200, Nicolas Saenz Julienne wrote:
-> > On Fri, 2019-06-14 at 09:02 +0900, Jean-Baptiste Théou wrote:
-> > > Sorry - Please find the public link:
-> > >
-> > >
-> >
-> https://android.googlesource.com/platform/cts/+/master/tests/tests/hardware/res/raw/asus_gamepad_register.json
-> > > Best regards
-> > >
-> > > On Fri, Jun 14, 2019 at 9:01 AM Jean-Baptiste Théou <jb@essential.com>
-> > > wrote:
-> > > > Hi,
-> > > >
-> > > > This patch (58e75155009cc800005629955d3482f36a1e0eec) is triggering a
-> > > > regression with the following descriptor (report not working as
-> > > > expected)
-> > > >
-> > > >
-> >
-> https://partner-android.googlesource.com/platform/cts/+/refs/heads/q-fs-release/tests/tests/hardware/res/raw/asus_gamepad_register.json
-> > > > Didn't see anything obviously wrong with this gamepad descriptor, so
-> > > > not sure what's trigger the regression.
-> > > >
-> > > > Thanks a lot
-> > > >
-> > > > Best regards
-> >
-> > Added Benjamin to the mail thread.
-> >
-> > For the record here's the report descritor, I have the feeling the issue is
-> > related to the Usage Page being defined in the middle of the Usage
-> > ennumeration.
-> >
-> > 0x05, 0x01,         /*  Usage Page (Desktop),               */
-> > 0x09, 0x05,         /*  Usage (Gamepad),                    */
-> > 0xA1, 0x01,         /*  Collection (Application),           */
-> > 0x85, 0x01,         /*      Report ID (1),                  */
-> > 0x05, 0x09,         /*      Usage Page (Button),            */
-> > 0x0A, 0x01, 0x00,   /*      Usage (01h),                    */
-> > 0x0A, 0x02, 0x00,   /*      Usage (02h),                    */
-> > 0x0A, 0x04, 0x00,   /*      Usage (04h),                    */
-> > 0x0A, 0x05, 0x00,   /*      Usage (05h),                    */
-> > 0x0A, 0x07, 0x00,   /*      Usage (07h),                    */
-> > 0x0A, 0x08, 0x00,   /*      Usage (08h),                    */
-> > 0x0A, 0x0E, 0x00,   /*      Usage (0Eh),                    */
-> > 0x0A, 0x0F, 0x00,   /*      Usage (0Fh),                    */
-> > 0x0A, 0x0D, 0x00,   /*      Usage (0Dh),                    */
-> > 0x05, 0x0C,         /*      Usage Page (Consumer),          */
-> > 0x0A, 0x24, 0x02,   /*      Usage (AC Back),                */
-> > 0x0A, 0x23, 0x02,   /*      Usage (AC Home),                */
-> > 0x15, 0x00,         /*      Logical Minimum (0),            */
-> > 0x25, 0x01,         /*      Logical Maximum (1),            */
-> > 0x75, 0x01,         /*      Report Size (1),                */
-> > 0x95, 0x0B,         /*      Report Count (11),              */
-> > 0x81, 0x02,         /*      Input (Variable),               */
-> > 0x75, 0x01,         /*      Report Size (1),                */
-> > 0x95, 0x01,         /*      Report Count (1),               */
-> > 0x81, 0x03,         /*      Input (Constant, Variable),     */
-> > 0x05, 0x01,         /*      Usage Page (Desktop),           */
-> > 0x75, 0x04,         /*      Report Size (4),                */
-> > 0x95, 0x01,         /*      Report Count (1),               */
-> > 0x25, 0x07,         /*      Logical Maximum (7),            */
-> > 0x46, 0x3B, 0x01,   /*      Physical Maximum (315),         */
-> > 0x66, 0x14, 0x00,   /*      Unit (Degrees),                 */
-> > 0x09, 0x39,         /*      Usage (Hat Switch),             */
-> > 0x81, 0x42,         /*      Input (Variable, Null State),   */
-> > 0x66, 0x00, 0x00,   /*      Unit,                           */
-> > 0x09, 0x01,         /*      Usage (Pointer),                */
-> > 0xA1, 0x00,         /*      Collection (Physical),          */
-> > 0x09, 0x30,         /*          Usage (X),                  */
-> > 0x09, 0x31,         /*          Usage (Y),                  */
-> > 0x09, 0x32,         /*          Usage (Z),                  */
-> > 0x09, 0x35,         /*          Usage (Rz),                 */
-> > 0x05, 0x02,         /*          Usage Page (Simulation),    */
-> > 0x09, 0xC5,         /*          Usage (C5h),                */
-> > 0x09, 0xC4,         /*          Usage (C4h),                */
-> > 0x15, 0x00,         /*          Logical Minimum (0),        */
-> > 0x26, 0xFF, 0x00,   /*          Logical Maximum (255),      */
-> > 0x35, 0x00,         /*          Physical Minimum (0),       */
-> > 0x46, 0xFF, 0x00,   /*          Physical Maximum (255),     */
-> > 0x75, 0x08,         /*          Report Size (8),            */
-> > 0x95, 0x06,         /*          Report Count (6),           */
-> > 0x81, 0x02,         /*          Input (Variable),           */
->
-> Well as it was stated in 57e75155009 ("HID: core: move Usage Page concatenation
-> to Main item"):
->
-> The spec is not pretty clear as 5.2.2.7 states "Any usage that follows
-> is interpreted as a Usage ID and concatenated with the Usage Page".
-> While 5.2.2.8 states "When the parser encounters a main item it
-> concatenates the last declared Usage Page with a Usage to form a
-> complete usage value." Being somewhat contradictory it was decided to
-> match Window's implementation, which follows 5.2.2.8.
->
-> This breaks the Report above as X, Y, Z and Rz will be concatenanted with the
-> 'Simulation' Usage Page as opposed to the 'Desktop' one.
->
-> Based on the USB IDs can't find much information on this Gamepad, is it a real
-> one? If so I guess the solution would be to fix the report descriptor in a
-> custom driver. Otherwise I'd suggest fixing the descriptors directly on the
-> test suite.
+Heiko, Sebastian, Peter,
 
-And most of all, how does the joypad behave on Windows?
+Please could you review the following patch ?
 
-If no quirks is used in Windows, then maybe wee are not doing the
-right thing, but AFAICT, the patch was added to mimic Windows :/
 
-Cheers,
-Benjamin
+On 03/06/2019 16:49, Suzuki K Poulose wrote:
+> The cio driver use driver_find_device() to find all devices
+> to release them before the driver is unregistered. Instead,
+> it could easily use a lighter driver_for_each_device() helper
+> to iterate over all the devices.
+> 
+> Cc: Sebastian Ott <sebott@linux.ibm.com>
+> Cc: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>   drivers/s390/cio/ccwgroup.c | 18 ++++++++----------
+>   1 file changed, 8 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/s390/cio/ccwgroup.c b/drivers/s390/cio/ccwgroup.c
+> index 4ebf6d4..a006945 100644
+> --- a/drivers/s390/cio/ccwgroup.c
+> +++ b/drivers/s390/cio/ccwgroup.c
+> @@ -581,9 +581,12 @@ int ccwgroup_driver_register(struct ccwgroup_driver *cdriver)
+>   }
+>   EXPORT_SYMBOL(ccwgroup_driver_register);
+>   
+> -static int __ccwgroup_match_all(struct device *dev, void *data)
+> +static int ccwgroup_release_device(struct device *dev, void *unused)
+>   {
+> -	return 1;
+> +	struct ccwgroup_device *gdev = to_ccwgroupdev(dev);
+> +
+> +	ccwgroup_ungroup(gdev);
+> +	return 0;
+>   }
+>   
+>   /**
+> @@ -594,16 +597,11 @@ static int __ccwgroup_match_all(struct device *dev, void *data)
+>    */
+>   void ccwgroup_driver_unregister(struct ccwgroup_driver *cdriver)
+>   {
+> -	struct device *dev;
+> +	int ret;
+>   
+>   	/* We don't want ccwgroup devices to live longer than their driver. */
+> -	while ((dev = driver_find_device(&cdriver->driver, NULL, NULL,
+> -					 __ccwgroup_match_all))) {
+> -		struct ccwgroup_device *gdev = to_ccwgroupdev(dev);
+> -
+> -		ccwgroup_ungroup(gdev);
+> -		put_device(dev);
+> -	}
+> +	ret = driver_for_each_device(&cdriver->driver, NULL, NULL,
+> +				     ccwgroup_release_device);
+>   	driver_unregister(&cdriver->driver);
+>   }
+>   EXPORT_SYMBOL(ccwgroup_driver_unregister);
+> 
 
->
-> Regards,
-> Nicolas
->
-> > 0xC0,               /*      End Collection,                 */
-> > 0x85, 0x02,         /*      Report ID (2),                  */
-> > 0x05, 0x08,         /*      Usage Page (LED),               */
-> > 0x0A, 0x01, 0x00,   /*      Usage (01h),                    */
-> > 0x0A, 0x02, 0x00,   /*      Usage (02h),                    */
-> > 0x0A, 0x03, 0x00,   /*      Usage (03h),                    */
-> > 0x0A, 0x04, 0x00,   /*      Usage (04h),                    */
-> > 0x15, 0x00,         /*      Logical Minimum (0),            */
-> > 0x25, 0x01,         /*      Logical Maximum (1),            */
-> > 0x75, 0x01,         /*      Report Size (1),                */
-> > 0x95, 0x04,         /*      Report Count (4),               */
-> > 0x91, 0x02,         /*      Output (Variable),              */
-> > 0x75, 0x04,         /*      Report Size (4),                */
-> > 0x95, 0x01,         /*      Report Count (1),               */
-> > 0x91, 0x03,         /*      Output (Constant, Variable),    */
-> > 0xC0,               /*  End Collection,                     */
-> > 0x05, 0x0C,         /*  Usage Page (Consumer),              */
-> > 0x09, 0x01,         /*  Usage (Consumer Control),           */
-> > 0xA1, 0x01,         /*  Collection (Application),           */
-> > 0x85, 0x03,         /*      Report ID (3),                  */
-> > 0x05, 0x01,         /*      Usage Page (Desktop),           */
-> > 0x09, 0x06,         /*      Usage (Keyboard),               */
-> > 0xA1, 0x02,         /*      Collection (Logical),           */
-> > 0x05, 0x06,         /*          Usage Page (Device),        */
-> > 0x09, 0x20,         /*          Usage (20h),                */
-> > 0x15, 0x00,         /*          Logical Minimum (0),        */
-> > 0x26, 0xFF, 0x00,   /*          Logical Maximum (255),      */
-> > 0x75, 0x08,         /*          Report Size (8),            */
-> > 0x95, 0x01,         /*          Report Count (1),           */
-> > 0x81, 0x02,         /*          Input (Variable),           */
-> > 0x06, 0xBC, 0xFF,   /*          Usage Page (FFBCh),         */
-> > 0x0A, 0xAD, 0xBD,   /*          Usage (BDADh),              */
-> > 0x75, 0x08,         /*          Report Size (8),            */
-> > 0x95, 0x06,         /*          Report Count (6),           */
-> > 0x81, 0x02,         /*          Input (Variable),           */
-> > 0xC0,               /*      End Collection,                 */
-> > 0xC0                /*  End Collection                      */
-> >
->
+
+Thanks
+Suzuki
