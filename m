@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A453C468B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7E8CC46477
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 529A02168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80CEB21537
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:49:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="owRHpuK6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fFAKLKpe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728590AbfFNNtZ (ORCPT
+        id S1729225AbfFNNtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:49:25 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:53666 "EHLO
+        Fri, 14 Jun 2019 09:49:41 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52676 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728966AbfFNNsc (ORCPT
+        with ESMTP id S1728361AbfFNNsM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:48:32 -0400
+        Fri, 14 Jun 2019 09:48:12 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=yT59YDuDyJ+PxdfRPqwI/alSJ84EPbJSnwgnpwBRCag=; b=owRHpuK6KPpEPbej7i1YhZs6AX
-        wN7yNoV43C+ez1kJ8mjyYksBoNb/QnO43qmDtaoXcejQN8JVymeq+ihqkSdORxH9DTolc8g44wL/n
-        4LSqiLNL1pznmOxp4ws/5vWu11eRtAmNuWXern/02xHfx/UTArA2cLwNsqFsJR3FHm32czvwMjXp2
-        7sGt2jHFZhtBCFB/p80y7vCA6bbzdpMVufvVVb+aSI6J4MNffPlYXrnmf1qIq+XF2XIQg2V9t5O5b
-        b1wpDdk22coEH5ua9xigsjiut+9bxXp+UfE0duTuPjXZxk7HNsybWuKX1NvzSJkdd8inzEtTrVrtu
-        gzlO+vIg==;
+        bh=7ZdZ3kFG7vLtpGzKUifkfy5au7mGeecDZr7pOAa/mbQ=; b=fFAKLKpeX1UXm3FTcf0KpVo86s
+        TAVWErFRg7UqZpj/joIjhsfplRvSdKGAbFeP6PmZqe8B9ErySOXGc93t2ofqJ0PfW5tVLu+2bO7c7
+        tlkcsmUTpcJGdiZudPM+9H/J7qA++YYntqBAP5nQMfi/0VmsaFYiz8iIh+FqmdmOSIDCUkX2AxyUg
+        4+iPQe6FbA5imHkaPuPHdlmpbWkOZY2IPMBFcFQu5749gI0wQ18r1UkUghz38MdwIvcYqglGbv42Q
+        OE9k8pQvOkUoTghcB7fXqj/U8J8TtUon4YKIlHWSSpbaJgmCuw3j4dq3Y7DAL3QyTY+SLK4x/iHsn
+        p71d6N7w==;
 Received: from 213-225-9-13.nat.highway.a1.net ([213.225.9.13] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbmYq-0005Ma-VZ; Fri, 14 Jun 2019 13:48:09 +0000
+        id 1hbmYk-0005GV-78; Fri, 14 Jun 2019 13:48:02 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -56,9 +56,9 @@ Cc:     Intel Linux Wireless <linuxwifi@intel.com>,
         linux-s390@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-mm@kvack.org, iommu@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/16] s390/ism: stop passing bogus gfp flags arguments to dma_alloc_coherent
-Date:   Fri, 14 Jun 2019 15:47:21 +0200
-Message-Id: <20190614134726.3827-12-hch@lst.de>
+Subject: [PATCH 09/16] cnic: stop passing bogus gfp flags arguments to dma_alloc_coherent
+Date:   Fri, 14 Jun 2019 15:47:19 +0200
+Message-Id: <20190614134726.3827-10-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614134726.3827-1-hch@lst.de>
 References: <20190614134726.3827-1-hch@lst.de>
@@ -76,23 +76,31 @@ modifiers of __GFP_NORETRY or __GFP_NOWARN.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/s390/net/ism_drv.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/broadcom/cnic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index 4fc2056bd227..4ff5506fa4c6 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -241,7 +241,8 @@ static int ism_alloc_dmb(struct ism_dev *ism, struct smcd_dmb *dmb)
+diff --git a/drivers/net/ethernet/broadcom/cnic.c b/drivers/net/ethernet/broadcom/cnic.c
+index 57dc3cbff36e..bd1c993680e5 100644
+--- a/drivers/net/ethernet/broadcom/cnic.c
++++ b/drivers/net/ethernet/broadcom/cnic.c
+@@ -1028,7 +1028,7 @@ static int __cnic_alloc_uio_rings(struct cnic_uio_dev *udev, int pages)
+ 	udev->l2_ring_size = pages * CNIC_PAGE_SIZE;
+ 	udev->l2_ring = dma_alloc_coherent(&udev->pdev->dev, udev->l2_ring_size,
+ 					   &udev->l2_ring_map,
+-					   GFP_KERNEL | __GFP_COMP);
++					   GFP_KERNEL);
+ 	if (!udev->l2_ring)
+ 		return -ENOMEM;
  
- 	dmb->cpu_addr = dma_alloc_coherent(&ism->pdev->dev, dmb->dmb_len,
- 					   &dmb->dma_addr,
--					   GFP_KERNEL | __GFP_NOWARN | __GFP_NOMEMALLOC | __GFP_COMP | __GFP_NORETRY);
-+					   GFP_KERNEL | __GFP_NOWARN |
-+					   __GFP_NORETRY);
- 	if (!dmb->cpu_addr)
- 		clear_bit(dmb->sba_idx, ism->sba_bitmap);
- 
+@@ -1036,7 +1036,7 @@ static int __cnic_alloc_uio_rings(struct cnic_uio_dev *udev, int pages)
+ 	udev->l2_buf_size = CNIC_PAGE_ALIGN(udev->l2_buf_size);
+ 	udev->l2_buf = dma_alloc_coherent(&udev->pdev->dev, udev->l2_buf_size,
+ 					  &udev->l2_buf_map,
+-					  GFP_KERNEL | __GFP_COMP);
++					  GFP_KERNEL);
+ 	if (!udev->l2_buf) {
+ 		__cnic_free_uio_rings(udev);
+ 		return -ENOMEM;
 -- 
 2.20.1
 
