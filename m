@@ -2,102 +2,145 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-21.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EC2C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:13:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AEBC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:16:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EF9E2177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:13:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69F762177E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:16:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="F/ZB6ORa"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LCEDsL+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726213AbfFNSNP (ORCPT
+        id S1725993AbfFNSQP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:13:15 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40159 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725814AbfFNSNP (ORCPT
+        Fri, 14 Jun 2019 14:16:15 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:40891 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfFNSQP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:13:15 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so1910972pfp.7
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 11:13:14 -0700 (PDT)
+        Fri, 14 Jun 2019 14:16:15 -0400
+Received: by mail-pf1-f201.google.com with SMTP id z1so2336848pfb.7
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 11:16:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:to:from:subject:cc:user-agent:date;
-        bh=ZLVDWUWwWY4MpQ/fxABhQErt5/T/sQKzxrLl0+83gd0=;
-        b=F/ZB6ORavFWyfK9TSla7/HqOfq2c2l0pz5qJuy3jEPcr17gJLZgyiFcEiReWczZ4bi
-         f9ONz8SUO9N76h1XRciw/qHw+mWnSHHTiG9dg/RyWE2MMARvWcv+Dn6aEfA+HuZpomSK
-         p3L4+/pudF2hA5CGZXA3FcqShuGYAY3jI5KKE=
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=b6DNMW7ju1QuwEJuOCkPftjguZ67YDFfeRj9euEw5FE=;
+        b=LCEDsL+9tDZLeLXZyYDgO0JsGOheHPdb/buNpwapdVddiULtuK0nXPOeoapk2O9gkc
+         G0sDsCwj2k2OI6hJF2dsHVyqSlb+jA7LDSKjohVLMRozw/am+gzYMKgWhRwjaAcSyuXD
+         YvkOvIbImpSyMq8RncfaghH5wqZXyRXGFy/x+yNoyZn1LQpPKpJTiwj5Xao/bp/9zD09
+         2eywAq5r+jzWCNtCvjJRL7Us7KLhM4xuxerC5FNdyLQn37DSgJpQnvFtN3oWsBzhoFKi
+         6n2bBQWsr+TGzssntlByzgT0PmsmiPKd/8gmgUeNabokjzvgrlRy/xGBrgHSTbu3TzqI
+         1C5g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:to:from:subject:cc
-         :user-agent:date;
-        bh=ZLVDWUWwWY4MpQ/fxABhQErt5/T/sQKzxrLl0+83gd0=;
-        b=IKgQUm6xvalwUSFC2NfyY5uX8Otb45TtFnbqe5Pb3H//cQs+ONJLXWFZkC49O6qQnL
-         zuMqQhwhZnaEWcyv7+N7Sozo8rye3tYq3y91L17TgSEuyvLIL2F35N27e8ltK9lyizWJ
-         sirnNMGHZ/u2U5N4dQnLSJt7ny/gd+RIw2me1kcJb93gw7rnjnNXwYzk6K8HYP29qrQL
-         1LPIgPYoZ/fdc0+/0ytxGD5tAQicuR07v4NxvJKAWgdyGa2rHXZf05mp04XzwONZ9HvE
-         l/judbYbtGlQsDTbxg70YhDgAY9lFj3QfO+s0wTZWFR42kyJOzWjcIwdIw+PlxILTVO1
-         4+vQ==
-X-Gm-Message-State: APjAAAXXCsMhvMvcCvAcZNhTua0tJXb8aOMOZK0YdTVqn0+DAIVCgCmx
-        IRwRyPJWybhADXheCV9LAbCOtQ==
-X-Google-Smtp-Source: APXvYqwhGwL7yshptV+gRwCd63XpWKvE0KUQQrTCSKiIt6r0u4yc69kfnzZn5k0V6NZrfaFRfW4W1Q==
-X-Received: by 2002:a63:e44c:: with SMTP id i12mr11731959pgk.297.1560535994544;
-        Fri, 14 Jun 2019 11:13:14 -0700 (PDT)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id e22sm3590678pgb.9.2019.06.14.11.13.13
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 11:13:14 -0700 (PDT)
-Message-ID: <5d03e3ba.1c69fb81.9c2c8.aa89@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190614152700.GE11241@linux.intel.com>
-References: <20190613180931.65445-1-swboyd@chromium.org> <20190613180931.65445-2-swboyd@chromium.org> <20190614152700.GE11241@linux.intel.com>
-To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-From:   Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 1/8] tpm: block messages while suspended
-Cc:     Peter Huewe <peterhuewe@gmx.de>,
-        Andrey Pronin <apronin@chromium.org>,
-        linux-kernel@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
-        Duncan Laurie <dlaurie@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>
-User-Agent: alot/0.8.1
-Date:   Fri, 14 Jun 2019 11:13:13 -0700
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=b6DNMW7ju1QuwEJuOCkPftjguZ67YDFfeRj9euEw5FE=;
+        b=ZjwsKh742bEZjezPpxb7EeYZBt15wjefXZLC9wfW4FvSrRpzilom62He/SSCwJs1oH
+         Si/sWqvShA4ha5r8LK1wcBpztdDiA1HKE9wmIPNZ2dc9vdk5JkT16YUeMseKyjOwMjDr
+         Bvwn+a+jmocouUxhWBP/TKRCtwy8fF0akZBSUoSSEXhyrm1jl07Ap/xL/Epj829DzQjX
+         HQ0f2+MUXgFSJ5prIZBFPFTaLV4UTdB6JqqwRX7DRowBwqsCmu1iDGpqTDGFquAxIPt1
+         04ExEwJmo3nMj2y0wZ0kWj1dRf2BuPSkefXmz0Ryrs3J+d0BmRwUG6NJzVjmIQbi1UfW
+         DYVw==
+X-Gm-Message-State: APjAAAViNgwTPZkOAZ0UuyQv78CkmMlsZxPxutKuj+1B18pso6PZfUQR
+        o/Sq+DiquqCzH4k0BUndb+PyPdXYzQ==
+X-Google-Smtp-Source: APXvYqz+I33l4X0PevCoKdBcBkV/EBnsh8yHM+WYyAtKrJaIyDH6vB/8SfzS97i5346++HiloYuetB88QQ==
+X-Received: by 2002:a63:d512:: with SMTP id c18mr15175899pgg.239.1560536174587;
+ Fri, 14 Jun 2019 11:16:14 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 11:16:04 -0700
+Message-Id: <20190614181604.112297-1-nhuck@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH] timer_list: Fix Wunused-const-variable
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     john.stultz@linaro.org, tglx@linutronix.de, sboyd@kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Jarkko Sakkinen (2019-06-14 08:27:00)
-> On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
-> > diff --git a/include/linux/tpm.h b/include/linux/tpm.h
-> > index 1b5436b213a2..48df005228d0 100644
-> > --- a/include/linux/tpm.h
-> > +++ b/include/linux/tpm.h
-> > @@ -132,6 +132,8 @@ struct tpm_chip {
-> >       int dev_num;            /* /dev/tpm# */
-> >       unsigned long is_open;  /* only one allowed */
-> > =20
-> > +     unsigned long is_suspended;
-> > +
-> >       char hwrng_name[64];
-> >       struct hwrng hwrng;
->=20
-> I think it would better idea to have a bitmask of some sort that
-> would have bits for 'open' and 'suspended'.
->=20
+Clang produced the following warning when using allnoconfig
 
-Sure. I can combine is_open and is_suspended into some sort of 'unsigned
-long flags' member and then have #define TPM_IS_OPEN 0 and #define
-TPM_IS_SUSPENDED 1 defines?
+kernel/time/timer_list.c:361:36: warning: unused variable
+'timer_list_sops' [-Wunused-const-variable]
+   static const struct seq_operations timer_list_sops = {
+
+Code reliant on CONFIG_PROC_FS is not in ifdef guard.
+Created ifdef guard around proc_fs specific code.
+
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/534
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+---
+ kernel/time/timer_list.c | 36 +++++++++++++++++++-----------------
+ 1 file changed, 19 insertions(+), 17 deletions(-)
+
+diff --git a/kernel/time/timer_list.c b/kernel/time/timer_list.c
+index 98ba50dcb1b2..acb326f5f50a 100644
+--- a/kernel/time/timer_list.c
++++ b/kernel/time/timer_list.c
+@@ -282,23 +282,6 @@ static inline void timer_list_header(struct seq_file *m, u64 now)
+ 	SEQ_printf(m, "\n");
+ }
+ 
+-static int timer_list_show(struct seq_file *m, void *v)
+-{
+-	struct timer_list_iter *iter = v;
+-
+-	if (iter->cpu == -1 && !iter->second_pass)
+-		timer_list_header(m, iter->now);
+-	else if (!iter->second_pass)
+-		print_cpu(m, iter->cpu, iter->now);
+-#ifdef CONFIG_GENERIC_CLOCKEVENTS
+-	else if (iter->cpu == -1 && iter->second_pass)
+-		timer_list_show_tickdevices_header(m);
+-	else
+-		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
+-#endif
+-	return 0;
+-}
+-
+ void sysrq_timer_list_show(void)
+ {
+ 	u64 now = ktime_to_ns(ktime_get());
+@@ -317,6 +300,24 @@ void sysrq_timer_list_show(void)
+ 	return;
+ }
+ 
++#ifdef CONFIG_PROC_FS
++static int timer_list_show(struct seq_file *m, void *v)
++{
++	struct timer_list_iter *iter = v;
++
++	if (iter->cpu == -1 && !iter->second_pass)
++		timer_list_header(m, iter->now);
++	else if (!iter->second_pass)
++		print_cpu(m, iter->cpu, iter->now);
++#ifdef CONFIG_GENERIC_CLOCKEVENTS
++	else if (iter->cpu == -1 && iter->second_pass)
++		timer_list_show_tickdevices_header(m);
++	else
++		print_tickdevice(m, tick_get_device(iter->cpu), iter->cpu);
++#endif
++	return 0;
++}
++
+ static void *move_iter(struct timer_list_iter *iter, loff_t offset)
+ {
+ 	for (; offset; offset--) {
+@@ -376,3 +377,4 @@ static int __init init_timer_list_procfs(void)
+ 	return 0;
+ }
+ __initcall(init_timer_list_procfs);
++#endif
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
