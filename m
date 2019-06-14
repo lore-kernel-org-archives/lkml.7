@@ -2,99 +2,107 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAA14C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9662EC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CA2C2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:41:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E49C2084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=etsukata-com.20150623.gappssmtp.com header.i=@etsukata-com.20150623.gappssmtp.com header.b="0TtnhhOc"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="enxNyPGf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726047AbfFNHlN (ORCPT
+        id S1726191AbfFNHlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:41:13 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35247 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfFNHlM (ORCPT
+        Fri, 14 Jun 2019 03:41:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42040 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725775AbfFNHlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:41:12 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so916851pfd.2
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 00:41:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=etsukata-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=3J9aX54K+uLhfj4AuSsCr3d9oObOMNCMjlw2UizAl94=;
-        b=0TtnhhOcm0GJGXOEwdkAk4uIxFHD8KcKtxfkxymzK7jMusm+7rDSfSpzNKdY2klglp
-         wqiVAxFXbwNcJaOfGdQGK5VDP/4I5r7woQ/KoxEq3SMXKDwOqXrPXF51UWDi75oJ7QxU
-         1feWaB0ayynYlpZ9ZXhNU1xBhC6sl8Og8sLBa4RqIL+KCTJ0LGIonQSfXzDYYWoHKcjF
-         tydlrv5P95Szv+V8GG4QeoEVRrwYohsxkFt7pWT7DRnFtr3msLtCqfAoXUSTd/xjZG1A
-         yxMvEX9B8sgDJsDGontKFGhOr5h2DeS2Qdr7/MtQ756NfQTp44SaoQC2lFmv8HWJth9x
-         jIBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=3J9aX54K+uLhfj4AuSsCr3d9oObOMNCMjlw2UizAl94=;
-        b=NnhW9NgT1Vc/t5dyB3XrknZzFXZbLcDdz5GQKwEFy9DRKjnEP9hC9zC/y6Tu08A2uy
-         cMdm4vM/S0gNyHGyBpPtWH/MgEI3VpRTbWlvFyvjIh+i4VjBOy4kpNb9du3tcgQ6iy7x
-         Z+uuV4nRUe74sc9nJqhxvu0BhsRTVbPcJuFYFT370U0V7S2D/E/dPU29HoTvbS/tXouE
-         FIOmQBjcmAmh+GtRd6OJMx6NH2dlGiwtNcBhnLrksP7nJSQasIArSwjcEoJc1DVD/2Z1
-         gu23IE4KGqk+Sh9dc1otqWVjF3t4+gBRTpnFjAeiSam9FQFq7/eErAXX0dsl7OL07DfI
-         Ty4A==
-X-Gm-Message-State: APjAAAUyhXCxEKMCCMdi0AP4osJND7hIoim2Dj77wzjCync0gdbYDz9m
-        uQtlGgX+G4c6VV7ZkhUwCyVLHg==
-X-Google-Smtp-Source: APXvYqy/hlUI23oUSi/Beu9WGn3OJWqV70szPkyF8Zo11ZQsjAjKtIYF0wJHrYwUi2SNN/lOgER4pg==
-X-Received: by 2002:a17:90a:3ac2:: with SMTP id b60mr9821149pjc.74.1560498072307;
-        Fri, 14 Jun 2019 00:41:12 -0700 (PDT)
-Received: from localhost.localdomain (p1227188-ipngn14401marunouchi.tokyo.ocn.ne.jp. [153.205.136.188])
-        by smtp.gmail.com with ESMTPSA id o13sm3113636pfh.23.2019.06.14.00.41.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 00:41:11 -0700 (PDT)
-From:   Eiichi Tsukata <devel@etsukata.com>
-To:     rostedt@goodmis.org, mingo@redhat.com, srikar@linux.vnet.ibm.com,
-        mhiramat@kernel.org, linux-kernel@vger.kernel.org
-Cc:     Eiichi Tsukata <devel@etsukata.com>
-Subject: [PATCH 2/2] tracing/uprobe: Fix obsolete comment on trace_uprobe_create()
-Date:   Fri, 14 Jun 2019 16:40:26 +0900
-Message-Id: <20190614074026.8045-2-devel@etsukata.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190614074026.8045-1-devel@etsukata.com>
-References: <20190614074026.8045-1-devel@etsukata.com>
+        Fri, 14 Jun 2019 03:41:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=dMa51kg57fAa4NjsSOviOfP9gGy0J52rQSs24i78lqM=; b=enxNyPGfXRJ13CeS7m9p9KG21
+        CAI3rfauRIHJfVS9oNQsEcK5NuzFFZpbXcwFW0dlOpM8YfXXmZUApq3Gnz8Q/oUDAlGcVIvWiMDt5
+        y6DN9xseIb0N3NavBCFfjc/pqRVUw0PSKFS/nO32WgxFy6KJaJku201BKfsVRRGltg2BT65O66e+T
+        XCsaWVePnFoaP1V8qN1ERxmF4DYSW0CZwr3WliQqmLGelLnyXTswdG9chzija+kqid4SrEWBTfIJj
+        EbtEvn3HPHfEjQkn40caRbdi//HC0PTasJfOSHrg45Zy3WRZztaaqcwOM+qF1o0oz+8ra4g80NaBv
+        C83qEkdqQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hbgqA-0005t2-S6; Fri, 14 Jun 2019 07:41:39 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0F21A209C9EB8; Fri, 14 Jun 2019 09:41:37 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 09:41:37 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
+ for generated code
+Message-ID: <20190614074136.GR3436@hirez.programming.kicks-ass.net>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+ <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
+ <20190614013051.6gnwduy4dsygbamj@treble>
+ <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
+ <20190614015848.todgfogryjn573nd@treble>
+ <20190614022848.ly4vlgsz6fa4bcbl@treble>
+ <20190614045037.zinbi2sivthcfrtg@treble>
+ <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0597c49c69d5 ("tracing/uprobes: Use dyn_event framework for
-uprobe events") cleaned up the usage of trace_uprobe_create(), and the
-function has been no longer used for removing uprobe/uretprobe.
+On Thu, Jun 13, 2019 at 11:00:09PM -0700, Alexei Starovoitov wrote:
 
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
----
- kernel/trace/trace_uprobe.c | 2 --
- 1 file changed, 2 deletions(-)
+> There is something wrong with
+> commit d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
 
-diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
-index 7dc8ee55cf84..7860e3f59fad 100644
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -426,8 +426,6 @@ static int register_trace_uprobe(struct trace_uprobe *tu)
- /*
-  * Argument syntax:
-  *  - Add uprobe: p|r[:[GRP/]EVENT] PATH:OFFSET [FETCHARGS]
-- *
-- *  - Remove uprobe: -:[GRP/]EVENT
-  */
- static int trace_uprobe_create(int argc, const char **argv)
- {
--- 
-2.21.0
+It assumes we can always unwind stack, which is, imo, not a weird thing.
 
+> If I simply revert it and have CONFIG_UNWINDER_FRAME_POINTER=y
+> JITed stacks work just fine, because
+> bpf_get_stackid()->get_perf_callchain()
+> need to start unwinding before any bpf stuff.
+
+How does stack unwinding work if we try and unwind from an interrupt
+that hits inside a BPF program? That too needs to work properly.
+
+> After that commit it needs to go through which is a bug on its own.
+> imo patch 1 doesn't really fix that issue.
+
+This we agree on, patch 1 doesn't solve that at all. But we also should
+not loose the initial regs->ip value.
+
+> As far as mangled rbp can we partially undo old
+> commit 177366bf7ceb ("bpf: change x86 JITed program stack layout")
+> that introduced that rbp adjustment.
+
+> Going through bpf code is only interesting in case of panics somewhere
+> in bpf helpers. Back then we didn't even have ksym of jited code.
+
+I disagree here, interrupts/NMIs hitting inside BPF should be able to
+reliably unwind the entire stack. Back then is irrelevant, these days we
+expect a reliable unwind.
+
+> Anyhow I agree that we need to make the jited frame proper,
+> but unwinding need to start before any bpf stuff.
+> That's a bigger issue.
+
+I strongly disagree, we should be able to unwind through bpf.
