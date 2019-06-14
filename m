@@ -2,42 +2,43 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0423C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16086C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:21:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EC822168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E128B21841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560543697;
-	bh=SUff+IuHYY1vqG1JvhChINONwtR73776hlNKIIAyNjU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=YwCK5ctUpinNP+PvErYM7lN0wUqYSNqxt7nVmgA29uRW1XZ2U1HuRG8fC9ZVPy98x
-	 kErsZp3ovfcIlwYxEu/BtWzu+LociXgsdYFaI8TFJIbO9hHe1qYS/0w8AyMkeRxC3N
-	 cc9RRwKE8D4yXfbw6LsXd+Afgo9TC7Ag277XnQ+E=
+	s=default; t=1560543700;
+	bh=7pm8JkCLHqEoLrJYY8z/2/wqC8f2TYEabiJDZrXwd5A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=bp7upT+6BmAP91NHQWYin5wb75iGMLDekfSP0B7fCpaBg7oJP8pXhmUTi7filQ64M
+	 vHCiOchgf0PjSLM6nLEe6dnSQeHhsltT7DpzfavTDk2gFYqecLMCWjZslq+9nQ+HR/
+	 grIia0AOqYlmuGnjGkABpBdRQpRhVoBGPakvLlJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfFNUVg (ORCPT
+        id S1726325AbfFNUVj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:21:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43228 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:21:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725802AbfFNUVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:21:35 -0400
+        id S1726072AbfFNUVg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:21:36 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9C402168B;
-        Fri, 14 Jun 2019 20:21:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 423F62184C;
+        Fri, 14 Jun 2019 20:21:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560543694;
-        bh=SUff+IuHYY1vqG1JvhChINONwtR73776hlNKIIAyNjU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=bj+0zlh6+G7niTDlS56IOmNXnwhNj7nxFjbOH3V5aGw1ydsvaR9GVxSftyGr16TFJ
-         F21V0scYHfySAJsB48nFd+7ZUq48qY/uCGsvR63f6wYPGoQQDqmVBAOcanRxv+EBja
-         l0xHcf/8xjGjKdzwh98N2XLnKqDMiAWyZ4FwPIwQ=
+        s=default; t=1560543695;
+        bh=7pm8JkCLHqEoLrJYY8z/2/wqC8f2TYEabiJDZrXwd5A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y6YMv1qU68gkZugK3Zs30fL635yTULIgOGn84MH449NBFuBJzExPGh9cigrJlIwQE
+         RqIEblW+Qp8qPgGtfhPlQue/kbfpVY8HN5hvdJ7HK5A478nwceV1rCOPn7vzsY3Pue
+         AqL86QycMpZGNo9FD0KrsnwoMHnUw19l6cSBtJtM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
 Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
@@ -45,10 +46,12 @@ Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
         linux-kernel@microsoft.com, thiruan@microsoft.com,
         bryankel@microsoft.com, tee-dev@lists.linaro.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH v5 0/2] fTPM: firmware TPM running in TEE
-Date:   Fri, 14 Jun 2019 16:21:25 -0400
-Message-Id: <20190614202127.26812-1-sashal@kernel.org>
+Subject: [PATCH v5 2/2] fTPM: add documentation for ftpm driver
+Date:   Fri, 14 Jun 2019 16:21:27 -0400
+Message-Id: <20190614202127.26812-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190614202127.26812-1-sashal@kernel.org>
+References: <20190614202127.26812-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -56,25 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes from v4:
+This patch adds basic documentation to describe the new fTPM driver.
 
- - Don't show an error message while waiting for OP-TEE to come up.
-
-Sasha Levin (2):
-  fTPM: firmware TPM running in TEE
-  fTPM: add documentation for ftpm driver
-
- Documentation/security/tpm/index.rst        |   1 +
- Documentation/security/tpm/tpm_ftpm_tee.rst |  31 ++
- drivers/char/tpm/Kconfig                    |   5 +
- drivers/char/tpm/Makefile                   |   1 +
- drivers/char/tpm/tpm_ftpm_tee.c             | 382 ++++++++++++++++++++
- drivers/char/tpm/tpm_ftpm_tee.h             |  40 ++
- 6 files changed, 460 insertions(+)
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ Documentation/security/tpm/index.rst        |  1 +
+ Documentation/security/tpm/tpm_ftpm_tee.rst | 31 +++++++++++++++++++++
+ 2 files changed, 32 insertions(+)
  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
- create mode 100644 drivers/char/tpm/tpm_ftpm_tee.c
- create mode 100644 drivers/char/tpm/tpm_ftpm_tee.h
 
+diff --git a/Documentation/security/tpm/index.rst b/Documentation/security/tpm/index.rst
+index af77a7bbb070..15783668644f 100644
+--- a/Documentation/security/tpm/index.rst
++++ b/Documentation/security/tpm/index.rst
+@@ -4,4 +4,5 @@ Trusted Platform Module documentation
+ 
+ .. toctree::
+ 
++   tpm_ftpm_tee
+    tpm_vtpm_proxy
+diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst b/Documentation/security/tpm/tpm_ftpm_tee.rst
+new file mode 100644
+index 000000000000..29c2f8b5ed10
+--- /dev/null
++++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
+@@ -0,0 +1,31 @@
++=============================================
++Firmware TPM Driver
++=============================================
++
++| Authors:
++| Thirupathaiah Annapureddy <thiruan@microsoft.com>
++| Sasha Levin <sashal@kernel.org>
++
++This document describes the firmware Trusted Platform Module (fTPM)
++device driver.
++
++Introduction
++============
++
++This driver is a shim for a firmware implemented in ARM's TrustZone
++environment. The driver allows programs to interact with the TPM in the same
++way the would interact with a hardware TPM.
++
++Design
++======
++
++The driver acts as a thin layer that passes commands to and from a TPM
++implemented in firmware. The driver itself doesn't contain much logic and is
++used more like a dumb pipe between firmware and kernel/userspace.
++
++The firmware itself is based on the following paper:
++https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/ftpm1.pdf
++
++When the driver is loaded it will expose ``/dev/tpmX`` character devices to
++userspace which will enable userspace to communicate with the firmware tpm
++through this device.
 -- 
 2.20.1
 
