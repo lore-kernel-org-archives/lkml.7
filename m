@@ -4,92 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF5CC31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF84DC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:43:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DA22217D6
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7C36217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:43:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560541386;
-	bh=0w1gnCrakV4CRACAPIYRXptThPrWLIzZAjzzJzc0xSA=;
+	s=default; t=1560541406;
+	bh=7gKmgo1dRjA4yONDe3HR3+7X4u/83d+VuGOw5pQZNh4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ooMTEUE8dU7g7oB5QZEoiKKB945Ap7X2+jYEVzG25ZjPkI1IEW9LenTgesbHn6H/k
-	 MK1Sr+Homs1k0iFQiF78X/ecNOljj19zt/vXCApyxC1FkNFrJV4HkenNHE5NtLUYtj
-	 iRHGImDyqnJJxgvPoBFZlFSb07cy7ZRtgjpQHFP0=
+	b=SnDpRsaHCYiZ2CFlc300W/V8kTlCCeprmqIi1pCT2G1+HrnghCpQWC2y/IHSy9osy
+	 Gad2fzLdLVCEnpLeMVy85a/4ypTNldWwW2xNdOklbccH2IetxzlGjdrJoD86MEiB4f
+	 rT2jcvlJ30DpT0OJuywaYhTELTtc4H+YD1NFu36Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfFNTnF (ORCPT
+        id S1726445AbfFNTnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 15:43:05 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:36124 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFNTnF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 15:43:05 -0400
-Received: by mail-qk1-f193.google.com with SMTP id g18so2457223qkl.3;
-        Fri, 14 Jun 2019 12:43:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mp8xTO5oNN7LboeBKHyfl41RYppmWJR4foCIg2c5W1s=;
-        b=EknriUybNYqed1WZbFQUVevwq9svztvZ5srHJWTyzGaVziLtsMRxKcU3vTz/pjaW3r
-         +35JiogVtbuYw949qB00IoYJTC5u2keANjmtyYjciEFa1k7cEmsAL7PoD/5Q+o5DmQY3
-         niBkCA4DC1LbZLHzKhGmprq2Yf4b/7C1D//B4wqObTcY3fVrsicXTbZy1qqSCVff0ak9
-         mmjFQXkd8ys2tSecgoZ1ZeFTVN2PU8XEUJMofv3v1A9OPd9Mx9/P8FR+nx77UsapKUkk
-         Jxez95537JEhb8QrJu5ylw5OTBrxeidl6XL6++yxIWc1kjEyn1+xuYVtTAxdhczzQ5jB
-         KhRw==
-X-Gm-Message-State: APjAAAUbCJQ8ttv1ejc9tby4u2YEy/7Pf8Jyy41XN7loUdo2gfKtdf7y
-        XZMb4YL75QHUSPzk2uY5ag==
-X-Google-Smtp-Source: APXvYqz0aEx4FDJ3gg/LvUzydLqr7NaukJPecyN5OsnEwsUCU0LY+1pAYvSd5Ebr1tqcYxuiJF4DxA==
-X-Received: by 2002:ae9:c106:: with SMTP id z6mr57253623qki.285.1560541383979;
-        Fri, 14 Jun 2019 12:43:03 -0700 (PDT)
-Received: from localhost ([64.188.179.243])
-        by smtp.gmail.com with ESMTPSA id j141sm2430766qke.28.2019.06.14.12.43.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 12:43:03 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 13:43:02 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Renato Lui Geh <renatogeh@gmail.com>
-Cc:     lars@metafoo.de, Michael.Hennerich@analog.com, jic23@kernel.org,
-        knaack.h@gmx.de, pmeerw@pmeerw.net, gregkh@linuxfoundation.org,
-        stefan.popa@analog.com, alexandru.Ardelean@analog.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml binding
-Message-ID: <20190614194302.GA18613@bogus>
-References: <cover.1558746978.git.renatogeh@gmail.com>
- <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
+        Fri, 14 Jun 2019 15:43:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60546 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbfFNTnY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 15:43:24 -0400
+Received: from localhost (107-207-74-175.lightspeed.austtx.sbcglobal.net [107.207.74.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C48B1217D6;
+        Fri, 14 Jun 2019 19:43:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560541404;
+        bh=7gKmgo1dRjA4yONDe3HR3+7X4u/83d+VuGOw5pQZNh4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Nx3YHCMvLrQ8EeCL7b6r55mXR4P7IXZevBKUROMh95rXS6UY1DZ8FLy1Vd88fYM3m
+         1jMsa1Si3koPI+t9iYqmsXLChMVRR0RV7IE0TaLzO0h0cZGiBV5Opyj0XjszVQqv62
+         Ovs6aoJfrjC36wQUiR4GhiihU0wad+USGgz1Xhvg=
+Date:   Fri, 14 Jun 2019 14:43:22 -0500
+From:   Andy Gross <agross@kernel.org>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     vkoul@kernel.org, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        sricharan@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+Message-ID: <20190614194322.GA4791@hector.attlocal.net>
+References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 24 May 2019 22:26:30 -0300, Renato Lui Geh wrote:
-> This patch adds a YAML binding for the Analog Devices AD7780/1 and
-> AD7170/1 analog-to-digital converters.
+On Fri, Jun 14, 2019 at 03:20:12PM +0100, Srinivas Kandagatla wrote:
+> For some reason arguments to most of the circular buffers
+> macros are used in reverse, tail is used for head and vice versa.
 > 
-> Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-> ---
-> Changes in v2:
->  - vref-supply to avdd-supply
->  - remove avdd-supply from required list
->  - include adc block in an spi block
+> This leads to bam thinking that there is an extra descriptor at the
+> end and leading to retransmitting descriptor which was not scheduled
+> by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
+> and done, so most of the drivers would not notice this, unless they are
+> heavily using bam dma. Originally found this issue while testing
+> SoundWire over SlimBus on DB845c which uses DMA very heavily for
+> read/writes.
 > 
->  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
->  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
->  2 files changed, 87 insertions(+), 48 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Andy Gross <agross@kernel.org>
