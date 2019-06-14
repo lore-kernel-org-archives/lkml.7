@@ -2,163 +2,108 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCDAC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D30C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:51:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 488B62183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFA7A2184D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:51:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="L8D24imo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oyx95PK4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfFNQup (ORCPT
+        id S1726847AbfFNQvM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:50:45 -0400
-Received: from mout.web.de ([212.227.15.4]:37853 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725812AbfFNQum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:50:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1560531029;
-        bh=w21hW0UjOS9V/aSHu9UGGrfjEKoKC+6rxpIW2WiCcE8=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=L8D24imof7Pg+A6Zp3gnrUDv/D+dsDizadCqre3CjgyHmzp7Y6hfFJIiejUA3WNH6
-         iWE3hkiSi4aLnQcxbIBChkFXHtfnQvUkQQk57MXd35hJRfcagxts3sKLdJsda8Zbe5
-         /AuQuw0JsH9EuNilDKBBM/GJOOJFo6zvVydcmDGA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([93.133.126.132]) by smtp.web.de (mrweb002
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MfYTr-1hz7x02zIR-00P9at; Fri, 14
- Jun 2019 18:50:29 +0200
-To:     Bartosz Golaszewski <brgl@bgdev.pl>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Fri, 14 Jun 2019 12:51:12 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36748 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725801AbfFNQvM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:51:12 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so3270604wrs.3;
+        Fri, 14 Jun 2019 09:51:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=3tjYBStu1LjnzhWqBptYBriF+bgQ9rTx2Bw7QcMOvJA=;
+        b=Oyx95PK4KOIjIb7OOTGl9gw2WKLfs7prx2Mt9Qc3ZsXrXp88Smjidi11p3+a2eP3s5
+         mmMXcBgnYcToGArp16I1K6Q3Ern9XTx3lngsnyA24FDdbBmPyNgcJCFHStNYncF8j0hp
+         5ZMYtPY1eBZVVbPPlqLiihYOcPiHmS82z5wrcNUaZHv47z5ViZekPbX/fmBId7cw59yp
+         PLzLgKOJsUuN19TtXDGdCM0ha9or7pgXE1nyvXsPQkqlzfAklUVIhqgrAd0EgocJ2bbl
+         24scSrqUMzrRCXhhH1FAJ5i3CM7bK1Fy43l8dgPedauDGM3l/utGxM9kRejbs/kUzayA
+         uD7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=3tjYBStu1LjnzhWqBptYBriF+bgQ9rTx2Bw7QcMOvJA=;
+        b=PtbvUxyKJw2wd0PMUy5k8dkCz8umf+tQfu2Fq0zYwrDL7LBNeyQ/CeI6H8wV9dsu5/
+         90c10PUauGvHAa41+kxNwfmvf+HUqCJi5R+EGBEC7RaQmyZrhKlkIzxsAjzxyDxGhCHl
+         ECpZm+vdA/WOhgZmLs643JjdWrXBaBSo54FGkBicEd89oF1d4CleSeyl86DT92NKP4tC
+         Abqi/dl96zUnI8tdOiIFPnJjdcrYEPmCXnJGhdKySqie1dRbI5MlKdJapORqK/xJ+bHW
+         fcuA6T5HooyH1pi02LLsUBA3LXbcRS/rz3tRZXc05zlTx1usrVH9LkpDkrU0/kHN2QNZ
+         Xt6A==
+X-Gm-Message-State: APjAAAVheasnVtYVFoSkvljK37TUPrwkBuFFeqSaknG3HWi5HBp4TcYG
+        hGgYYhmduJAgn3fu1g+tlEa2qw3b6aQ=
+X-Google-Smtp-Source: APXvYqytYV+jti5VJHYHLE4IWpeLMPvSQ7veUqlqTSu08+uhs45aFwoeLRGR8rSwd20t6tPCErqesQ==
+X-Received: by 2002:adf:e54b:: with SMTP id z11mr50141374wrm.198.1560531069659;
+        Fri, 14 Jun 2019 09:51:09 -0700 (PDT)
+Received: from smtp.gmail.com (1.77.115.89.rev.vodafone.pt. [89.115.77.1])
+        by smtp.gmail.com with ESMTPSA id o8sm4627462wrj.71.2019.06.14.09.51.07
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 09:51:08 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 13:50:59 -0300
+From:   Melissa Wen <melissa.srw@gmail.com>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Keerthy <j-keerthy@ti.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190221162627.3476-1-brgl@bgdev.pl>
-Subject: [PATCH] drivers: Adjust scope for CONFIG_HAS_IOMEM before
- devm_platform_ioremap_resource()
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <9efcbce2-4d49-7197-a3d8-0e83850892d5@web.de>
-Date:   Fri, 14 Jun 2019 18:50:27 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Barry Song <21cnbao@gmail.com>
+Cc:     linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, kernel-usp@googlegroups.com
+Subject: [PATCH] staging: iio: ad7150: use ternary operating to ensure 0/1
+ value
+Message-ID: <20190614165059.7bifufvhxofy6ybu@smtp.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190221162627.3476-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:CDUmOft4DVOQ0nItkPeEhljEaJ0EnGpyqzjKlXS8EM77gNnsI/N
- W9eGmgc5XNnCFgYf6xHUM4BFKj6uF0bOGGV+9eKa47L2q+ELfnHt4gFZOhwSWebTGnOkz9z
- V3Z4yvxQlPd8gZameHJYgMaqZ9CZzjLI3d5PgtKj24But+cg0vnGMlmz7XlcKgOiyhm8JHu
- YLpKsbZMmzJbW2Q8jqPCA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:W2PfOOkyf+g=:bIszttgVhTZFs9PnMSGGxx
- 3NAzcpzoSUesADLm5fn6Cylx/KvjyMl6sdNctR5Pt7Xz4yd1Za5K66pbt42q6JWtZPNCRA0uQ
- oCyFpEvkEWndM7n0ZwHfXqtwaZL4BFtjDj4tJZjjxjN2wvdAKAOq2As6PAmsEFIdDxt0IDj4W
- S65CoK3IdjeMLQDqdUR53vJf5Ilao/HU6U+IAwVhITxRib7fRpni5OVgCPBps/xpHfFsrFPfo
- dOwwWcK1l8VhRZDu542u9A19iDav4Zanf0e/XXRZfJ9DEadhfy5OVND0Rr5ReUC9CtQsEAnNP
- +cleowHQhnT4LsHrg2l+UzXwEV48pF89tBTRIBTFE+hW7NTUw6ACquOnjtqkzQe+GE2/n1u2g
- xjqXakNo+bNQOnFi7/7qhF5AHcyP8uMI91kKiHqMEC/tFwqMM9vH64CoryMt4vOYMtAYFrgFa
- jaEyl++24NtE+9uruP3okHxCxxblEk2lP8nMJFqhThRXrraBSys+WzSgT0XEuI/elAlkEAyb8
- WoD2DV3vXuSAHlv28ZZSnHSq0O19F6QXwdEs6KxRL/3wwaICzRthzxfi5r3zvWp0/QwlZTjDg
- P0GogRrUl+g2FNRdO+hsZkynasNwi/Ekj56cHkcrrkhcAtkmjDyFEQDyyu8vDtRQE2+XS0aP9
- 9r2khnrwbPVfDSklZ7V96Q+FZgAxGx9lkufVO8fybFutmINCtTbMom14bCn8CycscdWL0EebA
- 6zIh6G4Vx7fu1DIcdxiF75TyB2MvL+WUp7AxG0Ij+ssywXk7H+o12gaubpVeP35mADcTRxkvQ
- uxW/ct/yONbro7Vgg0NMwvMO9w3GkU59LTmQI1ypvH+YDTW443rXyV4XQsOs9mYEWvHRTgoZy
- YZXeIJBuueGxnMFTLoV2/xcxOz0fJlPZ9J6kopJRMmoo+P8td7MtvWOz01n3IOktV0k+fkziQ
- 7c5Jyg5jRS1RFvEXde6jtRK2k0oFSLO1YzaBYfu6C+BBhUfJKdJgx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Fri, 14 Jun 2019 17:45:13 +0200
+Remove idiom and use ternary operator for consistently trigger 0/1 value
+on variable declaration.
 
-Move the preprocessor statement =E2=80=9C#ifdef CONFIG_HAS_IOMEM=E2=80=9D =
-so that
-the corresponding scope for conditional compilation includes also comments
-for this function implementation.
+Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
+---
+ drivers/staging/iio/cdc/ad7150.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- drivers/base/platform.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 4d1729853d1a..a5f40974a6ef 100644
-=2D-- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -78,6 +78,7 @@ struct resource *platform_get_resource(struct platform_d=
-evice *dev,
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(platform_get_resource);
-+#ifdef CONFIG_HAS_IOMEM
-
- /**
-  * devm_platform_ioremap_resource - call devm_ioremap_resource() for a pl=
-atform
-@@ -87,7 +88,6 @@ EXPORT_SYMBOL_GPL(platform_get_resource);
-  *        resource management
-  * @index: resource index
-  */
--#ifdef CONFIG_HAS_IOMEM
- void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev=
-,
- 					     unsigned int index)
- {
-=2D-
-2.22.0
+diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
+index 8234da4b8c65..25598bf124fb 100644
+--- a/drivers/staging/iio/cdc/ad7150.c
++++ b/drivers/staging/iio/cdc/ad7150.c
+@@ -350,8 +350,8 @@ static ssize_t ad7150_show_timeout(struct device *dev,
+ 
+ 	/* use the event code for consistency reasons */
+ 	int chan = IIO_EVENT_CODE_EXTRACT_CHAN(this_attr->address);
+-	int rising = !!(IIO_EVENT_CODE_EXTRACT_DIR(this_attr->address)
+-			== IIO_EV_DIR_RISING);
++	int rising = (IIO_EVENT_CODE_EXTRACT_DIR(this_attr->address)
++		      == IIO_EV_DIR_RISING) ? 1 : 0;
+ 
+ 	switch (IIO_EVENT_CODE_EXTRACT_TYPE(this_attr->address)) {
+ 	case IIO_EV_TYPE_MAG_ADAPTIVE:
+-- 
+2.20.1
 
