@@ -2,109 +2,132 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 106F3C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A595C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C9C20850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C6A520850
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fIxpnoH/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726204AbfFNQLF (ORCPT
+        id S1726255AbfFNQLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:11:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49318 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725868AbfFNQLF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:11:05 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BAE55C057F30;
-        Fri, 14 Jun 2019 16:11:04 +0000 (UTC)
-Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A6595DE00;
-        Fri, 14 Jun 2019 16:11:03 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 11:11:01 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>, X86 ML <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH 2/9] objtool: Fix ORC unwinding in non-JIT BPF generated
- code
-Message-ID: <20190614161101.vobuleyjap777ol5@treble>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <99c22bbd79e72855f4bc9049981602d537a54e70.1560431531.git.jpoimboe@redhat.com>
- <20190613205710.et5fywop4gfalsa6@ast-mbp.dhcp.thefacebook.com>
- <20190614012030.b6eujm7b4psu62kj@treble>
- <20190614070852.GQ3436@hirez.programming.kicks-ass.net>
- <20190614073536.d3xkhwhq3fuivwt5@ast-mbp.dhcp.thefacebook.com>
- <20190614081116.GU3436@hirez.programming.kicks-ass.net>
- <CAADnVQJ_-mFCeWoq-Uz9VRFkb3eLgAK+yC5hG=N7t5riGhmLWg@mail.gmail.com>
+        Fri, 14 Jun 2019 12:11:12 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:15947 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfFNQLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:11:11 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d03c71f0000>; Fri, 14 Jun 2019 09:11:11 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Fri, 14 Jun 2019 09:11:11 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Fri, 14 Jun 2019 09:11:11 -0700
+Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 14 Jun
+ 2019 16:11:08 +0000
+Subject: Re: [PATCH V1 1/2] mailbox: tegra: hsp: add noirq resume
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-kernel@vger.kernel.org>, <linux-tegra@vger.kernel.org>
+References: <1560515734-2085-1-git-send-email-bbiswas@nvidia.com>
+ <20190614155041.GB26922@ulmo>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <ff0b9ae6-c964-4eed-3d06-40a11ec72415@nvidia.com>
+Date:   Fri, 14 Jun 2019 09:11:06 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAADnVQJ_-mFCeWoq-Uz9VRFkb3eLgAK+yC5hG=N7t5riGhmLWg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 14 Jun 2019 16:11:04 +0000 (UTC)
+In-Reply-To: <20190614155041.GB26922@ulmo>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560528671; bh=U1G5/chSX76jJebfU8fFuPn83smOgYAa1oniljWF5KA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=fIxpnoH/l3viomNBG2W4wQaHrLGYdOqN9YcNmewVeOORmayP7o7acSPqoFa7e6pIa
+         Ow+MJQqvamONiC41Z07WVU6tbYmPgE3YfxdoICsYAgYWlsFW8u00yh0VVYalCGGlq3
+         Lpz5eCxD69SitQaADLBFti0VsYFqD76/qqN/G37Xvl31D2wvi0AUQHb91llpGNlXZk
+         gIfop4oIYxLAN0lHn/lqc6lBo0g0436My9vGRTzPcLDRdNORHPd+m0OtrZlWHxpO2S
+         WAh7eCHMAfjptYYZeMDhUmSLRM4hbNX+lLcgXGv7Ml2rV+yQ+LC8c84kG4uZ7XXERJ
+         SRlBQIaUNluew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 08:13:49AM -0700, Alexei Starovoitov wrote:
-> On Fri, Jun 14, 2019 at 1:11 AM Peter Zijlstra <peterz@infradead.org> wrote:
-> >
-> > On Fri, Jun 14, 2019 at 12:35:38AM -0700, Alexei Starovoitov wrote:
-> > > On Fri, Jun 14, 2019 at 09:08:52AM +0200, Peter Zijlstra wrote:
-> > > > On Thu, Jun 13, 2019 at 08:20:30PM -0500, Josh Poimboeuf wrote:
-> > > > > On Thu, Jun 13, 2019 at 01:57:11PM -0700, Alexei Starovoitov wrote:
-> > > >
-> > > > > > and to patches 8 and 9.
-> > > > >
-> > > > > Well, it's your code, but ... can I ask why?  AT&T syntax is the
-> > > > > standard for Linux, which is in fact the OS we are developing for.
-> > > >
-> > > > I agree, all assembly in Linux is AT&T, adding Intel notation only
-> > > > serves to cause confusion.
-> > >
-> > > It's not assembly. It's C code that generates binary and here
-> > > we're talking about comments.
-> >
-> > And comments are useless if they don't clarify. Intel syntax confuses.
-> >
-> > > I'm sure you're not proposing to do:
-> > > /* mov src, dst */
-> > > #define EMIT_mov(DST, SRC)                                                               \
-> > > right?
-> >
-> > Which is why Josh reversed both of them. The current Intel order is just
-> > terribly confusing. And I don't see any of the other JITs having
-> > confusing comments like this.
-> >
-> > > bpf_jit_comp.c stays as-is. Enough of it.
-> >
-> > I think you're forgetting this is also arch/x86 code, and no, it needs
-> > changes because its broken wrt unwinding.
+
+
+On 6/14/19 8:50 AM, Thierry Reding wrote:
+> On Fri, Jun 14, 2019 at 05:35:33AM -0700, Bitan Biswas wrote:
+>> Add noirq resume instead of resume callback for Tegra HSP. Tegra HSP
+>> resume needs tegra_hsp_doorbell_startup() call to fix timeout error for
+>> tegra_bpmp_transfer() during genpd resume noirq on jetson-tx2.
 > 
-> See MAINTAINERS file.
-> If you guys keep insisting on pointless churn like this
-> we'll move arch/x86/net/ into net/ where it probably belongs.
-> netdev has its own comment style too.
-> And it is also probably confusing to some folks.
+> s/jetson-tx2/Jetson TX2/?
+I shall replace the string "jetson-tx2" in commit description with 
+"Jetson TX2".
 
-So if I understand correctly, you're proposing that we move x86-specific
-code to net/arch/x86 so you don't have to make your code readable to
-others and adhere to kernel style guidelines?
+> 
+>>
+>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>> ---
+>>   drivers/mailbox/tegra-hsp.c | 12 ++++++++++--
+>>   1 file changed, 10 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/mailbox/tegra-hsp.c b/drivers/mailbox/tegra-hsp.c
+>> index 91f1a0c..f147374 100644
+>> --- a/drivers/mailbox/tegra-hsp.c
+>> +++ b/drivers/mailbox/tegra-hsp.c
+>> @@ -771,10 +771,16 @@ static int tegra_hsp_probe(struct platform_device *pdev)
+>>   	return 0;
+>>   }
+>>   
+>> -static int __maybe_unused tegra_hsp_resume(struct device *dev)
+>> +static int __maybe_unused tegra_hsp_noirq_resume(struct device *dev)
+> 
+> Maybe call this tegra_hsp_resume_noirq() to match the naming of the
+> dev_pm_ops callback?
+I shall rename tegra_hsp_noirq_resume back to tegra_hsp_resume.
 
--- 
-Josh
+> 
+>>   {
+>>   	struct tegra_hsp *hsp = dev_get_drvdata(dev);
+>>   	unsigned int i;
+>> +	struct tegra_hsp_doorbell *db;
+>> +
+>> +	list_for_each_entry(db, &hsp->doorbells, list) {
+>> +		if (db && db->channel.chan)
+>> +			tegra_hsp_doorbell_startup(db->channel.chan);
+>> +	}
+>>   
+>>   	for (i = 0; i < hsp->num_sm; i++) {
+>>   		struct tegra_hsp_mailbox *mb = &hsp->mailboxes[i];
+>> @@ -786,7 +792,9 @@ static int __maybe_unused tegra_hsp_resume(struct device *dev)
+>>   	return 0;
+>>   }
+>>   
+>> -static SIMPLE_DEV_PM_OPS(tegra_hsp_pm_ops, NULL, tegra_hsp_resume);
+>> +static const struct dev_pm_ops tegra_hsp_pm_ops = {
+>> +	.resume_noirq   = tegra_hsp_noirq_resume,
+> 
+> There seems to be two extra spaces before that =.
+Missed extra spaces. Shall fix.
+
+-Thanks,
+  Bitan
