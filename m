@@ -2,142 +2,149 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C245EC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:32:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A489C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F3B420B7C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:32:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QSPL5o2o"
+	by mail.kernel.org (Postfix) with ESMTP id 1AEDE20B7C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:33:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560472437;
+	bh=XAlloaOV1xZpKZTaxk01s3z5Ddta1c/KBJFc4Qcqv3w=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=gNR9vVyG/p6UAsj+/N96GCVbYDYKRZQfh1KjuiZ/L1UWEGjRlOEKyYIbX+RR21EPs
+	 rkQY6cLAGh2Poy6RopfbozdKJI0ebbOdmhT09B5CtcdYHkcdOGhlMa8sO8jRn73oIp
+	 YnO20Jj/mBOQos6D0p8nkc/DtLJXaCT4iE3NMeTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfFNAce (ORCPT
+        id S1726826AbfFNAdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 20:32:34 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:43132 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725835AbfFNAcd (ORCPT
+        Thu, 13 Jun 2019 20:33:55 -0400
+Received: from mail-pg1-f182.google.com ([209.85.215.182]:36932 "EHLO
+        mail-pg1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfFNAdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 20:32:33 -0400
-Received: by mail-vs1-f66.google.com with SMTP id j26so659984vsn.10
-        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 17:32:33 -0700 (PDT)
+        Thu, 13 Jun 2019 20:33:54 -0400
+Received: by mail-pg1-f182.google.com with SMTP id 20so465869pgr.4;
+        Thu, 13 Jun 2019 17:33:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5o5a2UNvqnt2IqG/d30r1Z1PI+lkRFVIZCDDvP3GRa4=;
-        b=QSPL5o2oBNVzptcEqAin35G0xLo0WWvgdOOO2+lJQerKfjKIYK/6oBSgxbDxGyOeXK
-         xc1Z2RyR8khlsHj7h/56FHn401h/hL1ihSqJACQe/klR228W7RgTufBtib0cQQpfqY5/
-         S4NO2rnjTaZdsxN6OkMcnGXhGm9ft7LyISYAE=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=oTlzP5u+wueqk5xdHgpRxhOd00u8gJeBwCjbnHotl3k=;
+        b=BzGNcoFmYi8gLKxOomEtTfMFNIXrqiP0F3yWFy2pIZq6bQXNBZWRXp+YK4O+W6BCr2
+         03Dyfn+G4eBB3Qoewqaj5dXNOGEhd5+/AUaHayk9hntIRt+00rCIjkrtozgqiu4dUT67
+         NXksTOoEBg/0aXehmbLZAvEY8gPuTmfpYZOeXwdZ+W6/stWG/qeXrkP4bwKa17v/HPEE
+         9V8TlTDTfG5rKd2Vn0dcSpmSzCnPNzfTNv9ZSXQFSxQqYOM+tQkOTpS5CANKmgM1daZg
+         LNz0VFzp3brsf7zVNzjCvQulg96AMDLT7OhuNOeL/OvusgvhPe3SUuC3odLuGzHJ91OK
+         HOZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5o5a2UNvqnt2IqG/d30r1Z1PI+lkRFVIZCDDvP3GRa4=;
-        b=Gg479Dkf8nlWCYFd7QlBmYPhAmWfCIFDGbTVL7ZKbry1JNpBtQ5b+t45NUGffNXuFh
-         rK84Ul5VeGtsW/BbCz2c2BGFAaoIpFBaZb8rGSQZhFEgy3T+KCqZbIak46XMKGAFAAmb
-         flqJ+5wY2f5imJxnJBjWxzgqFVMQVGRlEFJ4UpLQB+L7sGRor3jYh7kvOYjz32FspaEY
-         fe6KOtNZa4yye96jUIPJQ9Zg7ilceqdkMzH6BJALhjiK4+ahx1UyPA2+bt5wgWTIwGJa
-         jt8Ob3cLMsRagVnzjXWJMpeknncZ9GIU3ESniLxAicgLTJXnOutquNXdDGrIU2uC5FSN
-         QgkQ==
-X-Gm-Message-State: APjAAAUZJ5qjhV79AxlQfjyWB2wCmUuKetqX+wdctOAQb9qy3hudqHXj
-        ljEOwUUsxVQKEc2E0AKHYRQIhSpVHTNvusNVaqcInA==
-X-Google-Smtp-Source: APXvYqyFuFyDZEX0VGqPH3v35EIiUK6ftc8JlgTdYuQL9iHMbG0bt8E4uHg/PoKRrVKv16C9BEZM1mqeIvYNB77SyX0=
-X-Received: by 2002:a67:d384:: with SMTP id b4mr18708468vsj.152.1560472352531;
- Thu, 13 Jun 2019 17:32:32 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190611040350.90064-1-dbasehore@chromium.org>
- <20190611040350.90064-2-dbasehore@chromium.org> <20190612212054.GB13155@ravnborg.org>
-In-Reply-To: <20190612212054.GB13155@ravnborg.org>
-From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Thu, 13 Jun 2019 17:32:21 -0700
-Message-ID: <CAGAzgspS_cSDYDUTgApK4R814r3gZk63oe+CdtqDuiXrTG5JdA@mail.gmail.com>
-Subject: Re: [PATCH 1/5] drm/panel: Add helper for reading DT rotation
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        CK Hu <ck.hu@mediatek.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Intel Graphics <intel-gfx@lists.freedesktop.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=oTlzP5u+wueqk5xdHgpRxhOd00u8gJeBwCjbnHotl3k=;
+        b=sWaeljdmZ/wx+PkuXrZ845qNKZwXUOs+PtyNPf2GXKVPIdpeu33Y4qee8WRMGXVAEw
+         tWLdLMtytZcSvSwglMvAROF8CA5rCV89wUq4IhGkJ8QlHRpvRpemb68YB2e1+Z4CbYzi
+         N6aqWul8Vgb6XLkR00btt4WLnrw7JK9JqZ/ZqyPtA8/EzcEWh2dBPkrh+/+BPxkQxe5q
+         4Iaz/p9nRjEtlJQVMi50UkjmDzCIdhEed6ECH7l1EW39buBWwQn/iDdi7cyXaT/oowLX
+         nldCy1YA57RXmwwQaOHZ/Mv8hZbc0McdfETvCgDdgQKBxyb67e35X3E3t82tyelVbvmB
+         sDUg==
+X-Gm-Message-State: APjAAAVQ+NBii9uloUaWJUaATdqgcZz0g6qb/no5fYJ6/mPDBm3QRgMO
+        UG/FbEufC3TdRgCvmxyxHRg5xgkw
+X-Google-Smtp-Source: APXvYqwdEJlBHl1J6iniMl+4x+IcJZNUmIQ5tWeT365a3MEshvfmKjso/WA0P3Jq5VOzRc4hZcCN1g==
+X-Received: by 2002:a62:750c:: with SMTP id q12mr75920731pfc.59.1560472433969;
+        Thu, 13 Jun 2019 17:33:53 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:9d14])
+        by smtp.gmail.com with ESMTPSA id l1sm894960pgj.67.2019.06.13.17.33.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 13 Jun 2019 17:33:53 -0700 (PDT)
+From:   Tejun Heo <tj@kernel.org>
+To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCHSET btrfs/for-next] btrfs: fix cgroup writeback support
+Date:   Thu, 13 Jun 2019 17:33:42 -0700
+Message-Id: <20190614003350.1178444-1-tj@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 2:20 PM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Derek.
->
-> On Mon, Jun 10, 2019 at 09:03:46PM -0700, Derek Basehore wrote:
-> > This adds a helper function for reading the rotation (panel
-> > orientation) from the device tree.
-> >
-> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > ---
-> >  drivers/gpu/drm/drm_panel.c | 41 +++++++++++++++++++++++++++++++++++++
-> >  include/drm/drm_panel.h     |  7 +++++++
-> >  2 files changed, 48 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> > index dbd5b873e8f2..3b689ce4a51a 100644
-> > --- a/drivers/gpu/drm/drm_panel.c
-> > +++ b/drivers/gpu/drm/drm_panel.c
-> > @@ -172,6 +172,47 @@ struct drm_panel *of_drm_find_panel(const struct device_node *np)
-> >       return ERR_PTR(-EPROBE_DEFER);
-> >  }
-> >  EXPORT_SYMBOL(of_drm_find_panel);
-> > +
-> > +/**
-> > + * of_drm_get_panel_orientation - look up the rotation of the panel using a
-> > + * device tree node
-> > + * @np: device tree node of the panel
-> > + * @orientation: orientation enum to be filled in
-> > + *
-> > + * Looks up the rotation of a panel in the device tree. The rotation in the
-> > + * device tree is counter clockwise.
-> > + *
-> > + * Return: 0 when a valid rotation value (0, 90, 180, or 270) is read or the
-> > + * rotation property doesn't exist. -EERROR otherwise.
-> > + */
-> > +int of_drm_get_panel_orientation(const struct device_node *np, int *orientation)
-> > +{
-> > +     int rotation, ret;
-> > +
-> > +     ret = of_property_read_u32(np, "rotation", &rotation);
->
-> I just noticed that everywhere this code talks about orientation,
-> but the property that it reads are rotation.
-> To my best understanding these are not the same.
+Hello,
 
-This is because both were previously defined in the kernel. Rotation
-was defined as a binding in the devicetree for panels (which is where
-we wanted to put this property) and orientation already exists as a
-DRM property.
+When writeback is executed asynchronously (e.g. for compression), bios
+are bounced to and issued by worker pool shared by all cgroups.  This
+leads to significant priority inversions when cgroup IO control is in
+use - IOs for a low priority cgroup can tie down the workers forcing
+higher priority IOs to wait behind them.
 
-If we want to change one, I would suggest the rotation binding since
-it doesn't have any upstream users yet.
+This patchset adds an bio punt mechanism to blkcg.  A bio tagged with
+REQ_CGROUP_PUNT flag is bounced to the asynchronous issue context of
+the associated blkcg on bio_submit().  As the bios are issued from
+per-blkcg work items, there's no concern for priority inversions and
+it doesn't require invasive changes to the filesystems.  The mechanism
+should be generally useful for IO control support across different
+filesystems.
 
->
->         Sam
+btrfs async path is simplified and is updated to use REQ_CGROUP_PUNT
+for submitting asynchronous bios.  It's also updated to always and
+only account the original writeback bios against wbc so that cgroup
+inode writeback ownership arbitration isn't confused by downstream
+bios.
+
+This patchset contains the following 8 patches.  The first three are
+my blkcg patches to implement the needed mechanisms.  The latter five
+are Chris Mason's btrfs cleanup and update patches.  Please let me
+know how the patches should be routed.  Given that there currently
+aren't other users, it's likely the easiest to route all through btrfs
+tree.
+
+ 0001-blkcg-writeback-Add-wbc-no_wbc_acct.patch
+ 0002-blkcg-writeback-Implement-wbc_blkcg_css.patch
+ 0003-blkcg-implement-REQ_CGROUP_PUNT.patch
+ 0004-Btrfs-stop-using-btrfs_schedule_bio.patch
+ 0005-Btrfs-delete-the-entire-async-bio-submission-framewo.patch
+ 0006-Btrfs-only-associate-the-locked-page-with-one-async_.patch
+ 0007-Btrfs-use-REQ_CGROUP_PUNT-for-worker-thread-submitte.patch
+ 0008-Btrfs-extent_write_locked_range-should-attach-inode-.patch
+
+0001-0003 implement wbc->no_wbc_acct, wbc_blkcg_css() and
+REQ_CGROUP_PUNT.
+
+0004-0006 are prep patches to simplify / improve async bio submission.
+
+0007 makes btrfs use REQ_CGROUP_PUNT for async bios.
+
+0008 fixes wbc writeback accounting for IOs issued through
+extent_write_locked_range().
+
+This patchset is also available in the following git branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-btrfs-cgroup-updates
+
+Thanks, diffstat follows.
+
+ block/blk-cgroup.c          |   54 +++++++++
+ block/blk-core.c            |    3 
+ fs/btrfs/compression.c      |   16 +-
+ fs/btrfs/compression.h      |    3 
+ fs/btrfs/ctree.h            |    1 
+ fs/btrfs/disk-io.c          |   25 +---
+ fs/btrfs/extent_io.c        |   15 +-
+ fs/btrfs/inode.c            |   61 ++++++++--
+ fs/btrfs/super.c            |    1 
+ fs/btrfs/volumes.c          |  264 --------------------------------------------
+ fs/btrfs/volumes.h          |   10 -
+ fs/fs-writeback.c           |    2 
+ include/linux/backing-dev.h |    1 
+ include/linux/blk-cgroup.h  |   16 ++
+ include/linux/blk_types.h   |   10 +
+ include/linux/writeback.h   |   24 +++-
+ 16 files changed, 194 insertions(+), 312 deletions(-)
+
+--
+tejun
+
