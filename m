@@ -2,122 +2,279 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C813C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:16:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9615DC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 054372177E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:16:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ws5E8yah"
+	by mail.kernel.org (Postfix) with ESMTP id 6BA262183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726207AbfFNSQp (ORCPT
+        id S1726419AbfFNSRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:16:45 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42391 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfFNSQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 14:16:45 -0400
-Received: by mail-pf1-f194.google.com with SMTP id q10so1913901pff.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 11:16:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=puTHRzJLDYkby5dm7Z8PxTsKRwDG5hRxWOagm4BjqQs=;
-        b=Ws5E8yahDqKXoYIz72TJmHfAl5rhhKJVVPGEfYEKGwK1Xc7tB9TLqy3FeLI4M9by0Y
-         nMXLSaMHVOLx61lkQ4eUUCb9vUtSwVTg4ls6Pn098zvhtKgMxYUVGLgcxnqtWZcuj0wb
-         +rdB2UpYxEYkA2PhycUv7iLSB5vLDV1Xvf4sl/3t6gl7PWUiqvlBpaE+roV7yxDRQXKx
-         JNgFRV6RLUNG7r+ARt5Y35EJFWsQ6NJ6v+sxMi3CDaL8CVgehmo+c1j6ldTPFTSCBFJ6
-         xzyPPD6EcNGFtUWUTqjTdPh2hq0sg1ENk0pHqOMNBAOLMRkl5CBNejc+HZ2RvgdPrON7
-         TGGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=puTHRzJLDYkby5dm7Z8PxTsKRwDG5hRxWOagm4BjqQs=;
-        b=suBLMizIeVSQdOJVBjiWV+0J6svzmpApv0SCt2nMFEH2xbjNmBmfb4PGz5O54sp6NK
-         AaAH3dJ0Lco97/3EiqAA6wmNwO+3DusuHuIMFOgSrNE6t2unbBP4qcPpQlaory9j9/U2
-         TkA09e7NWDMSRXKeg8Y+pjBM+hC1hJ9OefjM4Wj++/IjPrvZr+MbCcqEdmr7cQbgnNM1
-         7RiYcHpKi5OgmNSFXAAwqNOkeHO4o/tThc2ywGu9rTX19SFgfVzBfjgnSDa5FxHc6kxg
-         +AJ5zzeAKgPrG9FoeI3IxhsqzTQMk5xeMY185HjZorkYseyEjwCrXxtb0ZRPT0iM9zJC
-         xUUg==
-X-Gm-Message-State: APjAAAWzeXLIX5Imw9D+KArrYRqYZyceZPQ7x7KSVk3fvya895yI94lG
-        cnc4y1hjP7ej9q83j7PwIxgvsFjokhKTrWhtLy2f1g==
-X-Google-Smtp-Source: APXvYqyZgc8wUMxZ3Mln8U6UN35HufOhqqxZRAFb4tsblfJ4VSYkx2CoHaVLiNC8cZ96pfDUEqTOt66XarYRLfO+rdA=
-X-Received: by 2002:a63:52:: with SMTP id 79mr36714073pga.381.1560536203926;
- Fri, 14 Jun 2019 11:16:43 -0700 (PDT)
+        Fri, 14 Jun 2019 14:17:18 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18578 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725808AbfFNSRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 14:17:15 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5D58DBDBD6E55B213C50;
+        Sat, 15 Jun 2019 02:17:13 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sat, 15 Jun
+ 2019 02:17:06 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     <chao@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <devel@driverdev.osuosl.org>
+CC:     LKML <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        Fang Wei <fangwei1@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [RFC PATCH 3/8] staging: erofs: move per-CPU buffers implementation to utils.c
+Date:   Sat, 15 Jun 2019 02:16:14 +0800
+Message-ID: <20190614181619.64905-4-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190614181619.64905-1-gaoxiang25@huawei.com>
+References: <20190614181619.64905-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-References: <20190614165242.79257-1-natechancellor@gmail.com>
-In-Reply-To: <20190614165242.79257-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Fri, 14 Jun 2019 11:16:32 -0700
-Message-ID: <CAKwvOdkyoEYe83HdF-0ofPckFkE5rsFdNnQw5NxXTUQfHNntsg@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Enable -Wuninitialized
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 9:53 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> This helps fine very dodgy behavior through both -Wuninitialized
-> (warning that a variable is always uninitialized) and
-> -Wsometimes-uninitialized (warning that a variable is sometimes
-> uninitialized, like GCC's -Wmaybe-uninitialized). These warnings
-> catch things that GCC doesn't such as:
->
-> https://lore.kernel.org/lkml/86649ee4-9794-77a3-502c-f4cd10019c36@lca.pw/
+This patch moves per-CPU buffers to utils.c in order for
+the upcoming generic decompression framework to use it.
 
-or this one, which was my favorite, and quite insidious from an
-underhanded C contest perspective.
-https://lore.kernel.org/lkml/20190226053855.7020-1-natechancellor@gmail.com/
+Note that I tried to use generic per-CPU buffer or
+per-CPU page approaches to clean up further, but obvious
+performanace regression (about 2% for sequential read) was
+observed.
 
-Thank you very much for all the hard work you did tracking done and
-fixing all of the cases we could find.  I very much look forward to
-this patch as the capstone to all that work.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Therefore let's leave it as it is instead, just move
+to utils.c and I'll try to dig into the root cause later.
 
->
-> We very much want to catch these so turn this warning on so that CI is
-> aware of it.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/381
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
->  scripts/Makefile.extrawarn | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 98081ab300e5..699683a7c116 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -71,6 +71,5 @@ KBUILD_CFLAGS += -Wno-unused-value
->  KBUILD_CFLAGS += -Wno-format
->  KBUILD_CFLAGS += -Wno-sign-compare
->  KBUILD_CFLAGS += -Wno-format-zero-length
-> -KBUILD_CFLAGS += -Wno-uninitialized
->  endif
->  endif
-> --
-> 2.22.0
->
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ drivers/staging/erofs/internal.h      | 26 ++++++++++++++++++++++
+ drivers/staging/erofs/unzip_vle.c     |  5 ++---
+ drivers/staging/erofs/unzip_vle.h     |  4 +---
+ drivers/staging/erofs/unzip_vle_lz4.c | 31 ++++++++-------------------
+ drivers/staging/erofs/utils.c         | 12 +++++++++++
+ 5 files changed, 50 insertions(+), 28 deletions(-)
 
-
+diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+index f3063b13c117..dcbe6f7f5dae 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -321,6 +321,16 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
+ 
+ /* page count of a compressed cluster */
+ #define erofs_clusterpages(sbi)         ((1 << (sbi)->clusterbits) / PAGE_SIZE)
++#define Z_EROFS_NR_INLINE_PAGEVECS      3
++
++#if (Z_EROFS_CLUSTER_MAX_PAGES > Z_EROFS_NR_INLINE_PAGEVECS)
++#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
++#else
++#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_NR_INLINE_PAGEVECS
++#endif
++
++#else
++#define EROFS_PCPUBUF_NR_PAGES          0
+ #endif
+ 
+ typedef u64 erofs_off_t;
+@@ -608,6 +618,22 @@ static inline void erofs_vunmap(const void *mem, unsigned int count)
+ extern struct shrinker erofs_shrinker_info;
+ 
+ struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp);
++
++#if (EROFS_PCPUBUF_NR_PAGES > 0)
++void *erofs_get_pcpubuf(unsigned int pagenr);
++#define erofs_put_pcpubuf(buf) do { \
++	(void)&(buf);	\
++	preempt_enable();	\
++} while (0)
++#else
++static inline void *erofs_get_pcpubuf(unsigned int pagenr)
++{
++	return ERR_PTR(-ENOTSUPP);
++}
++
++#define erofs_put_pcpubuf(buf) do {} while (0)
++#endif
++
+ void erofs_register_super(struct super_block *sb);
+ void erofs_unregister_super(struct super_block *sb);
+ 
+diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+index 8aea938172df..08f2d4302ecb 100644
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -552,8 +552,7 @@ static int z_erofs_vle_work_iter_begin(struct z_erofs_vle_work_builder *builder,
+ 	if (IS_ERR(work))
+ 		return PTR_ERR(work);
+ got_it:
+-	z_erofs_pagevec_ctor_init(&builder->vector,
+-				  Z_EROFS_VLE_INLINE_PAGEVECS,
++	z_erofs_pagevec_ctor_init(&builder->vector, Z_EROFS_NR_INLINE_PAGEVECS,
+ 				  work->pagevec, work->vcnt);
+ 
+ 	if (builder->role >= Z_EROFS_VLE_WORK_PRIMARY) {
+@@ -936,7 +935,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 	for (i = 0; i < nr_pages; ++i)
+ 		pages[i] = NULL;
+ 
+-	z_erofs_pagevec_ctor_init(&ctor, Z_EROFS_VLE_INLINE_PAGEVECS,
++	z_erofs_pagevec_ctor_init(&ctor, Z_EROFS_NR_INLINE_PAGEVECS,
+ 				  work->pagevec, 0);
+ 
+ 	for (i = 0; i < work->vcnt; ++i) {
+diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
+index 902e67d04029..9c53009700cf 100644
+--- a/drivers/staging/erofs/unzip_vle.h
++++ b/drivers/staging/erofs/unzip_vle.h
+@@ -44,8 +44,6 @@ static inline bool z_erofs_gather_if_stagingpage(struct list_head *page_pool,
+  *
+  */
+ 
+-#define Z_EROFS_VLE_INLINE_PAGEVECS     3
+-
+ struct z_erofs_vle_work {
+ 	struct mutex lock;
+ 
+@@ -58,7 +56,7 @@ struct z_erofs_vle_work {
+ 
+ 	union {
+ 		/* L: pagevec */
+-		erofs_vtptr_t pagevec[Z_EROFS_VLE_INLINE_PAGEVECS];
++		erofs_vtptr_t pagevec[Z_EROFS_NR_INLINE_PAGEVECS];
+ 		struct rcu_head rcu;
+ 	};
+ };
+diff --git a/drivers/staging/erofs/unzip_vle_lz4.c b/drivers/staging/erofs/unzip_vle_lz4.c
+index 0daac9b984a8..399c3e3a3ff3 100644
+--- a/drivers/staging/erofs/unzip_vle_lz4.c
++++ b/drivers/staging/erofs/unzip_vle_lz4.c
+@@ -34,16 +34,6 @@ static int z_erofs_unzip_lz4(void *in, void *out, size_t inlen, size_t outlen)
+ 	return -EIO;
+ }
+ 
+-#if Z_EROFS_CLUSTER_MAX_PAGES > Z_EROFS_VLE_INLINE_PAGEVECS
+-#define EROFS_PERCPU_NR_PAGES   Z_EROFS_CLUSTER_MAX_PAGES
+-#else
+-#define EROFS_PERCPU_NR_PAGES   Z_EROFS_VLE_INLINE_PAGEVECS
+-#endif
+-
+-static struct {
+-	char data[PAGE_SIZE * EROFS_PERCPU_NR_PAGES];
+-} erofs_pcpubuf[NR_CPUS];
+-
+ int z_erofs_vle_plain_copy(struct page **compressed_pages,
+ 			   unsigned int clusterpages,
+ 			   struct page **pages,
+@@ -56,8 +46,7 @@ int z_erofs_vle_plain_copy(struct page **compressed_pages,
+ 	char *percpu_data;
+ 	bool mirrored[Z_EROFS_CLUSTER_MAX_PAGES] = { 0 };
+ 
+-	preempt_disable();
+-	percpu_data = erofs_pcpubuf[smp_processor_id()].data;
++	percpu_data = erofs_get_pcpubuf(0);
+ 
+ 	j = 0;
+ 	for (i = 0; i < nr_pages; j = i++) {
+@@ -117,7 +106,7 @@ int z_erofs_vle_plain_copy(struct page **compressed_pages,
+ 	if (src && !mirrored[j])
+ 		kunmap_atomic(src);
+ 
+-	preempt_enable();
++	erofs_put_pcpubuf(percpu_data);
+ 	return 0;
+ }
+ 
+@@ -131,7 +120,7 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+ 	unsigned int nr_pages, i, j;
+ 	int ret;
+ 
+-	if (outlen + pageofs > EROFS_PERCPU_NR_PAGES * PAGE_SIZE)
++	if (outlen + pageofs > EROFS_PCPUBUF_NR_PAGES * PAGE_SIZE)
+ 		return -ENOTSUPP;
+ 
+ 	nr_pages = DIV_ROUND_UP(outlen + pageofs, PAGE_SIZE);
+@@ -144,8 +133,7 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+ 			return -ENOMEM;
+ 	}
+ 
+-	preempt_disable();
+-	vout = erofs_pcpubuf[smp_processor_id()].data;
++	vout = erofs_get_pcpubuf(0);
+ 
+ 	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
+ 				clusterpages * PAGE_SIZE, outlen);
+@@ -174,7 +162,7 @@ int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+ 	}
+ 
+ out:
+-	preempt_enable();
++	erofs_put_pcpubuf(vout);
+ 
+ 	if (clusterpages == 1)
+ 		kunmap_atomic(vin);
+@@ -196,8 +184,7 @@ int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
+ 	int ret;
+ 
+ 	if (overlapped) {
+-		preempt_disable();
+-		vin = erofs_pcpubuf[smp_processor_id()].data;
++		vin = erofs_get_pcpubuf(0);
+ 
+ 		for (i = 0; i < clusterpages; ++i) {
+ 			void *t = kmap_atomic(compressed_pages[i]);
+@@ -216,13 +203,13 @@ int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
+ 	if (ret > 0)
+ 		ret = 0;
+ 
+-	if (!overlapped) {
++	if (overlapped) {
++		erofs_put_pcpubuf(vin);
++	} else {
+ 		if (clusterpages == 1)
+ 			kunmap_atomic(vin);
+ 		else
+ 			erofs_vunmap(vin, clusterpages);
+-	} else {
+-		preempt_enable();
+ 	}
+ 	return ret;
+ }
+diff --git a/drivers/staging/erofs/utils.c b/drivers/staging/erofs/utils.c
+index 3e7d30b6de1d..4bbd3bf34acd 100644
+--- a/drivers/staging/erofs/utils.c
++++ b/drivers/staging/erofs/utils.c
+@@ -27,6 +27,18 @@ struct page *erofs_allocpage(struct list_head *pool, gfp_t gfp)
+ 	return page;
+ }
+ 
++#if (EROFS_PCPUBUF_NR_PAGES > 0)
++static struct {
++	u8 data[PAGE_SIZE * EROFS_PCPUBUF_NR_PAGES];
++} ____cacheline_aligned_in_smp erofs_pcpubuf[NR_CPUS];
++
++void *erofs_get_pcpubuf(unsigned int pagenr)
++{
++	preempt_disable();
++	return &erofs_pcpubuf[smp_processor_id()].data[pagenr * PAGE_SIZE];
++}
++#endif
++
+ /* global shrink count (for all mounted EROFS instances) */
+ static atomic_long_t erofs_global_shrink_cnt;
+ 
 -- 
-Thanks,
-~Nick Desaulniers
+2.17.1
+
