@@ -4,29 +4,29 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE571C31E4E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 439D1C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B73422183E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21ADE2183E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 18:00:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfFNSAm (ORCPT
+        id S1727490AbfFNSAp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 14:00:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:39224 "EHLO mx1.redhat.com"
+        Fri, 14 Jun 2019 14:00:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54207 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727370AbfFNSAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726838AbfFNSAl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 14:00:41 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EDAC2C01F28C;
-        Fri, 14 Jun 2019 18:00:39 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id AC306316290D;
+        Fri, 14 Jun 2019 18:00:35 +0000 (UTC)
 Received: from treble.redhat.com (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 976FB5DD7A;
-        Fri, 14 Jun 2019 18:00:38 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 52A2D5D9E2;
+        Fri, 14 Jun 2019 18:00:33 +0000 (UTC)
 From:   Josh Poimboeuf <jpoimboe@redhat.com>
 To:     x86@kernel.org, Alexei Starovoitov <ast@kernel.org>
 Cc:     linux-kernel@vger.kernel.org,
@@ -38,203 +38,112 @@ Cc:     linux-kernel@vger.kernel.org,
         David Laight <David.Laight@ACULAB.COM>,
         Thomas Gleixner <tglx@linutronix.de>,
         Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH v2 4/5] x86/bpf: Fix 64-bit JIT frame pointer usage
-Date:   Fri, 14 Jun 2019 12:56:43 -0500
-Message-Id: <178097de8c1bd6a877342304f3469eac4067daa4.1560534694.git.jpoimboe@redhat.com>
+Subject: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF generated code
+Date:   Fri, 14 Jun 2019 12:56:41 -0500
+Message-Id: <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
 In-Reply-To: <cover.1560534694.git.jpoimboe@redhat.com>
 References: <cover.1560534694.git.jpoimboe@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 14 Jun 2019 18:00:40 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Fri, 14 Jun 2019 18:00:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The BPF JIT code clobbers RBP.  This breaks frame pointer convention and
-thus prevents the FP unwinder from unwinding through JIT generated code.
+Objtool currently ignores ___bpf_prog_run() because it doesn't
+understand the jump table.  This results in the ORC unwinder not being
+able to unwind through non-JIT BPF code.
 
-Fix it by saving the new RBP value on the stack before updating it.
-This effectively creates a new stack frame which the unwinder can
-understand.
+Luckily, the BPF jump table resembles a GCC switch jump table, which
+objtool already knows how to read.
 
-Also, simplify the BPF JIT prologue such that it more closely resembles
-a typical compiler-generated prologue.  This also reduces the prologue
-size quite a bit overall.
+Add generic support for reading any static local jump table array named
+"jump_table", and rename the BPF variable accordingly, so objtool can
+generate ORC data for ___bpf_prog_run().
 
-Suggested-by: David Laight <David.Laight@ACULAB.COM>
+Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+Reported-by: Song Liu <songliubraving@fb.com>
 Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 ---
- arch/x86/net/bpf_jit_comp.c | 106 ++++++++++++++++++------------------
- 1 file changed, 54 insertions(+), 52 deletions(-)
+ kernel/bpf/core.c     |  5 ++---
+ tools/objtool/check.c | 16 ++++++++++++++--
+ 2 files changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/net/bpf_jit_comp.c b/arch/x86/net/bpf_jit_comp.c
-index da8c988b0f0f..fa1fe65c4cb4 100644
---- a/arch/x86/net/bpf_jit_comp.c
-+++ b/arch/x86/net/bpf_jit_comp.c
-@@ -186,56 +186,54 @@ struct jit_context {
- #define BPF_MAX_INSN_SIZE	128
- #define BPF_INSN_SAFETY		64
- 
--#define AUX_STACK_SPACE		40 /* Space for RBX, R13, R14, R15, tailcnt */
--
--#define PROLOGUE_SIZE		37
-+#define PROLOGUE_SIZE		24
- 
- /*
-  * Emit x86-64 prologue code for BPF program and check its size.
-  * bpf_tail_call helper will skip it while jumping into another program
-  */
--static void emit_prologue(u8 **pprog, u32 stack_depth, bool ebpf_from_cbpf)
-+static void emit_prologue(u8 **pprog, u32 stack_depth)
+diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+index 7c473f208a10..aa546ef7dbdc 100644
+--- a/kernel/bpf/core.c
++++ b/kernel/bpf/core.c
+@@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
  {
- 	u8 *prog = *pprog;
- 	int cnt = 0;
+ #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+ #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+-	static const void *jumptable[256] = {
++	static const void *jump_table[256] = {
+ 		[0 ... 255] = &&default_label,
+ 		/* Now overwrite non-defaults ... */
+ 		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
+@@ -1315,7 +1315,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ #define CONT_JMP ({ insn++; goto select_insn; })
  
- 	/* push rbp */
- 	EMIT1(0x55);
--
--	/* mov rbp,rsp */
-+	/* mov rbp, rsp */
- 	EMIT3(0x48, 0x89, 0xE5);
+ select_insn:
+-	goto *jumptable[insn->code];
++	goto *jump_table[insn->code];
  
--	/* sub rsp, rounded_stack_depth + AUX_STACK_SPACE */
--	EMIT3_off32(0x48, 0x81, 0xEC,
--		    round_up(stack_depth, 8) + AUX_STACK_SPACE);
-+	/* push r15 */
-+	EMIT2(0x41, 0x57);
-+	/* push r14 */
-+	EMIT2(0x41, 0x56);
-+	/* push r13 */
-+	EMIT2(0x41, 0x55);
-+	/* push rbx */
-+	EMIT1(0x53);
- 
--	/* sub rbp, AUX_STACK_SPACE */
--	EMIT4(0x48, 0x83, 0xED, AUX_STACK_SPACE);
--
--	/* mov qword ptr [rbp+0],rbx */
--	EMIT4(0x48, 0x89, 0x5D, 0);
--	/* mov qword ptr [rbp+8],r13 */
--	EMIT4(0x4C, 0x89, 0x6D, 8);
--	/* mov qword ptr [rbp+16],r14 */
--	EMIT4(0x4C, 0x89, 0x75, 16);
--	/* mov qword ptr [rbp+24],r15 */
--	EMIT4(0x4C, 0x89, 0x7D, 24);
-+	/*
-+	 * Push the tail call counter (tail_call_cnt) for eBPF tail calls.
-+	 * Initialized to zero.
-+	 *
-+	 * push $0
-+	 */
-+	EMIT2(0x6a, 0x00);
- 
--	if (!ebpf_from_cbpf) {
--		/*
--		 * Clear the tail call counter (tail_call_cnt): for eBPF tail
--		 * calls we need to reset the counter to 0. It's done in two
--		 * instructions, resetting RAX register to 0, and moving it
--		 * to the counter location.
--		 */
-+	/*
-+	 * RBP is used for the BPF program's FP register.  It points to the end
-+	 * of the program's stack area.  Create another stack frame so the
-+	 * unwinder can unwind through the generated code.  The tail_call_cnt
-+	 * value doubles as an (invalid) RIP address.
-+	 */
-+	/* push rbp */
-+	EMIT1(0x55);
-+	/* mov rbp, rsp */
-+	EMIT3(0x48, 0x89, 0xE5);
- 
--		/* xor eax, eax */
--		EMIT2(0x31, 0xc0);
--		/* mov qword ptr [rbp+32], rax */
--		EMIT4(0x48, 0x89, 0x45, 32);
-+	/* sub rsp, rounded_stack_depth */
-+	EMIT3_off32(0x48, 0x81, 0xEC, round_up(stack_depth, 8));
- 
--		BUILD_BUG_ON(cnt != PROLOGUE_SIZE);
--	}
-+	BUILD_BUG_ON(cnt != PROLOGUE_SIZE);
- 
- 	*pprog = prog;
+ 	/* ALU */
+ #define ALU(OPCODE, OP)			\
+@@ -1558,7 +1558,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+ 		BUG_ON(1);
+ 		return 0;
  }
-@@ -245,19 +243,24 @@ static void emit_epilogue(u8 **pprog)
- 	u8 *prog = *pprog;
- 	int cnt = 0;
+-STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
  
--	/* mov rbx, qword ptr [rbp+0] */
--	EMIT4(0x48, 0x8B, 0x5D, 0);
--	/* mov r13, qword ptr [rbp+8] */
--	EMIT4(0x4C, 0x8B, 0x6D, 8);
--	/* mov r14, qword ptr [rbp+16] */
--	EMIT4(0x4C, 0x8B, 0x75, 16);
--	/* mov r15, qword ptr [rbp+24] */
--	EMIT4(0x4C, 0x8B, 0x7D, 24);
--
--	/* add rbp, AUX_STACK_SPACE */
--	EMIT4(0x48, 0x83, 0xC5, AUX_STACK_SPACE);
--	EMIT1(0xC9); /* leave */
--	EMIT1(0xC3); /* ret */
-+	/* leave (restore rsp and rbp) */
-+	EMIT1(0xC9);
-+	/* pop rbx (skip over tail_call_cnt) */
-+	EMIT1(0x5B);
+ #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+ #define DEFINE_BPF_PROG_RUN(stack_size) \
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 172f99195726..8341c2fff14f 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -18,6 +18,8 @@
+ 
+ #define FAKE_JUMP_OFFSET -1
+ 
++#define JUMP_TABLE_SYM_PREFIX "jump_table."
 +
-+	/* pop rbx */
-+	EMIT1(0x5B);
-+	/* pop r13 */
-+	EMIT2(0x41, 0x5D);
-+	/* pop r14 */
-+	EMIT2(0x41, 0x5E);
-+	/* pop r15 */
-+	EMIT2(0x41, 0x5F);
-+	/* pop rbp */
-+	EMIT1(0x5D);
-+
-+	/* ret */
-+	EMIT1(0xC3);
+ struct alternative {
+ 	struct list_head list;
+ 	struct instruction *insn;
+@@ -997,6 +999,7 @@ static struct rela *find_switch_table(struct objtool_file *file,
+ 	struct instruction *orig_insn = insn;
+ 	struct section *rodata_sec;
+ 	unsigned long table_offset;
++	struct symbol *sym;
  
- 	*pprog = prog;
- }
-@@ -295,7 +298,7 @@ static void emit_bpf_tail_call(u8 **pprog)
- 	EMIT2(0x89, 0xD2);                        /* mov edx, edx */
- 	EMIT3(0x39, 0x56,                         /* cmp dword ptr [rsi + 16], edx */
- 	      offsetof(struct bpf_array, map.max_entries));
--#define OFFSET1 (41 + RETPOLINE_RAX_BPF_JIT_SIZE) /* Number of bytes to jump */
-+#define OFFSET1 (35 + RETPOLINE_RAX_BPF_JIT_SIZE) /* Number of bytes to jump */
- 	EMIT2(X86_JBE, OFFSET1);                  /* jbe out */
- 	label1 = cnt;
+ 	/*
+ 	 * Backward search using the @first_jump_src links, these help avoid
+@@ -1035,9 +1038,18 @@ static struct rela *find_switch_table(struct objtool_file *file,
  
-@@ -303,13 +306,13 @@ static void emit_bpf_tail_call(u8 **pprog)
- 	 * if (tail_call_cnt > MAX_TAIL_CALL_CNT)
- 	 *	goto out;
- 	 */
--	EMIT2_off32(0x8B, 0x85, 36);              /* mov eax, dword ptr [rbp + 36] */
-+	EMIT3(0x8B, 0x45, 0x0C);                  /* mov eax, dword ptr [rbp + 12] */
- 	EMIT3(0x83, 0xF8, MAX_TAIL_CALL_CNT);     /* cmp eax, MAX_TAIL_CALL_CNT */
--#define OFFSET2 (30 + RETPOLINE_RAX_BPF_JIT_SIZE)
-+#define OFFSET2 (27 + RETPOLINE_RAX_BPF_JIT_SIZE)
- 	EMIT2(X86_JA, OFFSET2);                   /* ja out */
- 	label2 = cnt;
- 	EMIT3(0x83, 0xC0, 0x01);                  /* add eax, 1 */
--	EMIT2_off32(0x89, 0x85, 36);              /* mov dword ptr [rbp + 36], eax */
-+	EMIT3(0x89, 0x45, 0x0C);                  /* mov dword ptr [rbp + 12], eax */
+ 		/*
+ 		 * Make sure the .rodata address isn't associated with a
+-		 * symbol.  gcc jump tables are anonymous data.
++		 * symbol.  GCC jump tables are anonymous data.
++		 *
++		 * Also support C jump tables which are in the same format as
++		 * switch jump tables.  Each jump table should be a static
++		 * local const array named "jump_table" for objtool to
++		 * recognize it.  Note: GCC will add a numbered suffix to the
++		 * ELF symbol name, like "jump_table.12345", which it does for
++		 * all static local variables.
+ 		 */
+-		if (find_symbol_containing(rodata_sec, table_offset))
++		sym = find_symbol_containing(rodata_sec, table_offset);
++		if (sym && strncmp(sym->name, JUMP_TABLE_SYM_PREFIX,
++				   strlen(JUMP_TABLE_SYM_PREFIX)))
+ 			continue;
  
- 	/* prog = array->ptrs[index]; */
- 	EMIT4_off32(0x48, 0x8B, 0x84, 0xD6,       /* mov rax, [rsi + rdx * 8 + offsetof(...)] */
-@@ -437,8 +440,7 @@ static int do_jit(struct bpf_prog *bpf_prog, int *addrs, u8 *image,
- 	int proglen = 0;
- 	u8 *prog = temp;
- 
--	emit_prologue(&prog, bpf_prog->aux->stack_depth,
--		      bpf_prog_was_classic(bpf_prog));
-+	emit_prologue(&prog, bpf_prog->aux->stack_depth);
- 
- 	for (i = 0; i < insn_cnt; i++, insn++) {
- 		const s32 imm32 = insn->imm;
+ 		rodata_rela = find_rela_by_dest(rodata_sec, table_offset);
 -- 
 2.20.1
 
