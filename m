@@ -2,88 +2,169 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4662C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DB0AC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C6422168B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D119A2168B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:42:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HEpkw3Cr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfFNNmj (ORCPT
+        id S1728521AbfFNNmy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:42:39 -0400
-Received: from stargate.chelsio.com ([12.32.117.8]:22443 "EHLO
-        stargate.chelsio.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727918AbfFNNmi (ORCPT
+        Fri, 14 Jun 2019 09:42:54 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:35216 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728033AbfFNNmx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:42:38 -0400
-Received: from localhost (varun.asicdesigners.com [10.193.190.56])
-        by stargate.chelsio.com (8.13.8/8.13.8) with ESMTP id x5EDfkhn025181;
-        Fri, 14 Jun 2019 06:41:47 -0700
-Date:   Fri, 14 Jun 2019 19:11:44 +0530
-From:   Varun Prakash <varun@chelsio.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mike Christie <mchristi@redhat.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        varun@chelsio.com
-Subject: Re: [PATCH -next] cxgbit: remove set but not used variable 'ppmax'
-Message-ID: <20190614134143.GA1630@chelsio.com>
-References: <20190614024413.110449-1-yuehaibing@huawei.com>
+        Fri, 14 Jun 2019 09:42:53 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5EDgjcU015726;
+        Fri, 14 Jun 2019 08:42:45 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560519765;
+        bh=JTrKAS5DxBlxyr/RUcG7xCZZCkjwEovfo2qd+cpbq7o=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=HEpkw3CrAA6B+lRcszpV93/Y16UTfxTK16V1R8rSpRtlNuPfp4MuPbeje6tJaOzv5
+         fLdJFQ9otRoony+Lme3E13MenSQy4LEqEfVsXt7mou3/cYyqI1RR0wYBEpi47ZEC48
+         vJVGouhBNOuc0lWGVRF9c2Y/XVhzbzCnR+kY2Cn8=
+Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5EDgjTi018675
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Fri, 14 Jun 2019 08:42:45 -0500
+Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Fri, 14
+ Jun 2019 08:42:45 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Fri, 14 Jun 2019 08:42:45 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5EDggeV100780;
+        Fri, 14 Jun 2019 08:42:43 -0500
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Rob Herring <robh@kernel.org>
+CC:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
+ <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+ <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
+Date:   Fri, 14 Jun 2019 16:43:15 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614024413.110449-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 02:44:13AM +0000, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/target/iscsi/cxgbit/cxgbit_ddp.c: In function 'cxgbit_ddp_init':
-> drivers/target/iscsi/cxgbit/cxgbit_ddp.c:303:15: warning:
->  variable 'ppmax' set but not used [-Wunused-but-set-variable]
-> 
-> It's not used since commit a248384e6420 ("cxgb4/libcxgb/cxgb4i/cxgbit:
-> enable eDRAM page pods for iSCSI")
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/target/iscsi/cxgbit/cxgbit_ddp.c | 3 ---
->  1 file changed, 3 deletions(-)
-> 
-> diff --git a/drivers/target/iscsi/cxgbit/cxgbit_ddp.c b/drivers/target/iscsi/cxgbit/cxgbit_ddp.c
-> index 1443ef045a5f..fe1be5feaf21 100644
-> --- a/drivers/target/iscsi/cxgbit/cxgbit_ddp.c
-> +++ b/drivers/target/iscsi/cxgbit/cxgbit_ddp.c
-> @@ -300,7 +300,6 @@ int cxgbit_ddp_init(struct cxgbit_device *cdev)
->  	struct cxgb4_lld_info *lldi = &cdev->lldi;
->  	struct net_device *ndev = cdev->lldi.ports[0];
->  	struct cxgbi_tag_format tformat;
-> -	unsigned int ppmax;
->  	int ret, i;
->  
->  	if (!lldi->vr->iscsi.size) {
-> @@ -308,8 +307,6 @@ int cxgbit_ddp_init(struct cxgbit_device *cdev)
->  		return -EACCES;
->  	}
->  
-> -	ppmax = lldi->vr->iscsi.size >> PPOD_SIZE_SHIFT;
-> -
->  	memset(&tformat, 0, sizeof(struct cxgbi_tag_format));
->  	for (i = 0; i < 4; i++)
->  		tformat.pgsz_order[i] = (lldi->iscsi_pgsz_order >> (i << 3))
-> 
 
-Acked-by: Varun Prakash <varun@chelsio.com>
+On 14/06/2019 16.20, Rob Herring wrote:
+> On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>> Rob,
+>>
+>> On 13/06/2019 21.16, Rob Herring wrote:
+>>>> +Remote PSI-L endpoint
+>>>> +
+>>>> +Required properties:
+>>>> +--------------------
+>>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
+>>>> +
+>>>> +Within the PSI-L endpoint node thread configuration subnodes must present with:
+>>>> +ti,psil-configX naming convention, where X is the thread ID offset.
+>>>
+>>> Don't use vendor prefixes on node names.
+>>
+>> OK.
+>>
+>>>> +
+>>>> +Configuration node Required properties:
+>>>> +--------------------
+>>>> +- linux,udma-mode:  Channel mode, can be:
+>>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
+>>>> +                    - UDMA_TR_MODE: for Third-Party mode
+>>>
+>>> This is hardly a common linux thing. What determines the value here.
+>>
+>> Unfortunately it is.
+> 
+> No, it's a feature of your h/w and in no way is something linux
+> defined which is the point of 'linux' prefix.
 
-This patch is for net-next tree.
+The channel can be either Packet or TR mode. The HW is really flexible
+on this (and on other things as well).
+It just happens that Linux need to use specific channels in a specific mode.
+
+Would it help if we assume that all channels are used in Packet mode,
+but we have linux,tr-mode bool to indicate that the given channel in
+Linux need to be used in TR mode.
+
+>> Each channel can be configured to Packet or TR mode. For some
+>> peripherals it is true that they only support packet mode, these are the
+>> newer PSI-L native peripherals.
+>> For these channels a udma-mode property would be correct.
+>>
+>> But we have legacy peripherals as well and they are serviced by PDMA
+>> (which is a native peripheral designed to talk to the given legacy IP).
+>> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
+>> most cases clear what to use, but for example for audio (McASP) channels
+>> Linux is using TR channel because we need cyclic DMA while for example
+>> RTOS is using Packet mode as it fits their needs better.
+>>
+>> Here I need to prefix the udma-mode with linux as the mode is used by
+>> Linux, but other OS might opt to use different channel mode.
+> 
+> So you'd need <os>,udma-mode? That doesn't work... If the setting is
+> per OS, then it belongs in the OS because the same dtb should work
+> across OS's.
+
+So I should have a table for the thread IDs in the DMA driver and mark
+channels as TR or Packet in there for Linux use?
+Or just an array which would mark the non packet PSI-L thread IDs?
+
+I still prefer to have this coming via DT as a Linux parameter as other
+OS is free to ignore the linux,udma-mode, but as I said there are
+certain channels which must be used in Linux in certain mode while
+others in different mode.
+
+>> The reason why this needs to be in the DT is that when the channel is
+>> requested we need to configure the mode and it can not be swapped
+>> runtime easily between Packet and TR mode.
+> 
+> So when the client makes the channel request, why doesn't it specify the mode?
+
+This is UDMAP internal information on what type of Descriptors the
+channel will expect and how it is going to dispatch the work.
+
+Packet and TR mode at the end does the same thing, but in a completely
+different way.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
