@@ -2,87 +2,98 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5911C31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3475C31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FA921537
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABAD32082C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 11:39:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o6LPSm3Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jaPnhTGE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727604AbfFNLgH (ORCPT
+        id S1727477AbfFNLju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 07:36:07 -0400
-Received: from mail-qt1-f182.google.com ([209.85.160.182]:39458 "EHLO
-        mail-qt1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727054AbfFNLgG (ORCPT
+        Fri, 14 Jun 2019 07:39:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55941 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727054AbfFNLjt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 07:36:06 -0400
-Received: by mail-qt1-f182.google.com with SMTP id i34so2007631qta.6
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 04:36:06 -0700 (PDT)
+        Fri, 14 Jun 2019 07:39:49 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a15so1992372wmj.5;
+        Fri, 14 Jun 2019 04:39:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=iYWTfHNOGy0zCm7qjiECEcfyYn0UNGZv0fcAcGdSdgg=;
-        b=o6LPSm3YPDMrL/3E2NtKGfuENLZmMWBdAt0M2fXDRjTnM/hpNZZD+gQx4nuzZRErRi
-         OOXafc/BXwn0ssoqtMNrRgteXvsZ9xAn9QCgJjykO7RCluQFxU248dF6f0gsXfVgDHhP
-         trxyZq65xhrp0csV+D/zOKyYqleu7RIq0madxSfNVQW1qIL/UK4qUV1OFM0dwJf4YXvR
-         bI5jwS6oaZJ3+a3+myzITXwleNevb9W5SCrLkZM05SU8z3xCk3LixFOIvODGbEXUMe0Y
-         Hbl5Q0UCcaVzqBAHmIEpHRa57mo6U0i5aO1uDLd2NJTI9uLJ1jQ8pufjjrNYqf7PyLNr
-         KWxw==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5QkQOtBCvlpUCN6hRdiPhpjDsy/zd75Sg/vSA1kvV7I=;
+        b=jaPnhTGE71G4ZdV+SZXIJmPlRFM8tFsJyRbm6x51cF1rn2xU5i9q+R/NBoWeGCO5cp
+         S96GZGjqgBM2i8xp7GrvTL7EQ1gAydh2T6uw2UldnXHA5zfjaS9RnzKO9fDhmAAYwWyM
+         ZBVQt/O41N2xQa5IRa2Z8Y/4yYKR8tkRLlm/9AE0Gptl0hSigq0QeNfx2HRz3pLvD2O+
+         zbB9gDgwapWNU/Wiy/coZiBp/KQn5UDhdS1Hw0ax33+485vgFCXBrwCc6oOag+z5kj8/
+         bzkU1MI37eoBr+DgQPQ+cE1HjmeFRJXTR67XEuWPH9f8oM9TASSWyxnUu4Bv59GmlBYu
+         DtyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=iYWTfHNOGy0zCm7qjiECEcfyYn0UNGZv0fcAcGdSdgg=;
-        b=sP+H4DDqiqG7FS1tJ7l452Vq210TfJaUIx6UmehKIsm+UIvne7Lum5v7wuqaIktBGj
-         6BVyeW5QEY5Sdr9sadlYQQXYJr9c2D1zSwgXb4c0hpkicgIc4Bhj14t3OoiJtMBjhtTP
-         Tq4Xzh6ZI0MT8u9CKHmT2nOztzgvAjwoASSPY5C2RCfFr7nNsolWgHWlSVlyLjoVPS11
-         vgVCNT8pQ6ev/SLrIDPAKtPOEOpqG93EXnhSyKLYW7SMRgcERyHrOmgczaabtkpeJ9Mb
-         Ib5lYmKb7n1bb6hU1U0Gu335Q8KSaELWAVBC1/gRKQ7sRGp3A5W35UQdWjC+JbndoPZ+
-         LT6g==
-X-Gm-Message-State: APjAAAUWM/8dCJPXIzwr0hYnh6o2I+UszbvKfNU9NKlRSEgxzuh1fO8i
-        9PXN9bexl6EiZ7K0WWOaAAoH6ZiDo3XjdaujCyc=
-X-Google-Smtp-Source: APXvYqw4LNT9mOOlCh6RRAJMYCnVol0xQsRuD2GZQqReLTW7gc+Qtdxocgbn/MDYypq5T/Qb1tgZsEIDbXySavtO6ts=
-X-Received: by 2002:a05:6214:2b0:: with SMTP id m16mr7805135qvv.23.1560512165862;
- Fri, 14 Jun 2019 04:36:05 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5QkQOtBCvlpUCN6hRdiPhpjDsy/zd75Sg/vSA1kvV7I=;
+        b=DcxuAAsvQ86flfE5TPkC8IllLPsMGEw2qWNZc9PJo+wwJLbEdfrduaq+05qG5ZMp3Z
+         aLYVCRTtAZ7lDC+jdjojlHfUKVMUHNWspd9CUerWzQso7xsfPe07zwlyjgXVmvmoEKsU
+         zhDPDfe9qhRxyfVRdnpHjJZtx417EHjHwJ6g+d78e/51BVda89Av13/PLNJ6cm8Hp+tM
+         +8CRUw3BOGiPrsH68/frJJYbbYub3HBNVhuwFV7X32ihGb6VQaMMBwT2pIUrWxmZy3eS
+         /og9pwGVCQjpSs31DJktaSyVHEZ36EtCIJLBz4IX70Y+hNax8oTHu2szJ6/BlKv3Hst+
+         y/sg==
+X-Gm-Message-State: APjAAAWUpciCRttTFcq/3Wj1Ei5j7fMFaH9DLDQNWfVUJ6kOTQ7ERl6n
+        bq0g5fxVzioU3Yec85HW3V2TmfbpLC3PVw==
+X-Google-Smtp-Source: APXvYqxq6BZ+1M454AIWXxu8PflknrArMEw84BFEpKH9XMXPD0MCV08mnGX+9mgYW5qR/mO3ohNYPg==
+X-Received: by 2002:a7b:c842:: with SMTP id c2mr7682152wml.28.1560512387550;
+        Fri, 14 Jun 2019 04:39:47 -0700 (PDT)
+Received: from localhost.localdomain ([185.107.117.129])
+        by smtp.gmail.com with ESMTPSA id o1sm3051021wre.76.2019.06.14.04.39.45
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 04:39:46 -0700 (PDT)
+From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
+To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Pavel Begunkov <asml.silence@gmail.com>
+Subject: [PATCH 1/1] blk-mq/debugfs: Fix improper print qualifier
+Date:   Fri, 14 Jun 2019 14:39:26 +0300
+Message-Id: <7f9091f59d0331bf55286d5f78fa20fa4dde2e21.1560486257.git.asml.silence@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-References: <20190614100928.9791-1-hch@lst.de>
-In-Reply-To: <20190614100928.9791-1-hch@lst.de>
-From:   Greentime Hu <green.hu@gmail.com>
-Date:   Fri, 14 Jun 2019 19:35:29 +0800
-Message-ID: <CAEbi=3dnZNfMeLeuf9Y-d0HxTe_v1F_45Tb_TZwaat_LJq66SQ@mail.gmail.com>
-Subject: Re: [RFC] switch nds32 to use the generic remapping DMA allocator
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Vincent Chen <deanbo422@gmail.com>,
-        iommu@lists.linux-foundation.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Christoph Hellwig <hch@lst.de> =E6=96=BC 2019=E5=B9=B46=E6=9C=8814=E6=97=A5=
- =E9=80=B1=E4=BA=94 =E4=B8=8B=E5=8D=886:09=E5=AF=AB=E9=81=93=EF=BC=9A
->
-> Hi Greentime and Vicent,
->
-> can you take a look at the (untested) patch below?  It converts nds32
-> to use the generic remapping DMA allocator, which is also used by
-> arm64 and csky.
+From: Pavel Begunkov <asml.silence@gmail.com>
 
-Hi Christoph,
+struct blk_rq_stat::mean is a u64 value, so use %llu
 
-It looks good to me. I just verified in nds32 platform and it works fine.
-Should I put it in my next-tree or you will pick it up in your tree? :)
+Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+---
+ block/blk-mq-debugfs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested-by: Greentime Hu <greentime@andestech.com>
-Reviewed-by: Greentime Hu <greentime@andestech.com>
+diff --git a/block/blk-mq-debugfs.c b/block/blk-mq-debugfs.c
+index 6aea0ebc3a73..f69da381cb1e 100644
+--- a/block/blk-mq-debugfs.c
++++ b/block/blk-mq-debugfs.c
+@@ -17,7 +17,7 @@
+ static void print_stat(struct seq_file *m, struct blk_rq_stat *stat)
+ {
+ 	if (stat->nr_samples) {
+-		seq_printf(m, "samples=%d, mean=%lld, min=%llu, max=%llu",
++		seq_printf(m, "samples=%d, mean=%llu, min=%llu, max=%llu",
+ 			   stat->nr_samples, stat->mean, stat->min, stat->max);
+ 	} else {
+ 		seq_puts(m, "samples=0");
+-- 
+2.22.0
+
