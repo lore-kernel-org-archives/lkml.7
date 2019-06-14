@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8448C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C2BC31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3140217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D72321841
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544181;
-	bh=E3GY73+NvZOKNDdSCl5mj8a8NxwQggH++gAKIFJIZYE=;
+	s=default; t=1560544186;
+	bh=QD3QsZcOuxunLR89FwyqxzdkeWTv4iaFXo6tE1I7r3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eLsADNSllnvzPzZ33nC1NFan/waj1BoZ73nvEvpwDHzAO628kGsR7jZgKj3MRgzRi
-	 xLkekqDHw65vzTB0tDHtLCtsvjYMMWtw7G0YXJi62Ytdxn6pU8kBDCe+xbKnclPD/T
-	 imkGfqpLg7lJHKHnjtrD4voWAwhHKDeMy9R3V7uY=
+	b=Gj9oRHJvMX2rfbq08fahhNYon5CQTKUNdQmfenZVnl1hXPDbyBP52dRFQw9C0yzSD
+	 LalWR87f5JPSkZraAy4k+UOUrHleOEziLYnYxCRkqW6cacqE9ygrsXGanPg2pslPAH
+	 uNK0vbfy2bDbrj5NZxWl9h7TCWQf1PXKKWB8L8dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727093AbfFNU3k (ORCPT
+        id S1727160AbfFNU3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:29:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51740 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:29:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726397AbfFNU3g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:36 -0400
+        id S1727058AbfFNU3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:39 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E0E0E21841;
-        Fri, 14 Jun 2019 20:29:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41C4521841;
+        Fri, 14 Jun 2019 20:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544176;
-        bh=E3GY73+NvZOKNDdSCl5mj8a8NxwQggH++gAKIFJIZYE=;
+        s=default; t=1560544179;
+        bh=QD3QsZcOuxunLR89FwyqxzdkeWTv4iaFXo6tE1I7r3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XA9+nVH/b/ZuNGoHALzD84zpoRTnqMkMFOFK+qLaNX/hIBtrMV7kQNSRwN8hdWxrR
-         CpFblRxqA8b+ZuZPGWfZxOzC830yUr0Wg9ZujtTgbyLMjG24cCxCLzWRB/ubrBs4Nd
-         HeQPaY7CBa6l5Animum2Vawi4VSRhSJoAkm0ZFIY=
+        b=NRMTjknED47yIRDA1NQB8cv9lcAaDxyYXzzhxuz60XZDgHbOhj71cMpEC5D7cG3Hv
+         dc2u3v+Qp1glwFnp/M3LITy0jT+lYpEe0NempmsOp17GsJZ29j0WuiGtt8zUT2Limf
+         ie37vIlpqAkyjRfNDtf4upAyfTddOOXb8mm90XK8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Nikita Yushchenko <nikita.yoush@cogentembedded.com>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
+Cc:     Gen Zhang <blackgod016574@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 34/59] net: dsa: mv88e6xxx: avoid error message on remove from VLAN 0
-Date:   Fri, 14 Jun 2019 16:28:18 -0400
-Message-Id: <20190614202843.26941-34-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 36/59] mdesc: fix a missing-check bug in get_vdev_port_node_info()
+Date:   Fri, 14 Jun 2019 16:28:20 -0400
+Message-Id: <20190614202843.26941-36-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
 References: <20190614202843.26941-1-sashal@kernel.org>
@@ -60,48 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+From: Gen Zhang <blackgod016574@gmail.com>
 
-[ Upstream commit 62394708f3e01c9f2be6be74eb6305bae1ed924f ]
+[ Upstream commit 80caf43549e7e41a695c6d1e11066286538b336f ]
 
-When non-bridged, non-vlan'ed mv88e6xxx port is moving down, error
-message is logged:
+In get_vdev_port_node_info(), 'node_info->vdev_port.name' is allcoated
+by kstrdup_const(), and it returns NULL when fails. So
+'node_info->vdev_port.name' should be checked.
 
-failed to kill vid 0081/0 for device eth_cu_1000_4
-
-This is caused by call from __vlan_vid_del() with vin set to zero, over
-call chain this results into _mv88e6xxx_port_vlan_del() called with
-vid=0, and mv88e6xxx_vtu_get() called from there returns -EINVAL.
-
-On symmetric path moving port up, call goes through
-mv88e6xxx_port_vlan_prepare() that calls mv88e6xxx_port_check_hw_vlan()
-that returns -EOPNOTSUPP for zero vid.
-
-This patch changes mv88e6xxx_vtu_get() to also return -EOPNOTSUPP for
-zero vid, then this error code is explicitly cleared in
-dsa_slave_vlan_rx_kill_vid() and error message is no longer logged.
-
-Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
-Reviewed-by: Vivien Didelot <vivien.didelot@gmail.com>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/dsa/mv88e6xxx/chip.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sparc/kernel/mdesc.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/net/dsa/mv88e6xxx/chip.c b/drivers/net/dsa/mv88e6xxx/chip.c
-index 720f1dde2c2d..ae750ab9a4d7 100644
---- a/drivers/net/dsa/mv88e6xxx/chip.c
-+++ b/drivers/net/dsa/mv88e6xxx/chip.c
-@@ -1517,7 +1517,7 @@ static int mv88e6xxx_vtu_get(struct mv88e6xxx_chip *chip, u16 vid,
- 	int err;
+diff --git a/arch/sparc/kernel/mdesc.c b/arch/sparc/kernel/mdesc.c
+index 9a26b442f820..8e645ddac58e 100644
+--- a/arch/sparc/kernel/mdesc.c
++++ b/arch/sparc/kernel/mdesc.c
+@@ -356,6 +356,8 @@ static int get_vdev_port_node_info(struct mdesc_handle *md, u64 node,
  
- 	if (!vid)
--		return -EINVAL;
-+		return -EOPNOTSUPP;
+ 	node_info->vdev_port.id = *idp;
+ 	node_info->vdev_port.name = kstrdup_const(name, GFP_KERNEL);
++	if (!node_info->vdev_port.name)
++		return -1;
+ 	node_info->vdev_port.parent_cfg_hdl = *parent_cfg_hdlp;
  
- 	entry->vid = vid - 1;
- 	entry->valid = false;
+ 	return 0;
 -- 
 2.20.1
 
