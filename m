@@ -1,102 +1,78 @@
-Return-Path: <SRS0=5wok=UM=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE979C31E45
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DED9DC31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA05207E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 13 Jun 2019 23:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8EC2084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 00:01:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=essential-com.20150623.gappssmtp.com header.i=@essential-com.20150623.gappssmtp.com header.b="x+tI3AP9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727245AbfFMX6v (ORCPT
+        id S1727132AbfFNABi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 19:58:51 -0400
-Received: from mga06.intel.com ([134.134.136.31]:12081 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725836AbfFMX6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 19:58:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 Jun 2019 16:58:49 -0700
-X-ExtLoop1: 1
-Received: from iweiny-desk2.sc.intel.com ([10.3.52.157])
-  by fmsmga007.fm.intel.com with ESMTP; 13 Jun 2019 16:58:49 -0700
-Date:   Thu, 13 Jun 2019 17:00:11 -0700
-From:   Ira Weiny <ira.weiny@intel.com>
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Matthew Wilcox <willy@infradead.org>,
-        Dave Chinner <david@fromorbit.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190614000010.GA783@iweiny-DESK2.sc.intel.com>
-References: <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190613002555.GH14363@dread.disaster.area>
- <20190613152755.GI32656@bombadil.infradead.org>
- <20190613211321.GC32404@iweiny-DESK2.sc.intel.com>
- <20190613234530.GK22901@ziepe.ca>
+        Thu, 13 Jun 2019 20:01:38 -0400
+Received: from mail-vs1-f52.google.com ([209.85.217.52]:33107 "EHLO
+        mail-vs1-f52.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726187AbfFNABh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 20:01:37 -0400
+Received: by mail-vs1-f52.google.com with SMTP id m8so663717vsj.0
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 17:01:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=essential-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=b/VzHcVhDJTNOAdDRTbow8j/DNogn8ltF7sqkrIq3T8=;
+        b=x+tI3AP9uTXM60rkrG+1oiGMyJCF1EScMwISOb5aZIYkHFOrKVChTPO0wTUURMuoIb
+         z4a4fsZE1ptwu6NFRceu5CJKew8VYNNZZ5DBAZNVqCYi8gR/obaruPxwLMAclvJoP1Nh
+         5pTmtnH59bbRv/bgLfKfD8b6e/b60vaAT86AWN9kuU9dSkfxtSRcVyJb8TKBMPqwnVVC
+         yneRklPxOhXeFgnjyAYYMRq4M4C5UYy3ERBvEkbQMOKx10UUAWuNTj/3DfuytffPVFWa
+         LkfH6sfelkTclM7qrXz+/7bydcBzdKkFmYd5IYD976AjomF+htCL29D7L//SHmV3NoKZ
+         yjsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=b/VzHcVhDJTNOAdDRTbow8j/DNogn8ltF7sqkrIq3T8=;
+        b=TZenkGcci5QTPgTdOTKF1YcteALeS4H9Od7nvtlioOUA901H8Th6zl7IYEXTgztbnW
+         9Qg4XukxxDMzLNklSE2Yb1wdpdzXowVUyNxW1284A5fDTSRVC3xsXcBQcuApUlKgQDPS
+         NackylzVDwqe71kf4lgn7819B8CeY2xd1LateoI+46i/vl0eQgz3N5PQbjWvc7MXoQ7U
+         jwwMRSqJIQ7rc9mEpwzSH2wZGwjac+bIFEk0s/N3MFaTjIpfKwumNjccf4g2BO5ANyXF
+         HLxycB3RRn4U7VHmiOWxfUZ/iR7FVbc0HL0eYLruA2i4yPcCpL2dQLQdVNDGpuznwesh
+         1JfQ==
+X-Gm-Message-State: APjAAAVra00b16wrGGEVl5y8V+WrxvXa+Pj/jw/tfifOdAy/3OtyixUZ
+        jJXNXxlIfkxb4Kkpo7WGF1sCQlDq0lEYrYcs9D47Ow==
+X-Google-Smtp-Source: APXvYqxaGsxboqTVdy2/d1cfs19JKKBAiAcIZ0qmgBQcn7QmsDl18e8V3peuZUQDak5CVBfxM73w/S4w6Nxf01JNbUI=
+X-Received: by 2002:a67:1ec1:: with SMTP id e184mr41773724vse.83.1560470496877;
+ Thu, 13 Jun 2019 17:01:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613234530.GK22901@ziepe.ca>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+From:   =?UTF-8?Q?Jean=2DBaptiste_Th=C3=A9ou?= <jb@essential.com>
+Date:   Fri, 14 Jun 2019 09:01:25 +0900
+Message-ID: <CAEXycp+Y-x7N_Yr==Xy_CT5K_a1DZYc85w1OUV+cKC5ZN+KB1g@mail.gmail.com>
+Subject: Regression post "HID: core: move Usage Page concatenation to Main item"
+To:     Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, nsaenzjulienne@suse.de
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 08:45:30PM -0300, Jason Gunthorpe wrote:
-> On Thu, Jun 13, 2019 at 02:13:21PM -0700, Ira Weiny wrote:
-> > On Thu, Jun 13, 2019 at 08:27:55AM -0700, Matthew Wilcox wrote:
-> > > On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
-> > > > e.g. Process A has an exclusive layout lease on file F. It does an
-> > > > IO to file F. The filesystem IO path checks that Process A owns the
-> > > > lease on the file and so skips straight through layout breaking
-> > > > because it owns the lease and is allowed to modify the layout. It
-> > > > then takes the inode metadata locks to allocate new space and write
-> > > > new data.
-> > > > 
-> > > > Process B now tries to write to file F. The FS checks whether
-> > > > Process B owns a layout lease on file F. It doesn't, so then it
-> > > > tries to break the layout lease so the IO can proceed. The layout
-> > > > breaking code sees that process A has an exclusive layout lease
-> > > > granted, and so returns -ETXTBSY to process B - it is not allowed to
-> > > > break the lease and so the IO fails with -ETXTBSY.
-> > > 
-> > > This description doesn't match the behaviour that RDMA wants either.
-> > > Even if Process A has a lease on the file, an IO from Process A which
-> > > results in blocks being freed from the file is going to result in the
-> > > RDMA device being able to write to blocks which are now freed (and
-> > > potentially reallocated to another file).
-> > 
-> > I don't understand why this would not work for RDMA?  As long as the layout
-> > does not change the page pins can remain in place.
-> 
-> Because process A had a layout lease (and presumably a MR) and the
-> layout was still modified in way that invalidates the RDMA MR.
+Hi,
 
-Oh sorry I miss read the above...  (got Process A and  B mixed up...)
+This patch (58e75155009cc800005629955d3482f36a1e0eec) is triggering a
+regression with the following descriptor (report not working as
+expected)
 
-Right, but Process A still can't free those blocks because the gup pin exists
-on them...  So yea it can't _just_ be a layout lease which controls this on the
-"file fd".
+https://partner-android.googlesource.com/platform/cts/+/refs/heads/q-fs-release/tests/tests/hardware/res/raw/asus_gamepad_register.json
 
-Ira
+Didn't see anything obviously wrong with this gamepad descriptor, so
+not sure what's trigger the regression.
 
+Thanks a lot
+
+Best regards
