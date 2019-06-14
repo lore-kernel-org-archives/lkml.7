@@ -2,138 +2,76 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDB6BC468B0
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:22:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E071AC31E4C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:22:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD52720850
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:22:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC13221473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:22:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727819AbfFNMWr (ORCPT
+        id S1727852AbfFNMW5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:22:47 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:34984 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727362AbfFNMWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:22:47 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 154F19C821EE6C64B89A;
-        Fri, 14 Jun 2019 20:22:45 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Fri, 14 Jun 2019
- 20:22:38 +0800
-From:   John Garry <john.garry@huawei.com>
-Subject: Re: [PATCH v4 1/3] lib: logic_pio: Use logical PIO low-level
- accessors for !CONFIG_INDIRECT_PIO
-To:     Bjorn Helgaas <helgaas@kernel.org>
-References: <1560262374-67875-1-git-send-email-john.garry@huawei.com>
- <1560262374-67875-2-git-send-email-john.garry@huawei.com>
- <20190613023947.GD13533@google.com>
- <8ef228f8-97cb-e40e-ea6b-410b80a845cf@huawei.com>
- <20190613200932.GJ13533@google.com>
- <7495dcab-f293-4b2a-4740-2249f61351f7@huawei.com>
- <20190614115056.GP13533@google.com>
-CC:     <rjw@rjwysocki.net>, <wangkefeng.wang@huawei.com>,
-        <lorenzo.pieralisi@arm.com>, <arnd@arndb.de>,
-        <linux-pci@vger.kernel.org>, <will.deacon@arm.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <catalin.marinas@arm.com>, <andriy.shevchenko@linux.intel.com>,
-        <linux-arm-kernel@lists.infradead.org>
-Message-ID: <4c49bf7d-f68e-0b79-f03d-03958dac640e@huawei.com>
-Date:   Fri, 14 Jun 2019 13:22:31 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Fri, 14 Jun 2019 08:22:57 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:37746 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727362AbfFNMW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:22:56 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hblEL-0002pf-BB; Fri, 14 Jun 2019 14:22:53 +0200
+Date:   Fri, 14 Jun 2019 14:22:52 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        akpm@linux-foundation.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Subject: Re: [PATCH] mm/ioremap: Probe platform for p4d huge map support
+In-Reply-To: <1560406781-14253-1-git-send-email-anshuman.khandual@arm.com>
+Message-ID: <alpine.DEB.2.21.1906141422370.1722@nanos.tec.linutronix.de>
+References: <1560406781-14253-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190614115056.GP13533@google.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/2019 12:50, Bjorn Helgaas wrote:
-> On Fri, Jun 14, 2019 at 10:02:52AM +0100, John Garry wrote:
->> On 13/06/2019 21:09, Bjorn Helgaas wrote:
->>> On Thu, Jun 13, 2019 at 10:39:12AM +0100, John Garry wrote:
->>>> On 13/06/2019 03:39, Bjorn Helgaas wrote:
->>>>> I'm not sure it's even safe, because CONFIG_INDIRECT_PIO depends on
->>>>> ARM64,  but PCI_IOBASE is defined on most arches via asm-generic/io.h,
->>>>> so this potentially affects arches other than ARM64.
->>>>
->>>> It would do. It would affect any arch which defines PCI_IOBASE and
->>>> does not have arch-specific definition of inb et all.
->>
->>> What's the reason for testing PCI_IOBASE instead of
->>> CONFIG_INDIRECT_PIO?  If there's a reason it's needed, that's fine,
->>> but it does make this much more complicated to review.
->>
->> For ARM64, we have PCI_IOBASE defined but may not have
->> CONFIG_INDIRECT_PIO defined. Currently CONFIG_INDIRECT_PIO is only
->> selected by CONFIG_HISILICON_LPC.
->>
->> As such, we should make this change also for when
->> CONFIG_INDIRECT_PIO is not defined.
+On Thu, 13 Jun 2019, Anshuman Khandual wrote:
 
-Hi Bjorn,
+> Finishing up what the commit c2febafc67734a ("mm: convert generic code to
+> 5-level paging") started out while levelling up P4D huge mapping support
+> at par with PUD and PMD. A new arch call back arch_ioremap_p4d_supported()
+> is being added which just maintains status quo (P4D huge map not supported)
+> on x86 and arm64.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will.deacon@arm.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: x86@kernel.org
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
->
-> OK.  This is all very important for the commit log -- we need to
-> understand what arches are affected and the reason they need it.
-
-Right, and to repeat, this would affect other archs which define 
-PCI_IOBASE and don't have custom IO port accessors definitions.
-
-There are a few remaining even after the recent arch clear out . I have 
-it at arm64, microblaze, and unicore32. Arch m68k defines PCI_IOBASE but 
-seems to have its own IO port accessors. Same again for some arm machines.
-
-At least I should cc those arch maintainers.
-
->
-> Since the goal of this series is to fix an ARM64-specific issue,
-
-"ARM64" was in the headline banner, but it would apply to other archs, 
-as mentioned above. I should have made that clearer.
-
-and
-> the typical port I/O model is for each arch to #define its own inb(),
-> maybe it would make sense to move the "#define inb logic_inb" from
-> linux/logic_pio.h to arm64/include/asm/io.h?
->
-
-CONFIG_INDIRECT_PIO has been indirectly enabled in ARM64 defconfig for 
-some time, so I think that it's ok for ARM64 arch Kconfig to select it 
-at this stage. From that, we could make the change suggested.
-
-And, in addition to that, we can make the change in this series just for 
-CONFIG_INDIRECT_PIO.
-
-But I think that the other archs, above, could benefit from the changes 
-in this series, so it would be shame to omit them.
-
-> The "#ifndef inb" arrangement gets pretty complicated when it occurs
-> more than one place (asm-generic/io.h and logic_pio.h) and we have to
-> start worrying about the ordering of #includes.
-
-I agree on that.
-
-Cheers,
-John
-
->
-> Bjorn
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
->
-
-
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
