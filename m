@@ -2,79 +2,97 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115BDC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18637C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8D7E21473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE9CD21473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:38:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560544717;
+	bh=9q/dweRBeBD1nXD8t6BFSz7qps9Y6DHWLU1CbVVO9Ww=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=AHMSja7Zk8Pp+6xFwpmNgAtyc4QjR98d0G2YhF1fi7BcTFjnrQdakaM/96cnI5s4r
+	 8oROmePcK+VBZ6nhLMTW1KIAPgzQzyKZrI5LKgtp5dFEsf6PKAxElX+wGu46RBs/cz
+	 G8+KdVO88UH1K7vt0ieD6P4Rnfb37KGWldw6vOc0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbfFNUi2 (ORCPT
+        id S1728357AbfFNUig (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:38:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39294 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:38:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50870 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727175AbfFNUiK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:38:10 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726705AbfFNU3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:03 -0400
+Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 177DD21473;
-        Fri, 14 Jun 2019 20:38:09 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 16:38:07 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Anders Roxell <anders.roxell@linaro.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kprobes: Fix to init kprobes in subsys_initcall
-Message-ID: <20190614163807.140cd682@gandalf.local.home>
-In-Reply-To: <20190613160857.9db38d1cb32996b8c4e0ddc3@kernel.org>
-References: <20190603214105.715a4072472ef4946123dc20@kernel.org>
-        <155956708268.12228.10363800793132214198.stgit@devnote2>
-        <20190612165947.ba696696dac0faa3aa35a501@kernel.org>
-        <20190612094729.40106a28@gandalf.local.home>
-        <20190613160857.9db38d1cb32996b8c4e0ddc3@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B03421872;
+        Fri, 14 Jun 2019 20:29:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560544142;
+        bh=9q/dweRBeBD1nXD8t6BFSz7qps9Y6DHWLU1CbVVO9Ww=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=srBYP4LyqtYWUn/3X0lJJ4ZIc4Ri9/azc7JhhKmUR7iI7v1DKRCLrw8y49gv/pXMS
+         /xWOG1svWYLw9yGG3v9cjprlIiRcNuRpwGxhZkHAPbj2xGXODJQB3VOimnlhvvQPBP
+         zPukgJeQNp5cQBjAiEdH2QDaE+k/XCkHTQRDfzLM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        "Michael J . Ruhl" <michael.j.ruhl@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 22/59] IB/hfi1: Insure freeze_work work_struct is canceled on shutdown
+Date:   Fri, 14 Jun 2019 16:28:06 -0400
+Message-Id: <20190614202843.26941-22-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
+References: <20190614202843.26941-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 16:08:57 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-> On Wed, 12 Jun 2019 09:47:29 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > On Wed, 12 Jun 2019 16:59:47 +0900
-> > Masami Hiramatsu <mhiramat@kernel.org> wrote:
-> >   
-> > > Hi Steve,
-> > > 
-> > > Could you pick this to your ftrace/core branch?  
-> > 
-> > "core" or should this go to "urgent"? The difference is that core is
-> > scheduled for the next merge window, and urgent is for the rc releases
-> > (ie. bug fixes).  
-> 
-> If the previous one (b5f8b32c93b2) has already gone to rc, yes
-> this should be in urgent, since this always crashes arm64 kernel
-> if we enables CONFIG_KPROBES_SANITY_TEST.
-> 
+[ Upstream commit 6d517353c70bb0818b691ca003afdcb5ee5ea44e ]
 
-Ah, no it's not in -rc. I'll add it to my linux-next queue.
+By code inspection, the freeze_work is never canceled.
 
-Thanks!
+Fix by adding a cancel_work_sync in the shutdown path to insure it is no
+longer running.
 
--- Steve
+Fixes: 7724105686e7 ("IB/hfi1: add driver files")
+Reviewed-by: Michael J. Ruhl <michael.j.ruhl@intel.com>
+Reviewed-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
+Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/infiniband/hw/hfi1/chip.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/infiniband/hw/hfi1/chip.c b/drivers/infiniband/hw/hfi1/chip.c
+index 9784c6c0d2ec..403e23c5d08f 100644
+--- a/drivers/infiniband/hw/hfi1/chip.c
++++ b/drivers/infiniband/hw/hfi1/chip.c
+@@ -9848,6 +9848,7 @@ void hfi1_quiet_serdes(struct hfi1_pportdata *ppd)
+ 
+ 	/* disable the port */
+ 	clear_rcvctrl(dd, RCV_CTRL_RCV_PORT_ENABLE_SMASK);
++	cancel_work_sync(&ppd->freeze_work);
+ }
+ 
+ static inline int init_cpu_counters(struct hfi1_devdata *dd)
+-- 
+2.20.1
 
