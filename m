@@ -2,116 +2,267 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B901C31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F59DC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D00FC2084E
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:41:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E3842084E
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 07:42:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tx3zTdrZ"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="k/yXk8Sh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfFNHl6 (ORCPT
+        id S1726366AbfFNHme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 03:41:58 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:44392 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725775AbfFNHl4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 03:41:56 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t7so648771plr.11;
-        Fri, 14 Jun 2019 00:41:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qTN8zccKrdobWI38/ip/wwPCXH3X8VyP8EgQGu6WwT4=;
-        b=Tx3zTdrZxlmZBygvwuVbgkil59kuAuDEE9UD/o9yXNf7z+83BF5msXsFToFYmZYp4E
-         XQNHmim9ZBjucKmzzcSeHbwSWyreHdMPlMOEanVzlkX78CwPSYCOsE8/m3p5jc56JiSD
-         bqk0LJyD4L28EhEOAJoXAJwXrYikXA1UQnWIFOFhd46PbySme9DU402xNwtgUMvOSqQ/
-         I827m25SPAHWqj1C/AdTSO4O39CqR9R0nk6mmFTDkAGS/Bp72RWn/UNarsZfSSd7Y/dd
-         Yx1xXLEIaOvVSUkS7evJYxbttwD/KV7HRyR5gFCW3oYFzUiGwkid6CiY38OPJCFA5EW3
-         yHoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qTN8zccKrdobWI38/ip/wwPCXH3X8VyP8EgQGu6WwT4=;
-        b=cE1cY9Dz/hxc+Upm5hjSyho6ivM8ZjsWaHC511ReRJCkmryp4Z2kDVsNID/R3wkGcf
-         kMiCwfxPSTAI46I59FwTKk1CBMWrMDLmw3S27XBe1ZUzA4yjFGgSfUEbYEEYxkL/OAhc
-         WEVCkOFd/rNTonqXoSJaRb3FxgP4FSEH8iFU7lJklxJwqxm2CSe6MmOh63mxptSJQzwy
-         ugARzlH7GaE+YZRy/iq2NLUFKwnjw4R8+8+TevKSQ2Kt0pIROOJh+3srk5gUKBfc2JEU
-         WMhevfl02WCBZFV+8UYuMLy1Dso1UZ7q6w5CUqRXkcN9Ncc7ZZ9yYgQz4tFNA/vNPjhQ
-         8EzA==
-X-Gm-Message-State: APjAAAVw6lm51mwYk9Fstlx4Nqga9RHiS61pk6f2o0JTkZ4wepFPDO8a
-        mWRJ+QnO3QoZfQBrv3Kd9R8=
-X-Google-Smtp-Source: APXvYqz1ezUgFwUfWTWpyFtqN1r3FJLRHBwqWF1tKFIH7v0Hytm+7RntCcWvpExkwSaYKI3rEoBEyA==
-X-Received: by 2002:a17:902:8696:: with SMTP id g22mr66319599plo.249.1560498115397;
-        Fri, 14 Jun 2019 00:41:55 -0700 (PDT)
-Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id c6sm1979398pfm.163.2019.06.14.00.41.54
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 00:41:54 -0700 (PDT)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] thermal: imx: skip registering legacy cooling on i.MX7
-Date:   Fri, 14 Jun 2019 00:41:40 -0700
-Message-Id: <20190614074140.15276-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Fri, 14 Jun 2019 03:42:34 -0400
+Received: from mail-eopbgr680046.outbound.protection.outlook.com ([40.107.68.46]:7301
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725775AbfFNHmd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 03:42:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dmCodfGIjGXI2JbyFs130LRJec6Mu4OjJEsm69mGTkE=;
+ b=k/yXk8Sh6pYRZHyAVeLduBlmuXRF3TY1f0y/9UmTaOpbclT1VGkn2/LbT+hn45By4t8T5/YRME4Q/RubDy84F6Y1mwFDnw1lnDnvzPvHrpaKaRKOSdb7akg9YX/r1EgzdYEAat7vSUnLzvYnv/fgW8RQGOjIjwWKNTrgFuH3ISc=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.31.141) by
+ BN7PR08MB5075.namprd08.prod.outlook.com (20.176.177.218) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1965.15; Fri, 14 Jun 2019 07:42:30 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::499a:3dda:4c08:f586]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::499a:3dda:4c08:f586%5]) with mapi id 15.20.1965.017; Fri, 14 Jun 2019
+ 07:42:30 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Andy Gross <agross@kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
+Subject: RE: [EXT] [PATCH v3 2/3] scsi: ufs-qcom: Implement device_reset vops
+Thread-Topic: [EXT] [PATCH v3 2/3] scsi: ufs-qcom: Implement device_reset vops
+Thread-Index: AQHVHbe9gqV+6xhol06/1xHsxtXml6aWopCwgADzAICAAzRW0A==
+Date:   Fri, 14 Jun 2019 07:42:29 +0000
+Message-ID: <BN7PR08MB56846B54B2ED0BB4194545E2DBEE0@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <20190608050450.12056-1-bjorn.andersson@linaro.org>
+ <20190608050450.12056-3-bjorn.andersson@linaro.org>
+ <BN7PR08MB56848AB3CC413CBEC211130EDBED0@BN7PR08MB5684.namprd08.prod.outlook.com>
+ <20190612063143.GD22737@tuxbook-pro>
+In-Reply-To: <20190612063143.GD22737@tuxbook-pro>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.80.131]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 8bfb7749-d2c9-4abf-01df-08d6f09bdaf7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN7PR08MB5075;
+x-ms-traffictypediagnostic: BN7PR08MB5075:|BN7PR08MB5075:
+x-microsoft-antispam-prvs: <BN7PR08MB50756382C657BF568D27492EDBEE0@BN7PR08MB5075.namprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(376002)(396003)(136003)(366004)(189003)(199004)(13464003)(186003)(7696005)(81166006)(81156014)(6116002)(3846002)(8676002)(68736007)(66946007)(73956011)(66446008)(316002)(66476007)(66556008)(229853002)(64756008)(99286004)(8936002)(14454004)(76176011)(9686003)(33656002)(71200400001)(71190400001)(6916009)(6436002)(26005)(55016002)(74316002)(52536014)(5660300002)(53936002)(446003)(2906002)(76116006)(66066001)(25786009)(7416002)(6246003)(476003)(486006)(11346002)(7736002)(305945005)(4326008)(256004)(14444005)(6506007)(5024004)(55236004)(102836004)(86362001)(54906003)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB5075;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: k740o/3v6bCYpHPjUXUxiIonB0m51jnxhDtbRzUS+o5Nu/KJJ0eLr35gDmaWsHKMzDu9rExhtmmc4wgTzcl+Av9tBwyI/tlK9XgVNyILn8QfWz+NAF70qz/mZLZWe7ricTkcwfp48kFaXbTOJ/RNitd1j7jg8uQ5s//Fs+OpQslf+DFaecvrSfSOxjFE0J3bvOBFASZC5ma26sGt0TwL/vBQbInAPDxKhEUrMlT/Dndt7ooA7XGTb//F7S+g+v9sHoVRK7MdANzO4276QAXroulVg0ByquKhENd9qmnjV0CVDlfLkm4+28VMqi3Qzdl8AmHrd4sePmh2rAWgC+2DLqYKNJimKihjJGOHS4dOBm8bIEaOhBNRS1bUygVZtWjMQ7fKfUnL1hIRVg4sv/y6uUU89lEuDFWvNqsDZNpCEgA=
+Content-Type: text/plain; charset="iso-2022-jp"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 8bfb7749-d2c9-4abf-01df-08d6f09bdaf7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 07:42:30.0963
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: beanhuo@micron.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB5075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX7 doesn't have a mainline cpufreq driver, so
-imx_thermal_register_legacy_cooling() will always return -EPROBE_DEFER
-preventing the driver probe from finishing. No-op
-imx_thermal_register_legacy_cooling() on i.MX7 to avoid that problem.
+Hi, Bjorn
+Sorry just saw your message.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: NXP Linux Team <linux-imx@nxp.com>
-Cc: linux-pm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/thermal/imx_thermal.c | 3 +++
- 1 file changed, 3 insertions(+)
+You can use UIC command=1B$B!$=1B(Bthrough function ufshcd_send_uic_cmd( ) =
+with UIC_CMD_DME_END_PT_RST command.
 
-diff --git a/drivers/thermal/imx_thermal.c b/drivers/thermal/imx_thermal.c
-index bb6754a5342c..bfc9c6d57916 100644
---- a/drivers/thermal/imx_thermal.c
-+++ b/drivers/thermal/imx_thermal.c
-@@ -658,6 +658,9 @@ static int imx_thermal_register_legacy_cooling(struct imx_thermal_data *data)
- 	struct device_node *np;
- 	int ret;
- 
-+	if (data->socdata->version == TEMPMON_IMX7D)
-+		return 0;
-+
- 	data->policy = cpufreq_cpu_get(0);
- 	if (!data->policy) {
- 		pr_debug("%s: CPUFreq policy not found\n", __func__);
--- 
-2.21.0
+DME_ENDPOINTRESET: It is used when UFS host wants the UFS device to perform=
+ a reset.
 
+//bean
+
+>On Tue 11 Jun 09:08 PDT 2019, Bean Huo (beanhuo) wrote:
+>
+>> Hi, Bjorn
+>> This HW reset is dedicated to QUALCOMM based platform case.
+>> how about adding a SW reset as to be default reset routine if platform
+>doesn't support HW reset?
+>>
+>
+>Can you please advice how I perform such software reset?
+>
+>Regards,
+>Bjorn
+>
+>> >-----Original Message-----
+>> >From: linux-scsi-owner@vger.kernel.org
+>> ><linux-scsi-owner@vger.kernel.org>
+>> >On Behalf Of Bjorn Andersson
+>> >Sent: Saturday, June 8, 2019 7:05 AM
+>> >To: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+>> ><mark.rutland@arm.com>; Alim Akhtar <alim.akhtar@samsung.com>; Avri
+>> >Altman <avri.altman@wdc.com>; Pedro Sousa
+>> ><pedrom.sousa@synopsys.com>; James E.J. Bottomley
+>> ><jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>
+>> >Cc: Andy Gross <agross@kernel.org>; devicetree@vger.kernel.org;
+>> >linux- kernel@vger.kernel.org; linux-arm-msm@vger.kernel.org; linux-
+>> >scsi@vger.kernel.org
+>> >Subject: [EXT] [PATCH v3 2/3] scsi: ufs-qcom: Implement device_reset
+>> >vops
+>> >
+>> >The UFS_RESET pin on Qualcomm SoCs are controlled by TLMM and
+>exposed
+>> >through the GPIO framework. Acquire the device-reset GPIO and use
+>> >this to implement the device_reset vops, to allow resetting the attache=
+d
+>memory.
+>> >
+>> >Based on downstream support implemented by Subhash Jadavani
+>> ><subhashj@codeaurora.org>.
+>> >
+>> >Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> >---
+>> >
+>> >Changes since v2:
+>> >- Moved implementation to Qualcomm driver
+>> >
+>> > .../devicetree/bindings/ufs/ufshcd-pltfrm.txt |  2 ++
+>> > drivers/scsi/ufs/ufs-qcom.c                   | 32 +++++++++++++++++++
+>> > drivers/scsi/ufs/ufs-qcom.h                   |  4 +++
+>> > 3 files changed, 38 insertions(+)
+>> >
+>> >diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> >b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> >index a74720486ee2..d562d8b4919c 100644
+>> >--- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> >+++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+>> >@@ -54,6 +54,8 @@ Optional properties:
+>> > 			  PHY reset from the UFS controller.
+>> > - resets            : reset node register
+>> > - reset-names       : describe reset node register, the "rst" correspo=
+nds to
+>> >reset the whole UFS IP.
+>> >+- device-reset-gpios	: A phandle and gpio specifier denoting the
+>GPIO
+>> >connected
+>> >+			  to the RESET pin of the UFS memory device.
+>> >
+>> > Note: If above properties are not defined it can be assumed that the
+>> >supply regulators or clocks are always on.
+>> >diff --git a/drivers/scsi/ufs/ufs-qcom.c
+>> >b/drivers/scsi/ufs/ufs-qcom.c index ea7219407309..efaf57ba618a 100644
+>> >--- a/drivers/scsi/ufs/ufs-qcom.c
+>> >+++ b/drivers/scsi/ufs/ufs-qcom.c
+>> >@@ -16,6 +16,7 @@
+>> > #include <linux/of.h>
+>> > #include <linux/platform_device.h>
+>> > #include <linux/phy/phy.h>
+>> >+#include <linux/gpio/consumer.h>
+>> > #include <linux/reset-controller.h>
+>> >
+>> > #include "ufshcd.h"
+>> >@@ -1141,6 +1142,15 @@ static int ufs_qcom_init(struct ufs_hba *hba)
+>> > 		goto out_variant_clear;
+>> > 	}
+>> >
+>> >+	host->device_reset =3D devm_gpiod_get_optional(dev, "device-reset",
+>> >+						     GPIOD_OUT_HIGH);
+>> >+	if (IS_ERR(host->device_reset)) {
+>> >+		err =3D PTR_ERR(host->device_reset);
+>> >+		if (err !=3D -EPROBE_DEFER)
+>> >+			dev_err(dev, "failed to acquire reset gpio: %d\n", err);
+>> >+		goto out_variant_clear;
+>> >+	}
+>> >+
+>> > 	err =3D ufs_qcom_bus_register(host);
+>> > 	if (err)
+>> > 		goto out_variant_clear;
+>> >@@ -1546,6 +1556,27 @@ static void ufs_qcom_dump_dbg_regs(struct
+>> >ufs_hba *hba)
+>> > 	usleep_range(1000, 1100);
+>> > }
+>> >
+>> >+/**
+>> >+ * ufs_qcom_device_reset() - toggle the (optional) device reset line
+>> >+ * @hba: per-adapter instance
+>> >+ *
+>> >+ * Toggles the (optional) reset line to reset the attached device.
+>> >+ */
+>> >+static void ufs_qcom_device_reset(struct ufs_hba *hba) {
+>> >+	struct ufs_qcom_host *host =3D ufshcd_get_variant(hba);
+>> >+
+>> >+	/*
+>> >+	 * The UFS device shall detect reset pulses of 1us, sleep for 10us to
+>> >+	 * be on the safe side.
+>> >+	 */
+>> >+	gpiod_set_value_cansleep(host->device_reset, 1);
+>> >+	usleep_range(10, 15);
+>> >+
+>> >+	gpiod_set_value_cansleep(host->device_reset, 0);
+>> >+	usleep_range(10, 15);
+>> >+}
+>> >+
+>> > /**
+>> >  * struct ufs_hba_qcom_vops - UFS QCOM specific variant operations
+>> >  *
+>> >@@ -1566,6 +1597,7 @@ static struct ufs_hba_variant_ops
+>> >ufs_hba_qcom_vops =3D {
+>> > 	.suspend		=3D ufs_qcom_suspend,
+>> > 	.resume			=3D ufs_qcom_resume,
+>> > 	.dbg_register_dump	=3D ufs_qcom_dump_dbg_regs,
+>> >+	.device_reset		=3D ufs_qcom_device_reset,
+>> > };
+>> >
+>> > /**
+>> >diff --git a/drivers/scsi/ufs/ufs-qcom.h
+>> >b/drivers/scsi/ufs/ufs-qcom.h index
+>> >68a880185752..b96ffb6804e4 100644
+>> >--- a/drivers/scsi/ufs/ufs-qcom.h
+>> >+++ b/drivers/scsi/ufs/ufs-qcom.h
+>> >@@ -204,6 +204,8 @@ struct ufs_qcom_testbus {
+>> > 	u8 select_minor;
+>> > };
+>> >
+>> >+struct gpio_desc;
+>> >+
+>> > struct ufs_qcom_host {
+>> > 	/*
+>> > 	 * Set this capability if host controller supports the QUniPro mode
+>> >@@ -241,6 +243,8 @@ struct ufs_qcom_host {
+>> > 	struct ufs_qcom_testbus testbus;
+>> >
+>> > 	struct reset_controller_dev rcdev;
+>> >+
+>> >+	struct gpio_desc *device_reset;
+>> > };
+>> >
+>> > static inline u32
+>> >--
+>> >2.18.0
+>>
