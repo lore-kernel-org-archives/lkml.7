@@ -2,320 +2,114 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504BDC31E44
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DCAC31E44
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4C721473
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8748121473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 08:41:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="n1dXLHic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfFNIju (ORCPT
+        id S1726824AbfFNIl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 04:39:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34654 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726255AbfFNIju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 04:39:50 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 90AAE3082B15;
-        Fri, 14 Jun 2019 08:39:44 +0000 (UTC)
-Received: from [10.36.116.252] (ovpn-116-252.ams2.redhat.com [10.36.116.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5265E2AA88;
-        Fri, 14 Jun 2019 08:39:41 +0000 (UTC)
-Subject: Re: [PATCH v9 07/12] mm/sparsemem: Prepare for sub-section ranges
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     Michal Hocko <mhocko@suse.com>, Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155977191770.2443951.1506588644989416699.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <cb4b20ce-cd07-b274-7033-b2b7ca6df1dd@redhat.com>
-Date:   Fri, 14 Jun 2019 10:39:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <155977191770.2443951.1506588644989416699.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
+        Fri, 14 Jun 2019 04:41:26 -0400
+Received: from mail-eopbgr150095.outbound.protection.outlook.com ([40.107.15.95]:25248
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726255AbfFNIlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 04:41:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l/XnEsRw+q639kFXEt1+2HpcSnmLzlpQdK+wVyoquTg=;
+ b=n1dXLHicgzlYPgru4H6Z4N3wHuZaR3vEbU8oSVZ2H9QZG8d1G5q/ktesNy/ATEP6v07fNa/5a3iLx0HNJgdKX5fcQU1SuY1bgcaqo8aAISTeLpn50Q9EnZAd/3HMHWTlUu9t9WTWfqAO9cfEdtrzssUoK2tcIhGzXyxQyHMLZN8=
+Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM (20.178.126.80) by
+ VI1PR10MB2063.EURPRD10.PROD.OUTLOOK.COM (52.134.28.157) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Fri, 14 Jun 2019 08:41:21 +0000
+Received: from VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8844:426d:816b:f5d5]) by VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::8844:426d:816b:f5d5%6]) with mapi id 15.20.1987.010; Fri, 14 Jun 2019
+ 08:41:20 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Guenter Roeck <linux@roeck-us.net>
+CC:     "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Esben Haabendal <esben@haabendal.dk>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [PATCH v10 3/3] watchdog: make the device time out at
+ open_deadline when open_timeout is used
+Thread-Topic: [PATCH v10 3/3] watchdog: make the device time out at
+ open_deadline when open_timeout is used
+Thread-Index: AQHVG6fowaQY4GjN3k2RR2MpldVesqaQiRSAgApZeYA=
+Date:   Fri, 14 Jun 2019 08:41:20 +0000
+Message-ID: <56280052-9437-9813-a24e-125abb876762@prevas.dk>
+References: <20190605140628.618-1-rasmus.villemoes@prevas.dk>
+ <20190605140628.618-4-rasmus.villemoes@prevas.dk>
+ <20190607183827.GA32475@roeck-us.net>
+In-Reply-To: <20190607183827.GA32475@roeck-us.net>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Fri, 14 Jun 2019 08:39:49 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: HE1PR0502CA0022.eurprd05.prod.outlook.com
+ (2603:10a6:3:e3::32) To VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:803:e1::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [81.216.59.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e629911a-ef23-460f-ca3c-08d6f0a412f7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR10MB2063;
+x-ms-traffictypediagnostic: VI1PR10MB2063:
+x-microsoft-antispam-prvs: <VI1PR10MB20634B11852C2D47958B8B318AEE0@VI1PR10MB2063.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0068C7E410
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(346002)(136003)(366004)(39850400004)(189003)(199004)(68736007)(26005)(31686004)(2906002)(6486002)(5660300002)(54906003)(186003)(4744005)(478600001)(6436002)(8936002)(7736002)(72206003)(74482002)(8976002)(6512007)(25786009)(14454004)(229853002)(486006)(14444005)(44832011)(66556008)(64756008)(66446008)(66946007)(66476007)(6916009)(73956011)(256004)(53936002)(446003)(2616005)(476003)(11346002)(3846002)(6116002)(71190400001)(71200400001)(76176011)(316002)(296002)(6506007)(386003)(305945005)(4326008)(99286004)(81166006)(31696002)(8676002)(81156014)(102836004)(42882007)(66066001)(52116002)(36756003)(6246003)(107886003);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR10MB2063;H:VI1PR10MB2639.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ZKnVIpAUzFX8ZV1TUQWKlpc8OGSceaDpeFh1TSwHdJieuuapGVHdCVhEjS92yztNydi+P7HRqBtLRGoV4LGWBYiibm4Qg7rlkWW1qs74jf5nVJX3/LMn2LWIlsrWsNAYun8O+lMlHnuWtvrxy8uomAkv08R4OTYZpPaxPrRRrUI9EQeIzP3R9HPJRDhVj/Lhzm0Qb+5BRGxkZvpd4tOxRSIbdaeOzEOOcpaQkZQJjCbLRsXRvgw4Z/TDkQJi0TKIRIYCjx3QoZxPBw9TYgxlDFTAQDqt7jXP7b/k2OFk1P8UTmllYsxIC82dhEgEKsjc66imLfYjEVwIrt6B0UPnX2j59P+82ku9TugDbrjeg4aN26vi9Qqcnls6aNXB5NfxyyhVWWMxtzOerXKsvQLNvsThqZHMfRvu/zyoGjnU37s=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C7FBBE264731A14A83C7DEA4737F5C7F@EURPRD10.PROD.OUTLOOK.COM>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: e629911a-ef23-460f-ca3c-08d6f0a412f7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 08:41:20.5374
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2063
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.06.19 23:58, Dan Williams wrote:
-> Prepare the memory hot-{add,remove} paths for handling sub-section
-> ranges by plumbing the starting page frame and number of pages being
-> handled through arch_{add,remove}_memory() to
-> sparse_{add,remove}_one_section().
-> 
-> This is simply plumbing, small cleanups, and some identifier renames. No
-> intended functional changes.
-> 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Vlastimil Babka <vbabka@suse.cz>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  include/linux/memory_hotplug.h |    5 +-
->  mm/memory_hotplug.c            |  114 +++++++++++++++++++++++++---------------
->  mm/sparse.c                    |   15 ++---
->  3 files changed, 81 insertions(+), 53 deletions(-)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 79e0add6a597..3ab0282b4fe5 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -348,9 +348,10 @@ extern int add_memory_resource(int nid, struct resource *resource);
->  extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
->  		unsigned long nr_pages, struct vmem_altmap *altmap);
->  extern bool is_memblock_offlined(struct memory_block *mem);
-> -extern int sparse_add_one_section(int nid, unsigned long start_pfn,
-> -				  struct vmem_altmap *altmap);
-> +extern int sparse_add_section(int nid, unsigned long pfn,
-> +		unsigned long nr_pages, struct vmem_altmap *altmap);
->  extern void sparse_remove_one_section(struct mem_section *ms,
-> +		unsigned long pfn, unsigned long nr_pages,
->  		unsigned long map_offset, struct vmem_altmap *altmap);
->  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
->  					  unsigned long pnum);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 4b882c57781a..399bf78bccc5 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -252,51 +252,84 @@ void __init register_page_bootmem_info_node(struct pglist_data *pgdat)
->  }
->  #endif /* CONFIG_HAVE_BOOTMEM_INFO_NODE */
->  
-> -static int __meminit __add_section(int nid, unsigned long phys_start_pfn,
-> -				   struct vmem_altmap *altmap)
-> +static int __meminit __add_section(int nid, unsigned long pfn,
-> +		unsigned long nr_pages,	struct vmem_altmap *altmap)
->  {
->  	int ret;
->  
-> -	if (pfn_valid(phys_start_pfn))
-> +	if (pfn_valid(pfn))
->  		return -EEXIST;
->  
-> -	ret = sparse_add_one_section(nid, phys_start_pfn, altmap);
-> +	ret = sparse_add_section(nid, pfn, nr_pages, altmap);
->  	return ret < 0 ? ret : 0;
->  }
->  
-> +static int check_pfn_span(unsigned long pfn, unsigned long nr_pages,
-> +		const char *reason)
-> +{
-> +	/*
-> +	 * Disallow all operations smaller than a sub-section and only
-> +	 * allow operations smaller than a section for
-> +	 * SPARSEMEM_VMEMMAP. Note that check_hotplug_memory_range()
-> +	 * enforces a larger memory_block_size_bytes() granularity for
-> +	 * memory that will be marked online, so this check should only
-> +	 * fire for direct arch_{add,remove}_memory() users outside of
-> +	 * add_memory_resource().
-> +	 */
-> +	unsigned long min_align;
-> +
-> +	if (IS_ENABLED(CONFIG_SPARSEMEM_VMEMMAP))
-> +		min_align = PAGES_PER_SUBSECTION;
-> +	else
-> +		min_align = PAGES_PER_SECTION;
-> +	if (!IS_ALIGNED(pfn, min_align)
-> +			|| !IS_ALIGNED(nr_pages, min_align)) {
-> +		WARN(1, "Misaligned __%s_pages start: %#lx end: #%lx\n",
-> +				reason, pfn, pfn + nr_pages - 1);
-> +		return -EINVAL;
-> +	}
-> +	return 0;
-> +}
-> +
->  /*
->   * Reasonably generic function for adding memory.  It is
->   * expected that archs that support memory hotplug will
->   * call this function after deciding the zone to which to
->   * add the new pages.
->   */
-> -int __ref __add_pages(int nid, unsigned long phys_start_pfn,
-> -		unsigned long nr_pages, struct mhp_restrictions *restrictions)
-> +int __ref __add_pages(int nid, unsigned long pfn, unsigned long nr_pages,
-> +		struct mhp_restrictions *restrictions)
->  {
->  	unsigned long i;
-> -	int err = 0;
-> -	int start_sec, end_sec;
-> +	int start_sec, end_sec, err;
->  	struct vmem_altmap *altmap = restrictions->altmap;
->  
-> -	/* during initialize mem_map, align hot-added range to section */
-> -	start_sec = pfn_to_section_nr(phys_start_pfn);
-> -	end_sec = pfn_to_section_nr(phys_start_pfn + nr_pages - 1);
-> -
->  	if (altmap) {
->  		/*
->  		 * Validate altmap is within bounds of the total request
->  		 */
-> -		if (altmap->base_pfn != phys_start_pfn
-> +		if (altmap->base_pfn != pfn
->  				|| vmem_altmap_offset(altmap) > nr_pages) {
->  			pr_warn_once("memory add fail, invalid altmap\n");
-> -			err = -EINVAL;
-> -			goto out;
-> +			return -EINVAL;
->  		}
->  		altmap->alloc = 0;
->  	}
->  
-> +	err = check_pfn_span(pfn, nr_pages, "add");
-> +	if (err)
-> +		return err;
-> +
-> +	start_sec = pfn_to_section_nr(pfn);
-> +	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
->  	for (i = start_sec; i <= end_sec; i++) {
-> -		err = __add_section(nid, section_nr_to_pfn(i), altmap);
-> +		unsigned long pfns;
-> +
-> +		pfns = min(nr_pages, PAGES_PER_SECTION
-> +				- (pfn & ~PAGE_SECTION_MASK));
-> +		err = __add_section(nid, pfn, pfns, altmap);
-> +		pfn += pfns;
-> +		nr_pages -= pfns;
->  
->  		/*
->  		 * EEXIST is finally dealt with by ioresource collision
-> @@ -309,7 +342,6 @@ int __ref __add_pages(int nid, unsigned long phys_start_pfn,
->  		cond_resched();
->  	}
->  	vmemmap_populate_print_last();
-> -out:
->  	return err;
->  }
->  
-> @@ -487,10 +519,10 @@ static void shrink_pgdat_span(struct pglist_data *pgdat,
->  	pgdat->node_spanned_pages = 0;
->  }
->  
-> -static void __remove_zone(struct zone *zone, unsigned long start_pfn)
-> +static void __remove_zone(struct zone *zone, unsigned long start_pfn,
-> +		unsigned long nr_pages)
->  {
->  	struct pglist_data *pgdat = zone->zone_pgdat;
-> -	int nr_pages = PAGES_PER_SECTION;
->  	unsigned long flags;
->  
->  	pgdat_resize_lock(zone->zone_pgdat, &flags);
-> @@ -499,27 +531,23 @@ static void __remove_zone(struct zone *zone, unsigned long start_pfn)
->  	pgdat_resize_unlock(zone->zone_pgdat, &flags);
->  }
->  
-> -static void __remove_section(struct zone *zone, struct mem_section *ms,
-> -			     unsigned long map_offset,
-> -			     struct vmem_altmap *altmap)
-> +static void __remove_section(struct zone *zone, unsigned long pfn,
-> +		unsigned long nr_pages, unsigned long map_offset,
-> +		struct vmem_altmap *altmap)
->  {
-> -	unsigned long start_pfn;
-> -	int scn_nr;
-> +	struct mem_section *ms = __nr_to_section(pfn_to_section_nr(pfn));
->  
->  	if (WARN_ON_ONCE(!valid_section(ms)))
->  		return;
->  
-> -	scn_nr = __section_nr(ms);
-> -	start_pfn = section_nr_to_pfn((unsigned long)scn_nr);
-> -	__remove_zone(zone, start_pfn);
-> -
-> -	sparse_remove_one_section(ms, map_offset, altmap);
-> +	__remove_zone(zone, pfn, nr_pages);
-> +	sparse_remove_one_section(ms, pfn, nr_pages, map_offset, altmap);
->  }
->  
->  /**
->   * __remove_pages() - remove sections of pages from a zone
->   * @zone: zone from which pages need to be removed
-> - * @phys_start_pfn: starting pageframe (must be aligned to start of a section)
-> + * @pfn: starting pageframe (must be aligned to start of a section)
->   * @nr_pages: number of pages to remove (must be multiple of section size)
->   * @altmap: alternative device page map or %NULL if default memmap is used
->   *
-> @@ -528,31 +556,31 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
->   * sure that pages are marked reserved and zones are adjust properly by
->   * calling offline_pages().
->   */
-> -void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
-> +void __remove_pages(struct zone *zone, unsigned long pfn,
->  		    unsigned long nr_pages, struct vmem_altmap *altmap)
->  {
-> -	unsigned long i;
->  	unsigned long map_offset = 0;
-> -	int sections_to_remove;
-> +	int i, start_sec, end_sec;
-
-Can you convert these to unsigned longs? I'll be sending a clenup that
-will make this consistent tree-wide soon. Just making sure we won't miss
-this.
-
--- 
-
-Thanks,
-
-David / dhildenb
+T24gMDcvMDYvMjAxOSAyMC4zOCwgR3VlbnRlciBSb2VjayB3cm90ZToNCj4gT24gV2VkLCBKdW4g
+MDUsIDIwMTkgYXQgMDI6MDY6NDRQTSArMDAwMCwgUmFzbXVzIFZpbGxlbW9lcyB3cm90ZToNCj4+
+IFdoZW4gdGhlIHdhdGNoZG9nIGRldmljZSBpcyBub3Qgb3BlbiBieSB1c2Vyc3BhY2UsIHRoZSBr
+ZXJuZWwgdGFrZXMNCj4+IGNhcmUgb2YgcGluZ2luZyBpdC4gV2hlbiB0aGUgb3Blbl90aW1lb3V0
+IGZlYXR1cmUgaXMgaW4gdXNlLCB3ZSBzaG91bGQNCj4+IGVuc3VyZSB0aGF0IHRoZSBoYXJkd2Fy
+ZSBmaXJlcyBjbG9zZSB0byBvcGVuX3RpbWVvdXQgc2Vjb25kcyBhZnRlciB0aGUNCj4+IGtlcm5l
+bCBoYXMgYXNzdW1lZCByZXNwb25zaWJpbGl0eSBmb3IgdGhlIGRldmljZS4NCj4+DQo+PiBUbyBk
+byB0aGlzLCBzaW1wbHkgcmV1c2UgdGhlIGxvZ2ljIHRoYXQgaXMgYWxyZWFkeSBpbiBwbGFjZSBm
+b3INCj4+IGVuc3VyaW5nIHRoZSBzYW1lIHRoaW5nIHdoZW4gdXNlcnNwYWNlIGlzIHJlc3BvbnNp
+YmxlIGZvciByZWd1bGFybHkNCj4+IHBpbmdpbmcgdGhlIGRldmljZToNCj4+DQo+PiAtIFdoZW4g
+d2F0Y2hkb2dfYWN0aXZlKHdkZCksIHRoaXMgcGF0Y2ggZG9lc24ndCBjaGFuZ2UgYW55dGhpbmcu
+DQo+Pg0KPj4gLSBXaGVuICF3YXRjaGRvY19hY3RpdmUod2RkKSwgdGhlICJ2aXJ0dWFsIHRpbWVv
+dXQiIHNob3VsZCBiZSB0YWtlbiB0bw0KPiANCj4gcy93YXRjaGRvY19hY3RpdmUvd2F0Y2hkb2df
+YWN0aXZlLw0KPiANCj4gb3RoZXJ3aXNlDQo+IA0KPiBSZXZpZXdlZC1ieTogR3VlbnRlciBSb2Vj
+ayA8bGludXhAcm9lY2stdXMubmV0Pg0KDQpUaGFua3MhIFdpbSwgY2FuIHlvdSBmaXggdXAgaWYv
+d2hlbiBhcHBseWluZywgb3IgZG8geW91IHByZWZlciBJIHJlc2VuZD8NCg0KUmFzbXVzDQo=
