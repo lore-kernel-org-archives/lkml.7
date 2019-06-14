@@ -2,170 +2,115 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 601D2C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:37:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 545DCC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CCEC20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:37:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2168D21721
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:38:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="RDZZZjUc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfFNNhQ (ORCPT
+        id S1728262AbfFNNiH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:37:16 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:55719 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbfFNNhQ (ORCPT
+        Fri, 14 Jun 2019 09:38:07 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:34517 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728223AbfFNNiH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:37:16 -0400
-Received: from dell-desktop.home (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
-        (Authenticated sender: mylene.josserand@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id F3057240008;
-        Fri, 14 Jun 2019 13:37:07 +0000 (UTC)
-From:   =?UTF-8?q?Myl=C3=A8ne=20Josserand?= <mylene.josserand@bootlin.com>
-To:     dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc:     linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mylene.josserand@bootlin.com,
-        thomas.petazzoni@bootlin.com
-Subject: [PATCH v1] Input: rotary-encoder - Add gpio as push button
-Date:   Fri, 14 Jun 2019 15:36:51 +0200
-Message-Id: <20190614133651.28396-1-mylene.josserand@bootlin.com>
-X-Mailer: git-send-email 2.11.0
+        Fri, 14 Jun 2019 09:38:07 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m29so2483254qtu.1
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 06:38:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=5t38AdsOWv2f4Esw1W+MkepSRzr1WITdyAORH+5HjYw=;
+        b=RDZZZjUcgP1IQISh2OS0tjJq7h2lcyaLEZF4ZlCEaiFMBb9xylkmRKTOFdBqzT4CmS
+         pPUNoWCPpe3HFF/pMsbtof/jbvEp5RIksEwku+dWkHcrlYJ26kD9Dqq5vGTtWz2qLZsm
+         VigUHIj4paQ6Tly6gHAio3+6dTylmk0AM/qW0Xa+828w0olfCI3nAOPWG3ZBTFlUUwjr
+         9ow0YUAkq1hZQxV/aVZ/hWkdJ/YlB0EkCruIxzq+fKMxvsU6C/q0Q9meiBgvgag9IWlF
+         nccl5LY9zCXLLTksQBIci7LGgigiZ7vLU/6wZgWVN3V/czpvgZ2WGFhaN6Pw1JJ3t5FP
+         dI4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5t38AdsOWv2f4Esw1W+MkepSRzr1WITdyAORH+5HjYw=;
+        b=A5WNMmmfDMVPT4hHRs2nmO9Jl/ASCaQYw75tuIXb9Jr0nPOUUGydgnh2hFY8KclZ9m
+         bW3R5qOgE4UG26IVNO9btrOVwblZt9B5cQs/ItbA8JlsFuKz+XO+w1EqmMX8NnVGkHfj
+         gS0Qs51x1nmZTYYppiteEjsFUeDmh6pbKBrKxbAqwMi/OGkAD088uv55fjT0pj6d7+BA
+         W1Z/Jcvw8+NtNCQJzh2RSiVN/H1mNBVO/3osmpD0HeZWV97/c7QuNh0rFsZk8Nm0jAxz
+         dyPIrtT8lbkBtoftiSbweBfQewTDfPssDvpu1Lhgw45ePkcRpvh8S6IXFzyyqrVx5N9d
+         h/Qw==
+X-Gm-Message-State: APjAAAX6YxEhl99FM2vImDtoynFWeOMpbQOoFPiLZUmvA3PvYNEdviq7
+        pWx1XDZRb1LfCceig28DZHRy5A==
+X-Google-Smtp-Source: APXvYqzNmd+0+Nn6Q5ZrbPLFXLvgSb2BGcTgyraQHFgk83zTbcB39HZrH2xAznSe9nH6+xMmLCqDLg==
+X-Received: by 2002:ac8:2fa8:: with SMTP id l37mr78660838qta.358.1560519486142;
+        Fri, 14 Jun 2019 06:38:06 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::a658])
+        by smtp.gmail.com with ESMTPSA id t67sm1449588qkf.34.2019.06.14.06.38.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 14 Jun 2019 06:38:05 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 09:38:04 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Wouter Verhelst <w@uter.be>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Roman Stratiienko <roman.stratiienko@globallogic.com>,
+        linux-kernel@vger.kernel.org, nbd@other.debian.org,
+        Aleksandr Bulyshchenko <A.Bulyshchenko@globallogic.com>,
+        linux-block@vger.kernel.org, axboe@kernel.dkn.org
+Subject: Re: [PATCH 2/2] nbd: add support for nbd as root device
+Message-ID: <20190614133802.vg3w3sxpid2fpbp4@MacBook-Pro-91.local>
+References: <20190612163144.18486-1-roman.stratiienko@globallogic.com>
+ <20190612163144.18486-2-roman.stratiienko@globallogic.com>
+ <20190613135241.aghcrrz7rg2au3bw@MacBook-Pro-91.local>
+ <CAODwZ7v=RSsmVj5GjcvGn2dn+ejLRBHZ79x-+S9DrX4GoXuVaQ@mail.gmail.com>
+ <20190613145535.tdesq3y2xy6ycpw7@MacBook-Pro-91.local>
+ <20190614103343.GB11340@grep.be>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614103343.GB11340@grep.be>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add the support of a gpio that can be defined as a push button.
-Thanks to that, it is possible to emit a keycode in case of a
-"push" event, if the rotary supports that.
+On Fri, Jun 14, 2019 at 12:33:43PM +0200, Wouter Verhelst wrote:
+> On Thu, Jun 13, 2019 at 10:55:36AM -0400, Josef Bacik wrote:
+> > Also I mean that there are a bunch of different nbd servers out there.  We have
+> > our own here at Facebook, qemu has one, IIRC there's a ceph one.
+> 
+> I can't claim to know about the Facebook one of course, but the qemu one
+> uses the same handshake protocol as anyone else. The ceph ones that I've
+> seen do too (but there are various implementations of that, so...).
+> 
 
-The keycode to emit is defined using "linux,code" property
-(such as in gpio-keys).
+Ah, for some reason I remembered Qemu's being distinctly different.
 
-Signed-off-by: Mylène Josserand <mylene.josserand@bootlin.com>
----
- .../devicetree/bindings/input/rotary-encoder.txt   |  5 +++
- drivers/input/misc/rotary_encoder.c                | 50 ++++++++++++++++++++++
- 2 files changed, 55 insertions(+)
+I suppose if most of the main ones people use are using the same handshake
+protocol that makes it more compelling.  But there'd have to be a really good
+reason why a initramfs isn't viable, and so far I haven't heard a solid reason
+that's not an option other than "it's hard and we don't want to do it."
 
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-index a644408b33b8..1cfce5d0b5c4 100644
---- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-+++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-@@ -22,6 +22,9 @@ Optional properties:
- - wakeup-source: Boolean, rotary encoder can wake up the system.
- - rotary-encoder,encoding: String, the method used to encode steps.
-   Supported are "gray" (the default and more common) and "binary".
-+- push-gpio: a gpio to be used as a detection of a push from the rotary.
-+- linux,code: keycode to emit with the push-gpio of this rotary encoder.
-+  Required property in case "push-gpio"'s one is used.
- 
- Deprecated properties:
- - rotary-encoder,half-period: Makes the driver work on half-period mode.
-@@ -47,4 +50,6 @@ Example:
- 			rotary-encoder,steps = <24>;
- 			rotary-encoder,encoding = "binary";
- 			rotary-encoder,rollover;
-+			push-gpio = <&gpio 20 0>;
-+			linux-code = <28> /* KEY_ENTER */
- 		};
-diff --git a/drivers/input/misc/rotary_encoder.c b/drivers/input/misc/rotary_encoder.c
-index d748897bf5e9..556995fb7dde 100644
---- a/drivers/input/misc/rotary_encoder.c
-+++ b/drivers/input/misc/rotary_encoder.c
-@@ -47,8 +47,10 @@ struct rotary_encoder {
- 	unsigned int pos;
- 
- 	struct gpio_descs *gpios;
-+	struct gpio_desc *gpio_push;
- 
- 	unsigned int *irq;
-+	unsigned int code;
- 
- 	bool armed;
- 	signed char dir;	/* 1 - clockwise, -1 - CCW */
-@@ -56,6 +58,23 @@ struct rotary_encoder {
- 	unsigned int last_stable;
- };
- 
-+static irqreturn_t rotary_push_irq(int irq, void *dev_id)
-+{
-+	struct rotary_encoder *encoder = dev_id;
-+	int val;
-+
-+	mutex_lock(&encoder->access_mutex);
-+
-+	val = gpiod_get_value_cansleep(encoder->gpio_push);
-+
-+	input_report_key(encoder->input, encoder->code, val);
-+	input_sync(encoder->input);
-+
-+	mutex_unlock(&encoder->access_mutex);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static unsigned int rotary_encoder_get_state(struct rotary_encoder *encoder)
- {
- 	int i;
-@@ -190,6 +209,7 @@ static int rotary_encoder_probe(struct platform_device *pdev)
- 	struct device *dev = &pdev->dev;
- 	struct rotary_encoder *encoder;
- 	struct input_dev *input;
-+	unsigned int irq_push;
- 	irq_handler_t handler;
- 	u32 steps_per_period;
- 	unsigned int i;
-@@ -250,6 +270,20 @@ static int rotary_encoder_probe(struct platform_device *pdev)
- 		return -EINVAL;
- 	}
- 
-+	encoder->gpio_push = devm_gpiod_get_optional(dev, "push", GPIOD_IN);
-+	if (IS_ERR(encoder->gpio_push)) {
-+		dev_err(dev, "unable to get gpio-push\n");
-+		return PTR_ERR(encoder->gpio_push);
-+	}
-+
-+	if (encoder->gpio_push) {
-+		if (device_property_read_u32(dev, "linux,code",
-+					     &encoder->code)) {
-+			dev_err(dev, "gpio-push without keycode\n");
-+			return -EINVAL;
-+		}
-+	}
-+
- 	input = devm_input_allocate_device(dev);
- 	if (!input)
- 		return -ENOMEM;
-@@ -306,6 +340,22 @@ static int rotary_encoder_probe(struct platform_device *pdev)
- 		}
- 	}
- 
-+	if (encoder->gpio_push) {
-+		input_set_capability(encoder->input, EV_KEY, encoder->code);
-+
-+		irq_push = gpiod_to_irq(encoder->gpio_push);
-+		err = devm_request_threaded_irq(dev, irq_push,
-+						NULL, rotary_push_irq,
-+						IRQF_TRIGGER_RISING |
-+						IRQF_TRIGGER_FALLING |
-+						IRQF_ONESHOT,
-+						DRV_NAME, encoder);
-+		if (err) {
-+			dev_err(dev, "unable to request IRQ %d\n", irq_push);
-+			return err;
-+		}
-+	}
-+
- 	err = input_register_device(input);
- 	if (err) {
- 		dev_err(dev, "failed to register input device\n");
--- 
-2.11.0
+> > They all have their own connection protocols.  The beauty of NBD is
+> > that it doesn't have to know about that part, it just does the block
+> > device part, and I'd really rather leave it that way.  Thanks,
+> 
+> Sure.
+> 
+> OTOH, there is definitely also a benefit to using the same handshake
+> protocol everywhere, for interoperability reasons.
+> 
 
+Sure, Facebook's isn't different because we hate the protocol, we just use
+Thrift for all of our services, and thus it makes sense for us to use thrift for
+the client connection stuff to make it easy on all the apps that use disagg.
+Thanks,
+
+Josef
