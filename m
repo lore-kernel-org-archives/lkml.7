@@ -2,80 +2,121 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65687C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:44:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED560C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45ECA20866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:44:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C103320866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:44:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTLc22d+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728563AbfFNNoG (ORCPT
+        id S1728286AbfFNNos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:44:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57302 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727979AbfFNNoG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:44:06 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 63D1A30C1207;
-        Fri, 14 Jun 2019 13:44:06 +0000 (UTC)
-Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F4FA6A4A0;
-        Fri, 14 Jun 2019 13:44:03 +0000 (UTC)
-Date:   Fri, 14 Jun 2019 08:44:01 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'Alexei Starovoitov' <alexei.starovoitov@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>
-Subject: Re: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
-Message-ID: <20190614134401.q2wbh6mvo4nzmw2o@treble>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
- <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
- <57f6e69da6b3461a9c39d71aa1b58662@AcuMS.aculab.com>
+        Fri, 14 Jun 2019 09:44:48 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39077 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727382AbfFNNos (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:44:48 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m10so3582337edv.6;
+        Fri, 14 Jun 2019 06:44:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FyXT1/kbK0Pc0+G6zGZqye5FjmJZlP77pOonEO/PaPQ=;
+        b=KTLc22d+VHdXQX9yTHxxeZAKtARZ/ECZeI8Z+jiZgBfad0n3CwWYhhZglbRBJI+gcq
+         /EbAZfHMUJDvxkK1SDjadK8v69gz1WzZ9in05yZ+MTOAonOXYCimuSmuqGBcIwPtB3MO
+         VdQiNupNkxbgQaTcFAFq0VFESHr7WPE0G/p/5t+s15VmKyqHeVIm7YLZ1OnGwe0FUhw4
+         DJDNryNbIjkjXP9m/XXHxkkC30iZjaeqpqaJhaQDY+hPjJgVgnfZ1Ftq0c1z6xBYefLs
+         F02wlMEyaWx6gw/ZtrTafxwV0lMSLL29SZ7q3lD7Ia84KhwxIaOO0eUfVlju0RvKyTzR
+         dwvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FyXT1/kbK0Pc0+G6zGZqye5FjmJZlP77pOonEO/PaPQ=;
+        b=cR36R51wqbZsxIxos7hSGYu6pkTsEqDhIbxLvHXGk7BNabq1YbOEzZvsQT0dPS1owU
+         WqktvObca587vpv3hvH03Ai20aWl6N5KsdhNQOjAfEBWKCD1dGQIYT2l3o1k+R8jQnip
+         ud3U8W2M4gVh6PncoySi3/JzrAnWNbVF2BYY+c8Ele1abVomffDkc2VHMV1eijEO2R3H
+         YlhOrOjVrIssGsofjchGj6JMITk9F7xWn2oIZSNr7+JofQR9zueKNluOPEq8B3SnQKXU
+         V6o432/77g61A4rnN53LNISK17MnoKn6U0VGdtBGD0JZsGRo7ZTPuGeE2KyhmQ5ZZiBn
+         lIDA==
+X-Gm-Message-State: APjAAAVlJ3cloju1PAm0HpTumzA/kzFThnr6hCY8momIs3TZgr4fuBEd
+        6GAbyRkzfS8ADSRYReQ4mENiC6oTCXXNRi0/gIw=
+X-Google-Smtp-Source: APXvYqyS7dvDPfKGWqFi8rhkMR2nmF7A7n7GP/bNJ2bxTRiaVtMdcYXXV3XZ1yOe+WxfGspubCcyJKhSVkzEO54Hrso=
+X-Received: by 2002:a17:906:951:: with SMTP id j17mr56132952ejd.174.1560519885436;
+ Fri, 14 Jun 2019 06:44:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <57f6e69da6b3461a9c39d71aa1b58662@AcuMS.aculab.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Fri, 14 Jun 2019 13:44:06 +0000 (UTC)
+References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com> <20190612212748.32246-1-jeffrey.l.hugo@gmail.com>
+In-Reply-To: <20190612212748.32246-1-jeffrey.l.hugo@gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Fri, 14 Jun 2019 06:44:31 -0700
+Message-ID: <CAF6AEGvAkCqNXg-NwxfpYJteWs6hfBnOb0yJN6vQOnmMck-HDQ@mail.gmail.com>
+Subject: Re: [PATCH v6 3/5] arm64: dts: qcom: Add Lenovo Miix 630
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>, jikos@kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:50:23AM +0000, David Laight wrote:
-> On Thu, Jun 13, 2019 at 08:21:03AM -0500, Josh Poimboeuf wrote:
-> > The BPF JIT code clobbers RBP.  This breaks frame pointer convention and
-> > thus prevents the FP unwinder from unwinding through JIT generated code.
-> >
-> > RBP is currently used as the BPF stack frame pointer register.  The
-> > actual register used is opaque to the user, as long as it's a
-> > callee-saved register.  Change it to use R12 instead.
-> 
-> Could you maintain the system %rbp chain through the BPF stack?
+On Thu, Jun 13, 2019 at 10:17 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> This adds the initial DT for the Lenovo Miix 630 laptop.  Supported
+> functionality includes USB (host), microSD-card, keyboard, and trackpad.
+>
+> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> ---
 
-Do you mean to save RBP again before changing it again, so that we
-create another stack frame inside the BPF stack?  That might work.
+[snip]
 
-> It might even be possible to put something relevant in the %rip
-> location.
+> diff --git a/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> new file mode 100644
+> index 000000000000..407c6a32911c
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
+> @@ -0,0 +1,30 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
+> +
+> +/dts-v1/;
+> +
+> +#include "msm8998-clamshell.dtsi"
+> +
+> +/ {
+> +       model = "Lenovo Miix 630";
+> +       compatible = "lenovo,miix-630", "qcom,msm8998";
+> +};
 
-I'm not sure what you mean here.
 
--- 
-Josh
+So, I'm not sure if there is some precedent for this (but maybe we
+haven't really had this problem before).. but as I mentioned on
+#arch64-laptops, I think we should put vendor/product/board-id strings
+from SMBIOS table in the dts files.  That could be used by grub to
+find the correct dtb file to load in a generic way.  (Ie, look for a
+match of all three strings, and maybe fallback to a match on just
+vendor+product??)
+
+At any rate, how the strings are used can be refined later.  But I
+think we should include the strings from the beginning for anything
+that is booting via UEFI.  It's perhaps more useful than the
+compatible string.
+
+BR,
+-R
