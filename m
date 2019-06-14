@@ -2,87 +2,156 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB3B6C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6090C31E4D
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB55721848
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:20:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F8AD2173C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 16:22:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="Pf/t4wPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726319AbfFNQU2 (ORCPT
+        id S1725981AbfFNQWl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 12:20:28 -0400
-Received: from mga11.intel.com ([192.55.52.93]:3513 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfFNQU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 12:20:27 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 09:20:27 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by orsmga001.jf.intel.com with ESMTP; 14 Jun 2019 09:20:27 -0700
-Date:   Fri, 14 Jun 2019 09:20:27 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH 2/3] x86/cpufeatures: Combine word 11 and 12 into new
- scattered features word 11
-Message-ID: <20190614162027.GF12191@linux.intel.com>
-References: <20190614114410.GD2586@zn.tnic>
- <20190614122749.GE2586@zn.tnic>
- <20190614131701.GA198207@romley-ivt3.sc.intel.com>
- <20190614134123.GF2586@zn.tnic>
- <20190614141424.GA12191@linux.intel.com>
- <20190614142139.GH2586@zn.tnic>
- <20190614143912.GB12191@linux.intel.com>
- <20190614145734.GJ2586@zn.tnic>
- <20190614152458.GA22634@linux.intel.com>
- <20190614160659.GM2586@zn.tnic>
+        Fri, 14 Jun 2019 12:22:41 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:33022 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFNQWk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:22:40 -0400
+Received: by mail-oi1-f194.google.com with SMTP id q186so2408607oia.0
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 09:22:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yUJ36e2jf7ofvUZMfMQksFI5zeohGaN69gBiudrs7ZQ=;
+        b=Pf/t4wPNKlA6LPs6IE0E4wSi22sJptLx7xtCYfgS+hi2uLi+YmXWGVMFVjMqT/pHin
+         3Sq0DbM9kLfL1SbB/3kptFxfDPCI+TPgWEYr1ZhJ1oJwIw1v+EoZSCPgFNDZQzVYX4Lr
+         2O/D91YQ//vHVGdpuMdDYLmb46Wi1vu3M4Cl1/gLXm9iIRNs/rYYl1SNW6JMGIBBbCri
+         wnRV2hN8ILY7xmhQvs3isFMqLWQbSxD7bf5xY4C2+H9Xf8GDcv8serIT2Is1BLLoRgWt
+         6qsSSO3IfVb4gyfmVkGjLEjX7GEJQUHc17+vZfFZNZaTqwS8B/FF6UglP68Vf6+nZUOP
+         /d3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yUJ36e2jf7ofvUZMfMQksFI5zeohGaN69gBiudrs7ZQ=;
+        b=Jqiwpl77y+LMrT/Oa5FQdx0oBapVgLCt5iJnSwTutv60xnp/kBkkNyyD+NR7QYGWDJ
+         6m/LKChVuO04B1pa8Vd9wbWvqEajNdMUUyg0H0d2MlgGnS4Q55l0vqTXMCgkuTusuvZh
+         fazpe+W+kcYji0+XdTMzDDfKaFSlbQyHbNOzmYcctEXZTlK+Ry72ThlxaCYY/oBqT9DA
+         u+2XpXSCulG5TXhZJ0uCeqI/cLUurqfcd3mOv1EstSK0rs/rKYYcaIRW3tqoPQjeaqdt
+         3/8tNhQDkJC98rfRFH7NlpHA1J7lJ/e0HO6Km6sGfCI0yFLljIKNpDSCeigH1/hCOWnK
+         HYhA==
+X-Gm-Message-State: APjAAAUmc+X3UOCfM7GtIOWXDY65f07ZUHksSabgHMxUVTzReNRchuWD
+        Yx6RGYSxjTT+vd8eo9YK/RRw8H0M6ba67p1+Knq427UfvmE=
+X-Google-Smtp-Source: APXvYqyp2XTEh+/XfnwmiJdtynxT4ccw6FS0jzhQTeNBXLuonzWWAL9Kcvo3Hm8UjH32DPDaYYmWTbDfTj0f+BKN8e0=
+X-Received: by 2002:aca:ec82:: with SMTP id k124mr2277796oih.73.1560529360068;
+ Fri, 14 Jun 2019 09:22:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614160659.GM2586@zn.tnic>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <1560366952-10660-1-git-send-email-cai@lca.pw> <CAPcyv4hn0Vz24s5EWKr39roXORtBTevZf7dDutH+jwapgV3oSw@mail.gmail.com>
+ <CAPcyv4iuNYXmF0-EMP8GF5aiPsWF+pOFMYKCnr509WoAQ0VNUA@mail.gmail.com>
+ <1560376072.5154.6.camel@lca.pw> <87lfy4ilvj.fsf@linux.ibm.com>
+ <20190614153535.GA9900@linux> <c3f2c05d-e42f-c942-1385-664f646ddd33@linux.ibm.com>
+In-Reply-To: <c3f2c05d-e42f-c942-1385-664f646ddd33@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Fri, 14 Jun 2019 09:22:29 -0700
+Message-ID: <CAPcyv4j_QQB8SrhTqL2mnEEHGYCg4H7kYanChiww35k0fwNv8Q@mail.gmail.com>
+Subject: Re: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        jmoyer <jmoyer@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 06:10:12PM +0200, Borislav Petkov wrote:
-> On Fri, Jun 14, 2019 at 08:24:58AM -0700, Sean Christopherson wrote:
-> > On Fri, Jun 14, 2019 at 04:57:34PM +0200, Borislav Petkov wrote:
-> > > On Fri, Jun 14, 2019 at 07:39:12AM -0700, Sean Christopherson wrote:
-> > > > KVM can't handle Linux-defined leafs without extra tricks
-> > > 
-> > > and that's what I'm proposing - an extra trick.
-> > 
-> > It's not a trick, it's bug suppression.
-> > 
-> > Try running a kernel built with only patches 1/2 and 2/2 applied, along
-> > with KVM's assertions removed.  It'll probably boot fine since most of the
-> > affected features are option things, but Linux's feature reporting will be
-> > all kinds of screwed up.
-> > 
-> > E.g. this WARN triggers because CPUID_7_EDX is 17, not 18 as expected,
-> 
-> We can decrement NCAPINTS and word 18 in the header. The BUILD_BUG_ONs
-> should not fire then too.
-> 
-> But the easier thing is to not remove any defines in the enum
-> cpuid_leafs thing so that the capabilities array has the proper size for
-> after patch 2.
+On Fri, Jun 14, 2019 at 9:18 AM Aneesh Kumar K.V
+<aneesh.kumar@linux.ibm.com> wrote:
+>
+> On 6/14/19 9:05 PM, Oscar Salvador wrote:
+> > On Fri, Jun 14, 2019 at 02:28:40PM +0530, Aneesh Kumar K.V wrote:
+> >> Can you check with this change on ppc64.  I haven't reviewed this series yet.
+> >> I did limited testing with change . Before merging this I need to go
+> >> through the full series again. The vmemmap poplulate on ppc64 needs to
+> >> handle two translation mode (hash and radix). With respect to vmemap
+> >> hash doesn't setup a translation in the linux page table. Hence we need
+> >> to make sure we don't try to setup a mapping for a range which is
+> >> arleady convered by an existing mapping.
+> >>
+> >> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+> >> index a4e17a979e45..15c342f0a543 100644
+> >> --- a/arch/powerpc/mm/init_64.c
+> >> +++ b/arch/powerpc/mm/init_64.c
+> >> @@ -88,16 +88,23 @@ static unsigned long __meminit vmemmap_section_start(unsigned long page)
+> >>    * which overlaps this vmemmap page is initialised then this page is
+> >>    * initialised already.
+> >>    */
+> >> -static int __meminit vmemmap_populated(unsigned long start, int page_size)
+> >> +static bool __meminit vmemmap_populated(unsigned long start, int page_size)
+> >>   {
+> >>      unsigned long end = start + page_size;
+> >>      start = (unsigned long)(pfn_to_page(vmemmap_section_start(start)));
+> >>
+> >> -    for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page)))
+> >> -            if (pfn_valid(page_to_pfn((struct page *)start)))
+> >> -                    return 1;
+> >> +    for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page))) {
+> >>
+> >> -    return 0;
+> >> +            struct mem_section *ms;
+> >> +            unsigned long pfn = page_to_pfn((struct page *)start);
+> >> +
+> >> +            if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
+> >> +                    return 0;
+> >
+> > I might be missing something, but is this right?
+> > Having a section_nr above NR_MEM_SECTIONS is invalid, but if we return 0 here,
+> > vmemmap_populate will go on and populate it.
+>
+> I should drop that completely. We should not hit that condition at all.
+> I will send a final patch once I go through the full patch series making
+> sure we are not breaking any ppc64 details.
+>
+> Wondering why we did the below
+>
+> #if defined(ARCH_SUBSECTION_SHIFT)
+> #define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
+> #elif defined(PMD_SHIFT)
+> #define SUBSECTION_SHIFT (PMD_SHIFT)
+> #else
+> /*
+>   * Memory hotplug enabled platforms avoid this default because they
+>   * either define ARCH_SUBSECTION_SHIFT, or PMD_SHIFT is a constant, but
+>   * this is kept as a backstop to allow compilation on
+>   * !ARCH_ENABLE_MEMORY_HOTPLUG archs.
+>   */
+> #define SUBSECTION_SHIFT 21
+> #endif
+>
+> why not
+>
+> #if defined(ARCH_SUBSECTION_SHIFT)
+> #define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
+> #else
+> #define SUBSECTION_SHIFT  SECTION_SHIFT
+> #endif
+>
+> ie, if SUBSECTION is not supported by arch we have one sub-section per
+> section?
 
-Agreed, Fenghua's proposed CPUID_DUMMY is way easier.
+A couple comments:
+
+The only reason ARCH_SUBSECTION_SHIFT exists is because PMD_SHIFT on
+PowerPC was a non-constant value. However, I'm planning to remove the
+distinction in the next rev of the patches. Jeff rightly points out
+that having a variable subsection size per arch will lead to
+situations where persistent memory namespaces are not portable across
+archs. So I plan to just make SUBSECTION_SHIFT 21 everywhere.
