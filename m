@@ -2,187 +2,309 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63DC3C31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02466C31E45
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0727220866
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6AC720866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:08:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="RgTkRdws";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="wAZBxDO1"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kItjBAZk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726894AbfFNCHT (ORCPT
+        id S1726906AbfFNCIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 22:07:19 -0400
-Received: from esa2.hgst.iphmx.com ([68.232.143.124]:16028 "EHLO
-        esa2.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726349AbfFNCHT (ORCPT
+        Thu, 13 Jun 2019 22:08:42 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41695 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726349AbfFNCIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 22:07:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1560478055; x=1592014055;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=RVyrK1Nd0SKOMaBbmkdjUKhIVOY//5PpjjyPE/NIkNk=;
-  b=RgTkRdwsniJfcyxFBMnHRoyiiidqh846DSFQK2BN3SRvC9LknpDKg5Zu
-   QmBNE/TJIxWKFKeoh8WEEkFl4pOjaAZ0KW4YxlxZB5+Re4qX3iKirGZk4
-   itEeH4iyGKThuivMEvkML5jRfBY8Wpe/D0v747MMnXxorm+byujbbmFTn
-   LNRdxC4kH/01H71xMCTLGlRMt1Pp3pdEsKr825Mn2ZfMYgJh+uGhUy/NR
-   f/azcJSRQkdP5UiuC0HfneqiGF3v9tfiBGtjVYXN7kjzrPHpohYs1PUtR
-   3+jmMayaNbJNTV+cwQkuEn4nbRSCCLF02CME9g8MYrg/xr/lo14lygg12
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.63,371,1557158400"; 
-   d="scan'208";a="210237802"
-Received: from mail-by2nam03lp2055.outbound.protection.outlook.com (HELO NAM03-BY2-obe.outbound.protection.outlook.com) ([104.47.42.55])
-  by ob1.hgst.iphmx.com with ESMTP; 14 Jun 2019 10:07:33 +0800
+        Thu, 13 Jun 2019 22:08:42 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g7so815760oia.8
+        for <linux-kernel@vger.kernel.org>; Thu, 13 Jun 2019 19:08:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RVyrK1Nd0SKOMaBbmkdjUKhIVOY//5PpjjyPE/NIkNk=;
- b=wAZBxDO12kL9VjI0aCocPBpyHRw1CeaXExSV9iuyOO0e+iVYpew1vFKc6emqcE0GxRGBOuJ9tmvLbSCQWiUnmqOIUwV3rkAoVgI32m2aNsRmJ6Jt46JQjwKOfim3u3Le0Qae4OH9VjF61Uww21CVV8hobD57hRSZzESu1cBmaHE=
-Received: from SN6PR04MB5231.namprd04.prod.outlook.com (20.177.254.85) by
- SN6PR04MB5263.namprd04.prod.outlook.com (20.178.7.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.14; Fri, 14 Jun 2019 02:07:15 +0000
-Received: from SN6PR04MB5231.namprd04.prod.outlook.com
- ([fe80::5005:99a1:65aa:f088]) by SN6PR04MB5231.namprd04.prod.outlook.com
- ([fe80::5005:99a1:65aa:f088%6]) with mapi id 15.20.1987.012; Fri, 14 Jun 2019
- 02:07:15 +0000
-From:   Naohiro Aota <Naohiro.Aota@wdc.com>
-To:     "dsterba@suse.cz" <dsterba@suse.cz>
-CC:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, Qu Wenruo <wqu@suse.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH v2 00/19] btrfs zoned block device support
-Thread-Topic: [PATCH v2 00/19] btrfs zoned block device support
-Thread-Index: AQHVHTKAMt+QxADp/024sRBo1BQ8yw==
-Date:   Fri, 14 Jun 2019 02:07:15 +0000
-Message-ID: <SN6PR04MB5231FF124F9BF2FCB3EDB8F58CEE0@SN6PR04MB5231.namprd04.prod.outlook.com>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190612175138.GT3563@twin.jikos.cz>
- <SN6PR04MB5231E2F482B8D794950058FF8CEF0@SN6PR04MB5231.namprd04.prod.outlook.com>
- <20190613134612.GU3563@suse.cz>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Naohiro.Aota@wdc.com; 
-x-originating-ip: [199.255.47.8]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ae409566-791f-4d7d-59aa-08d6f06d05d8
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB5263;
-x-ms-traffictypediagnostic: SN6PR04MB5263:
-x-ms-exchange-purlcount: 1
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB5263936E145926A2BC4415148CEE0@SN6PR04MB5263.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0068C7E410
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(346002)(376002)(39860400002)(136003)(396003)(199004)(189003)(53376002)(99286004)(316002)(6436002)(54906003)(966005)(6116002)(7736002)(9686003)(33656002)(6246003)(6506007)(3846002)(76176011)(305945005)(68736007)(66556008)(8936002)(25786009)(72206003)(26005)(256004)(53936002)(55016002)(2906002)(52536014)(5640700003)(86362001)(6306002)(229853002)(478600001)(14454004)(74316002)(66066001)(53546011)(102836004)(73956011)(1730700003)(5660300002)(7696005)(2501003)(476003)(71200400001)(186003)(66946007)(66476007)(6916009)(76116006)(8676002)(81156014)(71190400001)(2351001)(486006)(91956017)(66446008)(81166006)(7416002)(446003)(4326008)(64756008);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5263;H:SN6PR04MB5231.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: TcHYyk3xajPxPn0Z0pZ0bvZWaK1Ch5k1vNPbG96quv5ApKGsz9pykcm/BTFoQOm4zXoDYXAIPVshpCvJvXCDsA9hN1b9MXoQ254NZVA08xARGQWYZF7FjlWpL89P7z74O1pyTvAK94pM3COWZq0UkeslcmY71TtzVo9vNULMp3oPXvIPpH5OZXbOopikUQD6bwAozX3tc99fbIRzQlnW/yV4DuPvigsWFQMmtpTabHYfCUCbzLLZYT5eULuF65JFLoJHFPZqUplLhRvEz7fqwjROkwLRe6y/SZqJyOTiiRERvbz1duCWSqBq+Aa3Ec/TlPdXj12Xmv+GarMJOx9Z8r/9+GjYCf/IgJZEyRuqIti1BLTE2G2FzY+fB6/7au0BqgpalHM1zDTIxijkFHAVLX3k5RMBWka0HIKoeKT7AdU=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=P8H9phhAbM592/xRkwLzBSB0ky/dXdqG638OeUP/3/E=;
+        b=kItjBAZkGrKIo75hITC7Tb1ASCebaL/9fp/zXkqCegX03EiS6sLUUZh61QZ7LkFIML
+         CRhMmt5JaBESn5TWeE43jAc8XvLOngkLyDnSfCiSbh9YZ1efQg2MXT0IRh3jZ3spmDj7
+         lIrNmAr2YbKnnQGt4fBLmdDuVMdVgBD9s9bwBHUC2R13hfw4VcqwOBmc4J+VxY28qqIX
+         gWGJWDtK9Zq/QNQU3Za8FYBhRQ9IMjhV6n/+CFG8HptetaixL1Jn701DS0zO5O+ixnmC
+         UWrjzf9OZUGdXrbAY8hAFmxOFpn0rp4UZiRNWm/fnDWdDnLI7zJcKXSHgxWY+5j7kDMg
+         DCLA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=P8H9phhAbM592/xRkwLzBSB0ky/dXdqG638OeUP/3/E=;
+        b=RukKriS7Bq+LUI4CNGm4erQliH+xGYk8HExMnOjMarPtYU+ztI85fl7jrXtGpDm72E
+         HQkgpy8Ul/faDMSz5aifP/DmaqWskAzMZY+LBgtWXy79ipr7RJ4ooPRiVviRNw9qlxyh
+         PEcLa8TfRCoMITcG5UrlNL24VtGCtMRJDDjB+15cqvrPH0IupYAUFIhUK3bOIoTJTuqn
+         O9NDabfHTrBVxbvNyWfDgFB4iSemi+EKleK5QOAcvq51nnzVN1fa2e9RZWln4rAKrpMd
+         hkieMru8htqA36uZFyCg9AUqGlNcxYqpNy+JFn3oHl4lQKH9TLxVf5mAHeQVo7KNEu6y
+         AtAA==
+X-Gm-Message-State: APjAAAU/K4Gs1/cvVNbDjvOIbwkCUTWM4eZ06S4zWNr1IvAT+AqkzpxR
+        IvpSYZ5A4lKug7WdXLSGDZP8JxxrJ0YE2eEUAjw1Mg==
+X-Google-Smtp-Source: APXvYqxO0ALB4g+u9BVBpHypMpNDpb3aRpE3W9VjHZMiI81uXqegdLZ9Kp4W33YO/C9M4YMUggtcUE3lkbOy7OFSHL4=
+X-Received: by 2002:aca:5612:: with SMTP id k18mr352899oib.12.1560478120705;
+ Thu, 13 Jun 2019 19:08:40 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ae409566-791f-4d7d-59aa-08d6f06d05d8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Jun 2019 02:07:15.8550
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Naohiro.Aota1@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5263
+References: <20190423233904.195842-1-furquan@google.com> <26443804.PuBNBtcb44@kreacher>
+In-Reply-To: <26443804.PuBNBtcb44@kreacher>
+From:   Furquan Shaikh <furquan@google.com>
+Date:   Thu, 13 Jun 2019 19:08:28 -0700
+Message-ID: <CAEGmHFFBBg6cMLaAfPnihABNkMAPbO=isTH3iOakpxRLtXG5pw@mail.gmail.com>
+Subject: Re: [PATCH] drivers/acpi: Turn off power resources while entering S5
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rajat Jain <rajatja@google.com>,
+        Duncan Laurie <dlaurie@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/06/13 22:45, David Sterba wrote:> On Thu, Jun 13, 2019 at 04:59:23A=
-M +0000, Naohiro Aota wrote:=0A=
->> On 2019/06/13 2:50, David Sterba wrote:=0A=
->>> On Fri, Jun 07, 2019 at 10:10:06PM +0900, Naohiro Aota wrote:=0A=
->>> How can I test the zoned devices backed by files (or regular disks)? I=
-=0A=
->>> searched for some concrete example eg. for qemu or dm-zoned, but closes=
-t=0A=
->>> match was a text description in libzbc README that it's possible to=0A=
->>> implement. All other howtos expect a real zoned device.=0A=
->>=0A=
->> You can use tcmu-runer [1] to create an emulated zoned device backed by=
-=0A=
->> a regular file. Here is a setup how-to:=0A=
->> http://zonedstorage.io/projects/tcmu-runner/#compilation-and-installatio=
-n>> That looks great, thanks. I wonder why there's no way to find that, all=
-=0A=
-> I got were dead links to linux-iscsi.org or tutorials of targetcli that=
-=0A=
-> were years old and not working.=0A=
-=0A=
-Actually, this is quite new site. ;-)=0A=
-=0A=
-> Feeding the textual commands to targetcli is not exactly what I'd=0A=
-> expect for scripting, but at least it seems to work.=0A=
-=0A=
-You can use "targetcli <directory> <command> [<args> ...]" format, so=0A=
-you can call e.g.=0A=
-=0A=
-targetcli /backstores/user:zbc create name=3Dfoo size=3D10G cfgstring=3Dmod=
-el-HM/zsize-256/conv-1@/mnt/nvme/disk0.raw=0A=
-=0A=
-> I tried to pass an emulated ZBC device on host to KVM guest (as a scsi=0A=
-> device) but lsscsi does not recognize that it as a zonde device (just a=
-=0A=
-> QEMU harddisk). So this seems the emulation must be done inside the VM.=
-=0A=
-=0A=
-Oops, QEMU hide the detail.=0A=
-=0A=
-In this case, you can try exposing the ZBC device via iSCSI.=0A=
-=0A=
-On the host:=0A=
-(after creating the ZBC backstores)=0A=
-# sudo targetcli /iscsi create=0A=
-Created target iqn.2003-01.org.linux-iscsi.naota-devel.x8664:sn.f4f308e4892=
-c.=0A=
-Created TPG 1.=0A=
-Global pref auto_add_default_portal=3Dtrue=0A=
-Created default portal listening on all IPs (0.0.0.0), port 3260.=0A=
-# TARGET=3D"iqn.2003-01.org.linux-iscsi.naota-devel.x8664:sn.f4f308e4892c"=
-=0A=
-=0A=
-(WARN: Allow any node to connect without any auth)=0A=
-# targetcli /iscsi/${TARGET}/tpg1 set attribute generate_node_acls=3D1=0A=
-Parameter generate_node_acls is now '1'.=0A=
-( or you can explicitly allow an initiator)=0A=
-# TCMU_INITIATOR=3Diqn.2018-07....=0A=
-# targecli /iscsi/${TARGET}/tpg1/acls create ${TCMU_INITIATOR}=0A=
-=0A=
-(for each backend)=0A=
-# targetcli /iscsi/${TARGET}/tpg1/luns create /backstores/user:zbc/foo=0A=
-Created LUN 0.=0A=
-=0A=
-Then, you can login to the iSCSI on the KVM guest like:=0A=
-=0A=
-# iscsiadm -m discovery -t st -p $HOST_IP=0A=
-127.0.0.1:3260,1 iqn.2003-01.org.linux-iscsi.naota-devel.x8664:sn.f4f308e48=
-92c=0A=
-# iscsiadm -m node -l -T ${TARGET}=0A=
-Logging in to [iface: default, target: iqn.2003-01.org.linux-iscsi.naota-de=
-vel.x8664:sn.f4f308e4892c, portal: 127.0.0.1,3260]=0A=
-Login to [iface: default, target: iqn.2003-01.org.linux-iscsi.naota-devel.x=
-8664:sn.f4f308e4892c, portal: 127.0.0.1,3260] successful.=0A=
+On Fri, May 31, 2019 at 3:13 AM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Wednesday, April 24, 2019 1:39:04 AM CEST Furquan Shaikh wrote:
+> > During boot-up, ACPI bus scan enables all power resources
+> > so that respective device drivers can talk to their device. This causes acpi
+> > ref_count for the power resource to be incremented to 1. When system
+> > suspends (S3/S0ix) or hibernates(S4), DPM is responsible for calling
+> > power off on all power resources whose ref_count is 1 i.e. no other
+> > user of this power resource and thus resulting in _OFF routine being
+> > called for it.
+> >
+> > However, in case of poweroff, DPM is not involved and so the power
+> > resources are left on when the system is entering S5. This results in
+> > the violation of power down sequencing for certain devices
+> > e.g. touchscreen or digitizer I2C devices.
+>
+> I'm not sure I can follow you here.  Any details?
+
+On the platforms that I am currently testing, I noticed that ACPI _OFF
+routine does not get called for the touchscreen I2C device. Since the
+device has power-on and power-down sequencing requirements, not
+calling _OFF routine results in its power-down sequence being violated
+when the system is entering S5. On further debug, I identified that
+this is true for all the ACPI devices on the platform i.e. _OFF
+routine does not get called when entering S5.
+
+In case of S3/S0ix, I see that the _OFF ACPI routine gets called using
+the following code flow:
+pm_suspend()
+   ...
+   --> suspend_devices_and_enter()
+        ...
+        --> dpm_suspend() for every device
+              ...
+              --> acpi_power_off() for every ACPI device
+
+On the other hand, in case of S5, _OFF routine never gets called
+because of the following code flow:
+kernel_poweroff()
+     ...
+     --> acpi_power_off_prepare()
+            --> acpi_sleep_prepare()
+            --> acpi_disable_all_gpes()
+            --> acpi_os_wait_events_complete()
+     ...
+     --> machine_power_off()
+
+In this sequence acpi_power_off is not executed for the devices.
+
+
+>
+> > In order to ensure that the
+> > power down sequencing does the right thing, it is necessary for ACPI
+> > to disable all power resources while preparing for S5.
+>
+> Well, I would say that this is not just about power resources.  ACPI PM methods should be
+> invoked for the devices as well, so generally there should be subject to the normal PM
+> during S5 transitions.
+
+Agree.
+
+>
+> Generally speaking, S5 should follow the code flow of the last phase of hibernation.
+
+By last phase of hibernation, do you mean HIBERNATION_SHUTDOWN?
+
+My platforms do not support hibernation, so I can't really test it,
+but from my reading of the code sequence below:
+hibernate()
+    ...
+    --> power_down()
+          ...
+
+It seems the "last phase of hibernation" i.e. HIBERNATION_SHUTDOWN is
+also going to have the same issue i.e. it will not lead to calling the
+ACPI _OFF routine.
+HIBERNATION_PLATFORM which calls hibernation_platform_enter() actually
+makes calls to dpm_suspend() and dpm_suspend_end() which will end up
+calling acpi_power_off.
+
+I'm sure I'm missing something here as I'm not too familiar with this
+code. Can you please help me by pointing me to the code sequence you
+expect should result in getting the _OFF ACPI routine called for:
+(1) Hibernation
+(2) Shutdown (S5)
+
+Many Thanks!
+
+>
+> > This change updates the function acpi_turn_off_unused_power_resources
+> > to accept a parameter acpi_system_state, This function turns off power
+> > resources according to the targeted system ACPI state:
+> > 1. For S0: Unused power resources are turned off i.e. power resources
+> > whose ref_count is already 0.
+> > 2. For S5: ref_count is decremented first to undo the increment
+> > performed during ACPI bus scan and then power resources with ref_count
+> > 0 are turned off.
+> > 3. All other suspend/hibernate states: No action is required since DPM
+> > takes care of turning off power resources.
+> >
+> > This change should not affect the wake capable devices since:
+> > 1. If wake capable devices are enabled before this call, their
+> > refcount should be greater than 1. Thus, they won't be turned off.
+> > 2. If wake capable devices are not enabled yet when this call is made,
+> > they would eventually get turned on by call to
+> > acpi_enable_wakeup_devices.
+>
+> Quite frankly, this looks like a hack causing a particular platform to behave
+> as expected, but it very well may not be applicable to other platforms.
+>
+> > Signed-off-by: Furquan Shaikh <furquan@google.com>
+> > ---
+> >  drivers/acpi/power.c | 47 ++++++++++++++++++++++++++++++++++++++------
+> >  drivers/acpi/sleep.c |  5 ++++-
+> >  drivers/acpi/sleep.h |  2 +-
+> >  3 files changed, 46 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/acpi/power.c b/drivers/acpi/power.c
+> > index 665e93ca0b40f..945db762861a3 100644
+> > --- a/drivers/acpi/power.c
+> > +++ b/drivers/acpi/power.c
+> > @@ -889,10 +889,42 @@ void acpi_resume_power_resources(void)
+> >
+> >       mutex_unlock(&power_resource_list_lock);
+> >  }
+> > +#endif
+> >
+> > -void acpi_turn_off_unused_power_resources(void)
+> > +/**
+> > + * acpi_turn_off_power_resources: This function is used to turn off power
+> > + * resources in provided ACPI system state.
+> > + *
+> > + * Behavior differs based on the target system state:
+> > + * ACPI_STATE_S0: Turn off unused power resources i.e. turn off power resources
+> > + *                with ref_count zero.
+> > + * ACPI_STATE_S5: Decrement ref_count first and turn off power resources with
+> > + *                ref_count zero. This is done to ensure that the ref_count
+> > + *                incremented during ACPI bus scan is undone and any power
+> > + *                resources that are not required during S5 are turned off.
+> > + * ACPI_STATE_Sx: No action required. DPM is responsible for turning off power
+> > + *                resources while suspending/hibernating.
+> > + */
+> > +void acpi_turn_off_power_resources(int acpi_system_state)
+> >  {
+> >       struct acpi_power_resource *resource;
+> > +     int decrement;
+> > +
+> > +     if (acpi_system_state == ACPI_STATE_S0) {
+> > +             /*
+> > +              * In case of ACPI_STATE_S0, turn off only unused power
+> > +              * resources. So, no need to decrement ref_count.
+> > +              */
+> > +             decrement = 0;
+> > +     } else if (acpi_system_state == ACPI_STATE_S5) {
+> > +             /*
+> > +              * In case of ACPI_STATE_S5, ref_count needs to be decremented
+> > +              * first before checking if it is okay to power off the
+> > +              * resource.
+> > +              */
+> > +             decrement = 1;
+>
+> Instead of doing this you could add a routing decrementing the recfount for all of
+> the power resources in the ON state and call that, before the original
+> acpi_turn_off_unused_power_resources(), in acpi_power_off_prepare().
+>
+> That said I don't think the approach is valid in general as stated above.
+>
+> > +     } else
+> > +             return;
+> >
+> >       mutex_lock(&power_resource_list_lock);
+> >
+> > @@ -907,10 +939,14 @@ void acpi_turn_off_unused_power_resources(void)
+> >                       continue;
+> >               }
+> >
+> > -             if (state == ACPI_POWER_RESOURCE_STATE_ON
+> > -                 && !resource->ref_count) {
+> > -                     dev_info(&resource->device.dev, "Turning OFF\n");
+> > -                     __acpi_power_off(resource);
+> > +             if (state == ACPI_POWER_RESOURCE_STATE_ON) {
+> > +                     if (resource->ref_count)
+> > +                             resource->ref_count -= decrement;
+> > +
+> > +                     if (!resource->ref_count) {
+> > +                             dev_info(&resource->device.dev, "Turning OFF\n");
+> > +                             __acpi_power_off(resource);
+> > +                     }
+> >               }
+> >
+> >               mutex_unlock(&resource->resource_lock);
+> > @@ -918,4 +954,3 @@ void acpi_turn_off_unused_power_resources(void)
+> >
+> >       mutex_unlock(&power_resource_list_lock);
+> >  }
+> > -#endif
+> > diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
+> > index 403c4ff153498..fb6b3ca0eeb91 100644
+> > --- a/drivers/acpi/sleep.c
+> > +++ b/drivers/acpi/sleep.c
+> > @@ -75,6 +75,9 @@ static int acpi_sleep_prepare(u32 acpi_state)
+> >       printk(KERN_INFO PREFIX "Preparing to enter system sleep state S%d\n",
+> >               acpi_state);
+> >       acpi_enable_wakeup_devices(acpi_state);
+> > +
+> > +     acpi_turn_off_power_resources(acpi_state);
+> > +
+> >       acpi_enter_sleep_state_prep(acpi_state);
+> >       return 0;
+> >  }
+> > @@ -524,7 +527,7 @@ static void acpi_pm_start(u32 acpi_state)
+> >   */
+> >  static void acpi_pm_end(void)
+> >  {
+> > -     acpi_turn_off_unused_power_resources();
+> > +     acpi_turn_off_power_resources(ACPI_STATE_S0);
+> >       acpi_scan_lock_release();
+> >       /*
+> >        * This is necessary in case acpi_pm_finish() is not called during a
+> > diff --git a/drivers/acpi/sleep.h b/drivers/acpi/sleep.h
+> > index 41675d24a9bc0..a495c91e2bf3b 100644
+> > --- a/drivers/acpi/sleep.h
+> > +++ b/drivers/acpi/sleep.h
+> > @@ -7,7 +7,7 @@ extern struct list_head acpi_wakeup_device_list;
+> >  extern struct mutex acpi_device_lock;
+> >
+> >  extern void acpi_resume_power_resources(void);
+> > -extern void acpi_turn_off_unused_power_resources(void);
+> > +extern void acpi_turn_off_power_resources(int acpi_system_state);
+> >
+> >  static inline acpi_status acpi_set_waking_vector(u32 wakeup_address)
+> >  {
+> >
+>
+>
+>
+>
