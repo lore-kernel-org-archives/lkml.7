@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52D94C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C70FC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26FF3217F9
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C66092080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544341;
-	bh=FqVRs5wZ2XAb8NdqafNx7fjnGVw1wpppCtCuk5JcHZo=;
+	s=default; t=1560544348;
+	bh=jhQqnymgbcED4Wg31HonswJM/vkpXR8hme/VKMnjuzU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lf1n6MbkpTZYxhOznCBFxzVkazvp/XaVdFtEoNFFXPEwIjwty6HIeSA9RTKnXQ8d2
-	 Hl42S88KWEUeg/vp63Nb0lusb/mG+4mnOkclh+sawc7jM59Nilp8msqv0+K8oKUKAT
-	 q4NISdyrY7BDDJs3VqmPcE7SztF9oIAq1GUOMQeA=
+	b=HCpMAnqh4tOCcqTTgZZfbtM8nJhyObp/YoQzQGwkJnu1x/Ps9eOubCq40hQuIkqdo
+	 EFezbMedCY7bvBst63kriCc4XFLGBwXpdSylcsMLkD4hGSgb77IY9n2v5RDKkLE51X
+	 3cIfcgmcZJEroCePBbepj+Czq5Fi7/6s0FkKZySM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfFNUcT (ORCPT
+        id S1728239AbfFNUc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54390 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:32:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727878AbfFNUap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727876AbfFNUap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Fri, 14 Jun 2019 16:30:45 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2080A2189F;
-        Fri, 14 Jun 2019 20:30:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C413F21880;
+        Fri, 14 Jun 2019 20:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544245;
-        bh=FqVRs5wZ2XAb8NdqafNx7fjnGVw1wpppCtCuk5JcHZo=;
+        s=default; t=1560544244;
+        bh=jhQqnymgbcED4Wg31HonswJM/vkpXR8hme/VKMnjuzU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CjVlzYX43CDvFap4O7NFzD37/255z+Bjmjqn6FiJRCiQCWfFUfs3fvs/lgT7aLGP5
-         qm90axTPGFZzVwsHDfyWHYSuXQbR3Y616jTFdb7nrM66pEEt4N0gfSkDcXNSzJBLxA
-         nVH2d9Pe7UpoyFQE3Mjf8GTQVOCVbMOgscYCWXDY=
+        b=mHZNJYVv1PfHpZE+nzDd3MLZxnQRyp+dkNpYQLEIhYbaDsLOzT7dU9gl4Mj0I3Hpf
+         n5SxjHPNtiobe80lL/Z32slZnasfBUnJ+Kdubqh85YrAl+HY6Q8IHzTXXnh0o3nNKN
+         FmnCp5oTKVKcTqrVvTQQeqW4XrKAztrJ5PQsCbYc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sean Wang <sean.wang@mediatek.com>,
-        Mark Lee <mark-mc.lee@mediatek.com>,
+Cc:     Young Xiao <92siuyang@gmail.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 11/18] net: ethernet: mediatek: Use hw_feature to judge if HWLRO is supported
-Date:   Fri, 14 Jun 2019 16:30:27 -0400
-Message-Id: <20190614203037.27910-11-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.9 10/18] sparc: perf: fix updated event period in response to PERF_EVENT_IOC_PERIOD
+Date:   Fri, 14 Jun 2019 16:30:26 -0400
+Message-Id: <20190614203037.27910-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190614203037.27910-1-sashal@kernel.org>
 References: <20190614203037.27910-1-sashal@kernel.org>
@@ -60,69 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Wang <sean.wang@mediatek.com>
+From: Young Xiao <92siuyang@gmail.com>
 
-[ Upstream commit 9e4f56f1a7f3287718d0083b5cb85298dc05a5fd ]
+[ Upstream commit 56cd0aefa475079e9613085b14a0f05037518fed ]
 
-Should hw_feature as hardware capability flags to check if hardware LRO
-got support.
+The PERF_EVENT_IOC_PERIOD ioctl command can be used to change the
+sample period of a running perf_event. Consequently, when calculating
+the next event period, the new period will only be considered after the
+previous one has overflowed.
 
-Signed-off-by: Mark Lee <mark-mc.lee@mediatek.com>
-Signed-off-by: Sean Wang <sean.wang@mediatek.com>
+This patch changes the calculation of the remaining event ticks so that
+they are offset if the period has changed.
+
+See commit 3581fe0ef37c ("ARM: 7556/1: perf: fix updated event period in
+response to PERF_EVENT_IOC_PERIOD") for details.
+
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mediatek/mtk_eth_soc.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/sparc/kernel/perf_event.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/ethernet/mediatek/mtk_eth_soc.c b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-index 20de37a414fe..03b599109619 100644
---- a/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-+++ b/drivers/net/ethernet/mediatek/mtk_eth_soc.c
-@@ -2175,13 +2175,13 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
+diff --git a/arch/sparc/kernel/perf_event.c b/arch/sparc/kernel/perf_event.c
+index 71e7f77f6776..84a80cd004eb 100644
+--- a/arch/sparc/kernel/perf_event.c
++++ b/arch/sparc/kernel/perf_event.c
+@@ -889,6 +889,10 @@ static int sparc_perf_event_set_period(struct perf_event *event,
+ 	s64 period = hwc->sample_period;
+ 	int ret = 0;
  
- 	switch (cmd->cmd) {
- 	case ETHTOOL_GRXRINGS:
--		if (dev->features & NETIF_F_LRO) {
-+		if (dev->hw_features & NETIF_F_LRO) {
- 			cmd->data = MTK_MAX_RX_RING_NUM;
- 			ret = 0;
- 		}
- 		break;
- 	case ETHTOOL_GRXCLSRLCNT:
--		if (dev->features & NETIF_F_LRO) {
-+		if (dev->hw_features & NETIF_F_LRO) {
- 			struct mtk_mac *mac = netdev_priv(dev);
- 
- 			cmd->rule_cnt = mac->hwlro_ip_cnt;
-@@ -2189,11 +2189,11 @@ static int mtk_get_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd,
- 		}
- 		break;
- 	case ETHTOOL_GRXCLSRULE:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_get_fdir_entry(dev, cmd);
- 		break;
- 	case ETHTOOL_GRXCLSRLALL:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_get_fdir_all(dev, cmd,
- 						     rule_locs);
- 		break;
-@@ -2210,11 +2210,11 @@ static int mtk_set_rxnfc(struct net_device *dev, struct ethtool_rxnfc *cmd)
- 
- 	switch (cmd->cmd) {
- 	case ETHTOOL_SRXCLSRLINS:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_add_ipaddr(dev, cmd);
- 		break;
- 	case ETHTOOL_SRXCLSRLDEL:
--		if (dev->features & NETIF_F_LRO)
-+		if (dev->hw_features & NETIF_F_LRO)
- 			ret = mtk_hwlro_del_ipaddr(dev, cmd);
- 		break;
- 	default:
++	/* The period may have been changed by PERF_EVENT_IOC_PERIOD */
++	if (unlikely(period != hwc->last_period))
++		left = period - (hwc->last_period - left);
++
+ 	if (unlikely(left <= -period)) {
+ 		left = period;
+ 		local64_set(&hwc->period_left, left);
 -- 
 2.20.1
 
