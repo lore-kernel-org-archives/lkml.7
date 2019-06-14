@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2C2BC31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0CAC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D72321841
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61E02184C
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544186;
-	bh=QD3QsZcOuxunLR89FwyqxzdkeWTv4iaFXo6tE1I7r3o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gj9oRHJvMX2rfbq08fahhNYon5CQTKUNdQmfenZVnl1hXPDbyBP52dRFQw9C0yzSD
-	 LalWR87f5JPSkZraAy4k+UOUrHleOEziLYnYxCRkqW6cacqE9ygrsXGanPg2pslPAH
-	 uNK0vbfy2bDbrj5NZxWl9h7TCWQf1PXKKWB8L8dc=
+	s=default; t=1560544191;
+	bh=l+rTMnFPCsw32TVa9pqRNQKLqnxtdHDYtV8BGIzK+k0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=zzSLRjNndBnAmCkn978f7xl+77go2Mpn753gmoW8XEE5jVtpd/gluUG5W80TG0711
+	 4jPdsRb0RWRjdRc6fCmcZE+Wm0lfphd2seE5s8o/qI/JsgRb8OHlPfqHr0om/dwksV
+	 d/GK2TmHu0cu3tyLsdbqkAHzlA6PNtqmFna6Zayo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727160AbfFNU3p (ORCPT
+        id S1727182AbfFNU3t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51830 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:29:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52050 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727058AbfFNU3j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:29:39 -0400
+        id S1727058AbfFNU3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:29:47 -0400
 Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 41C4521841;
-        Fri, 14 Jun 2019 20:29:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD57421841;
+        Fri, 14 Jun 2019 20:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544179;
-        bh=QD3QsZcOuxunLR89FwyqxzdkeWTv4iaFXo6tE1I7r3o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NRMTjknED47yIRDA1NQB8cv9lcAaDxyYXzzhxuz60XZDgHbOhj71cMpEC5D7cG3Hv
-         dc2u3v+Qp1glwFnp/M3LITy0jT+lYpEe0NempmsOp17GsJZ29j0WuiGtt8zUT2Limf
-         ie37vIlpqAkyjRfNDtf4upAyfTddOOXb8mm90XK8=
+        s=default; t=1560544186;
+        bh=l+rTMnFPCsw32TVa9pqRNQKLqnxtdHDYtV8BGIzK+k0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=zcmg5wlr1x+UEvqnqkF3v6CCcddCVKNIxos2rpjovGKQN0YJujAJrfngMpbhSdwuW
+         fBdLc3LPz/vp2hrcM31gLSW7MVhdbvrL8mVIcFkJA6wwfN3ZFEagGWlxNT5QbeIlyr
+         z0xUD5FwV//0JPWObNLFp28qEv4XHJgFW4Sb+ZPU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gen Zhang <blackgod016574@gmail.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, sparclinux@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 36/59] mdesc: fix a missing-check bug in get_vdev_port_node_info()
-Date:   Fri, 14 Jun 2019 16:28:20 -0400
-Message-Id: <20190614202843.26941-36-sashal@kernel.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        Sasha Levin <sashal@kernel.org>,
+        linux-snps-arc@lists.infradead.org
+Subject: [PATCH AUTOSEL 4.19 01/39] ARC: fix build warnings
+Date:   Fri, 14 Jun 2019 16:29:06 -0400
+Message-Id: <20190614202946.27385-1-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614202843.26941-1-sashal@kernel.org>
-References: <20190614202843.26941-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -59,34 +57,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Gen Zhang <blackgod016574@gmail.com>
+From: Vineet Gupta <vgupta@synopsys.com>
 
-[ Upstream commit 80caf43549e7e41a695c6d1e11066286538b336f ]
+[ Upstream commit 89c92142f75eb80064f5b9f1111484b1b4d81790 ]
 
-In get_vdev_port_node_info(), 'node_info->vdev_port.name' is allcoated
-by kstrdup_const(), and it returns NULL when fails. So
-'node_info->vdev_port.name' should be checked.
+| arch/arc/mm/tlb.c:914:2: warning: variable length array 'pd0' is used [-Wvla]
+| arch/arc/include/asm/cmpxchg.h:95:29: warning: value computed is not used [-Wunused-value]
 
-Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/sparc/kernel/mdesc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arc/include/asm/cmpxchg.h | 14 ++++++++++----
+ arch/arc/mm/tlb.c              | 13 ++++++++-----
+ 2 files changed, 18 insertions(+), 9 deletions(-)
 
-diff --git a/arch/sparc/kernel/mdesc.c b/arch/sparc/kernel/mdesc.c
-index 9a26b442f820..8e645ddac58e 100644
---- a/arch/sparc/kernel/mdesc.c
-+++ b/arch/sparc/kernel/mdesc.c
-@@ -356,6 +356,8 @@ static int get_vdev_port_node_info(struct mdesc_handle *md, u64 node,
+diff --git a/arch/arc/include/asm/cmpxchg.h b/arch/arc/include/asm/cmpxchg.h
+index d819de1c5d10..3ea4112c8302 100644
+--- a/arch/arc/include/asm/cmpxchg.h
++++ b/arch/arc/include/asm/cmpxchg.h
+@@ -92,8 +92,11 @@ __cmpxchg(volatile void *ptr, unsigned long expected, unsigned long new)
  
- 	node_info->vdev_port.id = *idp;
- 	node_info->vdev_port.name = kstrdup_const(name, GFP_KERNEL);
-+	if (!node_info->vdev_port.name)
-+		return -1;
- 	node_info->vdev_port.parent_cfg_hdl = *parent_cfg_hdlp;
+ #endif /* CONFIG_ARC_HAS_LLSC */
  
- 	return 0;
+-#define cmpxchg(ptr, o, n) ((typeof(*(ptr)))__cmpxchg((ptr), \
+-				(unsigned long)(o), (unsigned long)(n)))
++#define cmpxchg(ptr, o, n) ({				\
++	(typeof(*(ptr)))__cmpxchg((ptr),		\
++				  (unsigned long)(o),	\
++				  (unsigned long)(n));	\
++})
+ 
+ /*
+  * atomic_cmpxchg is same as cmpxchg
+@@ -198,8 +201,11 @@ static inline unsigned long __xchg(unsigned long val, volatile void *ptr,
+ 	return __xchg_bad_pointer();
+ }
+ 
+-#define xchg(ptr, with) ((typeof(*(ptr)))__xchg((unsigned long)(with), (ptr), \
+-						 sizeof(*(ptr))))
++#define xchg(ptr, with) ({				\
++	(typeof(*(ptr)))__xchg((unsigned long)(with),	\
++			       (ptr),			\
++			       sizeof(*(ptr)));		\
++})
+ 
+ #endif /* CONFIG_ARC_PLAT_EZNPS */
+ 
+diff --git a/arch/arc/mm/tlb.c b/arch/arc/mm/tlb.c
+index 4097764fea23..fa18c00b0cfd 100644
+--- a/arch/arc/mm/tlb.c
++++ b/arch/arc/mm/tlb.c
+@@ -911,9 +911,11 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 			  struct pt_regs *regs)
+ {
+ 	struct cpuinfo_arc_mmu *mmu = &cpuinfo_arc700[smp_processor_id()].mmu;
+-	unsigned int pd0[mmu->ways];
+ 	unsigned long flags;
+-	int set;
++	int set, n_ways = mmu->ways;
++
++	n_ways = min(n_ways, 4);
++	BUG_ON(mmu->ways > 4);
+ 
+ 	local_irq_save(flags);
+ 
+@@ -921,9 +923,10 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 	for (set = 0; set < mmu->sets; set++) {
+ 
+ 		int is_valid, way;
++		unsigned int pd0[4];
+ 
+ 		/* read out all the ways of current set */
+-		for (way = 0, is_valid = 0; way < mmu->ways; way++) {
++		for (way = 0, is_valid = 0; way < n_ways; way++) {
+ 			write_aux_reg(ARC_REG_TLBINDEX,
+ 					  SET_WAY_TO_IDX(mmu, set, way));
+ 			write_aux_reg(ARC_REG_TLBCOMMAND, TLBRead);
+@@ -937,14 +940,14 @@ void do_tlb_overlap_fault(unsigned long cause, unsigned long address,
+ 			continue;
+ 
+ 		/* Scan the set for duplicate ways: needs a nested loop */
+-		for (way = 0; way < mmu->ways - 1; way++) {
++		for (way = 0; way < n_ways - 1; way++) {
+ 
+ 			int n;
+ 
+ 			if (!pd0[way])
+ 				continue;
+ 
+-			for (n = way + 1; n < mmu->ways; n++) {
++			for (n = way + 1; n < n_ways; n++) {
+ 				if (pd0[way] != pd0[n])
+ 					continue;
+ 
 -- 
 2.20.1
 
