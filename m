@@ -2,125 +2,114 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B06C31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA79C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8F12080A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560544366;
-	bh=FE+12g6ZJUC6swIQFvWgR1Ppf6wRJ7KMqJ61p+JFJ7w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RDPSC6iTzeyAYesvWmveh+KYkklS9SCywr911pQkL+F3pdRP+jTYhx6EIH0A+OHGd
-	 AdVA9kLRy7zNj59i964/3lvnnma659kbEagKoiMr+45XoW4/MlxaAb1UIuJ1uoYWjs
-	 qwUzSe2TtVG0ZPinZsmSG/4a+vCfUKAYl/T3kHqE=
+	by mail.kernel.org (Postfix) with ESMTP id 08FCE2080A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 20:32:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727715AbfFNUcj (ORCPT
+        id S1728241AbfFNUcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 16:32:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53864 "EHLO mail.kernel.org"
+        Fri, 14 Jun 2019 16:32:47 -0400
+Received: from sauhun.de ([88.99.104.3]:56756 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726779AbfFNUal (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 16:30:41 -0400
-Received: from sasha-vm.mshome.net (unknown [131.107.159.134])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 739882186A;
-        Fri, 14 Jun 2019 20:30:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560544240;
-        bh=FE+12g6ZJUC6swIQFvWgR1Ppf6wRJ7KMqJ61p+JFJ7w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lk/WDXosj/ykAvHLz+Pqqiqb0HM8NkIMheP5lPxypxBt4hqe9u3jdl/8Lnlm8yYwX
-         ocKL9hkonlIGjUXa1Cr8mj3kkLGTlZUvJrgPWiYeC0+54mnhtGPyLqRuzLN8/MCi0q
-         nqVN+iNxOlXvusaa/8vCdjXCRasrjKtkzeH1ocQA=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Josh Collier <josh.d.collier@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>, linux-rdma@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 06/18] IB/{qib, hfi1, rdmavt}: Correct ibv_devinfo max_mr value
-Date:   Fri, 14 Jun 2019 16:30:22 -0400
-Message-Id: <20190614203037.27910-6-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190614203037.27910-1-sashal@kernel.org>
-References: <20190614203037.27910-1-sashal@kernel.org>
+        id S1727807AbfFNUcq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 16:32:46 -0400
+Received: from localhost (p5486CF81.dip0.t-ipconnect.de [84.134.207.129])
+        by pokefinder.org (Postfix) with ESMTPSA id 1BFB72CF690;
+        Fri, 14 Jun 2019 22:32:44 +0200 (CEST)
+Date:   Fri, 14 Jun 2019 22:32:43 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, devicetree@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Liam Girdwood <lgirdwood@gmail.com>, linux-i2c@vger.kernel.org,
+        linux-rockchip@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Re: [PATCH v2 17/28] drivers: Introduce bus_find_device_by_of_node()
+ helper
+Message-ID: <20190614203243.GC7991@kunai>
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-18-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8NvZYKFJsRX2Djef"
+Content-Disposition: inline
+In-Reply-To: <1560534863-15115-18-git-send-email-suzuki.poulose@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Marciniszyn <mike.marciniszyn@intel.com>
 
-[ Upstream commit 35164f5259a47ea756fa1deb3e463ac2a4f10dc9 ]
+--8NvZYKFJsRX2Djef
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The command 'ibv_devinfo -v' reports 0 for max_mr.
+On Fri, Jun 14, 2019 at 06:54:12PM +0100, Suzuki K Poulose wrote:
+> Add a wrapper to bus_find_device() to search for a device
+> by the of_node pointer, reusing the generic match function.
+> Also convert the existing users to make use of the new helper.
+>=20
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: devicetree@vger.kernel.org
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Heiko Stuebner <heiko@sntech.de>
+> Cc: Liam Girdwood <lgirdwood@gmail.com>
+> Cc: linux-i2c@vger.kernel.org
+> Cc: linux-rockchip@lists.infradead.org
+> Cc: linux-spi@vger.kernel.org
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Cc: Takashi Iwai <tiwai@suse.com>
+> Cc: Wolfram Sang <wsa@the-dreams.de>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 
-Fix by assigning the query values after the mr lkey_table has been built
-rather than early on in the driver.
+Acked-by: Wolfram Sang <wsa@the-dreams.de> # for the I2C parts
 
-Fixes: 7b1e2099adc8 ("IB/rdmavt: Move memory registration into rdmavt")
-Reviewed-by: Josh Collier <josh.d.collier@intel.com>
-Signed-off-by: Mike Marciniszyn <mike.marciniszyn@intel.com>
-Signed-off-by: Dennis Dalessandro <dennis.dalessandro@intel.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/infiniband/hw/hfi1/verbs.c    | 2 --
- drivers/infiniband/hw/qib/qib_verbs.c | 2 --
- drivers/infiniband/sw/rdmavt/mr.c     | 2 ++
- 3 files changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/infiniband/hw/hfi1/verbs.c b/drivers/infiniband/hw/hfi1/verbs.c
-index d9c71750e22d..15054a0cbf6d 100644
---- a/drivers/infiniband/hw/hfi1/verbs.c
-+++ b/drivers/infiniband/hw/hfi1/verbs.c
-@@ -1344,8 +1344,6 @@ static void hfi1_fill_device_attr(struct hfi1_devdata *dd)
- 	rdi->dparms.props.max_cq = hfi1_max_cqs;
- 	rdi->dparms.props.max_ah = hfi1_max_ahs;
- 	rdi->dparms.props.max_cqe = hfi1_max_cqes;
--	rdi->dparms.props.max_mr = rdi->lkey_table.max;
--	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
- 	rdi->dparms.props.max_map_per_fmr = 32767;
- 	rdi->dparms.props.max_pd = hfi1_max_pds;
- 	rdi->dparms.props.max_qp_rd_atom = HFI1_MAX_RDMA_ATOMIC;
-diff --git a/drivers/infiniband/hw/qib/qib_verbs.c b/drivers/infiniband/hw/qib/qib_verbs.c
-index 954f15064514..d6e183775e24 100644
---- a/drivers/infiniband/hw/qib/qib_verbs.c
-+++ b/drivers/infiniband/hw/qib/qib_verbs.c
-@@ -1568,8 +1568,6 @@ static void qib_fill_device_attr(struct qib_devdata *dd)
- 	rdi->dparms.props.max_cq = ib_qib_max_cqs;
- 	rdi->dparms.props.max_cqe = ib_qib_max_cqes;
- 	rdi->dparms.props.max_ah = ib_qib_max_ahs;
--	rdi->dparms.props.max_mr = rdi->lkey_table.max;
--	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
- 	rdi->dparms.props.max_map_per_fmr = 32767;
- 	rdi->dparms.props.max_qp_rd_atom = QIB_MAX_RDMA_ATOMIC;
- 	rdi->dparms.props.max_qp_init_rd_atom = 255;
-diff --git a/drivers/infiniband/sw/rdmavt/mr.c b/drivers/infiniband/sw/rdmavt/mr.c
-index 49d55a0322f6..dbd4c0d268e9 100644
---- a/drivers/infiniband/sw/rdmavt/mr.c
-+++ b/drivers/infiniband/sw/rdmavt/mr.c
-@@ -94,6 +94,8 @@ int rvt_driver_mr_init(struct rvt_dev_info *rdi)
- 	for (i = 0; i < rdi->lkey_table.max; i++)
- 		RCU_INIT_POINTER(rdi->lkey_table.table[i], NULL);
- 
-+	rdi->dparms.props.max_mr = rdi->lkey_table.max;
-+	rdi->dparms.props.max_fmr = rdi->lkey_table.max;
- 	return 0;
- }
- 
--- 
-2.20.1
+--8NvZYKFJsRX2Djef
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0EBGsACgkQFA3kzBSg
+KbZ+QhAAhP0RWmmLpy5mMKDwba8oyF5FX1jQZTj4zTukyeAJ5dFtxhQ8mANYEYOf
+2rnnAm42pcb0kyDIvP6xMF+yg+UK2lyd12Ud6k5TD3y+7Ochwlkcyu1JJessZZir
+YbDlY/eFeIyOzINxAx8yLLfYWncpANpAguyo321TmSXyoCFW1JbRlffuTxGKcXFt
+qYFrLQdwosCtFQV33gLalIQ69zBhN5c7Jgf0pVhiUjH8NF73yF0hgOkl9ptdzROX
+4Bzkw5RdlXV9N5yqy3lRa1iNzQ1BJlvFfOxphlHmUEvjXNlvvvHjKyInyFtsbpBR
+tKeUTjeWeVEfwOidPkEmiB8G3+k1LuGX9yOXZmnvVcSqy0xel3CyzjhZWDn6sGdB
+XgbvqJtd78g/Eaqr+y1WhaP5r8N8G/PzJODTtUkeisF06tocDxtLHLLhUjOhenDB
+6eCpKAP3dL7wxniDPMG0xzckpCWeIlCMlM/2BN+OyX16P1jy10HreRmCiIug7/5V
+6AFQji0dWbEwTtnTC6kYQsHXE3XRVILTHKJmWDE1R/Sosp08HOv128fw4G3a/5GK
+Rx6tVLYgs75/X6kc20Cyy51wgJiteoV3CvSXmq8mGhdA4XP5v8TLtKVKWMj+UMOx
+s+Q5PgkjDnvMXp7+HAGpHTlLe0tifUY2nZYtttsZKHraj4bgHoY=
+=val9
+-----END PGP SIGNATURE-----
+
+--8NvZYKFJsRX2Djef--
