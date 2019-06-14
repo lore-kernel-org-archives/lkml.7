@@ -2,132 +2,168 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C1AC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88116C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1226C208CA
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:58:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ltD1od8y"
+	by mail.kernel.org (Postfix) with ESMTP id 60B4321473
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 12:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560517152;
+	bh=d5XKOHRlv9JZdac1o7rwUyg/Yr9lYppTOJuFXN+lS4s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JEHvxSvzu5TeBsV1aG/0gygYkm7EjpwuUFyyvqxJ1rTyWdHe7/LhTqAXp1iAWrBxP
+	 t+FNlC/EgPxgI1CIszHrgtLf8yMswWPwysOFc/Iw9EOzTsMyGzNetdf6WqrcSoJduL
+	 grBySZplZE7tme3TgiXFbYKjnrtNZX4Bx/d57OTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfFNM6u (ORCPT
+        id S1727960AbfFNM7K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 08:58:50 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38765 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727801AbfFNM6u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 08:58:50 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5ECwDsW1697032
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Fri, 14 Jun 2019 05:58:13 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5ECwDsW1697032
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560517094;
-        bh=PDl8JTUgpqB3LLdov/TctBAi0gM+7NEpuJxH2pLc75Q=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=ltD1od8yQp6yCqJxSTnwlfNYk6/q/XdJbvfXVKy0NVjPcV/UV+CsLX8JNpQCR/Mit
-         Eb5kDEso1S6n+5IoXQ8o7VV92RtMjt8okBK+p3kdW1ZT+JjW88lv556Hcjgkn3kJTg
-         f8GBXGeGQXhznoZo2J2+UD4uB6yAmLq/8KlOV2MUYwwXDUxFTR2R/YzVKyOCf72jl8
-         PWnOSw3H63hwR1JUEyVxB4qfLZbzUhBioloKPGm7EaRz/MLpeLpzz/KqIgOJyNYTjx
-         AiESGmTRmTJZ5b4iigviv0BfEVkjbIvAj20EyhJBZ1LsuDSUSdW+owc16c4Ya8cWDW
-         YYsjU9VsqDrXQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5ECwCwd1697029;
-        Fri, 14 Jun 2019 05:58:12 -0700
-Date:   Fri, 14 Jun 2019 05:58:12 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Greg Kroah-Hartman <tipbot@zytor.com>
-Message-ID: <tip-fecb0d95cdf752836cafdfffc1661f61ba4e2101@git.kernel.org>
-Cc:     akpm@linux-foundation.org, longman@redhat.com, tglx@linutronix.de,
-        cai@gmx.us, joel@joelfernandes.org, zhongjiang@huawei.com,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, mingo@kernel.org,
-        gregkh@linuxfoundation.org
-Reply-To: mingo@kernel.org, gregkh@linuxfoundation.org, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, zhongjiang@huawei.com,
-          joel@joelfernandes.org, cai@gmx.us, tglx@linutronix.de,
-          longman@redhat.com, akpm@linux-foundation.org
-In-Reply-To: <20190612153513.GA21082@kroah.com>
-References: <20190612153513.GA21082@kroah.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/debugobjects] debugobjects: No need to check return value
- of debugfs_create()
-Git-Commit-ID: fecb0d95cdf752836cafdfffc1661f61ba4e2101
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Fri, 14 Jun 2019 08:59:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727654AbfFNM7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 08:59:10 -0400
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F629217D7;
+        Fri, 14 Jun 2019 12:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560517148;
+        bh=d5XKOHRlv9JZdac1o7rwUyg/Yr9lYppTOJuFXN+lS4s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QxTgsjt5ppQyUB47pRpIZqkG891XIXtlnRvxHcD9rgMTioeUc/N/j3eUlvT/ZkwDt
+         uEfm3ZZqSEYsH99v+4sc9jY8rahLSQVh8S+9jkjjAZwCxKjCs0/xb414FLz3cuqI/b
+         0+msLxD6tFOFtktEmJxcDJs17xDVP/M+kubU3PMc=
+Received: by mail-lf1-f46.google.com with SMTP id u10so1648119lfm.12;
+        Fri, 14 Jun 2019 05:59:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAW/Osq9z6M5D2ivv3aNtNgdcMihClVGMRZPuxbBaRCHYLU/ejg0
+        jPtRR1p/nE1Js8Eh5FkUFOSLCNKZg79z2GHlrV0=
+X-Google-Smtp-Source: APXvYqxvwcyD1geWDW+7ip6+JikZT/XjD7yYPtfcmB4v2ZBnUA35p45dCuJsJIJQESJjPfA/4kWIkvSmxx8WzRHb3rg=
+X-Received: by 2002:ac2:4891:: with SMTP id x17mr12738142lfc.60.1560517146467;
+ Fri, 14 Jun 2019 05:59:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <CGME20190614095327eucas1p19b6e522efa15c8fd21c51f3900e376e9@eucas1p1.samsung.com>
+ <20190614095309.24100-1-l.luba@partner.samsung.com> <20190614095309.24100-9-l.luba@partner.samsung.com>
+In-Reply-To: <20190614095309.24100-9-l.luba@partner.samsung.com>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Fri, 14 Jun 2019 14:58:55 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
+Message-ID: <CAJKOXPehO2pKrTKMO4YRwDMaPPngmeWG9WF=kMuBG+=P1ix3NA@mail.gmail.com>
+Subject: Re: [PATCH v10 08/13] drivers: memory: add DMC driver for Exynos5422
+To:     Lukasz Luba <l.luba@partner.samsung.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>, linux-clk@vger.kernel.org,
+        mturquette@baylibre.com, sboyd@kernel.org,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, kgene@kernel.org,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        kyungmin.park@samsung.com,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com,
+        keescook@chromium.org, tony@atomide.com, jroedel@suse.de,
+        treding@nvidia.com, digetx@gmail.com, gregkh@linuxfoundation.org,
+        willy.mh.wolff.ml@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  fecb0d95cdf752836cafdfffc1661f61ba4e2101
-Gitweb:     https://git.kernel.org/tip/fecb0d95cdf752836cafdfffc1661f61ba4e2101
-Author:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-AuthorDate: Wed, 12 Jun 2019 17:35:13 +0200
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Fri, 14 Jun 2019 14:51:14 +0200
+On Fri, 14 Jun 2019 at 11:53, Lukasz Luba <l.luba@partner.samsung.com> wrote:
+>
+> This patch adds driver for Exynos5422 Dynamic Memory Controller.
+> The driver provides support for dynamic frequency and voltage scaling for
+> DMC and DRAM. It supports changing timings of DRAM running with different
+> frequency. There is also an algorithm to calculate timigns based on
+> memory description provided in DT.
+> The patch also contains needed MAINTAINERS file update.
+>
+> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
+> ---
+>  MAINTAINERS                             |    8 +
+>  drivers/memory/samsung/Kconfig          |   17 +
+>  drivers/memory/samsung/Makefile         |    1 +
+>  drivers/memory/samsung/exynos5422-dmc.c | 1262 +++++++++++++++++++++++
+>  4 files changed, 1288 insertions(+)
+>  create mode 100644 drivers/memory/samsung/exynos5422-dmc.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 57f496cff999..6ffccfd95351 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3470,6 +3470,14 @@ S:       Maintained
+>  F:     drivers/devfreq/exynos-bus.c
+>  F:     Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+>
+> +DMC FREQUENCY DRIVER FOR SAMSUNG EXYNOS5422
 
-debugobjects: No need to check return value of debugfs_create()
+Eh, more comments from my side.
+"For the hard of thinking, this list is meant to remain in alphabetical order."
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+> +M:     Lukasz Luba <l.luba@partner.samsung.com>
+> +L:     linux-pm@vger.kernel.org
+> +L:     linux-samsung-soc@vger.kernel.org
+> +S:     Maintained
+> +F:     drivers/memory/samsung/exynos5422-dmc.c
+> +F:     Documentation/devicetree/bindings/memory-controllers/exynos5422-dmc.txt
+> +
+>  BUSLOGIC SCSI DRIVER
+>  M:     Khalid Aziz <khalid@gonehiking.org>
+>  L:     linux-scsi@vger.kernel.org
+> diff --git a/drivers/memory/samsung/Kconfig b/drivers/memory/samsung/Kconfig
+> index 79ce7ea58903..c93baa029654 100644
+> --- a/drivers/memory/samsung/Kconfig
+> +++ b/drivers/memory/samsung/Kconfig
+> @@ -5,6 +5,23 @@ config SAMSUNG_MC
+>           Support for the Memory Controller (MC) devices found on
+>           Samsung Exynos SoCs.
+>
+> +config ARM_EXYNOS5422_DMC
 
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Qian Cai <cai@gmx.us>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc: Zhong Jiang <zhongjiang@huawei.com>
-Link: https://lkml.kernel.org/r/20190612153513.GA21082@kroah.com
+Why you added prefix of ARM to CONFIG_? I think none of other Exynos
+Kconfig options follow such convention (except devfreq).
 
----
- lib/debugobjects.c | 14 ++------------
- 1 file changed, 2 insertions(+), 12 deletions(-)
+> +       tristate "ARM EXYNOS5422 Dynamic Memory Controller driver"
+> +       depends on ARCH_EXYNOS
+> +       select DDR
 
-diff --git a/lib/debugobjects.c b/lib/debugobjects.c
-index 55437fd5128b..2ac42286cd08 100644
---- a/lib/debugobjects.c
-+++ b/lib/debugobjects.c
-@@ -850,26 +850,16 @@ static const struct file_operations debug_stats_fops = {
- 
- static int __init debug_objects_init_debugfs(void)
- {
--	struct dentry *dbgdir, *dbgstats;
-+	struct dentry *dbgdir;
- 
- 	if (!debug_objects_enabled)
- 		return 0;
- 
- 	dbgdir = debugfs_create_dir("debug_objects", NULL);
--	if (!dbgdir)
--		return -ENOMEM;
- 
--	dbgstats = debugfs_create_file("stats", 0444, dbgdir, NULL,
--				       &debug_stats_fops);
--	if (!dbgstats)
--		goto err;
-+	debugfs_create_file("stats", 0444, dbgdir, NULL, &debug_stats_fops);
- 
- 	return 0;
--
--err:
--	debugfs_remove(dbgdir);
--
--	return -ENOMEM;
- }
- __initcall(debug_objects_init_debugfs);
- 
+In general select should be used only for non-visible symbols and DDR
+is visible. Use depends.
+
+> +       select PM_DEVFREQ
+
+This definitely cannot be select. You do not select entire subsystem
+because some similar driver was chosen.
+
+> +       select DEVFREQ_GOV_SIMPLE_ONDEMAND
+> +       select DEVFREQ_GOV_USERSPACE
+
+I think only simple_ondemand is needed. Is userspace governor
+necessary for working? Or actually maybe both could be skipped?
+
+> +       select PM_DEVFREQ_EVENT
+
+Again, depends.
+
+> +       select PM_OPP
+> +       help
+> +         This adds driver for Exynos5422 DMC (Dynamic Memory Controller).
+> +         The driver provides support for Dynamic Voltage and Frequency Scaling in
+> +         DMC and DRAM. It also supports changing timings of DRAM running with
+> +         different frequency. The timings are calculated based on DT memory
+> +         information.
+> +
+> +
+>  if SAMSUNG_MC
+
+Why this is outside of SAMSUNG_MC?
+
+Best regards,
+Krzysztof
