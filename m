@@ -2,220 +2,141 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B03DBC31E45
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDEA8C31E4A
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:00:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D142147A
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 02:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B417E20866
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 03:00:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JOAyb+WX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfFNC74 (ORCPT
+        id S1726653AbfFNDAs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 13 Jun 2019 22:59:56 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:37437 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726103AbfFNC74 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 13 Jun 2019 22:59:56 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id E4ACC3DD5BC;
-        Fri, 14 Jun 2019 12:59:50 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hbcQW-0005bc-NF; Fri, 14 Jun 2019 12:58:52 +1000
-Date:   Fri, 14 Jun 2019 12:58:52 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Ira Weiny <ira.weiny@intel.com>
-Cc:     Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190614025852.GN14363@dread.disaster.area>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190613002555.GH14363@dread.disaster.area>
- <20190613203404.GA30404@iweiny-DESK2.sc.intel.com>
+        Thu, 13 Jun 2019 23:00:48 -0400
+Received: from ozlabs.org ([203.11.71.1]:57793 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725834AbfFNDAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 13 Jun 2019 23:00:48 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Q52f6kgHz9sBb;
+        Fri, 14 Jun 2019 13:00:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560481243;
+        bh=m5X7GsQjj0dXlpKQUTPtE8A9eyH0F52zKw87lwG2hI0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JOAyb+WXUCCeOFSBUbYupotwV4ebSFtNAJP3Wvps6OvboKnaHVVleHJzuln+m7a1e
+         4pzzLz2JhxPeTqEU+H6LpkTm6BHMh+DD34SpjTWhFSkMvfGY5O8A6WjEvYgcclp26L
+         DEkz3NiewpNG+N7txc4rnZDab9Erz6p+1rG3STWgSC2AP+0q5rv2n6NCu7BKPijBMg
+         t1i4x7Dg85m4qD6RXenlVSr7WsIjsQKscG+z877difF3dIX7JwMbxDHk9a0ddLf8zG
+         vNRFhX+I0loruqPjOPJEJx9p19zgca0dRcxRnlTy+uoX4rczE+TjktGkm91kSpt4h7
+         uYBzOxyi2D7mQ==
+Date:   Fri, 14 Jun 2019 13:00:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Gal Pressman <galpress@amazon.com>
+Subject: linux-next: manual merge of the rdma tree with Linus' tree
+Message-ID: <20190614130033.2d50bc2e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613203404.GA30404@iweiny-DESK2.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=7-415B0cAAAA:8 a=gnJ_ljic2OsQuunJrboA:9 a=CjuIK1q_8ugA:10
-        a=biEYGPWJfzWAr4FL6Ov7:22
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/EPAqQI1YF8isUvvVdnEK_20"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 01:34:05PM -0700, Ira Weiny wrote:
-> On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
-> > On Wed, Jun 12, 2019 at 05:37:53AM -0700, Matthew Wilcox wrote:
-> > > On Sat, Jun 08, 2019 at 10:10:36AM +1000, Dave Chinner wrote:
-> > > > On Fri, Jun 07, 2019 at 11:25:35AM -0700, Ira Weiny wrote:
-> > > > > Are you suggesting that we have something like this from user space?
-> > > > > 
-> > > > > 	fcntl(fd, F_SETLEASE, F_LAYOUT | F_UNBREAKABLE);
-> > > > 
-> > > > Rather than "unbreakable", perhaps a clearer description of the
-> > > > policy it entails is "exclusive"?
-> > > > 
-> > > > i.e. what we are talking about here is an exclusive lease that
-> > > > prevents other processes from changing the layout. i.e. the
-> > > > mechanism used to guarantee a lease is exclusive is that the layout
-> > > > becomes "unbreakable" at the filesystem level, but the policy we are
-> > > > actually presenting to uses is "exclusive access"...
-> > > 
-> > > That's rather different from the normal meaning of 'exclusive' in the
-> > > context of locks, which is "only one user can have access to this at
-> > > a time".
-> > 
-> > 
-> > Layout leases are not locks, they are a user access policy object.
-> > It is the process/fd which holds the lease and it's the process/fd
-> > that is granted exclusive access.  This is exactly the same semantic
-> > as O_EXCL provides for granting exclusive access to a block device
-> > via open(), yes?
-> > 
-> > > As I understand it, this is rather more like a 'shared' or
-> > > 'read' lock.  The filesystem would be the one which wants an exclusive
-> > > lock, so it can modify the mapping of logical to physical blocks.
-> > 
-> > ISTM that you're conflating internal filesystem implementation with
-> > application visible semantics. Yes, the filesystem uses internal
-> > locks to serialise the modification of the things the lease manages
-> > access too, but that has nothing to do with the access policy the
-> > lease provides to users.
-> > 
-> > e.g. Process A has an exclusive layout lease on file F. It does an
-> > IO to file F. The filesystem IO path checks that Process A owns the
-> > lease on the file and so skips straight through layout breaking
-> > because it owns the lease and is allowed to modify the layout. It
-> > then takes the inode metadata locks to allocate new space and write
-> > new data.
-> > 
-> > Process B now tries to write to file F. The FS checks whether
-> > Process B owns a layout lease on file F. It doesn't, so then it
-> > tries to break the layout lease so the IO can proceed. The layout
-> > breaking code sees that process A has an exclusive layout lease
-> > granted, and so returns -ETXTBSY to process B - it is not allowed to
-> > break the lease and so the IO fails with -ETXTBSY.
-> > 
-> > i.e. the exclusive layout lease prevents other processes from
-> > performing operations that may need to modify the layout from
-> > performing those operations. It does not "lock" the file/inode in
-> > any way, it just changes how the layout lease breaking behaves.
-> 
-> Question: Do we expect Process A to get notified that Process B was attempting
-> to change the layout?
+--Sig_/EPAqQI1YF8isUvvVdnEK_20
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-In which case?
+Hi all,
 
-In the non-exclusive case, yes, the lease gets
-recalled and the application needs to play nice and release it's
-references and drop the lease.
+Today's linux-next merge of the rdma tree got conflicts in:
 
-In the exclusive case, no. The application has said "I don't play
-nice with others" and so we basically tell process B to get stuffed
-and process A can continue onwards oblivious to the wreckage it
-leaves behind....
+  drivers/infiniband/core/uverbs_cmd.c
+  drivers/infiniband/core/uverbs_std_types_cq.c
 
-> This changes the exclusivity semantics.  While Process A has an exclusive lease
-> it could release it if notified to allow process B temporary exclusivity.
+between commit:
 
-And then it's not an exclusive lease - it's just a normal layout
-lease. Process B -does not need a lease- to write to the file.
+  6876aaedc8a1 ("RDMA/uverbs: Pass udata on uverbs error unwind")
 
-All the layout lease does is provide notification to applications
-that rely on the layout of the file being under their control that
-someone else is about to modify the layout. The lease holder that
-"plays nice" then releases the layout and drops it's lease, allowing
-process B to begin it's operation.
+from Linus' tree and commit:
 
-Process A then immediately takes a new layout lease, and remaps the
-file layout via FIEMAP or by creating a new RDMA MR for the mmap
-region. THose operations get serialised by the filesystem because
-the operation being run by process B is run atomically w.r.t. the
-original lease being broken. Hence the new mapping that process A
-gets with it's new lease reflects whatever change was made by
-process B.
+  e39afe3d6dbd ("RDMA: Convert CQ allocations to be under core responsibili=
+ty")
 
-IOWs, the "normal" layout lease recall behaviour provides "temporary
-exclusivity" for third parties. If you are able to release leases
-temporarily and regain them then there is no need for an exclusive
-lease.
+from the rdma tree.
 
-> Question 2: Do we expect other process' (say Process C) to also be able to map
-> and pin the file?  I believe users will need this and for layout purposes it is
-> ok to do so.  But this means that Process A does not have "exclusive" access to
-> the lease.
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
 
-This is an application architecture problem, not a layout lease or
-filesystem problem. :)
-
-i.e. if you have a single process controlling all the RDMA mappings,
-then you can use exclusive leases. If you have multiple processes
-that are uncoordinated and all require layout access to the same
-file then you can't use exclusive layout leases in the application.
-i.e. your application has to play nice with others.
-
-Indeed, this is more than a application architecture problem - it's
-actually a system wide architecture problem.  e.g. the pNFS server
-cannot use exclusive layout leases because it has to play nice with
-anything else on the local filesystem that might require a layout
-lease. An example of this woudl be an app that provides coherent
-RDMA access to the same storage that pNFS is sharing (e.g. a
-userspace CIFS server).
-
-Hence I see that exclusive layout leases will end up being the
-exception rather than the norm, because most applications will need
-to play nice with other applications on the system that also
-directly access the storage under the filesystem....
-
-> So given Process C has also placed a layout lease on the file.  Indicating
-> that it does not want the layout to change.
-
-That is *not what layout leases provide*.
-
-Layout leases grant the owner the ability to map the layout and
-directly access the underlying storage and to do it safely because
-they will get a notification of 3rd party access that will
-invalidate their mapping. Layout leases do not prevent anyone from
-_changing_ the layout and, in fact, pNFS _requires_ the lease holder
-to be able to modify the layout.
-
-IOWs, the layout lease _as it stands now_ is a notification
-mechanism that tells the lease owner when someone else is about to
-modify the layout. It does not make the file layout immutable.
-
-The "exclusive" aspect of layout we have been discussing is a
-mechanism that prevents 3rd party modification of the layout by
-denying the ability to break the layout. This "exclusive" aspect
-does not make the layout immutable, either, it just means the
-layout is only modifiable by the exclusive lease holder. 
-
+--=20
 Cheers,
+Stephen Rothwell
 
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+diff --cc drivers/infiniband/core/uverbs_cmd.c
+index 63fe14c7c68f,5c00d9a5698a..000000000000
+--- a/drivers/infiniband/core/uverbs_cmd.c
++++ b/drivers/infiniband/core/uverbs_cmd.c
+@@@ -1053,8 -1045,10 +1056,10 @@@ static struct ib_ucq_object *create_cq(
+  	return obj;
+ =20
+  err_cb:
+ -	ib_destroy_cq(cq);
+ +	ib_destroy_cq_user(cq, uverbs_get_cleared_udata(attrs));
+-=20
++ 	cq =3D NULL;
++ err_free:
++ 	kfree(cq);
+  err_file:
+  	if (ev_file)
+  		ib_uverbs_release_ucq(attrs->ufile, ev_file, obj);
+diff --cc drivers/infiniband/core/uverbs_std_types_cq.c
+index 07ea4e3c4566,06b8c7d017b7..000000000000
+--- a/drivers/infiniband/core/uverbs_std_types_cq.c
++++ b/drivers/infiniband/core/uverbs_std_types_cq.c
+@@@ -135,8 -140,10 +140,10 @@@ static int UVERBS_HANDLER(UVERBS_METHOD
+ =20
+  	return 0;
+  err_cq:
+ -	ib_destroy_cq(cq);
+ +	ib_destroy_cq_user(cq, uverbs_get_cleared_udata(attrs));
+-=20
++ 	cq =3D NULL;
++ err_free:
++ 	kfree(cq);
+  err_event_file:
+  	if (ev_file)
+  		uverbs_uobject_put(ev_file_uobj);
+
+--Sig_/EPAqQI1YF8isUvvVdnEK_20
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0DDdEACgkQAVBC80lX
+0GzZrwgAoJBhYFviY55t2R8SCHHVHhCeQeA16nGse9fCe1xU1qZpGg3eNPHd+IJ4
+Q/+HGWrCL+99CG8cLl6jZoH7E3OCx2x0drlwIXGbLH+Gg7WN66r7DJpkDD6yBGpu
+cNeZbH3DD7DBZRN5M6YSyyzQgMVPwOvHcob4XKCTyoYqudM7OQMcj9vl5ZeytkcF
+9QgQv5gG7M9wt3up4RKytL8xSkIZuq2skhlFAzRlTSYuvhupyyiPq5U9AGJavVk1
+u0hat8mkpOMY7CkvXWQmOQN4ksNj2nIgT6F/fGl1YZsuD13i1O9PooaIE6zjtqqs
+QHYCA3CIS0k4d6Ii7x+d8b2Mp+8Tiw==
+=fwNT
+-----END PGP SIGNATURE-----
+
+--Sig_/EPAqQI1YF8isUvvVdnEK_20--
