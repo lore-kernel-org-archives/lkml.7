@@ -2,139 +2,85 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5358DC31E4B
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:11:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1576CC31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A3F2183F
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:11:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8D4C21773
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 19:15:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfFNTLZ (ORCPT
+        id S1726218AbfFNTPg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 15:11:25 -0400
-Received: from mga14.intel.com ([192.55.52.115]:58081 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfFNTLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 15:11:25 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 12:11:24 -0700
-X-ExtLoop1: 1
-Received: from ray.jf.intel.com (HELO [10.7.201.15]) ([10.7.201.15])
-  by orsmga007.jf.intel.com with ESMTP; 14 Jun 2019 12:11:23 -0700
-Subject: Re: [PATCH, RFC 44/62] x86/mm: Set KeyIDs in encrypted VMAs for MKTME
-To:     Alison Schofield <alison.schofield@intel.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>, linux-mm@kvack.org,
-        kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-45-kirill.shutemov@linux.intel.com>
- <20190614114408.GD3436@hirez.programming.kicks-ass.net>
- <20190614173345.GB5917@alison-desk.jf.intel.com>
- <e0884a6b-78bc-209d-bc9a-90f69839189e@intel.com>
- <20190614184602.GB7252@alison-desk.jf.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <ca62a921-e60c-6532-32c3-f02e15ba69aa@intel.com>
-Date:   Fri, 14 Jun 2019 12:11:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Fri, 14 Jun 2019 15:15:36 -0400
+Received: from emh01.mail.saunalahti.fi ([62.142.5.107]:43764 "EHLO
+        emh01.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725825AbfFNTPf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 15:15:35 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-83-177-nat.elisa-mobile.fi [85.76.83.177])
+        by emh01.mail.saunalahti.fi (Postfix) with ESMTP id 3F9C720347;
+        Fri, 14 Jun 2019 22:15:33 +0300 (EEST)
+Date:   Fri, 14 Jun 2019 22:15:33 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
+Message-ID: <20190614191532.GC27145@darkstar.musicnaut.iki.fi>
+References: <20190613082446.18685-1-hch@lst.de>
+ <CA+7wUswMtpVCoX0H5eF=GUY8jWDAEWa9Z223tKiKHiL69hhHtQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190614184602.GB7252@alison-desk.jf.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+7wUswMtpVCoX0H5eF=GUY8jWDAEWa9Z223tKiKHiL69hhHtQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/14/19 11:46 AM, Alison Schofield wrote:
-> On Fri, Jun 14, 2019 at 11:26:10AM -0700, Dave Hansen wrote:
->> On 6/14/19 10:33 AM, Alison Schofield wrote:
->>> Preserving the data across encryption key changes has not
->>> been a requirement. I'm not clear if it was ever considered
->>> and rejected. I believe that copying in order to preserve
->>> the data was never considered.
->>
->> We could preserve the data pretty easily.  It's just annoying, though.
->> Right now, our only KeyID conversions happen in the page allocator.  If
->> we were to convert in-place, we'd need something along the lines of:
->>
->> 	1. Allocate a scratch page
->> 	2. Unmap target page, or at least make it entirely read-only
->> 	3. Copy plaintext into scratch page
->> 	4. Do cache KeyID conversion of page being converted:
->> 	   Flush caches, change page_ext metadata
->> 	5. Copy plaintext back into target page from scratch area
->> 	6. Re-establish PTEs with new KeyID
+Hi,
+
+On Fri, Jun 14, 2019 at 09:24:16AM +0200, Mathieu Malaterre wrote:
+> On Thu, Jun 13, 2019 at 10:27 AM Christoph Hellwig <hch@lst.de> wrote:
+> > With the strict dma mask checking introduced with the switch to
+> > the generic DMA direct code common wifi chips on 32-bit powerbooks
+> > stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
+> > to allow them to reliably allocate dma coherent memory.
+> >
+> > Fixes: 65a21b71f948 ("powerpc/dma: remove dma_nommu_dma_supported")
+> > Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  arch/powerpc/include/asm/page.h         | 7 +++++++
+> >  arch/powerpc/mm/mem.c                   | 3 ++-
+> >  arch/powerpc/platforms/powermac/Kconfig | 1 +
+> >  3 files changed, 10 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+> > index b8286a2013b4..0d52f57fca04 100644
+> > --- a/arch/powerpc/include/asm/page.h
+> > +++ b/arch/powerpc/include/asm/page.h
+> > @@ -319,6 +319,13 @@ struct vm_area_struct;
+> >  #endif /* __ASSEMBLY__ */
+> >  #include <asm/slice.h>
+> >
+> > +/*
+> > + * Allow 30-bit DMA for very limited Broadcom wifi chips on many powerbooks.
 > 
-> Seems like the 'Copy plaintext' steps might disappoint the user, as
-> much as the 'we don't preserve your data' design. Would users be happy
-> w the plain text steps ?
+> nit: would it be possible to mention explicit reference to b43-legacy.
+> Using b43 on my macmini g4 never showed those symptoms (using
+> 5.2.0-rc2+)
 
-Well, it got to be plaintext because they wrote it to memory in
-plaintext in the first place, so it's kinda hard to disappoint them. :)
+According to Wikipedia Mac mini G4 is limited to 1 GB RAM, so that's
+why you don't see the issue.
 
-IMNHO, the *vast* majority of cases, folks will allocate memory and then
-put a secret in it.  They aren't going to *get* a secret in some
-mysterious fashion and then later decide they want to protect it.  In
-other words, the inability to convert it is pretty academic and not
-worth the complexity.
+A.
