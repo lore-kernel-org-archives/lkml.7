@@ -2,172 +2,87 @@ Return-Path: <SRS0=TKbG=UN=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99009C31E4D
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:34:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E424C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:34:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6843420851
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:34:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="HffgqhIm"
+	by mail.kernel.org (Postfix) with ESMTP id 5D85F20851
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 13:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfFNNeJ (ORCPT
+        id S1728149AbfFNNey (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 09:34:09 -0400
-Received: from mail.efficios.com ([167.114.142.138]:38922 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727827AbfFNNeJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 09:34:09 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id D261D25143A;
-        Fri, 14 Jun 2019 09:34:07 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id eMtJxE_PKUuv; Fri, 14 Jun 2019 09:34:07 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 5A209251437;
-        Fri, 14 Jun 2019 09:34:07 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 5A209251437
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1560519247;
-        bh=BXdzK3imtsRVvyqNXo75xd1vpyjR6NM0BuwT0eQblbg=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=HffgqhImyOqrETWjZ8ZBxuodnBa4RRE0oMjQGK4I0CeMV998n9+kRLxQFhCyE3SHW
-         pzxkkua62UHD/ubHQiY9NIFNhRGNCxFADrihzn2yERHxs96eJ8q5aTgPLjQl9krPG5
-         V7GnOuXwxx2LqEymxUqsAc5P0QciLnloo19N3JrfR/7wLNQn65NF8GfctY9iraUb5m
-         dE7ikuwq//6BwDIyqDNRw3i/csn4qDy1UGbBsnIEaZMdfiIdDXVx0Zx+XrbFd9QkRF
-         aDt/sS/q2RHGdvCqhorLHhIGCsFdXOiShv2oOZXemJ42iyJbTHQ2Ea8BZFwXG8ODh+
-         dHvAYZA7Znjzg==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id N5H9ReVy76NV; Fri, 14 Jun 2019 09:34:07 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 3EF2125142C;
-        Fri, 14 Jun 2019 09:34:07 -0400 (EDT)
-Date:   Fri, 14 Jun 2019 09:34:07 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     carlos <carlos@redhat.com>, Joseph Myers <joseph@codesourcery.com>,
-        Szabolcs Nagy <szabolcs.nagy@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ben Maurer <bmaurer@fb.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
-        Rich Felker <dalias@libc.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-api <linux-api@vger.kernel.org>
-Message-ID: <189377747.3315.1560519247118.JavaMail.zimbra@efficios.com>
-In-Reply-To: <87wohoti47.fsf@oldenburg2.str.redhat.com>
-References: <20190503184219.19266-1-mathieu.desnoyers@efficios.com> <1635690189.3049.1560507249693.JavaMail.zimbra@efficios.com> <87tvcsv1pk.fsf@oldenburg2.str.redhat.com> <1190407525.3131.1560516910936.JavaMail.zimbra@efficios.com> <1085273942.3137.1560517301721.JavaMail.zimbra@efficios.com> <87d0jguxdk.fsf@oldenburg2.str.redhat.com> <1779359826.3226.1560518318701.JavaMail.zimbra@efficios.com> <87wohoti47.fsf@oldenburg2.str.redhat.com>
-Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
- and thread creation (v10)
+        Fri, 14 Jun 2019 09:34:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:21676 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727827AbfFNNey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 09:34:54 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 54C3F3092652;
+        Fri, 14 Jun 2019 13:34:54 +0000 (UTC)
+Received: from treble (ovpn-121-232.rdu2.redhat.com [10.10.121.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 121261948B;
+        Fri, 14 Jun 2019 13:34:52 +0000 (UTC)
+Date:   Fri, 14 Jun 2019 08:34:48 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>
+Subject: Re: [PATCH 7/9] x86/unwind/orc: Fall back to using frame pointers
+ for generated code
+Message-ID: <20190614133004.gopjz64vbqmbbzqn@treble>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <4f536ec4facda97406273a22a4c2677f7cb22148.1560431531.git.jpoimboe@redhat.com>
+ <20190613220054.tmonrgfdeie2kl74@ast-mbp.dhcp.thefacebook.com>
+ <20190614013051.6gnwduy4dsygbamj@treble>
+ <20190614014244.st7fbr6areazmyrb@ast-mbp.dhcp.thefacebook.com>
+ <20190614015848.todgfogryjn573nd@treble>
+ <20190614022848.ly4vlgsz6fa4bcbl@treble>
+ <20190614045037.zinbi2sivthcfrtg@treble>
+ <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF67 (Linux)/8.8.12_GA_3794)
-Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v10)
-Thread-Index: J/z3tq5R2TjIrEv1ISEFn2sEl/wrzw==
+Content-Disposition: inline
+In-Reply-To: <20190614060006.na6nfl6shawsyj3i@ast-mbp.dhcp.thefacebook.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Fri, 14 Jun 2019 13:34:54 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Jun 14, 2019, at 3:24 PM, Florian Weimer fweimer@redhat.com wrote:
-
-> * Mathieu Desnoyers:
+On Thu, Jun 13, 2019 at 11:00:09PM -0700, Alexei Starovoitov wrote:
+> > +	if (src_reg == BPF_REG_FP) {
+> > +		/*
+> > +		 * If the value was copied from RBP (real frame pointer),
+> > +		 * adjust it to the BPF program's frame pointer value.
+> > +		 *
+> > +		 * add dst, -40
+> > +		 */
+> > +		EMIT4(add_1mod(0x48, dst_reg), 0x83, add_1reg(0xC0, dst_reg),
+> > +		      0xD8);
+> > +	}
+> > +
 > 
->> ----- On Jun 14, 2019, at 3:09 PM, Florian Weimer fweimer@redhat.com wrote:
->>
->>> * Mathieu Desnoyers:
->>> 
->>>> But my original issue remains: if I define a variable called __rseq_handled
->>>> within either the main executable or the preloaded library, it overshadows
->>>> the libc one:
->>>>
->>>> efficios@compudjdev:~/test/libc-sym$ ./a
->>>> __rseq_handled main: 0 0x56135fd5102c
->>>> __rseq_abi.cpu_id main: 29 0x7fcbeca6d5a0
->>>> efficios@compudjdev:~/test/libc-sym$ LD_PRELOAD=./s.so ./a
->>>> __rseq_handled s.so: 0 0x558f70aeb02c
->>>> __rseq_abi.cpu_id s.so: -1 0x7fdca78b7760
->>>> __rseq_handled main: 0 0x558f70aeb02c
->>>> __rseq_abi.cpu_id main: 27 0x7fdca78b7760
->>>>
->>>> Which is unexpected.
->>> 
->>> Why is this unexpected?  It has to be this way if the main program uses
->>> a copy relocation of __rseq_handled.  As long as there is just one
->>> address across the entire program and ld.so initializes the copy of the
->>> variable that is actually used, everything will be fine.
->>
->> Here is a printout of the __rseq_handled address observed by ld.so, it
->> does not match:
->>
->> LD_PRELOAD=./s.so ./a
->> elf: __rseq_handled addr: 7f501c98a140
->> __rseq_handled s.so: 0 0x55817a88d02c
->> __rseq_abi.cpu_id s.so: -1 0x7f501c983760
->> __rseq_handled main: 0 0x55817a88d02c
->> __rseq_abi.cpu_id main: 27 0x7f501c983760
-> 
-> Where do you print the address?  Before or after the self-relocation of
-> the dynamic loader?  The address is only correct after self-relocation.
+> That won't work. Any register can point to a stack.
 
-I printed the address within rseq_init (), which happened to be invoked
-by the linker startup waaaay too early. I followed your advice and moved
-the rseq_init () invocation after linker re-relocation:
+Right, but if the stack pointer comes from BPF_REG_FP then won't the
+above correct it?  Then if the pointer gets passed around to other
+registers it will have the correct value.  Or did I miss your point?
 
-diff --git a/elf/rtld.c b/elf/rtld.c
-index f29f284a7c..66b0894f9d 100644
---- a/elf/rtld.c
-+++ b/elf/rtld.c
-@@ -1410,9 +1410,6 @@ ERROR: '%s': cannot process note segment.\n", _dl_argv[0]);
-     /* Assign a module ID.  Do this before loading any audit modules.  */
-     GL(dl_rtld_map).l_tls_modid = _dl_next_tls_modid ();
- 
--  /* Publicize rseq registration ownership.  */
--  rseq_init ();
--
-   /* If we have auditing DSOs to load, do it now.  */
-   bool need_security_init = true;
-   if (__glibc_unlikely (audit_list != NULL)
-@@ -2284,6 +2281,11 @@ ERROR: ld.so: object '%s' cannot be loaded as audit interface: %s; ignored.\n",
-       HP_TIMING_ACCUM_NT (relocate_time, add);
-     }
- 
-+  /* Publicize rseq registration ownership.  This must be performed
-+     after rtld re-relocation, before invoking constructors of
-+     preloaded libraries.  */
-+  rseq_init ();
-+
-   /* Do any necessary cleanups for the startup OS interface code.
-      We do these now so that no calls are made after rtld re-relocation
-      which might be resolved to different functions than we expect.
+> The register can point to a stack of a different JITed function as well.
 
-It works fine now!
-
-LD_PRELOAD=./s.so ./a
-elf: __rseq_handled addr: 56300f0a402c
-__rseq_handled s.so: 1 0x56300f0a402c
-__rseq_abi.cpu_id s.so: -1 0x7fad2ff58760
-__rseq_handled main: 1 0x56300f0a402c
-__rseq_abi.cpu_id main: 27 0x7fad2ff58760
-
-Thanks!
-
-Mathieu
+Do you mean tail calls?  Or something else?  For tail calls the stack is
+shared and the stack layout is the same.
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Josh
