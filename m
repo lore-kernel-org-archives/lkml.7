@@ -6,22 +6,22 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A3FC31E4C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E4C31E4B
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C43EC2173C
-	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3104217D6
+	for <linux-kernel@archiver.kernel.org>; Fri, 14 Jun 2019 14:09:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728804AbfFNOJg (ORCPT
+        id S1728853AbfFNOJn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 10:09:36 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:48062 "EHLO huawei.com"
+        Fri, 14 Jun 2019 10:09:43 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18575 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728616AbfFNOJd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 10:09:33 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id E1D6B358CEDAD55C03A2;
-        Fri, 14 Jun 2019 22:09:29 +0800 (CST)
+        id S1728764AbfFNOJg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 10:09:36 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id D5F4B8F76EC02D1F2677;
+        Fri, 14 Jun 2019 22:09:34 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.75) by
  DGGEMS401-HUB.china.huawei.com (10.3.19.201) with Microsoft SMTP Server id
  14.3.439.0; Fri, 14 Jun 2019 22:09:23 +0800
@@ -35,9 +35,9 @@ To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
 CC:     <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <zhangshaokun@hisilicon.com>, "John Garry" <john.garry@huawei.com>
-Subject: [PATCH v2 2/5] perf pmu: Support more complex PMU event aliasing
-Date:   Fri, 14 Jun 2019 22:08:00 +0800
-Message-ID: <1560521283-73314-3-git-send-email-john.garry@huawei.com>
+Subject: [PATCH v2 4/5] perf jevents: Add support for Hisi hip08 HHA PMU aliasing
+Date:   Fri, 14 Jun 2019 22:08:02 +0800
+Message-ID: <1560521283-73314-5-git-send-email-john.garry@huawei.com>
 X-Mailer: git-send-email 2.8.1
 In-Reply-To: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
 References: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
@@ -50,85 +50,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The jevent "Unit" field is used for uncore PMU alias definition.
+Add support for Hisi hip08 HHA PMU aliasing.
 
-The form uncore_pmu_example_X is supported, where "X" is a wildcard,
-to support multiple instances of the same PMU in a system.
-
-Unfortunately this format not suitable for all uncore PMUs; take the Hisi
-DDRC uncore PMU for example, where the name is in the form
-hisi_scclX_ddrcY.
-
-For the current jevent parsing, we would be required to hardcode an uncore
-alias translation for each possible value of X. This is not scalable.
-
-Instead, add support for "Unit" field in the form "hisi_sccl,ddrc", where
-we can match by hisi_scclX and ddrcY. Tokens in Unit field are 
-delimited by ','.
+The kernel driver is in drivers/perf/hisilicon/hisi_uncore_hha_pmu.c
 
 Signed-off-by: John Garry <john.garry@huawei.com>
 ---
- tools/perf/util/pmu.c | 39 ++++++++++++++++++++++++++++++++++-----
- 1 file changed, 34 insertions(+), 5 deletions(-)
+ .../arm64/hisilicon/hip08/uncore-hha.json     | 51 +++++++++++++++++++
+ tools/perf/pmu-events/jevents.c               |  1 +
+ 2 files changed, 52 insertions(+)
+ create mode 100644 tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
 
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index 7e7299fee550..bc71c60589b5 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -700,6 +700,39 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
- 	return map;
- }
+diff --git a/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+new file mode 100644
+index 000000000000..447d3064de90
+--- /dev/null
++++ b/tools/perf/pmu-events/arch/arm64/hisilicon/hip08/uncore-hha.json
+@@ -0,0 +1,51 @@
++[
++   {
++	    "EventCode": "0x00",
++	    "EventName": "uncore_hisi_hha.rx_ops_num",
++	    "BriefDescription": "The number of all operations received by the HHA",
++	    "PublicDescription": "The number of all operations received by the HHA",
++	    "Unit": "hisi_sccl,hha",
++   },
++   {
++	    "EventCode": "0x01",
++	    "EventName": "uncore_hisi_hha.rx_outer",
++	    "BriefDescription": "The number of all operations received by the HHA from another socket",
++	    "PublicDescription": "The number of all operations received by the HHA from another socket",
++	    "Unit": "hisi_sccl,hha",
++   },
++   {
++	    "EventCode": "0x02",
++	    "EventName": "uncore_hisi_hha.rx_sccl",
++	    "BriefDescription": "The number of all operations received by the HHA from another SCCL in this socket",
++	    "PublicDescription": "The number of all operations received by the HHA from another SCCL in this socket",
++	    "Unit": "hisi_sccl,hha",
++   },
++   {
++	    "EventCode": "0x1c",
++	    "EventName": "uncore_hisi_hha.rd_ddr_64b",
++	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 64 bytes",
++	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 64bytes",
++	    "Unit": "hisi_sccl,hha",
++   },
++   {
++	    "EventCode": "0x1d",
++	    "EventName": "uncore_hisi_hha.wr_dr_64b",
++	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
++	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 64 bytes",
++	    "Unit": "hisi_sccl,hha",
++   },
++   {
++	    "EventCode": "0x1e",
++	    "EventName": "uncore_hisi_hha.rd_ddr_128b",
++	    "BriefDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
++	    "PublicDescription": "The number of read operations sent by HHA to DDRC which size is 128 bytes",
++	    "Unit": "hisi_sccl,hha",
++   },
++   {
++	    "EventCode": "0x1f",
++	    "EventName": "uncore_hisi_hha.wr_ddr_128b",
++	    "BriefDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
++	    "PublicDescription": "The number of write operations sent by HHA to DDRC which size is 128 bytes",
++	    "Unit": "hisi_sccl,hha",
++   },
++]
+diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
+index cf9a60333554..909e53e3b5bd 100644
+--- a/tools/perf/pmu-events/jevents.c
++++ b/tools/perf/pmu-events/jevents.c
+@@ -237,6 +237,7 @@ static struct map {
+ 	{ "CPU-M-SF", "cpum_sf" },
+ 	{ "UPI LL", "uncore_upi" },
+ 	{ "hisi_sccl,ddrc", "hisi_sccl,ddrc" },
++	{ "hisi_sccl,hha", "hisi_sccl,hha" },
+ 	{}
+ };
  
-+static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
-+{
-+	char *tmp, *tok, *str;
-+	bool res;
-+
-+	str = strdup(pmu_name);
-+	if (!str)
-+		return false;
-+
-+	/*
-+	 * uncore alias may be from different PMU with common
-+	 * prefix or matching tokens.
-+	 */
-+	tok = strtok_r(str, ",", &tmp);
-+	if (strncmp(pmu_name, tok, strlen(tok))) {
-+		res = false;
-+		goto out;
-+	}
-+
-+	for (; tok; name += strlen(tok), tok = strtok_r(NULL, ",", &tmp)) {
-+		name = strstr(name, tok);
-+		if (!name) {
-+			res = false;
-+			goto out;
-+		}
-+	}
-+
-+	res = true;
-+out:
-+	free(str);
-+	return res;
-+}
-+
- /*
-  * From the pmu_events_map, find the table of PMU events that corresponds
-  * to the current running CPU. Then, add all PMU events from that table
-@@ -730,12 +763,8 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
- 			break;
- 		}
- 
--		/*
--		 * uncore alias may be from different PMU
--		 * with common prefix
--		 */
- 		if (pmu_is_uncore(name) &&
--		    !strncmp(pname, name, strlen(pname)))
-+		    pmu_uncore_alias_match(pname, name))
- 			goto new_alias;
- 
- 		if (strcmp(pname, name))
 -- 
 2.17.1
 
