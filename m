@@ -2,150 +2,298 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD193C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 02:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E9DBC31E44
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 02:41:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CC862173C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 02:34:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF45D2070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 02:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="RK8FRyqp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jxl5nOKf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726655AbfFOCeu (ORCPT
+        id S1726494AbfFOCle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 22:34:50 -0400
-Received: from mail-eopbgr70050.outbound.protection.outlook.com ([40.107.7.50]:5311
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725809AbfFOCet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 22:34:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vvM9va8Cgs1lB26Fe7gtor+l/FazgsETzFAZp1nQ+l0=;
- b=RK8FRyqp4bPVlq9jm1Bay+goZJcHpG46NqLDDczuZaSCbB99c6kvxpBwH3dzpoTnHspvGzpWSMtmgh8uQVWkq0D4DtUSx0SDUjbW3PwQ+UX9iEZiMkzTePH3fMsRYFibVJMv2LJrAkwag5Didj1+Bu9prhCCxhPm13wbuKGYTC4=
-Received: from AM0PR04MB6738.eurprd04.prod.outlook.com (20.179.253.203) by
- AM0PR04MB4548.eurprd04.prod.outlook.com (52.135.149.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1965.15; Sat, 15 Jun 2019 02:34:44 +0000
-Received: from AM0PR04MB6738.eurprd04.prod.outlook.com
- ([fe80::f41f:5455:d0b3:2527]) by AM0PR04MB6738.eurprd04.prod.outlook.com
- ([fe80::f41f:5455:d0b3:2527%4]) with mapi id 15.20.1987.013; Sat, 15 Jun 2019
- 02:34:44 +0000
-From:   "Z.q. Hou" <zhiqiang.hou@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv5 17/20] PCI: mobiveil: Complete initialization of host
- even if no PCIe link
-Thread-Topic: [PATCHv5 17/20] PCI: mobiveil: Complete initialization of host
- even if no PCIe link
-Thread-Index: AQHU8Qrh69RXVzVSWU2bYWJ3S9cC9aaYddkAgAPcP0A=
-Date:   Sat, 15 Jun 2019 02:34:44 +0000
-Message-ID: <AM0PR04MB6738A753FB8A0AE340ADB2C684E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-18-Zhiqiang.Hou@nxp.com>
- <20190612143440.GC15747@redmoon>
-In-Reply-To: <20190612143440.GC15747@redmoon>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=zhiqiang.hou@nxp.com; 
-x-originating-ip: [27.186.246.136]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5bb9fd0e-8877-416b-6c26-08d6f13a0700
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB4548;
-x-ms-traffictypediagnostic: AM0PR04MB4548:
-x-microsoft-antispam-prvs: <AM0PR04MB4548AA8C71B348890D1A974884E90@AM0PR04MB4548.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 0069246B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(346002)(396003)(39850400004)(136003)(189003)(199004)(54534003)(13464003)(9686003)(2906002)(33656002)(76116006)(81156014)(81166006)(55016002)(26005)(102836004)(8676002)(53546011)(256004)(186003)(6246003)(6506007)(76176011)(66946007)(66476007)(73956011)(446003)(7696005)(6116002)(4326008)(11346002)(476003)(64756008)(66446008)(3846002)(66556008)(486006)(53936002)(99286004)(305945005)(52536014)(86362001)(5660300002)(71200400001)(6436002)(74316002)(14454004)(68736007)(54906003)(478600001)(71190400001)(316002)(25786009)(66066001)(8936002)(229853002)(7736002)(6916009)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4548;H:AM0PR04MB6738.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: YqMEsHEYdZapZvDN19UuSrRjZ8zOR7skrH3VLIblgEnCFICTrXUiouf7ZuByuRWRGRR+RT3OYUKNi6eeLT/veOdOXURpYVUBEKCxqQNm2ROQVGfsKHsk8rcqMLNHQjANV3+gmeHb4q2SBjxntqhhPHEgTVIJNSxTeYj94Pi9y5/k363Z4qgvZpgkM4Iba0SnyBoABUtBhbBbeS+02iowbgf7xRZwIu+QIbhMbJHFQrdXeZ0GAxYA2ZhDBhtkTSVm24eg5VFyW43aewqI0DrQk2WhhJkmHOIWelwoVY9qdbbgu/uhadY+4fwK6x5fvEt8hfrdKWPEku8Eu68sNgy6xsQag/9yfB1X+Zu/sv082m9dBrCt1UsY/SD1gBkh7z+e5Xqnb3r689SmwjbzZ+Ezhn9MiLZMRakK0c0715ZoPUo=
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+        Fri, 14 Jun 2019 22:41:34 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:36801 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725809AbfFOCle (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 22:41:34 -0400
+Received: by mail-qt1-f195.google.com with SMTP id p15so4787761qtl.3;
+        Fri, 14 Jun 2019 19:41:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yQ21ZLTY4RLs3iCwXQ/kkbuwACv/NnfO4tOeczfZY60=;
+        b=jxl5nOKfyRLXyx2VWgc1moJ5CiBIhaKj69hQEyyAxgoT/lWw02iRRkWodxJWYQMGCM
+         OnT1uNt/uY9cwxMJH5hsafz710swXVWjmGMESazI46sMMenCcmIQgM3H0zIfg/ZBiwSt
+         D5RltyqTPYaMg5hibHCVdHH9exVNiPkW5dwV6L1fvTkr0IpwTB1itRp9iz12SyHaTGww
+         mFc3JuzkZOcEJHd8ieK3za9kCMksjhgKSPW0xcBd1XptkzHjwjzRsxSsnojHUGBuerzN
+         1UwC3er4q9JPDnCEo+M8Wmt0KGerZ07KJ4C8IGnL5nrDX5cihs6YaQvDJtdRH4hTBOhg
+         mqkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yQ21ZLTY4RLs3iCwXQ/kkbuwACv/NnfO4tOeczfZY60=;
+        b=hYtn1KCunEidOomCAiEPCzPzRZguABMwXOL9c0/vElVMCWEofTj3rH+ayB+DELG/Au
+         XiKx33Bopb9HBJ0GjJZXsCUN5TKeaouZ9E2jGKfPOC/2oEfU2d5ptPXTHLPhTXiRVehF
+         n3Dh3o2ozh1A9IMcZLaltwxSe+NCKsg51u+FH5yp44+iTVNjm2zKnGG53Ynls8kzYFAX
+         swM/Xc5nlwAc/msU8dq3asBybezobDRI3VrU13XvDgoIul0gd1GqmEa3teZWbAPVZ7wo
+         uNE/HpwCNtftnNJS0UGG+I/G5fWjs90kv7Fnri6//rmnGZfRa+2SeCOf0pci6HfRcEPy
+         saAQ==
+X-Gm-Message-State: APjAAAVupFVOGubDe3OWWit56YSedBIJAZIsNddEdwY7Fp6Zl1hwjdPG
+        8Q5N8I4bQZHu8+M0Eg9bcXGyGrRFbuRa7ZUSWRk2uVXR
+X-Google-Smtp-Source: APXvYqxH+mhpDhI2qltwu89UwIsOjPGqHLTkqWWqpOi1GyC//4dnc5oSdU3HjOgk+ow2Y36YJbnoCzJJ+6Qj/h5mH6E=
+X-Received: by 2002:ac8:87d:: with SMTP id x58mr84178585qth.368.1560566492712;
+ Fri, 14 Jun 2019 19:41:32 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5bb9fd0e-8877-416b-6c26-08d6f13a0700
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2019 02:34:44.5950
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zhiqiang.hou@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4548
+References: <20190614134625.6870-1-jlayton@kernel.org> <20190614134625.6870-2-jlayton@kernel.org>
+In-Reply-To: <20190614134625.6870-2-jlayton@kernel.org>
+From:   "Yan, Zheng" <ukernel@gmail.com>
+Date:   Sat, 15 Jun 2019 10:41:21 +0800
+Message-ID: <CAAM7YAnZ=NtsOuR0Pm82fWCSUdFLkJ7NLNk+fNK9+T4viW=_1Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] lib/vsprintf: add snprintf_noterm
+To:     Jeff Layton <jlayton@kernel.org>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ilya Dryomov <idryomov@gmail.com>, Zheng Yan <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, agruenba@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgTG9yZW56bywNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMb3Jl
-bnpvIFBpZXJhbGlzaSBbbWFpbHRvOmxvcmVuem8ucGllcmFsaXNpQGFybS5jb21dDQo+IFNlbnQ6
-IDIwMTnE6jbUwjEyyNUgMjI6MzUNCj4gVG86IFoucS4gSG91IDx6aGlxaWFuZy5ob3VAbnhwLmNv
-bT4NCj4gQ2M6IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlz
-dHMuaW5mcmFkZWFkLm9yZzsNCj4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtl
-cm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2Vy
-bmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGwuc3VicmFobWFueWFAbW9iaXZlaWwu
-Y28uaW47IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaQ0KPiA8bGVveWFuZy5saUBueHAuY29t
-PjsgY2F0YWxpbi5tYXJpbmFzQGFybS5jb207IHdpbGwuZGVhY29uQGFybS5jb207DQo+IE1pbmdr
-YWkgSHUgPG1pbmdrYWkuaHVAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAu
-Y29tPjsNCj4gWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+IFN1YmplY3Q6IFJl
-OiBbUEFUQ0h2NSAxNy8yMF0gUENJOiBtb2JpdmVpbDogQ29tcGxldGUgaW5pdGlhbGl6YXRpb24g
-b2YgaG9zdA0KPiBldmVuIGlmIG5vIFBDSWUgbGluaw0KPiANCj4gT24gRnJpLCBBcHIgMTIsIDIw
-MTkgYXQgMDg6MzY6NTRBTSArMDAwMCwgWi5xLiBIb3Ugd3JvdGU6DQo+ID4gRnJvbTogSG91IFpo
-aXFpYW5nIDxaaGlxaWFuZy5Ib3VAbnhwLmNvbT4NCj4gPg0KPiA+IFNvbWV0aW1lcyB0aGVyZSBp
-cyBub3QgYSBQQ0llIEVuZHBvaW50IHN0YWxsZWQgaW4gdGhlIHNsb3QsIHNvIGRvIG5vdA0KPiA+
-IGV4aXQgd2hlbiB0aGUgUENJZSBsaW5rIGlzIG5vdCB1cC4gQW5kIGRlZ3JhZGUgdGhlIHByaW50
-IGxldmVsIG9mIGxpbmsNCj4gPiB1cCBpbmZvLg0KPiANCj4gU28gd2hhdCdzIHRoZSBwb2ludCBv
-ZiBwcm9iaW5nIGlmIHRoZSBsaW5rIGRvZXMgbm90IGluaXRpYWxpemUgPw0KDQpBIHNpbXBsZSBj
-YXNlIGlzIHBsdWcgaW4gYSBQQ0llIGRldmljZSBhZnRlciB0aGUgTGludXggYm9vdCB1cCwgdGhl
-biByZXNjYW4gdGhlIGRldmljZS4NCklmIGV4aXQgd2hlbiBQQ0llIGxpbmsgaXMgbm90IHVwLCB0
-aGUgUENJZSBjb250cm9sbGVyIGlzIG5vdCBpbml0aWFsaXplZCBjb21wbGV0ZWx5LCB0aGUNCnJl
-c2NhbiBjYW5ub3Qgd29yay4NCg0KVGhhbmtzLA0KWmhpcWlhbmcNCg0KPiBMb3JlbnpvDQo+IA0K
-PiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFuZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+
-ID4gUmV2aWV3ZWQtYnk6IE1pbmdodWFuIExpYW4gPE1pbmdodWFuLkxpYW5AbnhwLmNvbT4NCj4g
-PiBSZXZpZXdlZC1ieTogU3VicmFobWFueWEgTGluZ2FwcGEgPGwuc3VicmFobWFueWFAbW9iaXZl
-aWwuY28uaW4+DQo+ID4gLS0tDQo+ID4gVjU6DQo+ID4gIC0gQ29ycmVjdGVkIGFuZCByZXRvdWNo
-ZWQgdGhlIHN1YmplY3QgYW5kIGNoYW5nZWxvZy4NCj4gPg0KPiA+ICBkcml2ZXJzL3BjaS9jb250
-cm9sbGVyL3BjaWUtbW9iaXZlaWwuYyB8IDYgKystLS0tDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAy
-IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvZHJp
-dmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2ZWlsLmMNCj4gPiBiL2RyaXZlcnMvcGNpL2Nv
-bnRyb2xsZXIvcGNpZS1tb2JpdmVpbC5jDQo+ID4gaW5kZXggMWVlM2VhMjU3MGMwLi44ZGM4N2M3
-YTYwMGUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9wY2kvY29udHJvbGxlci9wY2llLW1vYml2
-ZWlsLmMNCj4gPiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL3BjaWUtbW9iaXZlaWwuYw0K
-PiA+IEBAIC01NjAsNyArNTYwLDcgQEAgc3RhdGljIGludCBtb2JpdmVpbF9icmluZ3VwX2xpbmso
-c3RydWN0DQo+IG1vYml2ZWlsX3BjaWUgKnBjaWUpDQo+ID4gIAkJdXNsZWVwX3JhbmdlKExJTktf
-V0FJVF9NSU4sIExJTktfV0FJVF9NQVgpOw0KPiA+ICAJfQ0KPiA+DQo+ID4gLQlkZXZfZXJyKCZw
-Y2llLT5wZGV2LT5kZXYsICJsaW5rIG5ldmVyIGNhbWUgdXBcbiIpOw0KPiA+ICsJZGV2X2luZm8o
-JnBjaWUtPnBkZXYtPmRldiwgImxpbmsgbmV2ZXIgY2FtZSB1cFxuIik7DQo+ID4NCj4gPiAgCXJl
-dHVybiAtRVRJTUVET1VUOw0KPiA+ICB9DQo+ID4gQEAgLTkyNiwxMCArOTI2LDggQEAgc3RhdGlj
-IGludCBtb2JpdmVpbF9wY2llX3Byb2JlKHN0cnVjdA0KPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYp
-DQo+ID4gIAlicmlkZ2UtPnN3aXp6bGVfaXJxID0gcGNpX2NvbW1vbl9zd2l6emxlOw0KPiA+DQo+
-ID4gIAlyZXQgPSBtb2JpdmVpbF9icmluZ3VwX2xpbmsocGNpZSk7DQo+ID4gLQlpZiAocmV0KSB7
-DQo+ID4gKwlpZiAocmV0KQ0KPiA+ICAJCWRldl9pbmZvKGRldiwgImxpbmsgYnJpbmctdXAgZmFp
-bGVkXG4iKTsNCj4gPiAtCQlnb3RvIGVycm9yOw0KPiA+IC0JfQ0KPiA+DQo+ID4gIAkvKiBzZXR1
-cCB0aGUga2VybmVsIHJlc291cmNlcyBmb3IgdGhlIG5ld2x5IGFkZGVkIFBDSWUgcm9vdCBidXMg
-Ki8NCj4gPiAgCXJldCA9IHBjaV9zY2FuX3Jvb3RfYnVzX2JyaWRnZShicmlkZ2UpOw0KPiA+IC0t
-DQo+ID4gMi4xNy4xDQo+ID4NCg==
+On Fri, Jun 14, 2019 at 9:48 PM Jeff Layton <jlayton@kernel.org> wrote:
+>
+> The getxattr interface returns a length after filling out the value
+> buffer, and the convention with xattrs is to not NULL terminate string
+> data.
+>
+> CephFS implements some virtual xattrs by using snprintf to fill the
+> buffer, but that always NULL terminates the string. If userland sends
+> down a buffer that is just the right length to hold the text without
+> termination then we end up truncating the value.
+>
+> Factor the formatting piece of vsnprintf into a separate helper
+> function, and have vsnprintf call that and then do the NULL termination
+> afterward. Then add a snprintf_noterm function that calls the new helper
+> to populate the string but skips the termination.
+>
+> Signed-off-by: Jeff Layton <jlayton@kernel.org>
+> ---
+>  include/linux/kernel.h |   2 +
+>  lib/vsprintf.c         | 145 ++++++++++++++++++++++++++++-------------
+>  2 files changed, 103 insertions(+), 44 deletions(-)
+>
+> diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+> index 2d14e21c16c0..2f305a347482 100644
+> --- a/include/linux/kernel.h
+> +++ b/include/linux/kernel.h
+> @@ -462,6 +462,8 @@ extern int num_to_str(char *buf, int size,
+>  extern __printf(2, 3) int sprintf(char *buf, const char * fmt, ...);
+>  extern __printf(2, 0) int vsprintf(char *buf, const char *, va_list);
+>  extern __printf(3, 4)
+> +int snprintf_noterm(char *buf, size_t size, const char *fmt, ...);
+> +extern __printf(3, 4)
+>  int snprintf(char *buf, size_t size, const char *fmt, ...);
+>  extern __printf(3, 0)
+>  int vsnprintf(char *buf, size_t size, const char *fmt, va_list args);
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 791b6fa36905..ad5f4990eda3 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -2296,53 +2296,24 @@ set_precision(struct printf_spec *spec, int prec)
+>  }
+>
+>  /**
+> - * vsnprintf - Format a string and place it in a buffer
+> + * vsnprintf_noterm - Format a string and place it in a buffer without NULL
+> + *                   terminating it
+>   * @buf: The buffer to place the result into
+> - * @size: The size of the buffer, including the trailing null space
+> + * @end: The end of the buffer
+>   * @fmt: The format string to use
+>   * @args: Arguments for the format string
+>   *
+> - * This function generally follows C99 vsnprintf, but has some
+> - * extensions and a few limitations:
+> - *
+> - *  - ``%n`` is unsupported
+> - *  - ``%p*`` is handled by pointer()
+> - *
+> - * See pointer() or Documentation/core-api/printk-formats.rst for more
+> - * extensive description.
+> - *
+> - * **Please update the documentation in both places when making changes**
+> - *
+> - * The return value is the number of characters which would
+> - * be generated for the given input, excluding the trailing
+> - * '\0', as per ISO C99. If you want to have the exact
+> - * number of characters written into @buf as return value
+> - * (not including the trailing '\0'), use vscnprintf(). If the
+> - * return is greater than or equal to @size, the resulting
+> - * string is truncated.
+> - *
+> - * If you're not already dealing with a va_list consider using snprintf().
+> + * See the documentation over vsnprintf. This function does NOT add any NULL
+> + * termination to the buffer. The caller must do that if necessary.
+>   */
+> -int vsnprintf(char *buf, size_t size, const char *fmt, va_list args)
+> +static int vsnprintf_noterm(char *buf, char *end, const char *fmt,
+> +                           va_list args)
+>  {
+>         unsigned long long num;
+> -       char *str, *end;
+> +       char *str;
+>         struct printf_spec spec = {0};
+>
+> -       /* Reject out-of-range values early.  Large positive sizes are
+> -          used for unknown buffer sizes. */
+> -       if (WARN_ON_ONCE(size > INT_MAX))
+> -               return 0;
+> -
+>         str = buf;
+> -       end = buf + size;
+> -
+> -       /* Make sure end is always >= buf */
+> -       if (end < buf) {
+> -               end = ((void *)-1);
+> -               size = end - buf;
+> -       }
+> -
+>         while (*fmt) {
+>                 const char *old_fmt = fmt;
+>                 int read = format_decode(fmt, &spec);
+> @@ -2462,18 +2433,69 @@ int vsnprintf(char *buf, size_t size, const char *fmt, va_list args)
+>                         str = number(str, end, num, spec);
+>                 }
+>         }
+> -
+>  out:
+> +       /* the trailing null byte doesn't count towards the total */
+> +       return str-buf;
+> +}
+> +EXPORT_SYMBOL(vsnprintf_noterm);
+
+export static function?
+
+> +
+> +/**
+> + * vsnprintf - Format a string and place it in a buffer
+> + * @buf: The buffer to place the result into
+> + * @size: The size of the buffer, including the trailing null space
+> + * @fmt: The format string to use
+> + * @args: Arguments for the format string
+> + *
+> + * This function generally follows C99 vsnprintf, but has some
+> + * extensions and a few limitations:
+> + *
+> + *  - ``%n`` is unsupported
+> + *  - ``%p*`` is handled by pointer()
+> + *
+> + * See pointer() or Documentation/core-api/printk-formats.rst for more
+> + * extensive description.
+> + *
+> + * **Please update the documentation in both places when making changes**
+> + *
+> + * The return value is the number of characters which would
+> + * be generated for the given input, excluding the trailing
+> + * '\0', as per ISO C99. If you want to have the exact
+> + * number of characters written into @buf as return value
+> + * (not including the trailing '\0'), use vscnprintf(). If the
+> + * return is greater than or equal to @size, the resulting
+> + * string is truncated.
+> + *
+> + * If you're not already dealing with a va_list consider using snprintf().
+> + */
+> +int vsnprintf(char *buf, size_t size, const char *fmt, va_list args)
+> +{
+> +       int ret;
+> +       char *end;
+> +
+> +       /* Reject out-of-range values early.  Large positive sizes are
+> +          used for unknown buffer sizes. */
+> +       if (WARN_ON_ONCE(size > INT_MAX))
+> +               return 0;
+> +
+> +       end = buf + size;
+> +
+> +       /* Make sure end is always >= buf */
+> +       if (end < buf) {
+> +               end = ((void *)-1);
+> +               size = end - buf;
+> +       }
+> +
+> +       ret = vsnprintf_noterm(buf, end, fmt, args);
+> +
+> +       /* NULL terminate the result */
+>         if (size > 0) {
+> -               if (str < end)
+> -                       *str = '\0';
+> +               if (ret < size)
+> +                       buf[ret] = '\0';
+>                 else
+> -                       end[-1] = '\0';
+> +                       buf[size - 1] = '\0';
+>         }
+>
+> -       /* the trailing null byte doesn't count towards the total */
+> -       return str-buf;
+> -
+> +       return ret;
+>  }
+>  EXPORT_SYMBOL(vsnprintf);
+>
+> @@ -2506,6 +2528,41 @@ int vscnprintf(char *buf, size_t size, const char *fmt, va_list args)
+>  }
+>  EXPORT_SYMBOL(vscnprintf);
+>
+> +/**
+> + * snprintf_noterm - Format a string and place it in a buffer
+> + * @buf: The buffer to place the result into
+> + * @size: The size of the buffer, including the trailing null space
+> + * @fmt: The format string to use
+> + * @...: Arguments for the format string
+> + *
+> + * Same as snprintf, but don't NULL terminate the result.
+> + */
+> +int snprintf_noterm(char *buf, size_t size, const char *fmt, ...)
+> +{
+> +       va_list args;
+> +       int ret;
+> +       char *end;
+> +
+> +       /* Reject out-of-range values early.  Large positive sizes are
+> +          used for unknown buffer sizes. */
+> +       if (WARN_ON_ONCE(size > INT_MAX))
+> +               return 0;
+> +
+> +       /* Make sure end is always >= buf */
+> +       end = buf + size;
+> +       if (end < buf) {
+> +               end = ((void *)-1);
+> +               size = end - buf;
+> +       }
+> +
+> +       va_start(args, fmt);
+> +       ret = vsnprintf_noterm(buf, end, fmt, args);
+> +       va_end(args);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL(snprintf_noterm);
+> +
+>  /**
+>   * snprintf - Format a string and place it in a buffer
+>   * @buf: The buffer to place the result into
+> --
+> 2.21.0
+>
