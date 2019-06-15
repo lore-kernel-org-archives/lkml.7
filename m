@@ -7,55 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 519D5C31E44
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 00:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFFD7C31E44
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 00:44:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8C62183E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 00:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5FE2183E
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 00:44:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TJKsD2z1"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BtucgTmj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726329AbfFOAnW (ORCPT
+        id S1726262AbfFOAoh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 20:43:22 -0400
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:42580 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725809AbfFOAnW (ORCPT
+        Fri, 14 Jun 2019 20:44:37 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:43013 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfFOAog (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 20:43:22 -0400
-Received: by mail-vs1-f67.google.com with SMTP id 190so2851642vsf.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 17:43:21 -0700 (PDT)
+        Fri, 14 Jun 2019 20:44:36 -0400
+Received: by mail-ua1-f68.google.com with SMTP id o2so1524288uae.10
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 17:44:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=l6kNs3vEbtZJz4gwMNE28MUy8volKIouYnWugvC1QNU=;
-        b=TJKsD2z1z6LHWkhgoQw49uj/KvYdTS4zbFAkQsUSVUQ3JEk20zJgrxRzVBZUGXky+U
-         05mj3xF2RM3pjz4JVDJMHlBOWviTHw/Ksu/cCWRuiKqbTVSm3IQC/+NKQaFD89Z7owt4
-         inHctQiUqxK3dyWeKKUR0/v4aWFYvh8U5FlKo=
+        bh=Hqhu3iKjp8F7B0PNppJXXZGMbjFkFcAKAjlOSHZGpCw=;
+        b=BtucgTmjUbw04kv6gLtiH5nn5+UMipRd1oqlFsMTR2xCAp7dX7SUmOFAn+CiWX1/b0
+         hhfIE8TVXUaoZx+P37dcbybW/6oDUCNAojfJQ3XVpYGMNP//S4/I38oQKNIvywS47Ah3
+         eIKb/hDcaVeqiHgUKu6Oac7LI+kqGw2jXUavc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=l6kNs3vEbtZJz4gwMNE28MUy8volKIouYnWugvC1QNU=;
-        b=tQU6pbtfp39fNkXcNptE+G2UUprLRow3mwUePC+/CYD1sSPZMMHE2q/Y9rCOVNZ3Ka
-         FRpEq7ozOjehMS90UcbKkxxZ2kVxjFF8UXL0xBLESowRRn1sDpBM3iqgzEuET+7dBJEE
-         ENVt4KGi3tWapHZJoji3FbHOpfqdcY1DJ5WXQcZYUQ1CwgMOGm9ezcjvZYiGFhnlQuLF
-         a8UpYuk4FDD/5PN1UFqr2BYPkwJ4ADYVZfiy31nobCZ9jzZHcLJGcLkYAlk9b/6duLuB
-         PbXECxccLsIckKRGwRoarA8FQdp4SOcaO2vS9GaLNtJQc6y9bW57N24w1wGhFVHR9jzk
-         +Q0Q==
-X-Gm-Message-State: APjAAAXQGNU2/mq4UMNzihqFJvNT+0QYxdiTjIMM/KUtGL1Yo9Q3J2sz
-        H5BiW8x5tBkdByMZ+XhWj4SaQpu2m9Jp4L6BTeUvuQ==
-X-Google-Smtp-Source: APXvYqyINzqLgoly97nAXbatYBIej847145lvC8l1Nj5Kjy8R4NBcmHdKvzptibuPr0Xq13NWsmWUIGgZWXDsSkN+Eo=
-X-Received: by 2002:a67:7d13:: with SMTP id y19mr35490665vsc.232.1560559400933;
- Fri, 14 Jun 2019 17:43:20 -0700 (PDT)
+        bh=Hqhu3iKjp8F7B0PNppJXXZGMbjFkFcAKAjlOSHZGpCw=;
+        b=esNFrhAdxew+/ugpThR2S2o+H2ScLSEQPOWs0aOPzknCezwgdXk5Af2VWCGRZcZ23L
+         YuBhK60s9Bq4syfxthWeK0cgATAQFa+7JCLBDoCfYxPLqK3f2jr/xLge3QM3fmobfrJa
+         d+0ExsPFNllhd3UAdDMq1aGOOCEflolrJ+FAk6BYI+2iE65kEOQwbLUvdy2xBfCfu0Mq
+         kiF5b55QSOtpZfHcDIwpCuWlVt9YEmo4I8y0XYgTSh0IKrCymQNMJpI4LGYJXTpM8jsQ
+         KJxQ6Xa26SWR71elymfFwYbQ52Gfb+YaSomV+w65XOa3X/lY4wApSpRH0bWopS1MtDM8
+         HiLQ==
+X-Gm-Message-State: APjAAAU4idPObvSB2rKJXhmSOQ5gdMu++hLgvb6iGIrlwiEA8MKKzLhn
+        z06025dj2rsr0pp94ED9ldCc0msUUAgWPuwqKLiUMg==
+X-Google-Smtp-Source: APXvYqzjiaDBlFO8bdV4IvvtCzZkmZFMZ8APcuYtyha2wtOhOiLtK7BKGsOv/u0x5QU1iMYswss+zrH9W2lUt/K8C88=
+X-Received: by 2002:a9f:31a2:: with SMTP id v31mr1811971uad.15.1560559475175;
+ Fri, 14 Jun 2019 17:44:35 -0700 (PDT)
 MIME-Version: 1.0
 References: <20190611040350.90064-1-dbasehore@chromium.org>
  <20190611040350.90064-2-dbasehore@chromium.org> <20190612211807.GA13155@ravnborg.org>
-In-Reply-To: <20190612211807.GA13155@ravnborg.org>
+ <CAGAzgsqgbr5rWpyWB1H_66=kxBRb7kw4wE7h34TJfE7eJ1mSQQ@mail.gmail.com>
+In-Reply-To: <CAGAzgsqgbr5rWpyWB1H_66=kxBRb7kw4wE7h34TJfE7eJ1mSQQ@mail.gmail.com>
 From:   "dbasehore ." <dbasehore@chromium.org>
-Date:   Fri, 14 Jun 2019 17:43:09 -0700
-Message-ID: <CAGAzgsqgbr5rWpyWB1H_66=kxBRb7kw4wE7h34TJfE7eJ1mSQQ@mail.gmail.com>
+Date:   Fri, 14 Jun 2019 17:44:24 -0700
+Message-ID: <CAGAzgsqv8qYM-+_4bPLHtyiaox2jFLMMka8n1Wnk-q5LVPKqDg@mail.gmail.com>
 Subject: Re: [PATCH 1/5] drm/panel: Add helper for reading DT rotation
 To:     Sam Ravnborg <sam@ravnborg.org>
 Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
@@ -86,117 +87,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 2:18 PM Sam Ravnborg <sam@ravnborg.org> wrote:
+On Fri, Jun 14, 2019 at 5:43 PM dbasehore . <dbasehore@chromium.org> wrote:
 >
-> Hi Derek.
->
-> On Mon, Jun 10, 2019 at 09:03:46PM -0700, Derek Basehore wrote:
-> > This adds a helper function for reading the rotation (panel
-> > orientation) from the device tree.
+> On Wed, Jun 12, 2019 at 2:18 PM Sam Ravnborg <sam@ravnborg.org> wrote:
 > >
-> > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
-> > ---
-> >  drivers/gpu/drm/drm_panel.c | 41 +++++++++++++++++++++++++++++++++++++
-> >  include/drm/drm_panel.h     |  7 +++++++
-> >  2 files changed, 48 insertions(+)
+> > Hi Derek.
 > >
-> > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-> > index dbd5b873e8f2..3b689ce4a51a 100644
-> > --- a/drivers/gpu/drm/drm_panel.c
-> > +++ b/drivers/gpu/drm/drm_panel.c
-> > @@ -172,6 +172,47 @@ struct drm_panel *of_drm_find_panel(const struct device_node *np)
-> >       return ERR_PTR(-EPROBE_DEFER);
-> >  }
-> >  EXPORT_SYMBOL(of_drm_find_panel);
-> > +
-> > +/**
-> > + * of_drm_get_panel_orientation - look up the rotation of the panel using a
-> > + * device tree node
-> > + * @np: device tree node of the panel
-> > + * @orientation: orientation enum to be filled in
-> The comment says "enum" but the type used is an int.
-> Why not use enum drm_panel_orientation?
+> > On Mon, Jun 10, 2019 at 09:03:46PM -0700, Derek Basehore wrote:
+> > > This adds a helper function for reading the rotation (panel
+> > > orientation) from the device tree.
+> > >
+> > > Signed-off-by: Derek Basehore <dbasehore@chromium.org>
+> > > ---
+> > >  drivers/gpu/drm/drm_panel.c | 41 +++++++++++++++++++++++++++++++++++++
+> > >  include/drm/drm_panel.h     |  7 +++++++
+> > >  2 files changed, 48 insertions(+)
+> > >
+> > > diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
+> > > index dbd5b873e8f2..3b689ce4a51a 100644
+> > > --- a/drivers/gpu/drm/drm_panel.c
+> > > +++ b/drivers/gpu/drm/drm_panel.c
+> > > @@ -172,6 +172,47 @@ struct drm_panel *of_drm_find_panel(const struct device_node *np)
+> > >       return ERR_PTR(-EPROBE_DEFER);
+> > >  }
+> > >  EXPORT_SYMBOL(of_drm_find_panel);
+> > > +
+> > > +/**
+> > > + * of_drm_get_panel_orientation - look up the rotation of the panel using a
+> > > + * device tree node
+> > > + * @np: device tree node of the panel
+> > > + * @orientation: orientation enum to be filled in
+> > The comment says "enum" but the type used is an int.
+> > Why not use enum drm_panel_orientation?
+> >
 >
+> The binding is just an int value, but I can change it to the enum.
 
-The binding is just an int value, but I can change it to the enum.
+Oops, I see what happened here. The way I wrote it should actually use the enum
 
-> > + *
-> > + * Looks up the rotation of a panel in the device tree. The rotation in the
-> > + * device tree is counter clockwise.
-> > + *
-> > + * Return: 0 when a valid rotation value (0, 90, 180, or 270) is read or the
-> > + * rotation property doesn't exist. -EERROR otherwise.
-> > + */
-> Initially I read -EEROOR as a specific error code.
-> But I gues the semantic is to say that a negative error code is returned
-> if something was wrong.
-> As we do not use the "-EERROR" syntax anywhere else in drm, please
-> reword like we do in other places.
 >
->
-> Also - it is worth to mention that the rotation returned is
-> DRM_MODE_PANEL_ORIENTATION_UNKNOWN if the property is not specified.
-> I wonder if this is correct, as no property could also been
-> interpretated as DRM_MODE_PANEL_ORIENTATION_NORMAL.
-> And in most cases the roation property is optional, so one could
-> assume that no property equals 0 degree.
->
->
->         Sam
->
-> > +int of_drm_get_panel_orientation(const struct device_node *np, int *orientation)
-> > +{
-> > +     int rotation, ret;
-> > +
-> > +     ret = of_property_read_u32(np, "rotation", &rotation);
-> > +     if (ret == -EINVAL) {
-> > +             /* Don't return an error if there's no rotation property. */
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
-> > +             return 0;
-> > +     }
-> > +
-> > +     if (ret < 0)
-> > +             return ret;
-> > +
-> > +     if (rotation == 0)
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_NORMAL;
-> > +     else if (rotation == 90)
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP;
-> > +     else if (rotation == 180)
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP;
-> > +     else if (rotation == 270)
-> > +             *orientation = DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
-> > +     else
-> > +             return -EINVAL;
-> > +
-> > +     return 0;
-> > +}
-> > +EXPORT_SYMBOL(of_drm_get_panel_orientation);
-> >  #endif
+> > > + *
+> > > + * Looks up the rotation of a panel in the device tree. The rotation in the
+> > > + * device tree is counter clockwise.
+> > > + *
+> > > + * Return: 0 when a valid rotation value (0, 90, 180, or 270) is read or the
+> > > + * rotation property doesn't exist. -EERROR otherwise.
+> > > + */
+> > Initially I read -EEROOR as a specific error code.
+> > But I gues the semantic is to say that a negative error code is returned
+> > if something was wrong.
+> > As we do not use the "-EERROR" syntax anywhere else in drm, please
+> > reword like we do in other places.
 > >
-> >  MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
-> > diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-> > index 8c738c0e6e9f..13631b2efbaa 100644
-> > --- a/include/drm/drm_panel.h
-> > +++ b/include/drm/drm_panel.h
-> > @@ -197,11 +197,18 @@ int drm_panel_detach(struct drm_panel *panel);
 > >
-> >  #if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL)
-> >  struct drm_panel *of_drm_find_panel(const struct device_node *np);
-> > +int of_drm_get_panel_orientation(const struct device_node *np,
-> > +                              int *orientation);
-> >  #else
-> >  static inline struct drm_panel *of_drm_find_panel(const struct device_node *np)
-> >  {
-> >       return ERR_PTR(-ENODEV);
-> >  }
-> > +int of_drm_get_panel_orientation(const struct device_node *np,
-> > +                              int *orientation)
-> > +{
-> > +     return -ENODEV;
-> > +}
-> >  #endif
+> > Also - it is worth to mention that the rotation returned is
+> > DRM_MODE_PANEL_ORIENTATION_UNKNOWN if the property is not specified.
+> > I wonder if this is correct, as no property could also been
+> > interpretated as DRM_MODE_PANEL_ORIENTATION_NORMAL.
+> > And in most cases the roation property is optional, so one could
+> > assume that no property equals 0 degree.
 > >
-> >  #endif
-> > --
-> > 2.22.0.rc2.383.gf4fbbf30c2-goog
+> >
+> >         Sam
+> >
+> > > +int of_drm_get_panel_orientation(const struct device_node *np, int *orientation)
+> > > +{
+> > > +     int rotation, ret;
+> > > +
+> > > +     ret = of_property_read_u32(np, "rotation", &rotation);
+> > > +     if (ret == -EINVAL) {
+> > > +             /* Don't return an error if there's no rotation property. */
+> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_UNKNOWN;
+> > > +             return 0;
+> > > +     }
+> > > +
+> > > +     if (ret < 0)
+> > > +             return ret;
+> > > +
+> > > +     if (rotation == 0)
+> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_NORMAL;
+> > > +     else if (rotation == 90)
+> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_RIGHT_UP;
+> > > +     else if (rotation == 180)
+> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_BOTTOM_UP;
+> > > +     else if (rotation == 270)
+> > > +             *orientation = DRM_MODE_PANEL_ORIENTATION_LEFT_UP;
+> > > +     else
+> > > +             return -EINVAL;
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +EXPORT_SYMBOL(of_drm_get_panel_orientation);
+> > >  #endif
+> > >
+> > >  MODULE_AUTHOR("Thierry Reding <treding@nvidia.com>");
+> > > diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> > > index 8c738c0e6e9f..13631b2efbaa 100644
+> > > --- a/include/drm/drm_panel.h
+> > > +++ b/include/drm/drm_panel.h
+> > > @@ -197,11 +197,18 @@ int drm_panel_detach(struct drm_panel *panel);
+> > >
+> > >  #if defined(CONFIG_OF) && defined(CONFIG_DRM_PANEL)
+> > >  struct drm_panel *of_drm_find_panel(const struct device_node *np);
+> > > +int of_drm_get_panel_orientation(const struct device_node *np,
+> > > +                              int *orientation);
+> > >  #else
+> > >  static inline struct drm_panel *of_drm_find_panel(const struct device_node *np)
+> > >  {
+> > >       return ERR_PTR(-ENODEV);
+> > >  }
+> > > +int of_drm_get_panel_orientation(const struct device_node *np,
+> > > +                              int *orientation)
+> > > +{
+> > > +     return -ENODEV;
+> > > +}
+> > >  #endif
+> > >
+> > >  #endif
+> > > --
+> > > 2.22.0.rc2.383.gf4fbbf30c2-goog
