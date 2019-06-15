@@ -2,103 +2,147 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F96C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 11:09:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFAFC31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 11:18:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1189320868
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 11:09:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560596955;
-	bh=d4PhO/BCiNtOO+NzHnU8fQBmsAsfyWLsC7FyggSF/sU=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=oiH4pbrGBpskwWdvBgaBFTK1Qe21anw5drMHycMi4JKnRVYXxWollwus4xcVw0nIg
-	 I2gPscriJuoZ7ckQr5qclnvDz+yLMbpjMPIb+1QyQcgSkHCRCuGUJIuFPF82hwfG7B
-	 hB5m3oXjb0vlNb6HOuI4+0H0CDfWv7XjISYARBSg=
+	by mail.kernel.org (Postfix) with ESMTP id C668421841
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 11:18:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfFOLIp (ORCPT
+        id S1726530AbfFOLRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 07:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43090 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725943AbfFOLIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 07:08:45 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE52320868;
-        Sat, 15 Jun 2019 11:08:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560596924;
-        bh=d4PhO/BCiNtOO+NzHnU8fQBmsAsfyWLsC7FyggSF/sU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=a18iU4uMjhWaK3rrpKek54hoED5rbc5LDwQPRdlQmFImUT7bN2sOWdHBAjj/qcuHc
-         4gvGCLO9K4IY8ZOzTOkqBCAjzpRaudk74oQhbsMSYVkKzHxsdLGuGC4ICR+Xqlj544
-         g4KapH6rPLCwVzwjZpYXJy4s9a9OGyE89VbTFR2g=
-Message-ID: <ef030ba8553a8bc81fde998df4bd927bfba17537.camel@kernel.org>
-Subject: Re: [PATCH 1/3] lib/vsprintf: add snprintf_noterm
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Joe Perches <joe@perches.com>, "Yan, Zheng" <ukernel@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Ilya Dryomov <idryomov@gmail.com>, Zheng Yan <zyan@redhat.com>,
-        Sage Weil <sage@redhat.com>, agruenba@redhat.com
-Date:   Sat, 15 Jun 2019 07:08:41 -0400
-In-Reply-To: <75c8f066c3aa2e20db2e1554a4d28c20b2952724.camel@perches.com>
-References: <20190614134625.6870-1-jlayton@kernel.org>
-         <20190614134625.6870-2-jlayton@kernel.org>
-         <CAAM7YAnZ=NtsOuR0Pm82fWCSUdFLkJ7NLNk+fNK9+T4viW=_1Q@mail.gmail.com>
-         <75c8f066c3aa2e20db2e1554a4d28c20b2952724.camel@perches.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Sat, 15 Jun 2019 07:17:15 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:46956 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725943AbfFOLRP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 07:17:15 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R131e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0TUENDtX_1560597424;
+Received: from localhost(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0TUENDtX_1560597424)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sat, 15 Jun 2019 19:17:11 +0800
+From:   Xunlei Pang <xlpang@linux.alibaba.com>
+To:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: [PATCH] memcg: Ignore unprotected parent in mem_cgroup_protected()
+Date:   Sat, 15 Jun 2019 19:17:04 +0800
+Message-Id: <20190615111704.63901-1-xlpang@linux.alibaba.com>
+X-Mailer: git-send-email 2.14.4.44.g2045bb6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-14 at 19:58 -0700, Joe Perches wrote:
-> On Sat, 2019-06-15 at 10:41 +0800, Yan, Zheng wrote:
-> > On Fri, Jun 14, 2019 at 9:48 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > > The getxattr interface returns a length after filling out the value
-> > > buffer, and the convention with xattrs is to not NULL terminate string
-> > > data.
-> > > 
-> > > CephFS implements some virtual xattrs by using snprintf to fill the
-> > > buffer, but that always NULL terminates the string. If userland sends
-> > > down a buffer that is just the right length to hold the text without
-> > > termination then we end up truncating the value.
-> > > 
-> > > Factor the formatting piece of vsnprintf into a separate helper
-> > > function, and have vsnprintf call that and then do the NULL termination
-> > > afterward. Then add a snprintf_noterm function that calls the new helper
-> > > to populate the string but skips the termination.
-> 
-> Is this function really necessary enough to add
-> the additional stack use to the generic case?
-> 
+Currently memory.min|low implementation requires the whole
+hierarchy has the settings, otherwise the protection will
+be broken.
 
-The only alternative I saw was to allocate an extra buffer in the
-callers, call snprintf to populate that and then copy the result into
-the destination buffer sans termination. I really would like to avoid
-that here.
+Our hierarchy is kind of like(memory.min value in brackets),
 
-Does breaking this code out into a helper add any significant stack
-usage? I didn't see it that way, but I am quite concerned about not
-slowing down the generic vsnprintf routine.
+               root
+                |
+             docker(0)
+              /    \
+         c1(max)   c2(0)
 
-> Why not add have this function call vsnprintf
-> and then terminate the string separately?
-> 
+Note that "docker" doesn't set memory.min. When kswapd runs,
+mem_cgroup_protected() returns "0" emin for "c1" due to "0"
+@parent_emin of "docker", as a result "c1" gets reclaimed.
 
-I don't quite follow what you're suggesting here. vsnprintf is what does
-the termination today, and we need a function that doesn't do that.
+But it's hard to maintain parent's "memory.min" when there're
+uncertain protected children because only some important types
+of containers need the protection.  Further, control tasks
+belonging to parent constantly reproduce trivial memory which
+should not be protected at all.  It makes sense to ignore
+unprotected parent in this scenario to achieve the flexibility.
 
+In order not to break previous hierarchical behaviour, only
+ignore the parent when there's no protected ancestor upwards
+the hierarchy.
+
+Signed-off-by: Xunlei Pang <xlpang@linux.alibaba.com>
+---
+ include/linux/page_counter.h |  2 ++
+ mm/memcontrol.c              |  5 +++++
+ mm/page_counter.c            | 24 ++++++++++++++++++++++++
+ 3 files changed, 31 insertions(+)
+
+diff --git a/include/linux/page_counter.h b/include/linux/page_counter.h
+index bab7e57f659b..aed7ed28b458 100644
+--- a/include/linux/page_counter.h
++++ b/include/linux/page_counter.h
+@@ -55,6 +55,8 @@ bool page_counter_try_charge(struct page_counter *counter,
+ void page_counter_uncharge(struct page_counter *counter, unsigned long nr_pages);
+ void page_counter_set_min(struct page_counter *counter, unsigned long nr_pages);
+ void page_counter_set_low(struct page_counter *counter, unsigned long nr_pages);
++bool page_counter_has_min(struct page_counter *counter);
++bool page_counter_has_low(struct page_counter *counter);
+ int page_counter_set_max(struct page_counter *counter, unsigned long nr_pages);
+ int page_counter_memparse(const char *buf, const char *max,
+ 			  unsigned long *nr_pages);
+diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+index ca0bc6e6be13..f1dfa651f55d 100644
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -5917,6 +5917,8 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+ 	if (parent == root)
+ 		goto exit;
+ 
++	if (!page_counter_has_min(&parent->memory))
++		goto elow;
+ 	parent_emin = READ_ONCE(parent->memory.emin);
+ 	emin = min(emin, parent_emin);
+ 	if (emin && parent_emin) {
+@@ -5931,6 +5933,9 @@ enum mem_cgroup_protection mem_cgroup_protected(struct mem_cgroup *root,
+ 				   siblings_min_usage);
+ 	}
+ 
++elow:
++	if (!page_counter_has_low(&parent->memory))
++		goto exit;
+ 	parent_elow = READ_ONCE(parent->memory.elow);
+ 	elow = min(elow, parent_elow);
+ 	if (elow && parent_elow) {
+diff --git a/mm/page_counter.c b/mm/page_counter.c
+index de31470655f6..8c668eae2af5 100644
+--- a/mm/page_counter.c
++++ b/mm/page_counter.c
+@@ -202,6 +202,30 @@ int page_counter_set_max(struct page_counter *counter, unsigned long nr_pages)
+ 	}
+ }
+ 
++bool page_counter_has_min(struct page_counter *counter)
++{
++	struct page_counter *c;
++
++	for (c = counter; c; c = c->parent) {
++		if (counter->min)
++			return true;
++	}
++
++	return false;
++}
++
++bool page_counter_has_low(struct page_counter *counter)
++{
++	struct page_counter *c;
++
++	for (c = counter; c; c = c->parent) {
++		if (counter->low)
++			return true;
++	}
++
++	return false;
++}
++
+ /**
+  * page_counter_set_min - set the amount of protected memory
+  * @counter: counter
 -- 
-Jeff Layton <jlayton@kernel.org>
+2.14.4.44.g2045bb6
 
