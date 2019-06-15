@@ -2,92 +2,126 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7EB6C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA77C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CCA32184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:16:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560579387;
-	bh=BjtkEmRJtAtHKEHwhGfkDFvic+g9qJNlH8cwQrXk1/M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Em0LUKd+20SrXoOAKPfc/fHMjeM4CrOSdd1+zwh9M2GtgTvXN2d/Pnpn/J4+E5pVi
-	 ZShUsY+3eiURudVBT7O29swvKyNhIFW2Cxu+HKECBHRmkHkbLYrbDVvzzrI7tvLpi9
-	 gSezhGTy8rdMvLdheds7m7+lOf/D7kZGCcFyXVFo=
+	by mail.kernel.org (Postfix) with ESMTP id AEB1B2184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfFOGQI (ORCPT
+        id S1726397AbfFOGSn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 02:16:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35580 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfFOGQH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 02:16:07 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 628282184C;
-        Sat, 15 Jun 2019 06:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560579366;
-        bh=BjtkEmRJtAtHKEHwhGfkDFvic+g9qJNlH8cwQrXk1/M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vd9RF7LOMmXbG79sY4uZhNiG2CZedC82zVAmk/8XnMhtyblNBvzhxgpVw5i30L9Np
-         0m4nFT6POp7H5TTQQn6IL3ZU23ghGL0Lejze1Lh5vcmFln8nrZz10XTDOxksVYtn6C
-         pAle1+Pbjhp3sSeMa9qKEut95kqunfd7r4qrP5ok=
-Date:   Sat, 15 Jun 2019 08:16:04 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 14/14] docs: sphinx/kernel_abi.py: fix UTF-8 support
-Message-ID: <20190615061604.GA31006@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <62c8ffe86df40c90299e80619a1cb5d50971c2c6.1560477540.git.mchehab+samsung@kernel.org>
- <20190614161837.GA25206@kroah.com>
- <20190614132530.7a013757@coco.lan>
+        Sat, 15 Jun 2019 02:18:43 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18581 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725828AbfFOGSn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 02:18:43 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 67AD2C45D52F06B7FBEE;
+        Sat, 15 Jun 2019 14:18:40 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Sat, 15 Jun 2019
+ 14:18:36 +0800
+Subject: Re: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20190531150923.12376-1-yuehaibing@huawei.com>
+ <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
+Date:   Sat, 15 Jun 2019 14:18:35 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614132530.7a013757@coco.lan>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 01:25:30PM -0300, Mauro Carvalho Chehab wrote:
-> Em Fri, 14 Jun 2019 18:18:37 +0200
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
-> 
-> > On Thu, Jun 13, 2019 at 11:04:20PM -0300, Mauro Carvalho Chehab wrote:
-> > > The parser breaks with UTF-8 characters with Sphinx 1.4.
-> > > 
-> > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > > ---
-> > >  Documentation/sphinx/kernel_abi.py | 10 ++++++----
-> > >  1 file changed, 6 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
-> > > index 7fa7806532dc..460cee48a245 100644
-> > > --- a/Documentation/sphinx/kernel_abi.py
-> > > +++ b/Documentation/sphinx/kernel_abi.py
-> > > @@ -1,4 +1,5 @@
-> > > -# -*- coding: utf-8; mode: python -*-
-> > > +# coding=utf-8
-> > > +#  
-> > 
-> > Is this an emacs vs. vim fight?
-> 
-> No. This is a python-specific thing:
-> 
-> 	https://www.python.org/dev/peps/pep-0263/
 
-Ah, thanks, didn't know that.
+On 2019/6/2 6:59, Michael Kelley wrote:
+> From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 AM
+>>
+>> while building without CONFIG_SYSFS, fails as below:
+>>
+>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
+>> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
+>> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
+>> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
+>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
+>> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
+>> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
+>> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
+>>
+>> Select SYSFS while PCI_HYPERV is set to fix this.
+>>
+> 
+> I'm wondering if is the right way to fix the problem.  Conceptually
+> is it possible to setup & operate virtual PCI devices like 
+> pci-hyperv.c does, even if sysfs is not present?  Or is it right to
+> always required sysfs?
+> 
+> The function pci_dev_assign_slot() in slot.c has a null implementation
+> in include/linux/pci.h when CONFIG_SYSFS is not defined, which
+> seems to be trying to solve the same problem for that function.  And
+> if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
+> pci_hp_create_module_link() and pci_hp_remove_module_link()
+> look like they would have the same problem.  Maybe there should
+> be degenerate implementations of pci_create_slot() and
+> pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
+> 
+> But I'll admit I don't know the full story behind how PCI slots
+> are represented and used, so maybe I'm off base.  I just noticed
+> the inconsistency in how other functions in slot.c are handled.
+> 
+> Thoughts?
 
-greg k-h
+268a03a42d33 ("PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS")
+
+make slot.o depends CONFIG_SYSFS
+
+commit 268a03a42d3377d5fb41e6e7cbdec4e0b65cab2e
+Author: Alex Chiang <achiang@hp.com>
+Date:   Wed Jun 17 19:03:57 2009 -0600
+
+    PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS
+
+    There is no way to interact with a physical PCI slot without
+    sysfs, so encode the dependency and prevent this build error:
+
+        drivers/pci/slot.c: In function 'pci_hp_create_module_link':
+        drivers/pci/slot.c:327: error: 'module_kset' undeclared
+
+    This patch _should_ make pci-sysfs.o depend on CONFIG_SYSFS too,
+    but we cannot (yet) because the PCI core merrily assumes the
+    existence of sysfs:
+
+        drivers/built-in.o: In function `pci_bus_add_device':
+        drivers/pci/bus.c:89: undefined reference to `pci_create_sysfs_dev_files'
+        drivers/built-in.o: In function `pci_stop_dev':
+        drivers/pci/remove.c:24: undefined reference to `pci_remove_sysfs_dev_files'
+
+    So do the minimal bit for now and figure out how to untangle it
+    later.
+
+If No CONFIG_SYSFS, slot.o is not build
+
+> 
+> Michael
+> 
+> 
+
