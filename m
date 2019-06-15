@@ -2,103 +2,134 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C780C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:42:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78C7C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:48:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 649EC2173C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:42:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SmfdGKEs"
+	by mail.kernel.org (Postfix) with ESMTP id C4FF32184D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:48:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfFOGml (ORCPT
+        id S1726391AbfFOGsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 02:42:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:33458 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725820AbfFOGml (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 02:42:41 -0400
-Received: by mail-pf1-f196.google.com with SMTP id x15so2720560pfq.0
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 23:42:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4hNHWrhfyzsV2n/wRn65uyM6GtYs6ZW3csZvNGHrW1M=;
-        b=SmfdGKEs9uPX16YgUrEx8uxW6d74F8JSAWtvzcoD+gYAubt5m7kLbAo3yn13CuIbXC
-         LcmpVrD/YFGRQ2uPnZ8E7HdD1vyh7X+TsUnB8/8s0kEQvA+Uy6XhVghwux+/uDWQMx6t
-         CA0eE1B4NKJOQWPT4O7Z+fdXwYC/6Ykz2Z89A=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=4hNHWrhfyzsV2n/wRn65uyM6GtYs6ZW3csZvNGHrW1M=;
-        b=bwAw3UTsPJx1xkZDhmOskFCUit4Zbiv4NNF7EljTT7NkRga0Fj+qdYWOsmVrqkTuOO
-         OkXWgftI/8PTWar7oa4//y0D4E1u0/x9kJcCmgCdHlRj5malhw3oTWEodyEpGtzhMEui
-         QGddCMo6ftd3qCdAJxcjcCY82oUFPHyBruSkS1yU3/bavjBnUuCW08/b78JzKEagCQJY
-         m+T+UmDv37FW8V95P63hJLNx+ApOPFjBTDI5JOtGixM8cAbZv3O5mpcA4ZWa0cZ/KZ0f
-         bTEk8wteIUF9WPdTL/pxah2hl2ktPaW4aBnftWrnSoPB7S6IVWPlMbXop6kcHQLtS+qP
-         91fQ==
-X-Gm-Message-State: APjAAAW4kU3kKlYYUDfSIoJ4F2E2wX5UI64hthOrClmJW2igWTur3JyQ
-        5QJO9cpySvy7FR/jZyrjJQbAiw==
-X-Google-Smtp-Source: APXvYqztVvlek2ciZ+0if+6HLcVw/2Jr58oCThu5McVtMseOVbl4zFUyuLV/sAQA79bZsV+yqr0xQg==
-X-Received: by 2002:a63:eb55:: with SMTP id b21mr38365372pgk.67.1560580960622;
-        Fri, 14 Jun 2019 23:42:40 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:942a:df4a:2beb:7e97])
-        by smtp.gmail.com with ESMTPSA id z126sm7025201pfb.100.2019.06.14.23.42.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 23:42:40 -0700 (PDT)
-From:   Stephen Barber <smbarber@chromium.org>
-To:     Stefan Hajnoczi <stefanha@redhat.com>,
-        "David S . Miller" <davem@davemloft.net>
-Cc:     kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Stephen Barber <smbarber@chromium.org>
-Subject: [PATCH] vsock/virtio: set SOCK_DONE on peer shutdown
-Date:   Fri, 14 Jun 2019 23:42:37 -0700
-Message-Id: <20190615064237.73586-1-smbarber@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Sat, 15 Jun 2019 02:48:32 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:60756 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725820AbfFOGsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 02:48:32 -0400
+Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B147BB5939DD75E4A577;
+        Sat, 15 Jun 2019 14:48:27 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
+ (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 15 Jun 2019
+ 14:48:25 +0800
+Subject: Re: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
+To:     Michael Kelley <mikelley@microsoft.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Dexuan Cui <decui@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
+References: <20190531150923.12376-1-yuehaibing@huawei.com>
+ <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
+ <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <b049b0f9-e31e-897a-6f2e-e30d6d865f24@huawei.com>
+Date:   Sat, 15 Jun 2019 14:48:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the SOCK_DONE flag to match the TCP_CLOSING state when a peer has
-shut down and there is nothing left to read.
++cc Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-This fixes the following bug:
-1) Peer sends SHUTDOWN(RDWR).
-2) Socket enters TCP_CLOSING but SOCK_DONE is not set.
-3) read() returns -ENOTCONN until close() is called, then returns 0.
-
-Signed-off-by: Stephen Barber <smbarber@chromium.org>
----
- net/vmw_vsock/virtio_transport_common.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/net/vmw_vsock/virtio_transport_common.c b/net/vmw_vsock/virtio_transport_common.c
-index f3f3d06cb6d8..e30f53728725 100644
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -871,8 +871,10 @@ virtio_transport_recv_connected(struct sock *sk,
- 		if (le32_to_cpu(pkt->hdr.flags) & VIRTIO_VSOCK_SHUTDOWN_SEND)
- 			vsk->peer_shutdown |= SEND_SHUTDOWN;
- 		if (vsk->peer_shutdown == SHUTDOWN_MASK &&
--		    vsock_stream_has_data(vsk) <= 0)
-+		    vsock_stream_has_data(vsk) <= 0) {
-+			sock_set_flag(sk, SOCK_DONE);
- 			sk->sk_state = TCP_CLOSING;
-+		}
- 		if (le32_to_cpu(pkt->hdr.flags))
- 			sk->sk_state_change(sk);
- 		break;
--- 
-2.22.0.410.gd8fdbe21b5-goog
+On 2019/6/15 14:18, Yuehaibing wrote:
+> 
+> On 2019/6/2 6:59, Michael Kelley wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 AM
+>>>
+>>> while building without CONFIG_SYSFS, fails as below:
+>>>
+>>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
+>>> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
+>>> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
+>>> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
+>>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
+>>> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
+>>> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
+>>> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
+>>>
+>>> Select SYSFS while PCI_HYPERV is set to fix this.
+>>>
+>>
+>> I'm wondering if is the right way to fix the problem.  Conceptually
+>> is it possible to setup & operate virtual PCI devices like 
+>> pci-hyperv.c does, even if sysfs is not present?  Or is it right to
+>> always required sysfs?
+>>
+>> The function pci_dev_assign_slot() in slot.c has a null implementation
+>> in include/linux/pci.h when CONFIG_SYSFS is not defined, which
+>> seems to be trying to solve the same problem for that function.  And
+>> if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
+>> pci_hp_create_module_link() and pci_hp_remove_module_link()
+>> look like they would have the same problem.  Maybe there should
+>> be degenerate implementations of pci_create_slot() and
+>> pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
+>>
+>> But I'll admit I don't know the full story behind how PCI slots
+>> are represented and used, so maybe I'm off base.  I just noticed
+>> the inconsistency in how other functions in slot.c are handled.
+>>
+>> Thoughts?
+> 
+> 268a03a42d33 ("PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS")
+> 
+> make slot.o depends CONFIG_SYSFS
+> 
+> commit 268a03a42d3377d5fb41e6e7cbdec4e0b65cab2e
+> Author: Alex Chiang <achiang@hp.com>
+> Date:   Wed Jun 17 19:03:57 2009 -0600
+> 
+>     PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS
+> 
+>     There is no way to interact with a physical PCI slot without
+>     sysfs, so encode the dependency and prevent this build error:
+> 
+>         drivers/pci/slot.c: In function 'pci_hp_create_module_link':
+>         drivers/pci/slot.c:327: error: 'module_kset' undeclared
+> 
+>     This patch _should_ make pci-sysfs.o depend on CONFIG_SYSFS too,
+>     but we cannot (yet) because the PCI core merrily assumes the
+>     existence of sysfs:
+> 
+>         drivers/built-in.o: In function `pci_bus_add_device':
+>         drivers/pci/bus.c:89: undefined reference to `pci_create_sysfs_dev_files'
+>         drivers/built-in.o: In function `pci_stop_dev':
+>         drivers/pci/remove.c:24: undefined reference to `pci_remove_sysfs_dev_files'
+> 
+>     So do the minimal bit for now and figure out how to untangle it
+>     later.
+> 
+> If No CONFIG_SYSFS, slot.o is not build
+> 
+>>
+>> Michael
+>>
+>>
+> 
+> 
+> .
+> 
 
