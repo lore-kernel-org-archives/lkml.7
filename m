@@ -2,107 +2,158 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96635C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC43C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EA322184C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78F8A2184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:12:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BQljxYEs"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XqPZTecA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfFOHGo (ORCPT
+        id S1726369AbfFOHMi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 03:06:44 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39301 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725847AbfFOHGo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 03:06:44 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so1917662pls.6
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 00:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=nxfStrkoZ2f5uEaotGyNxBrt2oeXGj2yoJPwauA88HM=;
-        b=BQljxYEsUcWx6IMUJWs3lt9f4P2pNVaKin9m6xUqR9H9LNqOdMLDtclGLYX11b74io
-         /xFEGeBJUthHOtnhoFu6naZs+pQbH2gprvEvYfgRxH1hJLMfXIrliNCKf2aBfrL4enuO
-         7Jv7couBfgBKbghqyfQquAUp2sor9PX1xt9xuNXyiM07hJTt6cWmghGQgeWoq8ZpGQf8
-         FpuXUGUnhT9PI2i6c89dZ6NAn/sNJU2eMwtAcXD7mNiXaJfr/8yTjQfGJExcfmCscggp
-         pdz6hm4bizPtTC3WfYTyvqGNMdfT2/aNGpADPBNdFn6bwXUK/xdRBDhURgEaIVYh2244
-         5UFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=nxfStrkoZ2f5uEaotGyNxBrt2oeXGj2yoJPwauA88HM=;
-        b=mCj84jtoHr/nrB6NuGrJ3SU0Ex1EEHJBhKBr/f9zidKKaBvia5MuGH6fIWRRV84/Ze
-         4d3+Hk0NDsa9lptiYjpWA0C7DHiSFQeN5CyqIqKxbJFCXrbC+AEmCeJCyiUp35i8qYWD
-         FewY7NL71diSLRubKCCe2TyJQPr5iAuLHqSTSWz6+5/SKkb57kuvWe+l6h8Walq8M+yD
-         +TjeVswencaD0W91h4RM1mh92G5Gwou+e2xIkoBxRc/Hx13PeUbmsJQxCLGFkG6DSyM6
-         ecOD2elXzZaD6W/CbvJE3lI0+rR36T6wNPrmq6w/3M4fqUMaU8mwPvICugqivJiMYof8
-         lUDg==
-X-Gm-Message-State: APjAAAWV4+pOzrjQyzOQYYHx2Df1MkMPqndZyep8scf4Sb0F5anR/lt2
-        Km+knXiaiu5MIAb9lNEK7/IBmA==
-X-Google-Smtp-Source: APXvYqwRyuDbMyXOtqz9wjhQN4oYSmEs4Kbc4rLpIiSEpz/Xzcy8mvo3twNZXhAZt/2ICZStoevA0w==
-X-Received: by 2002:a17:902:29a7:: with SMTP id h36mr45551825plb.158.1560582403432;
-        Sat, 15 Jun 2019 00:06:43 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id p2sm7963869pfb.118.2019.06.15.00.06.41
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 15 Jun 2019 00:06:42 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 00:07:29 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] soc: qcom: apr: Don't use reg for domain id
-Message-ID: <20190615070729.GB31088@tuxbook-pro>
-References: <20190523150153.13136-1-bjorn.andersson@linaro.org>
- <20190614165724.GA3083@bogus>
+        Sat, 15 Jun 2019 03:12:38 -0400
+Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:41947
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725828AbfFOHMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 03:12:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Swih4FYc82qBLXxT8o6+ulKgup/1alXQeOXBJ3dcpZQ=;
+ b=XqPZTecAM9oAzl5OM7/hYxsLpGkZsd3YXOGXebI651JXXwmtyJ0WL7lUkfei+IrRpTe8S/CeblkQbKmoBnpr6rhJlfe/GSJ59ltndTciYn1SPiOhl2d1Lx+PE8xkGhdA9iAl4ppO8WBMQnDKlCLTwzp368PLjOZY7NLeYQORBBQ=
+Received: from AM4PR05MB3137.eurprd05.prod.outlook.com (10.171.186.14) by
+ AM4PR05MB3185.eurprd05.prod.outlook.com (10.171.188.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Sat, 15 Jun 2019 07:12:27 +0000
+Received: from AM4PR05MB3137.eurprd05.prod.outlook.com
+ ([fe80::bc5a:ba8b:1a69:91b6]) by AM4PR05MB3137.eurprd05.prod.outlook.com
+ ([fe80::bc5a:ba8b:1a69:91b6%6]) with mapi id 15.20.1987.013; Sat, 15 Jun 2019
+ 07:12:27 +0000
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     Doug Ledford <dledford@redhat.com>
+CC:     Colin Ian King <colin.king@canonical.com>,
+        Gal Pressman <galpress@amazon.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: RDMA: Clean destroy CQ in drivers do not return errors
+Thread-Topic: RDMA: Clean destroy CQ in drivers do not return errors
+Thread-Index: AQHVIrlo0Ha/lYZPxkOD3nwuzZMhyaabjl4AgAC/iwA=
+Date:   Sat, 15 Jun 2019 07:12:27 +0000
+Message-ID: <20190615071224.GA4694@mtr-leonro.mtl.com>
+References: <68d62660-902c-ca49-20fd-32e92830faa7@canonical.com>
+ <ee0c017e93e28317791b7395e257801a208c7306.camel@redhat.com>
+In-Reply-To: <ee0c017e93e28317791b7395e257801a208c7306.camel@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM7PR03CA0028.eurprd03.prod.outlook.com
+ (2603:10a6:20b:130::38) To AM4PR05MB3137.eurprd05.prod.outlook.com
+ (2603:10a6:205:3::14)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=leonro@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [37.142.3.125]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 57c18133-5702-4ada-b459-08d6f160d295
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR05MB3185;
+x-ms-traffictypediagnostic: AM4PR05MB3185:
+x-microsoft-antispam-prvs: <AM4PR05MB3185B4FC092A7DBCBF846511B0E90@AM4PR05MB3185.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-forefront-prvs: 0069246B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(366004)(39860400002)(346002)(376002)(199004)(189003)(8676002)(71200400001)(71190400001)(73956011)(386003)(6506007)(52116002)(68736007)(99286004)(33656002)(229853002)(2906002)(186003)(6486002)(76176011)(102836004)(14454004)(26005)(6436002)(316002)(54906003)(478600001)(6916009)(256004)(486006)(476003)(3846002)(11346002)(6116002)(25786009)(446003)(4326008)(1076003)(66066001)(5660300002)(86362001)(53936002)(6246003)(8936002)(9686003)(64756008)(66556008)(66476007)(66446008)(66946007)(81166006)(81156014)(6512007)(7736002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3185;H:AM4PR05MB3137.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: Pcs//go+y2P3i4orFTDScVm/gN0caT2aWTz4NI6ZWShvJUAWzZGrG0+AQqDQzQBzt0Jn826LQDu8SuJCx/pH7BtQMU2h5pkAgF+KGCjNdPDF1DNbP8FqXxLUgfNTvA6/H6lCduJIhGV3s4UyVNHU9ObtOCaNq2vI/TuEe19ANwq6Dxb/6SDlPFndqP3Byv5ArBFbHo8F1YKDVn1L+fGWwTQLDPHL914RqWSA7uV4r++tB/Am61M7oGz+lSIs4GxUQhkn7LnvlE2pbnka1dY8oy8S5fFYmZjCUzfRvzLYVsptw4WlKi9en+dF5i87XyqMpJGfweatRDS8tjpI5odpRwlJEJaRiS78HPjDx0cnAWWotgCxIlJIMv5z4TNc6PyWoxf43zijIRZCxGrYsug/Vo7WBlhdCV9p/iHlIclAalg=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <C2621CA764179B4DAA30AD367EA0F07E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614165724.GA3083@bogus>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 57c18133-5702-4ada-b459-08d6f160d295
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2019 07:12:27.8370
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: leonro@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3185
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 14 Jun 09:57 PDT 2019, Rob Herring wrote:
+On Fri, Jun 14, 2019 at 03:46:50PM -0400, Doug Ledford wrote:
+> On Fri, 2019-06-14 at 14:59 +0100, Colin Ian King wrote:
+> > Hi,
+> >
+> > Static analysis with Coverity reported an issue with the following
+> > commit:
+> >
+> > commit a52c8e2469c30cf7ac453d624aed9c168b23d1af
+> > Author: Leon Romanovsky <leonro@mellanox.com>
+> > Date:   Tue May 28 14:37:28 2019 +0300
+> >
+> >     RDMA: Clean destroy CQ in drivers do not return errors
+> >
+> > In function bnxt_re_destroy_cq() contains the following:
+> >
+> >         if (!cq->umem)
+> >                 ib_umem_release(cq->umem);
+>
+> Given that the original test that was replaced was:
+> 	if (!IS_ERR_OR_NULL(cq->umem))
+>
+> we aren't really worried about a null cq, just that umem is valid.  So,
+> the logic is inverted on the test (or possibly we shouldn't have
+> replaced !IS_ERR_OR_NULL(cq->umem) at all).
 
-> On Thu, 23 May 2019 08:01:53 -0700, Bjorn Andersson wrote:
-> > The reg property represents the address and size on the bus that a
-> > device lives, but for APR the parent is a rpmsg bus, which does not have
-> > numerical addresses. Simply defining #address/#size-cells to 1 and 0,
-> > respectively, to silence the compiler is not an appropriate solution.
-> > 
-> > Replace the use of "reg" with an APR specific property.
-> > 
-> > Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> > 
-> > Changes since v1:
-> > - Fixed example to match change
-> > 
-> >  Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 6 +++---
-> >  drivers/soc/qcom/apr.c                                  | 2 +-
-> >  2 files changed, 4 insertions(+), 4 deletions(-)
-> > 
-> 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+I took a very brief look and think that the better way will be to put
+this "if (null)" check inside ib_umem_release() and make unconditional
+call to that function in all call sites.
 
-Thanks Rob, patch applied.
+>
+> But on closer inspection, the bnxt_re specific portion of this patch
+> appears to have another problem in that it no longer checks the result
+> of bnxt_qplib_destroy_cq() yet it does nothing to keep that function
+> from failing.
 
-Regards,
-Bjorn
+It was intentional for two reasons. First, bnxt_re already had exactly
+same logic without any checks of returned call inside bnxt_re_create_cq().
+Second, we need to release kernel memory without any relation to HW state.
+
+Maybe I should move bnxt_qplib_free_hwq() to be immediately after
+bnxt_qplib_rcfw_send_message() inside of bnxt_qplib_destroy_cq()?
+
+>
+> Leon, can you send a followup fix?
+
+Sure, I'll do it tomorrow.
+
+>
+> > Coverity detects this as a deference after null check on the null
+> > pointer cq->umem:
+> >
+> > "var_deref_model: Passing null pointer cq->umem to ib_umem_release,
+> > which dereferences it"
+> >
+> > Is the logic inverted on that null check?
+> >
+> > Colin
+>
+> --
+> Doug Ledford <dledford@redhat.com>
+>     GPG KeyID: B826A3330E572FDD
+>     Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
+> 2FDD
+
+
