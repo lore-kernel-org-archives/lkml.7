@@ -2,118 +2,107 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F54C31E51
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9B5C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:29:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C3592184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791472082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:29:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560623151;
-	bh=vWPYZBCODMGwcZhUIzS6KtTrRf0mJvEikwJL96bCByM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BxQusaSr3n35Cj4djBRn5GCIbKwYlWYZqgtSjDNCV+xipb3Bib6Qm3yXMV/kfod3A
-	 Ck/CIi1FWkf2WU2tQIEKi0PZhWtcB6rYrkLfwRnSW4ECPxSjI3tR8Exq58M0PJ7fnW
-	 cZtMZ4xFuv4LhNrWgxL+uh9qrPpNq9IJAdn5ulBA=
+	s=default; t=1560623379;
+	bh=drg1GKt+ib6Bp6LZP0o/5c5PxF6plAd2lkDNtWcgiCQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hSLVWTzuZIPn23y1KEdsbz9khCt5ApBXZNhLgDzoSBK5QQU+5qKpOAY1GD7Il+1kc
+	 Ky2JQX0hhjQTm/gOsg+O/vrJrmOqcY5UxCMhSlu+B1rrmaUdqyriwGXn8Ih9e6Fb0C
+	 xBSLR6w4t2C6tiwHOeVT1ZliOz7sVSYnb0Qrwbow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727103AbfFOSZQ (ORCPT
+        id S1726906AbfFOS3i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 14:25:16 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:43922 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfFOSZK (ORCPT
+        Sat, 15 Jun 2019 14:29:38 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:45666 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfFOS3h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 14:25:10 -0400
-Received: by mail-qt1-f195.google.com with SMTP id z24so6310972qtj.10;
-        Sat, 15 Jun 2019 11:25:09 -0700 (PDT)
+        Sat, 15 Jun 2019 14:29:37 -0400
+Received: by mail-qk1-f193.google.com with SMTP id s22so3795741qkj.12;
+        Sat, 15 Jun 2019 11:29:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=gfbJRWowmbBmL/5PSSu1BU5VBQ2iIkWS/MK9bvMff9Y=;
-        b=FAwf+6hjmWThr/Zo8e7ZPLeQ4Osz81kO6XOn01SydzL9G7yN45Gxq1gV1sDU8bZ8Ps
-         FFMW53WswxVXCIz5ymPH+aojtStDVDFc9U4gzOUzoQm5z7aO4LdqWWx+0rGps4WFCt3i
-         yAC+1YBfKSPmk/Rx0KOBAifiqYR+upzOWcfNjxSo/sUW9yTg5oQ89iEfb0VuH5V3kC5A
-         7dJCt5OfnPvSgkYgK2OHXh79Ftd14ZNMHmmmS1DEhRy6wdKaZepGZ6VA29ZMMDldvE2d
-         4TdTtSY/E3LUI5x/rycNBKJom4cvPWPtrOWTozTAnrOMUd8K9VmOU1ZlzofGVFmBbGp3
-         Wo5g==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lZWCDkdCZYN5S0+Ul2IxfiRO29wLQTcP6wWsFwWlu8s=;
+        b=PphbEiU9i51xnvtm9V73bQYuo5cIfkeTXUcMOZ155zwXkW9k1v0AszL3HGTB5AYeTT
+         fMmrhBXuFr0sPCV8eoVVlAksctrq0Tp9EfiShBGan9umj+gy1onSVWWyp/YbfNQ8hPO0
+         /YFxWG/bnNyKmMK9S+h8oW63Tm9QU2mlTRob+1FyRqmyB1V5pEABc7CIakDbt8CPe9zk
+         5OthH7bBlGrWW0NoCY261eL7JxLB03tRJCoGI4wGle7j93IpmuJsT+faKyIQzcXuW9CI
+         btceBey/cK2gygHTP53JgjcqvJ2KM9kFr8n+9XEQeuWH9QBQVX9jjMSGKTp/Ed+ovdcz
+         DqIA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references;
-        bh=gfbJRWowmbBmL/5PSSu1BU5VBQ2iIkWS/MK9bvMff9Y=;
-        b=kbKfcA+g/1Ig8z7c9kvktKH8yMXbC8e3RyoT5JTYrOaGM8ERmuyQk9WNIW0BSEaHWT
-         VyOCYYHCgA+iX4nKnaIbMaODdDLkX2EgS+uARsbEa53iaA9j67eu34rhgf46DS6V0mVg
-         RTqfRY9NQgzAQ/8DSWbnDb6cDP8tNHPY6SJs2WG/ALm+HjEXQQWXsk3/gqXCetZEKL54
-         7WKfFEZ9AGH/Wnc8UR8PPZSqEnHMnRmwn0OL86V3DpYNvjsAxBQ3cUdPuD6HVVorT8Bm
-         jwTeyIRCkI4+FxmYSBE5HVDD9lMncJ3MDDNYm3ku2oRLK8wZ06tDcmYfEQUIBarwnem7
-         GRRQ==
-X-Gm-Message-State: APjAAAXqv4fp3AqZ5UkiXJFRFWaeS/jlEhJRxAB8uhI5mrajLiouocoE
-        HKZAKHV8ox9T4mxM66LsGZM=
-X-Google-Smtp-Source: APXvYqzAsjP5XFJMaZa4nNVaYMsFZyf6LFDCRQlhH8zipSL5vUkPHifbL2l8oi8JL4wyS9o7nD81zw==
-X-Received: by 2002:ac8:4705:: with SMTP id f5mr60570826qtp.99.1560623109356;
-        Sat, 15 Jun 2019 11:25:09 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lZWCDkdCZYN5S0+Ul2IxfiRO29wLQTcP6wWsFwWlu8s=;
+        b=YrJsVPB46VnybZ6pvHnHjY6HMrSeX/gus1txUHXOwRyDr2FIamXMCsiuWRn3tu9mOV
+         hbYjika5yo1yBq4+4L53t5P7VlXGjBxdsHn/G3lAxaVpjcGswnWAvN9Ms5M9Kj+H1wSB
+         Z12X0UlNsBt/TCmmm54ish8unSVy7rHsUpv6DKos26iU+jBN+Av82FcyADN5Zu8QvGR9
+         3maBS/rENyGssPvbRg8GnQqz1+rwQAluN/V5baMxClAjeJts37hsxNl7r3oTH6iRpg/p
+         iYm0Qx342UpkqUgJw+fUPoKP3tgdhDQ2jb4dg9zf6eLXtZLpOnb+UBg8R9EwlqUVObHx
+         k+8A==
+X-Gm-Message-State: APjAAAXW54WSp2Z5E1QfMNc3UuA3Y2N29aPwwXYL8WbTvzGuA8C5ub8L
+        eCo6VsjWRJZwHl1zKCXqYyE=
+X-Google-Smtp-Source: APXvYqx5M5Vccns8o0Sb2Ujl3A2MXEaAf0YNJo2yyhXxfxv1/7ALY9MC70OvLseEU3n6ihO/8XZSew==
+X-Received: by 2002:a05:620a:124c:: with SMTP id a12mr82297214qkl.336.1560623376408;
+        Sat, 15 Jun 2019 11:29:36 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::4883])
-        by smtp.gmail.com with ESMTPSA id y6sm3413435qki.67.2019.06.15.11.25.08
+        by smtp.gmail.com with ESMTPSA id c5sm4004284qkb.41.2019.06.15.11.29.35
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 11:25:08 -0700 (PDT)
+        Sat, 15 Jun 2019 11:29:35 -0700 (PDT)
+Date:   Sat, 15 Jun 2019 11:29:33 -0700
 From:   Tejun Heo <tj@kernel.org>
 To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
         axboe@kernel.dk, jack@suse.cz
 Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, kernel-team@fb.com,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 3/9] blkcg, writeback: Implement wbc_blkcg_css()
-Date:   Sat, 15 Jun 2019 11:24:47 -0700
-Message-Id: <20190615182453.843275-4-tj@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190615182453.843275-1-tj@kernel.org>
+        linux-block@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCH 4/9] blkcg: implement REQ_CGROUP_PUNT
+Message-ID: <20190615182933.GH657710@devbig004.ftw2.facebook.com>
 References: <20190615182453.843275-1-tj@kernel.org>
+ <20190615182453.843275-5-tj@kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190615182453.843275-5-tj@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a helper to determine the target blkcg from wbc.
+Hello,
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reviewed-by: Josef Bacik <josef@toxicpanda.com>
----
- include/linux/writeback.h | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On Sat, Jun 15, 2019 at 11:24:48AM -0700, Tejun Heo wrote:
+> When a shared kthread needs to issue a bio for a cgroup, doing so
+> synchronously can lead to priority inversions as the kthread can be
+> trapped waiting for that cgroup.  This patch implements
+> REQ_CGROUP_PUNT flag which makes submit_bio() punt the actual issuing
+> to a dedicated per-blkcg work item to avoid such priority inversions.
+> 
+> This will be used to fix priority inversions in btrfs compression and
+> should be generally useful as we grow filesystem support for
+> comprehensive IO control.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
+> Cc: Chris Mason <clm@fb.com>
 
-diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-index b8f5f000cde4..800ee031e88a 100644
---- a/include/linux/writeback.h
-+++ b/include/linux/writeback.h
-@@ -11,6 +11,7 @@
- #include <linux/flex_proportions.h>
- #include <linux/backing-dev-defs.h>
- #include <linux/blk_types.h>
-+#include <linux/blk-cgroup.h>
- 
- struct bio;
- 
-@@ -93,6 +94,16 @@ static inline int wbc_to_write_flags(struct writeback_control *wbc)
- 	return 0;
- }
- 
-+static inline struct cgroup_subsys_state *
-+wbc_blkcg_css(struct writeback_control *wbc)
-+{
-+#ifdef CONFIG_CGROUP_WRITEBACK
-+	if (wbc->wb)
-+		return wbc->wb->blkcg_css;
-+#endif
-+	return blkcg_root_css;
-+}
-+
- /*
-  * A wb_domain represents a domain that wb's (bdi_writeback's) belong to
-  * and are measured against each other in.  There always is one global
+The blkcg patches, especially this one, need Jens's review.  Jens, if
+you're okay with the changes, please let me know how you want them to
+be routed.
+
+Thanks.
+
 -- 
-2.17.1
-
+tejun
