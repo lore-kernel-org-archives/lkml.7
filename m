@@ -2,115 +2,100 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E3FC31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFEBC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17192082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:29:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 135D42173C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ieIDwSTE"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="JZ6U04Ar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726965AbfFOQ3W (ORCPT
+        id S1726967AbfFOQkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 12:29:22 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42331 "EHLO
+        Sat, 15 Jun 2019 12:40:20 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:45542 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfFOQ3W (ORCPT
+        with ESMTP id S1726859AbfFOQkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 12:29:22 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so5551333wrl.9;
-        Sat, 15 Jun 2019 09:29:20 -0700 (PDT)
+        Sat, 15 Jun 2019 12:40:20 -0400
+Received: by mail-wr1-f65.google.com with SMTP id f9so5543895wre.12
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 09:40:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xbzPPti/d7x+WaN+ndNWClJ+kz638DCPbc0fo6KZsxY=;
-        b=ieIDwSTE7HAtFhzhbgj5P/HFRPZEIOuO8UWSkVQTqz8dqtGwrSTeM3Cg9+iEftZa3d
-         2p6TE36oS951Zcr5TMHXCxTlcpVKKP2i2vxphtNzUExZ3vPQNOzQ9URg0n9Bh/mOyOE0
-         eFHvyzQcM5aA/lzRMYs1D8xXFPGsKtLXwGUHTg/BQ8Zf8AYN8gQCy5DQaoV0kysM/F0W
-         Pj1BqSQxd3WMA3K0gRtqYhk3hMlJxIS9sxBWG3F70AkC6jweErdA/5KbBB3xJMbC5aXt
-         F3mTXmmIeZj/X9g8FdvIlxnRS9oXBDAZ24UKlabYwAPZtgbjpNt7DP+d1iYkkGTdupyP
-         GRCg==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=1kclzBY5PNZTommgGhPdgVS2cfCmzWZVTfht0vXTwCQ=;
+        b=JZ6U04ArpLq8AS2xkzrb4Pt5Fh1RnVZ1qP63J/hDTfXcvt46/6V+A2mg/PyQWgKfsR
+         GSSztIEC1ibdqHNVmLvYNhUsG6UgTdk13cSbTXafmpSnzexoF5W4xl2DC7cGup58lH9v
+         LLMxv1QPKGGHY/0M0xexLH+xkvU4+ghDlrT7En/w0khyRuSHpTi2dcpNXK6mHkwy0xye
+         vNc/oHqJsz7Sl0mKUtk8+JZkgsB5LRPcIPWZCv9aJxx1dEGpY56wUxCDDbXNLYclFQmO
+         aEQQtZCeSI51njJCbs5ScHGrunWce2jOttYa44FgYtMZ7uqhAD4xGn1dkbQ3FihaUxsE
+         ANsg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=xbzPPti/d7x+WaN+ndNWClJ+kz638DCPbc0fo6KZsxY=;
-        b=cwOt7QTpqzPnDF60TClWny+0DA6F3HtvuLrzbmb4jNl3R2oltM0Rsxb1l3puqUQwQB
-         gINI4X/8vgDOHMOYX6pEIn5yRb09LbQB931E1bDHBNtRn7dplNtYsPoTvFmcWiho1aw4
-         RY4oPqM4BHcXsFOq77mjueiGhpMDO8eNkU+kiIdqq0bdaquDn2Q1JnD22TeSlAcuqlVH
-         klanI6gXAoaeJAHNWxpy3/dindUFXxqgac2HTfv/CiqL0rUHNRrZ//zOREWdX+fL2O03
-         IiDHT+2gkjzMz2IVK+JHfHJxxpEcUyt5QS3xTwb76ktAgdoS219vLXlCivcqV7feWsxr
-         lnXA==
-X-Gm-Message-State: APjAAAWdEBXk3VbYVce85QGP3md+Rms5jbV+6tJ7HBaWLrrj0aTAkzaJ
-        CpUOIuXe0kkwHW9899kex35CJBrEjb4=
-X-Google-Smtp-Source: APXvYqy6frYI/6mx+Dk4Co35nGqa5ZlXs/X4iQfnMoOiujw6z3Bucud4rw6PC+VvLVuv0WlBY8iJXA==
-X-Received: by 2002:adf:f64a:: with SMTP id x10mr12181927wrp.287.1560616159963;
-        Sat, 15 Jun 2019 09:29:19 -0700 (PDT)
-Received: from debian64.daheim (pD9E2960F.dip0.t-ipconnect.de. [217.226.150.15])
-        by smtp.gmail.com with ESMTPSA id l18sm5643055wrv.38.2019.06.15.09.29.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 15 Jun 2019 09:29:19 -0700 (PDT)
-Received: from chuck by debian64.daheim with local (Exim 4.92)
-        (envelope-from <chunkeey@gmail.com>)
-        id 1hcBYM-0007aO-6H; Sat, 15 Jun 2019 18:29:18 +0200
-From:   Christian Lamparter <chunkeey@gmail.com>
-To:     linux-arm-msm@vger.kernel.org
-Cc:     Abhishek Sahu <absahu@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-kernel@vger.kernel.org, Pavel Kubelun <be.dissent@gmail.com>
-Subject: [PATCH v2] ARM: dts: qcom: ipq4019: fix high resolution timer
-Date:   Sat, 15 Jun 2019 18:29:18 +0200
-Message-Id: <20190615162918.29120-1-chunkeey@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        bh=1kclzBY5PNZTommgGhPdgVS2cfCmzWZVTfht0vXTwCQ=;
+        b=nhm//fAoCKHUAISlbOwrygsGBynL11wITe3wskLuGJSUFtEOf2AtobBJl8m+RnIeqd
+         T1kAAJ1zAWoExiBaxGovs/OnBoO3glcqcumW0ixzbu3OkiwKAGuHAvKdR0+5JlHfFpc1
+         WyyV07BKrjxBlV4Fc7qBl0mWw5Eu1Ih54TQwtc29tcxsixr9n/rKsxw7MxO0k23AjuxB
+         oL/5bu1RYcu3llrsk1uJ+Iv8BcQa+jFI16q5XjxMe/Um6WRfqiWFGqo5FC2XEckaw6p4
+         EFun6Rk+/OuWN8/ASnP+vBoTzQ7UdaRdW+qtdLFebkqzo2C0Ag1axEKZYKdZeYenHOVW
+         UZSQ==
+X-Gm-Message-State: APjAAAWNHlCiSSyzCvf5ySUjcIPaER9EwU3U1ZmEnu6PMH6RzWxuSrOQ
+        4MU+R6G1V1PrSVNV6zFyQ1CWBhj/DhJFK56c
+X-Google-Smtp-Source: APXvYqy9WEGALvrPT9COz+kWlbL9LXsbakuQb82aL5RDScZUgcY1zebZfqdZqPWKvssB7JsPXoZ9GQ==
+X-Received: by 2002:adf:ec49:: with SMTP id w9mr1610492wrn.303.1560616818338;
+        Sat, 15 Jun 2019 09:40:18 -0700 (PDT)
+Received: from [192.168.88.149] ([62.170.2.124])
+        by smtp.gmail.com with ESMTPSA id v18sm4121746wrs.80.2019.06.15.09.40.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Jun 2019 09:40:17 -0700 (PDT)
+Subject: Re: [PATCHSET block/for-linus] Assorted blkcg fixes
+To:     Tejun Heo <tj@kernel.org>
+Cc:     jbacik@fb.com, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel-team@fb.com, dennis@kernel.org,
+        jack@suse.cz
+References: <20190613223041.606735-1-tj@kernel.org>
+ <5d5835d3-d0e4-f4cc-19b1-841b4ad46a9a@kernel.dk>
+ <20190615155055.GE657710@devbig004.ftw2.facebook.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <30e86027-ea36-02c5-b3bf-b1f3ce1a9d98@kernel.dk>
+Date:   Sat, 15 Jun 2019 10:40:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190615155055.GE657710@devbig004.ftw2.facebook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Abhishek Sahu <absahu@codeaurora.org>
+On 6/15/19 9:50 AM, Tejun Heo wrote:
+> Hello,
+> 
+> On Sat, Jun 15, 2019 at 01:40:50AM -0600, Jens Axboe wrote:
+>>> Please refer to each patch's description for details.  Patchset is
+>>> also available in the following git branch.
+>>>
+>>>    git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-blkcg-fixes
+>>>
+>>> Thanks.  diffstat follows.
+>>
+>> Are you fine with these hitting 5.3?
+> 
+> Yeah, none of them are very urgent.  5.3 should be fine.
 
+OK great, added for 5.3, thanks.
 
-Cherry-picked from CAF QSDK repo with Change-Id
-I7c00b3c74d97c2a30ac9f05e18b511a0550fd459.
-
-Original commit message:
-The kernel is failing in switching the timer for high resolution
-mode and clock source operates in 10ms resolution. The always-on
-property needs to be given for timer device tree node to make
-clock source working in 1ns resolution.
-
-Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-Signed-off-by: Pavel Kubelun <be.dissent@gmail.com>
-Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
----
-
-v2: fixed subject [Abhishek Sahu is bouncing]
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index bbcb7db810f7..0e3e79442c50 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -169,6 +169,7 @@
- 			     <1 4 0xf08>,
- 			     <1 1 0xf08>;
- 		clock-frequency = <48000000>;
-+		always-on;
- 	};
- 
- 	soc {
 -- 
-2.20.1
+Jens Axboe
 
