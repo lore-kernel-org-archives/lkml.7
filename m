@@ -4,71 +4,70 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A92C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 557FAC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:25:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08E792082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 189C02082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560623121;
-	bh=KU1FuZdNOBltlkTXbCx2XGcqSX3A8H0YHRvAnYvGb4U=;
+	s=default; t=1560623126;
+	bh=uRZZB7Zy4sYQL2IiW9DbgTIPGeEx3rvFFpVwroJYNJI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cRaGfhs6THXgXDwNUniB8viX7hG8QljcObGy9aVd3z+Jp0wpkTwwla+ZiQxsKOKWO
-	 uFutlWYiaxSa0SrRlc+8vE+rLmLEvlNrqDwhu4wVwlyNVFXy97g/o+TU7PkmVz1yC7
-	 oinv9OjxJ7hVBAU/x2D65UY3EnpMljDTmPrATScY=
+	b=b2En9dkMKO1I9PeDsxi/4N4nqF+K5cWYt21JXRO6cwDOtJW/zvPzEfPS4orxaB8k/
+	 MTvcXBvZO7prIVAECj9UAAVbC23rWzSvk1OlGgYupjKcAtxXisswkXykDWPFub3f80
+	 ViE9A6/Vn7nII7g+n1Z7F97DNr3XR9wQSWiUNZY0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727143AbfFOSZT (ORCPT
+        id S1727191AbfFOSZY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 14:25:19 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35386 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfFOSZO (ORCPT
+        Sat, 15 Jun 2019 14:25:24 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33632 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727141AbfFOSZU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 14:25:14 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so6372238qto.2;
-        Sat, 15 Jun 2019 11:25:13 -0700 (PDT)
+        Sat, 15 Jun 2019 14:25:20 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x2so6389082qtr.0;
+        Sat, 15 Jun 2019 11:25:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=3gUlErPb54sHgERuHjLiYsVshuw0uLtH/4nFqCCKsLw=;
-        b=UxrapmyZh0lqq8LkK6li6+LW2vRLaEnbzYVXhx4e+CL8muZo7ZwTcx4V7FrS12oI6e
-         ehNVwzyCRpAjeIfzYI5NCkoskEnrBizCRFDXwDntl6/wPLwfXFhwzaER8wasIH58h/tO
-         bChxCGMLVJKlOIHB6p0TxNKHAf9navOQrr5w31ThlaS8HlmqYKAX7cYTD7xV5NEz8hqg
-         SWT0v6TO7qZ8ZzwY8MIyxe03njU3GpngLlr3yw5l17ZFNl2taNzwqm/Y6i45ub+Ov8UB
-         gKGePRfyJ+mRZdrdx6u4Yg360t9XVTSY15EEOOiO+EtcvXcGT0G+AVB68AonLBbbYqCq
-         h/4w==
+        bh=1X3FWS80K1JJNMQCA2qoi8Ha3uMJZ3PHL5FlErhUkgg=;
+        b=W5jXqn75isWClTobNCs6iOsCmrWOO2OVjTjjKtX/6Di8BIiuclxLmeP11JNsJVWfGj
+         8/Eem3yHPwJOv8rOjpTPTAiN0Y8aKMCVD3/IiRVhR9TkoujW2WHiMM/DdeODhQVXham7
+         cewl5BtiFF/GTRKx44D6E0apIHg5dA+D9CwCONOkNxTSA11zblml+QCf13U2nf94iSNp
+         AtEmHzvfuNzs98Hw0wLaypGDA54YOBmqjTbSJNbiOhUgVkhSudCct2ar5/uIU09R0JyN
+         C8/PZ3DA2VZ2WtlO+Fssl5VN5ETXu26367Qh6WuxLjwtwp33mk8TXQiQctGztqwrwpGK
+         p6JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=3gUlErPb54sHgERuHjLiYsVshuw0uLtH/4nFqCCKsLw=;
-        b=ZokJLgmVYr6QVYaC5heRj9Ekx32M4dsZ+/sxV+GPoaOCQo8KdIQXOC9VQE8KcNRh7J
-         Scj1coi3/Fj0MFSHIe7xP/Nk7NHNBaV74NfwcCGgACvN5HBFms4KJZMFt9HsiDOltxV5
-         F7d4NPMuMk3MRvBIsL3IGCgxZDvuFqKpjaJrQXAIZ5o80zmC1wRSEd8NoyrIjOtbdp46
-         XU8/GP01muNqvCr16HJUdM5RGh5ftDs/Tt13tcIslWPI/8A/rcUAnOgV0el8DJwkKePC
-         OMGRmV+aNsezcwpk2YU6dj0QUH+Iys9RipI0reKD/wwAAThKyaU/rXvTzK0FI+7ndhdu
-         Pejg==
-X-Gm-Message-State: APjAAAXwPk5jdN3wj6X+2tth+NcQoYH8qoK/uGHlsMgnkJgZHb2XHYrN
-        eu5JRteE42xHb5xmMhR1OdM=
-X-Google-Smtp-Source: APXvYqyM9/s6TwD7Ab3f2m2xIMZjb7wiSj685X/0KO1fCEa04MNyg7afUcXoRc8vSvI4djF32xVaGg==
-X-Received: by 2002:a0c:b902:: with SMTP id u2mr14101419qvf.151.1560623112865;
-        Sat, 15 Jun 2019 11:25:12 -0700 (PDT)
+        bh=1X3FWS80K1JJNMQCA2qoi8Ha3uMJZ3PHL5FlErhUkgg=;
+        b=K9/83Mq+5HH1TornZTtB3Mc6iAMMwZSiqrI7RRtOE/AFYp79fVtYvdhn/PdKJLZ9qV
+         2JoL1DtT6oiS7nANr5Xvu0NkqsLktmoVNQX2o7Ri8sLCiv3pJI1Xj+qpU3dbe3cyuy/0
+         yc+mvfzZYYJ8L7bO0GQb+JQWf0/VFGoGXQctyErIqmCaRRufTxD7kxjkcf1RIb/3fskv
+         qs76jyLcaoLfNG3Whs1yuqlAfI3DDD+clz9zapY+dl+M80n+1eY4DafwVcTyz+MVz6sn
+         6F1PLQBD2GIxkvmfo3FrYSgKR6tlaQomBAFtewaoh8dzYydf3sGP4eyjWwK6wrjwmck8
+         9DrQ==
+X-Gm-Message-State: APjAAAV4AOeaY6s3H6YFHGOv3qp29cw68MxY9H8q+hjRdxF2iADBvW/6
+        HJQy2ILBVvKft2jSyfOrq9k=
+X-Google-Smtp-Source: APXvYqwbk1Oa31Z5DL6a2mtq8MwGt/kbQeQGXY5aOtFWYWv/DxcGr0acqLs3Xu9/ppWEO5pAs+lH5w==
+X-Received: by 2002:a0c:b0e4:: with SMTP id p33mr3955600qvc.208.1560623118761;
+        Sat, 15 Jun 2019 11:25:18 -0700 (PDT)
 Received: from localhost ([2620:10d:c091:480::4883])
-        by smtp.gmail.com with ESMTPSA id r40sm3923177qtr.57.2019.06.15.11.25.11
+        by smtp.gmail.com with ESMTPSA id o185sm3280557qkd.64.2019.06.15.11.25.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 11:25:12 -0700 (PDT)
+        Sat, 15 Jun 2019 11:25:18 -0700 (PDT)
 From:   Tejun Heo <tj@kernel.org>
 To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
         axboe@kernel.dk, jack@suse.cz
 Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, kernel-team@fb.com,
-        Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4/9] blkcg: implement REQ_CGROUP_PUNT
-Date:   Sat, 15 Jun 2019 11:24:48 -0700
-Message-Id: <20190615182453.843275-5-tj@kernel.org>
+        linux-block@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCH 6/9] Btrfs: delete the entire async bio submission framework
+Date:   Sat, 15 Jun 2019 11:24:50 -0700
+Message-Id: <20190615182453.843275-7-tj@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190615182453.843275-1-tj@kernel.org>
 References: <20190615182453.843275-1-tj@kernel.org>
@@ -77,260 +76,336 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a shared kthread needs to issue a bio for a cgroup, doing so
-synchronously can lead to priority inversions as the kthread can be
-trapped waiting for that cgroup.  This patch implements
-REQ_CGROUP_PUNT flag which makes submit_bio() punt the actual issuing
-to a dedicated per-blkcg work item to avoid such priority inversions.
+From: Chris Mason <clm@fb.com>
 
-This will be used to fix priority inversions in btrfs compression and
-should be generally useful as we grow filesystem support for
-comprehensive IO control.
+Now that we're not using btrfs_schedule_bio() anymore, delete all the
+code that supported it.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
+Signed-off-by: Chris Mason <clm@fb.com>
 Reviewed-by: Josef Bacik <josef@toxicpanda.com>
-Cc: Chris Mason <clm@fb.com>
 ---
- block/blk-cgroup.c          | 53 +++++++++++++++++++++++++++++++++++++
- block/blk-core.c            |  3 +++
- include/linux/backing-dev.h |  1 +
- include/linux/blk-cgroup.h  | 16 ++++++++++-
- include/linux/blk_types.h   | 10 +++++++
- include/linux/writeback.h   | 12 ++++++---
- 6 files changed, 91 insertions(+), 4 deletions(-)
+ fs/btrfs/ctree.h   |   1 -
+ fs/btrfs/disk-io.c |  13 +--
+ fs/btrfs/super.c   |   1 -
+ fs/btrfs/volumes.c | 209 ---------------------------------------------
+ fs/btrfs/volumes.h |   8 --
+ 5 files changed, 1 insertion(+), 231 deletions(-)
 
-diff --git a/block/blk-cgroup.c b/block/blk-cgroup.c
-index 07600d3c9520..48239bb93fbe 100644
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -53,6 +53,7 @@ static struct blkcg_policy *blkcg_policy[BLKCG_MAX_POLS];
- static LIST_HEAD(all_blkcgs);		/* protected by blkcg_pol_mutex */
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index b81c331b28fa..2a5ba0f85ed3 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -989,7 +989,6 @@ struct btrfs_fs_info {
+ 	struct btrfs_workqueue *endio_meta_write_workers;
+ 	struct btrfs_workqueue *endio_write_workers;
+ 	struct btrfs_workqueue *endio_freespace_worker;
+-	struct btrfs_workqueue *submit_workers;
+ 	struct btrfs_workqueue *caching_workers;
+ 	struct btrfs_workqueue *readahead_workers;
  
- static bool blkcg_debug_stats = false;
-+static struct workqueue_struct *blkcg_punt_bio_wq;
+diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c
+index b34240406f36..9dbe4ba3995d 100644
+--- a/fs/btrfs/disk-io.c
++++ b/fs/btrfs/disk-io.c
+@@ -2028,7 +2028,6 @@ static void btrfs_stop_all_workers(struct btrfs_fs_info *fs_info)
+ 	btrfs_destroy_workqueue(fs_info->rmw_workers);
+ 	btrfs_destroy_workqueue(fs_info->endio_write_workers);
+ 	btrfs_destroy_workqueue(fs_info->endio_freespace_worker);
+-	btrfs_destroy_workqueue(fs_info->submit_workers);
+ 	btrfs_destroy_workqueue(fs_info->delayed_workers);
+ 	btrfs_destroy_workqueue(fs_info->caching_workers);
+ 	btrfs_destroy_workqueue(fs_info->readahead_workers);
+@@ -2194,16 +2193,6 @@ static int btrfs_init_workqueues(struct btrfs_fs_info *fs_info,
+ 	fs_info->caching_workers =
+ 		btrfs_alloc_workqueue(fs_info, "cache", flags, max_active, 0);
  
- static bool blkcg_policy_enabled(struct request_queue *q,
- 				 const struct blkcg_policy *pol)
-@@ -88,6 +89,8 @@ static void __blkg_release(struct rcu_head *rcu)
+-	/*
+-	 * a higher idle thresh on the submit workers makes it much more
+-	 * likely that bios will be send down in a sane order to the
+-	 * devices
+-	 */
+-	fs_info->submit_workers =
+-		btrfs_alloc_workqueue(fs_info, "submit", flags,
+-				      min_t(u64, fs_devices->num_devices,
+-					    max_active), 64);
+-
+ 	fs_info->fixup_workers =
+ 		btrfs_alloc_workqueue(fs_info, "fixup", flags, 1, 0);
  
- 	percpu_ref_exit(&blkg->refcnt);
+@@ -2246,7 +2235,7 @@ static int btrfs_init_workqueues(struct btrfs_fs_info *fs_info,
+ 					    max_active), 8);
  
-+	WARN_ON(!bio_list_empty(&blkg->async_bios));
-+
- 	/* release the blkcg and parent blkg refs this blkg has been holding */
- 	css_put(&blkg->blkcg->css);
- 	if (blkg->parent)
-@@ -113,6 +116,23 @@ static void blkg_release(struct percpu_ref *ref)
- 	call_rcu(&blkg->rcu_head, __blkg_release);
+ 	if (!(fs_info->workers && fs_info->delalloc_workers &&
+-	      fs_info->submit_workers && fs_info->flush_workers &&
++	      fs_info->flush_workers &&
+ 	      fs_info->endio_workers && fs_info->endio_meta_workers &&
+ 	      fs_info->endio_meta_write_workers &&
+ 	      fs_info->endio_repair_workers &&
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 2c66d9ea6a3b..3fb86a7bfdf7 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -1668,7 +1668,6 @@ static void btrfs_resize_thread_pool(struct btrfs_fs_info *fs_info,
+ 
+ 	btrfs_workqueue_set_max(fs_info->workers, new_pool_size);
+ 	btrfs_workqueue_set_max(fs_info->delalloc_workers, new_pool_size);
+-	btrfs_workqueue_set_max(fs_info->submit_workers, new_pool_size);
+ 	btrfs_workqueue_set_max(fs_info->caching_workers, new_pool_size);
+ 	btrfs_workqueue_set_max(fs_info->endio_workers, new_pool_size);
+ 	btrfs_workqueue_set_max(fs_info->endio_meta_workers, new_pool_size);
+diff --git a/fs/btrfs/volumes.c b/fs/btrfs/volumes.c
+index 72326cc23985..fc3a16d87869 100644
+--- a/fs/btrfs/volumes.c
++++ b/fs/btrfs/volumes.c
+@@ -509,212 +509,6 @@ btrfs_get_bdev_and_sb(const char *device_path, fmode_t flags, void *holder,
+ 	return ret;
  }
  
-+static void blkg_async_bio_workfn(struct work_struct *work)
-+{
-+	struct blkcg_gq *blkg = container_of(work, struct blkcg_gq,
-+					     async_bio_work);
-+	struct bio_list bios = BIO_EMPTY_LIST;
-+	struct bio *bio;
-+
-+	/* as long as there are pending bios, @blkg can't go away */
-+	spin_lock_bh(&blkg->async_bio_lock);
-+	bio_list_merge(&bios, &blkg->async_bios);
-+	bio_list_init(&blkg->async_bios);
-+	spin_unlock_bh(&blkg->async_bio_lock);
-+
-+	while ((bio = bio_list_pop(&bios)))
-+		submit_bio(bio);
-+}
-+
- /**
-  * blkg_alloc - allocate a blkg
-  * @blkcg: block cgroup the new blkg is associated with
-@@ -138,6 +158,9 @@ static struct blkcg_gq *blkg_alloc(struct blkcg *blkcg, struct request_queue *q,
+-static void requeue_list(struct btrfs_pending_bios *pending_bios,
+-			struct bio *head, struct bio *tail)
+-{
+-
+-	struct bio *old_head;
+-
+-	old_head = pending_bios->head;
+-	pending_bios->head = head;
+-	if (pending_bios->tail)
+-		tail->bi_next = old_head;
+-	else
+-		pending_bios->tail = tail;
+-}
+-
+-/*
+- * we try to collect pending bios for a device so we don't get a large
+- * number of procs sending bios down to the same device.  This greatly
+- * improves the schedulers ability to collect and merge the bios.
+- *
+- * But, it also turns into a long list of bios to process and that is sure
+- * to eventually make the worker thread block.  The solution here is to
+- * make some progress and then put this work struct back at the end of
+- * the list if the block device is congested.  This way, multiple devices
+- * can make progress from a single worker thread.
+- */
+-static noinline void run_scheduled_bios(struct btrfs_device *device)
+-{
+-	struct btrfs_fs_info *fs_info = device->fs_info;
+-	struct bio *pending;
+-	struct backing_dev_info *bdi;
+-	struct btrfs_pending_bios *pending_bios;
+-	struct bio *tail;
+-	struct bio *cur;
+-	int again = 0;
+-	unsigned long num_run;
+-	unsigned long batch_run = 0;
+-	unsigned long last_waited = 0;
+-	int force_reg = 0;
+-	int sync_pending = 0;
+-	struct blk_plug plug;
+-
+-	/*
+-	 * this function runs all the bios we've collected for
+-	 * a particular device.  We don't want to wander off to
+-	 * another device without first sending all of these down.
+-	 * So, setup a plug here and finish it off before we return
+-	 */
+-	blk_start_plug(&plug);
+-
+-	bdi = device->bdev->bd_bdi;
+-
+-loop:
+-	spin_lock(&device->io_lock);
+-
+-loop_lock:
+-	num_run = 0;
+-
+-	/* take all the bios off the list at once and process them
+-	 * later on (without the lock held).  But, remember the
+-	 * tail and other pointers so the bios can be properly reinserted
+-	 * into the list if we hit congestion
+-	 */
+-	if (!force_reg && device->pending_sync_bios.head) {
+-		pending_bios = &device->pending_sync_bios;
+-		force_reg = 1;
+-	} else {
+-		pending_bios = &device->pending_bios;
+-		force_reg = 0;
+-	}
+-
+-	pending = pending_bios->head;
+-	tail = pending_bios->tail;
+-	WARN_ON(pending && !tail);
+-
+-	/*
+-	 * if pending was null this time around, no bios need processing
+-	 * at all and we can stop.  Otherwise it'll loop back up again
+-	 * and do an additional check so no bios are missed.
+-	 *
+-	 * device->running_pending is used to synchronize with the
+-	 * schedule_bio code.
+-	 */
+-	if (device->pending_sync_bios.head == NULL &&
+-	    device->pending_bios.head == NULL) {
+-		again = 0;
+-		device->running_pending = 0;
+-	} else {
+-		again = 1;
+-		device->running_pending = 1;
+-	}
+-
+-	pending_bios->head = NULL;
+-	pending_bios->tail = NULL;
+-
+-	spin_unlock(&device->io_lock);
+-
+-	while (pending) {
+-
+-		rmb();
+-		/* we want to work on both lists, but do more bios on the
+-		 * sync list than the regular list
+-		 */
+-		if ((num_run > 32 &&
+-		    pending_bios != &device->pending_sync_bios &&
+-		    device->pending_sync_bios.head) ||
+-		   (num_run > 64 && pending_bios == &device->pending_sync_bios &&
+-		    device->pending_bios.head)) {
+-			spin_lock(&device->io_lock);
+-			requeue_list(pending_bios, pending, tail);
+-			goto loop_lock;
+-		}
+-
+-		cur = pending;
+-		pending = pending->bi_next;
+-		cur->bi_next = NULL;
+-
+-		BUG_ON(atomic_read(&cur->__bi_cnt) == 0);
+-
+-		/*
+-		 * if we're doing the sync list, record that our
+-		 * plug has some sync requests on it
+-		 *
+-		 * If we're doing the regular list and there are
+-		 * sync requests sitting around, unplug before
+-		 * we add more
+-		 */
+-		if (pending_bios == &device->pending_sync_bios) {
+-			sync_pending = 1;
+-		} else if (sync_pending) {
+-			blk_finish_plug(&plug);
+-			blk_start_plug(&plug);
+-			sync_pending = 0;
+-		}
+-
+-		btrfsic_submit_bio(cur);
+-		num_run++;
+-		batch_run++;
+-
+-		cond_resched();
+-
+-		/*
+-		 * we made progress, there is more work to do and the bdi
+-		 * is now congested.  Back off and let other work structs
+-		 * run instead
+-		 */
+-		if (pending && bdi_write_congested(bdi) && batch_run > 8 &&
+-		    fs_info->fs_devices->open_devices > 1) {
+-			struct io_context *ioc;
+-
+-			ioc = current->io_context;
+-
+-			/*
+-			 * the main goal here is that we don't want to
+-			 * block if we're going to be able to submit
+-			 * more requests without blocking.
+-			 *
+-			 * This code does two great things, it pokes into
+-			 * the elevator code from a filesystem _and_
+-			 * it makes assumptions about how batching works.
+-			 */
+-			if (ioc && ioc->nr_batch_requests > 0 &&
+-			    time_before(jiffies, ioc->last_waited + HZ/50UL) &&
+-			    (last_waited == 0 ||
+-			     ioc->last_waited == last_waited)) {
+-				/*
+-				 * we want to go through our batch of
+-				 * requests and stop.  So, we copy out
+-				 * the ioc->last_waited time and test
+-				 * against it before looping
+-				 */
+-				last_waited = ioc->last_waited;
+-				cond_resched();
+-				continue;
+-			}
+-			spin_lock(&device->io_lock);
+-			requeue_list(pending_bios, pending, tail);
+-			device->running_pending = 1;
+-
+-			spin_unlock(&device->io_lock);
+-			btrfs_queue_work(fs_info->submit_workers,
+-					 &device->work);
+-			goto done;
+-		}
+-	}
+-
+-	cond_resched();
+-	if (again)
+-		goto loop;
+-
+-	spin_lock(&device->io_lock);
+-	if (device->pending_bios.head || device->pending_sync_bios.head)
+-		goto loop_lock;
+-	spin_unlock(&device->io_lock);
+-
+-done:
+-	blk_finish_plug(&plug);
+-}
+-
+-static void pending_bios_fn(struct btrfs_work *work)
+-{
+-	struct btrfs_device *device;
+-
+-	device = container_of(work, struct btrfs_device, work);
+-	run_scheduled_bios(device);
+-}
+-
+ static bool device_path_matched(const char *path, struct btrfs_device *device)
+ {
+ 	int found;
+@@ -6599,9 +6393,6 @@ struct btrfs_device *btrfs_alloc_device(struct btrfs_fs_info *fs_info,
+ 	else
+ 		generate_random_uuid(dev->uuid);
  
- 	blkg->q = q;
- 	INIT_LIST_HEAD(&blkg->q_node);
-+	spin_lock_init(&blkg->async_bio_lock);
-+	bio_list_init(&blkg->async_bios);
-+	INIT_WORK(&blkg->async_bio_work, blkg_async_bio_workfn);
- 	blkg->blkcg = blkcg;
- 
- 	for (i = 0; i < BLKCG_MAX_POLS; i++) {
-@@ -1583,6 +1606,25 @@ void blkcg_policy_unregister(struct blkcg_policy *pol)
+-	btrfs_init_work(&dev->work, btrfs_submit_helper,
+-			pending_bios_fn, NULL, NULL);
+-
+ 	return dev;
  }
- EXPORT_SYMBOL_GPL(blkcg_policy_unregister);
  
-+bool __blkcg_punt_bio_submit(struct bio *bio)
-+{
-+	struct blkcg_gq *blkg = bio->bi_blkg;
-+
-+	/* consume the flag first */
-+	bio->bi_opf &= ~REQ_CGROUP_PUNT;
-+
-+	/* never bounce for the root cgroup */
-+	if (!blkg->parent)
-+		return false;
-+
-+	spin_lock_bh(&blkg->async_bio_lock);
-+	bio_list_add(&blkg->async_bios, bio);
-+	spin_unlock_bh(&blkg->async_bio_lock);
-+
-+	queue_work(blkcg_punt_bio_wq, &blkg->async_bio_work);
-+	return true;
-+}
-+
+diff --git a/fs/btrfs/volumes.h b/fs/btrfs/volumes.h
+index 8c7bd79b234a..231f50dd107d 100644
+--- a/fs/btrfs/volumes.h
++++ b/fs/btrfs/volumes.h
+@@ -18,10 +18,6 @@ extern struct mutex uuid_mutex;
+ #define BTRFS_STRIPE_LEN	SZ_64K
+ 
+ struct buffer_head;
+-struct btrfs_pending_bios {
+-	struct bio *head;
+-	struct bio *tail;
+-};
+ 
  /*
-  * Scale the accumulated delay based on how long it has been since we updated
-  * the delay.  We only call this when we are adding delay, in case it's been a
-@@ -1783,5 +1825,16 @@ void blkcg_add_delay(struct blkcg_gq *blkg, u64 now, u64 delta)
- 	atomic64_add(delta, &blkg->delay_nsec);
- }
+  * Use sequence counter to get consistent device stat data on
+@@ -55,10 +51,6 @@ struct btrfs_device {
  
-+static int __init blkcg_init(void)
-+{
-+	blkcg_punt_bio_wq = alloc_workqueue("blkcg_punt_bio",
-+					    WQ_MEM_RECLAIM | WQ_FREEZABLE |
-+					    WQ_UNBOUND | WQ_SYSFS, 0);
-+	if (!blkcg_punt_bio_wq)
-+		return -ENOMEM;
-+	return 0;
-+}
-+subsys_initcall(blkcg_init);
-+
- module_param(blkcg_debug_stats, bool, 0644);
- MODULE_PARM_DESC(blkcg_debug_stats, "True if you want debug stats, false if not");
-diff --git a/block/blk-core.c b/block/blk-core.c
-index a55389ba8779..5879c1ec044d 100644
---- a/block/blk-core.c
-+++ b/block/blk-core.c
-@@ -1165,6 +1165,9 @@ EXPORT_SYMBOL_GPL(direct_make_request);
-  */
- blk_qc_t submit_bio(struct bio *bio)
- {
-+	if (blkcg_punt_bio_submit(bio))
-+		return BLK_QC_T_NONE;
-+
- 	/*
- 	 * If it's a regular read/write or a barrier with data attached,
- 	 * go through the normal accounting stuff before submission.
-diff --git a/include/linux/backing-dev.h b/include/linux/backing-dev.h
-index f9b029180241..35b31d176f74 100644
---- a/include/linux/backing-dev.h
-+++ b/include/linux/backing-dev.h
-@@ -48,6 +48,7 @@ extern spinlock_t bdi_lock;
- extern struct list_head bdi_list;
+ 	spinlock_t io_lock ____cacheline_aligned;
+ 	int running_pending;
+-	/* regular prio bios */
+-	struct btrfs_pending_bios pending_bios;
+-	/* sync bios */
+-	struct btrfs_pending_bios pending_sync_bios;
  
- extern struct workqueue_struct *bdi_wq;
-+extern struct workqueue_struct *bdi_async_bio_wq;
+ 	struct block_device *bdev;
  
- static inline bool wb_has_dirty_io(struct bdi_writeback *wb)
- {
-diff --git a/include/linux/blk-cgroup.h b/include/linux/blk-cgroup.h
-index 76c61318fda5..ffb2f88e87c6 100644
---- a/include/linux/blk-cgroup.h
-+++ b/include/linux/blk-cgroup.h
-@@ -134,13 +134,17 @@ struct blkcg_gq {
- 
- 	struct blkg_policy_data		*pd[BLKCG_MAX_POLS];
- 
--	struct rcu_head			rcu_head;
-+	spinlock_t			async_bio_lock;
-+	struct bio_list			async_bios;
-+	struct work_struct		async_bio_work;
- 
- 	atomic_t			use_delay;
- 	atomic64_t			delay_nsec;
- 	atomic64_t			delay_start;
- 	u64				last_delay;
- 	int				last_use;
-+
-+	struct rcu_head			rcu_head;
- };
- 
- typedef struct blkcg_policy_data *(blkcg_pol_alloc_cpd_fn)(gfp_t gfp);
-@@ -763,6 +767,15 @@ static inline bool blk_throtl_bio(struct request_queue *q, struct blkcg_gq *blkg
- 				  struct bio *bio) { return false; }
- #endif
- 
-+bool __blkcg_punt_bio_submit(struct bio *bio);
-+
-+static inline bool blkcg_punt_bio_submit(struct bio *bio)
-+{
-+	if (bio->bi_opf & REQ_CGROUP_PUNT)
-+		return __blkcg_punt_bio_submit(bio);
-+	else
-+		return false;
-+}
- 
- static inline void blkcg_bio_issue_init(struct bio *bio)
- {
-@@ -910,6 +923,7 @@ static inline char *blkg_path(struct blkcg_gq *blkg) { return NULL; }
- static inline void blkg_get(struct blkcg_gq *blkg) { }
- static inline void blkg_put(struct blkcg_gq *blkg) { }
- 
-+static inline bool blkcg_punt_bio_submit(struct bio *bio) { return false; }
- static inline void blkcg_bio_issue_init(struct bio *bio) { }
- static inline bool blkcg_bio_issue_check(struct request_queue *q,
- 					 struct bio *bio) { return true; }
-diff --git a/include/linux/blk_types.h b/include/linux/blk_types.h
-index 791fee35df88..e8b42a786315 100644
---- a/include/linux/blk_types.h
-+++ b/include/linux/blk_types.h
-@@ -321,6 +321,14 @@ enum req_flag_bits {
- 	__REQ_RAHEAD,		/* read ahead, can fail anytime */
- 	__REQ_BACKGROUND,	/* background IO */
- 	__REQ_NOWAIT,           /* Don't wait if request will block */
-+	/*
-+	 * When a shared kthread needs to issue a bio for a cgroup, doing
-+	 * so synchronously can lead to priority inversions as the kthread
-+	 * can be trapped waiting for that cgroup.  CGROUP_PUNT flag makes
-+	 * submit_bio() punt the actual issuing to a dedicated per-blkcg
-+	 * work item to avoid such priority inversions.
-+	 */
-+	__REQ_CGROUP_PUNT,
- 
- 	/* command specific flags for REQ_OP_WRITE_ZEROES: */
- 	__REQ_NOUNMAP,		/* do not free blocks when zeroing */
-@@ -347,6 +355,8 @@ enum req_flag_bits {
- #define REQ_RAHEAD		(1ULL << __REQ_RAHEAD)
- #define REQ_BACKGROUND		(1ULL << __REQ_BACKGROUND)
- #define REQ_NOWAIT		(1ULL << __REQ_NOWAIT)
-+#define REQ_CGROUP_PUNT		(1ULL << __REQ_CGROUP_PUNT)
-+
- #define REQ_NOUNMAP		(1ULL << __REQ_NOUNMAP)
- #define REQ_HIPRI		(1ULL << __REQ_HIPRI)
- 
-diff --git a/include/linux/writeback.h b/include/linux/writeback.h
-index 800ee031e88a..be602c42aab8 100644
---- a/include/linux/writeback.h
-+++ b/include/linux/writeback.h
-@@ -70,6 +70,7 @@ struct writeback_control {
- 	unsigned range_cyclic:1;	/* range_start is cyclic */
- 	unsigned for_sync:1;		/* sync(2) WB_SYNC_ALL writeback */
- 	unsigned no_wbc_acct:1;		/* skip wbc IO accounting */
-+	unsigned punt_to_cgroup:1;	/* cgrp punting, see __REQ_CGROUP_PUNT */
- #ifdef CONFIG_CGROUP_WRITEBACK
- 	struct bdi_writeback *wb;	/* wb this writeback is issued under */
- 	struct inode *inode;		/* inode being written out */
-@@ -86,12 +87,17 @@ struct writeback_control {
- 
- static inline int wbc_to_write_flags(struct writeback_control *wbc)
- {
-+	int flags = 0;
-+
-+	if (wbc->punt_to_cgroup)
-+		flags = REQ_CGROUP_PUNT;
-+
- 	if (wbc->sync_mode == WB_SYNC_ALL)
--		return REQ_SYNC;
-+		flags |= REQ_SYNC;
- 	else if (wbc->for_kupdate || wbc->for_background)
--		return REQ_BACKGROUND;
-+		flags |= REQ_BACKGROUND;
- 
--	return 0;
-+	return flags;
- }
- 
- static inline struct cgroup_subsys_state *
 -- 
 2.17.1
 
