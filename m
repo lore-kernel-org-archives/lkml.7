@@ -2,130 +2,197 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14E37C31E53
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 13:50:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7F9C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 13:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEED72184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 13:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560606601;
-	bh=8c4I3wmBlxVBzgJarZkylqdbNGzadu6wrs7S7VmNhUQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=bH9m20R+QISAKHkx3EPY0NNyIXgo8yDJaPqVp8flhgXyoZg1nSrPAr11/vRD2p/+9
-	 Gbhhg1oTs4h2TrCsy/aoYO+vNxwxQkI85GuKDoG1sZ6cr0nhzdNjqUfaJa6Oi0SMYb
-	 Cjv0SUk6M1DfFtKaE5kJlvFFy0p5ubV8D2YhD4pA=
+	by mail.kernel.org (Postfix) with ESMTP id C8AC521473
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 13:57:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="eqKeNfV0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbfFONuA (ORCPT
+        id S1726811AbfFON4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 09:50:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:47182 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726236AbfFONuA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 09:50:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E77FAAF90;
-        Sat, 15 Jun 2019 13:49:57 +0000 (UTC)
-Date:   Sat, 15 Jun 2019 15:49:55 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yuzhoujian@didichuxing.com
-Subject: Re: general protection fault in oom_unkillable_task
-Message-ID: <20190615134955.GA28441@dhcp22.suse.cz>
-References: <0000000000004143a5058b526503@google.com>
- <CALvZod72=KuBZkSd0ey5orJFGFpwx462XY=cZvO3NOXC0MogFw@mail.gmail.com>
+        Sat, 15 Jun 2019 09:56:40 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40296 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726236AbfFON4k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 09:56:40 -0400
+Received: by mail-ot1-f67.google.com with SMTP id e8so4336803otl.7
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 06:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=QHCR3JSgS0RSHcF2VNdae/EolEZLrPS/qHWaU1BJy7I=;
+        b=eqKeNfV0/DKNowmDgDytbRxKZe/YIBslrcI+/6UoW6VrIQ4IXERd15SuP4HEEcg941
+         umwYW8yVMX0fH5rPsS/8iFnnYX4ETfea2MKPxtaeV5ezaDMj8CoGpnSE2rPwoSlgtmfb
+         qGCQ6MDTBLprBStkIIHLT16NSSx+g4XaelLxw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=QHCR3JSgS0RSHcF2VNdae/EolEZLrPS/qHWaU1BJy7I=;
+        b=IYd2AD6JKZrY+ZbHEMMFfzbG78fDcP18s9OQSQ+KlFCOOqZ/4ltZPQulNagXZ2iXlu
+         vdJI4NhR5VXUGtNardXRqkgCTlJth6N+Fc2U90dbHmrpuOx7lZ8S3AJmoZcjbtX2Moo0
+         BpcnregTNgFetWn6KgdDCRGGbR8mizLegxXjCbTvwYJ+O3rHNjaWcG1eDBBkZc8tZaUM
+         ydFYZ42DZOtZIlyZbwYlPctc9GYgABajLkybwMNLzNJ4EM24IOotoAu7+Iczh3tKUoA1
+         4wYkzekIYOdBMlEwZw6NIems/oiz/a0Qd+F8d9Yqlo3R18VWl+dW9rhNef5+5Rc3/gpt
+         kIsw==
+X-Gm-Message-State: APjAAAUW116yWy+r5rTM0PS1zz+PGI5yGOtrsykx89V9DtGisDS4Cjlo
+        vVhg0vSG0pmrkJSMhmN4MwbzFPxu3e7zeFOUP9Giqg==
+X-Google-Smtp-Source: APXvYqx/Ugw4ghpaI9BPclCunE9l+XqGUnnusYzQabQ3bRGiqNyMJGg8+HCBD7GFUGyd9Y8oSX+UvB7edg6+XiKE3Po=
+X-Received: by 2002:a05:6830:ce:: with SMTP id x14mr34286891oto.188.1560606998809;
+ Sat, 15 Jun 2019 06:56:38 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALvZod72=KuBZkSd0ey5orJFGFpwx462XY=cZvO3NOXC0MogFw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190614124125.124181-1-christian.koenig@amd.com>
+ <20190614124125.124181-4-christian.koenig@amd.com> <20190614131916.GQ3436@hirez.programming.kicks-ass.net>
+ <20190614152242.GC23020@phenom.ffwll.local> <094da0f7-a0f0-9ed4-d2da-8c6e6d165380@gmail.com>
+ <CAKMK7uFcDCJ9sozny1RqqRATwcK39doZNq+NZekvrzuO63ap-Q@mail.gmail.com>
+ <d97212dc-367c-28e9-6961-9b99110a4d2e@gmail.com> <20190614203040.GE23020@phenom.ffwll.local>
+In-Reply-To: <20190614203040.GE23020@phenom.ffwll.local>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Sat, 15 Jun 2019 15:56:25 +0200
+Message-ID: <CAKMK7uFzg+e315h2e5SmDTQwYTAbgAsxB_pc09ztwA1Wa-mzxw@mail.gmail.com>
+Subject: Re: [PATCH 3/6] drm/gem: use new ww_mutex_(un)lock_for_each macros
+To:     =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        Qiang Yu <yuq825@gmail.com>, "Anholt, Eric" <eric@anholt.net>,
+        Thomas Hellstrom <thellstrom@vmware.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        lima@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 14-06-19 20:15:31, Shakeel Butt wrote:
-> On Fri, Jun 14, 2019 at 6:08 PM syzbot
-> <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com> wrote:
+On Fri, Jun 14, 2019 at 10:30 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Fri, Jun 14, 2019 at 08:51:11PM +0200, Christian K=C3=B6nig wrote:
+> > Am 14.06.19 um 20:24 schrieb Daniel Vetter:
+> > >
+> > > On Fri, Jun 14, 2019 at 8:10 PM Christian K=C3=B6nig <ckoenig.leichtz=
+umerken@gmail.com> wrote:
+> > > > [SNIP]
+> > > > WW_MUTEX_LOCK_BEGIN()
+> > > >
+> > > > lock(lru_lock);
+> > > >
+> > > > while (bo =3D list_first(lru)) {
+> > > >   if (kref_get_unless_zero(bo)) {
+> > > >           unlock(lru_lock);
+> > > >           WW_MUTEX_LOCK(bo->ww_mutex);
+> > > >           lock(lru_lock);
+> > > >   } else {
+> > > >           /* bo is getting freed, steal it from the freeing process
+> > > >            * or just ignore */
+> > > >   }
+> > > > }
+> > > > unlock(lru_lock)
+> > > >
+> > > > WW_MUTEX_LOCK_END;
 > >
-> > Hello,
+> > Ah, now I know what you mean. And NO, that approach doesn't work.
 > >
-> > syzbot found the following crash on:
+> > See for the correct ww_mutex dance we need to use the iterator multiple
+> > times.
 > >
-> > HEAD commit:    3f310e51 Add linux-next specific files for 20190607
-> > git tree:       linux-next
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=15ab8771a00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d176e1849bbc45
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=d0fc9d3c166bc5e4a94b
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > Once to give us the BOs which needs to be locked and another time to gi=
+ve us
+> > the BOs which needs to be unlocked in case of a contention.
 > >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com
-> >
-> > kasan: CONFIG_KASAN_INLINE enabled
-> > kasan: GPF could be caused by NULL-ptr deref or user memory access
-> > general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> > CPU: 0 PID: 28426 Comm: syz-executor.5 Not tainted 5.2.0-rc3-next-20190607
-> > #11
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
-> > RIP: 0010:has_intersects_mems_allowed mm/oom_kill.c:84 [inline]
-> 
-> It seems like oom_unkillable_task() is broken for memcg OOMs. It
-> should not be calling has_intersects_mems_allowed() for memcg OOMs.
+> > That won't work with the approach you suggest here.
+>
+> A right, drat.
+>
+> Maybe give up on the idea to make this work for ww_mutex in general, and
+> just for drm_gem_buffer_object? I'm just about to send out a patch series
+> which makes sure that a lot more drivers set gem_bo.resv correctly (it
+> will alias with ttm_bo.resv for ttm drivers ofc). Then we could add a
+> list_head to gem_bo (won't really matter, but not something we can do wit=
+h
+> ww_mutex really), so that the unlock walking doesn't need to reuse the
+> same iterator. That should work I think ...
+>
+> Also, it would almost cover everything you want to do. For ttm we'd need
+> to make ttm_bo a subclass of gem_bo (and maybe not initialize that
+> embedded gem_bo for vmwgfx and shadow bo and driver internal stuff).
+>
+> Just some ideas, since copypasting the ww_mutex dance into all drivers is
+> indeed not great.
 
-You are right. It doesn't really make much sense to check for the NUMA
-policy/cpusets when the memcg oom is NUMA agnostic. Now that I am
-looking at the code then I am really wondering why do we even call
-oom_unkillable_task from oom_badness. proc_oom_score shouldn't care
-about NUMA either.
+Even better we don't need to force everyone to use drm_gem_object, the
+hard work is already done with the reservation_object. We could add a
+list_head there for unwinding, and then the locking helpers would look
+a lot cleaner and simpler imo. reservation_unlock_all() would even be
+a real function! And if we do this then I think we should also have a
+reservation_acquire_ctx, to store the list_head and maybe anything
+else.
 
-In other words the following should fix this unless I am missing
-something (task_in_mem_cgroup seems to be a relict from before the group
-oom handling). But please note that I am still not fully operation and
-laying in the bed.
+Plus all the code you want to touch is dealing with
+reservation_object, so that's all covered. And it mirros quite a bit
+what we've done with struct drm_modeset_lock, to wrap ww_mutex is
+something easier to deal with for kms.
+-Daniel
 
-diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-index 5a58778c91d4..43eb479a5dc7 100644
---- a/mm/oom_kill.c
-+++ b/mm/oom_kill.c
-@@ -161,8 +161,8 @@ static bool oom_unkillable_task(struct task_struct *p,
- 		return true;
- 
- 	/* When mem_cgroup_out_of_memory() and p is not member of the group */
--	if (memcg && !task_in_mem_cgroup(p, memcg))
--		return true;
-+	if (memcg)
-+		return false;
- 
- 	/* p may not have freeable memory in nodemask */
- 	if (!has_intersects_mems_allowed(p, nodemask))
-@@ -318,7 +318,7 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
- 	struct oom_control *oc = arg;
- 	unsigned long points;
- 
--	if (oom_unkillable_task(task, NULL, oc->nodemask))
-+	if (oom_unkillable_task(task, oc->memcg, oc->nodemask))
- 		goto next;
- 
--- 
-Michal Hocko
-SUSE Labs
+> -Daniel
+>
+> >
+> > Regards,
+> > Christian.
+> >
+> > >
+> > >
+> > > Also I think if we allow this we could perhaps use this to implement =
+the
+> > > modeset macros too.
+> > > -Daniel
+> > >
+> > >
+> > >
+> > >
+> > > > > This is kinda what we went with for modeset locks with
+> > > > > DRM_MODESET_LOCK_ALL_BEGIN/END, you can grab more locks in betwee=
+n the
+> > > > > pair at least. But it's a lot more limited use-cases, maybe too f=
+ragile an
+> > > > > idea for ww_mutex in full generality.
+> > > > >
+> > > > > Not going to type this out because too much w/e mode here already=
+, but I
+> > > > > can give it a stab next week.
+> > > > > -Daniel
+> > > > _______________________________________________
+> > > > dri-devel mailing list
+> > > > dri-devel@lists.freedesktop.org
+> > > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > >
+> > >
+> >
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+> --
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
+
+
+
+--=20
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
