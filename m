@@ -8,64 +8,64 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F3BC31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:09:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B82BDC31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA45E2184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:09:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8DD6B2184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:09:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kS071Lzw"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Tbn+fRxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726784AbfFOKJt (ORCPT
+        id S1726855AbfFOKJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 06:09:49 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:47074 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfFOKJr (ORCPT
+        Sat, 15 Jun 2019 06:09:56 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54580 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726740AbfFOKJt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 06:09:47 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so4942322wrw.13;
-        Sat, 15 Jun 2019 03:09:46 -0700 (PDT)
+        Sat, 15 Jun 2019 06:09:49 -0400
+Received: by mail-wm1-f66.google.com with SMTP id g135so4678746wme.4;
+        Sat, 15 Jun 2019 03:09:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=googlemail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bZFU7NFpVfVeHlWdzqsP9W+7pyjV+Qkejc+qbCNG2JI=;
-        b=kS071LzwgDU6YqnKn98IPviy/GgCUK0RM+EhTYLxlVneNva93160H8wS+XdNcNfRoR
-         rylBQviUW+BOLyLwgO+Y/eD1tFldIBZnj5CSu5t/lMErK7NwsGNaQFYkDMidrz5MeNJD
-         l4e1JC0QRccodXh/5TuRuF7Y/zv8ASzHjQBdOEqDvuP0dpYy1yCCYKclsnrM15ibmpR1
-         SyEMoSQg/HiT0nD/lErdb0jRfRUTB3xlvwEEPPEeig+HV+a2PZSaSRdRKZ2BmGRDtp+f
-         TCeaxMbpUGV8cSq7zugSmcBvgn35AbExvvonMeS6BE11STmktZQv9DKDCjsFYcdIi2KC
-         uREg==
+        bh=+2oD/T2gc6N24fqNrzj6/wc7vB4Laq1g0xwvSr2ZKbs=;
+        b=Tbn+fRxNzDPqt3dXwDOHmhvz1KRUKIeLE15UwPS7Aw07mlz4dq/T6LF2SVTNLz5mLZ
+         PyoiOmkF/joUJFS6kUJ/0/MNwgoN57I6kkVuBeqWRwohMevKvE0F+dc/FzuBAMUyJ03v
+         G8NweV2l51cLh0h8qJzK5Geqx3lDnoFEsPCKeP40L1LFRZuaIN8LHPrOhi4qaviSZvp6
+         94HWbfFXG67h7zj8SJU0KrYlQ3HXdv1/j3vkRASNTrog5v0F+YrNvVeNrAs89dV6alZ4
+         TI+WxthFrtSJ7iIYfJihpbsm66zotMRodljmY2LmrEbb64uArTJ3SjgFlzJhFZsHCgv0
+         SZ3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bZFU7NFpVfVeHlWdzqsP9W+7pyjV+Qkejc+qbCNG2JI=;
-        b=qro9zm1fNrLN0ACJAX6KNHxzp+GkHi1p59NcYNViCSGP1TA9dN+3d5ozVzlMsowx3N
-         8TX2yX+u6DO6g3Dt9pHVrD+N359TbBaZ0Fhra5UlWQ2/L38GmY21B/dhhnsbMI3i5mLJ
-         Y5EM/rXRiyGxWjolN6NacBmqVsJzzI26eGjvGRjDv9GT3m2BdnXSkLm2xCyPOTKShxXQ
-         gH9xTCYj8z4doDgd3rwMaccdpjOBa2zKSUtzlR/kaBdAoncRuWhT/IoL+ExVyTNV9J2D
-         z+bUSjMgmTwLCXrbhXGPhr6/jqqxpHHaGfhzSxN7wzpqwjWRIj+W94oaodEtC64PEtwW
-         nZzg==
-X-Gm-Message-State: APjAAAUpvIHijdJml338Womrz6Egw6s6tVpzSUNcK+SScVQJtx1PZA2G
-        mHt13xcg4Hm1l43xzzHhAXaCsljs1pw=
-X-Google-Smtp-Source: APXvYqx0/fov4P+lnmI2fLd5hg9jAgZR94PgXgj/0RSR6XIrP2w7HMaZ7iddBld9yhXqDa6274scSw==
-X-Received: by 2002:a5d:4001:: with SMTP id n1mr51838065wrp.293.1560593384926;
-        Sat, 15 Jun 2019 03:09:44 -0700 (PDT)
+        bh=+2oD/T2gc6N24fqNrzj6/wc7vB4Laq1g0xwvSr2ZKbs=;
+        b=VFHw0lndQu5+L6FEs7P9aSd1mcO7HlLsd7uN9PitwFbsoIkPQ9k1Xh/RgoTQ4ETI5v
+         VKaPr/OB2P7sb98mIxQAY3hI76SZZOTpvuLrLTrDTdJiDUd4FYSlOYkEJu/Ku25/DLD4
+         jKbLYtdJh+xi3WesGEOsLVpXJBwGuCG6j64i33c2axJqujuDUfWE+P14i8D/7h++SQyC
+         hgxzCdGBpkuDmJP3uzpOSQStztVj1i2Y6cKnc78e4vR3jxW83rCpkMT1lfqV6iYzRne0
+         t+80jJrjIupv6lPT4El5SL1RNgGe2V3CYi+zMExUZwj+Ehr006VCprImVsFdbDN2535q
+         cp5g==
+X-Gm-Message-State: APjAAAXfUeyQxnFMwp4ryj/lktxD6IbFmAY6LLB9fArYCQrZBKehFviQ
+        oWsDU7OgrdhVoEqKmyfc9/70Sr/h0Xo=
+X-Google-Smtp-Source: APXvYqyWy5DuzLQIfgqm/qwN02Z8iZMe0vr3d729+Ve1oTg2V8Q3d6yjtc0DL1CeTDaOZ2WQ3MBHCw==
+X-Received: by 2002:a1c:b6d4:: with SMTP id g203mr11100015wmf.19.1560593387236;
+        Sat, 15 Jun 2019 03:09:47 -0700 (PDT)
 Received: from blackbox.darklights.net (p200300F133C20E00A9A405DFDBBC0790.dip0.t-ipconnect.de. [2003:f1:33c2:e00:a9a4:5df:dbbc:790])
-        by smtp.googlemail.com with ESMTPSA id f2sm9270513wrq.48.2019.06.15.03.09.43
+        by smtp.googlemail.com with ESMTPSA id f2sm9270513wrq.48.2019.06.15.03.09.46
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 15 Jun 2019 03:09:44 -0700 (PDT)
+        Sat, 15 Jun 2019 03:09:46 -0700 (PDT)
 From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 To:     netdev@vger.kernel.org, peppe.cavallaro@st.com,
         alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net
 Cc:     linus.walleij@linaro.org, andrew@lunn.ch,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH net-next v1 3/5] net: stmmac: drop the reset GPIO from struct stmmac_mdio_bus_data
-Date:   Sat, 15 Jun 2019 12:09:30 +0200
-Message-Id: <20190615100932.27101-4-martin.blumenstingl@googlemail.com>
+Subject: [PATCH net-next v1 5/5] net: stmmac: drop the phy_reset hook from struct stmmac_mdio_bus_data
+Date:   Sat, 15 Jun 2019 12:09:32 +0200
+Message-Id: <20190615100932.27101-6-martin.blumenstingl@googlemail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190615100932.27101-1-martin.blumenstingl@googlemail.com>
 References: <20190615100932.27101-1-martin.blumenstingl@googlemail.com>
@@ -76,79 +76,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No platform uses the "reset_gpio" field from stmmac_mdio_bus_data
-anymore. Drop it so we don't get any new consumers either.
+The phy_reset hook is not set anywhere. Drop it to make
+stmmac_mdio_reset() smaller.
 
-Plain GPIO numbers are being deprecated in favor of GPIO descriptors. If
-needed any new non-OF platform can add a GPIO descriptor lookup table.
-devm_gpiod_get_optional() will find the GPIO in that case.
-
-Suggested-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 ---
- .../net/ethernet/stmicro/stmmac/stmmac_mdio.c | 29 ++++++-------------
- include/linux/stmmac.h                        |  1 -
- 2 files changed, 9 insertions(+), 21 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 6 ------
+ include/linux/stmmac.h                            | 1 -
+ 2 files changed, 7 deletions(-)
 
 diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index 4614f1f2bffb..459ef8afe4fb 100644
+index c9454cf4f189..14aa3ee14082 100644
 --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
 +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -253,21 +253,15 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+@@ -247,7 +247,6 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+ 	struct net_device *ndev = bus->priv;
+ 	struct stmmac_priv *priv = netdev_priv(ndev);
+ 	unsigned int mii_address = priv->hw->mii.addr;
+-	struct stmmac_mdio_bus_data *data = priv->plat->mdio_bus_data;
+ 
+ #ifdef CONFIG_OF
  	if (priv->device->of_node) {
- 		struct gpio_desc *reset_gpio;
+@@ -277,11 +276,6 @@ int stmmac_mdio_reset(struct mii_bus *bus)
+ 	}
+ #endif
  
--		if (data->reset_gpio < 0) {
--			reset_gpio = devm_gpiod_get_optional(priv->device,
--							     "snps,reset",
--							     GPIOD_OUT_LOW);
--			if (IS_ERR(reset_gpio))
--				return PTR_ERR(reset_gpio);
+-	if (data->phy_reset) {
+-		netdev_dbg(ndev, "stmmac_mdio_reset: calling phy_reset\n");
+-		data->phy_reset(priv->plat->bsp_priv);
+-	}
 -
--			device_property_read_u32_array(priv->device,
--						       "snps,reset-delays-us",
--						       data->delays, 3);
--		} else {
--			reset_gpio = gpio_to_desc(data->reset_gpio);
--
--			gpiod_direction_output(reset_gpio, 0);
--		}
-+		reset_gpio = devm_gpiod_get_optional(priv->device,
-+						     "snps,reset",
-+						     GPIOD_OUT_LOW);
-+		if (IS_ERR(reset_gpio))
-+			return PTR_ERR(reset_gpio);
-+
-+		device_property_read_u32_array(priv->device,
-+					       "snps,reset-delays-us",
-+					       data->delays, 3);
- 
- 		if (data->delays[0])
- 			msleep(DIV_ROUND_UP(data->delays[0], 1000));
-@@ -323,11 +317,6 @@ int stmmac_mdio_register(struct net_device *ndev)
- 	if (mdio_bus_data->irqs)
- 		memcpy(new_bus->irq, mdio_bus_data->irqs, sizeof(new_bus->irq));
- 
--#ifdef CONFIG_OF
--	if (priv->device->of_node)
--		mdio_bus_data->reset_gpio = -1;
--#endif
--
- 	new_bus->name = "stmmac";
- 
- 	if (priv->plat->has_xgmac) {
+ 	/* This is a workaround for problems with the STE101P PHY.
+ 	 * It doesn't complete its reset until at least one clock cycle
+ 	 * on MDC, so perform a dummy mdio read. To be updated for GMAC4
 diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
-index 816edb545592..fe865df82e48 100644
+index 96d97c908595..9aad16c379e7 100644
 --- a/include/linux/stmmac.h
 +++ b/include/linux/stmmac.h
-@@ -97,7 +97,6 @@ struct stmmac_mdio_bus_data {
+@@ -92,7 +92,6 @@
+ /* Platfrom data for platform device structure's platform_data field */
+ 
+ struct stmmac_mdio_bus_data {
+-	int (*phy_reset)(void *priv);
+ 	unsigned int phy_mask;
  	int *irqs;
  	int probed_phy_irq;
- #ifdef CONFIG_OF
--	int reset_gpio;
- 	u32 delays[3];
- #endif
- };
 -- 
 2.22.0
 
