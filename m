@@ -2,151 +2,91 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04808C31E51
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D207C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D159221773
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:22:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mk2sKC3F"
+	by mail.kernel.org (Postfix) with ESMTP id ECE0E2183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:29:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfFOOWT (ORCPT
+        id S1726867AbfFOO24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 10:22:19 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41587 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfFOOWT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 10:22:19 -0400
-Received: by mail-pf1-f194.google.com with SMTP id m30so3123254pff.8;
-        Sat, 15 Jun 2019 07:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4jcVnha6T/SSJcKsN+RA/B8GQPj4ptbm/niXDT+3DzY=;
-        b=mk2sKC3F5T58Z1iiRMMJtRkKPF2mkjQjQRK2iNpYMAZt4DuB2xtt3Mbq2HgnMn6wnS
-         7SPYL0jEB8/hrXOtg6GghB6mo1YLz38IXSyl8ctZdnvwYFZzMiOaxipPYUjfE7RrdOzR
-         RZqeah6HQjJ09p2OOMcUN7EMDgKx6E7FONWErjUjrry8l66bFuLZd6ODEZIClaPDEkk5
-         rXIjJuYADfRnOSjEbcbyOSnEXxbIi8n536c88BIxDrZANlgRehtW1fcUHZTjtheuqr9+
-         d3wtXaY95UHrWeAtlptMuV7IZeaLJreOGIlehXjVoNRQvU9gIITY7PsRipzhmLkEggkh
-         i1ZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4jcVnha6T/SSJcKsN+RA/B8GQPj4ptbm/niXDT+3DzY=;
-        b=s+TVygiSbZo0L3R5mFFjzT/h3pPsH4NdWn7UlNRUtoebW6DO4mDeAMoLXuTT4+aXZ4
-         jF3obZ5VxvSoXqIN5TSL45Gl/OT3mdqmRQEUFYWIaA4sFYV98Klx68idQv/AdtQJ62kL
-         5Aq/o5vuoCCwMw64IkxRDWE6gJ9nkLLeIa1W/UU36+uTJOAY9jBA+00GUdgIlbFYSROk
-         TcIgR3bghzXPGKZLq4qNKyy4MhQuFIygS70xFCAoZ7NNmq+RHNTNEssA916iDaVHnUUJ
-         kTF0KglV4tx+rRdOiCtxQT7hhx6pOCXS0hyW4W6PnWMmCbeE17Prtv6G9Zd9pmh1+F/j
-         41ug==
-X-Gm-Message-State: APjAAAU7d0jacTr/5A8GBW5ohw7kBSKGhIlYAvWplIKnp77IvE4k3gBa
-        sIj45q+UPoi8bcjERnX/gGI0FNy9
-X-Google-Smtp-Source: APXvYqwVayNboag+Dn8UwiSaLd6i9GFJKHjWbJ0mgRF9hnnKtw+1Vr+mwRUJaDySVmvmTyAXT2kCrg==
-X-Received: by 2002:a17:90a:e38f:: with SMTP id b15mr16850637pjz.85.1560608538196;
-        Sat, 15 Jun 2019 07:22:18 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e184sm10290803pfa.169.2019.06.15.07.22.17
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 07:22:17 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 07:22:16 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ken Sloat <KSloat@aampglobal.com>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
- watchdog on system suspend
-Message-ID: <20190615142216.GA32514@roeck-us.net>
-References: <20190614125310.29458-1-ksloat@aampglobal.com>
- <20190614164609.GA29814@roeck-us.net>
- <BL0PR07MB4115E99D065FD9BEA4C43BB5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
- <20190614180826.GD3369@piout.net>
- <BL0PR07MB4115D5ECDEDCC028197637E5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
- <20190614203327.GE3369@piout.net>
- <BL0PR07MB4115721DA2EB445BE7590BF6ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BL0PR07MB4115721DA2EB445BE7590BF6ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Sat, 15 Jun 2019 10:28:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56114 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725944AbfFOO24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 10:28:56 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3C37F308FBA0;
+        Sat, 15 Jun 2019 14:28:56 +0000 (UTC)
+Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.31])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D3565D9E2;
+        Sat, 15 Jun 2019 14:28:49 +0000 (UTC)
+Message-ID: <1d80a586342dfee0479db96a4457f7023b0260a9.camel@redhat.com>
+Subject: Re: [RFC PATCH 8/8] svm: Allow AVIC with in-kernel irqchip mode
+From:   Maxim Levitsky <mlevitsk@redhat.com>
+To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        Alex Williamson <alex.williamson@redhat.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "jsteckli@amazon.de" <jsteckli@amazon.de>,
+        "sironi@amazon.de" <sironi@amazon.de>,
+        "wawei@amazon.de" <wawei@amazon.de>
+Date:   Sat, 15 Jun 2019 17:28:50 +0300
+In-Reply-To: <d57a0843-061a-231a-9d50-d7e4d4d05d73@amd.com>
+References: <20190204144128.9489-1-suravee.suthikulpanit@amd.com>
+         <20190204144128.9489-9-suravee.suthikulpanit@amd.com>
+         <20190205113404.5c5382e6@w520.home>
+         <d57a0843-061a-231a-9d50-d7e4d4d05d73@amd.com>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sat, 15 Jun 2019 14:28:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 08:45:28PM +0000, Ken Sloat wrote:
-> > -----Original Message-----
-> > From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> > Sent: Friday, June 14, 2019 4:33 PM
-> > To: Ken Sloat <KSloat@aampglobal.com>
-> > Cc: Guenter Roeck <linux@roeck-us.net>; nicolas.ferre@microchip.com;
-> > ludovic.desroches@microchip.com; wim@linux-watchdog.org; linux-arm-
-> > kernel@lists.infradead.org; linux-watchdog@vger.kernel.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
-> > watchdog on system suspend
-> > 
-> > [This is an EXTERNAL EMAIL]
-> > ________________________________
-> > 
-> > On 14/06/2019 18:43:22+0000, Ken Sloat wrote:
-> > > Well I'm a little confused still because there are two separate
-> > > comments in these statements. The first within resume implies that the
-> > > init should be called because we might have lost register values for
-> > > some reason unexplained.
-> > 
-> > The sama5d2 has a suspend mode where power to the core is completely
-> > cut. Only a few IPs remain powered (in the backup power domain).
-> > Unfortunately, the watchdog is not in that domain and may lose its registers.
-> > 
-> > > Then within the init it says that the bootloader might have modified
-> > > the registers so we should check them and then update it or otherwise
-> > > disable it. I'm not trying to pick apart the logic or anything, I'm
-> > > just readily assuming it is good as it was already reviewed before.
-> > >
-> > 
-> > The bootloaders may have started the watchdog (this makes sense if you
-> > really care about reliability) and so we need to be careful to keep the proper
-> > parameters.
+On Wed, 2019-02-06 at 11:20 +0000, Suthikulpanit, Suravee wrote:
+> Alex,
 > 
-> Thanks for the explanation Alexandre I appreciate it.
-> 
-> > > So without digging into that too much, if we don't know if any of the
-> > > runtime situations above might have occurred, then isn't it best to
-> > > leave my patch as is? Yes this has the side effect of resetting the
-> > > timer count, but if the init call is needed and we don't have any way
-> > > to know if any of the situations occurred, then we have no choice right?
-> > >
+> On 2/6/19 1:34 AM, Alex Williamson wrote:
+> > On Mon, 4 Feb 2019 14:42:32 +0000
+> > "Suthikulpanit, Suravee"<Suravee.Suthikulpanit@amd.com>  wrote:
 > > 
-> > Until we can differentiate between suspend modes, we have no other
-> > choice.
+> > > Once the IRQ ack notifier for in-kernel PIT is no longer required
+> > > and run-time AVIC activate/deactivate is supported, we can remove
+> > > the kernel irqchip split mode requirement for AVIC.
+> > > 
+> > > Hence, remove the check for irqchip split mode when enabling AVIC.
+> > 
+> > Yay!  Could we also at this point make avic enabled by default or are
+> > there remaining incompatibilities?  Thanks,
 > 
-> Ok I will leave my patch as is for now then
+> I'm looking into that next. I would need to ensure that enabling
+> AVIC would not cause issues with other features.
 > 
+> Suravee
 
-If that is what those involved in this discussion argue for, they will
-need to confirm with Reviewed-by: or Acked-by: tags.
+Hi!
 
-Thanks,
-Guenter
+Do you have any update on the state of this patch? 
+I kind of stumbled on it accidently, while
+trying to understand why AVIC is only enabled in the split irqchip mode.
 
-> > --
-> > Alexandre Belloni, Bootlin
-> > Embedded Linux and Kernel engineering
-> > https://bootlin.com
-> 
-> Thanks,
-> Ken Sloat
+Best regards,
+	Maxim Levitsky
+
