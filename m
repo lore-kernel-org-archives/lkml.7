@@ -2,100 +2,90 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8062C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 00:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BBB7C31E52
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 00:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C07A1217D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 00:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560558271;
-	bh=ZrjXvva/bN7qY/TtGrD3uJbt5+dfSCyoL0fdmHhv7t0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PQN9TFVPW9J9MTf3iAvKeTdHcEhWG2DCv+SWFM05m2zsXvMiy5JPCV0tiWqjALkTG
-	 PoyOydTEJykH+LAlsINe5LavKNCOzgTvPRSoOp10La/xLbE5cxsP0toLSLC2p8lV8/
-	 ts5hkwmfMsygdZqv28DpRyENcXbLdZTRTjdDuc6Y=
+	by mail.kernel.org (Postfix) with ESMTP id 2A520217F9
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 00:29:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfFOAYa (ORCPT
+        id S1726096AbfFOA31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 20:24:30 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42152 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfFOAY3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 20:24:29 -0400
-Received: by mail-lj1-f196.google.com with SMTP id t28so4006800lje.9
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 17:24:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=aK7lUvYVYd4MHzc03gl18he+PgV3Hkk9KuzGz+vIyo4=;
-        b=e5ZS2eb2pZskGk1t2DAfftIR2H6ohKVnchU3giQkQVAHGxWxwBW20eLh5ZsUiCGGME
-         6sw8frLd89Po3z4XAfZ9MbD/TJit973JCdkHd51Y1T1Uq4vgc81VpJT6f+zyKtfC0mDs
-         rLEOUzr6pgcKa2PubqoFxZV/FYtmA1r3D0rKA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=aK7lUvYVYd4MHzc03gl18he+PgV3Hkk9KuzGz+vIyo4=;
-        b=eS9bWkRYfcxf3lQ40eoFwPt2ImmOVpMEZ/xg/tBvRxEKgVolQaQAgemdQyN+YY71B0
-         6tvz3SOiEnS1DwqnzLjU6hlt0DHRToKfUBXZHVb7vwr1KsgMSCl3lL2y6CbUMDXqDBaS
-         Soql2n5sF2E0lTJ3a4XLCe6x7e1iRgJ8j3mDIF3LeQD/s20r9Ker/DA27BFuMY1HLBS3
-         Mz61pyZHaDX+MKvdqHZ69pyqN3drTaLggA+rSCvNqqUkQQ3Nz09rA8HrwvoVoLviYk5G
-         3wjmXX0oryDQmQw3agVPE3nknjNuxymUWLdYIOT04rF8KsuyUigOKteO8/IzBxuUxzTx
-         aGOg==
-X-Gm-Message-State: APjAAAUIPr5lgjirwTNDnh62V3fLX2+rDMzpo0+Mc3yXQBxzdznNKkK+
-        Jwcm4zoIkS9VFkd+p9dCyWwQwxlh75U=
-X-Google-Smtp-Source: APXvYqz+emNKnZHMGCsdk8bKFVVPGa88IOU9udwEW5jscLxci6F34urTKXhkDuMMJOK2sbNBLGBwRQ==
-X-Received: by 2002:a2e:3807:: with SMTP id f7mr12515253lja.87.1560558266698;
-        Fri, 14 Jun 2019 17:24:26 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
-        by smtp.gmail.com with ESMTPSA id m10sm683305lfd.32.2019.06.14.17.24.25
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 17:24:25 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id 136so2833036lfa.8
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 17:24:25 -0700 (PDT)
-X-Received: by 2002:ac2:4565:: with SMTP id k5mr45739644lfm.170.1560558265318;
- Fri, 14 Jun 2019 17:24:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <155930001303.17253.2447519598157285098.stgit@warthog.procyon.org.uk>
- <17467.1559300202@warthog.procyon.org.uk> <alpine.LRH.2.21.1906040842110.13657@namei.org>
- <6cfd5113-8473-f962-dee7-e490e6f76f9c@schaufler-ca.com> <cb3749a6-e45b-3e07-27f9-841adf6f4640@schaufler-ca.com>
-In-Reply-To: <cb3749a6-e45b-3e07-27f9-841adf6f4640@schaufler-ca.com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Fri, 14 Jun 2019 14:24:09 -1000
-X-Gmail-Original-Message-ID: <CAHk-=wj8VCxjwyd_BDgRtDigik5UdizCZP7PU4wUtj4vHsEWNw@mail.gmail.com>
-Message-ID: <CAHk-=wj8VCxjwyd_BDgRtDigik5UdizCZP7PU4wUtj4vHsEWNw@mail.gmail.com>
-Subject: Re: [PATCH] Smack: Restore the smackfsdef mount option and add
- missing prefixes
-To:     Casey Schaufler <casey@schaufler-ca.com>
-Cc:     James Morris <jmorris@namei.org>,
+        Fri, 14 Jun 2019 20:29:27 -0400
+Received: from mga18.intel.com ([134.134.136.126]:26556 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725825AbfFOA31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 20:29:27 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 17:29:25 -0700
+Received: from alison-desk.jf.intel.com ([10.54.74.53])
+  by fmsmga008-auth.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 17:29:25 -0700
+Date:   Fri, 14 Jun 2019 17:32:31 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
         David Howells <dhowells@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        stable <stable@vger.kernel.org>, Jose Bollo <jose.bollo@iot.bzh>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>, linux-mm@kvack.org,
+        kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call
+ for MKTME
+Message-ID: <20190615003231.GA15479@alison-desk.jf.intel.com>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
+ <20190614115137.GF3436@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614115137.GF3436@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 1:08 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+On Fri, Jun 14, 2019 at 01:51:37PM +0200, Peter Zijlstra wrote:
+> On Wed, May 08, 2019 at 05:44:05PM +0300, Kirill A. Shutemov wrote:
+snip
+> >  /*
+> > - * When pkey==NO_KEY we get legacy mprotect behavior here.
+> > + * do_mprotect_ext() supports the legacy mprotect behavior plus extensions
+> > + * for Protection Keys and Memory Encryption Keys. These extensions are
+> > + * mutually exclusive and the behavior is:
+> > + *	(pkey==NO_KEY && keyid==NO_KEY) ==> legacy mprotect
+> > + *	(pkey is valid)  ==> legacy mprotect plus Protection Key extensions
+> > + *	(keyid is valid) ==> legacy mprotect plus Encryption Key extensions
+> >   */
+> >  static int do_mprotect_ext(unsigned long start, size_t len,
+> > -		unsigned long prot, int pkey)
+> > +			   unsigned long prot, int pkey, int keyid)
+> >  {
+
+snip
+
 >
-> Al, are you going to take this, or should I find another way
-> to get it in for 5.2?
+> I've missed the part where pkey && keyid results in a WARN or error or
+> whatever.
+> 
+I wasn't so sure about that since do_mprotect_ext()
+is the call 'behind' the system calls. 
 
-I guess I can take it directly.
+legacy mprotect always calls with: NO_KEY, NO_KEY
+pkey_mprotect always calls with:  pkey, NO_KEY
+encrypt_mprotect always calls with  NO_KEY, keyid
 
-I was assuming it would come through either Al (which is how I got the
-commit it fixes) or Casey (as smack maintainer), so I ignored the
-patch.
-
-                 Linus
+Would a check on those arguments be debug only 
+to future proof this?
