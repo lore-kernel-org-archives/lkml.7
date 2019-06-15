@@ -2,134 +2,107 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E78C7C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96635C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:06:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4FF32184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 06:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EA322184C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:06:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BQljxYEs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726391AbfFOGsc (ORCPT
+        id S1726218AbfFOHGo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 02:48:32 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:60756 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725820AbfFOGsc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 02:48:32 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B147BB5939DD75E4A577;
-        Sat, 15 Jun 2019 14:48:27 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Sat, 15 Jun 2019
- 14:48:25 +0800
-Subject: Re: [PATCH] PCI: hv: Fix build error without CONFIG_SYSFS
-To:     Michael Kelley <mikelley@microsoft.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Dexuan Cui <decui@microsoft.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>
-References: <20190531150923.12376-1-yuehaibing@huawei.com>
- <BYAPR21MB12211EEA95200F437C8E37ECD71A0@BYAPR21MB1221.namprd21.prod.outlook.com>
- <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <b049b0f9-e31e-897a-6f2e-e30d6d865f24@huawei.com>
-Date:   Sat, 15 Jun 2019 14:48:24 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Sat, 15 Jun 2019 03:06:44 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:39301 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725847AbfFOHGo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 03:06:44 -0400
+Received: by mail-pl1-f194.google.com with SMTP id b7so1917662pls.6
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 00:06:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nxfStrkoZ2f5uEaotGyNxBrt2oeXGj2yoJPwauA88HM=;
+        b=BQljxYEsUcWx6IMUJWs3lt9f4P2pNVaKin9m6xUqR9H9LNqOdMLDtclGLYX11b74io
+         /xFEGeBJUthHOtnhoFu6naZs+pQbH2gprvEvYfgRxH1hJLMfXIrliNCKf2aBfrL4enuO
+         7Jv7couBfgBKbghqyfQquAUp2sor9PX1xt9xuNXyiM07hJTt6cWmghGQgeWoq8ZpGQf8
+         FpuXUGUnhT9PI2i6c89dZ6NAn/sNJU2eMwtAcXD7mNiXaJfr/8yTjQfGJExcfmCscggp
+         pdz6hm4bizPtTC3WfYTyvqGNMdfT2/aNGpADPBNdFn6bwXUK/xdRBDhURgEaIVYh2244
+         5UFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nxfStrkoZ2f5uEaotGyNxBrt2oeXGj2yoJPwauA88HM=;
+        b=mCj84jtoHr/nrB6NuGrJ3SU0Ex1EEHJBhKBr/f9zidKKaBvia5MuGH6fIWRRV84/Ze
+         4d3+Hk0NDsa9lptiYjpWA0C7DHiSFQeN5CyqIqKxbJFCXrbC+AEmCeJCyiUp35i8qYWD
+         FewY7NL71diSLRubKCCe2TyJQPr5iAuLHqSTSWz6+5/SKkb57kuvWe+l6h8Walq8M+yD
+         +TjeVswencaD0W91h4RM1mh92G5Gwou+e2xIkoBxRc/Hx13PeUbmsJQxCLGFkG6DSyM6
+         ecOD2elXzZaD6W/CbvJE3lI0+rR36T6wNPrmq6w/3M4fqUMaU8mwPvICugqivJiMYof8
+         lUDg==
+X-Gm-Message-State: APjAAAWV4+pOzrjQyzOQYYHx2Df1MkMPqndZyep8scf4Sb0F5anR/lt2
+        Km+knXiaiu5MIAb9lNEK7/IBmA==
+X-Google-Smtp-Source: APXvYqwRyuDbMyXOtqz9wjhQN4oYSmEs4Kbc4rLpIiSEpz/Xzcy8mvo3twNZXhAZt/2ICZStoevA0w==
+X-Received: by 2002:a17:902:29a7:: with SMTP id h36mr45551825plb.158.1560582403432;
+        Sat, 15 Jun 2019 00:06:43 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id p2sm7963869pfb.118.2019.06.15.00.06.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 15 Jun 2019 00:06:42 -0700 (PDT)
+Date:   Sat, 15 Jun 2019 00:07:29 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] soc: qcom: apr: Don't use reg for domain id
+Message-ID: <20190615070729.GB31088@tuxbook-pro>
+References: <20190523150153.13136-1-bjorn.andersson@linaro.org>
+ <20190614165724.GA3083@bogus>
 MIME-Version: 1.0
-In-Reply-To: <7d8ca05e-7519-45d8-e694-d31e221696d5@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614165724.GA3083@bogus>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+cc Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+On Fri 14 Jun 09:57 PDT 2019, Rob Herring wrote:
 
-On 2019/6/15 14:18, Yuehaibing wrote:
+> On Thu, 23 May 2019 08:01:53 -0700, Bjorn Andersson wrote:
+> > The reg property represents the address and size on the bus that a
+> > device lives, but for APR the parent is a rpmsg bus, which does not have
+> > numerical addresses. Simply defining #address/#size-cells to 1 and 0,
+> > respectively, to silence the compiler is not an appropriate solution.
+> > 
+> > Replace the use of "reg" with an APR specific property.
+> > 
+> > Reviewed-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> > 
+> > Changes since v1:
+> > - Fixed example to match change
+> > 
+> >  Documentation/devicetree/bindings/soc/qcom/qcom,apr.txt | 6 +++---
+> >  drivers/soc/qcom/apr.c                                  | 2 +-
+> >  2 files changed, 4 insertions(+), 4 deletions(-)
+> > 
 > 
-> On 2019/6/2 6:59, Michael Kelley wrote:
->> From: YueHaibing <yuehaibing@huawei.com>  Sent: Friday, May 31, 2019 8:09 AM
->>>
->>> while building without CONFIG_SYSFS, fails as below:
->>>
->>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_assign_slots':
->>> pci-hyperv.c:(.text+0x40a): undefined reference to 'pci_create_slot'
->>> drivers/pci/controller/pci-hyperv.o: In function 'pci_devices_present_work':
->>> pci-hyperv.c:(.text+0xc02): undefined reference to 'pci_destroy_slot'
->>> drivers/pci/controller/pci-hyperv.o: In function 'hv_pci_remove':
->>> pci-hyperv.c:(.text+0xe50): undefined reference to 'pci_destroy_slot'
->>> drivers/pci/controller/pci-hyperv.o: In function 'hv_eject_device_work':
->>> pci-hyperv.c:(.text+0x11f9): undefined reference to 'pci_destroy_slot'
->>>
->>> Select SYSFS while PCI_HYPERV is set to fix this.
->>>
->>
->> I'm wondering if is the right way to fix the problem.  Conceptually
->> is it possible to setup & operate virtual PCI devices like 
->> pci-hyperv.c does, even if sysfs is not present?  Or is it right to
->> always required sysfs?
->>
->> The function pci_dev_assign_slot() in slot.c has a null implementation
->> in include/linux/pci.h when CONFIG_SYSFS is not defined, which
->> seems to be trying to solve the same problem for that function.  And
->> if CONFIG_HOTPLUG_PCI is defined but CONFIG_SYSFS is not,
->> pci_hp_create_module_link() and pci_hp_remove_module_link()
->> look like they would have the same problem.  Maybe there should
->> be degenerate implementations of pci_create_slot() and
->> pci_destroy_slot() for cases when CONFIG_SYSFS is not defined?
->>
->> But I'll admit I don't know the full story behind how PCI slots
->> are represented and used, so maybe I'm off base.  I just noticed
->> the inconsistency in how other functions in slot.c are handled.
->>
->> Thoughts?
-> 
-> 268a03a42d33 ("PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS")
-> 
-> make slot.o depends CONFIG_SYSFS
-> 
-> commit 268a03a42d3377d5fb41e6e7cbdec4e0b65cab2e
-> Author: Alex Chiang <achiang@hp.com>
-> Date:   Wed Jun 17 19:03:57 2009 -0600
-> 
->     PCI: drivers/pci/slot.c should depend on CONFIG_SYSFS
-> 
->     There is no way to interact with a physical PCI slot without
->     sysfs, so encode the dependency and prevent this build error:
-> 
->         drivers/pci/slot.c: In function 'pci_hp_create_module_link':
->         drivers/pci/slot.c:327: error: 'module_kset' undeclared
-> 
->     This patch _should_ make pci-sysfs.o depend on CONFIG_SYSFS too,
->     but we cannot (yet) because the PCI core merrily assumes the
->     existence of sysfs:
-> 
->         drivers/built-in.o: In function `pci_bus_add_device':
->         drivers/pci/bus.c:89: undefined reference to `pci_create_sysfs_dev_files'
->         drivers/built-in.o: In function `pci_stop_dev':
->         drivers/pci/remove.c:24: undefined reference to `pci_remove_sysfs_dev_files'
-> 
->     So do the minimal bit for now and figure out how to untangle it
->     later.
-> 
-> If No CONFIG_SYSFS, slot.o is not build
-> 
->>
->> Michael
->>
->>
-> 
-> 
-> .
-> 
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
+Thanks Rob, patch applied.
+
+Regards,
+Bjorn
