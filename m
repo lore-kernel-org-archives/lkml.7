@@ -2,108 +2,144 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74678C46477
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:52:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5F70C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 17:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47AA22186A
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:52:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560617566;
-	bh=UsK22JUeOOMcfS5ld8YBMJJSkveqxnB6s9i7jkbQthk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=o7AMWYaQ6qoleT9i/o6bUX3LnGEoET+3SXjgd5RyF+A8q4SQpUGw/xPYAg3qzwGoQ
-	 BTjTSHZXCPJyEPLX7NdqvzUKzGbJkD3dIWwpLL5IqNLNH78oaWuYmETYAvtY6tzpf8
-	 BfhKCLv8130u7T1NnnUalQq7QwDwdPgeKTtAzFWM=
+	by mail.kernel.org (Postfix) with ESMTP id 85BE42084B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 17:01:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JrOggcou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726756AbfFOQvz (ORCPT
+        id S1726703AbfFORBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 12:51:55 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33359 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfFOQvz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 12:51:55 -0400
-Received: by mail-qt1-f195.google.com with SMTP id x2so6224647qtr.0;
-        Sat, 15 Jun 2019 09:51:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=a4xhiw6iLiAdxawJ0gBqdsCUibLnDDLzmKzkX2M7ao4=;
-        b=JR/JSimc8wJkIyVGtrW8sddXIfoe51hLBfp76OQqLiXdj11v+ornlvGger8tCUHvDf
-         BAzCuAHwv2IojYL+dU6W7gdp7Z6BDFoZaq0dlIwg2Q6y1HK7vJfGi0O++eHTp3CpIUMS
-         g2bXbJOMYH/1pqAxP6xdKG2cjxzJu0y7oNmUMmaFpIkSiPpN/RwcZ5zesrEiDhxZMhZy
-         eSUAVlM8t9Tw69Iux3GpDjqGs5kxZLMANJJ2DkE3MfzJMlqGsORsNZ54ggxuDjQW2jFp
-         /9ToF+h5i4wkYYY0lbRYpC0PffPkjMefXTaY0muJHOX9Y4C3N3PhXLnrF9cjI1jS2/AE
-         oMdQ==
-X-Gm-Message-State: APjAAAUqeRqxWx7F/IzIDW7wdIZbDJ4AvaMS9EHJrLbYiscqMmz3H7zo
-        LxlSmeY9TblWT/51yidhbsk=
-X-Google-Smtp-Source: APXvYqzBaYFiNiMPaxJNo97WoRGxTucecswQCzfAVfZQ0cDMNOlT7per50nEv+L1BMYtPqZ0jchW0g==
-X-Received: by 2002:aed:3535:: with SMTP id a50mr88458459qte.237.1560617514471;
-        Sat, 15 Jun 2019 09:51:54 -0700 (PDT)
-Received: from dennisz-mbp.dhcp.thefacebook.com ([2620:10d:c091:480::3822])
-        by smtp.gmail.com with ESMTPSA id v4sm1288871qtq.15.2019.06.15.09.51.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 09:51:53 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 12:51:49 -0400
-From:   Dennis Zhou <dennis@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Dennis Zhou <dennis@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>, kernel-team@fb.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] blk-iolatency: only account submitted bios
-Message-ID: <20190615165149.GA96756@dennisz-mbp.dhcp.thefacebook.com>
-References: <20190523201018.49615-1-dennis@kernel.org>
+        Sat, 15 Jun 2019 13:01:20 -0400
+Received: from mail-eopbgr1310105.outbound.protection.outlook.com ([40.107.131.105]:6160
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725944AbfFORBT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 13:01:19 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=bRwioeCdWaAtA1ogvrz3ZwDdfRQe2bhp/c7+oNpOa/CcsZBTPpfymltDNuuNT3Z5X720MIslzmlG+RjIlclu2f239eW8PwW4KZJJVDOfFe2RAKPbfDdkLdbOlY4XDaonkxgBE6o+5Vxo9tKgKHYdWetUjsCLmUpANjhZkw1kq48=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=03LjLAPea0kYxmqRnORh0WWNxRMJcDAl60Gw1Yx9s28=;
+ b=R6gmYyFzUIUuv22Mrh65sTLWkBlqmd/kvuOjt3FbXMrMl33C+1OghtaV9p6iL/OTicAHVYZ99j4zQcVIefzJtOOlaRg1JuOw2ZO0ilkKFH4+OfhOuiNfJn+VvIYP0rH8VGUahCF1SmrjQaK0IebG5W0Mv4B7orc1jc6igUuRKR4=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=03LjLAPea0kYxmqRnORh0WWNxRMJcDAl60Gw1Yx9s28=;
+ b=JrOggcou4nsSCerOo+PxQluhGpFDKVHvyPoIg3vRS9aBFjypsyf5y/maXhrbbyJWc9AezwwHidc0x7P8tNC77CziEihPXwBSnXBIQ1YGABZMfYvQG3YNHYNNxFEMAswjda4oAMnMhXykOzXU/w3VMALJON4Ea7DK4GT1kmHlnsI=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0124.APCP153.PROD.OUTLOOK.COM (10.170.188.138) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.0; Sat, 15 Jun 2019 17:01:10 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d896:4219:e493:b04]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::d896:4219:e493:b04%4]) with mapi id 15.20.2008.007; Sat, 15 Jun 2019
+ 17:01:10 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Sunil Muthuswamy <sunilmut@microsoft.com>,
+        David Miller <davem@davemloft.net>
+CC:     KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net] hvsock: fix epollout hang from race condition
+Thread-Topic: [PATCH net] hvsock: fix epollout hang from race condition
+Thread-Index: AQHVIyAf1+XRZykcRS6vcxcYhC9DaaacCm+ggAAUrpCAADEXgIAAn55A
+Date:   Sat, 15 Jun 2019 17:01:08 +0000
+Message-ID: <PU1P153MB016954EEE4FB5463A61E4292BFE90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <MW2PR2101MB11164C6EEAA5C511B395EF3AC0EC0@MW2PR2101MB1116.namprd21.prod.outlook.com>
+ <20190614.191456.407433636343988177.davem@davemloft.net>
+ <PU1P153MB0169BACDA500F94910849770BFE90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <PU1P153MB0169810F29C473D44C090F6ABFE90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <MW2PR2101MB111678811A8761515B669A47C0E90@MW2PR2101MB1116.namprd21.prod.outlook.com>
+In-Reply-To: <MW2PR2101MB111678811A8761515B669A47C0E90@MW2PR2101MB1116.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-15T03:22:30.1109385Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=5a22ec33-d84a-451d-b0f2-0c7166ab82c0;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2601:600:a280:1760:3526:f0c3:b438:bf24]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 05200501-83b6-409f-7fc4-08d6f1b310c2
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:PU1P153MB0124;
+x-ms-traffictypediagnostic: PU1P153MB0124:
+x-microsoft-antispam-prvs: <PU1P153MB0124EFED770D3D2F831BA9CABFE90@PU1P153MB0124.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:2276;
+x-forefront-prvs: 0069246B74
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(136003)(39860400002)(376002)(366004)(189003)(199004)(11346002)(7736002)(446003)(86362001)(33656002)(486006)(305945005)(476003)(68736007)(186003)(81156014)(8676002)(81166006)(8936002)(1511001)(8990500004)(46003)(10090500001)(22452003)(316002)(110136005)(54906003)(53546011)(99286004)(76176011)(6506007)(7696005)(102836004)(4326008)(14454004)(55016002)(25786009)(6436002)(6246003)(9686003)(53936002)(10290500003)(478600001)(256004)(229853002)(71190400001)(73956011)(66946007)(66476007)(66556008)(64756008)(66446008)(2906002)(4744005)(5660300002)(52536014)(71200400001)(76116006)(6116002)(74316002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0124;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: EjZ+sypi9arab96unF9Gmsr7959HCLPdMK+XUTtvo4WFnqZclA9hKG+u75f5ieNINkAl+HQbzi3V9wNbO0p5VHnOJ4Lmo5WSzd2ai69tkmNBDeQhhpvBUwP34gpgr0ZCSmBMtt98rYaYI1jAGjh0mU5ieoZ/x3MGpE7QE1cbPPrdIA2RQx0pD6QLft8UK7vRgL7sNYEYit3w6K4j/cl5VSRt5w3QMaBAGHTXEsQ2ZeXVrh6EY814xZJRANOQwQo/CKVxgfhyq+rZAZmToXbVS4r/3Wmj05Hyk9a0geJKgEZISQdi8Y9e/rNNzUvZ7TeA+1xl0Rae/1t3ve6pX3OeszDEWwuFag1D3ZmTuzDaEgY3Odvfd8u0J+x4zKKPDRUaMVahauH4xhqEqz75TKWtsOFt6lxbG6+S35GEKngR1Ps=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523201018.49615-1-dennis@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 05200501-83b6-409f-7fc4-08d6f1b310c2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2019 17:01:08.7184
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: decui@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0124
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Sent: Saturday, June 15, 2019 12:23 AM
+> To: Dexuan Cui <decui@microsoft.com>; David Miller <davem@davemloft.net>
+> > ...
+> > It looks a simple inline assembly code can confuse gcc. I'm not sure if=
+ I should
+> > report a bug for gcc...
+> >
+> > I posted a patch to suppress these bogus warnings just now. The Subject=
+ is:
+> >
+> > [PATCH net] hv_sock: Suppress bogus "may be used uninitialized" warning=
+s
 
-On Thu, May 23, 2019 at 04:10:18PM -0400, Dennis Zhou wrote:
-> As is, iolatency recognizes done_bio and cleanup as ending paths. If a
-> request is marked REQ_NOWAIT and fails to get a request, the bio is
-> cleaned up via rq_qos_cleanup() and ended in bio_wouldblock_error().
-> This results in underflowing the inflight counter. Fix this by only
-> accounting bios that were actually submitted.
-> 
-> Signed-off-by: Dennis Zhou <dennis@kernel.org>
-> Cc: Josef Bacik <josef@toxicpanda.com>
-> ---
->  block/blk-iolatency.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/block/blk-iolatency.c b/block/blk-iolatency.c
-> index 507212d75ee2..58bac44ba78a 100644
-> --- a/block/blk-iolatency.c
-> +++ b/block/blk-iolatency.c
-> @@ -599,6 +599,10 @@ static void blkcg_iolatency_done_bio(struct rq_qos *rqos, struct bio *bio)
->  	if (!blkg || !bio_flagged(bio, BIO_TRACKED))
->  		return;
->  
-> +	/* We didn't actually submit this bio, don't account it. */
-> +	if (bio->bi_status == BLK_STS_AGAIN)
-> +		return;
-> +
->  	iolat = blkg_to_lat(bio->bi_blkg);
->  	if (!iolat)
->  		return;
-> -- 
-> 2.17.1
-> 
+David, as I described, these warnings are spurious and can be safely ignore=
+d.
 
-Can you please take a look at this?
+Please consider not applying my two-line patch to avoid merge conflict
+with Sunil's another patch in net-next.git.=20
+
+> Yes, these warnings are not specific to this patch. And, additionally the=
+se
+> should already addressed in the commit ...
+> I was trying to avoid making the same changes here to avoid merge
+> conflicts when 'net-next' merges with 'net' next.
+
+Yeah, I agree.
 
 Thanks,
-Dennis
+-- Dexuan
