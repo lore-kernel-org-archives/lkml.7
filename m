@@ -2,145 +2,148 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B271DC31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 846C9C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 875372168B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:24:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K37drCDl"
+	by mail.kernel.org (Postfix) with ESMTP id 50B152084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:47:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560577667;
+	bh=sbOXjveK+p/wOpcif4GHyC58VLRiBaijagkfWj1BpyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=b7+lUX874lFn/g5B+fPnRjuoEGQ1PalJpPXnAmAAig8pSTKb/caO+RHPqhnnImGjo
+	 voELXSUXhaIs6/SOr0uyMNFfNB0JZ9ZVny5+YnDpipRmFZRCgMpoVS/lvYRimevITK
+	 yAxhgNyMdhe6AEn4KmhgWJO8UCC2E0wI5AphsviE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726126AbfFOFYB (ORCPT
+        id S1726185AbfFOFro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 01:24:01 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45051 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbfFOFYB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 01:24:01 -0400
-Received: by mail-pg1-f193.google.com with SMTP id n2so2689064pgp.11
-        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 22:24:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=yNrW6xp0TlnPUlwSYk5j3h7SqKf8zU2qbYKV+9+hWKs=;
-        b=K37drCDl2YToHdNt3/k2l0v+EgT7kFzkGif0g3TSgO0Mi2CKUthFhZJmSlgEt8khpM
-         f0RYanS9uEM525eHFVUqj26x+9o3gud3UD1v9aNAuc9rndWMFQVZdce//D1P4vxWGTin
-         spArlN2S/1WRC+09DYbu92oSzgn8LUWM7KJNPuwZaJlyhMDdc6mfKCnFsc/d0UXBT6mQ
-         hpO9iP2HMvr6wXqcKvJij/+IC0y2tZVkJwd+MaoEvhdv7/olByoqxg2tLpe1kbi/WMvz
-         pmY4WXSpjbJacVahAz+eSstce15LJDLyKw89JmE2TfDEClC4QeySUkP0aNSlYuadXmCk
-         hSjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=yNrW6xp0TlnPUlwSYk5j3h7SqKf8zU2qbYKV+9+hWKs=;
-        b=uEqgXQ8MdFDtV4aUC7effCUuOeW0QMOsIoYTKLOixu8S5EVmyDv9D9wFIIGDXnJanr
-         cwF9nGABlb6rRgtl4Uc3/9nka1qQGFzNujWjBOOVKR5WHo/yyDjCgWTRH5Ik7hVg5vPr
-         bNM1YrW6lDq46pQ95y1o75cI6XJ/9odgvyOcWJpN9WZ1hfS7hMAfs0f1BoKK7dLehrPJ
-         O3dt/HG56w3Bs6iHbXd20P28xr2K8fXr5vxPPOxWiJk5FxzeUu+TET7XtkMv6kke7Y17
-         9vUi0sV22NHYvhbepvyJNldLXWK6iAWoLmWbS6q8D5bMm+YO5bKEm661PJasDuLNf6HN
-         uOcQ==
-X-Gm-Message-State: APjAAAVArzL89hBWMUHtSQ+jDTstuWPsmEnH8d1IgHm9ELwFjMXqFqQ1
-        9eyZqtnt8qOLs4HEfg366Yx87A==
-X-Google-Smtp-Source: APXvYqzTvXEEYJ3N7K6IN/K+BR9rccVM5BVHvLSzLlaPMDTRzQDWsoNt+nbmV10GcCcZFEZJQ9VrhQ==
-X-Received: by 2002:a63:1243:: with SMTP id 3mr14798306pgs.235.1560576239520;
-        Fri, 14 Jun 2019 22:23:59 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 10sm4404372pfh.179.2019.06.14.22.23.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 14 Jun 2019 22:23:58 -0700 (PDT)
-Date:   Fri, 14 Jun 2019 22:24:46 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@sonymobile.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH -next] soc: qcom: fix QCOM_AOSS_QMP dependency and build
- errors
-Message-ID: <20190615052446.GA31088@tuxbook-pro>
-References: <6d97f8dc-f980-7825-4aa6-27f56b25bc3a@infradead.org>
+        Sat, 15 Jun 2019 01:47:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725820AbfFOFro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 01:47:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D76672084D;
+        Sat, 15 Jun 2019 05:47:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560577662;
+        bh=sbOXjveK+p/wOpcif4GHyC58VLRiBaijagkfWj1BpyQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YtoqkIB3ZB9G7qpY/ezed1x85hnvAPNEegSfamPF2L7jS5nN8Q8A0TmFmPwGZXKgn
+         aIlcOXq6iBqEzTxqfb1E/fK1ocHAfyMKrIOoArf7lBFPY1SwVNTDiWX9hGZSr8WimO
+         4htszH6kQBRjhScYPFIM7BT3L2FRyzXESzW9wMUo=
+Date:   Sat, 15 Jun 2019 07:47:39 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Scott Wood <swood@redhat.com>, Wu Hao <hao.wu@intel.com>,
+        Alan Tull <atull@kernel.org>, linux-fpga@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.1 16/59] fpga: dfl: Add lockdep classes for
+ pdata->lock
+Message-ID: <20190615054739.GA23883@kroah.com>
+References: <20190614202843.26941-1-sashal@kernel.org>
+ <20190614202843.26941-16-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <6d97f8dc-f980-7825-4aa6-27f56b25bc3a@infradead.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190614202843.26941-16-sashal@kernel.org>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri 14 Jun 14:47 PDT 2019, Randy Dunlap wrote:
-
-> From: Randy Dunlap <rdunlap@infradead.org>
+On Fri, Jun 14, 2019 at 04:28:00PM -0400, Sasha Levin wrote:
+> From: Scott Wood <swood@redhat.com>
 > 
-> Fix Kconfig warning and subsequent build errors that are caused
-> when PM_GENERIC_DOMAINS=y but CONFIG_PM is not set/enabled.
+> [ Upstream commit dfe3de8d397bf878b31864d4e489d41118ec475f ]
 > 
-
-Thanks Randy, I thought I had all angles covered here.
-
-Applied to our -next branch.
-
-Regards,
-Bjorn
-
-> WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS
->   Depends on [n]: PM [=n]
->   Selected by [m]:
->   - QCOM_AOSS_QMP [=m] && (ARCH_QCOM || COMPILE_TEST [=y]) && MAILBOX [=y] && COMMON_CLK [=y]
+> struct dfl_feature_platform_data (and it's mutex) is used
+> by both fme and port devices, and when lockdep is enabled it
+> complains about nesting between these locks.  Tell lockdep about
+> the difference so it can track each class separately.
 > 
-> Fixes these build errors:
+> Here's the lockdep complaint:
+> [  409.680668] WARNING: possible recursive locking detected
+> [  409.685983] 5.1.0-rc3.fpga+ #1 Tainted: G            E
+> [  409.691469] --------------------------------------------
+> [  409.696779] fpgaconf/9348 is trying to acquire lock:
+> [  409.701746] 00000000a443fe2e (&pdata->lock){+.+.}, at: port_enable_set+0x24/0x60 [dfl_afu]
+> [  409.710006]
+> [  409.710006] but task is already holding lock:
+> [  409.715837] 0000000063b78782 (&pdata->lock){+.+.}, at: fme_pr_ioctl+0x21d/0x330 [dfl_fme]
+> [  409.724012]
+> [  409.724012] other info that might help us debug this:
+> [  409.730535]  Possible unsafe locking scenario:
+> [  409.730535]
+> [  409.736457]        CPU0
+> [  409.738910]        ----
+> [  409.741360]   lock(&pdata->lock);
+> [  409.744679]   lock(&pdata->lock);
+> [  409.747999]
+> [  409.747999]  *** DEADLOCK ***
+> [  409.747999]
+> [  409.753920]  May be due to missing lock nesting notation
+> [  409.753920]
+> [  409.760704] 4 locks held by fpgaconf/9348:
+> [  409.764805]  #0: 0000000063b78782 (&pdata->lock){+.+.}, at: fme_pr_ioctl+0x21d/0x330 [dfl_fme]
+> [  409.773408]  #1: 00000000213c8a66 (&region->mutex){+.+.}, at: fpga_region_program_fpga+0x24/0x200 [fpga_region]
+> [  409.783489]  #2: 00000000fe63afb9 (&mgr->ref_mutex){+.+.}, at: fpga_mgr_lock+0x15/0x40 [fpga_mgr]
+> [  409.792354]  #3: 000000000b2285c5 (&bridge->mutex){+.+.}, at: __fpga_bridge_get+0x26/0xa0 [fpga_bridge]
+> [  409.801740]
+> [  409.801740] stack backtrace:
+> [  409.806102] CPU: 45 PID: 9348 Comm: fpgaconf Kdump: loaded Tainted: G            E     5.1.0-rc3.fpga+ #1
+> [  409.815658] Hardware name: Intel Corporation S2600BT/S2600BT, BIOS SE5C620.86B.01.00.0763.022420181017 02/24/2018
+> [  409.825911] Call Trace:
+> [  409.828369]  dump_stack+0x5e/0x8b
+> [  409.831686]  __lock_acquire+0xf3d/0x10e0
+> [  409.835612]  ? find_held_lock+0x3c/0xa0
+> [  409.839451]  lock_acquire+0xbc/0x1d0
+> [  409.843030]  ? port_enable_set+0x24/0x60 [dfl_afu]
+> [  409.847823]  ? port_enable_set+0x24/0x60 [dfl_afu]
+> [  409.852616]  __mutex_lock+0x86/0x970
+> [  409.856195]  ? port_enable_set+0x24/0x60 [dfl_afu]
+> [  409.860989]  ? port_enable_set+0x24/0x60 [dfl_afu]
+> [  409.865777]  ? __mutex_unlock_slowpath+0x4b/0x290
+> [  409.870486]  port_enable_set+0x24/0x60 [dfl_afu]
+> [  409.875106]  fpga_bridges_disable+0x36/0x50 [fpga_bridge]
+> [  409.880502]  fpga_region_program_fpga+0xea/0x200 [fpga_region]
+> [  409.886338]  fme_pr_ioctl+0x13e/0x330 [dfl_fme]
+> [  409.890870]  fme_ioctl+0x66/0xe0 [dfl_fme]
+> [  409.894973]  do_vfs_ioctl+0xa9/0x720
+> [  409.898548]  ? lockdep_hardirqs_on+0xf0/0x1a0
+> [  409.902907]  ksys_ioctl+0x60/0x90
+> [  409.906225]  __x64_sys_ioctl+0x16/0x20
+> [  409.909981]  do_syscall_64+0x5a/0x220
+> [  409.913644]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> [  409.918698] RIP: 0033:0x7f9d31b9b8d7
+> [  409.922276] Code: 44 00 00 48 8b 05 b9 15 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 15 2d 00 f7 d8 64 89 01 48
+> [  409.941020] RSP: 002b:00007ffe4cae0d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
+> [  409.948588] RAX: ffffffffffffffda RBX: 00007f9d32ade6a0 RCX: 00007f9d31b9b8d7
+> [  409.955719] RDX: 00007ffe4cae0df0 RSI: 000000000000b680 RDI: 0000000000000003
+> [  409.962852] RBP: 0000000000000003 R08: 00007f9d2b70a177 R09: 00007ffe4cae0e40
+> [  409.969984] R10: 00007ffe4cae0160 R11: 0000000000000202 R12: 00007ffe4cae0df0
+> [  409.977115] R13: 000000000000b680 R14: 0000000000000000 R15: 00007ffe4cae0f60
 > 
-> ../drivers/base/power/domain.c: In function ‘genpd_queue_power_off_work’:
-> ../drivers/base/power/domain.c:485:13: error: ‘pm_wq’ undeclared (first use in this function)
->   queue_work(pm_wq, &genpd->power_off_work);
-> ../drivers/base/power/domain.c:485:13: note: each undeclared identifier is reported only once for each function it appears in
-> ../drivers/base/power/domain.c: In function ‘genpd_dev_pm_qos_notifier’:
-> ../drivers/base/power/domain.c:675:25: error: ‘struct dev_pm_info’ has no member named ‘ignore_children’
->    if (!dev || dev->power.ignore_children)
-> ../drivers/base/power/domain.c: In function ‘rtpm_status_str’:
-> ../drivers/base/power/domain.c:2754:16: error: ‘struct dev_pm_info’ has no member named ‘runtime_error’
->   if (dev->power.runtime_error)
-> ../drivers/base/power/domain.c:2756:21: error: ‘struct dev_pm_info’ has no member named ‘disable_depth’
->   else if (dev->power.disable_depth)
-> ../drivers/base/power/domain.c:2758:21: error: ‘struct dev_pm_info’ has no member named ‘runtime_status’
->   else if (dev->power.runtime_status < ARRAY_SIZE(status_lookup))
-> ../drivers/base/power/domain.c:2759:31: error: ‘struct dev_pm_info’ has no member named ‘runtime_status’
->    p = status_lookup[dev->power.runtime_status];
-> ../drivers/base/power/domain_governor.c: In function ‘default_suspend_ok’:
-> ../drivers/base/power/domain_governor.c:82:17: error: ‘struct dev_pm_info’ has no member named ‘ignore_children’
-> 
-> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-> Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Cc: Andy Gross <andy.gross@linaro.org>
-> Cc: David Brown <david.brown@linaro.org>
+> Signed-off-by: Scott Wood <swood@redhat.com>
+> Acked-by: Wu Hao <hao.wu@intel.com>
+> Acked-by: Alan Tull <atull@kernel.org>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 > ---
->  drivers/soc/qcom/Kconfig |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> --- linux-next-20190614.orig/drivers/soc/qcom/Kconfig
-> +++ linux-next-20190614/drivers/soc/qcom/Kconfig
-> @@ -8,7 +8,7 @@ config QCOM_AOSS_QMP
->  	tristate "Qualcomm AOSS Driver"
->  	depends on ARCH_QCOM || COMPILE_TEST
->  	depends on MAILBOX
-> -	depends on COMMON_CLK
-> +	depends on COMMON_CLK && PM
->  	select PM_GENERIC_DOMAINS
->  	help
->  	  This driver provides the means of communicating with and controlling
-> 
-> 
+>  drivers/fpga/dfl.c | 16 +++++++++++++++-
+>  1 file changed, 15 insertions(+), 1 deletion(-)
+
+Adding lockdep stuff is not really needed for stable kernels, please
+drop this from all trees.
+
+thanks,
+
+greg k-h
