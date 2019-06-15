@@ -7,110 +7,110 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA7DC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 00:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE95CC31E47
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 01:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DC5820645
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 00:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ECF92183F
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 01:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="XKUGpBn1";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="rm1asMNc"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="DWa049fP";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="PpzBLhJt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727125AbfFPArq (ORCPT
+        id S1727095AbfFPBKJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 20:47:46 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:34018 "EHLO
+        Sat, 15 Jun 2019 21:10:09 -0400
+Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:38688 "EHLO
         mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726434AbfFPArq (ORCPT
+        by vger.kernel.org with ESMTP id S1726434AbfFPBKI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 20:47:46 -0400
-X-Greylist: delayed 3677 seconds by postgrey-1.27 at vger.kernel.org; Sat, 15 Jun 2019 20:47:44 EDT
+        Sat, 15 Jun 2019 21:10:08 -0400
 Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5FNm78c028068;
-        Sat, 15 Jun 2019 16:48:40 -0700
+        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5FNilM8025954;
+        Sat, 15 Jun 2019 16:46:21 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
  subject : date : message-id : in-reply-to : references : mime-version :
  content-type; s=proofpoint;
- bh=bnTTUA0ptamDuxmRXW/zfAVOXLr0tETAmjdwULWkSrc=;
- b=XKUGpBn1sLfntPKPyxTrBE9Y++ZUXiKWdPTYjRoyPvOGnmh/lYbSewvBrOr9FHZ9mIgn
- 75PjPJnCefV0XjgfzIHzN0sjXmHiUsy+OzZQqIU7vAUdkw/ZYZzqGUjeCo/vDD5CogDo
- xgZkO/10wLMyule7RsvCfqty9TAQLNaFjFPmflMNKGdDwcL4zsbC4LW8OfxR7q3HUN+J
- MgCRHs8RJm4kBLAPT2ITjGsDzp3gv5aYsHU0yemYMXwokz++Z32o4HGCLbVwsXUSxkcr
- uYVYNyRLedzZHStEtMGppCFJOFf+1fprQiYDJHgG9vWQCEpzxApZyx+JbnNWEKkHRJgN fg== 
+ bh=N7Eqj6s2lfu9gv2thWZbJ13/QDK2b/oLzQIcZPDvE2A=;
+ b=DWa049fPP2fkTjvpI7TUvax+/t2Fx1ZEQyUdZ139BJhGwndgb7jBuks6S/V9BX1PspWj
+ kHlxgMvhbc3IMJtO7gwIwvrf1gFbl1JS+2FwU5dqTwqICDzZi8EKBMA/eGbqtfqOxjxA
+ jwKHX3hRmOPuPl8nf5k/dBIJmpXdSpBMoZ8IcYROhAFUbIzEMEf160b3wKa3lrzP/6ja
+ hKB6qLiXgkhq+8en+cDLYuf7kaRgdSvubpjKi9SL55Im5IchMlYI2Prm9p2OT3lABBji
+ sLWGB8KUBX8jbzAGVlZX2a+VAvrgsYngSi1zA1/dWbR6uiivYyNP8b4BX3mfcy03TG63 8A== 
 Authentication-Results: cadence.com;
         spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2057.outbound.protection.outlook.com [104.47.42.57])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2t4w7v1rc1-1
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2054.outbound.protection.outlook.com [104.47.45.54])
+        by mx0a-0014ca01.pphosted.com with ESMTP id 2t4w7v1r84-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 15 Jun 2019 16:48:40 -0700
+        Sat, 15 Jun 2019 16:46:21 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bnTTUA0ptamDuxmRXW/zfAVOXLr0tETAmjdwULWkSrc=;
- b=rm1asMNclLSslnDBv6M1dN1cVTT2WxijAkDY1Ly69DfGl7nZWkkGCGt7iCuv17VlSlvnsaGIVAb5vIM8ol+Isatzr4x3/7k33d6FiMNMXbtcDKdQsUrxclDHHCI147IhShQLVacrdfyQGZk0Rsa3RLHyETTnAAq6gZAYs8IikaQ=
-Received: from DM6PR07CA0035.namprd07.prod.outlook.com (20.176.74.48) by
- DM6PR07MB6828.namprd07.prod.outlook.com (20.179.70.76) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Sat, 15 Jun 2019 23:48:38 +0000
-Received: from BY2NAM05FT024.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e52::207) by DM6PR07CA0035.outlook.office365.com
- (2603:10b6:5:94::48) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.15 via Frontend
- Transport; Sat, 15 Jun 2019 23:48:38 +0000
+ bh=N7Eqj6s2lfu9gv2thWZbJ13/QDK2b/oLzQIcZPDvE2A=;
+ b=PpzBLhJt13BJxsoW9cM/EhdEQpfckmS53j8cORWCN2QIbwLHvOcPevghgas3nrsxSLZQ+9E2Y0SZv4W/9JpB2LUGA0XhdXy8oNgQJ2vMcg0k1zq51CRnmMhXmjf0g51rS347EFf5W3FkSbShwezejkUg5lzE/piEKW7lmF5In1w=
+Received: from BYAPR07CA0045.namprd07.prod.outlook.com (2603:10b6:a03:60::22)
+ by BYAPR07MB6824.namprd07.prod.outlook.com (2603:10b6:a03:128::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.11; Sat, 15 Jun
+ 2019 23:46:18 +0000
+Received: from BY2NAM05FT049.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e52::204) by BYAPR07CA0045.outlook.office365.com
+ (2603:10b6:a03:60::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.13 via Frontend
+ Transport; Sat, 15 Jun 2019 23:46:18 +0000
 Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 158.140.1.28 as permitted sender)
-Received: from sjmaillnx1.cadence.com (158.140.1.28) by
- BY2NAM05FT024.mail.protection.outlook.com (10.152.100.161) with Microsoft
+ cadence.com discourages use of 199.43.4.28 as permitted sender)
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ BY2NAM05FT049.mail.protection.outlook.com (10.152.100.186) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.7 via Frontend Transport; Sat, 15 Jun 2019 23:48:38 +0000
+ 15.20.2008.7 via Frontend Transport; Sat, 15 Jun 2019 23:46:17 +0000
 Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x5FNmaBa031884
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x5FNkBdk024229
         (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Sat, 15 Jun 2019 16:48:37 -0700
+        Sat, 15 Jun 2019 19:46:12 -0400
 X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
 Received: from maileu3.global.cadence.com (10.160.88.99) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Sun, 16 Jun 2019 01:48:35 +0200
+ 15.0.1367.3; Sun, 16 Jun 2019 01:46:10 +0200
 Received: from lvlogina.cadence.com (10.165.176.102) by
  maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Sun, 16 Jun 2019 01:48:34 +0200
+ 15.0.1367.3 via Frontend Transport; Sun, 16 Jun 2019 01:46:10 +0200
 Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5FNmYNO028922;
-        Sun, 16 Jun 2019 00:48:34 +0100
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5FNkAtQ026482;
+        Sun, 16 Jun 2019 00:46:10 +0100
 From:   Parshuram Thombare <pthombar@cadence.com>
 To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
         <davem@davemloft.net>, <f.fainelli@gmail.com>
 CC:     <netdev@vger.kernel.org>, <hkallweit1@gmail.com>,
         <linux-kernel@vger.kernel.org>, <rafalc@cadence.com>,
         <aniljoy@cadence.com>, <piotrs@cadence.com>, <pthombar@cadence.com>
-Subject: [PATCH 5/6] net: macb: add support for high speed interface
-Date:   Sun, 16 Jun 2019 00:48:32 +0100
-Message-ID: <1560642512-28765-1-git-send-email-pthombar@cadence.com>
+Subject: [PATCH 1/6] net: macb: add phylink support
+Date:   Sun, 16 Jun 2019 00:46:07 +0100
+Message-ID: <1560642367-26425-1-git-send-email-pthombar@cadence.com>
 X-Mailer: git-send-email 2.2.2
-In-Reply-To: <1560642481-28297-1-git-send-email-pthombar@cadence.com>
-References: <1560642481-28297-1-git-send-email-pthombar@cadence.com>
+In-Reply-To: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
+References: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-OrganizationHeadersPreserved: maileu3.global.cadence.com
 X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(39850400004)(136003)(396003)(2980300002)(199004)(189003)(36092001)(53416004)(478600001)(486006)(126002)(446003)(476003)(76176011)(11346002)(86362001)(5660300002)(7696005)(246002)(48376002)(7126003)(2616005)(107886003)(186003)(2201001)(47776003)(26826003)(426003)(51416003)(336012)(356004)(26005)(14444005)(2906002)(305945005)(50226002)(110136005)(77096007)(316002)(54906003)(16586007)(70586007)(30864003)(8936002)(70206006)(8676002)(76130400001)(4326008)(36756003)(7636002)(50466002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR07MB6828;H:sjmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.Cadence.COM;A:1;MX:1;
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(346002)(39850400004)(2980300002)(36092001)(189003)(199004)(2906002)(70586007)(305945005)(336012)(69596002)(70206006)(76130400001)(5660300002)(30864003)(2201001)(4326008)(86362001)(6666004)(356004)(68736007)(478600001)(26826003)(53936002)(107886003)(316002)(110136005)(54906003)(36756003)(16586007)(8676002)(14444005)(81166006)(76176011)(50466002)(81156014)(47776003)(5024004)(8936002)(446003)(48376002)(50226002)(7696005)(51416003)(486006)(7126003)(53416004)(2616005)(11346002)(476003)(186003)(426003)(126002)(77096007)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB6824;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:InfoDomainNonexistent;MX:1;A:1;
 X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: fabcd084-9f21-49a7-8da5-08d6f1ebfd1b
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:DM6PR07MB6828;
-X-MS-TrafficTypeDiagnostic: DM6PR07MB6828:
-X-Microsoft-Antispam-PRVS: <DM6PR07MB68283BF6FAB9F8FA95A488C7C1E90@DM6PR07MB6828.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-MS-Office365-Filtering-Correlation-Id: 33f35b66-6c68-44c5-b5f6-08d6f1eba958
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:BYAPR07MB6824;
+X-MS-TrafficTypeDiagnostic: BYAPR07MB6824:
+X-Microsoft-Antispam-PRVS: <BYAPR07MB682406605A94FD631B8CB702C1E90@BYAPR07MB6824.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:311;
 X-Forefront-PRVS: 0069246B74
 X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: LKivYVU301kTM8QQPwohcJ7DvaQK2ElbAnu8xeNc1mfOjBUBzPUdbf9n5ufN2UfGte4f0oEeP3paETykBhG1fV3aqKa76UKTtRoHo2sMsmqJFIbO+HQt7Tw6vBNC3jKE3o1gAiO0nn+GMpneM3HlEoDD+j8tnZl9/rC8kg+mCNsgTBRjcnD7gQVwsKYlwasEy07idyvxVzsehNiucIBU5NC830muLfKgrJSto/E5RHlec2LRB0fvSg3Mnm3pTJ1RSbv8Nwt2uAKBvKjdnx780unbkTMBsPXZ4C49n5kB14Hl9YOcNO1G5nGIezf4gpy2UShbzBehSJNNWnB7zCjb/yV7WXT50oZHULkTOOGfwh6HFhyzhljPixflHoCsL6C+GG1jWK5g45iuwPcwOEwoF/L2EoLqJXHB+mLtvE4jt8E=
+X-Microsoft-Antispam-Message-Info: MS57IO1wzVNsHMBpVsKiVHWDorKgqbvsTVsOpVT8iydfkSlGDU3s9cQ9ul7ZThO3OWpwfBu8v0G3Kc+NbfbaLhQqoS0+2ZJHWSryPm7qlGA7Ikr9lBwsf8JSTJKn/yVF0X9Q4elsGNOFutBoee3w7ZCO0GKg29Rw6w49BByO/BKzpGwOHSUkUXDF1rv4LAi/AgCVKJMwB5NEsHxwbqlxdnY6ylcNWXCtA2Q6U0cvsOiFbeTlXgD3Yp47RlkyGMdzTaqCkpq1uiYPNVApiHroLNIXm2xiXh9ytrcDcVc3+WzIkZASzhr9DR/71olc8bda6AsKZk/uAwjW76b7LpOHmfBjg0XQ3OMp7ZBbJxsNw5zO/uwnR/QIdswvuSlUctuA0wQ2iuBPqwcoVblASHyDfXy2SnGtG8NQhW2qlTZDdzA=
 X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2019 23:48:38.4823
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2019 23:46:17.7773
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: fabcd084-9f21-49a7-8da5-08d6f1ebfd1b
+X-MS-Exchange-CrossTenant-Network-Message-Id: 33f35b66-6c68-44c5-b5f6-08d6f1eba958
 X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR07MB6828
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB6824
 X-Proofpoint-SPF-Result: pass
 X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
  include:mktomail.com include:spf-0014ca01.pphosted.com
@@ -122,462 +122,532 @@ X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check sco
  priorityscore=1501 malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0
  spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906150226
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906150225
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add support for high speed USXGMII PCS and 10G
-speed in Cadence ethernet controller driver.
+This patch replace phylib API's by phylink API's.
 
 Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
 ---
- drivers/net/ethernet/cadence/macb.h      |  42 +++++
- drivers/net/ethernet/cadence/macb_main.c | 219 +++++++++++++++++++----
- 2 files changed, 228 insertions(+), 33 deletions(-)
+ drivers/net/ethernet/cadence/Kconfig     |   2 +-
+ drivers/net/ethernet/cadence/macb.h      |   3 +
+ drivers/net/ethernet/cadence/macb_main.c | 288 +++++++++++++----------
+ 3 files changed, 173 insertions(+), 120 deletions(-)
 
+diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+index 1766697c9c5a..d71411a71587 100644
+--- a/drivers/net/ethernet/cadence/Kconfig
++++ b/drivers/net/ethernet/cadence/Kconfig
+@@ -22,7 +22,7 @@ if NET_VENDOR_CADENCE
+ config MACB
+ 	tristate "Cadence MACB/GEM support"
+ 	depends on HAS_DMA
+-	select PHYLIB
++	select PHYLINK
+ 	---help---
+ 	  The Cadence MACB ethernet interface is found on many Atmel AT32 and
+ 	  AT91 parts.  This driver also supports the Cadence GEM (Gigabit
 diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-index 75f093bc52fe..e00b9f647757 100644
+index 00ee5e8e0ff0..35ed13236c8b 100644
 --- a/drivers/net/ethernet/cadence/macb.h
 +++ b/drivers/net/ethernet/cadence/macb.h
-@@ -85,6 +85,7 @@
- #define GEM_USRIO		0x000c /* User IO */
- #define GEM_DMACFG		0x0010 /* DMA Configuration */
- #define GEM_JML			0x0048 /* Jumbo Max Length */
-+#define GEM_HS_MAC_CONFIG	0x0050 /* GEM high speed config */
- #define GEM_HRB			0x0080 /* Hash Bottom */
- #define GEM_HRT			0x0084 /* Hash Top */
- #define GEM_SA1B		0x0088 /* Specific1 Bottom */
-@@ -172,6 +173,9 @@
- #define GEM_DCFG7		0x0298 /* Design Config 7 */
- #define GEM_DCFG8		0x029C /* Design Config 8 */
- #define GEM_DCFG10		0x02A4 /* Design Config 10 */
-+#define GEM_DCFG12		0x02AC /* Design Config 12 */
-+#define GEM_USX_CONTROL		0x0A80 /* USXGMII control register */
-+#define GEM_USX_STATUS		0x0A88 /* USXGMII status register */
+@@ -14,6 +14,7 @@
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/net_tstamp.h>
+ #include <linux/interrupt.h>
++#include <linux/phylink.h>
  
- #define GEM_TXBDCTRL	0x04cc /* TX Buffer Descriptor control register */
- #define GEM_RXBDCTRL	0x04d0 /* RX Buffer Descriptor control register */
-@@ -279,6 +283,8 @@
- #define MACB_IRXFCS_SIZE	1
+ #if defined(CONFIG_ARCH_DMA_ADDR_T_64BIT) || defined(CONFIG_MACB_USE_HWSTAMP)
+ #define MACB_EXT_DESC
+@@ -1227,6 +1228,8 @@ struct macb {
+ 	u32	rx_intr_mask;
  
- /* GEM specific NCR bitfields. */
-+#define GEM_ENABLE_HS_MAC_OFFSET	31
-+#define GEM_ENABLE_HS_MAC_SIZE		1
- #define GEM_TWO_PT_FIVE_GIG_OFFSET	29
- #define GEM_TWO_PT_FIVE_GIG_SIZE	1
- 
-@@ -470,6 +476,10 @@
- #define MACB_REV_OFFSET				0
- #define MACB_REV_SIZE				16
- 
-+/* Bitfield in HS_MAC_CONFIG */
-+#define GEM_HS_MAC_SPEED_OFFSET			0
-+#define GEM_HS_MAC_SPEED_SIZE			3
-+
- /* Bitfields in PCS_CONTROL. */
- #define GEM_PCS_CTRL_RST_OFFSET			15
- #define GEM_PCS_CTRL_RST_SIZE			1
-@@ -535,6 +545,34 @@
- #define GEM_RXBD_RDBUFF_OFFSET			8
- #define GEM_RXBD_RDBUFF_SIZE			4
- 
-+/* Bitfields in DCFG12. */
-+#define GEM_HIGH_SPEED_OFFSET			26
-+#define GEM_HIGH_SPEED_SIZE			1
-+
-+/* Bitfields in USX_CONTROL. */
-+#define GEM_USX_CTRL_SPEED_OFFSET		14
-+#define GEM_USX_CTRL_SPEED_SIZE			3
-+#define GEM_SERDES_RATE_OFFSET			12
-+#define GEM_SERDES_RATE_SIZE			2
-+#define GEM_RX_SCR_BYPASS_OFFSET		9
-+#define GEM_RX_SCR_BYPASS_SIZE			1
-+#define GEM_TX_SCR_BYPASS_OFFSET		8
-+#define GEM_TX_SCR_BYPASS_SIZE			1
-+#define GEM_RX_SYNC_RESET_OFFSET		2
-+#define GEM_RX_SYNC_RESET_SIZE			1
-+#define GEM_TX_EN_OFFSET			1
-+#define GEM_TX_EN_SIZE				1
-+#define GEM_SIGNAL_OK_OFFSET			0
-+#define GEM_SIGNAL_OK_SIZE			1
-+
-+/* Bitfields in USX_STATUS. */
-+#define GEM_USX_TX_FAULT_OFFSET			28
-+#define GEM_USX_TX_FAULT_SIZE			1
-+#define GEM_USX_RX_FAULT_OFFSET			27
-+#define GEM_USX_RX_FAULT_SIZE			1
-+#define GEM_USX_BLOCK_LOCK_OFFSET		0
-+#define GEM_USX_BLOCK_LOCK_SIZE			1
-+
- /* Bitfields in TISUBN */
- #define GEM_SUBNSINCR_OFFSET			0
- #define GEM_SUBNSINCR_SIZE			16
-@@ -695,6 +733,7 @@
- #define MACB_CAPS_MACB_IS_GEM			BIT(31)
- #define MACB_CAPS_PCS				BIT(24)
- #define MACB_CAPS_MACB_IS_GEM_GXL		BIT(25)
-+#define MACB_CAPS_HIGH_SPEED			BIT(26)
- 
- #define MACB_GEM7010_IDNUM			0x009
- #define MACB_GEM7014_IDNUM			0x107
-@@ -774,6 +813,7 @@
- 	})
- 
- #define MACB_READ_NSR(bp)	macb_readl(bp, NSR)
-+#define GEM_READ_USX_STATUS(bp)	gem_readl(bp, USX_STATUS)
- 
- /* struct macb_dma_desc - Hardware DMA descriptor
-  * @addr: DMA address of data buffer
-@@ -1287,6 +1327,8 @@ struct macb {
  	struct macb_pm_data pm_data;
- 	struct phylink *pl;
- 	struct phylink_config pl_config;
-+	u32 serdes_rate;
-+	u32 fixed_speed;
++	struct phylink *pl;
++	struct phylink_config pl_config;
  };
  
  #ifdef CONFIG_MACB_USE_HWSTAMP
 diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-index 57ffc4e9d2b9..4af0b434e818 100644
+index f825e3960540..52d5e5efe2ad 100644
 --- a/drivers/net/ethernet/cadence/macb_main.c
 +++ b/drivers/net/ethernet/cadence/macb_main.c
-@@ -77,6 +77,20 @@
- #define MACB_WOL_HAS_MAGIC_PACKET	(0x1 << 0)
- #define MACB_WOL_ENABLED		(0x1 << 1)
+@@ -38,6 +38,7 @@
+ #include <linux/tcp.h>
+ #include <linux/iopoll.h>
+ #include <linux/pm_runtime.h>
++#include <linux/phylink.h>
+ #include "macb.h"
  
-+enum {
-+	HS_MAC_SPEED_100M,
-+	HS_MAC_SPEED_1000M,
-+	HS_MAC_SPEED_2500M,
-+	HS_MAC_SPEED_5000M,
-+	HS_MAC_SPEED_10000M,
-+	HS_MAC_SPEED_25000M,
-+};
+ #define MACB_RX_BUFFER_SIZE	128
+@@ -428,115 +429,146 @@ static void macb_set_tx_clk(struct clk *clk, int speed, struct net_device *dev)
+ 		netdev_err(dev, "adjusting tx_clk failed.\n");
+ }
+ 
+-static void macb_handle_link_change(struct net_device *dev)
++static void gem_phylink_validate(struct phylink_config *pl_config,
++				 unsigned long *supported,
++				 struct phylink_link_state *state)
+ {
+-	struct macb *bp = netdev_priv(dev);
+-	struct phy_device *phydev = dev->phydev;
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
 +
-+enum {
-+	MACB_SERDES_RATE_5_PT_15625Gbps,
-+	MACB_SERDES_RATE_10_PT_3125Gbps,
-+};
-+
- /* Graceful stop timeouts in us. We should allow up to
-  * 1 frame time (10 Mbits/s, full-duplex, ignoring collisions)
-  */
-@@ -86,6 +100,8 @@
- 
- #define MACB_MDIO_TIMEOUT	1000000 /* in usecs */
- 
-+#define MACB_USX_BLOCK_LOCK_TIMEOUT	1000000 /* in usecs */
-+
- /* DMA buffer descriptor might be different size
-  * depends on hardware configuration:
-  *
-@@ -438,24 +454,37 @@ static void macb_set_tx_clk(struct clk *clk, int speed, struct net_device *dev)
- 	if (!clk)
- 		return;
- 
--	switch (speed) {
--	case SPEED_10:
--		rate = 2500000;
--		break;
--	case SPEED_100:
--		rate = 25000000;
--		break;
--	case SPEED_1000:
--		rate = 125000000;
--		break;
--	case SPEED_2500:
--		if (bp->caps & MACB_CAPS_MACB_IS_GEM_GXL)
--			rate = 312500000;
--		else
-+	if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
-+		switch (bp->serdes_rate) {
-+		case MACB_SERDES_RATE_5_PT_15625Gbps:
-+			rate = 78125000;
-+			break;
-+		case MACB_SERDES_RATE_10_PT_3125Gbps:
-+			rate = 156250000;
-+			break;
-+		default:
-+			return;
++	switch (state->interface) {
++	case PHY_INTERFACE_MODE_GMII:
++	case PHY_INTERFACE_MODE_RGMII:
++		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
++			phylink_set(mask, 1000baseT_Full);
++			phylink_set(mask, 1000baseX_Full);
++			if (!(bp->caps & MACB_CAPS_NO_GIGABIT_HALF)) {
++				phylink_set(mask, 1000baseT_Half);
++				phylink_set(mask, 1000baseT_Half);
++			}
 +		}
-+	} else {
-+		switch (speed) {
-+		case SPEED_10:
-+			rate = 2500000;
-+			break;
-+		case SPEED_100:
-+			rate = 25000000;
-+			break;
-+		case SPEED_1000:
- 			rate = 125000000;
--		break;
--	default:
--		return;
-+			break;
-+		case SPEED_2500:
-+			if (bp->caps & MACB_CAPS_MACB_IS_GEM_GXL)
-+				rate = 312500000;
-+			else
-+				return;
-+			break;
-+		default:
-+			return;
-+		}
++	/* fallthrough */
++	case PHY_INTERFACE_MODE_MII:
++	case PHY_INTERFACE_MODE_RMII:
++		phylink_set(mask, 10baseT_Half);
++		phylink_set(mask, 10baseT_Full);
++		phylink_set(mask, 100baseT_Half);
++		phylink_set(mask, 100baseT_Full);
++		break;
++	default:
++		break;
++	}
++
++	bitmap_and(supported, supported, mask, __ETHTOOL_LINK_MODE_MASK_NBITS);
++	bitmap_and(state->advertising, state->advertising, mask,
++		   __ETHTOOL_LINK_MODE_MASK_NBITS);
++}
++
++static int gem_phylink_mac_link_state(struct phylink_config *pl_config,
++				      struct phylink_link_state *state)
++{
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
++
++	state->speed = bp->speed;
++	state->duplex = bp->duplex;
++	state->link = bp->link;
++	return 1;
++}
++
++static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
++			   const struct phylink_link_state *state)
++{
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
+ 	unsigned long flags;
+-	int status_change = 0;
+ 
+ 	spin_lock_irqsave(&bp->lock, flags);
+ 
+-	if (phydev->link) {
+-		if ((bp->speed != phydev->speed) ||
+-		    (bp->duplex != phydev->duplex)) {
+-			u32 reg;
+-
+-			reg = macb_readl(bp, NCFGR);
+-			reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
+-			if (macb_is_gem(bp))
+-				reg &= ~GEM_BIT(GBE);
++	if (bp->speed != state->speed ||
++	    bp->duplex != state->duplex) {
++		u32 reg;
+ 
+-			if (phydev->duplex)
+-				reg |= MACB_BIT(FD);
+-			if (phydev->speed == SPEED_100)
+-				reg |= MACB_BIT(SPD);
+-			if (phydev->speed == SPEED_1000 &&
+-			    bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
+-				reg |= GEM_BIT(GBE);
++		reg = macb_readl(bp, NCFGR);
++		reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
++		if (macb_is_gem(bp))
++			reg &= ~GEM_BIT(GBE);
+ 
+-			macb_or_gem_writel(bp, NCFGR, reg);
++		if (state->duplex)
++			reg |= MACB_BIT(FD);
++		if (state->speed == SPEED_100)
++			reg |= MACB_BIT(SPD);
++		if (state->speed == SPEED_1000 &&
++		    bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
++			reg |= GEM_BIT(GBE);
+ 
+-			bp->speed = phydev->speed;
+-			bp->duplex = phydev->duplex;
+-			status_change = 1;
+-		}
+-	}
++		macb_or_gem_writel(bp, NCFGR, reg);
+ 
+-	if (phydev->link != bp->link) {
+-		if (!phydev->link) {
+-			bp->speed = 0;
+-			bp->duplex = -1;
+-		}
+-		bp->link = phydev->link;
++		bp->speed = state->speed;
++		bp->duplex = state->duplex;
+ 
+-		status_change = 1;
++		if (state->link)
++			macb_set_tx_clk(bp->tx_clk, state->speed, netdev);
  	}
  
- 	rate_rounded = clk_round_rate(clk, rate);
-@@ -484,6 +513,22 @@ static void gem_phylink_validate(struct phylink_config *pl_config,
- 	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
- 
- 	switch (state->interface) {
-+	case PHY_INTERFACE_MODE_NA:
-+	case PHY_INTERFACE_MODE_USXGMII:
-+	case PHY_INTERFACE_MODE_10GKR:
-+		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
-+			phylink_set(mask, 10000baseCR_Full);
-+			phylink_set(mask, 10000baseER_Full);
-+			phylink_set(mask, 10000baseKR_Full);
-+			phylink_set(mask, 10000baseLR_Full);
-+			phylink_set(mask, 10000baseLRM_Full);
-+			phylink_set(mask, 10000baseSR_Full);
-+			phylink_set(mask, 10000baseT_Full);
-+			phylink_set(mask, 5000baseT_Full);
-+			phylink_set(mask, 2500baseX_Full);
-+			phylink_set(mask, 1000baseX_Full);
-+		}
-+		/* Fall-through */
- 	case PHY_INTERFACE_MODE_SGMII:
- 		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
- 			phylink_set(mask, 2500baseT_Full);
-@@ -594,17 +639,55 @@ static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
- 			reg |= MACB_BIT(FD);
- 		macb_or_gem_writel(bp, NCFGR, reg);
- 
--		if (state->speed == SPEED_2500) {
--			gem_writel(bp, NCFGR, GEM_BIT(GBE) |
--				   gem_readl(bp, NCFGR));
--			gem_writel(bp, NCR, GEM_BIT(TWO_PT_FIVE_GIG) |
--				   gem_readl(bp, NCR));
--		} else if (state->speed == SPEED_1000) {
--			gem_writel(bp, NCFGR, GEM_BIT(GBE) |
--				   gem_readl(bp, NCFGR));
--		} else if (state->speed == SPEED_100) {
--			macb_writel(bp, NCFGR, MACB_BIT(SPD) |
--				    macb_readl(bp, NCFGR));
-+		if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
-+			u32 speed;
-+
-+			switch (state->speed) {
-+			case SPEED_10000:
-+				if (bp->serdes_rate ==
-+				    MACB_SERDES_RATE_10_PT_3125Gbps) {
-+					speed = HS_MAC_SPEED_10000M;
-+				} else {
-+					netdev_warn(netdev,
-+						    "10G not supported by HW");
-+					netdev_warn(netdev, "Setting speed to 1G");
-+					speed = HS_MAC_SPEED_1000M;
-+				}
-+				break;
-+			case SPEED_5000:
-+				speed = HS_MAC_SPEED_5000M;
-+				break;
-+			case SPEED_2500:
-+				speed = HS_MAC_SPEED_2500M;
-+				break;
-+			case SPEED_1000:
-+				speed = HS_MAC_SPEED_1000M;
-+				break;
-+			default:
-+			case SPEED_100:
-+				speed = HS_MAC_SPEED_100M;
-+				break;
-+			}
-+
-+			gem_writel(bp, HS_MAC_CONFIG,
-+				   GEM_BFINS(HS_MAC_SPEED, speed,
-+					     gem_readl(bp, HS_MAC_CONFIG)));
-+			gem_writel(bp, USX_CONTROL,
-+				   GEM_BFINS(USX_CTRL_SPEED, speed,
-+					     gem_readl(bp, USX_CONTROL)));
-+		} else {
-+			if (state->speed == SPEED_2500) {
-+				gem_writel(bp, NCFGR, GEM_BIT(GBE) |
-+					   gem_readl(bp, NCFGR));
-+				gem_writel(bp, NCR, GEM_BIT(TWO_PT_FIVE_GIG) |
-+					   gem_readl(bp, NCR));
-+			} else if (state->speed == SPEED_1000) {
-+				gem_writel(bp, NCFGR, GEM_BIT(GBE) |
-+					   gem_readl(bp, NCFGR));
-+			} else if (state->speed == SPEED_100) {
-+				macb_writel(bp, NCFGR, MACB_BIT(SPD) |
-+					    macb_readl(bp, NCFGR));
-+			}
- 		}
- 
- 		bp->speed = state->speed;
-@@ -649,6 +732,16 @@ static const struct phylink_mac_ops gem_phylink_ops = {
- 	.mac_link_down = gem_mac_link_down,
- };
- 
-+void gem_usx_fixed_state(struct net_device *dev,
-+			 struct phylink_link_state *state)
-+{
-+	struct macb *bp = netdev_priv(dev);
-+
-+	state->speed = (bp->fixed_speed == SPEED_UNKNOWN) ? SPEED_1000
-+			: bp->fixed_speed;
-+	state->duplex = 1;
+ 	spin_unlock_irqrestore(&bp->lock, flags);
 +}
+ 
+-	if (status_change) {
+-		if (phydev->link) {
+-			/* Update the TX clock rate if and only if the link is
+-			 * up and there has been a link change.
+-			 */
+-			macb_set_tx_clk(bp->tx_clk, phydev->speed, dev);
++static void gem_mac_link_up(struct phylink_config *pl_config, unsigned int mode,
++			    phy_interface_t interface, struct phy_device *phy)
++{
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
+ 
+-			netif_carrier_on(dev);
+-			netdev_info(dev, "link up (%d/%s)\n",
+-				    phydev->speed,
+-				    phydev->duplex == DUPLEX_FULL ?
+-				    "Full" : "Half");
+-		} else {
+-			netif_carrier_off(dev);
+-			netdev_info(dev, "link down\n");
+-		}
+-	}
++	bp->link = 1;
++	/* Enable TX and RX */
++	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(RE) | MACB_BIT(TE));
++}
++
++static void gem_mac_link_down(struct phylink_config *pl_config,
++			      unsigned int mode, phy_interface_t interface)
++{
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
++
++	bp->link = 0;
++	/* Disable TX and RX */
++	macb_writel(bp, NCR,
++		    macb_readl(bp, NCR) & ~(MACB_BIT(RE) | MACB_BIT(TE)));
+ }
+ 
++static const struct phylink_mac_ops gem_phylink_ops = {
++	.validate = gem_phylink_validate,
++	.mac_link_state = gem_phylink_mac_link_state,
++	.mac_config = gem_mac_config,
++	.mac_link_up = gem_mac_link_up,
++	.mac_link_down = gem_mac_link_down,
++};
 +
  /* based on au1000_eth. c*/
  static int macb_mii_probe(struct net_device *dev)
  {
-@@ -660,6 +753,8 @@ static int macb_mii_probe(struct net_device *dev)
+ 	struct macb *bp = netdev_priv(dev);
+ 	struct phy_device *phydev;
+ 	struct device_node *np;
+-	int ret, i;
++	int ret;
+ 
  	np = bp->pdev->dev.of_node;
  	ret = 0;
  
+-	if (np) {
+-		if (of_phy_is_fixed_link(np)) {
+-			bp->phy_node = of_node_get(np);
+-		} else {
+-			bp->phy_node = of_parse_phandle(np, "phy-handle", 0);
+-			/* fallback to standard phy registration if no
+-			 * phy-handle was found nor any phy found during
+-			 * dt phy registration
+-			 */
+-			if (!bp->phy_node && !phy_find_first(bp->mii_bus)) {
+-				for (i = 0; i < PHY_MAX_ADDR; i++) {
+-					phydev = mdiobus_scan(bp->mii_bus, i);
+-					if (IS_ERR(phydev) &&
+-					    PTR_ERR(phydev) != -ENODEV) {
+-						ret = PTR_ERR(phydev);
+-						break;
+-					}
+-				}
+-
+-				if (ret)
+-					return -ENODEV;
+-			}
+-		}
 +	bp->pl_config.dev = &dev->dev;
 +	bp->pl_config.type = PHYLINK_NETDEV;
- 	bp->pl_config.dev = &dev->dev;
- 	bp->pl_config.type = PHYLINK_NETDEV;
- 	bp->pl = phylink_create(&bp->pl_config, of_fwnode_handle(np),
-@@ -670,6 +765,9 @@ static int macb_mii_probe(struct net_device *dev)
- 		return PTR_ERR(bp->pl);
++	bp->pl = phylink_create(&bp->pl_config, of_fwnode_handle(np),
++				bp->phy_interface, &gem_phylink_ops);
++	if (IS_ERR(bp->pl)) {
++		netdev_err(dev,
++			   "error creating PHYLINK: %ld\n", PTR_ERR(bp->pl));
++		return PTR_ERR(bp->pl);
  	}
  
-+	if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII)
-+		phylink_fixed_state_cb(bp->pl, gem_usx_fixed_state);
-+
- 	ret = phylink_of_phy_connect(bp->pl, np, 0);
- 	if (ret == -ENODEV && bp->mii_bus) {
+-	if (bp->phy_node) {
+-		phydev = of_phy_connect(dev, bp->phy_node,
+-					&macb_handle_link_change, 0,
+-					bp->phy_interface);
+-		if (!phydev)
+-			return -ENODEV;
+-	} else {
++	ret = phylink_of_phy_connect(bp->pl, np, 0);
++	if (ret == -ENODEV && bp->mii_bus) {
  		phydev = phy_find_first(bp->mii_bus);
-@@ -2337,11 +2435,19 @@ static void macb_configure_dma(struct macb *bp)
+ 		if (!phydev) {
+ 			netdev_err(dev, "no PHY found\n");
+@@ -544,29 +576,18 @@ static int macb_mii_probe(struct net_device *dev)
+ 		}
+ 
+ 		/* attach the mac to the phy */
+-		ret = phy_connect_direct(dev, phydev, &macb_handle_link_change,
+-					 bp->phy_interface);
++		ret = phylink_connect_phy(bp->pl, phydev);
+ 		if (ret) {
+ 			netdev_err(dev, "Could not attach to PHY\n");
+ 			return ret;
+ 		}
  	}
- }
  
--static void macb_init_hw(struct macb *bp)
-+static int macb_wait_for_usx_block_lock(struct macb *bp)
-+{
-+	u32 val;
-+
-+	return readx_poll_timeout(GEM_READ_USX_STATUS, bp, val,
-+				  val & GEM_BIT(USX_BLOCK_LOCK),
-+				  1, MACB_USX_BLOCK_LOCK_TIMEOUT);
-+}
-+
-+static int macb_init_hw(struct macb *bp)
- {
- 	struct macb_queue *queue;
- 	unsigned int q;
+-	/* mask with MAC supported features */
+-	if (macb_is_gem(bp) && bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
+-		phy_set_max_speed(phydev, SPEED_1000);
+-	else
+-		phy_set_max_speed(phydev, SPEED_100);
 -
- 	u32 config;
+-	if (bp->caps & MACB_CAPS_NO_GIGABIT_HALF)
+-		phy_remove_link_mode(phydev,
+-				     ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
+-
+ 	bp->link = 0;
+ 	bp->speed = 0;
+ 	bp->duplex = -1;
  
- 	macb_reset_hw(bp);
-@@ -2375,6 +2481,25 @@ static void macb_init_hw(struct macb *bp)
- 	if (bp->caps & MACB_CAPS_JUMBO)
- 		bp->rx_frm_len_mask = MACB_RX_JFRMLEN_MASK;
- 
-+	if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
-+		bp->speed = 10000;
-+		bp->duplex = 1;
-+		gem_writel(bp, NCR, gem_readl(bp, NCR) |
-+			   GEM_BIT(ENABLE_HS_MAC));
-+		gem_writel(bp, NCFGR, gem_readl(bp, NCFGR) |
-+			   MACB_BIT(FD) | GEM_BIT(PCSSEL));
-+		config = gem_readl(bp, USX_CONTROL);
-+		config = GEM_BFINS(SERDES_RATE, bp->serdes_rate, config);
-+		config &= ~GEM_BIT(TX_SCR_BYPASS);
-+		config &= ~GEM_BIT(RX_SCR_BYPASS);
-+		gem_writel(bp, USX_CONTROL, config |
-+			   GEM_BIT(TX_EN));
-+		config = gem_readl(bp, USX_CONTROL);
-+		gem_writel(bp, USX_CONTROL, config | GEM_BIT(SIGNAL_OK));
-+		if (macb_wait_for_usx_block_lock(bp) < 0)
-+			return -ETIMEDOUT;
-+	}
-+
- 	if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII ||
- 	    bp->phy_interface == PHY_INTERFACE_MODE_1000BASEX ||
- 	    bp->phy_interface == PHY_INTERFACE_MODE_2500BASEX) {
-@@ -2410,6 +2535,7 @@ static void macb_init_hw(struct macb *bp)
- 
- 	/* Enable TX and RX */
- 	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(RE) | MACB_BIT(TE));
-+	return 0;
+-	return 0;
++	return ret;
  }
  
- /* The hash address register is 64 bits long and takes up two
-@@ -2568,7 +2694,9 @@ static int macb_open(struct net_device *dev)
- 		napi_enable(&queue->napi);
+ static int macb_mii_init(struct macb *bp)
+@@ -2412,7 +2433,7 @@ static int macb_open(struct net_device *dev)
+ 	netif_carrier_off(dev);
  
- 	bp->macbgem_ops.mog_init_rings(bp);
--	macb_init_hw(bp);
-+	err = macb_init_hw(bp);
-+	if (err)
-+		goto init_hw_exit;
+ 	/* if the phy is not yet register, retry later*/
+-	if (!dev->phydev) {
++	if (!bp->pl) {
+ 		err = -EAGAIN;
+ 		goto pm_exit;
+ 	}
+@@ -2434,7 +2455,7 @@ static int macb_open(struct net_device *dev)
+ 	macb_init_hw(bp);
  
  	/* schedule a link state check */
- 	phylink_start(bp->pl);
-@@ -2578,6 +2706,9 @@ static int macb_open(struct net_device *dev)
- 	if (bp->ptp_info)
- 		bp->ptp_info->ptp_init(dev);
+-	phy_start(dev->phydev);
++	phylink_start(bp->pl);
  
-+init_hw_exit:
-+	if (err)
-+		macb_free_consistent(bp);
- pm_exit:
- 	if (err) {
- 		pm_runtime_put_sync(&bp->pdev->dev);
-@@ -3493,6 +3624,9 @@ static void macb_configure_caps(struct macb *bp,
- 		default:
- 			break;
- 		}
-+		dcfg = gem_readl(bp, DCFG12);
-+		if (GEM_BFEXT(HIGH_SPEED, dcfg) == 1)
-+			bp->caps |= MACB_CAPS_HIGH_SPEED;
- 		dcfg = gem_readl(bp, DCFG2);
- 		if ((dcfg & (GEM_BIT(RX_PKT_BUFF) | GEM_BIT(TX_PKT_BUFF))) == 0)
- 			bp->caps |= MACB_CAPS_FIFO_MODE;
-@@ -3784,7 +3918,12 @@ static int macb_init(struct platform_device *pdev)
- 	if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII ||
- 	    bp->phy_interface == PHY_INTERFACE_MODE_1000BASEX ||
- 	    bp->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
--		val |= GEM_BIT(SGMIIEN) | GEM_BIT(PCSSEL);
-+		val |= GEM_BIT(SGMIIEN);
-+	if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII ||
-+	    bp->phy_interface == PHY_INTERFACE_MODE_SGMII ||
-+	    bp->phy_interface == PHY_INTERFACE_MODE_1000BASEX ||
-+	    bp->phy_interface == PHY_INTERFACE_MODE_2500BASEX)
-+		val |= GEM_BIT(PCSSEL);
- 	macb_writel(bp, NCFGR, val);
+ 	netif_tx_start_all_queues(dev);
  
- 	return 0;
-@@ -4372,7 +4511,21 @@ static int macb_probe(struct platform_device *pdev)
- 	} else if (bp->caps & MACB_CAPS_MACB_IS_GEM_GXL) {
- 		u32 interface_supported = 1;
+@@ -2461,8 +2482,8 @@ static int macb_close(struct net_device *dev)
+ 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
+ 		napi_disable(&queue->napi);
  
--		if (err == PHY_INTERFACE_MODE_SGMII ||
-+		if (err == PHY_INTERFACE_MODE_USXGMII) {
-+			if (!(bp->caps & MACB_CAPS_HIGH_SPEED &&
-+			      bp->caps & MACB_CAPS_PCS))
-+				interface_supported = 0;
+-	if (dev->phydev)
+-		phy_stop(dev->phydev);
++	if (bp->pl)
++		phylink_stop(bp->pl);
+ 
+ 	spin_lock_irqsave(&bp->lock, flags);
+ 	macb_reset_hw(bp);
+@@ -3151,6 +3172,29 @@ static int gem_set_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *cmd)
+ 	return ret;
+ }
+ 
++static int gem_ethtool_get_link_ksettings(struct net_device *netdev,
++					  struct ethtool_link_ksettings *cmd)
++{
++	struct macb *bp = netdev_priv(netdev);
 +
-+			if (of_property_read_u32(np, "serdes-rate",
-+						 &bp->serdes_rate)) {
-+				netdev_err(dev,
-+					   "GEM serdes_rate not specified");
-+				interface_supported = 0;
-+			}
-+			if (of_property_read_u32(np, "fixed-speed",
-+						 &bp->fixed_speed))
-+				bp->fixed_speed = SPEED_UNKNOWN;
-+		} else if (err == PHY_INTERFACE_MODE_SGMII ||
- 		    err == PHY_INTERFACE_MODE_1000BASEX ||
- 		    err == PHY_INTERFACE_MODE_2500BASEX) {
- 			if (!(bp->caps & MACB_CAPS_PCS))
++	if (!bp->pl)
++		return -ENOTSUPP;
++
++	return phylink_ethtool_ksettings_get(bp->pl, cmd);
++}
++
++static int
++gem_ethtool_set_link_ksettings(struct net_device *netdev,
++			       const struct ethtool_link_ksettings *cmd)
++{
++	struct macb *bp = netdev_priv(netdev);
++
++	if (!bp->pl)
++		return -ENOTSUPP;
++
++	return phylink_ethtool_ksettings_set(bp->pl, cmd);
++}
++
+ static const struct ethtool_ops macb_ethtool_ops = {
+ 	.get_regs_len		= macb_get_regs_len,
+ 	.get_regs		= macb_get_regs,
+@@ -3158,8 +3202,8 @@ static const struct ethtool_ops macb_ethtool_ops = {
+ 	.get_ts_info		= ethtool_op_get_ts_info,
+ 	.get_wol		= macb_get_wol,
+ 	.set_wol		= macb_set_wol,
+-	.get_link_ksettings     = phy_ethtool_get_link_ksettings,
+-	.set_link_ksettings     = phy_ethtool_set_link_ksettings,
++	.get_link_ksettings     = gem_ethtool_get_link_ksettings,
++	.set_link_ksettings     = gem_ethtool_set_link_ksettings,
+ 	.get_ringparam		= macb_get_ringparam,
+ 	.set_ringparam		= macb_set_ringparam,
+ };
+@@ -3172,8 +3216,8 @@ static const struct ethtool_ops gem_ethtool_ops = {
+ 	.get_ethtool_stats	= gem_get_ethtool_stats,
+ 	.get_strings		= gem_get_ethtool_strings,
+ 	.get_sset_count		= gem_get_sset_count,
+-	.get_link_ksettings     = phy_ethtool_get_link_ksettings,
+-	.set_link_ksettings     = phy_ethtool_set_link_ksettings,
++	.get_link_ksettings     = gem_ethtool_get_link_ksettings,
++	.set_link_ksettings     = gem_ethtool_set_link_ksettings,
+ 	.get_ringparam		= macb_get_ringparam,
+ 	.set_ringparam		= macb_set_ringparam,
+ 	.get_rxnfc			= gem_get_rxnfc,
+@@ -3182,17 +3226,16 @@ static const struct ethtool_ops gem_ethtool_ops = {
+ 
+ static int macb_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+ {
+-	struct phy_device *phydev = dev->phydev;
+ 	struct macb *bp = netdev_priv(dev);
+ 
+ 	if (!netif_running(dev))
+ 		return -EINVAL;
+ 
+-	if (!phydev)
++	if (!bp->pl)
+ 		return -ENODEV;
+ 
+ 	if (!bp->ptp_info)
+-		return phy_mii_ioctl(phydev, rq, cmd);
++		return phylink_mii_ioctl(bp->pl, rq, cmd);
+ 
+ 	switch (cmd) {
+ 	case SIOCSHWTSTAMP:
+@@ -3200,7 +3243,7 @@ static int macb_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+ 	case SIOCGHWTSTAMP:
+ 		return bp->ptp_info->get_hwtst(dev, rq);
+ 	default:
+-		return phy_mii_ioctl(phydev, rq, cmd);
++		return phylink_mii_ioctl(bp->pl, rq, cmd);
+ 	}
+ }
+ 
+@@ -3700,7 +3743,7 @@ static int at91ether_open(struct net_device *dev)
+ 			     MACB_BIT(HRESP));
+ 
+ 	/* schedule a link state check */
+-	phy_start(dev->phydev);
++	phylink_start(lp->pl);
+ 
+ 	netif_start_queue(dev);
+ 
+@@ -4062,7 +4105,6 @@ static int macb_probe(struct platform_device *pdev)
+ 	struct clk *tsu_clk = NULL;
+ 	unsigned int queue_mask, num_queues;
+ 	bool native_io;
+-	struct phy_device *phydev;
+ 	struct net_device *dev;
+ 	struct resource *regs;
+ 	void __iomem *mem;
+@@ -4205,8 +4247,6 @@ static int macb_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto err_out_free_netdev;
+ 
+-	phydev = dev->phydev;
+-
+ 	netif_carrier_off(dev);
+ 
+ 	err = register_netdev(dev);
+@@ -4217,8 +4257,8 @@ static int macb_probe(struct platform_device *pdev)
+ 
+ 	tasklet_init(&bp->hresp_err_tasklet, macb_hresp_error_task,
+ 		     (unsigned long)bp);
+-
+-	phy_attached_info(phydev);
++	if (dev->phydev)
++		phy_attached_info(dev->phydev);
+ 
+ 	netdev_info(dev, "Cadence %s rev 0x%08x at 0x%08lx irq %d (%pM)\n",
+ 		    macb_is_gem(bp) ? "GEM" : "MACB", macb_readl(bp, MID),
+@@ -4230,7 +4270,9 @@ static int macb_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_out_unregister_mdio:
+-	phy_disconnect(dev->phydev);
++	rtnl_lock();
++	phylink_disconnect_phy(bp->pl);
++	rtnl_unlock();
+ 	mdiobus_unregister(bp->mii_bus);
+ 	of_node_put(bp->phy_node);
+ 	if (np && of_phy_is_fixed_link(np))
+@@ -4263,13 +4305,18 @@ static int macb_remove(struct platform_device *pdev)
+ 
+ 	if (dev) {
+ 		bp = netdev_priv(dev);
+-		if (dev->phydev)
+-			phy_disconnect(dev->phydev);
++		if (bp->pl) {
++			rtnl_lock();
++			phylink_disconnect_phy(bp->pl);
++			rtnl_unlock();
++		}
+ 		mdiobus_unregister(bp->mii_bus);
+ 		if (np && of_phy_is_fixed_link(np))
+ 			of_phy_deregister_fixed_link(np);
+ 		dev->phydev = NULL;
+ 		mdiobus_free(bp->mii_bus);
++		if (bp->pl)
++			phylink_destroy(bp->pl);
+ 
+ 		unregister_netdev(dev);
+ 		pm_runtime_disable(&pdev->dev);
+@@ -4311,8 +4358,9 @@ static int __maybe_unused macb_suspend(struct device *dev)
+ 		for (q = 0, queue = bp->queues; q < bp->num_queues;
+ 		     ++q, ++queue)
+ 			napi_disable(&queue->napi);
+-		phy_stop(netdev->phydev);
+-		phy_suspend(netdev->phydev);
++		phylink_stop(bp->pl);
++		if (netdev->phydev)
++			phy_suspend(netdev->phydev);
+ 		spin_lock_irqsave(&bp->lock, flags);
+ 		macb_reset_hw(bp);
+ 		spin_unlock_irqrestore(&bp->lock, flags);
+@@ -4360,9 +4408,11 @@ static int __maybe_unused macb_resume(struct device *dev)
+ 		for (q = 0, queue = bp->queues; q < bp->num_queues;
+ 		     ++q, ++queue)
+ 			napi_enable(&queue->napi);
+-		phy_resume(netdev->phydev);
+-		phy_init_hw(netdev->phydev);
+-		phy_start(netdev->phydev);
++		if (netdev->phydev) {
++			phy_resume(netdev->phydev);
++			phy_init_hw(netdev->phydev);
++		}
++		phylink_start(bp->pl);
+ 	}
+ 
+ 	bp->macbgem_ops.mog_init_rings(bp);
 -- 
 2.17.1
 
