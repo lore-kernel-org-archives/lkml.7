@@ -2,141 +2,114 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB21AC31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 22:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79868C31E52
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 22:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E7921473
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 22:22:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="PNJT8Rmf"
+	by mail.kernel.org (Postfix) with ESMTP id 5040021473
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 22:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560637592;
+	bh=9O6Q/YpH9T0Jy87acBbGfMKLCZ9nwn4uy+CqzEuR9Nk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=RSGtAAYy3OwkY7/xy7YO3fHqLeNAaMuzFwEUZn0FT6rrtnhTKEoJRe7duvAnc1yG+
+	 0nNl8phb27UZhFojKfljnRiUrDxhTOJR5iQQAoFNNMDGtlNcQ513TfpjuKiTZb4z9J
+	 br+8oe8Bm3k4TUbBla/1S6nJoWuwhmh1hxhKgXUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726841AbfFOWWn (ORCPT
+        id S1726945AbfFOW0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 18:22:43 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:36432 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfFOWWn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 18:22:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1560637359; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sVyIFnScoxPXqLI9tBcjmS2//cgjT4c+m2gvnY81jCs=;
-        b=PNJT8Rmfq1mOruQzkh5Clw9tA/Z4vAL+pEWIUuYcjUpwrJc7pt/GEWrTpyR0ZenAm8XnEA
-        ZLC1dNozXtdj12dyU0QI3aNZlLsAKfVDjhFmLQuQHp2eE7NtWdJzYM77fDagcdBXlaUKgp
-        Tj3ubec6/ZEBD4ATunaPH7OZRsyopo0=
-Date:   Sun, 16 Jun 2019 00:22:33 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] mtd: rawnand: ingenic: Fix build error
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org,
-        computersforpeace@gmail.com, marek.vasut@gmail.com,
-        vigneshr@ti.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Message-Id: <1560637353.3745.0@crapouillou.net>
-In-Reply-To: <20190615134430.30384-1-yuehaibing@huawei.com>
-References: <20190615134430.30384-1-yuehaibing@huawei.com>
+        Sat, 15 Jun 2019 18:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43320 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726400AbfFOW0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 18:26:30 -0400
+Received: from localhost (unknown [107.242.116.137])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58D2121473;
+        Sat, 15 Jun 2019 22:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560637589;
+        bh=9O6Q/YpH9T0Jy87acBbGfMKLCZ9nwn4uy+CqzEuR9Nk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=rWU6g7DnvdoLoOVs2HJ8GPVaG7D94We3EXY9tksIdbBZpjomLqcqusRyez95eQLX4
+         zioll8nc2dm4sSb4dfzKbTOf/EX2BTTVnfnS4gN2sOB10lagu7plZMF1uUlOZeGsZe
+         v0M9DHAy1BrF8UnrFWdWp0Xd2Ofu+8bra6IdxiGs=
+Date:   Sat, 15 Jun 2019 18:26:27 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+Subject: Re: [PATCH AUTOSEL 5.1 06/60] driver core: platform: Fix the usage
+ of platform device name(pdev->name)
+Message-ID: <20190615222626.GR1513@sasha-vm>
+References: <20190604232212.6753-1-sashal@kernel.org>
+ <20190604232212.6753-6-sashal@kernel.org>
+ <20190605045846.GA21363@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190605045846.GA21363@kroah.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 05, 2019 at 06:58:46AM +0200, Greg Kroah-Hartman wrote:
+>On Tue, Jun 04, 2019 at 07:21:16PM -0400, Sasha Levin wrote:
+>> From: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+>>
+>> [ Upstream commit edb16da34b084c66763f29bee42b4e6bb33c3d66 ]
+>>
+>> Platform core is using pdev->name as the platform device name to do
+>> the binding of the devices with the drivers. But, when the platform
+>> driver overrides the platform device name with dev_set_name(),
+>> the pdev->name is pointing to a location which is freed and becomes
+>> an invalid parameter to do the binding match.
+>>
+>> use-after-free instance:
+>>
+>> [   33.325013] BUG: KASAN: use-after-free in strcmp+0x8c/0xb0
+>> [   33.330646] Read of size 1 at addr ffffffc10beae600 by task modprobe
+>> [   33.339068] CPU: 5 PID: 518 Comm: modprobe Tainted:
+>> 			G S      W  O      4.19.30+ #3
+>> [   33.346835] Hardware name: MTP (DT)
+>> [   33.350419] Call trace:
+>> [   33.352941]  dump_backtrace+0x0/0x3b8
+>> [   33.356713]  show_stack+0x24/0x30
+>> [   33.360119]  dump_stack+0x160/0x1d8
+>> [   33.363709]  print_address_description+0x84/0x2e0
+>> [   33.368549]  kasan_report+0x26c/0x2d0
+>> [   33.372322]  __asan_report_load1_noabort+0x2c/0x38
+>> [   33.377248]  strcmp+0x8c/0xb0
+>> [   33.380306]  platform_match+0x70/0x1f8
+>> [   33.384168]  __driver_attach+0x78/0x3a0
+>> [   33.388111]  bus_for_each_dev+0x13c/0x1b8
+>> [   33.392237]  driver_attach+0x4c/0x58
+>> [   33.395910]  bus_add_driver+0x350/0x560
+>> [   33.399854]  driver_register+0x23c/0x328
+>> [   33.403886]  __platform_driver_register+0xd0/0xe0
+>>
+>> So, use dev_name(&pdev->dev), which fetches the platform device name from
+>> the kobject(dev->kobj->name) of the device instead of the pdev->name.
+>>
+>> Signed-off-by: Venkata Narendra Kumar Gutta <vnkgutta@codeaurora.org>
+>> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  drivers/base/platform.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+>Please drop this from everywhere as it was reverted from Linus's tree
+>because it causes big problems.
 
-I don't think the patch is correct. We want to be able to build
-the ingenic_nand driver without the ingenic_ecc code.
+Dropped from all branches, thanks!
 
-The actual problem is that if the ingenic_nand driver is built-in,
-then the ingenic_ecc driver must be built-in too (if enabled),
-and we don't verify that constraint.
-
-Something like that should work better:
-
-config MTD_NAND_INGENIC_ECC
-	def_tristate m if MTD_NAND_JZ4780=3Dm
-	def_tristate y if MTD_NAND_JZ4780=3Dy
-
+--
 Thanks,
--Paul
-
-
-Le sam. 15 juin 2019 =E0 15:44, YueHaibing <yuehaibing@huawei.com> a=20
-=E9crit :
-> If MTD_NAND_JZ4780 is y and MTD_NAND_JZ4780_BCH is m,
-> which select CONFIG_MTD_NAND_INGENIC_ECC to m, building fails:
->=20
-> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
-> `ingenic_nand_remove':
-> ingenic_nand.c:(.text+0x177): undefined reference to=20
-> `ingenic_ecc_release'
-> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
-> `ingenic_nand_ecc_correct':
-> ingenic_nand.c:(.text+0x2ee): undefined reference to=20
-> `ingenic_ecc_correct'
->=20
-> Select MTD_NAND_INGENIC_ECC if MTD_NAND_JZ4780 is set
->=20
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fiexes: 15de8c6efd0e ("mtd: rawnand: ingenic: Separate top-level and=20
-> SoC specific code")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  drivers/mtd/nand/raw/ingenic/Kconfig | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
->=20
-> diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig=20
-> b/drivers/mtd/nand/raw/ingenic/Kconfig
-> index 19a96ce..d0b1909 100644
-> --- a/drivers/mtd/nand/raw/ingenic/Kconfig
-> +++ b/drivers/mtd/nand/raw/ingenic/Kconfig
-> @@ -9,6 +9,7 @@ config MTD_NAND_JZ4740
->  config MTD_NAND_JZ4780
->  	tristate "JZ4780 NAND controller"
->  	depends on JZ4780_NEMC
-> +	select MTD_NAND_INGENIC_ECC
->  	help
->  	  Enables support for NAND Flash connected to the NEMC on JZ4780 SoC
->  	  based boards, using the BCH controller for hardware error=20
-> correction.
-> @@ -20,7 +21,6 @@ config MTD_NAND_INGENIC_ECC
->=20
->  config MTD_NAND_JZ4740_ECC
->  	tristate "Hardware BCH support for JZ4740 SoC"
-> -	select MTD_NAND_INGENIC_ECC
->  	help
->  	  Enable this driver to support the Reed-Solomon error-correction
->  	  hardware present on the JZ4740 SoC from Ingenic.
-> @@ -30,7 +30,6 @@ config MTD_NAND_JZ4740_ECC
->=20
->  config MTD_NAND_JZ4725B_BCH
->  	tristate "Hardware BCH support for JZ4725B SoC"
-> -	select MTD_NAND_INGENIC_ECC
->  	help
->  	  Enable this driver to support the BCH error-correction hardware
->  	  present on the JZ4725B SoC from Ingenic.
-> @@ -40,7 +39,6 @@ config MTD_NAND_JZ4725B_BCH
->=20
->  config MTD_NAND_JZ4780_BCH
->  	tristate "Hardware BCH support for JZ4780 SoC"
-> -	select MTD_NAND_INGENIC_ECC
->  	help
->  	  Enable this driver to support the BCH error-correction hardware
->  	  present on the JZ4780 SoC from Ingenic.
-> --
-> 2.7.4
->=20
->=20
-
-=
-
+Sasha
