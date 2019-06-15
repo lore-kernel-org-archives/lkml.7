@@ -2,168 +2,173 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC0CC31E51
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:36:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E35BC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65F2204EC
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:36:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE4C020862
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:45:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="JzTo0rbc";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="alEH/dU6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfFOXgH (ORCPT
+        id S1727122AbfFOXpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 19:36:07 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:45847 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726434AbfFOXgH (ORCPT
+        Sat, 15 Jun 2019 19:45:52 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:46220 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726515AbfFOXpv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 19:36:07 -0400
-Received: by mail-io1-f71.google.com with SMTP id b197so7461246iof.12
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 16:36:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=A0xxLEpAS6xzeE3IwS+rre1Bstu3yn+UJKPxvopq0AE=;
-        b=N5enJco2awT/QtRU2koQor2/XGjpj0I0yR6zfrOJTWhmqz3M2L72BKRd3kH5biiXiL
-         6imiMw6DhTRYwddGvu5RDrhuDcKhIKTqx1unqh4y23HcAFeZ29UD/RLN1oi1Y8LP9kfo
-         kd8CftK6EqFDe/iXHkwXTBoFA7rQ4kHnKRi6e26MTg+a+WeJwLHxuW6BI8lU67f5AH31
-         FgUK3JRx0pMfG1YQcGF0ulS4qVu8r9GbyutOxF9WJCq9UP0egj6Gq2qzzJUY5OmPHb4O
-         H9hdejdvGJe1feGoTGYKqrbQtoqxgYqnbhIFhOXvFgTdEIZBAtYNKU0pLSro2pmWiyWw
-         trEQ==
-X-Gm-Message-State: APjAAAUnHTHotGsHPr7wUB6nBiEdlrodly8budNXMe9NY/QXrbPjUyeC
-        s0idODFKJASBNZpXU5AgMi01nWjDOCnunwj0f3WjJ16wXv67
-X-Google-Smtp-Source: APXvYqw15q1PS+pa+HxNorc6r9EeGlkrFu+2dK/kQTJ2k7U2BiQnU/gI0aXvWrXQHdWa/7vNJQUOhd9jPLLa1uVcQB5rX7hiT5wr
+        Sat, 15 Jun 2019 19:45:51 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5FNicgL020579;
+        Sat, 15 Jun 2019 16:45:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=proofpoint;
+ bh=G6aRL6pFKYJdeU6p5IWJ7kiH8eEV0fSNVZfQloEkiU4=;
+ b=JzTo0rbcWM3YU0LHPk4CZDxJU9Gw1oaRoscAZHTSxez9p8HaJzJPQE0gtfbePKmselYD
+ 6AXFn1f6YfHLRv5NCz4s4b8MBfY7x3k7Db0xLxdLp8nhR8UrxyL9mPvoqpA98pFejfR4
+ IO6HRC8e+9R5eEI9D3x5fg+dH0o4uSbQ56ODhUwjh+5kJeT0KQaaMkHmqWb9XXlPCO2t
+ CZ7FEIfHVb4e1FHNCjDHhvzCCWFzT/gQ9z5o2GXDifLRaEWlGpkYBqDUMLLKXtpAfUcl
+ u4t1tHSNnYp9yvpDHfKTBeVs9BBlACK7Ii8RQfxuX6tJTL/7wWbKdC/IRN95B5s78pMd qg== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2057.outbound.protection.outlook.com [104.47.37.57])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2t4v8w20yd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 15 Jun 2019 16:45:42 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G6aRL6pFKYJdeU6p5IWJ7kiH8eEV0fSNVZfQloEkiU4=;
+ b=alEH/dU6obBKeN3sCw889ZAR8VwCbRvFHgs4eR1wkd6W0OGsp1YqvK5Jow9Ifsez/5nKOt6Rzw9TmgFvVuRJsxwEt2JSVeNfJUo4g2jV9tnM1o3EzhSFDH0bl43nhTA2y0z0Nu1GhVcqJ2mTS/NRPsMRfFpDbWuWsqjV894lzDg=
+Received: from CO2PR07CA0068.namprd07.prod.outlook.com (2603:10b6:100::36) by
+ CO2PR07MB2488.namprd07.prod.outlook.com (2603:10b6:102:e::11) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Sat, 15 Jun 2019 23:45:38 +0000
+Received: from DM3NAM05FT028.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e51::201) by CO2PR07CA0068.outlook.office365.com
+ (2603:10b6:100::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1987.12 via Frontend
+ Transport; Sat, 15 Jun 2019 23:45:38 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 158.140.1.28 as permitted sender)
+Received: from sjmaillnx2.cadence.com (158.140.1.28) by
+ DM3NAM05FT028.mail.protection.outlook.com (10.152.98.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.2008.7 via Frontend Transport; Sat, 15 Jun 2019 23:45:37 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x5FNjZiX014149
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Sat, 15 Jun 2019 16:45:36 -0700
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Sun, 16 Jun 2019 01:45:34 +0200
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Sun, 16 Jun 2019 01:45:34 +0200
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5FNjTXi025910;
+        Sun, 16 Jun 2019 00:45:32 +0100
+From:   Parshuram Thombare <pthombar@cadence.com>
+To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
+        <davem@davemloft.net>, <f.fainelli@gmail.com>
+CC:     <netdev@vger.kernel.org>, <hkallweit1@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <rafalc@cadence.com>,
+        <aniljoy@cadence.com>, <piotrs@cadence.com>, <pthombar@cadence.com>
+Subject: [PATCH 0/6] net: macb patch set cover letter
+Date:   Sun, 16 Jun 2019 00:45:11 +0100
+Message-ID: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
+X-Mailer: git-send-email 2.2.2
 MIME-Version: 1.0
-X-Received: by 2002:a6b:90c1:: with SMTP id s184mr35599437iod.244.1560641766135;
- Sat, 15 Jun 2019 16:36:06 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 16:36:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000017a264058b653a58@google.com>
-Subject: general protection fault in sctp_sched_prio_sched
-From:   syzbot <syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, lucien.xin@gmail.com,
-        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(346002)(39850400004)(2980300002)(189003)(199004)(36092001)(476003)(16586007)(110136005)(246002)(5660300002)(76130400001)(316002)(77096007)(305945005)(186003)(107886003)(4326008)(70586007)(486006)(26005)(50226002)(8676002)(8936002)(54906003)(70206006)(26826003)(478600001)(356004)(6666004)(2906002)(126002)(2616005)(86362001)(2201001)(14444005)(51416003)(36756003)(336012)(47776003)(53416004)(7636002)(7696005)(7126003)(50466002)(426003)(48376002);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2488;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.cadence.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 296f8e12-ec98-41ce-bf64-08d6f1eb91ae
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:CO2PR07MB2488;
+X-MS-TrafficTypeDiagnostic: CO2PR07MB2488:
+X-Microsoft-Antispam-PRVS: <CO2PR07MB248870DC3E034DA0869D2D40C1E90@CO2PR07MB2488.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0069246B74
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: zA/j00yp5XGFG59nOBVfHwgMHPlL+4DkHDRDLAibvJ5upjNWZ4YJzz5Ux8A6jJkKP019rm9EneNfyN3LTP+VlfWPRj7ZwBaw6NGWz25TaqRxUBa3joBfeqfAyRGMJGa/NWoZbSqpjTJCX2U5DRIdkzx5B/K8W/ZisZJ7vhR9H9+iwbIbtOjmhr7svwBTMtODrbbZauDQNGMG2QzHawLzkCcG0WdN7DgDqxj0rkXoPzVdrtkQ3iBTAGYYErL3QdYIq7Gfh6xafC3gWVMT9SskfCZ5J1V3V+e3SwbYSw6JfV9gUqjvFGRWqKhbLX9hRLtyqJDNldCBmB0LJ8x+e4lHslPitlOBSxw0LvLua6AwztnDjmhng8txlVrbVqNROeXcedGUaCAmZczKHtBnshpd8LN0im46PYe61qR69TjfBDo=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2019 23:45:37.8379
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 296f8e12-ec98-41ce-bf64-08d6f1eb91ae
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2488
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-15_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906150226
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Hello !,
 
-syzbot found the following crash on:
+This is second version of patch set containing following patches
+for Cadence ethernet controller driver.
 
-HEAD commit:    35fc07ae Merge branch 'tcp-add-three-static-keys'
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=118e5caea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=e8b7a9cd7feeb720
-dashboard link: https://syzkaller.appspot.com/bug?extid=c1a380d42b190ad1e559
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11551df1a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12417076a00000
+1. 0001-net-macb-add-phylink-support.patch
+   Replace phylib API's with phylink API's.
+2. 0002-net-macb-add-support-for-sgmii-MAC-PHY-interface.patch
+   This patch add support for SGMII mode.
+3. 003-net-macb-add-PHY-configuration-in-MACB-PCI-wrapper.patch
+   This patch is to configure TI PHY DP83867 in SGMII mode from
+   our MAC PCI wrapper driver. 
+   With this change there is no need of PHY driver and dp83867
+   module must be disabled. Users wanting to setup DP83867 PHY	
+   in SGMII mode can disable dp83867.ko driver, else dp83867.ko
+   overwrite this configuration and PHY is setup as per dp83867.ko.
+4. 0004-net-macb-add-support-for-c45-PHY.patch
+   This patch is to support C45 PHY.
+5. 0005-net-macb-add-support-for-high-speed-interface
+   This patch add support for 10G USXGMII PCS in fixed mode.
+   Since emulated PHY used in fixed mode doesn't seems to
+   support anything above 1G, additional parameter is used outside
+   "fixed-link" node for selecting speed and "fixed-link"
+   node speed is still set at 1G.
+6. 0006-net-macb-parameter-added-to-cadence-ethernet-controller-DT-binding
+   New parameters added to Cadence ethernet controller DT binding
+   for USXGMII interface.
 
-The bug was bisected to:
+Regards,
+Parshuram Thombare
 
-commit 4ff40b86262b73553ee47cc3784ce8ba0f220bd8
-Author: Xin Long <lucien.xin@gmail.com>
-Date:   Mon Jan 21 18:42:09 2019 +0000
+Parshuram Thombare (6):
+  net: macb: add phylink support
+  net: macb: add support for sgmii MAC-PHY interface
+  net: macb: add PHY configuration in MACB PCI wrapper
+  net: macb: add support for c45 PHY
+  net: macb: add support for high speed interface
+  net: macb: parameter added to cadence ethernet controller DT binding
 
-     sctp: set chunk transport correctly when it's a new asoc
+ .../devicetree/bindings/net/macb.txt          |   4 +
+ drivers/net/ethernet/cadence/Kconfig          |   2 +-
+ drivers/net/ethernet/cadence/macb.h           | 136 +++-
+ drivers/net/ethernet/cadence/macb_main.c      | 659 ++++++++++++++----
+ drivers/net/ethernet/cadence/macb_pci.c       | 225 ++++++
+ 5 files changed, 860 insertions(+), 166 deletions(-)
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=104d1df1a00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=124d1df1a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=144d1df1a00000
+-- 
+2.17.1
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com
-Fixes: 4ff40b86262b ("sctp: set chunk transport correctly when it's a new  
-asoc")
-
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 1 PID: 8330 Comm: syz-executor666 Not tainted 5.2.0-rc3+ #52
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:sctp_sched_prio_sched+0x96/0x6f0 net/sctp/stream_sched_prio.c:132
-Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 0d 05 00 00 48 b8 00 00 00 00  
-00 fc ff df 4c 8b 73 50 4d 8d 6e 20 4c 89 ea 48 c1 ea 03 <80> 3c 02 00 0f  
-85 f4 04 00 00 4d 8b 7e 20 4d 85 ff 0f 84 f8 00 00
-RSP: 0018:ffff88809e4e7448 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880a9533b80 RCX: 1ffff11010347201
-RDX: 0000000000000004 RSI: ffffffff8696a77e RDI: ffff8880a9533bd0
-RBP: ffff88809e4e7488 R08: ffff88808bf8e300 R09: ffff88809e4e7580
-R10: ffffed1013c9cee2 R11: 0000000000000003 R12: ffff8880a9533bc0
-R13: 0000000000000020 R14: 0000000000000000 R15: ffff8880a4e92380
-FS:  00007f48c9337700(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f48c9315e78 CR3: 000000009db54000 CR4: 00000000001406e0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  sctp_sched_prio_enqueue+0x117/0x170 net/sctp/stream_sched_prio.c:243
-  sctp_cmd_send_msg net/sctp/sm_sideeffect.c:1101 [inline]
-  sctp_cmd_interpreter net/sctp/sm_sideeffect.c:1748 [inline]
-  sctp_side_effects net/sctp/sm_sideeffect.c:1184 [inline]
-  sctp_do_sm+0x2fd0/0x5190 net/sctp/sm_sideeffect.c:1155
-  sctp_primitive_SEND+0xa0/0xd0 net/sctp/primitive.c:163
-  sctp_sendmsg_to_asoc+0x1118/0x1f10 net/sctp/socket.c:1944
-  sctp_sendmsg+0x109a/0x17d0 net/sctp/socket.c:2102
-  inet_sendmsg+0x141/0x5d0 net/ipv4/af_inet.c:798
-  sock_sendmsg_nosec net/socket.c:646 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:665
-  sock_write_iter+0x27c/0x3e0 net/socket.c:994
-  call_write_iter include/linux/fs.h:1872 [inline]
-  new_sync_write+0x4d3/0x770 fs/read_write.c:483
-  __vfs_write+0xe1/0x110 fs/read_write.c:496
-  vfs_write+0x20c/0x580 fs/read_write.c:558
-  ksys_write+0x14f/0x290 fs/read_write.c:611
-  __do_sys_write fs/read_write.c:623 [inline]
-  __se_sys_write fs/read_write.c:620 [inline]
-  __x64_sys_write+0x73/0xb0 fs/read_write.c:620
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x447a69
-Code: e8 cc e7 ff ff 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 3b 08 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f48c9336d88 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
-RAX: ffffffffffffffda RBX: 00000000006ddc38 RCX: 0000000000447a69
-RDX: 0000000000010094 RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 00000000006ddc30 R08: 00007f48c9337700 R09: 0000000000000000
-R10: 00007f48c9337700 R11: 0000000000000246 R12: 00000000006ddc3c
-R13: 00007f48c9336d90 R14: 00007f48c93379c0 R15: 00000000006ddc3c
-Modules linked in:
----[ end trace 01e405583d741588 ]---
-RIP: 0010:sctp_sched_prio_sched+0x96/0x6f0 net/sctp/stream_sched_prio.c:132
-Code: 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 0d 05 00 00 48 b8 00 00 00 00  
-00 fc ff df 4c 8b 73 50 4d 8d 6e 20 4c 89 ea 48 c1 ea 03 <80> 3c 02 00 0f  
-85 f4 04 00 00 4d 8b 7e 20 4d 85 ff 0f 84 f8 00 00
-RSP: 0018:ffff88809e4e7448 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880a9533b80 RCX: 1ffff11010347201
-RDX: 0000000000000004 RSI: ffffffff8696a77e RDI: ffff8880a9533bd0
-RBP: ffff88809e4e7488 R08: ffff88808bf8e300 R09: ffff88809e4e7580
-R10: ffffed1013c9cee2 R11: 0000000000000003 R12: ffff8880a9533bc0
-R13: 0000000000000020 R14: 0000000000000000 R15: ffff8880a4e92380
-FS:  00007f48c9337700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000460687 CR3: 000000009db54000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
