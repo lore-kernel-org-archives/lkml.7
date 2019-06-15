@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70F9C31E44
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 01:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95894C31E44
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 01:11:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A412184D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 01:11:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4384721841
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 01:11:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfFOBLF (ORCPT
+        id S1726583AbfFOBLI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 21:11:05 -0400
-Received: from foss.arm.com ([217.140.110.172]:45090 "EHLO foss.arm.com"
+        Fri, 14 Jun 2019 21:11:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:45110 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726340AbfFOBLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 21:11:00 -0400
+        id S1726340AbfFOBLG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 21:11:06 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E813346;
-        Fri, 14 Jun 2019 18:11:00 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B9A642B;
+        Fri, 14 Jun 2019 18:11:05 -0700 (PDT)
 Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.30.49])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 2D9823F718;
-        Fri, 14 Jun 2019 18:11:00 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id B03893F718;
+        Fri, 14 Jun 2019 18:11:05 -0700 (PDT)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
         catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net,
         lenb@kernel.org, mark.rutland@arm.com, lorenzo.pieralisi@arm.com,
         sudeep.holla@arm.com, Jeremy Linton <jeremy.linton@arm.com>
-Subject: [PATCH 2/4] ACPI/PPTT: Add function to return ACPI 6.3 Identical tokens
-Date:   Fri, 14 Jun 2019 20:09:08 -0500
-Message-Id: <20190615010910.33921-3-jeremy.linton@arm.com>
+Subject: [PATCH 4/4] perf: arm_spe: Enable ACPI/Platform automatic module loading
+Date:   Fri, 14 Jun 2019 20:09:10 -0500
+Message-Id: <20190615010910.33921-5-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190615010910.33921-1-jeremy.linton@arm.com>
 References: <20190615010910.33921-1-jeremy.linton@arm.com>
@@ -44,78 +44,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACPI 6.3 adds a flag to indicate that child nodes are all
-identical cores. This is useful to authoritatively determine
-if a set of (possibly offline) cores are identical or not.
+Lets add the MODULE_TABLE and platform id_table entries so that
+the SPE driver can attach to the ACPI platform device created by
+the core pmu code.
 
-Since the flag doesn't give us a unique id we can generate
-one and use it to create bitmaps of sibling nodes, or simply
-in a loop to determine if a subset of cores are identical.
-
-Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
 ---
- drivers/acpi/pptt.c  | 26 ++++++++++++++++++++++++++
- include/linux/acpi.h |  5 +++++
- 2 files changed, 31 insertions(+)
+ drivers/perf/arm_spe_pmu.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/acpi/pptt.c b/drivers/acpi/pptt.c
-index 05344413f199..1e7ac0bd0d3a 100644
---- a/drivers/acpi/pptt.c
-+++ b/drivers/acpi/pptt.c
-@@ -683,3 +683,29 @@ int find_acpi_cpu_topology_package(unsigned int cpu)
- 	return find_acpi_cpu_topology_tag(cpu, PPTT_ABORT_PACKAGE,
- 					  ACPI_PPTT_PHYSICAL_PACKAGE);
- }
+diff --git a/drivers/perf/arm_spe_pmu.c b/drivers/perf/arm_spe_pmu.c
+index e120f933412a..4fb65c61c8ea 100644
+--- a/drivers/perf/arm_spe_pmu.c
++++ b/drivers/perf/arm_spe_pmu.c
+@@ -38,6 +38,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/perf_event.h>
++#include <linux/perf/arm_pmu.h>
+ #include <linux/platform_device.h>
+ #include <linux/printk.h>
+ #include <linux/slab.h>
+@@ -1168,7 +1169,13 @@ static const struct of_device_id arm_spe_pmu_of_match[] = {
+ };
+ MODULE_DEVICE_TABLE(of, arm_spe_pmu_of_match);
+ 
+-static int arm_spe_pmu_device_dt_probe(struct platform_device *pdev)
++static const struct platform_device_id arm_spe_match[] = {
++	{ ARMV8_SPE_PDEV_NAME, 0},
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, arm_spe_match);
 +
-+/**
-+ * find_acpi_cpu_topology_hetero_id() - Get a core architecture tag
-+ * @cpu: Kernel logical CPU number
-+ *
-+ * Determine a unique heterogeneous tag for the given CPU. CPUs with the same
-+ * implementation should have matching tags.
-+ *
-+ * The returned tag can be used to group peers with identical implementation.
-+ *
-+ * The search terminates when a level is found with the identical implementation
-+ * flag set or we reach a root node.
-+ *
-+ * Due to limitations in the PPTT data structure, there may be rare situations
-+ * where two cores in a heterogeneous machine may be identical, but won't have
-+ * the same tag.
-+ *
-+ * Return: -ENOENT if the PPTT doesn't exist, or the CPU cannot be found.
-+ * Otherwise returns a value which represents a group of identical cores
-+ * similar to this CPU.
-+ */
-+int find_acpi_cpu_topology_hetero_id(unsigned int cpu)
-+{
-+	return find_acpi_cpu_topology_tag(cpu, PPTT_ABORT_PACKAGE,
-+					  ACPI_PPTT_ACPI_IDENTICAL);
-+}
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index d315d86844e4..5bcd23e5ccd6 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1303,6 +1303,7 @@ static inline int lpit_read_residency_count_address(u64 *address)
- #ifdef CONFIG_ACPI_PPTT
- int find_acpi_cpu_topology(unsigned int cpu, int level);
- int find_acpi_cpu_topology_package(unsigned int cpu);
-+int find_acpi_cpu_topology_hetero_id(unsigned int cpu);
- int find_acpi_cpu_cache_topology(unsigned int cpu, int level);
- #else
- static inline int find_acpi_cpu_topology(unsigned int cpu, int level)
-@@ -1313,6 +1314,10 @@ static inline int find_acpi_cpu_topology_package(unsigned int cpu)
++static int arm_spe_pmu_device_probe(struct platform_device *pdev)
  {
- 	return -EINVAL;
+ 	int ret;
+ 	struct arm_spe_pmu *spe_pmu;
+@@ -1228,11 +1235,12 @@ static int arm_spe_pmu_device_remove(struct platform_device *pdev)
  }
-+static inline int find_acpi_cpu_topology_hetero_id(unsigned int cpu)
-+{
-+	return -EINVAL;
-+}
- static inline int find_acpi_cpu_cache_topology(unsigned int cpu, int level)
- {
- 	return -EINVAL;
+ 
+ static struct platform_driver arm_spe_pmu_driver = {
++	.id_table = arm_spe_match,
+ 	.driver	= {
+ 		.name		= DRVNAME,
+ 		.of_match_table	= of_match_ptr(arm_spe_pmu_of_match),
+ 	},
+-	.probe	= arm_spe_pmu_device_dt_probe,
++	.probe	= arm_spe_pmu_device_probe,
+ 	.remove	= arm_spe_pmu_device_remove,
+ };
+ 
 -- 
 2.21.0
 
