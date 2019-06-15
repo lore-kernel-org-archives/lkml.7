@@ -2,83 +2,67 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE64DC31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 15:58:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA27CC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:00:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A52BD21473
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 15:58:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="XkyL4uWd"
+	by mail.kernel.org (Postfix) with ESMTP id 846B821473
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:00:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726975AbfFOP6f (ORCPT
+        id S1726905AbfFOQAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 11:58:35 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43410 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfFOP6f (ORCPT
+        Sat, 15 Jun 2019 12:00:44 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:54978 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfFOQAo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 11:58:35 -0400
-Received: by mail-pl1-f193.google.com with SMTP id cl9so2275924plb.10
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 08:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=3UEdf7L10rlDvutzhQ5oN7IH73FXQkj8yTdma29U82E=;
-        b=XkyL4uWd3z3bLemMqav9h6r4cxQjATGvT6nrLhY1yRSxw+QOo7/ixS91nRkv7T5pHZ
-         ygciPYZ3p4au9mHIUYBFJFcheawDvU2ZfcbDSLexM7mBnSbvzcbm957GXSGPBODlinPN
-         VzLZVxx8U7/Rur2+zKhPoPSglFf29mPLk5sdI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3UEdf7L10rlDvutzhQ5oN7IH73FXQkj8yTdma29U82E=;
-        b=ZK7E16KUoGkRQgDc08v0kMISDtbuOHbcdDoQeo0ZhqP18O5JrZF01jFDkGKiRq0uJV
-         Yc/afweKohjf++5O/+nE/v5Rndu4e8s/JNcWM/lX/YR9fZzo9a6XmWGD622XX1j5rU57
-         76pdfdsP4M9wXxOICK6QLW8JMoTUCGM3dlgsHnzg1PMJiVHc1eGfbSUXoK6dpH+kPJ2p
-         of6ScKJIMxsuPTgfReSj3umKlgS+9aqMAZzPSnSgPnYv9oMCSFytzzMYrMsmUQavsHY2
-         ulshVZscoCqB7YuFWTEpsntFbc4+mUQyc82wk5siPiVnqpdtOx09JDRcfVts4fIOfKl2
-         ZeCw==
-X-Gm-Message-State: APjAAAUBzTHeQJHYAKD/gorHjOrI12/zVvg9olKcY+g8SRr3ZEJmb/Ir
-        3t4X4VWkYa0g8TYGl/Y+2VCVdw==
-X-Google-Smtp-Source: APXvYqwfY314uRro4dsc54oOetfpJqc+ffBY+G0B6BoAGGAlJaMAITXdd1MDQTxvCLR47/tBL2uq+g==
-X-Received: by 2002:a17:902:724:: with SMTP id 33mr96737215pli.49.1560614314543;
-        Sat, 15 Jun 2019 08:58:34 -0700 (PDT)
-Received: from localhost ([61.6.140.222])
-        by smtp.gmail.com with ESMTPSA id p7sm14713756pfp.131.2019.06.15.08.58.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 15 Jun 2019 08:58:33 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 23:58:31 +0800
-From:   Chris Down <chris@chrisdown.name>
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] psi: Don't account force reclaim as memory pressure
-Message-ID: <20190615155831.GA1307@chrisdown.name>
-References: <20190615120644.26743-1-xlpang@linux.alibaba.com>
+        Sat, 15 Jun 2019 12:00:44 -0400
+Received: from fsav107.sakura.ne.jp (fsav107.sakura.ne.jp [27.133.134.234])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5FFxdWl046712;
+        Sun, 16 Jun 2019 00:59:39 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav107.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav107.sakura.ne.jp);
+ Sun, 16 Jun 2019 00:59:39 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav107.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x5FFxYoZ046678
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sun, 16 Jun 2019 00:59:39 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: general protection fault in oom_unkillable_task
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+To:     syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>,
+        akpm@linux-foundation.org, mhocko@kernel.org
+Cc:     ebiederm@xmission.com, guro@fb.com, hannes@cmpxchg.org,
+        jglisse@redhat.com, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, shakeelb@google.com,
+        syzkaller-bugs@googlegroups.com, yuzhoujian@didichuxing.com
+References: <0000000000004143a5058b526503@google.com>
+ <cc3d5247-855d-a124-041f-64c4659d95c3@i-love.sakura.ne.jp>
+Message-ID: <8c50ca8c-3869-6f50-3a3f-bc7726c39975@i-love.sakura.ne.jp>
+Date:   Sun, 16 Jun 2019 00:59:32 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190615120644.26743-1-xlpang@linux.alibaba.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <cc3d5247-855d-a124-041f-64c4659d95c3@i-love.sakura.ne.jp>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xunlei,
+On 2019/06/15 10:10, Tetsuo Handa wrote:
+> I'm not sure this patch is correct/safe. Can you try memcg OOM torture
+> test (including memcg group OOM killing enabled) with this patch applied?
 
-Xunlei Pang writes:
->There're several cases like resize and force_empty that don't
->need to account to psi, otherwise is misleading.
+Well, I guess this patch was wrong. The ordering of removing threads
+does not matter as long as we start traversing via signal_struct.
+The reason why crashed at for_each_thread() is unknown...
 
-I'm afraid I'm quite confused by this patch. Why do you think accounting for 
-force reclaim in PSI is misleading? I completely expect that force reclaim 
-should still be accounted for as memory pressure, can you present some reason 
-why it shouldn't be?
