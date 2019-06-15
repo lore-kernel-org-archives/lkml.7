@@ -2,167 +2,153 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68DBEC31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:19:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B6D5C31E52
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:25:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357F921841
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:19:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="MWGdD/K0"
+	by mail.kernel.org (Postfix) with ESMTP id 2619F2184D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 18:25:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560623102;
+	bh=HfQdTGLdoYJVHRDucCDpAJIJPajf8fK95i+WsCWSqQo=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=G/Akam8uEIfp4VgkmmHe7Wtv3EWhHo8wCGKbx9ItbDj/7InwAukGIIRDKm6bWYAib
+	 O+WB5MIHsIar8QHm5A1HEUWFvu2up5RJZIij4vKp/VOcykkOccW4PEz0SLrtwLJ131
+	 6FVJpWS3Bl5oN21YS3qkoisQpyURCFa8+fxe6Oa4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbfFOSTF (ORCPT
+        id S1726843AbfFOSZB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 14:19:05 -0400
-Received: from mail-eopbgr770124.outbound.protection.outlook.com ([40.107.77.124]:32075
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725270AbfFOSTF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 14:19:05 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=wIleWJRiam4EVx3svO1CRgD0nMsPzb2/U1WekeUgmbYE4czALZirtK9cWNZT/IPGMAs13ZbasksnP+PNi9lKVCnsR2VK9GLSxcSQqlDjaYe8xg5cOPMKrtzpq7dQXsMi2v+GkrIvmmYITFZRs4/MOmmUcL6+czpsAF/LZPvK7xk=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PqdhfVYwlPfozmgkJio+lofchHcLhfxJUW3rF/EoxK0=;
- b=QBofWH9NdlaFN+ws636TmHvIHwHP+ujOtrIfZ9Xu3bQE6FtoNapFW+pRA7wjDJ3G12XyJhWN9oAQtRqecCsJhQMAQcsgsmpsB7KBgciSLy5EEIb67tHyGESJjR8Ung9hSCnO6C6mt+XwoykbCs1JG3Y5UV/0LhEcp9vl2KW/rPQ=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PqdhfVYwlPfozmgkJio+lofchHcLhfxJUW3rF/EoxK0=;
- b=MWGdD/K0UahKsITpZq07xF7Hij1hVH2XkSyYOHmQ6EbXtppY6pi5bJ17xVwue6U7tBfwDWSL0HLDaT3VINJSG0pnMim2nT6K62dSqO3qNa8bHStFMqMPPzVxSkciIPIjrwbwJVN9Zz7JhvKrtTHBeYDLBW3AklHDPwTaEjmci3g=
-Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
- (2603:10b6:208:92::22) by BL0PR2101MB1012.namprd21.prod.outlook.com
- (2603:10b6:207:37::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.1; Sat, 15 Jun
- 2019 18:19:01 +0000
-Received: from BL0PR2101MB1348.namprd21.prod.outlook.com
- ([fe80::ec20:70a:433e:a052]) by BL0PR2101MB1348.namprd21.prod.outlook.com
- ([fe80::ec20:70a:433e:a052%2]) with mapi id 15.20.2008.007; Sat, 15 Jun 2019
- 18:19:01 +0000
-From:   Michael Kelley <mikelley@microsoft.com>
-To:     brandonbonaby94 <brandonbonaby94@gmail.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
-        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
-CC:     brandonbonaby94 <brandonbonaby94@gmail.com>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] scsi: storvsc: Add ability to change scsi queue depth
-Thread-Topic: [PATCH] scsi: storvsc: Add ability to change scsi queue depth
-Thread-Index: AQHVIwu2hVNRohUcjEaExf3NA7oXWKadBz2w
-Date:   Sat, 15 Jun 2019 18:19:00 +0000
-Message-ID: <BL0PR2101MB13482F73342F77866D6A6AABD7E90@BL0PR2101MB1348.namprd21.prod.outlook.com>
-References: <20190614234822.5193-1-brandonbonaby94@gmail.com>
-In-Reply-To: <20190614234822.5193-1-brandonbonaby94@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-15T18:18:58.2507928Z;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
- Information Protection;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=45d65e2e-9da9-4357-aa96-bb219a120e27;
- MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=mikelley@microsoft.com; 
-x-originating-ip: [24.22.167.197]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 270d8398-76ce-4541-ca62-08d6f1bdf125
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:BL0PR2101MB1012;
-x-ms-traffictypediagnostic: BL0PR2101MB1012:
-x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
-x-microsoft-antispam-prvs: <BL0PR2101MB10129C929B439FE8EC085A8BD7E90@BL0PR2101MB1012.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 0069246B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(136003)(366004)(396003)(346002)(199004)(189003)(71200400001)(11346002)(446003)(486006)(66446008)(110136005)(25786009)(52536014)(316002)(66476007)(10290500003)(76116006)(66946007)(2201001)(73956011)(55016002)(64756008)(86362001)(66556008)(476003)(7736002)(68736007)(22452003)(2501003)(54906003)(4326008)(66066001)(256004)(14444005)(8990500004)(3846002)(7696005)(6116002)(52396003)(33656002)(14454004)(1511001)(2906002)(81166006)(76176011)(81156014)(9686003)(229853002)(102836004)(6506007)(8676002)(5660300002)(6436002)(99286004)(10090500001)(6246003)(53936002)(71190400001)(478600001)(74316002)(26005)(8936002)(305945005)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR2101MB1012;H:BL0PR2101MB1348.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: j+S+WsWN8c8BpFtnesChRu7w36GPqFoArNDsNwGZFLUT6QMyoIbuZ3AiMH6H8wU1rCPWrIim9g1TotB5dAS331foO5udKDGVEbD8FcBNk9mnYN7Mziv14/KAbC7rPOPj/6Y677LUGDP8esCoU7xUZhBXuczJC3lRP6AaHkUOrqaUft882eDokkqIvtj/HWRnKstOs5foCCsaHY2Ty0QVgu+Tl0dGKO+f0vL3K+WGLzkcM4r5rzxwtohYk0LY0IYVExhIe92ND/ZcMxjV95+HX3hs6TQAxqpYWLtTYFvcs3GncH/ye/PojvGvfhONMfClZVIbNO+pUsqJnX3p7Xu0uTp7X4l5vYydkJyJji3353lccL0gpvjya/wqggrdDoxxiuzSR76v9tdtgyTeKw8TzBM3wmCBoDZ9TYxQ4giHQTk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 270d8398-76ce-4541-ca62-08d6f1bdf125
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2019 18:19:00.8556
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mikelley@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR2101MB1012
+        Sat, 15 Jun 2019 14:25:01 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:33586 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfFOSZA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 14:25:00 -0400
+Received: by mail-qt1-f194.google.com with SMTP id x2so6388565qtr.0;
+        Sat, 15 Jun 2019 11:25:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=oPwR6up+4VWQ3T9cWYQSGpPmrQDg38fErMyiBrwhRvI=;
+        b=CF7AS0QLYz8GXNUSsfGV7wFlTdL/NCb7tKm9zDrdzArufdZQ7wWrTtFhAAyrXmpVpm
+         P+EB83po2r7c7hJ+T6gm01QNYZP1Q2F3Bf5t8vRhx2e6sRqx9ujXJzbGkUzN23dSYzW2
+         qxSnxJ+tkiXwqQ/uYPyxVbAjZg5vauVJq3a05Wb+bGa+bfFmhzGEaJQgRKp3SXnjpZhn
+         yFbnnB3O5qvB9f0UpHo200UvorEv8Q6mJZtcuBnMxwN5rEbXoinhi40qUzq8V6mvGjr6
+         6vjTS82YCx1oqRBw4eWuVDIktHHGGGQ7EPzCSh01BPn+xHxj4UR5iSL23GSWe5drYcJi
+         R9yQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=oPwR6up+4VWQ3T9cWYQSGpPmrQDg38fErMyiBrwhRvI=;
+        b=Hu6DbXQLsb2Jq2ys5GAhhqvgFDbjWlF5v1l0hMMAEiFPhz7DqYdfc9Mpun5oDYy1Fn
+         QVPNSd0ApqwlXIjpbT6l1xmm79rsJ1+iFUkwUe88w6f3szDDn6NAVdFsXM573tmM4Khv
+         5I5SjBOf2fYvRamgxPRNKUpBc4XZNIMp4er/ZK9oOZ3kVpygCnjEisdBybHKfMLjvIDh
+         ll15j8x1Ywfd9+Li/GtPUBX/6GHbF3ljuhU4DKFwxB9NDlhMyUOorPnajjoqguCP2jpu
+         jeUyPc9FhoZxlHbF9fmff0qVPbmkCoPqyTeZ4fkt3nWcYAXRjEBdo2PwAqlm+3cUnz08
+         +40g==
+X-Gm-Message-State: APjAAAVUQxhWuKZaEQP39ls8TtrKgOlyMAU9sYDgX2GwgGbNImNMCzqU
+        tzUgw9lZs8OxP4xrgtTWIdg=
+X-Google-Smtp-Source: APXvYqwI4HIehwRMwlm4ezs+Grdjp8PxAnEo5D0ptx3hhzj66wjWvzJYNlbUe3JQkYl3IWEbLzx6XA==
+X-Received: by 2002:a0c:929b:: with SMTP id b27mr13854026qvb.193.1560623099420;
+        Sat, 15 Jun 2019 11:24:59 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::4883])
+        by smtp.gmail.com with ESMTPSA id s23sm4843521qtj.56.2019.06.15.11.24.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Jun 2019 11:24:57 -0700 (PDT)
+From:   Tejun Heo <tj@kernel.org>
+To:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel-team@fb.com
+Subject: [PATCHSET v2 btrfs/for-next] blkcg, btrfs: fix cgroup writeback support
+Date:   Sat, 15 Jun 2019 11:24:44 -0700
+Message-Id: <20190615182453.843275-1-tj@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Friday, June 14, 201=
-9 4:48 PM
->=20
-> Adding functionality to allow the SCSI queue depth to be changed,
-> by utilizing the "scsi_change_queue_depth" function.
->=20
-> Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
-> ---
->  drivers/scsi/storvsc_drv.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
-> index 8472de1007ff..719ca9906fc2 100644
-> --- a/drivers/scsi/storvsc_drv.c
-> +++ b/drivers/scsi/storvsc_drv.c
-> @@ -387,6 +387,7 @@ enum storvsc_request_type {
->=20
->  static int storvsc_ringbuffer_size =3D (128 * 1024);
->  static u32 max_outstanding_req_per_channel;
-> +static int storvsc_change_queue_depth(struct scsi_device *sdev, int queu=
-e_depth);
->=20
->  static int storvsc_vcpus_per_sub_channel =3D 4;
->=20
-> @@ -1711,6 +1712,7 @@ static struct scsi_host_template scsi_driver =3D {
->  	.dma_boundary =3D		PAGE_SIZE-1,
->  	.no_write_same =3D	1,
->  	.track_queue_depth =3D	1,
-> +	.change_queue_depth =3D	storvsc_change_queue_depth,
->  };
->=20
->  enum {
-> @@ -1917,6 +1919,15 @@ static int storvsc_probe(struct hv_device *device,
->  	return ret;
->  }
->=20
-> +/* Change a scsi target's queue depth */
-> +static int storvsc_change_queue_depth(struct scsi_device *sdev, int queu=
-e_depth)
-> +{
-> +	if (queue_depth > scsi_driver.can_queue){
-> +		queue_depth =3D scsi_driver.can_queue;
-> +	}
-> +	return scsi_change_queue_depth(sdev, queue_depth);
-> +}
-> +
->  static int storvsc_remove(struct hv_device *dev)
->  {
->  	struct storvsc_device *stor_device =3D hv_get_drvdata(dev);
-> --
-> 2.17.1
+Hello,
 
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Changes from v1[1]
+
+  * 0001-cgroup-blkcg-Prepare-some-symbols-for-module-and-CON.patch
+    added.  It collects and adds symbol exports and dummy function def
+    to fix module and different config builds.
+
+When writeback is executed asynchronously (e.g. for compression), bios
+are bounced to and issued by worker pool shared by all cgroups.  This
+leads to significant priority inversions when cgroup IO control is in
+use - IOs for a low priority cgroup can tie down the workers forcing
+higher priority IOs to wait behind them.
+
+This patchset adds an bio punt mechanism to blkcg and updates btrfs to
+issue async IOs through it.  A bio tagged with REQ_CGROUP_PUNT flag is
+bounced to the asynchronous issue context of the associated blkcg on
+bio_submit().  As the bios are issued from per-blkcg work items,
+there's no concern for priority inversions and it doesn't require
+invasive changes to the filesystems.  The mechanism should be
+generally useful for IO control support across different filesystems.
+
+This patchset contains the following 9 patches.  The first three are
+my blkcg patches to implement the needed mechanisms.  The latter five
+are Chris Mason's btrfs cleanup and update patches.  Please let me
+know how the patches should be routed.  Given that there currently
+aren't other users, it's likely the easiest to route all through btrfs
+tree.
+
+ 0001-cgroup-blkcg-Prepare-some-symbols-for-module-and-CON.patch
+ 0002-blkcg-writeback-Add-wbc-no_wbc_acct.patch
+ 0003-blkcg-writeback-Implement-wbc_blkcg_css.patch
+ 0004-blkcg-implement-REQ_CGROUP_PUNT.patch
+ 0005-Btrfs-stop-using-btrfs_schedule_bio.patch
+ 0006-Btrfs-delete-the-entire-async-bio-submission-framewo.patch
+ 0007-Btrfs-only-associate-the-locked-page-with-one-async_.patch
+ 0008-Btrfs-use-REQ_CGROUP_PUNT-for-worker-thread-submitte.patch
+ 0009-Btrfs-extent_write_locked_range-should-attach-inode-.patch
+
+0001-0003 implement wbc->no_wbc_acct, wbc_blkcg_css() and
+REQ_CGROUP_PUNT.
+
+0004-0007 are prep patches to simplify / improve async bio submission.
+
+0008 makes btrfs use REQ_CGROUP_PUNT for async bios.
+
+0009 fixes wbc writeback accounting for IOs issued through
+extent_write_locked_range().
+
+This patchset is also available in the following git branch.
+
+ git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-btrfs-cgroup-updates-v2
+
+Thanks, diffstat follows.
+
+ block/blk-cgroup.c          |   54 +++++++++
+ block/blk-core.c            |    3 
+ fs/btrfs/compression.c      |   16 +-
+ fs/btrfs/compression.h      |    3 
+ fs/btrfs/ctree.h            |    1 
+ fs/btrfs/disk-io.c          |   25 +---
+ fs/btrfs/extent_io.c        |   15 +-
+ fs/btrfs/inode.c            |   61 ++++++++--
+ fs/btrfs/super.c            |    1 
+ fs/btrfs/volumes.c          |  264 --------------------------------------------
+ fs/btrfs/volumes.h          |   10 -
+ fs/fs-writeback.c           |    5 
+ include/linux/backing-dev.h |    1 
+ include/linux/blk-cgroup.h  |   16 ++
+ include/linux/blk_types.h   |   10 +
+ include/linux/cgroup.h      |    1 
+ include/linux/writeback.h   |   24 +++-
+ 17 files changed, 198 insertions(+), 312 deletions(-)
+
+--
+tejun
+
+[1] http://lkml.kernel.org/r/20190614003350.1178444-1-tj@kernel.org
 
