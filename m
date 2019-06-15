@@ -2,77 +2,49 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF03C31E51
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1773C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:44:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E942184E
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="EVs+enJu"
+	by mail.kernel.org (Postfix) with ESMTP id D11A021848
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:44:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726539AbfFOIh1 (ORCPT
+        id S1726425AbfFOIod (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 04:37:27 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:59977 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfFOIh0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 04:37:26 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45QrSg2ND1z9v0Fx;
-        Sat, 15 Jun 2019 10:37:23 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=EVs+enJu; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id h5MID7vsLt9m; Sat, 15 Jun 2019 10:37:23 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45QrSg1CYBz9v0Fw;
-        Sat, 15 Jun 2019 10:37:23 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560587843; bh=1zQeOTucIcOz7nqyoTV+C9CLAATxs8YjeVAtiYK4GTE=;
-        h=Subject:From:To:Cc:References:Date:In-Reply-To:From;
-        b=EVs+enJuj66wz1GH4JYPlmhsC4UmOmMDxF16Gzd8G0vPfQB6A8zkuvFv/1SM8LNHH
-         CV3s2+JpGylvAisOaKCTmsDwz1svIBkiVcQ3sNLSc91p3ddh0oC/8or4FO6N8tXV5c
-         as/gAW7jGMdk6ciS63sVlOLzTnevRh3eQPYR4RYQ=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3F3DB8B7B3;
-        Sat, 15 Jun 2019 10:37:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id VqXv7xNOE4Pb; Sat, 15 Jun 2019 10:37:24 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9D4118B77A;
-        Sat, 15 Jun 2019 10:37:23 +0200 (CEST)
-Subject: Issue with sg_copy_to_buffer() ? (was Re: [PATCH v3 2/4] crypto:
- talitos - fix hash on SEC1.)
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-To:     Horia Geanta <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <cover.1560429844.git.christophe.leroy@c-s.fr>
- <732ca0ff440bf4cd589d844cfda71d96efd500f5.1560429844.git.christophe.leroy@c-s.fr>
- <VI1PR0402MB34855C37F53DC1012DAF670798EE0@VI1PR0402MB3485.eurprd04.prod.outlook.com>
- <e98f196d-a47c-f2ae-e729-fe2613628da7@c-s.fr>
-Message-ID: <0cbec7fa-445c-4644-5ea9-9f0f774b20fd@c-s.fr>
-Date:   Sat, 15 Jun 2019 10:37:23 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sat, 15 Jun 2019 04:44:33 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:49642 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725825AbfFOIoc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 04:44:32 -0400
+X-IronPort-AV: E=Sophos;i="5.63,377,1557180000"; 
+   d="scan'208";a="387534746"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Jun 2019 10:44:31 +0200
+Date:   Sat, 15 Jun 2019 10:44:30 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jack Ping CHNG <jack.ping.chng@linux.intel.com>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Enrico Weigelt <lkml@metux.net>,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: drivers: Provide devm_platform_ioremap_resource_byname()
+In-Reply-To: <48877575-90b9-3db5-7a25-53cf3817b2ee@web.de>
+Message-ID: <alpine.DEB.2.21.1906151044160.2614@hadrien>
+References: <39e46643-d799-94b7-4aa5-d6d99d738f99@web.de> <20190614133840.GN9224@smile.fi.intel.com> <20190614141004.GC7234@kroah.com> <20190614144706.GO9224@smile.fi.intel.com> <48877575-90b9-3db5-7a25-53cf3817b2ee@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <e98f196d-a47c-f2ae-e729-fe2613628da7@c-s.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -80,102 +52,19 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-Le 15/06/2019 à 10:18, Christophe Leroy a écrit :
->>> @@ -2058,7 +2065,18 @@ static int ahash_process_req(struct 
->>> ahash_request *areq, unsigned int nbytes)
->>>           sg_copy_to_buffer(areq->src, nents,
->>>                     ctx_buf + req_ctx->nbuf, offset);
->>>           req_ctx->nbuf += offset;
->>> -        req_ctx->psrc = areq->src;
->>> +        for (sg = areq->src; sg && offset >= sg->length;
->>> +             offset -= sg->length, sg = sg_next(sg))
->>> +            ;
->>> +        if (offset) {
->>> +            sg_init_table(req_ctx->bufsl, 2);
->>> +            sg_set_buf(req_ctx->bufsl, sg_virt(sg) + offset,
->>> +                   sg->length - offset);
->>> +            sg_chain(req_ctx->bufsl, 2, sg_next(sg));
->>> +            req_ctx->psrc = req_ctx->bufsl;
->> Isn't this what scatterwalk_ffwd() does?
-> 
-> Thanks for pointing this, I wasn't aware of that function. Looking at it 
-> it seems to do the same. Unfortunately, some tests fails with 'wrong 
-> result' when using it instead.
-> 
-> Comparing the results of scatterwalk_ffwd() with what I get with my open 
-> codying, I see the following difference:
-> 
-> scatterwalk_ffwd() uses sg_page(sg) + sg->offset + len
-> 
-> while my open codying results in virt_to_page(sg_virt(sg) + len)
-> 
-> When sg->offset + len is greater than PAGE_SIZE, the resulting SG entry 
-> is different allthough valid in both cases. I think this difference 
-> results in sg_copy_to_buffer() failing. I'm still investigating. Any idea ?
-> 
+On Fri, 14 Jun 2019, Markus Elfring wrote:
 
-After adding some dumps, I confirm the suspicion:
+> >> I don't like adding new apis with no user.
+> >
+> > Perhaps Jack Ping will send it as a first patch of his series where he utilizes
+> > this functionality. Would it be acceptable?
+>
+> The proposed function can get wider application in a reasonable time frame
+> if a corresponding script for the semantic patch language (Coccinelle software)
+> would perform an automatic source code conversion (for example)
+> according to your change acceptance.
+> How do you think about to support a bit more collateral software evolution?
 
-My board uses 16k pages.
+Why don't you just do what is asked for?
 
-SG list when not using scatterwalk_ffwd()
-[   64.120540] sg c6386794 page c7fc1c60 offset 22 len 213
-[   64.120579] sg c6386a48 page c7fc1b80 offset 4 len 2
-[   64.120618] sg c6386a5c page c7fc1b00 offset 3 len 17
-[   64.120658] sg c6386a70 page c7fc1b40 offset 2 len 10
-
-SG list when using scatterwalk_ffwd()
-[   64.120743] sg c6386794 page c7fc1c40 offset 16406 len 213
-[   64.120782] sg c6386a48 page c7fc1b80 offset 4 len 2
-[   64.120821] sg c6386a5c page c7fc1b00 offset 3 len 17
-[   64.120861] sg c6386a70 page c7fc1b40 offset 2 len 10
-
-Content of the SG list:
-[   64.120975] 00000000: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.121021] 00000010: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.121067] 00000020: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.121112] 00000030: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.121157] 00000040: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.121202] 00000050: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.121247] 00000060: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 a8 10
-[   64.121292] 00000070: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.121337] 00000080: e8 40 98 f0 48 a0 f8 50 28 00 58 b0 08 60 b8 10
-[   64.121382] 00000090: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.121427] 000000a0: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.121472] 000000b0: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.121517] 000000c0: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.121557] 000000d0: 68 c0 18 30 c8
-[   64.121598] 00000000: 20 78
-[   64.121646] 00000000: d0 28 80 f8 30 88 e0 38 90 e8 40 98 f0 48 a0 f8
-[   64.121684] 00000010: 50
-[   64.121729] 00000000: a8 00 58 b0 08 60 b8 10 68 c0
-
-Content of the buffer after the copy from the list:
-[   64.121790] 00000000: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.121836] 00000010: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.121881] 00000020: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.121927] 00000030: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.121972] 00000040: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.122017] 00000050: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.122062] 00000060: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 a8 10
-[   64.122107] 00000070: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.122152] 00000080: e8 40 98 f0 48 a0 f8 50 28 00 58 b0 08 60 b8 10
-[   64.122197] 00000090: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.122243] 000000a0: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.122288] 000000b0: 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90
-[   64.122333] 000000c0: e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 60 b8 10
-[   64.122378] 000000d0: 68 c0 18 30 c8 d8 b0 08 60 b8 10 68 c0 18 70 c8
-[   64.122424] 000000e0: 20 78 d0 28 80 d8 30 88 e0 38 90 e8 40 98 f0 48
-[   64.122462] 000000f0: a0 f8
-
-As you can see, the data following the first block should be
-20 78 d0 28 80 f8 30 88 e0 38 90 e8 40 98 f0 48 a0 f8 50 a8 00 58 b0 08 
-60 b8 10 68 c0
-
-Instead it is
-d8 b0 08 60 b8 10 68 c0 18 70 c8 20 78 d0 28 80 d8 30 88 e0 38 90 e8 40 
-98 f0 48 a0 f8
-
-So I guess there is something wrong with sg_copy_to_buffer()
-
-Christophe
+julia
