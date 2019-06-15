@@ -2,86 +2,213 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B27C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:50:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34D33C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:53:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7412B217D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:50:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560577824;
-	bh=ZGVEz5W7fSK9yM6g3HmG8Fd2s6oQWJL4f41cyscrD40=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=u3zUPcOQ+F0SLkNMqh14icmRA5SL9JKpn2pmLgChGKE8D5OMbCypNhrBrQ9yGO3Hq
-	 EZEMIXfcxp//ID8d6uL/l10046UnvlkLGY3lxWSBthHQHcsvSP48/S0/J/vcPxLKCd
-	 H5IShDyQBmyVgLVKMbFwvrrw8iQuHllSa5iBQXmo=
+	by mail.kernel.org (Postfix) with ESMTP id EA53821773
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:53:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c4dwLIgG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726442AbfFOFuX (ORCPT
+        id S1726310AbfFOFxC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 01:50:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43334 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfFOFuW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 01:50:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B71C2084D;
-        Sat, 15 Jun 2019 05:50:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560577822;
-        bh=ZGVEz5W7fSK9yM6g3HmG8Fd2s6oQWJL4f41cyscrD40=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D9lcxTas7YscTCGetZere7/h4KQYBnkc+2EK+zLtB/bLZTnCo154dl2Xvlta07i8X
-         iqFKZEVjxhdK7z6a9Me4HznGJm3h3NMTq4wj25Ji2B9XHP6E/CIjg5bcyyL0cVGk3T
-         s+y0FtO1jGG925SUYmRrL4YBxswq7Lj+3j4+PzSI=
-Date:   Sat, 15 Jun 2019 07:50:19 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     James Feeney <james@nurealm.net>
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Peter Hutterer <peter.hutterer@who-t.net>,
-        Sasha Levin <sashal@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>, linux-input@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/2] HID: input: make sure the wheel high resolution
- multiplier is set
-Message-ID: <20190615055019.GC23883@kroah.com>
-References: <20190423154615.18257-1-benjamin.tissoires@redhat.com>
- <CAO-hwJLCL95pAzO9kco2jo2_uCV2=3f5OEf=P=AoB9EpEjFTAw@mail.gmail.com>
- <43a56e9b-6e44-76b7-efff-fa8996183fbc@nurealm.net>
- <CAO-hwJK614pzseUsGqH65fCnrm=N7970i4_mqi0m1gdkY=J0ag@mail.gmail.com>
- <b6410e5d-b165-7a9b-2ef5-eb44c8de7753@nurealm.net>
+        Sat, 15 Jun 2019 01:53:02 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:40895 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbfFOFxC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 01:53:02 -0400
+Received: by mail-qk1-f195.google.com with SMTP id c70so3100911qkg.7
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 22:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Kz+tawjj+TKGLusbM0dZKp0s2fiz0LpOWBpuEGiIXoo=;
+        b=c4dwLIgGIFZILjgl4mh8YLfuK7rL81nwXA/1iHCW5MEKfrs9x4sPI2/59Aao2vYRK2
+         JRupca19/9klmYhMoXAQRHQ524wIx8ItlLVH7TwwkzFrnbuPs+b+SL6MAw0etINOfGi1
+         tCsAM1QcalwmxnHVmpsNlbCx2ryeQ5qltSyoWo2HuyhrQr4lI7s9VA97Y1tY8Xh1rTGW
+         hoFH3XD2+VA6LJCqz5a3XMoCnW2Ge75kQgEAPtZ99qRZiN3MyPVYb4eM+8qjYalAeCEk
+         fzbiw7rNGVCwUwVs92X2Jly94WDadpVcYijCGrJrNP7QrA3rTPQlnnII9aQ6e8UHacpS
+         /QTA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kz+tawjj+TKGLusbM0dZKp0s2fiz0LpOWBpuEGiIXoo=;
+        b=c+a0AJKcgDixx89NUhI8P7BsZGi7Q17TgMmkg4ER30hnoiZHrj4TNHH1Y2agjngDji
+         Ddgw+MC5c2w9N3vG2P659hqe1b7hCtmgxlNi5Xnrajx4+FCFeo9KysfKBnDLEpet92/d
+         Z3B/yWFb+veE2XVePxaTFzBU9tEowKlxNSpGX+OAlMZeyXem+1utWDpeyhdk+re6A0Fn
+         WokmDE0hLo13P9QGSrYKHPjLxwSJ9mmzsqHDIp0wrRgzBnMS7y7dvHrvUs1m3GpvMGBZ
+         b428xUIqN7nUhY9IPJtyKgdHWdpArcFlIQ15Fqou8DsxQxmD58sz1Rm3uWTUuDeIVmW2
+         DUiQ==
+X-Gm-Message-State: APjAAAXUOnZj2D99yxwDRgwMMaN0LsEU9pP//lc+uxQzkcL+VxQpDsTn
+        vfwvNwvolDOE56uDYJbONuUJZQ==
+X-Google-Smtp-Source: APXvYqzJ8qzubBN5LJ4SW5ilBdh7p6QC+o8PkqRdl/sW5CGmuBBVQ572Ghw9AI2yNX6P9ThsL+rFpg==
+X-Received: by 2002:a05:620a:1661:: with SMTP id d1mr4643851qko.192.1560577981016;
+        Fri, 14 Jun 2019 22:53:01 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li1322-146.members.linode.com. [45.79.223.146])
+        by smtp.gmail.com with ESMTPSA id t67sm2494822qkf.34.2019.06.14.22.52.53
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 14 Jun 2019 22:53:00 -0700 (PDT)
+Date:   Sat, 15 Jun 2019 13:52:49 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Mike Leach <mike.leach@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v2 3/4] perf augmented_raw_syscalls: Support arm64 raw
+ syscalls
+Message-ID: <20190615055249.GA3742@leoy-ThinkPad-X240s>
+References: <20190606094845.4800-4-leo.yan@linaro.org>
+ <20190606133838.GC30166@kernel.org>
+ <20190606141231.GC5970@leoy-ThinkPad-X240s>
+ <20190606144412.GC21245@kernel.org>
+ <20190607095831.GG5970@leoy-ThinkPad-X240s>
+ <20190609131849.GB6357@leoy-ThinkPad-X240s>
+ <20190610184754.GU21245@kernel.org>
+ <20190611041831.GA3959@leoy-ThinkPad-X240s>
+ <20190612024917.GG28689@kernel.org>
+ <20190613181514.GC1402@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <b6410e5d-b165-7a9b-2ef5-eb44c8de7753@nurealm.net>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190613181514.GC1402@kernel.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:09:35PM -0600, James Feeney wrote:
-> Hey Everyone
+On Thu, Jun 13, 2019 at 03:15:14PM -0300, Arnaldo Carvalho de Melo wrote:
+
+[...]
+
+> > > > diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> > > > index 1a2a605cf068..eb70a4b71755 100644
+> > > > --- a/tools/perf/builtin-trace.c
+> > > > +++ b/tools/perf/builtin-trace.c
+> > > > @@ -1529,6 +1529,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+> > > >  static int trace__validate_ev_qualifier(struct trace *trace)
+> > > >  {
+> > > >  	int err = 0, i;
+> > > > +	bool printed_invalid_prefix = false;
+> > > >  	size_t nr_allocated;
+> > > >  	struct str_node *pos;
+> > > >  
+> > > > @@ -1555,14 +1556,15 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+> > > >  			if (id >= 0)
+> > > >  				goto matches;
+> > > >  
+> > > > -			if (err == 0) {
+> > > > -				fputs("Error:\tInvalid syscall ", trace->output);
+> > > > -				err = -EINVAL;
+> > > > +			if (!printed_invalid_prefix) {
+> > > > +				pr_debug("Skipping unknown syscalls: ");
+> > > > +				printed_invalid_prefix = true;
+> > > >  			} else {
+> > > > -				fputs(", ", trace->output);
+> > > > +				pr_debug(", ");
+> > > >  			}
+> > > >  
+> > > > -			fputs(sc, trace->output);
+> > > > +			pr_debug("%s", sc);
+> > > > +			continue;
+> > > 
+> > > Here adds 'continue' so that we want to let ev_qualifier_ids.entries
+> > > to only store valid system call ids.  But this is not sufficient,
+> > > because we have initialized ev_qualifier_ids.nr at the beginning of
+> > > the function:
+> > > 
+> > >   trace->ev_qualifier_ids.nr = strlist__nr_entries(trace->ev_qualifier);
+> > > This sentence will set ids number to the string table's length; but
+> > > actually some strings are not really supported; this leads to some
+> > > items in trace->ev_qualifier_ids.entries[] will be not initialized
+> > > properly.
+> > > 
+> > > If we want to get neat entries and entry number, I suggest at the
+> > > beginning of the function we use variable 'nr_allocated' to store
+> > > string table length and use it to allocate entries:
+> > > 
+> > >   nr_allocated = strlist__nr_entries(trace->ev_qualifier);
+> > >   trace->ev_qualifier_ids.entries = malloc(nr_allocated *
+> > >                                            sizeof(trace->ev_qualifier_ids.entries[0]));
+> > > 
+> > > If we find any matched string, then increment the nr field under
+> > > 'matches' tag:
+> > > 
+> > > matches:
+> > >                 trace->ev_qualifier_ids.nr++;
+> > >                 trace->ev_qualifier_ids.entries[i++] = id;
+> > > 
+> > > This can ensure the entries[0..nr-1] has valid id and we can use
+> > > ev_qualifier_ids.nr to maintain the valid system call numbers.
+> > 
+> > yeah, you're right, I'll address these issues in a followup patch,
+> > tomorrow.
 > 
-> On 4/24/19 10:41 AM, Benjamin Tissoires wrote:
-> >>> For a patch to be picked up by stable, it first needs to go in Linus'
-> >>> tree. Currently we are working on 5.1, so any stable patches need to
-> >>> go in 5.1 first. Then, once they hit Linus' tree, the stable team will
-> >>> pick them and backport them in the appropriate stable tree.
+> This is equivalent and I think the smallest patch, I'll add one on top
+> doing what you suggested about nr_allocated getting the
+> strlist__nr_entries() and also will rename i to nr_used to contrast with
+> nr_allocated, and then at the end set ev_qualifier_ids.nr to nr_used.
+
+Thanks for this patch, I tested below changes and 'perf trace' works
+well.  You could add my test tag:
+
+Tested-by: Leo Yan <leo.yan@linaro.org>
+
+> - Arnaldo
 > 
-> Hmm - so, I just booted linux 5.1.9, and this patch set is *still* missing from the kernel.
-> 
-> Is there anything that we can do about this?
-
-What is the git commit id of the patch in Linus's tree?
-
-As I said before, it can not be backported until it shows up there
-first.
-
-thanks,
-
-greg k-h
+> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
+> index eb70a4b71755..bd1f00e7a2eb 100644
+> --- a/tools/perf/builtin-trace.c
+> +++ b/tools/perf/builtin-trace.c
+> @@ -1528,9 +1528,9 @@ static int trace__read_syscall_info(struct trace *trace, int id)
+>  
+>  static int trace__validate_ev_qualifier(struct trace *trace)
+>  {
+> -	int err = 0, i;
+> +	int err = 0;
+>  	bool printed_invalid_prefix = false;
+> -	size_t nr_allocated;
+> +	size_t nr_allocated, i;
+>  	struct str_node *pos;
+>  
+>  	trace->ev_qualifier_ids.nr = strlist__nr_entries(trace->ev_qualifier);
+> @@ -1575,7 +1575,7 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+>  			id = syscalltbl__strglobmatch_next(trace->sctbl, sc, &match_next);
+>  			if (id < 0)
+>  				break;
+> -			if (nr_allocated == trace->ev_qualifier_ids.nr) {
+> +			if (nr_allocated == i) {
+>  				void *entries;
+>  
+>  				nr_allocated += 8;
+> @@ -1588,11 +1588,11 @@ static int trace__validate_ev_qualifier(struct trace *trace)
+>  				}
+>  				trace->ev_qualifier_ids.entries = entries;
+>  			}
+> -			trace->ev_qualifier_ids.nr++;
+>  			trace->ev_qualifier_ids.entries[i++] = id;
+>  		}
+>  	}
+>  
+> +	trace->ev_qualifier_ids.nr = i;
+>  out:
+>  	if (printed_invalid_prefix)
+>  		pr_debug("\n");
