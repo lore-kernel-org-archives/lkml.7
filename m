@@ -2,69 +2,70 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CF3C31E44
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 01:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E91D6C46477
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 02:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F53621848
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 01:55:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560563709;
-	bh=c2xG0sMMn3reLu/+z+3+JnJocsu+h7cW/PNsrKjcXH4=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=s5AVJNFQMvClbYx+c3s/pg8HRzYKds8rQj6bLlNIV+i0B7ku/e+08C744wgpirmpO
-	 120OObN89ymQBwV80KOHowsu7HtwxyPC4RRRLpc7HLYKcJafOCxNlCpDblRZHAJWIu
-	 NRi4TwzHcDuPEASy2meRJqsudPtrkchphW/BgwGw=
+	by mail.kernel.org (Postfix) with ESMTP id C2CBB2133D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 02:08:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfFOBzI (ORCPT
+        id S1726419AbfFOCIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Fri, 14 Jun 2019 21:55:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbfFOBzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Fri, 14 Jun 2019 21:55:07 -0400
-Subject: Re: [GIT PULL] SCSI fixes for 5.2-rc4
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560563706;
-        bh=c2xG0sMMn3reLu/+z+3+JnJocsu+h7cW/PNsrKjcXH4=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bAyH9I5YQlxI95hVPZqTSgc1q+pMHoGxYSKKGT20VzPpsZKnpYGNJpxGlPlG/mKFS
-         /d6noNSffFuvWyioOcJcOGi43FUZcsZN0d0phBqUM4yqZg8YbcJjYXtvUnRis2BeZ+
-         +t4uLWguSVHxhQvHhmfI7Pyy9vi/mbR/Yj9BwQRs=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <1560551043.27102.99.camel@HansenPartnership.com>
-References: <1560551043.27102.99.camel@HansenPartnership.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <1560551043.27102.99.camel@HansenPartnership.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
-X-PR-Tracked-Commit-Id: 625d7d3518875c4d303c652a198feaa13d9f52d9
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1ed1fa5f9c311a74f031cabb18a415b4defdfa03
-Message-Id: <156056370681.9443.2329949705637808644.pr-tracker-bot@kernel.org>
-Date:   Sat, 15 Jun 2019 01:55:06 +0000
-To:     James Bottomley <James.Bottomley@HansenPartnership.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
+        Fri, 14 Jun 2019 22:08:55 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:57134 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725812AbfFOCIy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Fri, 14 Jun 2019 22:08:54 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C340412EB032E;
+        Fri, 14 Jun 2019 19:08:53 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 19:08:53 -0700 (PDT)
+Message-Id: <20190614.190853.71764546033996539.davem@davemloft.net>
+To:     martin.blumenstingl@googlemail.com
+Cc:     netdev@vger.kernel.org, peppe.cavallaro@st.com,
+        alexandre.torgue@st.com, joabreu@synopsys.com, andrew@lunn.ch,
+        linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        maxime.ripard@bootlin.com
+Subject: Re: [PATCH net-next v2 1/1] net: stmmac: use GPIO descriptors in
+ stmmac_mdio_reset
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190612193115.6751-2-martin.blumenstingl@googlemail.com>
+References: <20190612193115.6751-1-martin.blumenstingl@googlemail.com>
+        <20190612193115.6751-2-martin.blumenstingl@googlemail.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 14 Jun 2019 19:08:54 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Fri, 14 Jun 2019 15:24:03 -0700:
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date: Wed, 12 Jun 2019 21:31:15 +0200
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jejb/scsi.git scsi-fixes
+> Switch stmmac_mdio_reset to use GPIO descriptors. GPIO core handles the
+> "snps,reset-gpio" for GPIO descriptors so we don't need to take care of
+> it inside the driver anymore.
+> 
+> The advantage of this is that we now preserve the GPIO flags which are
+> passed via devicetree. This is required on some newer Amlogic boards
+> which use an Open Drain pin for the reset GPIO. This pin can only output
+> a LOW signal or switch to input mode but it cannot output a HIGH signal.
+> There are already devicetree bindings for these special cases and GPIO
+> core already takes care of them but only if we use GPIO descriptors
+> instead of GPIO numbers.
+> 
+> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1ed1fa5f9c311a74f031cabb18a415b4defdfa03
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Applied.
