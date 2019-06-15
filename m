@@ -2,75 +2,62 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EFEBC31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1097AC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:52:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135D42173C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:40:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="JZ6U04Ar"
+	by mail.kernel.org (Postfix) with ESMTP id DC29E2063F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:52:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfFOQkU (ORCPT
+        id S1726719AbfFOQto (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 12:40:20 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45542 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726859AbfFOQkU (ORCPT
+        Sat, 15 Jun 2019 12:49:44 -0400
+Received: from www262.sakura.ne.jp ([202.181.97.72]:64055 "EHLO
+        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfFOQto (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 12:40:20 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so5543895wre.12
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 09:40:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=1kclzBY5PNZTommgGhPdgVS2cfCmzWZVTfht0vXTwCQ=;
-        b=JZ6U04ArpLq8AS2xkzrb4Pt5Fh1RnVZ1qP63J/hDTfXcvt46/6V+A2mg/PyQWgKfsR
-         GSSztIEC1ibdqHNVmLvYNhUsG6UgTdk13cSbTXafmpSnzexoF5W4xl2DC7cGup58lH9v
-         LLMxv1QPKGGHY/0M0xexLH+xkvU4+ghDlrT7En/w0khyRuSHpTi2dcpNXK6mHkwy0xye
-         vNc/oHqJsz7Sl0mKUtk8+JZkgsB5LRPcIPWZCv9aJxx1dEGpY56wUxCDDbXNLYclFQmO
-         aEQQtZCeSI51njJCbs5ScHGrunWce2jOttYa44FgYtMZ7uqhAD4xGn1dkbQ3FihaUxsE
-         ANsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=1kclzBY5PNZTommgGhPdgVS2cfCmzWZVTfht0vXTwCQ=;
-        b=nhm//fAoCKHUAISlbOwrygsGBynL11wITe3wskLuGJSUFtEOf2AtobBJl8m+RnIeqd
-         T1kAAJ1zAWoExiBaxGovs/OnBoO3glcqcumW0ixzbu3OkiwKAGuHAvKdR0+5JlHfFpc1
-         WyyV07BKrjxBlV4Fc7qBl0mWw5Eu1Ih54TQwtc29tcxsixr9n/rKsxw7MxO0k23AjuxB
-         oL/5bu1RYcu3llrsk1uJ+Iv8BcQa+jFI16q5XjxMe/Um6WRfqiWFGqo5FC2XEckaw6p4
-         EFun6Rk+/OuWN8/ASnP+vBoTzQ7UdaRdW+qtdLFebkqzo2C0Ag1axEKZYKdZeYenHOVW
-         UZSQ==
-X-Gm-Message-State: APjAAAWNHlCiSSyzCvf5ySUjcIPaER9EwU3U1ZmEnu6PMH6RzWxuSrOQ
-        4MU+R6G1V1PrSVNV6zFyQ1CWBhj/DhJFK56c
-X-Google-Smtp-Source: APXvYqy9WEGALvrPT9COz+kWlbL9LXsbakuQb82aL5RDScZUgcY1zebZfqdZqPWKvssB7JsPXoZ9GQ==
-X-Received: by 2002:adf:ec49:: with SMTP id w9mr1610492wrn.303.1560616818338;
-        Sat, 15 Jun 2019 09:40:18 -0700 (PDT)
-Received: from [192.168.88.149] ([62.170.2.124])
-        by smtp.gmail.com with ESMTPSA id v18sm4121746wrs.80.2019.06.15.09.40.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 09:40:17 -0700 (PDT)
-Subject: Re: [PATCHSET block/for-linus] Assorted blkcg fixes
-To:     Tejun Heo <tj@kernel.org>
-Cc:     jbacik@fb.com, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, kernel-team@fb.com, dennis@kernel.org,
-        jack@suse.cz
-References: <20190613223041.606735-1-tj@kernel.org>
- <5d5835d3-d0e4-f4cc-19b1-841b4ad46a9a@kernel.dk>
- <20190615155055.GE657710@devbig004.ftw2.facebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <30e86027-ea36-02c5-b3bf-b1f3ce1a9d98@kernel.dk>
-Date:   Sat, 15 Jun 2019 10:40:13 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sat, 15 Jun 2019 12:49:44 -0400
+Received: from fsav106.sakura.ne.jp (fsav106.sakura.ne.jp [27.133.134.233])
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5FGmXSn070660;
+        Sun, 16 Jun 2019 01:48:33 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Received: from www262.sakura.ne.jp (202.181.97.72)
+ by fsav106.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp);
+ Sun, 16 Jun 2019 01:48:33 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav106.sakura.ne.jp)
+Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
+        (authenticated bits=0)
+        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x5FGmXuT070654
+        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
+        Sun, 16 Jun 2019 01:48:33 +0900 (JST)
+        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
+Subject: Re: general protection fault in oom_unkillable_task
+To:     Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yuzhoujian@didichuxing.com
+References: <0000000000004143a5058b526503@google.com>
+ <CALvZod72=KuBZkSd0ey5orJFGFpwx462XY=cZvO3NOXC0MogFw@mail.gmail.com>
+ <20190615134955.GA28441@dhcp22.suse.cz>
+ <CALvZod4hT39PfGt9Ohj+g77om5=G0coHK=+G1=GKcm-PowkXsw@mail.gmail.com>
+From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Message-ID: <5bb1fe5d-f0e1-678b-4f64-82c8d5d81f61@i-love.sakura.ne.jp>
+Date:   Sun, 16 Jun 2019 01:48:31 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <20190615155055.GE657710@devbig004.ftw2.facebook.com>
+In-Reply-To: <CALvZod4hT39PfGt9Ohj+g77om5=G0coHK=+G1=GKcm-PowkXsw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -79,23 +66,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/19 9:50 AM, Tejun Heo wrote:
-> Hello,
-> 
-> On Sat, Jun 15, 2019 at 01:40:50AM -0600, Jens Axboe wrote:
->>> Please refer to each patch's description for details.  Patchset is
->>> also available in the following git branch.
->>>
->>>    git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-blkcg-fixes
->>>
->>> Thanks.  diffstat follows.
+On 2019/06/16 1:11, Shakeel Butt wrote:
+> On Sat, Jun 15, 2019 at 6:50 AM Michal Hocko <mhocko@kernel.org> wrote:
+>> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+>> index 5a58778c91d4..43eb479a5dc7 100644
+>> --- a/mm/oom_kill.c
+>> +++ b/mm/oom_kill.c
+>> @@ -161,8 +161,8 @@ static bool oom_unkillable_task(struct task_struct *p,
+>>                 return true;
 >>
->> Are you fine with these hitting 5.3?
+>>         /* When mem_cgroup_out_of_memory() and p is not member of the group */
+>> -       if (memcg && !task_in_mem_cgroup(p, memcg))
+>> -               return true;
+>> +       if (memcg)
+>> +               return false;
 > 
-> Yeah, none of them are very urgent.  5.3 should be fine.
+> This will break the dump_tasks() usage of oom_unkillable_task(). We
+> can change dump_tasks() to traverse processes like
+> mem_cgroup_scan_tasks() for memcg OOMs.
 
-OK great, added for 5.3, thanks.
+While dump_tasks() traverses only each thread group, mem_cgroup_scan_tasks()
+traverses each thread. To avoid printk()ing all threads in a thread group,
+moving that check to
 
--- 
-Jens Axboe
+	if (memcg && !task_in_mem_cgroup(p, memcg))
+		continue;
+
+in dump_tasks() is better?
+
+> 
+>>
+>>         /* p may not have freeable memory in nodemask */
+>>         if (!has_intersects_mems_allowed(p, nodemask))
 
