@@ -2,150 +2,111 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CEAC31E52
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 15:48:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1321C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 15:50:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C17F20673
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 15:48:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560613730;
-	bh=Ge0khhEctwDDjsAI9a281lx6Be7hNKcUJhcPMGAOz8I=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=GWMB5ibhcoGfFNyfFq0/MtQSUD+NjaCjIo7edkw2TVN20WWPZxAM3mDcKsyfngpwK
-	 yUr5K8nzeDO7t2BLsbdQjfpEi2ipXOpkptK0MdPpHy+pmfEReOWX9AwSEDCJaWSZGH
-	 itlp3AlNRn8De45NC6wBQaOg9qedl5bj4vil9/Vc=
+	by mail.kernel.org (Postfix) with ESMTP id CA8E020673
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 15:50:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oDrN3FIr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726832AbfFOPst (ORCPT
+        id S1726877AbfFOPuZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 11:48:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33034 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726405AbfFOPst (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 11:48:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB12B20673;
-        Sat, 15 Jun 2019 15:48:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560613728;
-        bh=Ge0khhEctwDDjsAI9a281lx6Be7hNKcUJhcPMGAOz8I=;
-        h=Date:From:To:Cc:Subject:From;
-        b=NfW/aNUcnLsxHEl4s7R2zYbGx7CDtl/GkQplUAoY+vQUgH1dexOgXY6RttRpLh1s/
-         55p8PAysM+MA6JXX+12kSPGZ8ZjGtp2mJyPeX8joKuc/Uz4oHa/IcLNJDn9YYeLYk+
-         x1USUq8htT21amMWl7udsdE+OuG3/q+HS0W16dKw=
-Date:   Sat, 15 Jun 2019 17:48:45 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: [GIT PULL] USB fixes for 5.2-rc5
-Message-ID: <20190615154845.GA6603@kroah.com>
+        Sat, 15 Jun 2019 11:50:25 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:56276 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfFOPuY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 11:50:24 -0400
+Received: by mail-wm1-f65.google.com with SMTP id a15so5209690wmj.5;
+        Sat, 15 Jun 2019 08:50:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fCnxcuBISnCFMkS4CaXGr8LMwEuRq/IrT37Bl4TOGh4=;
+        b=oDrN3FIrIFBF30pElj4VmuGcUjcw1qR0CtlyNdG/UJgVLADKFLAEqFg4CULrX1ewbd
+         EiVaBluytK9RPLn1T31RfddunY5GK4eo/hOXxO0FWwO+Ri/vD46fRIV9aR8geI+i44jD
+         BS1dI9M94WeUbYc1VGMokk8cJCtM0tcmNi/baThN7WemK7SNjUBeG300PlTbZ1WfYQM+
+         c653nCj2E04+vyoji6W8zlxTrUyedcAVkKPD84HQN7Kr5a5wUUgeeJyLAkgkHlN1k3Fo
+         2GJP6X8cwWQT5sLo23jSJONVVI4yGdrVadGyKMwb6mCT8tIMiDli2B+UOXbqngkpRiEn
+         QTvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=fCnxcuBISnCFMkS4CaXGr8LMwEuRq/IrT37Bl4TOGh4=;
+        b=K6K3H/8565YSRl297P7oCoZLca2YZQjao+dIhPP3n+oEELgzspeXiB6lIT+oqPKYLW
+         +UBMpqlftvQeVeVI8q86nHRIlNcUC79b0ZfFFWdB7R62DBeO+9RN9FZ+Na1D8B6uF49H
+         iHcuWCDby6zuNMH/cqeIyvINuuYsX50EgSt2vHhH6efxctORguR3KxEVbkSLS4X6VKWU
+         fNr16PVzwy4wuYgpuOxnTxvr2cGeb+ry3bSLKowXhL+nM1szsoQBvLElp/4+sqEnAUcm
+         oR4I9rllMHwSjzdOTo1WxzaDvCCbexdN/GMiHG1TgIN9LC72xKcBpNi+Q9n+apmBBCRP
+         FmwA==
+X-Gm-Message-State: APjAAAWz0mW6dTaoCbQYZ3UAKvKvFEk+E5OwJFIkJPgi7cJy2kQzxRrI
+        hj5HITTTsyd/BqL4aySeI3Zv3WU2uvQ=
+X-Google-Smtp-Source: APXvYqwgrDLe1sR+kqURXVgPIh6Qp7jjSpzcV0oQSqmHkgPfVLJQ40UYVwsVp75Iuxm60ew4zFl4ng==
+X-Received: by 2002:a1c:6a17:: with SMTP id f23mr11916738wmc.91.1560613822175;
+        Sat, 15 Jun 2019 08:50:22 -0700 (PDT)
+Received: from debian64.daheim (pD9E2960F.dip0.t-ipconnect.de. [217.226.150.15])
+        by smtp.gmail.com with ESMTPSA id 128sm8065848wme.12.2019.06.15.08.50.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 15 Jun 2019 08:50:21 -0700 (PDT)
+Received: from chuck by debian64.daheim with local (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1hcAwe-00070w-Ua; Sat, 15 Jun 2019 17:50:20 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Abhishek Sahu <absahu@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-kernel@vger.kernel.org, Pavel Kubelun <be.dissent@gmail.com>
+Subject: [PATCH] ipq40xx: fix high resolution timer
+Date:   Sat, 15 Jun 2019 17:50:20 +0200
+Message-Id: <20190615155020.26922-1-chunkeey@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+From: Abhishek Sahu <absahu@codeaurora.org>
 
-  Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
+Cherry-picked from CAF QSDK repo with Change-Id
+I7c00b3c74d97c2a30ac9f05e18b511a0550fd459.
 
-are available in the Git repository at:
+Original commit message:
+The kernel is failing in switching the timer for high resolution
+mode and clock source operates in 10ms resolution. The always-on
+property needs to be given for timer device tree node to make
+clock source working in 1ns resolution.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.2-rc5
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Signed-off-by: Pavel Kubelun <be.dissent@gmail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+---
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-for you to fetch changes up to 5f54a85db5df67df8161739a4b2f9c2b7ab219fe:
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index 83eb5c29274b..c7fa9f61e1f1 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -165,6 +165,7 @@
+ 			     <1 4 0xf08>,
+ 			     <1 1 0xf08>;
+ 		clock-frequency = <48000000>;
++		always-on;
+ 	};
+ 
+ 	soc {
+-- 
+2.20.1
 
-  usb: typec: Make sure an alt mode exist before getting its partner (2019-06-12 17:13:02 +0200)
-
-----------------------------------------------------------------
-USB fixes for 5.2-rc5
-
-Here are some small USB driver fixes for 5.2-rc5
-
-Nothing major, just some small gadget fixes, usb-serial new device ids,
-a few new quirks, and some small fixes for some regressions that have
-been found after the big 5.2-rc1 merge.
-
-All of these have been in linux-next for a while with no reported
-issues.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-----------------------------------------------------------------
-Alexandre Belloni (1):
-      usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
-
-Andrey Smirnov (1):
-      usb: phy: mxs: Disable external charger detect in mxs_phy_hw_init()
-
-Andrzej Pietrasiewicz (1):
-      usb: gadget: dwc2: fix zlp handling
-
-Chris Packham (1):
-      USB: serial: pl2303: add Allied Telesis VT-Kit3
-
-Daniele Palmas (1):
-      USB: serial: option: add Telit 0x1260 and 0x1261 compositions
-
-Douglas Anderson (1):
-      usb: dwc2: host: Fix wMaxPacketSize handling (fix webcam regression)
-
-Greg Kroah-Hartman (2):
-      Merge tag 'fixes-for-v5.2-rc4' of git://git.kernel.org/.../balbi/usb into usb-linus
-      Merge tag 'usb-serial-5.2-rc5' of https://git.kernel.org/.../johan/usb-serial into usb-linus
-
-Gustavo A. R. Silva (1):
-      usb: typec: ucsi: ccg: fix memory leak in do_flash
-
-Heikki Krogerus (1):
-      usb: typec: Make sure an alt mode exist before getting its partner
-
-Jörgen Storvist (1):
-      USB: serial: option: add support for Simcom SIM7500/SIM7600 RNDIS mode
-
-Kai-Heng Feng (1):
-      USB: usb-storage: Add new ID to ums-realtek
-
-Marco Zatta (1):
-      USB: Fix chipmunk-like voice when using Logitech C270 for recording audio.
-
-Martin Schiller (1):
-      usb: dwc2: Fix DMA cache alignment issues
-
-Minas Harutyunyan (1):
-      usb: dwc2: Set actual frame number for completed ISOC transfer for none DDMA
-
-Wei Yongjun (1):
-      usb: gadget: udc: lpc32xx: fix return value check in lpc32xx_udc_probe()
-
-Young Xiao (1):
-      usb: gadget: fusb300_udc: Fix memory leak of fusb300->ep[i]
-
- drivers/usb/core/quirks.c             |  3 +++
- drivers/usb/dwc2/gadget.c             | 24 ++++++++++++++-------
- drivers/usb/dwc2/hcd.c                | 39 +++++++++++++++++++++--------------
- drivers/usb/dwc2/hcd.h                | 20 ++++++++++--------
- drivers/usb/dwc2/hcd_intr.c           |  5 +++--
- drivers/usb/dwc2/hcd_queue.c          | 10 +++++----
- drivers/usb/gadget/udc/fusb300_udc.c  |  5 +++++
- drivers/usb/gadget/udc/lpc32xx_udc.c  |  7 +++----
- drivers/usb/phy/phy-mxs-usb.c         | 14 +++++++++++++
- drivers/usb/serial/option.c           |  6 ++++++
- drivers/usb/serial/pl2303.c           |  1 +
- drivers/usb/serial/pl2303.h           |  3 +++
- drivers/usb/storage/unusual_realtek.h |  5 +++++
- drivers/usb/typec/bus.c               |  2 +-
- drivers/usb/typec/ucsi/ucsi_ccg.c     |  6 ++++--
- 15 files changed, 105 insertions(+), 45 deletions(-)
