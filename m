@@ -2,87 +2,98 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79522C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A30E0C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AE621473
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF572183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726760AbfFOOgW (ORCPT
+        id S1726680AbfFOOr0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 10:36:22 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:52171 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfFOOgV (ORCPT
+        Sat, 15 Jun 2019 10:47:26 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42899 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfFOOr0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 10:36:21 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45R0Qp6Gd5z1rWTY;
-        Sat, 15 Jun 2019 16:36:18 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45R0Qp5Wgzz1qqkh;
-        Sat, 15 Jun 2019 16:36:18 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id CV3ATwZ73GD7; Sat, 15 Jun 2019 16:36:17 +0200 (CEST)
-X-Auth-Info: WeiuE3FkP22bpwRZXiPgSc5kxd0EGyhb2xJKE3Lx5DsQLNHL9KEEXkKT6N7vRlPZ
-Received: from igel.home (ppp-46-244-181-62.dynamic.mnet-online.de [46.244.181.62])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Sat, 15 Jun 2019 16:36:17 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-        id 98FE02C0C9A; Sat, 15 Jun 2019 16:36:15 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        j.neuschaefer@gmx.net, Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] powerpc/mm/32s: only use MMU to mark initmem NX if STRICT_KERNEL_RWX
-References: <cover.1550775950.git.christophe.leroy@c-s.fr>
-        <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
-        <8736kb9fry.fsf_-_@igel.home>
-        <20190615152559.Horde.0lTFIZALxZ-RI75z94G3jA8@messagerie.si.c-s.fr>
-X-Yow:  I'm using my X-RAY VISION to obtain a rare glimpse of the
- INNER WORKINGS of this POTATO!!
-Date:   Sat, 15 Jun 2019 16:36:15 +0200
-In-Reply-To: <20190615152559.Horde.0lTFIZALxZ-RI75z94G3jA8@messagerie.si.c-s.fr>
-        (Christophe Leroy's message of "Sat, 15 Jun 2019 15:25:59 +0200")
-Message-ID: <87pnne9aqo.fsf@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+        Sat, 15 Jun 2019 10:47:26 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z25so8179024edq.9
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 07:47:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=TzjhHeA4UQZAFu3IO7OhtCMGptw4ykhDZuWZdORubpw=;
+        b=FF3WfvpC3CuurKmiNy2M84Ia+5UHImiyMIV8/0HThgihF/yPxg+AHtNCGeehuQCzr2
+         CxyxhisyhOPEc+IIFVi0PVkHx3IXvxOw65bfwdNyVHf1ZJz87h7zCiYEhN9PYDospJd5
+         ljGcW3sjFnp3DDGA7UZL+3czJJiEtlpSyRH1hj+qgp8cvc/jstI6ezBjB7jf55NVPmf+
+         mO41gyN5+INJvuY7huPIzDA0xdzOdnnETnCi2PEFxIaSO9I5EXdP3mrfWmYSz5c5pDq4
+         R8/4gJ5MrsUkEQwP/z9pheiqur39+PEMYCVRsi59Ypc5nQZChsF4YzCbWZxOt/qedAk2
+         7Uaw==
+X-Gm-Message-State: APjAAAXhuEjnya0crMZKiYBVgsfPdJZHTu4lVs+eZLuMOHasC1aooJzh
+        E1HAdefFQQDg2otmyRozFsN5CcfFZM2ntQ==
+X-Google-Smtp-Source: APXvYqy91/uHnpOWdd31f07Z9HeokOran4BkkGdjbTNQeozVDRtV2oQSIbSteFcoyG7olovnY5fbcA==
+X-Received: by 2002:a17:906:b2cd:: with SMTP id cf13mr39744134ejb.197.1560610043968;
+        Sat, 15 Jun 2019 07:47:23 -0700 (PDT)
+Received: from localhost (134.217.90.212.static.wline.lns.sme.cust.swisscom.ch. [212.90.217.134])
+        by smtp.gmail.com with ESMTPSA id p37sm1928509edc.14.2019.06.15.07.47.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 15 Jun 2019 07:47:23 -0700 (PDT)
+Date:   Sat, 15 Jun 2019 07:47:23 -0700 (PDT)
+X-Google-Original-Date: Sat, 15 Jun 2019 07:11:37 PDT (-0700)
+Subject:     Re: [PATCH] MAINTAINERS: don't automatically patches involving SiFive to the linux-riscv list
+In-Reply-To: <20190613070225.7209-1-paul.walmsley@sifive.com>
+CC:     linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Paul Walmsley <paul.walmsley@sifive.com>
+Message-ID: <mhng-244456e0-3eb4-445b-963b-213b1d3b6293@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Jun 15 2019, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
-
-> Andreas Schwab <schwab@linux-m68k.org> a écrit :
+On Thu, 13 Jun 2019 00:02:25 PDT (-0700), Paul Walmsley wrote:
+> The current K: entry in the "SIFIVE DRIVERS" section causes
+> scripts/get_maintainer.pl to recommend that all patches that originate
+> from, or are sent or copied to, anyone with a @sifive.com E-mail
+> address to be copied to the linux-riscv@lists.infradead.org mailing
+> list:
 >
->> If STRICT_KERNEL_RWX is disabled, never use the MMU to mark initmen
->> nonexecutable.
+> https://lore.kernel.org/linux-riscv/CABEDWGxKCqCq2HBU8u1-=QgmMCdb69oXxN5rz65nxNODxdCAnw@mail.gmail.com/
 >
-> I dont understand, can you elaborate ?
+> This is undesirable, since not all of these patches may be relevant to
+> the linux-riscv@ mailing list.  Fix by excluding K: matches that look
+> like a sifive.com E-mail address.
+>
+> Based on the following patch from Palmer Dabbelt <palmer@sifive.com>:
+>
+> https://lore.kernel.org/linux-riscv/mhng-2a897a66-1f3d-4878-ba47-1ae36b555540@palmer-si-x1e/
+>
+> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+> Cc: Palmer Dabbelt <palmer@sifive.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 57f496cff999..66d23856781d 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -14332,7 +14332,7 @@ M:	Paul Walmsley <paul.walmsley@sifive.com>
+>  L:	linux-riscv@lists.infradead.org
+>  T:	git git://github.com/sifive/riscv-linux.git
+>  S:	Supported
+> -K:	sifive
+> +K:	[^@]sifive
+>  N:	sifive
+>
+>  SILEAD TOUCHSCREEN DRIVER
 
-It breaks suspend.
-
-> This area is mapped with BATs so using change_page_attr() is pointless.
-
-There must be a reason STRICT_KERNEL_RWX is not available with
-HIBERNATE.
-
-Andreas.
-
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
