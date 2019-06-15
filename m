@@ -2,69 +2,92 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3031C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70173C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:39:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9389520861
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4537220861
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:39:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="a33jSYKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726657AbfFOKh1 (ORCPT
+        id S1726729AbfFOKiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 06:37:27 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18622 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725944AbfFOKh1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 06:37:27 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D5DFC3ED05B042B05866;
-        Sat, 15 Jun 2019 18:37:20 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 15 Jun 2019 18:37:10 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] coresight: replicator: Add terminate entry for acpi_device_id tables
-Date:   Sat, 15 Jun 2019 10:44:40 +0000
-Message-ID: <20190615104440.94149-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Sat, 15 Jun 2019 06:38:50 -0400
+Received: from www.linux-watchdog.org ([185.87.125.42]:37242 "EHLO
+        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725944AbfFOKiu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 06:38:50 -0400
+Received: by www.linux-watchdog.org (Postfix, from userid 500)
+        id E075540909; Sat, 15 Jun 2019 12:02:30 +0200 (CEST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org E075540909
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
+        s=odk20180602; t=1560592950;
+        bh=x4moI263mVJ9xXic7CfPOGIPWBoqDc8/6cZrMgLHrrk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=a33jSYKHPmrGKL4bHC44S8kGiyIC/LW5QIg3kRKNEItop/qtctXJF40ON/1zXd/4j
+         BgH7YfgZUmz3jFwYewwboPMspfWmDzvzr3h++8zpXPrvz64egaHFHXVSWSbC+y5WIo
+         q17kUKzN8DhrwbU3GrwhWIEE2wagNL4K5wufWaEg=
+Date:   Sat, 15 Jun 2019 12:02:30 +0200
+From:   Wim Van Sebroeck <wim@linux-watchdog.org>
+To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Esben Haabendal <esben@haabendal.dk>,
+        Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
+Subject: Re: [PATCH v10 3/3] watchdog: make the device time out at
+ open_deadline when open_timeout is used
+Message-ID: <20190615100230.GA10480@www.linux-watchdog.org>
+References: <20190605140628.618-1-rasmus.villemoes@prevas.dk>
+ <20190605140628.618-4-rasmus.villemoes@prevas.dk>
+ <20190607183827.GA32475@roeck-us.net>
+ <56280052-9437-9813-a24e-125abb876762@prevas.dk>
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56280052-9437-9813-a24e-125abb876762@prevas.dk>
+User-Agent: Mutt/1.5.20 (2009-12-10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Make sure acpi_device_id tables have terminate entry.
+Hi Rasmus,
 
-Fixes: 8f35caae1e1f ("coresight: acpi: Support for platform devices")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- drivers/hwtracing/coresight/coresight-replicator.c | 1 +
- 1 file changed, 1 insertion(+)
+> > On Wed, Jun 05, 2019 at 02:06:44PM +0000, Rasmus Villemoes wrote:
+> >> When the watchdog device is not open by userspace, the kernel takes
+> >> care of pinging it. When the open_timeout feature is in use, we should
+> >> ensure that the hardware fires close to open_timeout seconds after the
+> >> kernel has assumed responsibility for the device.
+> >>
+> >> To do this, simply reuse the logic that is already in place for
+> >> ensuring the same thing when userspace is responsible for regularly
+> >> pinging the device:
+> >>
+> >> - When watchdog_active(wdd), this patch doesn't change anything.
+> >>
+> >> - When !watchdoc_active(wdd), the "virtual timeout" should be taken to
+> > 
+> > s/watchdoc_active/watchdog_active/
+> > 
+> > otherwise
+> > 
+> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> Thanks! Wim, can you fix up if/when applying, or do you prefer I resend?
 
-diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-index 542952759941..0c73dc1073c0 100644
---- a/drivers/hwtracing/coresight/coresight-replicator.c
-+++ b/drivers/hwtracing/coresight/coresight-replicator.c
-@@ -300,6 +300,7 @@ static const struct of_device_id static_replicator_match[] = {
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id static_replicator_acpi_ids[] = {
- 	{"ARMHC985", 0}, /* ARM CoreSight Static Replicator */
-+	{"", 0},
- };
- #endif
+I'll fix up when applying. No need to resend a new patch for that.
 
-
+Kind regards,
+Wim.
 
