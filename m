@@ -2,91 +2,66 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D207C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76285C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECE0E2183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 549082183F
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:31:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726867AbfFOO24 (ORCPT
+        id S1726894AbfFOObO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 10:28:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56114 "EHLO mx1.redhat.com"
+        Sat, 15 Jun 2019 10:31:14 -0400
+Received: from verein.lst.de ([213.95.11.211]:53697 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725944AbfFOO24 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 10:28:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3C37F308FBA0;
-        Sat, 15 Jun 2019 14:28:56 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D3565D9E2;
-        Sat, 15 Jun 2019 14:28:49 +0000 (UTC)
-Message-ID: <1d80a586342dfee0479db96a4457f7023b0260a9.camel@redhat.com>
-Subject: Re: [RFC PATCH 8/8] svm: Allow AVIC with in-kernel irqchip mode
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        Alex Williamson <alex.williamson@redhat.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "jsteckli@amazon.de" <jsteckli@amazon.de>,
-        "sironi@amazon.de" <sironi@amazon.de>,
-        "wawei@amazon.de" <wawei@amazon.de>
-Date:   Sat, 15 Jun 2019 17:28:50 +0300
-In-Reply-To: <d57a0843-061a-231a-9d50-d7e4d4d05d73@amd.com>
-References: <20190204144128.9489-1-suravee.suthikulpanit@amd.com>
-         <20190204144128.9489-9-suravee.suthikulpanit@amd.com>
-         <20190205113404.5c5382e6@w520.home>
-         <d57a0843-061a-231a-9d50-d7e4d4d05d73@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sat, 15 Jun 2019 14:28:56 +0000 (UTC)
+        id S1725944AbfFOObO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 10:31:14 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 57B1468B02; Sat, 15 Jun 2019 16:30:44 +0200 (CEST)
+Date:   Sat, 15 Jun 2019 16:30:43 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, linux-mm@kvack.org,
+        nouveau@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 06/22] mm: factor out a devm_request_free_mem_region
+ helper
+Message-ID: <20190615143043.GA27825@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <20190613094326.24093-7-hch@lst.de> <56c130b1-5ed9-7e75-41d9-c61e73874cb8@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <56c130b1-5ed9-7e75-41d9-c61e73874cb8@nvidia.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-02-06 at 11:20 +0000, Suthikulpanit, Suravee wrote:
-> Alex,
-> 
-> On 2/6/19 1:34 AM, Alex Williamson wrote:
-> > On Mon, 4 Feb 2019 14:42:32 +0000
-> > "Suthikulpanit, Suravee"<Suravee.Suthikulpanit@amd.com>  wrote:
+On Fri, Jun 14, 2019 at 07:21:54PM -0700, John Hubbard wrote:
+> On 6/13/19 2:43 AM, Christoph Hellwig wrote:
+> > Keep the physical address allocation that hmm_add_device does with the
+> > rest of the resource code, and allow future reuse of it without the hmm
+> > wrapper.
 > > 
-> > > Once the IRQ ack notifier for in-kernel PIT is no longer required
-> > > and run-time AVIC activate/deactivate is supported, we can remove
-> > > the kernel irqchip split mode requirement for AVIC.
-> > > 
-> > > Hence, remove the check for irqchip split mode when enabling AVIC.
-> > 
-> > Yay!  Could we also at this point make avic enabled by default or are
-> > there remaining incompatibilities?  Thanks,
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  include/linux/ioport.h |  2 ++
+> >  kernel/resource.c      | 39 +++++++++++++++++++++++++++++++++++++++
+> >  mm/hmm.c               | 33 ++++-----------------------------
+> >  3 files changed, 45 insertions(+), 29 deletions(-)
 > 
-> I'm looking into that next. I would need to ensure that enabling
-> AVIC would not cause issues with other features.
-> 
-> Suravee
+> Some trivial typos noted below, but this accurately moves the code
+> into a helper routine, looks good.
 
-Hi!
-
-Do you have any update on the state of this patch? 
-I kind of stumbled on it accidently, while
-trying to understand why AVIC is only enabled in the split irqchip mode.
-
-Best regards,
-	Maxim Levitsky
-
+Thanks for the typo spotting.  These two actually were copy and pasted
+from the original hmm code, but I'll gladly fix them for the next
+iteration.
