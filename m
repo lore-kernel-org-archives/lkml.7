@@ -2,110 +2,159 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8F09C31E52
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:08:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FA44C31E52
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:11:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE3921881
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:08:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3889921852
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:11:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="Yo6/9UyM"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ipVwsL7J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfFOQIZ (ORCPT
+        id S1726944AbfFOQLu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 12:08:25 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38581 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfFOQIZ (ORCPT
+        Sat, 15 Jun 2019 12:11:50 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:46013 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726800AbfFOQLu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 12:08:25 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f97so2299357plb.5
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 09:08:25 -0700 (PDT)
+        Sat, 15 Jun 2019 12:11:50 -0400
+Received: by mail-yw1-f67.google.com with SMTP id m16so2607717ywh.12
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 09:11:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9I928AV16ooo9jWnHVJ+TbU1BzYjl5gqs5k1AXR35Ps=;
-        b=Yo6/9UyMOSre2p9e2TlPcj5kPGAPwe0jyHAYNg1xpnQC6QoXxEXlu5DHEQqYKZGJ+o
-         eTsctghCJ9Gqwhw7P2J/7QQirAPJhd8amp1PjtjqTqhINbzoWY9zclMYpPwwdyvovgE6
-         U0YT4KT6spSRayg9itsoKCz+i/JW1RRf06hI8=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XfBQUtQbUflzlL5gXoL56FmCXzvbbHidoYyXkMyKoQc=;
+        b=ipVwsL7JBtwqQ60y57/QQVRgEPGE1O0zywJzxb44QwpSOZglzFLbY6eUJ1uzLB/sB2
+         dcawchwcYNXnetJRQcSW8Qk6DyStfIITaWSTIJ7x0exPSGlxcHc8l1U7v2pcu/F1qfAP
+         6lw3TEqIImIF2HpRXN0k3FwfDmPk3N1A8U7ErEPKUo7WETp2TI4S2i8bGuDISjPWspdh
+         bQipDoDcKLUcRn4D8TaWICJy+BAVPGBPTFDymCrdHaPgXuZ9bC0uylHuqZTiscz2PlEF
+         oY9VM5jTAj72SqVWgHNPndgHiKJq6ePR+vv1uaqiZT7sbppP/H7yNF5JNHzRSaBbMXK9
+         NwnA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9I928AV16ooo9jWnHVJ+TbU1BzYjl5gqs5k1AXR35Ps=;
-        b=BuARzvUmuI2lPwpqqUZZhqfHPE/fHHBv9QOSzGhT0fezczdjRtS/FinmaWRFB7TO8y
-         ZeobSEPDA6YcHcNJxhAfL7unkr2M0TqYhdwOqqan0xoSHRDL+sPU4YkLUJ9U2s4RwmfU
-         6yhEo0YqWOgKHVZMsykEr0s+UKrf3h1R9g9wITUl08n6rYSP8pEm2sEOtoqq1vOIH+tM
-         XSqL9yfxi+78/2dhP9pRqXUVxaYxBKHvUn/pujqByEsklzMkQEQl5MB5N6MtsWiowYDU
-         MLbUz67nZp/HPynImUZGAv2g9wb0waXe0ii/xBleakndCunD3ifxHxh0uyazArUh45J5
-         U50A==
-X-Gm-Message-State: APjAAAVmC4hiwhvMwa/NEo6pFiXTFLn+xgUNOnt3NQ4OWzjWe4g++Zkp
-        F+1Thc0t5UiEs4AiNgodAtGJacNZXc0udQ==
-X-Google-Smtp-Source: APXvYqxBTJ37ihL2DutojGbYbJbHsnfGkRbUmjSx6gSy91LHlFif6NhzN1Dj8LyE8MOq8FIkngDD3A==
-X-Received: by 2002:a17:902:25ab:: with SMTP id y40mr43063854pla.268.1560614904698;
-        Sat, 15 Jun 2019 09:08:24 -0700 (PDT)
-Received: from localhost ([61.6.140.222])
-        by smtp.gmail.com with ESMTPSA id s15sm8391955pfd.183.2019.06.15.09.08.23
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 15 Jun 2019 09:08:24 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 00:08:20 +0800
-From:   Chris Down <chris@chrisdown.name>
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] memcg: Ignore unprotected parent in
- mem_cgroup_protected()
-Message-ID: <20190615160820.GB1307@chrisdown.name>
-References: <20190615111704.63901-1-xlpang@linux.alibaba.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XfBQUtQbUflzlL5gXoL56FmCXzvbbHidoYyXkMyKoQc=;
+        b=OXAkPaW+Cx30w4VnQoJCQXaubZO3djF4T3VVGmCBWwdXzpmlNSy84slbX3EMzNU34R
+         8ASeTuzO2Z7jaXcuUwWO/2hM7YH8+3mLccP7XuJH6/TFhYrDm5b8d31sGGdsWSvr3mZ1
+         4kB/bb2+sl7x+uzlZe8mnrxXkrODk7LAolNdwNdCUlE1gWuvyTPHaz3+lAsDjxWmZhSZ
+         BYWostoRv2e5xhxcWLF/XSpB6hK6Ke1oPif1Vh/58zwbUeMXw6CPXJecwEIY4SIGaUB6
+         lWtnM2LIM4V6TXAuY9mA7zApaposMns6G0zOVSIw/uyjR5Ey5mBcF/yitLwNiizSnBv5
+         si2g==
+X-Gm-Message-State: APjAAAX94SgiF1HHCy92P/O5MxYilg7SclFSAOrHMmrFbNp+XL2au2dQ
+        +uKhgdmgOc71yo7fk2KGp72L52KM4ZKLD6sGuOc5vw==
+X-Google-Smtp-Source: APXvYqxqCQwnTjswkopI4Ctw1mHXH/vjwmIBUTDY33SGw8OLfcEmXYLIjHt/aW2ylM/efT8mCZZXjs/edDhY0sis1II=
+X-Received: by 2002:a81:90e:: with SMTP id 14mr13071232ywj.4.1560615108857;
+ Sat, 15 Jun 2019 09:11:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190615111704.63901-1-xlpang@linux.alibaba.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+References: <0000000000004143a5058b526503@google.com> <CALvZod72=KuBZkSd0ey5orJFGFpwx462XY=cZvO3NOXC0MogFw@mail.gmail.com>
+ <20190615134955.GA28441@dhcp22.suse.cz>
+In-Reply-To: <20190615134955.GA28441@dhcp22.suse.cz>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Sat, 15 Jun 2019 09:11:37 -0700
+Message-ID: <CALvZod4hT39PfGt9Ohj+g77om5=G0coHK=+G1=GKcm-PowkXsw@mail.gmail.com>
+Subject: Re: general protection fault in oom_unkillable_task
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yuzhoujian@didichuxing.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xunlei,
-
-Xunlei Pang writes:
->Currently memory.min|low implementation requires the whole
->hierarchy has the settings, otherwise the protection will
->be broken.
+On Sat, Jun 15, 2019 at 6:50 AM Michal Hocko <mhocko@kernel.org> wrote:
 >
->Our hierarchy is kind of like(memory.min value in brackets),
+> On Fri 14-06-19 20:15:31, Shakeel Butt wrote:
+> > On Fri, Jun 14, 2019 at 6:08 PM syzbot
+> > <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com> wrote:
+> > >
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    3f310e51 Add linux-next specific files for 20190607
+> > > git tree:       linux-next
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=15ab8771a00000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=5d176e1849bbc45
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=d0fc9d3c166bc5e4a94b
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >
+> > > Unfortunately, I don't have any reproducer for this crash yet.
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com
+> > >
+> > > kasan: CONFIG_KASAN_INLINE enabled
+> > > kasan: GPF could be caused by NULL-ptr deref or user memory access
+> > > general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> > > CPU: 0 PID: 28426 Comm: syz-executor.5 Not tainted 5.2.0-rc3-next-20190607
+> > > #11
+> > > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > > Google 01/01/2011
+> > > RIP: 0010:__read_once_size include/linux/compiler.h:194 [inline]
+> > > RIP: 0010:has_intersects_mems_allowed mm/oom_kill.c:84 [inline]
+> >
+> > It seems like oom_unkillable_task() is broken for memcg OOMs. It
+> > should not be calling has_intersects_mems_allowed() for memcg OOMs.
 >
->               root
->                |
->             docker(0)
->              /    \
->         c1(max)   c2(0)
+> You are right. It doesn't really make much sense to check for the NUMA
+> policy/cpusets when the memcg oom is NUMA agnostic. Now that I am
+> looking at the code then I am really wondering why do we even call
+> oom_unkillable_task from oom_badness. proc_oom_score shouldn't care
+> about NUMA either.
 >
->Note that "docker" doesn't set memory.min. When kswapd runs,
->mem_cgroup_protected() returns "0" emin for "c1" due to "0"
->@parent_emin of "docker", as a result "c1" gets reclaimed.
+> In other words the following should fix this unless I am missing
+> something (task_in_mem_cgroup seems to be a relict from before the group
+> oom handling). But please note that I am still not fully operation and
+> laying in the bed.
 >
->But it's hard to maintain parent's "memory.min" when there're
->uncertain protected children because only some important types
->of containers need the protection.  Further, control tasks
->belonging to parent constantly reproduce trivial memory which
->should not be protected at all.  It makes sense to ignore
->unprotected parent in this scenario to achieve the flexibility.
 
-I'm really confused by this, why don't you just set memory.{min,low} in the 
-docker cgroup and only propagate it to the children that want it?
+Yes, we need something like this but not exactly.
 
-If you only want some children to have the protection, only request it in those 
-children, or create an additional intermediate layer of the cgroup hierarchy 
-with protections further limited if you don't trust the task to request the 
-right amount.
+> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> index 5a58778c91d4..43eb479a5dc7 100644
+> --- a/mm/oom_kill.c
+> +++ b/mm/oom_kill.c
+> @@ -161,8 +161,8 @@ static bool oom_unkillable_task(struct task_struct *p,
+>                 return true;
+>
+>         /* When mem_cgroup_out_of_memory() and p is not member of the group */
+> -       if (memcg && !task_in_mem_cgroup(p, memcg))
+> -               return true;
+> +       if (memcg)
+> +               return false;
 
-Breaking the requirement for hierarchical propagation of protections seems like 
-a really questionable API change, not least because it makes it harder to set 
-systemwide policies about the constraints of protections within a subtree.
+This will break the dump_tasks() usage of oom_unkillable_task(). We
+can change dump_tasks() to traverse processes like
+mem_cgroup_scan_tasks() for memcg OOMs.
+
+>
+>         /* p may not have freeable memory in nodemask */
+>         if (!has_intersects_mems_allowed(p, nodemask))
+> @@ -318,7 +318,7 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
+>         struct oom_control *oc = arg;
+>         unsigned long points;
+>
+> -       if (oom_unkillable_task(task, NULL, oc->nodemask))
+> +       if (oom_unkillable_task(task, oc->memcg, oc->nodemask))
+>                 goto next;
+>
+> --
+> Michal Hocko
+> SUSE Labs
