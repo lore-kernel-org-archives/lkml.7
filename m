@@ -2,341 +2,103 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62F70C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 11:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44F96C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 11:09:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26F932080C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 11:01:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V4Mgcnod"
+	by mail.kernel.org (Postfix) with ESMTP id 1189320868
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 11:09:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560596955;
+	bh=d4PhO/BCiNtOO+NzHnU8fQBmsAsfyWLsC7FyggSF/sU=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=oiH4pbrGBpskwWdvBgaBFTK1Qe21anw5drMHycMi4JKnRVYXxWollwus4xcVw0nIg
+	 I2gPscriJuoZ7ckQr5qclnvDz+yLMbpjMPIb+1QyQcgSkHCRCuGUJIuFPF82hwfG7B
+	 hB5m3oXjb0vlNb6HOuI4+0H0CDfWv7XjISYARBSg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726592AbfFOLBo (ORCPT
+        id S1726562AbfFOLIp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 07:01:44 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39543 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726327AbfFOLBo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 07:01:44 -0400
-Received: by mail-lj1-f194.google.com with SMTP id v18so4878518ljh.6
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 04:01:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=z0/hbIyKEzsKlUSNqZcyqqFA3r0AZJ8ImBuvmj1df9M=;
-        b=V4Mgcnodj8QQNSXRhi9o2Lg83jmjevVTFHF6tNsrq8GP1XXiVNJ4EtLS3u4Uzfb/Yn
-         eS15wvnlZwhtKjoiBcup7VXzL8BfFnyA8iqWefuBlmz31eKEp9ENGVrqtuYZSSgyYI83
-         TgUA7IGC1PAaQLOLnoPi3iYVRpY4vsE0QMluOC5pW6qSCmIg62B0j43qYkVi2+rTtaYk
-         nLzCaMifa7KuAmeG9YHzJmqa9NOCgTmX0I2XqHtUNi8OlpXVCMtPk2bSD0uBhj9EtXWD
-         HophVZf9Tpaj9cF4I8Z2zFizrpA5dE8bZYWu9Ut79b99JgZvDNxoWh7DN5qUSn2kcD3x
-         qaIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=z0/hbIyKEzsKlUSNqZcyqqFA3r0AZJ8ImBuvmj1df9M=;
-        b=If88ubeG4B/CtKnKN/aKbdtc5SYyzlqJRpDULYXw54xP5+BBpn8gnOlBvNaGPCxcLw
-         b0I8dF6yMgoCi8yPvllY0kFiZ0pN+4jfZ5kuAFa6wj3eviUY+7XAuHQaoeuveCMU9vMG
-         NB2iirFn+VXEjScxx3/66S0WnJ3i4uZ5iNUP47scYe88DuMGrgtl1kTlznddfaQWf7wH
-         Nw/aAeybUQckvDcmMAR1A/ZVeDGVztOG7Qab7TF1iqo2yU6A5op/hayvy2fpdxnyRJY1
-         uXSZxJuuyDAMnn8g76tcZ7b/+AysTqObqtuSDbDNGLzEsp0Un0FJwJmMm6OlCWHSGwdy
-         MPCg==
-X-Gm-Message-State: APjAAAU/gVy0pIucaIj6OUV+R1ffzjlF8n+hKP/GDRzsIVCQvBmKv3tD
-        jMejNsB9iujlji8EGf8lQFg2aQ==
-X-Google-Smtp-Source: APXvYqyZgWAyHrmL3iJXYnf7X/41qb/JaYSHL9lErK/e30yGm75FuCObx3wxEf7PcGTDmBTWLx9Fvg==
-X-Received: by 2002:a2e:6e0e:: with SMTP id j14mr6490660ljc.85.1560596501562;
-        Sat, 15 Jun 2019 04:01:41 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id j14sm936258lfc.9.2019.06.15.04.01.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 15 Jun 2019 04:01:41 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     grygorii.strashko@ti.com, davem@davemloft.net
-Cc:     linux-omap@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [PATCH net-next] net: ethernet: ti: davinci_cpdma: use idled submit
-Date:   Sat, 15 Jun 2019 14:01:32 +0300
-Message-Id: <20190615110132.6594-1-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Sat, 15 Jun 2019 07:08:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725943AbfFOLIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 07:08:45 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AE52320868;
+        Sat, 15 Jun 2019 11:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560596924;
+        bh=d4PhO/BCiNtOO+NzHnU8fQBmsAsfyWLsC7FyggSF/sU=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=a18iU4uMjhWaK3rrpKek54hoED5rbc5LDwQPRdlQmFImUT7bN2sOWdHBAjj/qcuHc
+         4gvGCLO9K4IY8ZOzTOkqBCAjzpRaudk74oQhbsMSYVkKzHxsdLGuGC4ICR+Xqlj544
+         g4KapH6rPLCwVzwjZpYXJy4s9a9OGyE89VbTFR2g=
+Message-ID: <ef030ba8553a8bc81fde998df4bd927bfba17537.camel@kernel.org>
+Subject: Re: [PATCH 1/3] lib/vsprintf: add snprintf_noterm
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Joe Perches <joe@perches.com>, "Yan, Zheng" <ukernel@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ilya Dryomov <idryomov@gmail.com>, Zheng Yan <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, agruenba@redhat.com
+Date:   Sat, 15 Jun 2019 07:08:41 -0400
+In-Reply-To: <75c8f066c3aa2e20db2e1554a4d28c20b2952724.camel@perches.com>
+References: <20190614134625.6870-1-jlayton@kernel.org>
+         <20190614134625.6870-2-jlayton@kernel.org>
+         <CAAM7YAnZ=NtsOuR0Pm82fWCSUdFLkJ7NLNk+fNK9+T4viW=_1Q@mail.gmail.com>
+         <75c8f066c3aa2e20db2e1554a4d28c20b2952724.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While data pass suspend, reuse of rx descriptors can be disabled using
-channel state & lock from cpdma layer. For this, submit to a channel
-has to be disabled using state != "not active" under lock, what is done
-with this patch. The same submit is used to fill rx channel while
-ndo_open, when channel is idled, so add idled submit routine that
-allows to prepare descs for the channel. All this simplifies code and
-helps to avoid dormant mode usage and send packets only to active
-channels, avoiding potential race in later on changes. Also add missed
-sync barrier analogically like in other places after stopping tx
-queues.
+On Fri, 2019-06-14 at 19:58 -0700, Joe Perches wrote:
+> On Sat, 2019-06-15 at 10:41 +0800, Yan, Zheng wrote:
+> > On Fri, Jun 14, 2019 at 9:48 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > > The getxattr interface returns a length after filling out the value
+> > > buffer, and the convention with xattrs is to not NULL terminate string
+> > > data.
+> > > 
+> > > CephFS implements some virtual xattrs by using snprintf to fill the
+> > > buffer, but that always NULL terminates the string. If userland sends
+> > > down a buffer that is just the right length to hold the text without
+> > > termination then we end up truncating the value.
+> > > 
+> > > Factor the formatting piece of vsnprintf into a separate helper
+> > > function, and have vsnprintf call that and then do the NULL termination
+> > > afterward. Then add a snprintf_noterm function that calls the new helper
+> > > to populate the string but skips the termination.
+> 
+> Is this function really necessary enough to add
+> the additional stack use to the generic case?
+> 
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
+The only alternative I saw was to allocate an extra buffer in the
+callers, call snprintf to populate that and then copy the result into
+the destination buffer sans termination. I really would like to avoid
+that here.
 
-Based on net-next/master
+Does breaking this code out into a helper add any significant stack
+usage? I didn't see it that way, but I am quite concerned about not
+slowing down the generic vsnprintf routine.
 
- drivers/net/ethernet/ti/cpsw.c          | 15 ++---
- drivers/net/ethernet/ti/cpsw_ethtool.c  | 12 +---
- drivers/net/ethernet/ti/davinci_cpdma.c | 85 +++++++++++++++++++------
- drivers/net/ethernet/ti/davinci_cpdma.h |  2 +
- drivers/net/ethernet/ti/davinci_emac.c  |  4 +-
- 5 files changed, 77 insertions(+), 41 deletions(-)
+> Why not add have this function call vsnprintf
+> and then terminate the string separately?
+> 
 
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 3430503e1053..7bdd287074fc 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -457,16 +457,13 @@ static void cpsw_rx_handler(void *token, int len, int status)
- 	}
- 
- requeue:
--	if (netif_dormant(ndev)) {
--		dev_kfree_skb_any(new_skb);
--		return;
--	}
--
- 	ch = cpsw->rxv[skb_get_queue_mapping(new_skb)].ch;
- 	ret = cpdma_chan_submit(ch, new_skb, new_skb->data,
- 				skb_tailroom(new_skb), 0);
--	if (WARN_ON(ret < 0))
-+	if (ret < 0) {
-+		WARN_ON(ret == -ENOMEM);
- 		dev_kfree_skb_any(new_skb);
-+	}
- }
- 
- void cpsw_split_res(struct cpsw_common *cpsw)
-@@ -1051,9 +1048,9 @@ int cpsw_fill_rx_channels(struct cpsw_priv *priv)
- 			}
- 
- 			skb_set_queue_mapping(skb, ch);
--			ret = cpdma_chan_submit(cpsw->rxv[ch].ch, skb,
--						skb->data, skb_tailroom(skb),
--						0);
-+			ret = cpdma_chan_idle_submit(cpsw->rxv[ch].ch, skb,
-+						     skb->data,
-+						     skb_tailroom(skb), 0);
- 			if (ret < 0) {
- 				cpsw_err(priv, ifup,
- 					 "cannot submit skb to channel %d rx, error %d\n",
-diff --git a/drivers/net/ethernet/ti/cpsw_ethtool.c b/drivers/net/ethernet/ti/cpsw_ethtool.c
-index 86697b32194d..f60dc1dfc443 100644
---- a/drivers/net/ethernet/ti/cpsw_ethtool.c
-+++ b/drivers/net/ethernet/ti/cpsw_ethtool.c
-@@ -464,7 +464,6 @@ static void cpsw_suspend_data_pass(struct net_device *ndev)
- 	cpsw_intr_disable(cpsw);
- 
- 	/* Stop all transmit queues for every network device.
--	 * Disable re-using rx descriptors with dormant_on.
- 	 */
- 	for (i = 0; i < cpsw->data.slaves; i++) {
- 		ndev = cpsw->slaves[i].ndev;
-@@ -472,7 +471,9 @@ static void cpsw_suspend_data_pass(struct net_device *ndev)
- 			continue;
- 
- 		netif_tx_stop_all_queues(ndev);
--		netif_dormant_on(ndev);
-+
-+		/* Barrier, so that stop_queue visible to other cpus */
-+		smp_mb__after_atomic();
- 	}
- 
- 	/* Handle rest of tx packets and stop cpdma channels */
-@@ -485,13 +486,6 @@ static int cpsw_resume_data_pass(struct net_device *ndev)
- 	struct cpsw_common *cpsw = priv->cpsw;
- 	int i, ret;
- 
--	/* Allow rx packets handling */
--	for (i = 0; i < cpsw->data.slaves; i++) {
--		ndev = cpsw->slaves[i].ndev;
--		if (ndev && netif_running(ndev))
--			netif_dormant_off(ndev);
--	}
--
- 	/* After this receive is started */
- 	if (cpsw->usage_count) {
- 		ret = cpsw_fill_rx_channels(priv);
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 35bf14d8e7af..5cf1758d425b 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -134,6 +134,14 @@ struct cpdma_control_info {
- #define ACCESS_RW	(ACCESS_RO | ACCESS_WO)
- };
- 
-+struct submit_info {
-+	struct cpdma_chan *chan;
-+	int directed;
-+	void *token;
-+	void *data;
-+	int len;
-+};
-+
- static struct cpdma_control_info controls[] = {
- 	[CPDMA_TX_RLIM]		  = {CPDMA_DMACONTROL,	8,  0xffff, ACCESS_RW},
- 	[CPDMA_CMD_IDLE]	  = {CPDMA_DMACONTROL,	3,  1,      ACCESS_WO},
-@@ -1002,34 +1010,25 @@ static void __cpdma_chan_submit(struct cpdma_chan *chan,
- 	}
- }
- 
--int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
--		      int len, int directed)
-+static int cpdma_chan_submit_si(struct submit_info *si)
- {
-+	struct cpdma_chan		*chan = si->chan;
- 	struct cpdma_ctlr		*ctlr = chan->ctlr;
-+	int				len = si->len;
- 	struct cpdma_desc __iomem	*desc;
- 	dma_addr_t			buffer;
--	unsigned long			flags;
- 	u32				mode;
--	int				ret = 0;
--
--	spin_lock_irqsave(&chan->lock, flags);
--
--	if (chan->state == CPDMA_STATE_TEARDOWN) {
--		ret = -EINVAL;
--		goto unlock_ret;
--	}
-+	int				ret;
- 
- 	if (chan->count >= chan->desc_num)	{
- 		chan->stats.desc_alloc_fail++;
--		ret = -ENOMEM;
--		goto unlock_ret;
-+		return -ENOMEM;
- 	}
- 
- 	desc = cpdma_desc_alloc(ctlr->pool);
- 	if (!desc) {
- 		chan->stats.desc_alloc_fail++;
--		ret = -ENOMEM;
--		goto unlock_ret;
-+		return -ENOMEM;
- 	}
- 
- 	if (len < ctlr->params.min_packet_size) {
-@@ -1037,16 +1036,15 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		chan->stats.runt_transmit_buff++;
- 	}
- 
--	buffer = dma_map_single(ctlr->dev, data, len, chan->dir);
-+	buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
- 	ret = dma_mapping_error(ctlr->dev, buffer);
- 	if (ret) {
- 		cpdma_desc_free(ctlr->pool, desc, 1);
--		ret = -EINVAL;
--		goto unlock_ret;
-+		return -EINVAL;
- 	}
- 
- 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
--	cpdma_desc_to_port(chan, mode, directed);
-+	cpdma_desc_to_port(chan, mode, si->directed);
- 
- 	/* Relaxed IO accessors can be used here as there is read barrier
- 	 * at the end of write sequence.
-@@ -1055,7 +1053,7 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 	writel_relaxed(buffer, &desc->hw_buffer);
- 	writel_relaxed(len, &desc->hw_len);
- 	writel_relaxed(mode | len, &desc->hw_mode);
--	writel_relaxed((uintptr_t)token, &desc->sw_token);
-+	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
- 	writel_relaxed(buffer, &desc->sw_buffer);
- 	writel_relaxed(len, &desc->sw_len);
- 	desc_read(desc, sw_len);
-@@ -1066,8 +1064,53 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		chan_write(chan, rxfree, 1);
- 
- 	chan->count++;
-+	return 0;
-+}
- 
--unlock_ret:
-+int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
-+			   int len, int directed)
-+{
-+	struct submit_info si;
-+	unsigned long flags;
-+	int ret;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = data;
-+	si.len = len;
-+	si.directed = directed;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->state == CPDMA_STATE_TEARDOWN) {
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		return -EINVAL;
-+	}
-+
-+	ret = cpdma_chan_submit_si(&si);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+	return ret;
-+}
-+
-+int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
-+		      int len, int directed)
-+{
-+	struct submit_info si;
-+	unsigned long flags;
-+	int ret;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = data;
-+	si.len = len;
-+	si.directed = directed;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (chan->state != CPDMA_STATE_ACTIVE) {
-+		spin_unlock_irqrestore(&chan->lock, flags);
-+		return -EINVAL;
-+	}
-+
-+	ret = cpdma_chan_submit_si(&si);
- 	spin_unlock_irqrestore(&chan->lock, flags);
- 	return ret;
- }
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index 10376062dafa..9343c8c73c1b 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.h
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -79,6 +79,8 @@ int cpdma_chan_get_stats(struct cpdma_chan *chan,
- 			 struct cpdma_chan_stats *stats);
- int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		      int len, int directed);
-+int cpdma_chan_idle_submit(struct cpdma_chan *chan, void *token, void *data,
-+			   int len, int directed);
- int cpdma_chan_process(struct cpdma_chan *chan, int quota);
- 
- int cpdma_ctlr_int_ctrl(struct cpdma_ctlr *ctlr, bool enable);
-diff --git a/drivers/net/ethernet/ti/davinci_emac.c b/drivers/net/ethernet/ti/davinci_emac.c
-index 4bf65cab79e6..5f4ece0d5a73 100644
---- a/drivers/net/ethernet/ti/davinci_emac.c
-+++ b/drivers/net/ethernet/ti/davinci_emac.c
-@@ -1428,8 +1428,8 @@ static int emac_dev_open(struct net_device *ndev)
- 		if (!skb)
- 			break;
- 
--		ret = cpdma_chan_submit(priv->rxchan, skb, skb->data,
--					skb_tailroom(skb), 0);
-+		ret = cpdma_chan_idle_submit(priv->rxchan, skb, skb->data,
-+					     skb_tailroom(skb), 0);
- 		if (WARN_ON(ret < 0))
- 			break;
- 	}
+I don't quite follow what you're suggesting here. vsnprintf is what does
+the termination today, and we need a function that doesn't do that.
+
 -- 
-2.17.1
+Jeff Layton <jlayton@kernel.org>
 
