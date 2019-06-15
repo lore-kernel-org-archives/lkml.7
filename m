@@ -2,101 +2,69 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8430EC31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 04:02:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC705C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 04:05:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C9C0217D6
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 04:02:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GzCnkIla"
+	by mail.kernel.org (Postfix) with ESMTP id 8AD392168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 04:05:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560571507;
+	bh=1ukOZZGAEs0BqwHmgc/wwwlmaTI8YBYbMmWhkj1EHSQ=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=SuH0M4jJj5qXavptPigQl9tl8KhrOa0LG+S3thBuB0Odc9rog+JV0DmLTRJwtt8C3
+	 wZFIId7WMSGH6DHyeMaFINGBYqvWHL7tOgT7DTa66rhUyHD1LPONglml9nKnUnOpfz
+	 vtzf9MPKLR6gz4opSi8ef2kGj7vQKPmoDu2tPKow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfFOECR (ORCPT
+        id S1726071AbfFOEFG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 00:02:17 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42448 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726451AbfFOECQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 00:02:16 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l19so2608497pgh.9;
-        Fri, 14 Jun 2019 21:02:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :content-transfer-encoding:user-agent;
-        bh=u1ZcG1Sp0JvhKEi3rEpRDEedkqqLBcdvyquQGonVQRw=;
-        b=GzCnkIla8t/CAZwgluyHn46xdqBub+xym2+1pTfmLv7K5C5y691nCtPwbWqiAGwSwK
-         WDyrJVMv+CaURgfh0yM31SgMFDZ0mxU9kzcLlrX4Ap5YdQPDtAynNZPh06brqIWlQUr3
-         1FpXmpo/LbmuU+c5Z0WWjfMzFk2xQ8osf9Zzih9oBdY9MTjv/BHJw+YufUEQb2W9Moeu
-         M+BbcjPTjbu5SM80EnekimCviunjNUJ3c5pjJTQORg2Cvhw9W8Cpv+FUQw2VdqKxW3zD
-         yu2qoZGp+x6xOk7uV+N6rp0VvGC3i+Gl7HDcfWMX7aIWRMForIlRH2Taj06y3vqyCBnh
-         BV6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:content-transfer-encoding:user-agent;
-        bh=u1ZcG1Sp0JvhKEi3rEpRDEedkqqLBcdvyquQGonVQRw=;
-        b=Lh/up5ZsrUwbJwTFTS0tAe1P0DIx+4dnWcVZpPUgVKPPgBvTnh7rLqkpfyADyjNqoN
-         vWgJpR9N2XJqpZkQFH+4LQ7/KU8OnX3TBFnjuxhcJleckYMSiw43zCkiaTwEFXTyCTub
-         AJYnQPCU0wrLvVL2alzDSWo7ZoXfg83F8+DHK5Dsax1N9HmvIfkRFBQdQYgD4ykViyUI
-         YNVnS1BPXYb/1yiyEIRwKuoEas1BAukspK8Irr5u5XH8B1sCO9DNjhVlk52Bwfb7fXkX
-         suS31bEfwvliDFi6qPyFomLBAVpeE8VJ6Fm1qnsEitpALjUGFYA+S4ZO+5v7k1bd/G/e
-         Myfg==
-X-Gm-Message-State: APjAAAX1Et3JYpktUPy/2aNckBELHqs8aNAi0/h9SXRJcZVV7ZyEYLye
-        Zmx5f/lVMe9j3HmYJ6FrbNo=
-X-Google-Smtp-Source: APXvYqwudYW3SlUwNYhcsJjD2f8LUUTsZK63ADPGAZf93vIUia8LG6mRDg88vi/jG9tXTki6OS1H0Q==
-X-Received: by 2002:aa7:8d98:: with SMTP id i24mr34349227pfr.199.1560571335596;
-        Fri, 14 Jun 2019 21:02:15 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id m1sm3857242pjv.22.2019.06.14.21.02.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 14 Jun 2019 21:02:14 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 09:32:10 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drivers: firmware: efi: fix gcc warning -Wint-conversion
-Message-ID: <20190615040210.GA9112@hari-Inspiron-1545>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Sat, 15 Jun 2019 00:05:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52652 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725785AbfFOEFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 00:05:05 -0400
+Subject: Re: [GIT PULL] gfs2: Fix rounding error in gfs2_iomap_page_prepare
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560571505;
+        bh=1ukOZZGAEs0BqwHmgc/wwwlmaTI8YBYbMmWhkj1EHSQ=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=kaG6bUzU6Ikg5WKyTmICva3c3J8cxo7ECCimX3xdix3NaGJIlDuf9tKgGACTVx9tz
+         50qazRBijAZ7Ukm3FTSNaFmJB2/8+cycx6Ur/bwS2pTuu2xPgrgo2zsDR8vIxB7AWf
+         zivz2ge81+3J73+Zpo52jrZQ4TwHbhwfA0ekAS9g=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAHc6FU7aKs3bUwjnPeLn4Nw82ojGcQxkJbDsgtVdXYVRjVW0bQ@mail.gmail.com>
+References: <CAHc6FU7aKs3bUwjnPeLn4Nw82ojGcQxkJbDsgtVdXYVRjVW0bQ@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAHc6FU7aKs3bUwjnPeLn4Nw82ojGcQxkJbDsgtVdXYVRjVW0bQ@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git
+ tags/gfs2-v5.2.fixes2
+X-PR-Tracked-Commit-Id: 2741b6723bf6f7d92d07c44bd6a09c6e37f3f949
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4066524401724babc5710b0a6be88021a081874a
+Message-Id: <156057150507.28747.7815529893071983386.pr-tracker-bot@kernel.org>
+Date:   Sat, 15 Jun 2019 04:05:05 +0000
+To:     Andreas Gruenbacher <agruenba@redhat.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        cluster-devel <cluster-devel@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes below warning
+The pull request you sent on Fri, 14 Jun 2019 18:55:02 +0200:
 
-drivers/firmware/efi/tpm.c:78:38: warning: passing argument 1 of
-‘tpm2_calc_event_log_size’ makes pointer from integer without a cast
-[-Wint-conversion]
+> git://git.kernel.org/pub/scm/linux/kernel/git/gfs2/linux-gfs2.git tags/gfs2-v5.2.fixes2
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/firmware/efi/tpm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4066524401724babc5710b0a6be88021a081874a
 
-diff --git a/drivers/firmware/efi/tpm.c b/drivers/firmware/efi/tpm.c
-index 74d0cd1..1d3f5ca 100644
---- a/drivers/firmware/efi/tpm.c
-+++ b/drivers/firmware/efi/tpm.c
-@@ -75,7 +75,7 @@ int __init efi_tpm_eventlog_init(void)
- 		goto out;
- 	}
- 
--	tbl_size = tpm2_calc_event_log_size(efi.tpm_final_log
-+	tbl_size = tpm2_calc_event_log_size((void *)efi.tpm_final_log
- 					    + sizeof(final_tbl->version)
- 					    + sizeof(final_tbl->nr_events),
- 					    final_tbl->nr_events,
+Thank you!
+
 -- 
-2.7.4
-
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
