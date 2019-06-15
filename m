@@ -2,102 +2,70 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93886C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:29:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFD14C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:34:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603F2206B7
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:29:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mengyan1223.wang header.i=@mengyan1223.wang header.b="X6WUvQ6A"
+	by mail.kernel.org (Postfix) with ESMTP id 8E2392070B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:34:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfFOI3b (ORCPT
+        id S1726345AbfFOIe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 04:29:31 -0400
-Received: from mengyan1223.wang ([89.208.246.23]:56688 "EHLO mengyan1223.wang"
+        Sat, 15 Jun 2019 04:34:26 -0400
+Received: from verein.lst.de ([213.95.11.211]:52416 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfFOI3a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 04:29:30 -0400
-X-Greylist: delayed 554 seconds by postgrey-1.27 at vger.kernel.org; Sat, 15 Jun 2019 04:29:30 EDT
-Received: from [IPv6:2408:8270:a51:2470:fdc9:19d4:d061:dd4f] (unknown [IPv6:2408:8270:a51:2470:fdc9:19d4:d061:dd4f])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: xry111@mengyan1223.wang)
-        by mengyan1223.wang (Postfix) with ESMTPSA id C3F06665D2;
-        Sat, 15 Jun 2019 04:20:10 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mengyan1223.wang;
-        s=mail; t=1560586815;
-        bh=bqks99JML0mByy8FjY6xU4G7QtZG+ZkGbWODY0s995M=;
-        h=Subject:From:To:Cc:Date:From;
-        b=X6WUvQ6Am7IOROADt2MULQT0N6H5XyrHdIjWhdgp66wkT9D8yJ03fRRJg/E8IzSug
-         gP0aGKnrhRYQxaiRYYbPD+FNjl+mcGY+DcnnpYHZJat/mcn3+jv+6UuxSAFkQC/7Fm
-         J6Yf0nJeFn/Rq0SXJrgMZDo0dMHERBp4NR1yps8ewLikCwHpT1K9ZW7KAC5AHOJDxE
-         MmIP//2o1N12q/4eljFk+jD8otsc+oigSiisbEjPqxj+3G/Utn+HpXRQLdbZvtl5zs
-         EYW60BWEROdja3ZcdxvD1EgO9YE768kPQwCJJCK/G5PEiAsYo1EaNILfCRAvT7uhUf
-         eHr2f/ibTrg5A==
-Message-ID: <0f1be041f8de95603753ffe989bd25069efa13bb.camel@mengyan1223.wang>
-Subject: [PATCH RFC] mm: memcontrol: add cgroup v2 interface to read memory
- watermark
-From:   Xi Ruoyao <xry111@mengyan1223.wang>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Sat, 15 Jun 2019 16:20:04 +0800
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 
+        id S1725825AbfFOIe0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 04:34:26 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 31A9C68AFE; Sat, 15 Jun 2019 10:33:57 +0200 (CEST)
+Date:   Sat, 15 Jun 2019 10:33:56 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: dev_pagemap related cleanups
+Message-ID: <20190615083356.GB23406@lst.de>
+References: <20190613094326.24093-1-hch@lst.de> <CAPcyv4jBdwYaiVwkhy6kP78OBAs+vJme1UTm47dX4Eq_5=JgSg@mail.gmail.com> <20190614061333.GC7246@lst.de> <CAPcyv4jmk6OBpXkuwjMn0Ovtv__2LBNMyEOWx9j5LWvWnr8f_A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4jmk6OBpXkuwjMn0Ovtv__2LBNMyEOWx9j5LWvWnr8f_A@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a control file memory.watermark showing the watermark
-consumption of the cgroup and its descendants, in bytes.
+On Fri, Jun 14, 2019 at 06:14:45PM -0700, Dan Williams wrote:
+> On Thu, Jun 13, 2019 at 11:14 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > On Thu, Jun 13, 2019 at 11:27:39AM -0700, Dan Williams wrote:
+> > > It also turns out the nvdimm unit tests crash with this signature on
+> > > that branch where base v5.2-rc3 passes:
+> >
+> > How do you run that test?
+> 
+> This is the unit test suite that gets kicked off by running "make
+> check" from the ndctl source repository. In this case it requires the
+> nfit_test set of modules to create a fake nvdimm environment.
+> 
+> The setup instructions are in the README, but feel free to send me
+> branches and I can kick off a test. One of these we'll get around to
+> making it automated for patch submissions to the linux-nvdimm mailing
+> list.
 
-Signed-off-by: Xi Ruoyao <xry111@mengyan1223.wang>
----
- mm/memcontrol.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ba9138a4a1de..b1d968f2adcd 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -5495,6 +5495,13 @@ static u64 memory_current_read(struct cgroup_subsys_state
-*css,
- 	return (u64)page_counter_read(&memcg->memory) * PAGE_SIZE;
- }
- 
-+static u64 memory_watermark_read(struct cgroup_subsys_state *css,
-+				 struct cftype *cft)
-+{
-+	struct mem_cgroup *memcg = mem_cgroup_from_css(css);
-+	return (u64)memcg->memory.watermark * PAGE_SIZE;
-+}
-+
- static int memory_min_show(struct seq_file *m, void *v)
- {
- 	return seq_puts_memcg_tunable(m,
-@@ -5771,6 +5778,11 @@ static struct cftype memory_files[] = {
- 		.flags = CFTYPE_NOT_ON_ROOT,
- 		.read_u64 = memory_current_read,
- 	},
-+	{
-+		.name = "watermark",
-+		.flags = CFTYPE_NOT_ON_ROOT,
-+		.read_u64 = memory_watermark_read,
-+	},
- 	{
- 		.name = "min",
- 		.flags = CFTYPE_NOT_ON_ROOT,
--- 
-Xi Ruoyao <xry111@mengyan1223.wang>
-School of Aerospace Science and Technology, Xidian University
-
+Oh, now I remember, and that was the bummer as anything requiring modules
+just does not fit at all into my normal test flows that just inject
+kernel images and use otherwise static images.
