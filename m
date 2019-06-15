@@ -2,66 +2,86 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59D38C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 20:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C4FC46477
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 20:43:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29A6A21852
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 20:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 170E821852
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 20:43:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfFOUnW (ORCPT
+        id S1726954AbfFOUnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 16:43:22 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:39464 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfFOUnW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 16:43:22 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id A042214EB903F;
-        Sat, 15 Jun 2019 13:43:21 -0700 (PDT)
-Date:   Sat, 15 Jun 2019 13:43:21 -0700 (PDT)
-Message-Id: <20190615.134321.740066323733871726.davem@davemloft.net>
-To:     yangbo.lu@nxp.com
-Cc:     netdev@vger.kernel.org, richardcochran@gmail.com,
-        robh+dt@kernel.org, shawnguo@kernel.org, andrew@lunn.ch,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        devicetree@vger.kernel.org
-Subject: Re: [v2, 0/6] Reuse ptp_qoriq driver for dpaa2-ptp
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190614104055.43998-1-yangbo.lu@nxp.com>
-References: <20190614104055.43998-1-yangbo.lu@nxp.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sat, 15 Jun 2019 13:43:22 -0700 (PDT)
+        Sat, 15 Jun 2019 16:43:31 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43226 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726857AbfFOUnb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 16:43:31 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 108A13083391;
+        Sat, 15 Jun 2019 20:43:31 +0000 (UTC)
+Received: from treble (ovpn-112-16.rdu2.redhat.com [10.10.112.16])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 044F660CA3;
+        Sat, 15 Jun 2019 20:43:24 +0000 (UTC)
+Date:   Sat, 15 Jun 2019 15:43:20 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     jikos@kernel.org, pmladek@suse.com, joe.lawrence@redhat.com,
+        kamalesh@linux.vnet.ibm.com, live-patching@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v4 0/3] livepatch: Cleanup of reliable stacktrace warnings
+Message-ID: <20190615204320.i4qxbk2m3ee73vyg@treble>
+References: <20190611141320.25359-1-mbenes@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190611141320.25359-1-mbenes@suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Sat, 15 Jun 2019 20:43:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Date: Fri, 14 Jun 2019 18:40:49 +0800
-
-> Although dpaa2-ptp.c driver is a fsl_mc_driver which
-> is using MC APIs for register accessing, it's same IP
-> block with eTSEC/DPAA/ENETC 1588 timer.
-> This patch-set is to convert to reuse ptp_qoriq driver by
-> using register ioremap and dropping related MC APIs.
-> However the interrupts could only be handled by MC which
-> fires MSIs to ARM cores. So the interrupt enabling and
-> handling still rely on MC APIs. MC APIs for interrupt
-> and PPS event support are also added by this patch-set.
+On Tue, Jun 11, 2019 at 04:13:17PM +0200, Miroslav Benes wrote:
+> This is the fourth attempt to improve the situation of reliable stack
+> trace warnings in livepatch. Based on discussion in
+> 20190531074147.27616-1-pmladek@suse.com (v3).
 > 
-> ---
-> Changes for v2:
-> 	- Allowed to compile with COMPILE_TEST.
+> Changes against v3:
+> + weak save_stack_trace_tsk_reliable() removed, because it is not needed
+>   anymore thanks to Thomas' recent improvements
+> + klp_have_reliable_stack() check reintroduced in klp_try_switch_task()
+> 
+> Changes against v2:
+> 
+> + Put back the patch removing WARN_ONCE in the weak
+>   save_stack_trace_tsk_reliable(). It is related.
+> + Simplified patch removing the duplicate warning from klp_check_stack()
+> + Update commit message for 3rd patch [Josh]
+> 
+> Miroslav Benes (2):
+>   stacktrace: Remove weak version of save_stack_trace_tsk_reliable()
+>   Revert "livepatch: Remove reliable stacktrace check in
+>     klp_try_switch_task()"
+> 
+> Petr Mladek (1):
+>   livepatch: Remove duplicate warning about missing reliable stacktrace
+>     support
+> 
+>  kernel/livepatch/transition.c | 8 +++++++-
+>  kernel/stacktrace.c           | 8 --------
+>  2 files changed, 7 insertions(+), 9 deletions(-)
 
-Series applied, thanks.
+Thanks Miroslav for wrapping this up, and thanks to Petr for his
+previous work on this.
+
+Acked-by: Josh Poimboeuf <jpoimboe@redhat.com>
+
+-- 
+Josh
