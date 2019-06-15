@@ -2,120 +2,91 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7459C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:24:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 943EFC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A84B120645
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:24:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 687F8204EC
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bqqte53b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kTa6Q1QC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfFOXYM (ORCPT
+        id S1727112AbfFOXf1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 19:24:12 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:40019 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfFOXYL (ORCPT
+        Sat, 15 Jun 2019 19:35:27 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43578 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfFOXf0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 19:24:11 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a9so4053223lff.7;
-        Sat, 15 Jun 2019 16:24:10 -0700 (PDT)
+        Sat, 15 Jun 2019 19:35:26 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j29so4043633lfk.10;
+        Sat, 15 Jun 2019 16:35:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=x7rExcH1kU2EpvYeuDS7M66fY+J816ZSVv9MUtqFHHo=;
-        b=Bqqte53b9wG82aO7hOFbzApIPnUca+l6KDXRPlriiNsM9qVbBCwlHEPbsfaJAi6X2V
-         5S9w8LbRbEvJnjw6tXFe0Nf734hY03Qux3khfuhXuxlqYt8lGhbhuDMhlOWL00vzZWwh
-         nchDZiL54I4CtbOPJCFAsLmUseE30x9Nc/0VAWPbmTZD9TXthaGBuOLPnvueaDjhHXMi
-         4CCRGYBVPTJpb3erjPCmrP/QDszNTo5RSeR48utJogs6/7ZhOL79pYaKGs6b2YPz6YB2
-         GYvEZlrafuXbD2OiV51bU5Hp8lUSfCCTy+ETpddkxTs6eEhh0klOZlqjghWEVpcZUUKv
-         QWbA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KS7GuZ58mSVlo/UODgh9jqmMf1OWtYb0tsfUawgjzv0=;
+        b=kTa6Q1QCI0Z4J8clCy8W10U1qXnkVuz4ZUetAJzr9tOFDdUCtJgf1TZvTXaOhVifST
+         XIO+44juUdU6UM3Mb0q9iPoE6toh8N+AsYNnqw9IyIoT6y0V87VKoU4goEzWN1bpVhNp
+         +ySQbBGvUV8CCVqPll0dIzv7wHSa3AuMh3wcWoatXGrSTAmRXcTokhzqydb+P07Xbgq+
+         3yw3x1yJ2xzAsnZ1Izsn93GmVkb9nIhI07WF6/h1ebntwXzvqu3dlnCF3eTwCKenZxPJ
+         yE0RXe0ipeSn8rIG1kx1J4gprdRloCCF7/oivl6GgJRalrTlElOtwD3OnLnnNYeDVGyu
+         7eMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=x7rExcH1kU2EpvYeuDS7M66fY+J816ZSVv9MUtqFHHo=;
-        b=gBdfQ5u2volRH2oiugSumA/w708oXeJw8FJ/BMNoS/TGTQ+UaHcvV5uQ3diIevqd8G
-         T5yFZcHBV+9p6CMzUnprRn+xtOkaIv3taMI0oxqxwtyLS6i39j0Sb1Dj/K8v6n9j6x6s
-         ee9yCGFEU6LUWNJnYHoGBNwbxw8Y9YsWfvkRjYcGJ0tBLGoqYIBtibGoaPMSWXGgJVX2
-         rvC6la0Dscg5px/vifdjZzSNl5DpIyLfXzF8iXnCP3BPowGN+Fa8A1CI3RPzBgciLmZJ
-         MmR6tnLxjJuYxvlSvqsdb3VxrYWpXKqP6S7/zSjCPdfjfWRPp3AUCri4YgRZxk5fNSOI
-         APLg==
-X-Gm-Message-State: APjAAAWa8Onx6K7md9F0HiiDUelszj2oYNbfuZKjMHI4EEc4vAol010s
-        HCoZHeCejFSXq2LZSa6dB0msIqo3c04=
-X-Google-Smtp-Source: APXvYqyPW6XKnudCPRO7/Lrh73fTLhfjLycoQAJmLj6OIG5tPuGxeoBEHDURBHVNE77zyo5ftRI7Xw==
-X-Received: by 2002:a19:8cc:: with SMTP id 195mr16412515lfi.150.1560641049574;
-        Sat, 15 Jun 2019 16:24:09 -0700 (PDT)
-Received: from mobilestation ([5.164.217.122])
-        by smtp.gmail.com with ESMTPSA id r84sm1425813lja.54.2019.06.15.16.24.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 15 Jun 2019 16:24:09 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 02:24:07 +0300
-From:   Serge Semin <fancer.lancer@gmail.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Jean Delvare <jdelvare@suse.com>,
-        Peter Korsgaard <peter.korsgaard@barco.com>,
-        Peter Rosin <peda@axentia.se>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-i2c <linux-i2c@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] i2c: mux-gpio: Use "mux" con_id to find channel GPIOs
-Message-ID: <20190615232406.ni3ausfjaz5qowib@mobilestation>
-References: <20190614214748.2389-1-fancer.lancer@gmail.com>
- <CAHp75VcwP8DzhqfOn=cbcRQtd8WrnuoFPT6GCU754drTZePheg@mail.gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KS7GuZ58mSVlo/UODgh9jqmMf1OWtYb0tsfUawgjzv0=;
+        b=rBVtBRwOvtsRsR9Jeat9XuP7YTrYJGLpiWFQ/Br9FPVBTt2pJvorDNgSs/8m/5peU9
+         KwaDkU6++VvjoHip8UxKrbyCZxGB6THEklyUTjg/z+6KA3y8EeeFx62IqKUspUB0ruZj
+         vFlAqmDUm0zLbBlR+SDfIMhNMzE5xTIZgawhMCEguUGD7RcGvygZJyjvbinruiyMFpL/
+         zYOCHzgPvmYN0M6rnywVCq51srxVQt0DNZr1J8mhuEOHcireqcwuwc4nBjUvAWHfatQ8
+         kKCm0MMyz0SXUe02l4TbCnQ9gjo4otK/xyNRGyNlDRD2O07QF4lWbd93jgIt86tVWVNn
+         PeaQ==
+X-Gm-Message-State: APjAAAWErvZ/3VDjGSgT/FdjMA6GP9q/6ZgRe738xYFX77DlilLQhUEb
+        aGsaza+V3hbcIFXZ2PYUhZT/AIdWs7U8o5cdX30=
+X-Google-Smtp-Source: APXvYqzW2dUVula1K7et209n0mipZpMAmmBz3Lu+mizcU6RAUMBmVfosL1aqmHc0+Sggr7kEypD567DCGrb8gToZpIU=
+X-Received: by 2002:ac2:4252:: with SMTP id m18mr26605642lfl.100.1560641724078;
+ Sat, 15 Jun 2019 16:35:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHp75VcwP8DzhqfOn=cbcRQtd8WrnuoFPT6GCU754drTZePheg@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+References: <20190611215304.28831-1-mmullins@fb.com>
+In-Reply-To: <20190611215304.28831-1-mmullins@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Sat, 15 Jun 2019 16:35:12 -0700
+Message-ID: <CAADnVQ+tPkiuYHPAE28OP3BDRgM+JY5DpTLiFP1iUn9fXhCjYQ@mail.gmail.com>
+Subject: Re: [PATCH bpf v2] bpf: fix nested bpf tracepoints with per-cpu data
+To:     Matt Mullins <mmullins@fb.com>
+Cc:     Andrew Hall <hall@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        bpf <bpf@vger.kernel.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 02:43:09PM +0300, Andy Shevchenko wrote:
-> On Sat, Jun 15, 2019 at 12:51 AM Serge Semin <fancer.lancer@gmail.com> wrote:
-> >
-> > Recent patch - ("i2c: mux/i801: Switch to use descriptor passing")
-> > altered the i2c-mux-gpio driver to use the GPIO-descriptor
-> > based interface to find and request the GPIOs then being utilized
-> > to select and deselect the channels of GPIO-driven i2c-muxes. Even
-> > though the proposed modification was correct for the platform_data-based
-> > systems, it was invalid for the OF-based ones and caused the kernel
-> > to crash at the driver probe procedure. There were two problems with
-> > that modification. First of all the gpiod_count() and gpiod_get_index()
-> > were called with NULL con_id.
-> 
-> I always thought that this means "count me all GPIO's for this device
-> despite their names" and "get me GPIO by index despite it's name".
-> What's went wrong?
-> 
+On Tue, Jun 11, 2019 at 2:54 PM Matt Mullins <mmullins@fb.com> wrote:
+>
+> BPF_PROG_TYPE_RAW_TRACEPOINTs can be executed nested on the same CPU, as
+> they do not increment bpf_prog_active while executing.
+>
+> This enables three levels of nesting, to support
+>   - a kprobe or raw tp or perf event,
+>   - another one of the above that irq context happens to call, and
+>   - another one in nmi context
+> (at most one of which may be a kprobe or perf event).
+>
+> Fixes: 20b9d7ac4852 ("bpf: avoid excessive stack usage for perf_sample_data")
+> Signed-off-by: Matt Mullins <mmullins@fb.com>
 
-No. It's wrong as far as I can see for kernels 4.4, 4.9 and the modern
-5.2.0-rcX. dt_gpio_count()/of_find_gpio()will always try to count/request
-either "<con_id>-gpio(s)" or "gpio(s)" GPIOs in the device of-node. While
-platform_gpio_count()/gpiod_find() will take into account GPIOs with matching
-<con_id>'s even if it is NULL.
-
-Regards,
--Sergey
-
-> 
-> > Due to this the methods couldn't find
-> > the "mux-gpios" OF-properties and returned the -ENOENT error. Secondly
-> > the return value of gpiod_count() wasn't checked for being negative,
-> > which in case of an error caused the driver to crash. This patch
-> > is intended to fix the described problems.
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
+Applied. Thanks
