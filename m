@@ -2,120 +2,115 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 891EBC31E52
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:24:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28E3FC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:29:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61F292082C
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:24:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F17192082C
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 16:29:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGN8va3D"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ieIDwSTE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfFOQYn (ORCPT
+        id S1726965AbfFOQ3W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 12:24:43 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46809 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfFOQYm (ORCPT
+        Sat, 15 Jun 2019 12:29:22 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42331 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726770AbfFOQ3W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 12:24:42 -0400
-Received: by mail-lf1-f65.google.com with SMTP id z15so3704863lfh.13;
-        Sat, 15 Jun 2019 09:24:40 -0700 (PDT)
+        Sat, 15 Jun 2019 12:29:22 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so5551333wrl.9;
+        Sat, 15 Jun 2019 09:29:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:subject:date:user-agent:mime-version
-         :content-transfer-encoding:content-disposition:message-id;
-        bh=O8TenXf8n3Y7pwA2CkxS3CiasLg3xi/TeSP6+th2mY4=;
-        b=kGN8va3DtJTnAewO5ElzvA2LoOWuyNLEx6u5SbB4Bmi7KZhCr05f4SjJdHUDJdjtDo
-         0rUwdEzwEXk6O8lQp5whqVyOHVUEHnvOnVpCQq/lVoLzTpWTIkwaHRcVOA0wwkfBsD1C
-         /OP8/tJt7pRaG5SsSHxUhfuU0Vy6h0dg+cUBvWTh+LImUP7q7JPATwyX4n2r8vs0V6/5
-         nQfGnYmJoBYw8QGL4UC4hyFKq4s0CWuJNQyRgMf53S1J7kXiZFJPbgCIO1+Mavd1lthe
-         jCredm6N87A+ie8JIEwVqTO8C3BF7pvdfQfA/91dunSoHQUxsctB1/XD7xqmTNvx/Tha
-         Cv8A==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xbzPPti/d7x+WaN+ndNWClJ+kz638DCPbc0fo6KZsxY=;
+        b=ieIDwSTE7HAtFhzhbgj5P/HFRPZEIOuO8UWSkVQTqz8dqtGwrSTeM3Cg9+iEftZa3d
+         2p6TE36oS951Zcr5TMHXCxTlcpVKKP2i2vxphtNzUExZ3vPQNOzQ9URg0n9Bh/mOyOE0
+         eFHvyzQcM5aA/lzRMYs1D8xXFPGsKtLXwGUHTg/BQ8Zf8AYN8gQCy5DQaoV0kysM/F0W
+         Pj1BqSQxd3WMA3K0gRtqYhk3hMlJxIS9sxBWG3F70AkC6jweErdA/5KbBB3xJMbC5aXt
+         F3mTXmmIeZj/X9g8FdvIlxnRS9oXBDAZ24UKlabYwAPZtgbjpNt7DP+d1iYkkGTdupyP
+         GRCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:user-agent:mime-version
-         :content-transfer-encoding:content-disposition:message-id;
-        bh=O8TenXf8n3Y7pwA2CkxS3CiasLg3xi/TeSP6+th2mY4=;
-        b=DrSzGWR67rppY5U2IlvDchy9kYlF7OgRIzfVFZh9kPrk+E4+NkhpvnWIhoSTGjQgcP
-         KDgRgAwqTe5pnF3ocvdcu/lmgMn+T3X5FWjCIcBVvZGwFM/BYDcS6VmbTtbXc8WS+yXZ
-         aGsWM/She+VMDyOYWi2QN8ucTMVwbD8CWgnHSLkfbkvlNNeu5fcAOS0K76szyT4qfWFy
-         46XqvNpI8uTgeE0b6Qji130zM8B9LD9YoBkRMKvk3BaWhnhNib357QLaaxVsei74PHB7
-         +061+JxxW67pTKObL+ca4LOSmcX7Ee7wgQg5I6ybJAq+OZgJfTEr8y1r0BDZT9znaV9l
-         ypdA==
-X-Gm-Message-State: APjAAAWvv60smbbISACeb9ls2ov2iZfvgVsdgnON5OCrLAy0yWW49Uu9
-        wOTC7fWUvj/Q6g47qAKYPHy1OZZN
-X-Google-Smtp-Source: APXvYqxqHog0+uavUMt/3YkHEAzBWKuri1yzFFxIkV8dT2Njs1O78x2OggvP+CW8SDdFnBpViuBxfg==
-X-Received: by 2002:ac2:43b7:: with SMTP id t23mr2691780lfl.110.1560615879725;
-        Sat, 15 Jun 2019 09:24:39 -0700 (PDT)
-Received: from [192.168.1.100] ([176.116.252.109])
-        by smtp.gmail.com with ESMTPSA id m21sm918566lfh.20.2019.06.15.09.24.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 09:24:39 -0700 (PDT)
-From:   Andrew Randrianasulu <randrianasulu@gmail.com>
-To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>
-Subject: Bug 7805 strikes again?
-Date:   Sat, 15 Jun 2019 19:16:09 +0300
-User-Agent: KMail/1.9.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xbzPPti/d7x+WaN+ndNWClJ+kz638DCPbc0fo6KZsxY=;
+        b=cwOt7QTpqzPnDF60TClWny+0DA6F3HtvuLrzbmb4jNl3R2oltM0Rsxb1l3puqUQwQB
+         gINI4X/8vgDOHMOYX6pEIn5yRb09LbQB931E1bDHBNtRn7dplNtYsPoTvFmcWiho1aw4
+         RY4oPqM4BHcXsFOq77mjueiGhpMDO8eNkU+kiIdqq0bdaquDn2Q1JnD22TeSlAcuqlVH
+         klanI6gXAoaeJAHNWxpy3/dindUFXxqgac2HTfv/CiqL0rUHNRrZ//zOREWdX+fL2O03
+         IiDHT+2gkjzMz2IVK+JHfHJxxpEcUyt5QS3xTwb76ktAgdoS219vLXlCivcqV7feWsxr
+         lnXA==
+X-Gm-Message-State: APjAAAWdEBXk3VbYVce85QGP3md+Rms5jbV+6tJ7HBaWLrrj0aTAkzaJ
+        CpUOIuXe0kkwHW9899kex35CJBrEjb4=
+X-Google-Smtp-Source: APXvYqy6frYI/6mx+Dk4Co35nGqa5ZlXs/X4iQfnMoOiujw6z3Bucud4rw6PC+VvLVuv0WlBY8iJXA==
+X-Received: by 2002:adf:f64a:: with SMTP id x10mr12181927wrp.287.1560616159963;
+        Sat, 15 Jun 2019 09:29:19 -0700 (PDT)
+Received: from debian64.daheim (pD9E2960F.dip0.t-ipconnect.de. [217.226.150.15])
+        by smtp.gmail.com with ESMTPSA id l18sm5643055wrv.38.2019.06.15.09.29.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 15 Jun 2019 09:29:19 -0700 (PDT)
+Received: from chuck by debian64.daheim with local (Exim 4.92)
+        (envelope-from <chunkeey@gmail.com>)
+        id 1hcBYM-0007aO-6H; Sat, 15 Jun 2019 18:29:18 +0200
+From:   Christian Lamparter <chunkeey@gmail.com>
+To:     linux-arm-msm@vger.kernel.org
+Cc:     Abhishek Sahu <absahu@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        linux-kernel@vger.kernel.org, Pavel Kubelun <be.dissent@gmail.com>
+Subject: [PATCH v2] ARM: dts: qcom: ipq4019: fix high resolution timer
+Date:   Sat, 15 Jun 2019 18:29:18 +0200
+Message-Id: <20190615162918.29120-1-chunkeey@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-Message-Id: <201906151916.09688.randrianasulu@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-I was puzzled by strange fact my qemu stopped to boot DVDs I made over years, if I put them in physical drive and try to boot them via qemu.
-After  a lot of digging I found possible reason: wrongly-set block device size on /dev/sr0
-
-And this lead me to
-https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=619757
-
-and
-https://bugzilla.kernel.org/show_bug.cgi?id=7805
-
-so I checked if my dmesg had anything related to pktcdvd:
-
- dmesg | grep pkt
-[    7.681270] pktcdvd: pktcdvd0: writer mapped to sr0
+From: Abhishek Sahu <absahu@codeaurora.org>
 
 
-blockdev --getsize64 /dev/sr0
-1073741312
-pktsetup -d /dev/sr0
-pktsetup: Error: Can't tear down packet device '/dev/sr0': Inappropriate ioctl for device
+Cherry-picked from CAF QSDK repo with Change-Id
+I7c00b3c74d97c2a30ac9f05e18b511a0550fd459.
 
- blockdev --getsize64 /dev/sr0
-4700372992
+Original commit message:
+The kernel is failing in switching the timer for high resolution
+mode and clock source operates in 10ms resolution. The always-on
+property needs to be given for timer device tree node to make
+clock source working in 1ns resolution.
 
-after this I can boot my DVD fully (before it was failing at mounting squashfs images):
-qemu-system-x86_64 -enable-kvm -display sdl,gl=on -cdrom /dev/sr0 -m 1G -soundhw es1370 -usbdevice mouse -smp 3 -cpu max
+Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
+Signed-off-by: Pavel Kubelun <be.dissent@gmail.com>
+Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
+---
 
- uname -a
-Linux slax 5.1.6-x64 #1 SMP PREEMPT Fri May 31 23:49:35 MSK 2019 x86_64 AMD FX(tm)-4300 Quad-Core Processor AuthenticAMD GNU/Linux
+v2: fixed subject [Abhishek Sahu is bouncing]
+---
+ arch/arm/boot/dts/qcom-ipq4019.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Userspace is 32-bit Slackware (mix of many versions).
+diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+index bbcb7db810f7..0e3e79442c50 100644
+--- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
++++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
+@@ -169,6 +169,7 @@
+ 			     <1 4 0xf08>,
+ 			     <1 1 0xf08>;
+ 		clock-frequency = <48000000>;
++		always-on;
+ 	};
+ 
+ 	soc {
+-- 
+2.20.1
 
- sg_inq /dev/sr0
-standard INQUIRY:
-  PQual=0  Device_type=5  RMB=1  LU_CONG=0  version=0x05  [SPC-3]
-  [AERC=0]  [TrmTsk=0]  NormACA=1  HiSUP=1  Resp_data_format=2
-  SCCS=0  ACC=0  TPGS=0  3PC=0  Protect=0  [BQue=0]
-  EncServ=0  MultiP=0  [MChngr=0]  [ACKREQQ=0]  Addr16=0
-  [RelAdr=0]  WBus16=0  Sync=0  [Linked=0]  [TranDis=0]  CmdQue=0
-  [SPI: Clocking=0x0  QAS=0  IUS=0]
-    length=96 (0x60)   Peripheral device type: cd/dvd
- Vendor identification: ASUS
- Product identification: DRW-24D5MT
- Product revision level: 1.00
