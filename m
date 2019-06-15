@@ -2,130 +2,151 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AC06C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04808C31E51
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F4D921851
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D159221773
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 14:22:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z9Rk60Le"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mk2sKC3F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726876AbfFOOSg (ORCPT
+        id S1726921AbfFOOWT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 10:18:36 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36076 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726400AbfFOOSg (ORCPT
+        Sat, 15 Jun 2019 10:22:19 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41587 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfFOOWT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 10:18:36 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so12106051ioh.3
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 07:18:35 -0700 (PDT)
+        Sat, 15 Jun 2019 10:22:19 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so3123254pff.8;
+        Sat, 15 Jun 2019 07:22:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WZCWllnmsiBaICnZjSKeck7hGpgHXTO6pHNqapuT9AM=;
-        b=Z9Rk60LeD/0ptcPj16hkpfST5k3ZThFqW3OXHdbZlJbMajc0/BhzHF+sQMfmAFeZPf
-         g9RM8ZRaUqycBUQNF99rNjCoZSwH+6o3iRvi0RGwdkOg7rMWz5WCxfsdWyMgmM/EpS06
-         dAubW+ndaqdG95ne2fbXiysxPXe/a0cF4y9aexF3g+ERtHCy1rR/TApR3VIitpi2rmzF
-         Lri4OA9uev4HytKxrr7YzelhP4haIrdQbQrG8iL17AMzhQxcUskPNUFl6YyIDiq9ePwC
-         gsZyxStXOcx0YWnIjrsmzA+A36r0ILOMH2lzG/aLqTTxAOHiBZoGgqDc0vgB47TpSJYu
-         XzFg==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4jcVnha6T/SSJcKsN+RA/B8GQPj4ptbm/niXDT+3DzY=;
+        b=mk2sKC3F5T58Z1iiRMMJtRkKPF2mkjQjQRK2iNpYMAZt4DuB2xtt3Mbq2HgnMn6wnS
+         7SPYL0jEB8/hrXOtg6GghB6mo1YLz38IXSyl8ctZdnvwYFZzMiOaxipPYUjfE7RrdOzR
+         RZqeah6HQjJ09p2OOMcUN7EMDgKx6E7FONWErjUjrry8l66bFuLZd6ODEZIClaPDEkk5
+         rXIjJuYADfRnOSjEbcbyOSnEXxbIi8n536c88BIxDrZANlgRehtW1fcUHZTjtheuqr9+
+         d3wtXaY95UHrWeAtlptMuV7IZeaLJreOGIlehXjVoNRQvU9gIITY7PsRipzhmLkEggkh
+         i1ZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WZCWllnmsiBaICnZjSKeck7hGpgHXTO6pHNqapuT9AM=;
-        b=QmjkiECWxR7locOMLG9mUX0eGxijt5rF7y2X1El9zYxYneScyiY9JXlDhh1UxTGYuN
-         c0DJRNX2BU3XP1VeLU+yZNqXlPYTnDuPodtvz4w0xEwcFhQLzus0bW41zXP6M3GyQN1q
-         2lOz4P0J5YaLHuPS3tiFaImmofu0d++hpxhrkkOuhnIdeasn9lVTfbqA2QwYYhDut0yu
-         QmALljE6waict3oBLvKAgtnqMTTjYv0pOFg+MqYLLHYn7tzNQJ+cttpXvvo70I4vvXMx
-         0nCsybLUnPGmmVxlPG3MNS0usiY51fWUXC9Ct7Lgz3hyl+tjiocEIocmypSolWUlJS2s
-         /1uw==
-X-Gm-Message-State: APjAAAVvx8PUwcjmy29LoDeYKyh4SZoj75sNluTsBy810wx0kmJ9Te8f
-        +AdJqClfazFUNSNWjVFSzY38ahQAEBZ17Srq3+KmHA==
-X-Google-Smtp-Source: APXvYqxghuy0pG3URpiRF/uKu7ofXRDyNB8i7XeBd+Uupypx/WpqsWUjXwueN9xkkeBLCpEwkBt1I6agbNIYnAhx990=
-X-Received: by 2002:a5d:9456:: with SMTP id x22mr1769308ior.71.1560608315058;
- Sat, 15 Jun 2019 07:18:35 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAKv+Gu9U9z3iAuz4V1c5zTHuz1As8FSNGY-TJon4OLErB8ts8Q@mail.gmail.com>
- <20190522160417.GF7876@fuggles.cambridge.arm.com> <20190612040933.GA18848@dc5-eodlnx05.marvell.com>
- <20190612093151.GA11554@brain-police> <20190614070914.GA21961@dc5-eodlnx05.marvell.com>
- <20190614095846.GC10506@fuggles.cambridge.arm.com> <CAKv+Gu_Kdq=UPijjA84FpmO=ZsdEO9EyyF7GeOQ+WmfqtO_hMg@mail.gmail.com>
- <20190614103850.GG10659@fuggles.cambridge.arm.com> <201906142026.1BC27EDB1E@keescook>
- <CAKv+Gu_XuhgUCYOeykrbaxJz-wL1HFrc_O+HeZHqaGkMHd2J9Q@mail.gmail.com> <201906150654.FF4400F7C8@keescook>
-In-Reply-To: <201906150654.FF4400F7C8@keescook>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Sat, 15 Jun 2019 16:18:21 +0200
-Message-ID: <CAKv+Gu9-rZ16Nb9t3=knzW0BHu0eNxQoPwWS4c8UMMm=2iqiuw@mail.gmail.com>
-Subject: Re: [RFC] Disable lockref on arm64
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4jcVnha6T/SSJcKsN+RA/B8GQPj4ptbm/niXDT+3DzY=;
+        b=s+TVygiSbZo0L3R5mFFjzT/h3pPsH4NdWn7UlNRUtoebW6DO4mDeAMoLXuTT4+aXZ4
+         jF3obZ5VxvSoXqIN5TSL45Gl/OT3mdqmRQEUFYWIaA4sFYV98Klx68idQv/AdtQJ62kL
+         5Aq/o5vuoCCwMw64IkxRDWE6gJ9nkLLeIa1W/UU36+uTJOAY9jBA+00GUdgIlbFYSROk
+         TcIgR3bghzXPGKZLq4qNKyy4MhQuFIygS70xFCAoZ7NNmq+RHNTNEssA916iDaVHnUUJ
+         kTF0KglV4tx+rRdOiCtxQT7hhx6pOCXS0hyW4W6PnWMmCbeE17Prtv6G9Zd9pmh1+F/j
+         41ug==
+X-Gm-Message-State: APjAAAU7d0jacTr/5A8GBW5ohw7kBSKGhIlYAvWplIKnp77IvE4k3gBa
+        sIj45q+UPoi8bcjERnX/gGI0FNy9
+X-Google-Smtp-Source: APXvYqwVayNboag+Dn8UwiSaLd6i9GFJKHjWbJ0mgRF9hnnKtw+1Vr+mwRUJaDySVmvmTyAXT2kCrg==
+X-Received: by 2002:a17:90a:e38f:: with SMTP id b15mr16850637pjz.85.1560608538196;
+        Sat, 15 Jun 2019 07:22:18 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id e184sm10290803pfa.169.2019.06.15.07.22.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Jun 2019 07:22:17 -0700 (PDT)
+Date:   Sat, 15 Jun 2019 07:22:16 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ken Sloat <KSloat@aampglobal.com>
+Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
+        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
         "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
+ watchdog on system suspend
+Message-ID: <20190615142216.GA32514@roeck-us.net>
+References: <20190614125310.29458-1-ksloat@aampglobal.com>
+ <20190614164609.GA29814@roeck-us.net>
+ <BL0PR07MB4115E99D065FD9BEA4C43BB5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
+ <20190614180826.GD3369@piout.net>
+ <BL0PR07MB4115D5ECDEDCC028197637E5ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
+ <20190614203327.GE3369@piout.net>
+ <BL0PR07MB4115721DA2EB445BE7590BF6ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BL0PR07MB4115721DA2EB445BE7590BF6ADEE0@BL0PR07MB4115.namprd07.prod.outlook.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 15 Jun 2019 at 15:59, Kees Cook <keescook@chromium.org> wrote:
->
-> On Sat, Jun 15, 2019 at 10:47:19AM +0200, Ard Biesheuvel wrote:
-> > remaining question Will had was whether it makes sense to do the
-> > condition checks before doing the actual store, to avoid having a time
-> > window where the refcount assumes its illegal value. Since arm64 does
-> > not have memory operands, the instruction count wouldn't change, but
-> > it will definitely result in a performance hit on out-of-order CPUs.
->
-> What do the races end up looking like? Is it possible to have two
-> threads ordered in a way that a second thread could _un_saturate a
-> counter?
->
-> CPU 1                   CPU 2
-> inc()
->   load INT_MAX-1
->   about to overflow?
->   yes
->                         dec()
->                           load INT_MAX-1
->   set to INT_MAX
->                           set to INT_MAX-2
->
-> Or would you use the same INT_MIN/2 saturation point done on x86?
->
+On Fri, Jun 14, 2019 at 08:45:28PM +0000, Ken Sloat wrote:
+> > -----Original Message-----
+> > From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Sent: Friday, June 14, 2019 4:33 PM
+> > To: Ken Sloat <KSloat@aampglobal.com>
+> > Cc: Guenter Roeck <linux@roeck-us.net>; nicolas.ferre@microchip.com;
+> > ludovic.desroches@microchip.com; wim@linux-watchdog.org; linux-arm-
+> > kernel@lists.infradead.org; linux-watchdog@vger.kernel.org; linux-
+> > kernel@vger.kernel.org
+> > Subject: Re: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
+> > watchdog on system suspend
+> > 
+> > [This is an EXTERNAL EMAIL]
+> > ________________________________
+> > 
+> > On 14/06/2019 18:43:22+0000, Ken Sloat wrote:
+> > > Well I'm a little confused still because there are two separate
+> > > comments in these statements. The first within resume implies that the
+> > > init should be called because we might have lost register values for
+> > > some reason unexplained.
+> > 
+> > The sama5d2 has a suspend mode where power to the core is completely
+> > cut. Only a few IPs remain powered (in the backup power domain).
+> > Unfortunately, the watchdog is not in that domain and may lose its registers.
+> > 
+> > > Then within the init it says that the bootloader might have modified
+> > > the registers so we should check them and then update it or otherwise
+> > > disable it. I'm not trying to pick apart the logic or anything, I'm
+> > > just readily assuming it is good as it was already reviewed before.
+> > >
+> > 
+> > The bootloaders may have started the watchdog (this makes sense if you
+> > really care about reliability) and so we need to be careful to keep the proper
+> > parameters.
+> 
+> Thanks for the explanation Alexandre I appreciate it.
+> 
+> > > So without digging into that too much, if we don't know if any of the
+> > > runtime situations above might have occurred, then isn't it best to
+> > > leave my patch as is? Yes this has the side effect of resetting the
+> > > timer count, but if the init call is needed and we don't have any way
+> > > to know if any of the situations occurred, then we have no choice right?
+> > >
+> > 
+> > Until we can differentiate between suspend modes, we have no other
+> > choice.
+> 
+> Ok I will leave my patch as is for now then
+> 
 
-Yes, I am using the same saturation point as x86. In this example, I
-am not entirely sure I understand why it matters, though: the atomics
-guarantee that the write by CPU2 fails if CPU1 changed the value in
-the mean time, regardless of which value it wrote.
+If that is what those involved in this discussion argue for, they will
+need to confirm with Reviewed-by: or Acked-by: tags.
 
-I think the concern is more related to the likelihood of another CPU
-doing something nasty between the moment that the refcount overflows
-and the moment that the handler pins it at INT_MIN/2, e.g.,
+Thanks,
+Guenter
 
-> CPU 1                   CPU 2
-> inc()
->   load INT_MAX
->   about to overflow?
->   yes
->
->   set to 0
->                          <insert exploit here>
->   set to INT_MIN/2
-
-
-> As for performance, it should be easy to measure with the LKDTM test
-> to find out exactly the differences.
->
-
-Yes, I intend to look into this on Monday.
+> > --
+> > Alexandre Belloni, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> 
+> Thanks,
+> Ken Sloat
