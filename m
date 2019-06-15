@@ -2,185 +2,109 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05FFFC31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:53:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FB0C31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:58:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD77F21773
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:53:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B718C21848
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726686AbfFOMxF (ORCPT
+        id S1726740AbfFOM56 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 08:53:05 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:50616 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726511AbfFOMxE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 08:53:04 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 77FE759B21D05385D301;
-        Sat, 15 Jun 2019 20:53:01 +0800 (CST)
-Received: from localhost (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Sat, 15 Jun 2019
- 20:52:52 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <nm@ti.com>, <t-kristo@ti.com>, <ssantosh@kernel.org>,
-        <s-anna@ti.com>, <santosh.shilimkar@oracle.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH v3 -next] firmware: ti_sci: Fix gcc unused-but-set-variable warning
-Date:   Sat, 15 Jun 2019 20:50:54 +0800
-Message-ID: <20190615125054.16416-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-In-Reply-To: <20190614154421.17556-1-yuehaibing@huawei.com>
-References: <20190614154421.17556-1-yuehaibing@huawei.com>
+        Sat, 15 Jun 2019 08:57:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35170 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726327AbfFOM55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 08:57:57 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A174B308213A;
+        Sat, 15 Jun 2019 12:57:55 +0000 (UTC)
+Received: from treble (ovpn-120-23.rdu2.redhat.com [10.10.120.23])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A2B4379E;
+        Sat, 15 Jun 2019 12:57:51 +0000 (UTC)
+Date:   Sat, 15 Jun 2019 07:57:48 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Kairui Song <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@aculab.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH v2 4/5] x86/bpf: Fix 64-bit JIT frame pointer usage
+Message-ID: <20190615125748.2c4xpgfuccanjx5d@treble>
+References: <178097de8c1bd6a877342304f3469eac4067daa4.1560534694.git.jpoimboe@redhat.com>
+ <20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com>
+ <20190614211916.jnxakyfwilcv6r57@treble>
+ <CAADnVQJ0dmxYTnaQC1UiSo7MhcTy2KRWJWJKw4jyxFWby-JgRg@mail.gmail.com>
+ <20190614231311.gfeb47rpjoholuov@treble>
+ <CAADnVQKOjvhpMQqjHvF-oX2U99WRCi+repgqmt6hiSObovxoaQ@mail.gmail.com>
+ <20190614235417.7oagddee75xo7otp@treble>
+ <CAADnVQ+mjtgZExhtKDu6bbaVSHUfOYb=XeJodPB5+WdjtLYvCA@mail.gmail.com>
+ <20190615042747.awyy4djqe6vfmles@treble>
+ <CAADnVQJV6Yb9EyXE+NG6Nd1KLhhoF2Nr6BN=fihYnW7H0cvRoQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAADnVQJV6Yb9EyXE+NG6Nd1KLhhoF2Nr6BN=fihYnW7H0cvRoQ@mail.gmail.com>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sat, 15 Jun 2019 12:57:56 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+On Fri, Jun 14, 2019 at 10:16:53PM -0700, Alexei Starovoitov wrote:
+> On Fri, Jun 14, 2019 at 9:27 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> >
+> > On Fri, Jun 14, 2019 at 05:02:36PM -0700, Alexei Starovoitov wrote:
+> > > On Fri, Jun 14, 2019 at 4:54 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > > The previous patch you posted has my patch description, push/pop and
+> > > > comment changes, with no credit:
+> > > >
+> > > > https://lkml.kernel.org/r/20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com
+> > >
+> > > I'm sorry for reusing one sentence from your commit log and
+> > > not realizing you want credit for that.
+> > > Will not happen again.
+> >
+> > Um.  What are you talking about?  The entire patch was clearly derived
+> > from mine.  Not just "one sentence from your commit log".  The title,
+> > the pushes/pops in the prologue/epilogue, the removal of the
+> > "ebpf_from_cbpf" argument, the code spacing, and some of the non trivial
+> > comment changes were the same.
+> >
+> > > I also suggest you never touch anything bpf related.
+> > > Just to avoid this credit claims and threads like this one.
+> >
+> > Wth.  I made a simple request for credit.  Anybody can see the patch was
+> > derived from mine.  It's not like I really care.  It's just basic human
+> > decency.
+> 
+> derived? do you really think so ?
+> Please fix your orc stuff that is still broken.
+> Human decency is fixing stuff that you're responsible for.
+> Your commit d15d356887e7 on April 23 broke stack traces.
+> And we reported it 3 weeks ago.
+> Yet instead of fixing it you kept arguing about JIT frame pointers
+> that is orthogonal issue and was in this state for the last 2 years.
 
-drivers/firmware/ti_sci.c: In function ti_sci_cmd_ring_config:
-drivers/firmware/ti_sci.c:2035:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-drivers/firmware/ti_sci.c: In function ti_sci_cmd_ring_get_config:
-drivers/firmware/ti_sci.c:2104:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-drivers/firmware/ti_sci.c: In function ti_sci_cmd_rm_udmap_tx_ch_cfg:
-drivers/firmware/ti_sci.c:2287:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-drivers/firmware/ti_sci.c: In function ti_sci_cmd_rm_udmap_rx_ch_cfg:
-drivers/firmware/ti_sci.c:2357:17: warning: variable dev set but not used [-Wunused-but-set-variable]
+Again you're not making sense.  The fix has already been posted.  That
+was the point of this patch set.
 
-Use the 'dev' variable instead of info->dev to fix this.
+It's your call if you want to cherry pick the FP fix (which is a
+dependency of the ORC fix) without taking the others.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
-v3: fix patch title
-v2: use the 'dev' variable as Suman Anna's suggestion
----
- drivers/firmware/ti_sci.c | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 86b2727..c8da6e2 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -2046,7 +2046,7 @@ static int ti_sci_cmd_ring_config(const struct ti_sci_handle *handle,
- 				   sizeof(*req), sizeof(*resp));
- 	if (IS_ERR(xfer)) {
- 		ret = PTR_ERR(xfer);
--		dev_err(info->dev, "RM_RA:Message config failed(%d)\n", ret);
-+		dev_err(dev, "RM_RA:Message config failed(%d)\n", ret);
- 		return ret;
- 	}
- 	req = (struct ti_sci_msg_rm_ring_cfg_req *)xfer->xfer_buf;
-@@ -2062,7 +2062,7 @@ static int ti_sci_cmd_ring_config(const struct ti_sci_handle *handle,
- 
- 	ret = ti_sci_do_xfer(info, xfer);
- 	if (ret) {
--		dev_err(info->dev, "RM_RA:Mbox config send fail %d\n", ret);
-+		dev_err(dev, "RM_RA:Mbox config send fail %d\n", ret);
- 		goto fail;
- 	}
- 
-@@ -2071,7 +2071,7 @@ static int ti_sci_cmd_ring_config(const struct ti_sci_handle *handle,
- 
- fail:
- 	ti_sci_put_one_xfer(&info->minfo, xfer);
--	dev_dbg(info->dev, "RM_RA:config ring %u ret:%d\n", index, ret);
-+	dev_dbg(dev, "RM_RA:config ring %u ret:%d\n", index, ret);
- 	return ret;
- }
- 
-@@ -2115,7 +2115,7 @@ static int ti_sci_cmd_ring_get_config(const struct ti_sci_handle *handle,
- 				   sizeof(*req), sizeof(*resp));
- 	if (IS_ERR(xfer)) {
- 		ret = PTR_ERR(xfer);
--		dev_err(info->dev,
-+		dev_err(dev,
- 			"RM_RA:Message get config failed(%d)\n", ret);
- 		return ret;
- 	}
-@@ -2125,7 +2125,7 @@ static int ti_sci_cmd_ring_get_config(const struct ti_sci_handle *handle,
- 
- 	ret = ti_sci_do_xfer(info, xfer);
- 	if (ret) {
--		dev_err(info->dev, "RM_RA:Mbox get config send fail %d\n", ret);
-+		dev_err(dev, "RM_RA:Mbox get config send fail %d\n", ret);
- 		goto fail;
- 	}
- 
-@@ -2150,7 +2150,7 @@ static int ti_sci_cmd_ring_get_config(const struct ti_sci_handle *handle,
- 
- fail:
- 	ti_sci_put_one_xfer(&info->minfo, xfer);
--	dev_dbg(info->dev, "RM_RA:get config ring %u ret:%d\n", index, ret);
-+	dev_dbg(dev, "RM_RA:get config ring %u ret:%d\n", index, ret);
- 	return ret;
- }
- 
-@@ -2298,7 +2298,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
- 				   sizeof(*req), sizeof(*resp));
- 	if (IS_ERR(xfer)) {
- 		ret = PTR_ERR(xfer);
--		dev_err(info->dev, "Message TX_CH_CFG alloc failed(%d)\n", ret);
-+		dev_err(dev, "Message TX_CH_CFG alloc failed(%d)\n", ret);
- 		return ret;
- 	}
- 	req = (struct ti_sci_msg_rm_udmap_tx_ch_cfg_req *)xfer->xfer_buf;
-@@ -2323,7 +2323,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
- 
- 	ret = ti_sci_do_xfer(info, xfer);
- 	if (ret) {
--		dev_err(info->dev, "Mbox send TX_CH_CFG fail %d\n", ret);
-+		dev_err(dev, "Mbox send TX_CH_CFG fail %d\n", ret);
- 		goto fail;
- 	}
- 
-@@ -2332,7 +2332,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
- 
- fail:
- 	ti_sci_put_one_xfer(&info->minfo, xfer);
--	dev_dbg(info->dev, "TX_CH_CFG: chn %u ret:%u\n", params->index, ret);
-+	dev_dbg(dev, "TX_CH_CFG: chn %u ret:%u\n", params->index, ret);
- 	return ret;
- }
- 
-@@ -2368,7 +2368,7 @@ static int ti_sci_cmd_rm_udmap_rx_ch_cfg(const struct ti_sci_handle *handle,
- 				   sizeof(*req), sizeof(*resp));
- 	if (IS_ERR(xfer)) {
- 		ret = PTR_ERR(xfer);
--		dev_err(info->dev, "Message RX_CH_CFG alloc failed(%d)\n", ret);
-+		dev_err(dev, "Message RX_CH_CFG alloc failed(%d)\n", ret);
- 		return ret;
- 	}
- 	req = (struct ti_sci_msg_rm_udmap_rx_ch_cfg_req *)xfer->xfer_buf;
-@@ -2392,7 +2392,7 @@ static int ti_sci_cmd_rm_udmap_rx_ch_cfg(const struct ti_sci_handle *handle,
- 
- 	ret = ti_sci_do_xfer(info, xfer);
- 	if (ret) {
--		dev_err(info->dev, "Mbox send RX_CH_CFG fail %d\n", ret);
-+		dev_err(dev, "Mbox send RX_CH_CFG fail %d\n", ret);
- 		goto fail;
- 	}
- 
-@@ -2401,7 +2401,7 @@ static int ti_sci_cmd_rm_udmap_rx_ch_cfg(const struct ti_sci_handle *handle,
- 
- fail:
- 	ti_sci_put_one_xfer(&info->minfo, xfer);
--	dev_dbg(info->dev, "RX_CH_CFG: chn %u ret:%d\n", params->index, ret);
-+	dev_dbg(dev, "RX_CH_CFG: chn %u ret:%d\n", params->index, ret);
- 	return ret;
- }
- 
 -- 
-2.7.4
-
-
+Josh
