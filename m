@@ -2,116 +2,145 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FEA9C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B271DC31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E499A21773
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:17:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 875372168B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 05:24:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="anHHBk5O"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K37drCDl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726282AbfFOFRI (ORCPT
+        id S1726126AbfFOFYB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 01:17:08 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:38060 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725786AbfFOFRH (ORCPT
+        Sat, 15 Jun 2019 01:24:01 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45051 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbfFOFYB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 01:17:07 -0400
-Received: by mail-lf1-f68.google.com with SMTP id b11so3078989lfa.5;
-        Fri, 14 Jun 2019 22:17:05 -0700 (PDT)
+        Sat, 15 Jun 2019 01:24:01 -0400
+Received: by mail-pg1-f193.google.com with SMTP id n2so2689064pgp.11
+        for <linux-kernel@vger.kernel.org>; Fri, 14 Jun 2019 22:24:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dWRhLmpBbC3Bwa+dd84M6pBEnObbFDBtYhQXVaEn1qs=;
-        b=anHHBk5OSmRogUlK1HOP2vd2EEiFh6loSjqPKIoeElbSG/l6W/6mPXn+XOWMJteTu1
-         9ga6vLgnNsKjTukkzxv13+NKexWjC8/JLsBQ7TRivf1MtZjWnlTTNnjBPGhOIpOwX0fA
-         wKIGcgFonecx04LhtpWn3NlQTrReZXLLYNGlSfG6zrWrUUfNUsLlwlocALJkCtQHkGId
-         hmvWVfFzx92whZgyqfS9JXhuiVNQmb0AeSEDLe4ayTtNeELkJRdKUvJCm9EKWwECFnPq
-         UpDhscrlUVsZbPUufRWTARJQvMBWWNltqUHFrH/Eudiqs0kdJtGdQ+7RevHPGIorMKKm
-         shWw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=yNrW6xp0TlnPUlwSYk5j3h7SqKf8zU2qbYKV+9+hWKs=;
+        b=K37drCDl2YToHdNt3/k2l0v+EgT7kFzkGif0g3TSgO0Mi2CKUthFhZJmSlgEt8khpM
+         f0RYanS9uEM525eHFVUqj26x+9o3gud3UD1v9aNAuc9rndWMFQVZdce//D1P4vxWGTin
+         spArlN2S/1WRC+09DYbu92oSzgn8LUWM7KJNPuwZaJlyhMDdc6mfKCnFsc/d0UXBT6mQ
+         hpO9iP2HMvr6wXqcKvJij/+IC0y2tZVkJwd+MaoEvhdv7/olByoqxg2tLpe1kbi/WMvz
+         pmY4WXSpjbJacVahAz+eSstce15LJDLyKw89JmE2TfDEClC4QeySUkP0aNSlYuadXmCk
+         hSjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dWRhLmpBbC3Bwa+dd84M6pBEnObbFDBtYhQXVaEn1qs=;
-        b=jEgPJTCRYhZsVSD3JrD7QC8QvbhvXI/8ryNu/5E3+fXi3VWzjCtsjk/HH7CrWOFHmJ
-         eIROeZt7ILr5926Ng3F0gwtwpeMnAZEZXpCM0H+E8URaJRZJz4eDQEbiEagDDzrBFCop
-         hwGEeF2gvCzyr5i6clq3Z1uWyQWXOfxFv/8cpLKIdWPakXLDzQJ42/htfnSAv8ClqgwD
-         QKjMTRdRXatBoC0aoUxrf8/c8Ryu65kSD9AxphjaMQJElGoEluhv79ljC3lJQsaLv5Id
-         J5FaTh7u2ZP1CGQu8gcaFzV33VFohgakCOa61rjCSnKg9xuc0Eee18tLy4xBuG2xr9Kv
-         GXDg==
-X-Gm-Message-State: APjAAAXcpVUIvVNXU0LXdeAousild630z/xqbQ7/4pp9Ci5Mmp2hRcVW
-        2mJ8zxPK+cnI9HLnEWwDABBqA0elgZhURMJpd/Y=
-X-Google-Smtp-Source: APXvYqwWjUYlTpIfM2o3hOyDyGjre3lFXP1VpxqxCz1KsvZ9/Iub9UPvQwGApybJrggex8HEFqdRQhz2gsgonVaKCQ8=
-X-Received: by 2002:ac2:5337:: with SMTP id f23mr10006593lfh.15.1560575825177;
- Fri, 14 Jun 2019 22:17:05 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=yNrW6xp0TlnPUlwSYk5j3h7SqKf8zU2qbYKV+9+hWKs=;
+        b=uEqgXQ8MdFDtV4aUC7effCUuOeW0QMOsIoYTKLOixu8S5EVmyDv9D9wFIIGDXnJanr
+         cwF9nGABlb6rRgtl4Uc3/9nka1qQGFzNujWjBOOVKR5WHo/yyDjCgWTRH5Ik7hVg5vPr
+         bNM1YrW6lDq46pQ95y1o75cI6XJ/9odgvyOcWJpN9WZ1hfS7hMAfs0f1BoKK7dLehrPJ
+         O3dt/HG56w3Bs6iHbXd20P28xr2K8fXr5vxPPOxWiJk5FxzeUu+TET7XtkMv6kke7Y17
+         9vUi0sV22NHYvhbepvyJNldLXWK6iAWoLmWbS6q8D5bMm+YO5bKEm661PJasDuLNf6HN
+         uOcQ==
+X-Gm-Message-State: APjAAAVArzL89hBWMUHtSQ+jDTstuWPsmEnH8d1IgHm9ELwFjMXqFqQ1
+        9eyZqtnt8qOLs4HEfg366Yx87A==
+X-Google-Smtp-Source: APXvYqzTvXEEYJ3N7K6IN/K+BR9rccVM5BVHvLSzLlaPMDTRzQDWsoNt+nbmV10GcCcZFEZJQ9VrhQ==
+X-Received: by 2002:a63:1243:: with SMTP id 3mr14798306pgs.235.1560576239520;
+        Fri, 14 Jun 2019 22:23:59 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 10sm4404372pfh.179.2019.06.14.22.23.58
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 14 Jun 2019 22:23:58 -0700 (PDT)
+Date:   Fri, 14 Jun 2019 22:24:46 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@sonymobile.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH -next] soc: qcom: fix QCOM_AOSS_QMP dependency and build
+ errors
+Message-ID: <20190615052446.GA31088@tuxbook-pro>
+References: <6d97f8dc-f980-7825-4aa6-27f56b25bc3a@infradead.org>
 MIME-Version: 1.0
-References: <cover.1560534694.git.jpoimboe@redhat.com> <178097de8c1bd6a877342304f3469eac4067daa4.1560534694.git.jpoimboe@redhat.com>
- <20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com>
- <20190614211916.jnxakyfwilcv6r57@treble> <CAADnVQJ0dmxYTnaQC1UiSo7MhcTy2KRWJWJKw4jyxFWby-JgRg@mail.gmail.com>
- <20190614231311.gfeb47rpjoholuov@treble> <CAADnVQKOjvhpMQqjHvF-oX2U99WRCi+repgqmt6hiSObovxoaQ@mail.gmail.com>
- <20190614235417.7oagddee75xo7otp@treble> <CAADnVQ+mjtgZExhtKDu6bbaVSHUfOYb=XeJodPB5+WdjtLYvCA@mail.gmail.com>
- <20190615042747.awyy4djqe6vfmles@treble>
-In-Reply-To: <20190615042747.awyy4djqe6vfmles@treble>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Fri, 14 Jun 2019 22:16:53 -0700
-Message-ID: <CAADnVQJV6Yb9EyXE+NG6Nd1KLhhoF2Nr6BN=fihYnW7H0cvRoQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] x86/bpf: Fix 64-bit JIT frame pointer usage
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=windows-1252
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <6d97f8dc-f980-7825-4aa6-27f56b25bc3a@infradead.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 9:27 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Fri, Jun 14, 2019 at 05:02:36PM -0700, Alexei Starovoitov wrote:
-> > On Fri, Jun 14, 2019 at 4:54 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > > The previous patch you posted has my patch description, push/pop and
-> > > comment changes, with no credit:
-> > >
-> > > https://lkml.kernel.org/r/20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com
-> >
-> > I'm sorry for reusing one sentence from your commit log and
-> > not realizing you want credit for that.
-> > Will not happen again.
->
-> Um.  What are you talking about?  The entire patch was clearly derived
-> from mine.  Not just "one sentence from your commit log".  The title,
-> the pushes/pops in the prologue/epilogue, the removal of the
-> "ebpf_from_cbpf" argument, the code spacing, and some of the non trivial
-> comment changes were the same.
->
-> > I also suggest you never touch anything bpf related.
-> > Just to avoid this credit claims and threads like this one.
->
-> Wth.  I made a simple request for credit.  Anybody can see the patch was
-> derived from mine.  It's not like I really care.  It's just basic human
-> decency.
+On Fri 14 Jun 14:47 PDT 2019, Randy Dunlap wrote:
 
-derived? do you really think so ?
-Please fix your orc stuff that is still broken.
-Human decency is fixing stuff that you're responsible for.
-Your commit d15d356887e7 on April 23 broke stack traces.
-And we reported it 3 weeks ago.
-Yet instead of fixing it you kept arguing about JIT frame pointers
-that is orthogonal issue and was in this state for the last 2 years.
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix Kconfig warning and subsequent build errors that are caused
+> when PM_GENERIC_DOMAINS=y but CONFIG_PM is not set/enabled.
+> 
+
+Thanks Randy, I thought I had all angles covered here.
+
+Applied to our -next branch.
+
+Regards,
+Bjorn
+
+> WARNING: unmet direct dependencies detected for PM_GENERIC_DOMAINS
+>   Depends on [n]: PM [=n]
+>   Selected by [m]:
+>   - QCOM_AOSS_QMP [=m] && (ARCH_QCOM || COMPILE_TEST [=y]) && MAILBOX [=y] && COMMON_CLK [=y]
+> 
+> Fixes these build errors:
+> 
+> ../drivers/base/power/domain.c: In function ‘genpd_queue_power_off_work’:
+> ../drivers/base/power/domain.c:485:13: error: ‘pm_wq’ undeclared (first use in this function)
+>   queue_work(pm_wq, &genpd->power_off_work);
+> ../drivers/base/power/domain.c:485:13: note: each undeclared identifier is reported only once for each function it appears in
+> ../drivers/base/power/domain.c: In function ‘genpd_dev_pm_qos_notifier’:
+> ../drivers/base/power/domain.c:675:25: error: ‘struct dev_pm_info’ has no member named ‘ignore_children’
+>    if (!dev || dev->power.ignore_children)
+> ../drivers/base/power/domain.c: In function ‘rtpm_status_str’:
+> ../drivers/base/power/domain.c:2754:16: error: ‘struct dev_pm_info’ has no member named ‘runtime_error’
+>   if (dev->power.runtime_error)
+> ../drivers/base/power/domain.c:2756:21: error: ‘struct dev_pm_info’ has no member named ‘disable_depth’
+>   else if (dev->power.disable_depth)
+> ../drivers/base/power/domain.c:2758:21: error: ‘struct dev_pm_info’ has no member named ‘runtime_status’
+>   else if (dev->power.runtime_status < ARRAY_SIZE(status_lookup))
+> ../drivers/base/power/domain.c:2759:31: error: ‘struct dev_pm_info’ has no member named ‘runtime_status’
+>    p = status_lookup[dev->power.runtime_status];
+> ../drivers/base/power/domain_governor.c: In function ‘default_suspend_ok’:
+> ../drivers/base/power/domain_governor.c:82:17: error: ‘struct dev_pm_info’ has no member named ‘ignore_children’
+> 
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Andy Gross <andy.gross@linaro.org>
+> Cc: David Brown <david.brown@linaro.org>
+> ---
+>  drivers/soc/qcom/Kconfig |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- linux-next-20190614.orig/drivers/soc/qcom/Kconfig
+> +++ linux-next-20190614/drivers/soc/qcom/Kconfig
+> @@ -8,7 +8,7 @@ config QCOM_AOSS_QMP
+>  	tristate "Qualcomm AOSS Driver"
+>  	depends on ARCH_QCOM || COMPILE_TEST
+>  	depends on MAILBOX
+> -	depends on COMMON_CLK
+> +	depends on COMMON_CLK && PM
+>  	select PM_GENERIC_DOMAINS
+>  	help
+>  	  This driver provides the means of communicating with and controlling
+> 
+> 
