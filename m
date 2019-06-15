@@ -4,186 +4,97 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85FE8C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:46:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733D6C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 687192184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:46:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F0AB21841
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:47:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726773AbfFOMqO (ORCPT
+        id S1726758AbfFOMrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 08:46:14 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:47024 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725943AbfFOMqO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 08:46:14 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 1BE1DBBF7D24A9E17971;
-        Sat, 15 Jun 2019 20:46:05 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Sat, 15 Jun 2019
- 20:46:01 +0800
-Subject: Re: [PATCH v2 -next] firmware: ti_sci: remove set but not used
- variable 'dev'
-To:     <nm@ti.com>, <t-kristo@ti.com>, <ssantosh@kernel.org>,
-        <s-anna@ti.com>, <santosh.shilimkar@oracle.com>
-References: <20190614154421.17556-1-yuehaibing@huawei.com>
- <20190615123823.15708-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <74b6ab2e-09c0-a91d-6339-cb6b72eb4261@huawei.com>
-Date:   Sat, 15 Jun 2019 20:46:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Sat, 15 Jun 2019 08:47:33 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:51004 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725943AbfFOMrc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 08:47:32 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45Qy1G5lFZz1rD9d;
+        Sat, 15 Jun 2019 14:47:30 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45Qy1G52mJz1qqkq;
+        Sat, 15 Jun 2019 14:47:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id OuZhr5AH4Xcv; Sat, 15 Jun 2019 14:47:29 +0200 (CEST)
+X-Auth-Info: lR6vEGEjQp+5pJ18oak+YQGQ7QwRBmFU2NVjtItvVEU28hsAjcy4lojTPelqUle0
+Received: from igel.home (ppp-46-244-181-62.dynamic.mnet-online.de [46.244.181.62])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Sat, 15 Jun 2019 14:47:29 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id 0F8512C0C9A; Sat, 15 Jun 2019 14:47:29 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] powerpc/mm/32s: only use MMU to mark initmem NX if STRICT_KERNEL_RWX
+References: <cover.1550775950.git.christophe.leroy@c-s.fr>
+        <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
+X-Yow:  ...It's REAL ROUND..  And it's got a POINTY PART right in the MIDDLE!!
+ The shape is SMOOTH..  ..And COLD.. It feels very COMFORTABLE on my
+ CHEEK..  I'm getting EMOTIONAL..
+Date:   Sat, 15 Jun 2019 14:47:29 +0200
+In-Reply-To: <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
+        (Christophe Leroy's message of "Thu, 21 Feb 2019 19:08:49 +0000
+        (UTC)")
+Message-ID: <8736kb9fry.fsf_-_@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190615123823.15708-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry, Pls ignore this, will fix the patch title
+If STRICT_KERNEL_RWX is disabled, never use the MMU to mark initmen
+nonexecutable.
 
-On 2019/6/15 20:38, YueHaibing wrote:
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/firmware/ti_sci.c: In function ti_sci_cmd_ring_config:
-> drivers/firmware/ti_sci.c:2035:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-> drivers/firmware/ti_sci.c: In function ti_sci_cmd_ring_get_config:
-> drivers/firmware/ti_sci.c:2104:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-> drivers/firmware/ti_sci.c: In function ti_sci_cmd_rm_udmap_tx_ch_cfg:
-> drivers/firmware/ti_sci.c:2287:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-> drivers/firmware/ti_sci.c: In function ti_sci_cmd_rm_udmap_rx_ch_cfg:
-> drivers/firmware/ti_sci.c:2357:17: warning: variable dev set but not used [-Wunused-but-set-variable]
-> 
-> Use the 'dev' variable instead of 'info->dev' to fix this.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
-> v2: use the 'dev' variable as Suman Anna's suggestion
-> ---
->  drivers/firmware/ti_sci.c | 24 ++++++++++++------------
->  1 file changed, 12 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-> index 86b2727..c8da6e2 100644
-> --- a/drivers/firmware/ti_sci.c
-> +++ b/drivers/firmware/ti_sci.c
-> @@ -2046,7 +2046,7 @@ static int ti_sci_cmd_ring_config(const struct ti_sci_handle *handle,
->  				   sizeof(*req), sizeof(*resp));
->  	if (IS_ERR(xfer)) {
->  		ret = PTR_ERR(xfer);
-> -		dev_err(info->dev, "RM_RA:Message config failed(%d)\n", ret);
-> +		dev_err(dev, "RM_RA:Message config failed(%d)\n", ret);
->  		return ret;
->  	}
->  	req = (struct ti_sci_msg_rm_ring_cfg_req *)xfer->xfer_buf;
-> @@ -2062,7 +2062,7 @@ static int ti_sci_cmd_ring_config(const struct ti_sci_handle *handle,
->  
->  	ret = ti_sci_do_xfer(info, xfer);
->  	if (ret) {
-> -		dev_err(info->dev, "RM_RA:Mbox config send fail %d\n", ret);
-> +		dev_err(dev, "RM_RA:Mbox config send fail %d\n", ret);
->  		goto fail;
->  	}
->  
-> @@ -2071,7 +2071,7 @@ static int ti_sci_cmd_ring_config(const struct ti_sci_handle *handle,
->  
->  fail:
->  	ti_sci_put_one_xfer(&info->minfo, xfer);
-> -	dev_dbg(info->dev, "RM_RA:config ring %u ret:%d\n", index, ret);
-> +	dev_dbg(dev, "RM_RA:config ring %u ret:%d\n", index, ret);
->  	return ret;
->  }
->  
-> @@ -2115,7 +2115,7 @@ static int ti_sci_cmd_ring_get_config(const struct ti_sci_handle *handle,
->  				   sizeof(*req), sizeof(*resp));
->  	if (IS_ERR(xfer)) {
->  		ret = PTR_ERR(xfer);
-> -		dev_err(info->dev,
-> +		dev_err(dev,
->  			"RM_RA:Message get config failed(%d)\n", ret);
->  		return ret;
->  	}
-> @@ -2125,7 +2125,7 @@ static int ti_sci_cmd_ring_get_config(const struct ti_sci_handle *handle,
->  
->  	ret = ti_sci_do_xfer(info, xfer);
->  	if (ret) {
-> -		dev_err(info->dev, "RM_RA:Mbox get config send fail %d\n", ret);
-> +		dev_err(dev, "RM_RA:Mbox get config send fail %d\n", ret);
->  		goto fail;
->  	}
->  
-> @@ -2150,7 +2150,7 @@ static int ti_sci_cmd_ring_get_config(const struct ti_sci_handle *handle,
->  
->  fail:
->  	ti_sci_put_one_xfer(&info->minfo, xfer);
-> -	dev_dbg(info->dev, "RM_RA:get config ring %u ret:%d\n", index, ret);
-> +	dev_dbg(dev, "RM_RA:get config ring %u ret:%d\n", index, ret);
->  	return ret;
->  }
->  
-> @@ -2298,7 +2298,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
->  				   sizeof(*req), sizeof(*resp));
->  	if (IS_ERR(xfer)) {
->  		ret = PTR_ERR(xfer);
-> -		dev_err(info->dev, "Message TX_CH_CFG alloc failed(%d)\n", ret);
-> +		dev_err(dev, "Message TX_CH_CFG alloc failed(%d)\n", ret);
->  		return ret;
->  	}
->  	req = (struct ti_sci_msg_rm_udmap_tx_ch_cfg_req *)xfer->xfer_buf;
-> @@ -2323,7 +2323,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
->  
->  	ret = ti_sci_do_xfer(info, xfer);
->  	if (ret) {
-> -		dev_err(info->dev, "Mbox send TX_CH_CFG fail %d\n", ret);
-> +		dev_err(dev, "Mbox send TX_CH_CFG fail %d\n", ret);
->  		goto fail;
->  	}
->  
-> @@ -2332,7 +2332,7 @@ static int ti_sci_cmd_rm_udmap_tx_ch_cfg(const struct ti_sci_handle *handle,
->  
->  fail:
->  	ti_sci_put_one_xfer(&info->minfo, xfer);
-> -	dev_dbg(info->dev, "TX_CH_CFG: chn %u ret:%u\n", params->index, ret);
-> +	dev_dbg(dev, "TX_CH_CFG: chn %u ret:%u\n", params->index, ret);
->  	return ret;
->  }
->  
-> @@ -2368,7 +2368,7 @@ static int ti_sci_cmd_rm_udmap_rx_ch_cfg(const struct ti_sci_handle *handle,
->  				   sizeof(*req), sizeof(*resp));
->  	if (IS_ERR(xfer)) {
->  		ret = PTR_ERR(xfer);
-> -		dev_err(info->dev, "Message RX_CH_CFG alloc failed(%d)\n", ret);
-> +		dev_err(dev, "Message RX_CH_CFG alloc failed(%d)\n", ret);
->  		return ret;
->  	}
->  	req = (struct ti_sci_msg_rm_udmap_rx_ch_cfg_req *)xfer->xfer_buf;
-> @@ -2392,7 +2392,7 @@ static int ti_sci_cmd_rm_udmap_rx_ch_cfg(const struct ti_sci_handle *handle,
->  
->  	ret = ti_sci_do_xfer(info, xfer);
->  	if (ret) {
-> -		dev_err(info->dev, "Mbox send RX_CH_CFG fail %d\n", ret);
-> +		dev_err(dev, "Mbox send RX_CH_CFG fail %d\n", ret);
->  		goto fail;
->  	}
->  
-> @@ -2401,7 +2401,7 @@ static int ti_sci_cmd_rm_udmap_rx_ch_cfg(const struct ti_sci_handle *handle,
->  
->  fail:
->  	ti_sci_put_one_xfer(&info->minfo, xfer);
-> -	dev_dbg(info->dev, "RX_CH_CFG: chn %u ret:%d\n", params->index, ret);
-> +	dev_dbg(dev, "RX_CH_CFG: chn %u ret:%d\n", params->index, ret);
->  	return ret;
->  }
->  
-> 
+Also move a misplaced paren that makes the condition always true.
 
+Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
+---
+ arch/powerpc/mm/pgtable_32.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
+index d53188dee18f..3935dc263d65 100644
+--- a/arch/powerpc/mm/pgtable_32.c
++++ b/arch/powerpc/mm/pgtable_32.c
+@@ -360,9 +360,11 @@ void mark_initmem_nx(void)
+ 	unsigned long numpages = PFN_UP((unsigned long)_einittext) -
+ 				 PFN_DOWN((unsigned long)_sinittext);
+ 
+-	if (v_block_mapped((unsigned long)_stext) + 1)
++#ifdef CONFIG_STRICT_KERNEL_RWX
++	if (v_block_mapped((unsigned long)_stext + 1))
+ 		mmu_mark_initmem_nx();
+ 	else
++#endif
+ 		change_page_attr(page, numpages, PAGE_KERNEL);
+ }
+ 
+-- 
+2.22.0
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
