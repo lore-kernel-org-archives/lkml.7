@@ -2,84 +2,141 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E8EC31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 21:46:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB21AC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 22:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3021A21473
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 21:46:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6E7921473
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 22:22:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CuJVuDGg"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="PNJT8Rmf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfFOVqR (ORCPT
+        id S1726841AbfFOWWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 17:46:17 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:45992 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfFOVqR (ORCPT
+        Sat, 15 Jun 2019 18:22:43 -0400
+Received: from outils.crapouillou.net ([89.234.176.41]:36432 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726400AbfFOWWn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 17:46:17 -0400
-Received: by mail-lj1-f196.google.com with SMTP id m23so5716579lje.12;
-        Sat, 15 Jun 2019 14:46:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=hYTYW6IZAeP4tQBXMbfaMW4PaVUM/8gJ0AvydW6uNfY=;
-        b=CuJVuDGgH2o7twgGYU5eLOv7aiye65VapfBq209uyPNpBXrLGyglJJDBJOy2O5gNX2
-         AGGP6ddGEtp75ofVP67AhoiUaJZZU+WlPk/BIGALYxeZDMhJBUaxQ0DgXCLo+J+5QD8a
-         9tEu3lFaHjllVgYAHteH8HandSMpSHWSYva4jxccu8bpyYWqeLojbAHaHFNwTn4Z87zC
-         vQd0dD6KrUWEQGWPY0Ua73WHa38+0RUn220nq6iaBKBb300fOxnuoeVJh5d1oS5K5UAM
-         xEEX7iQGb1lo/6nmBbvBEDb4fqS/chL5Rx68q6QpPuNJBkGvNQC6b9dNtpR9wWNljWyF
-         Nc+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=hYTYW6IZAeP4tQBXMbfaMW4PaVUM/8gJ0AvydW6uNfY=;
-        b=F+k8UA41/Fafy57QnL5HWfMQnAvu7qiYAueXR7Eyz0NavnSmU3zSiUSvGan6dVb37N
-         THscOtBOfBFOQ5ESvimCQuO4A8IYRFzOtb7POUqZVwlHCL6j6Np/rc+PLtbtoNkNnsy2
-         +IkId+LxxFwaN1hRpe6qKOtfLDsxGdWkA87JWUkGN6RNh8LauahkNN67WGr5K2TrKRmD
-         Byds+j6MDnEP38Fnubt+oMthCURSoLJ1TpgUsraQwKLgxvh6J2Vw8dNtmFHL2+UXseoj
-         ZV9aEWQiA7kdlAmdobjcLgswJS3OkUAe2mapKJNczyU9ejq/KasQicHp1A/q78cPy7AT
-         UbmQ==
-X-Gm-Message-State: APjAAAXtbgJAc5zzSdAAM+MCO5rTOVc8k0ItHQS/1lwKalmG9QLO9AAv
-        4FAxwQ7ARC7QhXu6PFv7P+ifiOteayK3HWQLgOc=
-X-Google-Smtp-Source: APXvYqyBQ5bz7L/zMaO1OwZgvUHhpUqxUT6QEQmGntUzy166XZNsEw25FbmmgprjdVT/K8mN8xyb0Drt2FPzymm62dY=
-X-Received: by 2002:a2e:9dca:: with SMTP id x10mr23318282ljj.17.1560635174630;
- Sat, 15 Jun 2019 14:46:14 -0700 (PDT)
+        Sat, 15 Jun 2019 18:22:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1560637359; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sVyIFnScoxPXqLI9tBcjmS2//cgjT4c+m2gvnY81jCs=;
+        b=PNJT8Rmfq1mOruQzkh5Clw9tA/Z4vAL+pEWIUuYcjUpwrJc7pt/GEWrTpyR0ZenAm8XnEA
+        ZLC1dNozXtdj12dyU0QI3aNZlLsAKfVDjhFmLQuQHp2eE7NtWdJzYM77fDagcdBXlaUKgp
+        Tj3ubec6/ZEBD4ATunaPH7OZRsyopo0=
+Date:   Sun, 16 Jun 2019 00:22:33 +0200
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH] mtd: rawnand: ingenic: Fix build error
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org,
+        computersforpeace@gmail.com, marek.vasut@gmail.com,
+        vigneshr@ti.com, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
+Message-Id: <1560637353.3745.0@crapouillou.net>
+In-Reply-To: <20190615134430.30384-1-yuehaibing@huawei.com>
+References: <20190615134430.30384-1-yuehaibing@huawei.com>
 MIME-Version: 1.0
-References: <20190614230821.3146272-1-ast@kernel.org>
-In-Reply-To: <20190614230821.3146272-1-ast@kernel.org>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Sat, 15 Jun 2019 14:46:03 -0700
-Message-ID: <CAADnVQK2Nq6_HQT7Opn1XkA7s6UteVE_qOpXq8AiQwFOmeB6jA@mail.gmail.com>
-Subject: Re: [PATCH bpf] bpf, x64: fix stack layout of JITed bpf code
-To:     Alexei Starovoitov <ast@kernel.org>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        X86 ML <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 4:10 PM Alexei Starovoitov <ast@kernel.org> wrote:
->
-> Since commit 177366bf7ceb the %rbp stopped pointing to %rbp of the
-> previous stack frame. That broke frame pointer based stack unwinding.
-> This commit is a partial revert of it.
-> Note that the location of tail_call_cnt is fixed, since the verifier
-> enforces MAX_BPF_STACK stack size for programs with tail calls.
->
-> Fixes: 177366bf7ceb ("bpf: change x86 JITed program stack layout")
-> Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Hi,
 
-Applied to bpf tree.
+I don't think the patch is correct. We want to be able to build
+the ingenic_nand driver without the ingenic_ecc code.
+
+The actual problem is that if the ingenic_nand driver is built-in,
+then the ingenic_ecc driver must be built-in too (if enabled),
+and we don't verify that constraint.
+
+Something like that should work better:
+
+config MTD_NAND_INGENIC_ECC
+	def_tristate m if MTD_NAND_JZ4780=3Dm
+	def_tristate y if MTD_NAND_JZ4780=3Dy
+
+Thanks,
+-Paul
+
+
+Le sam. 15 juin 2019 =E0 15:44, YueHaibing <yuehaibing@huawei.com> a=20
+=E9crit :
+> If MTD_NAND_JZ4780 is y and MTD_NAND_JZ4780_BCH is m,
+> which select CONFIG_MTD_NAND_INGENIC_ECC to m, building fails:
+>=20
+> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
+> `ingenic_nand_remove':
+> ingenic_nand.c:(.text+0x177): undefined reference to=20
+> `ingenic_ecc_release'
+> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
+> `ingenic_nand_ecc_correct':
+> ingenic_nand.c:(.text+0x2ee): undefined reference to=20
+> `ingenic_ecc_correct'
+>=20
+> Select MTD_NAND_INGENIC_ECC if MTD_NAND_JZ4780 is set
+>=20
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Fiexes: 15de8c6efd0e ("mtd: rawnand: ingenic: Separate top-level and=20
+> SoC specific code")
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>  drivers/mtd/nand/raw/ingenic/Kconfig | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig=20
+> b/drivers/mtd/nand/raw/ingenic/Kconfig
+> index 19a96ce..d0b1909 100644
+> --- a/drivers/mtd/nand/raw/ingenic/Kconfig
+> +++ b/drivers/mtd/nand/raw/ingenic/Kconfig
+> @@ -9,6 +9,7 @@ config MTD_NAND_JZ4740
+>  config MTD_NAND_JZ4780
+>  	tristate "JZ4780 NAND controller"
+>  	depends on JZ4780_NEMC
+> +	select MTD_NAND_INGENIC_ECC
+>  	help
+>  	  Enables support for NAND Flash connected to the NEMC on JZ4780 SoC
+>  	  based boards, using the BCH controller for hardware error=20
+> correction.
+> @@ -20,7 +21,6 @@ config MTD_NAND_INGENIC_ECC
+>=20
+>  config MTD_NAND_JZ4740_ECC
+>  	tristate "Hardware BCH support for JZ4740 SoC"
+> -	select MTD_NAND_INGENIC_ECC
+>  	help
+>  	  Enable this driver to support the Reed-Solomon error-correction
+>  	  hardware present on the JZ4740 SoC from Ingenic.
+> @@ -30,7 +30,6 @@ config MTD_NAND_JZ4740_ECC
+>=20
+>  config MTD_NAND_JZ4725B_BCH
+>  	tristate "Hardware BCH support for JZ4725B SoC"
+> -	select MTD_NAND_INGENIC_ECC
+>  	help
+>  	  Enable this driver to support the BCH error-correction hardware
+>  	  present on the JZ4725B SoC from Ingenic.
+> @@ -40,7 +39,6 @@ config MTD_NAND_JZ4725B_BCH
+>=20
+>  config MTD_NAND_JZ4780_BCH
+>  	tristate "Hardware BCH support for JZ4780 SoC"
+> -	select MTD_NAND_INGENIC_ECC
+>  	help
+>  	  Enable this driver to support the BCH error-correction hardware
+>  	  present on the JZ4780 SoC from Ingenic.
+> --
+> 2.7.4
+>=20
+>=20
+
+=
+
