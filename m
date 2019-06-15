@@ -2,89 +2,90 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 338A2C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 21:34:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C68DC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 21:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E89C2183F
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 21:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5124921473
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 21:45:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nnwr4t7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726987AbfFOVet (ORCPT
+        id S1727001AbfFOVpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 17:34:49 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:64808 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725535AbfFOVet (ORCPT
+        Sat, 15 Jun 2019 17:45:17 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:35174 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725535AbfFOVpR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 17:34:49 -0400
-Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5FLXux2063615;
-        Sun, 16 Jun 2019 06:33:56 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
- Sun, 16 Jun 2019 06:33:56 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x5FLXpms063601
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Sun, 16 Jun 2019 06:33:56 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: general protection fault in oom_unkillable_task
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yuzhoujian@didichuxing.com
-References: <0000000000004143a5058b526503@google.com>
- <CALvZod72=KuBZkSd0ey5orJFGFpwx462XY=cZvO3NOXC0MogFw@mail.gmail.com>
- <20190615134955.GA28441@dhcp22.suse.cz>
- <CALvZod4hT39PfGt9Ohj+g77om5=G0coHK=+G1=GKcm-PowkXsw@mail.gmail.com>
- <5bb1fe5d-f0e1-678b-4f64-82c8d5d81f61@i-love.sakura.ne.jp>
- <CALvZod4etSv9Hv4UD=E6D7U4vyjCqhxQgq61AoTUCd+VubofFg@mail.gmail.com>
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Message-ID: <791594c6-45a3-d78a-70b5-901aa580ed9f@i-love.sakura.ne.jp>
-Date:   Sun, 16 Jun 2019 06:33:51 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sat, 15 Jun 2019 17:45:17 -0400
+Received: by mail-lj1-f195.google.com with SMTP id x25so5780903ljh.2;
+        Sat, 15 Jun 2019 14:45:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=exVM99lG/xDC8wNkJ4onOek50O5CPQsnZ8sIW3tB6IQ=;
+        b=Nnwr4t7Yh8+1DIk01779PsaXwLkAFCIZ2HBMljGP+BmOH0B0M1ESanqlM7aGabFfmb
+         CTDQSu3WzOh+c25JkGv/wulvBd/GT8zjVJbwPPIgtMd4e+OW8BfTQZXnFhcBdmjcFN8E
+         Ze1o+Pae5TgPJAGnFbQ+0yH//xhU4eUBFn0GDW8NNl40CB2H6P/+EV0bz8QvqdzPshSv
+         ZtFMjBTJNHPsdXD1xKRorYPsTUPErBb3nwT9R9T6jIIXjvSn6XrVuLMKw6m7Au1sGhV9
+         rono3M6RAUBc2bCQY1uYBf+X0nJls+lTjQFQLwhZHYWBmCR3UGQGRcSdtOY0hKiC6Xe6
+         9rIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=exVM99lG/xDC8wNkJ4onOek50O5CPQsnZ8sIW3tB6IQ=;
+        b=Xu1uNKiuGsYGP3wvEDs50xFcgvZX4igRX3r7EBJNMEWOMp8eRFToWktsMrafylncFM
+         PUrQq7mGVDFt5vCOlZ7dLOgS32yYqbCBGeQo5Ge1WFbKbbhHS3HSLKNIftjd05MH+e9n
+         Mio4k70T/WjzIeil5b947SUfbmpiXFqVcwTUDqPYjkk7adoO45wNhpXGjOpqm+9Lrmju
+         zVTIG8/fO5W/Cwdyn6i7qGGG2Rk1i2vHO2Kz9XqaJ4mW8W+40epyrqoi4lzvmmtenwHz
+         Fp7mLw5EebPPpn5RK9ece1Y1XjadUPny4M/X53INFI6kIns480HnUdWs8OkVXcmSFzNy
+         oPcg==
+X-Gm-Message-State: APjAAAWE0D3JO+NnIpHc/iBYzSxrJThpj/VLeBEi3OGeVf5uzi7/mpzn
+        ZqHuL2dyOf3jAjNmR+nQHzBqy0S+78QXOyuGP4k=
+X-Google-Smtp-Source: APXvYqyf1l0pf8ewxKoqr1WSEO1NAiGpZ/Skjl1A+u3J2wfYV8Kqxtd9kMf8z1Yeo94+dVZEUVRFQcgJExtsF+8RlWc=
+X-Received: by 2002:a2e:9758:: with SMTP id f24mr2787891ljj.58.1560635114849;
+ Sat, 15 Jun 2019 14:45:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <CALvZod4etSv9Hv4UD=E6D7U4vyjCqhxQgq61AoTUCd+VubofFg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190614093728.622-1-afabre@cloudflare.com> <CAEf4BzZNO8Px2BRcs5WMxfrfRaekxF=_fz_p2A+eL94L0DrfQg@mail.gmail.com>
+ <6aaa3a2f-5da5-525f-89a1-59dddc1cfa53@iogearbox.net>
+In-Reply-To: <6aaa3a2f-5da5-525f-89a1-59dddc1cfa53@iogearbox.net>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Sat, 15 Jun 2019 14:45:03 -0700
+Message-ID: <CAADnVQK6=90Yu6jhEhE52ptS4vgbRVpyj2oZZsO6gcrScU9bsw@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next] bpf: sk_storage: Fix out of bounds memory access
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Arthur Fabre <afabre@cloudflare.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/06/16 3:50, Shakeel Butt wrote:
->> While dump_tasks() traverses only each thread group, mem_cgroup_scan_tasks()
->> traverses each thread.
-> 
-> I think mem_cgroup_scan_tasks() traversing threads is not intentional
-> and css_task_iter_start in it should use CSS_TASK_ITER_PROCS as the
-> oom killer only cares about the processes or more specifically
-> mm_struct (though two different thread groups can have same mm_struct
-> but that is fine).
+On Fri, Jun 14, 2019 at 3:36 PM Daniel Borkmann <daniel@iogearbox.net> wrote:
+> >
+> >> Force the minimum number of locks to two.
+> >>
+> >> Signed-off-by: Arthur Fabre <afabre@cloudflare.com>
+> >> Fixes: 6ac99e8f23d4 ("bpf: Introduce bpf sk local storage")
+>
+> The offending commit is already in Linus tree hence if so bpf tree. Arthur, please
+> elaborate why bpf-next is targeted specifically here?
 
-We can't use CSS_TASK_ITER_PROCS from mem_cgroup_scan_tasks(). I've tried
-CSS_TASK_ITER_PROCS in an attempt to evaluate only one thread from each
-thread group, but I found that CSS_TASK_ITER_PROCS causes skipping whole
-threads in a thread group (and trivially allowing "Out of memory and no
-killable processes...\n" flood) if thread group leader has already exited.
-
-If we can agree with using a flag in mm_struct in order to track whether 
-each mm_struct was already evaluated for each out_of_memory() call, we can
-printk() only one thread from all thread groups sharing that mm_struct...
-
+It's certainly should be in bpf tree.
+It didn't apply directly, so I tweaked it a tiny bit,
+reduced verbosity of commit log and pushed to bpf tree.
+Thanks for the fix!
