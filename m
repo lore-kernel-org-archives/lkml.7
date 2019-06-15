@@ -2,109 +2,76 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FB0C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:58:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DACAC31E50
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 13:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B718C21848
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:58:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76F5921841
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 13:24:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726740AbfFOM56 (ORCPT
+        id S1726582AbfFONWj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 08:57:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35170 "EHLO mx1.redhat.com"
+        Sat, 15 Jun 2019 09:22:39 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:45884 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726327AbfFOM55 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 08:57:57 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A174B308213A;
-        Sat, 15 Jun 2019 12:57:55 +0000 (UTC)
-Received: from treble (ovpn-120-23.rdu2.redhat.com [10.10.120.23])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4A2B4379E;
-        Sat, 15 Jun 2019 12:57:51 +0000 (UTC)
-Date:   Sat, 15 Jun 2019 07:57:48 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     X86 ML <x86@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        Kairui Song <kasong@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH v2 4/5] x86/bpf: Fix 64-bit JIT frame pointer usage
-Message-ID: <20190615125748.2c4xpgfuccanjx5d@treble>
-References: <178097de8c1bd6a877342304f3469eac4067daa4.1560534694.git.jpoimboe@redhat.com>
- <20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com>
- <20190614211916.jnxakyfwilcv6r57@treble>
- <CAADnVQJ0dmxYTnaQC1UiSo7MhcTy2KRWJWJKw4jyxFWby-JgRg@mail.gmail.com>
- <20190614231311.gfeb47rpjoholuov@treble>
- <CAADnVQKOjvhpMQqjHvF-oX2U99WRCi+repgqmt6hiSObovxoaQ@mail.gmail.com>
- <20190614235417.7oagddee75xo7otp@treble>
- <CAADnVQ+mjtgZExhtKDu6bbaVSHUfOYb=XeJodPB5+WdjtLYvCA@mail.gmail.com>
- <20190615042747.awyy4djqe6vfmles@treble>
- <CAADnVQJV6Yb9EyXE+NG6Nd1KLhhoF2Nr6BN=fihYnW7H0cvRoQ@mail.gmail.com>
+        id S1725999AbfFONWj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 09:22:39 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45Qynm6SZfz9v0q8;
+        Sat, 15 Jun 2019 15:22:36 +0200 (CEST)
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id X5weirnDS2yi; Sat, 15 Jun 2019 15:22:36 +0200 (CEST)
+Received: from vm-hermes.si.c-s.fr (vm-hermes.si.c-s.fr [192.168.25.253])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45Qynm5brtz9v0q7;
+        Sat, 15 Jun 2019 15:22:36 +0200 (CEST)
+Received: by vm-hermes.si.c-s.fr (Postfix, from userid 33)
+        id 8DB8F320; Sat, 15 Jun 2019 15:22:36 +0200 (CEST)
+Received: from 37.170.137.36 ([37.170.137.36]) by messagerie.si.c-s.fr
+ (Horde Framework) with HTTP; Sat, 15 Jun 2019 15:22:36 +0200
+Date:   Sat, 15 Jun 2019 15:22:36 +0200
+Message-ID: <20190615152236.Horde.Z6SXNGV78O1TJVWEeYCY_A1@messagerie.si.c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        j.neuschaefer@gmx.net, Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v5 13/16] powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX
+References: <cover.1550775950.git.christophe.leroy@c-s.fr>
+ <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
+ <87blyz9jor.fsf@igel.home>
+In-Reply-To: <87blyz9jor.fsf@igel.home>
+User-Agent: Internet Messaging Program (IMP) H5 (6.2.3)
+Content-Type: text/plain; charset=UTF-8; format=flowed; DelSp=Yes
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CAADnVQJV6Yb9EyXE+NG6Nd1KLhhoF2Nr6BN=fihYnW7H0cvRoQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Sat, 15 Jun 2019 12:57:56 +0000 (UTC)
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:16:53PM -0700, Alexei Starovoitov wrote:
-> On Fri, Jun 14, 2019 at 9:27 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Fri, Jun 14, 2019 at 05:02:36PM -0700, Alexei Starovoitov wrote:
-> > > On Fri, Jun 14, 2019 at 4:54 PM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > > > The previous patch you posted has my patch description, push/pop and
-> > > > comment changes, with no credit:
-> > > >
-> > > > https://lkml.kernel.org/r/20190614210555.q4ictql3tzzjio4r@ast-mbp.dhcp.thefacebook.com
-> > >
-> > > I'm sorry for reusing one sentence from your commit log and
-> > > not realizing you want credit for that.
-> > > Will not happen again.
-> >
-> > Um.  What are you talking about?  The entire patch was clearly derived
-> > from mine.  Not just "one sentence from your commit log".  The title,
-> > the pushes/pops in the prologue/epilogue, the removal of the
-> > "ebpf_from_cbpf" argument, the code spacing, and some of the non trivial
-> > comment changes were the same.
-> >
-> > > I also suggest you never touch anything bpf related.
-> > > Just to avoid this credit claims and threads like this one.
-> >
-> > Wth.  I made a simple request for credit.  Anybody can see the patch was
-> > derived from mine.  It's not like I really care.  It's just basic human
-> > decency.
-> 
-> derived? do you really think so ?
-> Please fix your orc stuff that is still broken.
-> Human decency is fixing stuff that you're responsible for.
-> Your commit d15d356887e7 on April 23 broke stack traces.
-> And we reported it 3 weeks ago.
-> Yet instead of fixing it you kept arguing about JIT frame pointers
-> that is orthogonal issue and was in this state for the last 2 years.
+Andreas Schwab <schwab@linux-m68k.org> a écrit :
 
-Again you're not making sense.  The fix has already been posted.  That
-was the point of this patch set.
+> This breaks suspend (or resume) on the iBook G4.  no_console_suspend
+> doesn't give any clues, the display just stays dark.
 
-It's your call if you want to cherry pick the FP fix (which is a
-dependency of the ORC fix) without taking the others.
+Can you send your .config
 
--- 
-Josh
+Thanks
+Christophe
+
+>
+> Andreas.
+>
+> --
+> Andreas Schwab, schwab@linux-m68k.org
+> GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+> "And now for something completely different."
+
+
