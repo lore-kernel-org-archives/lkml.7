@@ -2,92 +2,147 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70173C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:39:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6AC6C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:39:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4537220861
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:39:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98E1420861
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 10:39:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux-watchdog.org header.i=@linux-watchdog.org header.b="a33jSYKH"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="q4/8iFDv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfFOKiu (ORCPT
+        id S1726777AbfFOKjP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 06:38:50 -0400
-Received: from www.linux-watchdog.org ([185.87.125.42]:37242 "EHLO
-        www.linux-watchdog.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725944AbfFOKiu (ORCPT
+        Sat, 15 Jun 2019 06:39:15 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:32943 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725927AbfFOKjP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 06:38:50 -0400
-Received: by www.linux-watchdog.org (Postfix, from userid 500)
-        id E075540909; Sat, 15 Jun 2019 12:02:30 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 www.linux-watchdog.org E075540909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linux-watchdog.org;
-        s=odk20180602; t=1560592950;
-        bh=x4moI263mVJ9xXic7CfPOGIPWBoqDc8/6cZrMgLHrrk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=a33jSYKHPmrGKL4bHC44S8kGiyIC/LW5QIg3kRKNEItop/qtctXJF40ON/1zXd/4j
-         BgH7YfgZUmz3jFwYewwboPMspfWmDzvzr3h++8zpXPrvz64egaHFHXVSWSbC+y5WIo
-         q17kUKzN8DhrwbU3GrwhWIEE2wagNL4K5wufWaEg=
-Date:   Sat, 15 Jun 2019 12:02:30 +0200
-From:   Wim Van Sebroeck <wim@linux-watchdog.org>
-To:     Rasmus Villemoes <rasmus.villemoes@prevas.dk>
-Cc:     Guenter Roeck <linux@roeck-us.net>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        Esben Haabendal <esben@haabendal.dk>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Rasmus Villemoes <Rasmus.Villemoes@prevas.se>
-Subject: Re: [PATCH v10 3/3] watchdog: make the device time out at
- open_deadline when open_timeout is used
-Message-ID: <20190615100230.GA10480@www.linux-watchdog.org>
-References: <20190605140628.618-1-rasmus.villemoes@prevas.dk>
- <20190605140628.618-4-rasmus.villemoes@prevas.dk>
- <20190607183827.GA32475@roeck-us.net>
- <56280052-9437-9813-a24e-125abb876762@prevas.dk>
+        Sat, 15 Jun 2019 06:39:15 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h19so1087079wme.0;
+        Sat, 15 Jun 2019 03:39:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EWaWjBLfgDeqQMeH6hpzSxjXl2/kKEQOmTgrAj3YJGg=;
+        b=q4/8iFDv/T3DcaMC2SysEKqDtCxF3c7gcO9kFC6QhAQ8Ex2o7CwvTeaOo3VXylWkt4
+         YtbxW1khkg1DKRwBV1F2J2Dx7XsWT6rv7r8yWVXm4CBoo4yVH/vislaPW/LkR2ChisMx
+         j8czCpHUS5RtVrKyJjtzW8TPdYApVAt6hXdf+z+bEjCgoussLKr8dbuyIZnjrvJBzU8p
+         3v1fwA87rIJQ0l4yCuDEVLyQ0HIrdeB/ovFmI7Cx42GS4Xq9b+WPRwNLXlVje9c09Tz5
+         dHtJbavxvfEoLGIDWDTzo/YLgR9zA5T8dPelO8cn3of6uTO2tuh8JYZLTaaRzEE+JYEG
+         D2dw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EWaWjBLfgDeqQMeH6hpzSxjXl2/kKEQOmTgrAj3YJGg=;
+        b=U9dNjMEpGeSwFxz5YsOYLqpFRibipKnf76hCsljSQ/fubkLIF/cAZ10ZBb/e1eKvKS
+         gOcQTw/+KbdnYeij1slxoYaPqngNeHvgRlXRtJ4e9gAPDxX/78wj4yqQuBPDfeolZxkW
+         BuVsEc/UZlpOyd7y+B7KZpYtT+hN1YmSCZSkNpakP6Fw6qO7efTRpnFuGdBWheuVVbf7
+         VsswocGDwunJsZsHrTFkBmHmAo9IbKxHxrzYqls47ESNnCJKQYyMqt0cEmLfKwNlqkTJ
+         OqszgZy1xPaxFK4ImGfHaFwteU3ZBk9Fh6lEr33LeK/rSPIruvrWFOYj1WTzEMlsmZuI
+         43Tw==
+X-Gm-Message-State: APjAAAXHO2bvTtMt/VeVO9fnSxOjkRFuPYVowD+FYT7HX/pjDITUKQFL
+        UL5rQtrBVQ8LkozBhqagmZQ=
+X-Google-Smtp-Source: APXvYqw7KUGm67auqn07Aq7kGxt/BE4gLpTyvUOVo7p1zIlBqBC3k9rX5VurjgaPLbfEwXXhKwRLZw==
+X-Received: by 2002:a1c:2dd2:: with SMTP id t201mr10541354wmt.136.1560595152890;
+        Sat, 15 Jun 2019 03:39:12 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133C20E00A9A405DFDBBC0790.dip0.t-ipconnect.de. [2003:f1:33c2:e00:a9a4:5df:dbbc:790])
+        by smtp.googlemail.com with ESMTPSA id o126sm12209031wmo.31.2019.06.15.03.39.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 15 Jun 2019 03:39:12 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     linux-amlogic@lists.infradead.org, khilman@baylibre.com
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, linus.walleij@linaro.org, andrew@lunn.ch,
+        robin.murphy@arm.com, narmstrong@baylibre.com,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: [PATCH v3 0/4] Ethernet PHY reset GPIO updates for Amlogic SoCs
+Date:   Sat, 15 Jun 2019 12:38:28 +0200
+Message-Id: <20190615103832.5126-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <56280052-9437-9813-a24e-125abb876762@prevas.dk>
-User-Agent: Mutt/1.5.20 (2009-12-10)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rasmus,
+While trying to add the Ethernet PHY interrupt on the X96 Max I found
+that the current reset line definition is incorrect. Patch #1 fixes
+this.
 
-> > On Wed, Jun 05, 2019 at 02:06:44PM +0000, Rasmus Villemoes wrote:
-> >> When the watchdog device is not open by userspace, the kernel takes
-> >> care of pinging it. When the open_timeout feature is in use, we should
-> >> ensure that the hardware fires close to open_timeout seconds after the
-> >> kernel has assumed responsibility for the device.
-> >>
-> >> To do this, simply reuse the logic that is already in place for
-> >> ensuring the same thing when userspace is responsible for regularly
-> >> pinging the device:
-> >>
-> >> - When watchdog_active(wdd), this patch doesn't change anything.
-> >>
-> >> - When !watchdoc_active(wdd), the "virtual timeout" should be taken to
-> > 
-> > s/watchdoc_active/watchdog_active/
-> > 
-> > otherwise
-> > 
-> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> 
-> Thanks! Wim, can you fix up if/when applying, or do you prefer I resend?
+Since the fix requires moving from the deprecated "snps,reset-gpio"
+property to the generic Ethernet PHY reset bindings I decided to move
+all Amlogic boards over to the non-deprecated bindings. That's what
+patches #2 and #3 do.
 
-I'll fix up when applying. No need to resend a new patch for that.
+Finally I found that Odroid-N2 doesn't define the Ethernet PHY's reset
+GPIO yet. I don't have that board so I can't test whether it really
+works but based on the schematics it should. 
 
-Kind regards,
-Wim.
+This series is a partial successor to "stmmac: honor the GPIO flags
+for the PHY reset GPIO" from [0]. I decided not to take Linus W.'s
+Reviewed-by from patch #4 of that series because I had to change the
+wording and I want to be sure that he's happy with that now.
+
+One quick note regarding patches #1 and #4: I decided to violate the
+"max 80 characters per line" (by 4 characters) limit because I find
+that the result is easier to read then it would be if I split the
+line.
+
+
+Changes since v1 at [1]:
+- fixed the reset deassert delay for RTL8211F PHYs - spotted by Robin
+  Murphy (thank you). according to the public RTL8211E datasheet the
+  correct values seem to be: 10ms assert, 30ms deassert
+- fixed the reset assert and deassert delays for IP101GR PHYs. There
+  are two values given in the public datasheet, use the higher one
+  (10ms instead of 2.5)
+- update the patch descriptions to quote the datasheets (the RTL8211F
+  quotes are taken from the public RTL8211E datasheet because as far
+  as I can tell the reset sequence is identical on both PHYs)
+
+Changes since v2 at [2]:
+- add Neil's Reviewed/Acked/Tested-by's (thank you!)
+- rebased on top of "arm64: dts: meson-g12a-x96-max: add sound card"
+
+
+[0] https://patchwork.kernel.org/cover/10983801/
+[1] https://patchwork.kernel.org/cover/10985155/
+[2] https://patchwork.kernel.org/cover/10990863/
+
+
+Martin Blumenstingl (4):
+  arm64: dts: meson: g12a: x96-max: fix the Ethernet PHY reset line
+  ARM: dts: meson: switch to the generic Ethernet PHY reset bindings
+  arm64: dts: meson: use the generic Ethernet PHY reset GPIO bindings
+  arm64: dts: meson: g12b: odroid-n2: add the Ethernet PHY reset line
+
+ arch/arm/boot/dts/meson8b-ec100.dts                   |  9 +++++----
+ arch/arm/boot/dts/meson8b-mxq.dts                     |  9 +++++----
+ arch/arm/boot/dts/meson8b-odroidc1.dts                |  9 +++++----
+ arch/arm/boot/dts/meson8m2-mxiii-plus.dts             |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts    |  7 ++++---
+ arch/arm64/boot/dts/amlogic/meson-g12b-odroid-n2.dts  |  4 ++++
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts  |  9 +++++----
+ .../arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts   |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p200.dts       |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi  |  9 +++++----
+ arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi     |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905d-p230.dts  | 11 ++++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts | 10 +++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts   |  8 ++++----
+ arch/arm64/boot/dts/amlogic/meson-gxm-q200.dts        | 11 ++++++-----
+ arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts    |  8 ++++----
+ 17 files changed, 80 insertions(+), 66 deletions(-)
+
+-- 
+2.22.0
 
