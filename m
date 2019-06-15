@@ -2,202 +2,188 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3BBC31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:07:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C883C31E47
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:08:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C93842084D
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:07:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="CFZCdvS6"
+	by mail.kernel.org (Postfix) with ESMTP id 70F222084D
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 08:08:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726294AbfFOIHE (ORCPT
+        id S1726506AbfFOII4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 04:07:04 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:7969 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725825AbfFOIHD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 04:07:03 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45QqnX6hxKz9v0F9;
-        Sat, 15 Jun 2019 10:06:56 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=CFZCdvS6; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id hc2rOByaNF3V; Sat, 15 Jun 2019 10:06:56 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45QqnX5Gqkz9v0F8;
-        Sat, 15 Jun 2019 10:06:56 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560586016; bh=1p6s1wDC21lFcLrW9LHAqnn+cIQAnQKI/I9iSnqTFsU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=CFZCdvS6Gn44Gms6CdPAgtpa9H53SYlJJFfS68xOIrkZxayPk64IgDJI88xDV354W
-         YUTg0/LxuR+UPAdtUprz+7sTpVdF78EI+TcFZzuJjZLj1OU2Oi01DPmjcAOipLL3Gq
-         9wjMJkVHKam+/9rCfdG+6q/sqIpKw2+fLOUwJHCI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BA5A58B7B3;
-        Sat, 15 Jun 2019 10:06:57 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id FwFmC_wRUTFQ; Sat, 15 Jun 2019 10:06:57 +0200 (CEST)
-Received: from PO15451 (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 96D348B77A;
-        Sat, 15 Jun 2019 10:06:56 +0200 (CEST)
-Subject: Re: [PATCH v1 1/6] mm: Section numbers use the type "unsigned long"
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Baoquan He <bhe@redhat.com>, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>,
-        linux-acpi@vger.kernel.org,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Arun KS <arunks@codeaurora.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>
-References: <20190614100114.311-1-david@redhat.com>
- <20190614100114.311-2-david@redhat.com>
- <20190614120036.00ae392e3f210e7bc9ec6960@linux-foundation.org>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <701e8feb-cbf8-04c1-758c-046da9394ac1@c-s.fr>
-Date:   Sat, 15 Jun 2019 10:06:54 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sat, 15 Jun 2019 04:08:56 -0400
+Received: from lb3-smtp-cloud7.xs4all.net ([194.109.24.31]:54321 "EHLO
+        lb3-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725825AbfFOIIz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 04:08:55 -0400
+Received: from [IPv6:2001:983:e9a7:1:cc45:ac5:3048:e495] ([IPv6:2001:983:e9a7:1:cc45:ac5:3048:e495])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id c3k0hgjMK5qKac3k2hPzyG; Sat, 15 Jun 2019 10:08:53 +0200
+Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        linux-media@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+ <259bb812-9cc9-8fe7-8fc6-2cbd5ef44ac3@xs4all.nl>
+ <615f53383f8f65011d1ce3ec49f6d78b67b8ddea.camel@ndufresne.ca>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <74c25415-01d4-eed6-c277-124a8ef1bf3e@xs4all.nl>
+Date:   Sat, 15 Jun 2019 10:08:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190614120036.00ae392e3f210e7bc9ec6960@linux-foundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
+In-Reply-To: <615f53383f8f65011d1ce3ec49f6d78b67b8ddea.camel@ndufresne.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfLGBM5gcGisHSFXeUWBoGOyrd/k9//nlnQCEgl0PnzJxYLAMR2DeUyh0usoMdOw0diyNRO0ElanCRr03NS3YOeO2L1aBXlcHWTFV7/VK222c3hpqJldO
+ oQSUCBmrUs3bSqOIueyqMz/cMiVek5R1/ja9DrcWG/BZ9wx5XEhFMTXcpqtvLsd5GAXcxYNNWEan0hFFeM3OdiI2DDC4fquyipRbrmbG2MV2N0iJiz2iSVym
+ /hd80vnsQkdBAa8Q7JnVZ9vfojPnkd7q6wJkw5wBD2LUm02sn9Xkaob34F1/qkYHYpZtBycTUsgYKEHPl1mqw7KSKr+W0ejq0h/YBJY6cLo35tKkIc5bjb5J
+ iSSbb7ht5qFKHzeAghoOkGGdnrNiuvzMXBPJIr8o8Cx/1oib7C8Cj5arYgHh/W7CQJttE/xsM9DxFkS3eTP+7SN8c+Cqb8PKb3gK4PY3u7x4KO2bIlKVHIRS
+ D/8Pa2e30qybgU1sQR7ccBSO+HvLrg7/rMjjAjpMxXytlbLfT/Y6GTbnZMwxsUbSzZPbMhIJsYY0fq8UfgaELWQgwvHYrnk4aes64NSQJ2xY+TNOLEbdtlAM
+ kQ6v9YT77P54RdfX3pRV0lsZ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 14/06/2019 à 21:00, Andrew Morton a écrit :
-> On Fri, 14 Jun 2019 12:01:09 +0200 David Hildenbrand <david@redhat.com> wrote:
-> 
->> We are using a mixture of "int" and "unsigned long". Let's make this
->> consistent by using "unsigned long" everywhere. We'll do the same with
->> memory block ids next.
+On 6/14/19 3:09 AM, Nicolas Dufresne wrote:
+> Le jeudi 13 juin 2019 à 08:48 +0200, Hans Verkuil a écrit :
+>> On 6/3/19 1:28 PM, Hans Verkuil wrote:
+>>> Since Tomasz was very busy with other things, I've taken over this
+>>> patch series. This v4 includes his draft changes and additional changes
+>>> from me.
+>>>
+>>> This series attempts to add the documentation of what was discussed
+>>> during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
+>>> later Embedded Linux Conference Europe 2014 in Düsseldorf and then
+>>> eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
+>>> video team (but mostly in a cosmetic way or making the document more
+>>> precise), during the several years of Chrome OS using the APIs in
+>>> production.
+>>>
+>>> Note that most, if not all, of the API is already implemented in
+>>> existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
+>>> this series is just to formalize what we already have.
+>>>
+>>> Thanks everyone for the huge amount of useful comments to previous
+>>> versions of this series. Much of the credits should go to Pawel Osciak
+>>> too, for writing most of the original text of the initial RFC.
+>>>
+>>> This v4 incorporates all known comments (let me know if I missed
+>>> something!) and should be complete for the decoder.
+>>>
+>>> For the encoder there are two remaining TODOs for the API:
+>>>
+>>> 1) Setting the frame rate so bitrate control can make sense, since
+>>>    they need to know this information.
+>>>
+>>>    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
+>>>    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
+>>>    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
+>>>    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
+>>>    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
 >>
->> ...
+>> Alternative proposal:
 >>
->> -	int i, ret, section_count = 0;
->> +	unsigned long i;
+>> 1) Add support for fractions (struct v4l2_fract) as a control type:
+>>    V4L2_CTRL_TYPE_FRACT.
 >>
->> ...
+>> 2) Add a new V4L2_CID_MPEG_FRAME_INTERVAL control.
+> 
+> Is the MPEG namespace historical ? That might be confusing for users.
+
+Yes, it's historical. I have toyed with the idea of renaming all the
+defines to something like V4L2_CID_CODEC_... (keeping the old defines, of
+course), but I'm not sure it is worth it.
+
+> 
 >>
->> -	unsigned int i;
->> +	unsigned long i;
+>> Encoders shall support this control.
+>>
+>> 3) For backwards compatibility reasons encoder drivers still have to
+>> support G/S_PARM, but this can now be implemented by standard helpers
+>> that query this control. Drivers also have to implement ENUM_FRAMEINTERVALS.
 > 
-> Maybe I did too much fortran back in the day, but I think the
-> expectation is that a variable called "i" has type "int".
-> 
-> This?
-> 
-> 
-> 
-> s/unsigned long i/unsigned long section_nr/
+> That's won't be very friendly for UI generator like qv4l2. Support for
+> v4l2_fract as control should include a way to describe the supported
+> values of that control the usual way I think.
 
- From my point of view you degrade readability by doing that.
+Such a control will definitely have the usual min/max/step/default control
+values.
 
-section_nr_to_pfn(mem->start_section_nr + section_nr);
+> Also, long term, it would be nice to have two sets of frame rates. The
+> one that the HW can handle "real-time" and the one that can be used for
+> bitrate calculation. So staying away from ENUM_FRAMEINTERVALS for
+> bitrate configuration would be nicer.
 
-Three times the word 'section_nr' in one line, is that worth it ? Gives 
-me headache.
+I'm not sure if that's feasible in practice, although the idea is nice.
+The 'real-time' framerate will likely depend to a huge extent on the
+frequency of various internal clocks and the content of the bitstream.
 
-Codying style says the following, which makes full sense in my opinion:
-
-LOCAL variable names should be short, and to the point.  If you have
-some random integer loop counter, it should probably be called ``i``.
-Calling it ``loop_counter`` is non-productive, if there is no chance of it
-being mis-understood.
-
-What about just naming it 'nr' if we want to use something else than 'i' ?
-
-Christophe
-
+I suspect it will be very hard if not impossible to report realistic
+ENUM_FRAMEINTERVAL values for codecs.
 
 > 
-> --- a/drivers/base/memory.c~mm-section-numbers-use-the-type-unsigned-long-fix
-> +++ a/drivers/base/memory.c
-> @@ -131,17 +131,17 @@ static ssize_t phys_index_show(struct de
->   static ssize_t removable_show(struct device *dev, struct device_attribute *attr,
->   			      char *buf)
->   {
-> -	unsigned long i, pfn;
-> +	unsigned long section_nr, pfn;
->   	int ret = 1;
->   	struct memory_block *mem = to_memory_block(dev);
->   
->   	if (mem->state != MEM_ONLINE)
->   		goto out;
->   
-> -	for (i = 0; i < sections_per_block; i++) {
-> -		if (!present_section_nr(mem->start_section_nr + i))
-> +	for (section_nr = 0; section_nr < sections_per_block; section_nr++) {
-> +		if (!present_section_nr(mem->start_section_nr + section_nr))
->   			continue;
-> -		pfn = section_nr_to_pfn(mem->start_section_nr + i);
-> +		pfn = section_nr_to_pfn(mem->start_section_nr + section_nr);
->   		ret &= is_mem_section_removable(pfn, PAGES_PER_SECTION);
->   	}
->   
-> @@ -695,12 +695,12 @@ static int add_memory_block(unsigned lon
->   {
->   	int ret, section_count = 0;
->   	struct memory_block *mem;
-> -	unsigned long i;
-> +	unsigned long section_nr;
->   
-> -	for (i = base_section_nr;
-> -	     i < base_section_nr + sections_per_block;
-> -	     i++)
-> -		if (present_section_nr(i))
-> +	for (section_nr = base_section_nr;
-> +	     section_nr < base_section_nr + sections_per_block;
-> +	     section_nr++)
-> +		if (present_section_nr(section_nr))
->   			section_count++;
->   
->   	if (section_count == 0)
-> @@ -823,7 +823,7 @@ static const struct attribute_group *mem
->    */
->   int __init memory_dev_init(void)
->   {
-> -	unsigned long i;
-> +	unsigned long section_nr;
->   	int ret;
->   	int err;
->   	unsigned long block_sz;
-> @@ -840,9 +840,9 @@ int __init memory_dev_init(void)
->   	 * during boot and have been initialized
->   	 */
->   	mutex_lock(&mem_sysfs_mutex);
-> -	for (i = 0; i <= __highest_present_section_nr;
-> -		i += sections_per_block) {
-> -		err = add_memory_block(i);
-> +	for (section_nr = 0; section_nr <= __highest_present_section_nr;
-> +		section_nr += sections_per_block) {
-> +		err = add_memory_block(section_nr);
->   		if (!ret)
->   			ret = err;
->   	}
-> _
+>> If the range of intervals is always the same regardless of the frame size,
+>> then a helper can be used that queries the min/max/step of the control, but
+>> if it is dependent on the frame size, then it has to be implemented in the
+>> driver itself.
+>>
+>> I'm sticking to frame intervals instead of frame rates for the simple reason
+>> that that's what V4L2 has used since the beginning. I think it is too confusing
+>> to change this to a frame rate. This is just my opinion, though.
 > 
+> I suggested frame rate since this is what I saw implemented by HW
+> registers (if you think it's worth it, I can try and make a list).
+> Also, frame-interval steps are not compatible with frame-rate steps
+> (something that was raised through a venus driver bug) last year. Even
+> v4l2-ctl was displaying that in a very confusing way. Something as
+> simple as 1 to 30 fps cannot be exposed through ENU_FRAMEINTERVALS. You
+> are forced to expose the full fractional range of interval, from 1/30
+> to 1/1. For Venus it was not that much of a trouble, since its stores a
+> framerate as Q16..
+
+Since this is used for bitrate calculations, and not for determining the
+exact framerate, I'm not sure it matters all that much in this particular
+case. Since you still need to implement G/S_PARM in drivers for backwards
+compatibility reasons I think it is easiest to keep using frame interval
+instead of frame rate.
+
+Actually, that raises a new question: are there codecs that store the frame rate
+in the bitstream? I haven't heard of that, so I suspect not, but I'm not certain.
+
+Regards,
+
+	Hans
+
+> 
+>>
+>> I also chose to make this a codec control, not a generic user control: this
+>> value together with the bit rate control(s) determine the compression size,
+>> it does not determine the actual time it takes for the encoder to compress
+>> the raw frames. Hence it is really not the same thing as the frame interval
+> 
+> That's a good point.
+> 
+>> of a video capture device. If we want to use a control for that as well in
+>> the future as a replacement for G/S_PARM, then that should be a new control.
+>> And we would like need per-pad controls as well in order to implement that.
+>> Which is a lot more work.
+>>
+>> Regards,
+>>
+>> 	Hans
+> 
+> 
+
