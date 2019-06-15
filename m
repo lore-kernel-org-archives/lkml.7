@@ -2,158 +2,157 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFC43C31E47
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:12:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BD3C31E51
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78F8A2184B
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:12:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A3F2184B
+	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 07:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="XqPZTecA"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JB5FiZwD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfFOHMi (ORCPT
+        id S1726340AbfFOHTj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 03:12:38 -0400
-Received: from mail-eopbgr70089.outbound.protection.outlook.com ([40.107.7.89]:41947
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        Sat, 15 Jun 2019 03:19:39 -0400
+Received: from mail-eopbgr750123.outbound.protection.outlook.com ([40.107.75.123]:42438
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725828AbfFOHMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 03:12:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
+        id S1725825AbfFOHTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 03:19:38 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=gCwszHyBqr2yuVBq9mK8lgszeA6Q7BQq7wApbNKqm9CnZkHZYmQbmaxDvB23N4lvjKK49LigjEkEsmYEEFquv2Bd3C0lvAEuv8bTBmlEwawtgkI/hQIc/HIFgf1uTILciM0elAT+XV+jmdJHuu0FDqJ/x/Q8iqSPDT6sffVE+JI=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Swih4FYc82qBLXxT8o6+ulKgup/1alXQeOXBJ3dcpZQ=;
- b=XqPZTecAM9oAzl5OM7/hYxsLpGkZsd3YXOGXebI651JXXwmtyJ0WL7lUkfei+IrRpTe8S/CeblkQbKmoBnpr6rhJlfe/GSJ59ltndTciYn1SPiOhl2d1Lx+PE8xkGhdA9iAl4ppO8WBMQnDKlCLTwzp368PLjOZY7NLeYQORBBQ=
-Received: from AM4PR05MB3137.eurprd05.prod.outlook.com (10.171.186.14) by
- AM4PR05MB3185.eurprd05.prod.outlook.com (10.171.188.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Sat, 15 Jun 2019 07:12:27 +0000
-Received: from AM4PR05MB3137.eurprd05.prod.outlook.com
- ([fe80::bc5a:ba8b:1a69:91b6]) by AM4PR05MB3137.eurprd05.prod.outlook.com
- ([fe80::bc5a:ba8b:1a69:91b6%6]) with mapi id 15.20.1987.013; Sat, 15 Jun 2019
- 07:12:27 +0000
-From:   Leon Romanovsky <leonro@mellanox.com>
-To:     Doug Ledford <dledford@redhat.com>
-CC:     Colin Ian King <colin.king@canonical.com>,
-        Gal Pressman <galpress@amazon.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: RDMA: Clean destroy CQ in drivers do not return errors
-Thread-Topic: RDMA: Clean destroy CQ in drivers do not return errors
-Thread-Index: AQHVIrlo0Ha/lYZPxkOD3nwuzZMhyaabjl4AgAC/iwA=
-Date:   Sat, 15 Jun 2019 07:12:27 +0000
-Message-ID: <20190615071224.GA4694@mtr-leonro.mtl.com>
-References: <68d62660-902c-ca49-20fd-32e92830faa7@canonical.com>
- <ee0c017e93e28317791b7395e257801a208c7306.camel@redhat.com>
-In-Reply-To: <ee0c017e93e28317791b7395e257801a208c7306.camel@redhat.com>
+ bh=wSAGMq0DMdK9Fk47IySGrWzf7qOm4l0hJnhsCRnHzcU=;
+ b=SlN2iWahqVv52Pk1+1dzberXPSTNelG2Lrce3gHL2rdC44cHdlmR3snTkDSEd0RYOf1xjkHhYKUQTXSbT8tS2kjw0FoVblS1Tv2z635pUkmjPyAbgr+O0KmWBv7TupRmbCoKvwAdzL9GhpGzXmQ7OJATVl5vh4Ybxctn3ZzQ2Kw=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=wSAGMq0DMdK9Fk47IySGrWzf7qOm4l0hJnhsCRnHzcU=;
+ b=JB5FiZwD5LgQ+IvlYj5DXtmsf1E5PXCxRwPvk0vPSAaMyqvBs9wLIFYylT3Lq+uY20htglYtLSjmEv9px3PdL026lg90mrlOsOu+XHypyIJeEI1VJIeRmDRAgKCUGHIlNOcOeWPjmv27li6FEMdMrsc3r/72XnL9cRE4wqctC14=
+Received: from MW2PR2101MB1116.namprd21.prod.outlook.com (2603:10b6:302:a::33)
+ by MW2PR2101MB0985.namprd21.prod.outlook.com (2603:10b6:302:4::22) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.4; Sat, 15 Jun
+ 2019 07:19:32 +0000
+Received: from MW2PR2101MB1116.namprd21.prod.outlook.com
+ ([fe80::a1f6:c002:82ba:ad47]) by MW2PR2101MB1116.namprd21.prod.outlook.com
+ ([fe80::a1f6:c002:82ba:ad47%9]) with mapi id 15.20.2008.002; Sat, 15 Jun 2019
+ 07:19:32 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     Dexuan Cui <decui@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        Michael Kelley <mikelley@microsoft.com>
+CC:     "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: RE: [PATCH net] hv_sock: Suppress bogus "may be used uninitialized"
+ warnings
+Thread-Topic: [PATCH net] hv_sock: Suppress bogus "may be used uninitialized"
+ warnings
+Thread-Index: AQHVIzdRyJ4h5bYUQkOiYCme+G2mp6acTflg
+Date:   Sat, 15 Jun 2019 07:19:31 +0000
+Message-ID: <MW2PR2101MB1116B911C7CAF2BF9884004FC0E90@MW2PR2101MB1116.namprd21.prod.outlook.com>
+References: <1560574826-99551-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <1560574826-99551-1-git-send-email-decui@microsoft.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: AM7PR03CA0028.eurprd03.prod.outlook.com
- (2603:10a6:20b:130::38) To AM4PR05MB3137.eurprd05.prod.outlook.com
- (2603:10a6:205:3::14)
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=sunilmut@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-15T07:19:31.3753016Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=4641602a-4424-4841-ac5c-b9f806288a66;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
 authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leonro@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [37.142.3.125]
+ smtp.mailfrom=sunilmut@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:0:24b4:540:3de4:fc8f]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 57c18133-5702-4ada-b459-08d6f160d295
+x-ms-office365-filtering-correlation-id: 3980b8e0-3ab7-4bde-ba70-08d6f161d034
 x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM4PR05MB3185;
-x-ms-traffictypediagnostic: AM4PR05MB3185:
-x-microsoft-antispam-prvs: <AM4PR05MB3185B4FC092A7DBCBF846511B0E90@AM4PR05MB3185.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5236;
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MW2PR2101MB0985;
+x-ms-traffictypediagnostic: MW2PR2101MB0985:
+x-ms-exchange-purlcount: 1
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <MW2PR2101MB09853D664258F03A69D7791FC0E90@MW2PR2101MB0985.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:758;
 x-forefront-prvs: 0069246B74
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(366004)(39860400002)(346002)(376002)(199004)(189003)(8676002)(71200400001)(71190400001)(73956011)(386003)(6506007)(52116002)(68736007)(99286004)(33656002)(229853002)(2906002)(186003)(6486002)(76176011)(102836004)(14454004)(26005)(6436002)(316002)(54906003)(478600001)(6916009)(256004)(486006)(476003)(3846002)(11346002)(6116002)(25786009)(446003)(4326008)(1076003)(66066001)(5660300002)(86362001)(53936002)(6246003)(8936002)(9686003)(64756008)(66556008)(66476007)(66446008)(66946007)(81166006)(81156014)(6512007)(7736002)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM4PR05MB3185;H:AM4PR05MB3137.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(376002)(346002)(39860400002)(396003)(366004)(136003)(13464003)(189003)(199004)(305945005)(10290500003)(64756008)(99286004)(2201001)(229853002)(6636002)(478600001)(6506007)(76176011)(53546011)(2501003)(966005)(52536014)(25786009)(6246003)(66556008)(71190400001)(71200400001)(66446008)(2906002)(66476007)(8676002)(4326008)(6116002)(81166006)(81156014)(8936002)(74316002)(86362001)(7736002)(33656002)(55016002)(6306002)(14454004)(446003)(9686003)(11346002)(186003)(73956011)(66946007)(14444005)(256004)(76116006)(110136005)(53936002)(1511001)(7696005)(54906003)(10090500001)(102836004)(22452003)(46003)(52396003)(8990500004)(476003)(316002)(6436002)(5660300002)(486006)(68736007)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB0985;H:MW2PR2101MB1116.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Pcs//go+y2P3i4orFTDScVm/gN0caT2aWTz4NI6ZWShvJUAWzZGrG0+AQqDQzQBzt0Jn826LQDu8SuJCx/pH7BtQMU2h5pkAgF+KGCjNdPDF1DNbP8FqXxLUgfNTvA6/H6lCduJIhGV3s4UyVNHU9ObtOCaNq2vI/TuEe19ANwq6Dxb/6SDlPFndqP3Byv5ArBFbHo8F1YKDVn1L+fGWwTQLDPHL914RqWSA7uV4r++tB/Am61M7oGz+lSIs4GxUQhkn7LnvlE2pbnka1dY8oy8S5fFYmZjCUzfRvzLYVsptw4WlKi9en+dF5i87XyqMpJGfweatRDS8tjpI5odpRwlJEJaRiS78HPjDx0cnAWWotgCxIlJIMv5z4TNc6PyWoxf43zijIRZCxGrYsug/Vo7WBlhdCV9p/iHlIclAalg=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <C2621CA764179B4DAA30AD367EA0F07E@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: cwRmHz/PY714c9cGgVoo1rDuGTao2ZdCw1PPNfLk7bZNWU1XNBTMdHaJk7P104KULikKsbFeBo6eYbF5BlJ51zoaJ5EKZH/7laBQP/El5QRH0qfWZeaEudqFtnVCacnT7ekA790hsAAp4qzizC5HwkIEPGjO/xEcH+CKchMsaVBvYnuOi/z9j9V/ZlfZKaqvdR+7yGGVFChXFdBE6UxiT7QUzFf7hGs23GlVvDgtW3DpYg3lvMh1TY8ixLBxVxj4ykQl2CWJFAoStmubRr4LwXfuISwjubVg39P3+Gm3wV/zo28i3VWLGjX83XJ5YniUZOMXd/+KHKIL9/sLDwWaOPlQzvS+KxTAx+kQ/kOYbkgub7x6PIzUZgCQYZSGYzafLO2jFy4P57UtSMRNeKNe7Cya90NyiIjebxmAFstCSiA=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 57c18133-5702-4ada-b459-08d6f160d295
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2019 07:12:27.8370
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3980b8e0-3ab7-4bde-ba70-08d6f161d034
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jun 2019 07:19:32.5342
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leonro@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR05MB3185
+X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB0985
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 03:46:50PM -0400, Doug Ledford wrote:
-> On Fri, 2019-06-14 at 14:59 +0100, Colin Ian King wrote:
-> > Hi,
-> >
-> > Static analysis with Coverity reported an issue with the following
-> > commit:
-> >
-> > commit a52c8e2469c30cf7ac453d624aed9c168b23d1af
-> > Author: Leon Romanovsky <leonro@mellanox.com>
-> > Date:   Tue May 28 14:37:28 2019 +0300
-> >
-> >     RDMA: Clean destroy CQ in drivers do not return errors
-> >
-> > In function bnxt_re_destroy_cq() contains the following:
-> >
-> >         if (!cq->umem)
-> >                 ib_umem_release(cq->umem);
->
-> Given that the original test that was replaced was:
-> 	if (!IS_ERR_OR_NULL(cq->umem))
->
-> we aren't really worried about a null cq, just that umem is valid.  So,
-> the logic is inverted on the test (or possibly we shouldn't have
-> replaced !IS_ERR_OR_NULL(cq->umem) at all).
-
-I took a very brief look and think that the better way will be to put
-this "if (null)" check inside ib_umem_release() and make unconditional
-call to that function in all call sites.
-
->
-> But on closer inspection, the bnxt_re specific portion of this patch
-> appears to have another problem in that it no longer checks the result
-> of bnxt_qplib_destroy_cq() yet it does nothing to keep that function
-> from failing.
-
-It was intentional for two reasons. First, bnxt_re already had exactly
-same logic without any checks of returned call inside bnxt_re_create_cq().
-Second, we need to release kernel memory without any relation to HW state.
-
-Maybe I should move bnxt_qplib_free_hwq() to be immediately after
-bnxt_qplib_rcfw_send_message() inside of bnxt_qplib_destroy_cq()?
-
->
-> Leon, can you send a followup fix?
-
-Sure, I'll do it tomorrow.
-
->
-> > Coverity detects this as a deference after null check on the null
-> > pointer cq->umem:
-> >
-> > "var_deref_model: Passing null pointer cq->umem to ib_umem_release,
-> > which dereferences it"
-> >
-> > Is the logic inverted on that null check?
-> >
-> > Colin
->
-> --
-> Doug Ledford <dledford@redhat.com>
->     GPG KeyID: B826A3330E572FDD
->     Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
-> 2FDD
-
-
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogbGludXgtaHlwZXJ2LW93
+bmVyQHZnZXIua2VybmVsLm9yZyA8bGludXgtaHlwZXJ2LW93bmVyQHZnZXIua2VybmVsLm9yZz4g
+T24gQmVoYWxmIE9mIERleHVhbiBDdWkNCj4gU2VudDogRnJpZGF5LCBKdW5lIDE0LCAyMDE5IDEw
+OjAxIFBNDQo+IFRvOiBuZXRkZXZAdmdlci5rZXJuZWwub3JnOyBkYXZlbUBkYXZlbWxvZnQubmV0
+OyBNaWNoYWVsIEtlbGxleSA8bWlrZWxsZXlAbWljcm9zb2Z0LmNvbT4NCj4gQ2M6IGxpbnV4LWh5
+cGVydkB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IEtZIFNy
+aW5pdmFzYW4gPGt5c0BtaWNyb3NvZnQuY29tPjsgU3RlcGhlbiBIZW1taW5nZXINCj4gPHN0aGVt
+bWluQG1pY3Jvc29mdC5jb20+OyBIYWl5YW5nIFpoYW5nIDxoYWl5YW5nekBtaWNyb3NvZnQuY29t
+PjsgU2FzaGEgTGV2aW4gPEFsZXhhbmRlci5MZXZpbkBtaWNyb3NvZnQuY29tPjsNCj4gb2xhZkBh
+ZXBmbGUuZGU7IGFwd0BjYW5vbmljYWwuY29tOyBqYXNvd2FuZ0ByZWRoYXQuY29tOyB2a3V6bmV0
+cyA8dmt1em5ldHNAcmVkaGF0LmNvbT47IG1hcmNlbG8uY2VycmlAY2Fub25pY2FsLmNvbTsNCj4g
+RGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4NCj4gU3ViamVjdDogW1BBVENIIG5ldF0g
+aHZfc29jazogU3VwcHJlc3MgYm9ndXMgIm1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQiIHdhcm5p
+bmdzDQo+IA0KPiBnY2MgOC4yLjAgbWF5IHJlcG9ydCB0aGVzZSBib2d1cyB3YXJuaW5ncyB1bmRl
+ciBzb21lIGNvbmRpdGlvbjoNCj4gDQo+IHdhcm5pbmc6IOKAmHZuZXfigJkgbWF5IGJlIHVzZWQg
+dW5pbml0aWFsaXplZCBpbiB0aGlzIGZ1bmN0aW9uDQo+IHdhcm5pbmc6IOKAmGh2c19uZXfigJkg
+bWF5IGJlIHVzZWQgdW5pbml0aWFsaXplZCBpbiB0aGlzIGZ1bmN0aW9uDQo+IA0KPiBBY3R1YWxs
+eSwgdGhlIDIgcG9pbnRlcnMgYXJlIG9ubHkgaW5pdGlhbGl6ZWQgYW5kIHVzZWQgaWYgdGhlIHZh
+cmlhYmxlDQo+ICJjb25uX2Zyb21faG9zdCIgaXMgdHJ1ZS4gVGhlIGNvZGUgaXMgbm90IGJ1Z2d5
+IGhlcmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBEZXh1YW4gQ3VpIDxkZWN1aUBtaWNyb3NvZnQu
+Y29tPg0KPiAtLS0NCj4gIG5ldC92bXdfdnNvY2svaHlwZXJ2X3RyYW5zcG9ydC5jIHwgNCArKy0t
+DQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQ0KPiAN
+Cj4gZGlmZiAtLWdpdCBhL25ldC92bXdfdnNvY2svaHlwZXJ2X3RyYW5zcG9ydC5jIGIvbmV0L3Zt
+d192c29jay9oeXBlcnZfdHJhbnNwb3J0LmMNCj4gaW5kZXggOGQxZWE5ZWRhOGEyLi5jZDNmNDdm
+NTRmYTcgMTAwNjQ0DQo+IC0tLSBhL25ldC92bXdfdnNvY2svaHlwZXJ2X3RyYW5zcG9ydC5jDQo+
+ICsrKyBiL25ldC92bXdfdnNvY2svaHlwZXJ2X3RyYW5zcG9ydC5jDQo+IEBAIC0zMjksOCArMzI5
+LDggQEAgc3RhdGljIHZvaWQgaHZzX29wZW5fY29ubmVjdGlvbihzdHJ1Y3Qgdm1idXNfY2hhbm5l
+bCAqY2hhbikNCj4gDQo+ICAJc3RydWN0IHNvY2thZGRyX3ZtIGFkZHI7DQo+ICAJc3RydWN0IHNv
+Y2sgKnNrLCAqbmV3ID0gTlVMTDsNCj4gLQlzdHJ1Y3QgdnNvY2tfc29jayAqdm5ldzsNCj4gLQlz
+dHJ1Y3QgaHZzb2NrICpodnMsICpodnNfbmV3Ow0KPiArCXN0cnVjdCB2c29ja19zb2NrICp2bmV3
+ID0gTlVMTDsNCj4gKwlzdHJ1Y3QgaHZzb2NrICpodnMsICpodnNfbmV3ID0gTlVMTDsNCj4gIAlp
+bnQgcmV0Ow0KPiANClRoZXNlIGFyZSBhbGwgYWxyZWFkeSBmaXhlZCB1bmRlciANCmh0dHBzOi8v
+Z2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L2RhdmVtL25ldC1uZXh0Lmdp
+dC9jb21taXQvP2lkPWFjMzgzZjU4ZjNjOThkZTM3ZmE2NzQ1MmFjYzViZDY3NzM5NmU5ZjMgDQpJ
+dHMganVzdCB0aGF0IHRoYXQgY29tbWl0IGhhc24ndCBtZXJnZWQgd2l0aCB0aGUgJ25ldCcgYnJh
+bmNoIHlldC4NCj4gIAlpZl90eXBlID0gJmNoYW4tPm9mZmVybXNnLm9mZmVyLmlmX3R5cGU7DQo+
+IC0tDQo+IDIuMTkuMQ0KDQo=
