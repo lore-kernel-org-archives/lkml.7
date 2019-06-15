@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D195C31E50
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EC0C31E52
 	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 17:55:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A4782184D
+	by mail.kernel.org (Postfix) with ESMTP id 66A702184D
 	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 17:55:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=default; t=1560621315;
-	bh=2htXWJdjd+iLtonxjiD0hHLYRT968pKJOxcef9OBGVc=;
+	bh=CA6qax+LZQSfbA3Nv9S7rXdp4xUGXGlahHUXFbBpPVw=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=uXcuF1kMay9iLdfzZgWkMSCuDnf8xDM57ILm6pfmuhzRReY/U2Bp9aWaQxi+SIcK6
-	 U59mi6sKdpuWerXAOiMKrIP/tVGb7ioA8IqM/hXdOioqJr4SsMgN3BQ0NSEUIuHBMW
-	 Cs1YhoGEr/kW7ANi1iDnwaw8le5IYmbsOwUlLmKQ=
+	b=N5kqGkfa89V+zkw3V3861C5cHLSqgDMNSylUZZ4fa1HvP+NLg6MxynDv39i90vY/h
+	 vhEL3Bgp5kk1Pw156nguWiKoi4Vl94PJjUsFwIMZnLcAZ9m7oMpHdoTdP8V5F5MzG9
+	 4CiFYb7cdGwJ4IzU+1wGWTj/iTi/YsmKu2g0I6Dc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726950AbfFORzH (ORCPT
+        id S1727015AbfFORzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 13:55:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41722 "EHLO mail.kernel.org"
+        Sat, 15 Jun 2019 13:55:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725535AbfFORzG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 13:55:06 -0400
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.2-4 tag
+        id S1725270AbfFORzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sat, 15 Jun 2019 13:55:07 -0400
+Subject: Re: [GIT PULL] USB fixes for 5.2-rc5
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1560621306;
-        bh=2htXWJdjd+iLtonxjiD0hHLYRT968pKJOxcef9OBGVc=;
+        bh=CA6qax+LZQSfbA3Nv9S7rXdp4xUGXGlahHUXFbBpPVw=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=U4+zqiDX0t+a+BemSzueLY9oOi7qPdSyEt+t+fTcozxW2Rkkkn3WQHD9B2zNtdVaH
-         QhDOwaLpKscq4GmlLHZd03VKUf6IQhVhq/G6aMKPtYzZvF7IBtYTP+r6v1KAiJVY4u
-         8yXwbVYgXYzQexDyVTl2jPHnwH5dIWGW8qnlESpw=
+        b=o8pMDLsHGbIQJ5LbZTS48lcw4WlKG+EDvp/E4l1218Mehwn2U5sGBJeE8swHE8/m9
+         wjkXPM4pmvKO3kCULSH+x05ZxcgGXWk74l6295ajzWoAmtoaAeNCCvqyMS4rVA7c2l
+         lL4iWwjkCCy7D5zSufhjXeCdUxZ0ItENHgAuCQIU=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <87v9x7nf9l.fsf@concordia.ellerman.id.au>
-References: <87v9x7nf9l.fsf@concordia.ellerman.id.au>
+In-Reply-To: <20190615154845.GA6603@kroah.com>
+References: <20190615154845.GA6603@kroah.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <87v9x7nf9l.fsf@concordia.ellerman.id.au>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
- tags/powerpc-5.2-4
-X-PR-Tracked-Commit-Id: c21f5a9ed85ca3e914ca11f421677ae9ae0d04b0
+X-PR-Tracked-Message-Id: <20190615154845.GA6603@kroah.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.2-rc5
+X-PR-Tracked-Commit-Id: 5f54a85db5df67df8161739a4b2f9c2b7ab219fe
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fa1827d7731ac24f44309ddc2ca806650912bf0e
-Message-Id: <156062130614.5191.12937398987487945534.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: ff39074b1d4e727c299ccfd1588f9cca17a59c86
+Message-Id: <156062130668.5191.12217177123386573904.pr-tracker-bot@kernel.org>
 Date:   Sat, 15 Jun 2019 17:55:06 +0000
-To:     Michael Ellerman <mpe@ellerman.id.au>
+To:     Greg KH <gregkh@linuxfoundation.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        christophe.leroy@c-s.fr, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, npiggin@gmail.com
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Sat, 15 Jun 2019 23:34:46 +1000:
+The pull request you sent on Sat, 15 Jun 2019 17:48:45 +0200:
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.2-4
+> git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git tags/usb-5.2-rc5
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fa1827d7731ac24f44309ddc2ca806650912bf0e
+https://git.kernel.org/torvalds/c/ff39074b1d4e727c299ccfd1588f9cca17a59c86
 
 Thank you!
 
