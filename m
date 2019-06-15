@@ -2,68 +2,134 @@ Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A621FC31E47
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB604C31E51
 	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:43:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B9F22184B
+	by mail.kernel.org (Postfix) with ESMTP id 9E1152184E
 	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 12:43:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfFOMnO (ORCPT
+        id S1726796AbfFOMnQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 08:43:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33032 "EHLO mail.kernel.org"
+        Sat, 15 Jun 2019 08:43:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33128 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726236AbfFOMnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726700AbfFOMnO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Sat, 15 Jun 2019 08:43:14 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FB2021841;
-        Sat, 15 Jun 2019 12:43:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 11DDD2184C;
+        Sat, 15 Jun 2019 12:43:14 +0000 (UTC)
 Received: from rostedt by gandalf.local.home with local (Exim 4.92)
         (envelope-from <rostedt@goodmis.org>)
-        id 1hc81Y-0006bf-I9; Sat, 15 Jun 2019 08:43:12 -0400
-Message-Id: <20190615124216.188179157@goodmis.org>
+        id 1hc81Z-0006de-5P; Sat, 15 Jun 2019 08:43:13 -0400
+Message-Id: <20190615124313.055864181@goodmis.org>
 User-Agent: quilt/0.65
-Date:   Sat, 15 Jun 2019 08:42:16 -0400
+Date:   Sat, 15 Jun 2019 08:42:20 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: [for-linus][PATCH 0/7] tracing: Fixes for 5.2-rc4
+        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
+        Eiichi Tsukata <devel@etsukata.com>
+Subject: [for-linus][PATCH 4/7] tracing/uprobe: Fix NULL pointer dereference in trace_uprobe_create()
+References: <20190615124216.188179157@goodmis.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Eiichi Tsukata <devel@etsukata.com>
 
-This is the queue for my next pull request to Linus.
+Just like the case of commit 8b05a3a7503c ("tracing/kprobes: Fix NULL
+pointer dereference in trace_kprobe_create()"), writing an incorrectly
+formatted string to uprobe_events can trigger NULL pointer dereference.
 
-Eiichi Tsukata (3):
-      tracing: Fix out-of-range read in trace_stack_print()
-      tracing/uprobe: Fix NULL pointer dereference in trace_uprobe_create()
-      tracing/uprobe: Fix obsolete comment on trace_uprobe_create()
+Reporeducer:
 
-Josh Poimboeuf (1):
-      module: Fix livepatch/ftrace module text permissions race
+  # echo r > /sys/kernel/debug/tracing/uprobe_events
 
-Vasily Gorbik (1):
-      tracing: avoid build warning with HAVE_NOP_MCOUNT
+dmesg:
 
-Wei Li (1):
-      ftrace: Fix NULL pointer dereference in free_ftrace_func_mapper()
+  BUG: kernel NULL pointer dereference, address: 0000000000000000
+  #PF: supervisor read access in kernel mode
+  #PF: error_code(0x0000) - not-present page
+  PGD 8000000079d12067 P4D 8000000079d12067 PUD 7b7ab067 PMD 0
+  Oops: 0000 [#1] PREEMPT SMP PTI
+  CPU: 0 PID: 1903 Comm: bash Not tainted 5.2.0-rc3+ #15
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
+  RIP: 0010:strchr+0x0/0x30
+  Code: c0 eb 0d 84 c9 74 18 48 83 c0 01 48 39 d0 74 0f 0f b6 0c 07 3a 0c 06 74 ea 19 c0 83 c8 01 c3 31 c0 c3 0f 1f 84 00 00 00 00 00 <0f> b6 07 89 f2 40 38 f0 75 0e eb 13 0f b6 47 01 48 83 c
+  RSP: 0018:ffffb55fc0403d10 EFLAGS: 00010293
 
-YueHaibing (1):
-      tracing: Make two symbols static
+  RAX: ffff993ffb793400 RBX: 0000000000000000 RCX: ffffffffa4852625
+  RDX: 0000000000000000 RSI: 000000000000002f RDI: 0000000000000000
+  RBP: ffffb55fc0403dd0 R08: ffff993ffb793400 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+  R13: ffff993ff9cc1668 R14: 0000000000000001 R15: 0000000000000000
+  FS:  00007f30c5147700(0000) GS:ffff993ffda00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000000000000 CR3: 000000007b628000 CR4: 00000000000006f0
+  Call Trace:
+   trace_uprobe_create+0xe6/0xb10
+   ? __kmalloc_track_caller+0xe6/0x1c0
+   ? __kmalloc+0xf0/0x1d0
+   ? trace_uprobe_create+0xb10/0xb10
+   create_or_delete_trace_uprobe+0x35/0x90
+   ? trace_uprobe_create+0xb10/0xb10
+   trace_run_command+0x9c/0xb0
+   trace_parse_run_command+0xf9/0x1eb
+   ? probes_open+0x80/0x80
+   __vfs_write+0x43/0x90
+   vfs_write+0x14a/0x2a0
+   ksys_write+0xa2/0x170
+   do_syscall_64+0x7f/0x200
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-----
- kernel/livepatch/core.c     |  6 ++++++
- kernel/trace/ftrace.c       | 22 ++++++++++++++++------
- kernel/trace/trace.c        |  4 ++--
- kernel/trace/trace_output.c |  2 +-
- kernel/trace/trace_uprobe.c | 15 ++++++++++-----
- 5 files changed, 35 insertions(+), 14 deletions(-)
+Link: http://lkml.kernel.org/r/20190614074026.8045-1-devel@etsukata.com
+
+Cc: stable@vger.kernel.org
+Fixes: 0597c49c69d5 ("tracing/uprobes: Use dyn_event framework for uprobe events")
+Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
+Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+---
+ kernel/trace/trace_uprobe.c | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/kernel/trace/trace_uprobe.c b/kernel/trace/trace_uprobe.c
+index eb7e06b54741..a88c692e3b8a 100644
+--- a/kernel/trace/trace_uprobe.c
++++ b/kernel/trace/trace_uprobe.c
+@@ -443,10 +443,17 @@ static int trace_uprobe_create(int argc, const char **argv)
+ 	ret = 0;
+ 	ref_ctr_offset = 0;
+ 
+-	/* argc must be >= 1 */
+-	if (argv[0][0] == 'r')
++	switch (argv[0][0]) {
++	case 'r':
+ 		is_return = true;
+-	else if (argv[0][0] != 'p' || argc < 2)
++		break;
++	case 'p':
++		break;
++	default:
++		return -ECANCELED;
++	}
++
++	if (argc < 2)
+ 		return -ECANCELED;
+ 
+ 	if (argv[0][1] == ':')
+-- 
+2.20.1
+
+
