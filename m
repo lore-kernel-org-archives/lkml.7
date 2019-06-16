@@ -2,389 +2,110 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8597BC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00DB8C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E1B52087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C865020862
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:36:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pu/hO6k7"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="dZFfXxgA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726612AbfFPSFt (ORCPT
+        id S1727188AbfFPSgV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 14:05:49 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43179 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfFPSFs (ORCPT
+        Sun, 16 Jun 2019 14:36:21 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34889 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725947AbfFPSgU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 14:05:48 -0400
-Received: by mail-pf1-f195.google.com with SMTP id i189so4364871pfg.10
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 11:05:48 -0700 (PDT)
+        Sun, 16 Jun 2019 14:36:20 -0400
+Received: by mail-ed1-f68.google.com with SMTP id p26so12528431edr.2
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 11:36:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=u35gclse1baa2lop6heiT2CDZ1NDng4DHhokpLnPOxc=;
-        b=Pu/hO6k7PPffAUQFy+SNuxWmWpe29U9fKC4udp6oYWkxri3v3BFd+bJDJamixnMRzI
-         5EqnWcNx7gdNJW6JXfXn0sye/l2kiOkSexDCviECyyJ9bvr5xqFz6dAZm51D0oOx9sEt
-         CVPJ9EZwRzY9Bq9AZ4XTMZOmnm3eh7/4rlEiA5elBKJpSJDzEQ570GRcSQv0sOvICIBO
-         1nIHFjrhk9HW/xJUweN3nkU6Q/uUtEdhB0F8XMl+/r9kgQwUGVvWwTNNkf3wG9MLR7JY
-         KAS4/rFYdZElXOdn9xn4rsm3OfT555TgDRG003LuJ6JJ0F1PYZyk4p3xQKPzJMDCARPK
-         D7mA==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Ih0vMtka/CWfK/DMqpVIf0q0omD2Of2trUIRIXOZFek=;
+        b=dZFfXxgAdt2O+dYVBMW3wJzfwc4UBN3EZExhIR/TbD3aG5hCZCvkOe9x49gecVFzMI
+         t6fF0X0ojWIcHedqbNSLq1PzMZpQrP5qatpgSV4CIsDu6PdtlxU/4jgWYBuCTgduGBOW
+         GuVbJ9cnlPmFw1NDKG6SKZZQlGhEA7I2ZkIfis164iAB7fOCBXe2M6fMIgtQmSTiB6dC
+         RYiSvoe0Hm0sxBwZL16TOatKfcZEJdv9Bz8qNMb1vjn2HqS0HRsTjP+ITsNvzrTR3Kj4
+         3JJzfNpso1y6HU2n3/bZuCzt5A9fgy71aaZmd9NsT+aya5FJNmn1Co4mZuHlet5I4lHC
+         0d+A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=u35gclse1baa2lop6heiT2CDZ1NDng4DHhokpLnPOxc=;
-        b=lVUx4unPAxtPQ7pP5y3qpFF/ANFzXIPbmXWvRnmk0poreQgCdlnRbbFNYG20yx4RKP
-         RLxP5I4MNjYAIDgIrCVe/NZFtrCDWMS5FoXYKzN/DCT0ruwpu7JPWeDtBgYgHNSnk8Yh
-         70e/BvG0cakC3tBrj6vkWyLb8UYfvsRhODakNxn9UR8FmiW7n1r6deCEgzSXsBCcnsB7
-         OOkj+kA5jNIl2heZm7N9xQMEumRxYf0pXlislXRz/53U0IbgmLbQLbn+uYH+cTdezml8
-         YUlQX3DJw7PRNUImXRaOnkUqMtH0HRez0F9MQVWhAgYiw516aXvyovajTHz3gcVVzP2S
-         TniA==
-X-Gm-Message-State: APjAAAWn2Ri5IDdGyoIptJCn3MFmi507yRszOhZ1XbxiTTHm1vCg72/8
-        4GW7sweMqbPSJLJhG1Bj7MXMXA==
-X-Google-Smtp-Source: APXvYqyCWmCwz42MjjqVugwCxFCSzIixh58X3n1GpdHNKlXXhC4ONFMYcjyuJteJpw2I6D2fsRFqiQ==
-X-Received: by 2002:a62:e315:: with SMTP id g21mr61941613pfh.225.1560708347505;
-        Sun, 16 Jun 2019 11:05:47 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l68sm5258599pjb.8.2019.06.16.11.05.45
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Ih0vMtka/CWfK/DMqpVIf0q0omD2Of2trUIRIXOZFek=;
+        b=T3+W322yGeeMEXhxsURYKc2DOIU5cPb+rFYfSgE+UcfiDgm7QGe/1EyiSqVA5OZu6A
+         t9HLO8QNkc3ZhloldEm4Cb0EHZgJmn4+BoVXFiVdKOvJdY9Dkre8qrTZMer6nErROPNZ
+         QPLPmlk+7Cg+JqQzkZ8+G4x62RhgdT+qGMFasvS+oBa74G0YPdLqwT2MWqZHeKZbzlMR
+         CirfJRcvxFGWx75I2K8eQRlo4YhiL4O2PBKwvauhP/3ABAn1GYpfbiv1E7pY9rpdX17C
+         Lx2K9i565Xm6cJeWy6XAlxK3vrZaV1eEwflE+95ASRX0vvwj2KLrwrVrjd/ebNkRWIbI
+         0BNQ==
+X-Gm-Message-State: APjAAAVkt+s6e37JFompQLXGrIHkLvBfJ/MupUNM7rB2AF4xtDCvSpNP
+        KZgBFX8+lWa021uCYEF8XjXHnw==
+X-Google-Smtp-Source: APXvYqywYn66JZCdeecFBIyEmRV6m0nV6+A+DDXidbrSGQ1fVKYOysZbvUAbi5kyFzXQC9UVsq5ptw==
+X-Received: by 2002:a17:906:d549:: with SMTP id gk9mr75132621ejb.268.1560710179023;
+        Sun, 16 Jun 2019 11:36:19 -0700 (PDT)
+Received: from localhost ([81.92.102.43])
+        by smtp.gmail.com with ESMTPSA id w35sm541055edd.32.2019.06.16.11.36.17
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 11:05:46 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 11:06:33 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
-        sean@poorly.run, robh+dt@kernel.org, airlied@linux.ie,
-        daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 6/6] drm/msm/gpu: add ocmem init/cleanup functions
-Message-ID: <20190616180633.GS22737@tuxbook-pro>
-References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-7-masneyb@onstation.org>
+        Sun, 16 Jun 2019 11:36:18 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 11:36:16 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Antony Pavlov <antonynpavlov@gmail.com>
+cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 5/5] riscv: dts: add initial board data for the SiFive
+ HiFive Unleashed
+In-Reply-To: <20190609091819.2d1a97c90c0b44aa9120d373@gmail.com>
+Message-ID: <alpine.DEB.2.21.9999.1906161135160.26914@viisi.sifive.com>
+References: <20190602080500.31700-1-paul.walmsley@sifive.com> <20190602080500.31700-6-paul.walmsley@sifive.com> <20190609091819.2d1a97c90c0b44aa9120d373@gmail.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190616132930.6942-7-masneyb@onstation.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 16 Jun 06:29 PDT 2019, Brian Masney wrote:
+On Sun, 9 Jun 2019, Antony Pavlov wrote:
 
-> The files a3xx_gpu.c and a4xx_gpu.c have ifdefs for the OCMEM support
-> that was missing upstream. Add two new functions (adreno_gpu_ocmem_init
-> and adreno_gpu_ocmem_cleanup) that removes some duplicated code. We also
-> need to change the ifdef check for CONFIG_MSM_OCMEM to CONFIG_QCOM_OCMEM
-> now that OCMEM support is upstream.
+> On Sun,  2 Jun 2019 01:05:00 -0700
+> Paul Walmsley <paul.walmsley@sifive.com> wrote:
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  drivers/gpu/drm/msm/adreno/a3xx_gpu.c   | 33 +++++++-------------
->  drivers/gpu/drm/msm/adreno/a3xx_gpu.h   |  3 +-
->  drivers/gpu/drm/msm/adreno/a4xx_gpu.c   | 30 ++++++------------
->  drivers/gpu/drm/msm/adreno/a4xx_gpu.h   |  3 +-
->  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 41 +++++++++++++++++++++++++
->  drivers/gpu/drm/msm/adreno/adreno_gpu.h | 10 ++++++
->  6 files changed, 74 insertions(+), 46 deletions(-)
+> Hi!
 > 
-> diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-> index c3b4bc6e4155..72720bb2aca1 100644
-> --- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
-> @@ -17,10 +17,6 @@
->   * this program.  If not, see <http://www.gnu.org/licenses/>.
->   */
->  
-> -#ifdef CONFIG_MSM_OCMEM
-> -#  include <mach/ocmem.h>
-> -#endif
-> -
->  #include "a3xx_gpu.h"
->  
->  #define A3XX_INT0_MASK \
-> @@ -206,9 +202,9 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
->  		gpu_write(gpu, REG_A3XX_RBBM_GPR0_CTL, 0x00000000);
->  
->  	/* Set the OCMEM base address for A330, etc */
-> -	if (a3xx_gpu->ocmem_hdl) {
-> +	if (a3xx_gpu->ocmem.hdl) {
->  		gpu_write(gpu, REG_A3XX_RB_GMEM_BASE_ADDR,
-> -			(unsigned int)(a3xx_gpu->ocmem_base >> 14));
-> +			(unsigned int)(a3xx_gpu->ocmem.base >> 14));
+> > Add initial board data for the SiFive HiFive Unleashed A00.
 
-This blindly requires that the ocmem allocator will return entries
-allocated to 16kB. Please ensure that a future implementation of the
-actual ocmem allocator maintains this (comments? checks?). 
+...
 
->  	}
->  
->  	/* Turn on performance counters: */
-> @@ -329,10 +325,7 @@ static void a3xx_destroy(struct msm_gpu *gpu)
->  
->  	adreno_gpu_cleanup(adreno_gpu);
->  
-> -#ifdef CONFIG_MSM_OCMEM
-> -	if (a3xx_gpu->ocmem_base)
-> -		ocmem_free(OCMEM_GRAPHICS, a3xx_gpu->ocmem_hdl);
-> -#endif
-> +	adreno_gpu_ocmem_cleanup(&a3xx_gpu->ocmem);
->  
->  	kfree(a3xx_gpu);
->  }
-> @@ -507,17 +500,10 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
->  
->  	/* if needed, allocate gmem: */
->  	if (adreno_is_a330(adreno_gpu)) {
-> -#ifdef CONFIG_MSM_OCMEM
-> -		/* TODO this is different/missing upstream: */
-> -		struct ocmem_buf *ocmem_hdl =
-> -				ocmem_allocate(OCMEM_GRAPHICS, adreno_gpu->gmem);
-> -
-> -		a3xx_gpu->ocmem_hdl = ocmem_hdl;
-> -		a3xx_gpu->ocmem_base = ocmem_hdl->addr;
-> -		adreno_gpu->gmem = ocmem_hdl->len;
-> -		DBG("using %dK of OCMEM at 0x%08x", adreno_gpu->gmem / 1024,
-> -				a3xx_gpu->ocmem_base);
-> -#endif
-> +		ret = adreno_gpu_ocmem_init(&adreno_gpu->base.pdev->dev,
-> +					    adreno_gpu, &a3xx_gpu->ocmem);
-> +		if (ret)
-> +			goto fail;
->  	}
->  
->  	if (!gpu->aspace) {
-> @@ -530,11 +516,14 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
->  		 */
->  		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
->  		ret = -ENXIO;
-> -		goto fail;
-> +		goto fail_cleanup_ocmem;
->  	}
->  
->  	return gpu;
->  
-> +fail_cleanup_ocmem:
-> +	adreno_gpu_ocmem_cleanup(&a3xx_gpu->ocmem);
-> +
->  fail:
->  	if (a3xx_gpu)
->  		a3xx_destroy(&a3xx_gpu->base.base);
-> diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.h b/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
-> index ab60dc9e344e..727c34f38f9e 100644
-> --- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
-> @@ -30,8 +30,7 @@ struct a3xx_gpu {
->  	struct adreno_gpu base;
->  
->  	/* if OCMEM is used for GMEM: */
-> -	uint32_t ocmem_base;
-> -	void *ocmem_hdl;
-> +	struct adreno_ocmem ocmem;
->  };
->  #define to_a3xx_gpu(x) container_of(x, struct a3xx_gpu, base)
->  
-> diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-> index ab2b752566d8..b8f825107796 100644
-> --- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
-> @@ -2,9 +2,6 @@
->  /* Copyright (c) 2014 The Linux Foundation. All rights reserved.
->   */
->  #include "a4xx_gpu.h"
-> -#ifdef CONFIG_MSM_OCMEM
-> -#  include <soc/qcom/ocmem.h>
-> -#endif
->  
->  #define A4XX_INT0_MASK \
->  	(A4XX_INT0_RBBM_AHB_ERROR |        \
-> @@ -188,7 +185,7 @@ static int a4xx_hw_init(struct msm_gpu *gpu)
->  			(1 << 30) | 0xFFFF);
->  
->  	gpu_write(gpu, REG_A4XX_RB_GMEM_BASE_ADDR,
-> -			(unsigned int)(a4xx_gpu->ocmem_base >> 14));
-> +			(unsigned int)(a4xx_gpu->ocmem.base >> 14));
->  
->  	/* Turn on performance counters: */
->  	gpu_write(gpu, REG_A4XX_RBBM_PERFCTR_CTL, 0x01);
-> @@ -318,10 +315,7 @@ static void a4xx_destroy(struct msm_gpu *gpu)
->  
->  	adreno_gpu_cleanup(adreno_gpu);
->  
-> -#ifdef CONFIG_MSM_OCMEM
-> -	if (a4xx_gpu->ocmem_base)
-> -		ocmem_free(OCMEM_GRAPHICS, a4xx_gpu->ocmem_hdl);
-> -#endif
-> +	adreno_gpu_ocmem_cleanup(&a4xx_gpu->ocmem);
->  
->  	kfree(a4xx_gpu);
->  }
-> @@ -578,17 +572,10 @@ struct msm_gpu *a4xx_gpu_init(struct drm_device *dev)
->  
->  	/* if needed, allocate gmem: */
->  	if (adreno_is_a4xx(adreno_gpu)) {
-> -#ifdef CONFIG_MSM_OCMEM
-> -		/* TODO this is different/missing upstream: */
-> -		struct ocmem_buf *ocmem_hdl =
-> -				ocmem_allocate(OCMEM_GRAPHICS, adreno_gpu->gmem);
-> -
-> -		a4xx_gpu->ocmem_hdl = ocmem_hdl;
-> -		a4xx_gpu->ocmem_base = ocmem_hdl->addr;
-> -		adreno_gpu->gmem = ocmem_hdl->len;
-> -		DBG("using %dK of OCMEM at 0x%08x", adreno_gpu->gmem / 1024,
-> -				a4xx_gpu->ocmem_base);
-> -#endif
-> +		ret = adreno_gpu_ocmem_init(dev->dev, adreno_gpu,
-> +					    &a4xx_gpu->ocmem);
-> +		if (ret)
-> +			goto fail;
->  	}
->  
->  	if (!gpu->aspace) {
-> @@ -601,11 +588,14 @@ struct msm_gpu *a4xx_gpu_init(struct drm_device *dev)
->  		 */
->  		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
->  		ret = -ENXIO;
-> -		goto fail;
-> +		goto fail_cleanup_ocmem;
->  	}
->  
->  	return gpu;
->  
-> +fail_cleanup_ocmem:
-> +	adreno_gpu_ocmem_cleanup(&a4xx_gpu->ocmem);
-> +
->  fail:
->  	if (a4xx_gpu)
->  		a4xx_destroy(&a4xx_gpu->base.base);
-> diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.h b/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
-> index d506311ee240..a01448cba2ea 100644
-> --- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
-> @@ -16,8 +16,7 @@ struct a4xx_gpu {
->  	struct adreno_gpu base;
->  
->  	/* if OCMEM is used for GMEM: */
-> -	uint32_t ocmem_base;
-> -	void *ocmem_hdl;
-> +	struct adreno_ocmem ocmem;
->  };
->  #define to_a4xx_gpu(x) container_of(x, struct a4xx_gpu, base)
->  
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> index 6f7f4114afcf..e0a9409c8a32 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> @@ -29,6 +29,10 @@
->  #include "msm_gem.h"
->  #include "msm_mmu.h"
->  
-> +#ifdef CONFIG_QCOM_OCMEM
-> +#  include <soc/qcom/ocmem.h>
-> +#endif
-
-This file exists (after the previous patch), so no need to make its
-inclusion conditional.
-
-> +
->  static bool zap_available = true;
->  
->  static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> @@ -897,6 +901,43 @@ static int adreno_get_pwrlevels(struct device *dev,
->  	return 0;
->  }
->  
-> +int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
-> +			  struct adreno_ocmem *adreno_ocmem)
-> +{
-> +#ifdef CONFIG_QCOM_OCMEM
-
-No need to make this conditional.
-
-> +	struct ocmem_buf *ocmem_hdl;
-> +	struct ocmem *ocmem;
-> +
-> +	ocmem = of_get_ocmem(dev);
-> +	if (!ocmem) {
-> +		/* This is an optional property so return success. */
-> +		return 0;
-> +	}
-> +
-> +	ocmem_hdl = ocmem_allocate(ocmem, OCMEM_GRAPHICS, adreno_gpu->gmem);
-> +	if (IS_ERR(ocmem_hdl))
-> +		return PTR_ERR(ocmem_hdl);
-> +
-> +	adreno_ocmem->ocmem = ocmem;
-> +	adreno_ocmem->base = ocmem_hdl->addr;
-> +	adreno_ocmem->hdl = ocmem_hdl;
-> +	adreno_gpu->gmem = ocmem_hdl->len;
-> +	DBG("using %dK of OCMEM at 0x%08x", adreno_gpu->gmem / 1024,
-> +	    adreno_ocmem->base);
-> +#endif
-> +
-> +	return 0;
-> +}
-> +
-> +void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *adreno_ocmem)
-> +{
-> +#ifdef CONFIG_QCOM_OCMEM
-> +	if (adreno_ocmem->base)
-
-It would be nice to have ocmem_free() accept NULL, similar to kfree() et
-al.
-
-> +		ocmem_free(adreno_ocmem->ocmem, OCMEM_GRAPHICS,
-> +			   adreno_ocmem->hdl);
-> +#endif
-> +}
-> +
->  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  		struct adreno_gpu *adreno_gpu,
->  		const struct adreno_gpu_funcs *funcs, int nr_rings)
-> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> index 0925606ec9b5..1cd11570323b 100644
-> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
-> @@ -136,6 +136,12 @@ struct adreno_gpu {
->  };
->  #define to_adreno_gpu(x) container_of(x, struct adreno_gpu, base)
->  
-> +struct adreno_ocmem {
-> +	struct ocmem *ocmem;
-> +	uint32_t base;
-
-By ocmem being physically fixed this is sufficient, but unsigned long is
-a nicer type for carrying memory addresses.
-
-Regards,
-Bjorn
-
-> +	void *hdl;
-> +};
-> +
->  /* platform config data (ie. from DT, or pdata) */
->  struct adreno_platform_config {
->  	struct adreno_rev rev;
-> @@ -241,6 +247,10 @@ void adreno_dump(struct msm_gpu *gpu);
->  void adreno_wait_ring(struct msm_ringbuffer *ring, uint32_t ndwords);
->  struct msm_ringbuffer *adreno_active_ring(struct msm_gpu *gpu);
->  
-> +int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
-> +			  struct adreno_ocmem *ocmem);
-> +void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *ocmem);
-> +
->  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
->  		struct adreno_gpu *gpu, const struct adreno_gpu_funcs *funcs,
->  		int nr_rings);
-> -- 
-> 2.20.1
+> > new file mode 100644
+> > index 000000000000..1de4ea1577d5
+> > --- /dev/null
+> > +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00.dts
+> > @@ -0,0 +1,67 @@
+> > +// SPDX-License-Identifier: (GPL-2.0 OR MIT)
+> > +/* Copyright (c) 2018-2019 SiFive, Inc */
+> > +
+> > +/dts-v1/;
+> > +
+> > +#include "fu540-c000.dtsi"
 > 
+> You already have "/dts-v1/;" in the fu540-c000.dtsi file.
+> 
+> You can omit it in the hifive-unleashed-a00.dts file.
+
+Thanks for the comment.  Dropped the line, per your suggestion.
+
+
+- Paul
