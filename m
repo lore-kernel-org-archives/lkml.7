@@ -2,163 +2,175 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A53FC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28DFBC31E53
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 653A22084B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:15:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00FAF21873
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560698317;
+	bh=+cBv0D4WKJT88FHE9AT3EwO/PO4Bc0pnE7UKxW1k6/I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=JuLuR7Ng9fL1QxcoLWgxthxRuQNy8yAjv8BOtX0gffwYrRAbS4rLX2iueoW032cps
+	 vmQa/5ccUCrnpsEG1Rd9J84UdOnayICg6982TKWo1R2EdaCD3bf/HmgkkUcMEnzTgJ
+	 u1J8JN2tbymDEU3yoCiu3Iib3bINlwy3jepnkEP8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727284AbfFPPPO (ORCPT
+        id S1727291AbfFPPSf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 11:15:14 -0400
-Received: from www262.sakura.ne.jp ([202.181.97.72]:49543 "EHLO
-        www262.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726012AbfFPPPO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 11:15:14 -0400
-Received: from fsav405.sakura.ne.jp (fsav405.sakura.ne.jp [133.242.250.104])
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x5GFDnKk039427;
-        Mon, 17 Jun 2019 00:13:49 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Received: from www262.sakura.ne.jp (202.181.97.72)
- by fsav405.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp);
- Mon, 17 Jun 2019 00:13:49 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav405.sakura.ne.jp)
-Received: from [192.168.1.8] (softbank126012062002.bbtec.net [126.12.62.2])
-        (authenticated bits=0)
-        by www262.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x5GFDl0h039419
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 17 Jun 2019 00:13:48 +0900 (JST)
-        (envelope-from penguin-kernel@i-love.sakura.ne.jp)
-Subject: Re: general protection fault in oom_unkillable_task
-From:   Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yuzhoujian@didichuxing.com
-References: <0000000000004143a5058b526503@google.com>
- <CALvZod72=KuBZkSd0ey5orJFGFpwx462XY=cZvO3NOXC0MogFw@mail.gmail.com>
- <20190615134955.GA28441@dhcp22.suse.cz>
- <CALvZod4hT39PfGt9Ohj+g77om5=G0coHK=+G1=GKcm-PowkXsw@mail.gmail.com>
- <5bb1fe5d-f0e1-678b-4f64-82c8d5d81f61@i-love.sakura.ne.jp>
- <CALvZod4etSv9Hv4UD=E6D7U4vyjCqhxQgq61AoTUCd+VubofFg@mail.gmail.com>
- <791594c6-45a3-d78a-70b5-901aa580ed9f@i-love.sakura.ne.jp>
- <840fa9f1-07e2-e206-2fc0-725392f96baf@i-love.sakura.ne.jp>
-Message-ID: <c763afc8-f0ae-756a-56a7-395f625b95fc@i-love.sakura.ne.jp>
-Date:   Mon, 17 Jun 2019 00:13:47 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sun, 16 Jun 2019 11:18:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40022 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726012AbfFPPSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 11:18:35 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 462C12084B;
+        Sun, 16 Jun 2019 15:18:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560698314;
+        bh=+cBv0D4WKJT88FHE9AT3EwO/PO4Bc0pnE7UKxW1k6/I=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VqKBxP4OvbIvC8T09RetdaGOiMpdIxN5rK1pm46ALrqdZPR73q7eerdsvuW7f+kB4
+         txuUELaQQVqg9KLDwsppRd7jT2LEbFIL5PUbhyuRVS7g9PHCKNBXLkwFOAlTZj+202
+         Ln8Ug32ExuLywX9jrins/Y1Q+wvjAoyRYIdI3lfk=
+Date:   Sun, 16 Jun 2019 16:18:30 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Harald Geyer <harald@ccbib.org>
+Cc:     Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iio: humidity: Replace older GPIO APIs with GPIO
+ Consumer APIs for the dht11 sensor
+Message-ID: <20190616161830.29b42440@archlinux>
+In-Reply-To: <E1haezD-0000WF-2x@stardust.g4.wien.funkfeuer.at>
+References: <20190611035554.GA20589@t-1000>
+        <E1haezD-0000WF-2x@stardust.g4.wien.funkfeuer.at>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <840fa9f1-07e2-e206-2fc0-725392f96baf@i-love.sakura.ne.jp>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/06/16 16:37, Tetsuo Handa wrote:
-> On 2019/06/16 6:33, Tetsuo Handa wrote:
->> On 2019/06/16 3:50, Shakeel Butt wrote:
->>>> While dump_tasks() traverses only each thread group, mem_cgroup_scan_tasks()
->>>> traverses each thread.
->>>
->>> I think mem_cgroup_scan_tasks() traversing threads is not intentional
->>> and css_task_iter_start in it should use CSS_TASK_ITER_PROCS as the
->>> oom killer only cares about the processes or more specifically
->>> mm_struct (though two different thread groups can have same mm_struct
->>> but that is fine).
->>
->> We can't use CSS_TASK_ITER_PROCS from mem_cgroup_scan_tasks(). I've tried
->> CSS_TASK_ITER_PROCS in an attempt to evaluate only one thread from each
->> thread group, but I found that CSS_TASK_ITER_PROCS causes skipping whole
->> threads in a thread group (and trivially allowing "Out of memory and no
->> killable processes...\n" flood) if thread group leader has already exited.
+On Tue, 11 Jun 2019 13:30:42 +0200
+Harald Geyer <harald@ccbib.org> wrote:
+
+> Shobhit Kukreti writes:
+> > The dht11 driver uses a single gpio to make measurements. It was
+> > using the older global gpio numberspace. The patch replaces the
+> > old gpio api with the new gpio descriptor based api.
+> > 
+> > Removed header files "linux/gpio.h" and "linux/of_gpio.h"
+> >
+> > Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>  
 > 
-> Seems that CSS_TASK_ITER_PROCS from mem_cgroup_scan_tasks() is now working.
+> Acked-by: Harald Geyer <harald@ccbib.org>
 
+Applied to the togreg branch of iio.git and pushed out as testing
+for the autobuilders to play with it.
 
-I found a reproducer and the commit.
+thanks,
 
-----------------------------------------
-#define _GNU_SOURCE
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <sched.h>
-#include <sys/mman.h>
-#include <asm/unistd.h>
+Jonathan
 
-static const unsigned long size = 1048576 * 200;
-static int thread(void *unused)
-{
-        int fd = open("/dev/zero", O_RDONLY);
-        char *buf = mmap(NULL, size, PROT_WRITE | PROT_READ,
-                         MAP_ANONYMOUS | MAP_SHARED, EOF, 0);
-        sleep(1);
-        read(fd, buf, size);
-        return syscall(__NR_exit, 0);
-}
-int main(int argc, char *argv[])
-{
-        FILE *fp;
-        mkdir("/sys/fs/cgroup/memory/test1", 0755);
-        fp = fopen("/sys/fs/cgroup/memory/test1/memory.limit_in_bytes", "w");
-        fprintf(fp, "%lu\n", size);
-        fclose(fp);
-        fp = fopen("/sys/fs/cgroup/memory/test1/tasks", "w");
-        fprintf(fp, "%u\n", getpid());
-        fclose(fp);
-        clone(thread, malloc(8192) + 4096, CLONE_SIGHAND | CLONE_THREAD | CLONE_VM, NULL);
-        return syscall(__NR_exit, 0);
-}
-----------------------------------------
+> 
+> > ---
+> >  drivers/iio/humidity/dht11.c | 28 ++++++++++------------------
+> >  1 file changed, 10 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/drivers/iio/humidity/dht11.c b/drivers/iio/humidity/dht11.c
+> > index c815920..f5128d8 100644
+> > --- a/drivers/iio/humidity/dht11.c
+> > +++ b/drivers/iio/humidity/dht11.c
+> > @@ -22,8 +22,7 @@
+> >  #include <linux/completion.h>
+> >  #include <linux/mutex.h>
+> >  #include <linux/delay.h>
+> > -#include <linux/gpio.h>
+> > -#include <linux/of_gpio.h>
+> > +#include <linux/gpio/consumer.h>
+> >  #include <linux/timekeeping.h>
+> >  
+> >  #include <linux/iio/iio.h>
+> > @@ -72,7 +71,7 @@
+> >  struct dht11 {
+> >  	struct device			*dev;
+> >  
+> > -	int				gpio;
+> > +	struct gpio_desc		*gpiod;
+> >  	int				irq;
+> >  
+> >  	struct completion		completion;
+> > @@ -179,7 +178,7 @@ static irqreturn_t dht11_handle_irq(int irq, void *data)
+> >  	if (dht11->num_edges < DHT11_EDGES_PER_READ && dht11->num_edges >= 0) {
+> >  		dht11->edges[dht11->num_edges].ts = ktime_get_boot_ns();
+> >  		dht11->edges[dht11->num_edges++].value =
+> > -						gpio_get_value(dht11->gpio);
+> > +						gpiod_get_value(dht11->gpiod);
+> >  
+> >  		if (dht11->num_edges >= DHT11_EDGES_PER_READ)
+> >  			complete(&dht11->completion);
+> > @@ -217,12 +216,12 @@ static int dht11_read_raw(struct iio_dev *iio_dev,
+> >  		reinit_completion(&dht11->completion);
+> >  
+> >  		dht11->num_edges = 0;
+> > -		ret = gpio_direction_output(dht11->gpio, 0);
+> > +		ret = gpiod_direction_output(dht11->gpiod, 0);
+> >  		if (ret)
+> >  			goto err;
+> >  		usleep_range(DHT11_START_TRANSMISSION_MIN,
+> >  			     DHT11_START_TRANSMISSION_MAX);
+> > -		ret = gpio_direction_input(dht11->gpio);
+> > +		ret = gpiod_direction_input(dht11->gpiod);
+> >  		if (ret)
+> >  			goto err;
+> >  
+> > @@ -294,10 +293,8 @@ MODULE_DEVICE_TABLE(of, dht11_dt_ids);
+> >  static int dht11_probe(struct platform_device *pdev)
+> >  {
+> >  	struct device *dev = &pdev->dev;
+> > -	struct device_node *node = dev->of_node;
+> >  	struct dht11 *dht11;
+> >  	struct iio_dev *iio;
+> > -	int ret;
+> >  
+> >  	iio = devm_iio_device_alloc(dev, sizeof(*dht11));
+> >  	if (!iio) {
+> > @@ -307,18 +304,13 @@ static int dht11_probe(struct platform_device *pdev)
+> >  
+> >  	dht11 = iio_priv(iio);
+> >  	dht11->dev = dev;
+> > +	dht11->gpiod = devm_gpiod_get(dev, NULL, GPIOD_IN);
+> > +	if (IS_ERR(dht11->gpiod))
+> > +		return PTR_ERR(dht11->gpiod);
+> >  
+> > -	ret = of_get_gpio(node, 0);
+> > -	if (ret < 0)
+> > -		return ret;
+> > -	dht11->gpio = ret;
+> > -	ret = devm_gpio_request_one(dev, dht11->gpio, GPIOF_IN, pdev->name);
+> > -	if (ret)
+> > -		return ret;
+> > -
+> > -	dht11->irq = gpio_to_irq(dht11->gpio);
+> > +	dht11->irq = gpiod_to_irq(dht11->gpiod);
+> >  	if (dht11->irq < 0) {
+> > -		dev_err(dev, "GPIO %d has no interrupt\n", dht11->gpio);
+> > +		dev_err(dev, "GPIO %d has no interrupt\n", desc_to_gpio(dht11->gpiod));
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > -- 
+> > 2.7.4
+> >   
+> 
 
-Here is a patch to use CSS_TASK_ITER_PROCS.
-
-From 415e52cf55bc4ad931e4f005421b827f0b02693d Mon Sep 17 00:00:00 2001
-From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-Date: Mon, 17 Jun 2019 00:09:38 +0900
-Subject: [PATCH] mm: memcontrol: Use CSS_TASK_ITER_PROCS at mem_cgroup_scan_tasks().
-
-Since commit c03cd7738a83b137 ("cgroup: Include dying leaders with live
-threads in PROCS iterations") corrected how CSS_TASK_ITER_PROCS works,
-mem_cgroup_scan_tasks() can use CSS_TASK_ITER_PROCS in order to check
-only one thread from each thread group.
-
-Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
----
- mm/memcontrol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index ba9138a..b09ff45 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -1163,7 +1163,7 @@ int mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
- 		struct css_task_iter it;
- 		struct task_struct *task;
- 
--		css_task_iter_start(&iter->css, 0, &it);
-+		css_task_iter_start(&iter->css, CSS_TASK_ITER_PROCS, &it);
- 		while (!ret && (task = css_task_iter_next(&it)))
- 			ret = fn(task, arg);
- 		css_task_iter_end(&it);
--- 
-1.8.3.1
