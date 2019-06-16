@@ -2,187 +2,112 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E1FDC31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9356C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:36:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7207216C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560677497;
-	bh=V2RGOroRMp3GYJD0CJ4tGNj0hThRjNfWKCdJFaQknLs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=awOLw2IHFBlZ4M+0Vbfd1Ygciqg/3xEKm/dJ+MhkbmZe1C6TJbS40VHo66YayBXqb
-	 hOhqTEwqqRkt9D1n8DczeoS/gfTNii7CLINhHvrpXl1Y0dK2KBIxS3Kwm0t1T6ETG7
-	 ZSCI6t6uDw3z2Qw0JKGomBxUTSEJkhbfVnTS7iqM=
+	by mail.kernel.org (Postfix) with ESMTP id BF021216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:36:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726534AbfFPJbe convert rfc822-to-8bit (ORCPT
+        id S1726396AbfFPJgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 05:31:34 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35414 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfFPJbe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 05:31:34 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c6so6128591wml.0;
-        Sun, 16 Jun 2019 02:31:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=P7np2R0uiRKT2gJN8ek7rdfOANAI0XwQdtdo70dDyiU=;
-        b=NAMDF+4EtP1973je2uTGBUgvrMI9bYXhHVmS3/3Ts1vT4b+4wnifdhbU8W9kf+Y7S9
-         pgiLbr3UtVMu3h+hsiX8wY9jAO6K6c5/QMQ6StZnaJj4Der8IBpqNYVuNmHkGLnWKLek
-         hkmNp53+mjCc08jAh44bdK/2FDMTrw95J0lTDE3sm03gOWcO/OZZCVi9C48O1OhvGei+
-         LrbAVmySeAFNCESuhOoBqK2wwLDPMbhCOcGYok2+enWu6qjeMDpTMyWBJ6gDBLi7pQRg
-         KMXn5xNQqQXlcCkrMHUi4T9g5sD4AzZVFisPwV2HSWH7h1eYzWzcpnAE+v68dJbNqfyK
-         /jNw==
-X-Gm-Message-State: APjAAAVxAck2wjJncSK423YBSc+4AvhpqAkvFH3EKa51XHaet4WCu4Rb
-        hWJdZlkcFjmuUX013qM8NYKfRk1i
-X-Google-Smtp-Source: APXvYqwrQ37EbqFHvz3Vz48TrUGqOVW3AcltditTb1gdeHf5Yz1/YUzW/ieDtmIwy2CL4dOiT39uOQ==
-X-Received: by 2002:a1c:e183:: with SMTP id y125mr14510016wmg.152.1560677490827;
-        Sun, 16 Jun 2019 02:31:30 -0700 (PDT)
-Received: from kozik-lap ([194.230.155.186])
-        by smtp.googlemail.com with ESMTPSA id c6sm3766254wma.25.2019.06.16.02.31.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 16 Jun 2019 02:31:29 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 11:31:27 +0200
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org,
-        edubezval@gmail.com, manivannan.sadhasivam@linaro.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        Christoph Muellner <christoph.muellner@theobroma-systems.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Emil Renner Berthing <kernel@esmil.dk>,
-        Randy Li <ayaka@soulik.info>,
-        Tony Xie <tony.xie@rock-chips.com>,
-        Vicente Bergas <vicencb@gmail.com>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/Rockchip SoC support" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "open list:ARM/Rockchip SoC support" 
-        <linux-rockchip@lists.infradead.org>, dianders@chromium.org,
-        Kukjin Kim <kgene@kernel.org>
-Subject: Re: [PATCH 1/2] arm64: dts: rockchip: Fix multiple thermal zones
- conflict in rk3399.dtsi
-Message-ID: <20190616093127.GC3826@kozik-lap>
-References: <20190604165802.7338-1-daniel.lezcano@linaro.org>
- <5188064.YWmxIpmbGp@phil>
- <55b9018e-672e-522b-d0a0-c5655be0f353@linaro.org>
- <e5a4f850-27e0-cad3-04bd-6c004fca2b81@arm.com>
- <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
+        Sun, 16 Jun 2019 05:36:19 -0400
+Received: from mga12.intel.com ([192.55.52.136]:50557 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725766AbfFPJgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 05:36:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jun 2019 02:36:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,381,1557212400"; 
+   d="scan'208";a="185427960"
+Received: from tao-optiplex-7060.sh.intel.com ([10.239.13.104])
+  by fmsmga002.fm.intel.com with ESMTP; 16 Jun 2019 02:36:16 -0700
+From:   Tao Xu <tao3.xu@intel.com>
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com, fenghua.yu@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tao3.xu@intel.com, jingqi.liu@intel.com
+Subject: [PATCH v3 0/3] x86: Enable user wait instructions
+Date:   Sun, 16 Jun 2019 17:33:41 +0800
+Message-Id: <20190616093344.12582-1-tao3.xu@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8BIT
-In-Reply-To: <9bf85c22-f1ba-3dbc-0b67-17e124484fa1@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:30:13PM +0200, Daniel Lezcano wrote:
-> On 14/06/2019 16:02, Robin Murphy wrote:
-> > On 14/06/2019 14:03, Daniel Lezcano wrote:
-> >> On 14/06/2019 11:35, Heiko Stuebner wrote:
-> >>> Hi Daniel,
-> >>>
-> >>> Am Dienstag, 4. Juni 2019, 18:57:57 CEST schrieb Daniel Lezcano:
-> >>>> Currently the common thermal zones definitions for the rk3399 assumes
-> >>>> multiple thermal zones are supported by the governors. This is not the
-> >>>> case and each thermal zone has its own governor instance acting
-> >>>> individually without collaboration with other governors.
-> >>>>
-> >>>> As the cooling device for the CPU and the GPU thermal zones is the
-> >>>> same, each governors take different decisions for the same cooling
-> >>>> device leading to conflicting instructions and an erratic behavior.
-> >>>>
-> >>>> As the cooling-maps is about to become an optional property, let's
-> >>>> remove the cpu cooling device map from the GPU thermal zone.
-> >>>>
-> >>>> Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-> >>>> ---
-> >>>>   arch/arm64/boot/dts/rockchip/rk3399.dtsi | 9 ---------
-> >>>>   1 file changed, 9 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >>>> b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >>>> index 196ac9b78076..e1357e0f60f7 100644
-> >>>> --- a/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399.dtsi
-> >>>> @@ -821,15 +821,6 @@
-> >>>>                       type = "critical";
-> >>>>                   };
-> >>>>               };
-> >>>> -
-> >>>> -            cooling-maps {
-> >>>> -                map0 {
-> >>>> -                    trip = <&gpu_alert0>;
-> >>>> -                    cooling-device =
-> >>>> -                        <&cpu_b0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> >>>> -                        <&cpu_b1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> >>>> -                };
-> >>>> -            };
-> >>>>           };
-> >>>>       };
-> >>>
-> >>> my knowledge of the thermal framework is not that big, but what about
-> >>> the
-> >>> rk3399-devices which further detail the cooling-maps like
-> >>> rk3399-gru-kevin
-> >>> and the rk3399-nanopc-t4 with its fan-handling in the cooling-maps?
-> >>
-> >> The rk3399-gru-kevin is correct.
-> >>
-> >> The rk3399-nanopc-t4 is not correct because the cpu and the gpu are
-> >> sharing the same cooling device (the fan). There are different
-> >> configurations:
-> >>
-> >> 1. The cpu cooling device for the CPU and the fan for the GPU
-> >>
-> >> 2. Different trip points on the CPU thermal zone, eg. one to for the CPU
-> >> cooling device and another one for the fan.
-> >>
-> >> There are some variant for the above. If this board is not on battery,
-> >> you may want to give priority to the throughput, so activate the fan
-> >> first and then cool down the CPU. Or if you are on battery, you may want
-> >> to invert the trip points.
-> >>
-> >> In any case, it is not possible to share the same cooling device for
-> >> different thermal zones.
-> > 
-> > OK, thanks for the clarification. I'll get my board set up again to
-> > figure out the best fix for rk3399-nanopc-t4 (FWIW most users are
-> > probably just using passive cooling or a plain DC fan anyway). You might
-> > want to raise this issue with the maintainers of
-> > arch/arm/boot/dts/exynos5422-odroidxu3-common.dtsi, since the
-> > everything-shared-by-everything approach in there was what I used as a
-> > reference.
-> 
-> Cc'ed: Kukjin Kim and Krzysztof Kozlowski
-> 
-> Easy :)
->
+UMONITOR, UMWAIT and TPAUSE are a set of user wait instructions.
 
-Assuming that all trip-points are the same between thermal zones, I
-understand that solution could be to have one thermal zone with thermal
-multiple sensors (some time ago bindings did not support it) and all
-cooling devices? Then only one governor would be assigned?
+UMONITOR arms address monitoring hardware using an address. A store
+to an address within the specified address range triggers the
+monitoring hardware to wake up the processor waiting in umwait.
 
-Best regards,
-Krzysztof
+UMWAIT instructs the processor to enter an implementation-dependent
+optimized state while monitoring a range of addresses. The optimized
+state may be either a light-weight power/performance optimized state
+(c0.1 state) or an improved power/performance optimized state
+(c0.2 state).
+TPAUSE instructs the processor to enter an implementation-dependent
+optimized state c0.1 or c0.2 state and wake up when time-stamp counter
+reaches specified timeout.
+
+Availability of the user wait instructions is indicated by the presence
+of the CPUID feature flag WAITPKG CPUID.0x07.0x0:ECX[5].
+
+The patches enable the umonitor, umwait and tpause features in KVM.
+Because umwait and tpause can put a (psysical) CPU into a power saving
+state, by default we dont't expose it in kvm and provide a capability to
+enable it. Use kvm capability to enable UMONITOR, UMWAIT and TPAUSE when
+QEMU use "-overcommit cpu-pm=on, a VM can use UMONITOR, UMWAIT and TPAUSE
+instructions. If the instruction causes a delay, the amount of time
+delayed is called here the physical delay. The physical delay is first
+computed by determining the virtual delay (the time to delay relative to
+the VM’s timestamp counter). Otherwise, UMONITOR, UMWAIT and TPAUSE cause
+an invalid-opcode exception(#UD).
+
+The dependency KVM patch link:
+https://lkml.org/lkml/2019/5/24/138
+
+The release document ref below link:
+https://software.intel.com/sites/default/files/\
+managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+Changelog:
+v3:
+	Simplify the patches, expose user wait instructions when the guest
+	has CPUID (Paolo)
+v2:
+	Separated from the series
+	https://www.mail-archive.com/qemu-devel@nongnu.org/msg549526.html
+	Use kvm capability to enable UMONITOR, UMWAIT and TPAUSE when
+	QEMU use "-overcommit cpu-pm=on"
+v1:
+	Sent out with MOVDIRI/MOVDIR64B instructions patches
+
+Tao Xu (3):
+  KVM: x86: add support for user wait instructions
+  KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+  KVM: vmx: handle vm-exit for UMWAIT and TPAUSE
+
+ arch/x86/include/asm/vmx.h      |  1 +
+ arch/x86/include/uapi/asm/vmx.h |  6 +++-
+ arch/x86/kvm/cpuid.c            |  2 +-
+ arch/x86/kvm/vmx/capabilities.h |  6 ++++
+ arch/x86/kvm/vmx/vmx.c          | 56 +++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.h          |  3 ++
+ arch/x86/power/umwait.c         |  3 +-
+ 7 files changed, 74 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
 
