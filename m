@@ -2,123 +2,130 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EB2C31E54
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F089CC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:03:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C675A216FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1DD521473
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:03:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=axentia.se header.i=@axentia.se header.b="S9i3Z4e2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727213AbfFPI6y (ORCPT
+        id S1726597AbfFPJDE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 04:58:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:37702 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727044AbfFPI6q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 04:58:46 -0400
-Received: by mail-wr1-f68.google.com with SMTP id v14so6688277wrr.4
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 01:58:45 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=hjjZi7hVawe1O5sE3agHwwCxgHKG18ng7v/8qT0V/18=;
-        b=eyWxOWtoV8GDuAYao0F/YtIphqgqy9hT+kTnLUZAJd2q5cYyJSeAE+A3L1KRc1sQkZ
-         fwBSfuKO/0CS0fMuIPEcW2sRDgovnptmulBYnzy62kJGvhUYsou6tcDWjoz0BUdtpiId
-         z5zsbN5g347uD46LaCfnnZ3E913g633YrX/SKKqFC0jwNk6W0hlX43yyDBkv6r01naO3
-         PkLfanpuAFnD6hWKgCjTiWL7MzceruZHYkubkqUcARTQQG17o3nVyATJkXwgK9EtnObD
-         +pt9Ptta3nfqpNBrlnRzAUnpNlV8jUL+2HTRazkt1xFFIW/IJDdTOSq4YAJml6SATUp4
-         e+dw==
-X-Gm-Message-State: APjAAAU5dt6truCNdxibyGRHpa02DYiVEAk938GHwMUz6qBHH5l/gg22
-        uer4C6Aw40nylo/WPx9DlX5H/g==
-X-Google-Smtp-Source: APXvYqwgBJiVgM4KiEAb/iF54vFPB8O+3Ztpe60o0gwS8ulqjH0TmG0LsqfT6UfUPJQvqxzCje57FA==
-X-Received: by 2002:a5d:56c1:: with SMTP id m1mr56928115wrw.26.1560675525088;
-        Sun, 16 Jun 2019 01:58:45 -0700 (PDT)
-Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id c4sm3173448wrb.68.2019.06.16.01.58.44
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 01:58:44 -0700 (PDT)
-From:   Oleksandr Natalenko <oleksandr@redhat.com>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-api@vger.kernel.org
-Subject: [PATCH NOTFORMERGE 5/5] mm/madvise: allow KSM hints for remote API
-Date:   Sun, 16 Jun 2019 10:58:35 +0200
-Message-Id: <20190616085835.953-6-oleksandr@redhat.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190616085835.953-1-oleksandr@redhat.com>
-References: <20190616085835.953-1-oleksandr@redhat.com>
+        Sun, 16 Jun 2019 05:03:04 -0400
+Received: from mail-eopbgr80124.outbound.protection.outlook.com ([40.107.8.124]:36066
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726085AbfFPJDD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 05:03:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axentia.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZlaDaXM8+j6aE5XeTEVciz5yp9afL8oRB+ZiQuq6gq8=;
+ b=S9i3Z4e2jzW4y+YFuJCe9xXq3+CuxzPbOI+v2DgYquzqkkmLrYhUohaDJ49K9UlVv2mRI+tIXg6pmKho+SAzJ4G8YaV8kxqv3yfqEcxX17HagE3USvGg8N2QsjjXHSo2/EjJfIHSZEdRQ6zsG8WbZgcDeq/p1qO4IJWmmXqWW7M=
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com (52.134.66.158) by
+ DB3PR0202MB3372.eurprd02.prod.outlook.com (52.134.73.17) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Sun, 16 Jun 2019 09:02:59 +0000
+Received: from DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::49ac:3a71:a3ec:d6bf]) by DB3PR0202MB3434.eurprd02.prod.outlook.com
+ ([fe80::49ac:3a71:a3ec:d6bf%5]) with mapi id 15.20.1987.014; Sun, 16 Jun 2019
+ 09:02:59 +0000
+From:   Peter Rosin <peda@axentia.se>
+To:     Serge Semin <fancer.lancer@gmail.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+CC:     Jean Delvare <jdelvare@suse.com>,
+        Peter Korsgaard <peter.korsgaard@barco.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] i2c: mux-gpio: Use "mux" con_id to find channel GPIOs
+Thread-Topic: [PATCH] i2c: mux-gpio: Use "mux" con_id to find channel GPIOs
+Thread-Index: AQHVIvsMA247pC4cl0e/+FehWq9+xqacmQuAgADD2YCAAKGyAA==
+Date:   Sun, 16 Jun 2019 09:02:59 +0000
+Message-ID: <ed6362c5-4d8a-456b-4e13-0f0531105018@axentia.se>
+References: <20190614214748.2389-1-fancer.lancer@gmail.com>
+ <CAHp75VcwP8DzhqfOn=cbcRQtd8WrnuoFPT6GCU754drTZePheg@mail.gmail.com>
+ <20190615232406.ni3ausfjaz5qowib@mobilestation>
+In-Reply-To: <20190615232406.ni3ausfjaz5qowib@mobilestation>
+Accept-Language: en-US, sv-SE
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+x-originating-ip: [213.112.138.100]
+x-clientproxiedby: HE1PR08CA0056.eurprd08.prod.outlook.com
+ (2603:10a6:7:2a::27) To DB3PR0202MB3434.eurprd02.prod.outlook.com
+ (2603:10a6:8:5::30)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peda@axentia.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 425e2664-da6d-4c1d-0ade-08d6f2396de9
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DB3PR0202MB3372;
+x-ms-traffictypediagnostic: DB3PR0202MB3372:
+x-microsoft-antispam-prvs: <DB3PR0202MB33729581193BC24C040C3176BCE80@DB3PR0202MB3372.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:586;
+x-forefront-prvs: 0070A8666B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39830400003)(346002)(376002)(396003)(366004)(136003)(189003)(199004)(8676002)(476003)(2906002)(14454004)(256004)(74482002)(53546011)(6506007)(386003)(64126003)(14444005)(81166006)(86362001)(73956011)(53936002)(102836004)(31696002)(65806001)(71200400001)(71190400001)(65956001)(54906003)(58126008)(4326008)(66946007)(110136005)(305945005)(11346002)(316002)(186003)(486006)(3846002)(52116002)(2616005)(66476007)(66556008)(26005)(446003)(7736002)(66446008)(6116002)(6512007)(99286004)(64756008)(508600001)(31686004)(6486002)(25786009)(6436002)(8936002)(5660300002)(65826007)(7416002)(68736007)(36756003)(81156014)(229853002)(66066001)(6246003)(76176011)(37363001);DIR:OUT;SFP:1102;SCL:1;SRVR:DB3PR0202MB3372;H:DB3PR0202MB3434.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: axentia.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GKNH3I3rZAbSAcyWzamLSyYb86l5owfeeH/vxskpaZJBLHAYrgXv+20bTSCAcpq8HbHtxcBxkC0ozmlKMXM9AlYmN07wUAMd1VSTKZKWl60LqHqzwNYUFwfelpbe/rCKLvPUB8fZVB0Er40eLTE+jOz1d5ThENFZRgQKVh3cmy76jOd76Il7FsljtnIR16OEllgO/VfuASO+DTjSTunSUy+Q8vfhOjD1/0VdxTxpfQ9GZj68+D9F+QUpNxv0JgAQ2oMba9zRnnyZ+FySGsDLwsy/fpn2VWZk5px6j9mIL1X1PBDJCvK9gK9Y7AevY4+aAA3lq7Id7xHfQheoP5za+Oy3dy06YKMK9CvNUcEERxkVjyD8ErkMjXJAm+PnAVy5GDWrlr8/mRERvxTn0uXjwCod1v2Ma1fDhUOL+3H+YbA=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <68F8486A23654344898961D93B04DB41@eurprd02.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: axentia.se
+X-MS-Exchange-CrossTenant-Network-Message-Id: 425e2664-da6d-4c1d-0ade-08d6f2396de9
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2019 09:02:59.4978
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 4ee68585-03e1-4785-942a-df9c1871a234
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: peda@axentia.se
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0202MB3372
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It all began with the fact that KSM works only on memory that is marked
-by madvise(). And the only way to get around that is to either:
-
-  * use LD_PRELOAD; or
-  * patch the kernel with something like UKSM or PKSM.
-
-(i skip ptrace can of worms here intentionally)
-
-To overcome this restriction, lets employ a new remote madvise API. This
-can be used by some small userspace helper daemon that will do auto-KSM
-job for us.
-
-I think of two major consumers of remote KSM hints:
-
-  * hosts, that run containers, especially similar ones and especially in
-    a trusted environment, sharing the same runtime like Node.js;
-
-  * heavy applications, that can be run in multiple instances, not
-    limited to opensource ones like Firefox, but also those that cannot be
-    modified since they are binary-only and, maybe, statically linked.
-
-Speaking of statistics, more numbers can be found in the very first
-submission, that is related to this one [1]. For my current setup with
-two Firefox instances I get 100 to 200 MiB saved for the second instance
-depending on the amount of tabs.
-
-1 FF instance with 15 tabs:
-
-   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-   410
-
-2 FF instances, second one has 12 tabs (all the tabs are different):
-
-   $ echo "$(cat /sys/kernel/mm/ksm/pages_sharing) * 4 / 1024" | bc
-   592
-
-At the very moment I do not have specific numbers for containerised
-workload, but those should be comparable in case the containers share
-similar/same runtime.
-
-[1] https://lore.kernel.org/patchwork/patch/1012142/
-
-Signed-off-by: Oleksandr Natalenko <oleksandr@redhat.com>
----
- mm/madvise.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/mm/madvise.c b/mm/madvise.c
-index 84f899b1b6da..e8f9c49794a3 100644
---- a/mm/madvise.c
-+++ b/mm/madvise.c
-@@ -991,6 +991,8 @@ process_madvise_behavior_valid(int behavior)
- 	switch (behavior) {
- 	case MADV_COLD:
- 	case MADV_PAGEOUT:
-+	case MADV_MERGEABLE:
-+	case MADV_UNMERGEABLE:
- 		return true;
- 
- 	default:
--- 
-2.22.0
-
+T24gMjAxOS0wNi0xNiAwMToyNCwgU2VyZ2UgU2VtaW4gd3JvdGU6DQo+IE9uIFNhdCwgSnVuIDE1
+LCAyMDE5IGF0IDAyOjQzOjA5UE0gKzAzMDAsIEFuZHkgU2hldmNoZW5rbyB3cm90ZToNCj4+IE9u
+IFNhdCwgSnVuIDE1LCAyMDE5IGF0IDEyOjUxIEFNIFNlcmdlIFNlbWluIDxmYW5jZXIubGFuY2Vy
+QGdtYWlsLmNvbT4gd3JvdGU6DQo+Pj4NCj4+PiBSZWNlbnQgcGF0Y2ggLSAoImkyYzogbXV4L2k4
+MDE6IFN3aXRjaCB0byB1c2UgZGVzY3JpcHRvciBwYXNzaW5nIikNCj4+PiBhbHRlcmVkIHRoZSBp
+MmMtbXV4LWdwaW8gZHJpdmVyIHRvIHVzZSB0aGUgR1BJTy1kZXNjcmlwdG9yDQo+Pj4gYmFzZWQg
+aW50ZXJmYWNlIHRvIGZpbmQgYW5kIHJlcXVlc3QgdGhlIEdQSU9zIHRoZW4gYmVpbmcgdXRpbGl6
+ZWQNCj4+PiB0byBzZWxlY3QgYW5kIGRlc2VsZWN0IHRoZSBjaGFubmVscyBvZiBHUElPLWRyaXZl
+biBpMmMtbXV4ZXMuIEV2ZW4NCj4+PiB0aG91Z2ggdGhlIHByb3Bvc2VkIG1vZGlmaWNhdGlvbiB3
+YXMgY29ycmVjdCBmb3IgdGhlIHBsYXRmb3JtX2RhdGEtYmFzZWQNCj4+PiBzeXN0ZW1zLCBpdCB3
+YXMgaW52YWxpZCBmb3IgdGhlIE9GLWJhc2VkIG9uZXMgYW5kIGNhdXNlZCB0aGUga2VybmVsDQo+
+Pj4gdG8gY3Jhc2ggYXQgdGhlIGRyaXZlciBwcm9iZSBwcm9jZWR1cmUuIFRoZXJlIHdlcmUgdHdv
+IHByb2JsZW1zIHdpdGgNCj4+PiB0aGF0IG1vZGlmaWNhdGlvbi4gRmlyc3Qgb2YgYWxsIHRoZSBn
+cGlvZF9jb3VudCgpIGFuZCBncGlvZF9nZXRfaW5kZXgoKQ0KPj4+IHdlcmUgY2FsbGVkIHdpdGgg
+TlVMTCBjb25faWQuDQo+Pg0KPj4gSSBhbHdheXMgdGhvdWdodCB0aGF0IHRoaXMgbWVhbnMgImNv
+dW50IG1lIGFsbCBHUElPJ3MgZm9yIHRoaXMgZGV2aWNlDQo+PiBkZXNwaXRlIHRoZWlyIG5hbWVz
+IiBhbmQgImdldCBtZSBHUElPIGJ5IGluZGV4IGRlc3BpdGUgaXQncyBuYW1lIi4NCj4+IFdoYXQn
+cyB3ZW50IHdyb25nPw0KPj4NCj4gDQo+IE5vLiBJdCdzIHdyb25nIGFzIGZhciBhcyBJIGNhbiBz
+ZWUgZm9yIGtlcm5lbHMgNC40LCA0LjkgYW5kIHRoZSBtb2Rlcm4NCj4gNS4yLjAtcmNYLiBkdF9n
+cGlvX2NvdW50KCkvb2ZfZmluZF9ncGlvKCl3aWxsIGFsd2F5cyB0cnkgdG8gY291bnQvcmVxdWVz
+dA0KPiBlaXRoZXIgIjxjb25faWQ+LWdwaW8ocykiIG9yICJncGlvKHMpIiBHUElPcyBpbiB0aGUg
+ZGV2aWNlIG9mLW5vZGUuIFdoaWxlDQo+IHBsYXRmb3JtX2dwaW9fY291bnQoKS9ncGlvZF9maW5k
+KCkgd2lsbCB0YWtlIGludG8gYWNjb3VudCBHUElPcyB3aXRoIG1hdGNoaW5nDQo+IDxjb25faWQ+
+J3MgZXZlbiBpZiBpdCBpcyBOVUxMLg0KDQpSaWdodCwgdGhpcyBpcyBteSByZWFkaW5nIHRvLiBG
+b3IgdGhlIE9GIGNhc2UsIGdwaW9kX2NvdW50IGNhbGxzIGR0X2dwaW9fY291bnQNCndoaWNoIGhh
+cyBubyB3YXkgdG8gZmluZCBncGlvcyB1bmxlc3MgdGhleSBhcmUgZXhwbGljaXRseSBuYW1lZC4g
+QW5kIE5VTEwNCnNpbXBseSBtZWFucyB1bm5hbWVkICh3aGljaCBpcyBub3QgdGhlIGNhc2UgaGVy
+ZSkuIFRoZSBmdW5jdGlvbiBzaW1wbHkgZG9lcw0Kbm90IGRvIGFueSB0cmF3bGluZyBmb3IgZ3Bp
+b3MgaXQgaGFzIG5vdCBiZWVuIHRvbGQgYWJvdXQuDQoNCkxpbnVzLCBjYXJlIHRvIHNxdWFzaCB0
+aGlzIGluY3JlbWVudGFsIGludG8geW91ciBwYXRjaCBhbmQgcmVzZW5kIHdpdGggcHJvcGVyDQpj
+cmVkaXQgYWRkZWQ/DQoNCkNoZWVycywNClBldGVyDQo=
