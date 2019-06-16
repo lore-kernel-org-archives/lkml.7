@@ -2,155 +2,158 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DFF9C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9F1C31E53
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:09:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B612133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:05:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="RDTfg5dP";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="ZBPl/wYX"
+	by mail.kernel.org (Postfix) with ESMTP id 28E3B216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:09:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560668960;
+	bh=hvH/uITKMS5seQn+VJ3oEo3HYiTI5KLJ/SX8eTOVYyo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KAompxiWTxeVpFAu8o3jLdcsduhkRF21eTUAGkbJ+4uWysgBXQWnGd10hbkiuNAMB
+	 T1eYdFtD7HwPZ1UpYYZs/gRev0wt9qv1fQmbYO0aFKMxId/UeS/Jn1Tk8Vts77EmC+
+	 /A1QOSCaX4/O9Nc++gnVj4RiLU25lIT2pg4S0MWs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfFPHFs (ORCPT
+        id S1726154AbfFPHJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 03:05:48 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:46856 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725860AbfFPHFr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 03:05:47 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5G742GH012380;
-        Sun, 16 Jun 2019 00:05:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=btibZ4CwVccBYDGblYXVjuLjX+4kKoSQLrCMgw/R1lg=;
- b=RDTfg5dPcJjFhxllt3fzj2l1Gb3xt9+RG9HyfucCVpWPJ8M/0RoujL+jzSVVj75ArRDr
- NDZ/b1lJywyZFDjKTp1eEpCEmoFvHm1ga3PEX97Cn8r3ebxanEdrjArT1RoMthYHug85
- itGBW1xrfGQbmze82dhqT5ziq6TrnyRWtxX+cWQYbh0SYOYAZzjlKcfRPZYeCqjUhIMS
- jgAOtV5VVUeI1EYvrxnPu0zyG9wCybfKjmnWLY6hH6t4Pz9wkYbErR1f/Qtojp3IW5cC
- B8NY3JPNT/cykulQe09e6ZObjSEpNcYTvyBMUaOApyfMT/ujGKqtsAJOvruKPRTmsuO3 0Q== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam03-by2-obe.outbound.protection.outlook.com (mail-by2nam03lp2050.outbound.protection.outlook.com [104.47.42.50])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2t4v8w2uqt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Sun, 16 Jun 2019 00:05:41 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btibZ4CwVccBYDGblYXVjuLjX+4kKoSQLrCMgw/R1lg=;
- b=ZBPl/wYXcDWiRC+vqbqRiB6f5IWYHc8w3UPhvZmuUXlCJRZQdZLrKFVRuKNKkjUncS2zyPjU+BDjgfkEWb/YHfhZgPSLjgR2REvIXxGNP6fShQd6pou6rzC17qde0JQFVhjCNaRO5b3h5i2DWz0csbzKlgFy6PPzHwJxyu7y5Yw=
-Received: from DM5PR07CA0070.namprd07.prod.outlook.com (2603:10b6:4:ad::35) by
- MN2PR07MB6976.namprd07.prod.outlook.com (2603:10b6:208:1a8::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.12; Sun, 16 Jun
- 2019 07:05:38 +0000
-Received: from CO1NAM05FT034.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e50::200) by DM5PR07CA0070.outlook.office365.com
- (2603:10b6:4:ad::35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.13 via Frontend
- Transport; Sun, 16 Jun 2019 07:05:38 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 199.43.4.28 as permitted sender)
-Received: from rmmaillnx1.cadence.com (199.43.4.28) by
- CO1NAM05FT034.mail.protection.outlook.com (10.152.96.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.7 via Frontend Transport; Sun, 16 Jun 2019 07:05:35 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x5G75W5m009035
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Sun, 16 Jun 2019 03:05:33 -0400
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Sun, 16 Jun 2019 09:05:31 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Sun, 16 Jun 2019 09:05:31 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5G75VPi022894;
-        Sun, 16 Jun 2019 08:05:31 +0100
-From:   Parshuram Thombare <pthombar@cadence.com>
-To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
-        <davem@davemloft.net>, <f.fainelli@gmail.com>
-CC:     <netdev@vger.kernel.org>, <hkallweit1@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <rafalc@cadence.com>,
-        <aniljoy@cadence.com>, <piotrs@cadence.com>, <pthombar@cadence.com>
-Subject: [PATCH 6/6] net: macb: parameter added to cadence ethernet controller DT binding
-Date:   Sun, 16 Jun 2019 08:05:28 +0100
-Message-ID: <1560668728-22834-1-git-send-email-pthombar@cadence.com>
-X-Mailer: git-send-email 2.2.2
-In-Reply-To: <1560639680-19049-1-git-send-email-pthombar@cadence.com>
-References: <1560639680-19049-1-git-send-email-pthombar@cadence.com>
+        Sun, 16 Jun 2019 03:09:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725860AbfFPHJS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 03:09:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3BF78216C8;
+        Sun, 16 Jun 2019 07:09:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560668956;
+        bh=hvH/uITKMS5seQn+VJ3oEo3HYiTI5KLJ/SX8eTOVYyo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Ipmr3tI0PLaYfwWUDHL91VpLwaa9+0vpu73DXn3eZ+eO/wXJlGNGScFB0e0bODjwd
+         8XHgJkstTbXRiNiYyeq95vYt7gedaDqn/cLWggHS0u0DJswJA91a2Vd5a7j9q/vrGA
+         P2qiK2vTdgne4vaXsnn1IsCwE9i6STWNrIrIDbJA=
+Date:   Sun, 16 Jun 2019 09:09:14 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Scott Wood <swood@redhat.com>, Wu Hao <hao.wu@intel.com>,
+        Alan Tull <atull@kernel.org>, linux-fpga@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 5.1 16/59] fpga: dfl: Add lockdep classes for
+ pdata->lock
+Message-ID: <20190616070914.GA4464@kroah.com>
+References: <20190614202843.26941-1-sashal@kernel.org>
+ <20190614202843.26941-16-sashal@kernel.org>
+ <20190615054739.GA23883@kroah.com>
+ <20190615224159.GU1513@sasha-vm>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(39850400004)(396003)(136003)(376002)(2980300002)(36092001)(199004)(189003)(6666004)(336012)(305945005)(76130400001)(426003)(186003)(77096007)(70206006)(446003)(70586007)(26005)(53416004)(11346002)(8936002)(81166006)(81156014)(8676002)(53936002)(50226002)(4326008)(107886003)(50466002)(51416003)(7696005)(48376002)(2906002)(76176011)(54906003)(26826003)(36756003)(478600001)(16586007)(316002)(110136005)(69596002)(486006)(47776003)(2201001)(5660300002)(126002)(356004)(476003)(2616005)(7126003)(86362001)(4744005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB6976;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:ErrorRetry;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 9709b7c1-e08a-4ded-a8f2-08d6f2290800
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:MN2PR07MB6976;
-X-MS-TrafficTypeDiagnostic: MN2PR07MB6976:
-X-Microsoft-Antispam-PRVS: <MN2PR07MB6976A479C57B1AB41D813F20C1E80@MN2PR07MB6976.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 0070A8666B
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: RBOTit8qKPjZy9eeaG9MxG2/yN6xsSD5kF6GvWIJe8ox2Z/K9x+PojLIVI9y/SXLQ/wdxwWnmD6W3ni2SkrtYOdhErtKqfJRuz69NtkI+0qQAph8ISjq535NpvhQ3/qFqJMzSMQ+bjeFJrww8gVOJLqEJ8IgvRL64f7l4tc4UMGKXyUG/Fma5WkDgIjXWuy8gBxRUCab1V5li6+YD5wathqAGR2u32p0vsu3dnV/y6qbFffnHY3+ocbY6UW44k3ja7TR/BrtQ2oqHN19VvsGYtCoVfrVlukPtrr2hP5UXAoy84hNIRHSqr2XmJTkdrQgFN89wSgQLY9SDxc8FxHW/rL4Q5mduVi2B9VsUU/Web0pd0s3+pPmo++V0Og9dyMXGsu095TJjRbXO7w7aw7/sfTyK0LmAgzgtX7yYDSB8ZI=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 16 Jun 2019 07:05:35.7662
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9709b7c1-e08a-4ded-a8f2-08d6f2290800
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6976
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906160068
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190615224159.GU1513@sasha-vm>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New parameters added to Cadence ethernet controller DT binding
-for USXGMII interface.
+On Sat, Jun 15, 2019 at 06:41:59PM -0400, Sasha Levin wrote:
+> On Sat, Jun 15, 2019 at 07:47:39AM +0200, Greg Kroah-Hartman wrote:
+> > On Fri, Jun 14, 2019 at 04:28:00PM -0400, Sasha Levin wrote:
+> > > From: Scott Wood <swood@redhat.com>
+> > > 
+> > > [ Upstream commit dfe3de8d397bf878b31864d4e489d41118ec475f ]
+> > > 
+> > > struct dfl_feature_platform_data (and it's mutex) is used
+> > > by both fme and port devices, and when lockdep is enabled it
+> > > complains about nesting between these locks.  Tell lockdep about
+> > > the difference so it can track each class separately.
+> > > 
+> > > Here's the lockdep complaint:
+> > > [  409.680668] WARNING: possible recursive locking detected
+> > > [  409.685983] 5.1.0-rc3.fpga+ #1 Tainted: G            E
+> > > [  409.691469] --------------------------------------------
+> > > [  409.696779] fpgaconf/9348 is trying to acquire lock:
+> > > [  409.701746] 00000000a443fe2e (&pdata->lock){+.+.}, at: port_enable_set+0x24/0x60 [dfl_afu]
+> > > [  409.710006]
+> > > [  409.710006] but task is already holding lock:
+> > > [  409.715837] 0000000063b78782 (&pdata->lock){+.+.}, at: fme_pr_ioctl+0x21d/0x330 [dfl_fme]
+> > > [  409.724012]
+> > > [  409.724012] other info that might help us debug this:
+> > > [  409.730535]  Possible unsafe locking scenario:
+> > > [  409.730535]
+> > > [  409.736457]        CPU0
+> > > [  409.738910]        ----
+> > > [  409.741360]   lock(&pdata->lock);
+> > > [  409.744679]   lock(&pdata->lock);
+> > > [  409.747999]
+> > > [  409.747999]  *** DEADLOCK ***
+> > > [  409.747999]
+> > > [  409.753920]  May be due to missing lock nesting notation
+> > > [  409.753920]
+> > > [  409.760704] 4 locks held by fpgaconf/9348:
+> > > [  409.764805]  #0: 0000000063b78782 (&pdata->lock){+.+.}, at: fme_pr_ioctl+0x21d/0x330 [dfl_fme]
+> > > [  409.773408]  #1: 00000000213c8a66 (&region->mutex){+.+.}, at: fpga_region_program_fpga+0x24/0x200 [fpga_region]
+> > > [  409.783489]  #2: 00000000fe63afb9 (&mgr->ref_mutex){+.+.}, at: fpga_mgr_lock+0x15/0x40 [fpga_mgr]
+> > > [  409.792354]  #3: 000000000b2285c5 (&bridge->mutex){+.+.}, at: __fpga_bridge_get+0x26/0xa0 [fpga_bridge]
+> > > [  409.801740]
+> > > [  409.801740] stack backtrace:
+> > > [  409.806102] CPU: 45 PID: 9348 Comm: fpgaconf Kdump: loaded Tainted: G            E     5.1.0-rc3.fpga+ #1
+> > > [  409.815658] Hardware name: Intel Corporation S2600BT/S2600BT, BIOS SE5C620.86B.01.00.0763.022420181017 02/24/2018
+> > > [  409.825911] Call Trace:
+> > > [  409.828369]  dump_stack+0x5e/0x8b
+> > > [  409.831686]  __lock_acquire+0xf3d/0x10e0
+> > > [  409.835612]  ? find_held_lock+0x3c/0xa0
+> > > [  409.839451]  lock_acquire+0xbc/0x1d0
+> > > [  409.843030]  ? port_enable_set+0x24/0x60 [dfl_afu]
+> > > [  409.847823]  ? port_enable_set+0x24/0x60 [dfl_afu]
+> > > [  409.852616]  __mutex_lock+0x86/0x970
+> > > [  409.856195]  ? port_enable_set+0x24/0x60 [dfl_afu]
+> > > [  409.860989]  ? port_enable_set+0x24/0x60 [dfl_afu]
+> > > [  409.865777]  ? __mutex_unlock_slowpath+0x4b/0x290
+> > > [  409.870486]  port_enable_set+0x24/0x60 [dfl_afu]
+> > > [  409.875106]  fpga_bridges_disable+0x36/0x50 [fpga_bridge]
+> > > [  409.880502]  fpga_region_program_fpga+0xea/0x200 [fpga_region]
+> > > [  409.886338]  fme_pr_ioctl+0x13e/0x330 [dfl_fme]
+> > > [  409.890870]  fme_ioctl+0x66/0xe0 [dfl_fme]
+> > > [  409.894973]  do_vfs_ioctl+0xa9/0x720
+> > > [  409.898548]  ? lockdep_hardirqs_on+0xf0/0x1a0
+> > > [  409.902907]  ksys_ioctl+0x60/0x90
+> > > [  409.906225]  __x64_sys_ioctl+0x16/0x20
+> > > [  409.909981]  do_syscall_64+0x5a/0x220
+> > > [  409.913644]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> > > [  409.918698] RIP: 0033:0x7f9d31b9b8d7
+> > > [  409.922276] Code: 44 00 00 48 8b 05 b9 15 2d 00 64 c7 00 26 00 00 00 48 c7 c0 ff ff ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 b8 10 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d 89 15 2d 00 f7 d8 64 89 01 48
+> > > [  409.941020] RSP: 002b:00007ffe4cae0d68 EFLAGS: 00000202 ORIG_RAX: 0000000000000010
+> > > [  409.948588] RAX: ffffffffffffffda RBX: 00007f9d32ade6a0 RCX: 00007f9d31b9b8d7
+> > > [  409.955719] RDX: 00007ffe4cae0df0 RSI: 000000000000b680 RDI: 0000000000000003
+> > > [  409.962852] RBP: 0000000000000003 R08: 00007f9d2b70a177 R09: 00007ffe4cae0e40
+> > > [  409.969984] R10: 00007ffe4cae0160 R11: 0000000000000202 R12: 00007ffe4cae0df0
+> > > [  409.977115] R13: 000000000000b680 R14: 0000000000000000 R15: 00007ffe4cae0f60
+> > > 
+> > > Signed-off-by: Scott Wood <swood@redhat.com>
+> > > Acked-by: Wu Hao <hao.wu@intel.com>
+> > > Acked-by: Alan Tull <atull@kernel.org>
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > Signed-off-by: Sasha Levin <sashal@kernel.org>
+> > > ---
+> > >  drivers/fpga/dfl.c | 16 +++++++++++++++-
+> > >  1 file changed, 15 insertions(+), 1 deletion(-)
+> > 
+> > Adding lockdep stuff is not really needed for stable kernels, please
+> > drop this from all trees.
+> 
+> For actual splats? Why? I treat them as compiler warnings. Keeping these
+> around will just make them show up over and over in testing (at least
+> until we unify our testing story...).
 
-Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
----
- Documentation/devicetree/bindings/net/macb.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Ah, good point, ok, leave this in :)
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 9c5e94482b5f..cd79ec9dddfb 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -25,6 +25,10 @@ Required properties:
- 	Optional elements: 'rx_clk' applies to cdns,zynqmp-gem
- 	Optional elements: 'tsu_clk'
- - clocks: Phandles to input clocks.
-+- serdes-rate External serdes rate.Mandatory for USXGMII mode.
-+	0 - 5G
-+	1 - 10G
-+- fixed-speed Speed for fixed mode UXSGMII interface based link
- 
- The MAC address will be determined using the optional properties
- defined in ethernet.txt.
--- 
-2.17.1
+thanks,
 
+greg k-h
