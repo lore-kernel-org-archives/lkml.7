@@ -2,190 +2,105 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EED6C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 14:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7630AC31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 14:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54449216FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 14:04:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560693876;
-	bh=sTWctmNabBHssDJy32epRGtnF/FWn1qjKnEwnrM2gY8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xyeF0QVfLG66dGOzNGhKKZwCt1MiSRTFcdohCWDK+Szr6jUkf1JgY615PDSyOCL6+
-	 9rLNTvb2Yx5cb+WLYeR8s1+9qIyUue6BOTSF/Cahr8jP5x1fIIOE27c0O/wtDDDZdv
-	 mc/jI4gWPoPCCSXWRg9rChjemVjEnlp+mtob5JIw=
+	by mail.kernel.org (Postfix) with ESMTP id 4EB7620870
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 14:09:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WHbVd2Yr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727426AbfFPOEe (ORCPT
+        id S1727289AbfFPOJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 10:04:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36932 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfFPOEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 10:04:32 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0D21C307D85E;
-        Sun, 16 Jun 2019 14:04:31 +0000 (UTC)
-Received: from krava.redhat.com (ovpn-204-53.brq.redhat.com [10.40.204.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45CF18CF9E;
-        Sun, 16 Jun 2019 14:04:28 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 8/8] perf/x86/rapl: Get quirk state from new probe framework
-Date:   Sun, 16 Jun 2019 16:03:58 +0200
-Message-Id: <20190616140358.27799-9-jolsa@kernel.org>
-In-Reply-To: <20190616140358.27799-1-jolsa@kernel.org>
-References: <20190616140358.27799-1-jolsa@kernel.org>
+        Sun, 16 Jun 2019 10:09:06 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:42616 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfFPOJG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 10:09:06 -0400
+Received: by mail-lf1-f51.google.com with SMTP id y13so4660434lfh.9;
+        Sun, 16 Jun 2019 07:09:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=E8vAHm5fNfx3JHjHoDH8HJSu0t2QoGEaq+gO0J45Wtw=;
+        b=WHbVd2Yr5Ti5gw6IcDQ88mow2xLWDitabLbYcq1tCD0vD34gGi0QJMn2GikEsdEYDj
+         xgxo0aMplw4Wg9tjY/MKyhiuw6blF+av0THGXw6wyMw5l7RXynFaSr8pVysucdxx7iK4
+         +abNxGzJiMv+25WIeLCxeHGkICsUHfj1Akqw+mrhySBPhDi4f1BewS2p8ADlYy9ic5uu
+         7vNWFN6JydEMZNDbwuIzgoOr99MtBgf7rjMduoLnL8tNNlXVrq2kz1NqPckzG/wOu9X5
+         PzqIhCCflpBhHPqh1vYShjvlJPRp5CZu+awAqs4YqG20k+JeV1236cbWio2TOo4EVx79
+         aVig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E8vAHm5fNfx3JHjHoDH8HJSu0t2QoGEaq+gO0J45Wtw=;
+        b=s8gsFtW4+K6e1YjU61/RP7Xzy1Ssu3IQwsIdo2/3244+kEU/rWg9fnub/ME+dAMjDm
+         NstOFoaAO0KgV6hZfANWCXNIorFj09GniOSgl+w+e2KY+M3YwMn0rIMIKY3cR+/SbNI+
+         WXD6RdarjXTeuovqmkqokN9gbzGWk3MS7CawOrlql9U6VRHgjw7yY40Q7nIvBLwRob1z
+         QLdUSvauewyZLAIYoJOrR+CWW6lCpwfzzeDx6VjTUE5bug8tEGuNeeUaP8bbqXJDK4fv
+         Sm8xgkNJTSfWCrW+o1Y/eaCTvpbDwAVqRbrJGJKYCwMqt+mSnitn31rIC5EF14mvdYyL
+         cFGw==
+X-Gm-Message-State: APjAAAXangxzD5jhQlGcAQXoLonvTUHScvtBwsXx6ruLF0BQeIbM4df+
+        3itd0iWY4Jiqy3xwm+QDAGRKHomi
+X-Google-Smtp-Source: APXvYqweZ2vVw8giy/ZF//DAlrMwVaB6CT4sj8/JOyiATtZz0y3OFG8dRiDnMofecSrwLu9s4h91Cg==
+X-Received: by 2002:a19:f506:: with SMTP id j6mr28280288lfb.168.1560694144339;
+        Sun, 16 Jun 2019 07:09:04 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id j23sm587163lfb.93.2019.06.16.07.09.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 16 Jun 2019 07:09:03 -0700 (PDT)
+Subject: Re: linux-next: Fixes tag needs some work in the clockevents tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <20190613090700.04badfc3@canb.auug.org.au>
+ <1b6c715b-5aa9-b0c1-d228-c99d2adc57b4@linaro.org>
+ <20190616232408.7ca0ec1c@canb.auug.org.au>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <daa92c0a-9c29-39cb-8612-1103bf09cf13@gmail.com>
+Date:   Sun, 16 Jun 2019 17:08:52 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190616232408.7ca0ec1c@canb.auug.org.au>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Sun, 16 Jun 2019 14:04:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Getting the apply_quirk bool from new rapl_model_match array.
+16.06.2019 16:24, Stephen Rothwell пишет:
+> Hi Daniel,
+> 
+> [Sorry for the slow response.]
+> 
+> On Thu, 13 Jun 2019 08:52:21 +0200 Daniel Lezcano <daniel.lezcano@linaro.org> wrote:
+>>
+>> actually it returns:
+>>
+>> git log -1 --format='Fixes: %h ("%s")' 3be2a85a0b61
+>>
+>> Fixes: 3be2a85a0b61 ("clocksource/drivers/tegra: Support per-CPU timers on all Tegra's")
+> 
+> Indeed.
+> 
+>> Is it ok to shorten the subject?
+> 
+> I figure it is easier to just use the "git log" result and to give
+> anyone (or any script) the wants to use the Fixes tag as much
+> information as possible.
+> 
 
-And because apply_quirk was the last remaining piece of data
-in rapl_cpu_match, replacing it with rapl_model_match as device
-table.
-
-The switch to new perf_msr_probe detection API is done.
-
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- arch/x86/events/intel/rapl.c | 82 ++----------------------------------
- 1 file changed, 3 insertions(+), 79 deletions(-)
-
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index e4c4ff870845..ddad45ef8757 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -671,75 +671,6 @@ static int __init init_rapl_pmus(void)
- #define X86_RAPL_MODEL_MATCH(model, init)	\
- 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)&init }
- 
--struct intel_rapl_init_fun {
--	bool apply_quirk;
--};
--
--static const struct intel_rapl_init_fun snb_rapl_init __initconst = {
--	.apply_quirk = false,
--};
--
--static const struct intel_rapl_init_fun hsx_rapl_init __initconst = {
--	.apply_quirk = true,
--};
--
--static const struct intel_rapl_init_fun hsw_rapl_init __initconst = {
--	.apply_quirk = false,
--};
--
--static const struct intel_rapl_init_fun snbep_rapl_init __initconst = {
--	.apply_quirk = false,
--};
--
--static const struct intel_rapl_init_fun knl_rapl_init __initconst = {
--	.apply_quirk = true,
--};
--
--static const struct intel_rapl_init_fun skl_rapl_init __initconst = {
--	.apply_quirk = false,
--};
--
--static const struct x86_cpu_id rapl_cpu_match[] __initconst = {
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE,   snb_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SANDYBRIDGE_X, snbep_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE,   snb_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_IVYBRIDGE_X, snbep_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_CORE, hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_X,    hsx_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_ULT,  hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_HASWELL_GT3E, hsw_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_CORE,   hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_GT3E,   hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_X,	  hsx_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_BROADWELL_XEON_D, hsx_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNL, knl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_XEON_PHI_KNM, knl_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_MOBILE,  skl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_DESKTOP, skl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_SKYLAKE_X,	 hsx_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_MOBILE,  skl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_KABYLAKE_DESKTOP, skl_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_CANNONLAKE_MOBILE,  skl_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT, hsw_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_X, hsw_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ATOM_GOLDMONT_PLUS, hsw_rapl_init),
--
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_MOBILE,  skl_rapl_init),
--	X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_DESKTOP, skl_rapl_init),
--	{},
--};
--
--MODULE_DEVICE_TABLE(x86cpu, rapl_cpu_match);
--
- static struct rapl_model model_snb = {
- 	.events		= BIT(PERF_RAPL_PP0) |
- 			  BIT(PERF_RAPL_PKG) |
-@@ -813,12 +744,12 @@ static const struct x86_cpu_id rapl_model_match[] __initconst = {
- 	{},
- };
- 
-+MODULE_DEVICE_TABLE(x86cpu, rapl_model_match);
-+
- static int __init rapl_pmu_init(void)
- {
- 	const struct x86_cpu_id *id;
--	struct intel_rapl_init_fun *rapl_init;
- 	struct rapl_model *rm;
--	bool apply_quirk;
- 	int ret;
- 
- 	id = x86_match_cpu(rapl_model_match);
-@@ -829,14 +760,7 @@ static int __init rapl_pmu_init(void)
- 	rapl_cntr_mask = perf_msr_probe(rapl_msrs, PERF_RAPL_MAX,
- 					false, (void *) &rm->events);
- 
--	id = x86_match_cpu(rapl_cpu_match);
--	if (!id)
--		return -ENODEV;
--
--	rapl_init = (struct intel_rapl_init_fun *)id->driver_data;
--	apply_quirk = rapl_init->apply_quirk;
--
--	ret = rapl_check_hw_unit(apply_quirk);
-+	ret = rapl_check_hw_unit(rm->apply_quirk);
- 	if (ret)
- 		return ret;
- 
--- 
-2.21.0
-
+Daniel, I'd also recommend to shorten the common subsys prefix in general to something
+like "clocksource: tegra:".
