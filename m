@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E40E7C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 14:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10C2C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 14:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B07972147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 14:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B354B2147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 14:04:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560693857;
-	bh=ksu4tMEHCRo5Z6euRXR4WTk3ATIsLRjXU/XsRRvBxe4=;
+	s=default; t=1560693861;
+	bh=mCKqzMI0KYOX3ES52pYFgaW9o6zTFjRuSj6QM1YU2us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g1NW3Gr983xDky3UPlyOR3OtTW2qUdDuciEqMlLgsveR7e6/vtH42SYfKR9fgDmQS
-	 yUiVE2Kn8aZ//KPPBS4Jwy2gmm7BpCq0jCXkBTD9tS6lB/tMZsVIDsH+FbenJrMqnG
-	 LsHpoVzSU+Z3xf3BwUfO3xjxrDwZkvaQefaLsbu4=
+	b=0oYOtzuKThGzBcodPin+/LJoyj3hCe6CuGJLmPJXEIwU71MVQZWk+BgIijPs12G/J
+	 7nQG6M/YFUmjcrEn07OXldMttKShucXyBqujC4RrthEnTjiKWx/xZ1AhufG/Lyprys
+	 k+JmJUxUGEJ05pta21AVATROVsDd6qGsIqYG6Sd0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfFPOEQ (ORCPT
+        id S1727326AbfFPOET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 10:04:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52038 "EHLO mx1.redhat.com"
+        Sun, 16 Jun 2019 10:04:19 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60938 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727251AbfFPOEM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 10:04:12 -0400
+        id S1727251AbfFPOER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 10:04:17 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D5EFF3688E;
-        Sun, 16 Jun 2019 14:04:10 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 03F7981129;
+        Sun, 16 Jun 2019 14:04:15 +0000 (UTC)
 Received: from krava.redhat.com (ovpn-204-53.brq.redhat.com [10.40.204.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C5AA8F6FE;
-        Sun, 16 Jun 2019 14:04:07 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3625D8CF9E;
+        Sun, 16 Jun 2019 14:04:11 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Peter Zijlstra <a.p.zijlstra@chello.nl>,
         "Liang, Kan" <kan.liang@linux.intel.com>,
@@ -48,21 +48,21 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Arnaldo Carvalho de Melo <acme@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 2/8] perf/x86/msr: Use new probe function
-Date:   Sun, 16 Jun 2019 16:03:52 +0200
-Message-Id: <20190616140358.27799-3-jolsa@kernel.org>
+Subject: [PATCH 3/8] perf/x86/cstate: Use new probe function
+Date:   Sun, 16 Jun 2019 16:03:53 +0200
+Message-Id: <20190616140358.27799-4-jolsa@kernel.org>
 In-Reply-To: <20190616140358.27799-1-jolsa@kernel.org>
 References: <20190616140358.27799-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sun, 16 Jun 2019 14:04:11 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Sun, 16 Jun 2019 14:04:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using perf_msr_probe function to probe for msr events.
+Using perf_msr_probe function to probe for cstate events.
 
 The functionality is the same, with one exception, that
 perf_msr_probe checks for rdmsr to return value != 0 for
@@ -73,200 +73,243 @@ pmu::attr_update.
 
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- arch/x86/events/msr.c | 110 +++++++++++++++++++++++-------------------
- 1 file changed, 60 insertions(+), 50 deletions(-)
+ arch/x86/events/intel/cstate.c | 152 +++++++++++++++++++--------------
+ 1 file changed, 87 insertions(+), 65 deletions(-)
 
-diff --git a/arch/x86/events/msr.c b/arch/x86/events/msr.c
-index f3f4c2263501..9431447541e9 100644
---- a/arch/x86/events/msr.c
-+++ b/arch/x86/events/msr.c
-@@ -1,7 +1,9 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/perf_event.h>
-+#include <linux/sysfs.h>
- #include <linux/nospec.h>
+diff --git a/arch/x86/events/intel/cstate.c b/arch/x86/events/intel/cstate.c
+index e1caa0b49d63..688592b34564 100644
+--- a/arch/x86/events/intel/cstate.c
++++ b/arch/x86/events/intel/cstate.c
+@@ -96,6 +96,7 @@
+ #include <asm/cpu_device_id.h>
  #include <asm/intel-family.h>
-+#include "probe.h"
+ #include "../perf_event.h"
++#include "../probe.h"
  
- enum perf_msr_id {
- 	PERF_MSR_TSC			= 0,
-@@ -12,32 +14,30 @@ enum perf_msr_id {
- 	PERF_MSR_PTSC			= 5,
- 	PERF_MSR_IRPERF			= 6,
- 	PERF_MSR_THERM			= 7,
--	PERF_MSR_THERM_SNAP		= 8,
--	PERF_MSR_THERM_UNIT		= 9,
- 	PERF_MSR_EVENT_MAX,
+ MODULE_LICENSE("GPL");
+ 
+@@ -144,25 +145,42 @@ enum perf_cstate_core_events {
+ 	PERF_CSTATE_CORE_EVENT_MAX,
  };
  
--static bool test_aperfmperf(int idx)
-+static bool test_aperfmperf(int idx, void *data)
- {
- 	return boot_cpu_has(X86_FEATURE_APERFMPERF);
- }
+-PMU_EVENT_ATTR_STRING(c1-residency, evattr_cstate_core_c1, "event=0x00");
+-PMU_EVENT_ATTR_STRING(c3-residency, evattr_cstate_core_c3, "event=0x01");
+-PMU_EVENT_ATTR_STRING(c6-residency, evattr_cstate_core_c6, "event=0x02");
+-PMU_EVENT_ATTR_STRING(c7-residency, evattr_cstate_core_c7, "event=0x03");
++PMU_EVENT_ATTR_STRING(c1-residency, attr_cstate_core_c1, "event=0x00");
++PMU_EVENT_ATTR_STRING(c3-residency, attr_cstate_core_c3, "event=0x01");
++PMU_EVENT_ATTR_STRING(c6-residency, attr_cstate_core_c6, "event=0x02");
++PMU_EVENT_ATTR_STRING(c7-residency, attr_cstate_core_c7, "event=0x03");
  
--static bool test_ptsc(int idx)
-+static bool test_ptsc(int idx, void *data)
- {
- 	return boot_cpu_has(X86_FEATURE_PTSC);
- }
- 
--static bool test_irperf(int idx)
-+static bool test_irperf(int idx, void *data)
- {
- 	return boot_cpu_has(X86_FEATURE_IRPERF);
- }
- 
--static bool test_therm_status(int idx)
-+static bool test_therm_status(int idx, void *data)
- {
- 	return boot_cpu_has(X86_FEATURE_DTHERM);
- }
- 
--static bool test_intel(int idx)
-+static bool test_intel(int idx, void *data)
- {
- 	if (boot_cpu_data.x86_vendor != X86_VENDOR_INTEL ||
- 	    boot_cpu_data.x86 != 6)
-@@ -98,37 +98,51 @@ static bool test_intel(int idx)
- 	return false;
- }
- 
--struct perf_msr {
--	u64	msr;
--	struct	perf_pmu_events_attr *attr;
--	bool	(*test)(int idx);
-+PMU_EVENT_ATTR_STRING(tsc,				attr_tsc,		"event=0x00"	);
-+PMU_EVENT_ATTR_STRING(aperf,				attr_aperf,		"event=0x01"	);
-+PMU_EVENT_ATTR_STRING(mperf,				attr_mperf,		"event=0x02"	);
-+PMU_EVENT_ATTR_STRING(pperf,				attr_pperf,		"event=0x03"	);
-+PMU_EVENT_ATTR_STRING(smi,				attr_smi,		"event=0x04"	);
-+PMU_EVENT_ATTR_STRING(ptsc,				attr_ptsc,		"event=0x05"	);
-+PMU_EVENT_ATTR_STRING(irperf,				attr_irperf,		"event=0x06"	);
-+PMU_EVENT_ATTR_STRING(cpu_thermal_margin,		attr_therm,		"event=0x07"	);
-+PMU_EVENT_ATTR_STRING(cpu_thermal_margin.snapshot,	attr_therm_snap,	"1"		);
-+PMU_EVENT_ATTR_STRING(cpu_thermal_margin.unit,		attr_therm_unit,	"C"		);
+-static struct perf_cstate_msr core_msr[] = {
+-	[PERF_CSTATE_CORE_C1_RES] = { MSR_CORE_C1_RES,		&evattr_cstate_core_c1 },
+-	[PERF_CSTATE_CORE_C3_RES] = { MSR_CORE_C3_RESIDENCY,	&evattr_cstate_core_c3 },
+-	[PERF_CSTATE_CORE_C6_RES] = { MSR_CORE_C6_RESIDENCY,	&evattr_cstate_core_c6 },
+-	[PERF_CSTATE_CORE_C7_RES] = { MSR_CORE_C7_RESIDENCY,	&evattr_cstate_core_c7 },
++static unsigned long core_msr_mask;
 +
-+static unsigned long msr_mask;
++PMU_EVENT_GROUP(events, cstate_core_c1);
++PMU_EVENT_GROUP(events, cstate_core_c3);
++PMU_EVENT_GROUP(events, cstate_core_c6);
++PMU_EVENT_GROUP(events, cstate_core_c7);
 +
-+PMU_EVENT_GROUP(events, aperf);
-+PMU_EVENT_GROUP(events, mperf);
-+PMU_EVENT_GROUP(events, pperf);
-+PMU_EVENT_GROUP(events, smi);
-+PMU_EVENT_GROUP(events, ptsc);
-+PMU_EVENT_GROUP(events, irperf);
++static bool test_msr(int idx, void *data)
++{
++	return test_bit(idx, (unsigned long *) data);
++}
 +
-+static struct attribute *attrs_therm[] = {
-+	&attr_therm.attr.attr,
-+	&attr_therm_snap.attr.attr,
-+	&attr_therm_unit.attr.attr,
-+	NULL,
++static struct perf_msr core_msr[] = {
++	[PERF_CSTATE_CORE_C1_RES] = { MSR_CORE_C1_RES,		&group_cstate_core_c1,	test_msr },
++	[PERF_CSTATE_CORE_C3_RES] = { MSR_CORE_C3_RESIDENCY,	&group_cstate_core_c3,	test_msr },
++	[PERF_CSTATE_CORE_C6_RES] = { MSR_CORE_C6_RESIDENCY,	&group_cstate_core_c6,	test_msr },
++	[PERF_CSTATE_CORE_C7_RES] = { MSR_CORE_C7_RESIDENCY,	&group_cstate_core_c7,	test_msr },
  };
  
--PMU_EVENT_ATTR_STRING(tsc,				evattr_tsc,		"event=0x00"	);
--PMU_EVENT_ATTR_STRING(aperf,				evattr_aperf,		"event=0x01"	);
--PMU_EVENT_ATTR_STRING(mperf,				evattr_mperf,		"event=0x02"	);
--PMU_EVENT_ATTR_STRING(pperf,				evattr_pperf,		"event=0x03"	);
--PMU_EVENT_ATTR_STRING(smi,				evattr_smi,		"event=0x04"	);
--PMU_EVENT_ATTR_STRING(ptsc,				evattr_ptsc,		"event=0x05"	);
--PMU_EVENT_ATTR_STRING(irperf,				evattr_irperf,		"event=0x06"	);
--PMU_EVENT_ATTR_STRING(cpu_thermal_margin,		evattr_therm,		"event=0x07"	);
--PMU_EVENT_ATTR_STRING(cpu_thermal_margin.snapshot,	evattr_therm_snap,	"1"		);
--PMU_EVENT_ATTR_STRING(cpu_thermal_margin.unit,		evattr_therm_unit,	"C"		);
-+static struct attribute_group group_therm = {
-+	.name  = "events",
-+	.attrs = attrs_therm,
-+};
- 
- static struct perf_msr msr[] = {
--	[PERF_MSR_TSC]		= { 0,				&evattr_tsc,		NULL,			},
--	[PERF_MSR_APERF]	= { MSR_IA32_APERF,		&evattr_aperf,		test_aperfmperf,	},
--	[PERF_MSR_MPERF]	= { MSR_IA32_MPERF,		&evattr_mperf,		test_aperfmperf,	},
--	[PERF_MSR_PPERF]	= { MSR_PPERF,			&evattr_pperf,		test_intel,		},
--	[PERF_MSR_SMI]		= { MSR_SMI_COUNT,		&evattr_smi,		test_intel,		},
--	[PERF_MSR_PTSC]		= { MSR_F15H_PTSC,		&evattr_ptsc,		test_ptsc,		},
--	[PERF_MSR_IRPERF]	= { MSR_F17H_IRPERF,		&evattr_irperf,		test_irperf,		},
--	[PERF_MSR_THERM]	= { MSR_IA32_THERM_STATUS,	&evattr_therm,		test_therm_status,	},
--	[PERF_MSR_THERM_SNAP]	= { MSR_IA32_THERM_STATUS,	&evattr_therm_snap,	test_therm_status,	},
--	[PERF_MSR_THERM_UNIT]	= { MSR_IA32_THERM_STATUS,	&evattr_therm_unit,	test_therm_status,	},
-+	[PERF_MSR_TSC]		= { .no_check = true,								},
-+	[PERF_MSR_APERF]	= { MSR_IA32_APERF,		&group_aperf,		test_aperfmperf,	},
-+	[PERF_MSR_MPERF]	= { MSR_IA32_MPERF,		&group_mperf,		test_aperfmperf,	},
-+	[PERF_MSR_PPERF]	= { MSR_PPERF,			&group_pperf,		test_intel,		},
-+	[PERF_MSR_SMI]		= { MSR_SMI_COUNT,		&group_smi,		test_intel,		},
-+	[PERF_MSR_PTSC]		= { MSR_F15H_PTSC,		&group_ptsc,		test_ptsc,		},
-+	[PERF_MSR_IRPERF]	= { MSR_F17H_IRPERF,		&group_irperf,		test_irperf,		},
-+	[PERF_MSR_THERM]	= { MSR_IA32_THERM_STATUS,	&group_therm,		test_therm_status,	},
- };
- 
--static struct attribute *events_attrs[PERF_MSR_EVENT_MAX + 1] = {
-+static struct attribute *events_attrs[] = {
-+	&attr_tsc.attr.attr,
+-static struct attribute *core_events_attrs[PERF_CSTATE_CORE_EVENT_MAX + 1] = {
++static struct attribute *attrs_empty[] = {
  	NULL,
  };
  
-@@ -153,6 +167,17 @@ static const struct attribute_group *attr_groups[] = {
- 	NULL,
++/*
++ * There are no default events, but we need to create
++ * "events" group (with empty attrs) before updating
++ * it with detected events.
++ */
+ static struct attribute_group core_events_attr_group = {
+ 	.name = "events",
+-	.attrs = core_events_attrs,
++	.attrs = attrs_empty,
  };
  
-+const struct attribute_group *attr_update[] = {
-+	&group_aperf,
-+	&group_mperf,
-+	&group_pperf,
-+	&group_smi,
-+	&group_ptsc,
-+	&group_irperf,
-+	&group_therm,
+ DEFINE_CSTATE_FORMAT_ATTR(core_event, event, "config:0-63");
+@@ -211,31 +229,37 @@ enum perf_cstate_pkg_events {
+ 	PERF_CSTATE_PKG_EVENT_MAX,
+ };
+ 
+-PMU_EVENT_ATTR_STRING(c2-residency, evattr_cstate_pkg_c2, "event=0x00");
+-PMU_EVENT_ATTR_STRING(c3-residency, evattr_cstate_pkg_c3, "event=0x01");
+-PMU_EVENT_ATTR_STRING(c6-residency, evattr_cstate_pkg_c6, "event=0x02");
+-PMU_EVENT_ATTR_STRING(c7-residency, evattr_cstate_pkg_c7, "event=0x03");
+-PMU_EVENT_ATTR_STRING(c8-residency, evattr_cstate_pkg_c8, "event=0x04");
+-PMU_EVENT_ATTR_STRING(c9-residency, evattr_cstate_pkg_c9, "event=0x05");
+-PMU_EVENT_ATTR_STRING(c10-residency, evattr_cstate_pkg_c10, "event=0x06");
+-
+-static struct perf_cstate_msr pkg_msr[] = {
+-	[PERF_CSTATE_PKG_C2_RES] = { MSR_PKG_C2_RESIDENCY,	&evattr_cstate_pkg_c2 },
+-	[PERF_CSTATE_PKG_C3_RES] = { MSR_PKG_C3_RESIDENCY,	&evattr_cstate_pkg_c3 },
+-	[PERF_CSTATE_PKG_C6_RES] = { MSR_PKG_C6_RESIDENCY,	&evattr_cstate_pkg_c6 },
+-	[PERF_CSTATE_PKG_C7_RES] = { MSR_PKG_C7_RESIDENCY,	&evattr_cstate_pkg_c7 },
+-	[PERF_CSTATE_PKG_C8_RES] = { MSR_PKG_C8_RESIDENCY,	&evattr_cstate_pkg_c8 },
+-	[PERF_CSTATE_PKG_C9_RES] = { MSR_PKG_C9_RESIDENCY,	&evattr_cstate_pkg_c9 },
+-	[PERF_CSTATE_PKG_C10_RES] = { MSR_PKG_C10_RESIDENCY,	&evattr_cstate_pkg_c10 },
+-};
+-
+-static struct attribute *pkg_events_attrs[PERF_CSTATE_PKG_EVENT_MAX + 1] = {
+-	NULL,
++PMU_EVENT_ATTR_STRING(c2-residency,  attr_cstate_pkg_c2,  "event=0x00");
++PMU_EVENT_ATTR_STRING(c3-residency,  attr_cstate_pkg_c3,  "event=0x01");
++PMU_EVENT_ATTR_STRING(c6-residency,  attr_cstate_pkg_c6,  "event=0x02");
++PMU_EVENT_ATTR_STRING(c7-residency,  attr_cstate_pkg_c7,  "event=0x03");
++PMU_EVENT_ATTR_STRING(c8-residency,  attr_cstate_pkg_c8,  "event=0x04");
++PMU_EVENT_ATTR_STRING(c9-residency,  attr_cstate_pkg_c9,  "event=0x05");
++PMU_EVENT_ATTR_STRING(c10-residency, attr_cstate_pkg_c10, "event=0x06");
++
++static unsigned long pkg_msr_mask;
++
++PMU_EVENT_GROUP(events, cstate_pkg_c2);
++PMU_EVENT_GROUP(events, cstate_pkg_c3);
++PMU_EVENT_GROUP(events, cstate_pkg_c6);
++PMU_EVENT_GROUP(events, cstate_pkg_c7);
++PMU_EVENT_GROUP(events, cstate_pkg_c8);
++PMU_EVENT_GROUP(events, cstate_pkg_c9);
++PMU_EVENT_GROUP(events, cstate_pkg_c10);
++
++static struct perf_msr pkg_msr[] = {
++	[PERF_CSTATE_PKG_C2_RES]  = { MSR_PKG_C2_RESIDENCY,	&group_cstate_pkg_c2,	test_msr },
++	[PERF_CSTATE_PKG_C3_RES]  = { MSR_PKG_C3_RESIDENCY,	&group_cstate_pkg_c3,	test_msr },
++	[PERF_CSTATE_PKG_C6_RES]  = { MSR_PKG_C6_RESIDENCY,	&group_cstate_pkg_c6,	test_msr },
++	[PERF_CSTATE_PKG_C7_RES]  = { MSR_PKG_C7_RESIDENCY,	&group_cstate_pkg_c7,	test_msr },
++	[PERF_CSTATE_PKG_C8_RES]  = { MSR_PKG_C8_RESIDENCY,	&group_cstate_pkg_c8,	test_msr },
++	[PERF_CSTATE_PKG_C9_RES]  = { MSR_PKG_C9_RESIDENCY,	&group_cstate_pkg_c9,	test_msr },
++	[PERF_CSTATE_PKG_C10_RES] = { MSR_PKG_C10_RESIDENCY,	&group_cstate_pkg_c10,	test_msr },
+ };
+ 
+ static struct attribute_group pkg_events_attr_group = {
+ 	.name = "events",
+-	.attrs = pkg_events_attrs,
++	.attrs = attrs_empty,
+ };
+ 
+ DEFINE_CSTATE_FORMAT_ATTR(pkg_event, event, "config:0-63");
+@@ -289,7 +313,8 @@ static int cstate_pmu_event_init(struct perf_event *event)
+ 	if (event->pmu == &cstate_core_pmu) {
+ 		if (cfg >= PERF_CSTATE_CORE_EVENT_MAX)
+ 			return -EINVAL;
+-		if (!core_msr[cfg].attr)
++		cfg = array_index_nospec((unsigned long)cfg, PERF_CSTATE_CORE_EVENT_MAX);
++		if (!(core_msr_mask & (1 << cfg)))
+ 			return -EINVAL;
+ 		event->hw.event_base = core_msr[cfg].msr;
+ 		cpu = cpumask_any_and(&cstate_core_cpu_mask,
+@@ -298,7 +323,7 @@ static int cstate_pmu_event_init(struct perf_event *event)
+ 		if (cfg >= PERF_CSTATE_PKG_EVENT_MAX)
+ 			return -EINVAL;
+ 		cfg = array_index_nospec((unsigned long)cfg, PERF_CSTATE_PKG_EVENT_MAX);
+-		if (!pkg_msr[cfg].attr)
++		if (!(pkg_msr_mask & (1 << cfg)))
+ 			return -EINVAL;
+ 		event->hw.event_base = pkg_msr[cfg].msr;
+ 		cpu = cpumask_any_and(&cstate_pkg_cpu_mask,
+@@ -421,8 +446,28 @@ static int cstate_cpu_init(unsigned int cpu)
+ 	return 0;
+ }
+ 
++const struct attribute_group *core_attr_update[] = {
++	&group_cstate_core_c1,
++	&group_cstate_core_c3,
++	&group_cstate_core_c6,
++	&group_cstate_core_c7,
 +	NULL,
 +};
 +
- static int msr_event_init(struct perf_event *event)
- {
- 	u64 cfg = event->attr.config;
-@@ -169,7 +194,7 @@ static int msr_event_init(struct perf_event *event)
++const struct attribute_group *pkg_attr_update[] = {
++	&group_cstate_pkg_c2,
++	&group_cstate_pkg_c3,
++	&group_cstate_pkg_c6,
++	&group_cstate_pkg_c7,
++	&group_cstate_pkg_c8,
++	&group_cstate_pkg_c9,
++	&group_cstate_pkg_c10,
++	NULL,
++};
++
+ static struct pmu cstate_core_pmu = {
+ 	.attr_groups	= core_attr_groups,
++	.attr_update	= core_attr_update,
+ 	.name		= "cstate_core",
+ 	.task_ctx_nr	= perf_invalid_context,
+ 	.event_init	= cstate_pmu_event_init,
+@@ -437,6 +482,7 @@ static struct pmu cstate_core_pmu = {
  
- 	cfg = array_index_nospec((unsigned long)cfg, PERF_MSR_EVENT_MAX);
- 
--	if (!msr[cfg].attr)
-+	if (!(msr_mask & (1 << cfg)))
- 		return -EINVAL;
- 
- 	event->hw.idx		= -1;
-@@ -252,32 +277,17 @@ static struct pmu pmu_msr = {
- 	.stop		= msr_event_stop,
- 	.read		= msr_event_update,
- 	.capabilities	= PERF_PMU_CAP_NO_INTERRUPT | PERF_PMU_CAP_NO_EXCLUDE,
-+	.attr_update	= attr_update,
+ static struct pmu cstate_pkg_pmu = {
+ 	.attr_groups	= pkg_attr_groups,
++	.attr_update	= pkg_attr_update,
+ 	.name		= "cstate_pkg",
+ 	.task_ctx_nr	= perf_invalid_context,
+ 	.event_init	= cstate_pmu_event_init,
+@@ -585,31 +631,6 @@ static const struct x86_cpu_id intel_cstates_match[] __initconst = {
  };
+ MODULE_DEVICE_TABLE(x86cpu, intel_cstates_match);
  
- static int __init msr_init(void)
+-/*
+- * Probe the cstate events and insert the available one into sysfs attrs
+- * Return false if there are no available events.
+- */
+-static bool __init cstate_probe_msr(const unsigned long evmsk, int max,
+-                                   struct perf_cstate_msr *msr,
+-                                   struct attribute **attrs)
+-{
+-	bool found = false;
+-	unsigned int bit;
+-	u64 val;
+-
+-	for (bit = 0; bit < max; bit++) {
+-		if (test_bit(bit, &evmsk) && !rdmsrl_safe(msr[bit].msr, &val)) {
+-			*attrs++ = &msr[bit].attr->attr.attr;
+-			found = true;
+-		} else {
+-			msr[bit].attr = NULL;
+-		}
+-	}
+-	*attrs = NULL;
+-
+-	return found;
+-}
+-
+ static int __init cstate_probe(const struct cstate_model *cm)
  {
--	int i, j = 0;
--
- 	if (!boot_cpu_has(X86_FEATURE_TSC)) {
- 		pr_cont("no MSR PMU driver.\n");
- 		return 0;
- 	}
+ 	/* SLM has different MSR for PKG C6 */
+@@ -621,13 +642,14 @@ static int __init cstate_probe(const struct cstate_model *cm)
+ 		pkg_msr[PERF_CSTATE_CORE_C6_RES].msr = MSR_KNL_CORE_C6_RESIDENCY;
  
--	/* Probe the MSRs. */
--	for (i = PERF_MSR_TSC + 1; i < PERF_MSR_EVENT_MAX; i++) {
--		u64 val;
--
--		/* Virt sucks; you cannot tell if a R/O MSR is present :/ */
--		if (!msr[i].test(i) || rdmsrl_safe(msr[i].msr, &val))
--			msr[i].attr = NULL;
--	}
--
--	/* List remaining MSRs in the sysfs attrs. */
--	for (i = 0; i < PERF_MSR_EVENT_MAX; i++) {
--		if (msr[i].attr)
--			events_attrs[j++] = &msr[i].attr->attr.attr;
--	}
--	events_attrs[j] = NULL;
-+	msr_mask = perf_msr_probe(msr, PERF_MSR_EVENT_MAX, true, NULL);
  
- 	perf_pmu_register(&pmu_msr, "msr", -1);
+-	has_cstate_core = cstate_probe_msr(cm->core_events,
+-					   PERF_CSTATE_CORE_EVENT_MAX,
+-					   core_msr, core_events_attrs);
++	core_msr_mask = perf_msr_probe(core_msr, PERF_CSTATE_CORE_EVENT_MAX,
++				       true, (void *) &cm->core_events);
++
++	pkg_msr_mask = perf_msr_probe(pkg_msr, PERF_CSTATE_PKG_EVENT_MAX,
++				      true, (void *) &cm->pkg_events);
  
+-	has_cstate_pkg = cstate_probe_msr(cm->pkg_events,
+-					  PERF_CSTATE_PKG_EVENT_MAX,
+-					  pkg_msr, pkg_events_attrs);
++	has_cstate_core = !!core_msr_mask;
++	has_cstate_pkg  = !!pkg_msr_mask;
+ 
+ 	return (has_cstate_core || has_cstate_pkg) ? 0 : -ENODEV;
+ }
 -- 
 2.21.0
 
