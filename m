@@ -4,46 +4,38 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8491C31E54
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF65C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:50:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAF432063F
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EC382063F
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:50:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726883AbfFPPtW (ORCPT
+        id S1727345AbfFPPuI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 11:49:22 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50354 "EHLO
+        Sun, 16 Jun 2019 11:50:08 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50375 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfFPPtW (ORCPT
+        with ESMTP id S1725895AbfFPPuH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 11:49:22 -0400
+        Sun, 16 Jun 2019 11:50:07 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 6191F801F6; Sun, 16 Jun 2019 17:49:09 +0200 (CEST)
-Date:   Sun, 16 Jun 2019 17:48:48 +0200
+        id 0A0AC801F6; Sun, 16 Jun 2019 17:49:54 +0200 (CEST)
+Date:   Sun, 16 Jun 2019 17:49:34 +0200
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
-Message-ID: <20190616154848.GA24837@xo-6d-61-c0.localdomain>
-References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
- <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
- <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
- <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
- <20190604134213.GA26263@kroah.com>
- <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+To:     Alexander Dahl <ada@thorsis.com>
+Cc:     linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>,
+        jacek.anaszewski@gmail.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 0/9] Multicolor Framework update
+Message-ID: <20190616154934.GC24837@xo-6d-61-c0.localdomain>
+References: <20190523190820.29375-1-dmurphy@ti.com>
+ <55737098.K72IVJ5cDM@ada>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+In-Reply-To: <55737098.K72IVJ5cDM@ada>
 User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -52,60 +44,25 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Hi!
 
-> > > In fact, I detected this issue by the following patch:
-> > > https://patchwork.kernel.org/patch/10974669/
-> > >
-> > > When I worked on it, I wondered which
-> > > c-dialect flags should be used.
-> > >
-> > > This code:
-> > >
-> > > > # Unlike the kernel space, uapi headers are written in more strict C.
-> > > > #  - Forbid C++ style comments
-> > > > #  - Use '__inline', '__asm__' instead of 'inline', 'asm'
-> > > > #
-> > > > # -std=c90 (equivalent to -ansi) catches the violation of those.
-> > > > # We cannot go as far as adding -Wpedantic since it emits too many warnings.
-> > > > #
-> > > > # REVISIT: re-consider the proper set of compiler flags for uapi compile-test.
-> > > >
-> > > > UAPI_CFLAGS := -std=c90 -Wpedantic -Wall -Werror=implicit-function-declaration
-> > >
-> > > Even "-std=c99 -Wpedantic" emits lots of warnings.
-> > >
-> > >
-> > >
-> > > I noticed one more thing.
-> > >
-> > > There are two ways to define fixed-width type.
-> > >
-> > > [1] #include <linux/types.h>, __u8, __u16, __u32, __u64
-> > >
-> > >       vs
-> > >
-> > > [2] #include <stdint.h>, uint8_t, uint16_t, uint32_t, uint64_t
-> > >
-> > >
-> > > Both are used in UAPI headers.
-> > > IIRC, <stdint.h> was standardized by C99.
-> > >
-> > > So, we have already relied on C99 in user-space too.
-> >
-> > Just because we have relied on it in the past, does not mean we need to
-> > keep relying on it.  I have had numerous complaints over the years from
-> > libc authors that our uapi headers are _NOT_ able to be directly
-> > consumed by them.  They all end up having to fix things up and include
-> > local "sanitized" copies.
-> >
-> > So any work we can do here to make them more sane and work properly
-> > everywhere is a good thing, as right now, they are broken.
+> Am Donnerstag, 23. Mai 2019, 14:08:11 CEST schrieb Dan Murphy:
+> >   leds: multicolor: Add sysfs interface definition
+> >   dt: bindings: Add multicolor class dt bindings documention
+> >   documention: leds: Add multicolor class documentation
+> >   dt-bindings: leds: Add multicolor ID to the color ID  list
+> >   leds: Add multicolor ID to the color ID list
+> >   leds: multicolor: Introduce a multicolor class definition
+> >   dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+> >   leds: lp50xx: Add the LP50XX family of the RGB LED driver
+> >   leds: Update the lp55xx to use the multi color framework
 > 
-> Maybe, we should document UAPI header coding guideline.
+> While not having much experience with the implementation of the LED subsystem, 
+> I've had a short look at those. Curious question: would it be possible to take 
+> three gpio-leds and group those together to one multicolor-led? I know at 
+> least one board, where things are wired up like this, see e.g. 
+> at91-sama5d27_som1_ek.dts
 
-> Without To-Don't list,
-> people will do anything.
-
-Even better would be a (compile-time) test that checks for problems in the headers...
+Probably could be done, but is not really a good match. Multicolor was meant for
+LEDs with many brightness levels.
 
 									Pavel
 -- 
