@@ -2,145 +2,76 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75242C31E54
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC511C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:29:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D66C2133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:17:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhZZN4Zo"
+	by mail.kernel.org (Postfix) with ESMTP id 9BF25216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:29:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726068AbfFPJRa (ORCPT
+        id S1726231AbfFPJ3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 05:17:30 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39125 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfFPJRa (ORCPT
+        Sun, 16 Jun 2019 05:29:48 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:50477 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfFPJ3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 05:17:30 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 196so4082724pgc.6;
-        Sun, 16 Jun 2019 02:17:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=WsOS9W6MkxWVUF6PRCv1rpiLrmIxWx7oq/nfwUHXQV4=;
-        b=bhZZN4ZoB10Na0Ic8RGp22L9+faJUjyGlbtTqC3QZGcBGJuewiHIW8tipif4QS7JJa
-         1nrwmgqclU0DIUK1lkjTTcUGhz54dyjqnkBu47eV2Gqxs1j6CHp1U+YLu4EAfw/CAjF1
-         N4Mx0ailxADXlnEYbdKSlfJzz1zls4lLkPIdBQJTSClQ4r1iGVc+xfs0MQuBRfpvwO9k
-         gu8vFQfMyie1SGDmstzys5iH9BtPM5Bh+9RYlpG24Inaj/skYMoNRLkXj6mCNXw8w51x
-         eAcug1S/tqUfOOwe3BZd+VoHBqNwLp+FIOwyB1hK2SzoGYVonIeSrUcHAXxJsyxiRCAl
-         RVrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WsOS9W6MkxWVUF6PRCv1rpiLrmIxWx7oq/nfwUHXQV4=;
-        b=r0wHhR7IUf16BBFIQId+KVyXk2s0SlofaFLGzUAxTsHBuZkPywBmcq8vHZrp2nPJJA
-         ASwm2KdcMCmUzqEVGgjst1Ifhefl8y9tKnQy68v8EmdY1R/Wdp0hQ7/yZsLO7tfae9Rx
-         54Od+K3ogTdn3F/odA8dTkF08MF55HD2hf2YIl7RDsxlGQjvsInXdsQ23StfjPK6RUJn
-         Vez39PYd9F7vR32W6JCSL2okrNZjtufm4FUhyCW2GgkXi2tiE6QFMyUc63ko/1LJfwmS
-         bD8E4hke9KIONPmDngMUQgaT0L7Pf/PcXpfY3h1QphUI4kuCUxeyrUVPWShYF/UQRfDI
-         NlSw==
-X-Gm-Message-State: APjAAAWxBOfoV4gFWnw5U6xmzfGOiPQFPQT/MjlPurW6fJZdS/DDN1y8
-        Gw/3KqglaNHCRBz+s3Tm52o3h/dkdiE=
-X-Google-Smtp-Source: APXvYqzC4p9c3ZsPQStMlz2hbBAY7Gw8pOpqyBR6LQ5uQv6ZdwfBVqV2rU83/Y0doH7WTm6gXf728g==
-X-Received: by 2002:a65:56c5:: with SMTP id w5mr43407043pgs.434.1560676649025;
-        Sun, 16 Jun 2019 02:17:29 -0700 (PDT)
-Received: from localhost (g30.211-19-85.ppp.wakwak.ne.jp. [211.19.85.30])
-        by smtp.gmail.com with ESMTPSA id q144sm10986713pfc.103.2019.06.16.02.17.27
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 02:17:28 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 18:17:24 +0900
-From:   Stafford Horne <shorne@gmail.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Helge Deller <deller@gmx.de>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        openrisc@lists.librecores.org, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/7] openrisc: remove the partial DMA_ATTR_NON_CONSISTENT
- support
-Message-ID: <20190616091724.GL2358@lianli.shorne-pla.net>
-References: <20190614144431.21760-1-hch@lst.de>
- <20190614144431.21760-4-hch@lst.de>
+        Sun, 16 Jun 2019 05:29:48 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45RTZd6XrWz1rC0W;
+        Sun, 16 Jun 2019 11:29:45 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45RTZd5s8Xz1qql1;
+        Sun, 16 Jun 2019 11:29:45 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id rh68AyRmP1Up; Sun, 16 Jun 2019 11:29:44 +0200 (CEST)
+X-Auth-Info: IBCJM83XJsrft7Zlp9/Ug88uxERziVkYs9510EWiwoxiATjiJNyy9asU0EOD/nLe
+Received: from igel.home (ppp-46-244-189-62.dynamic.mnet-online.de [46.244.189.62])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Sun, 16 Jun 2019 11:29:44 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id 5B6D32C117A; Sun, 16 Jun 2019 11:29:42 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     christophe leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v5 13/16] powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX
+References: <cover.1550775950.git.christophe.leroy@c-s.fr>
+        <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
+        <87blyz9jor.fsf@igel.home>
+        <a76f7759-a407-3d9a-0f43-654fd7ea0b1e@c-s.fr>
+X-Yow:  Hand me a pair of leather pants and a CASIO keyboard
+ -- I'm living for today!
+Date:   Sun, 16 Jun 2019 11:29:42 +0200
+In-Reply-To: <a76f7759-a407-3d9a-0f43-654fd7ea0b1e@c-s.fr> (christophe leroy's
+        message of "Sun, 16 Jun 2019 10:20:29 +0200")
+Message-ID: <87h88paneh.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614144431.21760-4-hch@lst.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:44:27PM +0200, Christoph Hellwig wrote:
-> The openrisc DMA code supports DMA_ATTR_NON_CONSISTENT allocations, but
-> does not provide a cache_sync operation.  This means any user of it
-> will never be able to actually transfer cache ownership and thus cause
-> coherency bugs.
+On Jun 16 2019, christophe leroy <christophe.leroy@c-s.fr> wrote:
 
-The below looks good.  I am always happy to what looks like legacy copy & paste
-cruft.
+> If any of registers IBATs 4 to 7 are used
 
-Acked-by: Stafford Horne <shorne@gmail.com>
+Nope.
 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/openrisc/kernel/dma.c | 22 +++++++++-------------
->  1 file changed, 9 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
-> index f79457cb3741..9f25fd0fbb5d 100644
-> --- a/arch/openrisc/kernel/dma.c
-> +++ b/arch/openrisc/kernel/dma.c
-> @@ -98,15 +98,13 @@ arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
->  
->  	va = (unsigned long)page;
->  
-> -	if ((attrs & DMA_ATTR_NON_CONSISTENT) == 0) {
-> -		/*
-> -		 * We need to iterate through the pages, clearing the dcache for
-> -		 * them and setting the cache-inhibit bit.
-> -		 */
-> -		if (walk_page_range(va, va + size, &walk)) {
-> -			free_pages_exact(page, size);
-> -			return NULL;
-> -		}
-> +	/*
-> +	 * We need to iterate through the pages, clearing the dcache for
-> +	 * them and setting the cache-inhibit bit.
-> +	 */
-> +	if (walk_page_range(va, va + size, &walk)) {
-> +		free_pages_exact(page, size);
-> +		return NULL;
->  	}
->  
->  	return (void *)va;
-> @@ -122,10 +120,8 @@ arch_dma_free(struct device *dev, size_t size, void *vaddr,
->  		.mm = &init_mm
->  	};
->  
-> -	if ((attrs & DMA_ATTR_NON_CONSISTENT) == 0) {
-> -		/* walk_page_range shouldn't be able to fail here */
-> -		WARN_ON(walk_page_range(va, va + size, &walk));
-> -	}
-> +	/* walk_page_range shouldn't be able to fail here */
-> +	WARN_ON(walk_page_range(va, va + size, &walk));
->  
->  	free_pages_exact(vaddr, size);
->  }
-> -- 
-> 2.20.1
-> 
+Andreas.
+
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
