@@ -2,121 +2,165 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64B33C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:45:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9966C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42F1C20870
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:45:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAF8D20866
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:55:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="g6XNvxCT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="giYKqR3u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727365AbfFPSpZ (ORCPT
+        id S1727434AbfFPSzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 14:45:25 -0400
-Received: from perceval.ideasonboard.com ([213.167.242.64]:39660 "EHLO
-        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfFPSpZ (ORCPT
+        Sun, 16 Jun 2019 14:55:52 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34687 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726054AbfFPSzv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 14:45:25 -0400
-Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
-        by perceval.ideasonboard.com (Postfix) with ESMTPSA id EB70E2AF;
-        Sun, 16 Jun 2019 20:45:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-        s=mail; t=1560710723;
-        bh=G0qCj97fG0BR0gNEdi8zFsKNtXZPj8HXGHe46Rzd7cI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=g6XNvxCTrp4R6fMuxDdDtuke9og7La3Fcb0H7aoVrhjc2Z+N4JsAI8dOw9TbAhpmh
-         i+/1IhW7zKfND+/zdgrhZYiW7DOBQBntk/7rTZwMpXrGD7Gaxx1o7qFTxGkMRujIoK
-         3HnCAzImTMv15RI8KPi6dSL43Hf8eq7tKss9nGNs=
-Date:   Sun, 16 Jun 2019 21:45:06 +0300
-From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Helen Koike <helen.koike@collabora.com>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
-Message-ID: <20190616184506.GD5006@pendragon.ideasonboard.com>
-References: <cover.1558667245.git.skhan@linuxfoundation.org>
- <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
- <2862ebca-c58f-c265-cc74-8d0f9b943275@collabora.com>
- <1c794ca1-5490-26a4-dc39-f86e05fadc46@linuxfoundation.org>
+        Sun, 16 Jun 2019 14:55:51 -0400
+Received: by mail-pl1-f194.google.com with SMTP id i2so3154897plt.1
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 11:55:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nByq7PxBYO/HndonaLBb5oHmEIAYGRGMS68VxuzBGRk=;
+        b=giYKqR3uuQzsw5eaDqiRp2acTNqFnPZNGfkvdyqIK6e9DdG1wdGpT2902CyfnnL0+V
+         gQV/aJZxaJ766T6k8+tdS9q6HW3KDh1ON4bIkNDME3gU/wcQzaLxtbC5DMFeOI1oZA7/
+         Vi0T1Efpctouh5bCEQWcjjTvLDLMvGyKAezVaGE0pIjmDJJSB0vQjP13WPB3uxVAWzXH
+         grHH4ruo8iX4GTXQYV3nWBhGHy6qSq59TnG7lWUepXuSUDu3hKnm1vR0eqdKeHDvECRh
+         Fqgyr2FnnzfW15sdK1rzgQS07lJkkV4w1FTg2PGUDgsQC3e1j+2LJ8eKpFLS9INoLzW+
+         0c5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nByq7PxBYO/HndonaLBb5oHmEIAYGRGMS68VxuzBGRk=;
+        b=iWbSpdWLWB/qfcnp8WLBBQkkaVWtBS3P62nAu3pkZBIKFxpMb7c03tzvgeS60lT0+p
+         UXQJQVQN3vcZNjQGyN9zlj7SpzE5OEZRgXFOy8m4xGdhnEBNCqDsOuLZEFlbVZG0JwO4
+         L09PXenOu1B2RpYh3MZ6/u/LhkvnecQhsT+92AFSxb+5/hOLj+P7QbHGUi0WXqZn4FuB
+         zjWHuiSPnrACxkSQiUc5WyXKrXjcW4SgTMRrslmEyh/i2Mqq/wNtv3J1HX63eIH7wJNC
+         LDat8lAUZ2Tagf511Hh4ORsaY5wAhiEGatDEQi0Lk8ZXIM1Bh30BSZcoAnXq3EEBYhJK
+         DeqA==
+X-Gm-Message-State: APjAAAVql2RS0UZKQzC+wVNvKKEwmf+MQUJBJQd51hvgbkHqIkaYPFZq
+        Rax3jAQacePrO+aXQGxBeDBLOw==
+X-Google-Smtp-Source: APXvYqzUHZZlZnoW14+Duy31K1F+WZSjH7lpsaz63YuG6cjBQRIqHcMWMDFgTS9Bd5mK9+hjxuMVbg==
+X-Received: by 2002:a17:902:24c:: with SMTP id 70mr103472422plc.2.1560711350661;
+        Sun, 16 Jun 2019 11:55:50 -0700 (PDT)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id m41sm12325765pje.18.2019.06.16.11.55.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 16 Jun 2019 11:55:49 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 11:56:37 -0700
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Sebastian Reichel <sre@kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Amit Pundir <amit.pundir@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v3 2/3] reset: qcom-pon: Add support for gen2 pon
+Message-ID: <20190616185637.GE31088@tuxbook-pro>
+References: <20190614231451.45998-1-john.stultz@linaro.org>
+ <20190614231451.45998-2-john.stultz@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1c794ca1-5490-26a4-dc39-f86e05fadc46@linuxfoundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190614231451.45998-2-john.stultz@linaro.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Shuah,
+On Fri 14 Jun 16:14 PDT 2019, John Stultz wrote:
 
-On Fri, Jun 14, 2019 at 05:26:46PM -0600, Shuah Khan wrote:
-> On 6/13/19 7:24 AM, Helen Koike wrote:
-> > On 6/13/19 2:44 AM, Hans Verkuil wrote:
-> >> On 5/24/19 5:31 AM, Shuah Khan wrote:
-> >>> media_device is embedded in struct vimc_device and when vimc is removed
-> >>> vimc_device and the embedded media_device goes with it, while the active
-> >>> stream and vimc_capture continue to access it.
-> >>>
-> >>> Fix the media_device lifetime problem by changing vimc to create shared
-> >>> media_device using Media Device Allocator API and vimc_capture getting
-> >>> a reference to vimc module. With this change, vimc module can be removed
-> >>> only when the references are gone. vimc can be removed after vimc_capture
-> >>> is removed.
-> >>>
-> >>> Media Device Allocator API supports just USB devices. Enhance it
-> >>> adding a genetic device allocate interface to support other media
-> >>> drivers.
-> >>>
-> >>> The new interface takes pointer to struct device instead and creates
-> >>> media device. This interface allows a group of drivers that have a
-> >>> common root device to share media device resource and ensure media
-> >>> device doesn't get deleted as long as one of the drivers holds its
-> >>> reference.
-> >>>
-> >>> The new interface has been tested with vimc component driver to fix
-> >>> panics when vimc module is removed while streaming is in progress.
-> >>
-> >> Helen, can you review this series? I'm not sure this is the right approach
-> >> for a driver like vimc, and even if it is, then it is odd that vimc-capture
-> >> is the only vimc module that's handled here.
-> > 
-> > Hi Hans,
-> > 
-> > Yes, I can take a look. Sorry, I've been a bit busy these days but I'll
-> > try to take a look at this patch series (and the others) asap.
-> > 
-> > Helen
-> > 
-> >> My gut feeling is that this should be handled inside vimc directly and not
-> >> using the media-dev-allocator.
+> Add support for gen2 pon register so "reboot bootloader" can
+> work on pixel3 and db845.
 > 
-> Hi Hans and Helen,
+> Cc: Andy Gross <agross@kernel.org>
+> Cc: David Brown <david.brown@linaro.org>
+> Cc: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Cc: Amit Pundir <amit.pundir@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Sebastian Reichel <sre@kernel.org>
+> Cc: linux-arm-msm@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 > 
-> I explored fixing the problem within vimc before I went down the path to
-> use Media Device Allocator API. I do think that it is cleaner to go this
-> way and easier to maintain.
-> 
-> vimc is a group pf component drivers that rely on the media device vimc
-> in vimc and falls into the use-case Media Device Allocator API is added
-> to address. The release and life-time management happens without vimc
-> component drivers being changed other than using the API to get and put
-> media device reference.
 
-Our replies crossed each other, please see my reply to Hans. I would
-just like to comment here that if having multiple kernel modules causes
-issue, they can all be merged together. There's no need for vimc to be
-handled through multiple modules (I actually think it's quite
-counterproductive, it only makes it more complex, for no added value).
+Sebastian, please take the first two patches through your tree and we'll
+pick the dts patch through arm-soc.
 
--- 
 Regards,
+Bjorn
 
-Laurent Pinchart
+> v2:
+> * Split out dts changes into separate path
+> * Minor cleanups and remove unused variables
+> ---
+>  drivers/power/reset/qcom-pon.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/power/reset/qcom-pon.c b/drivers/power/reset/qcom-pon.c
+> index 3fa1642d4c543..22a743a0bf28c 100644
+> --- a/drivers/power/reset/qcom-pon.c
+> +++ b/drivers/power/reset/qcom-pon.c
+> @@ -14,11 +14,15 @@
+>  
+>  #define PON_SOFT_RB_SPARE		0x8f
+>  
+> +#define GEN1_REASON_SHIFT		2
+> +#define GEN2_REASON_SHIFT		1
+> +
+>  struct pm8916_pon {
+>  	struct device *dev;
+>  	struct regmap *regmap;
+>  	u32 baseaddr;
+>  	struct reboot_mode_driver reboot_mode;
+> +	long reason_shift;
+>  };
+>  
+>  static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
+> @@ -30,7 +34,7 @@ static int pm8916_reboot_mode_write(struct reboot_mode_driver *reboot,
+>  
+>  	ret = regmap_update_bits(pon->regmap,
+>  				 pon->baseaddr + PON_SOFT_RB_SPARE,
+> -				 0xfc, magic << 2);
+> +				 0xfc, magic << pon->reason_shift);
+>  	if (ret < 0)
+>  		dev_err(pon->dev, "update reboot mode bits failed\n");
+>  
+> @@ -60,6 +64,7 @@ static int pm8916_pon_probe(struct platform_device *pdev)
+>  		return error;
+>  
+>  	pon->reboot_mode.dev = &pdev->dev;
+> +	pon->reason_shift = (long)of_device_get_match_data(&pdev->dev);
+>  	pon->reboot_mode.write = pm8916_reboot_mode_write;
+>  	error = devm_reboot_mode_register(&pdev->dev, &pon->reboot_mode);
+>  	if (error) {
+> @@ -73,8 +78,9 @@ static int pm8916_pon_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id pm8916_pon_id_table[] = {
+> -	{ .compatible = "qcom,pm8916-pon" },
+> -	{ .compatible = "qcom,pms405-pon" },
+> +	{ .compatible = "qcom,pm8916-pon", .data = (void *)GEN1_REASON_SHIFT },
+> +	{ .compatible = "qcom,pms405-pon", .data = (void *)GEN1_REASON_SHIFT },
+> +	{ .compatible = "qcom,pm8998-pon", .data = (void *)GEN2_REASON_SHIFT },
+>  	{ }
+>  };
+>  MODULE_DEVICE_TABLE(of, pm8916_pon_id_table);
+> -- 
+> 2.17.1
+> 
