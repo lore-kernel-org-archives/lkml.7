@@ -2,255 +2,207 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB73C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 12:48:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC1EC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 731F220870
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 12:48:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6199F20866
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:09:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="oPWAnWFI"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nlyClEWa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfFPMsO (ORCPT
+        id S1727082AbfFPNFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 08:48:14 -0400
-Received: from vps.xff.cz ([195.181.215.36]:38520 "EHLO vps.xff.cz"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725865AbfFPMsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 08:48:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1560689291; bh=qBJ9B0Xckt+HWWzbJLcLsikCH1xzty0YELtzbx90mkg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oPWAnWFIpuRP6ETv3DDOQhM2QI5kMHea+JQ32AOu9youL4NSvqwmFmwzXYjtOhgdA
-         9FWoqGNXIs5wK/hiNjCxjUjOv+QJdWBWe6127EOIZR5gMeJOLnvT3x21C0m0lSYmRi
-         irBZ/5vrY7a8yh1CJv8ZAHM8V3ZnQc1CETSSkceI=
-Date:   Sun, 16 Jun 2019 14:48:10 +0200
-From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
-Cc:     linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [linux-sunxi] [PATCH v6 5/6] drm: sun4i: Add support for
- enabling DDC I2C bus to sun8i_dw_hdmi glue
-Message-ID: <20190616124810.qvlij6zkcl3leu3d@core.my.home>
-Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
-        linux-sunxi@googlegroups.com,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-References: <20190527162237.18495-1-megous@megous.com>
- <20190527162237.18495-6-megous@megous.com>
- <1823986.m04BvQ5ALy@jernej-laptop>
+        Sun, 16 Jun 2019 09:05:46 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:45548 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfFPNFp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 09:05:45 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5GD5MQL125473;
+        Sun, 16 Jun 2019 08:05:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560690322;
+        bh=2RA2xXNZVNHXhzN4iyBAxmX1EFLrT8461Okcvci1n6I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=nlyClEWa59PXLXs71NW8irUU1AdDG4XUgKl0Ya96XG9WpKeZjTFVwM4MQDLxq6kZz
+         iQEDY67QI+kGjavrwrRr96LGhfCQ/agW9ap/KtWNi7NqDNoqnaGTREqiQae9KSAd/s
+         mi+hg+5roShtG8LYYd8N5JrX6PLD/ctMa8+mOwII=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5GD5MRq047563
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Sun, 16 Jun 2019 08:05:22 -0500
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 16
+ Jun 2019 08:05:21 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Sun, 16 Jun 2019 08:05:21 -0500
+Received: from [10.250.133.146] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5GD5HHD072003;
+        Sun, 16 Jun 2019 08:05:18 -0500
+Subject: Re: [PATCH v5 2/3] mtd: spi-nor: add support to unlock flash device
+To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>,
+        <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
+        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
+        <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+        <linux-riscv@lists.infradead.org>
+CC:     <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
+        <paul.walmsley@sifive.com>, <wesley@sifive.com>
+References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
+ <1560336476-31763-3-git-send-email-sagar.kadam@sifive.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <70732c8e-111f-7c46-9e93-11894d944a1d@ti.com>
+Date:   Sun, 16 Jun 2019 18:35:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1823986.m04BvQ5ALy@jernej-laptop>
+In-Reply-To: <1560336476-31763-3-git-send-email-sagar.kadam@sifive.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jernej,
 
-On Sun, Jun 16, 2019 at 01:05:13PM +0200, Jernej Škrabec wrote:
-> Hi Ondrej!
+
+On 12-Jun-19 4:17 PM, Sagar Shrikant Kadam wrote:
+> Nor device (is25wp256 mounted on HiFive unleashed Rev A00 board) from ISSI
+> have memory blocks guarded by block protection bits BP[0,1,2,3].
 > 
-> Dne ponedeljek, 27. maj 2019 ob 18:22:36 CEST je megous via linux-sunxi 
-> napisal(a):
-> > From: Ondrej Jirman <megous@megous.com>
-> > 
-> > Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
-> > for the DDC bus to be usable.
-> > 
-> > Add support for hdmi-connector node's optional ddc-en-gpios property to
-> > support this use case.
-> > 
-> > Signed-off-by: Ondrej Jirman <megous@megous.com>
-> > ---
-> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
-> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
-> >  2 files changed, 55 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index 39d8509d96a0..59b81ba02d96
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-> > @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct
-> > drm_device *drm, return crtcs;
-> >  }
-> > 
-> > +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-> > +					     struct 
-> platform_device **pdev_out)
-> > +{
-> > +	struct platform_device *pdev;
-> > +	struct device_node *remote;
-> > +
-> > +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-> > +	if (!remote)
-> > +		return -ENODEV;
-> > +
-> > +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-> > +		of_node_put(remote);
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	pdev = of_find_device_by_node(remote);
-> > +	of_node_put(remote);
-> > +	if (!pdev)
-> > +		return -ENODEV;
-> > +
-> > +	*pdev_out = pdev;
-> > +	return 0;
-> > +}
-> > +
-> >  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
-> >  			      void *data)
-> >  {
-> > @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
-> > struct device *master, return PTR_ERR(hdmi->regulator);
-> >  	}
-> > 
-> > +	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
-> > +	if (!ret) {
-> > +		hdmi->ddc_en = gpiod_get_optional(&hdmi->connector_pdev-
-> >dev,
-> > +						  "ddc-en", 
-> GPIOD_OUT_HIGH);
-> > +		if (IS_ERR(hdmi->ddc_en)) {
-> > +			platform_device_put(hdmi->connector_pdev);
-> > +			dev_err(dev, "Couldn't get ddc-en gpio\n");
-> > +			return PTR_ERR(hdmi->ddc_en);
-> > +		}
-> > +	}
-> > +
-> >  	ret = regulator_enable(hdmi->regulator);
-> >  	if (ret) {
-> >  		dev_err(dev, "Failed to enable regulator\n");
-> > -		return ret;
-> > +		goto err_unref_ddc_en;
-> >  	}
-> > 
-> > +	gpiod_set_value(hdmi->ddc_en, 1);
+> Clearing block protection bits,unlocks the flash memory regions
+> The unlock scheme is registered during nor scans.
 > 
-> Why don't you do that inside if clause where hdmi->ddc_en is assigned? It's 
-> not useful otherwise anyway.
+> Based on code developed by Wesley Terpstra <wesley@sifive.com>
+> and/or Palmer Dabbelt <palmer@sifive.com>.
+> https://github.com/riscv/riscv-linux/commit/c94e267766d62bc9a669611c3d0c8ed5ea26569b
 > 
-> Besides, you would then only need to adjust one goto label in error path.
-
-The idea is to enable DDC after enabling the regulator. I don't think it matters
-for the particular HW that's on Orange Pi 3, and similar Xunlong boards, but
-this is a fairly generic binding and it makes more sense to power the bus, and
-then enable whatever aditional circuitry might be there for the IO.
-
-I can move sun8i_dw_hdmi_find_connector_pdev lower, but I would then need to
-disable the regulator in the error path, and I like to keep this order:
-
-- parsing DT
-- enabling actual HW stuff
-
-Because parsing is likely to fail with DEFERED_PROBE, because GPIO or whatever
-else is not yet ready, and this approach avoids enabling/disabling the HW
-needlessly.
-
-> > +
-> >  	ret = reset_control_deassert(hdmi->rst_ctrl);
-> >  	if (ret) {
-> >  		dev_err(dev, "Could not deassert ctrl reset 
-> control\n");
-> > -		goto err_disable_regulator;
-> > +		goto err_disable_ddc_en;
-> >  	}
-> > 
-> >  	ret = clk_prepare_enable(hdmi->clk_tmds);
-> > @@ -213,8 +250,14 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
-> > struct device *master, clk_disable_unprepare(hdmi->clk_tmds);
-> >  err_assert_ctrl_reset:
-> >  	reset_control_assert(hdmi->rst_ctrl);
-> > -err_disable_regulator:
-> > +err_disable_ddc_en:
-> > +	gpiod_set_value(hdmi->ddc_en, 0);
-> >  	regulator_disable(hdmi->regulator);
-> > +err_unref_ddc_en:
-> > +	if (hdmi->ddc_en)
-> > +		gpiod_put(hdmi->ddc_en);
-> > +
-> > +	platform_device_put(hdmi->connector_pdev);
-> > 
-> >  	return ret;
-> >  }
-> > @@ -228,7 +271,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev,
-> > struct device *master, sun8i_hdmi_phy_remove(hdmi);
-> >  	clk_disable_unprepare(hdmi->clk_tmds);
-> >  	reset_control_assert(hdmi->rst_ctrl);
-> > +	gpiod_set_value(hdmi->ddc_en, 0);
-> >  	regulator_disable(hdmi->regulator);
-> > +
-> > +	if (hdmi->ddc_en)
-> > +		gpiod_put(hdmi->ddc_en);
-> > +
-> > +	platform_device_put(hdmi->connector_pdev);
-> >  }
-> > 
-> >  static const struct component_ops sun8i_dw_hdmi_ops = {
-> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 720c5aa8adc1..dad66b8301c2
-> > 100644
-> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-> > @@ -9,6 +9,7 @@
-> >  #include <drm/bridge/dw_hdmi.h>
-> >  #include <drm/drm_encoder.h>
-> >  #include <linux/clk.h>
-> > +#include <linux/gpio/consumer.h>
-> >  #include <linux/regmap.h>
-> >  #include <linux/regulator/consumer.h>
-> >  #include <linux/reset.h>
-> > @@ -190,6 +191,8 @@ struct sun8i_dw_hdmi {
-> >  	struct regulator		*regulator;
-> >  	const struct sun8i_dw_hdmi_quirks *quirks;
-> >  	struct reset_control		*rst_ctrl;
-> > +	struct platform_device		*connector_pdev;
+> Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
+> ---
+>  drivers/mtd/spi-nor/spi-nor.c | 51 ++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/mtd/spi-nor.h   |  1 +
+>  2 files changed, 51 insertions(+), 1 deletion(-)
 > 
-> It seems that connector_pdev is needed only during intialization. Why do you 
-> store it?
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 2d5a925..b7c6261 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -1461,6 +1461,49 @@ static int macronix_quad_enable(struct spi_nor *nor)
+>  }
+>  
+>  /**
+> + * issi_unlock() - clear BP[0123] write-protection.
+> + * @nor: pointer to a 'struct spi_nor'.
+> + * @ofs: offset from which to unlock memory.
+> + * @len: number of bytes to unlock.
+> + *
+> + * Bits [2345] of the Status Register are BP[0123].
+> + * ISSI chips use a different block protection scheme than other chips.
+> + * Just disable the write-protect unilaterally.
+> + *
+> + * Return: 0 on success, -errno otherwise.
+> + */
+> +static int issi_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+> +{
+> +	int ret, val;
+> +	u8 mask = SR_BP0 | SR_BP1 | SR_BP2 | SR_BP3;
+> +
+> +	val = read_sr(nor);
+> +	if (val < 0)
+> +		return val;
+> +	if (!(val & mask))
+> +		return 0;
+> +
+> +	write_enable(nor);
+> +
+> +	write_sr(nor, val & ~mask);
+> +
+> +	ret = spi_nor_wait_till_ready(nor);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = read_sr(nor);
+> +	if (ret > 0 && !(ret & mask)) {
+> +		dev_info(nor->dev,
+> +			"ISSI Block Protection Bits cleared SR=0x%x", ret);
+> +		ret = 0;
+> +	} else {
+> +		dev_err(nor->dev, "ISSI Block Protection Bits not cleared\n");
+> +		ret = -EINVAL;
+> +	}
+> +	return ret;
+> +}
+> +
+> +/**
+>   * spansion_quad_enable() - set QE bit in Configuraiton Register.
+>   * @nor:	pointer to a 'struct spi_nor'
+>   *
+> @@ -1836,7 +1879,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
+>  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
+>  	{ "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 1024,
+>  			SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
+> -			SPI_NOR_4B_OPCODES)
+> +			SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK)
+>  	},
+>  
+>  	/* Macronix */
+> @@ -4080,6 +4123,12 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+>  		nor->flash_is_locked = stm_is_locked;
+>  	}
+>  
+> +	/* NOR protection support for ISSI chips */
+> +	if (JEDEC_MFR(info) == SNOR_MFR_ISSI ||
+> +	    info->flags & SPI_NOR_HAS_LOCK) {
 
-For some reason I thought that I need to keep it to keep the GPIO available,
-but that's not true. I'll drop it.
+This should be:
 
-thank you,
-	Ondrej
+	if (JEDEC_MFR(info) == SNOR_MFR_ISSI &&
+	    info->flags & SPI_NOR_HAS_LOCK) {
 
-> Best regards,
-> Jernej
+Otherwise you would end up overriding nor->flash_unlock function for
+other vendors too, right?
+
+> +		nor->flash_unlock = issi_unlock;
+> +
+
+No need for blank line here.
+Please run ./scripts/checkpatch.pl --strict on all patches and address
+all the issues reported by it.
+
+
+
+> +	}
+>  	if (nor->flash_lock && nor->flash_unlock && nor->flash_is_locked) {
+>  		mtd->_lock = spi_nor_lock;
+>  		mtd->_unlock = spi_nor_unlock;
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index ff13297..9a7d719 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -127,6 +127,7 @@
+>  #define SR_BP0			BIT(2)	/* Block protect 0 */
+>  #define SR_BP1			BIT(3)	/* Block protect 1 */
+>  #define SR_BP2			BIT(4)	/* Block protect 2 */
+> +#define SR_BP3			BIT(5)	/* Block protect 3 for ISSI device*/
+
+No need to mention ISSI here. I am sure there are devices from other
+vendors with BP3
+
+>  #define SR_TB			BIT(5)	/* Top/Bottom protect */
+>  #define SR_SRWD			BIT(7)	/* SR write protect */
+>  /* Spansion/Cypress specific status bits */
 > 
-> > +	struct gpio_desc		*ddc_en;
-> >  };
-> > 
-> >  static inline struct sun8i_dw_hdmi *
+
+Regards
+Vignesh
