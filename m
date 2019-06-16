@@ -2,106 +2,108 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C70C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8284FC31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:43:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5FA420870
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:42:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B96520870
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 18:43:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="ntGvB1sP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727391AbfFPSml (ORCPT
+        id S1727405AbfFPSnk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 14:42:41 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41993 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfFPSmk (ORCPT
+        Sun, 16 Jun 2019 14:43:40 -0400
+Received: from perceval.ideasonboard.com ([213.167.242.64]:39558 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725920AbfFPSnk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 14:42:40 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hca6i-0002sP-VE; Sun, 16 Jun 2019 20:42:25 +0200
-Date:   Sun, 16 Jun 2019 20:42:23 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wincy Van <fanwenyi0529@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Baoquan He <bhe@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
- remampping table entry for watchdog
-In-Reply-To: <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906162039260.1760@nanos.tec.linutronix.de>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 16 Jun 2019 14:43:40 -0400
+Received: from pendragon.ideasonboard.com (dfj612yhrgyx302h3jwwy-3.rev.dnainternet.fi [IPv6:2001:14ba:21f5:5b00:ce28:277f:58d7:3ca4])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id E99B42AF;
+        Sun, 16 Jun 2019 20:43:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1560710619;
+        bh=RQOOSdwek+aBr4V6KaUj7W77SWYPTc0M2FXry1U3Deg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ntGvB1sPjxRFrYeytoIfXg6qSSWqp602In78YyJ5eUPL7IUvGTTcAesQUHTo31Fy7
+         CCsG2HCpL+uKUOKYtBeEbxs5hWkHic+cL+SjZhLh7ElCMW9fhOD2H79AFGkjrF9bSN
+         ipLnEM0wsUyW0Serc6kzG58BYSkTuwqLVzUjpEao=
+Date:   Sun, 16 Jun 2019 21:43:22 +0300
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Cc:     helen.koike@collabora.com, Shuah Khan <skhan@linuxfoundation.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/2] Use Media Dev Allocator to fix vimc dev lifetime bugs
+Message-ID: <20190616184322.GC5006@pendragon.ideasonboard.com>
+References: <cover.1558667245.git.skhan@linuxfoundation.org>
+ <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <c9160fe7-e880-4070-3959-b9e9177acf54@xs4all.nl>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 23 May 2019, Ricardo Neri wrote:
+Hi Hans,
 
-> When interrupt remapping is enabled, MSI interrupt messages must follow a
-> special format that the IOMMU can understand. Hence, when the HPET hard
-> lockup detector is used with interrupt remapping, it must also follow this
-> special format.
+On Thu, Jun 13, 2019 at 07:44:15AM +0200, Hans Verkuil wrote:
+> On 5/24/19 5:31 AM, Shuah Khan wrote:
+> > media_device is embedded in struct vimc_device and when vimc is removed
+> > vimc_device and the embedded media_device goes with it, while the active
+> > stream and vimc_capture continue to access it.
+> > 
+> > Fix the media_device lifetime problem by changing vimc to create shared
+> > media_device using Media Device Allocator API and vimc_capture getting
+> > a reference to vimc module. With this change, vimc module can be removed
+> > only when the references are gone. vimc can be removed after vimc_capture
+> > is removed.
+> > 
+> > Media Device Allocator API supports just USB devices. Enhance it
+> > adding a genetic device allocate interface to support other media
+> > drivers.
+> > 
+> > The new interface takes pointer to struct device instead and creates
+> > media device. This interface allows a group of drivers that have a
+> > common root device to share media device resource and ensure media
+> > device doesn't get deleted as long as one of the drivers holds its
+> > reference.
+> > 
+> > The new interface has been tested with vimc component driver to fix
+> > panics when vimc module is removed while streaming is in progress.
 > 
-> The IOMMU, given the information about a particular interrupt, already
-> knows how to populate the MSI message with this special format and the
-> corresponding entry in the interrupt remapping table. Given that this is a
-> special interrupt case, we want to avoid the interrupt subsystem. Add two
-> functions to create an entry for the HPET hard lockup detector. Perform
-> this process in two steps as described below.
+> Helen, can you review this series? I'm not sure this is the right approach
+> for a driver like vimc, and even if it is, then it is odd that vimc-capture
+> is the only vimc module that's handled here.
 > 
-> When initializing the lockup detector, the function
-> hld_hpet_intremap_alloc_irq() permanently allocates a new entry in the
-> interrupt remapping table and populates it with the information the
-> IOMMU driver needs. In order to populate the table, the IOMMU needs to
-> know the HPET block ID as described in the ACPI table. Hence, add such
-> ID to the data of the hardlockup detector.
-> 
-> When the hardlockup detector is enabled, the function
-> hld_hpet_intremapactivate_irq() activates the recently created entry
-> in the interrupt remapping table via the modify_irte() functions. While
-> doing this, it specifies which CPU the interrupt must target via its APIC
-> ID. This function can be called every time the destination iD of the
-> interrupt needs to be updated; there is no need to allocate or remove
-> entries in the interrupt remapping table.
+> My gut feeling is that this should be handled inside vimc directly and not
+> using the media-dev-allocator.
 
-And except for a few details all of this functionality exists today. There
-is no need to hack HPET NMI specific knowledge into the irq remapping
-driver. And of course to unbreak AMD you'd have to copy the same hackery
-into the AMD interrupt remapping code.
+That's my opinion too, I don't see why the media dev allocator would be
+needed here. We know how to fix this kind of issues, it requires proper
+lifetime management of objects with refcouting, using the media dev
+allocator is a hack that would just hide the problem deeper. Hiding
+problems deeper during the last MC rework brought us where we are today,
+and I don't think we should repeat the same mistake.
 
-More lines of duplicated duct tape code are better to maintain, right?
+> > Shuah Khan (2):
+> >   media: add generic device allocate interface to media-dev-allocator
+> >   vimc: fix BUG: unable to handle kernel NULL pointer dereference
+> > 
+> >  drivers/media/Makefile                     |  4 +-
+> >  drivers/media/media-dev-allocator.c        | 39 ++++++++++++++
+> >  drivers/media/platform/vimc/vimc-capture.c | 17 +++++-
+> >  drivers/media/platform/vimc/vimc-core.c    | 60 ++++++++++++----------
+> >  include/media/media-dev-allocator.h        | 46 ++++++++++++++---
+> >  5 files changed, 130 insertions(+), 36 deletions(-)
 
-Sigh.
+-- 
+Regards,
 
-	tglx
+Laurent Pinchart
