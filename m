@@ -2,171 +2,93 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 605DFC31E54
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:01:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1778C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C0A2133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:01:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9490B2133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:02:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725987AbfFPHBy (ORCPT
+        id S1726192AbfFPHC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 03:01:54 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36854 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725860AbfFPHBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 03:01:54 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3276A39927F579A48215;
-        Sun, 16 Jun 2019 15:00:50 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sun, 16 Jun
- 2019 15:00:43 +0800
-Subject: Re: [PATCH v3 1/2] staging: erofs: add requirements field in
- superblock
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
-        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
-        "Fang Wei" <fangwei1@huawei.com>, <stable@vger.kernel.org>
-References: <20190611024220.86121-1-gaoxiang25@huawei.com>
- <20190613083541.67091-1-gaoxiang25@huawei.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <a4d587eb-c4f0-b9e5-7ece-1ac38c2735f3@huawei.com>
-Date:   Sun, 16 Jun 2019 15:00:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        Sun, 16 Jun 2019 03:02:26 -0400
+Received: from smtp09.smtpout.orange.fr ([80.12.242.131]:33193 "EHLO
+        smtp.smtpout.orange.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725992AbfFPHC0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 03:02:26 -0400
+Received: from localhost.localdomain ([86.243.180.47])
+        by mwinf5d17 with ME
+        id RK2N2000C11lVym03K2NQE; Sun, 16 Jun 2019 09:02:23 +0200
+X-ME-Helo: localhost.localdomain
+X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
+X-ME-Date: Sun, 16 Jun 2019 09:02:23 +0200
+X-ME-IP: 86.243.180.47
+From:   Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+To:     martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] scsi: tcmu: Simplify 'tcmu_update_uio_info()'
+Date:   Sun, 16 Jun 2019 09:02:20 +0200
+Message-Id: <20190616070220.24189-1-christophe.jaillet@wanadoo.fr>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190613083541.67091-1-gaoxiang25@huawei.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+Use 'kasprintf()' instead of:
+   - snprintf(NULL, 0...
+   - kmalloc(...
+   - snprintf(...
 
-Sorry for annoying... Could you help merge these two fixes? Thanks in advance...
-decompression inplace optimization needs these two patches and I will integrate
-erofs decompression inplace optimization later for linux-next 5.3, and try to start 
-making effort on moving to fs/ directory on kernel 5.4...
+This is less verbose and saves 7 bytes (i.e. the space for '/(null)') if
+'udev->dev_config' is NULL.
 
-Thanks,
-Gao Xiang
+Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+---
+ drivers/target/target_core_user.c | 16 +++++++---------
+ 1 file changed, 7 insertions(+), 9 deletions(-)
 
-On 2019/6/13 16:35, Gao Xiang wrote:
-> There are some backward incompatible features pending
-> for months, mainly due to on-disk format expensions.
-> 
-> However, we should ensure that it cannot be mounted with
-> old kernels. Otherwise, it will causes unexpected behaviors.
-> 
-> Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
-> Cc: <stable@vger.kernel.org> # 4.19+
-> Reviewed-by: Chao Yu <yuchao0@huawei.com>
-> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-> ---
-> change log v3:
->  - record requirements in erofs_sb_info for runtime use as well;
-> 
-> change log v2:
->  - update printed message
-> 
->  drivers/staging/erofs/erofs_fs.h | 13 ++++++++++---
->  drivers/staging/erofs/internal.h |  2 ++
->  drivers/staging/erofs/super.c    | 19 +++++++++++++++++++
->  3 files changed, 31 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
-> index fa52898df006..8ddb2b3e7d39 100644
-> --- a/drivers/staging/erofs/erofs_fs.h
-> +++ b/drivers/staging/erofs/erofs_fs.h
-> @@ -17,10 +17,16 @@
->  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
->  #define EROFS_SUPER_OFFSET      1024
->  
-> +/*
-> + * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
-> + * incompatible with this kernel version.
-> + */
-> +#define EROFS_ALL_REQUIREMENTS  0
-> +
->  struct erofs_super_block {
->  /*  0 */__le32 magic;           /* in the little endian */
->  /*  4 */__le32 checksum;        /* crc32c(super_block) */
-> -/*  8 */__le32 features;
-> +/*  8 */__le32 features;        /* (aka. feature_compat) */
->  /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
->  /* 13 */__u8 reserved;
->  
-> @@ -34,9 +40,10 @@ struct erofs_super_block {
->  /* 44 */__le32 xattr_blkaddr;
->  /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
->  /* 64 */__u8 volume_name[16];   /* volume name */
-> +/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
->  
-> -/* 80 */__u8 reserved2[48];     /* 128 bytes */
-> -} __packed;
-> +/* 84 */__u8 reserved2[44];
-> +} __packed;                     /* 128 bytes */
->  
->  /*
->   * erofs inode data mapping:
-> diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-> index 911333cdeef4..fc732c86ecd8 100644
-> --- a/drivers/staging/erofs/internal.h
-> +++ b/drivers/staging/erofs/internal.h
-> @@ -115,6 +115,8 @@ struct erofs_sb_info {
->  
->  	u8 uuid[16];                    /* 128-bit uuid for volume */
->  	u8 volume_name[16];             /* volume name */
-> +	u32 requirements;
-> +
->  	char *dev_name;
->  
->  	unsigned int mount_opt;
-> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
-> index f580d4ef77a1..cadbcc11702a 100644
-> --- a/drivers/staging/erofs/super.c
-> +++ b/drivers/staging/erofs/super.c
-> @@ -71,6 +71,22 @@ static void free_inode(struct inode *inode)
->  	kmem_cache_free(erofs_inode_cachep, vi);
->  }
->  
-> +static bool check_layout_compatibility(struct super_block *sb,
-> +				       struct erofs_super_block *layout)
-> +{
-> +	const unsigned int requirements = le32_to_cpu(layout->requirements);
-> +
-> +	EROFS_SB(sb)->requirements = requirements;
-> +
-> +	/* check if current kernel meets all mandatory requirements */
-> +	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
-> +		errln("unidentified requirements %x, please upgrade kernel version",
-> +		      requirements & ~EROFS_ALL_REQUIREMENTS);
-> +		return false;
-> +	}
-> +	return true;
-> +}
-> +
->  static int superblock_read(struct super_block *sb)
->  {
->  	struct erofs_sb_info *sbi;
-> @@ -104,6 +120,9 @@ static int superblock_read(struct super_block *sb)
->  		goto out;
->  	}
->  
-> +	if (!check_layout_compatibility(sb, layout))
-> +		goto out;
-> +
->  	sbi->blocks = le32_to_cpu(layout->blocks);
->  	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
->  #ifdef CONFIG_EROFS_FS_XATTR
-> 
+diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+index b43d6385a1a0..04eda111920e 100644
+--- a/drivers/target/target_core_user.c
++++ b/drivers/target/target_core_user.c
+@@ -1824,20 +1824,18 @@ static int tcmu_update_uio_info(struct tcmu_dev *udev)
+ {
+ 	struct tcmu_hba *hba = udev->hba->hba_ptr;
+ 	struct uio_info *info;
+-	size_t size, used;
+ 	char *str;
+ 
+ 	info = &udev->uio_info;
+-	size = snprintf(NULL, 0, "tcm-user/%u/%s/%s", hba->host_id, udev->name,
+-			udev->dev_config);
+-	size += 1; /* for \0 */
+-	str = kmalloc(size, GFP_KERNEL);
+-	if (!str)
+-		return -ENOMEM;
+ 
+-	used = snprintf(str, size, "tcm-user/%u/%s", hba->host_id, udev->name);
+ 	if (udev->dev_config[0])
+-		snprintf(str + used, size - used, "/%s", udev->dev_config);
++		str = kasprintf(GFP_KERNEL, "tcm-user/%u/%s/%s", hba->host_id,
++				udev->name, udev->dev_config);
++	else
++		str = kasprintf(GFP_KERNEL, "tcm-user/%u/%s", hba->host_id,
++				udev->name);
++	if (!str)
++		return -ENOMEM;
+ 
+ 	/* If the old string exists, free it */
+ 	kfree(info->name);
+-- 
+2.20.1
+
