@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FF44C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:29:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB898C31E54
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58F3320870
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:29:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A35C2147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:29:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="OYoKc4Hq"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="SZJBVaDp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727256AbfFPN3s (ORCPT
+        id S1727281AbfFPN3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 09:29:48 -0400
-Received: from onstation.org ([52.200.56.107]:53638 "EHLO onstation.org"
+        Sun, 16 Jun 2019 09:29:50 -0400
+Received: from onstation.org ([52.200.56.107]:53696 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727044AbfFPN3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 09:29:47 -0400
+        id S1727247AbfFPN3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 09:29:49 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 004503E9CF;
-        Sun, 16 Jun 2019 13:29:45 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 6DD9C3EA0A;
+        Sun, 16 Jun 2019 13:29:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1560691786;
-        bh=irgUB032exacl9EYA4xT+dfR2io7zD/c3uZsKSwgy5I=;
+        s=default; t=1560691787;
+        bh=isipdNYHDnaIS6jjZEJA5zLRVmwZ0AOYiIPvP0S5Wfo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OYoKc4HqpLshtGnVB7kd7XWU+6L07I0PT7ssQvmpyTma5MSXOAKSCL5arcC1EkP2b
-         kW8jRyta7vpWqvCWgs+Mz2uBN+4/uRtnYDwtp5kmGhz98EawK7u4C7x0c1JopNbB8t
-         +VUAh/E/+yeAG/TQP09owKC+zqjKpLrb0Eyd6BYc=
+        b=SZJBVaDpRG6xG/C9yu4pzslFSmshNR2wm1TmMl+k5E/w0W0OePSMnVbrEBdRkhmlN
+         pj44EzoHG3x7BUvVxHC4lLO9k3QObqWyGPPG3uZeRM+wmuawOYfBZcebmX2v8/7U6B
+         kw7UkN9u5DgSJjId+bewz39LPNbKrhUX1eTye7gE=
 From:   Brian Masney <masneyb@onstation.org>
 To:     agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
         sean@poorly.run, robh+dt@kernel.org
@@ -43,9 +43,9 @@ Cc:     bjorn.andersson@linaro.org, airlied@linux.ie, daniel@ffwll.ch,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: [PATCH 1/6] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
-Date:   Sun, 16 Jun 2019 09:29:25 -0400
-Message-Id: <20190616132930.6942-2-masneyb@onstation.org>
+Subject: [PATCH 4/6] firmware: qcom: scm: add OCMEM lock/unlock interface
+Date:   Sun, 16 Jun 2019 09:29:28 -0400
+Message-Id: <20190616132930.6942-5-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190616132930.6942-1-masneyb@onstation.org>
 References: <20190616132930.6942-1-masneyb@onstation.org>
@@ -56,87 +56,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add device tree bindings for the On Chip Memory (OCMEM) that is present
-on some Qualcomm Snapdragon SoCs.
+From: Rob Clark <robdclark@gmail.com>
 
+Add support for the OCMEM lock/unlock interface that is needed by the
+On Chip MEMory (OCMEM) that is present on some Snapdragon devices.
+
+Signed-off-by: Rob Clark <robdclark@gmail.com>
+[masneyb@onstation.org: ported to latest kernel; minor reformatting.]
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- .../bindings/soc/qcom/qcom,ocmem.yaml         | 66 +++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
+Rob's last version of this patch:
+https://patchwork.kernel.org/patch/7340711/
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-new file mode 100644
-index 000000000000..5e3ae6311a16
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-@@ -0,0 +1,66 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/soc/qcom/qcom,ocmem.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+ drivers/firmware/qcom_scm-32.c | 35 +++++++++++++++++++++++++++++
+ drivers/firmware/qcom_scm-64.c | 12 ++++++++++
+ drivers/firmware/qcom_scm.c    | 40 ++++++++++++++++++++++++++++++++++
+ drivers/firmware/qcom_scm.h    |  9 ++++++++
+ include/linux/qcom_scm.h       | 15 +++++++++++++
+ 5 files changed, 111 insertions(+)
+
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index 089b47124933..0100c82b9c00 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -463,6 +463,41 @@ int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+ 	return 0;
+ }
+ 
++int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset, u32 size,
++			  u32 mode)
++{
++	struct ocmem_tz_lock {
++		__le32 id;
++		__le32 offset;
++		__le32 size;
++		__le32 mode;
++	} request;
 +
-+title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
++	request.id = cpu_to_le32(id);
++	request.offset = cpu_to_le32(offset);
++	request.size = cpu_to_le32(size);
++	request.mode = cpu_to_le32(mode);
 +
-+maintainers:
-+  - Brian Masney <masneyb@onstation.org>
++	return qcom_scm_call(dev, QCOM_SCM_OCMEM_SVC, QCOM_SCM_OCMEM_LOCK_CMD,
++			     &request, sizeof(request), NULL, 0);
++}
 +
-+description: |
-+  The On Chip Memory (OCMEM) allocator allows various clients to allocate memory
-+  from OCMEM based on performance, latency and power requirements. This is
-+  typically used by the GPU, camera/video, and audio components on some
-+  Snapdragon SoCs.
++int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset, u32 size)
++{
++	struct ocmem_tz_unlock {
++		__le32 id;
++		__le32 offset;
++		__le32 size;
++	} request;
 +
-+properties:
-+  compatible:
-+    const: qcom,ocmem-msm8974
++	request.id = cpu_to_le32(id);
++	request.offset = cpu_to_le32(offset);
++	request.size = cpu_to_le32(size);
 +
-+  reg:
-+    items:
-+      - description: Control registers
-+      - description: OCMEM address range
++	return qcom_scm_call(dev, QCOM_SCM_OCMEM_SVC, QCOM_SCM_OCMEM_UNLOCK_CMD,
++			     &request, sizeof(request), NULL, 0);
++}
 +
-+  reg-names:
-+    items:
-+      - const: ocmem_ctrl_physical
-+      - const: ocmem_physical
+ void __qcom_scm_init(void)
+ {
+ }
+diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+index b6b78da7f9c9..2674d6d3cdde 100644
+--- a/drivers/firmware/qcom_scm-64.c
++++ b/drivers/firmware/qcom_scm-64.c
+@@ -247,6 +247,18 @@ int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+ 	return -ENOTSUPP;
+ }
+ 
++int __qcom_scm_ocmem_lock(struct device *dev, uint32_t id, uint32_t offset,
++			  uint32_t size, uint32_t mode)
++{
++	return -ENOTSUPP;
++}
 +
-+  clocks:
-+    items:
-+      - description: Core clock
-+      - description: Interface clock
++int __qcom_scm_ocmem_unlock(struct device *dev, uint32_t id, uint32_t offset,
++			    uint32_t size)
++{
++	return -ENOTSUPP;
++}
 +
-+  clock-names:
-+    items:
-+      - const: core
-+      - const: iface
+ void __qcom_scm_init(void)
+ {
+ 	u64 cmd;
+diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+index 5495ef994c5d..85afb54defd4 100644
+--- a/drivers/firmware/qcom_scm.c
++++ b/drivers/firmware/qcom_scm.c
+@@ -193,6 +193,46 @@ int qcom_scm_restore_sec_config(struct device *dev,
+ }
+ EXPORT_SYMBOL(qcom_scm_restore_sec_config);
+ 
++/**
++ * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
++ */
++bool qcom_scm_ocmem_lock_available(void)
++{
++	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_OCMEM_SVC,
++					    QCOM_SCM_OCMEM_LOCK_CMD);
++}
++EXPORT_SYMBOL(qcom_scm_ocmem_lock_available);
 +
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - clocks
-+  - clock-names
++/**
++ * qcom_scm_ocmem_lock() - call OCMEM lock interface to assign an OCMEM
++ * region to the specified initiator
++ *
++ * @id:     tz initiator id
++ * @offset: OCMEM offset
++ * @size:   OCMEM size
++ * @mode:   access mode (WIDE/NARROW)
++ */
++int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset, u32 size,
++			u32 mode)
++{
++	return __qcom_scm_ocmem_lock(__scm->dev, id, offset, size, mode);
++}
++EXPORT_SYMBOL(qcom_scm_ocmem_lock);
 +
-+examples:
-+  - |
-+      #include <dt-bindings/clock/qcom,rpmcc.h>
-+      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
++/**
++ * qcom_scm_ocmem_unlock() - call OCMEM unlock interface to release an OCMEM
++ * region from the specified initiator
++ *
++ * @id:     tz initiator id
++ * @offset: OCMEM offset
++ * @size:   OCMEM size
++ */
++int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset, u32 size)
++{
++	return __qcom_scm_ocmem_unlock(__scm->dev, id, offset, size);
++}
++EXPORT_SYMBOL(qcom_scm_ocmem_unlock);
 +
-+      ocmem: ocmem@fdd00000 {
-+        compatible = "qcom,ocmem-msm8974";
+ /**
+  * qcom_scm_pas_supported() - Check if the peripheral authentication service is
+  *			      available for the given peripherial
+diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+index bccc7d10c5c2..387e3c4e33c5 100644
+--- a/drivers/firmware/qcom_scm.h
++++ b/drivers/firmware/qcom_scm.h
+@@ -48,6 +48,15 @@ extern void __qcom_scm_init(void);
+ extern int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+ 					 u32 ctx_bank_num);
+ 
++#define QCOM_SCM_OCMEM_SVC			0xf
++#define QCOM_SCM_OCMEM_LOCK_CMD		0x1
++#define QCOM_SCM_OCMEM_UNLOCK_CMD		0x2
 +
-+        reg = <0xfdd00000 0x2000>,
-+               <0xfec00000 0x180000>;
-+        reg-names = "ocmem_ctrl_physical",
-+                    "ocmem_physical";
++extern int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset,
++				 u32 size, u32 mode);
++extern int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset,
++				   u32 size);
 +
-+        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-+                  <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-+        clock-names = "core",
-+                      "iface";
-+      };
+ #define QCOM_SCM_SVC_PIL		0x2
+ #define QCOM_SCM_PAS_INIT_IMAGE_CMD	0x1
+ #define QCOM_SCM_PAS_MEM_SETUP_CMD	0x2
+diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
+index b5c0afaca955..977c01aa524a 100644
+--- a/include/linux/qcom_scm.h
++++ b/include/linux/qcom_scm.h
+@@ -34,6 +34,16 @@ enum qcom_scm_sec_dev_id {
+ 	QCOM_SCM_ICE_DEV_ID	= 20,
+ };
+ 
++enum qcom_scm_ocmem_client {
++	QCOM_SCM_OCMEM_UNUSED_ID = 0x0,
++	QCOM_SCM_OCMEM_GRAPHICS_ID,
++	QCOM_SCM_OCMEM_VIDEO_ID,
++	QCOM_SCM_OCMEM_LP_AUDIO_ID,
++	QCOM_SCM_OCMEM_SENSORS_ID,
++	QCOM_SCM_OCMEM_OTHER_OS_ID,
++	QCOM_SCM_OCMEM_DEBUG_ID,
++};
++
+ #define QCOM_SCM_VMID_HLOS       0x3
+ #define QCOM_SCM_VMID_MSS_MSA    0xF
+ #define QCOM_SCM_VMID_WLAN       0x18
+@@ -54,6 +64,11 @@ extern int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+ extern bool qcom_scm_restore_sec_config_available(void);
+ extern int qcom_scm_restore_sec_config(struct device *dev,
+ 				       enum qcom_scm_sec_dev_id sec_id);
++extern bool qcom_scm_ocmem_lock_available(void);
++extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
++			       u32 size, u32 mode);
++extern int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset,
++				 u32 size);
+ extern bool qcom_scm_pas_supported(u32 peripheral);
+ extern int qcom_scm_pas_init_image(u32 peripheral, const void *metadata,
+ 				   size_t size);
 -- 
 2.20.1
 
