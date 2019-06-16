@@ -2,177 +2,146 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA527C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:58:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFA5C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A4B2133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:58:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA6D22173C
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfFPJ6o (ORCPT
+        id S1727273AbfFPJ6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 05:58:44 -0400
-Received: from mga02.intel.com ([134.134.136.20]:28463 "EHLO mga02.intel.com"
+        Sun, 16 Jun 2019 05:58:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:52642 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfFPJ6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 05:58:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jun 2019 02:58:34 -0700
-X-ExtLoop1: 1
-Received: from tao-optiplex-7060.sh.intel.com ([10.239.13.104])
-  by orsmga005.jf.intel.com with ESMTP; 16 Jun 2019 02:58:32 -0700
-From:   Tao Xu <tao3.xu@intel.com>
-To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com, fenghua.yu@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tao3.xu@intel.com, jingqi.liu@intel.com
-Subject: [PATCH RESEND v3 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-Date:   Sun, 16 Jun 2019 17:55:54 +0800
-Message-Id: <20190616095555.20978-3-tao3.xu@intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190616095555.20978-1-tao3.xu@intel.com>
-References: <20190616095555.20978-1-tao3.xu@intel.com>
+        id S1727246AbfFPJ6y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 05:58:54 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 39D303084034;
+        Sun, 16 Jun 2019 09:58:53 +0000 (UTC)
+Received: from krava (ovpn-204-53.brq.redhat.com [10.40.204.53])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 6BD2C6AD2F;
+        Sun, 16 Jun 2019 09:58:45 +0000 (UTC)
+Date:   Sun, 16 Jun 2019 11:58:44 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     John Garry <john.garry@huawei.com>
+Cc:     peterz@infradead.org, mingo@redhat.com, acme@kernel.org,
+        alexander.shishkin@linux.intel.com, namhyung@kernel.org,
+        tmricht@linux.ibm.com, brueckner@linux.ibm.com,
+        kan.liang@linux.intel.com, ben@decadent.org.uk,
+        mathieu.poirier@linaro.org, mark.rutland@arm.com,
+        will.deacon@arm.com, linux-kernel@vger.kernel.org,
+        linuxarm@huawei.com, linux-arm-kernel@lists.infradead.org,
+        zhangshaokun@hisilicon.com
+Subject: Re: [PATCH v2 2/5] perf pmu: Support more complex PMU event aliasing
+Message-ID: <20190616095844.GC2500@krava>
+References: <1560521283-73314-1-git-send-email-john.garry@huawei.com>
+ <1560521283-73314-3-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560521283-73314-3-git-send-email-john.garry@huawei.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Sun, 16 Jun 2019 09:58:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
-to determines the maximum time in TSC-quanta that the processor can reside
-in either C0.1 or C0.2.
+On Fri, Jun 14, 2019 at 10:08:00PM +0800, John Garry wrote:
+> The jevent "Unit" field is used for uncore PMU alias definition.
+> 
+> The form uncore_pmu_example_X is supported, where "X" is a wildcard,
+> to support multiple instances of the same PMU in a system.
+> 
+> Unfortunately this format not suitable for all uncore PMUs; take the Hisi
+> DDRC uncore PMU for example, where the name is in the form
+> hisi_scclX_ddrcY.
+> 
+> For the current jevent parsing, we would be required to hardcode an uncore
+> alias translation for each possible value of X. This is not scalable.
+> 
+> Instead, add support for "Unit" field in the form "hisi_sccl,ddrc", where
+> we can match by hisi_scclX and ddrcY. Tokens in Unit field are 
+> delimited by ','.
+> 
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>  tools/perf/util/pmu.c | 39 ++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 34 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
+> index 7e7299fee550..bc71c60589b5 100644
+> --- a/tools/perf/util/pmu.c
+> +++ b/tools/perf/util/pmu.c
+> @@ -700,6 +700,39 @@ struct pmu_events_map *perf_pmu__find_map(struct perf_pmu *pmu)
+>  	return map;
+>  }
+>  
+> +static bool pmu_uncore_alias_match(const char *pmu_name, const char *name)
+> +{
+> +	char *tmp, *tok, *str;
+> +	bool res;
+> +
+> +	str = strdup(pmu_name);
+> +	if (!str)
+> +		return false;
+> +
+> +	/*
+> +	 * uncore alias may be from different PMU with common
+> +	 * prefix or matching tokens.
+> +	 */
+> +	tok = strtok_r(str, ",", &tmp);
+> +	if (strncmp(pmu_name, tok, strlen(tok))) {
 
-This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
-IA32_UMWAIT_CONTROL between host and guest. The variable
-mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
-this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
+if tok is NULL in here we crash
 
-Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
-Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
-Signed-off-by: Tao Xu <tao3.xu@intel.com>
----
- arch/x86/kvm/vmx/vmx.c  | 36 ++++++++++++++++++++++++++++++++++++
- arch/x86/kvm/vmx/vmx.h  |  3 +++
- arch/x86/power/umwait.c |  3 ++-
- 3 files changed, 41 insertions(+), 1 deletion(-)
+> +		res = false;
+> +		goto out;
+> +	}
+> +
+> +	for (; tok; name += strlen(tok), tok = strtok_r(NULL, ",", &tmp)) {
 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index b35bfac30a34..f33a25e82cb8 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -1679,6 +1679,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- #endif
- 	case MSR_EFER:
- 		return kvm_get_msr_common(vcpu, msr_info);
-+	case MSR_IA32_UMWAIT_CONTROL:
-+		if (!vmx_waitpkg_supported())
-+			return 1;
-+
-+		msr_info->data = vmx->msr_ia32_umwait_control;
-+		break;
- 	case MSR_IA32_SPEC_CTRL:
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-@@ -1841,6 +1847,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 			return 1;
- 		vmcs_write64(GUEST_BNDCFGS, data);
- 		break;
-+	case MSR_IA32_UMWAIT_CONTROL:
-+		if (!vmx_waitpkg_supported())
-+			return 1;
-+
-+		if (!data)
-+			break;
-+
-+		vmx->msr_ia32_umwait_control = data;
-+		break;
- 	case MSR_IA32_SPEC_CTRL:
- 		if (!msr_info->host_initiated &&
- 		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-@@ -4126,6 +4141,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
- 	vmx->rmode.vm86_active = 0;
- 	vmx->spec_ctrl = 0;
- 
-+	vmx->msr_ia32_umwait_control = 0;
-+
- 	vcpu->arch.microcode_version = 0x100000000ULL;
- 	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
- 	kvm_set_cr8(vcpu, 0);
-@@ -6339,6 +6356,23 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
- 					msrs[i].host, false);
- }
- 
-+static void atomic_switch_ia32_umwait_control(struct vcpu_vmx *vmx)
-+{
-+	u64 host_umwait_control;
-+
-+	if (!vmx_waitpkg_supported())
-+		return;
-+
-+	host_umwait_control = umwait_control_cached;
-+
-+	if (vmx->msr_ia32_umwait_control != host_umwait_control)
-+		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
-+				      vmx->msr_ia32_umwait_control,
-+				      host_umwait_control, false);
-+	else
-+		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
-+}
-+
- static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
- {
- 	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-@@ -6447,6 +6481,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	atomic_switch_perf_msrs(vmx);
- 
-+	atomic_switch_ia32_umwait_control(vmx);
-+
- 	vmx_update_hv_timer(vcpu);
- 
- 	/*
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index 61128b48c503..8485bec7c38a 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -14,6 +14,8 @@
- extern const u32 vmx_msr_index[];
- extern u64 host_efer;
- 
-+extern u32 umwait_control_cached;
-+
- #define MSR_TYPE_R	1
- #define MSR_TYPE_W	2
- #define MSR_TYPE_RW	3
-@@ -194,6 +196,7 @@ struct vcpu_vmx {
- #endif
- 
- 	u64		      spec_ctrl;
-+	u64		      msr_ia32_umwait_control;
- 
- 	u32 vm_entry_controls_shadow;
- 	u32 vm_exit_controls_shadow;
-diff --git a/arch/x86/power/umwait.c b/arch/x86/power/umwait.c
-index 7fa381e3fd4e..2e6ce4cbccb3 100644
---- a/arch/x86/power/umwait.c
-+++ b/arch/x86/power/umwait.c
-@@ -9,7 +9,8 @@
-  * MSR value. By default, umwait max time is 100000 in TSC-quanta and C0.2
-  * is enabled
-  */
--static u32 umwait_control_cached = 100000;
-+u32 umwait_control_cached = 100000;
-+EXPORT_SYMBOL_GPL(umwait_control_cached);
- 
- /*
-  * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR
--- 
-2.20.1
+why is name shifted in here?
 
+jirka
+
+> +		name = strstr(name, tok);
+> +		if (!name) {
+> +			res = false;
+> +			goto out;
+> +		}
+> +	}
+> +
+> +	res = true;
+> +out:
+> +	free(str);
+> +	return res;
+> +}
+> +
+>  /*
+>   * From the pmu_events_map, find the table of PMU events that corresponds
+>   * to the current running CPU. Then, add all PMU events from that table
+> @@ -730,12 +763,8 @@ static void pmu_add_cpu_aliases(struct list_head *head, struct perf_pmu *pmu)
+>  			break;
+>  		}
+>  
+> -		/*
+> -		 * uncore alias may be from different PMU
+> -		 * with common prefix
+> -		 */
+>  		if (pmu_is_uncore(name) &&
+> -		    !strncmp(pname, name, strlen(pname)))
+> +		    pmu_uncore_alias_match(pname, name))
+>  			goto new_alias;
+>  
+>  		if (strcmp(pname, name))
+> -- 
+> 2.17.1
+> 
