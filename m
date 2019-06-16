@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 139D5C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1165BC31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAAA020861
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE0D2087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:36:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o4XbwT/z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BSRSWdUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfFPXgX (ORCPT
+        id S1727571AbfFPXgT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 19:36:23 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43700 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727538AbfFPXgQ (ORCPT
+        Sun, 16 Jun 2019 19:36:19 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43690 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727510AbfFPXgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 19:36:16 -0400
-Received: by mail-lj1-f195.google.com with SMTP id 16so7467761ljv.10;
-        Sun, 16 Jun 2019 16:36:14 -0700 (PDT)
+        Sun, 16 Jun 2019 19:36:13 -0400
+Received: by mail-lj1-f193.google.com with SMTP id 16so7467660ljv.10;
+        Sun, 16 Jun 2019 16:36:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=t2V7RCk27WCmUusM85nZL0QgT3ShS/tiovCYzrgWfsY=;
-        b=o4XbwT/zpwZwYLrQ4m8YDgj621PjLQfcjEol41vgybx8ypDk40VFypufhxsC/bgDRi
-         ogWG90ShNvIF9kvf/1zS256dZjMc78CjxsD+BlzXdPVC95eS5tHjOrUkfEOZYGznxPpK
-         KIJOUYY8J3nAWTpr6Dp9QFu+bMZOTgNM+TwkCzYWkkdROqor/yEMOQw3RtYLpmAm5ht2
-         FhgUt71iu/G0jWWB5IjjOzT6GiBZQO36sve+4kIP1HybGAMpd9bau40ruS1EnY9aAgRG
-         r37zepZlaXLrxv/t2SgpiMLdxl0MGntkzYIvPfW5+XVdfi0/Lek084GFXE0JIbPVChRb
-         SVNw==
+        bh=qSGWfyGgts7/ACGUx3NwBZ4EU3S1UppuppDAwYa+a/0=;
+        b=BSRSWdUKGozsTDN4tXaeO4A7jbuKpBt71UNSuQo/xNKqwqmoTGSiTL2ddHSA3wA92/
+         4i8jqm0zSsnqkOB6pffvf4jiF4j1Ev1GCCN5bm8iTFBw5OX/TiqSFdnPl8SRLFXUJe24
+         zWnyLiCHFIVgigjnuq3z0+golgy0aO4BrFwzwucjvRWRHyJy9cvjiHGT3GWJNNOKkigp
+         UslUpzhtIctQuile3kX8OgTB1+heUUdIoQ8Xu32SwXhPG+uDQaJp7mw5GjylSq2oQeie
+         IIgKh3no3AuBzrh89c03H+Gh6PvZNcD1isnDi0YMiCvf4wSEYzqjuzsUyefO3f4MFjaR
+         65tg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=t2V7RCk27WCmUusM85nZL0QgT3ShS/tiovCYzrgWfsY=;
-        b=PGyY2etGVcr9W4JM0Jf/5Tvpgv6zwXqM+cm5ax+99ZgoywnZikNMaz+EQE62He6x27
-         4OYkq7MWAydwbeMkr/H6gdDZCnbHvRq2itdY+J65ds6SdUaxWHN0kPGsJk8LGzY4H7rA
-         TfiMhd7IW1vAA7UTy0Mi5xknYLYp0BJntGjq1kNHST/+bYWBdVl9CxReDokFbdcGdQVH
-         5MdbsjGD4hoC0zNZIEhXNA6VxCI7wFf2AnYkWN8mu8paWHqoU3Ei2R6/4I2YBVlYETuU
-         Lya73C6wgeoLSGVqZLbSSvGzch/eQGAeQ+uol+x+tJ5NexSWQLriH5xMUKMPG+8TfNus
-         UwMw==
-X-Gm-Message-State: APjAAAXWXckgHnIllcU1Dq/n0dvWd8Wxvo+V8ruBb9rfKgQ/UR3YxmdA
-        0YE725kqGB9IuEcebsXMZ+E=
-X-Google-Smtp-Source: APXvYqwOcczRwLkBHBL5rDESBQ+g3ZJMJA4SKCrxSh6v46W43ahnBQFMHehiS8PlLWBeH+RWY/X46Q==
-X-Received: by 2002:a2e:9cd4:: with SMTP id g20mr6704131ljj.205.1560728174046;
-        Sun, 16 Jun 2019 16:36:14 -0700 (PDT)
+        bh=qSGWfyGgts7/ACGUx3NwBZ4EU3S1UppuppDAwYa+a/0=;
+        b=MBITJmuW5OZK8JzwkC5XB3rwvbeQpP7LidEdb/EsiYMN1IRwI/ed/WYfqaOIMONwJ2
+         LbAO4ON44OgrTKGz2mzX+pWqJy+HigCEuayC36Edc2xFPmwAgnPW/tQh8iJedm6r34mo
+         VT+6/fZBwIOCdN3t5f/0rvzRunk1yw95aCDD9vufwRxvXR1kvHSV4CdcQUiluTA4NCj1
+         y235tsKGh6yxjJahe9NM+0wmp0J1y0fm4zFGBEmH4dK71U4z4OjIx423aVn+jxgmdh9i
+         HM8MPocz46efzBew5PCwaHOMQ+fwPQljgaYFSgQ+LAtoM1b5nJrNk8roHAUWaLGs6KwI
+         DxUA==
+X-Gm-Message-State: APjAAAVl0WYNI3dv9hM7dU6ujFiKH1pcm2FbDZ2p7eWw5VQWb/N4ETur
+        308iuTcgg24x8FAzbOm5YyM=
+X-Google-Smtp-Source: APXvYqwSkmBdIBpprG/cKABiWTNsfDQOuRSS4JhueH2eCr04/WhLzruIsne2m/uF5EoJdNIWW3mP4Q==
+X-Received: by 2002:a2e:87d0:: with SMTP id v16mr160701ljj.24.1560728170254;
+        Sun, 16 Jun 2019 16:36:10 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id q4sm2008377lje.99.2019.06.16.16.36.12
+        by smtp.gmail.com with ESMTPSA id q4sm2008377lje.99.2019.06.16.16.36.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Jun 2019 16:36:13 -0700 (PDT)
+        Sun, 16 Jun 2019 16:36:09 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 08/10] memory: tegra: Ensure timing control debug features are disabled
-Date:   Mon, 17 Jun 2019 02:35:49 +0300
-Message-Id: <20190616233551.6838-9-digetx@gmail.com>
+Subject: [PATCH v4 05/10] memory: tegra20-emc: Replace clk_get_sys with devm_clk_get
+Date:   Mon, 17 Jun 2019 02:35:46 +0300
+Message-Id: <20190616233551.6838-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190616233551.6838-1-digetx@gmail.com>
 References: <20190616233551.6838-1-digetx@gmail.com>
@@ -81,42 +81,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Timing control debug features should be disabled at a boot time, but you
-never now and hence it's better to disable them explicitly because some of
-those features are crucial for the driver to do a proper thing.
+There is no problem for drivers to request pll_m and pll_p clocks for
+the device, hence there is no need to use clk_get_sys() and it could be
+replaced with devm_clk_get() for consistency.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/memory/tegra/mc.c | 3 +++
- drivers/memory/tegra/mc.h | 2 ++
- 2 files changed, 5 insertions(+)
+ drivers/memory/tegra/tegra20-emc.c | 12 ++++--------
+ 1 file changed, 4 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/memory/tegra/mc.c b/drivers/memory/tegra/mc.c
-index eaebe371625c..4c1492c653e1 100644
---- a/drivers/memory/tegra/mc.c
-+++ b/drivers/memory/tegra/mc.c
-@@ -660,6 +660,9 @@ static int tegra_mc_probe(struct platform_device *pdev)
- 	} else
- #endif
- 	{
-+		/* ensure that debug features are disabled */
-+		mc_writel(mc, 0x00000000, MC_TIMING_CONTROL_DBG);
-+
- 		err = tegra_mc_setup_latency_allowance(mc);
- 		if (err < 0) {
- 			dev_err(&pdev->dev,
-diff --git a/drivers/memory/tegra/mc.h b/drivers/memory/tegra/mc.h
-index 0720a1d2023e..abc565b42225 100644
---- a/drivers/memory/tegra/mc.h
-+++ b/drivers/memory/tegra/mc.h
-@@ -33,6 +33,8 @@
- #define MC_EMEM_ARB_OVERRIDE				0xe8
- #define MC_EMEM_ARB_OVERRIDE_EACK_MASK			0x3
+diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
+index 43aef3614b65..527aa4b90e95 100644
+--- a/drivers/memory/tegra/tegra20-emc.c
++++ b/drivers/memory/tegra/tegra20-emc.c
+@@ -527,33 +527,29 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 		goto unset_cb;
+ 	}
  
-+#define MC_TIMING_CONTROL_DBG				0xf8
-+
- #define MC_TIMING_CONTROL				0xfc
- #define MC_TIMING_UPDATE				BIT(0)
+-	emc->pll_m = clk_get_sys(NULL, "pll_m");
++	emc->pll_m = devm_clk_get(&pdev->dev, "pll_m");
+ 	if (IS_ERR(emc->pll_m)) {
+ 		err = PTR_ERR(emc->pll_m);
+ 		dev_err(&pdev->dev, "failed to get pll_m clock: %d\n", err);
+ 		goto unset_cb;
+ 	}
+ 
+-	emc->backup_clk = clk_get_sys(NULL, "pll_p");
++	emc->backup_clk = devm_clk_get(&pdev->dev, "pll_p");
+ 	if (IS_ERR(emc->backup_clk)) {
+ 		err = PTR_ERR(emc->backup_clk);
+ 		dev_err(&pdev->dev, "failed to get pll_p clock: %d\n", err);
+-		goto put_pll_m;
++		goto unset_cb;
+ 	}
+ 
+ 	err = clk_notifier_register(emc->clk, &emc->clk_nb);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "failed to register clk notifier: %d\n",
+ 			err);
+-		goto put_backup;
++		goto unset_cb;
+ 	}
+ 
+ 	return 0;
+ 
+-put_backup:
+-	clk_put(emc->backup_clk);
+-put_pll_m:
+-	clk_put(emc->pll_m);
+ unset_cb:
+ 	tegra20_clk_set_emc_round_callback(NULL, NULL);
  
 -- 
 2.22.0
