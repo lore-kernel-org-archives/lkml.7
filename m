@@ -2,115 +2,98 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 840A0C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:53:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C054C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CE4621473
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B5C521473
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726504AbfFPIxn (ORCPT
+        id S1726566AbfFPI6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 04:53:43 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:41632 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725945AbfFPIxm (ORCPT
+        Sun, 16 Jun 2019 04:58:40 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:35403 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726085AbfFPI6k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 04:53:42 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hcQut-0007Ik-Bj; Sun, 16 Jun 2019 10:53:35 +0200
-Date:   Sun, 16 Jun 2019 10:53:33 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wincy Van <fanwenyi0529@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Baoquan He <bhe@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [RFC PATCH v4 21/21] x86/watchdog/hardlockup/hpet: Support
- interrupt remapping
-In-Reply-To: <alpine.DEB.2.21.1906161042080.1760@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1906161051491.1760@nanos.tec.linutronix.de>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-22-git-send-email-ricardo.neri-calderon@linux.intel.com> <alpine.DEB.2.21.1906161042080.1760@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Sun, 16 Jun 2019 04:58:40 -0400
+Received: by mail-wm1-f67.google.com with SMTP id c6so6087781wml.0
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 01:58:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tyLCtkeeaSbQ0/DZJIU/kBEIiONfg61xJ9wYqMhu3iQ=;
+        b=IPpS4kpRX2/0HqbBNmlwYccMlW4AhFAP2yOzaxWpwV2UFXwqQ+5LxGVL8Pf62rupd1
+         JqDnNG+cANiihrX0SdtOTUaVlMnf9ajW4qEgwUvNwaRnURl59zxVKwLCKXFk5l0WjTxT
+         oQJNetEZo8zjdxtiZJU9BL5KOv0gLvRTPY3DsQOBCTMIhLvMvvzh/kBw6hyaoH0JFDmX
+         BzGoIvtIPXO+cQfV/PBjwF/gXNBfeyJfDxDkKuFmSI2dOooPL8WUJ8Mu63RjN9in6zPN
+         odjbYyxMmDzsMBomzz2UnkD2l9jDd7eg6Y30dGFoktnNkB4/LHfXlkphlwDU1XSruXMx
+         yGow==
+X-Gm-Message-State: APjAAAWb7oDzFumBUVNkzlUCyO+l/cwJE0u/q+XhM0JafiAJ+iK/Oubz
+        6kdlPhDIkLzYRzjAaOQatgwg2ovzydM=
+X-Google-Smtp-Source: APXvYqwKzUqg8BlO1Ylb95tRjzIGZjsZsFmWcv2rFYrJ9MB+V7yC0LnQN11PT1XceFWw6KKnypDx5w==
+X-Received: by 2002:a1c:7503:: with SMTP id o3mr1885273wmc.170.1560675517908;
+        Sun, 16 Jun 2019 01:58:37 -0700 (PDT)
+Received: from localhost (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id j123sm16804248wmb.32.2019.06.16.01.58.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 16 Jun 2019 01:58:36 -0700 (PDT)
+From:   Oleksandr Natalenko <oleksandr@redhat.com>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-api@vger.kernel.org
+Subject: [PATCH NOTFORMERGE 0/5] Extend remote madvise API to KSM hints
+Date:   Sun, 16 Jun 2019 10:58:30 +0200
+Message-Id: <20190616085835.953-1-oleksandr@redhat.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 16 Jun 2019, Thomas Gleixner wrote:
+Hi, Minchan.
 
-> On Thu, 23 May 2019, Ricardo Neri wrote:
-> > +/** irq_remapping_enabled() - Detect if interrupt remapping is enabled
-> > + * @hdata:	A data structure with the HPET block id
-> > + *
-> > + * Determine if the HPET block that the hardlockup detector is under
-> > + * the remapped interrupt domain.
-> > + *
-> > + * Returns: True interrupt remapping is enabled. False otherwise.
-> > + */
-> > +static bool irq_remapping_enabled(struct hpet_hld_data *hdata)
-> > +{
-> > +	struct irq_alloc_info info;
-> > +
-> > +	init_irq_alloc_info(&info, NULL);
-> > +	info.type = X86_IRQ_ALLOC_TYPE_HPET;
-> > +	info.hpet_id = hdata->blockid;
-> > +
-> > +	return !!irq_remapping_get_ir_irq_domain(&info);
-> > +}
-> > +
-> >  /**
-> >   * compose_msi_msg() - Populate address and data fields of an MSI message
-> >   * @hdata:	A data strucure with the message to populate
-> > @@ -161,6 +181,9 @@ static int update_msi_destid(struct hpet_hld_data *hdata)
-> >  {
-> >  	u32 destid;
-> >  
-> > +	if (irq_remapping_enabled(hdata))
-> > +		return hld_hpet_intremap_activate_irq(hdata);
-> 
-> No. This is horrible hackery violating all the layering which we carefully
-> put into place to avoid exactly this kind of sprinkling conditionals into
-> all code pathes.
-> 
-> With some thought the existing irqdomain hierarchy can be used to achieve
-> the same thing without tons of extra functions and conditionals.
+This is a set of commits based on our discussion on your submission [1].
 
-And of course this whole thing falls completely apart when someone enables
-the hpet watchdog on AMD.
+First 2 implement minor suggestions just for you to not forget to take
+them into account.
 
-Can you folks please stop this works for me tinkering and finally grasp
-that there is a world outside of Intel and outside of big enterprise boxes?
+uio.h inclusion was needed for me to be able to compile your series
+successfully. Also please note I had to enable "Transparent Hugepage
+Support" as well as "Enable idle page tracking" options, otherwise the
+build failed. I guess this can be addressed by you better since the
+errors are introduced with MADV_COLD introduction.
 
-Thanks,
+Last 2 commits are the actual KSM hints enablement. The first one
+implements additional check for the case where the mmap_sem is taken for
+write, and the second one just allows KSM hints to be used by the remote
+interface.
 
-	tglx
+I'm not Cc'ing else anyone except two mailing lists to not distract
+people unnecessarily. If you are fine with this addition, please use it
+for your next iteration of process_madvise(), and then you'll Cc all the
+people needed.
+
+Thanks.
+
+[1] https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.org/
+
+Oleksandr Natalenko (5):
+  mm: rename madvise_core to madvise_common
+  mm: revert madvise_inject_error line split
+  mm: include uio.h to madvise.c
+  mm/madvise: employ mmget_still_valid for write lock
+  mm/madvise: allow KSM hints for remote API
+
+ mm/madvise.c | 23 ++++++++++++++---------
+ 1 file changed, 14 insertions(+), 9 deletions(-)
+
+-- 
+2.22.0
+
