@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47911C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42498C31E53
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A90C2087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A0E92087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:36:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m2yYGjNr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WZW0ndBQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727638AbfFPXgh (ORCPT
+        id S1727517AbfFPXgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 19:36:37 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39467 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727544AbfFPXgS (ORCPT
+        Sun, 16 Jun 2019 19:36:11 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41122 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727441AbfFPXgJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 19:36:18 -0400
-Received: by mail-lf1-f67.google.com with SMTP id p24so5144339lfo.6;
-        Sun, 16 Jun 2019 16:36:17 -0700 (PDT)
+        Sun, 16 Jun 2019 19:36:09 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 136so5133136lfa.8;
+        Sun, 16 Jun 2019 16:36:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=/LoNLOLC4v22fCk8MRxYZiVyFU9l44MdyNDw1bDmHwQ=;
-        b=m2yYGjNriXkaj18ueVpnD4vnoouUICdAj4mYFBxnqWOZGiwAaR5Bs62vrnNjku/2vP
-         X67mpJWA+Abgp3FLwUmzC4yHD/IIBAci1l5sCvSuG+RQj1QTQ4TBNADrYYOoJbkuKhZB
-         w56N3l17SwypZ6jd/tRs51e+XOyJr/UyXacC/6cZkB715iKmYAC2qQq3oVJZ2CdMIM8/
-         xiqV/zALHGyJE0dADZZDSa2AGYqQoRM85PqPwEFDpRKyfwFdjgM1tJGkTjxbivOYl5Bv
-         YlTMe6qRuDuKUcifzd1nvbQtVzFmLd8jB2MlIK4Zi0M+rUhN188PdRy25B6MGy6lxBzE
-         +wYg==
+        bh=/+aiQqK7SVIFUweiXHhwyrm7ecn7DTqzS0Aa+5uVOck=;
+        b=WZW0ndBQDx6P5ZBShmiU8I11BRUnYe/3JfJgyRAXTX+lMOh4eZfkA4usFnw0N/8coV
+         jk3EA/wkrjWjFhwVn3OfEWUrLA6WZ72b1MEaiuLkh4nKZ/CTaCt+oW0cCvjMnCZYj4pv
+         bPGUKvacMewgNenWN++3N0WV7g90NF1Y7CokW2rUOomnO5Xg90yd5ysg0JCKvvBxRf0F
+         pnsAHZbnEk6gQtX5niwCKpMrxLsgvQw56uMcYZIhtcj7WrOd89UOwVVY3WPkj6+dbNKo
+         Nrj2qIZFKHU5bjRB0HHH96aco4Smyi5kIhh28JMGOZ5YAbkwamd5bbUkT8U+iQPJclJh
+         /+Ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=/LoNLOLC4v22fCk8MRxYZiVyFU9l44MdyNDw1bDmHwQ=;
-        b=JldVCg+NoqVj19IuB9My4zeUyA0WRDy70zx1prCZJ8lQANPP9hwpJMMqssyuW5GhZ9
-         Bm/7kbbNLkehqyoNb1KPPEwuvFNqGQL9ZTK0fOpcVXyyWk9G4o0rfz8eZE5XiA0Qf48U
-         nueNDBNzMIhTjLSClEweKB9E+XPi6xxzAvaBcGT266WBSfOOx5PCrazRHRsJBZXyQ3US
-         eDJHLAhY+CHd2OHt9eeRy8YsPcxc8OcOvfbF6bl0bs7FJyKoCkgH8O7+Yh62+MBKg9Ui
-         qMd/ph65XVD9hQl4IxY6fn6m/pxO4cmvu8wCfC+lLbKT1OMSgEtOPMqI1tqEyFvSBmsp
-         Hclw==
-X-Gm-Message-State: APjAAAVgmEFqD1DjY82Pzm8FkI72eO5uDmxu5DpoUFO8CC/skRLTVs5D
-        7zyPTx4gWklVHPKwsVfiSHw=
-X-Google-Smtp-Source: APXvYqzrZ4HrWxTmGdAtjCWvopnaULhASTi++CVRUtOFAy27Rd4qfCGCV/jA8t8SLbcC9nAlQ6DX4A==
-X-Received: by 2002:ac2:5212:: with SMTP id a18mr46653296lfl.50.1560728176194;
-        Sun, 16 Jun 2019 16:36:16 -0700 (PDT)
+        bh=/+aiQqK7SVIFUweiXHhwyrm7ecn7DTqzS0Aa+5uVOck=;
+        b=kS0TnXdn4g4S0Ay6oIwgBfcKgJofj5Aw+YX3ZK6+JcznHRF8/cZTvV/W/qvapWnjYh
+         qpHJC8GSJZZMTarpKMHe7NyZ7vmyMZbGG0eS7cwUPDIUq5r2SS6Wm8yGh/GwYnwZLJNK
+         TsH4He0f34k4ClxctwrHYtwWiybnYVsCdFvI337ixIfL6s9aNMuJmB8rCg+QzziEj3dP
+         GDLzvm9OqwwTw3j9aOs6QMmu5y8t+EOqlICn1NKnBuWEwZlVor/xVWNAKcB1P1XeYZVP
+         8CNQt50RzRav+wB/wFN+05qX4DpH2lsH7ljkVEq/2A3aJKO098qMejaA5vzFAuRYIdRf
+         XMYQ==
+X-Gm-Message-State: APjAAAXaMRqXLE9oCf1cmyh6s7e/T1sKUbt3FW8OJXSVfg1R15zkz8oe
+        vITS4r/uB94hYy72cIuC/eY=
+X-Google-Smtp-Source: APXvYqw5oqIN3kNbxen2N2WaJbgiUJVeoLB6oGTSGGKsYmWm10j7xnqRm6IXmnYRmJ/r7KvMacP/Yg==
+X-Received: by 2002:a19:fc1d:: with SMTP id a29mr56713042lfi.35.1560728167128;
+        Sun, 16 Jun 2019 16:36:07 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id q4sm2008377lje.99.2019.06.16.16.36.15
+        by smtp.gmail.com with ESMTPSA id q4sm2008377lje.99.2019.06.16.16.36.05
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Jun 2019 16:36:15 -0700 (PDT)
+        Sun, 16 Jun 2019 16:36:06 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Rob Herring <robh+dt@kernel.org>,
         Michael Turquette <mturquette@baylibre.com>,
@@ -68,9 +68,9 @@ To:     Rob Herring <robh+dt@kernel.org>,
         Stephen Boyd <sboyd@kernel.org>
 Cc:     devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
         linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 10/10] ARM: dts: tegra30: Add External Memory Controller node
-Date:   Mon, 17 Jun 2019 02:35:51 +0300
-Message-Id: <20190616233551.6838-11-digetx@gmail.com>
+Subject: [PATCH v4 02/10] memory: tegra20-emc: Drop setting EMC rate to max on probe
+Date:   Mon, 17 Jun 2019 02:35:43 +0300
+Message-Id: <20190616233551.6838-3-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190616233551.6838-1-digetx@gmail.com>
 References: <20190616233551.6838-1-digetx@gmail.com>
@@ -81,35 +81,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add External Memory Controller node to the device-tree.
+The memory frequency scaling will be managed by tegra20-devfreq driver
+and PM QoS once all the prerequisite patches will get upstreamed.
+The parent clock is now managed by the clock driver and we also should
+assume that PLLM rate can't be changed on some devices (Galaxy Tab 10.1
+for example). Altogether there is no point in touching of clock's rate
+from the EMC driver.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- arch/arm/boot/dts/tegra30.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/memory/tegra/tegra20-emc.c | 45 ------------------------------
+ 1 file changed, 45 deletions(-)
 
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index e074258d4518..92c4aeafab29 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -732,6 +732,17 @@
- 		#reset-cells = <1>;
- 	};
+diff --git a/drivers/memory/tegra/tegra20-emc.c b/drivers/memory/tegra/tegra20-emc.c
+index 9ee5bef49e47..55ac3863a354 100644
+--- a/drivers/memory/tegra/tegra20-emc.c
++++ b/drivers/memory/tegra/tegra20-emc.c
+@@ -424,41 +424,6 @@ static int emc_setup_hw(struct tegra_emc *emc)
+ 	return 0;
+ }
  
-+	memory-controller@7000f400 {
-+		compatible = "nvidia,tegra30-emc";
-+		reg = <0x7000f400 0x400>;
-+		interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&tegra_car TEGRA30_CLK_EMC>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		nvidia,memory-controller = <&mc>;
-+	};
-+
- 	fuse@7000f800 {
- 		compatible = "nvidia,tegra30-efuse";
- 		reg = <0x7000f800 0x400>;
+-static int emc_init(struct tegra_emc *emc, unsigned long rate)
+-{
+-	int err;
+-
+-	err = clk_set_parent(emc->emc_mux, emc->backup_clk);
+-	if (err) {
+-		dev_err(emc->dev,
+-			"failed to reparent to backup source: %d\n", err);
+-		return err;
+-	}
+-
+-	err = clk_set_rate(emc->pll_m, rate);
+-	if (err) {
+-		dev_err(emc->dev,
+-			"failed to change pll_m rate: %d\n", err);
+-		return err;
+-	}
+-
+-	err = clk_set_parent(emc->emc_mux, emc->pll_m);
+-	if (err) {
+-		dev_err(emc->dev,
+-			"failed to reparent to pll_m: %d\n", err);
+-		return err;
+-	}
+-
+-	err = clk_set_rate(emc->clk, rate);
+-	if (err) {
+-		dev_err(emc->dev,
+-			"failed to change emc rate: %d\n", err);
+-		return err;
+-	}
+-
+-	return 0;
+-}
+-
+ static int tegra_emc_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np;
+@@ -550,18 +515,8 @@ static int tegra_emc_probe(struct platform_device *pdev)
+ 		goto put_backup;
+ 	}
+ 
+-	/* set DRAM clock rate to maximum */
+-	err = emc_init(emc, emc->timings[emc->num_timings - 1].rate);
+-	if (err) {
+-		dev_err(&pdev->dev, "failed to initialize EMC clock rate: %d\n",
+-			err);
+-		goto unreg_notifier;
+-	}
+-
+ 	return 0;
+ 
+-unreg_notifier:
+-	clk_notifier_unregister(emc->clk, &emc->clk_nb);
+ put_backup:
+ 	clk_put(emc->backup_clk);
+ put_pll_m:
 -- 
 2.22.0
 
