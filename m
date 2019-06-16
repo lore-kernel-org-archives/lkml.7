@@ -1,156 +1,224 @@
-Return-Path: <SRS0=HtuS=UO=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19791C31E50
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4807BC31E53
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 00:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE04121773
-	for <linux-kernel@archiver.kernel.org>; Sat, 15 Jun 2019 23:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2088421773
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 00:17:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="BRDPx3fe";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="AcKFHaJh"
+	dkim=pass (2048-bit key) header.d=ndufresne-ca.20150623.gappssmtp.com header.i=@ndufresne-ca.20150623.gappssmtp.com header.b="tvnVWwAK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727153AbfFOXuB (ORCPT
+        id S1727073AbfFPARR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 19:50:01 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:47254 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726434AbfFOXuA (ORCPT
+        Sat, 15 Jun 2019 20:17:17 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:38683 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726434AbfFPARR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 19:50:00 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5FNnPZl024308;
-        Sat, 15 Jun 2019 16:49:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=btibZ4CwVccBYDGblYXVjuLjX+4kKoSQLrCMgw/R1lg=;
- b=BRDPx3feYYD0iyBsosRmzHvucev6jVcGUY9GjC8aNxrUSQGatgs7m3t8xesbTNn3zMvm
- W9XmZwo/TSVtLeYPGaezHBYnc5oKUFLn7JYqdgHGLa5+77pZEh1uAGDmxEiKCa2VihxN
- m9WXFCO3Fua9OZz7Cxa0mGleFyHfTB5iXodIT1nhQRRxyF6XiK1QAylNJSKI/c41gPP0
- or87MW+khFIBOFy/z/RLC+MRz72A5sKMDISgONYM3HqzFgkFgAWqZOFAP8lfHwcXBl+v
- 2uKc/ajWvtbXfTbJ5aQbKN6gN/ttE2EcwvSNakLXXePhetDD7RGRTR37R26uPT+QjKPd gg== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam05-dm3-obe.outbound.protection.outlook.com (mail-dm3nam05lp2050.outbound.protection.outlook.com [104.47.49.50])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2t4v8w216m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 15 Jun 2019 16:49:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=btibZ4CwVccBYDGblYXVjuLjX+4kKoSQLrCMgw/R1lg=;
- b=AcKFHaJhfOsbn9iBgc4CnABUCUKq8xelMdDA3Q4vs5y2F6aF47mirLn2RPQKfhOXdzhW03gNRF8DicumEnbf/xtMU1X1Wem+KLepeJ/rqUhTB79z+d2HV4jHin5ID9mMCf+2+2uuXDfrJB4KF8AifGRW3eE++LgrObg3aYqLKiI=
-Received: from CY1PR07CA0024.namprd07.prod.outlook.com
- (2a01:111:e400:c60a::34) by MN2PR07MB6832.namprd07.prod.outlook.com
- (2603:10b6:208:11e::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.12; Sat, 15 Jun
- 2019 23:49:52 +0000
-Received: from BY2NAM05FT035.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e52::208) by CY1PR07CA0024.outlook.office365.com
- (2a01:111:e400:c60a::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.13 via Frontend
- Transport; Sat, 15 Jun 2019 23:49:52 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 158.140.1.28 as permitted sender)
-Received: from sjmaillnx2.cadence.com (158.140.1.28) by
- BY2NAM05FT035.mail.protection.outlook.com (10.152.100.172) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2008.7 via Frontend Transport; Sat, 15 Jun 2019 23:49:51 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by sjmaillnx2.cadence.com (8.14.4/8.14.4) with ESMTP id x5FNnnvK014480
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Sat, 15 Jun 2019 16:49:50 -0700
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Sun, 16 Jun 2019 01:49:48 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Sun, 16 Jun 2019 01:49:47 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5FNnlwK029946;
-        Sun, 16 Jun 2019 00:49:48 +0100
-From:   Parshuram Thombare <pthombar@cadence.com>
-To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
-        <davem@davemloft.net>, <f.fainelli@gmail.com>
-CC:     <netdev@vger.kernel.org>, <hkallweit1@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <rafalc@cadence.com>,
-        <aniljoy@cadence.com>, <piotrs@cadence.com>, <pthombar@cadence.com>
-Subject: [PATCH 6/6] net: macb: parameter added to cadence ethernet controller DT binding
-Date:   Sun, 16 Jun 2019 00:49:39 +0100
-Message-ID: <1560642579-29803-1-git-send-email-pthombar@cadence.com>
-X-Mailer: git-send-email 2.2.2
-In-Reply-To: <1560642512-28765-1-git-send-email-pthombar@cadence.com>
-References: <1560642512-28765-1-git-send-email-pthombar@cadence.com>
+        Sat, 15 Jun 2019 20:17:17 -0400
+Received: by mail-qt1-f193.google.com with SMTP id n11so6884069qtl.5
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 17:17:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ndufresne-ca.20150623.gappssmtp.com; s=20150623;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=RPYWmNahK2vRVRc4rjpcgyBodD//N8htFDABC5qiKy4=;
+        b=tvnVWwAKO+gxRapdBP9VjC96gXDZXuU7EIWkDpzqFfbNAW4CbwTrV+6JKz4OAF399n
+         CtofDo10IxqiCyQ1Z9Bl+rRcI8uW/dldDVkrM4J216uKA6mFG3Y40UtRQMlnxPmxLz3u
+         7fH7Xnp8LVuwCnOkTzYuMfwQmZAw+Vvm/xBnMBkgRhkoNcWJeZGDQ8jeucYsVSVYDfD1
+         uxzLAyl3eIng/prCUNuD414rVQ4gC27JLrywce9IkVchYh7sc8c5BltEPh95QlaTOaj4
+         i6ab/VyhV47WgOB85xrj/F4s1CbX+knKYOSRQwJfHev6Xvlg0vzU2OmcWutHNkjEJDYa
+         OWww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=RPYWmNahK2vRVRc4rjpcgyBodD//N8htFDABC5qiKy4=;
+        b=ltfniY9VtTxNgUn7vQngl2mOobjmdP2+db+b4FlwY/6AYJdkvm5fr70iBBKCC9XYea
+         0seYce907hbaFO6t7GNonuOvquVIOslebuLP44QTYLp4iWecWQjpokZikoaqTjEWFY7S
+         xRu9Uei3Z8F2zHmY8Owji5aW/rrzpeKyU+j1rZQhAaNDpbjCu51DpmADvQopPU27HyY+
+         pVfetlSfnGjNw7/SGj4sRmTUkt1Zl4DvDOtYuCJZnDDVK5SydQMXt/QgKlZco3Na7RFA
+         dnhketd8oH0s8woLxzM/IqohIlBGhpUnmuqMQh/cS2lxpqIeQ/GszEeal3SI5RzZZI6E
+         3Xrw==
+X-Gm-Message-State: APjAAAVkKILvj9NWMY53LX0kI1BKCE0CuEh6ZD1ERRJ/mds+3khoZhP2
+        VTHgRJyOioBkdNJK8ENhiIe6lQ==
+X-Google-Smtp-Source: APXvYqzog7sFeTixlNzo0cJnGdNsKtNwrbd57ULiUZdtTKqrVxb5B9rWMUEnNYBcSiTK3OGgjct43g==
+X-Received: by 2002:ac8:17f7:: with SMTP id r52mr88871478qtk.235.1560644235462;
+        Sat, 15 Jun 2019 17:17:15 -0700 (PDT)
+Received: from skullcanyon ([192.222.193.21])
+        by smtp.gmail.com with ESMTPSA id y6sm3821837qki.67.2019.06.15.17.17.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sat, 15 Jun 2019 17:17:14 -0700 (PDT)
+Message-ID: <e7660d9558e5fcb0cc040f7c71900706fa90dce1.camel@ndufresne.ca>
+Subject: Re: [PATCHv4 0/2] Document memory-to-memory video codec interfaces
+From:   Nicolas Dufresne <nicolas@ndufresne.ca>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org
+Cc:     Tomasz Figa <tfiga@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Andrew-CT Chen <andrew-ct.chen@mediatek.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Pawel Osciak <posciak@chromium.org>
+Date:   Sat, 15 Jun 2019 20:17:12 -0400
+In-Reply-To: <74c25415-01d4-eed6-c277-124a8ef1bf3e@xs4all.nl>
+References: <20190603112835.19661-1-hverkuil-cisco@xs4all.nl>
+         <259bb812-9cc9-8fe7-8fc6-2cbd5ef44ac3@xs4all.nl>
+         <615f53383f8f65011d1ce3ec49f6d78b67b8ddea.camel@ndufresne.ca>
+         <74c25415-01d4-eed6-c277-124a8ef1bf3e@xs4all.nl>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:158.140.1.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(396003)(346002)(376002)(136003)(2980300002)(36092001)(189003)(199004)(305945005)(11346002)(7636002)(50466002)(26005)(6666004)(356004)(48376002)(77096007)(50226002)(246002)(8676002)(53416004)(16586007)(316002)(76130400001)(8936002)(4744005)(5660300002)(2201001)(107886003)(126002)(476003)(86362001)(2906002)(47776003)(70206006)(51416003)(7696005)(76176011)(70586007)(446003)(426003)(26826003)(4326008)(478600001)(186003)(36756003)(336012)(110136005)(7126003)(2616005)(54906003)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR07MB6832;H:sjmaillnx2.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:corp.cadence.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: c9398075-9c8f-4a8c-91a8-08d6f1ec28cb
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:MN2PR07MB6832;
-X-MS-TrafficTypeDiagnostic: MN2PR07MB6832:
-X-Microsoft-Antispam-PRVS: <MN2PR07MB683292F54D6053D32E046AB1C1E90@MN2PR07MB6832.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 0069246B74
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: lIaG9jACxiG/1uGABr6qO+vG3+frIb4ibuEHNqYTlTl289gKOC+MglMI2koxr4AQYMlAS+2YrGiPVXiCbx+7LWopOcLSzlBPv6CvcdjyGbNJyF3sJpK+JNd4YDhQdIcPZTEGW/mq6C87r0zKwdqpalcQd/+ZqX5X05J4oXbq7JE5wjK0/22lwrsMe9EnDjjsSfp28RUTN8WuiQwF1Sl149UFdd0j6tLXkSj9FT8O3hY2Xf0EiGxTq8QE6cPRaROH2kraoG4FSDqtXT64rL790rVQGHgIfdiSW70uM+3Fl7uvcpXJ524flmv9ga0CJt/xkwNd8YpEuER5kHRE/9YgqvqvUTuK04PFimjGZpAqeBJwk8+ho5CbKgJB7+0Eekes32FFeDZ+iSzTjWLqZCtJKVNjpTGK5TXq6PrA3HgFvig=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2019 23:49:51.7919
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c9398075-9c8f-4a8c-91a8-08d6f1ec28cb
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[158.140.1.28];Helo=[sjmaillnx2.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR07MB6832
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-15_13:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906150227
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New parameters added to Cadence ethernet controller DT binding
-for USXGMII interface.
+Le samedi 15 juin 2019 à 10:08 +0200, Hans Verkuil a écrit :
+> On 6/14/19 3:09 AM, Nicolas Dufresne wrote:
+> > Le jeudi 13 juin 2019 à 08:48 +0200, Hans Verkuil a écrit :
+> > > On 6/3/19 1:28 PM, Hans Verkuil wrote:
+> > > > Since Tomasz was very busy with other things, I've taken over this
+> > > > patch series. This v4 includes his draft changes and additional changes
+> > > > from me.
+> > > > 
+> > > > This series attempts to add the documentation of what was discussed
+> > > > during Media Workshops at LinuxCon Europe 2012 in Barcelona and then
+> > > > later Embedded Linux Conference Europe 2014 in Düsseldorf and then
+> > > > eventually written down by Pawel Osciak and tweaked a bit by Chrome OS
+> > > > video team (but mostly in a cosmetic way or making the document more
+> > > > precise), during the several years of Chrome OS using the APIs in
+> > > > production.
+> > > > 
+> > > > Note that most, if not all, of the API is already implemented in
+> > > > existing mainline drivers, such as s5p-mfc or mtk-vcodec. Intention of
+> > > > this series is just to formalize what we already have.
+> > > > 
+> > > > Thanks everyone for the huge amount of useful comments to previous
+> > > > versions of this series. Much of the credits should go to Pawel Osciak
+> > > > too, for writing most of the original text of the initial RFC.
+> > > > 
+> > > > This v4 incorporates all known comments (let me know if I missed
+> > > > something!) and should be complete for the decoder.
+> > > > 
+> > > > For the encoder there are two remaining TODOs for the API:
+> > > > 
+> > > > 1) Setting the frame rate so bitrate control can make sense, since
+> > > >    they need to know this information.
+> > > > 
+> > > >    Suggested solution: require support for ENUM_FRAMEINTERVALS for the
+> > > >    coded pixelformats and S_PARM(OUTPUT). Open question: some drivers
+> > > >    (mediatek, hva, coda) require S_PARM(OUTPUT), some (venus) allow both
+> > > >    S_PARM(CAPTURE) and S_PARM(OUTPUT). I am inclined to allow both since
+> > > >    this is not a CAPTURE vs OUTPUT thing, it is global to both queues.
+> > > 
+> > > Alternative proposal:
+> > > 
+> > > 1) Add support for fractions (struct v4l2_fract) as a control type:
+> > >    V4L2_CTRL_TYPE_FRACT.
+> > > 
+> > > 2) Add a new V4L2_CID_MPEG_FRAME_INTERVAL control.
+> > 
+> > Is the MPEG namespace historical ? That might be confusing for users.
+> 
+> Yes, it's historical. I have toyed with the idea of renaming all the
+> defines to something like V4L2_CID_CODEC_... (keeping the old defines, of
+> course), but I'm not sure it is worth it.
+> 
+> > > Encoders shall support this control.
+> > > 
+> > > 3) For backwards compatibility reasons encoder drivers still have to
+> > > support G/S_PARM, but this can now be implemented by standard helpers
+> > > that query this control. Drivers also have to implement ENUM_FRAMEINTERVALS.
+> > 
+> > That's won't be very friendly for UI generator like qv4l2. Support for
+> > v4l2_fract as control should include a way to describe the supported
+> > values of that control the usual way I think.
+> 
+> Such a control will definitely have the usual min/max/step/default control
+> values.
+> 
+> > Also, long term, it would be nice to have two sets of frame rates. The
+> > one that the HW can handle "real-time" and the one that can be used for
+> > bitrate calculation. So staying away from ENUM_FRAMEINTERVALS for
+> > bitrate configuration would be nicer.
+> 
+> I'm not sure if that's feasible in practice, although the idea is nice.
+> The 'real-time' framerate will likely depend to a huge extent on the
+> frequency of various internal clocks and the content of the bitstream.
+> 
+> I suspect it will be very hard if not impossible to report realistic
+> ENUM_FRAMEINTERVAL values for codecs.
+> 
+> > > If the range of intervals is always the same regardless of the frame size,
+> > > then a helper can be used that queries the min/max/step of the control, but
+> > > if it is dependent on the frame size, then it has to be implemented in the
+> > > driver itself.
+> > > 
+> > > I'm sticking to frame intervals instead of frame rates for the simple reason
+> > > that that's what V4L2 has used since the beginning. I think it is too confusing
+> > > to change this to a frame rate. This is just my opinion, though.
+> > 
+> > I suggested frame rate since this is what I saw implemented by HW
+> > registers (if you think it's worth it, I can try and make a list).
+> > Also, frame-interval steps are not compatible with frame-rate steps
+> > (something that was raised through a venus driver bug) last year. Even
+> > v4l2-ctl was displaying that in a very confusing way. Something as
+> > simple as 1 to 30 fps cannot be exposed through ENU_FRAMEINTERVALS. You
+> > are forced to expose the full fractional range of interval, from 1/30
+> > to 1/1. For Venus it was not that much of a trouble, since its stores a
+> > framerate as Q16..
+> 
+> Since this is used for bitrate calculations, and not for determining the
+> exact framerate, I'm not sure it matters all that much in this particular
+> case. Since you still need to implement G/S_PARM in drivers for backwards
+> compatibility reasons I think it is easiest to keep using frame interval
+> instead of frame rate.
+> 
+> Actually, that raises a new question: are there codecs that store the frame rate
+> in the bitstream? I haven't heard of that, so I suspect not, but I'm not certain.
 
-Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
----
- Documentation/devicetree/bindings/net/macb.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+Yes, H264 and HEVC have the VUI SEI. In HEVC you can also pass this in
+VPS. Both are fractions. I'm not certain, but I think you can embed a
+timecode, and these also have the fps.
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 9c5e94482b5f..cd79ec9dddfb 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -25,6 +25,10 @@ Required properties:
- 	Optional elements: 'rx_clk' applies to cdns,zynqmp-gem
- 	Optional elements: 'tsu_clk'
- - clocks: Phandles to input clocks.
-+- serdes-rate External serdes rate.Mandatory for USXGMII mode.
-+	0 - 5G
-+	1 - 10G
-+- fixed-speed Speed for fixed mode UXSGMII interface based link
- 
- The MAC address will be determined using the optional properties
- defined in ethernet.txt.
--- 
-2.17.1
+For stateful encoder, it's always nice if the encoder can produce the
+SEI/VPS bit. The worst that could happen is an IP that always produce
+that information, and userspace that didn't set anything.
+
+For decoders, it's not something I really care about, since I we do
+parse this in GStreamer. That being said, I know that the firmware on
+the ZynqMP uses the framerate to calculate the number of cores it uses.
+So if you don't pass it, it will chose base on the maximum for the
+profile/level, which may greatly reduce the number of concurrent
+streams you can run.
+
+> 
+> Regards,
+> 
+> 	Hans
+> 
+> > > I also chose to make this a codec control, not a generic user control: this
+> > > value together with the bit rate control(s) determine the compression size,
+> > > it does not determine the actual time it takes for the encoder to compress
+> > > the raw frames. Hence it is really not the same thing as the frame interval
+> > 
+> > That's a good point.
+> > 
+> > > of a video capture device. If we want to use a control for that as well in
+> > > the future as a replacement for G/S_PARM, then that should be a new control.
+> > > And we would like need per-pad controls as well in order to implement that.
+> > > Which is a lot more work.
+> > > 
+> > > Regards,
+> > > 
+> > > 	Hans
 
