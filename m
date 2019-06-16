@@ -2,102 +2,91 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFF2EC31E53
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5657BC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:50:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88BF21473
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:21:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="I/eon35b"
+	by mail.kernel.org (Postfix) with ESMTP id 24B66216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:50:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfFPIVN (ORCPT
+        id S1726258AbfFPIjt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 04:21:13 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:1478 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725917AbfFPIVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 04:21:10 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 45RS3Q4XrGz9v19r;
-        Sun, 16 Jun 2019 10:21:06 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=I/eon35b; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id IVYRmuuTueHB; Sun, 16 Jun 2019 10:21:06 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 45RS3Q3VBdz9v19n;
-        Sun, 16 Jun 2019 10:21:06 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1560673266; bh=nDddjU62SJMnatBSBKFnzXb/nxJGkqucoMGf//3m8xY=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=I/eon35beLILDeNdqn5+T0Mrn9iajXcmzRWKFgcL1xtoTPsLiJsM9Zt+pv/RHb8/2
-         pPBbZNB2LIMIo40jsiyfjTtYbOoYFFAnptyjTWGI9tYdUG0D5NAPnEDLa+TOIoueM3
-         gXYPJ6VA1t384O8OCP7MeYf9egBEM3qNkEKrGJCg=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 551628B7D1;
-        Sun, 16 Jun 2019 10:21:09 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id j5p44WTEn-_X; Sun, 16 Jun 2019 10:21:09 +0200 (CEST)
-Received: from [192.168.232.53] (unknown [192.168.232.53])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BCED38B7CD;
-        Sun, 16 Jun 2019 10:21:08 +0200 (CEST)
-Subject: Re: [PATCH v5 13/16] powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX
-To:     Andreas Schwab <schwab@linux-m68k.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <cover.1550775950.git.christophe.leroy@c-s.fr>
- <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
- <87blyz9jor.fsf@igel.home>
-From:   christophe leroy <christophe.leroy@c-s.fr>
-Message-ID: <a76f7759-a407-3d9a-0f43-654fd7ea0b1e@c-s.fr>
-Date:   Sun, 16 Jun 2019 10:20:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sun, 16 Jun 2019 04:39:49 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41588 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725990AbfFPIjt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 04:39:49 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hcQhG-0007Ck-9X; Sun, 16 Jun 2019 10:39:30 +0200
+Date:   Sun, 16 Jun 2019 10:39:28 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Bae, Chang Seok" <chang.seok.bae@intel.com>
+cc:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v7 18/18] x86/fsgsbase/64: Add documentation for
+ FSGSBASE
+In-Reply-To: <89BE934A-A392-4CED-83E5-CA4FADDAE6DF@intel.com>
+Message-ID: <alpine.DEB.2.21.1906161038160.1760@nanos.tec.linutronix.de>
+References: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com> <1557309753-24073-19-git-send-email-chang.seok.bae@intel.com> <alpine.DEB.2.21.1906132246310.1791@nanos.tec.linutronix.de> <EEACF240-4772-417A-B516-95D9003D0D11@intel.com>
+ <89BE934A-A392-4CED-83E5-CA4FADDAE6DF@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <87blyz9jor.fsf@igel.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Avast (VPS 190616-0, 16/06/2019), Outbound message
-X-Antivirus-Status: Clean
+Content-Type: multipart/mixed; boundary="8323329-1038240742-1560674370=:1760"
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
 
+--8323329-1038240742-1560674370=:1760
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 
-Le 15/06/2019 à 13:23, Andreas Schwab a écrit :
-> This breaks suspend (or resume) on the iBook G4.  no_console_suspend
-> doesn't give any clues, the display just stays dark.
+On Sun, 16 Jun 2019, Bae, Chang Seok wrote:
+> On Jun 14, 2019, at 13:07, Bae, Chang Seok <chang.seok.bae@intel.com<mailto:chang.seok.bae@intel.com>> wrote:
 > 
+> 
+> On Jun 13, 2019, at 23:54, Thomas Gleixner <tglx@linutronix.de<mailto:tglx@linutronix.de>> wrote:
+> 
+> +The GS segment has no common use and can be used freely by
+> +applications. There is no storage class specifier similar to __thread which
+> +would cause the compiler to use GS based addressing modes. Newer versions
+> +of GCC and Clang support GS based addressing via address space identifiers.
+> +
+> 
+> …
+> 
+> +
+> +Clang does not provide these address space identifiers, but it provides
+> +an attribute based mechanism:
+> +
+> 
+> These two sentences seem to conflict with each other; Clang needs to be clarified
+> above.
+> 
+> Thanks for the write-up. Just preparing v8 right now. Will send out shortly.
 
-After a quick look at the suspend functions, I have the feeling that 
-those functions only store and restore BATs 0 to 3.
+Please dont. Send me a delta patch against the documentation. I have queued
+all the other patches already internally. I did not push it out because I
+wanted to have proper docs.
 
-Could you build your kernel with CONFIG_PPC_PTDUMP and see in file 
-/sys/kernel/debug/powerpc/segment_registers how many IBATs registers are 
-used.
-If any of registers IBATs 4 to 7 are used, could you adjust 
-CONFIG_ETEXT_SHIFT so that only IBATs 0 to 3 be used, and check if 
-suspend/resume works when IBATs 4 to 7 are not used ?
+Thanks,
 
-Thanks
-Christophe
-
----
-L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
-https://www.avast.com/antivirus
-
+	tglx
+--8323329-1038240742-1560674370=:1760--
