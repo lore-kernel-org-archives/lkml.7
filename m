@@ -2,102 +2,81 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BE4C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:30:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19E5BC31E54
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:48:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C34D216C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:30:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFBD0216F4
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:48:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725948AbfFPGaO (ORCPT
+        id S1726018AbfFPGsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 02:30:14 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:36290 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725795AbfFPGaO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 02:30:14 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TUIXG5o_1560666600;
-Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0TUIXG5o_1560666600)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 16 Jun 2019 14:30:01 +0800
-Reply-To: xlpang@linux.alibaba.com
-Subject: Re: [PATCH] memcg: Ignore unprotected parent in
- mem_cgroup_protected()
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190615111704.63901-1-xlpang@linux.alibaba.com>
- <20190615160820.GB1307@chrisdown.name>
-From:   Xunlei Pang <xlpang@linux.alibaba.com>
-Message-ID: <711f086e-a2e5-bccd-72b6-b314c4461686@linux.alibaba.com>
-Date:   Sun, 16 Jun 2019 14:30:00 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.1
+        Sun, 16 Jun 2019 02:48:23 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18624 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725882AbfFPGsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 02:48:23 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id CCD58D0E11060586B1D7;
+        Sun, 16 Jun 2019 14:48:03 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sun, 16 Jun
+ 2019 14:47:57 +0800
+Subject: Re: [PATCH v3 1/2] staging: erofs: add requirements field in
+ superblock
+To:     Sasha Levin <sashal@kernel.org>
+CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, <stable@vger.kernel.org>
+References: <20190613083541.67091-1-gaoxiang25@huawei.com>
+ <20190615221606.1C12F2183F@mail.kernel.org>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <8ba384bd-44ea-2261-4f49-da354298edf6@huawei.com>
+Date:   Sun, 16 Jun 2019 14:47:56 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-In-Reply-To: <20190615160820.GB1307@chrisdown.name>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190615221606.1C12F2183F@mail.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chirs,
+Hi Sasha,
 
-On 2019/6/16 AM 12:08, Chris Down wrote:
-> Hi Xunlei,
+On 2019/6/16 6:16, Sasha Levin wrote:
+> Hi,
 > 
-> Xunlei Pang writes:
->> Currently memory.min|low implementation requires the whole
->> hierarchy has the settings, otherwise the protection will
->> be broken.
->>
->> Our hierarchy is kind of like(memory.min value in brackets),
->>
->>               root
->>                |
->>             docker(0)
->>              /    \
->>         c1(max)   c2(0)
->>
->> Note that "docker" doesn't set memory.min. When kswapd runs,
->> mem_cgroup_protected() returns "0" emin for "c1" due to "0"
->> @parent_emin of "docker", as a result "c1" gets reclaimed.
->>
->> But it's hard to maintain parent's "memory.min" when there're
->> uncertain protected children because only some important types
->> of containers need the protection.  Further, control tasks
->> belonging to parent constantly reproduce trivial memory which
->> should not be protected at all.  It makes sense to ignore
->> unprotected parent in this scenario to achieve the flexibility.
+> [This is an automated email]
 > 
-> I'm really confused by this, why don't you just set memory.{min,low} in
-> the docker cgroup and only propagate it to the children that want it?
+> This commit has been processed because it contains a "Fixes:" tag,
+> fixing commit: ba2b77a82022 staging: erofs: add super block operations.
 > 
-> If you only want some children to have the protection, only request it
-> in those children, or create an additional intermediate layer of the
-> cgroup hierarchy with protections further limited if you don't trust the
-> task to request the right amount.
+> The bot has tested the following trees: v5.1.9, v4.19.50.
 > 
-> Breaking the requirement for hierarchical propagation of protections
-> seems like a really questionable API change, not least because it makes
-> it harder to set systemwide policies about the constraints of
-> protections within a subtree.
+> v5.1.9: Failed to apply! Possible dependencies:
+>     Unable to calculate
+> 
+> v4.19.50: Failed to apply! Possible dependencies:
+>     Unable to calculate
+> 
+> 
+> How should we proceed with this patch?
 
-docker and various types(different memory capacity) of containers
-are managed by k8s, it's a burden for k8s to maintain those dynamic
-figures, simply set "max" to key containers is always welcome.
+I will manually make patches for v5.1.9 and v4.19.50
+after it gets merged.
 
-Set "max" to docker also protects docker cgroup memory(as docker
-itself has tasks) unnecessarily.
+Thanks,
+Gao Xiang
 
-This patch doesn't take effect on any intermediate layer with
-positive memory.min set, it requires all the ancestors having
-0 memory.min to work.
-
-Nothing special change, but more flexible to business deployment...
+> 
+> --
+> Thanks,
+> Sasha
+> 
