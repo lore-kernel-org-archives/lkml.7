@@ -2,176 +2,191 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0064C31E54
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:42:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F844C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD85B205ED
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:42:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 279DB2145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:43:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E6ypAV7a"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sr2VHyKH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfFPRm4 (ORCPT
+        id S1727319AbfFPRnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 13:42:56 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44473 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFPRmz (ORCPT
+        Sun, 16 Jun 2019 13:43:55 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:52976 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726069AbfFPRny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 13:42:55 -0400
-Received: by mail-pg1-f196.google.com with SMTP id n2so4426900pgp.11
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 10:42:55 -0700 (PDT)
+        Sun, 16 Jun 2019 13:43:54 -0400
+Received: by mail-wm1-f65.google.com with SMTP id s3so6932440wms.2;
+        Sun, 16 Jun 2019 10:43:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VO7zaCyhtYCv5/pYPEOpaqTuj9RzI+pPqxayb3u5KrQ=;
-        b=E6ypAV7ah+6QPhVC+81/TmriH5kiwIW3yBefIT6/UZalvKxhpZ5qv33YYJG5Ha5pd9
-         /+Bb5+4iaqzNqexvspAViIRLQ/2DjzNk17I9h9DaKbIHuN/Mb61q6wgdqPw7o0Oi23KQ
-         XLYGKAhfheQYTmD7AWUEuNP219C/tfsBo4+IV9Yd0QzvQOzsXCgqWL4ApGonFglOW1gO
-         uIfvQJkW+i4eWuHCQou9gMmjMukpCYUsy4bKOUyFjtnVpPDDiJtc9LKWyKTLnlzKLCvn
-         +2/Drz9CSNCdfZLs7iQHwuYespDAW9ThxF56eaHQJp8tLxRDAcyNzWVbyhzc5IvXye2q
-         mxVA==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=que2swj0V47qMw6o/7WuGeIOPLMG0y81yFWSWpROV4I=;
+        b=sr2VHyKHuKA0dnTZCgPBIHaROyB60v/TFp3jvmeh9zHh4UdGBiZEj6s2Da59R/KTCi
+         zRkmUMxYcdl6nG36OxJI1Xa3QzD8MYrUxbPhvJ1HBWHK1cXUyTBogO1g7Lmrr/yYs7ur
+         P7vFT5ydVUqCb0Et6dUrutZ/TckfzLNxTJ8PPD8TrpNurkHcy09YDW2Xi9SA4qhYr7JO
+         LsvSObG99o64reQkzeEo4okgkdOwj0igpsavL21HkCQHLs2AJGSXttlaJcaQvtHbnwE5
+         fEnsOLPcQY/78BLWOebWOvv4PECbWxlK9PSmVBML9VyNc+59nZYhqIRBY2KZahJ7YjKK
+         ju7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VO7zaCyhtYCv5/pYPEOpaqTuj9RzI+pPqxayb3u5KrQ=;
-        b=OfAkz34yuD7ZgjV3GANqlZEacZm1+silDWUvjPbyI50sRvYxBqUq8ITN2TIe4m0hrg
-         V1GNLsliWIj4aAc6QIsdFVqAIoibSVf/+4aVk9S/Fr74ULBDHDeTvLJpq3q2JcRxgYCK
-         soU9Rtsk7ZTwtbE4EqDdIY3g13PhGtlDf8fof4x8fNhcG+lpojbnlW6LKaIFAaAwjphi
-         Cc67IlkPs1pi0Jx94ZT4p9FGClL+c0Eb0VhUEwa6+c1jMpf1OXiH+i8F3wk8g6VDbTLx
-         P1VE7xKg3IuhIOP3h2oIenP4UrSLbrC2y5jeUeOCk0a/xku2UO1XVk2tbKDG7aOj71SR
-         LXlw==
-X-Gm-Message-State: APjAAAVHgDJ26Yee3YrdAwO0jkoknEfrFUK9OEufj1HBWncme70con1i
-        C0sZVpyarFZ1rj1o7i8UJR3SjQ==
-X-Google-Smtp-Source: APXvYqyvq8iUKBGDlzVU0jxWwFc6QWJYExh3pNkXSN2atfAMzIvwO4vh8OKBBUYkG5sVg2kbv5VUcg==
-X-Received: by 2002:a17:90b:f0e:: with SMTP id br14mr7923991pjb.117.1560706975061;
-        Sun, 16 Jun 2019 10:42:55 -0700 (PDT)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id 12sm8736073pfi.60.2019.06.16.10.42.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 10:42:54 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 10:43:41 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
-        sean@poorly.run, robh+dt@kernel.org, airlied@linux.ie,
-        daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM)
- bindings
-Message-ID: <20190616174341.GP22737@tuxbook-pro>
-References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-2-masneyb@onstation.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=que2swj0V47qMw6o/7WuGeIOPLMG0y81yFWSWpROV4I=;
+        b=s1zkw4hczp+iE7TbVwGUTPU5DdVEyVUyaNrjnu0Nggrx+2ybZ2TVPYpm2ATym51cIH
+         MNg/NbDVC8zZUGXL3kB4IYoCOOxpQHwI6nSHsxXqkxVl8SO5CsMF+qeaBbZJVCaVnYAx
+         APoH3AjTjlqjqlqdBeo1jri4eib6JT4lvICNQExCxF0t0ES2mK8bscDpy2iK78nzCPNl
+         EgNTztseqV66tuv5D4AowJN/bufYRAISr2BpZPBkwxJvGVxn20WIQ3Ke6i75MuEzYgVY
+         vPyUPpq2twy7tQJNd8yDz4JD9CwSylwC0GzfzI1NXisurwW5mksy74u2zT3OILTKkM+Y
+         2ugQ==
+X-Gm-Message-State: APjAAAXE4G3JyMsdFD2OKOTmPMqH6lvsD4p6bOIfbnaziOj9vER8mZQt
+        ruOAHRXh2kFd5ODy5oyVozA=
+X-Google-Smtp-Source: APXvYqxuP6NBzLcQgq1Gfqfr/NPBip/sbjxzKzIOOw08EaRxZGa9wPyF1gU8Tar4EBtrnXvdhRX4FQ==
+X-Received: by 2002:a7b:cb84:: with SMTP id m4mr16663973wmi.50.1560707032125;
+        Sun, 16 Jun 2019 10:43:52 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id a81sm14875836wmh.3.2019.06.16.10.43.50
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 16 Jun 2019 10:43:51 -0700 (PDT)
+Subject: Re: [PATCHv4 06/28] timerfd/timens: Take into account ns clock
+ offsets
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org
+References: <20190612192628.23797-1-dima@arista.com>
+ <20190612192628.23797-7-dima@arista.com>
+ <alpine.DEB.2.21.1906141534090.1722@nanos.tec.linutronix.de>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <bf28eefd-390b-5209-09c1-db9874030369@gmail.com>
+Date:   Sun, 16 Jun 2019 18:43:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190616132930.6942-2-masneyb@onstation.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <alpine.DEB.2.21.1906141534090.1722@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 16 Jun 06:29 PDT 2019, Brian Masney wrote:
-
-> Add device tree bindings for the On Chip Memory (OCMEM) that is present
-> on some Qualcomm Snapdragon SoCs.
+On 6/14/19 2:37 PM, Thomas Gleixner wrote:
+> On Wed, 12 Jun 2019, Dmitry Safonov wrote:
+>> ---
+>>  fs/timerfd.c                   |  3 +++
+>>  include/linux/time_namespace.h | 18 ++++++++++++++++++
+>>  kernel/time_namespace.c        | 27 +++++++++++++++++++++++++++
+>>  3 files changed, 48 insertions(+)
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../bindings/soc/qcom/qcom,ocmem.yaml         | 66 +++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
+> Again, please split that into:
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-> new file mode 100644
-> index 000000000000..5e3ae6311a16
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/qcom/qcom,ocmem.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
-> +
-> +maintainers:
-> +  - Brian Masney <masneyb@onstation.org>
-> +
-> +description: |
-> +  The On Chip Memory (OCMEM) allocator allows various clients to allocate memory
-> +  from OCMEM based on performance, latency and power requirements. This is
-> +  typically used by the GPU, camera/video, and audio components on some
-> +  Snapdragon SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ocmem-msm8974
-
-qcom,msm8974-ocmem
-
-> +
-> +  reg:
-> +    items:
-> +      - description: Control registers
-> +      - description: OCMEM address range
-> +
-> +  reg-names:
-> +    items:
-> +      - const: ocmem_ctrl_physical
-> +      - const: ocmem_physical
-
-Drop the "_physical" part, it's given by this being "reg".
-
-Regards,
-Bjorn
-
-> +
-> +  clocks:
-> +    items:
-> +      - description: Core clock
-> +      - description: Interface clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: iface
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +      #include <dt-bindings/clock/qcom,rpmcc.h>
-> +      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-> +
-> +      ocmem: ocmem@fdd00000 {
-> +        compatible = "qcom,ocmem-msm8974";
-> +
-> +        reg = <0xfdd00000 0x2000>,
-> +               <0xfec00000 0x180000>;
-> +        reg-names = "ocmem_ctrl_physical",
-> +                    "ocmem_physical";
-> +
-> +        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-> +                  <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-> +        clock-names = "core",
-> +                      "iface";
-> +      };
-> -- 
-> 2.20.1
+>    1) Introduce the new function
 > 
+>    2) Make use of it
+
+Will do
+
+> 
+>> diff --git a/fs/timerfd.c b/fs/timerfd.c
+>> index 6a6fc8aa1de7..9b0c2f65e7e8 100644
+>> --- a/fs/timerfd.c
+>> +++ b/fs/timerfd.c
+>> @@ -26,6 +26,7 @@
+>>  #include <linux/syscalls.h>
+>>  #include <linux/compat.h>
+>>  #include <linux/rcupdate.h>
+>> +#include <linux/time_namespace.h>
+>>  
+>>  struct timerfd_ctx {
+>>  	union {
+>> @@ -196,6 +197,8 @@ static int timerfd_setup(struct timerfd_ctx *ctx, int flags,
+>>  	}
+>>  
+>>  	if (texp != 0) {
+>> +		if (flags & TFD_TIMER_ABSTIME)
+>> +			texp = timens_ktime_to_host(clockid, texp);
+>>  		if (isalarm(ctx)) {
+>>  			if (flags & TFD_TIMER_ABSTIME)
+>>  				alarm_start(&ctx->t.alarm, texp);
+>> diff --git a/include/linux/time_namespace.h b/include/linux/time_namespace.h
+>> index 1dda8af6b9fe..d32b55fad953 100644
+>> --- a/include/linux/time_namespace.h
+>> +++ b/include/linux/time_namespace.h
+>> @@ -56,6 +56,19 @@ static inline void timens_add_boottime(struct timespec64 *ts)
+>>                  *ts = timespec64_add(*ts, ns_offsets->boottime);
+>>  }
+>>  
+>> +ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
+>> +				struct timens_offsets *offsets);
+>> +static inline ktime_t timens_ktime_to_host(clockid_t clockid, ktime_t tim)
+>> +{
+>> +	struct timens_offsets *offsets = current->nsproxy->time_ns->offsets;
+>> +
+>> +	if (!offsets) /* fast-path for the root time namespace */
+> 
+> Can you please avoid tail comments. They break the reading flow. Aside of
+> that I don't see the value of documenting the obvious.
+> 
+>> +ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim, struct timens_offsets *ns_offsets)
+> 
+> Please line break the arguments
+> 
+> ktime_t do_timens_ktime_to_host(clockid_t clockid, ktime_t tim,
+> 				struct timens_offsets *ns_offsets)
+
+Sure
+
+> 
+>> +{
+>> +	ktime_t koff;
+>> +
+>> +	switch (clockid) {
+>> +	case CLOCK_MONOTONIC:
+>> +		koff = timespec64_to_ktime(ns_offsets->monotonic);
+>> +		break;
+>> +	case CLOCK_BOOTTIME:
+>> +	case CLOCK_BOOTTIME_ALARM:
+>> +		koff = timespec64_to_ktime(ns_offsets->boottime);
+>> +		break;
+>> +	default:
+>> +		return tim;
+>> +	}
+>> +
+>> +	/* tim - off has to be in [0, KTIME_MAX) */
+> 
+> Please be more elaborate why the below conditions can happen at all.
+> 
+>> +	if (tim < koff)
+>> +		tim = 0;
+>> +	else if (KTIME_MAX - tim < -koff)
+>> +		tim = KTIME_MAX;
+>> +	else
+>> +		tim = ktime_sub(tim, koff);
+
+Thanks,
+          Dmitry
