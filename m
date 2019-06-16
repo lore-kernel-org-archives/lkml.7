@@ -2,192 +2,171 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C41C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 605DFC31E54
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:01:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B8D82133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:56:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="I13XC7OY";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="kJz2L3Zw"
+	by mail.kernel.org (Postfix) with ESMTP id 42C0A2133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:01:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfFPG40 (ORCPT
+        id S1725987AbfFPHBy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 02:56:26 -0400
-Received: from mx0a-0014ca01.pphosted.com ([208.84.65.235]:43326 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725855AbfFPG4Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 02:56:25 -0400
-Received: from pps.filterd (m0042385.ppops.net [127.0.0.1])
-        by mx0a-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5G6lGJu003268;
-        Sat, 15 Jun 2019 23:56:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=proofpoint;
- bh=/cMVQDSocldfNQqXn3Fc8nTA3rhR6FrvZYVi9FZ6WwA=;
- b=I13XC7OYd/GtmzF7m9XHWWt8yMvpGqtkvtP9KmopvfGI5GjUSYSKpj01GAf9Ogd9we9P
- Btl/khRRS04DA8Z88qNePhzL8hi9piEtvezYEnpLgEaPbh1YSrGzWh7Nm2r+Ul1IL6sj
- G7d8ggzcBViDxpgCsKsoC7S+VZJcxZKLTA55uR70YhsGZFx83Y83YqTkuQiRpv4DiHMr
- B/9BrITenWeFAKhitO9gITkM7ts1RWkXa9Nn+ZyAg+05YCs3o2/n4LMgRO7dkAg9Oeix
- 07PLJVyQH9PTSYf90l6oOcxGri9FM++q/Z78rfKqEzNuxG8jmQi/8B0oQZXnPiMbiIu1 hQ== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam04-sn1-obe.outbound.protection.outlook.com (mail-sn1nam04lp2057.outbound.protection.outlook.com [104.47.44.57])
-        by mx0a-0014ca01.pphosted.com with ESMTP id 2t4w7v2g3d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 15 Jun 2019 23:56:18 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/cMVQDSocldfNQqXn3Fc8nTA3rhR6FrvZYVi9FZ6WwA=;
- b=kJz2L3ZwrbasFCLH0UpT4aLSaAN9VGsgR49vHw4RVE3fiiP7h57sYJsJkphMpGwvv6a6X6u6APrSvMIpxbMLoro8JxynJH3d5zbWEgNaAtmJkNlAJjk4zvkkOnfeKp9VFBrgmNfmdQcie0VAzoKlEB0pXANqTicNHaKQZjwRJWw=
-Received: from CO2PR07MB2469.namprd07.prod.outlook.com (10.166.94.21) by
- CO2PR07MB2583.namprd07.prod.outlook.com (10.166.92.142) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Sun, 16 Jun 2019 06:56:15 +0000
-Received: from CO2PR07MB2469.namprd07.prod.outlook.com
- ([fe80::b9c0:ba2d:e9e8:4176]) by CO2PR07MB2469.namprd07.prod.outlook.com
- ([fe80::b9c0:ba2d:e9e8:4176%4]) with mapi id 15.20.1965.019; Sun, 16 Jun 2019
- 06:56:14 +0000
-From:   Parshuram Raju Thombare <pthombar@cadence.com>
-To:     Parshuram Raju Thombare <pthombar@cadence.com>,
-        "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: RE: [PATCH 0/6] net: macb patch set cover letter
-Thread-Topic: [PATCH 0/6] net: macb patch set cover letter
-Thread-Index: AQHVI9Rx053wx8/6CUGjNUCvusFgp6ad2QKw
-Date:   Sun, 16 Jun 2019 06:56:14 +0000
-Message-ID: <CO2PR07MB2469362F8B7DA65D7A73315DC1E80@CO2PR07MB2469.namprd07.prod.outlook.com>
-References: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
-In-Reply-To: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy1kMDVmZTVmYi05MDAzLTExZTktODRmNy0xMDY1MzBlNmVmM2VcYW1lLXRlc3RcZDA1ZmU1ZmQtOTAwMy0xMWU5LTg0ZjctMTA2NTMwZTZlZjNlYm9keS50eHQiIHN6PSIyODkzIiB0PSIxMzIwNTE0MTc2Nzc0NTU0OTMiIGg9ImEwR3c1L3pEQ3c1V2Q3Ky96SE94WC9rUTdkWT0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
-x-dg-rorf: 
-x-originating-ip: [59.145.174.78]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f7363fa9-4aa4-49d3-c86b-08d6f227b97e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CO2PR07MB2583;
-x-ms-traffictypediagnostic: CO2PR07MB2583:
-x-microsoft-antispam-prvs: <CO2PR07MB25834769041981F50F7F0F55C1E80@CO2PR07MB2583.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:5797;
-x-forefront-prvs: 0070A8666B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(396003)(366004)(376002)(39850400004)(136003)(199004)(189003)(13464003)(36092001)(53754006)(71200400001)(14454004)(486006)(2501003)(71190400001)(74316002)(229853002)(7736002)(305945005)(316002)(66446008)(64756008)(25786009)(476003)(66946007)(66476007)(66556008)(3846002)(6116002)(76116006)(11346002)(81166006)(81156014)(446003)(73956011)(8676002)(8936002)(110136005)(5660300002)(54906003)(33656002)(66066001)(107886003)(2906002)(256004)(14444005)(55016002)(6436002)(52536014)(4326008)(53936002)(9686003)(86362001)(68736007)(26005)(6246003)(7696005)(186003)(2201001)(99286004)(478600001)(102836004)(6506007)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2583;H:CO2PR07MB2469.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: cadence.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: daH7KxsQRpWzLSZv7e+AR+SCLPvkhAn+Us5h/DStNbGKr0hk74TMM0HFHAs82/6SpDlLwG1zLmrD7yK7TQp7GNs2tV7vfdJ2v2RDpoCBiMdbgp8Qq9ZubYMyNWUN6ur+h60kptJifFpFco344O49vo8esrQj5yOFzimll7owYe7NVBOez1FIs53Vm9XKmzDmY/2bGpTD+UFTXKquaIQTJ7osI56MGef0phFfOmw7bVS+nWE6ktNBsJuqvjVcjaVp6snReg5ArqBcD6Msc6kbE+b1QJKlkJ1eLm+RQU1Y8jMf6RMbUFY3CtX6DHAcbv0mQ+g4uH6dKpWKPlbMiji8Y1rFtSDTvS1lDZ6OFrG75gFzkoNwLmBgdrROC4zAUARZ0nMkVjRRMTjRGrmMJNIxxIlGPjuw0XcFl8mO41uFfaE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 16 Jun 2019 03:01:54 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:36854 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725860AbfFPHBy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 03:01:54 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 3276A39927F579A48215;
+        Sun, 16 Jun 2019 15:00:50 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Sun, 16 Jun
+ 2019 15:00:43 +0800
+Subject: Re: [PATCH v3 1/2] staging: erofs: add requirements field in
+ superblock
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Chao Yu <yuchao0@huawei.com>, <devel@driverdev.osuosl.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        <linux-erofs@lists.ozlabs.org>, Chao Yu <chao@kernel.org>,
+        Miao Xie <miaoxie@huawei.com>, <weidu.du@huawei.com>,
+        "Fang Wei" <fangwei1@huawei.com>, <stable@vger.kernel.org>
+References: <20190611024220.86121-1-gaoxiang25@huawei.com>
+ <20190613083541.67091-1-gaoxiang25@huawei.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <a4d587eb-c4f0-b9e5-7ece-1ac38c2735f3@huawei.com>
+Date:   Sun, 16 Jun 2019 15:00:38 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f7363fa9-4aa4-49d3-c86b-08d6f227b97e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2019 06:56:14.8353
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2583
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906160066
+In-Reply-To: <20190613083541.67091-1-gaoxiang25@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+Hi Greg,
 
-Please ignore patches sent in-reply chain to patch 0001.
-Sending all patches in reply to patch 0000-cover-letter.patch.
+Sorry for annoying... Could you help merge these two fixes? Thanks in advance...
+decompression inplace optimization needs these two patches and I will integrate
+erofs decompression inplace optimization later for linux-next 5.3, and try to start 
+making effort on moving to fs/ directory on kernel 5.4...
 
-Regards,
-Parshuram Thombare
+Thanks,
+Gao Xiang
 
-
->-----Original Message-----
->From: Parshuram Thombare <pthombar@cadence.com>
->Sent: Sunday, June 16, 2019 5:15 AM
->To: andrew@lunn.ch; nicolas.ferre@microchip.com; davem@davemloft.net;
->f.fainelli@gmail.com
->Cc: netdev@vger.kernel.org; hkallweit1@gmail.com; linux-
->kernel@vger.kernel.org; Rafal Ciepiela <rafalc@cadence.com>; Anil Joy
->Varughese <aniljoy@cadence.com>; Piotr Sroka <piotrs@cadence.com>;
->Parshuram Raju Thombare <pthombar@cadence.com>
->Subject: [PATCH 0/6] net: macb patch set cover letter
->
->Hello !,
->
->This is second version of patch set containing following patches for Caden=
-ce
->ethernet controller driver.
->
->1. 0001-net-macb-add-phylink-support.patch
->   Replace phylib API's with phylink API's.
->2. 0002-net-macb-add-support-for-sgmii-MAC-PHY-interface.patch
->   This patch add support for SGMII mode.
->3. 003-net-macb-add-PHY-configuration-in-MACB-PCI-wrapper.patch
->   This patch is to configure TI PHY DP83867 in SGMII mode from
->   our MAC PCI wrapper driver.
->   With this change there is no need of PHY driver and dp83867
->   module must be disabled. Users wanting to setup DP83867 PHY
->   in SGMII mode can disable dp83867.ko driver, else dp83867.ko
->   overwrite this configuration and PHY is setup as per dp83867.ko.
->4. 0004-net-macb-add-support-for-c45-PHY.patch
->   This patch is to support C45 PHY.
->5. 0005-net-macb-add-support-for-high-speed-interface
->   This patch add support for 10G USXGMII PCS in fixed mode.
->   Since emulated PHY used in fixed mode doesn't seems to
->   support anything above 1G, additional parameter is used outside
->   "fixed-link" node for selecting speed and "fixed-link"
->   node speed is still set at 1G.
->6. 0006-net-macb-parameter-added-to-cadence-ethernet-controller-DT-binding
->   New parameters added to Cadence ethernet controller DT binding
->   for USXGMII interface.
->
->Regards,
->Parshuram Thombare
->
->Parshuram Thombare (6):
->  net: macb: add phylink support
->  net: macb: add support for sgmii MAC-PHY interface
->  net: macb: add PHY configuration in MACB PCI wrapper
->  net: macb: add support for c45 PHY
->  net: macb: add support for high speed interface
->  net: macb: parameter added to cadence ethernet controller DT binding
->
-> .../devicetree/bindings/net/macb.txt          |   4 +
-> drivers/net/ethernet/cadence/Kconfig          |   2 +-
-> drivers/net/ethernet/cadence/macb.h           | 136 +++-
-> drivers/net/ethernet/cadence/macb_main.c      | 659 ++++++++++++++----
-> drivers/net/ethernet/cadence/macb_pci.c       | 225 ++++++
-> 5 files changed, 860 insertions(+), 166 deletions(-)
->
->--
->2.17.1
-
+On 2019/6/13 16:35, Gao Xiang wrote:
+> There are some backward incompatible features pending
+> for months, mainly due to on-disk format expensions.
+> 
+> However, we should ensure that it cannot be mounted with
+> old kernels. Otherwise, it will causes unexpected behaviors.
+> 
+> Fixes: ba2b77a82022 ("staging: erofs: add super block operations")
+> Cc: <stable@vger.kernel.org> # 4.19+
+> Reviewed-by: Chao Yu <yuchao0@huawei.com>
+> Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+> ---
+> change log v3:
+>  - record requirements in erofs_sb_info for runtime use as well;
+> 
+> change log v2:
+>  - update printed message
+> 
+>  drivers/staging/erofs/erofs_fs.h | 13 ++++++++++---
+>  drivers/staging/erofs/internal.h |  2 ++
+>  drivers/staging/erofs/super.c    | 19 +++++++++++++++++++
+>  3 files changed, 31 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/staging/erofs/erofs_fs.h b/drivers/staging/erofs/erofs_fs.h
+> index fa52898df006..8ddb2b3e7d39 100644
+> --- a/drivers/staging/erofs/erofs_fs.h
+> +++ b/drivers/staging/erofs/erofs_fs.h
+> @@ -17,10 +17,16 @@
+>  #define EROFS_SUPER_MAGIC_V1    0xE0F5E1E2
+>  #define EROFS_SUPER_OFFSET      1024
+>  
+> +/*
+> + * Any bits that aren't in EROFS_ALL_REQUIREMENTS should be
+> + * incompatible with this kernel version.
+> + */
+> +#define EROFS_ALL_REQUIREMENTS  0
+> +
+>  struct erofs_super_block {
+>  /*  0 */__le32 magic;           /* in the little endian */
+>  /*  4 */__le32 checksum;        /* crc32c(super_block) */
+> -/*  8 */__le32 features;
+> +/*  8 */__le32 features;        /* (aka. feature_compat) */
+>  /* 12 */__u8 blkszbits;         /* support block_size == PAGE_SIZE only */
+>  /* 13 */__u8 reserved;
+>  
+> @@ -34,9 +40,10 @@ struct erofs_super_block {
+>  /* 44 */__le32 xattr_blkaddr;
+>  /* 48 */__u8 uuid[16];          /* 128-bit uuid for volume */
+>  /* 64 */__u8 volume_name[16];   /* volume name */
+> +/* 80 */__le32 requirements;    /* (aka. feature_incompat) */
+>  
+> -/* 80 */__u8 reserved2[48];     /* 128 bytes */
+> -} __packed;
+> +/* 84 */__u8 reserved2[44];
+> +} __packed;                     /* 128 bytes */
+>  
+>  /*
+>   * erofs inode data mapping:
+> diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+> index 911333cdeef4..fc732c86ecd8 100644
+> --- a/drivers/staging/erofs/internal.h
+> +++ b/drivers/staging/erofs/internal.h
+> @@ -115,6 +115,8 @@ struct erofs_sb_info {
+>  
+>  	u8 uuid[16];                    /* 128-bit uuid for volume */
+>  	u8 volume_name[16];             /* volume name */
+> +	u32 requirements;
+> +
+>  	char *dev_name;
+>  
+>  	unsigned int mount_opt;
+> diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+> index f580d4ef77a1..cadbcc11702a 100644
+> --- a/drivers/staging/erofs/super.c
+> +++ b/drivers/staging/erofs/super.c
+> @@ -71,6 +71,22 @@ static void free_inode(struct inode *inode)
+>  	kmem_cache_free(erofs_inode_cachep, vi);
+>  }
+>  
+> +static bool check_layout_compatibility(struct super_block *sb,
+> +				       struct erofs_super_block *layout)
+> +{
+> +	const unsigned int requirements = le32_to_cpu(layout->requirements);
+> +
+> +	EROFS_SB(sb)->requirements = requirements;
+> +
+> +	/* check if current kernel meets all mandatory requirements */
+> +	if (requirements & (~EROFS_ALL_REQUIREMENTS)) {
+> +		errln("unidentified requirements %x, please upgrade kernel version",
+> +		      requirements & ~EROFS_ALL_REQUIREMENTS);
+> +		return false;
+> +	}
+> +	return true;
+> +}
+> +
+>  static int superblock_read(struct super_block *sb)
+>  {
+>  	struct erofs_sb_info *sbi;
+> @@ -104,6 +120,9 @@ static int superblock_read(struct super_block *sb)
+>  		goto out;
+>  	}
+>  
+> +	if (!check_layout_compatibility(sb, layout))
+> +		goto out;
+> +
+>  	sbi->blocks = le32_to_cpu(layout->blocks);
+>  	sbi->meta_blkaddr = le32_to_cpu(layout->meta_blkaddr);
+>  #ifdef CONFIG_EROFS_FS_XATTR
+> 
