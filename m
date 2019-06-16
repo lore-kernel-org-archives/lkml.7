@@ -2,90 +2,114 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C25CC31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6142C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10B52216FD
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 937F421473
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:18:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LfBi3iw0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726062AbfFPINQ (ORCPT
+        id S1726220AbfFPIRx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 04:13:16 -0400
-Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:45099 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725865AbfFPINQ (ORCPT
+        Sun, 16 Jun 2019 04:17:53 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39740 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725865AbfFPIRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 04:13:16 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 43DCC181D3368;
-        Sun, 16 Jun 2019 08:13:15 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: print89_735c9b2327048
-X-Filterd-Recvd-Size: 2424
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf14.hostedemail.com (Postfix) with ESMTPA;
-        Sun, 16 Jun 2019 08:13:12 +0000 (UTC)
-Message-ID: <1d668acbce4cc9759cc940f56016dc9437df5441.camel@perches.com>
-Subject: Re: [PATCH v2] staging: rtl8723bs: Resolve checkpatch error "that
- open brace { should be on the previous line" in the rtl8723 driver
-From:   Joe Perches <joe@perches.com>
-To:     Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bastien Nocera <hadess@hadess.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
+        Sun, 16 Jun 2019 04:17:53 -0400
+X-Greylist: delayed 3609 seconds by postgrey-1.27 at vger.kernel.org; Sun, 16 Jun 2019 04:17:52 EDT
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5G7G136007380;
+        Sun, 16 Jun 2019 07:17:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=ZJ73kpbrHeloQJUvQyeOr5ZclVGIW1bQHglprF2krOA=;
+ b=LfBi3iw0+y+4oMsKxIkJu47SN+x7kNaFUa5x0QPMv4EXR3JRk2QQ8m6TopfNTuia9Nwq
+ 3n2VyngRvRspByxMmh1FKfbsjNOgyP7MLete8irNCKAHR96M1obAj9cG8ibDBjyXygqP
+ 0etlt4szoKCZict6/j4Ie+Y5p6LDLUg1+ttQ4n2YXmqfesapdYH8xj9wn50uuAY3+7/z
+ kac1gsttcZPu6aeVnnN7+VPiBa94mX2fUtnYBYwCNm9s9n83m1VePSJwR6NtREKWc+Up
+ CRNTSDm1jC5C4m9fhTIgb1zGTHGsdceBxBYOKGmGZV6SsoWgQKzAsSYphU2kwzyNtikT kA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2t4rmntasp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Jun 2019 07:17:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5G7F6UR093492;
+        Sun, 16 Jun 2019 07:15:37 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2t5cpd1ws9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Jun 2019 07:15:37 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5G7Fatt023361;
+        Sun, 16 Jun 2019 07:15:37 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 16 Jun 2019 00:15:36 -0700
+Date:   Sun, 16 Jun 2019 10:15:22 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Date:   Sun, 16 Jun 2019 01:13:11 -0700
-In-Reply-To: <1560634159-9015-1-git-send-email-shobhitkukreti@gmail.com>
-References: <20190615185355.GC10201@kroah.com>
-         <1560634159-9015-1-git-send-email-shobhitkukreti@gmail.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+Subject: Re: [PATCH] staging: rtl8723bs: os_dep: ioctl_linux:  Make use
+ rtw_zmalloc
+Message-ID: <20190616071522.GE28859@kadam>
+References: <20190616053250.GA16116@hari-Inspiron-1545>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190616053250.GA16116@hari-Inspiron-1545>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9289 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906160070
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9289 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906160070
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 2019-06-15 at 14:29 -0700, Shobhit Kukreti wrote:
-> Cleaned up the code from the following files to get rid of
-> check patch error "that open brace { should be on the previous line"
+On Sun, Jun 16, 2019 at 11:02:50AM +0530, Hariprasad Kelam wrote:
+> rtw_malloc with memset can be replace with rtw_zmalloc.
+> 
+> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> ---
+>  drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 12 +++---------
+>  1 file changed, 3 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> index fc3885d..c59e366 100644
+> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+> @@ -478,14 +478,12 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+>  		if (wep_key_len > 0) {
+>  			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+>  			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
+> -			pwep = rtw_malloc(wep_total_len);
+> +			pwep = rtw_zmalloc(wep_total_len);
 
-It's fine you are modifying brace styles, but:
+We should not introduce new uses of rtw_malloc() or rtw_zmalloc().  They
+are buggy garbage.  Use normall kmalloc() and kzalloc().
 
-> diff --git a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-> index aa2499f..4631b68 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-> @@ -46,8 +46,7 @@ void rtw_os_indicate_connect(struct adapter *adapter)
->  	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
->  
->  	if ((check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == true) ||
-> -		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true))
-> -	{
-> +		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true)) {
->  		rtw_cfg80211_ibss_indicate_connect(adapter);
->  	}
->  	else
-
-the else should be on the same line as the close brace
-
-> @@ -106,8 +105,9 @@ void rtw_reset_securitypriv(struct adapter *adapter)
->  		adapter->securitypriv.ndisencryptstatus = Ndis802_11WEPDisabled;
->  
->  	}
-> -	else /* reset values in securitypriv */
-> -	{
-> +	else {
-> +		/* reset values in securitypriv */
-> +
-
-and here.  etc.  Please change all instances appropriately.
-
+regards,
+dan carpenter
 
