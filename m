@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48416C46477
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:52:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED194C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:54:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 267392087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:52:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB1E22087F
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:54:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CAzgrNFE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Cm5565RT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727395AbfFPRwr (ORCPT
+        id S1727392AbfFPRyL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 13:52:47 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34123 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFPRwq (ORCPT
+        Sun, 16 Jun 2019 13:54:11 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41328 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727115AbfFPRyL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 13:52:46 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c85so4376180pfc.1
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 10:52:46 -0700 (PDT)
+        Sun, 16 Jun 2019 13:54:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id s24so3110048plr.8
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 10:54:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=JSCuClmggpz8Xfy1dDZDwdk/cubpXsrLwAGotENzbKs=;
-        b=CAzgrNFEKMdQpKgdGp/nqhCidH9CG88O48QbLwiUEoSO86bgyNCfkCi4c1YmJGcr3t
-         9reAJ4a2fc6dhF0UHSHKxMYzlUqJrqFv3TPCvSGp3FNu5mdaA3/FrgxOyi3pt+JqQBHa
-         BJWVMOtI436ml6J3QkvvtOWPX8wVlmjVT1exTobvGdN5Lcx/X4u2TRmCIs5IL77TK2AE
-         eplwcT0cqZlwMZPSwtKUM0UCEF6a5mG9GNQEwMUt1rM9sy3dFvTg3VkAEIdYXhg414Mm
-         zpCaoqI/KoFao5GFJn1dlLJwgzYOSbHmQsaALDZ/U0paTEoWHmjZamXoJsV11Z2BzOQP
-         CgXw==
+        bh=wy1KsC4Y/RgWZPFrZ2Hd5UaYP8LamPj+HBAbNFeIOjY=;
+        b=Cm5565RTIsJjcThQqKiwjeRQK2Yep+3F219oHN8NgIJ+HrhgDxyhq66mwveoPBD556
+         1EvtqpebGZgsymTVo//lKbGF7QO2eEgwZ1DB/LTIu7NXjo1C/zki36YskHKGsoQrtxx9
+         ZtACaEonUoI5UHj4gjJ2ERxPmDYZ+r5L5+s/mfqetdJBn1Ov8uw12N3GzWkpm8TncNbf
+         +iSMr2MAnrhy/BQ+X81ReJRUSJo2V9z8EWQm4i6VbnCdZNv5Lr0wWU01fY8EhFLZDkZn
+         8DO6HgZnl5MDmPYcBpJq7/U1vgps6CK3YR260mcOVes++FviXEzOTplE82J4tfVZ13LD
+         uJyQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JSCuClmggpz8Xfy1dDZDwdk/cubpXsrLwAGotENzbKs=;
-        b=Yk2xPWdb0EUYKgXmGyLqUA36WUYVSaR5hwr0VN4qnVPO204dFmjv+UI2bQluF58TvD
-         Tkj/w9eF3zpxigg6QCvCGQIyRAv/Qq4M56WqX3MUYjYoZjT5ab22SetoLvY+qH6Q2FLt
-         5D4st8521Rk+k6qC+lKeS3mV0TLer308lLk8ckCOeaMX/PxY7y6digPBbX58E1l7/vfI
-         l6dT/o6OJ8pnNbCJb/72ajIgFqxP5bE0KmR8ISqgrG9NLTfUsKvu16D7idK8P40gxnRY
-         RYCJupHf9ar6qJXZDgJU1Yzc8wK0U5+8N0Rp+t19qZnrJ/CCj/TuFYxVogQ4JC2aoErL
-         wQkg==
-X-Gm-Message-State: APjAAAVCYb79HcvMOjRdzacSGxiseE7Tzme8xZpQguBB328Hdd7L3005
-        DWZYTCUqXDKIWrJLbgTTFE70pg==
-X-Google-Smtp-Source: APXvYqzBrAgp10q9l+iA/huCnFxShpqf46svP3+PCfO0K562mdIaJ33xStj1QgDq0AwmzgkwOWBoCA==
-X-Received: by 2002:a17:90a:af8e:: with SMTP id w14mr22577232pjq.89.1560707565526;
-        Sun, 16 Jun 2019 10:52:45 -0700 (PDT)
+        bh=wy1KsC4Y/RgWZPFrZ2Hd5UaYP8LamPj+HBAbNFeIOjY=;
+        b=c/WeZbk+lVJhKb+ToxlMHMpG2HUvdZz4b7vxaZGraisEu017mfsmiR4pD1L3fzaocF
+         FMM/vOj86C0UICN9d+1VwfgR8aY8deK+1GmCO8gJkZIEG7NJwwRtEAC9N2idy6oLc43z
+         B2sYPr1UoY0ITpjJQsYlwBDkEVN15iLJvMxr87bmF/aFjGf6sjAmvrMQSW9UCIEK45N2
+         z5eb5jNrwDnIwMlz6JONZlVDQwJifTz3+dmZZKtnPNAU6vQySmrBVFM9awscTo1dNoab
+         Ts06wv6xom6FB34OYQ6vwKANice9cCabAAGo/BOi/o0j0LjSSsnNO3XGiaH6Uauo4kh1
+         50tQ==
+X-Gm-Message-State: APjAAAU4cjvDYyO6j5y5hjq6N3Ne61ANJuDL+ss22ewJXLXWoIJWaB/d
+        Xs7cnBD9TLmtP0C3NA2eE822ag==
+X-Google-Smtp-Source: APXvYqwc7dLKgyqwnNaB+k5ZzpCqLYIMS9wGS0zEyU4IMRufrbh0yK6BfrKsA/IqrSs0nKzrXK3ISA==
+X-Received: by 2002:a17:902:a412:: with SMTP id p18mr36511043plq.105.1560707650483;
+        Sun, 16 Jun 2019 10:54:10 -0700 (PDT)
 Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id u5sm8716191pgp.19.2019.06.16.10.52.44
+        by smtp.gmail.com with ESMTPSA id f88sm15832701pjg.5.2019.06.16.10.54.09
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 10:52:44 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 10:53:32 -0700
+        Sun, 16 Jun 2019 10:54:10 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 10:54:57 -0700
 From:   Bjorn Andersson <bjorn.andersson@linaro.org>
 To:     Brian Masney <masneyb@onstation.org>
 Cc:     agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
@@ -65,15 +65,14 @@ Cc:     agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
         devicetree@vger.kernel.org
-Subject: Re: [PATCH 3/6] firmware: qcom: scm: add support to restore secure
- config
-Message-ID: <20190616175332.GQ22737@tuxbook-pro>
+Subject: Re: [PATCH 4/6] firmware: qcom: scm: add OCMEM lock/unlock interface
+Message-ID: <20190616175457.GR22737@tuxbook-pro>
 References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-4-masneyb@onstation.org>
+ <20190616132930.6942-5-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190616132930.6942-4-masneyb@onstation.org>
+In-Reply-To: <20190616132930.6942-5-masneyb@onstation.org>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -84,73 +83,88 @@ On Sun 16 Jun 06:29 PDT 2019, Brian Masney wrote:
 
 > From: Rob Clark <robdclark@gmail.com>
 > 
-> Add support to restore the secure configuration that is needed by the
+> Add support for the OCMEM lock/unlock interface that is needed by the
 > On Chip MEMory (OCMEM) that is present on some Snapdragon devices.
 > 
 > Signed-off-by: Rob Clark <robdclark@gmail.com>
 > [masneyb@onstation.org: ported to latest kernel; minor reformatting.]
 > Signed-off-by: Brian Masney <masneyb@onstation.org>
 
-This went upstream for 64-bit with config abbreviated cfg, so please
-implement __qcom_scm_restore_sec_cfg() for 32-bit and add the defines
-instead.
-
-Regards,
-Bjorn
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
 > ---
 > Rob's last version of this patch:
-> https://patchwork.kernel.org/patch/7340701/
+> https://patchwork.kernel.org/patch/7340711/
 > 
->  drivers/firmware/qcom_scm-32.c | 21 +++++++++++++++++++++
->  drivers/firmware/qcom_scm-64.c |  6 ++++++
->  drivers/firmware/qcom_scm.c    | 23 +++++++++++++++++++++++
->  drivers/firmware/qcom_scm.h    |  6 ++++++
->  include/linux/qcom_scm.h       | 13 +++++++++++++
->  5 files changed, 69 insertions(+)
+>  drivers/firmware/qcom_scm-32.c | 35 +++++++++++++++++++++++++++++
+>  drivers/firmware/qcom_scm-64.c | 12 ++++++++++
+>  drivers/firmware/qcom_scm.c    | 40 ++++++++++++++++++++++++++++++++++
+>  drivers/firmware/qcom_scm.h    |  9 ++++++++
+>  include/linux/qcom_scm.h       | 15 +++++++++++++
+>  5 files changed, 111 insertions(+)
 > 
 > diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
-> index 215061c581e1..089b47124933 100644
+> index 089b47124933..0100c82b9c00 100644
 > --- a/drivers/firmware/qcom_scm-32.c
 > +++ b/drivers/firmware/qcom_scm-32.c
-> @@ -442,6 +442,27 @@ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
->  		req, req_cnt * sizeof(*req), resp, sizeof(*resp));
+> @@ -463,6 +463,41 @@ int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+>  	return 0;
 >  }
 >  
-> +int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
-> +				  u32 ctx_bank_num)
+> +int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset, u32 size,
+> +			  u32 mode)
 > +{
-> +	struct msm_scm_sec_cfg {
+> +	struct ocmem_tz_lock {
 > +		__le32 id;
-> +		__le32 ctx_bank_num;
-> +	} cfg;
-> +	int ret, scm_ret = 0;
+> +		__le32 offset;
+> +		__le32 size;
+> +		__le32 mode;
+> +	} request;
 > +
-> +	cfg.id = cpu_to_le32(sec_id);
-> +	cfg.ctx_bank_num = cpu_to_le32(sec_id);
+> +	request.id = cpu_to_le32(id);
+> +	request.offset = cpu_to_le32(offset);
+> +	request.size = cpu_to_le32(size);
+> +	request.mode = cpu_to_le32(mode);
 > +
-> +	ret = qcom_scm_call(dev, QCOM_SCM_MP_SVC, QCOM_SCM_MP_RESTORE_SEC_CFG,
-> +			    &cfg, sizeof(cfg), &scm_ret, sizeof(scm_ret));
+> +	return qcom_scm_call(dev, QCOM_SCM_OCMEM_SVC, QCOM_SCM_OCMEM_LOCK_CMD,
+> +			     &request, sizeof(request), NULL, 0);
+> +}
 > +
-> +	if (ret || scm_ret)
-> +		return ret ? ret : -EINVAL;
+> +int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset, u32 size)
+> +{
+> +	struct ocmem_tz_unlock {
+> +		__le32 id;
+> +		__le32 offset;
+> +		__le32 size;
+> +	} request;
 > +
-> +	return 0;
+> +	request.id = cpu_to_le32(id);
+> +	request.offset = cpu_to_le32(offset);
+> +	request.size = cpu_to_le32(size);
+> +
+> +	return qcom_scm_call(dev, QCOM_SCM_OCMEM_SVC, QCOM_SCM_OCMEM_UNLOCK_CMD,
+> +			     &request, sizeof(request), NULL, 0);
 > +}
 > +
 >  void __qcom_scm_init(void)
 >  {
 >  }
 > diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-> index 91d5ad7cf58b..b6b78da7f9c9 100644
+> index b6b78da7f9c9..2674d6d3cdde 100644
 > --- a/drivers/firmware/qcom_scm-64.c
 > +++ b/drivers/firmware/qcom_scm-64.c
-> @@ -241,6 +241,12 @@ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
->  	return ret;
+> @@ -247,6 +247,18 @@ int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+>  	return -ENOTSUPP;
 >  }
 >  
-> +int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
-> +				  u32 ctx_bank_num)
+> +int __qcom_scm_ocmem_lock(struct device *dev, uint32_t id, uint32_t offset,
+> +			  uint32_t size, uint32_t mode)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+> +int __qcom_scm_ocmem_unlock(struct device *dev, uint32_t id, uint32_t offset,
+> +			    uint32_t size)
 > +{
 > +	return -ENOTSUPP;
 > +}
@@ -159,84 +173,106 @@ Bjorn
 >  {
 >  	u64 cmd;
 > diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
-> index 2ddc118dba1b..5495ef994c5d 100644
+> index 5495ef994c5d..85afb54defd4 100644
 > --- a/drivers/firmware/qcom_scm.c
 > +++ b/drivers/firmware/qcom_scm.c
-> @@ -170,6 +170,29 @@ int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp)
+> @@ -193,6 +193,46 @@ int qcom_scm_restore_sec_config(struct device *dev,
 >  }
->  EXPORT_SYMBOL(qcom_scm_hdcp_req);
+>  EXPORT_SYMBOL(qcom_scm_restore_sec_config);
 >  
 > +/**
-> + * qcom_scm_restore_sec_config_available() - Check if secure environment
-> + * supports restore security config interface.
-> + *
-> + * Return true if restore-cfg interface is supported, false if not.
+> + * qcom_scm_ocmem_lock_available() - is OCMEM lock/unlock interface available
 > + */
-> +bool qcom_scm_restore_sec_config_available(void)
+> +bool qcom_scm_ocmem_lock_available(void)
 > +{
-> +	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_MP_SVC,
-> +					    QCOM_SCM_MP_RESTORE_SEC_CFG);
+> +	return __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_OCMEM_SVC,
+> +					    QCOM_SCM_OCMEM_LOCK_CMD);
 > +}
-> +EXPORT_SYMBOL(qcom_scm_restore_sec_config_available);
+> +EXPORT_SYMBOL(qcom_scm_ocmem_lock_available);
 > +
 > +/**
-> + * qcom_scm_restore_sec_config() - call restore-cfg interface
+> + * qcom_scm_ocmem_lock() - call OCMEM lock interface to assign an OCMEM
+> + * region to the specified initiator
+> + *
+> + * @id:     tz initiator id
+> + * @offset: OCMEM offset
+> + * @size:   OCMEM size
+> + * @mode:   access mode (WIDE/NARROW)
 > + */
-> +int qcom_scm_restore_sec_config(struct device *dev,
-> +				enum qcom_scm_sec_dev_id sec_id)
+> +int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset, u32 size,
+> +			u32 mode)
 > +{
-> +	return __qcom_scm_restore_sec_config(dev, sec_id, 0);
+> +	return __qcom_scm_ocmem_lock(__scm->dev, id, offset, size, mode);
 > +}
-> +EXPORT_SYMBOL(qcom_scm_restore_sec_config);
+> +EXPORT_SYMBOL(qcom_scm_ocmem_lock);
+> +
+> +/**
+> + * qcom_scm_ocmem_unlock() - call OCMEM unlock interface to release an OCMEM
+> + * region from the specified initiator
+> + *
+> + * @id:     tz initiator id
+> + * @offset: OCMEM offset
+> + * @size:   OCMEM size
+> + */
+> +int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset, u32 size)
+> +{
+> +	return __qcom_scm_ocmem_unlock(__scm->dev, id, offset, size);
+> +}
+> +EXPORT_SYMBOL(qcom_scm_ocmem_unlock);
 > +
 >  /**
 >   * qcom_scm_pas_supported() - Check if the peripheral authentication service is
 >   *			      available for the given peripherial
 > diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
-> index 99506bd873c0..bccc7d10c5c2 100644
+> index bccc7d10c5c2..387e3c4e33c5 100644
 > --- a/drivers/firmware/qcom_scm.h
 > +++ b/drivers/firmware/qcom_scm.h
-> @@ -42,6 +42,12 @@ extern int __qcom_scm_hdcp_req(struct device *dev,
+> @@ -48,6 +48,15 @@ extern void __qcom_scm_init(void);
+>  extern int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
+>  					 u32 ctx_bank_num);
 >  
->  extern void __qcom_scm_init(void);
->  
-> +#define QCOM_SCM_MP_SVC			0xc
-> +#define QCOM_SCM_MP_RESTORE_SEC_CFG	0x2
+> +#define QCOM_SCM_OCMEM_SVC			0xf
+> +#define QCOM_SCM_OCMEM_LOCK_CMD		0x1
+> +#define QCOM_SCM_OCMEM_UNLOCK_CMD		0x2
 > +
-> +extern int __qcom_scm_restore_sec_config(struct device *dev, u32 sec_id,
-> +					 u32 ctx_bank_num);
+> +extern int __qcom_scm_ocmem_lock(struct device *dev, u32 id, u32 offset,
+> +				 u32 size, u32 mode);
+> +extern int __qcom_scm_ocmem_unlock(struct device *dev, u32 id, u32 offset,
+> +				   u32 size);
 > +
 >  #define QCOM_SCM_SVC_PIL		0x2
 >  #define QCOM_SCM_PAS_INIT_IMAGE_CMD	0x1
 >  #define QCOM_SCM_PAS_MEM_SETUP_CMD	0x2
 > diff --git a/include/linux/qcom_scm.h b/include/linux/qcom_scm.h
-> index 3f12cc77fb58..b5c0afaca955 100644
+> index b5c0afaca955..977c01aa524a 100644
 > --- a/include/linux/qcom_scm.h
 > +++ b/include/linux/qcom_scm.h
-> @@ -24,6 +24,16 @@ struct qcom_scm_vmperm {
->  	int perm;
+> @@ -34,6 +34,16 @@ enum qcom_scm_sec_dev_id {
+>  	QCOM_SCM_ICE_DEV_ID	= 20,
 >  };
 >  
-> +enum qcom_scm_sec_dev_id {
-> +	QCOM_SCM_MDSS_DEV_ID	= 1,
-> +	QCOM_SCM_OCMEM_DEV_ID	= 5,
-> +	QCOM_SCM_PCIE0_DEV_ID	= 11,
-> +	QCOM_SCM_PCIE1_DEV_ID	= 12,
-> +	QCOM_SCM_GFX_DEV_ID	= 18,
-> +	QCOM_SCM_UFS_DEV_ID	= 19,
-> +	QCOM_SCM_ICE_DEV_ID	= 20,
+> +enum qcom_scm_ocmem_client {
+> +	QCOM_SCM_OCMEM_UNUSED_ID = 0x0,
+> +	QCOM_SCM_OCMEM_GRAPHICS_ID,
+> +	QCOM_SCM_OCMEM_VIDEO_ID,
+> +	QCOM_SCM_OCMEM_LP_AUDIO_ID,
+> +	QCOM_SCM_OCMEM_SENSORS_ID,
+> +	QCOM_SCM_OCMEM_OTHER_OS_ID,
+> +	QCOM_SCM_OCMEM_DEBUG_ID,
 > +};
 > +
 >  #define QCOM_SCM_VMID_HLOS       0x3
 >  #define QCOM_SCM_VMID_MSS_MSA    0xF
 >  #define QCOM_SCM_VMID_WLAN       0x18
-> @@ -41,6 +51,9 @@ extern bool qcom_scm_is_available(void);
->  extern bool qcom_scm_hdcp_available(void);
->  extern int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
->  			     u32 *resp);
-> +extern bool qcom_scm_restore_sec_config_available(void);
-> +extern int qcom_scm_restore_sec_config(struct device *dev,
-> +				       enum qcom_scm_sec_dev_id sec_id);
+> @@ -54,6 +64,11 @@ extern int qcom_scm_hdcp_req(struct qcom_scm_hdcp_req *req, u32 req_cnt,
+>  extern bool qcom_scm_restore_sec_config_available(void);
+>  extern int qcom_scm_restore_sec_config(struct device *dev,
+>  				       enum qcom_scm_sec_dev_id sec_id);
+> +extern bool qcom_scm_ocmem_lock_available(void);
+> +extern int qcom_scm_ocmem_lock(enum qcom_scm_ocmem_client id, u32 offset,
+> +			       u32 size, u32 mode);
+> +extern int qcom_scm_ocmem_unlock(enum qcom_scm_ocmem_client id, u32 offset,
+> +				 u32 size);
 >  extern bool qcom_scm_pas_supported(u32 peripheral);
 >  extern int qcom_scm_pas_init_image(u32 peripheral, const void *metadata,
 >  				   size_t size);
