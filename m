@@ -2,139 +2,77 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C648EC31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:12:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E09ABC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:13:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C88F2084A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:12:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sp0zNssZ"
+	by mail.kernel.org (Postfix) with ESMTP id BDEF32084A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:13:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727174AbfFPKMt (ORCPT
+        id S1727208AbfFPKNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 06:12:49 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:34984 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725888AbfFPKMt (ORCPT
+        Sun, 16 Jun 2019 06:13:24 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:52449 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfFPKNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 06:12:49 -0400
-Received: by mail-io1-f66.google.com with SMTP id m24so15178385ioo.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 03:12:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dXi83X39sc+SHqsRQb9qWakQ658qfuo/1ekg8hliBD0=;
-        b=Sp0zNssZ3yGsTgfmNa9NkVGcWT/8Bn/SQOq3LUSy7KJSExWEAP4Qte5nb4jT/waLpA
-         fx7Qiv9/fF+EuODR9/itkek4S1+dEGfgVBOpDm2wGAUXcueWeHHHgPI4wt0FQR5VbGM3
-         AyMwUJQNqwZiviyReqLSvHBVMV1mh/d5rdKdeisQRDZUSdZ4rFT/LW2qAhZvHXEwpw56
-         s+EyglpJMgN2kuq6581xB/X5hMUB6T61S385mK7WaOnmn8+oXbr+Xm7wGXu3S+gcCYpo
-         VkTGDhLKQfwOkEo2pwG/g42CgANc4AAV4Oh+lIF1BMZ8YpnXxtsvU4mppO9esDH4g/1a
-         HRzQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dXi83X39sc+SHqsRQb9qWakQ658qfuo/1ekg8hliBD0=;
-        b=XRZEZ8iV8ZtazjvzR+Z+yxE9ulLF+3LzuVhiOwMLWMdiJmmI5D/lBRZoiNrV8V7OGY
-         AlhQWbu64Lwoc/sji/z+6I71HuiZ4MmA0jba85XzSVig/ZBWsxoVj//Mx/yQC4NVQ/mL
-         vM9Rh9pOYhrsYc5puwlPFcCrAPvtATaIB/0Ec9f3OLEaKp/Q85N/QlAsot0airNqy384
-         LHTjINGWIjxBXu/Rj5pgP6Q6U0TOivqStfToKD2f+jjkKKDBPNyu7i2uBosRPadGZZMy
-         FQl+S/qSOpeTOeUi0TeIEsyqgBPVCCv94q9FxvTomzqsejYF4DXbsIir40tCp6wh6w9Y
-         2QxA==
-X-Gm-Message-State: APjAAAUjdJGkA9PH8QkQXJMCuCXmcA/994DnQN9AXjkPO2NmEBgc1u5E
-        G+xABTKSWtsEhZFlfJEzpRg99FS+nauDQsVf23HeliDG/VLZnQ==
-X-Google-Smtp-Source: APXvYqyUrK+C6uFyPu/mN+CP7kqloxH5tDYqAI6TJES117YkgWE/uPQUS7hB4tpeYLyAnmqD+FGwYyPPoXuvWiRvuYI=
-X-Received: by 2002:a02:16c5:: with SMTP id a188mr78260707jaa.86.1560679967918;
- Sun, 16 Jun 2019 03:12:47 -0700 (PDT)
+        Sun, 16 Jun 2019 06:13:23 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45RVXy03QRz1rGhP;
+        Sun, 16 Jun 2019 12:13:22 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45RVXx6V0rz1qql1;
+        Sun, 16 Jun 2019 12:13:21 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id MOFsqklPMlpF; Sun, 16 Jun 2019 12:13:21 +0200 (CEST)
+X-Auth-Info: cmuhtM6YUgJKHIsEcEpVlxTl8g7MpYPHC7rEiFby6sTT4CK1ale7h5rnC6HpCSiD
+Received: from igel.home (ppp-46-244-189-62.dynamic.mnet-online.de [46.244.189.62])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Sun, 16 Jun 2019 12:13:21 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id 748632C117A; Sun, 16 Jun 2019 12:13:20 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     christophe leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v5 13/16] powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX
+References: <cover.1550775950.git.christophe.leroy@c-s.fr>
+        <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
+        <87blyz9jor.fsf@igel.home>
+        <a76f7759-a407-3d9a-0f43-654fd7ea0b1e@c-s.fr>
+X-Yow:  Yow!
+Date:   Sun, 16 Jun 2019 12:13:20 +0200
+In-Reply-To: <a76f7759-a407-3d9a-0f43-654fd7ea0b1e@c-s.fr> (christophe leroy's
+        message of "Sun, 16 Jun 2019 10:20:29 +0200")
+Message-ID: <87d0jdaldr.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
 MIME-Version: 1.0
-References: <CABXGCsN9mYmBD-4GaaeW_NrDu+FDXLzr_6x+XNxfmFV6QkYCDg@mail.gmail.com>
- <CABXGCsNq4xTFeeLeUXBj7vXBz55aVu31W9q74r+pGM83DrPjfA@mail.gmail.com>
- <20190529180931.GI18589@dhcp22.suse.cz> <CABXGCsPrk=WJzms_H+-KuwSRqWReRTCSs-GLMDsjUG_-neYP0w@mail.gmail.com>
-In-Reply-To: <CABXGCsPrk=WJzms_H+-KuwSRqWReRTCSs-GLMDsjUG_-neYP0w@mail.gmail.com>
-From:   Mikhail Gavrilov <mikhail.v.gavrilov@gmail.com>
-Date:   Sun, 16 Jun 2019 15:12:37 +0500
-Message-ID: <CABXGCsMjDn0VT0DmP6qeuiytce9cNBx8PywpqejiFNVhwd0UGg@mail.gmail.com>
-Subject: Re: kernel BUG at mm/swap_state.c:170!
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-mm@kvack.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-I finished today bisecting kernel.
-And first bad commit for me was cd736d8b67fb22a85a68c1ee8020eb0d660615ec
+On Jun 16 2019, christophe leroy <christophe.leroy@c-s.fr> wrote:
 
-Can you look into this?
+> If any of registers IBATs 4 to 7 are used, could you adjust
+> CONFIG_ETEXT_SHIFT so that only IBATs 0 to 3 be used, and check if
+> suspend/resume works when IBATs 4 to 7 are not used ?
 
+I forgot to remove my patch.  With only 0-3 used, suspend/resume works.
 
-$ git bisect log
-git bisect start
-# good: [a188339ca5a396acc588e5851ed7e19f66b0ebd9] Linux 5.2-rc1
-git bisect good a188339ca5a396acc588e5851ed7e19f66b0ebd9
-# good: [a188339ca5a396acc588e5851ed7e19f66b0ebd9] Linux 5.2-rc1
-git bisect good a188339ca5a396acc588e5851ed7e19f66b0ebd9
-# bad: [cd6c84d8f0cdc911df435bb075ba22ce3c605b07] Linux 5.2-rc2
-git bisect bad cd6c84d8f0cdc911df435bb075ba22ce3c605b07
-# bad: [060358de993f24562e884e265c4c57864a3a4141] treewide: Replace
-GPLv2 boilerplate/reference with SPDX - rule 125
-git bisect bad 060358de993f24562e884e265c4c57864a3a4141
-# bad: [d53e860fd46f3d95c437bb67518f7374500de467] Merge branch 'linus'
-of git://git.kernel.org/pub/scm/linux/kernel/git/herbert/crypto-2.6
-git bisect bad d53e860fd46f3d95c437bb67518f7374500de467
-# bad: [34dcf6a1902ac214149a2742250ff03aa5346f3e] net: caif: fix the
-value of size argument of snprintf
-git bisect bad 34dcf6a1902ac214149a2742250ff03aa5346f3e
-# bad: [c7d5ec26ea4adf450d9ab2b794e7735761a93af1] Merge
-git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf
-git bisect bad c7d5ec26ea4adf450d9ab2b794e7735761a93af1
-# good: [3d21b6525caeae45f08e2d3a07ddfdef64882b8b] selftests/bpf: add
-prog detach to flow_dissector test
-git bisect good 3d21b6525caeae45f08e2d3a07ddfdef64882b8b
-# bad: [3ebe1bca58c85325c97a22d4fc3f5b5420752e6f] ppp: deflate: Fix
-possible crash in deflate_init
-git bisect bad 3ebe1bca58c85325c97a22d4fc3f5b5420752e6f
-# bad: [d0a7e8cb3c9d7d4fa2bcdd557be19f0841e2a3be] NFC: Orphan the subsystem
-git bisect bad d0a7e8cb3c9d7d4fa2bcdd557be19f0841e2a3be
-# bad: [0fe9f173d6cda95874edeb413b1fa9907b5ae830] net: Always descend into dsa/
-git bisect bad 0fe9f173d6cda95874edeb413b1fa9907b5ae830
-# bad: [cd736d8b67fb22a85a68c1ee8020eb0d660615ec] tcp: fix retrans
-timestamp on passive Fast Open
-git bisect bad cd736d8b67fb22a85a68c1ee8020eb0d660615ec
-# first bad commit: [cd736d8b67fb22a85a68c1ee8020eb0d660615ec] tcp:
-fix retrans timestamp on passive Fast Open
+Andreas.
 
-
-
---
-Best Regards,
-Mike Gavrilov.
-
-On Tue, 11 Jun 2019 at 08:59, Mikhail Gavrilov
-<mikhail.v.gavrilov@gmail.com> wrote:
->
-> On Wed, 29 May 2019 at 23:09, Michal Hocko <mhocko@kernel.org> wrote:
-> >
-> >
-> > Do you see the same with 5.2-rc1 resp. 5.1?
->
-> I can say with 100% certainty that kernel tag 5.1 is not affected by this bug.
->
-> Say anything about 5.2 rc1 is very difficult because occurs another
-> problem due to which all file systems are switched to read only mode.
->
-> And I am sure that since 5.2 rc2 this issue is begin occurring.
->
-> I also able recorded much more kernel logs with netconsole and option
-> memblock=debug. (attached as file here)
->
-> Please help me.
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
