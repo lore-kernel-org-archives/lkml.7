@@ -2,126 +2,102 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB94C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BE4C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA652133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:07:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C34D216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 06:30:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725936AbfFPGHA (ORCPT
+        id S1725948AbfFPGaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 02:07:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51812 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725821AbfFPGHA (ORCPT
+        Sun, 16 Jun 2019 02:30:14 -0400
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:36290 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725795AbfFPGaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 02:07:00 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5G66beU058610
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 02:06:58 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t5drtkncy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 02:06:58 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Sun, 16 Jun 2019 07:06:56 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 16 Jun 2019 07:06:53 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5G66qk146596116
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 16 Jun 2019 06:06:52 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6DDACAE04D;
-        Sun, 16 Jun 2019 06:06:52 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 12D30AE045;
-        Sun, 16 Jun 2019 06:06:50 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.85.86.48])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 16 Jun 2019 06:06:49 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        osalvador@suse.de, mhocko@suse.com
-Subject: Re: [PATCH v9 04/12] mm/sparsemem: Convert kmalloc_section_memmap() to populate_section_memmap()
-In-Reply-To: <155977189139.2443951.460884430946346998.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com> <155977189139.2443951.460884430946346998.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Sun, 16 Jun 2019 11:36:47 +0530
+        Sun, 16 Jun 2019 02:30:14 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TUIXG5o_1560666600;
+Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0TUIXG5o_1560666600)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Sun, 16 Jun 2019 14:30:01 +0800
+Reply-To: xlpang@linux.alibaba.com
+Subject: Re: [PATCH] memcg: Ignore unprotected parent in
+ mem_cgroup_protected()
+To:     Chris Down <chris@chrisdown.name>
+Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+References: <20190615111704.63901-1-xlpang@linux.alibaba.com>
+ <20190615160820.GB1307@chrisdown.name>
+From:   Xunlei Pang <xlpang@linux.alibaba.com>
+Message-ID: <711f086e-a2e5-bccd-72b6-b314c4461686@linux.alibaba.com>
+Date:   Sun, 16 Jun 2019 14:30:00 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19061606-0008-0000-0000-000002F42096
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061606-0009-0000-0000-000022612EA1
-Message-Id: <8736kahxmw.fsf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-16_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906160060
+In-Reply-To: <20190615160820.GB1307@chrisdown.name>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+Hi Chirs,
 
-> Allow sub-section sized ranges to be added to the memmap.
-> populate_section_memmap() takes an explict pfn range rather than
-> assuming a full section, and those parameters are plumbed all the way
-> through to vmmemap_populate(). There should be no sub-section usage in
-> current deployments. New warnings are added to clarify which memmap
-> allocation paths are sub-section capable.
->
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  arch/x86/mm/init_64.c |    4 ++-
->  include/linux/mm.h    |    4 ++-
->  mm/sparse-vmemmap.c   |   21 +++++++++++------
->  mm/sparse.c           |   61 +++++++++++++++++++++++++++++++------------------
->  4 files changed, 57 insertions(+), 33 deletions(-)
->
-> diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-> index 8335ac6e1112..688fb0687e55 100644
-> --- a/arch/x86/mm/init_64.c
-> +++ b/arch/x86/mm/init_64.c
-> @@ -1520,7 +1520,9 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
->  {
->  	int err;
->  
-> -	if (boot_cpu_has(X86_FEATURE_PSE))
-> +	if (end - start < PAGES_PER_SECTION * sizeof(struct page))
-> +		err = vmemmap_populate_basepages(start, end, node);
-> +	else if (boot_cpu_has(X86_FEATURE_PSE))
->  		err = vmemmap_populate_hugepages(start, end, node, altmap);
->  	else if (altmap) {
->  		pr_err_once("%s: no cpu support for altmap allocations\n",
+On 2019/6/16 AM 12:08, Chris Down wrote:
+> Hi Xunlei,
+> 
+> Xunlei Pang writes:
+>> Currently memory.min|low implementation requires the whole
+>> hierarchy has the settings, otherwise the protection will
+>> be broken.
+>>
+>> Our hierarchy is kind of like(memory.min value in brackets),
+>>
+>>               root
+>>                |
+>>             docker(0)
+>>              /    \
+>>         c1(max)   c2(0)
+>>
+>> Note that "docker" doesn't set memory.min. When kswapd runs,
+>> mem_cgroup_protected() returns "0" emin for "c1" due to "0"
+>> @parent_emin of "docker", as a result "c1" gets reclaimed.
+>>
+>> But it's hard to maintain parent's "memory.min" when there're
+>> uncertain protected children because only some important types
+>> of containers need the protection.  Further, control tasks
+>> belonging to parent constantly reproduce trivial memory which
+>> should not be protected at all.  It makes sense to ignore
+>> unprotected parent in this scenario to achieve the flexibility.
+> 
+> I'm really confused by this, why don't you just set memory.{min,low} in
+> the docker cgroup and only propagate it to the children that want it?
+> 
+> If you only want some children to have the protection, only request it
+> in those children, or create an additional intermediate layer of the
+> cgroup hierarchy with protections further limited if you don't trust the
+> task to request the right amount.
+> 
+> Breaking the requirement for hierarchical propagation of protections
+> seems like a really questionable API change, not least because it makes
+> it harder to set systemwide policies about the constraints of
+> protections within a subtree.
 
-Can we move this to another patch? I am wondering what the x86 behaviour
-here is? If the range is less that PAGES_PER_SECTION we don't allow to
-use pmem as the map device? We sliently use memory range?
+docker and various types(different memory capacity) of containers
+are managed by k8s, it's a burden for k8s to maintain those dynamic
+figures, simply set "max" to key containers is always welcome.
 
--aneesh
+Set "max" to docker also protects docker cgroup memory(as docker
+itself has tasks) unnecessarily.
 
+This patch doesn't take effect on any intermediate layer with
+positive memory.min set, it requires all the ancestors having
+0 memory.min to work.
+
+Nothing special change, but more flexible to business deployment...
