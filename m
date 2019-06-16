@@ -2,94 +2,112 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B24F3C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:45:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8491C31E54
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD0E2085A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560699957;
-	bh=FfgxTZ0FGxbj3xlmt5bwJEqweYKRnTtg8LNoSPRC0Lw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BZqkBpIaE3o0kfpNGlGQe+3h1Yug6Uy3pJnh/6jmOSl5LEmzTa2qIMBdRmJwPrcJG
-	 sedTuM7F4vDG/ihctoDMPqyQ41nH6cG+gGa2ZudQgBjiWhxu73pEWCcv/ZEJS9PZyz
-	 EBCXOCD0iW0gl2WyFkIhME/fAPnslT3anmB8Rk44=
+	by mail.kernel.org (Postfix) with ESMTP id AAF432063F
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:49:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727320AbfFPPp4 (ORCPT
+        id S1726883AbfFPPtW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 11:45:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725895AbfFPPpz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 11:45:55 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E55202063F;
-        Sun, 16 Jun 2019 15:45:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560699954;
-        bh=FfgxTZ0FGxbj3xlmt5bwJEqweYKRnTtg8LNoSPRC0Lw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=CvMSrzqOXMv2n8ac+ol7mLeNMxoosOicaYWKvMibcPR4JgFwQ362TG/bFkT1oeMrP
-         4E7QnDDS6SN4RM3FfYb4CM1m9ysh2LyqHSwO2NxtOX2IjKuGZEP8tnKOiQnv8dA0X6
-         y25aIaYbp9Lp9Vy7Y9PSvPBtdrcw2chMEAoWdpKg=
-Date:   Sun, 16 Jun 2019 16:45:48 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Rob Herring <robh@kernel.org>
-Cc:     Renato Lui Geh <renatogeh@gmail.com>, lars@metafoo.de,
-        Michael.Hennerich@analog.com, knaack.h@gmx.de, pmeerw@pmeerw.net,
-        gregkh@linuxfoundation.org, stefan.popa@analog.com,
-        alexandru.Ardelean@analog.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] dt-bindings: iio: adc: add adi,ad7780.yaml
- binding
-Message-ID: <20190616164548.01444b50@archlinux>
-In-Reply-To: <20190614194302.GA18613@bogus>
-References: <cover.1558746978.git.renatogeh@gmail.com>
-        <2426649b2d8224ae72e7706bcb8c4f2c44c581d2.1558746978.git.renatogeh@gmail.com>
-        <20190614194302.GA18613@bogus>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 16 Jun 2019 11:49:22 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:50354 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725895AbfFPPtW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 11:49:22 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 6191F801F6; Sun, 16 Jun 2019 17:49:09 +0200 (CEST)
+Date:   Sun, 16 Jun 2019 17:48:48 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>, Joe Perches <joe@perches.com>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] media: do not use C++ style comments in uapi headers
+Message-ID: <20190616154848.GA24837@xo-6d-61-c0.localdomain>
+References: <20190604111334.22182-1-yamada.masahiro@socionext.com>
+ <8cf48e20064eabdfe150795365e6ca6f36032e9f.camel@perches.com>
+ <CAK8P3a1oDfNF_T+NCoPsXkJAY2x4_uCWSwrDXHi7dDSaMqfnfA@mail.gmail.com>
+ <CAK7LNAS0Ph2Z6x0-UPSkJUC31NvPi09BmFrve+YJcXMrop-BGA@mail.gmail.com>
+ <20190604134213.GA26263@kroah.com>
+ <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARyqW3q6_46e-aYjmF8c0jUNDLdyB28zNaBEXqTV+5QSA@mail.gmail.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 13:43:02 -0600
-Rob Herring <robh@kernel.org> wrote:
+Hi!
 
-> On Fri, 24 May 2019 22:26:30 -0300, Renato Lui Geh wrote:
-> > This patch adds a YAML binding for the Analog Devices AD7780/1 and
-> > AD7170/1 analog-to-digital converters.
-> > 
-> > Signed-off-by: Renato Lui Geh <renatogeh@gmail.com>
-> > ---
-> > Changes in v2:
-> >  - vref-supply to avdd-supply
-> >  - remove avdd-supply from required list
-> >  - include adc block in an spi block
-> > 
-> >  .../bindings/iio/adc/adi,ad7780.txt           | 48 ----------
-> >  .../bindings/iio/adc/adi,ad7780.yaml          | 87 +++++++++++++++++++
-> >  2 files changed, 87 insertions(+), 48 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.txt
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
-> >   
+> > > In fact, I detected this issue by the following patch:
+> > > https://patchwork.kernel.org/patch/10974669/
+> > >
+> > > When I worked on it, I wondered which
+> > > c-dialect flags should be used.
+> > >
+> > > This code:
+> > >
+> > > > # Unlike the kernel space, uapi headers are written in more strict C.
+> > > > #  - Forbid C++ style comments
+> > > > #  - Use '__inline', '__asm__' instead of 'inline', 'asm'
+> > > > #
+> > > > # -std=c90 (equivalent to -ansi) catches the violation of those.
+> > > > # We cannot go as far as adding -Wpedantic since it emits too many warnings.
+> > > > #
+> > > > # REVISIT: re-consider the proper set of compiler flags for uapi compile-test.
+> > > >
+> > > > UAPI_CFLAGS := -std=c90 -Wpedantic -Wall -Werror=implicit-function-declaration
+> > >
+> > > Even "-std=c99 -Wpedantic" emits lots of warnings.
+> > >
+> > >
+> > >
+> > > I noticed one more thing.
+> > >
+> > > There are two ways to define fixed-width type.
+> > >
+> > > [1] #include <linux/types.h>, __u8, __u16, __u32, __u64
+> > >
+> > >       vs
+> > >
+> > > [2] #include <stdint.h>, uint8_t, uint16_t, uint32_t, uint64_t
+> > >
+> > >
+> > > Both are used in UAPI headers.
+> > > IIRC, <stdint.h> was standardized by C99.
+> > >
+> > > So, we have already relied on C99 in user-space too.
+> >
+> > Just because we have relied on it in the past, does not mean we need to
+> > keep relying on it.  I have had numerous complaints over the years from
+> > libc authors that our uapi headers are _NOT_ able to be directly
+> > consumed by them.  They all end up having to fix things up and include
+> > local "sanitized" copies.
+> >
+> > So any work we can do here to make them more sane and work properly
+> > everywhere is a good thing, as right now, they are broken.
 > 
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Maybe, we should document UAPI header coding guideline.
 
-Thanks. As I'd not yet pushed out as togreg (rather than testing)
-I've rebased to add your RB.
+> Without To-Don't list,
+> people will do anything.
 
-Thanks,
+Even better would be a (compile-time) test that checks for problems in the headers...
 
-Jonathan
+									Pavel
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
