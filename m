@@ -2,81 +2,94 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB0FC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1CB6C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C4C20870
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:04:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B59020870
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfFPQEG (ORCPT
+        id S1727177AbfFPQFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 12:04:06 -0400
-Received: from smtp2-4.goneo.de ([85.220.129.36]:58286 "EHLO smtp2-4.goneo.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725894AbfFPQEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 12:04:06 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp2.goneo.de (Postfix) with ESMTP id 7987623F5E1;
-        Sun, 16 Jun 2019 18:04:03 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp2.goneo.de ([127.0.0.1])
-        by localhost (smtp2.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id SHiCPLpy8X2s; Sun, 16 Jun 2019 18:04:02 +0200 (CEST)
-Received: from [192.168.1.127] (dyndsl-178-142-132-231.ewe-ip-backbone.de [178.142.132.231])
-        by smtp2.goneo.de (Postfix) with ESMTPSA id 287DC23F881;
-        Sun, 16 Jun 2019 18:04:02 +0200 (CEST)
-Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide
- book
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org>
- <87o930uvur.fsf@intel.com> <2955920a-3d6a-8e41-e8fe-b7db3cefed8b@darmarit.de>
- <20190614081546.64101411@lwn.net>
-From:   Markus Heiser <markus.heiser@darmarit.de>
-Message-ID: <327067f6-2609-41e6-c987-e37620e7154e@darmarit.de>
-Date:   Sun, 16 Jun 2019 18:04:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sun, 16 Jun 2019 12:05:36 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41899 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725894AbfFPQFg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 12:05:36 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hcXem-000248-Aj; Sun, 16 Jun 2019 18:05:24 +0200
+Date:   Sun, 16 Jun 2019 18:05:23 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Bae, Chang Seok" <chang.seok.bae@intel.com>
+cc:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v7 18/18] x86/fsgsbase/64: Add documentation for
+ FSGSBASE
+In-Reply-To: <62430B9C-95B6-4EB3-94FA-C16A02B9BD7C@intel.com>
+Message-ID: <alpine.DEB.2.21.1906161804570.1760@nanos.tec.linutronix.de>
+References: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com> <1557309753-24073-19-git-send-email-chang.seok.bae@intel.com> <alpine.DEB.2.21.1906132246310.1791@nanos.tec.linutronix.de> <EEACF240-4772-417A-B516-95D9003D0D11@intel.com>
+ <89BE934A-A392-4CED-83E5-CA4FADDAE6DF@intel.com> <alpine.DEB.2.21.1906161038160.1760@nanos.tec.linutronix.de> <alpine.DEB.2.21.1906161433390.1760@nanos.tec.linutronix.de> <62430B9C-95B6-4EB3-94FA-C16A02B9BD7C@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20190614081546.64101411@lwn.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 14.06.19 um 16:15 schrieb Jonathan Corbet:
-> On Fri, 14 Jun 2019 16:10:31 +0200
-> Markus Heiser <markus.heiser@darmarit.de> wrote:
+On Sun, 16 Jun 2019, Bae, Chang Seok wrote:
+
 > 
->> I agree with Jani. No matter how the decision ends, since I can't help here, I'd
->> rather not show up in the copyright.
+> > On Jun 16, 2019, at 05:34, Thomas Gleixner <tglx@linutronix.de> wrote:
+> > 
+> > On Sun, 16 Jun 2019, Thomas Gleixner wrote:
+> >> 
+> >> Please dont. Send me a delta patch against the documentation. I have queued
+> >> all the other patches already internally. I did not push it out because I
+> >> wanted to have proper docs.
+> > 
+> > Fixed it up already. About to push it out.
+> > 
 > 
-> Is there something specific you are asking us to do here?
+> Thanks. This is the diff though.
 > 
+> diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
+> index 22992c8377952..f667087792747 100644
+> --- a/arch/x86/include/asm/preempt.h
+> +++ b/arch/x86/include/asm/preempt.h
+> @@ -118,7 +118,7 @@ static __always_inline bool should_resched(int preempt_offset)
+>  
+>  	/* preempt count == 0 ? */
+>  	tmp &= ~PREEMPT_NEED_RESCHED;
+> -	if (tmp)
+> +	if (tmp != preempt_offset)
+>  		return false;
+>  	if (current_thread_info()->preempt_lazy_count)
+>  		return false;
+> diff --git a/kernel/softirq.c b/kernel/softirq.c
+> index c15583162a559..25bcf2f2714ba 100644
+> --- a/kernel/softirq.c
+> +++ b/kernel/softirq.c
+> @@ -92,6 +92,34 @@ static inline void softirq_clr_runner(unsigned int sirq)
+>  	sr->runner[sirq] = NULL;
+>  }
+>  
+> +static bool softirq_check_runner_tsk(struct task_struct *tsk,
+> +				     unsigned int *pending)
 
-
-I have lost the overview, but there was a patch Mauro added a
-kernel_abi.py.  There was my name (Markus Heiser) listed with a
-copyright notation.
-
-I guess Mauro picked up some old RFC or an other old patch of
-mine from 2016 and made some C&P .. whatever .. ATM I do not have
-time to give any support on parsing ABI and I'am not interested
-in holding copyrights on a C&P of a old source  ;)
-
--- Markus --
+WHAT? How is this related ?
 
