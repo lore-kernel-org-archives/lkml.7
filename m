@@ -3,43 +3,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B443EC46477
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 19:42:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60A79C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 19:57:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9968F2080C
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 19:42:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4430620657
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 19:57:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727422AbfFPTmj (ORCPT
+        id S1727397AbfFPTyd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 15:42:39 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54628 "EHLO
+        Sun, 16 Jun 2019 15:54:33 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54828 "EHLO
         atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfFPTmj (ORCPT
+        with ESMTP id S1726411AbfFPTyd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 15:42:39 -0400
+        Sun, 16 Jun 2019 15:54:33 -0400
 Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 1F4B580204; Sun, 16 Jun 2019 21:42:26 +0200 (CEST)
-Date:   Sun, 16 Jun 2019 21:42:36 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
-        Bhupesh Sharma <bhsharma@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
+        id A19428021E; Sun, 16 Jun 2019 21:54:20 +0200 (CEST)
+Date:   Sun, 16 Jun 2019 21:54:30 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 070/118] iommu/arm-smmu-v3: Dont disable SMMU in
- kdump kernel
-Message-ID: <20190616194236.GB6676@amd>
+Subject: Re: [PATCH 4.19 034/118] f2fs: fix to avoid panic in
+ f2fs_inplace_write_data()
+Message-ID: <20190616195430.GC6676@amd>
 References: <20190613075643.642092651@linuxfoundation.org>
- <20190613075647.892923884@linuxfoundation.org>
+ <20190613075645.482628218@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="5/uDoXvLw7AC5HRs"
+        protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
 Content-Disposition: inline
-In-Reply-To: <20190613075647.892923884@linuxfoundation.org>
+In-Reply-To: <20190613075645.482628218@linuxfoundation.org>
 User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -47,65 +45,78 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---5/uDoXvLw7AC5HRs
+--xesSdrSSBC0PokLI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi!
 
-> [ Upstream commit 3f54c447df34ff9efac7809a4a80fd3208efc619 ]
+> [ Upstream commit 05573d6ccf702df549a7bdeabef31e4753df1a90 ]
 >=20
-> Disabling the SMMU when probing from within a kdump kernel so that all
-> incoming transactions are terminated can prevent the core of the crashed
-> kernel from being transferred off the machine if all I/O devices are
-> behind the SMMU.
+> As Jungyeon reported in bugzilla:
 >=20
-> Instead, continue to probe the SMMU after it is disabled so that we can
-> reinitialise it entirely and re-attach the DMA masters as they are reset.
-> Since the kdump kernel may not have drivers for all of the active DMA
-> masters, we suppress fault reporting to avoid spamming the console and
-> swamping the IRQ threads.
+> https://bugzilla.kernel.org/show_bug.cgi?id=3D203239
+>=20
+> - Overview
+> When mounting the attached crafted image and running program, following e=
+rrors are reported.
+> Additionally, it hangs on sync after running program.
+>=20
+> The image is intentionally fuzzed from a normal f2fs image for testing.
+> Compile options for F2FS are as follows.
+> CONFIG_F2FS_FS=3Dy
+=2E..
+> The reason is f2fs_inplace_write_data() will trigger kernel panic due
+> to data block locates in node type segment.
+>=20
+> To avoid panic, let's just return error code and set SBI_NEED_FSCK to
+> give a hint to fsck for latter repairing.
 
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -2414,13 +2414,9 @@ static int arm_smmu_device_reset(struct arm_smmu_d=
-evice *smmu, bool bypass)
->  	/* Clear CR0 and sync (disables SMMU and queue processing) */
->  	reg =3D readl_relaxed(smmu->base + ARM_SMMU_CR0);
->  	if (reg & CR0_SMMUEN) {
-> -		if (is_kdump_kernel()) {
-> -			arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
-> -			arm_smmu_device_disable(smmu);
-> -			return -EBUSY;
-> -		}
-> -
->  		dev_warn(smmu->dev, "SMMU currently enabled! Resetting...\n");
-> +		WARN_ON(is_kdump_kernel() && !disable_bypass);
-> +		arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
->  	}
->
+> index 03fa2c4d3d79..8fc3edb6760c 100644
+> --- a/fs/f2fs/segment.c
+> +++ b/fs/f2fs/segment.c
+> @@ -3069,13 +3069,18 @@ int f2fs_inplace_write_data(struct f2fs_io_info *=
+fio)
+>  {
+>  	int err;
+>  	struct f2fs_sb_info *sbi =3D fio->sbi;
+> +	unsigned int segno;
+> =20
+>  	fio->new_blkaddr =3D fio->old_blkaddr;
+>  	/* i/o temperature is needed for passing down write hints */
+>  	__get_segment_type(fio);
+> =20
+> -	f2fs_bug_on(sbi, !IS_DATASEG(get_seg_entry(sbi,
+> -			GET_SEGNO(sbi, fio->new_blkaddr))->type));
+> +	segno =3D GET_SEGNO(sbi, fio->new_blkaddr);
+> +
+> +	if (!IS_DATASEG(get_seg_entry(sbi, segno)->type)) {
+> +		set_sbi_flag(sbi, SBI_NEED_FSCK);
+> +		return -EFAULT;
+> +	}
+> =20
 
-This changes behaviour in !is_kdump_kernel() case. Is that
-ok/intended?
+Would it make sense to print some kind of debug message, as we do in
+the other error cases?
 
 Best regards,
-     								Pavel
-							=09
+									Pavel
 --=20
 (english) http://www.livejournal.com/~pavelmachek
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---5/uDoXvLw7AC5HRs
+--xesSdrSSBC0PokLI
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iEYEARECAAYFAl0Gm6wACgkQMOfwapXb+vL0pQCgqLA/bem8NVC1lT8LN2u7MclX
-Is0AoKmqyUk8s8kGfeLWjcW57gvEPwyL
-=LnpM
+iEYEARECAAYFAl0GnnYACgkQMOfwapXb+vLp8gCgvGQ0G+7oFz87ngoQkAmdeobn
+o6YAnRvgQkvVHfao+qX+IclUlE2ncSeu
+=HTdA
 -----END PGP SIGNATURE-----
 
---5/uDoXvLw7AC5HRs--
+--xesSdrSSBC0PokLI--
