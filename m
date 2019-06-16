@@ -2,209 +2,139 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304DAC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:49:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 203CBC31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:49:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 018C320866
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:49:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF62E208E3
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:49:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="mjEKkL6z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntz43rBU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727360AbfFPRtW (ORCPT
+        id S1727375AbfFPRtv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 13:49:22 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:51789 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFPRtW (ORCPT
+        Sun, 16 Jun 2019 13:49:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42602 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfFPRtv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 13:49:22 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x5GHmCb4032735;
-        Mon, 17 Jun 2019 02:48:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x5GHmCb4032735
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560707293;
-        bh=IpZflS0Negz+N4Cq4nFYbftm4U1eCdP1v9vv3Zq7pwI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mjEKkL6zNDPWDoUcT/TJNVOlI+a4xtqrjGbKOTyWo9iroqkzg3fr+Rj6ni7MzLyCX
-         iO8khdgXDuCB31K0oaafZxyMjaSEYsr0PQ5JKdEGftIv/I9n50ERN9lNIFU0LyMuT7
-         4kO+jOKYxzCW5Xy0svE49IBOpi1zMIlVe6s5AKkIEFccIsWRqvvpju8xWXBAu+j3s9
-         2pljdiYPJUwnHxlr0Ot0VhG504dhsWfz6fGs9r+qa1bJ+/knWwDu6rlcAqsT/GHH5t
-         ohS6znaFFlM0ATXD0EsMGVzZ2XSPseCWTz93mBxwvDYZT7HVPWmw6/AjuTCoqZ7FzD
-         z9eHvTbt3XV3w==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org, Joel Stanley <joel@jms.id.au>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 2/2] lib/raid6: refactor unroll rules with pattern rules
-Date:   Mon, 17 Jun 2019 02:48:05 +0900
-Message-Id: <20190616174805.3069-2-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190616174805.3069-1-yamada.masahiro@socionext.com>
-References: <20190616174805.3069-1-yamada.masahiro@socionext.com>
+        Sun, 16 Jun 2019 13:49:51 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so7434299wrl.9;
+        Sun, 16 Jun 2019 10:49:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/hRwW8vMhzdua2ppKrVssHlA+91ZHXY3leNMzjUdRY4=;
+        b=ntz43rBUdHCHjbQbMNk77s+2nvtyM808P08aRWuPumkZQKQBX6uX3qR7c6QxUm+kfY
+         S4EgNUI3AZpmQZsUzFnWB4RT0LaH8Laq6DncsDkMX9fm+3bFkj+ZzdhB2lYU/aNpJi6Q
+         tkDsXCrXGbev++hsjRGw0l5l9sCVD2tQCDq6NylLb8bCbRMF4u4xmiPyQZ8bkcKhL9yx
+         3Q+ki0r9WsqqZe2dk52DqmGmh72uW5896XBCbFJC3NP6YDXchAPXDYyCvEW8DRsNJQfT
+         CRjw/s8FNnFFQYUp42lQ3yLiWRPURM1JKRP4ffG2oZPH/ccsRYAY3kGUmK+4Hnsficio
+         YaPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/hRwW8vMhzdua2ppKrVssHlA+91ZHXY3leNMzjUdRY4=;
+        b=tqovYPrMy7TFiV6bhAJAXX+OxqNwuTpUFj9WLyj2v1PL25wpMbU2qKB6BtHU5ggFTk
+         j/v+FUEBMMnWbszfagtWryaGzYTfZ+p1H3Oz1vQQaC3/8NIK1KAt3oly73AWYPAzY7o/
+         0iQzQK5xJxN3YD7ywKthAd/2bhMOy8D63tl/XUqesptKpTw2Ji60tC7amP3RqCEyviOA
+         bLmZZqTD4Y0WwiXCa3sclPZpxNRht+r8FBphBzwfkxEn6upqAkTM8AMhwmV8o9ZlKT5E
+         ZA686ZJGV3Bt838a7xvOncnSqYhm58lWLtfOFCw1LoBoUcCGPAphqd2Asaq7CW8jWcXl
+         YnxA==
+X-Gm-Message-State: APjAAAXbKPtLzWQ9gdcmHlI1RgPcpv3seheTnL9L4Z4xiz3jHjAq/IJq
+        W0Whx6LIwlD2z7nTclhQDKXtj1X8nYw=
+X-Google-Smtp-Source: APXvYqw8+eaMfU3JJptUOf9opfQ4Ex/advZBsHRVGuf0+Z2384xm0miDcOtIHBye56a10TFgRW3FAw==
+X-Received: by 2002:adf:ec4c:: with SMTP id w12mr52857090wrn.160.1560707389051;
+        Sun, 16 Jun 2019 10:49:49 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id x8sm10023143wmc.5.2019.06.16.10.49.47
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 16 Jun 2019 10:49:48 -0700 (PDT)
+Subject: Re: [PATCHv4 15/28] x86/vdso: Add offsets page in vvar
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@openvz.org>,
+        Adrian Reber <adrian@lisas.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+References: <20190612192628.23797-1-dima@arista.com>
+ <20190612192628.23797-16-dima@arista.com>
+ <alpine.DEB.2.21.1906141553070.1722@nanos.tec.linutronix.de>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <cc38a049-aa49-4290-d721-e0adc5d25491@gmail.com>
+Date:   Sun, 16 Jun 2019 18:49:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1906141553070.1722@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This Makefile repeats very similar rules.
+On 6/14/19 2:58 PM, Thomas Gleixner wrote:
+> On Wed, 12 Jun 2019, Dmitry Safonov wrote:
+>>  
+>> +#ifdef CONFIG_TIME_NS
+>> +notrace static __always_inline void clk_to_ns(clockid_t clk, struct timespec *ts)
+>> +{
+>> +	struct timens_offsets *timens = (struct timens_offsets *) &timens_page;
+>> +	struct timespec64 *offset64;
+>> +
+>> +	switch (clk) {
+>> +	case CLOCK_MONOTONIC:
+>> +	case CLOCK_MONOTONIC_COARSE:
+>> +	case CLOCK_MONOTONIC_RAW:
+>> +		offset64 = &timens->monotonic;
+>> +		break;
+>> +	case CLOCK_BOOTTIME:
+>> +		offset64 = &timens->boottime;
+>> +	default:
+>> +		return;
+>> +	}
+>> +
+>> +	ts->tv_nsec += offset64->tv_nsec;
+>> +	ts->tv_sec += offset64->tv_sec;
+>> +	if (ts->tv_nsec >= NSEC_PER_SEC) {
+>> +		ts->tv_nsec -= NSEC_PER_SEC;
+>> +		ts->tv_sec++;
+>> +	}
+>> +	if (ts->tv_nsec < 0) {
+>> +		ts->tv_nsec += NSEC_PER_SEC;
+>> +		ts->tv_sec--;
+>> +	}
+> 
+> I had to think twice why adding the offset (which can be negative) can
+> never result in negative time being returned. A comment explaining this
+> would be appreciated.
+> 
+> As I'm planning to merge Vincezos VDSO consolidation into 5.3, can you
+> please start to work on top of his series, which should be available as
+> final v7 next week hopefully.
 
-Let's use pattern rules. $(UNROLL) can be replaced with $*.
+Yes, will rebase on the top of his series.
 
-No intended change in behavior.
-
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
-
- lib/raid6/Makefile | 97 ++++++----------------------------------------
- 1 file changed, 11 insertions(+), 86 deletions(-)
-
-diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-index 74004037033f..42695bc8d451 100644
---- a/lib/raid6/Makefile
-+++ b/lib/raid6/Makefile
-@@ -12,9 +12,6 @@ raid6_pq-$(CONFIG_S390) += s390vx8.o recov_s390xc.o
- 
- hostprogs-y	+= mktables
- 
--quiet_cmd_unroll = UNROLL  $@
--      cmd_unroll = $(AWK) -f$(srctree)/$(src)/unroll.awk -vN=$(UNROLL) < $< > $@
--
- ifeq ($(CONFIG_ALTIVEC),y)
- altivec_flags := -maltivec $(call cc-option,-mabi=altivec)
- 
-@@ -50,111 +47,39 @@ CFLAGS_REMOVE_neon8.o += -mgeneral-regs-only
- endif
- endif
- 
--targets += int1.c
--$(obj)/int1.c:   UNROLL := 1
--$(obj)/int1.c:   $(src)/int.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
--targets += int2.c
--$(obj)/int2.c:   UNROLL := 2
--$(obj)/int2.c:   $(src)/int.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
--targets += int4.c
--$(obj)/int4.c:   UNROLL := 4
--$(obj)/int4.c:   $(src)/int.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
--targets += int8.c
--$(obj)/int8.c:   UNROLL := 8
--$(obj)/int8.c:   $(src)/int.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
--targets += int16.c
--$(obj)/int16.c:  UNROLL := 16
--$(obj)/int16.c:  $(src)/int.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
-+quiet_cmd_unroll = UNROLL  $@
-+      cmd_unroll = $(AWK) -f$(srctree)/$(src)/unroll.awk -vN=$* < $< > $@
- 
--targets += int32.c
--$(obj)/int32.c:  UNROLL := 32
--$(obj)/int32.c:  $(src)/int.uc $(src)/unroll.awk FORCE
-+targets += int1.c int2.c int4.c int8.c int16.c int32.c
-+$(obj)/int%.c: $(src)/int.uc $(src)/unroll.awk FORCE
- 	$(call if_changed,unroll)
- 
- CFLAGS_altivec1.o += $(altivec_flags)
--targets += altivec1.c
--$(obj)/altivec1.c:   UNROLL := 1
--$(obj)/altivec1.c:   $(src)/altivec.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_altivec2.o += $(altivec_flags)
--targets += altivec2.c
--$(obj)/altivec2.c:   UNROLL := 2
--$(obj)/altivec2.c:   $(src)/altivec.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_altivec4.o += $(altivec_flags)
--targets += altivec4.c
--$(obj)/altivec4.c:   UNROLL := 4
--$(obj)/altivec4.c:   $(src)/altivec.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_altivec8.o += $(altivec_flags)
--targets += altivec8.c
--$(obj)/altivec8.c:   UNROLL := 8
--$(obj)/altivec8.c:   $(src)/altivec.uc $(src)/unroll.awk FORCE
-+targets += altivec1.c altivec2.c altivec4.c altivec8.c
-+$(obj)/altivec%.c: $(src)/altivec.uc $(src)/unroll.awk FORCE
- 	$(call if_changed,unroll)
- 
- CFLAGS_vpermxor1.o += $(altivec_flags)
--targets += vpermxor1.c
--$(obj)/vpermxor1.c: UNROLL := 1
--$(obj)/vpermxor1.c: $(src)/vpermxor.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_vpermxor2.o += $(altivec_flags)
--targets += vpermxor2.c
--$(obj)/vpermxor2.c: UNROLL := 2
--$(obj)/vpermxor2.c: $(src)/vpermxor.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_vpermxor4.o += $(altivec_flags)
--targets += vpermxor4.c
--$(obj)/vpermxor4.c: UNROLL := 4
--$(obj)/vpermxor4.c: $(src)/vpermxor.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_vpermxor8.o += $(altivec_flags)
--targets += vpermxor8.c
--$(obj)/vpermxor8.c: UNROLL := 8
--$(obj)/vpermxor8.c: $(src)/vpermxor.uc $(src)/unroll.awk FORCE
-+targets += vpermxor1.o vpermxor2.o vpermxor4.o vpermxor8.o
-+$(obj)/vpermxor%.c: $(src)/vpermxor.uc $(src)/unroll.awk FORCE
- 	$(call if_changed,unroll)
- 
- CFLAGS_neon1.o += $(NEON_FLAGS)
--targets += neon1.c
--$(obj)/neon1.c:   UNROLL := 1
--$(obj)/neon1.c:   $(src)/neon.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_neon2.o += $(NEON_FLAGS)
--targets += neon2.c
--$(obj)/neon2.c:   UNROLL := 2
--$(obj)/neon2.c:   $(src)/neon.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_neon4.o += $(NEON_FLAGS)
--targets += neon4.c
--$(obj)/neon4.c:   UNROLL := 4
--$(obj)/neon4.c:   $(src)/neon.uc $(src)/unroll.awk FORCE
--	$(call if_changed,unroll)
--
- CFLAGS_neon8.o += $(NEON_FLAGS)
--targets += neon8.c
--$(obj)/neon8.c:   UNROLL := 8
--$(obj)/neon8.c:   $(src)/neon.uc $(src)/unroll.awk FORCE
-+targets += neon1.c neon2.c neon4.c neon8.c
-+$(obj)/neon%.c: $(src)/neon.uc $(src)/unroll.awk FORCE
- 	$(call if_changed,unroll)
- 
- targets += s390vx8.c
--$(obj)/s390vx8.c:   UNROLL := 8
--$(obj)/s390vx8.c:   $(src)/s390vx.uc $(src)/unroll.awk FORCE
-+$(obj)/s390vx%.c: $(src)/s390vx.uc $(src)/unroll.awk FORCE
- 	$(call if_changed,unroll)
- 
- quiet_cmd_mktable = TABLE   $@
--- 
-2.17.1
-
+Thanks much,
+          Dmitry
