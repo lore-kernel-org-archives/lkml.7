@@ -2,80 +2,119 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AD5C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B606C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABF9A2147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C65132133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:39:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Mj+eQsS7"
+	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="kgrOCNDV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726688AbfFPK3B (ORCPT
+        id S1726431AbfFPKht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 06:29:01 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:38076 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfFPK3A (ORCPT
+        Sun, 16 Jun 2019 06:37:49 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:38404 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725766AbfFPKht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 06:29:00 -0400
-Received: by mail-lj1-f196.google.com with SMTP id r9so6535659ljg.5
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 03:28:59 -0700 (PDT)
+        Sun, 16 Jun 2019 06:37:49 -0400
+Received: by mail-pf1-f193.google.com with SMTP id a186so4059962pfa.5
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 03:37:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cloudflare.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Me4XqG/m9sHfXXVEccb17VwdYwCFLO+trDo9KyCTW1Y=;
-        b=Mj+eQsS7MDu61+1NUKDH1vAVTLwD55IzuU/Ok6nGLyPgc2jYALj4QUYjUl44/7Urod
-         O/lKJOx/c96GmYVodsEeQyT09XPC3zY+UyHXxvzDGsxvm+C1TYDv3klWqlLDmHJgOW70
-         Mllq7UzbSzIFS66HvA5Dyy/5WaYfBnoRYkhgg=
+        d=chrisdown.name; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=D66IwRD66+bBr49h113lbcClZo8OrbEzuxhoETswyAA=;
+        b=kgrOCNDV3slPKYPtT/XUkerWgc9N6kmRSVG8nhJbBPj7PsOQxHbX7sRVeKyB4adSbG
+         X7fAr8BFsvhhdJFjJQq8cqqa1pm7ssLdmRZi0Pjeq1tdaHh5DNhEfm/KHevQMnlnek9+
+         wFq8e/uowrLJk81/22wplVkQzIPQqnvvx6Aes=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Me4XqG/m9sHfXXVEccb17VwdYwCFLO+trDo9KyCTW1Y=;
-        b=ZG3837g0yaoaxRh6PMUB+43pFBrOA7XSO9YaEyVbgO8GnmaX/7Z9savZF0kAX1XikD
-         Yx4vY7xHaZgsFG6fasejxD1GzwuTjrL2YhWyyaNjsXfLzkix1cg/auWuWmwkTdGR11z1
-         LRoA+Y2Z+d+9cZq/lvMevG+qJp8kKSL4QocpurhKDVgs6n3uceP9VGTn5nKleEpQsHfy
-         +GzWaSIh4e4bvzdPq76Mlfg4/0Q8IINWYpw2r/nSbCq52Rd7UKBh5hNj76UhkMDugjnF
-         XGUkA9pEwxEzo+fLMZoixMGkPtkphcCn/i7JnlF5T2jjTCf3X1NXp9PJ1UW4KgYgBVuD
-         V5dQ==
-X-Gm-Message-State: APjAAAXd6n2WOE7/UtftoaBdtUseaf8TwcVl1Jnh5L6HvIY6dd+CzLKY
-        QoCkZuO5vxMFmz56YYKAgRw6xZERouWPJs63p0Md7w==
-X-Google-Smtp-Source: APXvYqxO8O0hAikX/nV9jyVW6aUtHpiYRATrrhyKO60SL4jd3wF5Sc0joxCGcm+leHffWey6z5+hGcFWv4ELMQpFpYU=
-X-Received: by 2002:a2e:2c14:: with SMTP id s20mr28744572ljs.54.1560680938585;
- Sun, 16 Jun 2019 03:28:58 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=D66IwRD66+bBr49h113lbcClZo8OrbEzuxhoETswyAA=;
+        b=hBBm4741khFHuEotIwk4k9DPD6YxHTVLACPpw/iO8OBtE8mN+AyY0w2BKfaLq5UtYL
+         Hr+Fx1LblkeaiMhg402veupVD2zuf8yTD+BH64gzpt1MqDubiXTkGKoJ9ZN0DOIUX4F1
+         LEggCy75f6c6oBL2289d/ZVnWsMi9eU7kLMZQ2FSTiWwac24ImmkKSbY6N3Zn3KHR884
+         FVs9AoRQ3rYVdbIqJMNJ4gwGm24M7KsX1ZuhK9Pt+OM9qVmF2MqJHDYsF7oQqwYGoN7y
+         dE/qjK9zxUzldzJxBEKxhlMRbiAgJY6TU6+0kssd1zh+MUOoL91TdddpYh+xpJhwMhh7
+         aXDg==
+X-Gm-Message-State: APjAAAUKOIeWVtpJeJAUAxrzB/v7pOAkghn8paFMY+XnjqC1bYx9yGjN
+        7E0dl0CLQwJU2wqYrl0VzBzPjw==
+X-Google-Smtp-Source: APXvYqzuJgQl+102uUA83U5N3hshdRoQSBwu1PZlD2FrUikMytjIFjhKAz6HFlQnXa6TUYRoI/Xy6A==
+X-Received: by 2002:a17:90a:7f93:: with SMTP id m19mr21160942pjl.73.1560681468335;
+        Sun, 16 Jun 2019 03:37:48 -0700 (PDT)
+Received: from localhost ([61.6.140.222])
+        by smtp.gmail.com with ESMTPSA id h11sm8294436pfn.170.2019.06.16.03.37.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 16 Jun 2019 03:37:47 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 18:37:45 +0800
+From:   Chris Down <chris@chrisdown.name>
+To:     Xunlei Pang <xlpang@linux.alibaba.com>
+Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH] memcg: Ignore unprotected parent in
+ mem_cgroup_protected()
+Message-ID: <20190616103745.GA2117@chrisdown.name>
+References: <20190615111704.63901-1-xlpang@linux.alibaba.com>
+ <20190615160820.GB1307@chrisdown.name>
+ <711f086e-a2e5-bccd-72b6-b314c4461686@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20190614093728.622-1-afabre@cloudflare.com> <CAEf4BzZNO8Px2BRcs5WMxfrfRaekxF=_fz_p2A+eL94L0DrfQg@mail.gmail.com>
- <6aaa3a2f-5da5-525f-89a1-59dddc1cfa53@iogearbox.net> <CAADnVQK6=90Yu6jhEhE52ptS4vgbRVpyj2oZZsO6gcrScU9bsw@mail.gmail.com>
-In-Reply-To: <CAADnVQK6=90Yu6jhEhE52ptS4vgbRVpyj2oZZsO6gcrScU9bsw@mail.gmail.com>
-From:   Arthur Fabre <afabre@cloudflare.com>
-Date:   Sun, 16 Jun 2019 11:28:46 +0100
-Message-ID: <CAOn4ftsQGaVdB+BYx6s8e9GVSCBBVu-7YXU_B-n7YttXbt-gKA@mail.gmail.com>
-Subject: Re: [PATCH v2 bpf-next] bpf: sk_storage: Fix out of bounds memory access
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Daniel Borkmann <daniel@iogearbox.net>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <711f086e-a2e5-bccd-72b6-b314c4461686@linux.alibaba.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 10:45 PM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
-> It's certainly should be in bpf tree.
-> It didn't apply directly, so I tweaked it a tiny bit,
-> reduced verbosity of commit log and pushed to bpf tree.
-> Thanks for the fix!
+Hi Xunlei,
 
-Thanks! I didn't realize this had already made it to the bpf tree.
+Xunlei Pang writes:
+>docker and various types(different memory capacity) of containers
+>are managed by k8s, it's a burden for k8s to maintain those dynamic
+>figures, simply set "max" to key containers is always welcome.
+
+Right, setting "max" is generally a fine way of going about it.
+
+>Set "max" to docker also protects docker cgroup memory(as docker
+>itself has tasks) unnecessarily.
+
+That's not correct -- leaf memcgs have to _explicitly_ request memory 
+protection. From the documentation:
+
+    memory.low
+
+    [...]
+
+    Best-effort memory protection.  If the memory usages of a
+    cgroup and all its ancestors are below their low boundaries,
+    the cgroup's memory won't be reclaimed unless memory can be
+    reclaimed from unprotected cgroups.
+
+Note the part that the cgroup itself also must be within its low boundary, 
+which is not implied simply by having ancestors that would permit propagation 
+of protections.
+
+In this case, Docker just shouldn't request it for those Docker-related tasks, 
+and they won't get any. That seems a lot simpler and more intuitive than 
+special casing "0" in ancestors.
+
+>This patch doesn't take effect on any intermediate layer with
+>positive memory.min set, it requires all the ancestors having
+>0 memory.min to work.
+>
+>Nothing special change, but more flexible to business deployment...
+
+Not so, this change is extremely "special". It violates the basic expectation 
+that 0 means no possibility of propagation of protection, and I still don't see 
+a compelling argument why Docker can't just set "max" in the intermediate 
+cgroup and not accept any protection in leaf memcgs that it doesn't want 
+protection for.
