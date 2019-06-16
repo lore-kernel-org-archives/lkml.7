@@ -2,104 +2,144 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B1AC31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 11:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE48FC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 12:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D1E20870
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 11:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 834DB20870
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 12:04:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfFPL5H (ORCPT
+        id S1727149AbfFPMEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 07:57:07 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:54359 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725879AbfFPL5H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 07:57:07 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e07417;MF=xlpang@linux.alibaba.com;NM=1;PH=DS;RN=6;SR=0;TI=SMTPD_---0TUK.rqV_1560686221;
-Received: from xunleideMacBook-Pro.local(mailfrom:xlpang@linux.alibaba.com fp:SMTPD_---0TUK.rqV_1560686221)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Sun, 16 Jun 2019 19:57:01 +0800
-Reply-To: xlpang@linux.alibaba.com
-Subject: Re: [PATCH] memcg: Ignore unprotected parent in
- mem_cgroup_protected()
-To:     Chris Down <chris@chrisdown.name>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-References: <20190615111704.63901-1-xlpang@linux.alibaba.com>
- <20190615160820.GB1307@chrisdown.name>
- <711f086e-a2e5-bccd-72b6-b314c4461686@linux.alibaba.com>
- <20190616103745.GA2117@chrisdown.name>
-From:   Xunlei Pang <xlpang@linux.alibaba.com>
-Message-ID: <89067792-2c39-bcf2-6a35-80cab101c5ac@linux.alibaba.com>
-Date:   Sun, 16 Jun 2019 19:57:01 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.1
+        Sun, 16 Jun 2019 08:04:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38096 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725879AbfFPMEJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 08:04:09 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A18133162908;
+        Sun, 16 Jun 2019 12:04:07 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-102.pek2.redhat.com [10.72.12.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8C0121001DE8;
+        Sun, 16 Jun 2019 12:03:55 +0000 (UTC)
+Subject: Re: [PATCH v2 1/2] x86/mm: Identify the end of the kernel area to be
+ reserved
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Baoquan He <bhe@redhat.com>
+References: <cover.1560546537.git.thomas.lendacky@amd.com>
+ <284d3650e2dae50d5645310a8b49664398fe5223.1560546537.git.thomas.lendacky@amd.com>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <53f14fd0-dd96-06dc-f488-e47c6eacbedf@redhat.com>
+Date:   Sun, 16 Jun 2019 20:03:50 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190616103745.GA2117@chrisdown.name>
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <284d3650e2dae50d5645310a8b49664398fe5223.1560546537.git.thomas.lendacky@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Sun, 16 Jun 2019 12:04:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Chris,
+After applied the patch series(v2), the kexec-d kernel and the kdump kernel can
+successfully boot.
 
-On 2019/6/16 PM 6:37, Chris Down wrote:
-> Hi Xunlei,
-> 
-> Xunlei Pang writes:
->> docker and various types(different memory capacity) of containers
->> are managed by k8s, it's a burden for k8s to maintain those dynamic
->> figures, simply set "max" to key containers is always welcome.
-> 
-> Right, setting "max" is generally a fine way of going about it.
-> 
->> Set "max" to docker also protects docker cgroup memory(as docker
->> itself has tasks) unnecessarily.
-> 
-> That's not correct -- leaf memcgs have to _explicitly_ request memory
-> protection. From the documentation:
-> 
->    memory.low
-> 
->    [...]
-> 
->    Best-effort memory protection.  If the memory usages of a
->    cgroup and all its ancestors are below their low boundaries,
->    the cgroup's memory won't be reclaimed unless memory can be
->    reclaimed from unprotected cgroups.
-> 
-> Note the part that the cgroup itself also must be within its low
-> boundary, which is not implied simply by having ancestors that would
-> permit propagation of protections.
-> 
-> In this case, Docker just shouldn't request it for those Docker-related
-> tasks, and they won't get any. That seems a lot simpler and more
-> intuitive than special casing "0" in ancestors.
-> 
->> This patch doesn't take effect on any intermediate layer with
->> positive memory.min set, it requires all the ancestors having
->> 0 memory.min to work.
->>
->> Nothing special change, but more flexible to business deployment...
-> 
-> Not so, this change is extremely "special". It violates the basic
-> expectation that 0 means no possibility of propagation of protection,
-> and I still don't see a compelling argument why Docker can't just set
-> "max" in the intermediate cgroup and not accept any protection in leaf
-> memcgs that it doesn't want protection for.
+Thanks.
 
-I got the reason, I'm using cgroup v1(with memory.min backport)
-which permits tasks existent in "docker" cgroup.procs.
+Tested-by: Lianbo Jiang <lijiang@redhat.com>
 
-For cgroup v2, it's not a problem.
-
-Thanks,
-Xunlei
+在 2019年06月15日 05:15, Lendacky, Thomas 写道:
+> The memory occupied by the kernel is reserved using memblock_reserve()
+> in setup_arch(). Currently, the area is from symbols _text to __bss_stop.
+> Everything after __bss_stop must be specifically reserved otherwise it
+> is discarded. This is not clearly documented.
+> 
+> Add a new symbol, __end_of_kernel_reserve, that more readily identifies
+> what is reserved, along with comments that indicate what is reserved,
+> what is discarded and what needs to be done to prevent a section from
+> being discarded.
+> 
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Lianbo Jiang <lijiang@redhat.com>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/include/asm/sections.h | 2 ++
+>  arch/x86/kernel/setup.c         | 8 +++++++-
+>  arch/x86/kernel/vmlinux.lds.S   | 9 ++++++++-
+>  3 files changed, 17 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/sections.h b/arch/x86/include/asm/sections.h
+> index 8ea1cfdbeabc..71b32f2570ab 100644
+> --- a/arch/x86/include/asm/sections.h
+> +++ b/arch/x86/include/asm/sections.h
+> @@ -13,4 +13,6 @@ extern char __end_rodata_aligned[];
+>  extern char __end_rodata_hpage_align[];
+>  #endif
+>  
+> +extern char __end_of_kernel_reserve[];
+> +
+>  #endif	/* _ASM_X86_SECTIONS_H */
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 08a5f4a131f5..32eb70625b3b 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -827,8 +827,14 @@ dump_kernel_offset(struct notifier_block *self, unsigned long v, void *p)
+>  
+>  void __init setup_arch(char **cmdline_p)
+>  {
+> +	/*
+> +	 * Reserve the memory occupied by the kernel between _text and
+> +	 * __end_of_kernel_reserve symbols. Any kernel sections after the
+> +	 * __end_of_kernel_reserve symbol must be explicity reserved with a
+> +	 * separate memblock_reserve() or it will be discarded.
+> +	 */
+>  	memblock_reserve(__pa_symbol(_text),
+> -			 (unsigned long)__bss_stop - (unsigned long)_text);
+> +			 (unsigned long)__end_of_kernel_reserve - (unsigned long)_text);
+>  
+>  	/*
+>  	 * Make sure page 0 is always reserved because on systems with
+> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+> index 0850b5149345..ca2252ca6ad7 100644
+> --- a/arch/x86/kernel/vmlinux.lds.S
+> +++ b/arch/x86/kernel/vmlinux.lds.S
+> @@ -368,6 +368,14 @@ SECTIONS
+>  		__bss_stop = .;
+>  	}
+>  
+> +	/*
+> +	 * The memory occupied from _text to here, __end_of_kernel_reserve, is
+> +	 * automatically reserved in setup_arch(). Anything after here must be
+> +	 * explicitly reserved using memblock_reserve() or it will be discarded
+> +	 * and treated as available memory.
+> +	 */
+> +	__end_of_kernel_reserve = .;
+> +
+>  	. = ALIGN(PAGE_SIZE);
+>  	.brk : AT(ADDR(.brk) - LOAD_OFFSET) {
+>  		__brk_base = .;
+> @@ -382,7 +390,6 @@ SECTIONS
+>  	STABS_DEBUG
+>  	DWARF_DEBUG
+>  
+> -	/* Sections to be discarded */
+>  	DISCARDS
+>  	/DISCARD/ : {
+>  		*(.eh_frame)
+> 
