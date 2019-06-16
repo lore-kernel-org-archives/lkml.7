@@ -2,110 +2,255 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4D1AC31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 12:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABB73C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 12:48:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A95F320870
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 12:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 731F220870
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 12:48:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fBMNN+Jl"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="oPWAnWFI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727150AbfFPMow (ORCPT
+        id S1727206AbfFPMsO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 08:44:52 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:50988 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfFPMow (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 08:44:52 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5GCiLhA033414;
-        Sun, 16 Jun 2019 07:44:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560689061;
-        bh=19H8228T7JxbHupQvwDqhQcBwn5pS/mQpYoEWhiFVCA=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=fBMNN+Jl7jtZzcNJVVeNu23O1SMLIJURY6HkAxnEugTApS0+Qf+8w4dTVl5udZW9I
-         WWkTepki3mCK0/KTL9D7KhWO8mofjFaG6vluM3At9EHCZ7FJ1MK85p8JAtYTO45Vc8
-         JIsly0gmjIo/3EETy2UfYgeE/p0YT3PapwEPfhDE=
-Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5GCiL4U024120
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Sun, 16 Jun 2019 07:44:21 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Sun, 16
- Jun 2019 07:44:20 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Sun, 16 Jun 2019 07:44:20 -0500
-Received: from [10.250.133.146] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5GCiGQW130920;
-        Sun, 16 Jun 2019 07:44:17 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v5 1/3] mtd: spi-nor: add support for is25wp256
-To:     Sagar Shrikant Kadam <sagar.kadam@sifive.com>,
-        <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
-        <dwmw2@infradead.org>, <computersforpeace@gmail.com>,
-        <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>
-CC:     <palmer@sifive.com>, <aou@eecs.berkeley.edu>,
-        <paul.walmsley@sifive.com>, <wesley@sifive.com>
-References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
- <1560336476-31763-2-git-send-email-sagar.kadam@sifive.com>
-Message-ID: <325855d0-00f9-df8a-ea57-c140d39dd6ef@ti.com>
-Date:   Sun, 16 Jun 2019 18:14:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sun, 16 Jun 2019 08:48:14 -0400
+Received: from vps.xff.cz ([195.181.215.36]:38520 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725865AbfFPMsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 08:48:13 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1560689291; bh=qBJ9B0Xckt+HWWzbJLcLsikCH1xzty0YELtzbx90mkg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oPWAnWFIpuRP6ETv3DDOQhM2QI5kMHea+JQ32AOu9youL4NSvqwmFmwzXYjtOhgdA
+         9FWoqGNXIs5wK/hiNjCxjUjOv+QJdWBWe6127EOIZR5gMeJOLnvT3x21C0m0lSYmRi
+         irBZ/5vrY7a8yh1CJv8ZAHM8V3ZnQc1CETSSkceI=
+Date:   Sun, 16 Jun 2019 14:48:10 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [linux-sunxi] [PATCH v6 5/6] drm: sun4i: Add support for
+ enabling DDC I2C bus to sun8i_dw_hdmi glue
+Message-ID: <20190616124810.qvlij6zkcl3leu3d@core.my.home>
+Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20190527162237.18495-1-megous@megous.com>
+ <20190527162237.18495-6-megous@megous.com>
+ <1823986.m04BvQ5ALy@jernej-laptop>
 MIME-Version: 1.0
-In-Reply-To: <1560336476-31763-2-git-send-email-sagar.kadam@sifive.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1823986.m04BvQ5ALy@jernej-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Jernej,
 
-On 12-Jun-19 4:17 PM, Sagar Shrikant Kadam wrote:
-[...]
-
-> @@ -4129,7 +4137,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
->  	if (ret)
->  		return ret;
->  
-> -	if (nor->addr_width) {
-> +	if (nor->addr_width && JEDEC_MFR(info) != SNOR_MFR_ISSI) {
->  		/* already configured from SFDP */
-
-Hmm, why would you want to ignore addr_width that's read from SFDP table?
-
-Regards
-Vignesh
-
-
->  	} else if (info->addr_width) {
->  		nor->addr_width = info->addr_width;
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index b3d360b..ff13297 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -19,6 +19,7 @@
->  #define SNOR_MFR_ATMEL		CFI_MFR_ATMEL
->  #define SNOR_MFR_GIGADEVICE	0xc8
->  #define SNOR_MFR_INTEL		CFI_MFR_INTEL
-> +#define SNOR_MFR_ISSI		0x9d		/* ISSI */
->  #define SNOR_MFR_ST		CFI_MFR_ST	/* ST Micro */
->  #define SNOR_MFR_MICRON		CFI_MFR_MICRON	/* Micron */
->  #define SNOR_MFR_MACRONIX	CFI_MFR_MACRONIX
+On Sun, Jun 16, 2019 at 01:05:13PM +0200, Jernej Škrabec wrote:
+> Hi Ondrej!
 > 
+> Dne ponedeljek, 27. maj 2019 ob 18:22:36 CEST je megous via linux-sunxi 
+> napisal(a):
+> > From: Ondrej Jirman <megous@megous.com>
+> > 
+> > Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
+> > for the DDC bus to be usable.
+> > 
+> > Add support for hdmi-connector node's optional ddc-en-gpios property to
+> > support this use case.
+> > 
+> > Signed-off-by: Ondrej Jirman <megous@megous.com>
+> > ---
+> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
+> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
+> >  2 files changed, 55 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index 39d8509d96a0..59b81ba02d96
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> > @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct
+> > drm_device *drm, return crtcs;
+> >  }
+> > 
+> > +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
+> > +					     struct 
+> platform_device **pdev_out)
+> > +{
+> > +	struct platform_device *pdev;
+> > +	struct device_node *remote;
+> > +
+> > +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
+> > +	if (!remote)
+> > +		return -ENODEV;
+> > +
+> > +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+> > +		of_node_put(remote);
+> > +		return -ENODEV;
+> > +	}
+> > +
+> > +	pdev = of_find_device_by_node(remote);
+> > +	of_node_put(remote);
+> > +	if (!pdev)
+> > +		return -ENODEV;
+> > +
+> > +	*pdev_out = pdev;
+> > +	return 0;
+> > +}
+> > +
+> >  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+> >  			      void *data)
+> >  {
+> > @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> > struct device *master, return PTR_ERR(hdmi->regulator);
+> >  	}
+> > 
+> > +	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
+> > +	if (!ret) {
+> > +		hdmi->ddc_en = gpiod_get_optional(&hdmi->connector_pdev-
+> >dev,
+> > +						  "ddc-en", 
+> GPIOD_OUT_HIGH);
+> > +		if (IS_ERR(hdmi->ddc_en)) {
+> > +			platform_device_put(hdmi->connector_pdev);
+> > +			dev_err(dev, "Couldn't get ddc-en gpio\n");
+> > +			return PTR_ERR(hdmi->ddc_en);
+> > +		}
+> > +	}
+> > +
+> >  	ret = regulator_enable(hdmi->regulator);
+> >  	if (ret) {
+> >  		dev_err(dev, "Failed to enable regulator\n");
+> > -		return ret;
+> > +		goto err_unref_ddc_en;
+> >  	}
+> > 
+> > +	gpiod_set_value(hdmi->ddc_en, 1);
+> 
+> Why don't you do that inside if clause where hdmi->ddc_en is assigned? It's 
+> not useful otherwise anyway.
+> 
+> Besides, you would then only need to adjust one goto label in error path.
+
+The idea is to enable DDC after enabling the regulator. I don't think it matters
+for the particular HW that's on Orange Pi 3, and similar Xunlong boards, but
+this is a fairly generic binding and it makes more sense to power the bus, and
+then enable whatever aditional circuitry might be there for the IO.
+
+I can move sun8i_dw_hdmi_find_connector_pdev lower, but I would then need to
+disable the regulator in the error path, and I like to keep this order:
+
+- parsing DT
+- enabling actual HW stuff
+
+Because parsing is likely to fail with DEFERED_PROBE, because GPIO or whatever
+else is not yet ready, and this approach avoids enabling/disabling the HW
+needlessly.
+
+> > +
+> >  	ret = reset_control_deassert(hdmi->rst_ctrl);
+> >  	if (ret) {
+> >  		dev_err(dev, "Could not deassert ctrl reset 
+> control\n");
+> > -		goto err_disable_regulator;
+> > +		goto err_disable_ddc_en;
+> >  	}
+> > 
+> >  	ret = clk_prepare_enable(hdmi->clk_tmds);
+> > @@ -213,8 +250,14 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> > struct device *master, clk_disable_unprepare(hdmi->clk_tmds);
+> >  err_assert_ctrl_reset:
+> >  	reset_control_assert(hdmi->rst_ctrl);
+> > -err_disable_regulator:
+> > +err_disable_ddc_en:
+> > +	gpiod_set_value(hdmi->ddc_en, 0);
+> >  	regulator_disable(hdmi->regulator);
+> > +err_unref_ddc_en:
+> > +	if (hdmi->ddc_en)
+> > +		gpiod_put(hdmi->ddc_en);
+> > +
+> > +	platform_device_put(hdmi->connector_pdev);
+> > 
+> >  	return ret;
+> >  }
+> > @@ -228,7 +271,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev,
+> > struct device *master, sun8i_hdmi_phy_remove(hdmi);
+> >  	clk_disable_unprepare(hdmi->clk_tmds);
+> >  	reset_control_assert(hdmi->rst_ctrl);
+> > +	gpiod_set_value(hdmi->ddc_en, 0);
+> >  	regulator_disable(hdmi->regulator);
+> > +
+> > +	if (hdmi->ddc_en)
+> > +		gpiod_put(hdmi->ddc_en);
+> > +
+> > +	platform_device_put(hdmi->connector_pdev);
+> >  }
+> > 
+> >  static const struct component_ops sun8i_dw_hdmi_ops = {
+> > diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 720c5aa8adc1..dad66b8301c2
+> > 100644
+> > --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> > @@ -9,6 +9,7 @@
+> >  #include <drm/bridge/dw_hdmi.h>
+> >  #include <drm/drm_encoder.h>
+> >  #include <linux/clk.h>
+> > +#include <linux/gpio/consumer.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/regulator/consumer.h>
+> >  #include <linux/reset.h>
+> > @@ -190,6 +191,8 @@ struct sun8i_dw_hdmi {
+> >  	struct regulator		*regulator;
+> >  	const struct sun8i_dw_hdmi_quirks *quirks;
+> >  	struct reset_control		*rst_ctrl;
+> > +	struct platform_device		*connector_pdev;
+> 
+> It seems that connector_pdev is needed only during intialization. Why do you 
+> store it?
+
+For some reason I thought that I need to keep it to keep the GPIO available,
+but that's not true. I'll drop it.
+
+thank you,
+	Ondrej
+
+> Best regards,
+> Jernej
+> 
+> > +	struct gpio_desc		*ddc_en;
+> >  };
+> > 
+> >  static inline struct sun8i_dw_hdmi *
