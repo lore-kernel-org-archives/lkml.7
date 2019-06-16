@@ -2,103 +2,126 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42AEEC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:56:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9922C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:57:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4D82084B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:56:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EArIxiUt"
+	by mail.kernel.org (Postfix) with ESMTP id B8F532147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:57:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727201AbfFPN4U (ORCPT
+        id S1727236AbfFPN5C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 09:56:20 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43608 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfFPN4U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 09:56:20 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j29so4643047lfk.10;
-        Sun, 16 Jun 2019 06:56:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=vUj7/cmqz5EsJjON5muTu2B1PksKipHdgkZedARaWAY=;
-        b=EArIxiUtzwv4fAo+tQXYXVYXrYx2cB+95rmkMP1Sbun8BYAnoXJvcPNJ/+VqPFG7NV
-         RPrMmnQO0vhs5xa32MLsOiZv0l8PCJ8cpaPqhI2flQWvJqgbAcTNjvAxCzSwYJ7Wnbqx
-         8ME4LPcwqiU1sF5dW5bKJa8CbpWGd10FcE1NdAk1Pm89ovais6IaK27HFTgvojNoa2EO
-         QqjQFZTrx+kRH6ptv+PeApRs4rUu/bYTsNRNgQyTuy/XQQ9r8N2WGQ10Vc93gmIwNN6j
-         9+ef2fyP0GA5kaZ3bDgK4ygInimJmZAndBQWqnx2UA1K8ICDQQeW8AjiynhslUrERBml
-         hJqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vUj7/cmqz5EsJjON5muTu2B1PksKipHdgkZedARaWAY=;
-        b=iMZ9D5coofBoyYdS1DlOfqWCsVtFs/pYbq7lUYLmQKO/dY3QuwzTkJrn6rXBKesw2b
-         NofVkrvy5XxrFjWG5OmwtsAYQnsAPUIiE29tIxc/F5znb5D6ctgXLn3/1ns3ne5x86mc
-         0oaIifEgbpJcY2X0LG2r8v7jLaeal1Rmt1lvHTMu7g0wQs5JmlEBUD0mftpCqRd1xfNQ
-         rFRuzKSxcu1zdi/vsmT/XaduAmIZkDwZpIlz5QUkN3fCyRisABTybhZTUnzJwPiMIAOb
-         Mf+FmYedxBxH7U+l1hv8oaUcSFw2F+Zbm44cR6m5ud2Xc+u1uUt7mip4qFsacrxKJzK4
-         swaQ==
-X-Gm-Message-State: APjAAAVxtX86D5HtiPl7YMQRnzeCY/DyyiFis/hvaX5BsPU4YtAVsaSf
-        7utSn2xAiblI7FNDRCzYeoQ=
-X-Google-Smtp-Source: APXvYqziCr78Zs5kDjI/NHZgifF4wyDPKUb+UgfVgT5G+4vXttuXr/e5KKMq7FdThf8SUrN9mEM1kg==
-X-Received: by 2002:a19:6e41:: with SMTP id q1mr45228904lfk.20.1560693377880;
-        Sun, 16 Jun 2019 06:56:17 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id z12sm1297835lfg.67.2019.06.16.06.56.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Jun 2019 06:56:17 -0700 (PDT)
-Subject: Re: [PATCH V3] i2c: busses: tegra: Add suspend-resume support
-To:     Wolfram Sang <wsa@the-dreams.de>, Bitan Biswas <bbiswas@nvidia.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
- <20190614211129.GG17899@ninjato>
- <758d6dc2-f044-6be3-6896-196ef477d393@nvidia.com>
- <20190615045405.GA1023@kunai>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <69a9a7e3-f885-b6ab-60bb-a1165ce2db23@gmail.com>
-Date:   Sun, 16 Jun 2019 16:56:06 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sun, 16 Jun 2019 09:57:02 -0400
+Received: from szxga02-in.huawei.com ([45.249.212.188]:6962 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725874AbfFPN5C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 09:57:02 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 4FD339C215E9BAA019A1;
+        Sun, 16 Jun 2019 21:56:59 +0800 (CST)
+Received: from DGGEMM507-MBX.china.huawei.com ([169.254.1.169]) by
+ DGGEMM401-HUB.china.huawei.com ([10.3.20.209]) with mapi id 14.03.0439.000;
+ Sun, 16 Jun 2019 21:56:49 +0800
+From:   Nixiaoming <nixiaoming@huawei.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "skinsbursky@parallels.com" <skinsbursky@parallels.com>
+CC:     "vvs@virtuozzo.com" <vvs@virtuozzo.com>,
+        "adobriyan@gmail.com" <adobriyan@gmail.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "mingo@kernel.org" <mingo@kernel.org>,
+        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "arjan@linux.intel.com" <arjan@linux.intel.com>,
+        "Nadia.Derbey@bull.net" <Nadia.Derbey@bull.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>,
+        "paulmck@linux.vnet.ibm.com" <paulmck@linux.vnet.ibm.com>,
+        "Huangjianhui (Alex)" <alex.huangjianhui@huawei.com>,
+        Dailei <dylix.dailei@huawei.com>,
+        Stanislav Kinsbursky <skinsbursky@parallels.com>,
+        Trond Myklebust <Trond.Myklebust@netapp.com>
+Subject: RE: [PATCH] kernel/notifier.c: remove notifier_chain_register
+Thread-Topic: [PATCH] kernel/notifier.c: remove notifier_chain_register
+Thread-Index: AQHVIfmToZlGaGc/cESr8dpAvR4RxaaZdRCAgATUotA=
+Date:   Sun, 16 Jun 2019 13:56:47 +0000
+Deferred-Delivery: Sun, 16 Jun 2019 09:00:00 +0000
+Message-ID: <E490CD805F7529488761C40FD9D26EF12AC29744@dggemm507-mbx.china.huawei.com>
+References: <1560434864-98664-1-git-send-email-nixiaoming@huawei.com>
+ <20190613123823.bf75e7305e22dd1dcab04fb8@linux-foundation.org>
+In-Reply-To: <20190613123823.bf75e7305e22dd1dcab04fb8@linux-foundation.org>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.57.88.168]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20190615045405.GA1023@kunai>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-15.06.2019 7:54, Wolfram Sang пишет:
-> 
->>> Without a maintainer ack, this is an exception this time. Should we add
->>> Dmitry as another maintainer or reviewer at least?
->>>
->> I shall followup with Maintainer for ACK in future I2C tegra patches.
-> 
-> This comment was not directed at you, sorry if that was not clear. It
-> was more for Laxman, Thierry, Jonathan, and Dmitry (if he is
-> interested).
-> 
-
-I don't mind at all to review and test patches for the driver and can propose myself
-as a reviewer if that helps and if there are no objections from the Tegra maintainers.
-My primary interest is to have my devices working after next kernel update, but I also
-like to review patches in general if they are touching area that I'm familiar with.
+T24gRnJpLCAxNCBKdW4gMjAxOSAwMzozOCBBTSBBbmRyZXcgTW9ydG9uIDxha3BtQGxpbnV4LWZv
+dW5kYXRpb24ub3JnPiB3cm90ZToNCj5PbiBUaHUsIDEzIEp1biAyMDE5IDIyOjA3OjQ0ICswODAw
+IFhpYW9taW5nIE5pIDxuaXhpYW9taW5nQGh1YXdlaS5jb20+IHdyb3RlOg0KPg0KPj4gUmVnaXN0
+ZXJpbmcgdGhlIHNhbWUgbm90aWZpZXIgdG8gYSBob29rIHJlcGVhdGVkbHkgY2FuIGNhdXNlIHRo
+ZSBob29rDQo+PiBsaXN0IHRvIGZvcm0gYSByaW5nIG9yIGxvc2Ugb3RoZXIgbWVtYmVycyBvZiB0
+aGUgbGlzdC4NCj4+IC4uLi4uDQo+PiANCj4+IGRpZmYgLS1naXQgYS9rZXJuZWwvbm90aWZpZXIu
+YyBiL2tlcm5lbC9ub3RpZmllci5jDQo+PiBpbmRleCBkOWY1MDgxLi41NmVmZDU0IDEwMDY0NA0K
+Pj4gLS0tIGEva2VybmVsL25vdGlmaWVyLmMNCj4+ICsrKyBiL2tlcm5lbC9ub3RpZmllci5jDQo+
+PiBAQCAtMTksMjAgKzE5LDYgQEANCj4+ICAgKglhcmUgbGF5ZXJlZCBvbiB0b3Agb2YgdGhlc2Us
+IHdpdGggYXBwcm9wcmlhdGUgbG9ja2luZyBhZGRlZC4NCj4+ICAgKi8NCj4+ICANCj4+IC1zdGF0
+aWMgaW50IG5vdGlmaWVyX2NoYWluX3JlZ2lzdGVyKHN0cnVjdCBub3RpZmllcl9ibG9jayAqKm5s
+LA0KPj4gLQkJc3RydWN0IG5vdGlmaWVyX2Jsb2NrICpuKQ0KPj4gLXsNCj4+IC0Jd2hpbGUgKCgq
+bmwpICE9IE5VTEwpIHsNCj4+IC0JCVdBUk5fT05DRSgoKCpubCkgPT0gbiksICJkb3VibGUgcmVn
+aXN0ZXIgZGV0ZWN0ZWQiKTsNCj4+IC0JCWlmIChuLT5wcmlvcml0eSA+ICgqbmwpLT5wcmlvcml0
+eSkNCj4+IC0JCQlicmVhazsNCj4+IC0JCW5sID0gJigoKm5sKS0+bmV4dCk7DQo+PiAtCX0NCj4+
+IC0Jbi0+bmV4dCA9ICpubDsNCj4+IC0JcmN1X2Fzc2lnbl9wb2ludGVyKCpubCwgbik7DQo+PiAt
+CXJldHVybiAwOw0KPj4gLX0NCj4NCj5SZWdpc3RlcmluZyBhbiBhbHJlYWR5LXJlZ2lzdGVyZWQg
+bm90aWZpZXIgaXMgYSBidWcgKGV4Y2VwdCBmb3IgaW4NCj5uZXQvc3VucnBjL3JwY19waXBlLmMs
+IGFwcGFyZW50bHkpLiAgVGhlIGVmZmVjdCBvZiB0aGlzIGNoYW5nZSBpcyB0bw0KPnJlbW92ZSB0
+aGUgd2FybmluZyBhYm91dCB0aGUgcHJlc2VuY2Ugb2YgdGhlIGJ1Zywgc28gdGhlIGJ1ZyBpcyBs
+ZXNzDQo+bGlrZWx5IHRvIGdldCBmaXhlZC4NCj4NCnRoYW5rcyBmb3IgeW91ciBndWlkYW5jZSwN
+Cg0KU2hvdWxkIEkgbW9kaWZ5IHRoaXMgd2F5IA0KICAgMSBub3RpZmllcl9jaGFpbl9jb25kX3Jl
+Z2lzdGVyKCkgYW5kIG5vdGlmaWVyX2NoYWluX3JlZ2lzdGVyKCkgc2hvdWxkIGJlIGNvbWJpbmVk
+IGludG8gb25lIGZ1bmN0aW9uLg0KICAgMiBUaGUgd2FybmluZyBpbmZvcm1hdGlvbiBuZWVkcyB0
+byBiZSBkaXNwbGF5ZWQgd2hpbGUgcHJvaGliaXRpbmcgZHVwbGljYXRlIHJlZ2lzdHJhdGlvbi4N
+CgkJQEAgLTIzLDcgKzIzLDEwIEBAIHN0YXRpYyBpbnQgbm90aWZpZXJfY2hhaW5fcmVnaXN0ZXIo
+c3RydWN0IG5vdGlmaWVyX2Jsb2NrICoqbmwsDQoJCQkJCQlzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sg
+Km4pDQoJCSB7DQoJCQkJd2hpbGUgKCgqbmwpICE9IE5VTEwpIHsNCgkJLSAgICAgICAgICAgV0FS
+Tl9PTkNFKCgoKm5sKSA9PSBuKSwgImRvdWJsZSByZWdpc3RlciBkZXRlY3RlZCIpOw0KCQkrICAg
+ICAgICAgaWYgKHVubGlrZWx5KCgqbmwpID09IG4pKSB7DQoJCSsgICAgICAgICAgICAgICAgIFdB
+Uk4oMSwgImRvdWJsZSByZWdpc3RlciBkZXRlY3RlZCIpOw0KCQkrICAgICAgICAgICAgICAgICBy
+ZXR1cm4gMDsNCgkJKyAgICAgICAgIH0NCgkJCQkJCWlmIChuLT5wcmlvcml0eSA+ICgqbmwpLT5w
+cmlvcml0eSkNCgkJCQkJCQkJYnJlYWs7DQoNCj5JIHRoaW5rIGl0IHdvdWxkIGJlIGJldHRlciB0
+byByZW1vdmUgbm90aWZpZXJfY2hhaW5fY29uZF9yZWdpc3RlcigpIGFuZA0KPmJsb2NraW5nX25v
+dGlmaWVyX2NoYWluX2NvbmRfcmVnaXN0ZXIoKSBhbmQgdG8gZmlndXJlIG91dCB3aHkNCj5uZXQv
+c3VucnBjL3JwY19waXBlLmMgaXMgdXNpbmcgaXQgYW5kIHRvIHJlZG8gdGhlIHJwYyBjb2RlIHNv
+IGl0IG5vDQo+bG9uZ2VyIGhhcyB0aGF0IG5lZWQuDQo+DQp0aGFua3MgZm9yIHlvdXIgZ3VpZGFu
+Y2UsDQpJIHJlLWV4YW1pbmUgdGhlIHN1Ym1pc3Npb24gcmVjb3JkIGFuZCBhbmFseXplIGl0IGFz
+IGZvbGxvd3MNCg0Kbm90aWZpZXJfY2hhaW5fY29uZF9yZWdpc3RlcigpIHdhcyBpbnRyb2R1Y2Vk
+IGJ5IGNvbW1pdCA2NTQ2YmM0Mjc5MjQxZThmYTQzDQogKCJpcGM6IHJlLWVuYWJsZSBtc2dtbmkg
+YXV0b21hdGljIHJlY29tcHV0aW5nIG1zZ21uaSBpZiDigIvigItzZXQgdG8gbmVnYXRpdmUiKQ0K
+RnJvbSB0aGUgcGF0Y2ggZGVzY3JpcHRpb24gaW5mb3JtYXRpb24sIGl0IHNob3VsZCBiZSBkb25l
+IHRvIGF2b2lkIHJlcGVhdGVkIHJlZ2lzdHJhdGlvbnMsDQogYnV0IEkgZG9uJ3Qga25vdyB3aHkg
+bm90IGRpcmVjdGx5IG1vZGlmeSBub3RpZmllcl9jaGFpbl9jb25kX3JlZ2lzdGVyKCkuDQogDQpu
+b3RpZmllcl9jaGFpbl9jb25kX3JlZ2lzdGVyKCkgaXMgb25seSBjYWxsZWQgYnkgYmxvY2tpbmdf
+bm90aWZpZXJfY2hhaW5fY29uZF9yZWdpc3RlcigpDQpibG9ja2luZ19ub3RpZmllcl9jaGFpbl9j
+b25kX3JlZ2lzdGVyKCkgaGFzIGxlc3MgcHJvY2Vzc2luZyBvZiB0aGUgU1lTVEVNX0JPT1RJTkcg
+c3RhdGUgDQp0aGFuIGJsb2NraW5nX25vdGlmaWVyX2NoYWluX2VnaXN0ZXIoKS4NCm1heSBhbHNv
+IGJlIGEgYnVnLg0KDQppcGMvaXBjbnNfbm90aWZpZXIuYyBhbmQgdGhlIGNhbGwgdG8gYmxvY2tp
+bmdfbm90aWZpZXJfY2hhaW5fY29uZF9yZWdpc3RlcigpIGFyZSByZW1vdmVkIA0KaW4gY29tbWl0
+IDAwNTBlZTA1OWY3ZmM4NmIxZGYyNTIgKCJpcGMvbXNnOiBpbmNyZWFzZSBNU0dNTkksIHJlbW92
+ZSBzY2FsaW5nIikuDQoNCm5vdyBibG9ja2luZ19ub3RpZmllcl9jaGFpbl9jb25kX3JlZ2lzdGVy
+KCkgaXMgb25seSB1c2VkIGluIG5ldC9zdW5ycGMvcnBjX3BpcGUuYywgDQpjb21taXQgMmQwMDEz
+MWFjYzY0MWIyY2I2ICgiU1VOUlBDOiBzZW5kIG5vdGlmaWNhdGlvbiBldmVudHMgb24gcGlwZWZz
+IHNiIGNyZWF0aW9uIGFuZCBkZXN0cnVjdGlvbiIpDQpVc2luZyBibG9ja2luZ19ub3RpZmllcl9j
+aGFpbl9jb25kX3JlZ2lzdGVyKCkgbWF5IGFsc28gYmUgdG8gYXZvaWQgZHVwbGljYXRlIHJlZ2lz
+dHJhdGlvbnM/Pw0KDQp0aGFua3MNCg0K
