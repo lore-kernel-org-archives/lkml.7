@@ -2,137 +2,90 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3AB7C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C25CC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F86C216C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 07:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10B52216FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:16:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726186AbfFPHts convert rfc822-to-8bit (ORCPT
+        id S1726062AbfFPINQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 03:49:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50082 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725860AbfFPHts (ORCPT
+        Sun, 16 Jun 2019 04:13:16 -0400
+Received: from smtprelay0077.hostedemail.com ([216.40.44.77]:45099 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725865AbfFPINQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 03:49:48 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5G7l1qM001584
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 03:49:47 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t5dn0ntjb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 03:49:47 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Sun, 16 Jun 2019 08:49:45 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 16 Jun 2019 08:49:41 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5G7nerW29622376
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 16 Jun 2019 07:49:40 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D64F4C04E;
-        Sun, 16 Jun 2019 07:49:40 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6FD194C046;
-        Sun, 16 Jun 2019 07:49:38 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.85.86.48])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 16 Jun 2019 07:49:38 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     mhocko@suse.com, Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        osalvador@suse.de
-Subject: Re: [PATCH v9 10/12] mm/devm_memremap_pages: Enable sub-section remap
-In-Reply-To: <155977193326.2443951.14201009973429527491.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com> <155977193326.2443951.14201009973429527491.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Sun, 16 Jun 2019 13:19:36 +0530
+        Sun, 16 Jun 2019 04:13:16 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 43DCC181D3368;
+        Sun, 16 Jun 2019 08:13:15 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: print89_735c9b2327048
+X-Filterd-Recvd-Size: 2424
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf14.hostedemail.com (Postfix) with ESMTPA;
+        Sun, 16 Jun 2019 08:13:12 +0000 (UTC)
+Message-ID: <1d668acbce4cc9759cc940f56016dc9437df5441.camel@perches.com>
+Subject: Re: [PATCH v2] staging: rtl8723bs: Resolve checkpatch error "that
+ open brace { should be on the previous line" in the rtl8723 driver
+From:   Joe Perches <joe@perches.com>
+To:     Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Bastien Nocera <hadess@hadess.net>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Date:   Sun, 16 Jun 2019 01:13:11 -0700
+In-Reply-To: <1560634159-9015-1-git-send-email-shobhitkukreti@gmail.com>
+References: <20190615185355.GC10201@kroah.com>
+         <1560634159-9015-1-git-send-email-shobhitkukreti@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19061607-0020-0000-0000-0000034A7E9E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061607-0021-0000-0000-0000219DBFAE
-Message-Id: <87zhmigeb3.fsf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906160076
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Sat, 2019-06-15 at 14:29 -0700, Shobhit Kukreti wrote:
+> Cleaned up the code from the following files to get rid of
+> check patch error "that open brace { should be on the previous line"
 
-> Teach devm_memremap_pages() about the new sub-section capabilities of
-> arch_{add,remove}_memory(). Effectively, just replace all usage of
-> align_start, align_end, and align_size with res->start, res->end, and
-> resource_size(res). The existing sanity check will still make sure that
-> the two separate remap attempts do not collide within a sub-section (2MB
-> on x86).
->
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Toshi Kani <toshi.kani@hpe.com>
-> Cc: Jérôme Glisse <jglisse@redhat.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  kernel/memremap.c |   61 +++++++++++++++++++++--------------------------------
->  1 file changed, 24 insertions(+), 37 deletions(-)
->
-> diff --git a/kernel/memremap.c b/kernel/memremap.c
-> index 57980ed4e571..a0e5f6b91b04 100644
-> --- a/kernel/memremap.c
-> +++ b/kernel/memremap.c
-> @@ -58,7 +58,7 @@ static unsigned long pfn_first(struct dev_pagemap *pgmap)
->  	struct vmem_altmap *altmap = &pgmap->altmap;
->  	unsigned long pfn;
->  
-> -	pfn = res->start >> PAGE_SHIFT;
-> +	pfn = PHYS_PFN(res->start);
->  	if (pgmap->altmap_valid)
->  		pfn += vmem_altmap_offset(altmap);
->  	return pfn;
-> @@ -86,7 +86,6 @@ static void devm_memremap_pages_release(void *data)
->  	struct dev_pagemap *pgmap = data;
->  	struct device *dev = pgmap->dev;
->  	struct resource *res = &pgmap->res;
-> -	resource_size_t align_start, align_size;
->  	unsigned long pfn;
->  	int nid;
->  
-> @@ -96,25 +95,21 @@ static void devm_memremap_pages_release(void *data)
->  	pgmap->cleanup(pgmap->ref);
->  
->  	/* pages are dead and unused, undo the arch mapping */
-> -	align_start = res->start & ~(PA_SECTION_SIZE - 1);
-> -	align_size = ALIGN(res->start + resource_size(res), PA_SECTION_SIZE)
-> -		- align_start;
-> -
-> -	nid = page_to_nid(pfn_to_page(align_start >> PAGE_SHIFT));
-> +	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
+It's fine you are modifying brace styles, but:
 
-Why do we not require to align things to subsection size now? 
+> diff --git a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
+> index aa2499f..4631b68 100644
+> --- a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
+> +++ b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
+> @@ -46,8 +46,7 @@ void rtw_os_indicate_connect(struct adapter *adapter)
+>  	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
+>  
+>  	if ((check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == true) ||
+> -		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true))
+> -	{
+> +		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true)) {
+>  		rtw_cfg80211_ibss_indicate_connect(adapter);
+>  	}
+>  	else
 
--aneesh
+the else should be on the same line as the close brace
+
+> @@ -106,8 +105,9 @@ void rtw_reset_securitypriv(struct adapter *adapter)
+>  		adapter->securitypriv.ndisencryptstatus = Ndis802_11WEPDisabled;
+>  
+>  	}
+> -	else /* reset values in securitypriv */
+> -	{
+> +	else {
+> +		/* reset values in securitypriv */
+> +
+
+and here.  etc.  Please change all instances appropriately.
+
 
