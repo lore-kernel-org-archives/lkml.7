@@ -2,108 +2,80 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29809C31E53
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3AD5C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBF89216C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:20:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560680457;
-	bh=HeAVqFhEnFHaGE/MLt8iG4KF9+eU3HYvjifK8118Rak=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=a4kFncDpPXPwPnAh9PUXZt3+HztgeV2Hj6XKCElr5ld2tdA2geKXOKE+TfZjdOsU9
-	 +fMm1IQsSHOWMYSMghmuea68ZjLyQlzvdARa6kgD5Afyr2Xp05S/Add5aFo6npvRqs
-	 ksQJyhwR1eJeDrHdoNkxZzGekE8fs9DrDj2JvF0A=
+	by mail.kernel.org (Postfix) with ESMTP id ABF9A2147A
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:29:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=cloudflare.com header.i=@cloudflare.com header.b="Mj+eQsS7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727066AbfFPKUz (ORCPT
+        id S1726688AbfFPK3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 06:20:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34766 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbfFPKUz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 06:20:55 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 04F092084A;
-        Sun, 16 Jun 2019 10:20:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560680454;
-        bh=HeAVqFhEnFHaGE/MLt8iG4KF9+eU3HYvjifK8118Rak=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Mnf1Pj/huamHWR6SCw8l2VcZkO3Fh1eunBrqAEP/wKDkhAUUfaux8hWOgKsdOv+TR
-         6QZq0TcotwXJEGHe5WTci4kjd1ChlSG3g6fiDA9U2TpHKqicsxx5yFiU/QPmZrBENG
-         WFG28OKNi7mHn5KtT1U6V9lDlWbIwSB9sn/xxGgU=
-Date:   Sun, 16 Jun 2019 11:20:48 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Melissa Wen <melissa.srw@gmail.com>
-Cc:     Lars-Peter Clausen <lars@metafoo.de>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Barry Song <21cnbao@gmail.com>, linux-iio@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        kernel-usp@googlegroups.com
-Subject: Re: [PATCH v2 2/3] staging: iio: ad7150: simplify i2c SMBus return
- treatment
-Message-ID: <20190616112048.67082117@archlinux>
-In-Reply-To: <90e8a25eca0825878d55fe0a9e760906b4689035.1560529045.git.melissa.srw@gmail.com>
-References: <cover.1560529045.git.melissa.srw@gmail.com>
-        <90e8a25eca0825878d55fe0a9e760906b4689035.1560529045.git.melissa.srw@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 16 Jun 2019 06:29:01 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:38076 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfFPK3A (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 06:29:00 -0400
+Received: by mail-lj1-f196.google.com with SMTP id r9so6535659ljg.5
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 03:28:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cloudflare.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Me4XqG/m9sHfXXVEccb17VwdYwCFLO+trDo9KyCTW1Y=;
+        b=Mj+eQsS7MDu61+1NUKDH1vAVTLwD55IzuU/Ok6nGLyPgc2jYALj4QUYjUl44/7Urod
+         O/lKJOx/c96GmYVodsEeQyT09XPC3zY+UyHXxvzDGsxvm+C1TYDv3klWqlLDmHJgOW70
+         Mllq7UzbSzIFS66HvA5Dyy/5WaYfBnoRYkhgg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Me4XqG/m9sHfXXVEccb17VwdYwCFLO+trDo9KyCTW1Y=;
+        b=ZG3837g0yaoaxRh6PMUB+43pFBrOA7XSO9YaEyVbgO8GnmaX/7Z9savZF0kAX1XikD
+         Yx4vY7xHaZgsFG6fasejxD1GzwuTjrL2YhWyyaNjsXfLzkix1cg/auWuWmwkTdGR11z1
+         LRoA+Y2Z+d+9cZq/lvMevG+qJp8kKSL4QocpurhKDVgs6n3uceP9VGTn5nKleEpQsHfy
+         +GzWaSIh4e4bvzdPq76Mlfg4/0Q8IINWYpw2r/nSbCq52Rd7UKBh5hNj76UhkMDugjnF
+         XGUkA9pEwxEzo+fLMZoixMGkPtkphcCn/i7JnlF5T2jjTCf3X1NXp9PJ1UW4KgYgBVuD
+         V5dQ==
+X-Gm-Message-State: APjAAAXd6n2WOE7/UtftoaBdtUseaf8TwcVl1Jnh5L6HvIY6dd+CzLKY
+        QoCkZuO5vxMFmz56YYKAgRw6xZERouWPJs63p0Md7w==
+X-Google-Smtp-Source: APXvYqxO8O0hAikX/nV9jyVW6aUtHpiYRATrrhyKO60SL4jd3wF5Sc0joxCGcm+leHffWey6z5+hGcFWv4ELMQpFpYU=
+X-Received: by 2002:a2e:2c14:: with SMTP id s20mr28744572ljs.54.1560680938585;
+ Sun, 16 Jun 2019 03:28:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190614093728.622-1-afabre@cloudflare.com> <CAEf4BzZNO8Px2BRcs5WMxfrfRaekxF=_fz_p2A+eL94L0DrfQg@mail.gmail.com>
+ <6aaa3a2f-5da5-525f-89a1-59dddc1cfa53@iogearbox.net> <CAADnVQK6=90Yu6jhEhE52ptS4vgbRVpyj2oZZsO6gcrScU9bsw@mail.gmail.com>
+In-Reply-To: <CAADnVQK6=90Yu6jhEhE52ptS4vgbRVpyj2oZZsO6gcrScU9bsw@mail.gmail.com>
+From:   Arthur Fabre <afabre@cloudflare.com>
+Date:   Sun, 16 Jun 2019 11:28:46 +0100
+Message-ID: <CAOn4ftsQGaVdB+BYx6s8e9GVSCBBVu-7YXU_B-n7YttXbt-gKA@mail.gmail.com>
+Subject: Re: [PATCH v2 bpf-next] bpf: sk_storage: Fix out of bounds memory access
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 13:32:54 -0300
-Melissa Wen <melissa.srw@gmail.com> wrote:
+On Sat, Jun 15, 2019 at 10:45 PM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+> It's certainly should be in bpf tree.
+> It didn't apply directly, so I tweaked it a tiny bit,
+> reduced verbosity of commit log and pushed to bpf tree.
+> Thanks for the fix!
 
-> Since i2c_smbus_write_byte_data returns no-positive value, this commit
-> making the treatment of its return value less verbose.
-> 
-> Signed-off-by: Melissa Wen <melissa.srw@gmail.com>
-Applied to the togreg branch of iio.git and pushed out as testing for
-the autobuilders to play with it.
-
-Thanks,
-
-Jonathan
-
-> ---
->  drivers/staging/iio/cdc/ad7150.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/staging/iio/cdc/ad7150.c b/drivers/staging/iio/cdc/ad7150.c
-> index 091aa33589d7..7d56f10a19ed 100644
-> --- a/drivers/staging/iio/cdc/ad7150.c
-> +++ b/drivers/staging/iio/cdc/ad7150.c
-> @@ -202,16 +202,11 @@ static int ad7150_write_event_params(struct iio_dev *indio_dev,
->  	ret = i2c_smbus_write_byte_data(chip->client,
->  					ad7150_addresses[chan][4],
->  					sens);
-> -	if (ret < 0)
-> +	if (ret)
->  		return ret;
-> -
-> -	ret = i2c_smbus_write_byte_data(chip->client,
-> +	return i2c_smbus_write_byte_data(chip->client,
->  					ad7150_addresses[chan][5],
->  					timeout);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	return 0;
->  }
->  
->  static int ad7150_write_event_config(struct iio_dev *indio_dev,
-
+Thanks! I didn't realize this had already made it to the bpf tree.
