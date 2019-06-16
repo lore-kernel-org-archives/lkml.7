@@ -2,102 +2,113 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E017C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 20:01:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B619CC31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 20:07:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F3B220657
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 20:01:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9176F20862
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 20:07:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560715623;
+	bh=72sUR+zaF0lp/W7gPOXpIbJyNHZInIS+zl5zPvRRTyQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=I8pAvV0DD594scDNqZZRpSjjkCQ7jNTaJTCJzHXEVbZw+y17wrBxwh+yFsnIAWzKo
+	 PVDc05LPnyw/vcBSsUNU/ARBG5+eYQs4wsmdMkkh8IW5sRrD2lmggr+L37CxHP6upp
+	 4QCvEvuDIlHBx1Qwx2pQm0dAnn83F+I5+s0yumvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727472AbfFPUA7 (ORCPT
+        id S1727454AbfFPUHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 16:00:59 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:54958 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727211AbfFPUA6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 16:00:58 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 6642C8022F; Sun, 16 Jun 2019 22:00:46 +0200 (CEST)
-Date:   Sun, 16 Jun 2019 22:00:56 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     pavel@ucw.cz
-Cc:     linux-kernel@vger.kernel.org,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sun, 16 Jun 2019 16:07:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55932 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727211AbfFPUHB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 16:07:01 -0400
+Received: from brain-police (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA50A20657;
+        Sun, 16 Jun 2019 20:06:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560715620;
+        bh=72sUR+zaF0lp/W7gPOXpIbJyNHZInIS+zl5zPvRRTyQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=MXVLM2odnLWn2xQ7HlLNHoeT6EmZYNTNEcC48TZ/c0joF3uU2Xa5P2l6R70ZinWRB
+         5TSfaEE0GrziuACtOKGOWWIJSMqSmscjLbxBznOgFCz82gZ/h0BnyJPWudkAq/Ms5r
+         fSreDrTAk3jaUFOas3Va0c5ZoDNJaeQpcs19ZIcY=
+Date:   Sun, 16 Jun 2019 21:06:55 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>,
+        Bhupesh Sharma <bhsharma@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 058/118] PCI: designware-ep: Use aligned ATU window
- for raising MSI interrupts
-Message-ID: <20190616200056.GF6676@amd>
+Subject: Re: [PATCH 4.19 070/118] iommu/arm-smmu-v3: Dont disable SMMU in
+ kdump kernel
+Message-ID: <20190616200654.GA13018@brain-police>
 References: <20190613075643.642092651@linuxfoundation.org>
- <20190613075647.132827503@linuxfoundation.org>
+ <20190613075647.892923884@linuxfoundation.org>
+ <20190616194236.GB6676@amd>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="DEueqSqTbz/jWVG1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613075647.132827503@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190616194236.GB6676@amd>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[FYI: This was in my spam folder. I'll reserve judgement on whether that's
+the right decision.]
 
---DEueqSqTbz/jWVG1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jun 16, 2019 at 09:42:36PM +0200, Pavel Machek wrote:
+> > [ Upstream commit 3f54c447df34ff9efac7809a4a80fd3208efc619 ]
+> > 
+> > Disabling the SMMU when probing from within a kdump kernel so that all
+> > incoming transactions are terminated can prevent the core of the crashed
+> > kernel from being transferred off the machine if all I/O devices are
+> > behind the SMMU.
+> > 
+> > Instead, continue to probe the SMMU after it is disabled so that we can
+> > reinitialise it entirely and re-attach the DMA masters as they are reset.
+> > Since the kdump kernel may not have drivers for all of the active DMA
+> > masters, we suppress fault reporting to avoid spamming the console and
+> > swamping the IRQ threads.
+> 
+> > +++ b/drivers/iommu/arm-smmu-v3.c
+> > @@ -2414,13 +2414,9 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+> >  	/* Clear CR0 and sync (disables SMMU and queue processing) */
+> >  	reg = readl_relaxed(smmu->base + ARM_SMMU_CR0);
+> >  	if (reg & CR0_SMMUEN) {
+> > -		if (is_kdump_kernel()) {
+> > -			arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+> > -			arm_smmu_device_disable(smmu);
+> > -			return -EBUSY;
+> > -		}
+> > -
+> >  		dev_warn(smmu->dev, "SMMU currently enabled! Resetting...\n");
+> > +		WARN_ON(is_kdump_kernel() && !disable_bypass);
+> > +		arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+> >  	}
+> >
+> 
+> This changes behaviour in !is_kdump_kernel() case. Is that
+> ok/intended?
 
-Hi!
+Yes, that's intentional. If we find the SMMU in an enabled state, it's
+probably a good idea to configure it to abort all transactions before
+disabling it, otherwise virtual addresses suddenly become physical addresses
+and we could corrupt random memory. However, I don't think I've ever seen
+this happen outside of kdump so it's admittedly a bit of a theoretical
+scenario.
 
-> diff --git a/drivers/pci/controller/dwc/pcie-designware-ep.c b/drivers/pc=
-i/controller/dwc/pcie-designware-ep.c
-> index de8635af4cde..739d97080d3b 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware-ep.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware-ep.c
-> @@ -385,6 +385,7 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep, u=
-8 func_no,
->  {
->  	struct dw_pcie *pci =3D to_dw_pcie_from_ep(ep);
->  	struct pci_epc *epc =3D ep->epc;
-> +	unsigned int aligned_offset;
->  	u16 msg_ctrl, msg_data;
->  	u32 msg_addr_lower, msg_addr_upper, reg;
->  	u64 msg_addr;
-> @@ -410,13 +411,15 @@ int dw_pcie_ep_raise_msi_irq(struct dw_pcie_ep *ep,=
- u8 func_no,
->  		reg =3D ep->msi_cap + PCI_MSI_DATA_32;
->  		msg_data =3D dw_pcie_readw_dbi(pci, reg);
->  	}
-> -	msg_addr =3D ((u64) msg_addr_upper) << 32 | msg_addr_lower;
-> +	aligned_offset =3D msg_addr_lower & (epc->mem->page_size - 1);
-> +	msg_addr =3D ((u64)msg_addr_upper) << 32 |
-> +			(msg_addr_lower & ~aligned_offset);
+Regardless, patches to -stable should probably match their upstream
+counterparts so even if this was an issue, I don't think this is the right
+place to discuss it.
 
-This warks but is really... interesting code.
-
-would (msg_addr_lower - aligned_offset) make more sense?
-
-Thanks,
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---DEueqSqTbz/jWVG1
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl0Gn/gACgkQMOfwapXb+vJiMQCfaMErZYfiEOA4QXiLbdOfTZpG
-gHYAn1SX8FSkEgxzVN/KwVpBCF9NdHAS
-=YktC
------END PGP SIGNATURE-----
-
---DEueqSqTbz/jWVG1--
+Will
