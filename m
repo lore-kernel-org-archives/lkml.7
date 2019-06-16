@@ -2,60 +2,64 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DE2C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 21:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9953AC31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 21:03:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9FBFF20866
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 21:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B9B62080C
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 21:03:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727423AbfFPVBM (ORCPT
+        id S1727446AbfFPVDn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 17:01:12 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:52088 "EHLO
+        Sun, 16 Jun 2019 17:03:43 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:52118 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725920AbfFPVBL (ORCPT
+        with ESMTP id S1725920AbfFPVDn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 17:01:11 -0400
+        Sun, 16 Jun 2019 17:03:43 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 85CCA151BE526;
-        Sun, 16 Jun 2019 14:01:07 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 14:01:06 -0700 (PDT)
-Message-Id: <20190616.140106.158669787444398226.davem@davemloft.net>
-To:     decui@microsoft.com
-Cc:     netdev@vger.kernel.org, mikelley@microsoft.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kys@microsoft.com, sthemmin@microsoft.com, haiyangz@microsoft.com,
-        Alexander.Levin@microsoft.com, olaf@aepfle.de, apw@canonical.com,
-        jasowang@redhat.com, vkuznets@redhat.com,
-        marcelo.cerri@canonical.com
-Subject: Re: [PATCH net] hv_sock: Suppress bogus "may be used
- uninitialized" warnings
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 64DC7151BFFA9;
+        Sun, 16 Jun 2019 14:03:42 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 14:03:41 -0700 (PDT)
+Message-Id: <20190616.140341.1206535816113380121.davem@davemloft.net>
+To:     ivan.khoronzhuk@linaro.org
+Cc:     grygorii.strashko@ti.com, linux-omap@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next] net: ethernet: ti: davinci_cpdma: use idled
+ submit
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <1560574826-99551-1-git-send-email-decui@microsoft.com>
-References: <1560574826-99551-1-git-send-email-decui@microsoft.com>
+In-Reply-To: <20190615110132.6594-1-ivan.khoronzhuk@linaro.org>
+References: <20190615110132.6594-1-ivan.khoronzhuk@linaro.org>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-7
-Content-Transfer-Encoding: base64
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 16 Jun 2019 14:01:08 -0700 (PDT)
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 16 Jun 2019 14:03:42 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogRGV4dWFuIEN1aSA8ZGVjdWlAbWljcm9zb2Z0LmNvbT4NCkRhdGU6IFNhdCwgMTUgSnVu
-IDIwMTkgMDU6MDA6NTcgKzAwMDANCg0KPiBnY2MgOC4yLjAgbWF5IHJlcG9ydCB0aGVzZSBib2d1
-cyB3YXJuaW5ncyB1bmRlciBzb21lIGNvbmRpdGlvbjoNCj4gDQo+IHdhcm5pbmc6IKF2bmV3oiBt
-YXkgYmUgdXNlZCB1bmluaXRpYWxpemVkIGluIHRoaXMgZnVuY3Rpb24NCj4gd2FybmluZzogoWh2
-c19uZXeiIG1heSBiZSB1c2VkIHVuaW5pdGlhbGl6ZWQgaW4gdGhpcyBmdW5jdGlvbg0KPiANCj4g
-QWN0dWFsbHksIHRoZSAyIHBvaW50ZXJzIGFyZSBvbmx5IGluaXRpYWxpemVkIGFuZCB1c2VkIGlm
-IHRoZSB2YXJpYWJsZQ0KPiAiY29ubl9mcm9tX2hvc3QiIGlzIHRydWUuIFRoZSBjb2RlIGlzIG5v
-dCBidWdneSBoZXJlLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogRGV4dWFuIEN1aSA8ZGVjdWlAbWlj
-cm9zb2Z0LmNvbT4NCg0KQXBwbGllZC4NCg==
+From: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+Date: Sat, 15 Jun 2019 14:01:32 +0300
+
+> While data pass suspend, reuse of rx descriptors can be disabled using
+> channel state & lock from cpdma layer. For this, submit to a channel
+> has to be disabled using state != "not active" under lock, what is done
+> with this patch. The same submit is used to fill rx channel while
+> ndo_open, when channel is idled, so add idled submit routine that
+> allows to prepare descs for the channel. All this simplifies code and
+> helps to avoid dormant mode usage and send packets only to active
+> channels, avoiding potential race in later on changes. Also add missed
+> sync barrier analogically like in other places after stopping tx
+> queues.
+> 
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
+
+Applied.
