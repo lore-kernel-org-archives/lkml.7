@@ -2,114 +2,109 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6142C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:18:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E14C31E54
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 937F421473
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:18:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D64E216FD
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 08:21:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="LfBi3iw0"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="LpkytxuO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbfFPIRx (ORCPT
+        id S1726390AbfFPIVM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 04:17:53 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39740 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfFPIRx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 04:17:53 -0400
-X-Greylist: delayed 3609 seconds by postgrey-1.27 at vger.kernel.org; Sun, 16 Jun 2019 04:17:52 EDT
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5G7G136007380;
-        Sun, 16 Jun 2019 07:17:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=ZJ73kpbrHeloQJUvQyeOr5ZclVGIW1bQHglprF2krOA=;
- b=LfBi3iw0+y+4oMsKxIkJu47SN+x7kNaFUa5x0QPMv4EXR3JRk2QQ8m6TopfNTuia9Nwq
- 3n2VyngRvRspByxMmh1FKfbsjNOgyP7MLete8irNCKAHR96M1obAj9cG8ibDBjyXygqP
- 0etlt4szoKCZict6/j4Ie+Y5p6LDLUg1+ttQ4n2YXmqfesapdYH8xj9wn50uuAY3+7/z
- kac1gsttcZPu6aeVnnN7+VPiBa94mX2fUtnYBYwCNm9s9n83m1VePSJwR6NtREKWc+Up
- CRNTSDm1jC5C4m9fhTIgb1zGTHGsdceBxBYOKGmGZV6SsoWgQKzAsSYphU2kwzyNtikT kA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2t4rmntasp-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 16 Jun 2019 07:17:37 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5G7F6UR093492;
-        Sun, 16 Jun 2019 07:15:37 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2t5cpd1ws9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 16 Jun 2019 07:15:37 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5G7Fatt023361;
-        Sun, 16 Jun 2019 07:15:37 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 16 Jun 2019 00:15:36 -0700
-Date:   Sun, 16 Jun 2019 10:15:22 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: os_dep: ioctl_linux:  Make use
- rtw_zmalloc
-Message-ID: <20190616071522.GE28859@kadam>
-References: <20190616053250.GA16116@hari-Inspiron-1545>
+        Sun, 16 Jun 2019 04:21:12 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:37407 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725894AbfFPIVK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 04:21:10 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45RS3N3ySYz9v19p;
+        Sun, 16 Jun 2019 10:21:04 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=LpkytxuO; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id oOyNzZ6g3_Ow; Sun, 16 Jun 2019 10:21:04 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45RS3N2lq6z9v19n;
+        Sun, 16 Jun 2019 10:21:04 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560673264; bh=MJqSgQzXgPmNRPH0n1stQKb77v16xTqSmd2hmNpUr2w=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=LpkytxuOtptABTtek2rOH7LeGpz8Or6fj84OACjTSEJDJQIvNnHE5/j8krvqEwpxE
+         vO+F+wOkd3yWlb1uvraSVvekL98iyLv/W8MwKn/7jafLNGynKgTIkt4T7+UpY7mlqY
+         QJkYO7mPH8RA9QDnRZYWr/QtKRwyr5gNtEOJhE+I=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 37F1C8B7D1;
+        Sun, 16 Jun 2019 10:21:07 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id KGIqsT9_FfFn; Sun, 16 Jun 2019 10:21:07 +0200 (CEST)
+Received: from [192.168.232.53] (unknown [192.168.232.53])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 949188B7CD;
+        Sun, 16 Jun 2019 10:21:06 +0200 (CEST)
+Subject: Re: [PATCH v5 13/16] powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX
+To:     Andreas Schwab <schwab@linux-m68k.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <cover.1550775950.git.christophe.leroy@c-s.fr>
+ <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
+ <877e9n9gng.fsf@igel.home>
+From:   christophe leroy <christophe.leroy@c-s.fr>
+Message-ID: <1c271e47-6917-2f29-97b6-f3160ddf5117@c-s.fr>
+Date:   Sun, 16 Jun 2019 10:01:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190616053250.GA16116@hari-Inspiron-1545>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9289 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906160070
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9289 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906160070
+In-Reply-To: <877e9n9gng.fsf@igel.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-Antivirus: Avast (VPS 190616-0, 16/06/2019), Outbound message
+X-Antivirus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 11:02:50AM +0530, Hariprasad Kelam wrote:
-> rtw_malloc with memset can be replace with rtw_zmalloc.
-> 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 12 +++---------
->  1 file changed, 3 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> index fc3885d..c59e366 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> @@ -478,14 +478,12 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
->  		if (wep_key_len > 0) {
->  			wep_key_len = wep_key_len <= 5 ? 5 : 13;
->  			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
-> -			pwep = rtw_malloc(wep_total_len);
-> +			pwep = rtw_zmalloc(wep_total_len);
 
-We should not introduce new uses of rtw_malloc() or rtw_zmalloc().  They
-are buggy garbage.  Use normall kmalloc() and kzalloc().
 
-regards,
-dan carpenter
+Le 15/06/2019 à 14:28, Andreas Schwab a écrit :
+> On Feb 21 2019, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+> 
+>> diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
+>> index a000768a5cc9..6e56a6240bfa 100644
+>> --- a/arch/powerpc/mm/pgtable_32.c
+>> +++ b/arch/powerpc/mm/pgtable_32.c
+>> @@ -353,7 +353,10 @@ void mark_initmem_nx(void)
+>>   	unsigned long numpages = PFN_UP((unsigned long)_einittext) -
+>>   				 PFN_DOWN((unsigned long)_sinittext);
+>>   
+>> -	change_page_attr(page, numpages, PAGE_KERNEL);
+>> +	if (v_block_mapped((unsigned long)_stext) + 1)
+> 
+> That is always true.
+> 
+
+Did you boot with 'nobats' kernel parameter ?
+
+If not, that's normal to be true, it means that memory is mapped with BATs.
+
+When you boot with 'nobats' parameter, this should return false.
+
+Christophe
+
+---
+L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
+https://www.avast.com/antivirus
 
