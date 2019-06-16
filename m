@@ -2,138 +2,91 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40CB4C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9A07C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:23:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B91320862
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:14:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtBTpHDx"
+	by mail.kernel.org (Postfix) with ESMTP id CBF9D20870
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfFPROo (ORCPT
+        id S1726440AbfFPRXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 13:14:44 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41425 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725895AbfFPROo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 13:14:44 -0400
-Received: by mail-io1-f67.google.com with SMTP id w25so16235330ioc.8;
-        Sun, 16 Jun 2019 10:14:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=X4WrkjaQQpTlNjMoovx5rY40SD+a9Kp8afFJnM+fxs8=;
-        b=DtBTpHDxVxOt6zVeqDkWmoLKrJvKKvlWytU3DSb5/ZSiXl+/GarLsfhGOsI6Pcn5ra
-         GnfkKgJx3VCEcKFn/yeXmTIdvisj1Id7d4a77IVLU3J8O08ruqLOX8wU20skBO2JkTLm
-         Evwp1+BKfbLnXv2plxC4a/RfZZ8Rm4KvwfqJFCC7aM9JptlI62Emd//AWbsTsaa6hDd8
-         5AJL4twEvTNC6MvcVg6lAP3LP88o1Wu3Y0znNnzYt5E7Ly2190Qz4TnuvLPZgZRPMCP1
-         Kga65S72qqbFLX6jh/cnVjvFIIeYrsuEkfgsmdUm5qMnHM3VCBgcMKeo8cMwE3i5AwTA
-         vNhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=X4WrkjaQQpTlNjMoovx5rY40SD+a9Kp8afFJnM+fxs8=;
-        b=H+wTOCHZs04e4/F2q2Pm3BmFLdWZwJzig20GxNMjsQOnd+UbhB1cW+3iIA/IfiPnPh
-         2ZmdPFOz4FxzgNisbwZ6AUTsglwbFgBlyh8JoFOSMVrq77pofAqXI2y1NocdNK81+/IQ
-         jjWkHBOzFhRi6ui/gHZuv0lJtuKiq5eyScoDwbgoQ5smWTjyCo6hcBvGkfAJdrrHqsf/
-         GRT7FGokM5WaI8IBi/fc6oIJ39l2HpePADMPrKoWZ2ZiKbQbW9JGPeqLnn2QsQx9asG+
-         xadeDKZkjvxaEeDAYbwY5P4g1cGkHDxIwIkq+saBfP+MZaEz814SWjmtGHg8xXbgzfCb
-         iZew==
-X-Gm-Message-State: APjAAAU9s6FvdfI8Vn2qHERpbCvc+Eu33rBJi/DoiU1fNdSAk9kkVmvT
-        RB9dsQI8vuuVobdGQa9EjxiYxX9VYIvfP8U54qs=
-X-Google-Smtp-Source: APXvYqyxtZq0gEu9LqJooDjhP0+ruL974qi24V0L/KYODE0xHaWL2snu4Y8IU+laFHrkpbIPTIhYimHeI9K/beK7Gac=
-X-Received: by 2002:a5e:8618:: with SMTP id z24mr72484671ioj.174.1560705283278;
- Sun, 16 Jun 2019 10:14:43 -0700 (PDT)
-MIME-Version: 1.0
-References: <20180429104412.22445-1-christian.brauner@ubuntu.com>
- <20180429104412.22445-3-christian.brauner@ubuntu.com> <CAKdAkRTtffEQfZLnSW9CwzX_oYzHdOE816OvciGadqV7RHaV1Q@mail.gmail.com>
- <875zp5rbpf.fsf@xmission.com> <20190616165027.prdbshnipwphqtis@gmail.com>
-In-Reply-To: <20190616165027.prdbshnipwphqtis@gmail.com>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Sun, 16 Jun 2019 10:14:32 -0700
-Message-ID: <CAKdAkRT98DmxCHPL+1+COinSEDU0_87GMDL6ZiQEiBJSd286yw@mail.gmail.com>
-Subject: Re: [PATCH net-next 2/2 v5] netns: restrict uevents
-To:     Christian Brauner <christian.brauner@canonical.com>
-Cc:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, avagin@virtuozzo.com,
-        ktkhai@virtuozzo.com, "Serge E. Hallyn" <serge@hallyn.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 16 Jun 2019 13:23:44 -0400
+Received: from mga12.intel.com ([192.55.52.136]:33650 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725895AbfFPRXn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 13:23:43 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jun 2019 10:23:43 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Jun 2019 10:23:43 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "Christopherson Sean J" <sean.j.christopherson@intel.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Radim Krcmar" <rkrcmar@redhat.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH 0/3] x86/cpufeatures: Re-arrange a few features and enumerate AVX512 BFLOAT16 intructions
+Date:   Sun, 16 Jun 2019 10:14:07 -0700
+Message-Id: <1560705250-211820-1-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christian,
+To enumerate AVX512 BFLOAT16 feature CPUID.7.1:EAX[5] and other future
+features in CPUID.7.1:EAX, Boris suggests to create a new pure feature
+bits word.
 
-On Sun, Jun 16, 2019 at 9:50 AM Christian Brauner
-<christian.brauner@canonical.com> wrote:
->
-> Hey Dmitry,
->
-> Crostini on ChromeOS is making heavy use of this patchset and of LXD. So
-> reverting this almost 1.5 years after the fact will regress all of
-> Google's ChromeOS Crostini users, and all LXD/LXC users.
->
-> LXD and Crostini by using LXD (through Concierge/Tremplin etc. [2]) are
-> using this whole series e.g. when hotplugging usb devices into the
-> container.
->
-> When a usb hotplug happens, LXD will receive the relevant uevent and
-> will forward it to the container. Any process listening on a uevent
-> socket inside the container will now be able to see it.
->
-> Now, to talk briefly about solutions:
-> From what I gather from talking to the ChromeOS guys and from your
-> ChromeOS bugtracker and recent patchsets to ARC you are moving your
-> Android workloads into Crostini? So like Eric said this seems like a new
-> feature you're implementing.
+Boris further suggests to re-define word 11 as scattered features word
+and move the four X86_FEATURE_CQM_* features in existing word 11 and
+word 12 into the new word 11. Then use word 12 to hold features in
+CPUID.7.1:EAX including AVX512 BFLOAT16 instructions.
 
-No, I am talking about ARC, not Crostini here.
+Also remove x86_cache_max_rmid and x86_cache_occ_scale in cpuinfo_x86
+to save memory space because they are only read once by resctrl during
+boot time. Get the info directly from CPUID in resctrl initialization.
 
->
-> If you need to be able to listen to uevents inside of a user namespace
-> and plan on using Crostini going forward then you can have Crostini
-> forward battery uevents to the container. The logic for doing this can
-> be found in the LXD codebase (cf. [3]). It's pretty simple. If you want
-> to go this route I'm happy to guide you. :)
-> Note, both options are a version of what Eric suggested in his last
-> paragraph!
->
-> What astonishes me is that healthd couldn't have possibly received
-> battery uevents for a long time even if Android already was run in user
-> namespaces prior to the new feature you're working on and the healthd I
-> see in master is not even using uevents anymore (cf. [8]) but rather is
-> using sysfs it seems. :)
-> Before that healthd was using (cf. [7])
->
-> uevent_kernel_multicast_recv()
-> |
-> -> uevent_kernel_multicast_uid_recv
->
-> the latter containing the check
->
-> if (cred->uid != 0) {
->     /* ignoring netlink message from non-root user */
->     goto out;
-> }
->
-> Before my patchset here the uevents sent out came with cred->uid == INVALID_UID
-> and so healthd never received those events until very recently.
+Change Log:
 
-I see. OK, let me try digging into this to figure out what exactly changed.
+Address all comments from Borislav Petkov:
+- Re-define feature word 11 as a scattered features word and move the
+  four X86_FEATURE_CQM_* features into the word
+- Re-define feature word 12 to hold CPUID.7.1:EAX including BFLOAT16
+- Name a dummy leaf 12 in cpuid_leafs in patch 0002 to avoid bisect
+  error
+- Simplify code to get number of rmid and monitoring scale in
+  rdt_get_mon_l3_config()
 
-Thanks.
+Fenghua Yu (3):
+  x86/resctrl: Get max rmid and occupancy scale directly from CPUID
+    instead of cpuinfo_x86
+  x86/cpufeatures: Combine word 11 and 12 into new scattered features
+    word 11
+  x86/cpufeatures: Enumerate new AVX512 BFLOAT16 instructions
+
+ arch/x86/include/asm/cpufeature.h      |  4 +--
+ arch/x86/include/asm/cpufeatures.h     | 18 +++++++----
+ arch/x86/include/asm/processor.h       |  3 --
+ arch/x86/kernel/cpu/common.c           | 45 ++------------------------
+ arch/x86/kernel/cpu/cpuid-deps.c       |  4 +++
+ arch/x86/kernel/cpu/resctrl/internal.h |  2 +-
+ arch/x86/kernel/cpu/resctrl/monitor.c  | 13 ++++++--
+ arch/x86/kernel/cpu/scattered.c        |  4 +++
+ arch/x86/kvm/cpuid.h                   |  2 --
+ 9 files changed, 36 insertions(+), 59 deletions(-)
 
 -- 
-Dmitry
+2.19.1
+
