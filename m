@@ -2,109 +2,60 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 111F5C31E54
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:29:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3788BC31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD359204EC
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:29:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/sR59wJ"
+	by mail.kernel.org (Postfix) with ESMTP id 0DEF020644
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:33:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727371AbfFPQ3p (ORCPT
+        id S1727229AbfFPQdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 12:29:45 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:35065 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726267AbfFPQ3p (ORCPT
+        Sun, 16 Jun 2019 12:33:09 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41920 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726267AbfFPQdJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 12:29:45 -0400
-Received: by mail-lj1-f195.google.com with SMTP id x25so7023047ljh.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 09:29:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ROe9l7rmNkgoXM5ZdfPpWNA4ZJ7+sjLyBm3rIg5S9KA=;
-        b=h/sR59wJK+fRC3mRDJUs7YbyyNEHv8XpFqQto+pIOpDJRMFMGXKdTxTZAireTGxWI7
-         FiwYLSr2JON5mEQW2DXWE7T8sKIn1R0ReRXD5pwqAVNuRR8sz89cbggeLHCju6kvpUAD
-         1ja4b8jol2zMk/o5ykuyNrTYJOMC4nQs3gM6GOvIuLdZHdSfereMItNivftbGHTijBQP
-         0UcvIB9QCMSfYiXgJIMozMimRf/z2poqJKiEzgAm8hX4YL94zxvC5YVcufmTAcrCx7mm
-         109jh1L0ci4SmEfT27NtHD5LOcG1rXp2M0z8qHkzSJ1Oy6lmw/MYZAwE2vQpbf4O1+ma
-         ziJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ROe9l7rmNkgoXM5ZdfPpWNA4ZJ7+sjLyBm3rIg5S9KA=;
-        b=ZD141AfCsjAHZNGq7BDWIGJvYIw353KOviROseAuj7cVuq+SauY9si0av2AJmX9RLL
-         qaXIydGGY3ZzDawLjOTwWUGQBrQtMSJ2PqQDlzAL+aPaRAUNKCGvPQMZfTbg1QK8mfQq
-         Jo7YIJl33KIefD5OZtcCYeHEBjYsaoGS3OJdAdWTvMs25MRpkV+4kWPJF+f005T+nI7I
-         ZuXMaoemL2jHB/uJBBdunFk8aJtwI6FfVJG/PkkkHQU7xsZoFfhoc8aUaFwuOgMTngP0
-         mECkIGPUPMQwh9dCrEjQzSvJJJXRbdK56qyAlJRvwIL78u/HtCQJ1OqcsgPYqYLbD7gp
-         0D2Q==
-X-Gm-Message-State: APjAAAUXbcy9OwMi3G3TnVHqcB1INcUSn2pwf6Xdb63LvdfSUiLuDgF7
-        L98rjD9vtwcH1exvY42CG/E=
-X-Google-Smtp-Source: APXvYqz3gJlQxLnmSB1YMDld8wbounFH1DdB5g8n3krY1uyci2h9hWjnE9Hq3gAA/X85j5ZNacy3cg==
-X-Received: by 2002:a2e:93c5:: with SMTP id p5mr22338427ljh.79.1560702583227;
-        Sun, 16 Jun 2019 09:29:43 -0700 (PDT)
-Received: from esperanza ([176.120.239.149])
-        by smtp.gmail.com with ESMTPSA id 25sm1660372ljv.40.2019.06.16.09.29.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 16 Jun 2019 09:29:42 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 19:29:41 +0300
-From:   Vladimir Davydov <vdavydov.dev@gmail.com>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Waiman Long <longman@redhat.com>
-Subject: Re: [PATCH v7 10/10] mm: reparent memcg kmem_caches on cgroup removal
-Message-ID: <20190616162941.aqa4ae5j63nmjlp6@esperanza>
-References: <20190611231813.3148843-1-guro@fb.com>
- <20190611231813.3148843-11-guro@fb.com>
+        Sun, 16 Jun 2019 12:33:09 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hcY5Q-0002Eq-Tn; Sun, 16 Jun 2019 18:32:57 +0200
+Date:   Sun, 16 Jun 2019 18:32:56 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     "Bae, Chang Seok" <chang.seok.bae@intel.com>
+cc:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
+        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v7 01/18] x86/fsgsbase/64: Fix ARCH_SET_FS/GS behaviors
+ for a remote task
+In-Reply-To: <9040CFCD-74BD-4C17-9A01-B9B713CF6B10@intel.com>
+Message-ID: <alpine.DEB.2.21.1906161830590.1760@nanos.tec.linutronix.de>
+References: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com> <1557309753-24073-2-git-send-email-chang.seok.bae@intel.com> <74F4F506-2913-4013-9D81-A0C69FA8CDF1@intel.com> <6420E1A5-B5AD-4028-AA91-AA4D5445AC83@intel.com>
+ <9040CFCD-74BD-4C17-9A01-B9B713CF6B10@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611231813.3148843-11-guro@fb.com>
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 04:18:13PM -0700, Roman Gushchin wrote:
-> Let's reparent non-root kmem_caches on memcg offlining. This allows us
-> to release the memory cgroup without waiting for the last outstanding
-> kernel object (e.g. dentry used by another application).
+On Sun, 16 Jun 2019, Bae, Chang Seok wrote:
+> > On Jun 14, 2019, at 13:11, Bae, Chang Seok <chang.seok.bae@intel.com> wrote:
 > 
-> Since the parent cgroup is already charged, everything we need to do
-> is to splice the list of kmem_caches to the parent's kmem_caches list,
-> swap the memcg pointer, drop the css refcounter for each kmem_cache
-> and adjust the parent's css refcounter.
-> 
-> Please, note that kmem_cache->memcg_params.memcg isn't a stable
-> pointer anymore. It's safe to read it under rcu_read_lock(),
-> cgroup_mutex held, or any other way that protects the memory cgroup
-> from being released.
-> 
-> We can race with the slab allocation and deallocation paths. It's not
-> a big problem: parent's charge and slab global stats are always
-> correct, and we don't care anymore about the child usage and global
-> stats. The child cgroup is already offline, so we don't use or show it
-> anywhere.
-> 
-> Local slab stats (NR_SLAB_RECLAIMABLE and NR_SLAB_UNRECLAIMABLE)
-> aren't used anywhere except count_shadow_nodes(). But even there it
-> won't break anything: after reparenting "nodes" will be 0 on child
-> level (because we're already reparenting shrinker lists), and on
-> parent level page stats always were 0, and this patch won't change
-> anything.
-> 
-> Signed-off-by: Roman Gushchin <guro@fb.com>
+> Looks build error was reported with this. Sorry again for the noise.
 
-Acked-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Well. This has not built when it was posted. Can't you run your stuff
+through the Intel zero day infrastructure _BEFORE_ posting?
+
+Thanks,
+
+	tglx
