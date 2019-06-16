@@ -2,89 +2,147 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8A4C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 11:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03F04C31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 11:33:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13B6D216C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 11:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MIqviWeH"
+	by mail.kernel.org (Postfix) with ESMTP id CD22D216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 11:33:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfFPLYf (ORCPT
+        id S1727158AbfFPLdG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 07:24:35 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:42406 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfFPLYf (ORCPT
+        Sun, 16 Jun 2019 07:33:06 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41713 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725874AbfFPLdF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 07:24:35 -0400
-Received: by mail-ua1-f66.google.com with SMTP id a97so2451169uaa.9
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 04:24:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5YFtP5iq4BuWWAYRxXcVS3zg7MUScG/wOavOEpLgmd4=;
-        b=MIqviWeHh0MAPFZ+O748eD1CPUP+ze9taXOmIk320qFtd0z0ZwWdRMT/3aVaU0L1od
-         /papDVqO6pJktv5ACUwSLfl8tMgvRaTBtOmfX+EsFL+IdBrJ/6fYb9HI6lONV8WoTOi/
-         9BTXQQ1ghWGfhgDK7sb7eC7AoWVy7IQP7WeRggCunxTmuC3iNxuOL65a++ql6ClyZd4B
-         KeaJXXJ7iyl4NO1w2UaMGngDyhSbNHpCzJrwBWvoWvQwH0EwaTULYGczXhzOcugcbOxC
-         zLMbChGl23+XaSiG3si+cV3WlHzfkFK1AehSnt9Xw17DIFdds21kzXmCARlHxbd3q1lX
-         BAeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5YFtP5iq4BuWWAYRxXcVS3zg7MUScG/wOavOEpLgmd4=;
-        b=ZWOneBzGcigh64ffnk4EojRCWCysZpyPXJ6T+mZ+4lMiNhn6CmNn+peJD1NXA/EMCh
-         K8vDKeOgdAULcnCHLhedIWDkD0QkVIazyjdTXwAysg3ywYXMtRX4gBvbTVzMywDS9G9G
-         mOWSZcX4q7oh46bgf/u+Go/uUqDONgRqFp67hvPcInTXL5RhYCKTEFGVxyo8OnnTRTGq
-         cMnNwQbDyTypdK0LlJ3tfeltC5RhpqxQ10adxz7znOtJscVL5gde9P9dNxlNwFNAuKnK
-         YRYnBy4CLZFzs+0tBVySPD6gMBdu7txs/oqQQirrI3OXsAlyqxf+K55MlskeU4cyzw/D
-         JedA==
-X-Gm-Message-State: APjAAAX6mYuSOMt/bEfE9/yTppwBq2gHBb62rGmStyXPg9X+MvfdDf3E
-        CwO2eluzrF7Q+s3TzYPso2raxi+EDxptpfMb93Pxrhkd
-X-Google-Smtp-Source: APXvYqwFnjkL/sGG6t/J2J4p55Sgoswg5CgNeymio3riVhqmFIfVhmwbO0lvkgKGo3NOAWyf60liJs64r5OK8KHwUQE=
-X-Received: by 2002:ab0:698f:: with SMTP id t15mr27953515uaq.34.1560684274198;
- Sun, 16 Jun 2019 04:24:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190611092144.11194-1-oded.gabbay@gmail.com> <20190611095857.GB24058@kroah.com>
- <20190611151753.GA11404@infradead.org> <20190611152655.GA3972@kroah.com>
- <CAFCwf11DKi+pfvvGR2zN4jvwTQZ9-Lm=OXBs+ZU=E-eFfJOi7A@mail.gmail.com> <20190616095554.GA5156@infradead.org>
-In-Reply-To: <20190616095554.GA5156@infradead.org>
-From:   Oded Gabbay <oded.gabbay@gmail.com>
-Date:   Sun, 16 Jun 2019 14:24:08 +0300
-Message-ID: <CAFCwf11XU1JydbS-wswXBzm4t-fxLjGyXuHCqrNxTsWzLraSZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Sun, 16 Jun 2019 07:33:05 -0400
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hcTPD-0008No-Lr; Sun, 16 Jun 2019 13:33:03 +0200
+Date:   Sun, 16 Jun 2019 11:29:52 -0000
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [GIT pull] timer fixes for 5.2
+References: <156068459205.30217.15980952927216488865.tglx@nanos.tec.linutronix.de>
+Message-ID: <156068459205.30217.17659593879245974125.tglx@nanos.tec.linutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 12:55 PM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Sat, Jun 15, 2019 at 03:12:36PM +0300, Oded Gabbay wrote:
-> > So after the dust has settled a bit, do you think it is reasonable to
-> > add this patch upstream ?
->
-> I'm not Greg, but the answer is a very clear no.  drivers have abslutely
-> no business adding these hacks.
+Linus,
 
-So the alternative is that my device won't work on POWER9. Does that make sense?
-What is the reason for this logic?
-I'm not adding code that will be used by other drivers/users.
-I'm just doing a special configuration to my device's H/W and I
-condition it upon the PCI device ID of my parent PCI device.
-What is the harm in that?
+please pull the latest timers-urgent-for-linus git tree from:
+
+   git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git timers-urgent-for-linus
+
+up to:  e3ff9c3678b4: timekeeping: Repair ktime_get_coarse*() granularity
+
+A set of small fixes:
+
+ - Repair the ktime_get_coarse() functions so they actually deliver what
+   they are supposed to: tick granular time stamps. The current code missed
+   to add the accumulated nanoseconds part of the timekeeper so the
+   resulting granularity was 1 second.
+
+ - Prevent the tracer from infinitely recursing into time getter functions
+   in the arm architectured timer by marking these functions notrace
+
+ - Fix a trivial compiler warning caused by wrong qualifier ordering.
 
 Thanks,
-Oded
+
+	tglx
+
+------------------>
+Julien Thierry (1):
+      clocksource/drivers/arm_arch_timer: Don't trace count reader functions
+
+Philippe Mazenauer (1):
+      clocksource/drivers/timer-ti-dm: Change to new style declaration
+
+Thomas Gleixner (1):
+      timekeeping: Repair ktime_get_coarse*() granularity
+
+
+ drivers/clocksource/arm_arch_timer.c | 8 ++++----
+ drivers/clocksource/timer-ti-dm.c    | 2 +-
+ kernel/time/timekeeping.c            | 5 +++--
+ 3 files changed, 8 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksource/arm_arch_timer.c
+index b2a951a798e2..5c69c9a9a6a4 100644
+--- a/drivers/clocksource/arm_arch_timer.c
++++ b/drivers/clocksource/arm_arch_timer.c
+@@ -149,22 +149,22 @@ u32 arch_timer_reg_read(int access, enum arch_timer_reg reg,
+ 	return val;
+ }
+ 
+-static u64 arch_counter_get_cntpct_stable(void)
++static notrace u64 arch_counter_get_cntpct_stable(void)
+ {
+ 	return __arch_counter_get_cntpct_stable();
+ }
+ 
+-static u64 arch_counter_get_cntpct(void)
++static notrace u64 arch_counter_get_cntpct(void)
+ {
+ 	return __arch_counter_get_cntpct();
+ }
+ 
+-static u64 arch_counter_get_cntvct_stable(void)
++static notrace u64 arch_counter_get_cntvct_stable(void)
+ {
+ 	return __arch_counter_get_cntvct_stable();
+ }
+ 
+-static u64 arch_counter_get_cntvct(void)
++static notrace u64 arch_counter_get_cntvct(void)
+ {
+ 	return __arch_counter_get_cntvct();
+ }
+diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
+index e40b55a7086f..5394d9dbdfbc 100644
+--- a/drivers/clocksource/timer-ti-dm.c
++++ b/drivers/clocksource/timer-ti-dm.c
+@@ -896,7 +896,7 @@ static int omap_dm_timer_remove(struct platform_device *pdev)
+ 	return ret;
+ }
+ 
+-const static struct omap_dm_timer_ops dmtimer_ops = {
++static const struct omap_dm_timer_ops dmtimer_ops = {
+ 	.request_by_node = omap_dm_timer_request_by_node,
+ 	.request_specific = omap_dm_timer_request_specific,
+ 	.request = omap_dm_timer_request,
+diff --git a/kernel/time/timekeeping.c b/kernel/time/timekeeping.c
+index 85f5912d8f70..44b726bab4bd 100644
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -808,17 +808,18 @@ ktime_t ktime_get_coarse_with_offset(enum tk_offsets offs)
+ 	struct timekeeper *tk = &tk_core.timekeeper;
+ 	unsigned int seq;
+ 	ktime_t base, *offset = offsets[offs];
++	u64 nsecs;
+ 
+ 	WARN_ON(timekeeping_suspended);
+ 
+ 	do {
+ 		seq = read_seqcount_begin(&tk_core.seq);
+ 		base = ktime_add(tk->tkr_mono.base, *offset);
++		nsecs = tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+ 
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+-	return base;
+-
++	return base + nsecs;
+ }
+ EXPORT_SYMBOL_GPL(ktime_get_coarse_with_offset);
+ 
+
