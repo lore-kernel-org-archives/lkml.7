@@ -2,301 +2,214 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D14C31E53
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6426C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:48:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89875216C8
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:47:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560692871;
-	bh=p0iL82cdaEa1Vv36sQ0BnhAX2AFRjC9Qqy5te+FMyV4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=YOe2VppLP+OGtJYbIsd70IKAthN3krPVwi1Y26WVLdn1BC6IHaz0ANtkpFEn3nsW1
-	 h/kcd9+KvhktCGpZHNnXc0fnv+xCUVwaVmQErISTqyx7Y2bz/PvaDWwuPRLgYT25v5
-	 fPdWNy4x72HxdT3PNa6gQIy/8JhU2BKY7xfe+XVk=
+	by mail.kernel.org (Postfix) with ESMTP id 992312133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:48:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=habanalabs.onmicrosoft.com header.i=@habanalabs.onmicrosoft.com header.b="dD9obt9H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfFPNrs (ORCPT
+        id S1727223AbfFPNsj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 09:47:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34096 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725874AbfFPNrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 09:47:48 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BE4BF2133D;
-        Sun, 16 Jun 2019 13:47:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560692867;
-        bh=p0iL82cdaEa1Vv36sQ0BnhAX2AFRjC9Qqy5te+FMyV4=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=uXHXVAVj4eO6fSQ2kfhTGQ2xpE6Yu1dRTsqgbI2J1u5IuOSaZ4YA04ycR3zkB/Y5j
-         n/s90Kh/RzWT8qHMF/qlEt2STWUCj+8XN1/qU9OAD1xVWvgeDaWrOiYYbkQbBkIXhe
-         Dng7WdvB62qLiR2JTkTyZRtPW22LS2D39Meb/dyk=
-Date:   Sun, 16 Jun 2019 14:47:42 +0100
-From:   Jonathan Cameron <jic23@kernel.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Subject: Re: [PATCH v1 24/31] docs: iio: convert to ReST
-Message-ID: <20190616144742.7e2dce98@archlinux>
-In-Reply-To: <6b9df01697dde8b9bb9be9accf28d63ed821956d.1560364494.git.mchehab+samsung@kernel.org>
-References: <cover.1560364493.git.mchehab+samsung@kernel.org>
-        <6b9df01697dde8b9bb9be9accf28d63ed821956d.1560364494.git.mchehab+samsung@kernel.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Sun, 16 Jun 2019 09:48:39 -0400
+Received: from mail-eopbgr30128.outbound.protection.outlook.com ([40.107.3.128]:11269
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725874AbfFPNsi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 09:48:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=habanalabs.onmicrosoft.com; s=selector1-habanalabs-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hRgmduehJB0wL8o9V7NJ3rdYV9c0H419WXYJkuBepmk=;
+ b=dD9obt9HZUnwOpmcAI3g6gavl6gOA3o1suB8X+CDAh7pycIrEPBBXt0xvNP0YTfIfuZ1CVYBFhQs+KVEvn9AMpphmsogG3H17Xmb9bBrWPL05EBDgmwqeY3p2pEeImUb+cDO4hPXuUHtAua7gZfNdDLFQQmHcKBBcXNxeYQFK3w=
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com (10.170.235.155) by
+ VI1PR02MB5934.eurprd02.prod.outlook.com (52.133.246.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Sun, 16 Jun 2019 13:48:29 +0000
+Received: from VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::d45e:25f0:5b42:30e2]) by VI1PR02MB3054.eurprd02.prod.outlook.com
+ ([fe80::d45e:25f0:5b42:30e2%2]) with mapi id 15.20.1987.014; Sun, 16 Jun 2019
+ 13:48:29 +0000
+From:   Tomer Tayar <ttayar@habana.ai>
+To:     "oded.gabbay@gmail.com" <oded.gabbay@gmail.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] habanalabs: Allow accessing host mapped addresses via debugfs
+Thread-Topic: [PATCH] habanalabs: Allow accessing host mapped addresses via
+ debugfs
+Thread-Index: AQHVJEotqhRZKkY5HUWUiZb66OgpsA==
+Date:   Sun, 16 Jun 2019 13:48:29 +0000
+Message-ID: <20190616134813.4094-1-ttayar@habana.ai>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: PR0P264CA0068.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1d::32) To VI1PR02MB3054.eurprd02.prod.outlook.com
+ (2603:10a6:802:17::27)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=ttayar@habana.ai; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [31.154.190.6]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e09e787e-07f4-4601-3f00-08d6f261500b
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:VI1PR02MB5934;
+x-ms-traffictypediagnostic: VI1PR02MB5934:
+x-microsoft-antispam-prvs: <VI1PR02MB5934D859978B94A49AD032F3D2E80@VI1PR02MB5934.eurprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 0070A8666B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39840400004)(346002)(136003)(366004)(376002)(189003)(199004)(1361003)(66556008)(66476007)(64756008)(66446008)(8936002)(6916009)(86362001)(73956011)(66946007)(476003)(2616005)(486006)(53936002)(74482002)(81166006)(25786009)(1076003)(2351001)(6436002)(316002)(81156014)(8676002)(6486002)(68736007)(6512007)(7736002)(5640700003)(305945005)(66066001)(14444005)(14454004)(99286004)(71190400001)(71200400001)(50226002)(52116002)(478600001)(102836004)(3846002)(36756003)(186003)(256004)(26005)(2906002)(5660300002)(4326008)(2501003)(6506007)(386003)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:VI1PR02MB5934;H:VI1PR02MB3054.eurprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: habana.ai does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: OiNurgQ5Gj9z5XG5nUb38/okg2sMi3JKUtiobbEZdzUsKPLtXDRjh+KYNTzvTS7Sj77B11uH3HTcRuJs+KNLIq58rYBGI7iOVnpvcgj3DAbe4jeV8cnWT0IL6GFTAy0ZqciRtKPaZJg008K31xn57n50fVU6Mp1MPkFV3QnPVqlCooG6mYnLf2DBDxGJwRq1ehD40YJTh01+YMv+p+KcxH7WdfxbqS3pVfdEyxb399UnllRy4DHxMGGfzqQx6wvOrXEiQ1xxJPcZ0Rn44TSTe9A5T1GvRfeuLdtepzS4fKsKSIdnWJ+1WjHjRvoOtw+wvzOpuS4JFdMJtuH56lbYqstoI8YdIpJdIpaScHjfq1wY6Xa36aqkpccvdN7hAG0F873kABC9/U3RQJBKIaZ0tVqufxWi6xAys9p+wd6nyuI=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: habana.ai
+X-MS-Exchange-CrossTenant-Network-Message-Id: e09e787e-07f4-4601-3f00-08d6f261500b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2019 13:48:29.1835
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 0d4d4539-213c-4ed8-a251-dc9766ba127a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ttayar@habana.ai
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR02MB5934
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 15:38:27 -0300
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-
-> Rename the iio documentation files to ReST, add an
-> index for them and adjust in order to produce a nice html
-> output via the Sphinx build system.
-> 
-> At its new index.rst, let's add a :orphan: while this is not linked to
-> the main index.rst file, in order to avoid build warnings.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Thanks, looks good to me.   At some point we need to look at how
-to tie together the various IIO docs as they are split between
-here and the driver-api/iio/ directory.  That split isn't currently
-along particularly logical lines.
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-
-Thanks for tidying this up!
-
-Jonathan
-> ---
->  .../iio/{ep93xx_adc.txt => ep93xx_adc.rst}    | 15 +++++-
->  .../{iio_configfs.txt => iio_configfs.rst}    | 52 +++++++++++--------
->  Documentation/iio/index.rst                   | 12 +++++
->  drivers/iio/Kconfig                           |  2 +-
->  4 files changed, 56 insertions(+), 25 deletions(-)
->  rename Documentation/iio/{ep93xx_adc.txt => ep93xx_adc.rst} (71%)
->  rename Documentation/iio/{iio_configfs.txt => iio_configfs.rst} (73%)
->  create mode 100644 Documentation/iio/index.rst
-> 
-> diff --git a/Documentation/iio/ep93xx_adc.txt b/Documentation/iio/ep93xx_adc.rst
-> similarity index 71%
-> rename from Documentation/iio/ep93xx_adc.txt
-> rename to Documentation/iio/ep93xx_adc.rst
-> index 23053e7817bd..4fd8dea3f6b8 100644
-> --- a/Documentation/iio/ep93xx_adc.txt
-> +++ b/Documentation/iio/ep93xx_adc.rst
-> @@ -1,12 +1,16 @@
-> -Cirrus Logic EP93xx ADC driver.
-> +==============================
-> +Cirrus Logic EP93xx ADC driver
-> +==============================
->  
->  1. Overview
-> +===========
->  
->  The driver is intended to work on both low-end (EP9301, EP9302) devices with
->  5-channel ADC and high-end (EP9307, EP9312, EP9315) devices with 10-channel
->  touchscreen/ADC module.
->  
->  2. Channel numbering
-> +====================
->  
->  Numbering scheme for channels 0..4 is defined in EP9301 and EP9302 datasheets.
->  EP9307, EP9312 and EP9312 have 3 channels more (total 8), but the numbering is
-> @@ -17,13 +21,20 @@ Assuming ep93xx_adc is IIO device0, you'd find the following entries under
->  
->    +-----------------+---------------+
->    | sysfs entry     | ball/pin name |
-> -  +-----------------+---------------+
-> +  +=================+===============+
->    | in_voltage0_raw | YM            |
-> +  +-----------------+---------------+
->    | in_voltage1_raw | SXP           |
-> +  +-----------------+---------------+
->    | in_voltage2_raw | SXM           |
-> +  +-----------------+---------------+
->    | in_voltage3_raw | SYP           |
-> +  +-----------------+---------------+
->    | in_voltage4_raw | SYM           |
-> +  +-----------------+---------------+
->    | in_voltage5_raw | XP            |
-> +  +-----------------+---------------+
->    | in_voltage6_raw | XM            |
-> +  +-----------------+---------------+
->    | in_voltage7_raw | YP            |
->    +-----------------+---------------+
-> diff --git a/Documentation/iio/iio_configfs.txt b/Documentation/iio/iio_configfs.rst
-> similarity index 73%
-> rename from Documentation/iio/iio_configfs.txt
-> rename to Documentation/iio/iio_configfs.rst
-> index 4e5f101837a8..ecbfdb3afef7 100644
-> --- a/Documentation/iio/iio_configfs.txt
-> +++ b/Documentation/iio/iio_configfs.rst
-> @@ -1,6 +1,9 @@
-> +===============================
->  Industrial IIO configfs support
-> +===============================
->  
->  1. Overview
-> +===========
->  
->  Configfs is a filesystem-based manager of kernel objects. IIO uses some
->  objects that could be easily configured using configfs (e.g.: devices,
-> @@ -10,20 +13,22 @@ See Documentation/filesystems/configfs/configfs.txt for more information
->  about how configfs works.
->  
->  2. Usage
-> +========
->  
->  In order to use configfs support in IIO we need to select it at compile
->  time via CONFIG_IIO_CONFIGFS config option.
->  
-> -Then, mount the configfs filesystem (usually under /config directory):
-> +Then, mount the configfs filesystem (usually under /config directory)::
->  
-> -$ mkdir /config
-> -$ mount -t configfs none /config
-> +  $ mkdir /config
-> +  $ mount -t configfs none /config
->  
->  At this point, all default IIO groups will be created and can be accessed
->  under /config/iio. Next chapters will describe available IIO configuration
->  objects.
->  
->  3. Software triggers
-> +====================
->  
->  One of the IIO default configfs groups is the "triggers" group. It is
->  automagically accessible when the configfs is mounted and can be found
-> @@ -31,40 +36,40 @@ under /config/iio/triggers.
->  
->  IIO software triggers implementation offers support for creating multiple
->  trigger types. A new trigger type is usually implemented as a separate
-> -kernel module following the interface in include/linux/iio/sw_trigger.h:
-> +kernel module following the interface in include/linux/iio/sw_trigger.h::
->  
-> -/*
-> - * drivers/iio/trigger/iio-trig-sample.c
-> - * sample kernel module implementing a new trigger type
-> - */
-> -#include <linux/iio/sw_trigger.h>
-> +  /*
-> +   * drivers/iio/trigger/iio-trig-sample.c
-> +   * sample kernel module implementing a new trigger type
-> +   */
-> +  #include <linux/iio/sw_trigger.h>
->  
->  
-> -static struct iio_sw_trigger *iio_trig_sample_probe(const char *name)
-> -{
-> +  static struct iio_sw_trigger *iio_trig_sample_probe(const char *name)
-> +  {
->  	/*
->  	 * This allocates and registers an IIO trigger plus other
->  	 * trigger type specific initialization.
->  	 */
-> -}
-> +  }
->  
-> -static int iio_trig_hrtimer_remove(struct iio_sw_trigger *swt)
-> -{
-> +  static int iio_trig_hrtimer_remove(struct iio_sw_trigger *swt)
-> +  {
->  	/*
->  	 * This undoes the actions in iio_trig_sample_probe
->  	 */
-> -}
-> +  }
->  
-> -static const struct iio_sw_trigger_ops iio_trig_sample_ops = {
-> +  static const struct iio_sw_trigger_ops iio_trig_sample_ops = {
->  	.probe		= iio_trig_sample_probe,
->  	.remove		= iio_trig_sample_remove,
-> -};
-> +  };
->  
-> -static struct iio_sw_trigger_type iio_trig_sample = {
-> +  static struct iio_sw_trigger_type iio_trig_sample = {
->  	.name = "trig-sample",
->  	.owner = THIS_MODULE,
->  	.ops = &iio_trig_sample_ops,
-> -};
-> +  };
->  
->  module_iio_sw_trigger_driver(iio_trig_sample);
->  
-> @@ -73,21 +78,24 @@ iio-trig-sample module will create 'trig-sample' trigger type directory
->  /config/iio/triggers/trig-sample.
->  
->  We support the following interrupt sources (trigger types):
-> +
->  	* hrtimer, uses high resolution timers as interrupt source
->  
->  3.1 Hrtimer triggers creation and destruction
-> +---------------------------------------------
->  
->  Loading iio-trig-hrtimer module will register hrtimer trigger types allowing
->  users to create hrtimer triggers under /config/iio/triggers/hrtimer.
->  
-> -e.g:
-> +e.g::
->  
-> -$ mkdir /config/iio/triggers/hrtimer/instance1
-> -$ rmdir /config/iio/triggers/hrtimer/instance1
-> +  $ mkdir /config/iio/triggers/hrtimer/instance1
-> +  $ rmdir /config/iio/triggers/hrtimer/instance1
->  
->  Each trigger can have one or more attributes specific to the trigger type.
->  
->  3.2 "hrtimer" trigger types attributes
-> +--------------------------------------
->  
->  "hrtimer" trigger type doesn't have any configurable attribute from /config dir.
->  It does introduce the sampling_frequency attribute to trigger directory.
-> diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
-> new file mode 100644
-> index 000000000000..0593dca89a94
-> --- /dev/null
-> +++ b/Documentation/iio/index.rst
-> @@ -0,0 +1,12 @@
-> +:orphan:
-> +
-> +==============
-> +Industrial I/O
-> +==============
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   iio_configfs
-> +
-> +   ep93xx_adc
-> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
-> index 1d736a4952ab..5bd51853b15e 100644
-> --- a/drivers/iio/Kconfig
-> +++ b/drivers/iio/Kconfig
-> @@ -28,7 +28,7 @@ config IIO_CONFIGFS
->  	help
->  	  This allows configuring various IIO bits through configfs
->  	  (e.g. software triggers). For more info see
-> -	  Documentation/iio/iio_configfs.txt.
-> +	  Documentation/iio/iio_configfs.rst.
->  
->  config IIO_TRIGGER
->  	bool "Enable triggered sampling support"
-
+QWxsb3dzIHVzaW5nIHRoZSBhZGRyL2RhdGEzMiBkZWJ1Z2ZzIG5vZGVzIHRvIGFjY2VzcyBhIGRl
+dmljZSBWQSBvZiBhDQpob3N0IG1hcHBlZCBtZW1vcnkgd2hlbiB0aGUgSU9NTVUgaXMgZGlzYWJs
+ZWQuDQoNCkR1ZSB0byB0aGUgcG9zc2libGUgbGFyZ2UgYW1vdW50IG9mIGEgdXNlciBob3N0IG1h
+cHBlZCBtZW1vcnksIHRoZQ0KZHJpdmVyIGRvZXNuJ3QgbWFpbnRhaW4gYSBkYXRhYmFzZSB3aXRo
+IHRoZSBob3N0IGFkZHJlc3NlcyBwZXIgZGV2aWNlIFZBLg0KV2hlbiB0aGUgSU9NTVUgaXMgZGlz
+YWJsZWQsIHRoaXMgbWlzc2luZyBpbmZvIGlzIGJlaW5nIG92ZXJjb21lIGJ5DQpzaW1wbHkgdXNp
+bmcgcGh5c190b192aXJ0KCkuIEhvd2V2ZXIsIHRoaXMgaXMgbm90IHVzZWZ1bCB3aGVuIHRoZSBJ
+T01NVQ0KaXMgZW5hYmxlZCwgYW5kIHRodXMgdGhlIGVuZm9yY2VkIGxpbWl0YXRpb24uDQoNClNp
+Z25lZC1vZmYtYnk6IFRvbWVyIFRheWFyIDx0dGF5YXJAaGFiYW5hLmFpPg0KLS0tDQogLi4uL0FC
+SS90ZXN0aW5nL2RlYnVnZnMtZHJpdmVyLWhhYmFuYWxhYnMgICAgIHwgMTEgKysrKy0tDQogZHJp
+dmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jICAgICAgICAgICAgIHwgMzUgKysrKysrKysr
+KysrLS0tLS0tLQ0KIGRyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2dveWEvZ295YS5jICAgICAgICAg
+ICB8IDE5ICsrKysrKystLS0NCiAzIGZpbGVzIGNoYW5nZWQsIDQ2IGluc2VydGlvbnMoKyksIDE5
+IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9k
+ZWJ1Z2ZzLWRyaXZlci1oYWJhbmFsYWJzIGIvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9kZWJ1
+Z2ZzLWRyaXZlci1oYWJhbmFsYWJzDQppbmRleCAyZjViODBiZTA3YTMuLjE4MTkxYzJiZWNhYiAx
+MDA2NDQNCi0tLSBhL0RvY3VtZW50YXRpb24vQUJJL3Rlc3RpbmcvZGVidWdmcy1kcml2ZXItaGFi
+YW5hbGFicw0KKysrIGIvRG9jdW1lbnRhdGlvbi9BQkkvdGVzdGluZy9kZWJ1Z2ZzLWRyaXZlci1o
+YWJhbmFsYWJzDQpAQCAtMyw3ICszLDEwIEBAIERhdGU6ICAgICAgICAgICBKYW4gMjAxOQ0KIEtl
+cm5lbFZlcnNpb246ICA1LjENCiBDb250YWN0OiAgICAgICAgb2RlZC5nYWJiYXlAZ21haWwuY29t
+DQogRGVzY3JpcHRpb246ICAgIFNldHMgdGhlIGRldmljZSBhZGRyZXNzIHRvIGJlIHVzZWQgZm9y
+IHJlYWQgb3Igd3JpdGUgdGhyb3VnaA0KLSAgICAgICAgICAgICAgICBQQ0kgYmFyLiBUaGUgYWNj
+ZXB0YWJsZSB2YWx1ZSBpcyBhIHN0cmluZyB0aGF0IHN0YXJ0cyB3aXRoICIweCINCisgICAgICAg
+ICAgICAgICAgUENJIGJhciwgb3IgdGhlIGRldmljZSBWQSBvZiBhIGhvc3QgbWFwcGVkIG1lbW9y
+eSB0byBiZSByZWFkIG9yDQorICAgICAgICAgICAgICAgIHdyaXR0ZW4gZGlyZWN0bHkgZnJvbSB0
+aGUgaG9zdC4gVGhlIGxhdHRlciBvcHRpb24gaXMgYWxsb3dlZA0KKyAgICAgICAgICAgICAgICBv
+bmx5IHdoZW4gdGhlIElPTU1VIGlzIGRpc2FibGVkLg0KKyAgICAgICAgICAgICAgICBUaGUgYWNj
+ZXB0YWJsZSB2YWx1ZSBpcyBhIHN0cmluZyB0aGF0IHN0YXJ0cyB3aXRoICIweCINCiANCiBXaGF0
+OiAgICAgICAgICAgL3N5cy9rZXJuZWwvZGVidWcvaGFiYW5hbGFicy9obDxuPi9jb21tYW5kX2J1
+ZmZlcnMNCiBEYXRlOiAgICAgICAgICAgSmFuIDIwMTkNCkBAIC0zMywxMCArMzYsMTIgQEAgQ29u
+dGFjdDogICAgICAgIG9kZWQuZ2FiYmF5QGdtYWlsLmNvbQ0KIERlc2NyaXB0aW9uOiAgICBBbGxv
+d3MgdGhlIHJvb3QgdXNlciB0byByZWFkIG9yIHdyaXRlIGRpcmVjdGx5IHRocm91Z2ggdGhlDQog
+ICAgICAgICAgICAgICAgIGRldmljZSdzIFBDSSBiYXIuIFdyaXRpbmcgdG8gdGhpcyBmaWxlIGdl
+bmVyYXRlcyBhIHdyaXRlDQogICAgICAgICAgICAgICAgIHRyYW5zYWN0aW9uIHdoaWxlIHJlYWRp
+bmcgZnJvbSB0aGUgZmlsZSBnZW5lcmF0ZXMgYSByZWFkDQotICAgICAgICAgICAgICAgIHRyYW5z
+Y2F0aW9uLiBUaGlzIGN1c3RvbSBpbnRlcmZhY2UgaXMgbmVlZGVkIChpbnN0ZWFkIG9mIHVzaW5n
+DQorICAgICAgICAgICAgICAgIHRyYW5zYWN0aW9uLiBUaGlzIGN1c3RvbSBpbnRlcmZhY2UgaXMg
+bmVlZGVkIChpbnN0ZWFkIG9mIHVzaW5nDQogICAgICAgICAgICAgICAgIHRoZSBnZW5lcmljIExp
+bnV4IHVzZXItc3BhY2UgUENJIG1hcHBpbmcpIGJlY2F1c2UgdGhlIEREUiBiYXINCiAgICAgICAg
+ICAgICAgICAgaXMgdmVyeSBzbWFsbCBjb21wYXJlZCB0byB0aGUgRERSIG1lbW9yeSBhbmQgb25s
+eSB0aGUgZHJpdmVyIGNhbg0KLSAgICAgICAgICAgICAgICBtb3ZlIHRoZSBiYXIgYmVmb3JlIGFu
+ZCBhZnRlciB0aGUgdHJhbnNhY3Rpb24NCisgICAgICAgICAgICAgICAgbW92ZSB0aGUgYmFyIGJl
+Zm9yZSBhbmQgYWZ0ZXIgdGhlIHRyYW5zYWN0aW9uLg0KKyAgICAgICAgICAgICAgICBJZiB0aGUg
+SU9NTVUgaXMgZGlzYWJsZWQsIGl0IGFsc28gYWxsb3dzIHRoZSByb290IHVzZXIgdG8gcmVhZA0K
+KyAgICAgICAgICAgICAgICBvciB3cml0ZSBmcm9tIHRoZSBob3N0IGEgZGV2aWNlIFZBIG9mIGEg
+aG9zdCBtYXBwZWQgbWVtb3J5DQogDQogV2hhdDogICAgICAgICAgIC9zeXMva2VybmVsL2RlYnVn
+L2hhYmFuYWxhYnMvaGw8bj4vZGV2aWNlDQogRGF0ZTogICAgICAgICAgIEphbiAyMDE5DQpkaWZm
+IC0tZ2l0IGEvZHJpdmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jIGIvZHJpdmVycy9taXNj
+L2hhYmFuYWxhYnMvZGVidWdmcy5jDQppbmRleCA4ODZmOGVhODI0OTkuLjE3OTc0OTE5Yjc2MCAx
+MDA2NDQNCi0tLSBhL2RyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2RlYnVnZnMuYw0KKysrIGIvZHJp
+dmVycy9taXNjL2hhYmFuYWxhYnMvZGVidWdmcy5jDQpAQCAtNTAwLDYgKzUwMCwyNSBAQCBzdGF0
+aWMgc3NpemVfdCBtbXVfd3JpdGUoc3RydWN0IGZpbGUgKmZpbGUsIGNvbnN0IGNoYXIgX191c2Vy
+ICpidWYsDQogCXJldHVybiAtRUlOVkFMOw0KIH0NCiANCitzdGF0aWMgYm9vbCBobF9pc19kZXZp
+Y2VfdmEoc3RydWN0IGhsX2RldmljZSAqaGRldiwgdTY0IGFkZHIpDQorew0KKwlzdHJ1Y3QgYXNp
+Y19maXhlZF9wcm9wZXJ0aWVzICpwcm9wID0gJmhkZXYtPmFzaWNfcHJvcDsNCisNCisJaWYgKCFo
+ZGV2LT5tbXVfZW5hYmxlKQ0KKwkJZ290byBvdXQ7DQorDQorCWlmIChoZGV2LT5kcmFtX3N1cHBv
+cnRzX3ZpcnR1YWxfbWVtb3J5ICYmDQorCQkJYWRkciA+PSBwcm9wLT52YV9zcGFjZV9kcmFtX3N0
+YXJ0X2FkZHJlc3MgJiYNCisJCQlhZGRyIDwgcHJvcC0+dmFfc3BhY2VfZHJhbV9lbmRfYWRkcmVz
+cykNCisJCXJldHVybiB0cnVlOw0KKw0KKwlpZiAoYWRkciA+PSBwcm9wLT52YV9zcGFjZV9ob3N0
+X3N0YXJ0X2FkZHJlc3MgJiYNCisJCQlhZGRyIDwgcHJvcC0+dmFfc3BhY2VfaG9zdF9lbmRfYWRk
+cmVzcykNCisJCXJldHVybiB0cnVlOw0KK291dDoNCisJcmV0dXJuIGZhbHNlOw0KK30NCisNCiBz
+dGF0aWMgaW50IGRldmljZV92YV90b19wYShzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2LCB1NjQgdmly
+dF9hZGRyLA0KIAkJCQl1NjQgKnBoeXNfYWRkcikNCiB7DQpAQCAtNTczLDcgKzU5Miw2IEBAIHN0
+YXRpYyBzc2l6ZV90IGhsX2RhdGFfcmVhZDMyKHN0cnVjdCBmaWxlICpmLCBjaGFyIF9fdXNlciAq
+YnVmLA0KIHsNCiAJc3RydWN0IGhsX2RiZ19kZXZpY2VfZW50cnkgKmVudHJ5ID0gZmlsZV9pbm9k
+ZShmKS0+aV9wcml2YXRlOw0KIAlzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2ID0gZW50cnktPmhkZXY7
+DQotCXN0cnVjdCBhc2ljX2ZpeGVkX3Byb3BlcnRpZXMgKnByb3AgPSAmaGRldi0+YXNpY19wcm9w
+Ow0KIAljaGFyIHRtcF9idWZbMzJdOw0KIAl1NjQgYWRkciA9IGVudHJ5LT5hZGRyOw0KIAl1MzIg
+dmFsOw0KQEAgLTU4MiwxMSArNjAwLDggQEAgc3RhdGljIHNzaXplX3QgaGxfZGF0YV9yZWFkMzIo
+c3RydWN0IGZpbGUgKmYsIGNoYXIgX191c2VyICpidWYsDQogCWlmICgqcHBvcykNCiAJCXJldHVy
+biAwOw0KIA0KLQlpZiAoYWRkciA+PSBwcm9wLT52YV9zcGFjZV9kcmFtX3N0YXJ0X2FkZHJlc3Mg
+JiYNCi0JCQlhZGRyIDwgcHJvcC0+dmFfc3BhY2VfZHJhbV9lbmRfYWRkcmVzcyAmJg0KLQkJCWhk
+ZXYtPm1tdV9lbmFibGUgJiYNCi0JCQloZGV2LT5kcmFtX3N1cHBvcnRzX3ZpcnR1YWxfbWVtb3J5
+KSB7DQotCQlyYyA9IGRldmljZV92YV90b19wYShoZGV2LCBlbnRyeS0+YWRkciwgJmFkZHIpOw0K
+KwlpZiAoaGxfaXNfZGV2aWNlX3ZhKGhkZXYsIGFkZHIpKSB7DQorCQlyYyA9IGRldmljZV92YV90
+b19wYShoZGV2LCBhZGRyLCAmYWRkcik7DQogCQlpZiAocmMpDQogCQkJcmV0dXJuIHJjOw0KIAl9
+DQpAQCAtNjA3LDcgKzYyMiw2IEBAIHN0YXRpYyBzc2l6ZV90IGhsX2RhdGFfd3JpdGUzMihzdHJ1
+Y3QgZmlsZSAqZiwgY29uc3QgY2hhciBfX3VzZXIgKmJ1ZiwNCiB7DQogCXN0cnVjdCBobF9kYmdf
+ZGV2aWNlX2VudHJ5ICplbnRyeSA9IGZpbGVfaW5vZGUoZiktPmlfcHJpdmF0ZTsNCiAJc3RydWN0
+IGhsX2RldmljZSAqaGRldiA9IGVudHJ5LT5oZGV2Ow0KLQlzdHJ1Y3QgYXNpY19maXhlZF9wcm9w
+ZXJ0aWVzICpwcm9wID0gJmhkZXYtPmFzaWNfcHJvcDsNCiAJdTY0IGFkZHIgPSBlbnRyeS0+YWRk
+cjsNCiAJdTMyIHZhbHVlOw0KIAlzc2l6ZV90IHJjOw0KQEAgLTYxNiwxMSArNjMwLDggQEAgc3Rh
+dGljIHNzaXplX3QgaGxfZGF0YV93cml0ZTMyKHN0cnVjdCBmaWxlICpmLCBjb25zdCBjaGFyIF9f
+dXNlciAqYnVmLA0KIAlpZiAocmMpDQogCQlyZXR1cm4gcmM7DQogDQotCWlmIChhZGRyID49IHBy
+b3AtPnZhX3NwYWNlX2RyYW1fc3RhcnRfYWRkcmVzcyAmJg0KLQkJCWFkZHIgPCBwcm9wLT52YV9z
+cGFjZV9kcmFtX2VuZF9hZGRyZXNzICYmDQotCQkJaGRldi0+bW11X2VuYWJsZSAmJg0KLQkJCWhk
+ZXYtPmRyYW1fc3VwcG9ydHNfdmlydHVhbF9tZW1vcnkpIHsNCi0JCXJjID0gZGV2aWNlX3ZhX3Rv
+X3BhKGhkZXYsIGVudHJ5LT5hZGRyLCAmYWRkcik7DQorCWlmIChobF9pc19kZXZpY2VfdmEoaGRl
+diwgYWRkcikpIHsNCisJCXJjID0gZGV2aWNlX3ZhX3RvX3BhKGhkZXYsIGFkZHIsICZhZGRyKTsN
+CiAJCWlmIChyYykNCiAJCQlyZXR1cm4gcmM7DQogCX0NCmRpZmYgLS1naXQgYS9kcml2ZXJzL21p
+c2MvaGFiYW5hbGFicy9nb3lhL2dveWEuYyBiL2RyaXZlcnMvbWlzYy9oYWJhbmFsYWJzL2dveWEv
+Z295YS5jDQppbmRleCBlOGIzYTMxZDIxMWYuLmNlMTI3YTZmNjA2ZiAxMDA2NDQNCi0tLSBhL2Ry
+aXZlcnMvbWlzYy9oYWJhbmFsYWJzL2dveWEvZ295YS5jDQorKysgYi9kcml2ZXJzL21pc2MvaGFi
+YW5hbGFicy9nb3lhL2dveWEuYw0KQEAgLTE0LDYgKzE0LDcgQEANCiAjaW5jbHVkZSA8bGludXgv
+Z2VuYWxsb2MuaD4NCiAjaW5jbHVkZSA8bGludXgvaHdtb24uaD4NCiAjaW5jbHVkZSA8bGludXgv
+aW8tNjQtbm9uYXRvbWljLWxvLWhpLmg+DQorI2luY2x1ZGUgPGxpbnV4L2lvbW11Lmg+DQogDQog
+LyoNCiAgKiBHT1lBIHNlY3VyaXR5IHNjaGVtZToNCkBAIC0zOTQxLDEwICszOTQyLDExIEBAIHN0
+YXRpYyB2b2lkIGdveWFfY2xlYXJfc21fcmVncyhzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2KQ0KIH0N
+CiANCiAvKg0KLSAqIGdveWFfZGVidWdmc19yZWFkMzIgLSByZWFkIGEgMzJiaXQgdmFsdWUgZnJv
+bSBhIGdpdmVuIGRldmljZSBhZGRyZXNzDQorICogZ295YV9kZWJ1Z2ZzX3JlYWQzMiAtIHJlYWQg
+YSAzMmJpdCB2YWx1ZSBmcm9tIGEgZ2l2ZW4gZGV2aWNlIG9yIGEgaG9zdCBtYXBwZWQNCisgKiAg
+ICAgICAgICAgICAgICAgICAgICAgYWRkcmVzcy4NCiAgKg0KICAqIEBoZGV2Oglwb2ludGVyIHRv
+IGhsX2RldmljZSBzdHJ1Y3R1cmUNCi0gKiBAYWRkcjoJYWRkcmVzcyBpbiBkZXZpY2UNCisgKiBA
+YWRkcjoJZGV2aWNlIG9yIGhvc3QgbWFwcGVkIGFkZHJlc3MNCiAgKiBAdmFsOglyZXR1cm5lZCB2
+YWx1ZQ0KICAqDQogICogSW4gY2FzZSBvZiBERFIgYWRkcmVzcyB0aGF0IGlzIG5vdCBtYXBwZWQg
+aW50byB0aGUgZGVmYXVsdCBhcGVydHVyZSB0aGF0DQpAQCAtMzk4NSw2ICszOTg3LDEwIEBAIHN0
+YXRpYyBpbnQgZ295YV9kZWJ1Z2ZzX3JlYWQzMihzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2LCB1NjQg
+YWRkciwgdTMyICp2YWwpDQogCQl9DQogCQlpZiAoZGRyX2Jhcl9hZGRyID09IFU2NF9NQVgpDQog
+CQkJcmMgPSAtRUlPOw0KKw0KKwl9IGVsc2UgaWYgKGFkZHIgPj0gSE9TVF9QSFlTX0JBU0UgJiYg
+IWlvbW11X3ByZXNlbnQoJnBjaV9idXNfdHlwZSkpIHsNCisJCSp2YWwgPSAqKHUzMiAqKSBwaHlz
+X3RvX3ZpcnQoYWRkciAtIEhPU1RfUEhZU19CQVNFKTsNCisNCiAJfSBlbHNlIHsNCiAJCXJjID0g
+LUVGQVVMVDsNCiAJfQ0KQEAgLTM5OTMsMTAgKzM5OTksMTEgQEAgc3RhdGljIGludCBnb3lhX2Rl
+YnVnZnNfcmVhZDMyKHN0cnVjdCBobF9kZXZpY2UgKmhkZXYsIHU2NCBhZGRyLCB1MzIgKnZhbCkN
+CiB9DQogDQogLyoNCi0gKiBnb3lhX2RlYnVnZnNfd3JpdGUzMiAtIHdyaXRlIGEgMzJiaXQgdmFs
+dWUgdG8gYSBnaXZlbiBkZXZpY2UgYWRkcmVzcw0KKyAqIGdveWFfZGVidWdmc193cml0ZTMyIC0g
+d3JpdGUgYSAzMmJpdCB2YWx1ZSB0byBhIGdpdmVuIGRldmljZSBvciBhIGhvc3QgbWFwcGVkDQor
+ICogICAgICAgICAgICAgICAgICAgICAgICBhZGRyZXNzLg0KICAqDQogICogQGhkZXY6CXBvaW50
+ZXIgdG8gaGxfZGV2aWNlIHN0cnVjdHVyZQ0KLSAqIEBhZGRyOglhZGRyZXNzIGluIGRldmljZQ0K
+KyAqIEBhZGRyOglkZXZpY2Ugb3IgaG9zdCBtYXBwZWQgYWRkcmVzcw0KICAqIEB2YWw6CXJldHVy
+bmVkIHZhbHVlDQogICoNCiAgKiBJbiBjYXNlIG9mIEREUiBhZGRyZXNzIHRoYXQgaXMgbm90IG1h
+cHBlZCBpbnRvIHRoZSBkZWZhdWx0IGFwZXJ0dXJlIHRoYXQNCkBAIC00MDM3LDYgKzQwNDQsMTAg
+QEAgc3RhdGljIGludCBnb3lhX2RlYnVnZnNfd3JpdGUzMihzdHJ1Y3QgaGxfZGV2aWNlICpoZGV2
+LCB1NjQgYWRkciwgdTMyIHZhbCkNCiAJCX0NCiAJCWlmIChkZHJfYmFyX2FkZHIgPT0gVTY0X01B
+WCkNCiAJCQlyYyA9IC1FSU87DQorDQorCX0gZWxzZSBpZiAoYWRkciA+PSBIT1NUX1BIWVNfQkFT
+RSAmJiAhaW9tbXVfcHJlc2VudCgmcGNpX2J1c190eXBlKSkgew0KKwkJKih1MzIgKikgcGh5c190
+b192aXJ0KGFkZHIgLSBIT1NUX1BIWVNfQkFTRSkgPSB2YWw7DQorDQogCX0gZWxzZSB7DQogCQly
+YyA9IC1FRkFVTFQ7DQogCX0NCi0tIA0KMi4xNy4xDQoNCg==
