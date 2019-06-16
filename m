@@ -8,68 +8,71 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE132C31E51
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 03:27:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A88C31E51
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 03:35:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87D7920652
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 03:27:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0C87216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 03:35:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="etPgZwUY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJq9+4xU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727108AbfFPD1L (ORCPT
+        id S1727132AbfFPDfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 23:27:11 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39209 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726870AbfFPD1L (ORCPT
+        Sat, 15 Jun 2019 23:35:34 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41422 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726883AbfFPDfe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 23:27:11 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 196so3838844pgc.6
-        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 20:27:11 -0700 (PDT)
+        Sat, 15 Jun 2019 23:35:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id m30so3756213pff.8
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 20:35:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=468/RLQKpIqiti2//KMB81NPRyvxXX0VssP8ZgLdNtw=;
-        b=etPgZwUYVMabvNDiHfuYDthpUixrKax2+vMU4U4qKFIZgDXih3zHnvdcziRLeDFBwE
-         3r02ZYAJ6PPrd/9EyK519Q4MaJM0LyY7ELMOhfmOpvHXiDDEZG5zMIpFeZUp91y1c1dZ
-         KNdLhUSb0Be7TIcKPX05hh9pOUQWPrq12TN94NvoBEZIOMtF+R8sO6GrHJLzW64b5yWj
-         YUljYcSIlSmYHDxt6TWxpl0O52wg2FBQJJ/TR34tO7HFL2YaNS+QBdPn/UINxqsAIYCb
-         bFDkHnLd9QhcPS4og/ivqLTsmP+BGVwrln/7p90gQWRdlVttNjoNjEeRCp9T233Uwgfv
-         GugA==
+        bh=P+dZfWhhczsv5TTRUbrSlNE3547rfcjOFelTNKUKczI=;
+        b=SJq9+4xUablqDSXRTAq0ercysLl4BrTt8Wr2v4V+ZitlX+vGwokkg1PBXq28Ib7C3F
+         7jpzuvr2lhhWoruFFoSOKhrw08dLdumrTA0bEkKkIqRHT/OMx7bPHi2X40UryG+12fVM
+         1O4CSlDx/MNDO0QZVaKHz0h17gc/NwMgvJF43I8bu3GWv3kxpcGUjM4f64Uv3uIrdnew
+         5O9iao2Yi7etmG3zEYgrdLkyY2hlvodEQ1BRgUyxf4bR86kGSgYuWv0g1XlSX9wUTsVW
+         5Afxt2Js165Qgx6FPJS2CW1Tb8k30p6bdklfqZ9iEnrYfcOU7ATHqkFcDg/XiG1HONnz
+         zDdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=468/RLQKpIqiti2//KMB81NPRyvxXX0VssP8ZgLdNtw=;
-        b=MYGTcC58R4pb5shwygPGgvp76tmtNpB3IChgpHHBE4JFdRlYQ7FTaKpU1iJX/dw/zo
-         /FoVw0J/q7aT4yqsNE1mqpkhLWKoV7qbcLSh9Sq6rv4EyPK84Amkr40owPvjn7m2rvGy
-         H0Bwb+YloAU3jzJM5iQsC8S1eyFHEWkxuhQp+8rP+8ta1CIc/IaXxZiKUtRvxJsDMqFn
-         U+65x75CMNoFqbkJdbtAMbS1Jwdr/Z64qF9DqCRe5inQRRM5neCnggTL7LFSEJoxJbGE
-         QaDWfRumNy3lu9ax6SwAaBvURjiDu9Gh5VFoj/UDLhQnt8RXCsy5zE5Oy+h0JWLcebMc
-         q46A==
-X-Gm-Message-State: APjAAAWTumpyf3+bmHsCXVvRViznFna7djAKorD6YEZWXgryUO8MOFqr
-        l67pyDMDHa50ugo1/RqRWdE=
-X-Google-Smtp-Source: APXvYqxLn4cvOpVNTUHm+i4dJj/N+ModuzP1/ExShNgEha1mvVOgElUNUZ0r/rFUVe5Ixd5nwKllJA==
-X-Received: by 2002:a17:90b:8d2:: with SMTP id ds18mr19685197pjb.132.1560655630682;
-        Sat, 15 Jun 2019 20:27:10 -0700 (PDT)
+        bh=P+dZfWhhczsv5TTRUbrSlNE3547rfcjOFelTNKUKczI=;
+        b=ND63oJB5Rlmb3RpQkTN78mAUvx+KlkDzRUq/txxY5kYevT71P2n3wonp0+Ss73WXmp
+         l/94yXIV+ZvEfc9QLa21gaAQ1HvTD5Ys2ZbCCl09CQzosgOGyJiF39A3P3lfixjxVPwp
+         16A8nWH7TWmEnr7xz0CI+7JWbQn2DE9KIyFKNLM3GiBOCpi0JhwhnILejMbtBpoVinqu
+         4YKnA77HgNguH6SiPoRgW4uT3lsdEGimQ4GUPYjDFUfi+qSiJDrsYJNv/DLcxw35fWFV
+         UMI9FewvZkUKAj2+oFTJJCaaSwLRSixeyXn2UaXgGQ4y+k5Y4+Xb2iVdCN+LyNDcdaht
+         L+mw==
+X-Gm-Message-State: APjAAAWP0jGXhrKsy3G5TN2QtvUlfDhPvk683byRghX6/XPrgcsEdSp3
+        pUA9o3BsU5lTPt2zgOpKKVo=
+X-Google-Smtp-Source: APXvYqy4PejcM3KwVGxdZDCvOpg1et1o372+G1zs9MV0Ol4tYlbZHMG7CMmACiAtZO+Q/XdE/S7bww==
+X-Received: by 2002:a17:90a:480d:: with SMTP id a13mr18548872pjh.40.1560656133623;
+        Sat, 15 Jun 2019 20:35:33 -0700 (PDT)
 Received: from hari-Inspiron-1545 ([183.83.89.153])
-        by smtp.gmail.com with ESMTPSA id 125sm4615801pfg.99.2019.06.15.20.27.07
+        by smtp.gmail.com with ESMTPSA id g6sm7318314pgh.64.2019.06.15.20.35.30
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 20:27:10 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 08:57:05 +0530
+        Sat, 15 Jun 2019 20:35:32 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 09:05:27 +0530
 From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Kimberly Brown <kimbrownkd@gmail.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Anirudh Rayabharam <anirudh.rayabharam@gmail.com>,
         Nishka Dasgupta <nishka.dasgupta@yahoo.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Jeeeun Evans <jeeeunevans@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
         Hardik Singh Rathore <hardiksingh.k@gmail.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        Payal Kshirsagar <payal.s.kshirsagar.98@gmail.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
         devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging/rtl8723bs/core: Remove redundant call to memset
-Message-ID: <20190616032705.GA13790@hari-Inspiron-1545>
+Subject: [PATCH] staging/rtl8723bs/core/rtw_ap: Remove redundant call to
+ memset
+Message-ID: <20190616033527.GA14062@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
@@ -79,33 +82,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rtw_zmalloc is doing memset . So there is no need to call memset again.
+rtw_zmalloc is internally doing memset . So there is no need to call memset
+again.
 
 Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_mlme.c | 2 --
+ drivers/staging/rtl8723bs/core/rtw_ap.c | 2 --
  1 file changed, 2 deletions(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_mlme.c b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-index d26d8cf..a8dab1a 100644
---- a/drivers/staging/rtl8723bs/core/rtw_mlme.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_mlme.c
-@@ -2229,7 +2229,6 @@ sint rtw_set_auth(struct adapter *adapter, struct security_priv *psecuritypriv)
+diff --git a/drivers/staging/rtl8723bs/core/rtw_ap.c b/drivers/staging/rtl8723bs/core/rtw_ap.c
+index 87b201a..df055b8 100644
+--- a/drivers/staging/rtl8723bs/core/rtw_ap.c
++++ b/drivers/staging/rtl8723bs/core/rtw_ap.c
+@@ -1502,8 +1502,6 @@ static int rtw_ap_set_key(
  		goto exit;
  	}
  
--	memset(psetauthparm, 0, sizeof(struct setauth_parm));
- 	psetauthparm->mode = (unsigned char)psecuritypriv->dot11AuthAlgrthm;
- 
- 	pcmd->cmdcode = _SetAuth_CMD_;
-@@ -2262,7 +2261,6 @@ sint rtw_set_key(struct adapter *adapter, struct security_priv *psecuritypriv, s
- 		res = _FAIL;
- 		goto exit;
- 	}
 -	memset(psetkeyparm, 0, sizeof(struct setkey_parm));
- 
- 	if (psecuritypriv->dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) {
- 		psetkeyparm->algorithm = (unsigned char)psecuritypriv->dot118021XGrpPrivacy;
+-
+ 	psetkeyparm->keyid = (u8)keyid;
+ 	if (is_wep_enc(alg))
+ 		padapter->securitypriv.key_mask |= BIT(psetkeyparm->keyid);
 -- 
 2.7.4
 
