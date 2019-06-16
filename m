@@ -2,250 +2,140 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6672BC31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 05:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5028FC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 05:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A80C21473
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 05:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20C9121473
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 05:33:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYu/+NVw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725903AbfFPFbg (ORCPT
+        id S1726008AbfFPFc4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 01:31:36 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:32818 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfFPFbg (ORCPT
+        Sun, 16 Jun 2019 01:32:56 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:45170 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfFPFc4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 01:31:36 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i11so10393456edq.0;
-        Sat, 15 Jun 2019 22:31:34 -0700 (PDT)
+        Sun, 16 Jun 2019 01:32:56 -0400
+Received: by mail-pg1-f195.google.com with SMTP id s21so3900408pga.12
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 22:32:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=mzA6YGK114GVMFQzrNpNT//3gdsVz7F+WL+F5wNK5UE=;
+        b=LYu/+NVwSLjv4s670OLSv8HTPOpogxzRVgy5uyO+17vtePiBW2qxQMesQnBnyviEEZ
+         Zwsm/ia7xgwFCATgBvwxJmSzG6mBIt7xNSmpsbonMzv7MKtfOJc7R/a7ozuQYmURwwJB
+         7dnG59e9eU5HbsSxqvuBy8Qn1T3c79ltpJe6DDIuBSQ+NnikKYaTC/6JMfOf9M9Jlm7+
+         pU4eHv6W4jit1V21AZY3PF2V30N6F6rQI7eo0O7fso/BeqDFx4NkOwaLg8k8OLCp9Fbj
+         rajP7MTDZWhY5KFup2ymhhvG1I2GKXMlXnQfJOlIFpeOMCtXIjuH82FeWK8Kao4I0uSY
+         F9wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nVwk/ziTyLZE6Zw80YoRGbaeC4ieFbAxfmOC6bCL8pk=;
-        b=RuBPsgZHQ5VTC16pjlUVTU0dwK+VoWf2GoQLMcdRjZ5oAAwHAUGP8VhcJyYGhjLWwt
-         LXoLYd2w09KnSPC6WMuvflDZGA9Ae9luSd5xdRW0rTQ3rV9xEz7FHF1hV/x4z4P4Ox/t
-         RB6UiP7pU6aQcFpKW84kxxWXX+RpnW+pPleGlricYOxB9xeNAwK8gCJjIx8LhYZmPIst
-         e7Sgwbw2JnjkWWmBY6f7rD9j9pV52cIcdk3qzfprkr3Etl2jGlqvSDSIlXhwuwPMdE2n
-         fOroLn6CJyXOGaguFtiorQQnC80C8qVR7iPfdyGfK2TFLiFiNnzRZXKhMa3UFGAsMibf
-         2I7g==
-X-Gm-Message-State: APjAAAVBwt3DKIKUbQipX/FDZiBN/zsjcUJhF7Qp5Dbu5knH/UJxoNar
-        B3PlvE6056qA+e2NO0T7fFUN4CJY5KQ=
-X-Google-Smtp-Source: APXvYqxOOF51A6akSq1bcjWY3DXBOSxKbxBc1FTjufmgG+SL0T0YuZ4qlB1rVu+iFoQB5SfCiHvw8Q==
-X-Received: by 2002:a17:906:6a87:: with SMTP id p7mr70251290ejr.277.1560663093093;
-        Sat, 15 Jun 2019 22:31:33 -0700 (PDT)
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
-        by smtp.gmail.com with ESMTPSA id ay25sm1498094ejb.26.2019.06.15.22.31.32
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sat, 15 Jun 2019 22:31:32 -0700 (PDT)
-Received: by mail-wr1-f46.google.com with SMTP id k11so6447900wrl.1;
-        Sat, 15 Jun 2019 22:31:32 -0700 (PDT)
-X-Received: by 2002:adf:f946:: with SMTP id q6mr18780972wrr.109.1560663091964;
- Sat, 15 Jun 2019 22:31:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=mzA6YGK114GVMFQzrNpNT//3gdsVz7F+WL+F5wNK5UE=;
+        b=iMLnwKD3Bmtl/Npxu9dksj6yI/rLjWAd9bX4x+HTwGgHqPPGaJ0EHeW21KxDpBOWw0
+         eBgnmLbFWK+OmhKzj7mnBWTveKx7dEzQ/w1964TL8Ax6v4TbhGMd5EoQTyvuKVMFMggS
+         RMpqXEGHf6AnaWPVhqOd4Hwn+Dtz7xbHc8I+YbtOta9XYOrIlUcGOZGa8xvzrqHo8DqC
+         Nh/3iJP362ywSovuhYAkmARJApTwDmHdl36lcip4XG7p9wsPeOmqoNd6w7SoSI0W2onR
+         jjb64GJ0DV0A1llPxB0Y4bNgoDOCZ2bkjWuODISFrfMgiIWOiyByj7w90Z4xL7mZlQ2n
+         Nehw==
+X-Gm-Message-State: APjAAAX6efJoyCS/XccSAmjrCeAi3IGEXZqfcGh9zEb6xKj3mjC5xu1w
+        k28CPyDLOz81CRiuVf3zA0o=
+X-Google-Smtp-Source: APXvYqy/qNZg1GQjR2zk1frJxNxSAejEDL/BNJ2/rkpno+AU9YJmzwyLbBAwXfhS0UxAcTt6WyQBHQ==
+X-Received: by 2002:a63:dc56:: with SMTP id f22mr28014541pgj.305.1560663175751;
+        Sat, 15 Jun 2019 22:32:55 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id c9sm8305651pfn.3.2019.06.15.22.32.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Jun 2019 22:32:55 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 11:02:50 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Michael Straube <straube.linux@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Shobhit Kukreti <shobhitkukreti@gmail.com>,
+        Emanuel Bennici <benniciemanuel78@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: os_dep: ioctl_linux:  Make use
+ rtw_zmalloc
+Message-ID: <20190616053250.GA16116@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <20190614164324.9427-1-jagan@amarulasolutions.com> <20190614164324.9427-6-jagan@amarulasolutions.com>
-In-Reply-To: <20190614164324.9427-6-jagan@amarulasolutions.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Sun, 16 Jun 2019 13:31:19 +0800
-X-Gmail-Original-Message-ID: <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
-Message-ID: <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
- gates in probe
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> TCON TOP have clock gates for TV0, TV1, dsi and right
-> now these are register during bind call.
->
-> Of which, dsi clock gate would required during DPHY probe
-> but same can miss to get since tcon top is not bound at
-> that time.
->
-> To solve, this circular dependency move the clock gate
-> registration from bind to probe so-that DPHY can get the
-> dsi gate clock on time.
->
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> ---
->  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
->  1 file changed, 49 insertions(+), 45 deletions(-)
->
-> diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> index 465e9b0cdfee..a8978b3fe851 100644
-> --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
->  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
->                                void *data)
->  {
-> -       struct platform_device *pdev = to_platform_device(dev);
-> +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-> +       int ret;
-> +
-> +       ret = reset_control_deassert(tcon_top->rst);
-> +       if (ret) {
-> +               dev_err(dev, "Could not deassert ctrl reset control\n");
-> +               return ret;
-> +       }
-> +
-> +       ret = clk_prepare_enable(tcon_top->bus);
-> +       if (ret) {
-> +               dev_err(dev, "Could not enable bus clock\n");
-> +               goto err_assert_reset;
-> +       }
+rtw_malloc with memset can be replace with rtw_zmalloc.
 
-You have to de-assert the reset control and enable the clock before the
-clocks it provides are registered. Otherwise a consumer may come in and
-ask for the provided clock to be enabled, but since the TCON TOP's own
-reset and clock are still disabled, you can't actually access the registers
-that controls the provided clock.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-> +
-> +       return 0;
-> +
-> +err_assert_reset:
-> +       reset_control_assert(tcon_top->rst);
-> +
-> +       return ret;
-> +}
-> +
-> +static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
-> +                                 void *data)
-> +{
-> +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-> +       struct clk_hw_onecell_data *clk_data = tcon_top->clk_data;
-> +       int i;
-> +
-> +       of_clk_del_provider(dev->of_node);
-> +       for (i = 0; i < CLK_NUM; i++)
-> +               if (clk_data->hws[i])
-> +                       clk_hw_unregister_gate(clk_data->hws[i]);
+diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+index fc3885d..c59e366 100644
+--- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
++++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
+@@ -478,14 +478,12 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 		if (wep_key_len > 0) {
+ 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+ 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
+-			pwep = rtw_malloc(wep_total_len);
++			pwep = rtw_zmalloc(wep_total_len);
+ 			if (pwep == NULL) {
+ 				RT_TRACE(_module_rtl871x_ioctl_os_c, _drv_err_, (" wpa_set_encryption: pwep allocate fail !!!\n"));
+ 				goto exit;
+ 			}
+ 
+-			memset(pwep, 0, wep_total_len);
+-
+ 			pwep->KeyLength = wep_key_len;
+ 			pwep->Length = wep_total_len;
+ 
+@@ -2144,12 +2142,10 @@ static int rtw_wx_set_enc_ext(struct net_device *dev,
+ 	int ret = 0;
+ 
+ 	param_len = sizeof(struct ieee_param) + pext->key_len;
+-	param = rtw_malloc(param_len);
++	param = rtw_zmalloc(param_len);
+ 	if (param == NULL)
+ 		return -1;
+ 
+-	memset(param, 0, param_len);
+-
+ 	param->cmd = IEEE_CMD_SET_ENCRYPTION;
+ 	memset(param->sta_addr, 0xff, ETH_ALEN);
+ 
+@@ -3521,14 +3517,12 @@ static int rtw_set_encryption(struct net_device *dev, struct ieee_param *param,
+ 		if (wep_key_len > 0) {
+ 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
+ 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
+-			pwep = rtw_malloc(wep_total_len);
++			pwep = rtw_zmalloc(wep_total_len);
+ 			if (pwep == NULL) {
+ 				DBG_871X(" r871x_set_encryption: pwep allocate fail !!!\n");
+ 				goto exit;
+ 			}
+ 
+-			memset(pwep, 0, wep_total_len);
+-
+ 			pwep->KeyLength = wep_key_len;
+ 			pwep->Length = wep_total_len;
+ 
+-- 
+2.7.4
 
-And this should be in the remove function.
-
-So instead, just move _everything_ to the probe and remove functions,
-and provide empty bind/unbind functions so the component system still
-works.
-
-ChenYu
-
-> +
-> +       clk_disable_unprepare(tcon_top->bus);
-> +       reset_control_assert(tcon_top->rst);
-> +}
-> +
-> +static const struct component_ops sun8i_tcon_top_ops = {
-> +       .bind   = sun8i_tcon_top_bind,
-> +       .unbind = sun8i_tcon_top_unbind,
-> +};
-> +
-> +static int sun8i_tcon_top_probe(struct platform_device *pdev)
-> +{
-> +       struct device *dev = &pdev->dev;
->         struct clk_hw_onecell_data *clk_data;
->         struct sun8i_tcon_top *tcon_top;
->         const struct sun8i_tcon_top_quirks *quirks;
-> @@ -132,7 +178,7 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
->         void __iomem *regs;
->         int ret, i;
->
-> -       quirks = of_device_get_match_data(&pdev->dev);
-> +       quirks = of_device_get_match_data(dev);
->
->         tcon_top = devm_kzalloc(dev, sizeof(*tcon_top), GFP_KERNEL);
->         if (!tcon_top)
-> @@ -164,18 +210,6 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
->         if (IS_ERR(regs))
->                 return PTR_ERR(regs);
->
-> -       ret = reset_control_deassert(tcon_top->rst);
-> -       if (ret) {
-> -               dev_err(dev, "Could not deassert ctrl reset control\n");
-> -               return ret;
-> -       }
-> -
-> -       ret = clk_prepare_enable(tcon_top->bus);
-> -       if (ret) {
-> -               dev_err(dev, "Could not enable bus clock\n");
-> -               goto err_assert_reset;
-> -       }
-> -
->         /*
->          * At least on H6, some registers have some bits set by default
->          * which may cause issues. Clear them here.
-> @@ -226,45 +260,15 @@ static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
->
->         dev_set_drvdata(dev, tcon_top);
->
-> -       return 0;
-> +       return component_add(dev, &sun8i_tcon_top_ops);
->
->  err_unregister_gates:
->         for (i = 0; i < CLK_NUM; i++)
->                 if (!IS_ERR_OR_NULL(clk_data->hws[i]))
->                         clk_hw_unregister_gate(clk_data->hws[i]);
-> -       clk_disable_unprepare(tcon_top->bus);
-> -err_assert_reset:
-> -       reset_control_assert(tcon_top->rst);
-> -
->         return ret;
->  }
->
-> -static void sun8i_tcon_top_unbind(struct device *dev, struct device *master,
-> -                                 void *data)
-> -{
-> -       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-> -       struct clk_hw_onecell_data *clk_data = tcon_top->clk_data;
-> -       int i;
-> -
-> -       of_clk_del_provider(dev->of_node);
-> -       for (i = 0; i < CLK_NUM; i++)
-> -               if (clk_data->hws[i])
-> -                       clk_hw_unregister_gate(clk_data->hws[i]);
-> -
-> -       clk_disable_unprepare(tcon_top->bus);
-> -       reset_control_assert(tcon_top->rst);
-> -}
-> -
-> -static const struct component_ops sun8i_tcon_top_ops = {
-> -       .bind   = sun8i_tcon_top_bind,
-> -       .unbind = sun8i_tcon_top_unbind,
-> -};
-> -
-> -static int sun8i_tcon_top_probe(struct platform_device *pdev)
-> -{
-> -       return component_add(&pdev->dev, &sun8i_tcon_top_ops);
-> -}
-> -
->  static int sun8i_tcon_top_remove(struct platform_device *pdev)
->  {
->         component_del(&pdev->dev, &sun8i_tcon_top_ops);
-> --
-> 2.18.0.321.gffc6fa0e3
->
-> --
-> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
-> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/20190614164324.9427-6-jagan%40amarulasolutions.com.
-> For more options, visit https://groups.google.com/d/optout.
