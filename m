@@ -2,247 +2,373 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1ECC31E54
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CCE1C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:57:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 076512087F
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BE3220665
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 16:57:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727334AbfFPQvL (ORCPT
+        id S1727300AbfFPQ46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 12:51:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56806 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726087AbfFPQvJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 12:51:09 -0400
-Received: from mail-wr1-f71.google.com ([209.85.221.71])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <christian.brauner@canonical.com>)
-        id 1hcYMR-0003oG-DI
-        for linux-kernel@vger.kernel.org; Sun, 16 Jun 2019 16:50:31 +0000
-Received: by mail-wr1-f71.google.com with SMTP id d15so1410780wrx.5
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 09:50:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4weMMDB1e4xggyN6QVuSK0L2mbvAhMQgtTR+U8gP2VI=;
-        b=kXt712CoaHwxxe8ATPZaeeIBy1fZMVnJ7GnsavMPU5elsfmBErqvGGoDp4nKcy1v9L
-         yymQWNVCuEhbW+E91IRpqlIDOe1WxmvAPHiXWew1KbiehWfq1E/09biyIJOI4ky8zo5H
-         Ykkbw4onztB7u68XXLiaHwwUUmQRReS657pVklmODdX9t2uUD1PM2ONCMjces7ANvnXz
-         TIPjA49q9GSZELleCCcREWACe8jml/UQpdM3xL8vLe3giBLsTz8lUHaTed1T0VTaaCoc
-         LHlY1O5rIfs6IsOzOKcs7EWGUb5wkMQX/o0HAGj1Y3qQrONwHd3VlK8J1yO0fvwavOpn
-         npjw==
-X-Gm-Message-State: APjAAAWhNKleZxkWVea7spB8lbDZxO2a1KTuSXllWNHQVWwSVhsIBFkR
-        qqbNL2LWkgAvrSJDzbEeZTMK0doRQux/WurY8rEmDFZZEV6vnCFJlPQ0aAe1HeOhIt9kJ8knN34
-        qwlEtCNOjleoWwwSTAlJBK680XS+DPpdO35xii+BdQQ==
-X-Received: by 2002:adf:e6c6:: with SMTP id y6mr10550968wrm.191.1560703830527;
-        Sun, 16 Jun 2019 09:50:30 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqyAfKzA5GN6jq58JEOkyuPMZK3t2hID9fMyfxeAV6ksOEgtu2ETPFmf46Var84JITRXrsVC4A==
-X-Received: by 2002:adf:e6c6:: with SMTP id y6mr10550947wrm.191.1560703830118;
-        Sun, 16 Jun 2019 09:50:30 -0700 (PDT)
-Received: from gmail.com ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id g19sm13495899wmg.10.2019.06.16.09.50.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 09:50:29 -0700 (PDT)
-From:   Christian Brauner <christian.brauner@canonical.com>
-X-Google-Original-From: Christian Brauner <christian.brauner@ubuntu.com>
-Date:   Sun, 16 Jun 2019 18:50:28 +0200
-To:     "Eric W. Biederman" <ebiederm@xmission.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, avagin@virtuozzo.com,
-        ktkhai@virtuozzo.com, "Serge E. Hallyn" <serge@hallyn.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH net-next 2/2 v5] netns: restrict uevents
-Message-ID: <20190616165027.prdbshnipwphqtis@gmail.com>
-References: <20180429104412.22445-1-christian.brauner@ubuntu.com>
- <20180429104412.22445-3-christian.brauner@ubuntu.com>
- <CAKdAkRTtffEQfZLnSW9CwzX_oYzHdOE816OvciGadqV7RHaV1Q@mail.gmail.com>
- <875zp5rbpf.fsf@xmission.com>
+        Sun, 16 Jun 2019 12:56:58 -0400
+Received: from mga11.intel.com ([192.55.52.93]:3759 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726453AbfFPQ46 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 12:56:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jun 2019 09:56:57 -0700
+X-ExtLoop1: 1
+Received: from crojewsk-mobl1.ger.corp.intel.com (HELO [10.252.23.51]) ([10.252.23.51])
+  by orsmga005.jf.intel.com with ESMTP; 16 Jun 2019 09:56:53 -0700
+Subject: Re: [PATCH v7 3/4] ASoC: rt5677: clear interrupts by polarity flip
+To:     Fletcher Woodruff <fletcherw@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ben Zhang <benzh@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Ross Zwisler <zwisler@chromium.org>,
+        alsa-devel@alsa-project.org
+References: <20190614194854.208436-1-fletcherw@chromium.org>
+ <20190614194854.208436-4-fletcherw@chromium.org>
+From:   Cezary Rojewski <cezary.rojewski@intel.com>
+Message-ID: <4e560e12-4c20-8d5d-b3f9-587a55da279d@intel.com>
+Date:   Sun, 16 Jun 2019 18:56:52 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <875zp5rbpf.fsf@xmission.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190614194854.208436-4-fletcherw@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 06:50:20AM -0500, Eric W. Biederman wrote:
-> Dmitry Torokhov <dmitry.torokhov@gmail.com> writes:
+
+On 2019-06-14 21:48, Fletcher Woodruff wrote:
+> From: Ben Zhang <benzh@chromium.org>
 > 
-> > Hi Christian,
-> >
-> > On Sun, Apr 29, 2018 at 3:45 AM Christian Brauner
-> > <christian.brauner@ubuntu.com> wrote:
-> >>
-> >> commit 07e98962fa77 ("kobject: Send hotplug events in all network namespaces")
-> >>abhishekbh@google.com
-> >> enabled sending hotplug events into all network namespaces back in 2010.
-> >> Over time the set of uevents that get sent into all network namespaces has
-> >> shrunk. We have now reached the point where hotplug events for all devices
-> >> that carry a namespace tag are filtered according to that namespace.
-> >> Specifically, they are filtered whenever the namespace tag of the kobject
-> >> does not match the namespace tag of the netlink socket.
-> >> Currently, only network devices carry namespace tags (i.e. network
-> >> namespace tags). Hence, uevents for network devices only show up in the
-> >> network namespace such devices are created in or moved to.
-> >>
-> >> However, any uevent for a kobject that does not have a namespace tag
-> >> associated with it will not be filtered and we will broadcast it into all
-> >> network namespaces. This behavior stopped making sense when user namespaces
-> >> were introduced.
-> >>
-> >> This patch simplifies and fixes couple of things:
-> >> - Split codepath for sending uevents by kobject namespace tags:
-> >>   1. Untagged kobjects - uevent_net_broadcast_untagged():
-> >>      Untagged kobjects will be broadcast into all uevent sockets recorded
-> >>      in uevent_sock_list, i.e. into all network namespacs owned by the
-> >>      intial user namespace.
-> >>   2. Tagged kobjects - uevent_net_broadcast_tagged():
-> >>      Tagged kobjects will only be broadcast into the network namespace they
-> >>      were tagged with.
-> >>   Handling of tagged kobjects in 2. does not cause any semantic changes.
-> >>   This is just splitting out the filtering logic that was handled by
-> >>   kobj_bcast_filter() before.
-> >>   Handling of untagged kobjects in 1. will cause a semantic change. The
-> >>   reasons why this is needed and ok have been discussed in [1]. Here is a
-> >>   short summary:
-> >>   - Userspace ignores uevents from network namespaces that are not owned by
-> >>     the intial user namespace:
-> >>     Uevents are filtered by userspace in a user namespace because the
-> >>     received uid != 0. Instead the uid associated with the event will be
-> >>     65534 == "nobody" because the global root uid is not mapped.
-> >>     This means we can safely and without introducing regressions modify the
-> >>     kernel to not send uevents into all network namespaces whose owning
-> >>     user namespace is not the initial user namespace because we know that
-> >>     userspace will ignore the message because of the uid anyway.
-> >>     I have a) verified that is is true for every udev implementation out
-> >>     there b) that this behavior has been present in all udev
-> >>     implementations from the very beginning.
-> >
-> > Unfortunately udev is not the only consumer of uevents, for example on
-> > Android there is healthd that also consumes uevents, and this
-> > particular change broke Android running in a container on Chrome OS.
-> > Can this be reverted? Or, if we want to keep this, how can containers
-> > that use separate user namespace still listen to uevents?
+> The rt5677 jack detection function has a requirement that the polarity
+> of an interrupt be flipped after it fires in order to clear the
+> interrupt.
 > 
-> The code has been in the main tree for over a year so at a minimum
-> reverting this has the real chance of causing a regression for
-> folks like lxc.
+> This patch implements an irq_chip with irq_domain directly instead of
+> using regmap-irq, so that interrupt source line polarities can be
+> flipped in the irq handler.
 > 
-> I don't think Android running in a container on Chrome OS was even
-> available when this change was merged.  So I don't think this falls
-> under the ordinary no regression rules.
+> The reason that this patch does not add this feature within regmap-irq
+> is that future patches will add hotword detection support to this irq
+> handler. Those patches will require adding additional logic that would
+> not make sense to have in regmap-irq.
 > 
-> I may be wrong but I think this is a case of developing new code on an
-> old kernel and developing a dependence on a bug that had already been
-> fixed in newer kernels.  I know Christian did his best to reach out to
-> everyone when this change came through, so only getting a bug report
-> over a year after the code was merged is concerning.
+> Signed-off-by: Ben Zhang <benzh@chromium.org>
+> Signed-off-by: Fletcher Woodruff <fletcherw@chromium.org>
+> ---
+>   sound/soc/codecs/rt5677.c | 170 ++++++++++++++++++++++++++++++--------
+>   sound/soc/codecs/rt5677.h |   7 +-
+>   2 files changed, 143 insertions(+), 34 deletions(-)
 > 
-> That said uevents should be completely useless in a user namespace
-> except as letting you know something happened.  Is that what healthd
-> is using them for?
+> diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
+> index 87a92ba0d040b7..87466ee222ee59 100644
+> --- a/sound/soc/codecs/rt5677.c
+> +++ b/sound/soc/codecs/rt5677.c
+> @@ -23,6 +23,10 @@
+>   #include <linux/firmware.h>
+>   #include <linux/of_device.h>
+>   #include <linux/property.h>
+> +#include <linux/irq.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/workqueue.h>
+>   #include <sound/core.h>
+>   #include <sound/pcm.h>
+>   #include <sound/pcm_params.h>
+> @@ -4620,7 +4624,6 @@ static void rt5677_gpio_config(struct rt5677_priv *rt5677, unsigned offset,
+>   static int rt5677_to_irq(struct gpio_chip *chip, unsigned offset)
+>   {
+>   	struct rt5677_priv *rt5677 = gpiochip_get_data(chip);
+> -	struct regmap_irq_chip_data *data = rt5677->irq_data;
+>   	int irq;
+>   
+>   	if ((rt5677->pdata.jd1_gpio == 1 && offset == RT5677_GPIO1) ||
+> @@ -4646,7 +4649,7 @@ static int rt5677_to_irq(struct gpio_chip *chip, unsigned offset)
+>   		return -ENXIO;
+>   	}
+>   
+> -	return regmap_irq_get_virq(data, irq);
+> +	return irq_create_mapping(rt5677->domain, irq);
+>   }
+>   
+>   static const struct gpio_chip rt5677_template_chip = {
+> @@ -5042,30 +5045,130 @@ static void rt5677_read_device_properties(struct rt5677_priv *rt5677,
+>   		rt5677->pdata.jd3_gpio = val;
+>   }
+>   
+> -static struct regmap_irq rt5677_irqs[] = {
+> +struct rt5677_irq_desc {
+> +	unsigned int enable_mask;
+> +	unsigned int status_mask;
+> +	unsigned int polarity_mask;
+> +};
+> +
+> +static const struct rt5677_irq_desc rt5677_irq_descs[] = {
+>   	[RT5677_IRQ_JD1] = {
+> -		.reg_offset = 0,
+> -		.mask = RT5677_EN_IRQ_GPIO_JD1,
+> +		.enable_mask = RT5677_EN_IRQ_GPIO_JD1,
+> +		.status_mask = RT5677_STA_GPIO_JD1,
+> +		.polarity_mask = RT5677_INV_GPIO_JD1,
+>   	},
+>   	[RT5677_IRQ_JD2] = {
+> -		.reg_offset = 0,
+> -		.mask = RT5677_EN_IRQ_GPIO_JD2,
+> +		.enable_mask = RT5677_EN_IRQ_GPIO_JD2,
+> +		.status_mask = RT5677_STA_GPIO_JD2,
+> +		.polarity_mask = RT5677_INV_GPIO_JD2,
+>   	},
+>   	[RT5677_IRQ_JD3] = {
+> -		.reg_offset = 0,
+> -		.mask = RT5677_EN_IRQ_GPIO_JD3,
+> +		.enable_mask = RT5677_EN_IRQ_GPIO_JD3,
+> +		.status_mask = RT5677_STA_GPIO_JD3,
+> +		.polarity_mask = RT5677_INV_GPIO_JD3,
+>   	},
+>   };
+>   
+> -static struct regmap_irq_chip rt5677_irq_chip = {
+> -	.name = RT5677_DRV_NAME,
+> -	.irqs = rt5677_irqs,
+> -	.num_irqs = ARRAY_SIZE(rt5677_irqs),
+> +static irqreturn_t rt5677_irq(int unused, void *data)
+> +{
+> +	struct rt5677_priv *rt5677 = data;
+> +	int ret = 0, i, reg_irq, virq;
+> +	bool irq_fired = false;
+> +
+> +	mutex_lock(&rt5677->irq_lock);
+> +	/* Read interrupt status */
+> +	ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
+> +	if (ret) {
+> +		pr_err("rt5677: failed reading IRQ status: %d\n", ret);
+
+The entire rt5677 makes use of dev_XXX with the exception of.. this very 
+function. Consider reusing "component" field which is already part of 
+struct rt5677_priv and removing pr_XXX.
+
+> +		goto exit;
+> +	}
+> +
+> +	for (i = 0; i < RT5677_IRQ_NUM; i++) {
+> +		if (reg_irq & rt5677_irq_descs[i].status_mask) {
+> +			irq_fired = true;
+> +			virq = irq_find_mapping(rt5677->domain, i);
+> +			if (virq)
+> +				handle_nested_irq(virq);
+> +
+> +			/* Clear the interrupt by flipping the polarity of the
+> +			 * interrupt source line that fired
+> +			 */
+> +			reg_irq ^= rt5677_irq_descs[i].polarity_mask;
+> +		}
+> +	}
+> +
+> +	if (!irq_fired)
+> +		goto exit;
+> +
+> +	ret = regmap_write(rt5677->regmap, RT5677_IRQ_CTRL1, reg_irq);
+> +	if (ret) {
+> +		pr_err("rt5677: failed updating IRQ status: %d\n", ret);
+
+Same here.
+
+> +		goto exit;
+> +	}
+> +exit:
+> +	mutex_unlock(&rt5677->irq_lock);
+> +	if (irq_fired)
+> +		return IRQ_HANDLED;
+> +	else
+> +		return IRQ_NONE;
+> +}
+>   
+> -	.num_regs = 1,
+> -	.status_base = RT5677_IRQ_CTRL1,
+> -	.mask_base = RT5677_IRQ_CTRL1,
+> -	.mask_invert = 1,
+> +static void rt5677_irq_bus_lock(struct irq_data *data)
+> +{
+> +	struct rt5677_priv *rt5677 = irq_data_get_irq_chip_data(data);
+> +
+> +	mutex_lock(&rt5677->irq_lock);
+> +}
+> +
+> +static void rt5677_irq_bus_sync_unlock(struct irq_data *data)
+> +{
+> +	struct rt5677_priv *rt5677 = irq_data_get_irq_chip_data(data);
+> +
+> +	// Set the enable/disable bits for the jack detect IRQs.
+> +	regmap_update_bits(rt5677->regmap, RT5677_IRQ_CTRL1,
+> +			RT5677_EN_IRQ_GPIO_JD1 | RT5677_EN_IRQ_GPIO_JD2 |
+> +			RT5677_EN_IRQ_GPIO_JD3, rt5677->irq_en);
+> +	mutex_unlock(&rt5677->irq_lock);
+> +}
+> +
+> +static void rt5677_irq_enable(struct irq_data *data)
+> +{
+> +	struct rt5677_priv *rt5677 = irq_data_get_irq_chip_data(data);
+> +
+> +	rt5677->irq_en |= rt5677_irq_descs[data->hwirq].enable_mask;
+> +}
+> +
+> +static void rt5677_irq_disable(struct irq_data *data)
+> +{
+> +	struct rt5677_priv *rt5677 = irq_data_get_irq_chip_data(data);
+> +
+> +	rt5677->irq_en &= ~rt5677_irq_descs[data->hwirq].enable_mask;
+> +}
+> +
+> +static struct irq_chip rt5677_irq_chip = {
+> +	.name			= "rt5677_irq_chip",
+> +	.irq_bus_lock		= rt5677_irq_bus_lock,
+> +	.irq_bus_sync_unlock	= rt5677_irq_bus_sync_unlock,
+> +	.irq_disable		= rt5677_irq_disable,
+> +	.irq_enable		= rt5677_irq_enable,
+> +};
+> +
+> +static int rt5677_irq_map(struct irq_domain *h, unsigned int virq,
+> +			  irq_hw_number_t hw)
+> +{
+> +	struct rt5677_priv *rt5677 = h->host_data;
+> +
+> +	irq_set_chip_data(virq, rt5677);
+> +	irq_set_chip(virq, &rt5677_irq_chip);
+> +	irq_set_nested_thread(virq, 1);
+> +	irq_set_noprobe(virq);
+> +	return 0;
+> +}
+> +
+> +
+> +static const struct irq_domain_ops rt5677_domain_ops = {
+> +	.map	= rt5677_irq_map,
+> +	.xlate	= irq_domain_xlate_twocell,
+>   };
+>   
+>   static int rt5677_init_irq(struct i2c_client *i2c)
+> @@ -5084,6 +5187,8 @@ static int rt5677_init_irq(struct i2c_client *i2c)
+>   		return -EINVAL;
+>   	}
+>   
+> +	mutex_init(&rt5677->irq_lock);
+> +
+>   	/*
+>   	 * Select RC as the debounce clock so that GPIO works even when
+>   	 * MCLK is gated which happens when there is no audio stream
+> @@ -5092,7 +5197,6 @@ static int rt5677_init_irq(struct i2c_client *i2c)
+>   	regmap_update_bits(rt5677->regmap, RT5677_DIG_MISC,
+>   			RT5677_IRQ_DEBOUNCE_SEL_MASK,
+>   			RT5677_IRQ_DEBOUNCE_SEL_RC);
+> -
+>   	/* Enable auto power on RC when GPIO states are changed */
+>   	regmap_update_bits(rt5677->regmap, RT5677_GEN_CTRL1, 0xff, 0xff);
+>   
+> @@ -5115,26 +5219,25 @@ static int rt5677_init_irq(struct i2c_client *i2c)
+>   	regmap_update_bits(rt5677->regmap, RT5677_GPIO_CTRL1,
+>   			RT5677_GPIO1_PIN_MASK, RT5677_GPIO1_PIN_IRQ);
+>   
+> -	ret = regmap_add_irq_chip(rt5677->regmap, i2c->irq,
+> -		IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING | IRQF_ONESHOT, 0,
+> -		&rt5677_irq_chip, &rt5677->irq_data);
+> +	/* Ready to listen for interrupts */
+> +	rt5677->domain = irq_domain_add_linear(i2c->dev.of_node,
+> +			RT5677_IRQ_NUM, &rt5677_domain_ops, rt5677);
+> +	if (!rt5677->domain) {
+> +		dev_err(&i2c->dev, "Failed to create IRQ domain\n");
+> +		return -ENOMEM;
+> +	}
+>   
+> -	if (ret != 0) {
+> -		dev_err(&i2c->dev, "Failed to register IRQ chip: %d\n", ret);
+> +	ret = devm_request_threaded_irq(&i2c->dev, i2c->irq, NULL, rt5677_irq,
+> +			IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+> +			"rt5677", rt5677);
+> +	if (ret) {
+> +		dev_err(&i2c->dev, "Failed to request IRQ: %d\n", ret);
+>   		return ret;
+
+You may want to simplify this, similarly to how's it done in your 
+rt5677_i2c_probe - leave message alone and return "ret" explicitly at 
+the end.
+
+>   	}
+>   
+>   	return 0;
+>   }
+>   
+> -static void rt5677_free_irq(struct i2c_client *i2c)
+> -{
+> -	struct rt5677_priv *rt5677 = i2c_get_clientdata(i2c);
+> -
+> -	if (rt5677->irq_data)
+> -		regmap_del_irq_chip(i2c->irq, rt5677->irq_data);
+> -}
+> -
+>   static int rt5677_i2c_probe(struct i2c_client *i2c)
+>   {
+>   	struct rt5677_priv *rt5677;
+> @@ -5259,7 +5362,9 @@ static int rt5677_i2c_probe(struct i2c_client *i2c)
+>   			RT5677_MICBIAS1_CTRL_VDD_3_3V);
+>   
+>   	rt5677_init_gpio(i2c);
+> -	rt5677_init_irq(i2c);
+> +	ret = rt5677_init_irq(i2c);
+> +	if (ret)
+> +		dev_err(&i2c->dev, "Failed to initialize irq: %d\n", ret);
+>   
+>   	return devm_snd_soc_register_component(&i2c->dev,
+>   				      &soc_component_dev_rt5677,
+> @@ -5268,7 +5373,6 @@ static int rt5677_i2c_probe(struct i2c_client *i2c)
+>   
+>   static int rt5677_i2c_remove(struct i2c_client *i2c)
+>   {
+> -	rt5677_free_irq(i2c);
+>   	rt5677_free_gpio(i2c);
+>   
+>   	return 0;
+> diff --git a/sound/soc/codecs/rt5677.h b/sound/soc/codecs/rt5677.h
+> index c26edd387e340b..d0ac26e562eb5f 100644
+> --- a/sound/soc/codecs/rt5677.h
+> +++ b/sound/soc/codecs/rt5677.h
+> @@ -1749,6 +1749,7 @@ enum {
+>   	RT5677_IRQ_JD1,
+>   	RT5677_IRQ_JD2,
+>   	RT5677_IRQ_JD3,
+> +	RT5677_IRQ_NUM,
+>   };
+>   
+>   enum rt5677_type {
+> @@ -1847,9 +1848,13 @@ struct rt5677_priv {
+>   	struct gpio_chip gpio_chip;
+>   #endif
+>   	bool dsp_vad_en;
+> -	struct regmap_irq_chip_data *irq_data;
+>   	bool is_dsp_mode;
+>   	bool is_vref_slow;
+> +
+> +	/* Interrupt handling */
+> +	struct irq_domain *domain;
+> +	struct mutex irq_lock;
+> +	unsigned int irq_en;
+>   };
+>   
+>   int rt5677_sel_asrc_clk_src(struct snd_soc_component *component,
 > 
-> 
-> One solution would be to tweak the container userspace on ChromeOS to
-> listen to the uevents outside the container and to relay them into the
-> Android container.
-
-Thanks for jumping in Eric! Welcome back. :)
-
-Hey Dmitry,
-
-Crostini on ChromeOS is making heavy use of this patchset and of LXD. So
-reverting this almost 1.5 years after the fact will regress all of
-Google's ChromeOS Crostini users, and all LXD/LXC users.
-
-LXD and Crostini by using LXD (through Concierge/Tremplin etc. [2]) are
-using this whole series e.g. when hotplugging usb devices into the
-container.
-
-When a usb hotplug happens, LXD will receive the relevant uevent and
-will forward it to the container. Any process listening on a uevent
-socket inside the container will now be able to see it.
-
-Now, to talk briefly about solutions:
-From what I gather from talking to the ChromeOS guys and from your
-ChromeOS bugtracker and recent patchsets to ARC you are moving your
-Android workloads into Crostini? So like Eric said this seems like a new
-feature you're implementing.
-
-If you need to be able to listen to uevents inside of a user namespace
-and plan on using Crostini going forward then you can have Crostini
-forward battery uevents to the container. The logic for doing this can
-be found in the LXD codebase (cf. [3]). It's pretty simple. If you want
-to go this route I'm happy to guide you. :)
-Note, both options are a version of what Eric suggested in his last
-paragraph!
-
-What astonishes me is that healthd couldn't have possibly received
-battery uevents for a long time even if Android already was run in user
-namespaces prior to the new feature you're working on and the healthd I
-see in master is not even using uevents anymore (cf. [8]) but rather is
-using sysfs it seems. :)
-Before that healthd was using (cf. [7])
-
-uevent_kernel_multicast_recv()
-|
--> uevent_kernel_multicast_uid_recv
-
-the latter containing the check
-
-if (cred->uid != 0) {
-    /* ignoring netlink message from non-root user */
-    goto out;
-}
-
-Before my patchset here the uevents sent out came with cred->uid == INVALID_UID
-and so healthd never received those events until very recently.
-And I can tell you exactly when it started receiving those events as I
-reported the removal of this check as a bug against Android before
-this patchset was ever merged and before a version of Android without
-this check was released (cf. [6]). :)
-While we're at it, removing this check is strange. Why would you have
-any core tool of yours listen to uevents that do not come from the root
-user? Especially when it comes from INVALID_UID. That's what I tried to
-tell you in [6].
-
-This patchset also fixes a real information leak. Netlink is a socket
-and having those sockets respect network namespaces like all others
-makes sense. Especially to allow containers to do their own thing and
-to avoid information leakage.
-
-Fyi, when I wrote this patch I informed the ChromeOS guys about it
-multiple times as early as March/April 2018. At least two times the PM
-in person (last time we talked about this was during FOSDEM because
-ChromeOS was already reling on this). I also mentioned this feature on
-the official ChromeOS bugtracker here [1] in April 2018 since ChromeOS
-could use it.
-So that this comes up as a problem almost 1.5 years later is a bit
-surprising. :)
-Additionally, I gave a presentation about this feature at LPC 2018 with
-Google folks from Android around as well (cf. [4]). :)
-
-Thanks!
-Christian
-
-[1]: https://bugs.chromium.org/p/chromium/issues/detail?id=831850#c2
-[2]: https://bugs.chromium.org/p/chromium/issues/detail?id=956288
-[3]: https://github.com/lxc/lxd 
-[4]: https://www.youtube.com/watch?v=yI_1cuhoDgA&t=327s
-[5]: https://android.googlesource.com/platform/system/core.git/+/android-4.2.2_r1/libcutils/uevent.c#77
-[6]: https://issuetracker.google.com/issues/77764945
-[7]: https://android.googlesource.com/platform/system/core/+/android-4.4_r1/healthd/healthd.cpp#135
-[8]: https://android.googlesource.com/platform/system/core/+/master/healthd/BatteryMonitor.cpp
