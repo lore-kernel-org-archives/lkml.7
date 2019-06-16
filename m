@@ -2,139 +2,80 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 203CBC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:49:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F01C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:50:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF62E208E3
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:49:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE7520866
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:50:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ntz43rBU"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JTjezIzO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfFPRtv (ORCPT
+        id S1727406AbfFPRuB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 13:49:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42602 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFPRtv (ORCPT
+        Sun, 16 Jun 2019 13:50:01 -0400
+Received: from conuserg-10.nifty.com ([210.131.2.77]:52511 "EHLO
+        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfFPRuB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 13:49:51 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so7434299wrl.9;
-        Sun, 16 Jun 2019 10:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/hRwW8vMhzdua2ppKrVssHlA+91ZHXY3leNMzjUdRY4=;
-        b=ntz43rBUdHCHjbQbMNk77s+2nvtyM808P08aRWuPumkZQKQBX6uX3qR7c6QxUm+kfY
-         S4EgNUI3AZpmQZsUzFnWB4RT0LaH8Laq6DncsDkMX9fm+3bFkj+ZzdhB2lYU/aNpJi6Q
-         tkDsXCrXGbev++hsjRGw0l5l9sCVD2tQCDq6NylLb8bCbRMF4u4xmiPyQZ8bkcKhL9yx
-         3Q+ki0r9WsqqZe2dk52DqmGmh72uW5896XBCbFJC3NP6YDXchAPXDYyCvEW8DRsNJQfT
-         CRjw/s8FNnFFQYUp42lQ3yLiWRPURM1JKRP4ffG2oZPH/ccsRYAY3kGUmK+4Hnsficio
-         YaPA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/hRwW8vMhzdua2ppKrVssHlA+91ZHXY3leNMzjUdRY4=;
-        b=tqovYPrMy7TFiV6bhAJAXX+OxqNwuTpUFj9WLyj2v1PL25wpMbU2qKB6BtHU5ggFTk
-         j/v+FUEBMMnWbszfagtWryaGzYTfZ+p1H3Oz1vQQaC3/8NIK1KAt3oly73AWYPAzY7o/
-         0iQzQK5xJxN3YD7ywKthAd/2bhMOy8D63tl/XUqesptKpTw2Ji60tC7amP3RqCEyviOA
-         bLmZZqTD4Y0WwiXCa3sclPZpxNRht+r8FBphBzwfkxEn6upqAkTM8AMhwmV8o9ZlKT5E
-         ZA686ZJGV3Bt838a7xvOncnSqYhm58lWLtfOFCw1LoBoUcCGPAphqd2Asaq7CW8jWcXl
-         YnxA==
-X-Gm-Message-State: APjAAAXbKPtLzWQ9gdcmHlI1RgPcpv3seheTnL9L4Z4xiz3jHjAq/IJq
-        W0Whx6LIwlD2z7nTclhQDKXtj1X8nYw=
-X-Google-Smtp-Source: APXvYqw8+eaMfU3JJptUOf9opfQ4Ex/advZBsHRVGuf0+Z2384xm0miDcOtIHBye56a10TFgRW3FAw==
-X-Received: by 2002:adf:ec4c:: with SMTP id w12mr52857090wrn.160.1560707389051;
-        Sun, 16 Jun 2019 10:49:49 -0700 (PDT)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id x8sm10023143wmc.5.2019.06.16.10.49.47
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Jun 2019 10:49:48 -0700 (PDT)
-Subject: Re: [PATCHv4 15/28] x86/vdso: Add offsets page in vvar
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org, Andrei Vagin <avagin@openvz.org>,
-        Adrian Reber <adrian@lisas.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Cyrill Gorcunov <gorcunov@openvz.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        containers@lists.linux-foundation.org, criu@openvz.org,
-        linux-api@vger.kernel.org, x86@kernel.org,
-        Andrei Vagin <avagin@gmail.com>
-References: <20190612192628.23797-1-dima@arista.com>
- <20190612192628.23797-16-dima@arista.com>
- <alpine.DEB.2.21.1906141553070.1722@nanos.tec.linutronix.de>
-From:   Dmitry Safonov <0x7f454c46@gmail.com>
-Message-ID: <cc38a049-aa49-4290-d721-e0adc5d25491@gmail.com>
-Date:   Sun, 16 Jun 2019 18:49:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906141553070.1722@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Sun, 16 Jun 2019 13:50:01 -0400
+Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
+        by conuserg-10.nifty.com with ESMTP id x5GHmCb3032735;
+        Mon, 17 Jun 2019 02:48:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x5GHmCb3032735
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560707293;
+        bh=Te693hygqCk6T69KjghvaUj9Rx8zaxGUTGHMI/OphOA=;
+        h=From:To:Cc:Subject:Date:From;
+        b=JTjezIzOW7STPIX7uzZ/YRLpPKesR4u7WdeD2VTiUifcJfYIklwCHHte5/8XmYhUw
+         b/A+3Fh4o8in3SEUdbrr6cy2EheRPJZeoArTjyU+B7iTUPt6egppuZQlS2BNic1HJ7
+         tDVg9OGLnL5GAF3627aTM06Nh4LETvKqfU2aMivm+pxJlVitS3yNL2PZH/NrEAzH92
+         4BB5yRA25f0ERq92WeQ+iGnJRLNPnDMGAxf+B4HWGrU1EYGRQj59EiKzqMGaDrnA00
+         OXRWMXevCHvrx/pZ+ZQ032xkvar2tYJ9M8cze6vwgl6O2p1eSVNTOh1Y3EAN3W2tHH
+         o13UcG2csZAaQ==
+X-Nifty-SrcIP: [126.125.154.139]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Stefan Agner <stefan@agner.ch>, Joel Stanley <joel@jms.id.au>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH 1/2] lib/raid6: remove duplicated CFLAGS_REMOVE_altivec8.o
+Date:   Mon, 17 Jun 2019 02:48:04 +0900
+Message-Id: <20190616174805.3069-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/14/19 2:58 PM, Thomas Gleixner wrote:
-> On Wed, 12 Jun 2019, Dmitry Safonov wrote:
->>  
->> +#ifdef CONFIG_TIME_NS
->> +notrace static __always_inline void clk_to_ns(clockid_t clk, struct timespec *ts)
->> +{
->> +	struct timens_offsets *timens = (struct timens_offsets *) &timens_page;
->> +	struct timespec64 *offset64;
->> +
->> +	switch (clk) {
->> +	case CLOCK_MONOTONIC:
->> +	case CLOCK_MONOTONIC_COARSE:
->> +	case CLOCK_MONOTONIC_RAW:
->> +		offset64 = &timens->monotonic;
->> +		break;
->> +	case CLOCK_BOOTTIME:
->> +		offset64 = &timens->boottime;
->> +	default:
->> +		return;
->> +	}
->> +
->> +	ts->tv_nsec += offset64->tv_nsec;
->> +	ts->tv_sec += offset64->tv_sec;
->> +	if (ts->tv_nsec >= NSEC_PER_SEC) {
->> +		ts->tv_nsec -= NSEC_PER_SEC;
->> +		ts->tv_sec++;
->> +	}
->> +	if (ts->tv_nsec < 0) {
->> +		ts->tv_nsec += NSEC_PER_SEC;
->> +		ts->tv_sec--;
->> +	}
-> 
-> I had to think twice why adding the offset (which can be negative) can
-> never result in negative time being returned. A comment explaining this
-> would be appreciated.
-> 
-> As I'm planning to merge Vincezos VDSO consolidation into 5.3, can you
-> please start to work on top of his series, which should be available as
-> final v7 next week hopefully.
+No intended change in behavior.
 
-Yes, will rebase on the top of his series.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-Thanks much,
-          Dmitry
+ lib/raid6/Makefile | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
+index e723eacf7868..74004037033f 100644
+--- a/lib/raid6/Makefile
++++ b/lib/raid6/Makefile
+@@ -26,7 +26,6 @@ CFLAGS_REMOVE_altivec1.o  += -msoft-float
+ CFLAGS_REMOVE_altivec2.o  += -msoft-float
+ CFLAGS_REMOVE_altivec4.o  += -msoft-float
+ CFLAGS_REMOVE_altivec8.o  += -msoft-float
+-CFLAGS_REMOVE_altivec8.o  += -msoft-float
+ CFLAGS_REMOVE_vpermxor1.o += -msoft-float
+ CFLAGS_REMOVE_vpermxor2.o += -msoft-float
+ CFLAGS_REMOVE_vpermxor4.o += -msoft-float
+-- 
+2.17.1
+
