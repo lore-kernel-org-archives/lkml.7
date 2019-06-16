@@ -3,186 +3,111 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE39C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 22:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B964DC31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 22:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC302084B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 22:16:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A60E2084B
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 22:18:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560723412;
-	bh=oLx5pniqxG/jELRH2iyGmtPEYVhozT1h6R4yt+A9/zc=;
+	s=default; t=1560723501;
+	bh=O1ycWhUilyVeZV1l4Vcdv51ZM55dvixJqHvFqBWW/UQ=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FGn9HSUmHRyMz8I2c7q+qbCNTxGIMsWZEcNi+PSNtZ9Viarrv5w/b42c25xa3uho8
-	 sy5Heo5joXm+59wyqS9S+WQ7O71GxCWN8AnTIMboiDZ9eDh8v8J7JmzB1/6QBPx/G0
-	 MKRN9LRen/COeZ9kPNDX1g1irswXJC+O9o6+hBHs=
+	b=M0gBMJRF19btwhTEmkcf2GZcfi7v6jpNREOyeoL25Vxo7xEdJz9etQNTyi8/X/BwX
+	 CS9kIE1ViK/GvT1ti0hoa8bK3E+I6n2YQeob/YTNtY9OxhLlUF9IfjHkZAvLxSDkZ1
+	 FgP1GcG/cfhVaY8ddrvBSrP4fX64EmEZ0rVSNvZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727484AbfFPWQs (ORCPT
+        id S1727490AbfFPWSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 18:16:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41454 "EHLO mail.kernel.org"
+        Sun, 16 Jun 2019 18:18:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727447AbfFPWQr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 18:16:47 -0400
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+        id S1727410AbfFPWSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 18:18:14 -0400
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D49CA2087F
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 22:16:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 82CC22133D
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 22:18:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560723406;
-        bh=oLx5pniqxG/jELRH2iyGmtPEYVhozT1h6R4yt+A9/zc=;
+        s=default; t=1560723493;
+        bh=O1ycWhUilyVeZV1l4Vcdv51ZM55dvixJqHvFqBWW/UQ=;
         h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=T+y0s0KCYKjJALEZNyPoXM5/rZcyVy81hMNXsvjs1JoQof8fTSG2t6O2B7gnYh6KE
-         Ut3jaYPJDUcKaTX1rbCTyjBJQzV6v1GsdVNZFCMI6jwt1PJAwgesmrRBSXBw8W+XGl
-         JQp8pKioMJXgvb/P4BcsGhh4AEUfQXu3hbDQGi98=
-Received: by mail-wm1-f46.google.com with SMTP id f17so4591734wme.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 15:16:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAUmx96IqHxpP+/2lHjYWLS2dPspG9UQ4aRzRMmOUJ90fjk7PAFZ
-        KQaOiDHLlaVBuEigj+3GyTvtRyKDWh4jeBqNulyOzA==
-X-Google-Smtp-Source: APXvYqyLNC6Yg329xWtpRh6aEChlgRxAAqzoyltmGU+X5FI8weBu+KOZvAoY8R4ojMAgdUlfKbzzFc86TSOLGIg1qZA=
-X-Received: by 2002:a1c:9a53:: with SMTP id c80mr15207022wme.173.1560723404414;
- Sun, 16 Jun 2019 15:16:44 -0700 (PDT)
+        b=uPTQWy7A2IaMi2VBKyydX6tBMS0ETwgHQLORn92D5Ob77cz9VH+Q0CCsmmQuAjDST
+         Wlrjhv1YwjNqUQj+5SQpca8XI46FMMLkmV/MP22m2HnBN6RXFL9a06Y8VMioCARb0h
+         eq9dGVqnSe0ejcfAgRvWxQLa0KPBAe617qplclt0=
+Received: by mail-wm1-f43.google.com with SMTP id s15so7109769wmj.3
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 15:18:13 -0700 (PDT)
+X-Gm-Message-State: APjAAAX28VLyn9qW5l4HaIUVm6xW6QjV3cD9S9qlwN1+GVvUKL+4/ECU
+        K15JxEZm3OHou9wviy1Vanl963jScW0I3EcoooNUDw==
+X-Google-Smtp-Source: APXvYqzLtLrlyAc4h7N2S7ze6VO2usm4Gpw8733KZc+aAYCc4lsGwCtnws1ou95toQgBrBXzSaYCX/qQON0xFktvLrY=
+X-Received: by 2002:a1c:6242:: with SMTP id w63mr17250060wmb.161.1560723492077;
+ Sun, 16 Jun 2019 15:18:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <cover.1560131039.git.cedric.xing@intel.com> <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov> <20190611220243.GB3416@linux.intel.com>
- <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov> <20190614004600.GF18385@linux.intel.com>
- <960B34DE67B9E140824F1DCDEC400C0F65504665@ORSMSX116.amr.corp.intel.com>
-In-Reply-To: <960B34DE67B9E140824F1DCDEC400C0F65504665@ORSMSX116.amr.corp.intel.com>
+References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+ <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net> <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
 From:   Andy Lutomirski <luto@kernel.org>
-Date:   Sun, 16 Jun 2019 15:16:32 -0700
-X-Gmail-Original-Message-ID: <CALCETrUaNCmO9Ne38ifnkfKTaZttTYCXPpLuHfR_NaGUwBNdSQ@mail.gmail.com>
-Message-ID: <CALCETrUaNCmO9Ne38ifnkfKTaZttTYCXPpLuHfR_NaGUwBNdSQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in SELinux
-To:     "Xing, Cedric" <cedric.xing@intel.com>
-Cc:     "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        "linux-security-module@vger.kernel.org" 
-        <linux-security-module@vger.kernel.org>,
-        "selinux@vger.kernel.org" <selinux@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-sgx@vger.kernel.org" <linux-sgx@vger.kernel.org>,
-        "jarkko.sakkinen@linux.intel.com" <jarkko.sakkinen@linux.intel.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "jmorris@namei.org" <jmorris@namei.org>,
-        "serge@hallyn.com" <serge@hallyn.com>,
-        "paul@paul-moore.com" <paul@paul-moore.com>,
-        "eparis@parisplace.org" <eparis@parisplace.org>,
-        "jethro@fortanix.com" <jethro@fortanix.com>,
-        "Hansen, Dave" <dave.hansen@intel.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
-        "nhorman@redhat.com" <nhorman@redhat.com>,
-        "pmccallum@redhat.com" <pmccallum@redhat.com>,
-        "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        "andriy.shevchenko@linux.intel.com" 
-        <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, "bp@alien8.de" <bp@alien8.de>,
-        "josh@joshtriplett.org" <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        "rientjes@google.com" <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        "Tricca, Philip B" <philip.b.tricca@intel.com>
+Date:   Sun, 16 Jun 2019 15:18:00 -0700
+X-Gmail-Original-Message-ID: <CALCETrWZ4qUW+A+YqE36ZJHqJAzxwDgq77bL99BEKQx-=JYAtA@mail.gmail.com>
+Message-ID: <CALCETrWZ4qUW+A+YqE36ZJHqJAzxwDgq77bL99BEKQx-=JYAtA@mail.gmail.com>
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM secrets
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        Marius Hillenbrand <mhillenb@amazon.de>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:16 AM Xing, Cedric <cedric.xing@intel.com> wrote:
+On Fri, Jun 14, 2019 at 7:21 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> > From: Christopherson, Sean J
-> > Sent: Thursday, June 13, 2019 5:46 PM
-> >
-> > On Thu, Jun 13, 2019 at 01:02:17PM -0400, Stephen Smalley wrote:
-> > > On 6/11/19 6:02 PM, Sean Christopherson wrote:
-> > > >On Tue, Jun 11, 2019 at 09:40:25AM -0400, Stephen Smalley wrote:
-> > > >>I haven't looked at this code closely, but it feels like a lot of
-> > > >>SGX-specific logic embedded into SELinux that will have to be
-> > > >>repeated or reused for every security module.  Does SGX not track
-> > this state itself?
-> > > >
-> > > >SGX does track equivalent state.
-> > > >
-> > > >There are three proposals on the table (I think):
-> > > >
-> > > >   1. Require userspace to explicitly specificy (maximal) enclave
-> > page
-> > > >      permissions at build time.  The enclave page permissions are
-> > provided
-> > > >      to, and checked by, LSMs at enclave build time.
-> > > >
-> > > >      Pros: Low-complexity kernel implementation, straightforward
-> > auditing
-> > > >      Cons: Sullies the SGX UAPI to some extent, may increase
-> > complexity of
-> > > >            SGX2 enclave loaders.
-> > > >
-> > > >   2. Pre-check LSM permissions and dynamically track mappings to
-> > enclave
-> > > >      pages, e.g. add an SGX mprotect() hook to restrict W->X and WX
-> > > >      based on the pre-checked permissions.
-> > > >
-> > > >      Pros: Does not impact SGX UAPI, medium kernel complexity
-> > > >      Cons: Auditing is complex/weird, requires taking enclave-
-> > specific
-> > > >            lock during mprotect() to query/update tracking.
-> > > >
-> > > >   3. Implement LSM hooks in SGX to allow LSMs to track enclave
-> > regions
-> > > >      from cradle to grave, but otherwise defer everything to LSMs.
-> > > >
-> > > >      Pros: Does not impact SGX UAPI, maximum flexibility, precise
-> > auditing
-> > > >      Cons: Most complex and "heaviest" kernel implementation of the
-> > three,
-> > > >            pushes more SGX details into LSMs.
-> > > >
-> > > >My RFC series[1] implements #1.  My understanding is that Andy
-> > > >(Lutomirski) prefers #2.  Cedric's RFC series implements #3.
-> > > >
-> > > >Perhaps the easiest way to make forward progress is to rule out the
-> > > >options we absolutely *don't* want by focusing on the potentially
-> > > >blocking issue with each option:
-> > > >
-> > > >   #1 - SGX UAPI funkiness
-> > > >
-> > > >   #2 - Auditing complexity, potential enclave lock contention
-> > > >
-> > > >   #3 - Pushing SGX details into LSMs and complexity of kernel
-> > > > implementation
-> > > >
-> > > >
-> > > >[1]
-> > > >https://lkml.kernel.org/r/20190606021145.12604-1-sean.j.christopherso
-> > > >n@intel.com
+> On Wed, 12 Jun 2019, Andy Lutomirski wrote:
+> > > On Jun 12, 2019, at 12:55 PM, Dave Hansen <dave.hansen@intel.com> wro=
+te:
 > > >
-> > > Given the complexity tradeoff, what is the clear motivating example
-> > > for why
-> > > #1 isn't the obvious choice? That the enclave loader has no way of
-> > > knowing a priori whether the enclave will require W->X or WX?  But
-> > > aren't we better off requiring enclaves to be explicitly marked as
-> > > needing such so that we can make a more informed decision about
-> > > whether to load them in the first place?
+> > >> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
+> > >> This patch series proposes to introduce a region for what we call
+> > >> process-local memory into the kernel's virtual address space.
+> > >
+> > > It might be fun to cc some x86 folks on this series.  They might have
+> > > some relevant opinions. ;)
+> > >
+> > > A few high-level questions:
+> > >
+> > > Why go to all this trouble to hide guest state like registers if all =
+the
+> > > guest data itself is still mapped?
+> > >
+> > > Where's the context-switching code?  Did I just miss it?
+> > >
+> > > We've discussed having per-cpu page tables where a given PGD is only =
+in
+> > > use from one CPU at a time.  I *think* this scheme still works in suc=
+h a
+> > > case, it just adds one more PGD entry that would have to context-swit=
+ched.
 > >
-> > Andy and/or Cedric, can you please weigh in with a concrete (and
-> > practical) use case that will break if we go with #1?  The auditing
-> > issues for #2/#3 are complex to say the least...
+> > Fair warning: Linus is on record as absolutely hating this idea. He mig=
+ht
+> > change his mind, but it=E2=80=99s an uphill battle.
 >
-> How does enclave loader provide per-page ALLOW_* flags? And a related question is why they are necessary for enclaves but unnecessary for regular executables or shared objects.
->
-> What's the story for SGX2 if mmap()'ing non-existing pages is not allowed?
+> Yes I know, but as a benefit we could get rid of all the GSBASE horrors i=
+n
+> the entry code as we could just put the percpu space into the local PGD.
 >
 
-I think it just works.  Either you can't mmap() the page until you
-have explicitly EAUG-ed it, or you add a new ioctl() that is
-effectively "EAUG lazily".  The latter would declare that address and
-request that it get allocated and EAUGed when faulted, but it wouldn't
-actually do the EAUG.
-
---Andy
+I have personally suggested this to Linus on a couple of occasions,
+and he seemed quite skeptical.
