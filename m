@@ -2,219 +2,741 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71AEAC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA6C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F8182183F
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75A8320820
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 15:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560699594;
+	bh=dVR88/sNWQeeme03MbSWzBQUPU5rrEbkEISN2IUrdK4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=Z4LetK60QcQJBfoZSMTQHSLN1PdpN7bRznTCR0RBUVSBMS+D3fA8A1IJtRxnNEG4E
+	 plFkA/Dvd3ju8+cZiqnNCgr6wWRgyQQ95jTme5r91/vJYCec2K0ZydpirAymQwJRcN
+	 Z9YugHkrTbH8gzt2wl85BrIBle3PGTO+DUt8TWIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727325AbfFPPez convert rfc822-to-8bit (ORCPT
+        id S1727166AbfFPPjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 11:34:55 -0400
-Received: from mga04.intel.com ([192.55.52.120]:47524 "EHLO mga04.intel.com"
+        Sun, 16 Jun 2019 11:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47136 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727156AbfFPPez (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 11:34:55 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jun 2019 08:34:54 -0700
-X-ExtLoop1: 1
-Received: from fmsmsx108.amr.corp.intel.com ([10.18.124.206])
-  by orsmga007.jf.intel.com with ESMTP; 16 Jun 2019 08:34:54 -0700
-Received: from FMSMSX110.amr.corp.intel.com (10.18.116.10) by
- FMSMSX108.amr.corp.intel.com (10.18.124.206) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 16 Jun 2019 08:34:54 -0700
-Received: from crsmsx152.amr.corp.intel.com (172.18.7.35) by
- fmsmsx110.amr.corp.intel.com (10.18.116.10) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Sun, 16 Jun 2019 08:34:53 -0700
-Received: from crsmsx101.amr.corp.intel.com ([169.254.1.187]) by
- CRSMSX152.amr.corp.intel.com ([169.254.5.113]) with mapi id 14.03.0439.000;
- Sun, 16 Jun 2019 09:34:51 -0600
-From:   "Bae, Chang Seok" <chang.seok.bae@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-CC:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        "Shankar, Ravi V" <ravi.v.shankar@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "x86@kernel.org" <x86@kernel.org>, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v7 18/18] x86/fsgsbase/64: Add documentation for FSGSBASE
-Thread-Topic: [PATCH v7 18/18] x86/fsgsbase/64: Add documentation for
- FSGSBASE
-Thread-Index: AQHVBb/wZjduerPLCE6RrgdTn3cIcqabVRAAgADdggCAAjFkAIAAMyQAgABBkwCAADJ4AA==
-Date:   Sun, 16 Jun 2019 15:34:50 +0000
-Message-ID: <62430B9C-95B6-4EB3-94FA-C16A02B9BD7C@intel.com>
-References: <1557309753-24073-1-git-send-email-chang.seok.bae@intel.com>
- <1557309753-24073-19-git-send-email-chang.seok.bae@intel.com>
- <alpine.DEB.2.21.1906132246310.1791@nanos.tec.linutronix.de>
- <EEACF240-4772-417A-B516-95D9003D0D11@intel.com>
- <89BE934A-A392-4CED-83E5-CA4FADDAE6DF@intel.com>
- <alpine.DEB.2.21.1906161038160.1760@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1906161433390.1760@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1906161433390.1760@nanos.tec.linutronix.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.254.190.226]
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <FC8223A9CBD124409BE4596677C1925B@intel.com>
-Content-Transfer-Encoding: 8BIT
+        id S1725894AbfFPPjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 11:39:52 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 59FD32063F;
+        Sun, 16 Jun 2019 15:39:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560699590;
+        bh=dVR88/sNWQeeme03MbSWzBQUPU5rrEbkEISN2IUrdK4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Jbaqy2roDgmFYoH8xJjjhsDF9QC7l6pdYQnq+mSc1ypaPeZt8ZUPmVh2M+VdIUZ1j
+         Tp9FQC5uR6rIrjIpBqdP+YWhvbhWaCP3QbrUurAILVv3b6xxFT3sWgmMVwVE/DWq+J
+         qK538A8swHskCkbl/ZtExk6cSyVf70lDIb2/cv2s=
+Date:   Sun, 16 Jun 2019 16:39:45 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Alexandre Mergnat <amergnat@baylibre.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        baylibre-upstreaming@groups.io, dmitry.torokhov@gmail.com,
+        linux-input@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] iio: Add PAT9125 optical tracker sensor
+Message-ID: <20190616163945.06bdbef0@archlinux>
+In-Reply-To: <20190610092945.6330-4-amergnat@baylibre.com>
+References: <20190610092945.6330-1-amergnat@baylibre.com>
+        <20190610092945.6330-4-amergnat@baylibre.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 10 Jun 2019 11:29:45 +0200
+Alexandre Mergnat <amergnat@baylibre.com> wrote:
 
-> On Jun 16, 2019, at 05:34, Thomas Gleixner <tglx@linutronix.de> wrote:
-> 
-> On Sun, 16 Jun 2019, Thomas Gleixner wrote:
->> 
->> Please dont. Send me a delta patch against the documentation. I have queued
->> all the other patches already internally. I did not push it out because I
->> wanted to have proper docs.
-> 
-> Fixed it up already. About to push it out.
-> 
+> This adds support for PixArt Imaging=E2=80=99s miniature low power optical
+> navigation chip using LASER light source enabling digital surface trackin=
+g.
+>=20
+> Feature and datasheet: [0]
+>=20
+> This IIO driver allows to read delta or relative position on X and Y axis:
+>   - The position relative to where the system started can be taken through
+>   punctual "read_raw" which will issue a read in the device registers to
+>   get the delta between last/current read and return the addition of all
+>   the deltas.
+>   - The delta can be retrieved using triggered buffer subscription
+>   (i.e. iio_readdev). The buffer payload is:
+>     |32 bits delta X|32 bits delta Y|timestamp|.
+>=20
+> The possible I2C addresses are 0x73, 0x75 and 0x79.
+>=20
+> X and Y axis CPI resolution can be get/set independently through IIO_SCAL=
+E.
+> The range value is 0-255 which means:
+>   - 0 to ~1,275 Counts Per Inch on flat surface.
+>   - 0 to ~630 Counts Per Rev on 1.0mm diameter STS shaft at 1.0mm distanc=
+e.
+> More details on the datasheet.
+>=20
+> The "position" directory is added to contain drivers which can provide
+> position data.
+>=20
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
+>=20
+> [0]: http://www.pixart.com/products-detail/72/PAT9125EL-TKIT___TKMT
+>=20
+> Signed-off-by: Alexandre Mergnat <amergnat@baylibre.com>
 
-Thanks. This is the diff though.
+Hi Alexandre,
 
-diff --git a/arch/x86/include/asm/preempt.h b/arch/x86/include/asm/preempt.h
-index 22992c8377952..f667087792747 100644
---- a/arch/x86/include/asm/preempt.h
-+++ b/arch/x86/include/asm/preempt.h
-@@ -118,7 +118,7 @@ static __always_inline bool should_resched(int preempt_offset)
- 
- 	/* preempt count == 0 ? */
- 	tmp &= ~PREEMPT_NEED_RESCHED;
--	if (tmp)
-+	if (tmp != preempt_offset)
- 		return false;
- 	if (current_thread_info()->preempt_lazy_count)
- 		return false;
-diff --git a/kernel/softirq.c b/kernel/softirq.c
-index c15583162a559..25bcf2f2714ba 100644
---- a/kernel/softirq.c
-+++ b/kernel/softirq.c
-@@ -92,6 +92,34 @@ static inline void softirq_clr_runner(unsigned int sirq)
- 	sr->runner[sirq] = NULL;
- }
- 
-+static bool softirq_check_runner_tsk(struct task_struct *tsk,
-+				     unsigned int *pending)
-+{
-+	bool ret = false;
-+
-+	if (!tsk)
-+		return ret;
-+
-+	/*
-+	 * The wakeup code in rtmutex.c wakes up the task
-+	 * _before_ it sets pi_blocked_on to NULL under
-+	 * tsk->pi_lock. So we need to check for both: state
-+	 * and pi_blocked_on.
-+	 * The test against UNINTERRUPTIBLE + ->sleeping_lock is in case the
-+	 * task does cpu_chill().
-+	 */
-+	raw_spin_lock(&tsk->pi_lock);
-+	if (tsk->pi_blocked_on || tsk->state == TASK_RUNNING ||
-+	    (tsk->state == TASK_UNINTERRUPTIBLE && tsk->sleeping_lock)) {
-+		/* Clear all bits pending in that task */
-+		*pending &= ~(tsk->softirqs_raised);
-+		ret = true;
-+	}
-+	raw_spin_unlock(&tsk->pi_lock);
-+
-+	return ret;
-+}
-+
- /*
-  * On preempt-rt a softirq running context might be blocked on a
-  * lock. There might be no other runnable task on this CPU because the
-@@ -104,6 +132,7 @@ static inline void softirq_clr_runner(unsigned int sirq)
-  */
- void softirq_check_pending_idle(void)
- {
-+	struct task_struct *tsk;
- 	static int rate_limit;
- 	struct softirq_runner *sr = this_cpu_ptr(&softirq_runners);
- 	u32 warnpending;
-@@ -113,24 +142,23 @@ void softirq_check_pending_idle(void)
- 		return;
- 
- 	warnpending = local_softirq_pending() & SOFTIRQ_STOP_IDLE_MASK;
-+	if (!warnpending)
-+		return;
- 	for (i = 0; i < NR_SOFTIRQS; i++) {
--		struct task_struct *tsk = sr->runner[i];
-+		tsk = sr->runner[i];
- 
--		/*
--		 * The wakeup code in rtmutex.c wakes up the task
--		 * _before_ it sets pi_blocked_on to NULL under
--		 * tsk->pi_lock. So we need to check for both: state
--		 * and pi_blocked_on.
--		 */
--		if (tsk) {
--			raw_spin_lock(&tsk->pi_lock);
--			if (tsk->pi_blocked_on || tsk->state == TASK_RUNNING) {
--				/* Clear all bits pending in that task */
--				warnpending &= ~(tsk->softirqs_raised);
--				warnpending &= ~(1 << i);
--			}
--			raw_spin_unlock(&tsk->pi_lock);
--		}
-+		if (softirq_check_runner_tsk(tsk, &warnpending))
-+			warnpending &= ~(1 << i);
-+	}
-+
-+	if (warnpending) {
-+		tsk = __this_cpu_read(ksoftirqd);
-+		softirq_check_runner_tsk(tsk, &warnpending);
-+	}
-+
-+	if (warnpending) {
-+		tsk = __this_cpu_read(ktimer_softirqd);
-+		softirq_check_runner_tsk(tsk, &warnpending);
- 	}
- 
- 	if (warnpending) {
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 851b2134e77f4..6f2736ec4b8ef 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1902,15 +1902,18 @@ void cpu_chill(void)
- {
- 	ktime_t chill_time;
- 	unsigned int freeze_flag = current->flags & PF_NOFREEZE;
-+	long saved_state;
- 
-+	saved_state = current->state;
- 	chill_time = ktime_set(0, NSEC_PER_MSEC);
--	set_current_state(TASK_UNINTERRUPTIBLE);
-+	__set_current_state_no_track(TASK_UNINTERRUPTIBLE);
- 	current->flags |= PF_NOFREEZE;
- 	sleeping_lock_inc();
- 	schedule_hrtimeout(&chill_time, HRTIMER_MODE_REL_HARD);
- 	sleeping_lock_dec();
- 	if (!freeze_flag)
- 		current->flags &= ~PF_NOFREEZE;
-+	__set_current_state_no_track(saved_state);
- }
- EXPORT_SYMBOL(cpu_chill);
- #endif
-diff --git a/localversion-rt b/localversion-rt
-index 9f7d0bdbffb18..08b3e75841adc 100644
---- a/localversion-rt
-+++ b/localversion-rt
-@@ -1 +1 @@
---rt13
-+-rt14
+Getting close but a few more bits and pieces inline.
 
+I'm a little confused on why the buffered reads are giving the delta
+values whilst we have fixed up the sysfs reads to give the more useful
+position values (and hence not need to know when last read was).
+We should be consistent and give positions from the buffered path as well.
+
+Thanks,
+
+Jonathan
+
+> ---
+>  drivers/iio/Kconfig            |   1 +
+>  drivers/iio/Makefile           |   1 +
+>  drivers/iio/position/Kconfig   |  18 ++
+>  drivers/iio/position/Makefile  |   6 +
+>  drivers/iio/position/pat9125.c | 499 +++++++++++++++++++++++++++++++++
+>  5 files changed, 525 insertions(+)
+>  create mode 100644 drivers/iio/position/Kconfig
+>  create mode 100644 drivers/iio/position/Makefile
+>  create mode 100644 drivers/iio/position/pat9125.c
+>=20
+> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+> index 1d736a4952ab..23d9780640e7 100644
+> --- a/drivers/iio/Kconfig
+> +++ b/drivers/iio/Kconfig
+> @@ -85,6 +85,7 @@ source "drivers/iio/light/Kconfig"
+>  source "drivers/iio/magnetometer/Kconfig"
+>  source "drivers/iio/multiplexer/Kconfig"
+>  source "drivers/iio/orientation/Kconfig"
+> +source "drivers/iio/position/Kconfig"
+>  if IIO_TRIGGER
+>     source "drivers/iio/trigger/Kconfig"
+>  endif #IIO_TRIGGER
+> diff --git a/drivers/iio/Makefile b/drivers/iio/Makefile
+> index bff682ad1cfb..1712011c0f4a 100644
+> --- a/drivers/iio/Makefile
+> +++ b/drivers/iio/Makefile
+> @@ -31,6 +31,7 @@ obj-y +=3D light/
+>  obj-y +=3D magnetometer/
+>  obj-y +=3D multiplexer/
+>  obj-y +=3D orientation/
+> +obj-y +=3D position/
+>  obj-y +=3D potentiometer/
+>  obj-y +=3D potentiostat/
+>  obj-y +=3D pressure/
+> diff --git a/drivers/iio/position/Kconfig b/drivers/iio/position/Kconfig
+> new file mode 100644
+> index 000000000000..1cf28896511c
+> --- /dev/null
+> +++ b/drivers/iio/position/Kconfig
+> @@ -0,0 +1,18 @@
+> +#
+> +# Optical tracker sensors
+> +#
+> +# When adding new entries keep the list in alphabetical order
+> +
+> +menu "Optical tracker sensors"
+> +
+> +config PAT9125
+> +	tristate "Optical tracker PAT9125 I2C driver"
+> +	depends on I2C
+> +	select IIO_BUFFER
+> +	help
+> +	  Say yes here to build support for PAT9125 optical tracker
+> +	  sensors.
+> +
+> +          To compile this driver as a module, say M here: the module will
+> +          be called pat9125.
+> +endmenu
+> diff --git a/drivers/iio/position/Makefile b/drivers/iio/position/Makefile
+> new file mode 100644
+> index 000000000000..cf294917ae2c
+> --- /dev/null
+> +++ b/drivers/iio/position/Makefile
+> @@ -0,0 +1,6 @@
+> +#
+> +# Makefile for industrial I/O Optical tracker sensor drivers
+> +#
+> +
+> +# When adding new entries keep the list in alphabetical order
+> +obj-$(CONFIG_PAT9125) +=3D pat9125.o
+> diff --git a/drivers/iio/position/pat9125.c b/drivers/iio/position/pat912=
+5.c
+> new file mode 100644
+> index 000000000000..22bf729bec9b
+> --- /dev/null
+> +++ b/drivers/iio/position/pat9125.c
+> @@ -0,0 +1,499 @@
+> +// SPDX-License-Identifier: (GPL-2.0)
+> +/*
+> + * Copyright (C) 2019 BayLibre, SAS
+> + * Author: Alexandre Mergnat <amergnat@baylibre.com>
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/delay.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/i2c.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/sysfs.h>
+> +#include <linux/iio/events.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/trigger.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/iio/kfifo_buf.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +
+> +/* I2C Address function to ID pin*/
+> +#define PAT9125_I2C_ADDR_HI		0x73
+> +#define PAT9125_I2C_ADDR_LO		0x75
+> +#define PAT9125_I2C_ADDR_NC		0x79
+> +
+> +/* Registers */
+> +#define PAT9125_PRD_ID1_REG		0x00
+> +#define PAT9125_PRD_ID2_REG		0x01
+> +#define PAT9125_MOTION_STATUS_REG	0x02
+> +#define PAT9125_DELTA_X_LO_REG		0x03
+> +#define PAT9125_DELTA_Y_LO_REG		0x04
+> +#define PAT9125_OP_MODE_REG		0x05
+> +#define PAT9125_CONFIG_REG		0x06
+> +#define PAT9125_WRITE_PROTEC_REG	0x09
+> +#define PAT9125_SLEEP1_REG		0x0A
+> +#define PAT9125_SLEEP2_REG		0x0B
+> +#define PAT9125_RES_X_REG		0x0D
+> +#define PAT9125_RES_Y_REG		0x0E
+> +#define PAT9125_DELTA_XY_HI_REG		0x12
+> +#define PAT9125_SHUTER_REG		0x14
+> +#define PAT9125_FRAME_AVG_REG		0x17
+> +#define PAT9125_ORIENTATION_REG		0x19
+> +
+> +/* Bits */
+> +#define PAT9125_VALID_MOTION_DATA_BIT	BIT(7)
+> +#define PAT9125_RESET_BIT		BIT(7)
+> +
+> +/* Registers' values */
+> +#define PAT9125_SENSOR_ID_VAL			0x31
+> +#define PAT9125_DISABLE_WRITE_PROTECT_VAL	0x5A
+> +#define PAT9125_ENABLE_WRITE_PROTECT_VAL	0x00
+> +
+> +/* Default Value of sampled value size */
+> +#define PAT9125_SAMPLED_VAL_BIT_SIZE		12
+> +
+> +struct pat9125_data {
+> +	struct regmap *regmap;
+> +	struct iio_trigger *indio_trig;	/* Motion detection */
+> +	s32 delta_x;
+> +	s32 delta_y;
+> +	s32 position_x;
+> +	s32 position_y;
+> +	bool sampling;
+> +};
+> +
+> +static const struct iio_chan_spec pat9125_channels[] =3D {
+> +	{
+> +		.type =3D IIO_DISTANCE,
+> +		.modified =3D 1,
+> +		.channel2 =3D IIO_MOD_X,
+> +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
+> +			BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index =3D 0,
+> +		.scan_type =3D {
+> +			.sign =3D 's',
+> +			.realbits =3D 32,
+> +			.storagebits =3D 32,
+> +			.endianness =3D IIO_CPU,
+> +		},
+> +	},
+> +	{
+> +		.type =3D IIO_DISTANCE,
+> +		.modified =3D 1,
+> +		.channel2 =3D IIO_MOD_Y,
+> +		.info_mask_separate =3D BIT(IIO_CHAN_INFO_RAW) |
+> +			BIT(IIO_CHAN_INFO_SCALE),
+> +		.scan_index =3D 1,
+> +		.scan_type =3D {
+> +			.sign =3D 's',
+> +			.realbits =3D 32,
+> +			.storagebits =3D 32,
+> +			.endianness =3D IIO_CPU,
+> +		},
+> +	},
+> +	IIO_CHAN_SOFT_TIMESTAMP(2),
+> +};
+> +
+> +/**
+> + * pat9125_write_pretected_reg() - Write value in protected register.
+> + *
+> + * @regmap: Pointer to I2C register map.
+> + * @reg_addr: Register address.
+> + * @reg_value: Value to be write in register.
+> + *
+> + * A value of zero will be returned on success, a negative errno will
+> + * be returned in error cases.
+> + */
+> +static int pat9125_write_pretected_reg(struct iio_dev *indio_dev,
+> +	u8 reg_addr, u8 reg_value)
+> +{
+> +	struct pat9125_data *data =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	ret =3D regmap_write(data->regmap,
+> +			 PAT9125_WRITE_PROTEC_REG,
+> +			 PAT9125_DISABLE_WRITE_PROTECT_VAL);
+> +	if (ret < 0) {
+> +		dev_err(indio_dev->dev.parent, "register 0x%x access failed %d\n",
+> +			PAT9125_WRITE_PROTEC_REG, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D regmap_write(data->regmap, reg_addr, reg_value);
+> +	if (ret < 0) {
+> +		dev_err(indio_dev->dev.parent, "register 0x%x access failed %d\n",
+> +			reg_addr, ret);
+> +		return ret;
+> +	}
+> +
+> +	ret =3D regmap_write(data->regmap,
+> +			 PAT9125_WRITE_PROTEC_REG,
+> +			 PAT9125_ENABLE_WRITE_PROTECT_VAL);
+> +	if (ret < 0) {
+> +		dev_err(indio_dev->dev.parent, "register 0x%x access failed %d\n",
+> +			PAT9125_WRITE_PROTEC_REG, ret);
+> +		return ret;
+We'll probably get a patch from some script for this so nice to
+cleanup now.
+
+regmap_write always returns 0 for success and negative otherwise.
+
+Hence we can just check if (ret).  Having done that we can also drop
+the return ret above out of the brackets and save a few lines of code
+by getting rid of the return 0 that follows.
+
+Just checkign if (ret) in general is probably a worthwhile cleanup
+for these regmap calls.
+
+
+> +	}
+> +	return 0;
+> +}
+> +/**
+> + * pat9125_read_delta() - Read delta value, update delta & position data.
+> + *
+> + * @data: Driver's data structure.
+> + *
+> + * A value of zero will be returned on success, a negative errno will
+> + * be returned in error cases.
+> + */
+> +static int pat9125_read_delta(struct pat9125_data *data)
+> +{
+> +	struct regmap *regmap =3D data->regmap;
+> +	int status =3D 0;
+> +	int val_x =3D 0;
+> +	int val_y =3D 0;
+> +	int val_high_nibbles =3D 0;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(regmap, PAT9125_MOTION_STATUS_REG, &status);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/* Check if motion is detected */
+> +	if (status & PAT9125_VALID_MOTION_DATA_BIT) {
+> +		ret =3D regmap_read(regmap, PAT9125_DELTA_X_LO_REG, &val_x);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret =3D regmap_read(regmap, PAT9125_DELTA_Y_LO_REG, &val_y);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		ret =3D regmap_read(regmap, PAT9125_DELTA_XY_HI_REG,
+> +			&val_high_nibbles);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		val_x |=3D (val_high_nibbles << 4) & 0xF00;
+> +		val_y |=3D (val_high_nibbles << 8) & 0xF00;
+> +		val_x =3D sign_extend32(val_x,
+> +			PAT9125_SAMPLED_VAL_BIT_SIZE - 1);
+> +		val_y =3D sign_extend32(val_y,
+> +			PAT9125_SAMPLED_VAL_BIT_SIZE - 1);
+> +		data->position_x +=3D val_x;
+> +		data->position_y +=3D val_y;
+> +		data->delta_x =3D val_x;
+> +		data->delta_y =3D val_y;
+> +	}
+> +	return 0;
+> +}
+> +
+> +/**
+> + * pat9125_read_raw() - Sample and return the value(s)
+> + * function to the associated channel info enum.
+> + **/
+> +static int pat9125_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int *val, int *val2, long mask)
+> +{
+> +	struct pat9125_data *data =3D iio_priv(indio_dev);
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_RAW:
+> +		ret =3D pat9125_read_delta(data);
+> +		if (ret)
+> +			return ret;
+> +		switch (chan->channel2) {
+> +		case IIO_MOD_X:
+> +			*val =3D data->position_x;
+> +			return IIO_VAL_INT;
+> +		case IIO_MOD_Y:
+> +			*val =3D data->position_y;
+> +			return IIO_VAL_INT;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->channel2) {
+> +		case IIO_MOD_X:
+> +			ret =3D regmap_read(data->regmap, PAT9125_RES_X_REG, val);
+> +			if (ret)
+> +				return ret;
+> +			else
+> +				return IIO_VAL_INT;
+> +		case IIO_MOD_Y:
+> +			ret =3D regmap_read(data->regmap, PAT9125_RES_Y_REG, val);
+> +			if (ret)
+> +				return ret;
+> +			else
+> +				return IIO_VAL_INT;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +/**
+> + * pat9125_write_raw() - Write the value(s)
+> + * function to the associated channel info enum.
+> + **/
+*/
+
+Tidy these up throughout.  If you are going to do
+kernel-doc (which is good) you should also document all of the
+parameters.
+
+> +static int pat9125_write_raw(struct iio_dev *indio_dev,
+> +			     struct iio_chan_spec const *chan, int val,
+> +			     int val2, long mask)
+> +{
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_SCALE:
+> +		switch (chan->channel2) {
+> +		case IIO_MOD_X:
+> +			ret =3D pat9125_write_pretected_reg(indio_dev,
+> +				PAT9125_RES_X_REG, val);
+> +			return ret;
+> +		case IIO_MOD_Y:
+> +			ret =3D pat9125_write_pretected_reg(indio_dev,
+> +				PAT9125_RES_Y_REG, val);
+> +			return ret;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static irqreturn_t pat9125_threaded_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf =3D p;
+> +	struct iio_dev *indio_dev =3D pf->indio_dev;
+> +	struct pat9125_data *data =3D iio_priv(indio_dev);
+> +	u8 buf[16]; /* Payload: Delta_X (4) | Delta_Y (4) | Timestamp (8) */
+> +	int ret;
+> +	s64 timestamp;
+> +
+> +	data->sampling =3D true;
+> +	ret =3D pat9125_read_delta(data);
+> +	if (ret) {
+> +		dev_err(indio_dev->dev.parent, "Read delta failed %d\n", ret);
+> +		return IRQ_NONE;
+> +	}
+> +	timestamp =3D iio_get_time_ns(indio_dev);
+> +	*((s32 *)&buf[0]) =3D data->delta_x;
+> +	*((s32 *)&buf[sizeof(s32)]) =3D data->delta_y;
+
+Why are we putting the delta values in the buffer rather than the positions?
+
+> +	data->delta_x =3D 0;
+> +	data->delta_y =3D 0;
+> +	iio_push_to_buffers_with_timestamp(indio_dev, buf, timestamp);
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +/**
+> + * pat9125_threaded_event_handler() - Threaded motion detection event ha=
+ndler
+> + * @irq: The irq being handled.
+> + * @private: struct iio_device pointer for the device.
+> + */
+> +static irqreturn_t pat9125_threaded_event_handler(int irq, void *private)
+> +{
+> +	struct iio_dev *indio_dev =3D private;
+> +	struct pat9125_data *data =3D iio_priv(indio_dev);
+> +
+> +	iio_trigger_poll_chained(data->indio_trig);
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int pat9125_buffer_postenable(struct iio_dev *indio_dev)
+> +{
+> +	struct pat9125_data *data =3D iio_priv(indio_dev);
+> +	int ret =3D 0;
+> +
+> +	ret =3D iio_triggered_buffer_postenable(indio_dev);
+> +	if (ret)
+> +		return ret;
+> +	/* Release interrupt pin on the device */
+> +	return pat9125_read_delta(data);
+
+If this has an error, we should be handling the unwind of
+iio_triggered_buffer_postenable.  That is
+iio_triggered_buffer_predisable.
+
+(Alexandru has been cleaning these up recently so I'm more
+aware of this than normal!)
+
+> +}
+> +
+> +static const struct iio_buffer_setup_ops pat9125_buffer_ops =3D {
+> +	.postenable =3D pat9125_buffer_postenable,
+> +	.predisable =3D iio_triggered_buffer_predisable,
+> +};
+> +
+One blank line is almost always enough (nitpick of the day ;)
+> +
+> +static const struct regmap_config pat9125_regmap_config =3D {
+> +	.reg_bits =3D 8,
+> +	.val_bits =3D 8,
+> +};
+> +
+> +static const struct iio_info pat9125_info =3D {
+> +	.read_raw =3D pat9125_read_raw,
+> +	.write_raw =3D pat9125_write_raw,
+> +};
+> +
+> +/*
+> + * To detect if a new value is available, register status is checked. Th=
+is
+> + * method is safer than using a flag on GPIO IRQ to track event while sa=
+mpling
+> + * because falling edge is missed when device trig just after a read reg=
+ value
+> + * (that happen for fast motions or high CPI setting).
+
+So we have an edge triggered interrupt that doesn't have a 'minimum low'
+period? If so then the only safe way to handle it would be as a level
+interrupt. Can you do that here?
+(I once had the delights of a sensor like this tied to a edge sensitive only
+interrupt, but thankfully those are a rare thing these days).
+
+> + *
+> + * Note: To avoid infinite loop in "iio_trigger_notify_done" when it si =
+not in
+
+is
+
+> + * buffer mode and kernel warning due to nested IRQ thread,
+> + * this function must return 0.
+> + */
+> +static int pat9125_trig_try_reenable(struct iio_trigger *trig)
+> +{
+> +	struct pat9125_data *data =3D iio_trigger_get_drvdata(trig);
+> +	struct regmap *regmap =3D data->regmap;
+> +	int status =3D 0;
+> +
+> +	if (data->sampling) {
+> +		regmap_read(regmap, PAT9125_MOTION_STATUS_REG, &status);
+> +		if (status & PAT9125_VALID_MOTION_DATA_BIT) {
+> +			data->sampling =3D false;
+So we only ever do 2 reads?  Why can't we be unlucky on timing
+twice in a row?
+
+> +			iio_trigger_poll_chained(data->indio_trig);
+> +			return 0;
+> +		}
+> +	}
+> +	data->sampling =3D false;
+> +	return 0;
+> +}
+> +
+> +static const struct iio_trigger_ops pat9125_trigger_ops =3D {
+> +	.try_reenable =3D pat9125_trig_try_reenable,
+> +};
+> +
+> +static int pat9125_probe(struct i2c_client *client,
+> +			 const struct i2c_device_id *id)
+> +{
+> +	struct pat9125_data *data;
+> +	struct iio_dev *indio_dev;
+> +	int ret, sensor_pid;
+> +
+> +	indio_dev =3D devm_iio_device_alloc(&client->dev, sizeof(*data));
+> +	if (!indio_dev) {
+> +		dev_err(&client->dev, "IIO device allocation failed\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	data =3D iio_priv(indio_dev);
+> +	indio_dev->dev.parent =3D &client->dev;
+> +	indio_dev->name =3D id->name;
+> +	indio_dev->channels =3D pat9125_channels;
+> +	indio_dev->num_channels =3D ARRAY_SIZE(pat9125_channels);
+> +	indio_dev->info =3D &pat9125_info;
+> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> +
+> +	ret =3D devm_iio_triggered_buffer_setup(&client->dev, indio_dev, NULL,
+> +		pat9125_threaded_trigger_handler, &pat9125_buffer_ops);
+> +	if (ret) {
+> +		dev_err(&client->dev, "unable to setup triggered buffer\n");
+> +		return ret;
+> +	}
+> +
+> +	data->indio_trig =3D devm_iio_trigger_alloc(&client->dev, "%s-dev%d",
+> +		indio_dev->name, indio_dev->id);
+> +	if (!data->indio_trig)
+> +		return -ENOMEM;
+> +	data->indio_trig->dev.parent =3D &client->dev;
+> +	data->indio_trig->ops =3D &pat9125_trigger_ops;
+> +	iio_trigger_set_drvdata(data->indio_trig, data);
+> +	ret =3D devm_iio_trigger_register(&client->dev, data->indio_trig);
+> +	if (ret) {
+> +		dev_err(&client->dev, "unable to register trigger\n");
+> +		return ret;
+> +	}
+> +
+> +	data->regmap =3D devm_regmap_init_i2c(client, &pat9125_regmap_config);
+> +	if (IS_ERR(data->regmap)) {
+> +		dev_err(&client->dev, "regmap init failed %ld\n",
+> +			PTR_ERR(data->regmap));
+> +		return PTR_ERR(data->regmap);
+> +	}
+> +
+> +	/* Check device ID */
+> +	ret =3D regmap_read(data->regmap, PAT9125_PRD_ID1_REG, &sensor_pid);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "register 0x%x access failed %d\n",
+> +			PAT9125_PRD_ID1_REG, ret);
+> +		return ret;
+> +	}
+> +	if (sensor_pid !=3D PAT9125_SENSOR_ID_VAL)
+> +		return -ENODEV;
+> +
+> +	/* Switch to bank0 (Magic number)*/
+> +	ret =3D regmap_write(data->regmap, 0x7F, 0x00);
+> +	if (ret < 0) {
+> +		dev_err(indio_dev->dev.parent, "register 0x%x access failed %d\n",
+> +			0x7F, ret);
+> +		return ret;
+> +	}
+> +
+> +	/* Software reset */
+> +	ret =3D regmap_write_bits(data->regmap,
+> +			      PAT9125_CONFIG_REG,
+> +			      PAT9125_RESET_BIT,
+> +			      1);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "register 0x%x access failed %d\n",
+> +			PAT9125_CONFIG_REG, ret);
+> +		return ret;
+> +	}
+> +
+> +	msleep(20);
+> +
+> +	/* Init GPIO IRQ */
+> +	if (client->irq) {
+> +		ret =3D devm_request_threaded_irq(&client->dev,
+> +			client->irq,
+> +			NULL,
+> +			pat9125_threaded_event_handler,
+> +			IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+> +			"pat9125",
+> +			indio_dev);
+> +		if (ret) {
+> +			dev_err(&client->dev, "GPIO IRQ init failed\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	ret =3D devm_iio_device_register(&client->dev, indio_dev);
+> +	if (ret) {
+> +		dev_err(&client->dev, "IIO device register failed\n");
+> +		return ret;
+> +	}
+> +
+> +	i2c_set_clientdata(client, indio_dev);
+
+Why?  You have now gotten rid of remove (which is great).
+I'm guessing that was using i2c_get_clientdata?
+
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_device_id pat9125_id[] =3D {
+> +	{ "pat9125", 0 },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(i2c, pat9125_id);
+> +
+> +static const unsigned short normal_i2c[] =3D {
+> +	PAT9125_I2C_ADDR_HI,
+> +	PAT9125_I2C_ADDR_LO,
+> +	PAT9125_I2C_ADDR_NC,
+> +	I2C_CLIENT_END
+> +};
+> +
+> +static struct i2c_driver pat9125_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "pat9125",
+> +	},
+> +	.probe =3D pat9125_probe,
+> +	.address_list =3D normal_i2c,
+> +	.id_table =3D pat9125_id,
+> +};
+> +
+> +module_i2c_driver(pat9125_driver);
+> +
+> +MODULE_AUTHOR("Alexandre Mergnat <amergnat@baylibre.com>");
+> +MODULE_DESCRIPTION("Optical Tracking sensor");
+> +MODULE_LICENSE("GPL");
 
