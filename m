@@ -2,291 +2,301 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B840FC31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D14C31E53
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867892133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:43:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jqh/7GCN"
+	by mail.kernel.org (Postfix) with ESMTP id 89875216C8
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 13:47:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560692871;
+	bh=p0iL82cdaEa1Vv36sQ0BnhAX2AFRjC9Qqy5te+FMyV4=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=YOe2VppLP+OGtJYbIsd70IKAthN3krPVwi1Y26WVLdn1BC6IHaz0ANtkpFEn3nsW1
+	 h/kcd9+KvhktCGpZHNnXc0fnv+xCUVwaVmQErISTqyx7Y2bz/PvaDWwuPRLgYT25v5
+	 fPdWNy4x72HxdT3PNa6gQIy/8JhU2BKY7xfe+XVk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727187AbfFPNnN (ORCPT
+        id S1727178AbfFPNrs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 09:43:13 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36245 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725874AbfFPNnN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 09:43:13 -0400
-Received: by mail-lf1-f67.google.com with SMTP id q26so4665402lfc.3
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 06:43:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DXWZ5UexIRmyYBBuMtlnLVrDXtCKcTUdxpXDAAOej+g=;
-        b=Jqh/7GCNsbS9Rm7Op/IcbqbEAR0Hah0BL8OWuNuB7Zn5tie4O8zgUxR2hgU+cGtujY
-         cy512hrMBnuXvStpN8IYc3o+880f1MYC63uz3Mtqi3C3Ptnk1iMjqKYwMN7QyXpj9yNx
-         j8gu1AwmQMrgQosW+nNLOgYFPUF8jqJoIrlvoDLCjq5gAdkkCA6w+d5LvsWs+EH4ymoc
-         F3hSoE4HlB1VFHVsCa/2kMwKm27kmd1y7J7Nrm7WpcdVbEdMtLM9Zie9UcldNysdyjIi
-         4AZRwKDZ/d5BqJ/qhptizaTt1ilVwa1svjpBIoovZ9Nz6nIxh66UomuYzKwXB1snNabJ
-         vZJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DXWZ5UexIRmyYBBuMtlnLVrDXtCKcTUdxpXDAAOej+g=;
-        b=ltrCS+XUSkmD1H7hP5U1JeAxV9HVsVG0UK68Kt9w/Yoxoi3cqDiZLTeaQF+dVR3YZJ
-         3ZWkeY7dbWlKa7CMnLPug7xOjQvnOkKkILegZy7S9EwLm7FmJx3rdDp1Jbn2dOnu9SHy
-         UjWb7yhTLTzbv+BDqxIxFwYEhMWTCl43T2OZjksT0yw421iXzK0p9QmLI9QAHm90hk8g
-         EafFZpgexkBTiO6dQ+0UlSDwQAQOoh8aXP3Uf+ClPXzrUqV52ROQrpkO7+usxNLmr9cF
-         Vdbpp5rTWwwv+Q9/DPF7J6M0hY/CgZenTfaW1pfIeOrsH5J9B6GPDoGcTcUEJBKiQFPe
-         7x1w==
-X-Gm-Message-State: APjAAAU6KLRHJYA1z1iHZj266J6X0APTUNfKvg2qcW003VtQjAvvvTj8
-        qdvgknz7ulthZKz/7sk56UE=
-X-Google-Smtp-Source: APXvYqwIJUYGhAV4LJMP9F0yUkW3PLBdZZBvaMA/cMwvm7NvnZ0q2khKahtU1sAs6kewCVnMBDirsA==
-X-Received: by 2002:a19:24d5:: with SMTP id k204mr22338825lfk.190.1560692590570;
-        Sun, 16 Jun 2019 06:43:10 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id y15sm1301596lfg.43.2019.06.16.06.43.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Jun 2019 06:43:09 -0700 (PDT)
-Subject: Re: [v3 1/2] mtd: nand: Add Cadence NAND controller driver
-To:     Piotr Sroka <piotrs@cadence.com>, linux-kernel@vger.kernel.org
-Cc:     Boris Brezillon <bbrezillon@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        Stefan Agner <stefan@agner.ch>, linux-mtd@lists.infradead.org
-References: <20190614150638.28383-1-piotrs@cadence.com>
- <20190614150956.31244-1-piotrs@cadence.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <dd96bd1b-e944-e95d-31c9-6dd1d0b5720f@gmail.com>
-Date:   Sun, 16 Jun 2019 16:42:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Sun, 16 Jun 2019 09:47:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34096 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725874AbfFPNrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 09:47:48 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BE4BF2133D;
+        Sun, 16 Jun 2019 13:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560692867;
+        bh=p0iL82cdaEa1Vv36sQ0BnhAX2AFRjC9Qqy5te+FMyV4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=uXHXVAVj4eO6fSQ2kfhTGQ2xpE6Yu1dRTsqgbI2J1u5IuOSaZ4YA04ycR3zkB/Y5j
+         n/s90Kh/RzWT8qHMF/qlEt2STWUCj+8XN1/qU9OAD1xVWvgeDaWrOiYYbkQbBkIXhe
+         Dng7WdvB62qLiR2JTkTyZRtPW22LS2D39Meb/dyk=
+Date:   Sun, 16 Jun 2019 14:47:42 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-iio@vger.kernel.org
+Subject: Re: [PATCH v1 24/31] docs: iio: convert to ReST
+Message-ID: <20190616144742.7e2dce98@archlinux>
+In-Reply-To: <6b9df01697dde8b9bb9be9accf28d63ed821956d.1560364494.git.mchehab+samsung@kernel.org>
+References: <cover.1560364493.git.mchehab+samsung@kernel.org>
+        <6b9df01697dde8b9bb9be9accf28d63ed821956d.1560364494.git.mchehab+samsung@kernel.org>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190614150956.31244-1-piotrs@cadence.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-14.06.2019 18:09, Piotr Sroka пишет:
+On Wed, 12 Jun 2019 15:38:27 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-Commit description is mandatory.
+> Rename the iio documentation files to ReST, add an
+> index for them and adjust in order to produce a nice html
+> output via the Sphinx build system.
+> 
+> At its new index.rst, let's add a :orphan: while this is not linked to
+> the main index.rst file, in order to avoid build warnings.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Thanks, looks good to me.   At some point we need to look at how
+to tie together the various IIO docs as they are split between
+here and the driver-api/iio/ directory.  That split isn't currently
+along particularly logical lines.
 
-> Signed-off-by: Piotr Sroka <piotrs@cadence.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+
+Thanks for tidying this up!
+
+Jonathan
 > ---
+>  .../iio/{ep93xx_adc.txt => ep93xx_adc.rst}    | 15 +++++-
+>  .../{iio_configfs.txt => iio_configfs.rst}    | 52 +++++++++++--------
+>  Documentation/iio/index.rst                   | 12 +++++
+>  drivers/iio/Kconfig                           |  2 +-
+>  4 files changed, 56 insertions(+), 25 deletions(-)
+>  rename Documentation/iio/{ep93xx_adc.txt => ep93xx_adc.rst} (71%)
+>  rename Documentation/iio/{iio_configfs.txt => iio_configfs.rst} (73%)
+>  create mode 100644 Documentation/iio/index.rst
+> 
+> diff --git a/Documentation/iio/ep93xx_adc.txt b/Documentation/iio/ep93xx_adc.rst
+> similarity index 71%
+> rename from Documentation/iio/ep93xx_adc.txt
+> rename to Documentation/iio/ep93xx_adc.rst
+> index 23053e7817bd..4fd8dea3f6b8 100644
+> --- a/Documentation/iio/ep93xx_adc.txt
+> +++ b/Documentation/iio/ep93xx_adc.rst
+> @@ -1,12 +1,16 @@
+> -Cirrus Logic EP93xx ADC driver.
+> +==============================
+> +Cirrus Logic EP93xx ADC driver
+> +==============================
+>  
+>  1. Overview
+> +===========
+>  
+>  The driver is intended to work on both low-end (EP9301, EP9302) devices with
+>  5-channel ADC and high-end (EP9307, EP9312, EP9315) devices with 10-channel
+>  touchscreen/ADC module.
+>  
+>  2. Channel numbering
+> +====================
+>  
+>  Numbering scheme for channels 0..4 is defined in EP9301 and EP9302 datasheets.
+>  EP9307, EP9312 and EP9312 have 3 channels more (total 8), but the numbering is
+> @@ -17,13 +21,20 @@ Assuming ep93xx_adc is IIO device0, you'd find the following entries under
+>  
+>    +-----------------+---------------+
+>    | sysfs entry     | ball/pin name |
+> -  +-----------------+---------------+
+> +  +=================+===============+
+>    | in_voltage0_raw | YM            |
+> +  +-----------------+---------------+
+>    | in_voltage1_raw | SXP           |
+> +  +-----------------+---------------+
+>    | in_voltage2_raw | SXM           |
+> +  +-----------------+---------------+
+>    | in_voltage3_raw | SYP           |
+> +  +-----------------+---------------+
+>    | in_voltage4_raw | SYM           |
+> +  +-----------------+---------------+
+>    | in_voltage5_raw | XP            |
+> +  +-----------------+---------------+
+>    | in_voltage6_raw | XM            |
+> +  +-----------------+---------------+
+>    | in_voltage7_raw | YP            |
+>    +-----------------+---------------+
+> diff --git a/Documentation/iio/iio_configfs.txt b/Documentation/iio/iio_configfs.rst
+> similarity index 73%
+> rename from Documentation/iio/iio_configfs.txt
+> rename to Documentation/iio/iio_configfs.rst
+> index 4e5f101837a8..ecbfdb3afef7 100644
+> --- a/Documentation/iio/iio_configfs.txt
+> +++ b/Documentation/iio/iio_configfs.rst
+> @@ -1,6 +1,9 @@
+> +===============================
+>  Industrial IIO configfs support
+> +===============================
+>  
+>  1. Overview
+> +===========
+>  
+>  Configfs is a filesystem-based manager of kernel objects. IIO uses some
+>  objects that could be easily configured using configfs (e.g.: devices,
+> @@ -10,20 +13,22 @@ See Documentation/filesystems/configfs/configfs.txt for more information
+>  about how configfs works.
+>  
+>  2. Usage
+> +========
+>  
+>  In order to use configfs support in IIO we need to select it at compile
+>  time via CONFIG_IIO_CONFIGFS config option.
+>  
+> -Then, mount the configfs filesystem (usually under /config directory):
+> +Then, mount the configfs filesystem (usually under /config directory)::
+>  
+> -$ mkdir /config
+> -$ mount -t configfs none /config
+> +  $ mkdir /config
+> +  $ mount -t configfs none /config
+>  
+>  At this point, all default IIO groups will be created and can be accessed
+>  under /config/iio. Next chapters will describe available IIO configuration
+>  objects.
+>  
+>  3. Software triggers
+> +====================
+>  
+>  One of the IIO default configfs groups is the "triggers" group. It is
+>  automagically accessible when the configfs is mounted and can be found
+> @@ -31,40 +36,40 @@ under /config/iio/triggers.
+>  
+>  IIO software triggers implementation offers support for creating multiple
+>  trigger types. A new trigger type is usually implemented as a separate
+> -kernel module following the interface in include/linux/iio/sw_trigger.h:
+> +kernel module following the interface in include/linux/iio/sw_trigger.h::
+>  
+> -/*
+> - * drivers/iio/trigger/iio-trig-sample.c
+> - * sample kernel module implementing a new trigger type
+> - */
+> -#include <linux/iio/sw_trigger.h>
+> +  /*
+> +   * drivers/iio/trigger/iio-trig-sample.c
+> +   * sample kernel module implementing a new trigger type
+> +   */
+> +  #include <linux/iio/sw_trigger.h>
+>  
+>  
+> -static struct iio_sw_trigger *iio_trig_sample_probe(const char *name)
+> -{
+> +  static struct iio_sw_trigger *iio_trig_sample_probe(const char *name)
+> +  {
+>  	/*
+>  	 * This allocates and registers an IIO trigger plus other
+>  	 * trigger type specific initialization.
+>  	 */
+> -}
+> +  }
+>  
+> -static int iio_trig_hrtimer_remove(struct iio_sw_trigger *swt)
+> -{
+> +  static int iio_trig_hrtimer_remove(struct iio_sw_trigger *swt)
+> +  {
+>  	/*
+>  	 * This undoes the actions in iio_trig_sample_probe
+>  	 */
+> -}
+> +  }
+>  
+> -static const struct iio_sw_trigger_ops iio_trig_sample_ops = {
+> +  static const struct iio_sw_trigger_ops iio_trig_sample_ops = {
+>  	.probe		= iio_trig_sample_probe,
+>  	.remove		= iio_trig_sample_remove,
+> -};
+> +  };
+>  
+> -static struct iio_sw_trigger_type iio_trig_sample = {
+> +  static struct iio_sw_trigger_type iio_trig_sample = {
+>  	.name = "trig-sample",
+>  	.owner = THIS_MODULE,
+>  	.ops = &iio_trig_sample_ops,
+> -};
+> +  };
+>  
+>  module_iio_sw_trigger_driver(iio_trig_sample);
+>  
+> @@ -73,21 +78,24 @@ iio-trig-sample module will create 'trig-sample' trigger type directory
+>  /config/iio/triggers/trig-sample.
+>  
+>  We support the following interrupt sources (trigger types):
+> +
+>  	* hrtimer, uses high resolution timers as interrupt source
+>  
+>  3.1 Hrtimer triggers creation and destruction
+> +---------------------------------------------
+>  
+>  Loading iio-trig-hrtimer module will register hrtimer trigger types allowing
+>  users to create hrtimer triggers under /config/iio/triggers/hrtimer.
+>  
+> -e.g:
+> +e.g::
+>  
+> -$ mkdir /config/iio/triggers/hrtimer/instance1
+> -$ rmdir /config/iio/triggers/hrtimer/instance1
+> +  $ mkdir /config/iio/triggers/hrtimer/instance1
+> +  $ rmdir /config/iio/triggers/hrtimer/instance1
+>  
+>  Each trigger can have one or more attributes specific to the trigger type.
+>  
+>  3.2 "hrtimer" trigger types attributes
+> +--------------------------------------
+>  
+>  "hrtimer" trigger type doesn't have any configurable attribute from /config dir.
+>  It does introduce the sampling_frequency attribute to trigger directory.
+> diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
+> new file mode 100644
+> index 000000000000..0593dca89a94
+> --- /dev/null
+> +++ b/Documentation/iio/index.rst
+> @@ -0,0 +1,12 @@
+> +:orphan:
+> +
+> +==============
+> +Industrial I/O
+> +==============
+> +
+> +.. toctree::
+> +   :maxdepth: 1
+> +
+> +   iio_configfs
+> +
+> +   ep93xx_adc
+> diff --git a/drivers/iio/Kconfig b/drivers/iio/Kconfig
+> index 1d736a4952ab..5bd51853b15e 100644
+> --- a/drivers/iio/Kconfig
+> +++ b/drivers/iio/Kconfig
+> @@ -28,7 +28,7 @@ config IIO_CONFIGFS
+>  	help
+>  	  This allows configuring various IIO bits through configfs
+>  	  (e.g. software triggers). For more info see
+> -	  Documentation/iio/iio_configfs.txt.
+> +	  Documentation/iio/iio_configfs.rst.
+>  
+>  config IIO_TRIGGER
+>  	bool "Enable triggered sampling support"
 
-[snip]
-
-> +
-> +/* Cadnence NAND flash controller capabilities get from driver data. */
-> +struct cadence_nand_dt_devdata {
-> +	/* Skew value of the output signals of the NAND Flash interface. */
-> +	u32 if_skew;
-> +	/* It informs if aging feature in the DLL PHY supported. */
-> +	u8 phy_dll_aging;
-> +	/*
-> +	 * It informs if per bit deskew for read and write path in
-> +	 * the PHY is supported.
-> +	 */
-> +	u8 phy_per_bit_deskew;
-> +	/* It informs if slave DMA interface is connected to DMA engine. */
-> +	u8 has_dma;
-
-There is no needed to dedicate 8 bits to a variable if you only care about a single
-bit. You may write this as:
-
-bool has_dma : 1;
-
-[snip]
-
-> +static struct
-> +cdns_nand_chip *to_cdns_nand_chip(struct nand_chip *chip)
-> +{
-> +	return container_of(chip, struct cdns_nand_chip, chip);
-> +}
-> +
-> +static struct
-> +cdns_nand_ctrl *to_cdns_nand_ctrl(struct nand_controller *controller)
-> +{
-> +	return container_of(controller, struct cdns_nand_ctrl, controller);
-> +}
-
-It's better to inline explicitly such cases because they won't get inlined with some
-kernel configurations, like enabled ftracing for example.
-
-> +static bool
-> +cadence_nand_dma_buf_ok(struct cdns_nand_ctrl *cdns_ctrl, const void *buf,
-> +			u32 buf_len)
-> +{
-> +	u8 data_dma_width = cdns_ctrl->caps2.data_dma_width;
-> +
-> +	return buf && virt_addr_valid(buf) &&
-> +		likely(IS_ALIGNED((uintptr_t)buf, data_dma_width)) &&
-> +		likely(IS_ALIGNED(buf_len, data_dma_width));
-> +}
-> +
-> +static int cadence_nand_wait_for_value(struct cdns_nand_ctrl *cdns_ctrl,
-> +				       u32 reg_offset, u32 timeout_us,
-> +				       u32 mask, bool is_clear)
-> +{
-> +	u32 val;
-> +	int ret = 0;
-> +
-> +	ret = readl_poll_timeout(cdns_ctrl->reg + reg_offset,
-> +				 val, !(val & mask) == is_clear,
-> +				 10, timeout_us);
-
-Apparently you don't care about having memory barrier here, hence
-readl_relaxed_poll_timeout().
-
-> +	if (ret < 0) {
-> +		dev_err(cdns_ctrl->dev,
-> +			"Timeout while waiting for reg %x with mask %x is clear %d\n",
-> +			reg_offset, mask, is_clear);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static int cadence_nand_set_ecc_enable(struct cdns_nand_ctrl *cdns_ctrl,
-> +				       bool enable)
-> +{
-> +	u32 reg;
-> +
-> +	if (cadence_nand_wait_for_value(cdns_ctrl, CTRL_STATUS,
-> +					1000000,
-> +					CTRL_STATUS_CTRL_BUSY, true))
-> +		return -ETIMEDOUT;
-> +
-> +	reg = readl(cdns_ctrl->reg + ECC_CONFIG_0);
-> +
-> +	if (enable)
-> +		reg |= ECC_CONFIG_0_ECC_EN;
-> +	else
-> +		reg &= ~ECC_CONFIG_0_ECC_EN;
-> +
-> +	writel(reg, cdns_ctrl->reg + ECC_CONFIG_0);
-
-And here.. looks like there is no need for the memory barries, hence use the relaxed
-versions of readl/writel. Same for the rest of the patch.
-
-> +	return 0;
-> +}
-> +
-> +static void cadence_nand_set_ecc_strength(struct cdns_nand_ctrl *cdns_ctrl,
-> +					  u8 corr_str_idx)
-> +{
-> +	u32 reg;
-> +
-> +	if (cdns_ctrl->curr_corr_str_idx == corr_str_idx)
-> +		return;
-> +
-> +	reg = readl(cdns_ctrl->reg + ECC_CONFIG_0);
-> +	reg &= ~ECC_CONFIG_0_CORR_STR;
-> +	reg |= FIELD_PREP(ECC_CONFIG_0_CORR_STR, corr_str_idx);
-> +	writel(reg, cdns_ctrl->reg + ECC_CONFIG_0);
-> +
-> +	cdns_ctrl->curr_corr_str_idx = corr_str_idx;
-> +}
-> +
-> +static u8 cadence_nand_get_ecc_strength_idx(struct cdns_nand_ctrl *cdns_ctrl,
-> +					    u8 strength)
-> +{
-> +	u8 i, corr_str_idx = 0;
-> +
-> +	for (i = 0; i < BCH_MAX_NUM_CORR_CAPS; i++) {
-> +		if (cdns_ctrl->ecc_strengths[i] == strength) {
-> +			corr_str_idx = i;
-> +			break;
-> +		}
-> +	}
-
-Is it a error case when i == BCH_MAX_NUM_CORR_CAPS?
-
-> +	return corr_str_idx;
-> +}
-> +
-> +static int cadence_nand_set_skip_marker_val(struct cdns_nand_ctrl *cdns_ctrl,
-> +					    u16 marker_value)
-> +{
-> +	u32 reg = 0;
-> +
-> +	if (cadence_nand_wait_for_value(cdns_ctrl, CTRL_STATUS,
-> +					1000000,
-> +					CTRL_STATUS_CTRL_BUSY, true))
-> +		return -ETIMEDOUT;
-> +
-> +	reg = readl(cdns_ctrl->reg + SKIP_BYTES_CONF);
-> +	reg &= ~SKIP_BYTES_MARKER_VALUE;
-> +	reg |= FIELD_PREP(SKIP_BYTES_MARKER_VALUE,
-> +		    marker_value);
-> +
-> +	writel(reg, cdns_ctrl->reg + SKIP_BYTES_CONF);
-> +
-> +	return 0;
-> +}
-> +
-> +static int cadence_nand_set_skip_bytes_conf(struct cdns_nand_ctrl *cdns_ctrl,
-> +					    u8 num_of_bytes,
-> +					    u32 offset_value,
-> +					    int enable)
-> +{
-> +	u32 reg = 0;
-> +	u32 skip_bytes_offset = 0;
-
-Please don't initialize variables if not necessary. You could also write this in a
-single line.
-
-	u32 skip_bytes_offset, reg;
-
-Same for the rest of the patch.
-
-> +	if (cadence_nand_wait_for_value(cdns_ctrl, CTRL_STATUS,
-> +					1000000,
-> +					CTRL_STATUS_CTRL_BUSY, true))
-> +		return -ETIMEDOUT;
-> +
-> +	if (!enable) {
-> +		num_of_bytes = 0;
-> +		offset_value = 0;
-> +	}
-> +
-> +	reg = readl(cdns_ctrl->reg + SKIP_BYTES_CONF);
-> +	reg &= ~SKIP_BYTES_NUM_OF_BYTES;
-> +	reg |= FIELD_PREP(SKIP_BYTES_NUM_OF_BYTES,
-> +		    num_of_bytes);
-> +	skip_bytes_offset = FIELD_PREP(SKIP_BYTES_OFFSET_VALUE,
-> +				       offset_value);
-> +
-> +	writel(reg, cdns_ctrl->reg + SKIP_BYTES_CONF);
-> +	writel(skip_bytes_offset, cdns_ctrl->reg + SKIP_BYTES_OFFSET);
-> +
-> +	return 0;
-> +}
-> +
-> +/* Fucntions enables/disables hardware detection of erased data */
-
-s/Fucntions/Function/, please use spellchecker. I'd also recommend to start all
-single-line comments with a lower case (and without a dot in the end) because it is a
-more common style in the kernel and is a bit easier for the eyes.
-
-[snip]
