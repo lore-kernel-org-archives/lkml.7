@@ -2,119 +2,244 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B606C31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D951EC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 11:05:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65132133D
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 10:39:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D17320870
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 11:05:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chrisdown.name header.i=@chrisdown.name header.b="kgrOCNDV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UwFN84U/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726431AbfFPKht (ORCPT
+        id S1727167AbfFPLFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 06:37:49 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:38404 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725766AbfFPKht (ORCPT
+        Sun, 16 Jun 2019 07:05:20 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34533 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727116AbfFPLFT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 06:37:49 -0400
-Received: by mail-pf1-f193.google.com with SMTP id a186so4059962pfa.5
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 03:37:48 -0700 (PDT)
+        Sun, 16 Jun 2019 07:05:19 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k11so6874531wrl.1;
+        Sun, 16 Jun 2019 04:05:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chrisdown.name; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=D66IwRD66+bBr49h113lbcClZo8OrbEzuxhoETswyAA=;
-        b=kgrOCNDV3slPKYPtT/XUkerWgc9N6kmRSVG8nhJbBPj7PsOQxHbX7sRVeKyB4adSbG
-         X7fAr8BFsvhhdJFjJQq8cqqa1pm7ssLdmRZi0Pjeq1tdaHh5DNhEfm/KHevQMnlnek9+
-         wFq8e/uowrLJk81/22wplVkQzIPQqnvvx6Aes=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=jYpdMxao6pliYnnD2x77IZriJWD7lFq0HxazhfUGYeM=;
+        b=UwFN84U/ghpHYCjJsDjNhvd0IG6uo6P/Ch88x8naJcdJ3LA2P+oVvUyG2OddL1IfWo
+         Txz07ZLzHPkSr8t6uXZYv+JBxeYlPaL1q6TjnJV5i5NsIHi8otj703Hw439tfzCJmkx9
+         bhtZwyBGnDAfKH75NBMd9QFWoSzIRXN7SWKl/tUPS9VsqMtLYoA7ZItlJ0Qe6h6Gc1H4
+         qSmX/Z0FQ6FbVAP6j62fzdvl7Kx7qsJb3yVW+gAouv+ZrB1JfGLTsGPbBCjmTDsQIrUA
+         xMoN/N5HJ9atne/L4VNVvkuBNudrkBYAjRmGwG1yPEPswZ9FqVwy4LkjPSgvi+gf6yz3
+         NADw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=D66IwRD66+bBr49h113lbcClZo8OrbEzuxhoETswyAA=;
-        b=hBBm4741khFHuEotIwk4k9DPD6YxHTVLACPpw/iO8OBtE8mN+AyY0w2BKfaLq5UtYL
-         Hr+Fx1LblkeaiMhg402veupVD2zuf8yTD+BH64gzpt1MqDubiXTkGKoJ9ZN0DOIUX4F1
-         LEggCy75f6c6oBL2289d/ZVnWsMi9eU7kLMZQ2FSTiWwac24ImmkKSbY6N3Zn3KHR884
-         FVs9AoRQ3rYVdbIqJMNJ4gwGm24M7KsX1ZuhK9Pt+OM9qVmF2MqJHDYsF7oQqwYGoN7y
-         dE/qjK9zxUzldzJxBEKxhlMRbiAgJY6TU6+0kssd1zh+MUOoL91TdddpYh+xpJhwMhh7
-         aXDg==
-X-Gm-Message-State: APjAAAUKOIeWVtpJeJAUAxrzB/v7pOAkghn8paFMY+XnjqC1bYx9yGjN
-        7E0dl0CLQwJU2wqYrl0VzBzPjw==
-X-Google-Smtp-Source: APXvYqzuJgQl+102uUA83U5N3hshdRoQSBwu1PZlD2FrUikMytjIFjhKAz6HFlQnXa6TUYRoI/Xy6A==
-X-Received: by 2002:a17:90a:7f93:: with SMTP id m19mr21160942pjl.73.1560681468335;
-        Sun, 16 Jun 2019 03:37:48 -0700 (PDT)
-Received: from localhost ([61.6.140.222])
-        by smtp.gmail.com with ESMTPSA id h11sm8294436pfn.170.2019.06.16.03.37.46
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=jYpdMxao6pliYnnD2x77IZriJWD7lFq0HxazhfUGYeM=;
+        b=lCkodrDnkkHPukFIS10M/Eurgv0/7N8VoVtSqzsrefH0yvnsKI+2Rl09pGzUDVb8aY
+         HSkwK3MKOAlCcmrxNudkzGhoXV2Zr56ZBQSMCcMtq7nwd4YNz/MdcEBXPK5o5U6zbEDI
+         BCbNZuj2Xj2VjmJzX6qU8Zml97e9fm+d5B49Jcab8vWmMYk3+icd6RxyXk0kdGlTU0AO
+         ALHkAp95kg8p3+pWRPFEIqtmCg3p5xUvK+YgQzq28patVR4rvuE93LB4OGXxIPe8ofUM
+         T09fJxIa/ZS99yYhAbMljGI7R/6flyI+rfQpme2gQqhhkTu9KIGOqKzFfLRicwOC5K0y
+         7TlQ==
+X-Gm-Message-State: APjAAAX3GI5qsQMufFR+iHfvagd8h9zhO9Gis6vpd9130J45vVgdHw0K
+        l8QJXpVJVrsKLheMsJy7wwQ=
+X-Google-Smtp-Source: APXvYqzzqx42PAT4ueneqpG+etvE0yFc0vTzd9YPvagfFq04jv7+a+XjTXMN2fn6y898d3uHmGL14w==
+X-Received: by 2002:adf:ef8d:: with SMTP id d13mr55684452wro.60.1560683116461;
+        Sun, 16 Jun 2019 04:05:16 -0700 (PDT)
+Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net. [86.58.52.202])
+        by smtp.gmail.com with ESMTPSA id t1sm8457650wra.74.2019.06.16.04.05.13
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 03:37:47 -0700 (PDT)
-Date:   Sun, 16 Jun 2019 18:37:45 +0800
-From:   Chris Down <chris@chrisdown.name>
-To:     Xunlei Pang <xlpang@linux.alibaba.com>
-Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Subject: Re: [PATCH] memcg: Ignore unprotected parent in
- mem_cgroup_protected()
-Message-ID: <20190616103745.GA2117@chrisdown.name>
-References: <20190615111704.63901-1-xlpang@linux.alibaba.com>
- <20190615160820.GB1307@chrisdown.name>
- <711f086e-a2e5-bccd-72b6-b314c4461686@linux.alibaba.com>
+        Sun, 16 Jun 2019 04:05:14 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     linux-sunxi@googlegroups.com, megous@megous.com
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [linux-sunxi] [PATCH v6 5/6] drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
+Date:   Sun, 16 Jun 2019 13:05:13 +0200
+Message-ID: <1823986.m04BvQ5ALy@jernej-laptop>
+In-Reply-To: <20190527162237.18495-6-megous@megous.com>
+References: <20190527162237.18495-1-megous@megous.com> <20190527162237.18495-6-megous@megous.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <711f086e-a2e5-bccd-72b6-b314c4461686@linux.alibaba.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Xunlei,
+Hi Ondrej!
 
-Xunlei Pang writes:
->docker and various types(different memory capacity) of containers
->are managed by k8s, it's a burden for k8s to maintain those dynamic
->figures, simply set "max" to key containers is always welcome.
+Dne ponedeljek, 27. maj 2019 ob 18:22:36 CEST je megous via linux-sunxi 
+napisal(a):
+> From: Ondrej Jirman <megous@megous.com>
+> 
+> Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
+> for the DDC bus to be usable.
+> 
+> Add support for hdmi-connector node's optional ddc-en-gpios property to
+> support this use case.
+> 
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
+> ---
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 55 +++++++++++++++++++++++++--
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  3 ++
+>  2 files changed, 55 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c index 39d8509d96a0..59b81ba02d96
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
+> @@ -98,6 +98,30 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct
+> drm_device *drm, return crtcs;
+>  }
+> 
+> +static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
+> +					     struct 
+platform_device **pdev_out)
+> +{
+> +	struct platform_device *pdev;
+> +	struct device_node *remote;
+> +
+> +	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
+> +	if (!remote)
+> +		return -ENODEV;
+> +
+> +	if (!of_device_is_compatible(remote, "hdmi-connector")) {
+> +		of_node_put(remote);
+> +		return -ENODEV;
+> +	}
+> +
+> +	pdev = of_find_device_by_node(remote);
+> +	of_node_put(remote);
+> +	if (!pdev)
+> +		return -ENODEV;
+> +
+> +	*pdev_out = pdev;
+> +	return 0;
+> +}
+> +
+>  static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
+>  			      void *data)
+>  {
+> @@ -151,16 +175,29 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> struct device *master, return PTR_ERR(hdmi->regulator);
+>  	}
+> 
+> +	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &hdmi->connector_pdev);
+> +	if (!ret) {
+> +		hdmi->ddc_en = gpiod_get_optional(&hdmi->connector_pdev-
+>dev,
+> +						  "ddc-en", 
+GPIOD_OUT_HIGH);
+> +		if (IS_ERR(hdmi->ddc_en)) {
+> +			platform_device_put(hdmi->connector_pdev);
+> +			dev_err(dev, "Couldn't get ddc-en gpio\n");
+> +			return PTR_ERR(hdmi->ddc_en);
+> +		}
+> +	}
+> +
+>  	ret = regulator_enable(hdmi->regulator);
+>  	if (ret) {
+>  		dev_err(dev, "Failed to enable regulator\n");
+> -		return ret;
+> +		goto err_unref_ddc_en;
+>  	}
+> 
+> +	gpiod_set_value(hdmi->ddc_en, 1);
 
-Right, setting "max" is generally a fine way of going about it.
+Why don't you do that inside if clause where hdmi->ddc_en is assigned? It's 
+not useful otherwise anyway.
 
->Set "max" to docker also protects docker cgroup memory(as docker
->itself has tasks) unnecessarily.
+Besides, you would then only need to adjust one goto label in error path.
 
-That's not correct -- leaf memcgs have to _explicitly_ request memory 
-protection. From the documentation:
+> +
+>  	ret = reset_control_deassert(hdmi->rst_ctrl);
+>  	if (ret) {
+>  		dev_err(dev, "Could not deassert ctrl reset 
+control\n");
+> -		goto err_disable_regulator;
+> +		goto err_disable_ddc_en;
+>  	}
+> 
+>  	ret = clk_prepare_enable(hdmi->clk_tmds);
+> @@ -213,8 +250,14 @@ static int sun8i_dw_hdmi_bind(struct device *dev,
+> struct device *master, clk_disable_unprepare(hdmi->clk_tmds);
+>  err_assert_ctrl_reset:
+>  	reset_control_assert(hdmi->rst_ctrl);
+> -err_disable_regulator:
+> +err_disable_ddc_en:
+> +	gpiod_set_value(hdmi->ddc_en, 0);
+>  	regulator_disable(hdmi->regulator);
+> +err_unref_ddc_en:
+> +	if (hdmi->ddc_en)
+> +		gpiod_put(hdmi->ddc_en);
+> +
+> +	platform_device_put(hdmi->connector_pdev);
+> 
+>  	return ret;
+>  }
+> @@ -228,7 +271,13 @@ static void sun8i_dw_hdmi_unbind(struct device *dev,
+> struct device *master, sun8i_hdmi_phy_remove(hdmi);
+>  	clk_disable_unprepare(hdmi->clk_tmds);
+>  	reset_control_assert(hdmi->rst_ctrl);
+> +	gpiod_set_value(hdmi->ddc_en, 0);
+>  	regulator_disable(hdmi->regulator);
+> +
+> +	if (hdmi->ddc_en)
+> +		gpiod_put(hdmi->ddc_en);
+> +
+> +	platform_device_put(hdmi->connector_pdev);
+>  }
+> 
+>  static const struct component_ops sun8i_dw_hdmi_ops = {
+> diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h index 720c5aa8adc1..dad66b8301c2
+> 100644
+> --- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> +++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
+> @@ -9,6 +9,7 @@
+>  #include <drm/bridge/dw_hdmi.h>
+>  #include <drm/drm_encoder.h>
+>  #include <linux/clk.h>
+> +#include <linux/gpio/consumer.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/reset.h>
+> @@ -190,6 +191,8 @@ struct sun8i_dw_hdmi {
+>  	struct regulator		*regulator;
+>  	const struct sun8i_dw_hdmi_quirks *quirks;
+>  	struct reset_control		*rst_ctrl;
+> +	struct platform_device		*connector_pdev;
 
-    memory.low
+It seems that connector_pdev is needed only during intialization. Why do you 
+store it?
 
-    [...]
+Best regards,
+Jernej
 
-    Best-effort memory protection.  If the memory usages of a
-    cgroup and all its ancestors are below their low boundaries,
-    the cgroup's memory won't be reclaimed unless memory can be
-    reclaimed from unprotected cgroups.
+> +	struct gpio_desc		*ddc_en;
+>  };
+> 
+>  static inline struct sun8i_dw_hdmi *
 
-Note the part that the cgroup itself also must be within its low boundary, 
-which is not implied simply by having ancestors that would permit propagation 
-of protections.
 
-In this case, Docker just shouldn't request it for those Docker-related tasks, 
-and they won't get any. That seems a lot simpler and more intuitive than 
-special casing "0" in ancestors.
 
->This patch doesn't take effect on any intermediate layer with
->positive memory.min set, it requires all the ancestors having
->0 memory.min to work.
->
->Nothing special change, but more flexible to business deployment...
 
-Not so, this change is extremely "special". It violates the basic expectation 
-that 0 means no possibility of propagation of protection, and I still don't see 
-a compelling argument why Docker can't just set "max" in the intermediate 
-cgroup and not accept any protection in leaf memcgs that it doesn't want 
-protection for.
