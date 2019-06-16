@@ -2,80 +2,132 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F01C31E50
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19412C31E50
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE7520866
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:50:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD0382145D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 17:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="JTjezIzO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHmV61cN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727406AbfFPRuB (ORCPT
+        id S1727412AbfFPRvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 13:50:01 -0400
-Received: from conuserg-10.nifty.com ([210.131.2.77]:52511 "EHLO
-        conuserg-10.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFPRuB (ORCPT
+        Sun, 16 Jun 2019 13:51:16 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40199 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfFPRvQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 13:50:01 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id x5GHmCb3032735;
-        Mon, 17 Jun 2019 02:48:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com x5GHmCb3032735
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560707293;
-        bh=Te693hygqCk6T69KjghvaUj9Rx8zaxGUTGHMI/OphOA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=JTjezIzOW7STPIX7uzZ/YRLpPKesR4u7WdeD2VTiUifcJfYIklwCHHte5/8XmYhUw
-         b/A+3Fh4o8in3SEUdbrr6cy2EheRPJZeoArTjyU+B7iTUPt6egppuZQlS2BNic1HJ7
-         tDVg9OGLnL5GAF3627aTM06Nh4LETvKqfU2aMivm+pxJlVitS3yNL2PZH/NrEAzH92
-         4BB5yRA25f0ERq92WeQ+iGnJRLNPnDMGAxf+B4HWGrU1EYGRQj59EiKzqMGaDrnA00
-         OXRWMXevCHvrx/pZ+ZQ032xkvar2tYJ9M8cze6vwgl6O2p1eSVNTOh1Y3EAN3W2tHH
-         o13UcG2csZAaQ==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-kernel@vger.kernel.org,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Stefan Agner <stefan@agner.ch>, Joel Stanley <joel@jms.id.au>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH 1/2] lib/raid6: remove duplicated CFLAGS_REMOVE_altivec8.o
-Date:   Mon, 17 Jun 2019 02:48:04 +0900
-Message-Id: <20190616174805.3069-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Sun, 16 Jun 2019 13:51:16 -0400
+Received: by mail-wm1-f67.google.com with SMTP id v19so6740691wmj.5;
+        Sun, 16 Jun 2019 10:51:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=eVSTx+XKpmuAqrrVQWr/mEKYA3TUsuFexdVGwSEmrwY=;
+        b=AHmV61cNcCytwE+8j8CjiMsjNIVOGRJl0x50kDtiUSH87Snpxrx+DQjlsrur1SfIqB
+         //5heBapOMqdR6mE4KXvRhYF04XeAIcX5AX82SqojNUX3HwDn9QeOvHwrW5mCR/7W1v9
+         lDgQz/gYNcGt9xJCn4Dn2pHQSSxDETDWn0BSbN/oEfVHIe/mrJGhS4ha3mXeF8YEEZnt
+         8gMDj2Kp4huPCmhP7XjqhLIOm6PvSiZp/HgszoEmiRBNWTWi4B0otGGNvscDA8bKD/c4
+         H7AUWqwpY8ZnIwojAii3StsNC/TP5Hy1JUcBtmvd1ARtIBSFoEHLkoraSPVMPciIaZus
+         Y1Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=eVSTx+XKpmuAqrrVQWr/mEKYA3TUsuFexdVGwSEmrwY=;
+        b=a6wK+b1JCiAmUgQVlIFTffnfv0l/3Fdoa4nCff/fyLvSq1kW3pE3160uAjZWd7JdxL
+         FFNDsDvClJamIsS3NFO0ZdENZcRwEoeZxHDCAN32zXy1sxS1kDlIpp3qaOnkezKhLnsf
+         DWkbEwYqdQkLSLQ/cs3NWumMRDWs7w3rCxS58/w/htVNyWI9E0CdaQazQnfr3Xfwv/oG
+         qMzcSeLvUyfPVRUs//FjbNBj3SZh23zFd/pseuMoVGzBcqCE7WZgidtMWRDXkhxLt2sp
+         Oywc1SL9Mb7nLVMFrXg3u2cqlS+ku80fRpKvpPSrRUs9PLzqrSk0kyIhZWjIh4A5SLW7
+         NSNw==
+X-Gm-Message-State: APjAAAWsXp9r92bSf5FildTGE9gNT5EwwPk4J7OTxgER2BGiNOdjAmiM
+        /UqHlp8mObRWyeiSC/mImso=
+X-Google-Smtp-Source: APXvYqyBF8D/KuFgdlt61asAqKXISiqUTVlj4ZuVudEgQCX1Wvy8FZxNRT73ct+SazvV623KepnaPw==
+X-Received: by 2002:a1c:a807:: with SMTP id r7mr15250572wme.137.1560707474190;
+        Sun, 16 Jun 2019 10:51:14 -0700 (PDT)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id s12sm8502671wmh.34.2019.06.16.10.51.12
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Sun, 16 Jun 2019 10:51:13 -0700 (PDT)
+Subject: Re: [PATCHv4 17/28] x86/vdso: Switch image on
+ setns()/unshare()/clone()
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org, Adrian Reber <adrian@lisas.de>,
+        Andrei Vagin <avagin@openvz.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Cyrill Gorcunov <gorcunov@openvz.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jann Horn <jannh@google.com>, Jeff Dike <jdike@addtoit.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        containers@lists.linux-foundation.org, criu@openvz.org,
+        linux-api@vger.kernel.org, x86@kernel.org,
+        Andrei Vagin <avagin@gmail.com>
+References: <20190612192628.23797-1-dima@arista.com>
+ <20190612192628.23797-18-dima@arista.com>
+ <alpine.DEB.2.21.1906141603500.1722@nanos.tec.linutronix.de>
+From:   Dmitry Safonov <0x7f454c46@gmail.com>
+Message-ID: <efe0d911-e70d-c044-80fc-da7bab8e546d@gmail.com>
+Date:   Sun, 16 Jun 2019 18:51:12 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1906141603500.1722@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No intended change in behavior.
+On 6/14/19 3:05 PM, Thomas Gleixner wrote:
+> On Wed, 12 Jun 2019, Dmitry Safonov wrote:
+>>  
+>> +#ifdef CONFIG_TIME_NS
+>> +int vdso_join_timens(struct task_struct *task)
+>> +{
+>> +	struct mm_struct *mm = task->mm;
+>> +	struct vm_area_struct *vma;
+>> +
+>> +	if (down_write_killable(&mm->mmap_sem))
+>> +		return -EINTR;
+>> +
+>> +	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+>> +		unsigned long size = vma->vm_end - vma->vm_start;
+>> +
+>> +		if (vma_is_special_mapping(vma, &vvar_mapping) ||
+>> +		    vma_is_special_mapping(vma, &vdso_mapping))
+>> +			zap_page_range(vma, vma->vm_start, size);
+>> +	}
+>> +
+>> +	up_write(&mm->mmap_sem);
+>> +	return 0;
+>> +}
+>> +#else /* CONFIG_TIME_NS */
+>> +int vdso_join_timens(struct task_struct *task)
+>> +{
+>> +	return -ENXIO;
+>> +}
+> 
+> Is that else path really required? The callsite is only compiled when
+> CONFIG_TIME_NS is enabled, right?
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+Oh, yes - will drop this.
 
- lib/raid6/Makefile | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-index e723eacf7868..74004037033f 100644
---- a/lib/raid6/Makefile
-+++ b/lib/raid6/Makefile
-@@ -26,7 +26,6 @@ CFLAGS_REMOVE_altivec1.o  += -msoft-float
- CFLAGS_REMOVE_altivec2.o  += -msoft-float
- CFLAGS_REMOVE_altivec4.o  += -msoft-float
- CFLAGS_REMOVE_altivec8.o  += -msoft-float
--CFLAGS_REMOVE_altivec8.o  += -msoft-float
- CFLAGS_REMOVE_vpermxor1.o += -msoft-float
- CFLAGS_REMOVE_vpermxor2.o += -msoft-float
- CFLAGS_REMOVE_vpermxor4.o += -msoft-float
--- 
-2.17.1
-
+Thanks,
+          Dmitry
