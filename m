@@ -7,64 +7,66 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E05C31E50
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F350C31E54
 	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B4B42087F
+	by mail.kernel.org (Postfix) with ESMTP id 771B2208E3
 	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 23:15:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mforney-org.20150623.gappssmtp.com header.i=@mforney-org.20150623.gappssmtp.com header.b="bSbCWQu2"
+	dkim=pass (2048-bit key) header.d=mforney-org.20150623.gappssmtp.com header.i=@mforney-org.20150623.gappssmtp.com header.b="gh6LmzXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727368AbfFPXPD (ORCPT
+        id S1727447AbfFPXPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Sun, 16 Jun 2019 19:15:03 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:33714 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbfFPXPC (ORCPT
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45155 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727226AbfFPXPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 19:15:02 -0400
-Received: by mail-pf1-f194.google.com with SMTP id x15so4618173pfq.0
+        Sun, 16 Jun 2019 19:15:03 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r1so4589979pfq.12
         for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 16:15:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=mforney-org.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LisjUcQynEyutHjcXsklrzKxwrxgiMqBcx84t9sp8SU=;
-        b=bSbCWQu24OBmXvfrVDwrOpERHEraXzWyIGcgWvqTNuBUz3F6XNDkGYw6KIxUUjB+KP
-         9F95IzONT3TCxeU9+CSpsYO3e/BEqD9x0UOLCeLE1W4KksJmc3/wd2bzehVMBxLyb8rh
-         UkXpRFKKudx0vRvHfyfTxT5oZj0U0Gq07yTVW6wRDPrvdg+ziz/H9P1iPPIy4pBnvaJw
-         elOjdHJyDuCt9q9AXVk2akJ2yy2tI0lHqth8TO6JXjFez3ZTSB674DeemzcmlEjsyJAC
-         Zt//0BcxFt63Q2EiEq9nL+pEExLC8akAGnIzvcgJ6OT1Cyeyuk25uvdYgxGPX13fFv/Z
-         e0Ew==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=O6s43FoFGk1a0lzCjrcjOypwF7oZWJqI5fW9U/cGkrQ=;
+        b=gh6LmzXLeXfnxxQNn15D7PEEGjZHXVOAh6pjmCTfac7zk6xjN7oYV5g6z2KUz2AG8a
+         0sqjwzkrH/Lu/SRrpKVqlK30hNtORG52paEMlxfgKvGRDoIy6SSRvP/Hh7Po7moowL9j
+         /xwphgXKkcBw6jcKOukF03Hp4YO+w07s7b9HOJkEg9Oo/GX84WajneW2sNGyQ2IBfp6x
+         MiCQyHy/3TAS7XaxpSz+lbT5LBg5I0q05RB2FlUrrjXdpEUSNXbgwx/64DuteKGeZnIl
+         p649thLLjnB3U0Qn2CooH70GPYG63yKd6xrIrXyn66PsdP8JDeuLkzZMg/Xg7oi9wKco
+         QCUQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LisjUcQynEyutHjcXsklrzKxwrxgiMqBcx84t9sp8SU=;
-        b=PNvFSBZy7e4t8rbern3goIpwjn9R5lVl6l9UV3HccZNbOZ4I/qxG0ptZxKOI4XGZPg
-         PRcuBZYvDSkpjV0Wtb7QJz8CsALamBeivJZ3lDAU9HLybuAKzYXEquiA8RmJ55HCwjzA
-         9FYAFknr0Z8cS5zZrlQS/WbXFAon44mW90utMr4egpcyg9YdTmkuIrLhF0oN8hdsMlLG
-         G3NCo8cWFy5EdeeMlKfnsYdCmRgz17bX53IBd7tIEH3Mdm2bCbFVDYBFhH7m0eCGsO4B
-         LuDZEgdh4BbkVe+Z3vgsa13WMOKIrksyAMyDzo52nkfz/IhDpG+3xQymKEd8z4rzOpIA
-         uGcg==
-X-Gm-Message-State: APjAAAWZ40gc9jI1EmeSBC1HIZ3rSEwfpQrQkn84RS+wHT98d1JJHaNX
-        wwc4aCBrjYXTWTX3Icj2xTaoaQ==
-X-Google-Smtp-Source: APXvYqyrwfghEFvC2DlBNDu9ly6M2Y9AECBryhe5iiG4xbRkvU7M9Al8iNwtfCFJuAgdZ9VAFWE+0g==
-X-Received: by 2002:a62:4e48:: with SMTP id c69mr88327597pfb.176.1560726901504;
-        Sun, 16 Jun 2019 16:15:01 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=O6s43FoFGk1a0lzCjrcjOypwF7oZWJqI5fW9U/cGkrQ=;
+        b=b0ye1tIFu4Q1xfMtYk9SiIJw/yXs2IM/GZHPkPQgpUFEgDldWIAhe0S2ymIi0z66kS
+         xQ+kNQ4jhzV5hmeEv4QQzY4RRCVUVtBw+yC42fwBJByQrg9SMshhJqF7jUXQB3dZ65oU
+         FseYdzKJMgMMeAa4w3TSKi3xGCCfDaCjk2dpXj1F0TPT0KyWijTtTrgHBpum+iEvogCL
+         rWar2W6IxvHsMf1pryf+aqV8jKB2az5sBWxnYwrvk9k2Y2YwQs4mJDhwmhvMB3BpwX9I
+         FVI74WlUkwSjjcZ0GWT9pSixJQoBDJp00j5OBDKOkvXKVb3pJ5Ot1NmbTfnXQ1VVhH+9
+         y4gw==
+X-Gm-Message-State: APjAAAVBrJ02OayTm2EmoHynXr9xvMU6/KU955A8Xr9tArrn9AC+7FSy
+        MCBWc7msoXjpuVfCTVUSfHRteiIAzmtOuEeJ
+X-Google-Smtp-Source: APXvYqz+hgr1xnFhDWLE2nNx94+8/zH+iIcchdfdn0eXOBf+KMdK8dn5FigOxZDuEdAmalDFmv2TPw==
+X-Received: by 2002:a62:1456:: with SMTP id 83mr59232399pfu.228.1560726902615;
+        Sun, 16 Jun 2019 16:15:02 -0700 (PDT)
 Received: from localhost ([2601:647:5180:35d7::cf52])
-        by smtp.gmail.com with ESMTPSA id d13sm7446684pjs.32.2019.06.16.16.15.00
+        by smtp.gmail.com with ESMTPSA id a21sm7682381pjh.10.2019.06.16.16.15.01
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sun, 16 Jun 2019 16:15:01 -0700 (PDT)
+        Sun, 16 Jun 2019 16:15:02 -0700 (PDT)
 From:   Michael Forney <mforney@mforney.org>
 To:     Josh Poimboeuf <jpoimboe@redhat.com>,
         Peter Zijlstra <peterz@infradead.org>
 Cc:     linux-kernel@vger.kernel.org,
         elftoolchain-developers@lists.sourceforge.net
-Subject: [PATCH 1/2] objtool: Rename elf_open to prevent conflict with libelf from elftoolchain
-Date:   Sun, 16 Jun 2019 16:14:59 -0700
-Message-Id: <20190616231500.8572-1-mforney@mforney.org>
+Subject: [PATCH 2/2] objtool: Use Elf_Scn typedef instead of assuming tag name
+Date:   Sun, 16 Jun 2019 16:15:00 -0700
+Message-Id: <20190616231500.8572-2-mforney@mforney.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190616231500.8572-1-mforney@mforney.org>
+References: <20190616231500.8572-1-mforney@mforney.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -72,52 +74,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The libelf implementation might use a different tag name, and the
+Elf_Scn typedef is already used throughout the rest of objtool.
+
 Signed-off-by: Michael Forney <mforney@mforney.org>
 ---
- tools/objtool/check.c | 2 +-
- tools/objtool/elf.c   | 2 +-
- tools/objtool/elf.h   | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ tools/objtool/elf.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/objtool/check.c b/tools/objtool/check.c
-index 172f99195726..6ed46c36c54f 100644
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -2407,7 +2407,7 @@ int check(const char *_objname, bool orc)
- 
- 	objname = _objname;
- 
--	file.elf = elf_open(objname, orc ? O_RDWR : O_RDONLY);
-+	file.elf = elf_open_path(objname, orc ? O_RDWR : O_RDONLY);
- 	if (!file.elf)
- 		return 1;
- 
 diff --git a/tools/objtool/elf.c b/tools/objtool/elf.c
-index e99e1be19ad9..4116f564a0b0 100644
+index 4116f564a0b0..a4258d80d4ce 100644
 --- a/tools/objtool/elf.c
 +++ b/tools/objtool/elf.c
-@@ -401,7 +401,7 @@ static int read_relas(struct elf *elf)
- 	return 0;
- }
- 
--struct elf *elf_open(const char *name, int flags)
-+struct elf *elf_open_path(const char *name, int flags)
+@@ -463,7 +463,7 @@ struct section *elf_create_section(struct elf *elf, const char *name,
  {
- 	struct elf *elf;
- 	Elf_Cmd cmd;
-diff --git a/tools/objtool/elf.h b/tools/objtool/elf.h
-index e44ca5d51871..c59100d243ac 100644
---- a/tools/objtool/elf.h
-+++ b/tools/objtool/elf.h
-@@ -74,7 +74,7 @@ struct elf {
- };
+ 	struct section *sec, *shstrtab;
+ 	size_t size = entsize * nr;
+-	struct Elf_Scn *s;
++	Elf_Scn *s;
+ 	Elf_Data *data;
  
- 
--struct elf *elf_open(const char *name, int flags);
-+struct elf *elf_open_path(const char *name, int flags);
- struct section *find_section_by_name(struct elf *elf, const char *name);
- struct symbol *find_symbol_by_offset(struct section *sec, unsigned long offset);
- struct symbol *find_symbol_by_name(struct elf *elf, const char *name);
+ 	sec = malloc(sizeof(*sec));
 -- 
 2.20.1
 
