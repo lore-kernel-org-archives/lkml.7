@@ -2,107 +2,95 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D1AC31E49
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:46:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 570EEC31E49
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:55:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFFBF2147A
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:46:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220622133D
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 09:55:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfFPJqV (ORCPT
+        id S1726650AbfFPJzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 05:46:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57540 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725888AbfFPJqU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 05:46:20 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8CAA33688E;
-        Sun, 16 Jun 2019 09:46:20 +0000 (UTC)
-Received: from krava (ovpn-204-53.brq.redhat.com [10.40.204.53])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 394701001DDE;
-        Sun, 16 Jun 2019 09:46:09 +0000 (UTC)
-Date:   Sun, 16 Jun 2019 11:46:05 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
+        Sun, 16 Jun 2019 05:55:19 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:41666 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725888AbfFPJzT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 05:55:19 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hcRsP-0007lv-2B; Sun, 16 Jun 2019 11:55:05 +0200
+Date:   Sun, 16 Jun 2019 11:55:03 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <andi.kleen@intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: Re: [PATCH] perf: Don't hardcode host include path for libslang
-Message-ID: <20190616094605.GB2500@krava>
-References: <20190614183949.5588-1-f.fainelli@gmail.com>
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Stephane Eranian <eranian@google.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wincy Van <fanwenyi0529@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Baoquan He <bhe@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [RFC PATCH v4 18/21] x86/apic: Add a parameter for the APIC
+ delivery mode
+In-Reply-To: <1558660583-28561-19-git-send-email-ricardo.neri-calderon@linux.intel.com>
+Message-ID: <alpine.DEB.2.21.1906161151240.1760@nanos.tec.linutronix.de>
+References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-19-git-send-email-ricardo.neri-calderon@linux.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614183949.5588-1-f.fainelli@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sun, 16 Jun 2019 09:46:20 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 11:39:47AM -0700, Florian Fainelli wrote:
-> Hardcoding /usr/include/slang is fundamentally incompatible with cross
-> compilation and will lead to the inability for a cross-compiled
-> environment to properly detect whether slang is available or not.
-> 
-> If /usr/include/slang is necessary that is a distribution specific
-> knowledge that could be solved with either a standard pkg-config .pc
-> file (which slang has) or simply overriding CFLAGS accordingly, but the
-> default perf Makefile should be clean of all of that.
-
-fedora 30 is ok with this, I guess acme's distro test will
-tell us about the rest ;-)
-
-jirka
-
-> 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  tools/build/feature/Makefile | 2 +-
->  tools/perf/Makefile.config   | 1 -
->  2 files changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/tools/build/feature/Makefile b/tools/build/feature/Makefile
-> index 4b8244ee65ce..f9432d21eff9 100644
-> --- a/tools/build/feature/Makefile
-> +++ b/tools/build/feature/Makefile
-> @@ -181,7 +181,7 @@ $(OUTPUT)test-libaudit.bin:
->  	$(BUILD) -laudit
+On Thu, 23 May 2019, Ricardo Neri wrote:
 >  
->  $(OUTPUT)test-libslang.bin:
-> -	$(BUILD) -I/usr/include/slang -lslang
-> +	$(BUILD) -lslang
->  
->  $(OUTPUT)test-libcrypto.bin:
->  	$(BUILD) -lcrypto
-> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-> index 85fbcd265351..b11134fdf59f 100644
-> --- a/tools/perf/Makefile.config
-> +++ b/tools/perf/Makefile.config
-> @@ -641,7 +641,6 @@ ifndef NO_SLANG
->      NO_SLANG := 1
->    else
->      # Fedora has /usr/include/slang/slang.h, but ubuntu /usr/include/slang.h
-> -    CFLAGS += -I/usr/include/slang
->      CFLAGS += -DHAVE_SLANG_SUPPORT
->      EXTLIBS += -lslang
->      $(call detected,CONFIG_SLANG)
-> -- 
-> 2.17.1
-> 
+>  struct irq_cfg {
+> -	unsigned int		dest_apicid;
+> -	unsigned int		vector;
+> +	unsigned int				dest_apicid;
+> +	unsigned int				vector;
+> +	enum ioapic_irq_destination_types	delivery_mode;
+
+And how is this related to IOAPIC? I know this enum exists already, but in
+connection with MSI this does not make any sense at all.
+
+> +
+> +		/*
+> +		 * Initialize the delivery mode of this irq to match the
+> +		 * default delivery mode of the APIC. This is useful for
+> +		 * children irq domains which want to take the delivery
+> +		 * mode from the individual irq configuration rather
+> +		 * than from the APIC.
+> +		 */
+> +		 apicd->hw_irq_cfg.delivery_mode = apic->irq_delivery_mode;
+
+And here it's initialized from apic->irq_delivery_mode, which is an
+u32. Intuitive and consistent - NOT!
+
+Thanks,
+
+	tglx
