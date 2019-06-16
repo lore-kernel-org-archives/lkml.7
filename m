@@ -2,122 +2,123 @@ Return-Path: <SRS0=7o0M=UP=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B42B7C31E54
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 02:48:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCEEFC31E51
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 02:54:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9C12184B
-	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 02:48:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 924502173C
+	for <linux-kernel@archiver.kernel.org>; Sun, 16 Jun 2019 02:54:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="osqG7nTx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azL1fWDj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726993AbfFPCsc (ORCPT
+        id S1727101AbfFPCyC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sat, 15 Jun 2019 22:48:32 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:52364 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725807AbfFPCsb (ORCPT
+        Sat, 15 Jun 2019 22:54:02 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36688 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725807AbfFPCyC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sat, 15 Jun 2019 22:48:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=fVR/gatsCNvx0HfZ+cZtZt1egg9Lv7Ur86vtwfcXrT4=; b=osqG7nTxCG0chX8AjzYKA4XQN7
-        43yVCmjIEtwVihWM9s4a7ybp7yDBwUgVxyzal/Hw6DIuvlK34Mivqb2eG38meWVPEKm5MwSH8gMtQ
-        YsrZTs+qP09+6BJSk1Mhc8V9zsldhCKJ78vDT+oE4rxjFMZNHlcDL7Yx9fqlLYhRpVT3a8PiQs3sb
-        v34iQ7R7ZVuA34UL652FrgWLaQimFv76S2EY5t1FaVrTEMwHjVFcn16g3Zyxf9bw2GWCoX1rKFw/X
-        IVdZ91J0bovZt2l4n2TwTM29SL637mJFjdAegaUWsQujbmGaYEMKe/fY2NEgKWzpUr6hgJiqmqY3v
-        Qawzmf0g==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcLDY-0006gs-1P; Sun, 16 Jun 2019 02:48:28 +0000
-Subject: Re: [PATCH v2 1/2] media: vimc: stream: add missing function
- documentation
-To:     =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>,
-        linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
-        kernel@collabora.com, linux-kernel@vger.kernel.org
-References: <20190616020959.7360-1-andrealmeid@collabora.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <ed60e26e-64f2-4769-3018-135cbf0fbfc0@infradead.org>
-Date:   Sat, 15 Jun 2019 19:48:23 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sat, 15 Jun 2019 22:54:02 -0400
+Received: by mail-pl1-f193.google.com with SMTP id k8so1681022plt.3
+        for <linux-kernel@vger.kernel.org>; Sat, 15 Jun 2019 19:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=rSYojKKqNckbYG/tUygNLocVuWuVohmc/L+Qes76CYE=;
+        b=azL1fWDj/VaFfL9a+EU3dyAzxR2XAIeqzYD3ZEfAEuIxBq8E23eXJQdpJkYc+Wx1BE
+         97YGhEtWi9nx5NqEOzEdmY6Sv2Kk3iaf/A8kvtS7grPSrqU47tDOvHWxK8tRw2KgU5vh
+         8iFGuRL9QJCe5fNSRXy6MR/ufNPt/qltALYE02ZfUDxkSFcDO+Snm0R/k+KOpkMHZsHw
+         f+fwt97b2Yn6wU1xxB/nxl5YW6vvaV7Gc8c19T+NVgpWoxEUbrsAYUPoIOD/3r8dgI8l
+         LonnMpdycxR5z7OC04Lt30qQat5TZ2uL+x6UswOzFsELE6q7YpJfJI2h+zNPU6lSFGiv
+         5+2w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=rSYojKKqNckbYG/tUygNLocVuWuVohmc/L+Qes76CYE=;
+        b=O9Vywstz78V2LPFEQYvChEe1igIWEzNiRciK7kEdleKLV4Rt3Vn/MuhEhXZlIj8UUs
+         8x6n+6oVji5c4OxcJ1iwQ0P/+gdWdv5rCn0AB4cCYxRj0W4lWFNUGLWprm0azdePdtlj
+         wOOIrcgBqjtBO5lMclFDc7yOaEU21Kou3+3lrQBKohGTdJcNXBDoQSGKW8WYmkQ2HxHX
+         HhyQnb0sQ20N4JtJYHIiW9O3dv+LY+ZR/+9irYFHcN7dtxuo896gQdCcwzwTVhIEPaOU
+         lH5BKPnsThlTq7Z9ADh1o0kk7GdlmFp4GPTd0faTeB6JEHsfLryaIjNLWw89bEIXT9gZ
+         3bhw==
+X-Gm-Message-State: APjAAAVbZ7wBkgGOZW/vRzJ15tucGjT7C3FYqRN8dWUUsQnLfTYMi79N
+        g2mgFe4+N23OgK/fMrgc24o=
+X-Google-Smtp-Source: APXvYqysiXGChPoHpbyxkJa7fBtYWM9b/WTr83QA/2CtymmU9Hk/xLsaSFBSvknMGRD1LOjVz59NkA==
+X-Received: by 2002:a17:902:a506:: with SMTP id s6mr26553650plq.87.1560653641324;
+        Sat, 15 Jun 2019 19:54:01 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.89.153])
+        by smtp.gmail.com with ESMTPSA id e127sm7464489pfe.98.2019.06.15.19.53.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sat, 15 Jun 2019 19:54:00 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 08:23:55 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Josenivaldo Benito Jr <jrbenito@benito.qsl.br>,
+        Larry Finger <Larry.Finger@lwfinger.net>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [Patch v2 1/2] staging: rtl8723bs: hal: Remove return type of
+ initrecvbuf
+Message-ID: <20190616025355.GA12008@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190616020959.7360-1-andrealmeid@collabora.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/15/19 7:09 PM, André Almeida wrote:
-> Add comments at vimc_streamer_s_stream and vimc_streamer_thread, making
-> the vimc-stream totally documented.
-> 
-> Signed-off-by: André Almeida <andrealmeid@collabora.com>
-> ---
-> Commit extracted from [PATCH 0/4] media: vimc: Minor code cleanup
-> and documentation
-> 
-> Changes in v2: fix typos
-> 
->  drivers/media/platform/vimc/vimc-streamer.c | 22 +++++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
-> index 236ade38f1da..76435e87d609 100644
-> --- a/drivers/media/platform/vimc/vimc-streamer.c
-> +++ b/drivers/media/platform/vimc/vimc-streamer.c
-> @@ -122,6 +122,14 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
->  	return -EINVAL;
->  }
->  
-> +/*
-> + * vimc_streamer_thread - process frames through the pipeline
-> + *
-> + * @data:	vimc_stream struct of the current streaming
+change return of initrecvbuf from s32 to void. As this function always
+returns SUCCESS .
 
-                                   of the current stream               ??
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+changes in v2: break the patch for specific change
+----
+---
+ drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-> + *
-> + * From the source to the sink, gets a frame from each subdevice and send to
-> + * the next one of the pipeline in a fixed framerate.
-> + */
->  static int vimc_streamer_thread(void *data)
->  {
->  	struct vimc_stream *stream = data;
-> @@ -149,6 +157,20 @@ static int vimc_streamer_thread(void *data)
->  	return 0;
->  }
->  
-> +/*
-> + * vimc_streamer_s_stream - start/stop the streaming on the media pipeline
-> + *
-> + * @stream:	the pointer to the stream structure of the current stream
-> + * @ved:	pointer to the vimc entity of the entity of the stream
-> + * @enable:	flag to determine if stream should start/stop
-> + *
-> + * When starting, check if there is no stream->kthread allocated. This should
-> + * indicate that a streaming is already running. Then, it initializes
-> + * the pipeline, creates and runs a kthread to consume buffers through the
-> + * pipeline.
-> + * When stopping, analogously check if there is a stream running, stops
-> + * the thread and terminates the pipeline.
-> + */
->  int vimc_streamer_s_stream(struct vimc_stream *stream,
->  			   struct vimc_ent_device *ved,
->  			   int enable)
-> 
-
-
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+index b269de5..07bee19 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723bs_recv.c
+@@ -10,14 +10,12 @@
+ #include <rtw_debug.h>
+ #include <rtl8723b_hal.h>
+ 
+-static s32 initrecvbuf(struct recv_buf *precvbuf, struct adapter *padapter)
++static void initrecvbuf(struct recv_buf *precvbuf, struct adapter *padapter)
+ {
+ 	INIT_LIST_HEAD(&precvbuf->list);
+ 	spin_lock_init(&precvbuf->recvbuf_lock);
+ 
+ 	precvbuf->adapter = padapter;
+-
+-	return _SUCCESS;
+ }
+ 
+ static void update_recvframe_attrib(struct adapter *padapter,
+@@ -435,9 +433,7 @@ s32 rtl8723bs_init_recv_priv(struct adapter *padapter)
+ 	/*  init each recv buffer */
+ 	precvbuf = (struct recv_buf *)precvpriv->precv_buf;
+ 	for (i = 0; i < NR_RECVBUFF; i++) {
+-		res = initrecvbuf(precvbuf, padapter);
+-		if (res == _FAIL)
+-			break;
++		initrecvbuf(precvbuf, padapter);
+ 
+ 		if (!precvbuf->pskb) {
+ 			SIZE_PTR tmpaddr = 0;
 -- 
-~Randy
+2.7.4
+
