@@ -2,93 +2,125 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BB6FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:58:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10044C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDFAD20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:58:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F40208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:03:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560790983;
+	bh=qFutW4ACpB8KMmF6po/QTSDeni5wf40dGpnWM0uiXqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0dFXClBKIY5NHA1GZQTmJRmQRVaarZW8jgwmyLjR3BlFcKzzG+MH/C+iU1kJVY5cv
+	 564yeF5y3HJwEAyiDQ1vx2bKmBRkZzaQJ6w0tnH4lDiUjk7016nixbirWS314j7l4W
+	 xn8f9lzMdK653FuZzxgdX3fJcyNFbCk4EEG6MxVo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbfFQQ6p (ORCPT
+        id S1726962AbfFQRDC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:58:45 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:54678 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfFQQ6p (ORCPT
+        Mon, 17 Jun 2019 13:03:02 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47708 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfFQRDB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:58:45 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hcuxo-0000Ez-Te; Mon, 17 Jun 2019 16:58:37 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net: stmmac: add sanity check to device_property_read_u32_array call
-Date:   Mon, 17 Jun 2019 17:58:36 +0100
-Message-Id: <20190617165836.4673-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 17 Jun 2019 13:03:01 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=YCw5ZGqGwDO2jRR4SKrGPJxH9VYTLoFjpJ0IDkR4FtQ=; b=XswRJ/R50SFktB+oheI64colW
+        YsD42tCs10vzDTouy2DDJI11BUaSItpL1SPF24/rX4cygyIcmS+tbQXESWRiY+zd+IoKFFJYYFK6X
+        OCc6MN+TKGi1WCfQPlXOCOhlpD+3IiyTarnA3PV5Gr/ceX5gyAatnSy3neQw7tP2kqs/o=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hcv20-0002GR-3Z; Mon, 17 Jun 2019 17:02:56 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 4F2BB440046; Mon, 17 Jun 2019 18:02:55 +0100 (BST)
+Date:   Mon, 17 Jun 2019 18:02:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
+Message-ID: <20190617170255.GF5316@sirena.org.uk>
+Mail-Followup-To: Andreas Kemnade <andreas@kemnade.info>, tony@atomide.com,
+        lgirdwood@gmail.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
+        letux-kernel@openphoenux.org
+References: <20190615163314.28173-1-andreas@kemnade.info>
+ <20190617103111.GM5316@sirena.org.uk>
+ <20190617130357.41204ff7@kemnade.info>
+ <20190617114048.GN5316@sirena.org.uk>
+ <20190617182743.7f40f2ee@aktux>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="SO+9/CRZBGNspxuY"
+Content-Disposition: inline
+In-Reply-To: <20190617182743.7f40f2ee@aktux>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
 
-Currently the call to device_property_read_u32_array is not error checked
-leading to potential garbage values in the delays array that are then used
-in msleep delays.  Add a sanity check to the property fetching.
+--SO+9/CRZBGNspxuY
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Addresses-Coverity: ("Uninitialized scalar variable")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+On Mon, Jun 17, 2019 at 06:27:43PM +0200, Andreas Kemnade wrote:
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index da310de06bf6..5b7923c0698c 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -242,6 +242,7 @@ int stmmac_mdio_reset(struct mii_bus *bus)
- 	if (priv->device->of_node) {
- 		struct gpio_desc *reset_gpio;
- 		u32 delays[3];
-+		int ret;
- 
- 		reset_gpio = devm_gpiod_get_optional(priv->device,
- 						     "snps,reset",
-@@ -249,9 +250,15 @@ int stmmac_mdio_reset(struct mii_bus *bus)
- 		if (IS_ERR(reset_gpio))
- 			return PTR_ERR(reset_gpio);
- 
--		device_property_read_u32_array(priv->device,
--					       "snps,reset-delays-us",
--					       delays, ARRAY_SIZE(delays));
-+		ret = device_property_read_u32_array(priv->device,
-+						     "snps,reset-delays-us",
-+						     delays,
-+						     ARRAY_SIZE(delays));
-+		if (ret) {
-+			dev_err(ndev->dev.parent,
-+				"invalid property snps,reset-delays-us\n");
-+			return -EINVAL;
-+		}
- 
- 		if (delays[0])
- 			msleep(DIV_ROUND_UP(delays[0], 1000));
--- 
-2.20.1
+> Citing tps65950 trm page 55:
 
+> The device contains three switch-mode power supplies (SMPS):
+> =E2=80=A2 VDD1: 1.2-A, buck DC/DC converter (VOUT =3D 0.6 V to 1.45 V, in=
+ steps of 12.5 mV)
+> =E2=80=A2 VDD2: 600-mA buck DC/DC converter (VOUT =3D 0.6 V to 1.45 V, in=
+ steps of 12.5 mV, and 1.5 V as a
+>    single programmable value)
+
+> you are right, they are not really continuous. So should I add these
+> 68 steps they have as a voltage list?
+
+There's helpers for linear mappings, you should be able to use those
+(see helpers.c).
+
+> I think they are nearly continuous, so we should IMHO rather take that
+> not that strict. I guess there are no really continuous regulators, all
+> have steps as voltage is specified in a limited resolution. So what is
+> the exact meaning of that flag here?
+
+This was added for devices with extremely high resolution interfaces
+like some microcontroller interfaces that take voltage values directly
+(mirroring the regulator API) or PWM regulators - it's for cases where
+enumerating all the voltages is unreasonable.  The TWL4030 regulators
+look fairly standard in comparison.
+
+--SO+9/CRZBGNspxuY
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0Hx74ACgkQJNaLcl1U
+h9CWNQf+MwgfRdIW7BcriKWVMF03v0jco6sVD6U8CVZVFsKKZcsnzI2Y68Z90jGL
+guU08JDMRePIz7mPhlBSLqwvOIAa7oF3difVoepvu5vyNmckQho4IBpja827vHLY
+w7zeVoEE1GIA2X9r4SjY5d0NHVSdfbAkEGXkJCyRvJE+COGUVw2btMe42st8Yh0F
+qud88Wj7O1RCHzFmSzK0Q2nIbXSKNzHk7vi6spYUU9TdbloMtiGny7kG9Fto37Kf
+wUqHzHHJRCI9KToy7AR3M3Oy1FdmuR8GBnmDcb+Js0kGMmDvcP9+7L7gGZkZV+Pq
+hwbZETb/MHtSj7MqotPchV9n1Y0wIA==
+=cjH3
+-----END PGP SIGNATURE-----
+
+--SO+9/CRZBGNspxuY--
