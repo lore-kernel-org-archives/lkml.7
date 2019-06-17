@@ -2,146 +2,82 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FCFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9190C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEE2E2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:52:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HhwqhNrM"
+	by mail.kernel.org (Postfix) with ESMTP id A2A812084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:53:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728465AbfFQOwM (ORCPT
+        id S1728163AbfFQOxv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:52:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34934 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfFQOwK (ORCPT
+        Mon, 17 Jun 2019 10:53:51 -0400
+Received: from bmailout1.hostsharing.net ([83.223.95.100]:34111 "EHLO
+        bmailout1.hostsharing.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfFQOxv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:52:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CC6TusG/xvd2NrKEqztW6Q0eLvQHpCSqZ9asqvSUbGQ=; b=HhwqhNrM9xrAQOq0eNTILgTfj
-        R+0T3K6DbjbIQyqcNTefACa3jRYLYfmFr4O2DTtDoavuT0bYMdlrxcS92IvJtv2UUGOO3dBzTihLB
-        UNtKyWn6YD230yNinCi6buZ5Y1cFQrcsU3Yf0AKOWWsUOio12DIiRYw0JHoJhAFyg7pDgL7qkcSr0
-        9B1owcTUHT3GZq77EKPQ2Be6tSOdWLwu/5DQDTsaA+kc+xdgkxwwbDZqVqeemMIuiKx2sI21XYSkj
-        VNQrWUbfXOqlIDfhkhAkwTWqWnsFdYX9pzSdlvpXOVDMOmtOUK0OoVu6wc12rWnWOkLladzvUZa8S
-        /gsHPagpw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcszI-0004sz-1Q; Mon, 17 Jun 2019 14:52:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 68240201F4619; Mon, 17 Jun 2019 16:51:58 +0200 (CEST)
-Date:   Mon, 17 Jun 2019 16:51:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 18/62] x86/mm: Implement syncing per-KeyID direct
- mappings
-Message-ID: <20190617145158.GF3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-19-kirill.shutemov@linux.intel.com>
- <20190614095131.GY3436@hirez.programming.kicks-ass.net>
- <20190614224309.t4ce7lpx577qh2gu@box>
- <20190617092755.GA3419@hirez.programming.kicks-ass.net>
- <20190617144328.oqwx5rb5yfm2ziws@box>
+        Mon, 17 Jun 2019 10:53:51 -0400
+Received: from h08.hostsharing.net (h08.hostsharing.net [83.223.95.28])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client CN "*.hostsharing.net", Issuer "COMODO RSA Domain Validation Secure Server CA" (not verified))
+        by bmailout1.hostsharing.net (Postfix) with ESMTPS id ACA9C3001237D;
+        Mon, 17 Jun 2019 16:53:48 +0200 (CEST)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+        id 7B4E5417199; Mon, 17 Jun 2019 16:53:48 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 16:53:48 +0200
+From:   Lukas Wunner <lukas@wunner.de>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Subject: Re: [PATCH] PCI/PME: Fix race on PME polling
+Message-ID: <20190617145348.cqmtuqlvabgpo2ky@wunner.de>
+References: <0113014581dbe2d1f938813f1783905bd81b79db.1560079442.git.lukas@wunner.de>
+ <1957149.eOSnrBRbHu@kreacher>
+ <20190617143510.GT2640@lahna.fi.intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617144328.oqwx5rb5yfm2ziws@box>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190617143510.GT2640@lahna.fi.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 05:43:28PM +0300, Kirill A. Shutemov wrote:
-> On Mon, Jun 17, 2019 at 11:27:55AM +0200, Peter Zijlstra wrote:
+On Mon, Jun 17, 2019 at 05:35:10PM +0300, Mika Westerberg wrote:
+> Today when doing some PM testing I noticed that this patch actually
+> reveals an issue in our native PME handling. Problem is in
+> pcie_pme_handle_request() where we first convert req_id to struct
+> pci_dev and then call pci_check_pme_status() for it. Now, when a device
+> triggers wake the link is first brought up and then the PME is sent to
+> root complex with req_id matching the originating device. However, if
+> there are PCIe ports in the middle they may still be in D3 which means
+> that pci_check_pme_status() returns 0xffff for the device below so there
+> are lots of
+> 
+> 	Spurious native interrupt"
+> 
+> messages in the dmesg but the actual PME is never handled.
+> 
+> It has been working because pci_check_pme_status() returned true in case
+> of 0xffff as well and we went and runtime resumed to originating device.
+> 
+> I think the correct way to handle this is actually drop the call to
+> pci_check_pme_status() in pcie_pme_handle_request() because the whole
+> idea of req_id in PME message is to allow the root complex and SW to
+> identify the device without need to poll for the PME status bit.
 
-> > > > And yet I don't see anything in pageattr.c.
-> > > 
-> > > You're right. I've hooked up the sync in the wrong place.
+Either that or the call to pci_check_pme_status() should be encapsulated
+in a pci_config_pm_runtime_get() / _put() pair.
 
-> I think something like this should do (I'll fold it in after testing):
+Thanks,
 
-> @@ -643,7 +641,7 @@ static int sync_direct_mapping_keyid(unsigned long keyid)
->   *
->   * The function is nop until MKTME is enabled.
->   */
-> -int sync_direct_mapping(void)
-> +int sync_direct_mapping(unsigned long start, unsigned long end)
->  {
->  	int i, ret = 0;
->  
-> @@ -651,7 +649,7 @@ int sync_direct_mapping(void)
->  		return 0;
->  
->  	for (i = 1; !ret && i <= mktme_nr_keyids; i++)
-> -		ret = sync_direct_mapping_keyid(i);
-> +		ret = sync_direct_mapping_keyid(i, start, end);
->  
->  	flush_tlb_all();
->  
-> diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-> index 6a9a77a403c9..eafbe0d8c44f 100644
-> --- a/arch/x86/mm/pageattr.c
-> +++ b/arch/x86/mm/pageattr.c
-> @@ -347,6 +347,28 @@ static void cpa_flush(struct cpa_data *data, int cache)
->  
->  	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
->  
-> +	if (mktme_enabled()) {
-> +		unsigned long start, end;
-> +
-> +		start = *cpa->vaddr;
-> +		end = *cpa->vaddr + cpa->numpages * PAGE_SIZE;
-> +
-> +		/* Sync all direct mapping for an array */
-> +		if (cpa->flags & CPA_ARRAY) {
-> +			start = PAGE_OFFSET;
-> +			end = PAGE_OFFSET + direct_mapping_size;
-> +		}
-
-Understandable but sad, IIRC that's the most used interface (at least,
-its the one the graphics people use).
-
-> +
-> +		/*
-> +		 * Sync per-KeyID direct mappings with the canonical one
-> +		 * (KeyID-0).
-> +		 *
-> +		 * sync_direct_mapping() does full TLB flush.
-> +		 */
-> +		sync_direct_mapping(start, end);
-> +		return;
-
-But it doesn't flush cache. So you can't return here.
-
-> +	}
-> +
->  	if (cache && !static_cpu_has(X86_FEATURE_CLFLUSH)) {
->  		cpa_flush_all(cache);
->  		return;
-> -- 
->  Kirill A. Shutemov
+Lukas
