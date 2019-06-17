@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 998B7C31E54
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94C55C31E53
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:15:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F54F21E6E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:15:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7761F21C38
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:15:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfFQIO7 (ORCPT
+        id S1727271AbfFQIPp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:14:59 -0400
-Received: from aclms3.advantech.com.tw ([125.252.70.86]:39405 "EHLO
-        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfFQIO6 (ORCPT
+        Mon, 17 Jun 2019 04:15:45 -0400
+Received: from aclms1.advantech.com.tw ([61.58.41.199]:52652 "EHLO
+        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFQIPo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:14:58 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td872a11b14ac1401c810b8@ACLMS3.advantech.com.tw>;
- Mon, 17 Jun 2019 16:14:56 +0800
+        Mon, 17 Jun 2019 04:15:44 -0400
+Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Td872a1cd5cac14014b1070@ACLMS1.advantech.com.tw>;
+ Mon, 17 Jun 2019 16:15:42 +0800
 From:   <Amy.Shih@advantech.com.tw>
 To:     <she90122@gmail.com>
 CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
         <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
         Guenter Roeck <linux@roeck-us.net>,
         <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v2 6/9] hwmon: (nct7904) Fix wrong return code in function nct7904_write_fan.
-Date:   Mon, 17 Jun 2019 08:14:35 +0000
-Message-ID: <70e520dfcf80c58045d2238a0af972d9cdbb6ac4.1560756733.git.amy.shih@advantech.com.tw>
+Subject: [v2 7/9] hwmon: (nct7904) Delete wrong comment in function nct7904_write_in.
+Date:   Mon, 17 Jun 2019 08:15:26 +0000
+Message-ID: <5be014e8e289c615bd9c74321e39484e8f448d8a.1560756733.git.amy.shih@advantech.com.tw>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
 References: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
@@ -48,31 +48,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "amy.shih" <amy.shih@advantech.com.tw>
 
-In function nct7904_write_fan, the return code is either 0 or an
-error code. 0x1fff is not a valid return code. Thus, set return
-code to 0 when setting value is smaller or equal to 0.
+In function nct7904_write_in, delete wrong comment "Bit 15 is sign bit".
 
 Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
 ---
 Changes in v2:
-- Fix wrong return code 0x1fff in function nct7904_write_fan.
+- Delete wrong comment in function nct7904_write_in.
 
  drivers/hwmon/nct7904.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 95348eebe8e4..3fa3eb31d176 100644
+index 3fa3eb31d176..c74f919c0181 100644
 --- a/drivers/hwmon/nct7904.c
 +++ b/drivers/hwmon/nct7904.c
-@@ -551,7 +551,7 @@ static int nct7904_write_fan(struct device *dev, u32 attr, int channel,
- 	switch (attr) {
- 	case hwmon_fan_min:
- 		if (val <= 0)
--			return 0x1fff;
-+			return 0;
+@@ -581,7 +581,7 @@ static int nct7904_write_in(struct device *dev, u32 attr, int channel,
+ 	else
+ 		val = val / 6; /* 0.006V scale */
  
- 		val = clamp_val((1350000 + (val >> 1)) / val, 1, 0x1fff);
- 		tmp = (val >> 5) & 0xff;
+-	val = clamp_val(val, 0, 0x7ff); /* Bit 15 is sign bit */
++	val = clamp_val(val, 0, 0x7ff);
+ 
+ 	switch (attr) {
+ 	case hwmon_in_min:
 -- 
 2.17.1
 
