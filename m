@@ -2,117 +2,135 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52E4BC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E651FC31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 275752084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:18:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFFF920833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:18:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="aoMimue4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="QXZd0Hes"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728114AbfFQOSW (ORCPT
+        id S1728153AbfFQOS1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:18:22 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57619 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQOSW (ORCPT
+        Mon, 17 Jun 2019 10:18:27 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42087 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfFQOSY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:18:22 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HEI0mV3452655
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:18:00 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HEI0mV3452655
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560781081;
-        bh=QvsIwv5WIf+fcrELoHYf3/XxiI/T/+7WhknAQJefcpA=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=aoMimue4QS255/49S8jKwNJ6HkiHmK8XmmopUCnbCmM+RvIgclS7dSMgFtzjAr2FM
-         2RSPuDhoDnmyTJpr3AiqHc4rjnyMDQE0PX1iFtkwMcBa1UvxO2JGTfeMWjKO1k1+Vr
-         qHSxqL8Y+sPQ6Eic8f+h5dj8H5risLAmba14gkl/XqN6rcXpycgkpItwqAeIIiPzq0
-         EU4EEfb7kecAKrqPEH5VF13UUfpuph14DD/txFIkWdO47edHQiOb9URoMDn4c0BOQi
-         tvZKPoDRSejXD472LZ5tMaweqiacuOijyzeNBsutNX65fSqJznYomzxSoRdo0R6GG8
-         nQNZ5uff7VXxQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HEI08Z3452652;
-        Mon, 17 Jun 2019 07:18:00 -0700
-Date:   Mon, 17 Jun 2019 07:18:00 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kobe Wu <tipbot@zytor.com>
-Message-ID: <tip-dd471efe345bf6f9e1206f6c629ca3e80eb43523@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, will.deacon@arm.com, hpa@zytor.com,
-        tglx@linutronix.de, kobe-cp.wu@mediatek.com,
-        eason-yh.lin@mediatek.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, peterz@infradead.org,
-        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com
-Reply-To: peterz@infradead.org, linux-mediatek@lists.infradead.org,
-          will.deacon@arm.com, linux-kernel@vger.kernel.org,
-          eason-yh.lin@mediatek.com, kobe-cp.wu@mediatek.com,
-          wsd_upstream@mediatek.com, tglx@linutronix.de, hpa@zytor.com,
-          torvalds@linux-foundation.org, mingo@kernel.org
-In-Reply-To: <1559217575-30298-1-git-send-email-kobe-cp.wu@mediatek.com>
-References: <1559217575-30298-1-git-send-email-kobe-cp.wu@mediatek.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Remove unnecessary
- DEBUG_LOCKS_WARN_ON()
-Git-Commit-ID: dd471efe345bf6f9e1206f6c629ca3e80eb43523
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 10:18:24 -0400
+Received: by mail-ed1-f67.google.com with SMTP id z25so16387787edq.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:18:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=255cRppfmUAELVuEBOpb3q7EnIYgii6r3uBAfeCWFHg=;
+        b=QXZd0Hes9umi74jp07G814dRb7D+MKScfq/PvUjRyLM3zoC9fLVKkvWV5netvsA25k
+         NUIsYDd14TDgOSfnvPb2WwyUPm83bP8nmQLJSaq/NYP2ZdXgIcMHoCO2X22RiLjgNXAc
+         VYe43lVvPYBw1dig7MLt4yFnORiY0r9qeYQAM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=255cRppfmUAELVuEBOpb3q7EnIYgii6r3uBAfeCWFHg=;
+        b=nqsYoXUuKvM11ZKGOFXSksa2GxSWV9ONMgeEA/T7R3rGcQzDj7wF4EQJ4s2d9NG6ix
+         bLxKDZ/cXzOwln4nhZOv7jcRnTHMgmlDhjbVQ+3NvXGn9sWFZ5YepYu+asylEoJj5HZI
+         9DnXpJAbQZ8795puDgMi+ztXSNRp4KkSxt+lNBjrFJxWFjajRDMk84UFUQP8NVjJWYgd
+         NyOwbRRrVHgP6dIWsU4NCylS05kFphhKge6hv+VMjXHMT4/MZjTu0WDOptZ5YPvr6zgx
+         Y8uxHMy9T+kE21WRMCl4F1Y2A3F8JwchJahen1+96Znjq/7BMwBJoYiwZafC2LvCJO27
+         nM6A==
+X-Gm-Message-State: APjAAAXVnWiPY4l4OUoeWR8mN1LYT3fDyCwQGZT1j1JCBPSOUNky5Wbi
+        5krqKd0DmePWwDByycC6i2/qfA==
+X-Google-Smtp-Source: APXvYqxDQv3y3Qn61R/NUrw/NJLZtfJcmIB9+oQ+MQzul0tqmu/Xxh75ou9bVBEZdpcSUMhFOByM5g==
+X-Received: by 2002:a17:906:644c:: with SMTP id l12mr45333686ejn.199.1560781102836;
+        Mon, 17 Jun 2019 07:18:22 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id f3sm2186344ejc.15.2019.06.17.07.18.21
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 07:18:21 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 16:18:19 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4/4] drm/virtio: remove virtio_gpu_object_wait
+Message-ID: <20190617141819.GH12905@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190617111406.14765-1-kraxel@redhat.com>
+ <20190617111406.14765-5-kraxel@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190617111406.14765-5-kraxel@redhat.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  dd471efe345bf6f9e1206f6c629ca3e80eb43523
-Gitweb:     https://git.kernel.org/tip/dd471efe345bf6f9e1206f6c629ca3e80eb43523
-Author:     Kobe Wu <kobe-cp.wu@mediatek.com>
-AuthorDate: Thu, 30 May 2019 19:59:35 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:09:37 +0200
+On Mon, Jun 17, 2019 at 01:14:06PM +0200, Gerd Hoffmann wrote:
+> No users left.
+> 
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 
-locking/lockdep: Remove unnecessary DEBUG_LOCKS_WARN_ON()
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-DEBUG_LOCKS_WARN_ON() will turn off debug_locks and
-makes print_unlock_imbalance_bug() return directly.
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_drv.h    |  1 -
+>  drivers/gpu/drm/virtio/virtgpu_object.c | 13 -------------
+>  2 files changed, 14 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index 9e2d3062b01d..2cd96256ba37 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -364,7 +364,6 @@ int virtio_gpu_object_kmap(struct virtio_gpu_object *bo);
+>  int virtio_gpu_object_get_sg_table(struct virtio_gpu_device *qdev,
+>  				   struct virtio_gpu_object *bo);
+>  void virtio_gpu_object_free_sg_table(struct virtio_gpu_object *bo);
+> -int virtio_gpu_object_wait(struct virtio_gpu_object *bo, bool no_wait);
+>  
+>  /* virtgpu_prime.c */
+>  struct sg_table *virtgpu_gem_prime_get_sg_table(struct drm_gem_object *obj);
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+> index 242766d644a7..82bfbf983fd2 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+> @@ -233,16 +233,3 @@ void virtio_gpu_object_free_sg_table(struct virtio_gpu_object *bo)
+>  	kfree(bo->pages);
+>  	bo->pages = NULL;
+>  }
+> -
+> -int virtio_gpu_object_wait(struct virtio_gpu_object *bo, bool no_wait)
+> -{
+> -	int r;
+> -
+> -	r = ttm_bo_reserve(&bo->tbo, true, no_wait, NULL);
+> -	if (unlikely(r != 0))
+> -		return r;
+> -	r = ttm_bo_wait(&bo->tbo, true, no_wait);
+> -	ttm_bo_unreserve(&bo->tbo);
+> -	return r;
+> -}
+> -
+> -- 
+> 2.18.1
+> 
 
-Remove a redundant whitespace.
-
-Signed-off-by: Kobe Wu <kobe-cp.wu@mediatek.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <linux-mediatek@lists.infradead.org>
-Cc: <wsd_upstream@mediatek.com>
-Cc: Eason Lin <eason-yh.lin@mediatek.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Will Deacon <will.deacon@arm.com>
-Link: https://lkml.kernel.org/r/1559217575-30298-1-git-send-email-kobe-cp.wu@mediatek.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/lockdep.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-index 48a840adb281..5e368f485330 100644
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -4160,7 +4160,7 @@ __lock_release(struct lockdep_map *lock, unsigned long ip)
- 	 * So we're all set to release this lock.. wait what lock? We don't
- 	 * own any locks, you've been drinking again?
- 	 */
--	if (DEBUG_LOCKS_WARN_ON(depth <= 0)) {
-+	if (depth <= 0) {
- 		print_unlock_imbalance_bug(curr, lock, ip);
- 		return 0;
- 	}
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
