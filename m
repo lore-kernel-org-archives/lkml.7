@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 302CAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B63C7C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F415A21881
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C7221019
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806747;
-	bh=VYyhyrgg/DJ/e4Djl5XWxP6JTsXLLylVkZB6XxZ6LyA=;
+	s=default; t=1560806750;
+	bh=JvB79mR2s+I88HNbw4piHuEnw9TVf9QkjAeU8oSnRNI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JsH2l+30kS3BzO5zkz7sMybizD5hVw1LHFLr7smeDjX+w+gUBk7Kj0EMhSJQenulw
-	 THuO4JBrkYE78PYF94WDyfYskY2HCUVSucWfsg/ZzDVLwcU+S2MMacaKWdLrBw72in
-	 4pZvmyPTFhnyAMyQm9DOdNUT76+00r6HWL5Kmahw=
+	b=PlI/rIC9qIFVgIfQVA66s61QC7NC1l2hioZUe2QDx71cSqrzl7WYA2LL9pcQuh5kC
+	 2PwUHoPdTT9sZBK+foUBr4kgGK4yyAV3aa4OfVqInMgZ4fVfHDwzlukKKvbBiViPdU
+	 NxkipT7IYe8ViSv7ETK1yg2wpbC4G/rPnb2hbogM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730117AbfFQVZp (ORCPT
+        id S1730125AbfFQVZt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:25:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51964 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52052 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730090AbfFQVZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:25:42 -0400
+        id S1729348AbfFQVZo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:25:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29E4D2063F;
-        Mon, 17 Jun 2019 21:25:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C805820657;
+        Mon, 17 Jun 2019 21:25:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806741;
-        bh=VYyhyrgg/DJ/e4Djl5XWxP6JTsXLLylVkZB6XxZ6LyA=;
+        s=default; t=1560806744;
+        bh=JvB79mR2s+I88HNbw4piHuEnw9TVf9QkjAeU8oSnRNI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N7udcaNoPqhjvWEwg3u3KYCB2ueq0w6AQcsOUUZEMRYJvqPKLNYJgotD45Ob9B5u0
-         xQcvBRE6t5ROWxRJTa/Q3QR+bguv2L8R7+1g5qR5lrjjHH4PKhPXwonKggzXPQpBev
-         WgI44XwV1FvVTXQ8NPHnhnI13y3I40j1U8Jc7EKs=
+        b=ouw92B/JXEM3pCc0Pa9ytZjdhLp7NVq/50p0xYzRCJOF9cBwjWswbEj6BiN6yJktc
+         xfuQx/xJMU4xeMFYfeS8iLp01wfmOSQKsbVunOMQ0Ew6gHkhF5jf6GEN4zWqZU8eJc
+         RMWGpuD8LVGW87ShmN6OKAPyple1NW9+fTLyOv5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kenneth Heitke <kenneth.heitke@intel.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 42/75] nvme: release namespace SRCU protection before performing controller ioctls
-Date:   Mon, 17 Jun 2019 23:09:53 +0200
-Message-Id: <20190617210754.386649678@linuxfoundation.org>
+        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
+        David Milburn <dmilburn@redhat.com>,
+        Yufen Yu <yuyufen@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 43/75] nvme: fix memory leak for power latency tolerance
+Date:   Mon, 17 Jun 2019 23:09:54 +0200
+Message-Id: <20190617210754.423281311@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -61,70 +60,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5fb4aac756acacf260b9ebd88747251effa3a2f2 ]
+[ Upstream commit 510a405d945bc985abc513fafe45890cac34fafa ]
 
-Holding the SRCU critical section protecting the namespace list can
-cause deadlocks when using the per-namespace admin passthrough ioctl to
-delete as namespace.  Release it earlier when performing per-controller
-ioctls to avoid that.
+Unconditionally hide device pm latency tolerance when uninitializing
+the controller to ensure all qos resources are released so that we're
+not leaking this memory. This is safe to call if none were allocated in
+the first place, or were previously freed.
 
-Reported-by: Kenneth Heitke <kenneth.heitke@intel.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: c5552fde102fc("nvme: Enable autonomous power state transitions")
+Suggested-by: Keith Busch <keith.busch@intel.com>
+Tested-by: David Milburn <dmilburn@redhat.com>
+Signed-off-by: Yufen Yu <yuyufen@huawei.com>
+[changelog]
+Signed-off-by: Keith Busch <keith.busch@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/nvme/host/core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 82f5f1d030d4..818788275406 100644
+index 818788275406..a867a139bb35 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -1310,14 +1310,31 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 	if (unlikely(!ns))
- 		return -EWOULDBLOCK;
+@@ -3525,6 +3525,7 @@ EXPORT_SYMBOL_GPL(nvme_start_ctrl);
  
-+	/*
-+	 * Handle ioctls that apply to the controller instead of the namespace
-+	 * seperately and drop the ns SRCU reference early.  This avoids a
-+	 * deadlock when deleting namespaces using the passthrough interface.
-+	 */
-+	if (cmd == NVME_IOCTL_ADMIN_CMD || is_sed_ioctl(cmd)) {
-+		struct nvme_ctrl *ctrl = ns->ctrl;
-+
-+		nvme_get_ctrl(ns->ctrl);
-+		nvme_put_ns_from_disk(head, srcu_idx);
-+
-+		if (cmd == NVME_IOCTL_ADMIN_CMD)
-+			ret = nvme_user_cmd(ctrl, NULL, argp);
-+		else
-+			ret = sed_ioctl(ctrl->opal_dev, cmd, argp);
-+
-+		nvme_put_ctrl(ctrl);
-+		return ret;
-+	}
-+
- 	switch (cmd) {
- 	case NVME_IOCTL_ID:
- 		force_successful_syscall_return();
- 		ret = ns->head->ns_id;
- 		break;
--	case NVME_IOCTL_ADMIN_CMD:
--		ret = nvme_user_cmd(ns->ctrl, NULL, argp);
--		break;
- 	case NVME_IOCTL_IO_CMD:
- 		ret = nvme_user_cmd(ns->ctrl, ns, argp);
- 		break;
-@@ -1327,8 +1344,6 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 	default:
- 		if (ns->ndev)
- 			ret = nvme_nvm_ioctl(ns, cmd, arg);
--		else if (is_sed_ioctl(cmd))
--			ret = sed_ioctl(ns->ctrl->opal_dev, cmd, argp);
- 		else
- 			ret = -ENOTTY;
- 	}
+ void nvme_uninit_ctrl(struct nvme_ctrl *ctrl)
+ {
++	dev_pm_qos_hide_latency_tolerance(ctrl->device);
+ 	cdev_device_del(&ctrl->cdev, ctrl->device);
+ }
+ EXPORT_SYMBOL_GPL(nvme_uninit_ctrl);
 -- 
 2.20.1
 
