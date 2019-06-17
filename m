@@ -6,139 +6,102 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D946C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288F1C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D31FD2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:33:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB5F2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YlBxHyck"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YaXNNhpE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727961AbfFQLdc (ORCPT
+        id S1726691AbfFQLec (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:33:32 -0400
-Received: from mail-io1-f54.google.com ([209.85.166.54]:43566 "EHLO
-        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfFQLdc (ORCPT
+        Mon, 17 Jun 2019 07:34:32 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:33423 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfFQLeb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:33:32 -0400
-Received: by mail-io1-f54.google.com with SMTP id k20so20256527ios.10
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:33:31 -0700 (PDT)
+        Mon, 17 Jun 2019 07:34:31 -0400
+Received: by mail-ed1-f65.google.com with SMTP id i11so15730279edq.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:34:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uTaQurjF4DAEz2YA58sq1itwNB0DAFLlJ/DDxkRjQXs=;
-        b=YlBxHyckiHCNw4pcv1L+3aipakmvWHdfu1oxzwefcQcVWnyNIn5NGlNqYIN/7QC0ey
-         ioGaBXAv5AJACbpMWAaAsdLvLID96zO5uFRnyIa/tNH4W41NImVSVkxrQ0LVv/5lBHZz
-         iEw6edvCS3C/y6wdXkjdsW3dJBbRBA4SU1vFKgiJzgFxZZEW6e1ELjhVW+MpsfItpE7h
-         ZcLT9Ml5vwbXxOJ18xbKM2fo2/VHFZmbasZ2ki93QAjNEpwdH9E6TdwQqBrr5CEXoFeL
-         rxMZ9NE4l66LJ1eS2LKTv6F9j1x+5ianNQxSP60RRxrfI+gX25JRg2p+ejEoCSKNrw9Y
-         sWuw==
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=9vPSLa5+XLyQJw19zpdaml7fRJQhxguAtOgI7YT73oo=;
+        b=YaXNNhpEEHuGAVVYKiFjcIjtnlRn+SX4KK6cHn4Pg7lywkMBTaTfMWwp9ZftE10ZTr
+         nuJ/UU47huRRPPSztqkz4DT7OKeZiKaT3eRLIl1roljXdiZqjxVtFlg3kLPfsMBLX4Un
+         7ceatCqEab2IpD+LDjdjSxFc3CPR7yAI7ByqoRuTM6zTdeKEHebGRoQcAkX8h/0DLvtx
+         mU1LmYOU6smRlrahMdW/qJObnQsEC/dU3qrlVLLrj1wviK4LfngoI/syjUqsbWjuk/se
+         mN/ZqzvXU79WwIu8OvQHKDBC0nfBXRps1lnFQdEllgWHSwdSXd1mJ+KOqrNNWMbWO75W
+         khiQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uTaQurjF4DAEz2YA58sq1itwNB0DAFLlJ/DDxkRjQXs=;
-        b=pY8dOOseAWtCf8nAEldZoRCIGFlcVZ1j+kM9ejd4ME7irUI+z9IUoc/imHxSUqnK99
-         MZHC7I6A0U915ohDzGa3X6PAsZM8gmav0htYF1+1iyN3BOpRT1KiybCa2EIQQvRuqSCI
-         UKkzIB/Nxt6CZqxN+M0txlfsOBrD7Zq+NMNzN4rqWv0IF15RCmUB2mSH/AIPJ3RbN/7P
-         XlzOLgXMK04bMHoRbuCMeiea7igaJlHWeZOf52uiQX8YZCYCxFBZSekEbW4NAidP2JC/
-         Ml+jRk0KLGFJlFlV2w2PrW1JNCIv5ShA0HW0ibvtS042nuvSG11lJUfk8AMVdSo0879d
-         mZsw==
-X-Gm-Message-State: APjAAAWGPMihrrM1/5/TfNF0t8NBaK40gfU2NdcpOsatCvOxYbaySSRn
-        1qN9ypqHrO+KujldJZgEGYhQQVhWDE4AXcTz6uMjEA==
-X-Google-Smtp-Source: APXvYqzOD8mZdWMW5nl/G9kBu3RjbewHkgd/pSd8u227vGW4RBm64bgLB0Ejnt8SWGd0xJ5w7k3raGX9tSnxFEfpahY=
-X-Received: by 2002:a02:3308:: with SMTP id c8mr15420974jae.103.1560771211244;
- Mon, 17 Jun 2019 04:33:31 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=9vPSLa5+XLyQJw19zpdaml7fRJQhxguAtOgI7YT73oo=;
+        b=pf2KEokoYzt9CUnhYG4lF/rXNr58WpcCY8011Ps/6sP2xR45u0A8eaG8+SUcDWXqQe
+         dHumKglCiGpi7aat61+0B9enztnuoFzeNyQTwewFMf4KXHeIJVWfrK3BaEfViJnhvOJ0
+         pUFaKpqn3fIwjhy3ML/aIyMygVwLYhrlAdgD8lc0L+LA7ryfEIujwlq+w33R38M9GESu
+         hmbNy3yMaYajrJyyaGopRt8QB1gjytLeImAwbR+9Kufdn7HA+ohpEQaf9J2SwpLW8J+1
+         UdihVd3ocJOQM83H5fOicsqpJrPsa8m/sOnVObdoeI5xKC7gPuJPCUYUgl9BwYHvcTka
+         vLcw==
+X-Gm-Message-State: APjAAAX6Cx+EYa3riVmllCqC2FZfhUx/gYfxyMmbQngjQl0Ws/cpy9Hd
+        JurP19GAN4OrnWCr7ILHF2OMkw==
+X-Google-Smtp-Source: APXvYqw1q+5ssz4QySIjZc498AMwl614ceV96qiEMFWPDNSLJ7oh7ctcvwS8zNJc5j4OHthaIvZI/Q==
+X-Received: by 2002:a50:d0d6:: with SMTP id g22mr46189168edf.250.1560771269879;
+        Mon, 17 Jun 2019 04:34:29 -0700 (PDT)
+Received: from localhost ([81.92.102.43])
+        by smtp.gmail.com with ESMTPSA id s5sm3434216edh.3.2019.06.17.04.34.29
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 04:34:29 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 04:34:28 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Andreas Schwab <schwab@suse.de>
+cc:     Yash Shah <yash.shah@sifive.com>, davem@davemloft.net,
+        devicetree@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        nicolas.ferre@microchip.com, palmer@sifive.com,
+        aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
+Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
+In-Reply-To: <mvmh88o5xi5.fsf@suse.de>
+Message-ID: <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
+References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com> <mvmtvco62k9.fsf@suse.de> <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com> <mvmpnnc5y49.fsf@suse.de> <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
+ <mvmh88o5xi5.fsf@suse.de>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-References: <20190612040933.GA18848@dc5-eodlnx05.marvell.com>
- <20190612093151.GA11554@brain-police> <20190614070914.GA21961@dc5-eodlnx05.marvell.com>
- <20190614095846.GC10506@fuggles.cambridge.arm.com> <CAKv+Gu_Kdq=UPijjA84FpmO=ZsdEO9EyyF7GeOQ+WmfqtO_hMg@mail.gmail.com>
- <20190614103850.GG10659@fuggles.cambridge.arm.com> <201906142026.1BC27EDB1E@keescook>
- <CAKv+Gu_XuhgUCYOeykrbaxJz-wL1HFrc_O+HeZHqaGkMHd2J9Q@mail.gmail.com>
- <201906150654.FF4400F7C8@keescook> <CAKv+Gu9-rZ16Nb9t3=knzW0BHu0eNxQoPwWS4c8UMMm=2iqiuw@mail.gmail.com>
- <201906161429.BCE1083@keescook>
-In-Reply-To: <201906161429.BCE1083@keescook>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Mon, 17 Jun 2019 13:33:19 +0200
-Message-ID: <CAKv+Gu_8ibO4D01DZv6KjL2GnvKuVBVnt=doxkN0w=4utJ7NvQ@mail.gmail.com>
-Subject: Re: [RFC] Disable lockref on arm64
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        Jan Glauber <jglauber@marvell.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 16 Jun 2019 at 23:31, Kees Cook <keescook@chromium.org> wrote:
->
-> On Sat, Jun 15, 2019 at 04:18:21PM +0200, Ard Biesheuvel wrote:
-> > Yes, I am using the same saturation point as x86. In this example, I
-> > am not entirely sure I understand why it matters, though: the atomics
-> > guarantee that the write by CPU2 fails if CPU1 changed the value in
-> > the mean time, regardless of which value it wrote.
+On Mon, 17 Jun 2019, Andreas Schwab wrote:
+
+> On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> 
+> > On Mon, 17 Jun 2019, Andreas Schwab wrote:
 > >
-> > I think the concern is more related to the likelihood of another CPU
-> > doing something nasty between the moment that the refcount overflows
-> > and the moment that the handler pins it at INT_MIN/2, e.g.,
+> >> On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+> >> 
+> >> > Looks to me that it shouldn't have an impact unless the DT string is 
+> >> > present, and even then, the impact might simply be that the MACB driver 
+> >> > may not work?
+> >> 
+> >> If the macb driver doesn't work you have an unusable system, of course.
 > >
-> > > CPU 1                   CPU 2
-> > > inc()
-> > >   load INT_MAX
-> > >   about to overflow?
-> > >   yes
-> > >
-> > >   set to 0
-> > >                          <insert exploit here>
-> > >   set to INT_MIN/2
->
-> Ah, gotcha, but the "set to 0" is really "set to INT_MAX+1" (not zero)
-> if you're using the same saturation.
->
+> > Why?
+> 
+> Because a system is useless without network.
 
-Of course. So there is no issue here: whatever manipulations are
-racing with the overflow handler can never result in the counter to
-unsaturate.
+From an upstream Linux point of view, Yash's patches should be an 
+improvement over the current mainline kernel situation, since there's 
+currently no upstream support for the (SiFive-specific) TX clock switch 
+register.  With the right DT data, and a bootloader that handles the PHY 
+reset, I think networking should work after his patches are upstream -- 
+although I myself haven't tried this yet.
 
-And actually, moving the checks before the stores is not as trivial as
-I thought, E.g., for the LSE refcount_add case, we have
 
-        "       ldadd           %w[i], w30, %[cval]\n"                  \
-        "       adds            %w[i], %w[i], w30\n"                    \
-        REFCOUNT_PRE_CHECK_ ## pre (w30))                               \
-        REFCOUNT_POST_CHECK_ ## post                                    \
-
-and changing this into load/test/store defeats the purpose of using
-the LSE atomics in the first place.
-
-On my single core TX2, the comparative performance is as follows
-
-Baseline: REFCOUNT_TIMING test using REFCOUNT_FULL (LSE cmpxchg)
-      191057942484      cycles                    #    2.207 GHz
-      148447589402      instructions              #    0.78  insn per
-cycle
-
-      86.568269904 seconds time elapsed
-
-Upper bound: ATOMIC_TIMING
-      116252672661      cycles                    #    2.207 GHz
-       28089216452      instructions              #    0.24  insn per
-cycle
-
-      52.689793525 seconds time elapsed
-
-REFCOUNT_TIMING test using LSE atomics
-      127060259162      cycles                    #    2.207 GHz
-                 0      instructions              #    0.00  insn per
-cycle
-
-      57.243690077 seconds time elapsed
+- Paul
