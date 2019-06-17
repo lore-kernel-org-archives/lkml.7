@@ -2,107 +2,86 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9966C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E37FC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91E022089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560776145;
-	bh=lwqMZcmomoJHiJmOU3YR0Sts5aUdBFDfr3WzLnWu6pY=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=Z9VuA9YzHAyL1IGdiqngidexCKCM2k6jTfmscaVYgFQbFC4LtQjEDMd8fPIychrfU
-	 V1ipHS0R73T2yl7hzMxHGfoaev3FtQZRWVWxXzzWOhAU3tr6GJBk8m/sLmZmV+u1Jn
-	 WA9aymltrFJoofIbmjsgm1GFDT7aWXeGfeUKZrl0=
+	by mail.kernel.org (Postfix) with ESMTP id 63A342089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727957AbfFQMzn (ORCPT
+        id S1728025AbfFQMzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:55:43 -0400
-Received: from mga17.intel.com ([192.55.52.151]:3200 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfFQMzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:55:42 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 05:55:42 -0700
-X-ExtLoop1: 1
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Jun 2019 05:55:39 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
-        agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
-        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RESEND v4 0/4] I2C: DWC3 USB: Add support for ACPI based AArch64 Laptops
-In-Reply-To: <20190617125105.6186-1-lee.jones@linaro.org>
-References: <20190617125105.6186-1-lee.jones@linaro.org>
-Date:   Mon, 17 Jun 2019 15:55:35 +0300
-Message-ID: <87lfy0gym0.fsf@linux.intel.com>
+        Mon, 17 Jun 2019 08:55:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:45045 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727921AbfFQMzo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:55:44 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N3KgE-1ibs0F23KE-010PaW; Mon, 17 Jun 2019 14:55:25 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Paul Walmsley <paul@pwsan.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH, for GregKH] ARM: omap1: remove unused variable
+Date:   Mon, 17 Jun 2019 14:55:02 +0200
+Message-Id: <20190617125521.1553103-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:5sZGK4gs2Z6lmbY+AZRULzOzFNndqrsR+LR3N/b8eoORxP0RDRK
+ 4cwluOKmjFxZCnLo2qjBpxUUor/ZXJ6iEOFu4JpoLJpxM9m4apj+ajihoQh0JF6jBNqRUk6
+ 6PPyM14TQksrd7+xKxkYUtkmSnkp4rcQ+bNDJB86ByweuvD+ZWfuaaSvro2a99gv7/O6PtM
+ yrVhks6FHyXfuGJOb8tkQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vOzSgpnzn8Y=:1UhMFQ7PRhzaTbKtTHzgsT
+ 5+AiVHzBehXpewrih74danSoQRVN7gVvj2LwcJMjovTHaV/Wyw4ViTKEqbVzd4scs1XsCGzO1
+ Uf0MYtPBFdXpjUY7EdnT9n/Sx3X9ZEv8buU8UjwG9r3csAMpb2DG0k+A8Vwe8WtV+JBbW4hKF
+ kkQSzdm3YZz5daeUE8MxrYUfJlpl8jXHmlR9FAsDz748cfxqiwvYi7r6d3oGWCa9krHTvldF9
+ ifuTXbZZ6/s9zRxzsA0Iw+lbc7b4iW+MWhBp6MF/HOakiWDQvowMgPEK9q6cGqiJmA60GqvJk
+ 27fGHmd3qp997d5pGrZUgbUtg+9eRe65Pi4CC42FghZ/FqHhAtMjHZz2YdVhUReZ51Ju0jOxW
+ iK6OrUR3wNTS0Of90ifwvPRkTzJ3uXQESeImSIeNO+VSFjTJJ3AffNyJfV7moQF4BdCeZn9pb
+ hCStqGC+UbBGwjmOi/U1OhkYFluLjG46BwkaFV70Qkk4z8Xe8AyUaKfreqTQweEvBWTN5djKA
+ Knz3ZQT13EC/45cg0E+EsVNclYxV0dkG/qNoIe3nZ7SUde5whaJV4E2nZbdFCaOILpylFzyRz
+ jtB/qrS5wmw9P6iKCkc6aUzpkp5z1xXHXycv695xZdFIBNC5BkoTM+Xsykg+Io46UGfoQ0oux
+ s4vvsz8urhMUWnUF5BGBe7aAfYcI2fUWZc7SkLo1iRfeIgzBA5Vu8dsZ8s421DQ22epTb8HCj
+ uwKQnAgsCRwDixLu77x5b2TVETajW7qitnG9hA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+The cleanup of the debugfs functions left one variable behind that
+should now be removed as well:
 
-Lee Jones <lee.jones@linaro.org> writes:
+arch/arm/mach-omap1/clock.c:1008:6: error: unused variable 'err' [-Werror,-Wunused-variable]
 
-> This patch-set ensures the kernel is bootable on the newly released
-> AArch64 based Laptops using ACPI configuration tables.  The Pinctrl
-> changes have been accepted, leaving only I2C (keyboard, touchpad,
-> touchscreen, fingerprint, etc, HID device) and USB (root filesystem,
-> camera, networking, etc) enablement.
->
-> RESEND: Stripped I2C patches as they have also been merged into
->         their respective subsystem.
->
-> v4:
->  * Collecting Acks
->  * Adding Andy Gross' new email
->  * Removing applied Pinctrl patches
->
-> Lee Jones (4):
->   soc: qcom: geni: Add support for ACPI
->   usb: dwc3: qcom: Add support for booting with ACPI
->   usb: dwc3: qcom: Start USB in 'host mode' on the SDM845
->   usb: dwc3: qcom: Improve error handling
+Fixes: d5ddd5a51726 ("arm: omap1: no need to check return value of debugfs_create functions")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/mach-omap1/clock.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-pushed to testing/next
+diff --git a/arch/arm/mach-omap1/clock.c b/arch/arm/mach-omap1/clock.c
+index 3d7ab2bcf46c..a5a50efc8e17 100644
+--- a/arch/arm/mach-omap1/clock.c
++++ b/arch/arm/mach-omap1/clock.c
+@@ -1005,7 +1005,6 @@ static void clk_debugfs_register_one(struct clk *c)
+ 
+ static void clk_debugfs_register(struct clk *c)
+ {
+-	int err;
+ 	struct clk *pa = c->parent;
+ 
+ 	if (pa && !pa->dent)
+-- 
+2.20.0
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0HjccACgkQzL64meEa
-mQZhsA/9GPXGmz10q8n644hKI3owpJviGwOTfR0L0fAavSjDtLvI3avmcYMZ1a+h
-oYvJDVOAZNvc97WMt8JeF1Dc9rfutyq+jtmkpRwTAZ1Xy8cg+9nu1GLSaajLu/OU
-kECtbgtUXf76/srOfseNyRk8aFnEW6YZXviTW0q1L6ayYhtxHibF8y1Z3ltKl8Wq
-xgFLb1EeffqtNfQze/6Fg7y20XfPA2VeeJGqy+e3IFN6p4GJsRtGhLtJUObxmclR
-vSaelq0UrPylodnFK+5GhcPHhXwYZKA28JNlZmw91kplKCvLHR32goJsfTY6fq4W
-xTZvHn54vnQ6xoNgxQCtzpFa4A9m5Eqabsq2HzrRzha/HbzCj5kKnFIhHxLV+N4a
-CGtDJzcB9nZbuspSsjTGrumTtKPKedrmwHkbxD9sWW/mMwTbavqu0MAiRqBkm/eU
-v1lGqBNjIvMX+246KG/iCLvfYZjANYM84cLxz//ODfKjS67WKrIgqCFHXGflEpd0
-DBjFHGtIX2JJKtCFOcSkzyxyPo4qiRvdM5wP+MStR2YNa9e+DZrd+DgRV1HlkOBR
-A/r4yTd8mqlCCw7F1gkP689+zCQUhZn4SASDwWeuXtqaQigXDFYuA8gMMbVbBG/Z
-ieiHtc8WmhlI11GgO5Qbj6ucJHNuzKhJcpKMeMf5d6jR1nNACdo=
-=yt0c
------END PGP SIGNATURE-----
---=-=-=--
