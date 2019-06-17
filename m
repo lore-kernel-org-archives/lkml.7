@@ -2,168 +2,144 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F33DC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:17:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F69C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA881208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:17:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA592084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:17:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="RXkc/Niz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XW0NKdf8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfFQPRV (ORCPT
+        id S1728383AbfFQPRd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:17:21 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:45788 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQPRV (ORCPT
+        Mon, 17 Jun 2019 11:17:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33914 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728267AbfFQPRc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:17:21 -0400
-Received: by mail-ed1-f68.google.com with SMTP id a14so16657021edv.12
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:17:20 -0700 (PDT)
+        Mon, 17 Jun 2019 11:17:32 -0400
+Received: by mail-io1-f66.google.com with SMTP id k8so22102463iot.1;
+        Mon, 17 Jun 2019 08:17:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=793wO/lpxosyL8Lo8JzZhwJr+Npn0SNzRpqHl7DL5pk=;
-        b=RXkc/NizyisWqRuCLogAjrsGOcBd68f10ywsjcm7brS6yJ+d35dfd+cuxSbAdQkx7z
-         wKq6dhyTSmZ8s4JbZA59Rkjj72jmNHBxRcmOYEgxuj6UaAQzP3CjhQs8yOYAaNNeQtYZ
-         oQiaPvp4+5m58VPDDZEqv915qKyTqDyud0y//YquxhBsN1QiXiGgrRgpGbRFSbY2lMhp
-         16SEa3RJWjVMHgeXA/9dyN9Ap1U+ZDrdKgvOStfNibxXjwuR3roK7mBx8fRE2X27RuH9
-         2I09MIggqYS5t3kBHlA8AG3pKMkbKtW5EIxg5zvJJHx3o698XrY/7sue3H+NA82wDJmc
-         Y3PQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3+wD3SVXZ3PrXa1HtjvCKKY1g2uXLotDdh/IZjbwZD4=;
+        b=XW0NKdf8HYq8QBc4Mxuma9s8F0Gia3HEyU125mLUA7j/kI9hW+ksgPSsrEAbd0r2JU
+         rAIP4ROAGs+4Mft6ygNPQmeunP+4KdhfWgNzmdSIiWlD99x6hcDUcitu2sVS229onCY3
+         Vb04HaUnieL1TmikiqpAkjJRRNjvY3JzJ9tpNYF8l6CNZYsj9ikncEZihBy4ONe/RFnd
+         Itu9TtwwXfkFNRIOnpgbeJl8qJ11JmreOrGU0kTkL6im2jAJUGaXLgD5rCMrjIfJa0h+
+         K+u49csTAsCMIpv0GBJJU/z+ygok9Q5T62cq4TKiIPTu8bo+RgL6kvt9WJHiXsIXuUTH
+         FbyA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=793wO/lpxosyL8Lo8JzZhwJr+Npn0SNzRpqHl7DL5pk=;
-        b=sKdp2ovv+CrT/IlMyTnHUqxhxZfKABdxZdzIFya053pf3OJ2LsoT3vPgaj/U1HASRv
-         fxm/7D9pvRK6aMWEvPu6OTaEBO17+ZC+Z0f+9HxkiRNbdXMTATgjb3KHT/MnuLT0mkHT
-         0izT7J6cVE7MTbwebEsGluQYOx//a54/P6Q3N21VgWnqOVBzDHR0o1Fw2tcUIRfocY6p
-         i/p+0qvNebX+ZWArES8iyqWOkKD5J2oT1YRvmooevOO8ozOOHv0RMHzVNkrLmcTp+wtw
-         vEDFVJ/SlVVW2lOdJXxFsLMmgeOPWgpl6ni/f+6QBN6QMwHeI6KRjKqY5MoIgYSLnyUJ
-         c7QQ==
-X-Gm-Message-State: APjAAAWdyLRYMqDxxM5srgAT2J7qUHz4rwx7ec/kMXoEplvyCNkYOc7V
-        WLRCzg3xyWpGvteU+UjILNoQ/Q==
-X-Google-Smtp-Source: APXvYqx/2PG0WVKQ0QCNSQz1um97AoXbarsKCLVMsvp/9S7L7EsBQNFc5qFB/PVQai5MQ0iioIgvfg==
-X-Received: by 2002:a50:addc:: with SMTP id b28mr23146217edd.174.1560784639396;
-        Mon, 17 Jun 2019 08:17:19 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id j17sm4004322ede.60.2019.06.17.08.17.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 08:17:18 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id E2A72100F6D; Mon, 17 Jun 2019 18:17:17 +0300 (+03)
-Date:   Mon, 17 Jun 2019 18:17:17 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 18/62] x86/mm: Implement syncing per-KeyID direct
- mappings
-Message-ID: <20190617151717.ofjfbpsgv6hkj2jk@box>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-19-kirill.shutemov@linux.intel.com>
- <20190614095131.GY3436@hirez.programming.kicks-ass.net>
- <20190614224309.t4ce7lpx577qh2gu@box>
- <20190617092755.GA3419@hirez.programming.kicks-ass.net>
- <20190617144328.oqwx5rb5yfm2ziws@box>
- <20190617145158.GF3436@hirez.programming.kicks-ass.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3+wD3SVXZ3PrXa1HtjvCKKY1g2uXLotDdh/IZjbwZD4=;
+        b=aVLzkshRYxJisro94B2XXCGi1TqRuqq8gU++ketjNrkAQFtQUsdnfh1vuf9IWAZ2sm
+         yt5SMoDyzDOpG9xsUFGyLC4+qeuA6mkyeVIZ/5E6wcGeNfzGHTu3k4jdCb+bf4c9WxZX
+         CMSbI+RsFBSQ0HLup1HYBNNu/L3+GYV+dj+g29stZnavo+Has4UaBVz4Bd/ES4urahOu
+         /q3oManMH8JqL3pza4mT00MdGtheYvNyXS+9JZhp/R3rd8hQWlrNEi/6l50oxh0vcIO0
+         TY7PNng5DnCGqKyK6EFIV5GKryaFoQyYKk8yxb70vIwsincxgxepgUbKJhMtiRQLxVkK
+         8B4Q==
+X-Gm-Message-State: APjAAAU/KFkDeKrPY5IUKv8grkxY4779iFv5iqUCj6TYz+rSEuvK7xXf
+        gN/bh39VO2bZvXc+ho0DfTPBj/7XH8bsIGYdnpXE6hWF
+X-Google-Smtp-Source: APXvYqzHko/RHOucNVkRDhgeF7jxqsQrYHP/teYkSGuN2gCpAyHtQ4kD7zLzznSbAeTHSrrBWQClAN66pqYh6uIt6ZA=
+X-Received: by 2002:a6b:901:: with SMTP id t1mr228382ioi.42.1560784651888;
+ Mon, 17 Jun 2019 08:17:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617145158.GF3436@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
+ <20190613212553.10541-1-jeffrey.l.hugo@gmail.com> <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
+ <20190617150502.GU5316@sirena.org.uk>
+In-Reply-To: <20190617150502.GU5316@sirena.org.uk>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 17 Jun 2019 09:17:21 -0600
+Message-ID: <CAOCk7NrwYezbVyLKOZdxgGRVemKtBmHKP+fSO0a2p3bCPNdW3w@mail.gmail.com>
+Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
+To:     Mark Brown <broonie@kernel.org>
+Cc:     lgirdwood@gmail.com, Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 04:51:58PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 17, 2019 at 05:43:28PM +0300, Kirill A. Shutemov wrote:
-> > On Mon, Jun 17, 2019 at 11:27:55AM +0200, Peter Zijlstra wrote:
-> 
-> > > > > And yet I don't see anything in pageattr.c.
-> > > > 
-> > > > You're right. I've hooked up the sync in the wrong place.
-> 
-> > I think something like this should do (I'll fold it in after testing):
-> 
-> > @@ -643,7 +641,7 @@ static int sync_direct_mapping_keyid(unsigned long keyid)
-> >   *
-> >   * The function is nop until MKTME is enabled.
-> >   */
-> > -int sync_direct_mapping(void)
-> > +int sync_direct_mapping(unsigned long start, unsigned long end)
-> >  {
-> >  	int i, ret = 0;
-> >  
-> > @@ -651,7 +649,7 @@ int sync_direct_mapping(void)
-> >  		return 0;
-> >  
-> >  	for (i = 1; !ret && i <= mktme_nr_keyids; i++)
-> > -		ret = sync_direct_mapping_keyid(i);
-> > +		ret = sync_direct_mapping_keyid(i, start, end);
-> >  
-> >  	flush_tlb_all();
-> >  
-> > diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-> > index 6a9a77a403c9..eafbe0d8c44f 100644
-> > --- a/arch/x86/mm/pageattr.c
-> > +++ b/arch/x86/mm/pageattr.c
-> > @@ -347,6 +347,28 @@ static void cpa_flush(struct cpa_data *data, int cache)
-> >  
-> >  	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
-> >  
-> > +	if (mktme_enabled()) {
-> > +		unsigned long start, end;
+On Mon, Jun 17, 2019 at 9:05 AM Mark Brown <broonie@kernel.org> wrote:
+>
+> On Thu, Jun 13, 2019 at 02:25:53PM -0700, Jeffrey Hugo wrote:
+>
+> > +static int spmi_regulator_ftsmps426_set_voltage(struct regulator_dev *rdev,
+> > +                                           unsigned selector)
+> > +{
+> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> > +     u8 buf[2];
+> > +     int mV;
 > > +
-> > +		start = *cpa->vaddr;
-> > +		end = *cpa->vaddr + cpa->numpages * PAGE_SIZE;
+> > +     mV = spmi_regulator_common_list_voltage(rdev, selector) / 1000;
 > > +
-> > +		/* Sync all direct mapping for an array */
-> > +		if (cpa->flags & CPA_ARRAY) {
-> > +			start = PAGE_OFFSET;
-> > +			end = PAGE_OFFSET + direct_mapping_size;
-> > +		}
-> 
-> Understandable but sad, IIRC that's the most used interface (at least,
-> its the one the graphics people use).
-> 
+> > +     buf[0] = mV & 0xff;
+> > +     buf[1] = mV >> 8;
+> > +     return spmi_vreg_write(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
+> > +}
+>
+> This could just be a set_voltage_sel(), no need for it to be a
+> set_voltage() operation....
+
+This is a set_voltage_sel() in spmi_ftsmps426_ops.  Is the issue because this
+function is "spmi_regulator_ftsmps426_set_voltage" and not
+"spmi_regulator_ftsmps426_set_voltage_sel"?
+
+>
+> > +static int spmi_regulator_ftsmps426_get_voltage(struct regulator_dev *rdev)
+> > +{
+> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> > +     u8 buf[2];
 > > +
-> > +		/*
-> > +		 * Sync per-KeyID direct mappings with the canonical one
-> > +		 * (KeyID-0).
-> > +		 *
-> > +		 * sync_direct_mapping() does full TLB flush.
-> > +		 */
-> > +		sync_direct_mapping(start, end);
-> > +		return;
-> 
-> But it doesn't flush cache. So you can't return here.
+> > +     spmi_vreg_read(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
+> > +
+> > +     return (((unsigned int)buf[1] << 8) | (unsigned int)buf[0]) * 1000;
+> > +}
+>
+> ...or if the conversion is this trivial why do the list_voltage() lookup
+> above?
 
-Thanks for catching this.
+We already have code in the driver to convert a selector to the
+voltage.  Why duplicate
+that inline in spmi_regulator_ftsmps426_set_voltage?
 
-	if (!cache)
-		return;
+>
+> > +spmi_regulator_ftsmps426_set_mode(struct regulator_dev *rdev, unsigned int mode)
+> > +{
+> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> > +     u8 mask = SPMI_FTSMPS426_MODE_MASK;
+> > +     u8 val;
+> > +
+> > +     switch (mode) {
+> > +     case REGULATOR_MODE_NORMAL:
+> > +             val = SPMI_FTSMPS426_MODE_HPM_MASK;
+> > +             break;
+> > +     case REGULATOR_MODE_FAST:
+> > +             val = SPMI_FTSMPS426_MODE_AUTO_MASK;
+> > +             break;
+> > +     default:
+> > +             val = SPMI_FTSMPS426_MODE_LPM_MASK;
+> > +             break;
+> > +     }
+>
+> This should validate, it shouldn't just translate invalid values into
+> valid ones.
 
-should be fine.
-
--- 
- Kirill A. Shutemov
+Validate what?  The other defines are REGULATOR_MODE_IDLE
+and REGULATOR_MODE_STANDBY which correspond to the LPM
+mode.  Or are you suggesting that regulator framework is going to pass
+REGULATOR_MODE_INVALID to this operation?
