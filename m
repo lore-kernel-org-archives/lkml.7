@@ -2,145 +2,101 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6CE9C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C176C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCBE020861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61FE02084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QkZ4Xgh5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VaUgNytS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727787AbfFQMUm (ORCPT
+        id S1727824AbfFQMUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:20:42 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59218 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbfFQMUT (ORCPT
+        Mon, 17 Jun 2019 08:20:47 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:34929 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfFQMUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:20:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rAru/g/esClPI2WAaX3PUnaPhvPum8MkxndH0C4U79k=; b=QkZ4Xgh5y91dYvFuT64YOH0Xwn
-        u5bqL9vAPRDcR+CsmKyese77tj7wJfgFvWsq9gy4tOsq/V+EmewMoDFVVsZnoObZwzIGLgVMHpRaH
-        hHC+CHJlrDMjnz/JjVWhBMbcIwuxWndBXhYHOyBibnjsLyU4Ucnp0W79+87ZlBaoLVOMlxCvUKVA9
-        iW9/n3virNs6E0IQOtb09OH4lzUVb5NMXTbyg+ngIU/XY359SDDH1+59PmtIrSAql2wPkRLNNyXXR
-        RKZF1GaRe3Fnqb/oof9Kvit4WOM/7jWEqov8Cawxc9SuQsOHK2hLnJQtWZxN2LaptfnJ68D1x3j0P
-        LwxzQ1ZA==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqcR-0004gJ-Lt; Mon, 17 Jun 2019 12:20:16 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/8] IB/iser: set virt_boundary_mask in the scsi host
-Date:   Mon, 17 Jun 2019 14:19:57 +0200
-Message-Id: <20190617122000.22181-6-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190617122000.22181-1-hch@lst.de>
-References: <20190617122000.22181-1-hch@lst.de>
+        Mon, 17 Jun 2019 08:20:45 -0400
+Received: by mail-vs1-f66.google.com with SMTP id u124so5965261vsu.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 05:20:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=h6E2Ip34X/NLucxUj+SAkivtur6dQeITpi+3ydY7xI0=;
+        b=VaUgNytSxrZHTdPy4AHf679viycuTT6TSbjD97ksFXQstGJ82OF4pQ79sVLFQZQhN+
+         TAuv5O2zEPG++5ULYyed+wDJ5gD2Dqj0QNEzc6xYj4nzpZTwncw9qHWxhO6uVJGU+EYS
+         2EbluPNmffJYa8MDJ+KpRZqomOybDNanPvTv+/o3haL3l7jK1LYduPX7LAks6bEOSRAB
+         Ten84501wJz8bGfC9E0wLG4zBNZLaFYPikgrBwnDcGtcQe9IxcbgCH3GWG/SspfXvqP9
+         zgqRTcV4gdtH0YJ7d3VGLRfctNOdxQZCumldkSAga6QkZJaEAFxC0NobHLu/1cHYL9Qj
+         jdxQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=h6E2Ip34X/NLucxUj+SAkivtur6dQeITpi+3ydY7xI0=;
+        b=MYykcE7iVsYCDJT/vnNjb+D+yBxIck7UA93FNLBUWPNmny8fIVh+0WrBuUA4LbzwoP
+         b5cuz4tfoLGBsit8i91Le7tiI644NRWWcKavZ4oJmLBUqKYlGLxWx4jmkRo/y53DmbpL
+         PUB0AZo6WBGNHP/nr4JFQKQ74dfHeA3paPTQF8+sXmmjCiZN8x494h4jAuLbvjW/cwOq
+         FZ58RvLhx855w1/tVp+uXoLfbJSvRbcpHVEAD6HmhsbKFI4VdJeQNmxju0ajL8v/L6JQ
+         znBQ+JVjf6QQ7OHS+DiLjFBeNf5uZNTyY35Y3j4o9emz846/0eg665rKBC9fUOhmIE03
+         pbLg==
+X-Gm-Message-State: APjAAAU9PnZNedsmr2Zky55nZ6DvGwDYcNRW41y2xAsZB2N4hjtvMT8x
+        +UKU+tRqtS9623lFmQr0jaI8n9dGC26IV8k2Z81f7QLh
+X-Google-Smtp-Source: APXvYqxMJLMuFqwF6SNEbeLs9khmkOhZ5vp7TF3Ik3nkRvURQ4fTn76Oh+GhbDbYR/M64gcI1PcWhg4Eko/OqHDU99I=
+X-Received: by 2002:a67:6d44:: with SMTP id i65mr59348095vsc.106.1560774044360;
+ Mon, 17 Jun 2019 05:20:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <CAOuPNLifSHQmi+jCMzRGYz3kzct+NB_vyv-yiwL91adRZPkTrQ@mail.gmail.com>
+ <CAOfkYf7BZ1Ttrm7iVioq4mxZcJy7V44gNmusavPzgi=59=TY6g@mail.gmail.com> <13999.1560455005@turing-police>
+In-Reply-To: <13999.1560455005@turing-police>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Mon, 17 Jun 2019 17:50:32 +0530
+Message-ID: <CAOuPNLj4useN+BiPJvd2MRMntELt=_Kc_8x=mbxfrkgWh5v7Mw@mail.gmail.com>
+Subject: Re: Pause a process execution from external program
+To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     Shyam Saini <mayhs11saini@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>, pedro@palves.net,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This ensures all proper DMA layer handling is taken care of by the
-SCSI midlayer.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/infiniband/ulp/iser/iscsi_iser.c | 35 +++++-------------------
- 1 file changed, 7 insertions(+), 28 deletions(-)
-
-diff --git a/drivers/infiniband/ulp/iser/iscsi_iser.c b/drivers/infiniband/ulp/iser/iscsi_iser.c
-index 9c185a8dabd3..841b66397a57 100644
---- a/drivers/infiniband/ulp/iser/iscsi_iser.c
-+++ b/drivers/infiniband/ulp/iser/iscsi_iser.c
-@@ -613,6 +613,7 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 	struct Scsi_Host *shost;
- 	struct iser_conn *iser_conn = NULL;
- 	struct ib_conn *ib_conn;
-+	struct ib_device *ib_dev;
- 	u32 max_fr_sectors;
- 
- 	shost = iscsi_host_alloc(&iscsi_iser_sht, 0, 0);
-@@ -643,16 +644,19 @@ iscsi_iser_session_create(struct iscsi_endpoint *ep,
- 		}
- 
- 		ib_conn = &iser_conn->ib_conn;
-+		ib_dev = ib_conn->device->ib_device;
- 		if (ib_conn->pi_support) {
--			u32 sig_caps = ib_conn->device->ib_device->attrs.sig_prot_cap;
-+			u32 sig_caps = ib_dev->attrs.sig_prot_cap;
- 
- 			scsi_host_set_prot(shost, iser_dif_prot_caps(sig_caps));
- 			scsi_host_set_guard(shost, SHOST_DIX_GUARD_IP |
- 						   SHOST_DIX_GUARD_CRC);
- 		}
- 
--		if (iscsi_host_add(shost,
--				   ib_conn->device->ib_device->dev.parent)) {
-+		if (!(ib_dev->attrs.device_cap_flags & IB_DEVICE_SG_GAPS_REG))
-+			shost->virt_boundary_mask = ~MASK_4K;
-+
-+		if (iscsi_host_add(shost, ib_dev->dev.parent)) {
- 			mutex_unlock(&iser_conn->state_mutex);
- 			goto free_host;
- 		}
-@@ -958,30 +962,6 @@ static umode_t iser_attr_is_visible(int param_type, int param)
- 	return 0;
- }
- 
--static int iscsi_iser_slave_alloc(struct scsi_device *sdev)
--{
--	struct iscsi_session *session;
--	struct iser_conn *iser_conn;
--	struct ib_device *ib_dev;
--
--	mutex_lock(&unbind_iser_conn_mutex);
--
--	session = starget_to_session(scsi_target(sdev))->dd_data;
--	iser_conn = session->leadconn->dd_data;
--	if (!iser_conn) {
--		mutex_unlock(&unbind_iser_conn_mutex);
--		return -ENOTCONN;
--	}
--	ib_dev = iser_conn->ib_conn.device->ib_device;
--
--	if (!(ib_dev->attrs.device_cap_flags & IB_DEVICE_SG_GAPS_REG))
--		blk_queue_virt_boundary(sdev->request_queue, ~MASK_4K);
--
--	mutex_unlock(&unbind_iser_conn_mutex);
--
--	return 0;
--}
--
- static struct scsi_host_template iscsi_iser_sht = {
- 	.module                 = THIS_MODULE,
- 	.name                   = "iSCSI Initiator over iSER",
-@@ -994,7 +974,6 @@ static struct scsi_host_template iscsi_iser_sht = {
- 	.eh_device_reset_handler= iscsi_eh_device_reset,
- 	.eh_target_reset_handler = iscsi_eh_recover_target,
- 	.target_alloc		= iscsi_target_alloc,
--	.slave_alloc            = iscsi_iser_slave_alloc,
- 	.proc_name              = "iscsi_iser",
- 	.this_id                = -1,
- 	.track_queue_depth	= 1,
--- 
-2.20.1
-
+On Fri, Jun 14, 2019 at 1:13 AM Valdis Kl=C4=93tnieks
+<valdis.kletnieks@vt.edu> wrote:
+>
+> On Thu, 13 Jun 2019 13:22:12 +0530, Shyam Saini said:
+>
+> > from command line we use ctrl-z to stop execution of a foreground
+> > process but you can program
+> > SIGTSTP signal handler in your application code to do the same.
+>
+> Note that if you simply fail to include a signal handler for SIGSTOP and
+> SIGCONT, it will Do The Right Thing.  The only programs that need worry a=
+bout
+> SIGTSTP are ones like 'vi' that may want to do something (like restore th=
+e
+> terminal state from raw to cooked mode, etc) before they stop.  That's wh=
+y you
+> can control-z /bin/cat without it having to include a signal handler for =
+it.
+>
+> % kill -STOP `pidof process-to-stop`   # stop it
+> % kill -CONT `pidof process-to-stop`  # and make it run again.
+>
+> No source code modifications needed.  No source needed.
+>
+> Now, if you want to make it stop at a *specific point*, then you're into
+> ptrace territory, and source will be helpful.
+>
+Yes, I think ptrace can serve our purpose.
+Thank you so much.
