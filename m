@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42D41C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 851A8C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D4FE2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5991420673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807115;
-	bh=5+pIcsxL3+kMfNjKRKyMxU8gJGrwjrepimwCwm6k9zk=;
+	s=default; t=1560807120;
+	bh=cFx4VBLzAal3G0rBA32RUb0yH6Y2uo0QIMRMn9lE+cY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZpAZQFO4NzG35Sx9kkRAiLPc20CEicZp4uk1Dfq41/g4Loxu8LgdTpJJAS5DIrh2j
-	 dmaqNq68/bKVYbykx0LWvNuriHewkh9SYeSIQz4vKKBPBXN46qJLRnh4fto4RNnXRb
-	 /AQO3sy8frYbbcRXdoZj1xJL1xrGGiPA9RjSELrI=
+	b=XuJhYtG2dx7uvJEd+VgfBiFRGxnAShllxlEWp5E+k8dzq9qiBgxvknPLbcew3zxx9
+	 jeEew8aWbFAq8GUmgNcPuORXZqICunpNHDwJ3CX6JM0o5PapMfJOUQIudGShmxwio7
+	 BBTSEkSAeMD8XAUDIcKSwm1O9TmDjQ3LhHRO+FUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729311AbfFQV2M (ORCPT
+        id S1729811AbfFQV2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:28:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55212 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:28:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729369AbfFQV2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:28:06 -0400
+        id S1730462AbfFQV15 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:27:57 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BEF32187F;
-        Mon, 17 Jun 2019 21:28:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C43020861;
+        Mon, 17 Jun 2019 21:27:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806886;
-        bh=5+pIcsxL3+kMfNjKRKyMxU8gJGrwjrepimwCwm6k9zk=;
+        s=default; t=1560806876;
+        bh=cFx4VBLzAal3G0rBA32RUb0yH6Y2uo0QIMRMn9lE+cY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yRknwLO4Mhhjw6Ws8p7oApWN6Y0PzDGGpJD2a0L89yzjndsH6uxwUE4ayr5G3g8Ys
-         /ElYGgcwiX5z22bzqR5dpRlqxoRYDRenKoz68tp2opqhbCVeFg9ETezfaiIpGnAJg1
-         9XveFwvF4FUxclBdv2xNl/0AGXat3s/8oelhIFDU=
+        b=VntWxLC/PAzlV3j6nqXlGSVBphtTvKvFZpGuBHol4lUvukp0PTWvXE+1lFlQNE+N0
+         5aLTyG2vJ14AySntvSELS9QvgHlR9CfRYI2sGDaJ6DBhsZgvWZH8OX56HucoQClyfs
+         fWjRi8ERC7Sr0QdaQEDkDH6AI2EELsZ0HGdMjkRU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 4.14 16/53] i2c: acorn: fix i2c warning
-Date:   Mon, 17 Jun 2019 23:09:59 +0200
-Message-Id: <20190617210748.336849640@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 4.14 13/53] ptrace: restore smp_rmb() in __ptrace_may_access()
+Date:   Mon, 17 Jun 2019 23:09:56 +0200
+Message-Id: <20190617210747.887165718@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -59,33 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Jann Horn <jannh@google.com>
 
-commit ca21f851cc9643af049226d57fabc3c883ea648e upstream.
+commit f6581f5b55141a95657ef5742cf6a6bfa20a109f upstream.
 
-The Acorn i2c driver (for RiscPC) triggers the "i2c adapter has no name"
-warning in the I2C core driver, resulting in the RTC being inaccessible.
-Fix this.
+Restore the read memory barrier in __ptrace_may_access() that was deleted
+a couple years ago. Also add comments on this barrier and the one it pairs
+with to explain why they're there (as far as I understand).
 
-Fixes: 2236baa75f70 ("i2c: Sanity checks on adapter registration")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
+Fixes: bfedb589252c ("mm: Add a user_ns owner to mm_struct and fix ptrace permission checks")
+Cc: stable@vger.kernel.org
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-acorn.c |    1 +
- 1 file changed, 1 insertion(+)
+ kernel/cred.c   |    9 +++++++++
+ kernel/ptrace.c |   10 ++++++++++
+ 2 files changed, 19 insertions(+)
 
---- a/drivers/i2c/busses/i2c-acorn.c
-+++ b/drivers/i2c/busses/i2c-acorn.c
-@@ -83,6 +83,7 @@ static struct i2c_algo_bit_data ioc_data
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -448,6 +448,15 @@ int commit_creds(struct cred *new)
+ 		if (task->mm)
+ 			set_dumpable(task->mm, suid_dumpable);
+ 		task->pdeath_signal = 0;
++		/*
++		 * If a task drops privileges and becomes nondumpable,
++		 * the dumpability change must become visible before
++		 * the credential change; otherwise, a __ptrace_may_access()
++		 * racing with this change may be able to attach to a task it
++		 * shouldn't be able to attach to (as if the task had dropped
++		 * privileges without becoming nondumpable).
++		 * Pairs with a read barrier in __ptrace_may_access().
++		 */
+ 		smp_wmb();
+ 	}
  
- static struct i2c_adapter ioc_ops = {
- 	.nr			= 0,
-+	.name			= "ioc",
- 	.algo_data		= &ioc_data,
- };
- 
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -323,6 +323,16 @@ static int __ptrace_may_access(struct ta
+ 	return -EPERM;
+ ok:
+ 	rcu_read_unlock();
++	/*
++	 * If a task drops privileges and becomes nondumpable (through a syscall
++	 * like setresuid()) while we are trying to access it, we must ensure
++	 * that the dumpability is read after the credentials; otherwise,
++	 * we may be able to attach to a task that we shouldn't be able to
++	 * attach to (as if the task had dropped privileges without becoming
++	 * nondumpable).
++	 * Pairs with a write barrier in commit_creds().
++	 */
++	smp_rmb();
+ 	mm = task->mm;
+ 	if (mm &&
+ 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
 
 
