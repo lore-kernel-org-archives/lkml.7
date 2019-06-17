@@ -2,143 +2,167 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA0AC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:45:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6FE0C31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B060F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:45:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EB922084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="DfyeHbBo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ESL7h+x6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728096AbfFQNpW (ORCPT
+        id S1726752AbfFQNrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:45:22 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13828 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725884AbfFQNpW (ORCPT
+        Mon, 17 Jun 2019 09:47:36 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38479 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbfFQNrf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:45:22 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HDfLpV026019;
-        Mon, 17 Jun 2019 15:44:15 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=TukET5a1B87T8jAy8Pcez1BbOi6ltkalZ8o/aJvv4Ow=;
- b=DfyeHbBodyNC7xlupkSuyuz6HEZY+FH5jtORUN+y9B1TKxuO2geqtoBs17rQpOTY6AGW
- 6rXrn6AUZXu3Wmyybdol0t2C+TyZ/yf3IqE27CzZG4C4ngTjf/3ps7U2h/UDZGvGPhN7
- v0Iet8Gd643ilcQLocoYPG3MWyLKWismAQmejWLhNgLEmKu+zHKAMbmviCyriSRPtroZ
- LqspCfwS8YJx0V88PVDqCsQJ1dcvfM5/nbVA+tG3Xc9sp+F9GsGYbd90hXWdZeOF7ddo
- dAxbWXccgSywZ5RWkt+NKeOHj6PD4Fj0UJbBElvDiLLSGvf0OjzbH9D4ox57lOTz3drB KQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t4nt834nu-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Mon, 17 Jun 2019 15:44:15 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 78C743A;
-        Mon, 17 Jun 2019 13:44:14 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2CCB12AFF;
-        Mon, 17 Jun 2019 13:44:14 +0000 (GMT)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS21.st.com
- (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 17 Jun
- 2019 15:44:14 +0200
-Received: from localhost (10.201.23.19) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 17 Jun 2019 15:44:13
- +0200
-From:   Hugues Fruchet <hugues.fruchet@st.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mickael Guene <mickael.guene@st.com>
-CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        "Hugues Fruchet" <hugues.fruchet@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>
-Subject: [PATCH v2 3/3] media: st-mipid02: add support of JPEG
-Date:   Mon, 17 Jun 2019 15:43:58 +0200
-Message-ID: <1560779038-26012-4-git-send-email-hugues.fruchet@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560779038-26012-1-git-send-email-hugues.fruchet@st.com>
-References: <1560779038-26012-1-git-send-email-hugues.fruchet@st.com>
+        Mon, 17 Jun 2019 09:47:35 -0400
+Received: by mail-lf1-f67.google.com with SMTP id b11so6559654lfa.5;
+        Mon, 17 Jun 2019 06:47:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=O9iaokS7chRIdty8YXJ6Ys/2JY44g91hT9zsHpjPuBg=;
+        b=ESL7h+x6npOVGuO1kDUltOllyumhp7aW8zxRpnbwR0R2IlDD38Dae7N2KYdDOJImep
+         K/sS0rRKbpjTMcUW79gCdah0eMKQWlb8Mis1BA/PaWyeE+bOwvh2JWeUvq+5JwtC3wPA
+         Kq7fTe2eZuukZ4CDSgVrVbuIjAk9Yx6Eh57AmxYWdY8MQkMRaJURdDS5VWQHuQ4x8vvK
+         HSVyzSWOrko7q/YJarrvddjHG/6eVXDCF4whEpkr9xXo1bmQ/YBvO01t1JiWAsOVrabS
+         Nzoz/QthCrZF56BH3bSZ9jNfdfFEF+6F63VnFr3rDxSi0EJx4VJ3o8nZ6Lt+4s91jq4B
+         kWcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=O9iaokS7chRIdty8YXJ6Ys/2JY44g91hT9zsHpjPuBg=;
+        b=kYuCvUWjRGR8kEgUAu8b6U1YPw803Tn16mdyuq3l3Si/1l/b9G9kjvKizCShQjs9hF
+         9YBZzEBMET5vjgNmGdLYDH/Q57U9TuYGrFwVFCrGx5q4rYb4UybsI5/EylxLrdlYCC2A
+         sCDRciSmrC87PFxBiCLdaNBD3ejdfghztXgStTe6Tk+iuaV4wsvjz2USyj13AeVkZHzP
+         cuKwAGc/05oCG5RiujlfmImZbrbua3dXJj98Al1BN15qFx8KPs8qgAOzdQ2QMy1IFHnD
+         uG75vPfHEi1FZ6igpJvnCG53ZqXW7h2n9WtE3r86YlJskuLr4Lha9MolbXHq73LcWFLl
+         Ur3A==
+X-Gm-Message-State: APjAAAWJc3LsmaS11jaNuoXXNTyfSqesJy82XG6Q3NjBrN5fN55WeXwA
+        WKC050SHH+qufThn7Jlxs4wpHAPYwVM=
+X-Google-Smtp-Source: APXvYqzAO3WcughOQWS36ZmjwboEnCZX7eu0ToKYcUhEpInYmxfUni6YOBAbjr+vbOs3ie2xT0neQg==
+X-Received: by 2002:ac2:4d17:: with SMTP id r23mr6757lfi.130.1560779253032;
+        Mon, 17 Jun 2019 06:47:33 -0700 (PDT)
+Received: from mobilestation ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id 16sm1770779lfy.21.2019.06.17.06.47.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 06:47:32 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 16:47:30 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Huang Rui <ray.huang@amd.com>,
+        Junwei Zhang <Jerry.Zhang@amd.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     dri-devel@lists.freedesktop.org, linux-mips@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>
+Subject: Re: [PATCH] drm: Permit video-buffers writecombine mapping for MIPS
+Message-ID: <20190617134729.pd24boyqe2viyihm@mobilestation>
+References: <20190423123122.32573-1-fancer.lancer@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.19]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_06:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190423123122.32573-1-fancer.lancer@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support of JPEG pixel format.
-This requires auto detection of data type from CSI-2 stream.
+Hello folks,
 
-Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
----
- drivers/media/i2c/st-mipid02.c | 18 +++++++++++++-----
- 1 file changed, 13 insertions(+), 5 deletions(-)
+Any updates of this patch status? It has been here for about two months.
 
-diff --git a/drivers/media/i2c/st-mipid02.c b/drivers/media/i2c/st-mipid02.c
-index 35946ad..ff8a4d8 100644
---- a/drivers/media/i2c/st-mipid02.c
-+++ b/drivers/media/i2c/st-mipid02.c
-@@ -64,6 +64,7 @@ static const u32 mipid02_supported_fmt_codes[] = {
- 	MEDIA_BUS_FMT_UYVY8_1X16, MEDIA_BUS_FMT_BGR888_1X24,
- 	MEDIA_BUS_FMT_RGB565_2X8_LE, MEDIA_BUS_FMT_RGB565_2X8_BE,
- 	MEDIA_BUS_FMT_YUYV8_2X8, MEDIA_BUS_FMT_UYVY8_2X8,
-+	MEDIA_BUS_FMT_JPEG_1X8
- };
- 
- /* regulator supplies */
-@@ -101,6 +102,7 @@ struct mipid02_dev {
- 		u8 data_lane1_reg1;
- 		u8 mode_reg1;
- 		u8 mode_reg2;
-+		u8 data_selection_ctrl;
- 		u8 data_id_rreg;
- 		u8 pix_width_ctrl;
- 		u8 pix_width_ctrl_emb;
-@@ -463,6 +465,7 @@ static int mipid02_configure_from_tx(struct mipid02_dev *bridge)
- {
- 	struct v4l2_fwnode_endpoint *ep = &bridge->tx;
- 
-+	bridge->r.data_selection_ctrl = SELECTION_MANUAL_WIDTH;
- 	bridge->r.pix_width_ctrl = ep->bus.parallel.bus_width;
- 	bridge->r.pix_width_ctrl_emb = ep->bus.parallel.bus_width;
- 	if (ep->bus.parallel.flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-@@ -478,10 +481,15 @@ static int mipid02_configure_from_code(struct mipid02_dev *bridge)
- 	u8 data_type;
- 
- 	bridge->r.data_id_rreg = 0;
--	data_type = data_type_from_code(bridge->fmt.code);
--	if (!data_type)
--		return -EINVAL;
--	bridge->r.data_id_rreg = data_type;
-+
-+	if (bridge->fmt.code != MEDIA_BUS_FMT_JPEG_1X8) {
-+		bridge->r.data_selection_ctrl |= SELECTION_MANUAL_DATA;
-+
-+		data_type = data_type_from_code(bridge->fmt.code);
-+		if (!data_type)
-+			return -EINVAL;
-+		bridge->r.data_id_rreg = data_type;
-+	}
- 
- 	return 0;
- }
-@@ -565,7 +573,7 @@ static int mipid02_stream_enable(struct mipid02_dev *bridge)
- 	if (ret)
- 		goto error;
- 	ret = mipid02_write_reg(bridge, MIPID02_DATA_SELECTION_CTRL,
--		SELECTION_MANUAL_DATA | SELECTION_MANUAL_WIDTH);
-+		bridge->r.data_selection_ctrl);
- 	if (ret)
- 		goto error;
- 	ret = mipid02_write_reg(bridge, MIPID02_PIX_WIDTH_CTRL,
--- 
-2.7.4
+Regards,
+-Sergey
 
+On Tue, Apr 23, 2019 at 03:31:22PM +0300, Serge Semin wrote:
+> Since commit 4b050ba7a66c ("MIPS: pgtable.h: Implement the
+> pgprot_writecombine function for MIPS") and commit c4687b15a848 ("MIPS: Fix
+> definition of pgprot_writecombine()") write-combine vma mapping is
+> available to be used by kernel subsystems for MIPS. In particular the
+> uncached accelerated attribute is requested to be set by ioremap_wc()
+> method and by generic PCI memory pages/ranges mapping methods. The same
+> is done by the drm_io_prot()/ttm_io_prot() functions in case if
+> write-combine flag is set for vma's passed for mapping. But for some
+> reason the pgprot_writecombine() method calling is ifdefed to be a
+> platform-specific with MIPS system being marked as lacking of one. At the
+> very least it doesn't reflect the current MIPS platform implementation.
+> So in order to improve the DRM subsystem performance on MIPS with UCA
+> mapping enabled, we need to have pgprot_writecombine() called for buffers,
+> which need store operations being combined. In case if particular MIPS
+> chip doesn't support the UCA attribute, the mapping will fall back to
+> noncached.
+> 
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Signed-off-by: Vadim V. Vlasov <vadim.vlasov@t-platforms.ru>
+> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
+> ---
+>  drivers/gpu/drm/drm_vm.c          | 5 +++--
+>  drivers/gpu/drm/ttm/ttm_bo_util.c | 4 ++--
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_vm.c b/drivers/gpu/drm/drm_vm.c
+> index c3301046dfaa..50178dc64060 100644
+> --- a/drivers/gpu/drm/drm_vm.c
+> +++ b/drivers/gpu/drm/drm_vm.c
+> @@ -62,7 +62,8 @@ static pgprot_t drm_io_prot(struct drm_local_map *map,
+>  	/* We don't want graphics memory to be mapped encrypted */
+>  	tmp = pgprot_decrypted(tmp);
+>  
+> -#if defined(__i386__) || defined(__x86_64__) || defined(__powerpc__)
+> +#if defined(__i386__) || defined(__x86_64__) || defined(__powerpc__) || \
+> +    defined(__mips__)
+>  	if (map->type == _DRM_REGISTERS && !(map->flags & _DRM_WRITE_COMBINING))
+>  		tmp = pgprot_noncached(tmp);
+>  	else
+> @@ -73,7 +74,7 @@ static pgprot_t drm_io_prot(struct drm_local_map *map,
+>  		tmp = pgprot_writecombine(tmp);
+>  	else
+>  		tmp = pgprot_noncached(tmp);
+> -#elif defined(__sparc__) || defined(__arm__) || defined(__mips__)
+> +#elif defined(__sparc__) || defined(__arm__)
+>  	tmp = pgprot_noncached(tmp);
+>  #endif
+>  	return tmp;
+> diff --git a/drivers/gpu/drm/ttm/ttm_bo_util.c b/drivers/gpu/drm/ttm/ttm_bo_util.c
+> index 895d77d799e4..9f918b992f7e 100644
+> --- a/drivers/gpu/drm/ttm/ttm_bo_util.c
+> +++ b/drivers/gpu/drm/ttm/ttm_bo_util.c
+> @@ -539,13 +539,13 @@ pgprot_t ttm_io_prot(uint32_t caching_flags, pgprot_t tmp)
+>  		tmp = pgprot_noncached(tmp);
+>  #endif
+>  #if defined(__ia64__) || defined(__arm__) || defined(__aarch64__) || \
+> -    defined(__powerpc__)
+> +    defined(__powerpc__) || defined(__mips__)
+>  	if (caching_flags & TTM_PL_FLAG_WC)
+>  		tmp = pgprot_writecombine(tmp);
+>  	else
+>  		tmp = pgprot_noncached(tmp);
+>  #endif
+> -#if defined(__sparc__) || defined(__mips__)
+> +#if defined(__sparc__)
+>  	tmp = pgprot_noncached(tmp);
+>  #endif
+>  	return tmp;
+> -- 
+> 2.21.0
+> 
