@@ -2,97 +2,111 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A3CC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:22:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B8CC31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8202084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:22:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560795737;
-	bh=qbxCbs3GDp/CMv5cX9wG11BqOooaSzc5OufFPBK83JI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=lA+x+Omc5efqj2IGCZ+5WJc+28Z8UFQccafJAct5xhLDju3qGtU6a/dkhg36H/IKS
-	 ExRh9g/LtLEmlqcdIcPWmJ5ToqSCEjLYCNDErLpJfkR4K7PmUnrjJRaXpgbpJfwqXz
-	 1irTyCQ5H565b2qYg+a9xc3hzJLJ8/Hyb9bg+IPI=
+	by mail.kernel.org (Postfix) with ESMTP id CC0DD2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:24:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qQYXAZfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfFQSWQ (ORCPT
+        id S1726694AbfFQSYH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:22:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49716 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbfFQSWQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:22:16 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A5692084D;
-        Mon, 17 Jun 2019 18:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560795734;
-        bh=qbxCbs3GDp/CMv5cX9wG11BqOooaSzc5OufFPBK83JI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=epfD/pHewbrtU7RIq8hZ9DZ2Oqv+jnjcHpsCMxoLWFWCsMHaPv6B3bu9h3RPkfmAa
-         wN0PIZ9fDKy8XxycJmkxlglCRWJ7Qh/zE6RqJatltbO11YW85KguMSnaEcdTZNh7Ci
-         AGZZ89mlLlB2Wxn7SqSoEGpe2BYRLYERjg436COE=
-Date:   Mon, 17 Jun 2019 13:22:13 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-Cc:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v6 1/4] PCI: Consider alignment of hot-added bridges when
- distributing available resources
-Message-ID: <20190617182213.GB13533@google.com>
-References: <20190522222928.2964-1-nicholas.johnson-opensource@outlook.com.au>
- <PS2P216MB0642C7A485649D2D787A1C6F80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
- <20190617093513.GN2640@lahna.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617093513.GN2640@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 17 Jun 2019 14:24:07 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36824 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbfFQSYH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 14:24:07 -0400
+Received: by mail-io1-f67.google.com with SMTP id h6so23460950ioh.3;
+        Mon, 17 Jun 2019 11:24:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LNDj/9Uge4rb5LG4sl2oFwkMWYo5QYyd6vgWjHPxMYU=;
+        b=qQYXAZfu49iyzDbgqn6cbHpgYcLoIDlv7zGX98wyqWvuIYcHIxug+f4sJAV0e8O4xS
+         s2aspucn8QC8QewHtixUcfZtc37sAjg4Air9VWD8cmQdivRugh0avoZmTyk4tvKkEMM+
+         uCi9QqhFp1GzZUUoej5+j58BBKCszJrqE9LSTLHE3OQBav6nWg3gvpNEdf7ol3uwnMri
+         Ha2g/qaKSkhHN+sklpgoeU6VM0qsdYBK1J0JAG/c0O5TAzucfcxvUH8rWNbS3nvxTQmi
+         W45Q9UxajNij0sKKOqw9/RMl+1F/XFB7aUFZk/25qTaw1H1SumUXrt6TCVFXSbtgxEHf
+         7PyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LNDj/9Uge4rb5LG4sl2oFwkMWYo5QYyd6vgWjHPxMYU=;
+        b=MOomKdaZ4tlHnx2hA8hPuFwByQVapFn7Ii6TIOoSiZimsGehhTK+cHcsUQcm8t5FQV
+         hQQuVqxQRVq08wEXY2MpJr2HrdBR9A61y5myHl00mIEIDlnXC2MAt8BjE0hHKdKCt3cM
+         uosNvXFWKqu8ZHFnbgR5SSun3d07lidsv+f7451rI17a20Ur8lZ3tmBMbMYlxqwwuucb
+         paTnHNCzgr8TvQaWU6wZgcsHCQd7Tuicb1+1c6qnAQZl1+hEeNMRP0enY2FwqQV2gZJA
+         hkiAVJFPxYe6cD9TH2HnvWYL0wT3G68Ke661Z4KcMLfa4ANdURaeo/B0YKE/10JYBtiF
+         Ohrw==
+X-Gm-Message-State: APjAAAX6967Y+DKCtqLGHZwchjy/t01KjCKM6Pw73E25GvNLAqx0IxZ/
+        BBVJonACh2IoEQGXV/DnUxA=
+X-Google-Smtp-Source: APXvYqzyjNQeJEGdeV6RSpDBxUhnrQBrAbJd9GIEz2zpA9IlQT9KOaNLnUdyRAooNwA/EyrALQpQGw==
+X-Received: by 2002:a5d:8e08:: with SMTP id e8mr42656031iod.139.1560795845930;
+        Mon, 17 Jun 2019 11:24:05 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id r5sm13961804iom.42.2019.06.17.11.24.04
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 11:24:05 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Luis Chamberlain <mcgrof@kernel.org>
+Cc:     Stable <stable@vger.kernel.org>,
+        Mimi Zohar <zohar@linux.vnet.ibm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: improve LSM/IMA security behaviour
+Date:   Mon, 17 Jun 2019 14:23:54 -0400
+Message-Id: <20190617182354.10846-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:35:13PM +0300, mika.westerberg@linux.intel.com wrote:
-> On Wed, May 22, 2019 at 02:30:44PM +0000, Nicholas Johnson wrote:
-> > Rewrite pci_bus_distribute_available_resources to better handle bridges
-> > with different resource alignment requirements. Pass more details
-> > arguments recursively to track the resource start and end addresses
-> > relative to the initial hotplug bridge. This is especially useful for
-> > Thunderbolt with native PCI enumeration, enabling external graphics
-> > cards and other devices with bridge alignment higher than 0x100000
->  
-> Instead of 0x100000 you could say 1MB here.
+The firmware loader queries if LSM/IMA permits it to load firmware
+via the sysfs fallback. Unfortunately, the code does the opposite:
+it expressly permits sysfs fw loading if security_kernel_load_data(
+LOADING_FIRMWARE) returns -EACCES. This happens because a
+zero-on-success return value is cast to a bool that's true on success.
 
-And of course, 1MB is the minimum bridge window alignment.  I *guess*
-this is actually talking about endpoints with BARs larger than 1MB,
-which have to be aligned on their size.  This doesn't actually impose
-any requirement on the bridge window alignment, as long as the bridge
-window contains the endpoint BARs.
+Fix the return value handling so we get the correct behaviour.
 
-> > bytes.
+Fixes: 6e852651f28e ("firmware: add call to LSM hook before firmware sysfs fallback")
+Cc: Stable <stable@vger.kernel.org>
+Cc: Mimi Zohar <zohar@linux.vnet.ibm.com>
+Cc: Kees Cook <keescook@chromium.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
+---
+ drivers/base/firmware_loader/fallback.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> >  	for_each_pci_bridge(dev, bus) {
-> > -		const struct resource *res;
-> > +		struct resource *res;
-> > +		resource_size_t used_size;
-> 
-> Here order these in "reverse christmas tree" like:
-> 
-> 		resource_size_t used_size;
-> 		struct resource *res;
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index f962488546b6..103b5d37fa86 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -659,7 +659,7 @@ static bool fw_run_sysfs_fallback(enum fw_opt opt_flags)
+ 	/* Also permit LSMs and IMA to fail firmware sysfs fallback */
+ 	ret = security_kernel_load_data(LOADING_FIRMWARE);
+ 	if (ret < 0)
+-		return ret;
++		return false;
+ 
+ 	return fw_force_sysfs_fallback(opt_flags);
+ }
+-- 
+2.17.1
 
-I actually don't enforce "reverse christmas tree", and when I write
-code, I order the declarations in order of their use in the code
-below, as Nicholas has done.  But either way is fine.
-
-Bjorn
