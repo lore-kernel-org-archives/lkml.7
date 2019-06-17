@@ -2,135 +2,183 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58BBAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C95BFC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:46:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E3DB2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:45:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tGZ39Zzu"
+	by mail.kernel.org (Postfix) with ESMTP id 978DF2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:46:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560786388;
+	bh=F3uEyDN+Xs7L0Di68zDs4MEi1Cbu2UWQXut0pG0xWMs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=J17dfNPqW9uHUyfk7A2XGSYyf4rUjNSvcGv+YGa7pmG8zcbZhxWhSqvKKqUGvUltH
+	 89+vPA3bnEKjOA2D7RYjAQ3WS5Quh7XfEzKvKuDiQf+/XLLK6E7XZaHZSyGDgI0mPZ
+	 gSOXm4xRsQ2pKc5wWQyX4EjlzDdn4RphsTaxZjH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728402AbfFQPpH (ORCPT
+        id S1728322AbfFQPq1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:45:07 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49498 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726292AbfFQPpH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:45:07 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5HFipSq091402;
-        Mon, 17 Jun 2019 10:44:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560786291;
-        bh=McgqI3mDBBahPgI7AYaJFbF+RYWPhclsx1BVQphtdss=;
-        h=Date:From:To:CC:Subject:References:In-Reply-To;
-        b=tGZ39ZzusXUIC2LOEMo6l1t/H/cuu47XY3JhCagVn/SHGDqiskMsCG/5aLqGs7Oz/
-         AoaFtY8aYXKKz3N0lwp+wIcg25wa9QMRSJ52Y2Q8hgMj3PODs25N+uxhClXaZeqxG1
-         EvKShXPUzIyfITQapeWr2zzAHRQOLZEqszxdkqwE=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5HFipq0126827
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Jun 2019 10:44:51 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
- Jun 2019 10:44:50 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 17 Jun 2019 10:44:50 -0500
-Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5HFio7i120698;
-        Mon, 17 Jun 2019 10:44:50 -0500
-Date:   Mon, 17 Jun 2019 10:43:42 -0500
-From:   Nishanth Menon <nm@ti.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Santosh Shilimkar <ssantosh@kernel.org>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Olof Johansson <olof@lixom.net>,
-        Tony Lindgren <tony@atomide.com>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] soc: ti: fix irq-ti-sci link error
-Message-ID: <20190617154342.n2tre474cfyvraw3@kahuna>
-References: <20190617130149.1782930-1-arnd@arndb.de>
+        Mon, 17 Jun 2019 11:46:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59918 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726292AbfFQPq1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:46:27 -0400
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F39621530
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:46:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560786385;
+        bh=F3uEyDN+Xs7L0Di68zDs4MEi1Cbu2UWQXut0pG0xWMs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wa35xolYW4YasUKQT8EwzT6szfhNdHDv0tXqCBbVczs42MXSBCsyqEPKC57euY3wj
+         xTlfaENabxyxNZ4xaXCX4kGyw7z94wbPMr9w+hYWZLZqYfzBKsWgmhZHcCSZ61Sbjv
+         HM3+iiGzq5mOAoMIYcKW89sL9P2A2CmPt30I6s04=
+Received: by mail-wm1-f41.google.com with SMTP id f17so7140361wme.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:46:25 -0700 (PDT)
+X-Gm-Message-State: APjAAAUYpa2r3r++l/hIhmVd+Kj9dXk1Ze2p1HV7PlTqSRBANJlYJStF
+        C6e4K+LcMItcWWd/FhJX7aslzX7+YpUj3Pz8LAKR/Q==
+X-Google-Smtp-Source: APXvYqyrDpnzTXcyPRzw7xdKgDkoK9TPRpUT8p/03uOhfg+q5WxYbogJ4WqJXyfqu9bcckbw7dHL/p31ug/zjQinPwo=
+X-Received: by 2002:a1c:a942:: with SMTP id s63mr19448598wme.76.1560786383736;
+ Mon, 17 Jun 2019 08:46:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190617130149.1782930-1-arnd@arndb.de>
-User-Agent: NeoMutt/20171215
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-46-kirill.shutemov@linux.intel.com> <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
+ <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com>
+In-Reply-To: <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 17 Jun 2019 08:46:12 -0700
+X-Gmail-Original-Message-ID: <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
+Message-ID: <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
+Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for MKTME
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
+        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15:01-20190617, Arnd Bergmann wrote:
-> The irqchip driver depends on the SoC specific driver, but we want
-> to be able to compile-test it elsewhere:
-> 
-> WARNING: unmet direct dependencies detected for TI_SCI_INTA_MSI_DOMAIN
->   Depends on [n]: SOC_TI [=n]
->   Selected by [y]:
->   - TI_SCI_INTA_IRQCHIP [=y] && TI_SCI_PROTOCOL [=y]
-> 
-> drivers/irqchip/irq-ti-sci-inta.o: In function `ti_sci_inta_irq_domain_probe':
-> irq-ti-sci-inta.c:(.text+0x204): undefined reference to `ti_sci_inta_msi_create_irq_domain'
-> 
-> Rearrange the Kconfig and Makefile so we build the soc driver whenever
-> its users are there, regardless of the SOC_TI option.
-> 
-> Fixes: 49b323157bf1 ("soc: ti: Add MSI domain bus support for Interrupt Aggregator")
-> Fixes: f011df6179bd ("irqchip/ti-sci-inta: Add msi domain support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/soc/Makefile   | 2 +-
->  drivers/soc/ti/Kconfig | 4 ++--
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/soc/Makefile b/drivers/soc/Makefile
-> index 524ecdc2a9bb..2ec355003524 100644
-> --- a/drivers/soc/Makefile
-> +++ b/drivers/soc/Makefile
-> @@ -22,7 +22,7 @@ obj-$(CONFIG_ARCH_ROCKCHIP)	+= rockchip/
->  obj-$(CONFIG_SOC_SAMSUNG)	+= samsung/
->  obj-y				+= sunxi/
->  obj-$(CONFIG_ARCH_TEGRA)	+= tegra/
-> -obj-$(CONFIG_SOC_TI)		+= ti/
-> +obj-y				+= ti/
->  obj-$(CONFIG_ARCH_U8500)	+= ux500/
->  obj-$(CONFIG_PLAT_VERSATILE)	+= versatile/
->  obj-y				+= xilinx/
-> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-> index ea0859f7b185..d7d50d48d05d 100644
-> --- a/drivers/soc/ti/Kconfig
-> +++ b/drivers/soc/ti/Kconfig
-> @@ -75,10 +75,10 @@ config TI_SCI_PM_DOMAINS
->  	  called ti_sci_pm_domains. Note this is needed early in boot before
->  	  rootfs may be available.
->  
-> +endif # SOC_TI
-> +
->  config TI_SCI_INTA_MSI_DOMAIN
->  	bool
->  	select GENERIC_MSI_IRQ_DOMAIN
->  	help
->  	  Driver to enable Interrupt Aggregator specific MSI Domain.
-> -
-> -endif # SOC_TI
-> -- 
-> 2.20.0
-> 
+On Mon, Jun 17, 2019 at 8:28 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 6/17/19 8:07 AM, Andy Lutomirski wrote:
+> > I still find it bizarre that this is conflated with mprotect().
+>
+> This needs to be in the changelog.  But, for better or worse, it's
+> following the mprotect_pkey() pattern.
+>
+> Other than the obvious "set the key on this memory", we're looking for
+> two other properties: atomicity (ensuring there is no transient state
+> where the memory is usable without the desired properties) and that it
+> is usable on existing allocations.
+>
+> For atomicity, we have a model where we can allocate things with
+> PROT_NONE, then do mprotect_pkey() and mprotect_encrypt() (plus any
+> future features), then the last mprotect_*() call takes us from
+> PROT_NONE to the desired end permisions.  We could just require a plain
+> old mprotect() to do that instead of embedding mprotect()-like behavior
+> in these, of course, but that isn't the path we're on at the moment with
+> mprotect_pkey().
+>
+> So, for this series it's just a matter of whether we do this:
+>
+>         ptr = mmap(..., PROT_NONE);
+>         mprotect_pkey(protect_key, ptr, PROT_NONE);
+>         mprotect_encrypt(encr_key, ptr, PROT_READ|PROT_WRITE);
+>         // good to go
+>
+> or this:
+>
+>         ptr = mmap(..., PROT_NONE);
+>         mprotect_pkey(protect_key, ptr, PROT_NONE);
+>         sys_encrypt(key, ptr);
+>         mprotect(ptr, PROT_READ|PROT_WRITE);
+>         // good to go
+>
+> I actually don't care all that much which one we end up with.  It's not
+> like the extra syscall in the second options means much.
 
-	Looks fine to me. Lokesh?
+The benefit of the second one is that, if sys_encrypt is absent, it
+just works.  In the first model, programs need a fallback because
+they'll segfault of mprotect_encrypt() gets ENOSYS.
 
--- 
-Regards,
-Nishanth Menon
+>
+> > This is part of why I much prefer the idea of making this style of
+> > MKTME a driver or some other non-intrusive interface.  Then, once
+> > everyone gets tired of it, the driver can just get turned off with no
+> > side effects.
+>
+> I like the concept, but not where it leads.  I'd call it the 'hugetlbfs
+> approach". :)  Hugetblfs certainly go us huge pages, but it's continued
+> to be a parallel set of code with parallel bugs and parallel
+> implementations of many VM features.  It's not that you can't implement
+> new things on hugetlbfs, it's that you *need* to.  You never get them
+> for free.
+
+Fair enough, but...
+
+>
+> For instance, if we do a driver, how do we get large pages?  How do we
+> swap/reclaim the pages?  How do we do NUMA affinity?
+
+Those all make sense.
+
+>  How do we
+> eventually stack it on top of persistent memory filesystems or Device
+> DAX?
+
+How do we stack anonymous memory on top of persistent memory or Device
+DAX?  I'm confused.
+
+Just to throw this out there, what if we had a new device /dev/xpfo
+and MKTME were one of its features.  You open /dev/xpfo, optionally do
+an ioctl to set a key, and them map it.  The pages you get are
+unmapped entirely from the direct map, and you get a PFNMAP VMA with
+all its limitations.  This seems much more useful -- it's limited, but
+it's limited *because the kernel can't accidentally read it*.
+
+I think that, in the long run, we're going to have to either expand
+the core mm's concept of what "memory" is or just have a whole
+parallel set of mechanisms for memory that doesn't work like memory.
+We're already accumulating a set of things that are backed by memory
+but aren't usable as memory. SGX EPC pages and SEV pages come to mind.
+They are faster when they're in big contiguous chunks (well, not SGX
+AFAIK, but maybe some day), they have NUMA node affinity, and they
+show up in page tables, but the hardware restricts who can read and
+write them.  If Intel isn't planning to do something like this with
+the MKTME hardware, I'll eat my hat.
+
+I expect that some day normal memory will  be able to be repurposed as
+SGX pages on the fly, and that will also look a lot more like SEV or
+XPFO than like the this model of MKTME.
+
+So, if we upstream MKTME as anonymous memory with a magic config
+syscall, I predict that, in a few years, it will be end up inheriting
+all downsides of both approaches with few of the upsides.  Programs
+like QEMU will need to learn to manipulate pages that can't be
+accessed outside the VM without special VM buy-in, so the fact that
+MKTME pages are fully functional and can be GUP-ed won't be very
+useful.  And the VM will learn about all these things, but MKTME won't
+really fit in.
+
+And, one of these days, someone will come up with a version of XPFO
+that could actually be upstreamed, and it seems entirely plausible
+that it will be totally incompatible with MKTME-as-anonymous-memory
+and that users of MKTME will actually get *worse* security.
