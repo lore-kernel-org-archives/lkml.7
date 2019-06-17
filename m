@@ -2,143 +2,122 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 009EDC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4D4C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF58C208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:32:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McKtNWQ2"
+	by mail.kernel.org (Postfix) with ESMTP id 6FB39208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727959AbfFQRcJ (ORCPT
+        id S1728546AbfFQRcZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 13:32:09 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:40888 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfFQRcJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:32:09 -0400
-Received: by mail-qt1-f195.google.com with SMTP id a15so11691801qtn.7;
-        Mon, 17 Jun 2019 10:32:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t1yJydCVDq5OJIyrTjOy4i8SVUirxdw9ac7nmQRIwbg=;
-        b=McKtNWQ2jh6T9n8Ui7/I36Ofbeqr/iUidtuOxm6EQgwWotCtAlLgOfYfBlZOXpmmp1
-         rQFMK6ad/0/QDW1+V8R05cljfo9QLUBqSL3h/LXPShJ6hdZ6G1Wy0tf3er54K7fPFgw7
-         Lj+dz+isVIEUpd29stGu4uOQgrvFdc7Mds1mc6m1IvkzdLukZoGfULZHh++Bczi9V3ru
-         6CYLfDK93KEsMlBuzxFWxEeervGS5yGPWTZOv1BRQtG88k3Aa3havHXpoqiTFTzGIhlw
-         fannlqH3iNyRLNhapW1Jkm3YpaH4SkSKFRHzy6v739TcjXJhBuyZkl9u4JRjeS0zYOSR
-         uBkQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t1yJydCVDq5OJIyrTjOy4i8SVUirxdw9ac7nmQRIwbg=;
-        b=Qufa0w7Rx/DfTYTlpfTGHlvtTIstDjhGgENtb8qR05oepZNw7ZmCgToE7/gF/5plZ7
-         s6kUa5gJcndG5ICq2H2du9avbAAjT+puV6+z7fhrT42HonnXQbFSFxuvZ2tV2GqeUZfJ
-         s1GZCU0eHldxbK1FaAlAni30Z3WvJIJm1jIQk8LdRZyt+lx8NPiX9JTK/10SOueG7PDk
-         BOtWB9feZ4jX0H68FFbUoRHsZtx9wv0fgxAysBfzOjihhXz26ZPiELgeIC6YiK24q6Ed
-         /8Rl83Rquo7P2D6CtAeMF7cxa2u47aHQKYYDVp66XPyF4GCHnJiUHJvxanEWyACIm5YE
-         y6nQ==
-X-Gm-Message-State: APjAAAWWXjlslyOFsZvbGE+EY7UjguV2hn6/YQEnq3oEinnPlAdyPn6I
-        Wj0HVk2Yvb23JbK5hjYBk1M=
-X-Google-Smtp-Source: APXvYqwrFiH9HyWsgGS9Bd1/XMSyTPAOP3mCgQw0j4tx6rrJiTpgrlPEX4l4qlpr3T3DxqF6fVmEvQ==
-X-Received: by 2002:ac8:303c:: with SMTP id f57mr95760870qte.294.1560792727374;
-        Mon, 17 Jun 2019 10:32:07 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (179-240-145-61.3g.claro.net.br. [179.240.145.61])
-        by smtp.gmail.com with ESMTPSA id u63sm1222212qkh.85.2019.06.17.10.32.06
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 10:32:06 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 8246541149; Mon, 17 Jun 2019 14:32:03 -0300 (-03)
-Date:   Mon, 17 Jun 2019 14:32:03 -0300
-To:     Leo Yan <leo.yan@linaro.org>
-Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH 2/2] perf trace: Handle NULL pointer dereference in
- trace__syscall_info()
-Message-ID: <20190617173203.GA23094@kernel.org>
-References: <20190617091140.24372-1-leo.yan@linaro.org>
- <20190617091140.24372-2-leo.yan@linaro.org>
+        Mon, 17 Jun 2019 13:32:25 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:46258 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbfFQRcZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:32:25 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hcvUV-0007og-MA; Mon, 17 Jun 2019 11:32:24 -0600
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
+References: <20190531171216.20532-1-logang@deltatee.com>
+ <20190531171216.20532-3-logang@deltatee.com>
+ <20190617135307.GA13533@google.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <56b3452c-7713-c39a-196e-9f6921580b9c@deltatee.com>
+Date:   Mon, 17 Jun 2019 11:32:23 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617091140.24372-2-leo.yan@linaro.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190617135307.GA13533@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: yinghai@kernel.org, kchow@gigaio.com, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, helgaas@kernel.org
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v3 2/2] PCI: Fix disabling of bridge BARs when assigning
+ bus resources
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Mon, Jun 17, 2019 at 05:11:40PM +0800, Leo Yan escreveu:
-> trace__init_bpf_map_syscall_args() invokes trace__syscall_info() to
-> retrieve system calls information, it always passes NULL for 'evsel'
-> argument; when id is an invalid value then the logging will try to
-> output event name, this triggers NULL pointer dereference.
-> 
-> This patch directly uses string "unknown" for event name when 'evsel'
-> is NULL pointer.
-> 
-> Signed-off-by: Leo Yan <leo.yan@linaro.org>
-> ---
->  tools/perf/builtin-trace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-> index 5cd74651db4c..49dfb2fd393b 100644
-> --- a/tools/perf/builtin-trace.c
-> +++ b/tools/perf/builtin-trace.c
-> @@ -1764,7 +1764,7 @@ static struct syscall *trace__syscall_info(struct trace *trace,
->  		static u64 n;
->  
->  		pr_debug("Invalid syscall %d id, skipping (%s, %" PRIu64 ")\n",
-> -			 id, perf_evsel__name(evsel), ++n);
-> +			 id, evsel ? perf_evsel__name(evsel) : "unknown", ++n);
->  		return NULL;
 
-What do you think of this instead?
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 68beef8f47ff..1d6af95b9207 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -590,6 +590,9 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
- {
- 	char bf[128];
- 
-+	if (!evsel)
-+		goto out_unknown;
-+
- 	if (evsel->name)
- 		return evsel->name;
- 
-@@ -629,7 +632,10 @@ const char *perf_evsel__name(struct perf_evsel *evsel)
- 
- 	evsel->name = strdup(bf);
- 
--	return evsel->name ?: "unknown";
-+	if (evsel->name)
-+		return evsel->name;
-+out_unknown:
-+	return "unknown";
- }
- 
- const char *perf_evsel__group_name(struct perf_evsel *evsel)
+On 2019-06-17 7:53 a.m., Bjorn Helgaas wrote:
+>> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+>> index 0eb40924169b..7adbd4bedd16 100644
+>> --- a/drivers/pci/setup-bus.c
+>> +++ b/drivers/pci/setup-bus.c
+>> @@ -1784,11 +1784,16 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
+>>  	/* restore size and flags */
+>>  	list_for_each_entry(fail_res, &fail_head, list) {
+>>  		struct resource *res = fail_res->res;
+>> +		int idx;
+>>  
+>>  		res->start = fail_res->start;
+>>  		res->end = fail_res->end;
+>>  		res->flags = fail_res->flags;
+>> -		if (fail_res->dev->subordinate)
+>> +
+>> +		idx = res - &fail_res->dev->resource[0];
+>> +		if (fail_res->dev->subordinate &&
+>> +		    idx >= PCI_BRIDGE_RESOURCES &&
+>> +		    idx <= PCI_BRIDGE_RESOURCE_END)
+>>  			res->flags = 0;
+> 
+> In my ideal world we wouldn't zap the flags of any resource.  I think
+> we should derive the flags from the device's config space *once*
+> during enumeration and remember them for the life of the device.
+
+Yes, I agree. The fact that this code seems to be constantly modifying
+everything makes it difficult to follow. When it clears the flags like
+this it's not clear if/where/how it will ever put them back.
+
+> This patch preserves res->flags for bridge BARs just like for any
+> other device, so I think this is definitely a step in the right
+> direction.
+> 
+> I'm not sure the "dev->subordinate" test is really correct, though.
+> I think the original intent of this code was to clear res->flags for
+> bridge windows under the assumptions that (a) we can identify bridges
+> by "dev->subordinate" being non-zero, and (b) bridges only have
+> windows and didn't have BARs.
+
+Yes, I was also unsure of the reasoning behind the dev->subordinate test
+as well. But given that I didn't fully understand it, and it wasn't
+itself causing any problems, I elected to just change around it only for
+the bug I was trying to fix.
+
+> This patch fixes assumption (b), but I think (a) is false, and we
+> should fix it as well.  One can imagine a bridge device without a
+> subordinate bus (maybe we ran out of bus numbers), so I don't think we
+> should test dev->subordinate.
+>
+> We could test something like pci_is_bridge(), although testing for idx
+> being in the PCI_BRIDGE_RESOURCES range should be sufficient because I
+> don't think we use those resource for anything other than windows.
+
+Ok, yes, there are a couple possibilities here and I'm unsure of the
+best thing to do. I agree that, right now, testing the idx for the range
+is probably sufficient. So logically we could probably just remove the
+dev->subordinate test. Assuming nobody decides to reuse the bridge
+indices for something else (which is probably a safe assumption).
+Though, testing for pci_is_bridge() would definitely be an improvement
+in terms of readability and the issues you point out.
+
+One way or another I can add a third patch to do this next time I submit
+this series.
+
+Thanks,
+
+Logan
