@@ -2,123 +2,130 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F8AC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9EDCC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDBD52084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JKaeP9Ev"
+	by mail.kernel.org (Postfix) with ESMTP id 98E412084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726781AbfFQMUM (ORCPT
+        id S1727318AbfFQMWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:20:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59160 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFQMUL (ORCPT
+        Mon, 17 Jun 2019 08:22:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45695 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfFQMWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:20:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=EgU5lGgALUASevuDqm6D+3fpiqvPjFDOViczDZXWl1A=; b=JKaeP9Ev7LiZHvrRPLqNumCtMl
-        dquHp4cwMR0898RYkYJA8f51GaGPh3BxiQM89zTUVNPybDX6jDLLRDW5CqVLksUSOuWUa+cvlQ8mk
-        w9+KucND1Falz8nRMx1eEiY/2FPE6GUXvE3fUrbXkfvZtktVAvZJfKbjk10t1X2wwp3HNlKjVsbpZ
-        nMr9nNh18ZxuzY8Ik4oSxBPB7725XgTyT6ZIEblhmsG12E/PRS/MYGjE99RsOlElZePtDTxT6AaKH
-        G9uBZDtdvoB23crxPIQyhDLWCvDkzrjlIZ2DeF0DZ3caY8IZmNvK/38nJ2OM3XrG9DtbudCa8IxV/
-        cZ8Z0C4w==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqcI-00047i-MP; Mon, 17 Jun 2019 12:20:07 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/8] scsi: add a host / host template field for the virt boundary
-Date:   Mon, 17 Jun 2019 14:19:53 +0200
-Message-Id: <20190617122000.22181-2-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190617122000.22181-1-hch@lst.de>
-References: <20190617122000.22181-1-hch@lst.de>
+        Mon, 17 Jun 2019 08:22:04 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j19so10331079qtr.12
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 05:22:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=J1D0wRVIBxkLJPdsyEaqbWMW7xmtTDyWae7i+70qMQs=;
+        b=GOaHoBgvNGJIIr7Jatbi1CK9+jALGw4+UEoCEXXBBFq9efzp9LpO8CVgf7MrwQVgNj
+         Ceak5lBwKT8v6V63DxxTA7o437lKA0xMe8bTTgfyruCBLTEI9nFleVlPZzch44dXT2tC
+         RUxZUGe3AbmmAvwdCu5iUQkWRtU3TL2a3cxa2ESlzhyj3bblQ0ueHGZN+ZIcF1GFKhNP
+         ygNwtuOr//D+LbX4mLgTaGr6g8nUqUOvN5U7l96KhiwKVsVyiJPLuBcV8hxES7El7v32
+         7FJ/6n5MEnpLEX2CJ43pgcvmI4yq/GZedKnCWWx7FQXyouJbKmPT6LGZ74etYWoyWcoa
+         nZ+w==
+X-Gm-Message-State: APjAAAUiC6TbVznhmJY/R91TLcaHUOAPCDhGI8kCtIS8+mSwRpppYeZQ
+        QNHNBqi5eEv21MFqSJNwuumqDuIWVREJhWgYuOc=
+X-Google-Smtp-Source: APXvYqzBS9/f+FzXIzoMEx/rQKNZckt6bdT2jsoQ/5V9Nb2UOXwEEV6V5B/6sbBr2C25lfeCYsPalMWFzJMpk3UwffM=
+X-Received: by 2002:a0c:b758:: with SMTP id q24mr21150036qve.45.1560774123691;
+ Mon, 17 Jun 2019 05:22:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+References: <20190617104237.2082388-1-arnd@arndb.de> <20190617112652.GB30800@fuggles.cambridge.arm.com>
+In-Reply-To: <20190617112652.GB30800@fuggles.cambridge.arm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 17 Jun 2019 14:21:46 +0200
+Message-ID: <CAK8P3a2aJNiLTyfRDqazJa2sAc-Jf-QShSZ7+4-whHSxKbLUVQ@mail.gmail.com>
+Subject: Re: [PATCH] arm64/sve: fix genksyms generation
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        =?UTF-8?B?QWxleCBCZW5uw6ll?= <alex.bennee@linaro.org>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Alan Hayward <alan.hayward@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows drivers setting it up easily instead of branching out to
-block layer calls in slave_alloc, and ensures the upgraded
-max_segment_size setting gets picked up by the DMA layer.
+On Mon, Jun 17, 2019 at 1:26 PM Will Deacon <will.deacon@arm.com> wrote:
+>
+> Hi Arnd,
+>
+> On Mon, Jun 17, 2019 at 12:42:11PM +0200, Arnd Bergmann wrote:
+> > genksyms does not understand __uint128_t, so we get a build failure
+> > in the fpsimd module when it cannot export a symbol right:
+>
+> The fpsimd code is builtin, so which module is actually failing? My
+> allmodconfig build succeeds, so I must be missing something.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/scsi/hosts.c     | 3 +++
- drivers/scsi/scsi_lib.c  | 3 ++-
- include/scsi/scsi_host.h | 3 +++
- 3 files changed, 8 insertions(+), 1 deletion(-)
+It happened for me on randconfig builds, you can find one such configuration
+at https://pastebin.com/cU8iQ4ta now. I was building this with clang
+rather than gcc, which may affect the issue, but I assumed not.
 
-diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
-index ff0d8c6a8d0c..55522b7162d3 100644
---- a/drivers/scsi/hosts.c
-+++ b/drivers/scsi/hosts.c
-@@ -462,6 +462,9 @@ struct Scsi_Host *scsi_host_alloc(struct scsi_host_template *sht, int privsize)
- 	else
- 		shost->dma_boundary = 0xffffffff;
- 
-+	if (sht->virt_boundary_mask)
-+		shost->virt_boundary_mask = sht->virt_boundary_mask;
-+
- 	device_initialize(&shost->shost_gendev);
- 	dev_set_name(&shost->shost_gendev, "host%d", shost->host_no);
- 	shost->shost_gendev.bus = &scsi_bus_type;
-diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-index 65d0a10c76ad..d333bb6b1c59 100644
---- a/drivers/scsi/scsi_lib.c
-+++ b/drivers/scsi/scsi_lib.c
-@@ -1775,7 +1775,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
- 	dma_set_seg_boundary(dev, shost->dma_boundary);
- 
- 	blk_queue_max_segment_size(q, shost->max_segment_size);
--	dma_set_max_seg_size(dev, shost->max_segment_size);
-+	blk_queue_virt_boundary(q, shost->virt_boundary_mask);
-+	dma_set_max_seg_size(dev, queue_max_segment_size(q));
- 
- 	/*
- 	 * Set a reasonable default alignment:  The larger of 32-byte (dword),
-diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
-index a5fcdad4a03e..cc139dbd71e5 100644
---- a/include/scsi/scsi_host.h
-+++ b/include/scsi/scsi_host.h
-@@ -369,6 +369,8 @@ struct scsi_host_template {
- 	 */
- 	unsigned long dma_boundary;
- 
-+	unsigned long virt_boundary_mask;
-+
- 	/*
- 	 * This specifies "machine infinity" for host templates which don't
- 	 * limit the transfer size.  Note this limit represents an absolute
-@@ -587,6 +589,7 @@ struct Scsi_Host {
- 	unsigned int max_sectors;
- 	unsigned int max_segment_size;
- 	unsigned long dma_boundary;
-+	unsigned long virt_boundary_mask;
- 	/*
- 	 * In scsi-mq mode, the number of hardware queues supported by the LLD.
- 	 *
--- 
-2.20.1
+> > WARNING: EXPORT symbol "kernel_neon_begin" [vmlinux] version generation failed, symbol will not be versioned.
+> > /home/arnd/cross/x86_64/gcc-8.1.0-nolibc/aarch64-linux/bin/aarch64-linux-ld: arch/arm64/kernel/fpsimd.o: relocation R_AARCH64_ABS32 against `__crc_kernel_neon_begin' can not be used when making a shared object
+> > arch/arm64/kernel/fpsimd.o:(.data+0x0): dangerous relocation: unsupported relocation
+> > arch/arm64/kernel/fpsimd.o:(".discard.addressable"+0x0): dangerous relocation: unsupported relocation
+> > arch/arm64/kernel/fpsimd.o:(".discard.addressable"+0x8): dangerous relocation: unsupported relocation
+> >
+> > We could teach genksyms about the type, but it's easier to just
+> > work around it by defining that type locally in a way that genksyms
+> > understands.
+> >
+> > Fixes: 41040cf7c5f0 ("arm64/sve: Fix missing SVE/FPSIMD endianness conversions")
+>
+> I can't see which part of that patch causes the problem, so I'm a bit wary
+> of the fix. We've been using __uint128_t for a while now, and I see there's
+> one in the x86 kvm code as well, so it would be nice to understand what's
+> happening here so that we can avoid running into it in future as well.
 
+The problem is only in files that export a symbol. This is also the
+case in arch/x86/kernel/kvm.c, but it may be lucky because the
+type only appears /after/ the last export in that file.
+
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  arch/arm64/kernel/fpsimd.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> >
+> > diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> > index 07f238ef47ae..2aba07cccf50 100644
+> > --- a/arch/arm64/kernel/fpsimd.c
+> > +++ b/arch/arm64/kernel/fpsimd.c
+> > @@ -400,6 +400,9 @@ static int __init sve_sysctl_init(void) { return 0; }
+> >  #define ZREG(sve_state, vq, n) ((char *)(sve_state) +                \
+> >       (SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
+> >
+> > +#ifdef __GENKSYMS__
+> > +typedef __u64 __uint128_t[2];
+> > +#endif
+>
+> I suspect I need to figure out what genksyms is doing, but I'm nervous
+> about exposing this as an array type without understanding whether or
+> not that has consequences for its operation.
+
+The entire point is genksyms is to ensure that types of exported symbols
+are compatible. To do this, it has a limited parser for C source code that
+understands the basic types (char, int, long, _Bool, etc) and how to
+aggregate them into structs and function arguments. This process has
+always been fragile, and it clearly breaks when it fails to understand a
+particular type.
+
+          Arnd
