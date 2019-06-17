@@ -2,117 +2,99 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1468C31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:20:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC01C31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9D2E2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:20:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BAD2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:20:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="QJWOjDsE"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Iay63UGc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727806AbfFQOUZ (ORCPT
+        id S1728129AbfFQOUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:20:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:38145 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQOUZ (ORCPT
+        Mon, 17 Jun 2019 10:20:35 -0400
+Received: from mail-ed1-f45.google.com ([209.85.208.45]:46388 "EHLO
+        mail-ed1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfFQOUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:20:25 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HEK6hQ3453226
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:20:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HEK6hQ3453226
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560781207;
-        bh=IDpTSBmF5IVhnNoGRkM3wVvvTmliJPDMpWgIU8KyfkY=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=QJWOjDsECBUKGJtcFs60ylbEABuKmDB7wJ5JzgAUtqAVgDmlXOB7tNkoW5xOMbw/k
-         Cnym0uJgJfrP/adyWkENcS/YDaqZvB6qU6C+Upi0jqVL+xLrCEmYx4tEVvl1Qs7iCe
-         SkSdWE0B7fM4wW5GpLAqXG9/cLd8vNKM6LS0rnEFZfT+YxbGQyQmWPLYdX87AdtlkO
-         rc8xlKmilRoZe66NluufWw9TnagRGhfkgg0k4b0tkXFpllEvPtQAdHFD6nWdXnC+OI
-         aa07DqMQfrqf6pjQbJp2Rbu2+uebyKZ5LM0bJ6BvLfDzpulOLqB3yOi8yukULBut3C
-         jJvBylQcdteJQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HEK5iS3453216;
-        Mon, 17 Jun 2019 07:20:05 -0700
-Date:   Mon, 17 Jun 2019 07:20:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Gao Xiang <tipbot@zytor.com>
-Message-ID: <tip-e3b929b0a184edb35531153c5afcaebb09014f9d@git.kernel.org>
-Cc:     hpa@zytor.com, linux-kernel@vger.kernel.org, koujilong@huawei.com,
-        akpm@linux-foundation.org, tj@kernel.org, miaoxie@huawei.com,
-        mingo@kernel.org, peterz@infradead.org, gaoxiang25@huawei.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org
-Reply-To: koujilong@huawei.com, akpm@linux-foundation.org, tj@kernel.org,
-          linux-kernel@vger.kernel.org, mingo@kernel.org,
-          miaoxie@huawei.com, hpa@zytor.com, torvalds@linux-foundation.org,
-          peterz@infradead.org, tglx@linutronix.de, gaoxiang25@huawei.com
-In-Reply-To: <20190603091338.2695-1-gaoxiang25@huawei.com>
-References: <20190603091338.2695-1-gaoxiang25@huawei.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/core: Add __sched tag for io_schedule()
-Git-Commit-ID: e3b929b0a184edb35531153c5afcaebb09014f9d
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 10:20:35 -0400
+Received: by mail-ed1-f45.google.com with SMTP id d4so16390793edr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:20:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=lPDqMdPEKR2PzqaGXWoGDd7T5h4jBpHExcweaLaSSK0=;
+        b=Iay63UGcYlvzI9g3XDbohxpgexk9t4pKF6mBC7NJEA0o2i/h7b/F3pyRiN7Ztb5yhg
+         IGbfDCuvvjULm7skN4POwuaHWx33fxSiMI7qeoYiZf+H4tqbmlcbZc1tb396Gn9C+r0j
+         wLA9hWmoRSXQE1p8DWJnjWib2J/4Kaz2VWSVHI688WdK0no2cBvovBdcdntWCHAxQ946
+         z2JoMRtEJvhNYoUFUu3ZKtlUkW3DiKCMs5jrJfXK1Cqn2Xs4IjIEY8K6M8szn+ozlS1c
+         EZYkDBaWPauhcR4yqdZ4NLQpUqF7pdJSAhwbay0oiAGr8k3TfraHW12LWhIdIN34y+0A
+         xU1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=lPDqMdPEKR2PzqaGXWoGDd7T5h4jBpHExcweaLaSSK0=;
+        b=huhSyEgw9HHxhU9UJm7MFsH7XnxixpRs9bNNVa6XA6OY0ClBQD+Dj2dNG5ViLixr5T
+         SoZ8/Ex9EwuZARfw/i4pynU8TCeWBzIBdpmbXWB+SBax4cf6k64mve4FIjQqEBQOF1pm
+         cdPW+1lmZDjFf81A63E/KATmgvzebuIrH+ndEZXrWMkwWTmEjWz50l6LUIxmmYEa79gO
+         l6NqBiufly7vwUfR37meyPHQxQ1dyOB18PG8CVPn7ZCMcVr7ORPjyhOCTtEqsZpZbu4x
+         9U/Y1xBqtW1+03BC0rJC0tO4pUOrsSzEpuDr8PnbngPm8+n6auqdlZjh03YhYhbSTmf9
+         pcPA==
+X-Gm-Message-State: APjAAAUVx/gt1w0VK45OICc0I8Q9YDRyDZ2pnS26ABLdc+CGt2UuBw2D
+        ZQc4dunTIvsSbfri+abi6/27IQ==
+X-Google-Smtp-Source: APXvYqyNGHMS9Mr0hlgx8DUwk8VB/wUtnm/TqHyh3muEpDOB7qL1OTl8vAIIxlvfK0LsosNfRT+dCw==
+X-Received: by 2002:a50:95ae:: with SMTP id w43mr90466777eda.115.1560781232849;
+        Mon, 17 Jun 2019 07:20:32 -0700 (PDT)
+Received: from localhost ([81.92.102.43])
+        by smtp.gmail.com with ESMTPSA id w27sm2071922edw.63.2019.06.17.07.20.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 07:20:32 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 07:20:31 -0700 (PDT)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     Troy Benjegerdes <troy.benjegerdes@sifive.com>
+cc:     Andreas Schwab <schwab@suse.de>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        netdev@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        nicolas.ferre@microchip.com,
+        Sachin Ghadi <sachin.ghadi@sifive.com>,
+        Yash Shah <yash.shah@sifive.com>, robh+dt@kernel.org,
+        ynezz@true.cz, linux-riscv@lists.infradead.org,
+        davem@davemloft.net, Jim Jacobsen <jamez@wit.com>
+Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
+In-Reply-To: <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1906170715350.32654@viisi.sifive.com>
+References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com> <mvmtvco62k9.fsf@suse.de> <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com> <mvmpnnc5y49.fsf@suse.de> <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com> <mvmh88o5xi5.fsf@suse.de>
+ <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com> <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e3b929b0a184edb35531153c5afcaebb09014f9d
-Gitweb:     https://git.kernel.org/tip/e3b929b0a184edb35531153c5afcaebb09014f9d
-Author:     Gao Xiang <gaoxiang25@huawei.com>
-AuthorDate: Mon, 3 Jun 2019 17:13:38 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:15:56 +0200
+On Mon, 17 Jun 2019, Troy Benjegerdes wrote:
 
-sched/core: Add __sched tag for io_schedule()
+> Have we documented this tx clock switch register in something with a
+> direct URL link (rather than a PDF)?
 
-Non-inline io_schedule() was introduced in:
+The SiFive FU540 user manual PDF is the canonical public reference:
 
-  commit 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
+https://static.dev.sifive.com/FU540-C000-v1.0.pdf
 
-Keep in line with io_schedule_timeout(), otherwise "/proc/<pid>/wchan" will
-report io_schedule() rather than its callers when waiting for IO.
+This practice aligns with other SoC vendors, who also release PDFs.
 
-Reported-by: Jilong Kou <koujilong@huawei.com>
-Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Miao Xie <miaoxie@huawei.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 10ab56434f2f ("sched/core: Separate out io_schedule_prepare() and io_schedule_finish()")
-Link: https://lkml.kernel.org/r/20190603091338.2695-1-gaoxiang25@huawei.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The relevant Ethernet documentation, including register maps, is in 
+Chapter 19.
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 29984d8c41f0..cd047927f707 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5122,7 +5122,7 @@ long __sched io_schedule_timeout(long timeout)
- }
- EXPORT_SYMBOL(io_schedule_timeout);
- 
--void io_schedule(void)
-+void __sched io_schedule(void)
- {
- 	int token;
- 
+
+- Paul
