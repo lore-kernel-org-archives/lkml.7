@@ -7,45 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14471C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461FDC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF012070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1675320673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806977;
-	bh=9PkkKS4eK3cHYIwtOop9pQXBjR3OgNjWLKjzMomaHd4=;
+	s=default; t=1560806986;
+	bh=bpDKAsTgt3xv12xbpfJYU6uZ/4ata7f1fGHctvls5tA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jKlegQnQXV/ZXluEr6b07v2Atxqk3ar7qg8MDvnnDKLcoGIPzTiHIl5/dBFv0pTHZ
-	 6xf+/7YBQDLkPvAZZo7XzyPRudvl9eCwGeA62fTWIw2McbR/3wBqWV1KDlJlIFDhSJ
-	 gJhD0BsRzimZ6szfu6ESHxcx7qTZTMsrHj0pNyKo=
+	b=RaM2vzlpMgPmkHKBRG3PSSru72okOBs88fSOXkphqkjRibcsL6Pe60+bnTbIli3jy
+	 0HCnorUmd+kQaWkKYb/oWxRVMNxgXNXiU8q4JgQz9WSrnmiFE/y8GkGXTVbdSpiVNx
+	 5YZMSWl6X4uObPlp6xu9CA3PsPlK1CjviGJzkBW8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730214AbfFQV3g (ORCPT
+        id S1730748AbfFQV3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56748 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56876 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730436AbfFQV3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:32 -0400
+        id S1730730AbfFQV3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A167204FD;
-        Mon, 17 Jun 2019 21:29:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63F9D20673;
+        Mon, 17 Jun 2019 21:29:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806972;
-        bh=9PkkKS4eK3cHYIwtOop9pQXBjR3OgNjWLKjzMomaHd4=;
+        s=default; t=1560806980;
+        bh=bpDKAsTgt3xv12xbpfJYU6uZ/4ata7f1fGHctvls5tA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SLRLRdTWCLvrvoPYEFaqMh2HIB1SNIFhm9kkEgK6KUYpshKxaiEnx04O2XHVY9cii
-         9XmzDHwaISy9vtkpQASzqml4DyWrOG1oQyxhcwTreADEdUcNqpbh3AazzQS7syq07t
-         ZJfyEfcssHod0sf7pMt0kK2Ox0GUYbuCDzZnbaDE=
+        b=vOIMXYSLxAk2oVNuneFODElGM6c2/aibNZAaWxay/Fiyvb8HF1INlI5rUEaEI11GW
+         VTbS6Je7S2mrMdMzLwAIlz6fHKT8SjpSfaOcsCHoA3NJmdBi5kMCo2ZAM9WB7jvQTv
+         ioBE93PZvOoBzggbZD53hMfnMfdoofephFsGACMM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Zatta <marco@zatta.me>
-Subject: [PATCH 4.14 45/53] USB: Fix chipmunk-like voice when using Logitech C270 for recording audio.
-Date:   Mon, 17 Jun 2019 23:10:28 +0200
-Message-Id: <20190617210752.338665036@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 48/53] USB: serial: option: add support for Simcom SIM7500/SIM7600 RNDIS mode
+Date:   Mon, 17 Jun 2019 23:10:31 +0200
+Message-Id: <20190617210752.467963732@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -58,37 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Zatta <marco@zatta.me>
+From: Jörgen Storvist <jorgen.storvist@gmail.com>
 
-commit bd21f0222adab64974b7d1b4b8c7ce6b23e9ea4d upstream.
+commit 5417a7e482962952e622eabd60cd3600dd65dedf upstream.
 
-This patch fixes the chipmunk-like voice that manifets randomly when
-using the integrated mic of the Logitech Webcam HD C270.
+Added IDs for Simcom SIM7500/SIM7600 series cellular module in RNDIS
+mode. Reserved the interface for ADB.
 
-The issue was solved initially for this device by commit 2394d67e446b
-("USB: add RESET_RESUME for webcams shown to be quirky") but it was then
-reintroduced by e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all
-Logitech UVC webcams"). This patch is to have the fix back.
+T:  Bus=03 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  7 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1e0e ProdID=9011 Rev=03.18
+S:  Manufacturer=SimTech, Incorporated
+S:  Product=SimTech, Incorporated
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 8 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=02 Prot=ff Driver=rndis_host
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
+I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x6 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x7 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
 
-Signed-off-by: Marco Zatta <marco@zatta.me>
+Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
 Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -70,6 +70,9 @@ static const struct usb_device_id usb_qu
- 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
- 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
- 
-+	/* Logitech HD Webcam C270 */
-+	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
-+
- 	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
- 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
- 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1775,6 +1775,8 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE(ALINK_VENDOR_ID, SIMCOM_PRODUCT_SIM7100E),
+ 	  .driver_info = RSVD(5) | RSVD(6) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x1e0e, 0x9003, 0xff) },	/* Simcom SIM7500/SIM7600 MBIM mode */
++	{ USB_DEVICE_INTERFACE_CLASS(0x1e0e, 0x9011, 0xff),	/* Simcom SIM7500/SIM7600 RNDIS mode */
++	  .driver_info = RSVD(7) },
+ 	{ USB_DEVICE(ALCATEL_VENDOR_ID, ALCATEL_PRODUCT_X060S_X200),
+ 	  .driver_info = NCTRL(0) | NCTRL(1) | RSVD(4) },
+ 	{ USB_DEVICE(ALCATEL_VENDOR_ID, ALCATEL_PRODUCT_X220_X500D),
 
 
