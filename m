@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 16280C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76708C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3F7B2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4863220673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807009;
-	bh=oHZ+D+qqoj/Fy19Nk7YNcsjpllGzO0Ch48+MNTt6MOY=;
+	s=default; t=1560807013;
+	bh=R1+m3KTeYHiY6pURNymRtJDDfSzns4NMWsIKPE8HE7s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=koKOg+vBSCfTqphatDShBBWYF4lmTd3yCj+x5NXHGgoY351sE952OaFhLR9ofas+w
-	 1iBgZ9g2hFmd9lSy6fV7HhqIbhLeAYvH2Wsa9DJjI3Q1MpaoIDSMwrLIxzPNHexJ/C
-	 +76tvpRnWN6k34Efp61d52hBpACo7Ew83bBq3+R8=
+	b=LIiCmZgFUy+NsZ8kzT/EcrIZoQWncb9ZN/23A97wr+9RKxD5pMrjeAKhnLcThCgcr
+	 gFxsPQWbQjrQbC0VCyBEsB380Wyu/dgoTCy19NwD3U9gDmIfyOIq5fMfE3P4wswIP/
+	 fP++/1nSyI9CXIg06pykI1V35t+sAYNMhNTPtSAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730793AbfFQVaI (ORCPT
+        id S1730803AbfFQVaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:30:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:30:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730324AbfFQVaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:30:04 -0400
+        id S1730324AbfFQVaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:30:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F7FC204FD;
-        Mon, 17 Jun 2019 21:30:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E3D8B20673;
+        Mon, 17 Jun 2019 21:30:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560807003;
-        bh=oHZ+D+qqoj/Fy19Nk7YNcsjpllGzO0Ch48+MNTt6MOY=;
+        s=default; t=1560807009;
+        bh=R1+m3KTeYHiY6pURNymRtJDDfSzns4NMWsIKPE8HE7s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CdhaBVkMoPz7p0Ki7Fc3VZSpTKh0YRMlDLp9vv2cQlxptDi0KA9m8aYYQmIvI/YQb
-         ElW+AOwDkKc6eYzSzwEumk1lU+SMvscApbQJBkk1rYEJZZzN4GmxUIoDUeBDzun2gH
-         5dyfY2rA40WTXbjFpk0qfQlk4RkzzXFkvAqiTkko=
+        b=NtY37ywYnO1V6Hwe+b2WDVi4kRY9g9o4Gj4zWhIOJLEM9LtxqjjZcIJOIqe4DJdie
+         n4tF6TBbbfzTRScdTORZe0opoNleGEfUeuWFqUcRMMvsmOrjPuc8JXU523T8b8a942
+         iCSPZ4dK8fJEwTHhc5KfC6Ri/fn0pFuDO5DZ5I+8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 27/53] Drivers: misc: fix out-of-bounds access in function param_set_kgdbts_var
-Date:   Mon, 17 Jun 2019 23:10:10 +0200
-Message-Id: <20190617210750.416667064@linuxfoundation.org>
+Subject: [PATCH 4.14 29/53] scsi: qedi: remove set but not used variables cdev and udev
+Date:   Mon, 17 Jun 2019 23:10:12 +0200
+Message-Id: <20190617210750.755703379@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -59,43 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b281218ad4311a0342a40cb02fb17a363df08b48 ]
+[ Upstream commit d0adee5d12752256ff0c87ad7f002f21fe49d618 ]
 
-There is an out-of-bounds access to "config[len - 1]" array when the
-variable "len" is zero.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-See commit dada6a43b040 ("kgdboc: fix KASAN global-out-of-bounds bug
-in param_set_kgdboc_var()") for details.
+drivers/scsi/qedi/qedi_iscsi.c: In function 'qedi_ep_connect':
+drivers/scsi/qedi/qedi_iscsi.c:813:23: warning: variable 'udev' set but not used [-Wunused-but-set-variable]
+drivers/scsi/qedi/qedi_iscsi.c:812:18: warning: variable 'cdev' set but not used [-Wunused-but-set-variable]
 
-Signed-off-by: Young Xiao <YangX92@hotmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+These have never been used since introduction.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/misc/kgdbts.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qedi/qedi_iscsi.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index fc7efedbc4be..94cbc5c98cae 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -1134,7 +1134,7 @@ static void kgdbts_put_char(u8 chr)
+diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
+index 0b7267e68336..94f3829b1974 100644
+--- a/drivers/scsi/qedi/qedi_iscsi.c
++++ b/drivers/scsi/qedi/qedi_iscsi.c
+@@ -817,8 +817,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
+ 	struct qedi_endpoint *qedi_ep;
+ 	struct sockaddr_in *addr;
+ 	struct sockaddr_in6 *addr6;
+-	struct qed_dev *cdev  =  NULL;
+-	struct qedi_uio_dev *udev = NULL;
+ 	struct iscsi_path path_req;
+ 	u32 msg_type = ISCSI_KEVENT_IF_DOWN;
+ 	u32 iscsi_cid = QEDI_CID_RESERVED;
+@@ -838,8 +836,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
+ 	}
  
- static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
- {
--	int len = strlen(kmessage);
-+	size_t len = strlen(kmessage);
+ 	qedi = iscsi_host_priv(shost);
+-	cdev = qedi->cdev;
+-	udev = qedi->udev;
  
- 	if (len >= MAX_CONFIG_LEN) {
- 		printk(KERN_ERR "kgdbts: config string too long\n");
-@@ -1154,7 +1154,7 @@ static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
- 
- 	strcpy(config, kmessage);
- 	/* Chop out \n char as a result of echo */
--	if (config[len - 1] == '\n')
-+	if (len && config[len - 1] == '\n')
- 		config[len - 1] = '\0';
- 
- 	/* Go and configure with the new params. */
+ 	if (test_bit(QEDI_IN_OFFLINE, &qedi->flags) ||
+ 	    test_bit(QEDI_IN_RECOVERY, &qedi->flags)) {
 -- 
 2.20.1
 
