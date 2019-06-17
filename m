@@ -6,92 +6,95 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7FBEC31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15786C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:00:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81BF7208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:59:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D24E02089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:00:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727809AbfFQM7X (ORCPT
+        id S1727518AbfFQNAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:59:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:59541 "EHLO
+        Mon, 17 Jun 2019 09:00:39 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:59849 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQM7W (ORCPT
+        with ESMTP id S1725983AbfFQNAj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:59:22 -0400
+        Mon, 17 Jun 2019 09:00:39 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M7aqD-1hi5Tv2z0v-007yoG; Mon, 17 Jun 2019 14:59:10 +0200
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N4hBx-1iaUKt1pPL-011g38; Mon, 17 Jun 2019 15:00:16 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] coresight: platform: add OF/APCI dependency
-Date:   Mon, 17 Jun 2019 14:58:53 +0200
-Message-Id: <20190617125908.1674177-1-arnd@arndb.de>
+To:     Luis Chamberlain <mcgrof@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Matteo Croce <mcroce@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Aaron Tomlin <atomlin@redhat.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] proc/sysctl: make firmware loader table conditional
+Date:   Mon, 17 Jun 2019 14:59:42 +0200
+Message-Id: <20190617130014.1713870-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:r/0hHafrBCppjYQNVu+1mD3eJ6YmngQjlW/+xUHtbAPKwuxS3Qx
- nZBCpWPQCl4eOcffBSVdqrI12pu0iPjKkoHlB6z8bV2mxMrKGes9t8wxdzX6ErODzNxdSY1
- +X9SaGzIjMa25+R5c69d/fft6lnZMot+O+VNYm29YO/0ZFy5RMUqQzQ1iFYatF48GmeLolv
- 8NsK0dvpOumD8022xjHsg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:sN8TpRPEG88=:xqhx/AVla85jg89VvfExI5
- HuovXWfErDB6joo8/rCwqnViHA1Edahy7OdakVFAM1rJFEi9pPtH1TeaI76SfZ+GKyOfSjvlm
- oM+ernZo3JvwOhLi8sr3oUJ9QJCSCXinNs1FORjqWl/IeG9SZmjCh7Y/dyVWZ9wIR0eWB1Vfs
- 3Jpm/34aEGzGRzEfbTtfTXccAndkIImMmBQE1hzDKzzYOkhGZwgRG+/EvMNFDQg+S1hRYNEah
- A1g0TNVzsiuzQgkgNh5LaqEmnnB732OzZif1kiVH20C7FDRjTvxRroSUV69FrZ+TH5a2VnntC
- lT2DlRjnjR998tC1CIP+5BRTFCKTiBYfXnEOYR5IXfyjAb9W1zKGriwacA+BzzJWkPOm8DjS8
- 7mrjZ/QSQ2RFnwJBBcXJOtkihcwJtIfxJ9KC8jh+yMqgLyMmTEjKZhxBGZKVH3U+EAFHKXoeW
- 4MICZtPsg6Ui2hZRrnqVn3k98GZzrzFx6BWyadPNgAN5PjkzRD0xd6AbNAa+DA6gkAyW2ucHc
- 0pay8OJwotOa/roLwldvYYYliYA7H/XBQHmBM6sV4WsW9QIqm9RhfJHJaoyF/9us+NfiejG87
- w3AS3RPq+VVTB5eZk4xbb4/zh7PWc/3R3qvXODth3ydD+IKlMLNrkaCRVtx9WYKk2V7wwwBsB
- LAif0+Oje8ESKtUQ7oNLvvlVv3YFVlQIPhC2t41/uI73q/6JA5HQSehViqntrxK9HJqwHLYl6
- MAV2JQNWCt8QmwXCM+x4RveIgpSxBeBU9qfzTw==
+X-Provags-ID: V03:K1:XTaIUBGjnjT9WW+czXzvrv/r6EJZj+23Cfw8xaApEgCOB08WIB2
+ Caascn262VC4BGM7/2JOvQmm1nrwtRybanDDj6heklnQ2fppRPXpumytuwrjV6UD6Q4iP2C
+ X4f6AHv7mT1R68rVpfFnXJ0p0XOVTtRdLdRd/KdiOwi8+Ylup8EA71o6vGuLganbXPo628K
+ 5kOm82C+aVxLM08P75kRw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:hMkOW4RJ2SI=:Vg0iBnXdbNqA7hKySE5/Vn
+ s+mXw+lDyr66Gs5nXuWJxU2nbaiCgkSBh858yebRs+4VlQt562twokmps5zKjVn73nTyd3lAd
+ A7Uib48RFr0mmR46ff0nH1uTml5BpL9Jl3Q1zcGUqOUcnECeHWt2SYZlnkCmX/197X87rl5iA
+ lnPIg/U5StCueSKDJ0y6cAQ7suhziSl8/yln6JofhqGkh2cTNGe/t4IpXW6Kj2Ap2VwhZyyQm
+ hYzoz5MIOWJhEEFHh9Foi5dlzKu9NPN+z182zFnxaROmnkARmGOFQybM1o5B5YkkX+smFXrIX
+ w5Gqe06Ui7/4ez9GWBjG4M1Nk8QYEXCUNdCbeBo4szPELGqjYv1wYHVWULXNgSrzHGOxWSHQA
+ pw/xox9+ZdbWAI7vD/G7la/xN7WNpkOesMnzFVHLRmX54JUbHywTB/mBwzJUJQ5PmbOt5plv7
+ w8FPUtD7gRUc2D8QHfDNUzYPv1GyH2tFyA7qDUlOf3N54fZw0P1G1ow8IunWg3dj6pBdvN2jg
+ 3sQEqdaZMuvuU+oKtvZ7A/OTDymex75ivvLMARQ6G46Sss8bITW79gxb5sdRasAMkyYuhk93J
+ lphWHohjS6q6cK5oRrtsmvxUkdqLoblEIV4lnQCeLp5QrYFrmm7wTl496sFhvCmrEQtaI7VcD
+ CSiP9rc5XAw9RvyCtXT9AV0qDHzLA1h6RcoxPH8+MHVr2gCFG/W+DPTdSWgvvFclIy1+PF+fC
+ 9LGY4lxjbWJiV8X+ECpCNKy++s14rgfw0QhUrg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When neither CONFIG_OF nor CONFIG_ACPI are set, we get a harmless
-build warning:
+We get a link error in the firmware loader fallback table,
+which now refers to the global sysctl_vals variable:
 
-drivers/hwtracing/coresight/coresight-platform.c:26:12: error: unused function 'coresight_alloc_conns'
-      [-Werror,-Wunused-function]
-static int coresight_alloc_conns(struct device *dev,
-           ^
-drivers/hwtracing/coresight/coresight-platform.c:46:1: error: unused function 'coresight_find_device_by_fwnode'
-      [-Werror,-Wunused-function]
-coresight_find_device_by_fwnode(struct fwnode_handle *fwnode)
+drivers/base/firmware_loader/fallback_table.o:(.data+0x2c): undefined reference to `sysctl_vals'
+drivers/base/firmware_loader/fallback_table.o:(.data+0x30): undefined reference to `sysctl_vals'
+drivers/base/firmware_loader/fallback_table.o:(.data+0x50): undefined reference to `sysctl_vals'
+drivers/base/firmware_loader/fallback_table.o:(.data+0x54): undefined reference to `sysctl_vals'
 
-As the code is useless in that configuration anyway, just add
-a Kconfig dependency that only allows building when at least
-one of the two is set.
+Add an #ifdef that only builds that table when it is being
+used.
 
-This should not hinder compile-testing, as CONFIG_OF can be
-enabled on any architecture.
-
-Fixes: ac0e232c12f0 ("coresight: platform: Use fwnode handle for device search")
+Fixes: c81c506545f4 ("proc/sysctl: add shared variables for range check")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/hwtracing/coresight/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/base/firmware_loader/fallback_table.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/Kconfig b/drivers/hwtracing/coresight/Kconfig
-index 5487d4a1abc2..14638db4991d 100644
---- a/drivers/hwtracing/coresight/Kconfig
-+++ b/drivers/hwtracing/coresight/Kconfig
-@@ -4,6 +4,7 @@
- #
- menuconfig CORESIGHT
- 	bool "CoreSight Tracing Support"
-+	depends on OF || ACPI
- 	select ARM_AMBA
- 	select PERF_EVENTS
- 	help
+diff --git a/drivers/base/firmware_loader/fallback_table.c b/drivers/base/firmware_loader/fallback_table.c
+index 58d4a1263480..ba9d30b28edc 100644
+--- a/drivers/base/firmware_loader/fallback_table.c
++++ b/drivers/base/firmware_loader/fallback_table.c
+@@ -23,6 +23,7 @@ struct firmware_fallback_config fw_fallback_config = {
+ };
+ EXPORT_SYMBOL_GPL(fw_fallback_config);
+ 
++#ifdef CONFIG_SYSCTL
+ struct ctl_table firmware_config_table[] = {
+ 	{
+ 		.procname	= "force_sysfs_fallback",
+@@ -45,3 +46,4 @@ struct ctl_table firmware_config_table[] = {
+ 	{ }
+ };
+ EXPORT_SYMBOL_GPL(firmware_config_table);
++#endif
 -- 
 2.20.0
 
