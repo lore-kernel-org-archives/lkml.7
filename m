@@ -2,27 +2,27 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7718C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D38C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEEC420863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 371A9208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:43:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728839AbfFQSnl (ORCPT
+        id S1728806AbfFQSlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:43:41 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:41707 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728803AbfFQSlz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 14:41:55 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:33337 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728755AbfFQSlt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 14:41:49 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MspyA-1iVizF3GJ6-00t8ju; Mon, 17 Jun 2019 20:41:41 +0200
+ 1MQeI4-1hxCRN2g34-00NfoG; Mon, 17 Jun 2019 20:41:35 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -33,28 +33,28 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 13/30] drivers: gpio: tc3589x: use subsys_platform_driver()
-Date:   Mon, 17 Jun 2019 20:40:54 +0200
-Message-Id: <1560796871-18560-13-git-send-email-info@metux.net>
+Subject: [PATCH 09/30] drivers: gpio: rc5t583: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:40:50 +0200
+Message-Id: <1560796871-18560-9-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
 References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:KrVoP4vjl12gjhS5mZN4JRyOMm71/rHFm+seF2fjW4HDqMnyA9z
- i7/gWIp0+QdEp5YTxyI8hlSXO8VoSehUm8jDuoy3yxjiIP2CVIJCStEdhnwwmFg77oSrTSG
- 5n+uVdYAylSYyNCOmi0LGjs41PbzjT4S+fEV9iTzA5JjEBNvwpGFPUPya5r4S1fYyqQ2ePU
- wqvICV1/74+gsSDJ/I1CA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f5YSQ2fpssk=:HnhA79MjR0QcrbOrYV1JVh
- uxh0ML8XxUgT9uiqtti1WOKznAsttBP4Cifx9lW92Sv3yrqv0eeOtqFdDqM9ckD1GqP9bAW2j
- lZBirmVJHM3a8gYeT7OcuUIVh9voP9b6OvhCaUStZ/adHDgyn627UP9CqtU6+54xsIgWmkbxd
- HjhHwoio0TDWtlbNGfFrcrsXdBYnNk9EhQ1a8CGYQPD9ygFutqGJPoD6rUkzHiTX6W9gxxc+z
- BuArCrJRCZGknjvV/Gthm6zws0KU+YGx9b2tumusBKMp8MbT+H9ooy6faqniOZFLNpf10zuB1
- 6cJnkfLs5FFOJfCx+NF9BFOmpxCoQjBa45d/9lNU7mwFsLhht7nKPvqcDbaAwu9186j1vhYQO
- UnJCk7lJBIQu0fnhyNpQf0nABRPxXxHtngyOfw1Ph0uU88YnZqNRhonCM85qp26cLqhpdpzeo
- S5I9XC4xyMR+2q4gbjTqFIut0k8qU5oSsd4J/MwtmMxjn49Fidrmwg6OCuHh2xpcHkRmuA3IG
- m+0VWfAuMXuAAVid1PB5L/yfzf9WiL5bocvOc85FdeXoVnL9Cn8qu0hFupCjc5+kzHLVIVhNX
- 9/RF9SnsSIBa9itwpxrG2pgeBQ7jlApqZoWib+ofiO3dDJ/3myaKyvPwnWa8ro1dsxkIpq4mW
- ZGBaxzvScEF+jiwWGIOCMHHz9JGoq75jj1ED0aS9Cc2K6hcT0+fGNLR7IOtA6AJ3ALEJXct5X
- 1HDbVk7VaXfyvClN5Mr5vlizaGCw73bxlpOAzw==
+X-Provags-ID: V03:K1:NtfiuMTxPtr80+HHq665BNavw/BCJA4CgEhl2ViOFLYgu88eWOU
+ 2hhnzzDAS/UIAhXsTLZmMhvR5azFrVgoO8K7O9AWO18mS71Q9QqXPk/QlZ2hahMSN8xLbH5
+ BpvY5n6zqLpshIgXs8kSDc0umTxmPZzUc9x16Y8s9R5fMBo3hrpHjBCyNxJ2e5JGiS4K5mA
+ SPsRKeySP2Rf9bfO4EIEA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Z7+Hk0iGS8w=:v68Ui3dBufbwKf2fdxsih1
+ xyGo6MFOXAG6Rnqmex/eTqJdHND6dM1aL2DoQusdjev48d5nW747jhUT6QhIqvsQ+5PGH6DGC
+ BwYjLMtTlsn5LMOYV6AMnQSt6qpgRqVDJxAwMxLYuLo9oPQWRlu6vFzdtt/A+zIjH2mpYuwVS
+ YiJ/5C0QGAVVtovX2y6+lHyEAo7XYdbPZTk6illizoNnZ7qJ3fwSTUUxLT+ZDEiEbj/yG16gO
+ j+UQVHaDEIiNbxyYp6b+KEvV7TRMKHSjY+CH7jIFjIZVNFVktw/5cwb4mv5et+1gYpitKQUy9
+ 5938IjvzhBbM9EmD/5y8h9DbBaE6/rT0TTya6auQEKHcC+C3vm20u2LUVoXOWBRdJsRO/O1mO
+ MKla7BMEN+9zwuvV5dSRg+LI20ILNFEUJ7ljD9FWS8e2NoT9ECtiClxKiqjGXm0zMDn6DrPpD
+ Itv8kFbZAh4DyIkM1KRgJYayh0Rml3vCW2/3l1e010aV0TDQGboRNzYdBVfJribaswChdeWZt
+ BA6mb354jeWRFXEIl/olhVUSL78s9eAd4jhWpAh4UdbMDJcmnanoX5AX1lY3BqdGJ4WGRKada
+ PWHOLSmslGlhYMoyD1wA07U3cPzPpxPi28B+wzWxeT8pPsOYNdu2XywZtsf12pswdjQp/yWx6
+ ICpqNo33jhYCptfF+oqDt/2nXnWEcNvdV2n+jTkyfHO9NKdra44/j3c3ANoZD+Vgp4uennAmd
+ i1iPHcmZDZMmiQb607DBQRiOmf8lQ+GHpaqvNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,24 +67,24 @@ subsys_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-tc3589x.c | 7 +------
+ drivers/gpio/gpio-rc5t583.c | 7 +------
  1 file changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-index 91a8ef8..8084698 100644
---- a/drivers/gpio/gpio-tc3589x.c
-+++ b/drivers/gpio/gpio-tc3589x.c
-@@ -360,9 +360,4 @@ static int tc3589x_gpio_probe(struct platform_device *pdev)
- 	.driver.name	= "tc3589x-gpio",
- 	.probe		= tc3589x_gpio_probe,
+diff --git a/drivers/gpio/gpio-rc5t583.c b/drivers/gpio/gpio-rc5t583.c
+index 4fae3eb..d0dd3c2 100644
+--- a/drivers/gpio/gpio-rc5t583.c
++++ b/drivers/gpio/gpio-rc5t583.c
+@@ -133,9 +133,4 @@ static int rc5t583_gpio_probe(struct platform_device *pdev)
+ 	},
+ 	.probe		= rc5t583_gpio_probe,
  };
 -
--static int __init tc3589x_gpio_init(void)
+-static int __init rc5t583_gpio_init(void)
 -{
--	return platform_driver_register(&tc3589x_gpio_driver);
+-	return platform_driver_register(&rc5t583_gpio_driver);
 -}
--subsys_initcall(tc3589x_gpio_init);
-+subsys_platform_driver(tc3589x_gpio_driver);
+-subsys_initcall(rc5t583_gpio_init);
++subsys_platform_driver(rc5t583_gpio_driver);
 -- 
 1.9.1
 
