@@ -2,163 +2,121 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D176EC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CF2C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:43:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B03DA204EC
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7B92205ED
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:43:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MMXvlchV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfFQEmW (ORCPT
+        id S1726209AbfFQEnn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 00:42:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48732 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725840AbfFQEmW (ORCPT
+        Mon, 17 Jun 2019 00:43:43 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:43113 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfFQEnn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 00:42:22 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5H4bsTb066826
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 00:42:20 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t634b1na5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 00:42:20 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 17 Jun 2019 05:42:18 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Jun 2019 05:42:16 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5H4g7tp27001144
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 04:42:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5821342042;
-        Mon, 17 Jun 2019 04:42:15 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0857F42041;
-        Mon, 17 Jun 2019 04:42:15 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Jun 2019 04:42:14 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id DE718A0208;
-        Mon, 17 Jun 2019 14:42:13 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ocxl: Allow contexts to be attached with a NULL mm
-Date:   Mon, 17 Jun 2019 14:41:52 +1000
-X-Mailer: git-send-email 2.21.0
+        Mon, 17 Jun 2019 00:43:43 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j29so5442863lfk.10
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 21:43:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QZYnY2hIUSm+INHACfGV3NJI8hXeyeTw8tvqjhCF464=;
+        b=MMXvlchVs2Zgrzft62CDXTNlgYLYUhsdEmF5yBBfIzjcxXwgu+TFNl4ZoIwXwi/Cp5
+         GZyWocmV8KqP7vfrpu1KZsUdWgrLDSd0gdy43lJi+LlqepOvPg3LRwzIW8VKsHP3Zyex
+         nUl+DAZfb/HRyNan1Ndv+uAdskNAK0QOUFJS1qq8hxxYXWax7O1+84TlV70C14ekBJq6
+         2Ld/EPFBUYKfF5DBrHjTwoqqpQ8o2NWQU/A8PIF+9etcSJjrhDveAIUKfa2rAObbsj+p
+         xspUXSK+ZWwcak0Pe7L+Kb0TaWtpxbwnsJoIEHGhu7U1B34r930XYyfs5qAAq3I80GEW
+         ESfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QZYnY2hIUSm+INHACfGV3NJI8hXeyeTw8tvqjhCF464=;
+        b=AaraeUYhkRTKNQP2ByLualjDNgY39KVQh0H4ghwLVEQtdVRRdIZxo20Bm8xmd7U5E2
+         GIB+VaWIzEft+qFppEnK7Iyo5UqIy4M70lKdbsSPnCLPZzjXxy1mnG3nwP4gFoGfrnlu
+         ESv9Ex8BQLeeGDga7XbjRooLmaUGiY70lX0Y6+AoZPGBDKK95IwHWeTcr3z8MhwKlCkp
+         tHuVkjBihpFJyG8dVsk5fz0CbjfWkN7LKRxMQBWXUhGhcoIoXIixEJIAtnALUnfi70oo
+         +3oubJrIczRLR1mAUM6/FnTAOtIGlh8UhXNfX6tWQZWgfl7rkdj6GKAUCrFOp/JVnW0h
+         znkQ==
+X-Gm-Message-State: APjAAAUoNm2afF1ppOjKkP9GBcoNqDqIlMusgYn8wg935JyocxP2eg96
+        3a/DifQ5L2JUgOE5hO30oLqAKq+VTDf2CxEmTlrMBw==
+X-Google-Smtp-Source: APXvYqx5atfcvuI00s9Z4mXLRo48akZO/SgAq0T1wCjD9YxY4YsnaLJCxKSL3H3msuEwih+R7uGarFUy+Wtgrp1SkuE=
+X-Received: by 2002:a19:5046:: with SMTP id z6mr6335117lfj.185.1560746621318;
+ Sun, 16 Jun 2019 21:43:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061704-0020-0000-0000-0000034AAC54
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061704-0021-0000-0000-0000219DEF49
-Message-Id: <20190617044152.13707-1-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=642 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906170042
+References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
+In-Reply-To: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
+From:   Yash Shah <yash.shah@sifive.com>
+Date:   Mon, 17 Jun 2019 10:13:05 +0530
+Message-ID: <CAJ2_jOH2X6+CcNCruxX0aeCzPnjcGuv-X1Q4eESsY6PyW1LViA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
+To:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
+        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicolas Ferre <nicolas.ferre@microchip.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
+        Sachin Ghadi <sachin.ghadi@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+On Mon, Jun 17, 2019 at 9:49 AM Yash Shah <yash.shah@sifive.com> wrote:
+>
+> On FU540, the management IP block is tightly coupled with the Cadence
+> MACB IP block. It manages many of the boundary signals from the MACB IP
+> This patchset controls the tx_clk input signal to the MACB IP. It
+> switches between the local TX clock (125MHz) and PHY TX clocks. This
+> is necessary to toggle between 1Gb and 100/10Mb speeds.
+>
+> Future patches may add support for monitoring or controlling other IP
+> boundary signals.
+>
+> This patchset is mostly based on work done by
+> Wesley Terpstra <wesley@sifive.com>
+>
+> This patchset is based on Linux v5.2-rc1 and tested on HiFive Unleashed
+> board with additional board related patches needed for testing can be
+> found at dev/yashs/ethernet branch of:
 
-If an OpenCAPI context is to be used directly by a kernel driver, there
-may not be a suitable mm to use.
+Correction in branch name: dev/yashs/ethernet_v2
 
-The patch makes the mm parameter to ocxl_context_attach optional.
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- drivers/misc/ocxl/context.c |  9 ++++++---
- drivers/misc/ocxl/link.c    | 12 ++++++++----
- 2 files changed, 14 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-index bab9c9364184..994563a078eb 100644
---- a/drivers/misc/ocxl/context.c
-+++ b/drivers/misc/ocxl/context.c
-@@ -69,6 +69,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
- int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
- {
- 	int rc;
-+	unsigned long pidr = 0;
- 
- 	// Locks both status & tidr
- 	mutex_lock(&ctx->status_mutex);
-@@ -77,9 +78,11 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
- 		goto out;
- 	}
- 
--	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
--			mm->context.id, ctx->tidr, amr, mm,
--			xsl_fault_error, ctx);
-+	if (mm)
-+		pidr = mm->context.id;
-+
-+	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid, pidr, ctx->tidr,
-+			      amr, mm, xsl_fault_error, ctx);
- 	if (rc)
- 		goto out;
- 
-diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-index cce5b0d64505..43542f124807 100644
---- a/drivers/misc/ocxl/link.c
-+++ b/drivers/misc/ocxl/link.c
-@@ -523,7 +523,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
- 	pe->amr = cpu_to_be64(amr);
- 	pe->software_state = cpu_to_be32(SPA_PE_VALID);
- 
--	mm_context_add_copro(mm);
-+	if (mm)
-+		mm_context_add_copro(mm);
- 	/*
- 	 * Barrier is to make sure PE is visible in the SPA before it
- 	 * is used by the device. It also helps with the global TLBI
-@@ -546,7 +547,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
- 	 * have a reference on mm_users. Incrementing mm_count solves
- 	 * the problem.
- 	 */
--	mmgrab(mm);
-+	if (mm)
-+		mmgrab(mm);
- 	trace_ocxl_context_add(current->pid, spa->spa_mem, pasid, pidr, tidr);
- unlock:
- 	mutex_unlock(&spa->spa_lock);
-@@ -652,8 +654,10 @@ int ocxl_link_remove_pe(void *link_handle, int pasid)
- 	if (!pe_data) {
- 		WARN(1, "Couldn't find pe data when removing PE\n");
- 	} else {
--		mm_context_remove_copro(pe_data->mm);
--		mmdrop(pe_data->mm);
-+		if (pe_data->mm) {
-+			mm_context_remove_copro(pe_data->mm);
-+			mmdrop(pe_data->mm);
-+		}
- 		kfree_rcu(pe_data, rcu);
- 	}
- unlock:
--- 
-2.21.0
-
+> https://github.com/yashshah7/riscv-linux.git
+>
+> Change History:
+> V2:
+> - Change compatible string from "cdns,fu540-macb" to "sifive,fu540-macb"
+> - Add "MACB_SIFIVE_FU540" in Kconfig to support SiFive FU540 in macb
+>   driver. This is needed because on FU540, the macb driver depends on
+>   SiFive GPIO driver.
+> - Avoid writing the result of a comparison to a register.
+> - Fix the issue of probe fail on reloading the module reported by:
+>   Andreas Schwab <schwab@suse.de>
+>
+> Yash Shah (2):
+>   macb: bindings doc: add sifive fu540-c000 binding
+>   macb: Add support for SiFive FU540-C000
+>
+>  Documentation/devicetree/bindings/net/macb.txt |   3 +
+>  drivers/net/ethernet/cadence/Kconfig           |   6 ++
+>  drivers/net/ethernet/cadence/macb_main.c       | 129 +++++++++++++++++++++++++
+>  3 files changed, 138 insertions(+)
+>
+> --
+> 1.9.1
+>
