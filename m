@@ -4,90 +4,139 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1F7C31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:47:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3637AC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:49:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E85B20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:47:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1464820657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:49:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726434AbfFQLrh (ORCPT
+        id S1726636AbfFQLs6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:47:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:46772 "EHLO foss.arm.com"
+        Mon, 17 Jun 2019 07:48:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46120 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725971AbfFQLrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:47:37 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5F51344;
-        Mon, 17 Jun 2019 04:47:36 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 831763F246;
-        Mon, 17 Jun 2019 04:49:21 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 12:47:34 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        kbuild test robot <lkp@intel.com>
-Subject: Re: [PATCH] clocksource/arm_arch_timer: remove unused return type
-Message-ID: <20190617114734.GK20984@e119886-lin.cambridge.arm.com>
-References: <20190617093601.34511-1-andrew.murray@arm.com>
- <eb9532ff-8365-4287-ff43-045834dacdce@arm.com>
+        id S1725763AbfFQLs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:48:57 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 443A130872E6;
+        Mon, 17 Jun 2019 11:48:57 +0000 (UTC)
+Received: from xz-x1 (ovpn-12-34.pek2.redhat.com [10.72.12.34])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D05847DF6F;
+        Mon, 17 Jun 2019 11:48:54 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 19:48:51 +0800
+From:   Peter Xu <peterx@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH v4 1/5] KVM: LAPIC: Make lapic timer unpinned
+Message-ID: <20190617114850.GC30983@xz-x1>
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-2-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <eb9532ff-8365-4287-ff43-045834dacdce@arm.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560770687-23227-2-git-send-email-wanpengli@tencent.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 17 Jun 2019 11:48:57 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:45:24AM +0100, Marc Zyngier wrote:
-> On 17/06/2019 10:36, Andrew Murray wrote:
-> > The function 'arch_timer_set_evtstrm_feature' has no return statement
-> > despite its prototype - let's change the function prototype to return
-> > void. This matches the equivalent arm64 implementation.
-> > 
-> > fixes: 11e34eca5d0a ("clocksource/arm_arch_timer: Extract elf_hwcap use to arch-helper")
+On Mon, Jun 17, 2019 at 07:24:43PM +0800, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
 > 
-> nit: tags start with a capital letter.
+> Make lapic timer unpinned when timer is injected by posted-interrupt,
 
-Thanks - I'll remember next time.
+It has nothing to do with PI, yet?
 
-Andrew Murray
+And, how about mentioning 61abdbe0bc and telling that this could be
+another solution for that problem (but will be used in follow up
+patches)?
 
+> the emulated timer can be offload to the housekeeping cpus, kick after 
+> setting the pending timer request as alternative to commit 61abdbe0bcc.
 > 
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
-> > ---
-> >  arch/arm/include/asm/arch_timer.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/arm/include/asm/arch_timer.h b/arch/arm/include/asm/arch_timer.h
-> > index ae533caec1e9..99175812d903 100644
-> > --- a/arch/arm/include/asm/arch_timer.h
-> > +++ b/arch/arm/include/asm/arch_timer.h
-> > @@ -125,7 +125,7 @@ static inline void arch_timer_set_cntkctl(u32 cntkctl)
-> >  	isb();
-> >  }
-> >  
-> > -static inline bool arch_timer_set_evtstrm_feature(void)
-> > +static inline void arch_timer_set_evtstrm_feature(void)
-> >  {
-> >  	elf_hwcap |= HWCAP_EVTSTRM;
-> >  }
-> > 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
+>  arch/x86/kvm/lapic.c | 8 ++++----
+>  arch/x86/kvm/x86.c   | 6 +-----
+>  2 files changed, 5 insertions(+), 9 deletions(-)
 > 
-> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-> 
-> 	M.
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index e82a18c..87ecb56 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1578,7 +1578,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
+>  	    likely(ns > apic->lapic_timer.timer_advance_ns)) {
+>  		expire = ktime_add_ns(now, ns);
+>  		expire = ktime_sub_ns(expire, ktimer->timer_advance_ns);
+> -		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS_PINNED);
+> +		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS);
+>  	} else
+>  		apic_timer_expired(apic);
+>  
+> @@ -1680,7 +1680,7 @@ static void start_sw_period(struct kvm_lapic *apic)
+>  
+>  	hrtimer_start(&apic->lapic_timer.timer,
+>  		apic->lapic_timer.target_expiration,
+> -		HRTIMER_MODE_ABS_PINNED);
+> +		HRTIMER_MODE_ABS);
+>  }
+>  
+>  bool kvm_lapic_hv_timer_in_use(struct kvm_vcpu *vcpu)
+> @@ -2317,7 +2317,7 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
+>  	apic->vcpu = vcpu;
+>  
+>  	hrtimer_init(&apic->lapic_timer.timer, CLOCK_MONOTONIC,
+> -		     HRTIMER_MODE_ABS_PINNED);
+> +		     HRTIMER_MODE_ABS);
+>  	apic->lapic_timer.timer.function = apic_timer_fn;
+>  	if (timer_advance_ns == -1) {
+>  		apic->lapic_timer.timer_advance_ns = 1000;
+> @@ -2506,7 +2506,7 @@ void __kvm_migrate_apic_timer(struct kvm_vcpu *vcpu)
+>  
+>  	timer = &vcpu->arch.apic->lapic_timer.timer;
+>  	if (hrtimer_cancel(timer))
+> -		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
+> +		hrtimer_start_expires(timer, HRTIMER_MODE_ABS);
+>  }
+>  
+>  /*
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 0a05a4e..9450a16 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -1437,12 +1437,8 @@ static void update_pvclock_gtod(struct timekeeper *tk)
+>  
+>  void kvm_set_pending_timer(struct kvm_vcpu *vcpu)
+>  {
+> -	/*
+> -	 * Note: KVM_REQ_PENDING_TIMER is implicitly checked in
+> -	 * vcpu_enter_guest.  This function is only called from
+> -	 * the physical CPU that is running vcpu.
+> -	 */
+>  	kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
+> +	kvm_vcpu_kick(vcpu);
+>  }
+>  
+>  static void kvm_write_wall_clock(struct kvm *kvm, gpa_t wall_clock)
 > -- 
-> Jazz is not dead. It just smells funny...
+> 2.7.4
+> 
+
+Regards,
+
+-- 
+Peter Xu
