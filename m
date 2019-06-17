@@ -2,277 +2,123 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 481C2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:36:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58C2DC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:36:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFCF2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:36:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D5642084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:36:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I4NRLm13"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RRJM6381"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbfFQSf7 (ORCPT
+        id S1727687AbfFQSgv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:35:59 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43642 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfFQSfy (ORCPT
+        Mon, 17 Jun 2019 14:36:51 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45842 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfFQSgu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:35:54 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cl9so4442694plb.10;
-        Mon, 17 Jun 2019 11:35:53 -0700 (PDT)
+        Mon, 17 Jun 2019 14:36:50 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r1so6134406pfq.12;
+        Mon, 17 Jun 2019 11:36:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5eKh/DRVd1FpfihYitd7cyh/Xzcloht+qnfxwzs2rgY=;
-        b=I4NRLm13H1IJjwIAZwnnj7oluHlaJQ0AcBtpcAGVAQJw0iocjnn4Ij2SuLfdDwY0Ek
-         L18jUsWn584FaK9DTTs2lpX1bTqYxQMj4NML7LtKqTcQFBZ4oa/MohMjfBL20aF3zO/x
-         MV1AQZswqmMl1i3BpZ0q0BBJQgKA3iH4setbH6SfgF2G5bBk8+9hJEzLopPTfR9M8+LQ
-         2ikoFJdxBmXD1Dovyf/rSfRikqL59LKsqfeLfU7WWe/trI4HFvb8FkfXegWrBoDXAuAv
-         HJm6z3k7040usAPNUNefq8musJcGPHYllFhm4M8JNvovFkzGtODyHRkmEu8ycPFl2kja
-         imaA==
+        h=from:to:cc:subject:date:message-id;
+        bh=LKGeNlPZwIGVNZZsS9uYLIodxN+fkjvFRMre01BWKLg=;
+        b=RRJM6381xq6M0GpIu/gfVDCailz8RcvtlHMPnWE8WwYag1fHjW13rFxzw0CbXmwyZU
+         y1X5Ovp/uCXCMC4nm+fmGkjfO8CsEY8xPZ/hWcihO+jCtgZLBmlHRCyQqr4qyY6r0P+2
+         PtOf3StZ7r09RdG1XVGr0aUH/ylCUi13eS7Ykgmsm+Q6h1xQ0MY39v27A4xA2S9px6Os
+         jC7DGXDFVcatK/e/qfkwAtifPNh2mN1wUslDh9b2nKKiAdZtCKlHJXhUGQsLgvCweN7m
+         PKYMnUKggWmUHs6KzSfkdgrJ3jnDIIefWfcPidclO7nOgyOuErxQsbLwfvbeNiweySQP
+         4A/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5eKh/DRVd1FpfihYitd7cyh/Xzcloht+qnfxwzs2rgY=;
-        b=Jjwftet+G9rK53k+Lhz6gQca4D9MSJkmGcIlgBbCX7YnDTwVfiEIsx13JHGV173dCy
-         szWKu8nlmNxSl6AUEtgvTS6R0Ze+LuggpWihS9NZkS0gky5/dZwV2/m+JVVm/n74dZuV
-         bFpyXAUhY01ECqNFEZ8cgnloNNJpGIt9iZIUHIlZqf+KMuPGH9/HvW5csZo3HFTi5j/G
-         e9GXHcd6QIFsx+vIByepyklw38p3cWlvApdHrPPi/THI3B8ji28velgqGT9iIWXVJJlM
-         qTF87DWXio4cq2unrTbfXQIhIgHsKyZo/g6mYZcFUW2cSURTA0OKY0PH6yIE4C33zGvD
-         lWdA==
-X-Gm-Message-State: APjAAAV9f5jQt7mt9h68oyHWvb4HLGXPk5t7BxODiQaysY8pQjgflbtd
-        5fLBflJbwn+cx4Lnc1RzoWh0kilG
-X-Google-Smtp-Source: APXvYqzn9YMcCH9voAc0Z5h8oJIy1gbtJ61d2oOYY/uH50rwpfG6oyEjITE11/PAAHyiJZ55mIJsNw==
-X-Received: by 2002:a17:902:7887:: with SMTP id q7mr23590370pll.129.1560796553246;
-        Mon, 17 Jun 2019 11:35:53 -0700 (PDT)
-Received: from localhost.localdomain ([167.220.56.169])
-        by smtp.gmail.com with ESMTPSA id f186sm16552946pfb.5.2019.06.17.11.35.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 11:35:52 -0700 (PDT)
-From:   Prakhar Srivastava <prsriva02@gmail.com>
-To:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     zohar@linux.ibm.com, roberto.sassu@huawei.com,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Subject: [PATCH 2/3] IMA:Define a new template field buf
-Date:   Mon, 17 Jun 2019 11:35:06 -0700
-Message-Id: <20190617183507.14160-3-prsriva02@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190617183507.14160-1-prsriva02@gmail.com>
-References: <20190617183507.14160-1-prsriva02@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LKGeNlPZwIGVNZZsS9uYLIodxN+fkjvFRMre01BWKLg=;
+        b=kfDQ6+OU9BjRLHrnaJZgzYMCZpau/TpeYUxQL3mlPYOmA7rS4bzZU+OqUfoH3xZG7d
+         YvK72rIPodzLPJJyVInHoF0wyzaV5SIU04CJ+X8PsmMvffur9A5+ZHxnDe/3jBt4i/Bi
+         xbAEjd4/ImjNkiBnXfEFekxmIlkafmzWue3nj8BD6fGu+Yj4GuAeDqcViUMccQ0AHBvq
+         AC2W7y+aldcahUxkyDMGXKgnUuP4OMHWDrujcQKVkjBmQf29WgmKAtowum/BnC0OQ9LJ
+         84iivVqBo37lPfy3CX/nYhOS8fwhXoGsWaaaYxnnGParOx9UO+jns/+1pMPE4l++SHuD
+         4imQ==
+X-Gm-Message-State: APjAAAV8nNx9o+xDpca9qZXcZVw00CbKVKZwgTnYFn1Oj69gFzBkG/7z
+        aEGPytuol2NxCAli5mZc7Fa1Obsh
+X-Google-Smtp-Source: APXvYqyjy89E8tz6+xKj6FtuzHozyTb/rdTmJNYjxAKF9KzFUQVJZImITEuwiEwSuqcRVbLhOh8HXA==
+X-Received: by 2002:a62:a511:: with SMTP id v17mr112104356pfm.129.1560796608695;
+        Mon, 17 Jun 2019 11:36:48 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 137sm13010823pfz.116.2019.06.17.11.36.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 11:36:48 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v5 0/5] PM8005 and PMS405 regulator support
+Date:   Mon, 17 Jun 2019 11:36:43 -0700
+Message-Id: <20190617183643.13449-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-A buffer(kexec boot command line arguments) measured into IMA
-measuremnt list cannot be appraised, without already being
-aware of the buffer contents. Since hashes are non-reversible,
-raw buffer is needed for validation or regenerating hash for
-appraisal/attestation.
+The MSM8998 MTP reference platform supplies VDD_GFX from s1 of the
+pm8005 PMIC.  VDD_GFX is needed to turn on the GPU.  As we are looking
+to bring up the GPU, add the support for pm8005 and wire up s1 in a
+basic manner so that we have this dependency out of the way and can
+focus on enabling the GPU driver.
 
-Add support to store/read the buffer contents in HEX.
-The kexec cmdline hash is stored in the "d-ng" field of the
-template data,it can be verified using
-sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements |
-  grep  kexec-cmdline | cut -d' ' -f 6 | xxd -r -p | sha256sum
+The s3 regulator of PMS405 is used for voltage scaling of the CPU on
+QCS404.
 
-- Add two new fields to ima_event_data to hold the buf and
-buf_len [Suggested by Roberto]
-- Add a new temaplte field 'buf' to be used to store/read
-the buffer data.[Suggested by Mimi]
-- Updated process_buffer_meaurement to add the buffer to
-ima_event_data. process_buffer_measurement added in
-"Define a new IMA hook to measure the boot command line
- arguments"
-- Add a new template policy name ima-buf to represent
-'d-ng|n-ng|buf'
+Both PMICs are very similar in design, so add the base support with one,
+and trivially add the support for the other on top.
 
-Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
----
- Documentation/security/IMA-templates.rst  |  7 ++++---
- security/integrity/ima/ima.h              |  2 ++
- security/integrity/ima/ima_api.c          |  4 ++--
- security/integrity/ima/ima_init.c         |  2 +-
- security/integrity/ima/ima_main.c         |  2 ++
- security/integrity/ima/ima_template.c     |  3 +++
- security/integrity/ima/ima_template_lib.c | 21 +++++++++++++++++++++
- security/integrity/ima/ima_template_lib.h |  4 ++++
- 8 files changed, 39 insertions(+), 6 deletions(-)
+v5:
+-drop accepted changes
+-.get_voltage -> .get_voltage_sel
+-made set_mode be 1:1 between API and hw
 
-diff --git a/Documentation/security/IMA-templates.rst b/Documentation/security/IMA-templates.rst
-index 2cd0e273cc9a..fccdbbc984f5 100644
---- a/Documentation/security/IMA-templates.rst
-+++ b/Documentation/security/IMA-templates.rst
-@@ -69,14 +69,15 @@ descriptors by adding their identifier to the format string
-    algorithm (field format: [<hash algo>:]digest, where the digest
-    prefix is shown only if the hash algorithm is not SHA1 or MD5);
-  - 'n-ng': the name of the event, without size limitations;
-- - 'sig': the file signature.
--
-+ - 'sig': the file signature;
-+ - 'buf': the buffer data that was used to generate the hash without size limitations;
- 
- Below, there is the list of defined template descriptors:
- 
-  - "ima": its format is ``d|n``;
-  - "ima-ng" (default): its format is ``d-ng|n-ng``;
-- - "ima-sig": its format is ``d-ng|n-ng|sig``.
-+ - "ima-sig": its format is ``d-ng|n-ng|sig``;
-+ - "ima-buf": its format is ``d-ng|n-ng|buf``;
- 
- 
- 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index a4ad1270bffa..16110180545c 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -65,6 +65,8 @@ struct ima_event_data {
- 	struct evm_ima_xattr_data *xattr_value;
- 	int xattr_len;
- 	const char *violation;
-+	const void *buf;
-+	int buf_len;
- };
- 
- /* IMA template field data definition */
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index ea7d8cbf712f..83ca99d65e4b 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -140,7 +140,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
- 	struct ima_template_entry *entry;
- 	struct inode *inode = file_inode(file);
- 	struct ima_event_data event_data = {iint, file, filename, NULL, 0,
--					    cause};
-+					    cause, NULL, 0};
- 	int violation = 1;
- 	int result;
- 
-@@ -296,7 +296,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint,
- 	struct inode *inode = file_inode(file);
- 	struct ima_template_entry *entry;
- 	struct ima_event_data event_data = {iint, file, filename, xattr_value,
--					    xattr_len, NULL};
-+					    xattr_len, NULL, NULL, 0};
- 	int violation = 0;
- 
- 	if (iint->measured_pcrs & (0x1 << pcr))
-diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-index 993d0f1915ff..c8591406c0e2 100644
---- a/security/integrity/ima/ima_init.c
-+++ b/security/integrity/ima/ima_init.c
-@@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
- 	struct ima_template_entry *entry;
- 	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
- 	struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
--					    NULL, 0, NULL};
-+					    NULL, 0, NULL, NULL, 0};
- 	int result = -ENOMEM;
- 	int violation = 0;
- 	struct {
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 1e233417a7af..84b321ac1ad3 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -638,6 +638,8 @@ static void process_buffer_measurement(const void *buf, int size,
- 		goto out;
- 
- 	event_data.filename = eventname;
-+	event_data.buf = buf;
-+	event_data.buf_len = size;
- 
- 	iint.ima_hash = &hash.hdr;
- 	iint.ima_hash->algo = ima_hash_algo;
-diff --git a/security/integrity/ima/ima_template.c b/security/integrity/ima/ima_template.c
-index e6e892f31cbd..632f314c0e5a 100644
---- a/security/integrity/ima/ima_template.c
-+++ b/security/integrity/ima/ima_template.c
-@@ -26,6 +26,7 @@ static struct ima_template_desc builtin_templates[] = {
- 	{.name = IMA_TEMPLATE_IMA_NAME, .fmt = IMA_TEMPLATE_IMA_FMT},
- 	{.name = "ima-ng", .fmt = "d-ng|n-ng"},
- 	{.name = "ima-sig", .fmt = "d-ng|n-ng|sig"},
-+	{.name = "ima-buf", .fmt = "d-ng|n-ng|buf"},
- 	{.name = "", .fmt = ""},	/* placeholder for a custom format */
- };
- 
-@@ -43,6 +44,8 @@ static const struct ima_template_field supported_fields[] = {
- 	 .field_show = ima_show_template_string},
- 	{.field_id = "sig", .field_init = ima_eventsig_init,
- 	 .field_show = ima_show_template_sig},
-+	{.field_id = "buf", .field_init = ima_eventbuf_init,
-+	 .field_show = ima_show_template_buf},
- };
- #define MAX_TEMPLATE_NAME_LEN 15
- 
-diff --git a/security/integrity/ima/ima_template_lib.c b/security/integrity/ima/ima_template_lib.c
-index 513b457ae900..baf4de45c5aa 100644
---- a/security/integrity/ima/ima_template_lib.c
-+++ b/security/integrity/ima/ima_template_lib.c
-@@ -162,6 +162,12 @@ void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
- 	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
- }
- 
-+void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
-+			   struct ima_field_data *field_data)
-+{
-+	ima_show_template_field_data(m, show, DATA_FMT_HEX, field_data);
-+}
-+
- /**
-  * ima_parse_buf() - Parses lengths and data from an input buffer
-  * @bufstartp:       Buffer start address.
-@@ -389,3 +395,18 @@ int ima_eventsig_init(struct ima_event_data *event_data,
- 	return ima_write_template_field_data(xattr_value, event_data->xattr_len,
- 					     DATA_FMT_HEX, field_data);
- }
-+
-+/*
-+ *  ima_eventbuf_init - include the buffer(kexec-cmldine) as part of the
-+ *  template data.
-+ */
-+int ima_eventbuf_init(struct ima_event_data *event_data,
-+		      struct ima_field_data *field_data)
-+{
-+	if ((!event_data->buf) || (event_data->buf_len == 0))
-+		return 0;
-+
-+	return ima_write_template_field_data(event_data->buf,
-+					     event_data->buf_len, DATA_FMT_HEX,
-+					     field_data);
-+}
-diff --git a/security/integrity/ima/ima_template_lib.h b/security/integrity/ima/ima_template_lib.h
-index 6a3d8b831deb..12f1a8578b31 100644
---- a/security/integrity/ima/ima_template_lib.h
-+++ b/security/integrity/ima/ima_template_lib.h
-@@ -29,6 +29,8 @@ void ima_show_template_string(struct seq_file *m, enum ima_show_type show,
- 			      struct ima_field_data *field_data);
- void ima_show_template_sig(struct seq_file *m, enum ima_show_type show,
- 			   struct ima_field_data *field_data);
-+void ima_show_template_buf(struct seq_file *m, enum ima_show_type show,
-+			   struct ima_field_data *field_data);
- int ima_parse_buf(void *bufstartp, void *bufendp, void **bufcurp,
- 		  int maxfields, struct ima_field_data *fields, int *curfields,
- 		  unsigned long *len_mask, int enforce_mask, char *bufname);
-@@ -42,4 +44,6 @@ int ima_eventname_ng_init(struct ima_event_data *event_data,
- 			  struct ima_field_data *field_data);
- int ima_eventsig_init(struct ima_event_data *event_data,
- 		      struct ima_field_data *field_data);
-+int ima_eventbuf_init(struct ima_event_data *event_data,
-+		      struct ima_field_data *field_data);
- #endif /* __LINUX_IMA_TEMPLATE_LIB_H */
+v4:
+-fix the linear range change to use the correct implementation
+-mask out the non-mode bits when reading the hardware reg
+-correct the pms405 supply pins listing
+-correct the pms405 s3 supply name in the match struct
+-correct subject names to be more aligned with the subsystem history
+
+v3:
+-Allow PMS405 regulators to be enabled and disabled, instead of the
+outdated "always on" concept
+
+v2:
+-Perform if statement cleanups per review discussion
+-Pull in linear range support since its related, and simple
+-Rework the PM8005 to minimize special cases in the driver
+-"common2" is now ftsmps426 since that design first implemented it
+-Reworked the PMS405 changes on top, since they are related to pm8005
+and trivial
+
+Jeffrey Hugo (3):
+  dt-bindings: qcom_spmi: Document PM8005 regulators
+  regulator: qcom_spmi: Add support for PM8005
+  arm64: dts: msm8998-mtp: Add pm8005_s1 regulator
+
+Jorge Ramirez (2):
+  dt-bindings: qcom_spmi: Document pms405 support
+  regulator: qcom_spmi: add PMS405 SPMI regulator
+
+ .../regulator/qcom,spmi-regulator.txt         |  22 ++
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi     |  17 ++
+ drivers/regulator/qcom_spmi-regulator.c       | 213 ++++++++++++++++++
+ 3 files changed, 252 insertions(+)
+
 -- 
-2.19.1
+2.17.1
 
