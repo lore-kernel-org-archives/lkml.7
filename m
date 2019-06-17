@@ -2,103 +2,236 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C81C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B3B9C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90A782080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D26242080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:57:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726735AbfFQU4h (ORCPT
+        id S1726920AbfFQU53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:56:37 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:43406 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFQU4g (ORCPT
+        Mon, 17 Jun 2019 16:57:29 -0400
+Received: from out30-45.freemail.mail.aliyun.com ([115.124.30.45]:44184 "EHLO
+        out30-45.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725497AbfFQU53 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:56:36 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cl9so4638398plb.10;
-        Mon, 17 Jun 2019 13:56:36 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=oaUF+IVfxLkFEOX3EdWdqY0MW6ieO175zRASbw5HHZM=;
-        b=In45RciiYycSqmGUdJVle6PXKgp27Jun83jcfNaFIWxUh+nu6S7hGEwwIyxJocZJWT
-         mGlVFcevrfTBcxOXw6X2qvuIfTNXez1swbd03ntboTL0nem4WZrx31X4pjJoP84AKVFi
-         L+eU+ocYLl2Pe1qZ5fnOTe3E0DcC8zXsZVBXwB2Ia7EiEyTvkvN0SBnGM1OJanw1gcjt
-         gnbH6CCtegHpz+1xeU4F84+YmRqccWdXELzmRCC0iBnIl6FtWwwgM0a1hZevfmCcY+1b
-         7EefNT9Nm4Z6LbhWq7o8I+0WNkpcFfqD5jRPBKISAGXGFBPwESwFRXQlBl1rMMNr4q6H
-         UDjA==
-X-Gm-Message-State: APjAAAUTYWWzYCdpFb0vIbIXNS+5KK8cfm63DuzxCzC/U+utgDZMWRsB
-        lcoXQEJNarAhpKJpZFg2H4oe09jTYuI=
-X-Google-Smtp-Source: APXvYqyW1uX5YVD0oJTXzOf/KTeNCXdXhtPN2mMaP3rKDVGtTCu0tZAI6kQEifd7AGUdvUb3udfRmg==
-X-Received: by 2002:a17:902:760a:: with SMTP id k10mr89887792pll.83.1560804995269;
-        Mon, 17 Jun 2019 13:56:35 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id r9sm12006074pgv.24.2019.06.17.13.56.33
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 13:56:34 -0700 (PDT)
-Subject: Re: [PATCH 2/8] scsi: take the DMA max mapping size into account
-To:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190617122000.22181-1-hch@lst.de>
- <20190617122000.22181-3-hch@lst.de>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <5d143a03-edd5-5878-780b-45d87313a813@acm.org>
-Date:   Mon, 17 Jun 2019 13:56:32 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190617122000.22181-3-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 16:57:29 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R301e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TURrDrJ_1560805038;
+Received: from e19h19392.et15sqa.tbsite.net(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TURrDrJ_1560805038)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 18 Jun 2019 04:57:25 +0800
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     gregkh@linuxfoundation.org, akpm@linux-foundation.org,
+        aneesh.kumar@linux.ibm.com, jstancek@redhat.com, mgorman@suse.de,
+        minchan@kernel.org, namit@vmware.com, npiggin@gmail.com,
+        peterz@infradead.org, will.deacon@arm.com
+Cc:     yang.shi@linux.alibaba.com, stable@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: [RESEND 5.1-stable PATCH] mm: mmu_gather: remove __tlb_reset_range() for force flush
+Date:   Tue, 18 Jun 2019 04:57:17 +0800
+Message-Id: <1560805037-35324-1-git-send-email-yang.shi@linux.alibaba.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 5:19 AM, Christoph Hellwig wrote:
-> We need to limit the devices max_sectors to what the DMA mapping
-> implementation can support.  If not we risk running out of swiotlb
-> buffers easily.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/scsi/scsi_lib.c | 2 ++
->   1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> index d333bb6b1c59..f233bfd84cd7 100644
-> --- a/drivers/scsi/scsi_lib.c
-> +++ b/drivers/scsi/scsi_lib.c
-> @@ -1768,6 +1768,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
->   		blk_queue_max_integrity_segments(q, shost->sg_prot_tablesize);
->   	}
->   
-> +	shost->max_sectors = min_t(unsigned int, shost->max_sectors,
-> +			dma_max_mapping_size(dev) << SECTOR_SHIFT);
->   	blk_queue_max_hw_sectors(q, shost->max_sectors);
->   	if (shost->unchecked_isa_dma)
->   		blk_queue_bounce_limit(q, BLK_BOUNCE_ISA);
+commit 7a30df49f63ad92318ddf1f7498d1129a77dd4bd upstream
 
-Does dma_max_mapping_size() return a value in bytes? Is 
-shost->max_sectors a number of sectors? If so, are you sure that "<< 
-SECTOR_SHIFT" is the proper conversion? Shouldn't that be ">> 
-SECTOR_SHIFT" instead?
+A few new fields were added to mmu_gather to make TLB flush smarter for
+huge page by telling what level of page table is changed.
 
-Additionally, how about adding a comment above dma_max_mapping_size() 
-that documents the unit of the returned number?
+__tlb_reset_range() is used to reset all these page table state to
+unchanged, which is called by TLB flush for parallel mapping changes for
+the same range under non-exclusive lock (i.e.  read mmap_sem).
 
-Thanks,
+Before commit dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in
+munmap"), the syscalls (e.g.  MADV_DONTNEED, MADV_FREE) which may update
+PTEs in parallel don't remove page tables.  But, the forementioned
+commit may do munmap() under read mmap_sem and free page tables.  This
+may result in program hang on aarch64 reported by Jan Stancek.  The
+problem could be reproduced by his test program with slightly modified
+below.
 
-Bart.
+---8<---
+
+static int map_size = 4096;
+static int num_iter = 500;
+static long threads_total;
+
+static void *distant_area;
+
+void *map_write_unmap(void *ptr)
+{
+	int *fd = ptr;
+	unsigned char *map_address;
+	int i, j = 0;
+
+	for (i = 0; i < num_iter; i++) {
+		map_address = mmap(distant_area, (size_t) map_size, PROT_WRITE | PROT_READ,
+			MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+		if (map_address == MAP_FAILED) {
+			perror("mmap");
+			exit(1);
+		}
+
+		for (j = 0; j < map_size; j++)
+			map_address[j] = 'b';
+
+		if (munmap(map_address, map_size) == -1) {
+			perror("munmap");
+			exit(1);
+		}
+	}
+
+	return NULL;
+}
+
+void *dummy(void *ptr)
+{
+	return NULL;
+}
+
+int main(void)
+{
+	pthread_t thid[2];
+
+	/* hint for mmap in map_write_unmap() */
+	distant_area = mmap(0, DISTANT_MMAP_SIZE, PROT_WRITE | PROT_READ,
+			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+	munmap(distant_area, (size_t)DISTANT_MMAP_SIZE);
+	distant_area += DISTANT_MMAP_SIZE / 2;
+
+	while (1) {
+		pthread_create(&thid[0], NULL, map_write_unmap, NULL);
+		pthread_create(&thid[1], NULL, dummy, NULL);
+
+		pthread_join(thid[0], NULL);
+		pthread_join(thid[1], NULL);
+	}
+}
+---8<---
+
+The program may bring in parallel execution like below:
+
+        t1                                        t2
+munmap(map_address)
+  downgrade_write(&mm->mmap_sem);
+  unmap_region()
+  tlb_gather_mmu()
+    inc_tlb_flush_pending(tlb->mm);
+  free_pgtables()
+    tlb->freed_tables = 1
+    tlb->cleared_pmds = 1
+
+                                        pthread_exit()
+                                        madvise(thread_stack, 8M, MADV_DONTNEED)
+                                          zap_page_range()
+                                            tlb_gather_mmu()
+                                              inc_tlb_flush_pending(tlb->mm);
+
+  tlb_finish_mmu()
+    if (mm_tlb_flush_nested(tlb->mm))
+      __tlb_reset_range()
+
+__tlb_reset_range() would reset freed_tables and cleared_* bits, but this
+may cause inconsistency for munmap() which do free page tables.  Then it
+may result in some architectures, e.g.  aarch64, may not flush TLB
+completely as expected to have stale TLB entries remained.
+
+Use fullmm flush since it yields much better performance on aarch64 and
+non-fullmm doesn't yields significant difference on x86.
+
+The original proposed fix came from Jan Stancek who mainly debugged this
+issue, I just wrapped up everything together.
+
+Jan's testing results:
+
+v5.2-rc2-24-gbec7550cca10
+--------------------------
+         mean     stddev
+real    37.382   2.780
+user     1.420   0.078
+sys     54.658   1.855
+
+v5.2-rc2-24-gbec7550cca10 + "mm: mmu_gather: remove __tlb_reset_range() for force flush"
+---------------------------------------------------------------------------------------_
+         mean     stddev
+real    37.119   2.105
+user     1.548   0.087
+sys     55.698   1.357
+
+[akpm@linux-foundation.org: coding-style fixes]
+Link: http://lkml.kernel.org/r/1558322252-113575-1-git-send-email-yang.shi@linux.alibaba.com
+Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Tested-by: Jan Stancek <jstancek@redhat.com>
+Suggested-by: Will Deacon <will.deacon@arm.com>
+Tested-by: Will Deacon <will.deacon@arm.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Nick Piggin <npiggin@gmail.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: <stable@vger.kernel.org>	[4.20+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+---
+ mm/mmu_gather.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
+
+diff --git a/mm/mmu_gather.c b/mm/mmu_gather.c
+index f2f03c6..a58bd0d 100644
+--- a/mm/mmu_gather.c
++++ b/mm/mmu_gather.c
+@@ -93,8 +93,17 @@ void arch_tlb_finish_mmu(struct mmu_gather *tlb,
+ 	struct mmu_gather_batch *batch, *next;
+ 
+ 	if (force) {
++		/*
++		 * The aarch64 yields better performance with fullmm by
++		 * avoiding multiple CPUs spamming TLBI messages at the
++		 * same time.
++		 *
++		 * On x86 non-fullmm doesn't yield significant difference
++		 * against fullmm.
++		 */
++		tlb->fullmm = 1;
+ 		__tlb_reset_range(tlb);
+-		__tlb_adjust_range(tlb, start, end - start);
++		tlb->freed_tables = 1;
+ 	}
+ 
+ 	tlb_flush_mmu(tlb);
+@@ -249,10 +258,15 @@ void tlb_finish_mmu(struct mmu_gather *tlb,
+ {
+ 	/*
+ 	 * If there are parallel threads are doing PTE changes on same range
+-	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+-	 * flush by batching, a thread has stable TLB entry can fail to flush
+-	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+-	 * forcefully if we detect parallel PTE batching threads.
++	 * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
++	 * flush by batching, one thread may end up seeing inconsistent PTEs
++	 * and result in having stale TLB entries.  So flush TLB forcefully
++	 * if we detect parallel PTE batching threads.
++	 *
++	 * However, some syscalls, e.g. munmap(), may free page tables, this
++	 * needs force flush everything in the given range. Otherwise this
++	 * may result in having stale TLB entries for some architectures,
++	 * e.g. aarch64, that could specify flush what level TLB.
+ 	 */
+ 	bool force = mm_tlb_flush_nested(tlb->mm);
+ 
+-- 
+1.8.3.1
+
