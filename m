@@ -2,107 +2,137 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38411C31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:11:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D98ABC31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:11:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B5C5206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADE1C206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:11:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="E1lV/u7o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfFQOLD (ORCPT
+        id S1727586AbfFQOLy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:11:03 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:36956 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFQOLD (ORCPT
+        Mon, 17 Jun 2019 10:11:54 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:43459 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFQOLx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:11:03 -0400
-Received: by mail-qk1-f195.google.com with SMTP id d15so6234032qkl.4;
-        Mon, 17 Jun 2019 07:11:02 -0700 (PDT)
+        Mon, 17 Jun 2019 10:11:53 -0400
+Received: by mail-ed1-f68.google.com with SMTP id e3so16324386edr.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:11:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zlCo9TC98c5FZkjUzIf1KLkN5UgmU6J99oGWDzFXHpI=;
+        b=E1lV/u7o1nMu/5qcTlwV2LMql4XhweKWVE452oSFGI9R9SjCnpHHJnbxQXIKoXvsmz
+         MjEC7OHqO9/kJOeec+mu0Z8koL5fprasZn58JKAQBBN+0wxWXoJYVbr7u+ap7ulflBy9
+         qPQrTUudwz+GPCINTlkK6HQ+6xSffoDX3Zgzg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SHlicgj5jJS/0b/2UM+41wnaHIVMnE9CKknJ2bXTQck=;
-        b=ZZB6gvJIdX7HQLhTZk8FE3lse0JrUZtgKdHccGlsIijlysMOgTpMnBCjJ44osE2Wlz
-         1R72w4V5k//Foy6n5A+1V+fcsvbcz8MA6/TacM5t+XsFlkbpEake1Qree0IB1hRDKYuM
-         +mreJjhvfFe7dqvFS1K2Oi8MX/ozpsODbMFIFUUyW8OfR4FtzqQYTDY3iLmmN5xYqmY5
-         QjPvkmd93+YdrQ4RB7l7mbtgScQq9tjGGvLRWOCi7KGS0vFnOsO+ffFOultPZ/4oXRc7
-         ci0xGNRv6GUNzig+AdywH1BdZEViI9kND6bXwq+lBDVQDx3+fdTrBkk9qD42T6ov4oZo
-         O58Q==
-X-Gm-Message-State: APjAAAV4fq9IHUQPyjjxlrZN2odPxvz3yaT1Kwc2/gcUD3Xa/XdXEjpN
-        whnKvUJYKVI6OhzxZD03R2+7Bvyx1zbHEMSPK3k=
-X-Google-Smtp-Source: APXvYqz/zY9xPk2Jh05D8FoFALFOwZkRORfl1anNOl7AeYnHfAe4CMrSl7w7RmCl48n0kgwku7lRbyglucqe9iA2hqo=
-X-Received: by 2002:a05:620a:10b2:: with SMTP id h18mr23908385qkk.14.1560780662046;
- Mon, 17 Jun 2019 07:11:02 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=zlCo9TC98c5FZkjUzIf1KLkN5UgmU6J99oGWDzFXHpI=;
+        b=mhINOp05CvZDU/21Y/hezB9OpBPNDLI++QFOuYYNgMjzmaeiA9h+SHmEmYKS20DvP3
+         JuB+tMKXlE3weHVw7PI/ydFvYovDWiHOijK5O0hWgqNHZinZwIIaT4+q0pUXGlE/iLNP
+         lu8psUcRagox6VO+mWi5VjTguVqA0c3B7Lme7JIRWFtqKhPvFyL6BBbsy+Y60NqdTLpq
+         RoQ/27eKHX2cVM9kevRbQ1vkgxC/QDglK1C+COXsrMgXeUVhmNsCYYsBzHpP2/BR9Eu8
+         pt+m5bMl2Odc7YIfq74EAloF3eVnnWK2oVjXeGiTJNFc49+uFL2xzx/Tnmz4eVqDvCZq
+         H46Q==
+X-Gm-Message-State: APjAAAVURUAyIZx1LRgBPsRIMpJZ7+4S73gCM6b40x4mWeu/A5JBd/iP
+        Y9FNzCRDIKYPrcmaDR80jNwqYw==
+X-Google-Smtp-Source: APXvYqyFOj7EMYy9qivyoZv6/j9iQIWwU8H2myH8qg8E6iBR3g1ZdPTuAJd2zbKKIw0TxP9ixHftTQ==
+X-Received: by 2002:aa7:c486:: with SMTP id m6mr54266304edq.298.1560780712473;
+        Mon, 17 Jun 2019 07:11:52 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id m19sm2186424eje.30.2019.06.17.07.11.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 07:11:50 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 16:11:48 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] drm/virtio: pass gem reservation object to ttm init
+Message-ID: <20190617141148.GE12905@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190617111406.14765-1-kraxel@redhat.com>
+ <20190617111406.14765-2-kraxel@redhat.com>
+ <20190617140825.GD12905@phenom.ffwll.local>
 MIME-Version: 1.0
-References: <20190617132343.2678836-1-arnd@arndb.de> <20190617140435.qjzcouaqzepaicf4@gondor.apana.org.au>
-In-Reply-To: <20190617140435.qjzcouaqzepaicf4@gondor.apana.org.au>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 17 Jun 2019 16:10:44 +0200
-Message-ID: <CAK8P3a07Vcqs+6Rs2Ckq_itWfGKUv+_pdgdis9eSujCGHQgFkQ@mail.gmail.com>
-Subject: Re: [PATCH] crypto: testmgr - reduce stack usage in fuzzers
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617140825.GD12905@phenom.ffwll.local>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 4:04 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Mon, Jun 17, 2019 at 03:23:02PM +0200, Arnd Bergmann wrote:
-> > On arm32, we get warnings about high stack usage in some of the functions:
-> >
-> > crypto/testmgr.c:2269:12: error: stack frame size of 1032 bytes in function 'alg_test_aead' [-Werror,-Wframe-larger-than=]
-> > static int alg_test_aead(const struct alg_test_desc *desc, const char *driver,
-> >            ^
-> > crypto/testmgr.c:1693:12: error: stack frame size of 1312 bytes in function '__alg_test_hash' [-Werror,-Wframe-larger-than=]
-> > static int __alg_test_hash(const struct hash_testvec *vecs,
-> >            ^
-> >
-> > On of the larger objects on the stack here is struct testvec_config, so
-> > change that to dynamic allocation.
-> >
-> > Fixes: 40153b10d91c ("crypto: testmgr - fuzz AEADs against their generic implementation")
-> > Fixes: d435e10e67be ("crypto: testmgr - fuzz skciphers against their generic implementation")
-> > Fixes: 9a8a6b3f0950 ("crypto: testmgr - fuzz hashes against their generic implementation")
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Mon, Jun 17, 2019 at 04:08:25PM +0200, Daniel Vetter wrote:
+> On Mon, Jun 17, 2019 at 01:14:03PM +0200, Gerd Hoffmann wrote:
+> > With this gem and ttm will use the same reservation object,
+> > so mixing and matching ttm / gem reservation helpers should
+> > work fine.
+> > 
+> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> 
+> While doing my prime doc+cleanup series I wondered whether we should do
+> this for everyone, and perhaps even remove ttm_bo.ttm_resv. Only driver
+> which doesn't yet have a gem_bo embedded in the same allocation is vmwgfx,
+> and that would be easy to fix by adding a vmwgfx_resv somehwere.
+> 
+> Anyway, looks like a solid start into the convergence story.
+> 
+> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+Aside: if virtio ever allows dma-buf sharing with something else (or
+multiple virtio-gpu instances), then together with my patch series this
+will fix dma-buf import. Atm virtio ignores the reservation object of the
+imported dma-buf, which for foreing objects really isn't correct.
+-Daniel
+
+> 
 > > ---
-> > I only compile-tested this, and it's not completely trivial, so please
-> > review carefully.
->
-> These structures are not meant to be that big.  I suspect something
-> has gone awry with the recent security conversions.
->
-> Kees?
+> >  drivers/gpu/drm/virtio/virtgpu_object.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+> > index b2da31310d24..242766d644a7 100644
+> > --- a/drivers/gpu/drm/virtio/virtgpu_object.c
+> > +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+> > @@ -132,7 +132,8 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+> >  	virtio_gpu_init_ttm_placement(bo);
+> >  	ret = ttm_bo_init(&vgdev->mman.bdev, &bo->tbo, params->size,
+> >  			  ttm_bo_type_device, &bo->placement, 0,
+> > -			  true, acc_size, NULL, NULL,
+> > +			  true, acc_size, NULL,
+> > +			  bo->gem_base.resv,
+> >  			  &virtio_gpu_ttm_bo_destroy);
+> >  	/* ttm_bo_init failure will call the destroy */
+> >  	if (ret != 0)
+> > -- 
+> > 2.18.1
+> > 
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
-I should have mentioned above that this happened with clang but not gcc.
-
-We used to not be able to test with clang and KASAN. I had done some of
-those tests in the past, but that was before Kees' nice cleanup, so the
-potential stack overflow would already happen but not detected by the
-compiler.
-
-Both gcc and clang add a redzone around each stack variable that gets
-passed into an 'extern' variable. The difference here is that with clang, the
-size of that redzone is proportional to the size of the object, while with gcc
-it is constant.
-
-In most cases, this ends up in favor of clang (concerning the stack
-warning size limit) because most variables are small, but here we have
-a large stack object (two objects for the hash fuzzing) with a large redzone.
-
-         Arnd
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
