@@ -2,330 +2,125 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECB9C31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DE8C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5373F20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:30:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gfw1yyyn"
+	by mail.kernel.org (Postfix) with ESMTP id C605020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:30:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727276AbfFQNaB (ORCPT
+        id S1727377AbfFQNav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:30:01 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42354 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725983AbfFQNaB (ORCPT
+        Mon, 17 Jun 2019 09:30:51 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:44647 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfFQNav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:30:01 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so9954928wrl.9;
-        Mon, 17 Jun 2019 06:29:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=cbldudMML2MwvQcB7m6YQgg0iKGbGlv6uQTNnPHYACA=;
-        b=Gfw1yyynBDN29VlWvgkmlFlrn59tbrQlj/7UTjXrzD3mEOsc2faa/J6YLOdVzsvOp5
-         Beso4n7h9cvi+UO9rsT8MzztcfJAdf4dMu21A+4nyL/vLeIvocBrBAJDFkPRg3MhC5pm
-         lCTTI65XWG5Acc+kMrldyF91tiEjEQE+6nfUbaYA1A6/DloyEn1Cnj3ascBlIWViLeV+
-         ZIwQYGGukZXFOr3KVk+AGjRwCySixKUhE80KsxGAf4zyjuT+9Wg/61YQeVK6kl29x//l
-         RR84fJfva0msAOXZruFb3VK0mejrDx3MLCGDbGc6QC1wyLqIwTpNCp6A1JgUbkgA7MFY
-         5lrA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cbldudMML2MwvQcB7m6YQgg0iKGbGlv6uQTNnPHYACA=;
-        b=tJcTUd9HEFzfb3a3i1Jdxrj5oQ7rBEPauyzVafnvrhuoELtBNAWpnZWacLYKAekRqc
-         mOLVRw02gNH0xkC7spXo/obCEVKQfDG/2lTDaBk6Qj+B9ptKeSpmMhSTYe7WcLHXEhte
-         2Mvgjxt1NpQ07F1WPxETMkmCZ5cdmrghdah2TSmYzMSprx4A5L+H98+nWk6fCulmue2R
-         ppSDPzTaSMWRie9ieDrfwAcRRws9pB0UUsQiPxY0SAckWqkTFqAlMrzBy2xTID+zlU8T
-         7U3cipcBW8C8BNZfPtJFDMjSY5iMR9zW5gj0teNe9mAxYplSMUyGMcQtJ1i1Zvx4r68c
-         xPxA==
-X-Gm-Message-State: APjAAAUX6voCuirlxFUjRio5qF81O3/t0exMP3C6rBeHY3I4EbUkLRuL
-        1caykIABZZsXWswywV4JBZI4Mrtf
-X-Google-Smtp-Source: APXvYqyP/EOzzuA5YxS1CFnRD0YFU+wlnX0CQZ2eLnByxvt10zN0qgYNyZWXIQwTjrNoF48RI2V2VQ==
-X-Received: by 2002:adf:e3cc:: with SMTP id k12mr19689706wrm.159.1560778198798;
-        Mon, 17 Jun 2019 06:29:58 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id h84sm15890123wmf.43.2019.06.17.06.29.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 06:29:58 -0700 (PDT)
-Subject: Re: [PATCH 2/2] rtc: tegra: Implement suspend clock source
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190614104747.19712-1-thierry.reding@gmail.com>
- <20190614104747.19712-2-thierry.reding@gmail.com>
- <5a00bccf-6542-51bd-9030-99a59f14f2f9@gmail.com>
- <20190614134110.GF15526@ulmo>
- <d9b65fd9-ecad-b241-a0d6-251a648488aa@gmail.com>
- <20190614141400.GI15526@ulmo>
- <3c6ac621-bc2a-c9c8-64fc-531be7dd323d@gmail.com> <20190617102049.GF508@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <b5b12bd1-b522-0886-29b4-acfd7f4a7715@gmail.com>
-Date:   Mon, 17 Jun 2019 16:29:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 17 Jun 2019 09:30:51 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mnq8Y-1iQnn21uzS-00pKbB; Mon, 17 Jun 2019 15:29:50 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>, xen-devel@lists.xenproject.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] swiotlb: fix phys_addr_t overflow warning
+Date:   Mon, 17 Jun 2019 15:28:43 +0200
+Message-Id: <20190617132946.2817440-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190617102049.GF508@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:WxAlzhRk05Boo+/YM4l5i3GHyI9GeBc8OiWCfJusR6LAoI1zMkq
+ mI5T09W/WmD7J75VlpcbwtZqQ0SrDUbM08mliK9OyOpw5VGdZN1zx6lKdkmnejKI2IWefXV
+ gD87Cuo+tKgxk+8DVFi5MULUIVmtKYjNbQ/mH9PLbLfMO/vz0NadJP8Sg5EQz6l4Rygh/yT
+ LeEipTLCyl1mG60QYU9LA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pjHS7vU6GCo=:oYrDoKB2+KgIcpoaYs8GlG
+ uTtBiYh+a9NRCMSK/VAmJBtr3OyY50oWkyFrAONPZtPHVNpiF2a8CHfvo5FAn9V1TMPmHj5jF
+ NHxQxqMxS1V9M23uTBejYpfbDSjtIH/c0sAcPnkGEJkybimAEup6/oze7uWb2eQBnfEFQoWUQ
+ aJy4HSSAKT+4gw0ktzsx3iM6TPn57cocJrG/3j5ZCD/oAdErbgrysiAhEeIY9GWvEVkvjDLUI
+ ONy9C26roR2C6uw20//9hHKteelpqgKuxODx/J/UPtPgIMywqCsDLHqOreyPZIamuMa1y+w5G
+ VfTKrnXuklvNm0PX7w7uJIDUmjaHUOra43Y5OxASS35FYFrpJFZvxfUiVc8eRpYhueBJoiqeA
+ aAO7vgmS0K7aJcv4XsT7yAuXgRNjzO7c8G4uCtniGqhvkCj6f0V3UlfvkLvAEw1olB/EoBZGI
+ 3UqpKNY5rjoEdLlVgcSXpS2IAI4cwApvlzIwjAAoBu4rrtqwv/aK0yvzchZRHvCzAFXGe8bRe
+ +bm04PWiu6yyPZ/yOlveC8euUHfYhoJOdzudhIanL205wpbYyqs+QeylkyGFUUOg3X6Qs5qsa
+ RMJUfD0XDSpuNei092sg7J/xfBCHQmIWZmyPvHOtDnOWOGKcu2l7SMGW+i1PFzF9/LL4Vrn18
+ 3KHw4A+YxFrMfGY9xxypp+kyL9UCU3Vi3s/DYWqc7KuDLjYVMLmoUjW3hGoYprONHKuxNyhn/
+ ltfrC74ikaZMsbUQaH/Ka2jk6kCcG4leKkdP+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.06.2019 13:20, Thierry Reding пишет:
-> On Fri, Jun 14, 2019 at 07:41:54PM +0300, Dmitry Osipenko wrote:
->> 14.06.2019 17:14, Thierry Reding пишет:
->>> On Fri, Jun 14, 2019 at 04:49:44PM +0300, Dmitry Osipenko wrote:
->>>> 14.06.2019 16:41, Thierry Reding пишет:
->>>>> On Fri, Jun 14, 2019 at 03:01:13PM +0300, Dmitry Osipenko wrote:
->>>>>> 14.06.2019 13:47, Thierry Reding пишет:
->>>>>>> From: Thierry Reding <treding@nvidia.com>
->>>>>>>
->>>>>>> The suspend clock source for Tegra210 and earlier is currently
->>>>>>> implemented in the Tegra timer driver. However, the suspend clock source
->>>>>>> code accesses registers that are part of the RTC hardware block, so both
->>>>>>> can step on each others' toes. In practice this isn't an issue, but
->>>>>>> there is no reason why the RTC driver can't implement the clock source,
->>>>>>> so move the code over to the tegra-rtc driver.
->>>>>>>
->>>>>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
->>>>>>> ---
->>>>>>>  drivers/clocksource/timer-tegra.c | 44 -------------------------------
->>>>>>>  drivers/rtc/rtc-tegra.c           | 42 +++++++++++++++++++++++++++++
->>>>>>>  2 files changed, 42 insertions(+), 44 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
->>>>>>> index e6608141cccb..87eac618924d 100644
->>>>>>> --- a/drivers/clocksource/timer-tegra.c
->>>>>>> +++ b/drivers/clocksource/timer-tegra.c
->>>>>>> @@ -21,10 +21,6 @@
->>>>>>>  
->>>>>>>  #include "timer-of.h"
->>>>>>>  
->>>>>>> -#define RTC_SECONDS		0x08
->>>>>>> -#define RTC_SHADOW_SECONDS	0x0c
->>>>>>> -#define RTC_MILLISECONDS	0x10
->>>>>>> -
->>>>>>>  #define TIMERUS_CNTR_1US	0x10
->>>>>>>  #define TIMERUS_USEC_CFG	0x14
->>>>>>>  #define TIMERUS_CNTR_FREEZE	0x4c
->>>>>>> @@ -164,34 +160,6 @@ static struct delay_timer tegra_delay_timer = {
->>>>>>>  };
->>>>>>>  #endif
->>>>>>>  
->>>>>>> -static struct timer_of suspend_rtc_to = {
->>>>>>> -	.flags = TIMER_OF_BASE | TIMER_OF_CLOCK,
->>>>>>> -};
->>>>>>> -
->>>>>>> -/*
->>>>>>> - * tegra_rtc_read - Reads the Tegra RTC registers
->>>>>>> - * Care must be taken that this function is not called while the
->>>>>>> - * tegra_rtc driver could be executing to avoid race conditions
->>>>>>> - * on the RTC shadow register
->>>>>>> - */
->>>>>>> -static u64 tegra_rtc_read_ms(struct clocksource *cs)
->>>>>>> -{
->>>>>>> -	void __iomem *reg_base = timer_of_base(&suspend_rtc_to);
->>>>>>> -
->>>>>>> -	u32 ms = readl_relaxed(reg_base + RTC_MILLISECONDS);
->>>>>>> -	u32 s = readl_relaxed(reg_base + RTC_SHADOW_SECONDS);
->>>>>>> -
->>>>>>> -	return (u64)s * MSEC_PER_SEC + ms;
->>>>>>> -}
->>>>>>> -
->>>>>>> -static struct clocksource suspend_rtc_clocksource = {
->>>>>>> -	.name	= "tegra_suspend_timer",
->>>>>>> -	.rating	= 200,
->>>>>>> -	.read	= tegra_rtc_read_ms,
->>>>>>> -	.mask	= CLOCKSOURCE_MASK(32),
->>>>>>> -	.flags	= CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
->>>>>>> -};
->>>>>>> -
->>>>>>>  static inline unsigned int tegra_base_for_cpu(int cpu, bool tegra20)
->>>>>>>  {
->>>>>>>  	if (tegra20) {
->>>>>>> @@ -385,15 +353,3 @@ static int __init tegra20_init_timer(struct device_node *np)
->>>>>>>  	return tegra_init_timer(np, true, rating);
->>>>>>>  }
->>>>>>>  TIMER_OF_DECLARE(tegra20_timer, "nvidia,tegra20-timer", tegra20_init_timer);
->>>>>>> -
->>>>>>> -static int __init tegra20_init_rtc(struct device_node *np)
->>>>>>> -{
->>>>>>> -	int ret;
->>>>>>> -
->>>>>>> -	ret = timer_of_init(np, &suspend_rtc_to);
->>>>>>> -	if (ret)
->>>>>>> -		return ret;
->>>>>>> -
->>>>>>> -	return clocksource_register_hz(&suspend_rtc_clocksource, 1000);
->>>>>>> -}
->>>>>>> -TIMER_OF_DECLARE(tegra20_rtc, "nvidia,tegra20-rtc", tegra20_init_rtc);
->>>>>>> diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
->>>>>>> index 8fa1b3febf69..6da54264a27a 100644
->>>>>>> --- a/drivers/rtc/rtc-tegra.c
->>>>>>> +++ b/drivers/rtc/rtc-tegra.c
->>>>>>> @@ -6,6 +6,7 @@
->>>>>>>   */
->>>>>>>  
->>>>>>>  #include <linux/clk.h>
->>>>>>> +#include <linux/clocksource.h>
->>>>>>>  #include <linux/delay.h>
->>>>>>>  #include <linux/init.h>
->>>>>>>  #include <linux/io.h>
->>>>>>> @@ -52,8 +53,15 @@ struct tegra_rtc_info {
->>>>>>>  	struct clk *clk;
->>>>>>>  	int irq; /* alarm and periodic IRQ */
->>>>>>>  	spinlock_t lock;
->>>>>>> +
->>>>>>> +	struct clocksource clksrc;
->>>>>>>  };
->>>>>>>  
->>>>>>> +static struct tegra_rtc_info *to_tegra_rtc(struct clocksource *clksrc)
->>>>>>> +{
->>>>>>> +	return container_of(clksrc, struct tegra_rtc_info, clksrc);
->>>>>>> +}
->>>>>>> +
->>>>>>>  /*
->>>>>>>   * RTC hardware is busy when it is updating its values over AHB once every
->>>>>>>   * eight 32 kHz clocks (~250 us). Outside of these updates the CPU is free to
->>>>>>> @@ -268,6 +276,17 @@ static const struct rtc_class_ops tegra_rtc_ops = {
->>>>>>>  	.alarm_irq_enable = tegra_rtc_alarm_irq_enable,
->>>>>>>  };
->>>>>>>  
->>>>>>> +static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
->>>>>>> +{
->>>>>>> +	struct tegra_rtc_info *info = to_tegra_rtc(clksrc);
->>>>>>> +	u32 ms, s;
->>>>>>> +
->>>>>>> +	ms = readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
->>>>>>> +	s = readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
->>>>>>> +
->>>>>>> +	return (u64)s * MSEC_PER_SEC + ms;
->>>>>>> +}
->>>>>>> +
->>>>>>>  static const struct of_device_id tegra_rtc_dt_match[] = {
->>>>>>>  	{ .compatible = "nvidia,tegra20-rtc", },
->>>>>>>  	{}
->>>>>>> @@ -339,6 +358,28 @@ static int tegra_rtc_probe(struct platform_device *pdev)
->>>>>>>  		goto disable_clk;
->>>>>>>  	}
->>>>>>>  
->>>>>>> +	/*
->>>>>>> +	 * The Tegra RTC is the only reliable clock source that persists
->>>>>>> +	 * across an SC7 transition (VDD_CPU and VDD_CORE off) on Tegra210
->>>>>>> +	 * and earlier. Starting with Tegra186, the ARM v8 architected timer
->>>>>>> +	 * is in an always on power partition and its reference clock keeps
->>>>>>> +	 * running during SC7. Therefore, we technically don't need to have
->>>>>>> +	 * the RTC register as a clock source on Tegra186 and later, but it
->>>>>>> +	 * doesn't hurt either, so we just register it unconditionally here.
->>>>>>> +	 */
->>>>>>> +	info->clksrc.name = "tegra_rtc";
->>>>>>> +	info->clksrc.rating = 200;
->>>>>>> +	info->clksrc.read = tegra_rtc_read_ms;
->>>>>>> +	info->clksrc.mask = CLOCKSOURCE_MASK(32);
->>>>>>
->>>>>> Hm.. shouldn't this be CLOCKSOURCE_MASK(52)? Given that there are 32 bits for seconds and
->>>>>> 10bits for milliseconds.
->>>>>
->>>>> Did you mean to say CLOCKSOURCE_MASK(42)? Yeah, that's probably better
->>>>> here.
->>>>
->>>> Yes, 42 :)
->>>
->>> I'm wondering if that could perhaps be a little problematic because
->>> we're not actually using all of the 10 bits for the milliseconds. So the
->>> maximum value that we can return is:
->>>
->>> 	4294967296 * 1000 + 999 = 4294967296999
->>>
->>> However, the maximum value for a 42 bit mask is:
->>>
->>> 	2^42 - 1 = 4398046511103
->>>
->>> That mask is only used in order to wrap around in delta computations. So
->>> I can imagine a situation where we'd end up with a wrong value in the
->>> delta. I suppose this can only really happen if the two samples are very
->>> far apart in time, so maybe this isn't worth worrying about.
->>
->> I'm a bit puzzled now. Looks problematic that wraparound will happen unexpectedly for
->> the timekeeping. Although please bare in mind that I'm not expert in the area of
->> timekeeping, actually I know very little about it.
->>
->> Maybe tegra_rtc_read_ms() should track wraparound case itself and return a
->> monotonically incrementing value?
->>
->> static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
->> {
->> 	struct tegra_rtc_info *info = to_tegra_rtc(clksrc);
->> 	u64 ms, s, now;
->>
->> 	ms = readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
->> 	s = readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
->>
->> 	now = s * MSEC_PER_SEC + ms;
->>
->> 	if (now < info->last)
->> 		info->ms_cnt += 0x3e8000003e8ull - info->last + now;
->> 	else
->> 		info->ms_cnt += now - info->last;
->>
->> 	info->last = now;
->>
->> 	return info->ms_cnt;
->> }
->>
->> and then simply CLOCKSOURCE_MASK(64).
-> 
-> This sounds like a bit of overkill to me. There's an obscure constant in
-> there that's completely non-obvious and we're duplicating code that's
-> effectively already in the core. I think the only thing that we need to
-> make sure is that we don't confuse the timekeeping system by having this
-> discrepancy of 24 values between the values that we report and the mask.
-> 
-> I think we could probably do this by setting a mask of 41 bits and then
-> also applying that mask to the values that we return:
-> 
-> 	return (u64)(s * MSEC_PER_SEC + ms) & clksrc->mask;
-> 
-> That way we always wrap around before we reach the maximum numerical
-> value that we could. So we "loose" that 24 value range, but that's not
-> really a problem.
-> 
-> Actually, saying it that way I don't think we actually have to worry
-> about this at all. Those 24 values (0x3E8-0x3FF) are already lost. We
-> never return any values in that range because the MILLI_SECONDS register
-> wraps around to 0x000 after 0x3E7. So we will never end up with any of
-> those 24 values being used. They are effectively already lost. The fact
-> that we "hide" them by contracting the 10 bit field to 1000 values does
-> not change that.
+On architectures that have a larger dma_addr_t than phys_addr_t,
+the swiotlb_tbl_map_single() function truncates its return code
+in the failure path, making it impossible to identify the error
+later, as we compare to the original value:
 
-IIUC, clocksource code has assumption that the wraparound happens at a pow2 value,
-hence the problem is that the time will go backwards unexpectedly because 0xffffffff *
-1000 isn't a pow2 value and masking of 41 bits won't help with that. The mask is only
-needed by clocksource to account the pow2 overflow correctly and again, we don't have
-the pow2.
+kernel/dma/swiotlb.c:551:9: error: implicit conversion from 'dma_addr_t' (aka 'unsigned long long') to 'phys_addr_t' (aka 'unsigned int') changes value from 18446744073709551615 to 4294967295 [-Werror,-Wconstant-conversion]
+        return DMA_MAPPING_ERROR;
 
-Indeed, it looks like a bit of overkill. But it's not a performance-critical code at
-all and thus it's better to preserve correctness whenever possible. You could add a
-clarifying comment to the obscure constant and to the code in general, explaining why
-that all is needed.
+Use an explicit typecast here to convert it to the narrower type,
+and use the same expression in the error handling later.
 
-Also, please note that the info->lock should be taken within tegra_rtc_read_ms() for
-consistency. I'd also rename "m" and "s" variables to "msec" "sec" to be consistent
-with the tegra_rtc_read_time().
+Fixes: b907e20508d0 ("swiotlb: remove SWIOTLB_MAP_ERROR")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+I still think that reverting the original commit would have
+provided clearer semantics for this corner case, but at least
+this patch restores the correct behavior.
+---
+ drivers/xen/swiotlb-xen.c | 2 +-
+ kernel/dma/swiotlb.c      | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+index d53f3493a6b9..cfbe46785a3b 100644
+--- a/drivers/xen/swiotlb-xen.c
++++ b/drivers/xen/swiotlb-xen.c
+@@ -402,7 +402,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+ 
+ 	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys, size, dir,
+ 				     attrs);
+-	if (map == DMA_MAPPING_ERROR)
++	if (map == (phys_addr_t)DMA_MAPPING_ERROR)
+ 		return DMA_MAPPING_ERROR;
+ 
+ 	dev_addr = xen_phys_to_bus(map);
+diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+index e906ef2e6315..a3be651973ad 100644
+--- a/kernel/dma/swiotlb.c
++++ b/kernel/dma/swiotlb.c
+@@ -548,7 +548,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+ 	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
+ 		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes), total %lu (slots), used %lu (slots)\n",
+ 			 size, io_tlb_nslabs, tmp_io_tlb_used);
+-	return DMA_MAPPING_ERROR;
++	return (phys_addr_t)DMA_MAPPING_ERROR;
+ found:
+ 	io_tlb_used += nslots;
+ 	spin_unlock_irqrestore(&io_tlb_lock, flags);
+@@ -666,7 +666,7 @@ bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_addr,
+ 	/* Oh well, have to allocate and map a bounce buffer. */
+ 	*phys = swiotlb_tbl_map_single(dev, __phys_to_dma(dev, io_tlb_start),
+ 			*phys, size, dir, attrs);
+-	if (*phys == DMA_MAPPING_ERROR)
++	if (*phys == (phys_addr_t)DMA_MAPPING_ERROR)
+ 		return false;
+ 
+ 	/* Ensure that the address returned is DMA'ble */
+-- 
+2.20.0
+
