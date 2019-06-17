@@ -6,31 +6,30 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31242C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:11:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C699C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 024E0218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:11:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 53EA1218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:11:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfFQHLR (ORCPT
+        id S1726202AbfFQHLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 17 Jun 2019 03:11:17 -0400
-Received: from lilium.sigma-star.at ([109.75.188.150]:34356 "EHLO
+Received: from lilium.sigma-star.at ([109.75.188.150]:34362 "EHLO
         lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfFQHLR (ORCPT
+        with ESMTP id S1725837AbfFQHLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 03:11:17 -0400
-X-Greylist: delayed 457 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jun 2019 03:11:16 EDT
 Received: from localhost (localhost [127.0.0.1])
-        by lilium.sigma-star.at (Postfix) with ESMTP id 7AE54181180F8;
-        Mon, 17 Jun 2019 09:04:06 +0200 (CEST)
-Subject: Re: [PATCH mtd-utils] ubi-tests: mkvol test: Checks return value
- 'ENOSPC' for 'ubi_mkvol'
+        by lilium.sigma-star.at (Postfix) with ESMTP id C817D1801420A;
+        Mon, 17 Jun 2019 09:04:14 +0200 (CEST)
+Subject: Re: [PATCH mtd-utils] ubi-tests: fm_param: Replace 'fm_auto' with
+ 'fm_autoconvert'
 To:     chengzhihao1@huawei.com, richard@nod.at,
         boris.brezillon@bootlin.com, david@sigma-star.at,
         artem.bityutskiy@linux.intel.com, yi.zhang@huawei.com
 Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1560514728-54932-1-git-send-email-chengzhihao1@huawei.com>
+References: <1560514790-55222-1-git-send-email-chengzhihao1@huawei.com>
 From:   David Oberhollenzer <david.oberhollenzer@sigma-star.at>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david.oberhollenzer@sigma-star.at; prefer-encrypt=mutual;
@@ -59,12 +58,12 @@ Autocrypt: addr=david.oberhollenzer@sigma-star.at; prefer-encrypt=mutual;
  7In6ift5SNySojCOfAV0iKZb8QUXWktLleY8kQ8jltOsSRTuO4PDfzvtCQDixUw4tQ7WLwDT
  qyUpot0oG03vtSG4LIRCdxI=
 Organization: sigma star gmbh
-Message-ID: <1ff9444e-283b-af3b-3428-e66b769f15fd@sigma-star.at>
-Date:   Mon, 17 Jun 2019 09:04:04 +0200
+Message-ID: <d137856c-1437-f937-4c88-57908255dfb9@sigma-star.at>
+Date:   Mon, 17 Jun 2019 09:04:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <1560514728-54932-1-git-send-email-chengzhihao1@huawei.com>
+In-Reply-To: <1560514790-55222-1-git-send-email-chengzhihao1@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
