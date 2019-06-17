@@ -2,119 +2,69 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2ABC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC67C31E53
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 049452080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02F62080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727823AbfFQIjs (ORCPT
+        id S1727747AbfFQIlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:39:48 -0400
-Received: from mga04.intel.com ([192.55.52.120]:3979 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbfFQIjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:39:48 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 01:39:47 -0700
-X-ExtLoop1: 1
-Received: from khuang2-desk.gar.corp.intel.com ([10.255.91.82])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Jun 2019 01:39:44 -0700
-Message-ID: <1560760783.5187.10.camel@linux.intel.com>
-Subject: Re: [PATCH, RFC 49/62] mm, x86: export several MKTME variables
-From:   Kai Huang <kai.huang@linux.intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 17 Jun 2019 20:39:43 +1200
-In-Reply-To: <20190617074643.GW3436@hirez.programming.kicks-ass.net>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
-         <20190508144422.13171-50-kirill.shutemov@linux.intel.com>
-         <20190614115647.GI3436@hirez.programming.kicks-ass.net>
-         <1560741269.5187.7.camel@linux.intel.com>
-         <20190617074643.GW3436@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.24.6 (3.24.6-1.fc26) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 04:41:20 -0400
+Received: from kirsty.vergenet.net ([202.4.237.240]:35344 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFQIlU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 04:41:20 -0400
+Received: from reginn.horms.nl (watermunt.horms.nl [80.127.179.77])
+        by kirsty.vergenet.net (Postfix) with ESMTPA id AE0A325AED3;
+        Mon, 17 Jun 2019 18:41:17 +1000 (AEST)
+Received: by reginn.horms.nl (Postfix, from userid 7100)
+        id B60C194024A; Mon, 17 Jun 2019 10:41:15 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 10:41:15 +0200
+From:   Simon Horman <horms@verge.net.au>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        linux-renesas-soc@vger.kernel.org,
+        Magnus Damm <magnus.damm@gmail.com>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Cao Van Dong <cv-dong@jinso.co.jp>
+Subject: Re: [PATCH repost] dt-bindings: timer: renesas, cmt: Document
+ r8a779{5|65|90} CMT support
+Message-ID: <20190617084115.5wbys67m5ueyu2hp@verge.net.au>
+References: <20190509122949.23256-1-horms+renesas@verge.net.au>
+ <20190613101219.vx4ht6dixxu7fioi@verge.net.au>
+ <7171405c-4647-173f-2883-c7a281e998ea@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7171405c-4647-173f-2883-c7a281e998ea@linaro.org>
+Organisation: Horms Solutions BV
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 09:46 +0200, Peter Zijlstra wrote:
-> On Mon, Jun 17, 2019 at 03:14:29PM +1200, Kai Huang wrote:
-> > On Fri, 2019-06-14 at 13:56 +0200, Peter Zijlstra wrote:
-> > > On Wed, May 08, 2019 at 05:44:09PM +0300, Kirill A. Shutemov wrote:
-> > > > From: Kai Huang <kai.huang@linux.intel.com>
-> > > > 
-> > > > KVM needs those variables to get/set memory encryption mask.
-> > > > 
-> > > > Signed-off-by: Kai Huang <kai.huang@linux.intel.com>
-> > > > Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> > > > ---
-> > > >  arch/x86/mm/mktme.c | 3 +++
-> > > >  1 file changed, 3 insertions(+)
-> > > > 
-> > > > diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-> > > > index df70651816a1..12f4266cf7ea 100644
-> > > > --- a/arch/x86/mm/mktme.c
-> > > > +++ b/arch/x86/mm/mktme.c
-> > > > @@ -7,13 +7,16 @@
-> > > >  
-> > > >  /* Mask to extract KeyID from physical address. */
-> > > >  phys_addr_t mktme_keyid_mask;
-> > > > +EXPORT_SYMBOL_GPL(mktme_keyid_mask);
-> > > >  /*
-> > > >   * Number of KeyIDs available for MKTME.
-> > > >   * Excludes KeyID-0 which used by TME. MKTME KeyIDs start from 1.
-> > > >   */
-> > > >  int mktme_nr_keyids;
-> > > > +EXPORT_SYMBOL_GPL(mktme_nr_keyids);
-> > > >  /* Shift of KeyID within physical address. */
-> > > >  int mktme_keyid_shift;
-> > > > +EXPORT_SYMBOL_GPL(mktme_keyid_shift);
-> > > >  
-> > > >  DEFINE_STATIC_KEY_FALSE(mktme_enabled_key);
-> > > >  EXPORT_SYMBOL_GPL(mktme_enabled_key);
-> > > 
-> > > NAK, don't export variables. Who owns the values, who enforces this?
-> > > 
+On Thu, Jun 13, 2019 at 01:09:08PM +0200, Daniel Lezcano wrote:
+> On 13/06/2019 12:12, Simon Horman wrote:
+> > On Thu, May 09, 2019 at 02:29:49PM +0200, Simon Horman wrote:
+> >> From: Cao Van Dong <cv-dong@jinso.co.jp>
+> >>
+> >> Document SoC specific bindings for R-Car H3/M3-N/E3 SoCs.
 > > 
-> > Both KVM and IOMMU driver need page_keyid() and mktme_keyid_shift to set page's keyID to the
-> > right
-> > place in the PTE (of KVM EPT and VT-d DMA page table).
+> > Hi Daniel and Thomas,
 > > 
-> > MKTME key type code need to know mktme_nr_keyids in order to alloc/free keyID.
-> > 
-> > Maybe better to introduce functions instead of exposing variables directly?
-> > 
-> > Or instead of introducing page_keyid(), we use page_encrypt_mask(), which essentially holds
-> > "page_keyid() << mktme_keyid_shift"?
+> > would you object to me taking this patch through the renesas tree.
+> > It has been outstanding for some time now.
 > 
-> Yes, that's much better, because that strictly limits the access to R/O.
-> 
-
-Thanks. I think Kirill will be the one to handle your suggestion. :)
-
-Kirill?
+> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
 Thanks,
--Kai
+
+applied to the renesas tree for inclusion in v5.3.
