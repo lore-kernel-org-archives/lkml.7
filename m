@@ -2,221 +2,146 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD10FC31E53
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:28:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B21B6C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:29:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5621223A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:28:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q/ODDwhA"
+	by mail.kernel.org (Postfix) with ESMTP id 904142238C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:29:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727902AbfFQI13 (ORCPT
+        id S1727828AbfFQI3c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:27:29 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:52232 "EHLO
-        mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727878AbfFQI1Y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:27:24 -0400
-Received: by mail-qt1-f202.google.com with SMTP id d26so682104qte.19
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 01:27:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=KY/n5n08DNNwzzOt2NpPZO1jsdMpuV8r/7DR2vhL0/g=;
-        b=q/ODDwhAqKOOiCxSwz4+lG1McMEc9y5H+DzydXrrUKfUIpWOITBaQS4h6r5e8uhTYL
-         35FkAc8AkNNK9UGFxQmNhZzLUq2bTCf0YNU1/9lCVMoiMJv3ozdOP1dE2VJcykod8SYA
-         fp1WPz4nTHkiPystbW71OVZ7DbBbmEcnaGFpE2WcWzFxXqsAjaSuAI46xWLRPlbms8fp
-         XIbX/yt+4xjWdOf/AMYK0Lc91DnlTl5wg5wcf5ltaqWPgiCJlAVUwLmrFI5rg8wuJ4u7
-         BOOpAtZX3oVW6pMsQyR698D5r9Vz+Oj2QB1TUXqKDYi5g5rSgHnEmf7Qsg+zHHi1eTV9
-         lITA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=KY/n5n08DNNwzzOt2NpPZO1jsdMpuV8r/7DR2vhL0/g=;
-        b=PWlWUh5njMtUGsxmw3KAJO7sb+T8usLUUMNAvVIVHoallPLir6DFqqRPqTK/HVyoyK
-         fyk4lfY98QR3ME301Wb2CUX6Nfzgb4TJvr4bDhH1M24s5MuCdTLUB0rW1EjKxhyIoW4Z
-         u/R+EC8NtmesCu9D/W3F7/GdpxLZTUc+hYvwE2DtcBVOHO4xTA5f+CIVlbF6i0rT3LT3
-         2cVNjSHtXqDr0DV6kyIkzOEHgUH5YUn6rpJ7ZFHLs9P7bC8+7uO6+fWHXujHiWwolBMT
-         9rPBRxinlYOsLbNEnGDX64CIkfjBOAElSdIT+au8m3lvl1uPiAnuOmRMU5TCwYUDc4ya
-         rGRQ==
-X-Gm-Message-State: APjAAAXOrqqqyqaEg+RzMnigg+XaFTuWCP4t3BdBoCuhYPRDScUrDBpL
-        gF2GM/ojBEPiOlfXLAVRQdtJH6nfGLAw0K+b5QetZg==
-X-Google-Smtp-Source: APXvYqzCMX5H8mzcZVVnWvfekHxFcv5ncZ0if0igGLkx+XMDy6e5vPqV21Ji4VVBaW7z5lkEKQEg8ZEKZALn4G6Eqn99xg==
-X-Received: by 2002:a05:620a:136d:: with SMTP id d13mr62994339qkl.22.1560760043194;
- Mon, 17 Jun 2019 01:27:23 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 01:26:05 -0700
-In-Reply-To: <20190617082613.109131-1-brendanhiggins@google.com>
-Message-Id: <20190617082613.109131-11-brendanhiggins@google.com>
-Mime-Version: 1.0
-References: <20190617082613.109131-1-brendanhiggins@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v5 10/18] kunit: test: add tests for kunit test abort
-From:   Brendan Higgins <brendanhiggins@google.com>
-To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
-        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 17 Jun 2019 04:29:32 -0400
+Received: from mga01.intel.com ([192.55.52.88]:62593 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbfFQI3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 04:29:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 01:29:31 -0700
+X-ExtLoop1: 1
+Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Jun 2019 01:29:27 -0700
+Subject: Re: [PATCH v4 5/5] brcmfmac: sdio: Don't tune while the card is off
+To:     Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>
+Cc:     brcm80211-dev-list.pdl@broadcom.com,
+        linux-rockchip@lists.infradead.org,
+        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
+        linux-wireless@vger.kernel.org,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
+        Franky Lin <franky.lin@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20190613234153.59309-1-dianders@chromium.org>
+ <20190613234153.59309-6-dianders@chromium.org>
+From:   Adrian Hunter <adrian.hunter@intel.com>
+Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
+ Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+Message-ID: <dac34482-cf74-5db9-ec0f-124af0ace811@intel.com>
+Date:   Mon, 17 Jun 2019 11:28:10 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190613234153.59309-6-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add KUnit tests for the KUnit test abort mechanism (see preceding
-commit). Add tests both for general try catch mechanism as well as
-non-architecture specific mechanism.
+On 14/06/19 2:41 AM, Douglas Anderson wrote:
+> When Broadcom SDIO cards are idled they go to sleep and a whole
+> separate subsystem takes over their SDIO communication.  This is the
+> Always-On-Subsystem (AOS) and it can't handle tuning requests.
+> 
+> Specifically, as tested on rk3288-veyron-minnie (which reports having
+> BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
+> when "on = 1" (aka we're transition from sleep to wake) by whacking:
+>   bus->sdiodev->func1->card->host->need_retune = 1
+> ...then I can often see tuning fail.  In this case dw_mmc reports "All
+> phases bad!").  Note that I don't get 100% failure, presumably because
+> sometimes the card itself has already transitioned away from the AOS
+> itself by the time we try to wake it up.  If I force retuning when "on
+> = 0" (AKA force retuning right before sending the command to go to
+> sleep) then retuning is always OK.
+> 
+> NOTE: we need _both_ this patch and the patch to avoid triggering
+> tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
+> sdio: Disable auto-tuning around commands expected to fail").  Though
+> both patches handle issues with Broadcom's AOS, the problems are
+> distinct:
+> 1. We want to defer (but not ignore) asynchronous (like
+>    timer-requested) tuning requests till the card is awake.  However,
+>    we want to ignore CRC errors during the transition, we don't want
+>    to queue deferred tuning request.
+> 2. You could imagine that the AOS could implement retuning but we
+>    could still get errors while transitioning in and out of the AOS.
+>    Similarly you could imagine a seamless transition into and out of
+>    the AOS (with no CRC errors) even if the AOS couldn't handle
+>    tuning.
+> 
+> ALSO NOTE: presumably there is never a desperate need to retune in
+> order to wake up the card, since doing so is impossible.  Luckily the
+> only way the card can get into sleep state is if we had a good enough
+> tuning to send it a sleep command, so presumably that "good enough"
+> tuning is enough to wake us up, at least with a few retries.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
----
- kunit/Makefile    |   3 +-
- kunit/test-test.c | 101 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 103 insertions(+), 1 deletion(-)
- create mode 100644 kunit/test-test.c
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-diff --git a/kunit/Makefile b/kunit/Makefile
-index 1f7680cfa11ad..533355867abd2 100644
---- a/kunit/Makefile
-+++ b/kunit/Makefile
-@@ -3,6 +3,7 @@ obj-$(CONFIG_KUNIT) +=			test.o \
- 					kunit-stream.o \
- 					try-catch.o
- 
--obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
-+obj-$(CONFIG_KUNIT_TEST) +=		test-test.o \
-+					string-stream-test.o
- 
- obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	example-test.o
-diff --git a/kunit/test-test.c b/kunit/test-test.c
-new file mode 100644
-index 0000000000000..5d14e1ae35ed5
---- /dev/null
-+++ b/kunit/test-test.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * KUnit test for core test infrastructure.
-+ *
-+ * Copyright (C) 2019, Google LLC.
-+ * Author: Brendan Higgins <brendanhiggins@google.com>
-+ */
-+#include <kunit/test.h>
-+
-+struct kunit_try_catch_test_context {
-+	struct kunit_try_catch *try_catch;
-+	bool function_called;
-+};
-+
-+void kunit_test_successful_try(void *data)
-+{
-+	struct kunit *test = data;
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+
-+	ctx->function_called = true;
-+}
-+
-+void kunit_test_no_catch(void *data)
-+{
-+	struct kunit *test = data;
-+
-+	KUNIT_FAIL(test, "Catch should not be called\n");
-+}
-+
-+static void kunit_test_try_catch_successful_try_no_catch(struct kunit *test)
-+{
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+	struct kunit_try_catch *try_catch = ctx->try_catch;
-+
-+	kunit_try_catch_init(try_catch,
-+			     test,
-+			     kunit_test_successful_try,
-+			     kunit_test_no_catch);
-+	kunit_try_catch_run(try_catch, test);
-+
-+	KUNIT_EXPECT_TRUE(test, ctx->function_called);
-+}
-+
-+void kunit_test_unsuccessful_try(void *data)
-+{
-+	struct kunit *test = data;
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+	struct kunit_try_catch *try_catch = ctx->try_catch;
-+
-+	kunit_try_catch_throw(try_catch);
-+	KUNIT_FAIL(test, "This line should never be reached\n");
-+}
-+
-+void kunit_test_catch(void *data)
-+{
-+	struct kunit *test = data;
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+
-+	ctx->function_called = true;
-+}
-+
-+static void kunit_test_try_catch_unsuccessful_try_does_catch(struct kunit *test)
-+{
-+	struct kunit_try_catch_test_context *ctx = test->priv;
-+	struct kunit_try_catch *try_catch = ctx->try_catch;
-+
-+	kunit_try_catch_init(try_catch,
-+			     test,
-+			     kunit_test_unsuccessful_try,
-+			     kunit_test_catch);
-+	kunit_try_catch_run(try_catch, test);
-+
-+	KUNIT_EXPECT_TRUE(test, ctx->function_called);
-+}
-+
-+static int kunit_try_catch_test_init(struct kunit *test)
-+{
-+	struct kunit_try_catch_test_context *ctx;
-+
-+	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
-+	test->priv = ctx;
-+
-+	ctx->try_catch = kunit_kmalloc(test,
-+				       sizeof(*ctx->try_catch),
-+				       GFP_KERNEL);
-+
-+	return 0;
-+}
-+
-+static struct kunit_case kunit_try_catch_test_cases[] = {
-+	KUNIT_CASE(kunit_test_try_catch_successful_try_no_catch),
-+	KUNIT_CASE(kunit_test_try_catch_unsuccessful_try_does_catch),
-+	{}
-+};
-+
-+static struct kunit_module kunit_try_catch_test_module = {
-+	.name = "kunit-try-catch-test",
-+	.init = kunit_try_catch_test_init,
-+	.test_cases = kunit_try_catch_test_cases,
-+};
-+module_test(kunit_try_catch_test_module);
--- 
-2.22.0.410.gd8fdbe21b5-goog
+> ---
+> 
+> Changes in v4:
+> - Adjust to API rename (Adrian).
+> 
+> Changes in v3:
+> - ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
+> 
+> Changes in v2: None
+> 
+>  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> index ee76593259a7..629140b6d7e2 100644
+> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
+> @@ -669,6 +669,10 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+>  
+>  	sdio_retune_crc_disable(bus->sdiodev->func1);
+>  
+> +	/* Cannot re-tune if device is asleep; defer till we're awake */
+> +	if (on)
+> +		sdio_retune_hold_now(bus->sdiodev->func1);
+> +
+>  	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
+>  	/* 1st KSO write goes to AOS wake up core if device is asleep  */
+>  	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
+> @@ -729,6 +733,9 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
+>  	if (try_cnt > MAX_KSO_ATTEMPTS)
+>  		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
+>  
+> +	if (on)
+> +		sdio_retune_release(bus->sdiodev->func1);
+> +
+>  	sdio_retune_crc_enable(bus->sdiodev->func1);
+>  
+>  	return err;
+> 
 
