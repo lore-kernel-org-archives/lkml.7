@@ -2,113 +2,124 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B16C31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C8D5C31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:08:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6122084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF376206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:08:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="YyLeBzVY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728219AbfFQOFE (ORCPT
+        id S1726586AbfFQOIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:05:04 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56934 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725906AbfFQOFE (ORCPT
+        Mon, 17 Jun 2019 10:08:31 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46850 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFQOIb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:05:04 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HE2ZoI054058
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 10:05:02 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t6bfraj7f-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 10:05:02 -0400
-Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <nayna@linux.vnet.ibm.com>;
-        Mon, 17 Jun 2019 15:05:01 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Jun 2019 15:04:58 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5HE4v4Y20119844
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 14:04:57 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B00E78063;
-        Mon, 17 Jun 2019 14:04:57 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3852478064;
-        Mon, 17 Jun 2019 14:04:56 +0000 (GMT)
-Received: from swastik.ibm.com (unknown [9.85.160.209])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Jun 2019 14:04:55 +0000 (GMT)
-Subject: Re: [PATCH] integrity: Fix __integrity_init_keyring() section
- mismatch
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Nayna Jain <nayna@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190617074452.12901-1-geert@linux-m68k.org>
-From:   Nayna <nayna@linux.vnet.ibm.com>
-Date:   Mon, 17 Jun 2019 10:04:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 17 Jun 2019 10:08:31 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d4so16335392edr.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:08:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QclIRmGgE6e1NwC0LyK0y/gOsKzmfG48w5Q/Ut94Q+k=;
+        b=YyLeBzVYVYsicyyTQaxOj8/wVRXFIWW/Pk135d0I16nxXxId1a6hq5l4MbpdrVDb1q
+         6K00J3TChDALBDD04GdAyKBMsE45rcW3gx1uphcbzC7nmtufgwJsA9J9KKokP6xZk8RF
+         IokXKwK/8xTC7O5fOi/xUwQMKRgUFj4H+SzJw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=QclIRmGgE6e1NwC0LyK0y/gOsKzmfG48w5Q/Ut94Q+k=;
+        b=D/nRntlX9oRz3tInTKy7UYPKhjHmqSpm64b/RHfsG9PZuqtHUi291QonKVFuB7GqU3
+         4VZTghO5qwRYCNJkzwY698l9mz3Eif5+pcT3foZ3siwMmXgajh4RwbBZcxcsQsIYcgyl
+         ZSFnDjzYioK5uYwC9NvkweGKvt8oIXoXDGLKplD04znGKc6msmbSu7jmjY16feajzV8s
+         OymbCfPquXCE87hkjAD42CPb3QESAUxoDB+wYB1i02hTuVBtZeJZ/XdsHLLDK3KuvKcH
+         tSSwX76kMLmr/BWjJv+LMIc5VCzxCu6hqsHBe3GbyqBcnUrRKRbrf1h64eokJWYjHd4O
+         1oNg==
+X-Gm-Message-State: APjAAAWvVC1qtdTbdoyJ8H0JHDqpF08bOqrf7sOuek33WlfchIDNud7l
+        D8S39fMiuecn3gbO+QLD8Ro32Q==
+X-Google-Smtp-Source: APXvYqxFgofUOrCrJe8Zusip83q+AIHX7wVQGYRBZyLeOZT0aLmRPes/a8REwHA8Uo/EXqXeQFakrw==
+X-Received: by 2002:a05:6402:8d7:: with SMTP id d23mr76998441edz.17.1560780509384;
+        Mon, 17 Jun 2019 07:08:29 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id y3sm3688780edr.27.2019.06.17.07.08.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 07:08:27 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 16:08:25 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/4] drm/virtio: pass gem reservation object to ttm init
+Message-ID: <20190617140825.GD12905@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190617111406.14765-1-kraxel@redhat.com>
+ <20190617111406.14765-2-kraxel@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190617074452.12901-1-geert@linux-m68k.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19061714-8235-0000-0000-00000EA93BDE
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011278; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01219285; UDB=6.00641324; IPR=6.01000426;
- MB=3.00027344; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-17 14:05:00
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061714-8236-0000-0000-0000460CBB70
-Message-Id: <1f2d599b-77dd-18eb-3e99-e93cc79cfddf@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=870 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906170128
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617111406.14765-2-kraxel@redhat.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 01:14:03PM +0200, Gerd Hoffmann wrote:
+> With this gem and ttm will use the same reservation object,
+> so mixing and matching ttm / gem reservation helpers should
+> work fine.
+> 
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
 
+While doing my prime doc+cleanup series I wondered whether we should do
+this for everyone, and perhaps even remove ttm_bo.ttm_resv. Only driver
+which doesn't yet have a gem_bo embedded in the same allocation is vmwgfx,
+and that would be easy to fix by adding a vmwgfx_resv somehwere.
 
-On 06/17/2019 03:44 AM, Geert Uytterhoeven wrote:
-> With gcc-4.6.3:
->
->      WARNING: vmlinux.o(.text.unlikely+0x24c64): Section mismatch in reference from the function __integrity_init_keyring() to the function .init.text:set_platform_trusted_keys()
->      The function __integrity_init_keyring() references
->      the function __init set_platform_trusted_keys().
->      This is often because __integrity_init_keyring lacks a __init
->      annotation or the annotation of set_platform_trusted_keys is wrong.
->
-> Indeed, if the compiler decides not to inline __integrity_init_keyring(),
-> a warning is issued.
->
-> Fix this by adding the missing __init annotation.
->
-> Fixes: 9dc92c45177ab70e ("integrity: Define a trusted platform keyring")
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Anyway, looks like a solid start into the convergence story.
 
-Thanks for fixing it.
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Reviewed-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  drivers/gpu/drm/virtio/virtgpu_object.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
+> index b2da31310d24..242766d644a7 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_object.c
+> +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
+> @@ -132,7 +132,8 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
+>  	virtio_gpu_init_ttm_placement(bo);
+>  	ret = ttm_bo_init(&vgdev->mman.bdev, &bo->tbo, params->size,
+>  			  ttm_bo_type_device, &bo->placement, 0,
+> -			  true, acc_size, NULL, NULL,
+> +			  true, acc_size, NULL,
+> +			  bo->gem_base.resv,
+>  			  &virtio_gpu_ttm_bo_destroy);
+>  	/* ttm_bo_init failure will call the destroy */
+>  	if (ret != 0)
+> -- 
+> 2.18.1
+> 
 
-Thanks & Regards,
-          - Nayna
-
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
