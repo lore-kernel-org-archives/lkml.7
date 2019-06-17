@@ -2,151 +2,104 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B4AC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1FBDC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:13:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 366152054F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4FDA2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:13:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727892AbfFQNMj (ORCPT
+        id S1727947AbfFQNN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:12:39 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:53435 "EHLO
+        Mon, 17 Jun 2019 09:13:56 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:45927 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfFQNMi (ORCPT
+        with ESMTP id S1725884AbfFQNNz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:12:38 -0400
+        Mon, 17 Jun 2019 09:13:55 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MTzKW-1i2oYx43MY-00QycG; Mon, 17 Jun 2019 15:12:14 +0200
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MNOZO-1i0ZUq1BHO-00OktR; Mon, 17 Jun 2019 15:13:34 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Alexander Potapenko <glider@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Jann Horn <jannh@google.com>, Marco Elver <elver@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] lib: test_meminit: fix -Wmaybe-uninitialized false positive
-Date:   Mon, 17 Jun 2019 15:11:57 +0200
-Message-Id: <20190617131210.2190280-1-arnd@arndb.de>
+To:     Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Joao Pinto <jpinto@synopsys.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH net-next] net: stmmac: fix unused-variable warning
+Date:   Mon, 17 Jun 2019 15:13:03 +0200
+Message-Id: <20190617131327.2227754-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:kOJR4T41V/xJjVqo+3xT+Z4mWAd8aTQRzAFqh4zAFz0xLbWz96U
- 2dooLYqmY+E0WT/rDs/meig77BanZK7eoQzYy1zN5ZRAWt5HY7zV+cvn+EBlN/lXLuR/PA6
- BVj9LTOouIEzed06XF+0wHwJ1dBmHryeKugsG28von18kBLDu1kF/aJ4vO1ydIL8zutGLO+
- pkp6F7iWbM39bcEuGArFA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:IXykDVGcQ/g=:THSQ10OrLUrXEk6BhOe21s
- s0nGLPNWCfJHDuwD4FInvG63Xu3CGGen54eLAyQNRWko2f64iIVTPx2AWXm1Nh7fRJ+UI0LF3
- HF8KA5+DMPyOAi3UQhZebphdh9T/etXNs21RyY/F8OMRHIbkCTATtqy241bgFcBcv7G0pwqq8
- 75M6c6ROVXpC7Hhzv5GzfuwAxOpBzIgQJMxxr39U+HS5JG2IyPiiut/FW4cR2msshVPR+bIso
- vsieTcMpldKIl4VHn/6/fyzpdUJ1PAPL5evBCun18Z1vVvFj8qY4csbn/l6+qbbQaR6yFSgII
- VKVugbsLHIAiywi5sTn4b0F4pngRTHTcBrRW6t0wnkzxllqqQyAfIK0soF7ZfOTSokRs2nowF
- sUX7THC/UKYIsW9ynnyj+hekdIyMNYkbQTbUQCH8tHGevkU2na6SUf6MrwLHhOlpK0KIi5Tq5
- mU0IayF2qX1/BPVz5lM51QMBf6g1ZOOXd45T0tNd2OHf/CG/vYtB8QX2V+6tdZCC+7VXavbC4
- CucNF62zDcwhFXH7UIotOioUmR6720c4U5zr7Q/O1+N4gSfLjLER9rEljqE1874xeoqonwWTI
- pwsIV44lcZ+8A0iTJTl3yB7AbCoP1KTo3YuhuazKOlkjFCq2EEpcM0fm2VwRnASZl+d2a0NZH
- qVHxk2/GiQW/FojsogBlrG+fLFdiutMKmS3ZGi5a1IqN7ePcSWncCsuHqK8Wjya5vxYYafrtA
- h8FZkhSYwqX2xvQZ/cntP2f5WhSdZcV3+Zqw2A==
+X-Provags-ID: V03:K1:3iQswqHwy9CHF3y1gp7c7xlBW7MRNJ6Fv/0O9bUwjPHV/LWGdIh
+ Sg9soT5vhpPfNJhxJsqwCgkwuTEe0AEIYCVllZ3t2UQIugkzeIa/1LuEaIZUloY3QurmxNh
+ gczDmibxxnKXOGvclLvdFNkq77keyFmY3/wMG0JJpWlQyapLFJEW43ks+VIlxcOEDqSZwS3
+ OARaUsIkb9o2x/pv8mmcw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3iQy2mN8gLw=:a/aWCEZLxeIcdIwAmPzzUe
+ xGLtrdS/+m+HkJbvQmw4YCcKRq+jjVA4Wtn+HPWhql6rNXFI2OSAEXwdCkt4iIvUgoATCu+57
+ GS0GebKolVJMtTG0QEJlFFsIjyGO8m59rwwITRlcQggasDrAK8+rvAmkj0zXDQxH5nOcB/2WQ
+ G9c81RQTG3axlhsfWamWceqs0YzM6AfyfS3NtMZWZ3xgTJhILdLuladwA70p/S8/0BnTTu3sS
+ KgBZQkXn8EU9dMZSuJhwKGITr+O3U2A0GJnFezlKJmwLcpxABgMy2XseUoS8lYpD+HStwu7MN
+ v5Lok7Nv1fo/vD0OPBH7p0XLNlDiRb1rfN2ouloulgNBCsKnL1A9bJ7n6UpOo1exVphGK8Tif
+ hYs9W9CfOJzSMWLFoQd0w0JnNBjPYpaoLYfaQRueJ/d42aHeDlXu2KS4QfKp2aOaCDW2nGk42
+ CFtLQrArAaoKywY3KbXVgonhi/2dFRFUch79pGpZBX+eX4KT4Qv7sLcRKGltK3ZYuIrvYIC6o
+ 4SMRIX3QMKVrsFsdr2IW+8d7+BwLB51x/8nuP82jiswqd2ExGYd0lujY7KUV5oRMDq3y/hipa
+ jmjMn/gFYzIcsNHaLFxdR3Pi5aP/QyWpVbZW8FWNTZXLu8QxuM21jnQBn+UAns6Q8ZT5GRUgK
+ PMho0FQJnlISs1mGsxCqrIbfXVdpNqvbxqe46DKNwVH93SXxuPwMlpfFho+kgiQ8xftV+c7+/
+ PlChMgjnn4hc9Nlo2a5n9L+84eTAkFLeiaSmdA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conditional logic is too complicated for the compiler to
-fully comprehend:
+When building without CONFIG_OF, we get a harmless build warning:
 
-lib/test_meminit.c: In function 'test_meminit_init':
-lib/test_meminit.c:236:5: error: 'buf_copy' may be used uninitialized in this function [-Werror=maybe-uninitialized]
-     kfree(buf_copy);
-     ^~~~~~~~~~~~~~~
-lib/test_meminit.c:201:14: note: 'buf_copy' was declared here
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c: In function 'stmmac_phy_setup':
+drivers/net/ethernet/stmicro/stmmac/stmmac_main.c:973:22: error: unused variable 'node' [-Werror=unused-variable]
+  struct device_node *node = priv->plat->phy_node;
 
-Simplify it by splitting out the non-rcu section.
+Reword it so we always use the local variable, by making it the
+fwnode pointer instead of the device_node.
 
-Fixes: af734ee6ec85 ("lib: introduce test_meminit module")
+Fixes: 74371272f97f ("net: stmmac: Convert to phylink and remove phylib logic")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- lib/test_meminit.c | 50 ++++++++++++++++++++++++----------------------
- 1 file changed, 26 insertions(+), 24 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/lib/test_meminit.c b/lib/test_meminit.c
-index ed7efec1387b..7ae2183ff1f4 100644
---- a/lib/test_meminit.c
-+++ b/lib/test_meminit.c
-@@ -208,35 +208,37 @@ static int __init do_kmem_cache_size(size_t size, bool want_ctor,
- 		/* Check that buf is zeroed, if it must be. */
- 		fail = check_buf(buf, size, want_ctor, want_rcu, want_zero);
- 		fill_with_garbage_skip(buf, size, want_ctor ? CTOR_BYTES : 0);
-+
-+		if (!want_rcu) {
-+			kmem_cache_free(c, buf);
-+			continue;
-+		}
-+
- 		/*
- 		 * If this is an RCU cache, use a critical section to ensure we
- 		 * can touch objects after they're freed.
- 		 */
--		if (want_rcu) {
--			rcu_read_lock();
--			/*
--			 * Copy the buffer to check that it's not wiped on
--			 * free().
--			 */
--			buf_copy = kmalloc(size, GFP_KERNEL);
--			if (buf_copy)
--				memcpy(buf_copy, buf, size);
--		}
--		kmem_cache_free(c, buf);
--		if (want_rcu) {
--			/*
--			 * Check that |buf| is intact after kmem_cache_free().
--			 * |want_zero| is false, because we wrote garbage to
--			 * the buffer already.
--			 */
--			fail |= check_buf(buf, size, want_ctor, want_rcu,
--					  false);
--			if (buf_copy) {
--				fail |= (bool)memcmp(buf, buf_copy, size);
--				kfree(buf_copy);
--			}
--			rcu_read_unlock();
-+		rcu_read_lock();
-+		/*
-+		 * Copy the buffer to check that it's not wiped on
-+		 * free().
-+		 */
-+		buf_copy = kmalloc(size, GFP_KERNEL);
-+		if (buf_copy)
-+			memcpy(buf_copy, buf, size);
-+
-+		/*
-+		 * Check that |buf| is intact after kmem_cache_free().
-+		 * |want_zero| is false, because we wrote garbage to
-+		 * the buffer already.
-+		 */
-+		fail |= check_buf(buf, size, want_ctor, want_rcu,
-+				  false);
-+		if (buf_copy) {
-+			fail |= (bool)memcmp(buf, buf_copy, size);
-+			kfree(buf_copy);
- 		}
-+		rcu_read_unlock();
- 	}
- 	kmem_cache_destroy(c);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 4ca46289a742..a48751989fa6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -970,14 +970,14 @@ static int stmmac_init_phy(struct net_device *dev)
  
+ static int stmmac_phy_setup(struct stmmac_priv *priv)
+ {
+-	struct device_node *node = priv->plat->phylink_node;
++	struct fwnode_handle *fwnode = of_fwnode_handle(priv->plat->phylink_node);
+ 	int mode = priv->plat->interface;
+ 	struct phylink *phylink;
+ 
+ 	priv->phylink_config.dev = &priv->dev->dev;
+ 	priv->phylink_config.type = PHYLINK_NETDEV;
+ 
+-	phylink = phylink_create(&priv->phylink_config, of_fwnode_handle(node),
++	phylink = phylink_create(&priv->phylink_config, fwnode,
+ 				 mode, &stmmac_phylink_mac_ops);
+ 	if (IS_ERR(phylink))
+ 		return PTR_ERR(phylink);
 -- 
 2.20.0
 
