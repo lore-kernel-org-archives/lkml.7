@@ -2,247 +2,170 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EDFFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ACF4C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0671E2147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806337;
-	bh=BobXAKq6EkpdbWZmUctSawfQcQQcn2hoqMMa5tCR+UQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZzHok9mmWk1KKe0WiqJTyaTIhpaEs4csjby8JR/+e1wyc5Vc5U/aPZoVFhnpQJxqM
-	 0WqqySfikr/2GUMBaValNVGVmx3oN0fon/Gbsggq7uUrvfzmM7bCXip1czITM6Ra4Z
-	 tFCa1xb6Y3GO+z5qFtMwlkMj0lM8wSY/+ooy+bjY=
+	by mail.kernel.org (Postfix) with ESMTP id 7617521670
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728433AbfFQVS4 (ORCPT
+        id S1728533AbfFQVS7 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:18:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42378 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:18:59 -0400
+Received: from mga04.intel.com ([192.55.52.120]:43004 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbfFQVSt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:18:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 29CFD2147A;
-        Mon, 17 Jun 2019 21:18:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806328;
-        bh=BobXAKq6EkpdbWZmUctSawfQcQQcn2hoqMMa5tCR+UQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2QzDM1oUSZqV6KP4/KC7W1K4lJPOImAUR3ppTd4NLV88RzBtQKVXHjuqE645JULhv
-         oX9IEeNlvfOfL1KaEAzU+2o12GNNwE131iCjSNu1Paf+T97bAdTOwe0sCR3pFDtxMV
-         bVPezH0avuWLiXF/owALr/jsTgFdMtj7fwVD6mP8=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.1 015/115] ALSA: hda/realtek - Update headset mode for ALC256
-Date:   Mon, 17 Jun 2019 23:08:35 +0200
-Message-Id: <20190617210800.701423879@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-References: <20190617210759.929316339@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1728377AbfFQVS4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:18:56 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 14:18:55 -0700
+X-ExtLoop1: 1
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga008.fm.intel.com with ESMTP; 17 Jun 2019 14:18:55 -0700
+Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
+ ORSMSX110.amr.corp.intel.com (10.22.240.8) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 17 Jun 2019 14:18:54 -0700
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.92]) by
+ ORSMSX160.amr.corp.intel.com ([169.254.13.41]) with mapi id 14.03.0439.000;
+ Mon, 17 Jun 2019 14:18:54 -0700
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Nikolaus Voss <nv@vosn.de>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "nikolaus.voss@loewensteinmedical.de" 
+        <nikolaus.voss@loewensteinmedical.de>
+Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+Thread-Topic: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+Thread-Index: AQHVIPn/qqDB5Bv4z0aSsleXlAnDw6abVhaAgAADpwD///G0sIAEkokAgACES6A=
+Date:   Mon, 17 Jun 2019 21:18:53 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95F9EC6@ORSMSX110.amr.corp.intel.com>
+References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+ <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+ <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+ <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1906170746150.12344@fox.voss.local>
+In-Reply-To: <alpine.DEB.2.20.1906170746150.12344@fox.voss.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOWYzNGU5MjEtOTVmYS00NTIwLWEwNDAtZjVjY2FhNDMyMzcyIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZ0VVTTM4NGZoQm5MNFFFeDI2dUhmcEE1SnNzcXNjWDZUVElBdVwvOWdkdkhyN3pBXC95cVpcLzNkY0tkRk1SbFc2MiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
-
-commit 717f43d81afc1250300479075952a0e36d74ded3 upstream.
-
-ALC255 and ALC256 were some difference for hidden register.
-This update was suitable for ALC256.
-
-Fixes: e69e7e03ed22 ("ALSA: hda/realtek - ALC256 speaker noise issue")
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/pci/hda/patch_realtek.c |   75 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 60 insertions(+), 15 deletions(-)
-
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -4084,18 +4084,19 @@ static struct coef_fw alc225_pre_hsmode[
- static void alc_headset_mode_unplugged(struct hda_codec *codec)
- {
- 	static struct coef_fw coef0255[] = {
-+		WRITE_COEF(0x1b, 0x0c0b), /* LDO and MISC control */
- 		WRITE_COEF(0x45, 0xd089), /* UAJ function set to menual mode */
- 		UPDATE_COEFEX(0x57, 0x05, 1<<14, 0), /* Direct Drive HP Amp control(Set to verb control)*/
- 		WRITE_COEF(0x06, 0x6104), /* Set MIC2 Vref gate with HP */
- 		WRITE_COEFEX(0x57, 0x03, 0x8aa6), /* Direct Drive HP Amp control */
- 		{}
- 	};
--	static struct coef_fw coef0255_1[] = {
--		WRITE_COEF(0x1b, 0x0c0b), /* LDO and MISC control */
--		{}
--	};
- 	static struct coef_fw coef0256[] = {
- 		WRITE_COEF(0x1b, 0x0c4b), /* LDO and MISC control */
-+		WRITE_COEF(0x45, 0xd089), /* UAJ function set to menual mode */
-+		WRITE_COEF(0x06, 0x6104), /* Set MIC2 Vref gate with HP */
-+		WRITE_COEFEX(0x57, 0x03, 0x09a3), /* Direct Drive HP Amp control */
-+		UPDATE_COEFEX(0x57, 0x05, 1<<14, 0), /* Direct Drive HP Amp control(Set to verb control)*/
- 		{}
- 	};
- 	static struct coef_fw coef0233[] = {
-@@ -4158,13 +4159,11 @@ static void alc_headset_mode_unplugged(s
- 
- 	switch (codec->core.vendor_id) {
- 	case 0x10ec0255:
--		alc_process_coef_fw(codec, coef0255_1);
- 		alc_process_coef_fw(codec, coef0255);
- 		break;
- 	case 0x10ec0236:
- 	case 0x10ec0256:
- 		alc_process_coef_fw(codec, coef0256);
--		alc_process_coef_fw(codec, coef0255);
- 		break;
- 	case 0x10ec0234:
- 	case 0x10ec0274:
-@@ -4217,6 +4216,12 @@ static void alc_headset_mode_mic_in(stru
- 		WRITE_COEF(0x06, 0x6100), /* Set MIC2 Vref gate to normal */
- 		{}
- 	};
-+	static struct coef_fw coef0256[] = {
-+		UPDATE_COEFEX(0x57, 0x05, 1<<14, 1<<14), /* Direct Drive HP Amp control(Set to verb control)*/
-+		WRITE_COEFEX(0x57, 0x03, 0x09a3),
-+		WRITE_COEF(0x06, 0x6100), /* Set MIC2 Vref gate to normal */
-+		{}
-+	};
- 	static struct coef_fw coef0233[] = {
- 		UPDATE_COEF(0x35, 0, 1<<14),
- 		WRITE_COEF(0x06, 0x2100),
-@@ -4264,14 +4269,19 @@ static void alc_headset_mode_mic_in(stru
- 	};
- 
- 	switch (codec->core.vendor_id) {
--	case 0x10ec0236:
- 	case 0x10ec0255:
--	case 0x10ec0256:
- 		alc_write_coef_idx(codec, 0x45, 0xc489);
- 		snd_hda_set_pin_ctl_cache(codec, hp_pin, 0);
- 		alc_process_coef_fw(codec, coef0255);
- 		snd_hda_set_pin_ctl_cache(codec, mic_pin, PIN_VREF50);
- 		break;
-+	case 0x10ec0236:
-+	case 0x10ec0256:
-+		alc_write_coef_idx(codec, 0x45, 0xc489);
-+		snd_hda_set_pin_ctl_cache(codec, hp_pin, 0);
-+		alc_process_coef_fw(codec, coef0256);
-+		snd_hda_set_pin_ctl_cache(codec, mic_pin, PIN_VREF50);
-+		break;
- 	case 0x10ec0234:
- 	case 0x10ec0274:
- 	case 0x10ec0294:
-@@ -4353,6 +4363,14 @@ static void alc_headset_mode_default(str
- 		WRITE_COEF(0x49, 0x0049),
- 		{}
- 	};
-+	static struct coef_fw coef0256[] = {
-+		WRITE_COEF(0x45, 0xc489),
-+		WRITE_COEFEX(0x57, 0x03, 0x0da3),
-+		WRITE_COEF(0x49, 0x0049),
-+		UPDATE_COEFEX(0x57, 0x05, 1<<14, 0), /* Direct Drive HP Amp control(Set to verb control)*/
-+		WRITE_COEF(0x06, 0x6100),
-+		{}
-+	};
- 	static struct coef_fw coef0233[] = {
- 		WRITE_COEF(0x06, 0x2100),
- 		WRITE_COEF(0x32, 0x4ea3),
-@@ -4403,11 +4421,16 @@ static void alc_headset_mode_default(str
- 		alc_process_coef_fw(codec, alc225_pre_hsmode);
- 		alc_process_coef_fw(codec, coef0225);
- 		break;
--	case 0x10ec0236:
- 	case 0x10ec0255:
--	case 0x10ec0256:
- 		alc_process_coef_fw(codec, coef0255);
- 		break;
-+	case 0x10ec0236:
-+	case 0x10ec0256:
-+		alc_write_coef_idx(codec, 0x1b, 0x0e4b);
-+		alc_write_coef_idx(codec, 0x45, 0xc089);
-+		msleep(50);
-+		alc_process_coef_fw(codec, coef0256);
-+		break;
- 	case 0x10ec0234:
- 	case 0x10ec0274:
- 	case 0x10ec0294:
-@@ -4451,8 +4474,7 @@ static void alc_headset_mode_ctia(struct
- 	};
- 	static struct coef_fw coef0256[] = {
- 		WRITE_COEF(0x45, 0xd489), /* Set to CTIA type */
--		WRITE_COEF(0x1b, 0x0c6b),
--		WRITE_COEFEX(0x57, 0x03, 0x8ea6),
-+		WRITE_COEF(0x1b, 0x0e6b),
- 		{}
- 	};
- 	static struct coef_fw coef0233[] = {
-@@ -4570,8 +4592,7 @@ static void alc_headset_mode_omtp(struct
- 	};
- 	static struct coef_fw coef0256[] = {
- 		WRITE_COEF(0x45, 0xe489), /* Set to OMTP Type */
--		WRITE_COEF(0x1b, 0x0c6b),
--		WRITE_COEFEX(0x57, 0x03, 0x8ea6),
-+		WRITE_COEF(0x1b, 0x0e6b),
- 		{}
- 	};
- 	static struct coef_fw coef0233[] = {
-@@ -4703,13 +4724,37 @@ static void alc_determine_headset_type(s
- 	};
- 
- 	switch (codec->core.vendor_id) {
--	case 0x10ec0236:
- 	case 0x10ec0255:
-+		alc_process_coef_fw(codec, coef0255);
-+		msleep(300);
-+		val = alc_read_coef_idx(codec, 0x46);
-+		is_ctia = (val & 0x0070) == 0x0070;
-+		break;
-+	case 0x10ec0236:
- 	case 0x10ec0256:
-+		alc_write_coef_idx(codec, 0x1b, 0x0e4b);
-+		alc_write_coef_idx(codec, 0x06, 0x6104);
-+		alc_write_coefex_idx(codec, 0x57, 0x3, 0x09a3);
-+
-+		snd_hda_codec_write(codec, 0x21, 0,
-+			    AC_VERB_SET_AMP_GAIN_MUTE, AMP_OUT_MUTE);
-+		msleep(80);
-+		snd_hda_codec_write(codec, 0x21, 0,
-+			    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
-+
- 		alc_process_coef_fw(codec, coef0255);
- 		msleep(300);
- 		val = alc_read_coef_idx(codec, 0x46);
- 		is_ctia = (val & 0x0070) == 0x0070;
-+
-+		alc_write_coefex_idx(codec, 0x57, 0x3, 0x0da3);
-+		alc_update_coefex_idx(codec, 0x57, 0x5, 1<<14, 0);
-+
-+		snd_hda_codec_write(codec, 0x21, 0,
-+			    AC_VERB_SET_PIN_WIDGET_CONTROL, PIN_OUT);
-+		msleep(80);
-+		snd_hda_codec_write(codec, 0x21, 0,
-+			    AC_VERB_SET_AMP_GAIN_MUTE, AMP_OUT_UNMUTE);
- 		break;
- 	case 0x10ec0234:
- 	case 0x10ec0274:
 
 
+> -----Original Message-----
+> From: Nikolaus Voss [mailto:nv@vosn.de]
+> Sent: Sunday, June 16, 2019 11:24 PM
+> To: Moore, Robert <robert.moore@intel.com>
+> Cc: Rafael J. Wysocki <rafael@kernel.org>; Rafael J. Wysocki
+> <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Schmauss, Erik
+> <erik.schmauss@intel.com>; Jacek Anaszewski
+> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
+> <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI Devel
+> Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT
+> ARCHITECTURE (ACPICA) <devel@acpica.org>; linux-leds@vger.kernel.org;
+> Linux PWM List <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
+> <linux-kernel@vger.kernel.org>; nikolaus.voss@loewensteinmedical.de
+> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+> loads
+> 
+> Bob,
+> 
+> On Fri, 14 Jun 2019, Moore, Robert wrote:
+> >
+> >
+> > -----Original Message-----
+> > From: Nikolaus Voss [mailto:nv@vosn.de]
+> > Sent: Friday, June 14, 2019 2:26 AM
+> > To: Rafael J. Wysocki <rafael@kernel.org>
+> > Cc: Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown
+> > <lenb@kernel.org>; Moore, Robert <robert.moore@intel.com>; Schmauss,
+> > Erik <erik.schmauss@intel.com>; Jacek Anaszewski
+> > <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
+> > <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI
+> > Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI
+> > COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>;
+> > linux-leds@vger.kernel.org; Linux PWM List
+> > <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
+> > <linux-kernel@vger.kernel.org>
+> > Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed
+> > table loads
+> >
+> > Hi Rafael,
+> >
+> > On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
+> >> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
+> >> <nikolaus.voss@loewensteinmedical.de> wrote:
+> >>>
+> >>> If an ACPI SSDT overlay is loaded after built-in tables have been
+> >>> loaded e.g. via configfs or efivar_ssdt_load() it is necessary to
+> >>> rewalk the namespace to resolve references. Without this, relative
+> >>> and absolute paths like ^PCI0.SBUS or \_SB.PCI0.SBUS are not
+> >>> resolved correctly.
+> >>>
+> >>> Make configfs load use the same method as efivar_ssdt_load().
+> >>>
+> >>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> >>
+> >> This is fine by me, so
+> >>
+> >> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >>
+> >> Or if you want me to take this patch (without the other two in the
+> >> series), please let me know.
+> >
+> > thanks. I think it would be the best if you take up this patch as it
+> > is an independent topic. In retrospect it wasn't a good idea to put it
+> > into this series.
+> >
+> > Kind regards,
+> > Niko
+> >
+> > I would have to ask, why is additional code needed for package
+> > initialization/resolution? It already happens elsewhere in acpica. Bob
+> 
+> for built-in tables loaded via acpi_ex_load_table_op() everything is
+> fine, because after acpi_tb_load_table() acpi_ns_walk_namespace() is
+> called to resolve references.
+> 
+> My fix only affects tables loaded dynamically via either acpi_configfs
+> driver (for debugging purposes) or efivar_ssdt_load() (to specify a
+> table on the kernel's command line). They use acpi_load_table() to load
+> the table from a caller-owned buffer. To resolve the references, it is
+> again necessary to rewalk the namespace, which was simply missing in
+> acpi_load_table().
+> 
+[Moore, Robert] 
+
+Perhaps you should call AcpiInitializeObjects after the call to AcpiLoadTable, but I will check.
+
+> Niko
