@@ -2,72 +2,169 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B272C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:36:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18362C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2912F208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:36:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560803774;
-	bh=RBEoU7K4ZyXjT/BPfVR3ydSkkFVBWSYhZLSbBJZIwnE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LXuc6KMMiymF+laJ4coxE8F6S78ulmJbQCp78i38ltvTI/nrN5FL8jhs9tAqN/we9
-	 251HTZb65PVo5zQjmkkyUvsRMnur8HDHDJ1trSxJRMNJCOQnT0InRIfw5a3F23/T1H
-	 OkQ/dsmMXK1hRa8l48VugL11Vwkh3PDFyPzWbOTQ=
+	by mail.kernel.org (Postfix) with ESMTP id DB50D2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:36:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728577AbfFQUgM (ORCPT
+        id S1728659AbfFQUgf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:36:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55488 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 16:36:35 -0400
+Received: from mga18.intel.com ([134.134.136.126]:4819 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfFQUgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:36:12 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA4532084B;
-        Mon, 17 Jun 2019 20:36:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560803771;
-        bh=RBEoU7K4ZyXjT/BPfVR3ydSkkFVBWSYhZLSbBJZIwnE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ii0V8rWo4jEGHSK7qh1pFdLGpxHb2Hv219ILGasyXFoTZazQP6oCwgztS3yHEs1P2
-         XyAUH9b7y+2Edk6GIYsLYLsn/4FzQIFDG5rF8iJmQ3RSzDK4jEiX/8AoEb8yMGpEXE
-         Zy71RMbIL59ib2in0pJ2SNuk/itNAXD/1eOMafqU=
-Date:   Mon, 17 Jun 2019 22:36:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     chao@kernel.org, devel@driverdev.osuosl.org,
-        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
-        weidu.du@huawei.com, Fang Wei <fangwei1@huawei.com>,
-        linux-fsdevel@vger.kernel.org, Miao Xie <miaoxie@huawei.com>
-Subject: Re: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
-Message-ID: <20190617203609.GA22034@kroah.com>
-References: <20190614181619.64905-1-gaoxiang25@huawei.com>
+        id S1725844AbfFQUgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 16:36:35 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 13:36:34 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga003.jf.intel.com with ESMTP; 17 Jun 2019 13:36:33 -0700
+Date:   Mon, 17 Jun 2019 13:27:03 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v4 3/5] x86/umwait: Add sysfs interface to control umwait
+ C0.2 state
+Message-ID: <20190617202702.GB217081@romley-ivt3.sc.intel.com>
+References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
+ <1559944837-149589-4-git-send-email-fenghua.yu@intel.com>
+ <CALCETrXEqqc3cKyJ5guRV3T6LP9dpSExk3a7dvR4PF8TDgD_OA@mail.gmail.com>
+ <20190610035302.GA162238@romley-ivt3.sc.intel.com>
+ <CALCETrUSpk+_FDaPpA3a-duajUdF8kOK64AQJjsr7Pm0Gi04OA@mail.gmail.com>
+ <20190610060234.GD162238@romley-ivt3.sc.intel.com>
+ <F021B947-90E9-450A-9196-531B7EE965F1@amacapital.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190614181619.64905-1-gaoxiang25@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <F021B947-90E9-450A-9196-531B7EE965F1@amacapital.net>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 02:16:11AM +0800, Gao Xiang wrote:
-> At last, this is RFC patch v1, which means it is not suitable for
-> merging soon... I'm still working on it, testing its stability
-> these days and hope these patches get merged for 5.3 LTS
-> (if 5.3 is a LTS version).
+On Mon, Jun 10, 2019 at 06:41:31AM -0700, Andy Lutomirski wrote:
+> 
+> 
+> > On Jun 9, 2019, at 11:02 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > 
+> >> On Sun, Jun 09, 2019 at 09:24:18PM -0700, Andy Lutomirski wrote:
+> >>> On Sun, Jun 9, 2019 at 9:02 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+> >>> 
+> >>>> On Sat, Jun 08, 2019 at 03:50:32PM -0700, Andy Lutomirski wrote:
+> >>>>> On Fri, Jun 7, 2019 at 3:10 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+> >>>>> 
+> >>>>> C0.2 state in umwait and tpause instructions can be enabled or disabled
+> >>>>> on a processor through IA32_UMWAIT_CONTROL MSR register.
+> >>>>> 
+> >>>>> By default, C0.2 is enabled and the user wait instructions result in
+> >>>>> lower power consumption with slower wakeup time.
+> >>>>> 
+> >>>>> But in real time systems which require faster wakeup time although power
+> >>>>> savings could be smaller, the administrator needs to disable C0.2 and all
+> >>>>> C0.2 requests from user applications revert to C0.1.
+> >>>>> 
+> >>>>> A sysfs interface "/sys/devices/system/cpu/umwait_control/enable_c02" is
+> >>>>> created to allow the administrator to control C0.2 state during run time.
+> >>>> 
+> >>>> This looks better than the previous version.  I think the locking is
+> >>>> still rather confused.  You have a mutex that you hold while changing
+> >>>> the value, which is entirely reasonable.  But, of the code paths that
+> >>>> write the MSR, only one takes the mutex.
+> >>>> 
+> >>>> I think you should consider making a function that just does:
+> >>>> 
+> >>>> wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
+> >>>> 
+> >>>> and using it in all the places that update the MSR.  The only thing
+> >>>> that should need the lock is the sysfs code to avoid accidentally
+> >>>> corrupting the value, but that code should also use WRITE_ONCE to do
+> >>>> its update.
+> >>> 
+> >>> Based on the comment, the illustrative CPU online and enable_c02 store
+> >>> functions would be:
+> >>> 
+> >>> umwait_cpu_online()
+> >>> {
+> >>>        wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
+> >>>        return 0;
+> >>> }
+> >>> 
+> >>> enable_c02_store()
+> >>> {
+> >>>       mutex_lock(&umwait_lock);
+> >>>       umwait_control_c02 = (u32)!c02_enabled;
+> >>>       WRITE_ONCE(umwait_control_cached, 2 | get_umwait_control_max_time());
+> >>>       on_each_cpu(umwait_control_msr_update, NULL, 1);
+> >>>       mutex_unlock(&umwait_lock);
+> >>> }
+> >>> 
+> >>> Then suppose umwait_control_cached = 100000 initially and only CPU0 is
+> >>> running. Admin change bit 0 in MSR from 0 to 1 to disable C0.2 and is
+> >>> onlining CPU1 in the same time:
+> >>> 
+> >>> 1. On CPU1, read umwait_control_cached to eax as 100000 in
+> >>> umwait_cpu_online()
+> >>> 2. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
+> >>> 3. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
+> >>> 4. On CPU0, wrmsr with 100001 in enabled_c02_store()
+> >>> 
+> >>> The result is CPU0 and CPU1 have different MSR values.
+> >> 
+> >> Yes, but only transiently, because you didn't finish your example.
+> >> 
+> >> Step 5: enable_c02_store() does on_each_cpu(), and CPU 1 gets updated.
+> > 
+> > There is no sync on wrmsr on CPU0 and CPU1.
+> 
+> What do you mean by sync?
+> 
+> > So a better sequence to
+> > describe the problem is changing the order of wrmsr:
+> > 
+> > 1. On CPU1, read umwait_control_cached to eax as 100000 in
+> > umwait_cpu_online()
+> > 2. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
+> > 3. On CPU0, wrmsr with 100001 in on_each_cpu() in enabled_c02_store()
+> > 4. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
+> > 
+> > So CPU1 and CPU0 have different MSR values. This won't be transient.
+> 
+> You are still ignoring the wrmsr on CPU1 due to on_each_cpu().
+> 
 
-Why would 5.3 be a LTS kernel?
+Initially umwait_control_cached is 100000 and CPU0 is online while CPU1
+is going to be online:
 
-curious as to how you came up with that :)
+1. On CPU1, cpu_online_mask=0x3 in start_secondary()
+2. On CPU1, read umwait_control_cached to eax as 100000 in umwait_cpu_online()
+3. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
+4. On CPU0, execute one_each_cpu() in enabled_c02_store():
+    wrmsr with 100001 on CPU0
+    wrmsr with 100001 on CPU1
+5. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
 
-thanks,
+So the MSR is 100000 on CPU1 and 100001 on CPU0. The MSRs are different on
+the CPUs.
 
-greg k-h
+Is this a right sequence to demonstrate locking issue without the mutex
+locking?
+
+Thanks.
+
+-Fenghua
+
