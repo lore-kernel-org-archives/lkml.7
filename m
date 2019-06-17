@@ -7,37 +7,41 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C18EC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD10C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:52:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F34282084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F8F2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:52:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728401AbfFQOvb (ORCPT
+        id S1728407AbfFQOwJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:51:31 -0400
-Received: from baptiste.telenet-ops.be ([195.130.132.51]:40446 "EHLO
-        baptiste.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728327AbfFQOvb (ORCPT
+        Mon, 17 Jun 2019 10:52:09 -0400
+Received: from laurent.telenet-ops.be ([195.130.137.89]:41778 "EHLO
+        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfFQOwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:51:31 -0400
+        Mon, 17 Jun 2019 10:52:08 -0400
 Received: from ramsan ([84.194.111.163])
-        by baptiste.telenet-ops.be with bizsmtp
-        id RqrH2000C3XaVaC01qrHBK; Mon, 17 Jun 2019 16:51:19 +0200
+        by laurent.telenet-ops.be with bizsmtp
+        id Rqs52000E3XaVaC01qs5gl; Mon, 17 Jun 2019 16:52:06 +0200
 Received: from rox.of.borg ([192.168.97.57])
         by ramsan with esmtp (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hcsya-0002M8-O9; Mon, 17 Jun 2019 16:51:16 +0200
+        id 1hcszN-0002MC-Px; Mon, 17 Jun 2019 16:52:05 +0200
 Received: from geert by rox.of.borg with local (Exim 4.90_1)
         (envelope-from <geert@linux-m68k.org>)
-        id 1hcsya-0001l7-M8; Mon, 17 Jun 2019 16:51:16 +0200
+        id 1hcszN-0001mb-Ol; Mon, 17 Jun 2019 16:52:05 +0200
 From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Shuah Khan <shuah@kernel.org>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
         Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] cpupower: Add missing newline at end of file
-Date:   Mon, 17 Jun 2019 16:51:15 +0200
-Message-Id: <20190617145115.6719-1-geert+renesas@glider.be>
+Subject: [PATCH] selftests/powerpc: Add missing newline at end of file
+Date:   Mon, 17 Jun 2019 16:52:04 +0200
+Message-Id: <20190617145204.6810-1-geert+renesas@glider.be>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -48,36 +52,24 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
     \ No newline at end of file
 
-after modifying the files.
+after modifying the file.
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- tools/power/cpupower/bench/cpufreq-bench_plot.sh   | 2 +-
- tools/power/cpupower/bench/cpufreq-bench_script.sh | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/powerpc/mm/.gitignore | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/power/cpupower/bench/cpufreq-bench_plot.sh b/tools/power/cpupower/bench/cpufreq-bench_plot.sh
-index 9061b4f1244ec7e3..f5f8b3c8f062a6fa 100644
---- a/tools/power/cpupower/bench/cpufreq-bench_plot.sh
-+++ b/tools/power/cpupower/bench/cpufreq-bench_plot.sh
-@@ -88,4 +88,4 @@ done
- echo >> $dir/plot_script.gpl
- 
- gnuplot $dir/plot_script.gpl
--rm -r $dir
+diff --git a/tools/testing/selftests/powerpc/mm/.gitignore b/tools/testing/selftests/powerpc/mm/.gitignore
+index ba919308fe3052f3..16861ab840f57e90 100644
+--- a/tools/testing/selftests/powerpc/mm/.gitignore
++++ b/tools/testing/selftests/powerpc/mm/.gitignore
+@@ -3,4 +3,4 @@ subpage_prot
+ tempfile
+ prot_sao
+ segv_errors
+-wild_bctr
 \ No newline at end of file
-+rm -r $dir
-diff --git a/tools/power/cpupower/bench/cpufreq-bench_script.sh b/tools/power/cpupower/bench/cpufreq-bench_script.sh
-index 4e9714b876d23b7a..785a3679c704e525 100644
---- a/tools/power/cpupower/bench/cpufreq-bench_script.sh
-+++ b/tools/power/cpupower/bench/cpufreq-bench_script.sh
-@@ -85,4 +85,4 @@ function create_plots()
- }
- 
- measure
--create_plots
-\ No newline at end of file
-+create_plots
++wild_bctr
 -- 
 2.17.1
 
