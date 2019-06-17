@@ -2,144 +2,152 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CFE1C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 972D2C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B2B820820
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:28:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7422120820
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:29:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728110AbfFQJ2Q (ORCPT
+        id S1728183AbfFQJ3H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:28:16 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43372 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726286AbfFQJ2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:28:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9CCC6AE67;
-        Mon, 17 Jun 2019 09:28:13 +0000 (UTC)
-Subject: Re: [RFC PATCH 10/16] xen/balloon: support ballooning in xenhost_t
-To:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org,
-        joao.m.martins@oracle.com
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-11-ankur.a.arora@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <c67f2fd9-c837-bc13-492f-f3bed7f01f05@suse.com>
-Date:   Mon, 17 Jun 2019 11:28:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 17 Jun 2019 05:29:07 -0400
+Received: from foss.arm.com ([217.140.110.172]:42972 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728036AbfFQJ3G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:29:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA6A1344;
+        Mon, 17 Jun 2019 02:29:05 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E76ED3F246;
+        Mon, 17 Jun 2019 02:29:03 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 10:29:01 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: Re: [PATCHv5 19/20] PCI: mobiveil: Add 8-bit and 16-bit register
+ accessors
+Message-ID: <20190617092901.GB18020@e121166-lin.cambridge.arm.com>
+References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
+ <20190412083635.33626-20-Zhiqiang.Hou@nxp.com>
+ <20190612135400.GB15747@redmoon>
+ <AM0PR04MB673802CE0891BC898B61EBA384E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509172540.12398-11-ankur.a.arora@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <AM0PR04MB673802CE0891BC898B61EBA384E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.05.19 19:25, Ankur Arora wrote:
-> Xen ballooning uses hollow struct pages (with the underlying GFNs being
-> populated/unpopulated via hypercalls) which are used by the grant logic
-> to map grants from other domains.
+On Sat, Jun 15, 2019 at 01:13:48AM +0000, Z.q. Hou wrote:
+> Hi Lorenzo,
 > 
-> This patch allows the default xenhost to provide an alternate ballooning
-> allocation mechanism. This is expected to be useful for local xenhosts
-> (type xenhost_r0) because unlike Xen, where there is an external
-> hypervisor which can change the memory underneath a GFN, that is not
-> possible when the hypervisor is running in the same address space
-> as the entity doing the ballooning.
+> > -----Original Message-----
+> > From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
+> > Sent: 2019年6月12日 21:54
+> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
+> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> > l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
+> > <leoyang.li@nxp.com>; catalin.marinas@arm.com; will.deacon@arm.com;
+> > Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>;
+> > Xiaowei Bao <xiaowei.bao@nxp.com>
+> > Subject: Re: [PATCHv5 19/20] PCI: mobiveil: Add 8-bit and 16-bit register
+> > accessors
+> > 
+> > On Fri, Apr 12, 2019 at 08:37:05AM +0000, Z.q. Hou wrote:
+> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > >
+> > > There are some 8-bit and 16-bit registers in PCIe configuration space,
+> > > so add accessors for them.
+> > >
+> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
+> > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
+> > > ---
+> > > V5:
+> > >  - Corrected and retouched the subject and changelog.
+> > >  - No functionality change.
+> > >
+> > >  drivers/pci/controller/pcie-mobiveil.c | 20 ++++++++++++++++++++
+> > >  1 file changed, 20 insertions(+)
+> > >
+> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
+> > > b/drivers/pci/controller/pcie-mobiveil.c
+> > > index 411e9779da12..456adfee393c 100644
+> > > --- a/drivers/pci/controller/pcie-mobiveil.c
+> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
+> > > @@ -268,11 +268,31 @@ static u32 csr_readl(struct mobiveil_pcie *pcie,
+> > u32 off)
+> > >  	return csr_read(pcie, off, 0x4);
+> > >  }
+> > >
+> > > +static u32 csr_readw(struct mobiveil_pcie *pcie, u32 off) {
+> > > +	return csr_read(pcie, off, 0x2);
+> > > +}
+> > > +
+> > > +static u32 csr_readb(struct mobiveil_pcie *pcie, u32 off) {
+> > > +	return csr_read(pcie, off, 0x1);
+> > > +}
+> > > +
+> > >  static void csr_writel(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> > > {
+> > >  	csr_write(pcie, val, off, 0x4);
+> > >  }
+> > >
+> > > +static void csr_writew(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> > > +{
+> > > +	csr_write(pcie, val, off, 0x2);
+> > > +}
+> > > +
+> > > +static void csr_writeb(struct mobiveil_pcie *pcie, u32 val, u32 off)
+> > > +{
+> > > +	csr_write(pcie, val, off, 0x1);
+> > > +}
+> > > +
+> > 
+> > They are not used so you should drop this patch.
 > 
-> Co-developed-by: Ankur Arora <ankur.a.arora@oracle.com>
-> Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
-> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
-> ---
->   arch/x86/xen/enlighten_hvm.c       |  7 +++++++
->   arch/x86/xen/enlighten_pv.c        |  8 ++++++++
->   drivers/xen/balloon.c              | 19 ++++++++++++++++---
->   drivers/xen/grant-table.c          |  4 ++--
->   drivers/xen/privcmd.c              |  4 ++--
->   drivers/xen/xen-selfballoon.c      |  2 ++
->   drivers/xen/xenbus/xenbus_client.c |  6 +++---
->   drivers/xen/xlate_mmu.c            |  4 ++--
->   include/xen/balloon.h              |  4 ++--
->   include/xen/xenhost.h              | 19 +++++++++++++++++++
->   10 files changed, 63 insertions(+), 14 deletions(-)
+> NXP Layerscape PCIe Gen4 controller driver will use them, so don't
+> drop it.
+
+You add functions when they are needed, so drop this patch and
+squash it to the patch that use these functions.
+
+Lorenzo
+
+> Thanks,
+> Zhiqiang
 > 
-> diff --git a/drivers/xen/balloon.c b/drivers/xen/balloon.c
-> index 5ef4d6ad920d..08becf574743 100644
-> --- a/drivers/xen/balloon.c
-> +++ b/drivers/xen/balloon.c
-> @@ -63,6 +63,7 @@
->   #include <asm/tlb.h>
->   
->   #include <xen/interface/xen.h>
-> +#include <xen/xenhost.h>
->   #include <asm/xen/hypervisor.h>
->   #include <asm/xen/hypercall.h>
->   
-> @@ -583,12 +584,21 @@ static int add_ballooned_pages(int nr_pages)
->    * @pages: pages returned
->    * @return 0 on success, error otherwise
->    */
-> -int alloc_xenballooned_pages(int nr_pages, struct page **pages)
-> +int alloc_xenballooned_pages(xenhost_t *xh, int nr_pages, struct page **pages)
->   {
->   	int pgno = 0;
->   	struct page *page;
->   	int ret;
->   
-> +	/*
-> +	 * xenmem transactions for remote xenhost are disallowed.
-> +	 */
-> +	if (xh->type == xenhost_r2)
-> +		return -EINVAL;
-
-Why don't you set a dummy function returning -EINVAL into the xenhost_r2
-structure instead?
-
-> +
-> +	if (xh->ops->alloc_ballooned_pages)
-> +		return xh->ops->alloc_ballooned_pages(xh, nr_pages, pages);
-> +
-
-Please make alloc_xenballooned_pages() an inline wrapper and use the
-current implmentaion as the default. This avoids another if ().
-
->   	mutex_lock(&balloon_mutex);
->   
->   	balloon_stats.target_unpopulated += nr_pages;
-> @@ -620,7 +630,7 @@ int alloc_xenballooned_pages(int nr_pages, struct page **pages)
->   	return 0;
->    out_undo:
->   	mutex_unlock(&balloon_mutex);
-> -	free_xenballooned_pages(pgno, pages);
-> +	free_xenballooned_pages(xh, pgno, pages);
->   	return ret;
->   }
->   EXPORT_SYMBOL(alloc_xenballooned_pages);
-> @@ -630,10 +640,13 @@ EXPORT_SYMBOL(alloc_xenballooned_pages);
->    * @nr_pages: Number of pages
->    * @pages: pages to return
->    */
-> -void free_xenballooned_pages(int nr_pages, struct page **pages)
-> +void free_xenballooned_pages(xenhost_t *xh, int nr_pages, struct page **pages)
->   {
->   	int i;
->   
-> +	if (xh->ops->free_ballooned_pages)
-> +		return xh->ops->free_ballooned_pages(xh, nr_pages, pages);
-> +
-
-Same again: please use an inline wrapper.
-
-
-Juergen
+> > 
+> > Lorenzo
+> > 
+> > >  static bool mobiveil_pcie_link_up(struct mobiveil_pcie *pcie)  {
+> > >  	return (csr_readl(pcie, LTSSM_STATUS) &
+> > > --
+> > > 2.17.1
+> > >
