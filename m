@@ -2,101 +2,65 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EB6C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:58:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA748C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:58:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEF252089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:58:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 872AF2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:58:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfFQU6X (ORCPT
+        id S1727317AbfFQU6W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:58:23 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42735 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFQU6W (ORCPT
+        Mon, 17 Jun 2019 16:58:22 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:38196 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfFQU6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 16:58:22 -0400
-Received: by mail-pl1-f193.google.com with SMTP id ay6so2424720plb.9;
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A9B6B15130B18;
         Mon, 17 Jun 2019 13:58:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3asWb+msWGw1j4yltc/+ryybgDy37jdG08DZDWZ/paI=;
-        b=GZKyD2ZHLy6Xi3PsfKL4Dr0a+N2l7TskzzR2voktGQc/sFCoNiwEdHUf1VndDNgEP6
-         g+DJ4Bn/UWM3hF5SyxQuc8Lfk9e6Yz7Mxu+9g1YTNqs646VupW0u9YjiV+waE3eh8fC8
-         VNE8gAV8721ZUt1S4oWGeXPuys/moeJXWGDbE2o/+5wz/oyA6DOTv3WGfM/vA+DaR50b
-         dUqfMLJ/7A221vPuK4S7uIXvEVA85+vGwB9BUSh431xCXZvGajKU4ZJMzJF4h0lIM1cn
-         CrdJYDS/sozRkYWzXfqU+40DKGIXl1+hcGvu8CmjoXtDDqxSgYOWrui9Qrr3z+xmkaDo
-         zqKg==
-X-Gm-Message-State: APjAAAWxqQyi8c5KwYKSogZs3hHdFY40EWQt7UsCzc9XwkT7EELi/SPp
-        7Y5tBqxE/POHo4NC2jqjlXoA6WNv2zM=
-X-Google-Smtp-Source: APXvYqw84YUDedrfrj8WdCb+ch56o52YCu/qbb53tTZsJEbeT8baUUbToJrEhkITh4E5QSvgFyQbwA==
-X-Received: by 2002:a17:902:b609:: with SMTP id b9mr30920714pls.8.1560805101145;
-        Mon, 17 Jun 2019 13:58:21 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id s66sm14614231pgs.87.2019.06.17.13.58.19
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 13:58:20 -0700 (PDT)
-Subject: Re: [PATCH 3/8] ufshcd: set max_segment_size in the scsi host
- template
-To:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190617122000.22181-1-hch@lst.de>
- <20190617122000.22181-4-hch@lst.de>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <9afbf4d9-3a15-bfb4-bf5c-64a1c224cc2c@acm.org>
-Date:   Mon, 17 Jun 2019 13:58:19 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190617122000.22181-4-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Date:   Mon, 17 Jun 2019 13:58:21 -0700 (PDT)
+Message-Id: <20190617.135821.1970853531857836652.davem@davemloft.net>
+To:     jasowang@redhat.com
+Cc:     mst@redhat.com, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, huhai@kylinos.cn
+Subject: Re: [PATCH net-next] vhost_net: disable zerocopy by default
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190617092054.12299-1-jasowang@redhat.com>
+References: <20190617092054.12299-1-jasowang@redhat.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 17 Jun 2019 13:58:21 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 5:19 AM, Christoph Hellwig wrote:
-> We need to also mirror the value to the device to ensure IOMMU merging
-> doesn't undo it, and the SCSI host level parameter will ensure that.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->   drivers/scsi/ufs/ufshcd.c | 3 +--
->   1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-> index 3fe3029617a8..505d625ed28d 100644
-> --- a/drivers/scsi/ufs/ufshcd.c
-> +++ b/drivers/scsi/ufs/ufshcd.c
-> @@ -4587,8 +4587,6 @@ static int ufshcd_slave_configure(struct scsi_device *sdev)
->   	struct request_queue *q = sdev->request_queue;
->   
->   	blk_queue_update_dma_pad(q, PRDT_DATA_BYTE_COUNT_PAD - 1);
-> -	blk_queue_max_segment_size(q, PRDT_DATA_BYTE_COUNT_MAX);
-> -
->   	return 0;
->   }
->   
-> @@ -6991,6 +6989,7 @@ static struct scsi_host_template ufshcd_driver_template = {
->   	.sg_tablesize		= SG_ALL,
->   	.cmd_per_lun		= UFSHCD_CMD_PER_LUN,
->   	.can_queue		= UFSHCD_CAN_QUEUE,
-> +	.max_segment_size	= PRDT_DATA_BYTE_COUNT_MAX,
->   	.max_host_blocked	= 1,
->   	.track_queue_depth	= 1,
->   	.sdev_groups		= ufshcd_driver_groups,
+From: Jason Wang <jasowang@redhat.com>
+Date: Mon, 17 Jun 2019 05:20:54 -0400
 
-Reviewed-by: Bart Van Assche <bvanassche@acm.org>
+> Vhost_net was known to suffer from HOL[1] issues which is not easy to
+> fix. Several downstream disable the feature by default. What's more,
+> the datapath was split and datacopy path got the support of batching
+> and XDP support recently which makes it faster than zerocopy part for
+> small packets transmission.
+> 
+> It looks to me that disable zerocopy by default is more
+> appropriate. It cold be enabled by default again in the future if we
+> fix the above issues.
+> 
+> [1] https://patchwork.kernel.org/patch/3787671/
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+
+Applied, thanks Jason.
