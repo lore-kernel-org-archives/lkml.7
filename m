@@ -2,167 +2,101 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D25CEC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A15C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6EBC2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:25:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFvxApUF"
+	by mail.kernel.org (Postfix) with ESMTP id 86BE92084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:26:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfFQLZP (ORCPT
+        id S1728071AbfFQL05 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:25:15 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:46385 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728238AbfFQLZD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:25:03 -0400
-Received: by mail-pl1-f194.google.com with SMTP id e5so3958048pls.13;
-        Mon, 17 Jun 2019 04:25:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=eZ65YD0TXsz73f/6tJ4mNuZ4ortjaWiCfb0XlT1C3No=;
-        b=KFvxApUFU2jdrMZzwG8zwoApYbxhCFl2Mf6kylnwmR52M3nhzDpwBQerTUtwucpC4i
-         tw5O/FQa7NacWVi9PtIQJkKDD4hx3Cs7mcBGOA+bskO8poMUZqurksWBWmSOhincrRki
-         Qg1v4HbnOjHi46J53/Q61koI8DgRbNm06jWuG3/9bKkByglgnFmTT8tsOmYg4JyTfVkH
-         9OhzPQ8SofIZqfQkExyMm0u7gAcI6YymOmLvrK6ySy52FdsmkGcuuzYMIBHcpSlIOz4k
-         0aA6bh7dx4R9pp8Pb0dCHgC82VBmm+VQ/9qt1hCWVWx+LffxM6UANrlYhSaxl/iJvk4d
-         +POQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=eZ65YD0TXsz73f/6tJ4mNuZ4ortjaWiCfb0XlT1C3No=;
-        b=E/EgXR3wNbtAo6MFJ6yuU5IwXoVbnR3ANrH6V8YqU2grsN2HnIclpvGRmJOU3L2vLj
-         LcVjy2WPv2+fvsXYSbTcKyOg/pq56vSOl1s1BJuMk4TtyE7fARVh4FYAIrMvbxEvll2p
-         UqxLyA7a8iAVsfxAcuZty+3vk1J46E8Fd4SuKdxad+USafkWqaoOFvA7sMn/cmStGbJq
-         4BnchHfkeM+tr0v//9XO/UkgZsu7mOHEx0SFU2C6mhsQjHuEsvJYIu9uasQEgXQ7M29g
-         iDkYXn4BAr5gj/BSVYdx64jn/anwukLKLqmAr1MLp8Gb3L7SltXorous/Mcm7Wppisvb
-         3b3g==
-X-Gm-Message-State: APjAAAVN/4eDYi2OT+e+fhyFh1qUJ85ibwgjE1GRD2HAmi8sYlk/laCM
-        jmsAouQLDJCgZQBObCfRLHSrhGkP
-X-Google-Smtp-Source: APXvYqw1hyCZYGABGQ3DwbQGYs4ers0cdgO62nY78GM5/ZbG9L7sIGDqz0je8gFhY2KiAD3s+u4DpQ==
-X-Received: by 2002:a17:902:1e6:: with SMTP id b93mr63747850plb.295.1560770702823;
-        Mon, 17 Jun 2019 04:25:02 -0700 (PDT)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id d4sm12535751pfc.149.2019.06.17.04.25.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 17 Jun 2019 04:25:02 -0700 (PDT)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: [PATCH v4 5/5] KVM: LAPIC: add advance timer support to pi_inject_timer
-Date:   Mon, 17 Jun 2019 19:24:47 +0800
-Message-Id: <1560770687-23227-6-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
-References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+        Mon, 17 Jun 2019 07:26:57 -0400
+Received: from foss.arm.com ([217.140.110.172]:46146 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727688AbfFQL04 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:26:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86272344;
+        Mon, 17 Jun 2019 04:26:56 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2CE733F246;
+        Mon, 17 Jun 2019 04:28:40 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 12:26:52 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
+        Peter Maydell <peter.maydell@linaro.org>,
+        Alan Hayward <alan.hayward@arm.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64/sve: fix genksyms generation
+Message-ID: <20190617112652.GB30800@fuggles.cambridge.arm.com>
+References: <20190617104237.2082388-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617104237.2082388-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+Hi Arnd,
 
-Wait before calling posted-interrupt deliver function directly to add 
-advance timer support to pi_inject_timer.
+On Mon, Jun 17, 2019 at 12:42:11PM +0200, Arnd Bergmann wrote:
+> genksyms does not understand __uint128_t, so we get a build failure
+> in the fpsimd module when it cannot export a symbol right:
 
-Cc: Paolo Bonzini <pbonzini@redhat.com>
-Cc: Radim Krčmář <rkrcmar@redhat.com>
-Cc: Marcelo Tosatti <mtosatti@redhat.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- arch/x86/kvm/lapic.c   | 6 ++++--
- arch/x86/kvm/lapic.h   | 2 +-
- arch/x86/kvm/svm.c     | 2 +-
- arch/x86/kvm/vmx/vmx.c | 2 +-
- 4 files changed, 7 insertions(+), 5 deletions(-)
+The fpsimd code is builtin, so which module is actually failing? My
+allmodconfig build succeeds, so I must be missing something.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 1a31389..1a31ba5 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1462,6 +1462,8 @@ static void apic_timer_expired(struct kvm_lapic *apic, bool can_pi_inject)
- 		return;
- 
- 	if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu)) {
-+		if (apic->lapic_timer.timer_advance_ns)
-+			kvm_wait_lapic_expire(vcpu, true);
- 		kvm_apic_inject_pending_timer_irqs(apic);
- 		return;
- 	}
-@@ -1553,7 +1555,7 @@ static inline void adjust_lapic_timer_advance(struct kvm_vcpu *vcpu,
- 	apic->lapic_timer.timer_advance_ns = timer_advance_ns;
- }
- 
--void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
-+void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu, bool pi_inject)
- {
- 	struct kvm_lapic *apic = vcpu->arch.apic;
- 	u64 guest_tsc, tsc_deadline;
-@@ -1561,7 +1563,7 @@ void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu)
- 	if (apic->lapic_timer.expired_tscdeadline == 0)
- 		return;
- 
--	if (!lapic_timer_int_injected(vcpu))
-+	if (!lapic_timer_int_injected(vcpu) && !pi_inject)
- 		return;
- 
- 	tsc_deadline = apic->lapic_timer.expired_tscdeadline;
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index e41936b..3d8a043 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -225,7 +225,7 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
- 
- bool kvm_apic_pending_eoi(struct kvm_vcpu *vcpu, int vector);
- 
--void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
-+void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu, bool pi_inject);
- 
- bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
- 			struct kvm_vcpu **dest_vcpu);
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index bbc31f7..7e65de4 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -5648,7 +5648,7 @@ static void svm_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	if (lapic_in_kernel(vcpu) &&
- 		vcpu->arch.apic->lapic_timer.timer_advance_ns)
--		kvm_wait_lapic_expire(vcpu);
-+		kvm_wait_lapic_expire(vcpu, false);
- 
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index f45c51e..718a3ad 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -6462,7 +6462,7 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
- 
- 	if (lapic_in_kernel(vcpu) &&
- 		vcpu->arch.apic->lapic_timer.timer_advance_ns)
--		kvm_wait_lapic_expire(vcpu);
-+		kvm_wait_lapic_expire(vcpu, false);
- 
- 	/*
- 	 * If this vCPU has touched SPEC_CTRL, restore the guest's value if
--- 
-2.7.4
+> WARNING: EXPORT symbol "kernel_neon_begin" [vmlinux] version generation failed, symbol will not be versioned.
+> /home/arnd/cross/x86_64/gcc-8.1.0-nolibc/aarch64-linux/bin/aarch64-linux-ld: arch/arm64/kernel/fpsimd.o: relocation R_AARCH64_ABS32 against `__crc_kernel_neon_begin' can not be used when making a shared object
+> arch/arm64/kernel/fpsimd.o:(.data+0x0): dangerous relocation: unsupported relocation
+> arch/arm64/kernel/fpsimd.o:(".discard.addressable"+0x0): dangerous relocation: unsupported relocation
+> arch/arm64/kernel/fpsimd.o:(".discard.addressable"+0x8): dangerous relocation: unsupported relocation
+> 
+> We could teach genksyms about the type, but it's easier to just
+> work around it by defining that type locally in a way that genksyms
+> understands.
+> 
+> Fixes: 41040cf7c5f0 ("arm64/sve: Fix missing SVE/FPSIMD endianness conversions")
 
+I can't see which part of that patch causes the problem, so I'm a bit wary
+of the fix. We've been using __uint128_t for a while now, and I see there's
+one in the x86 kvm code as well, so it would be nice to understand what's
+happening here so that we can avoid running into it in future as well.
+
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  arch/arm64/kernel/fpsimd.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
+> index 07f238ef47ae..2aba07cccf50 100644
+> --- a/arch/arm64/kernel/fpsimd.c
+> +++ b/arch/arm64/kernel/fpsimd.c
+> @@ -400,6 +400,9 @@ static int __init sve_sysctl_init(void) { return 0; }
+>  #define ZREG(sve_state, vq, n) ((char *)(sve_state) +		\
+>  	(SVE_SIG_ZREG_OFFSET(vq, n) - SVE_SIG_REGS_OFFSET))
+>  
+> +#ifdef __GENKSYMS__
+> +typedef __u64 __uint128_t[2];
+> +#endif
+
+I suspect I need to figure out what genksyms is doing, but I'm nervous
+about exposing this as an array type without understanding whether or
+not that has consequences for its operation.
+
+Will
