@@ -2,171 +2,166 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C27DC31E59
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:30:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B05EC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:30:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F002212F5
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:30:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65160208E3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:30:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F60ERVd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728127AbfFQJap (ORCPT
+        id S1728180AbfFQJaw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:30:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:43036 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfFQJap (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:30:45 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79858344;
-        Mon, 17 Jun 2019 02:30:44 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7761A3F246;
-        Mon, 17 Jun 2019 02:30:42 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 10:30:40 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 18/20] PCI: mobiveil: Disable IB and OB windows set by
- bootloader
-Message-ID: <20190617093040.GC18020@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-19-Zhiqiang.Hou@nxp.com>
- <20190612162347.GF15747@redmoon>
- <AM0PR04MB67383C84D946045874B0F14A84E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
+        Mon, 17 Jun 2019 05:30:52 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52080 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfFQJaw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:30:52 -0400
+Received: by mail-wm1-f67.google.com with SMTP id 207so8463923wma.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 02:30:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=reply-to:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=hGy+FSJRzToSeoyUsvQaQYFoLBq93m5qcKw5Lz5P/as=;
+        b=F60ERVd/hdyLx8RkvS+tUuVoOJCT4bbcqGeQftgadh71HU605jvy7+avRbGBSrNhoJ
+         1keSHnOnl1ku6hUHqHp8Yox/P3ICEsxA7UPoWoo1f9WHKWLkV/RwfycdjI4kOzml8fQf
+         5mylKL44bJ1IW0AxZ/6GNbuXkVv1WuGyoQySInYmoX141ojNSY9KSOEgJevGuL3grgY+
+         bhF6o5VqoOVwA1i+XBT0tVEOOqElJwyCeeHUqyr1K+1l7DGf0VF8/RPloApCnkLXhEdU
+         wUIRpnGvue7vKNzG4hqCItM5q8GYfUGHaQQs3DmutNABXH2anO0k3MpuopjZqm02RWLb
+         GzMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-transfer-encoding:content-language;
+        bh=hGy+FSJRzToSeoyUsvQaQYFoLBq93m5qcKw5Lz5P/as=;
+        b=R1UdJFg/6TqRR1KnVZ/pxF3jnzLHcrZy2OIqOqzwwFRXIhDj68kX2JK1EowkdHps+6
+         J4OWszvL4FUQ6JaIdM58TCuJT4viCckxhyMduj2UaAfqU/0uuYMSKygjw0kWZJW7AXyf
+         HBscTRtItLzlUnMsXVOkU2gjyIKddxqSE9JriG5+bPKbzSdenrRl7Jte0/us1cCUKS0F
+         7owHRmP382foWBtE1tLYSDG0k1eBJO9tosOJIgC9iRnL1VgRw+FqvoLJ5mMjzlMGa6mo
+         6YzwNGGYlS3G75m8UQif8+jVDlifVxYjRb/+aflwfRDxV0fZPy1lN43Erdw4e0MlN4ui
+         NF7Q==
+X-Gm-Message-State: APjAAAUxz4ozTbDFBSjr7drshhKFuKEDSS690deo3/gdUNKI2W7jGUJT
+        CbBJRQDlgFN/znH5EZyYoRM=
+X-Google-Smtp-Source: APXvYqwdhcc9M07F72k/LDIugLL1XTkyPT3qTKjPffVGpz59oqzpHW73M+4cmRAMD4p6XlvT7Ussqw==
+X-Received: by 2002:a1c:2dc2:: with SMTP id t185mr18175091wmt.52.1560763849022;
+        Mon, 17 Jun 2019 02:30:49 -0700 (PDT)
+Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
+        by smtp.gmail.com with ESMTPSA id z5sm9895972wrh.16.2019.06.17.02.30.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 02:30:48 -0700 (PDT)
+Reply-To: christian.koenig@amd.com
+Subject: Re: [PATCH 3/6] drm/gem: use new ww_mutex_(un)lock_for_each macros
+To:     Daniel Vetter <daniel@ffwll.ch>,
+        =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
+Cc:     Thomas Hellstrom <thellstrom@vmware.com>,
+        lima@lists.freedesktop.org, Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        The etnaviv authors <etnaviv@lists.freedesktop.org>,
+        Qiang Yu <yuq825@gmail.com>,
+        Russell King <linux+etnaviv@armlinux.org.uk>
+References: <20190614124125.124181-1-christian.koenig@amd.com>
+ <20190614124125.124181-4-christian.koenig@amd.com>
+ <20190614131916.GQ3436@hirez.programming.kicks-ass.net>
+ <20190614152242.GC23020@phenom.ffwll.local>
+ <094da0f7-a0f0-9ed4-d2da-8c6e6d165380@gmail.com>
+ <CAKMK7uFcDCJ9sozny1RqqRATwcK39doZNq+NZekvrzuO63ap-Q@mail.gmail.com>
+ <d97212dc-367c-28e9-6961-9b99110a4d2e@gmail.com>
+ <20190614203040.GE23020@phenom.ffwll.local>
+ <CAKMK7uFzg+e315h2e5SmDTQwYTAbgAsxB_pc09ztwA1Wa-mzxw@mail.gmail.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+Message-ID: <16adcdac-b3e7-02f1-e56b-9b4ad68e146e@gmail.com>
+Date:   Mon, 17 Jun 2019 11:30:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+In-Reply-To: <CAKMK7uFzg+e315h2e5SmDTQwYTAbgAsxB_pc09ztwA1Wa-mzxw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB67383C84D946045874B0F14A84E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 05:03:33AM +0000, Z.q. Hou wrote:
-> Hi Lorenzo,
-> 
-> > -----Original Message-----
-> > From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
-> > Sent: 2019年6月13日 0:24
-> > To: Z.q. Hou <zhiqiang.hou@nxp.com>; bhelgaas@google.com
-> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > robh+dt@kernel.org; mark.rutland@arm.com; l.subrahmanya@mobiveil.co.in;
-> > shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>;
-> > catalin.marinas@arm.com; will.deacon@arm.com; Mingkai Hu
-> > <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>; Xiaowei Bao
-> > <xiaowei.bao@nxp.com>
-> > Subject: Re: [PATCHv5 18/20] PCI: mobiveil: Disable IB and OB windows set
-> > by bootloader
-> > 
-> > On Fri, Apr 12, 2019 at 08:37:00AM +0000, Z.q. Hou wrote:
-> > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > >
-> > > Disable all inbound and outbound windows before set up the windows in
-> > > kernel, in case transactions match the window set by bootloader.
-> > 
-> > There must be no PCI transactions ongoing at bootloader<->OS handover.
-> >
-> 
-> Yes, exact.
->  
-> > The bootloader needs fixing and this patch should be dropped, the host bridge
-> > driver assumes the host bridge state is disabled,
-> 
-> The host bridge driver should not assumes the host state is disabled,
-> actually u-boot enable/initialize the host and without disabling it
-> when transfer the control to Linux.
+Am 15.06.19 um 15:56 schrieb Daniel Vetter:
+> On Fri, Jun 14, 2019 at 10:30 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+>> On Fri, Jun 14, 2019 at 08:51:11PM +0200, Christian König wrote:
+>>> Am 14.06.19 um 20:24 schrieb Daniel Vetter:
+>>>> On Fri, Jun 14, 2019 at 8:10 PM Christian König <ckoenig.leichtzumerken@gmail.com> wrote:
+>>>>> [SNIP]
+>>>>> WW_MUTEX_LOCK_BEGIN()
+>>>>>
+>>>>> lock(lru_lock);
+>>>>>
+>>>>> while (bo = list_first(lru)) {
+>>>>>    if (kref_get_unless_zero(bo)) {
+>>>>>            unlock(lru_lock);
+>>>>>            WW_MUTEX_LOCK(bo->ww_mutex);
+>>>>>            lock(lru_lock);
+>>>>>    } else {
+>>>>>            /* bo is getting freed, steal it from the freeing process
+>>>>>             * or just ignore */
+>>>>>    }
+>>>>> }
+>>>>> unlock(lru_lock)
+>>>>>
+>>>>> WW_MUTEX_LOCK_END;
+>>> Ah, now I know what you mean. And NO, that approach doesn't work.
+>>>
+>>> See for the correct ww_mutex dance we need to use the iterator multiple
+>>> times.
+>>>
+>>> Once to give us the BOs which needs to be locked and another time to give us
+>>> the BOs which needs to be unlocked in case of a contention.
+>>>
+>>> That won't work with the approach you suggest here.
+>> A right, drat.
+>>
+>> Maybe give up on the idea to make this work for ww_mutex in general, and
+>> just for drm_gem_buffer_object? I'm just about to send out a patch series
+>> which makes sure that a lot more drivers set gem_bo.resv correctly (it
+>> will alias with ttm_bo.resv for ttm drivers ofc). Then we could add a
+>> list_head to gem_bo (won't really matter, but not something we can do with
+>> ww_mutex really), so that the unlock walking doesn't need to reuse the
+>> same iterator. That should work I think ...
+>>
+>> Also, it would almost cover everything you want to do. For ttm we'd need
+>> to make ttm_bo a subclass of gem_bo (and maybe not initialize that
+>> embedded gem_bo for vmwgfx and shadow bo and driver internal stuff).
+>>
+>> Just some ideas, since copypasting the ww_mutex dance into all drivers is
+>> indeed not great.
+> Even better we don't need to force everyone to use drm_gem_object, the
+> hard work is already done with the reservation_object. We could add a
+> list_head there for unwinding, and then the locking helpers would look
+> a lot cleaner and simpler imo. reservation_unlock_all() would even be
+> a real function! And if we do this then I think we should also have a
+> reservation_acquire_ctx, to store the list_head and maybe anything
+> else.
+>
+> Plus all the code you want to touch is dealing with
+> reservation_object, so that's all covered. And it mirros quite a bit
+> what we've done with struct drm_modeset_lock, to wrap ww_mutex is
+> something easier to deal with for kms.
 
-Fix the bootloader and drop this patch, I explain to you why.
+That's a rather interesting idea.
 
-> > it will program the bridge
-> > apertures from scratch with no ongoing transactions, anything deviating from
-> > this behaviour is a bootloader bug and a recipe for disaster.
-> 
-> The point of this patch is not to fix the ongoing transaction issue,
-> it is to avoid a potential issue which is caused by the outbound
-> window enabled by bootloader overlapping with Linux enabled.
+I wouldn't use a list_head cause that has a rather horrible caching 
+footprint for something you want to use during CS, but apart from that 
+the idea sounds like it would also solve a bunch of problem during eviction.
 
-See above.
+Going to give that a try,
+Christian.
 
-Lorenzo
+> -Daniel
+>
 
-> Thanks,
-> Zhiqiang
->  
-> > Lorenzo
-> > 
-> > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> > > ---
-> > > V5:
-> > >  - No functionality change.
-> > >
-> > >  drivers/pci/controller/pcie-mobiveil.c | 25 +++++++++++++++++++++++++
-> > >  1 file changed, 25 insertions(+)
-> > >
-> > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> > > b/drivers/pci/controller/pcie-mobiveil.c
-> > > index 8dc87c7a600e..411e9779da12 100644
-> > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > @@ -565,6 +565,24 @@ static int mobiveil_bringup_link(struct
-> > mobiveil_pcie *pcie)
-> > >  	return -ETIMEDOUT;
-> > >  }
-> > >
-> > > +static void mobiveil_pcie_disable_ib_win(struct mobiveil_pcie *pcie,
-> > > +int idx) {
-> > > +	u32 val;
-> > > +
-> > > +	val = csr_readl(pcie, PAB_PEX_AMAP_CTRL(idx));
-> > > +	val &= ~(1 << AMAP_CTRL_EN_SHIFT);
-> > > +	csr_writel(pcie, val, PAB_PEX_AMAP_CTRL(idx)); }
-> > > +
-> > > +static void mobiveil_pcie_disable_ob_win(struct mobiveil_pcie *pcie,
-> > > +int idx) {
-> > > +	u32 val;
-> > > +
-> > > +	val = csr_readl(pcie, PAB_AXI_AMAP_CTRL(idx));
-> > > +	val &= ~(1 << WIN_ENABLE_SHIFT);
-> > > +	csr_writel(pcie, val, PAB_AXI_AMAP_CTRL(idx)); }
-> > > +
-> > >  static void mobiveil_pcie_enable_msi(struct mobiveil_pcie *pcie)  {
-> > >  	phys_addr_t msg_addr = pcie->pcie_reg_base; @@ -585,6 +603,13 @@
-> > > static int mobiveil_host_init(struct mobiveil_pcie *pcie)  {
-> > >  	u32 value, pab_ctrl, type;
-> > >  	struct resource_entry *win;
-> > > +	int i;
-> > > +
-> > > +	/* Disable all inbound/outbound windows */
-> > > +	for (i = 0; i < pcie->apio_wins; i++)
-> > > +		mobiveil_pcie_disable_ob_win(pcie, i);
-> > > +	for (i = 0; i < pcie->ppio_wins; i++)
-> > > +		mobiveil_pcie_disable_ib_win(pcie, i);
-> > >
-> > >  	/* setup bus numbers */
-> > >  	value = csr_readl(pcie, PCI_PRIMARY_BUS);
-> > > --
-> > > 2.17.1
-> > >
