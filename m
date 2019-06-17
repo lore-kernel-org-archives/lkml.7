@@ -2,147 +2,73 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D5DAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:22:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3206CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F27202085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:22:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P43tJP6I"
+	by mail.kernel.org (Postfix) with ESMTP id 06B552085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727579AbfFQTWs (ORCPT
+        id S1728771AbfFQTX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:22:48 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42551 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFQTWs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:22:48 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJMFC33560904
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:22:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJMFC33560904
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560799336;
-        bh=I0f8c8zlutdhaZ/vrHnn52hSauWLCUniL5rHMFHk7Jg=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=P43tJP6Ib4Osl3Y9WK2GqOWKjF+cC1Msq9tZVN94xGbREef6TKl8HvPNshSo9qVOb
-         T4oL+a1UQM7BeZP1IA8kQYv/EYgp8Dibo2oFcLz6cKpTjOglXaNdMTmIM6705Kvy6I
-         khTS7hXnpiEABoWhrl6rNR1VxlLG1dPKhnWOGYv1eP9Hwk1Q45KwCM3WemMALBCqrf
-         O7KQlR2z4OdthyMWgKbBR8DGEYIAe98+ggWmfeKhu9Tdxu1jOf3pqWpUTMB4BoW6y7
-         jCach/Jh0IQvecXOOBPke4tkSwhs4ruCZMWpOT/mDmxm4DrEAia6TmFo9zA94HigXa
-         e1YNAmtxUQTdQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJMFK53560901;
-        Mon, 17 Jun 2019 12:22:15 -0700
-Date:   Mon, 17 Jun 2019 12:22:15 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Mathieu Poirier <tipbot@zytor.com>
-Message-ID: <tip-a465f3c3e3e6da729c645ea17615d4ae673588bf@git.kernel.org>
-Cc:     jolsa@redhat.com, leo.yan@linaro.org, peterz@infradead.org,
-        hpa@zytor.com, namhyung@kernel.org, mathieu.poirier@linaro.org,
-        acme@redhat.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
-        alexander.shishkin@linux.intel.com
-Reply-To: peterz@infradead.org, leo.yan@linaro.org, jolsa@redhat.com,
-          alexander.shishkin@linux.intel.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, suzuki.poulose@arm.com,
-          tglx@linutronix.de, hpa@zytor.com, namhyung@kernel.org,
-          mathieu.poirier@linaro.org, acme@redhat.com
-In-Reply-To: <20190524173508.29044-5-mathieu.poirier@linaro.org>
-References: <20190524173508.29044-5-mathieu.poirier@linaro.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf cs-etm: Add handling of itrace start events
-Git-Commit-ID: a465f3c3e3e6da729c645ea17615d4ae673588bf
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 15:23:26 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53175 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfFQTXY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:23:24 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 490ECC07410F;
+        Mon, 17 Jun 2019 19:23:24 +0000 (UTC)
+Received: from flask (unknown [10.43.2.199])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 6AE1A783BB;
+        Mon, 17 Jun 2019 19:23:19 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Mon, 17 Jun 2019 21:23:18 +0200
+Date:   Mon, 17 Jun 2019 21:23:18 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2] KVM: x86: clean up conditions for asynchronous page
+ fault handling
+Message-ID: <20190617192318.GA13948@flask>
+References: <1560446532-22494-1-git-send-email-pbonzini@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560446532-22494-1-git-send-email-pbonzini@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 17 Jun 2019 19:23:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a465f3c3e3e6da729c645ea17615d4ae673588bf
-Gitweb:     https://git.kernel.org/tip/a465f3c3e3e6da729c645ea17615d4ae673588bf
-Author:     Mathieu Poirier <mathieu.poirier@linaro.org>
-AuthorDate: Fri, 24 May 2019 11:34:55 -0600
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 10 Jun 2019 15:50:01 -0300
+2019-06-13 19:22+0200, Paolo Bonzini:
+> Even when asynchronous page fault is disabled, KVM does not want to pause
+> the host if a guest triggers a page fault; instead it will put it into
+> an artificial HLT state that allows running other host processes while
+> allowing interrupt delivery into the guest.
+> 
+> However, the way this feature is triggered is a bit confusing.
+> First, it is not used for page faults while a nested guest is
+> running: but this is not an issue since the artificial halt
+> is completely invisible to the guest, either L1 or L2.  Second,
+> it is used even if kvm_halt_in_guest() returns true; in this case,
+> the guest probably should not pay the additional latency cost of the
+> artificial halt, and thus we should handle the page fault in a
+> completely synchronous way.
+> 
+> By introducing a new function kvm_can_deliver_async_pf, this patch
+> commonizes the code that chooses whether to deliver an async page fault
+> (kvm_arch_async_page_not_present) and the code that chooses whether a
+> page fault should be handled synchronously (kvm_can_do_async_pf).
+> 
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
 
-perf cs-etm: Add handling of itrace start events
-
-Add handling of ITRACE events in order to add the tid/pid of the
-executing process to the perf tools machine infrastructure.  This
-information is later retrieved when a contextID packet is found in the
-trace stream.
-
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-5-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/cs-etm.c | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index de488b43f440..0742c50fce46 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -1657,6 +1657,29 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 	return 0;
- }
- 
-+static int cs_etm__process_itrace_start(struct cs_etm_auxtrace *etm,
-+					union perf_event *event)
-+{
-+	struct thread *th;
-+
-+	if (etm->timeless_decoding)
-+		return 0;
-+
-+	/*
-+	 * Add the tid/pid to the log so that we can get a match when
-+	 * we get a contextID from the decoder.
-+	 */
-+	th = machine__findnew_thread(etm->machine,
-+				     event->itrace_start.pid,
-+				     event->itrace_start.tid);
-+	if (!th)
-+		return -ENOMEM;
-+
-+	thread__put(th);
-+
-+	return 0;
-+}
-+
- static int cs_etm__process_event(struct perf_session *session,
- 				 union perf_event *event,
- 				 struct perf_sample *sample,
-@@ -1694,6 +1717,9 @@ static int cs_etm__process_event(struct perf_session *session,
- 		return cs_etm__process_timeless_queues(etm,
- 						       event->fork.tid);
- 
-+	if (event->header.type == PERF_RECORD_ITRACE_START)
-+		return cs_etm__process_itrace_start(etm, event);
-+
- 	return 0;
- }
- 
+Reviewed-by: Radim Krčmář <rkrcmar@redhat.com>
