@@ -6,93 +6,91 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D58AC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D80C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:40:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0D9420861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:39:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E677320861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:40:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfFQMj1 (ORCPT
+        id S1727722AbfFQMkK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:39:27 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:37707 "EHLO
+        Mon, 17 Jun 2019 08:40:10 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:56871 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfFQMj0 (ORCPT
+        with ESMTP id S1727394AbfFQMkJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:39:26 -0400
+        Mon, 17 Jun 2019 08:40:09 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MkpOZ-1iL19m1NHz-00mJjL; Mon, 17 Jun 2019 14:39:17 +0200
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1My3In-1iYGfA14mt-00zT27; Mon, 17 Jun 2019 14:39:51 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Thomas Lim <Thomas.Lim@amd.com>,
-        Eric Yang <eric.yang2@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
-        Tony Cheng <tony.cheng@amd.com>,
-        Anthony Koo <Anthony.Koo@amd.com>,
-        Charlene Liu <charlene.liu@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+To:     Miklos Szeredi <miklos@szeredi.hu>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        syzbot+9c69c282adc4edd2b540@syzkaller.appspotmail.com,
+        Amir Goldstein <amir73il@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
+        Vivek Goyal <vgoyal@redhat.com>, linux-unionfs@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] drm/amd/display: include missing linux/delay.h
-Date:   Mon, 17 Jun 2019 14:38:55 +0200
-Message-Id: <20190617123915.926526-1-arnd@arndb.de>
+Subject: [PATCH] ovl: fix bogus -Wmaybe-unitialized warning
+Date:   Mon, 17 Jun 2019 14:39:29 +0200
+Message-Id: <20190617123947.941417-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:r3X+Mcq4GDZ3qYDRz2Ihhnt91TQ2U5GxOpABsFsYrkC/K9q9h5n
- iCNKaLTm4verJxBR2gbf1xeYHX3t8DdWTTAtUV2POtlSaUwtwRKQpa/71TAsiTm5UPIGKjd
- J+/kRqcTWmqyST8H4wUAR9xdOfp8NF8rU2uoLqYwzwxpz1WNbRaP7oI+RNniNHlcacXAddZ
- P3NzvMWZ/HEnTZr5TlA8Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:gIkHZ7VzfnU=:BghEa7Q00cCOgUdn2Xy4TN
- ntd/ikOW70/jka68RwgFFOvVsWZe0SRnkOLrlD6m4vvpa3mNH+WGlAgiV0rWs/pb9jlCNt6Xt
- zE9ZQPtlwXqbvFfCpQXJ8rrIxLEZdSMoVZGxQo3PKYGstUbVA4Hagc6jwbt19jS+sR9+i22DZ
- yCU3d+eWNpaKdQ+mvAPkyc3kf6izzC8ErJR9OrGqIElMTaBQkPrvWIe9OPByQNtAqWEu22oc4
- qG36PmJKAKH0jZTIah0v3v5BrAtsPWJrAt5IinFummsUJyxnzK58ju/9NufZpCShKrNIClbx9
- 7a/iR6RBWMwuXvhy+k2e0pp60ApueRRa10iwdjfxhsJattT1IwM+kfth+3L+eEOPIf0WiKc9S
- AJtgCNdEPKgMYVQOi9mopZuEDH3P5gv3xJkpKmmo7WOizDK+D3SlibAmM+NZr+wl7pGwOAEWh
- PsCgN1fGOBExJV3NwJb2/ORp6y4q5Qtu6uR3p85vmBmMeDwDzUnZCoJxfZ8avsSGBZUbQoq+L
- GB6gtPOZbWDlpLUNaFXDkiy5ikcQDsDY5Cfz/LEBCBG6w0C0oP6h/jVVufGzzzsV0Lx0eW2oy
- VlrL1mwfeJjmn4ndivGszp8rsuL/QQdgWY7l0VaUQQNUjorzSPlkQIoaoeVED018PHS1MLrTE
- Xr2FQ0iQU0XgNykaHZFKfd7naYgIc2gtgju13fhBusm6aIiduAolLzigm2zWIz9s/4d2i4xXq
- QQgxMyA193iIPTvQhRBv/3vIdQgooZVG0reFQw==
+X-Provags-ID: V03:K1:VMmghNLouvOr+K+bfJY6ktXiz4LQF0Tgkc4VipMMdMlj5hSYiFF
+ Kuz66NlT5mfIqkDPhs0INSQ6W5g7xUrO2VsXRfwdGPxJOsGvfzMD+KQu0gn6YEeyv4ZocKA
+ giMzsF6/brReIyLfXmyw+qIqq1isbPE3LsIeV1zF2HP56PR9ww3lPYirQ+nC8kFYr+g0ooB
+ ijAEtaOXzCcbLycDzSvmg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2GlMJfBsJmw=:TbCQHBQlR61T4n2//VMNhP
+ uQrwe3wS78ihWQNEXlV2DpY6WUp3/2RaICX+TzXcILt0j0WWfXItn1YP4zGhLbtHYLdHaf4T7
+ u7OHs+uSiYmveKvqpKHUsBYv1SntgZFaeeElviUYU/WCeg11R0KnLngxfMHY7z1NzbNXfQqAn
+ cRhQEYphUVlq4Nib+DJng2SWY+PU5g2WpjKzn1itu3zi8Yo61ZwXnzbcx2beK2x9VuScJFP1c
+ 6zxplSj8LgRCoBX+xpL7BtWQcWna7Mw5P1fOs7EuaQcZ68agqXssjSm4MWkTiC1A0nw3tDqoh
+ m3B+WWb1WHexcmq24f2pCWEDkqDr6QUq63Ljs5KUEjojK/tENLCwfictWEMIUdu4J5XdxdKq0
+ BDIQuj/Sng8Gpy9iJdGBDNKafgECoI045CtLN+X73Ml+z8CA1V2AMbikvE8GK66I3W1KFU8Vf
+ 2MwR2ydLQj7RbcjvH46VcUaM4lweB+cLzQegTnZtZg+fHfbRGIjTalQwdjg3YNsx47bBtkHMn
+ xpnkWWyJSC39/MTMZo9BDN9vFMkLNrPX4ObkMHHHyalEZYnULbWoT7S5GvlC6E4EhALXYx1HM
+ 1+bVB4aJi05SkI/IyzR3olWI3a7/+CPZhZejqI8baKLkO247QlCXYsYOHjPlutjmVHiIDqjR5
+ DRO9D1wupUxQdG7IbxNDlaZ1sQdTwfcUmCtLhpNLyoq3W3/hL9kpnaVEn2ky23FFZIG5vqZJu
+ eRqfNfdtlcvh55d/3Ei3CxEH2OPWgcb29gz2Tw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some randconfig builds fail to compile the dcn10 code because of
-a missing declaration:
+gcc gets a bit confused by the logic in ovl_setup_trap() and
+can't figure out whether the local 'trap' variable in the caller
+was initialized or not:
 
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: In function 'dcn10_apply_ctx_for_surface':
-drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2378:3: error: implicit declaration of function 'udelay' [-Werror=implicit-function-declaration]
+fs/overlayfs/super.c: In function 'ovl_fill_super':
+fs/overlayfs/super.c:1333:4: error: 'trap' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+    iput(trap);
+    ^~~~~~~~~~
+fs/overlayfs/super.c:1312:17: note: 'trap' was declared here
 
-Include the appropriate kernel header.
+Reword slightly to make it easier for the compiler to understand.
 
-Fixes: 9ed43ef84d9d ("drm/amd/display: Add Underflow Asserts to dc")
+Fixes: 146d62e5a586 ("ovl: detect overlapping layers")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/overlayfs/super.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-index 1ac9a4f03990..d87ddc7de9c6 100644
---- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-+++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
-@@ -22,6 +22,7 @@
-  * Authors: AMD
-  *
-  */
-+#include <linux/delay.h>
+diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+index 746ea36f3171..d150ad6dba94 100644
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -995,8 +995,8 @@ static int ovl_setup_trap(struct super_block *sb, struct dentry *dir,
+ 	int err;
  
- #include <linux/delay.h>
- #include "dm_services.h"
+ 	trap = ovl_get_trap_inode(sb, dir);
+-	err = PTR_ERR(trap);
+-	if (IS_ERR(trap)) {
++	err = PTR_ERR_OR_ZERO(trap);
++	if (err) {
+ 		if (err == -ELOOP)
+ 			pr_err("overlayfs: conflicting %s path\n", name);
+ 		return err;
 -- 
 2.20.0
 
