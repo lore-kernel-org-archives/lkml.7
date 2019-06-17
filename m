@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42059C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23A4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2175220863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF7FB20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728712AbfFQSlj (ORCPT
+        id S1728737AbfFQSlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:41:39 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:60101 "EHLO
+        Mon, 17 Jun 2019 14:41:45 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:47939 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfFQSli (ORCPT
+        with ESMTP id S1726405AbfFQSln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:41:38 -0400
+        Mon, 17 Jun 2019 14:41:43 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MAORp-1hn8v92BXH-00Bvr3; Mon, 17 Jun 2019 20:41:24 +0200
+ 1M3DBb-1hdkz93fAL-003e79; Mon, 17 Jun 2019 20:41:23 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -33,28 +33,31 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 05/30] drivers: gpio: lynxpoint: use subsys_platform_driver()
-Date:   Mon, 17 Jun 2019 20:40:46 +0200
-Message-Id: <1560796871-18560-5-git-send-email-info@metux.net>
+Subject: [PATCH 03/30] drivers: gpio: da9055: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:40:44 +0200
+Message-Id: <1560796871-18560-3-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
 References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:/j4c3FyWT7iNyjBM83hS+oirnyGOSBHrDy4mSedO3eOWbp294SX
- A+Ed8X11Ylq2mC41dad6tu9XDE3eB5sIetcv6lTw7L2rRsguhB5Jv0gBiufWxHdLJnH470I
- Jbxi+YCChbbgscoDecbvtrwBc3W9XqAiePBIZ6VDHC5IJbH6bwas7iwrFDGTyzN0/G5FpUk
- iCinY4J8YA07zTMcIQzpg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:I69TDSvAHEk=:354x7iU3r/TnN7yyD7caOR
- mtV7+NWSZ7xIG6yHHD7tPPe8iOz/YzBVTvve28kblCC+rX63X8HuAc5LMzsF9O7MOmLdSo30j
- YZYISl3GofEDNbdLqYRbUFFiv49/pw3pqaGALJdwRZ2+l7w54/OSkDXFIPl3I02lUDmIzzMcB
- S4r7og5ohxiOuFoQfNuB307tS3Eis6r5zA3sjx0tmyBUIPqkG4nl0IMklORHolIsCIzJzdi6L
- i+Q9R5WRZpqcK7h4O/UtBtZe36mw54h5QBgkkGVnctk1G/JP740CwQOfmY7a1jup80EikYmgu
- F1nmXuwiabkAcVq2WAGmoKJdB9rNjsM133FYxz6P3fsdS+7z2WqKmM/PRwhKHZj6CEKLULvLM
- /10hl0Iz97n1N1zWWGCKiF2vkLbtZExF8rxIqqlhvcki40haTE8u0ICCvV9GXgjT8wCfeSLCP
- 1zNfMNKOPiML6rJFU6dSj/gpg2bh7/xcTgviQwV1by96jtLbvfdHo3kkCwjXytiYDqAz/u3dM
- kADOAt2BLFQiM9758631Fu/ml12cXkJqfyftZYWHNwyRLSDo7tsndy5wtZ2l5Iovg1dEgtc5V
- pl8hKEHhmVg8ciQGM2xgT/6W0dmU0I5Qs98JyvpNAOLp8bAF0w3JtKNFiaeh4Z+gJJZKZeHvl
- BhICMKtCnmu2MmvEZuT+UiouopvbByt4OX8hdd+M2ISTKsaA7ORP0+WHmqW094b8E7z+tv9z9
- 5TXBh76124MvoTFW6wLqAPAIZAzp1lPVLhJjLA==
+X-Provags-ID: V03:K1:Q5PltQXfiTOKHrKSj/Mo0rLI3IO7ONIoPXqcrcBIRXSnUAJ8vQ3
+ wn1jtR1xBNHqfmRS0rbCc116r5T7LrtGwvVWsxrPVqXea/YZ+pVMj1nPRE2rsfDfskBXB3t
+ 8Sndve/+Bc55xXUqoxgSYGiBcYrkPefxqHAChWvwJ9wKATWTH801QzMXNEgcGFdwiALljoc
+ r/1VvOX6UEa2O5X8ha6mw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:UWp2ZL6PlN4=:2AH/c8BuRTW47BCMNdDqvv
+ yDVEK3Sv4llPKToTHOQF9SMBJIZb2gIqZ+qlt9lapxCJmy9hoXYI1IaNCNIRmYtyvdRIvxmfM
+ ui6NqAxXdTXfiOjsYp7VXNocwVi6KByYslGsgOTi4Vf2ZGW0KR9/1BqTK8R3kCveCp9r1piUe
+ MQCG9K0PcWW4DORT5Mq1WJHM2+EtfDlfetIjsUJec1T04gjF8BOiKMfzQMLPkucA01pCymdSk
+ UJD+eSoCMsj0CLHhDkHwwJO0KfWnoziwFNF2KIzhI0KxEmYTDGBSkT95mivFWNPXlhO5M0i8e
+ WFtkZ8HE9bADucd0aFdICO9KPPhN1UoeVfN7EhdvsCGm+dtwRDvMYab1T8fKI3P9ULDhLGiPs
+ DUyCsJxi6SmvFbV9McDe1bV3L/iyGS/1o9jTlMbnBBJULkTruOqNQ8ViAo3FaoNcnwwlqcarQ
+ tRqfkew9JOrFLtQVzLzSa3/3itNZ4QHjMsQdF5evdMVI2gBP+GQmNUS/upSlqNmrM40v+rd/m
+ scq/1nIJFUNzhBV5pA/JDqCru9IiWbw0D4DfpAp2EI78InNrxkmsFgbFQswJWLxHz1Z9nlBN5
+ WzOswPED15wnkSUOpZ1C/+IE8aSVSjYdjtCiKWFSdWEXDVO9T7YSbqz41O1aou9QOU0cBKgrv
+ OvFJhbVGlwvLY9Hxx82oEi4LIjFCB6ig8JM3d+EHGzKOCNa33TESzJSrCIqzpPRncZFBNGPnU
+ aI6WiZpqzYApZDDynptHCCxAyvi/wlJ5T1FfPGqJMhy1CMZVBzTUP4R8oQZPX1jBt0vOfnneT
+ UdQSn0whmPLAuIQpa2O0EATeqv7qvhc027itMVC+wv1DzEWhE2KBm07GQeCuGQll/T3BMuTJB
+ SUuDBQddwizJpxw0KcIlY63jUEU5U/cPmxKwokiATJYCGXc8l/0oXIhaJQMkdc1FSbqVbSoqb
+ kRmWLcTUP6Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,34 +70,33 @@ subsys_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-lynxpoint.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+ drivers/gpio/gpio-da9055.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-lynxpoint.c b/drivers/gpio/gpio-lynxpoint.c
-index 31b4a09..8e6b998 100644
---- a/drivers/gpio/gpio-lynxpoint.c
-+++ b/drivers/gpio/gpio-lynxpoint.c
-@@ -438,19 +438,7 @@ static int lp_gpio_remove(struct platform_device *pdev)
- 		.acpi_match_table = ACPI_PTR(lynxpoint_gpio_acpi_match),
+diff --git a/drivers/gpio/gpio-da9055.c b/drivers/gpio/gpio-da9055.c
+index 6ad0c37..d93f8ba 100644
+--- a/drivers/gpio/gpio-da9055.c
++++ b/drivers/gpio/gpio-da9055.c
+@@ -163,18 +163,7 @@ static int da9055_gpio_probe(struct platform_device *pdev)
+ 		.name	= "da9055-gpio",
  	},
  };
 -
--static int __init lp_gpio_init(void)
+-static int __init da9055_gpio_init(void)
 -{
--	return platform_driver_register(&lp_gpio_driver);
+-	return platform_driver_register(&da9055_gpio_driver);
 -}
+-subsys_initcall(da9055_gpio_init);
 -
--static void __exit lp_gpio_exit(void)
+-static void __exit da9055_gpio_exit(void)
 -{
--	platform_driver_unregister(&lp_gpio_driver);
+-	platform_driver_unregister(&da9055_gpio_driver);
 -}
--
--subsys_initcall(lp_gpio_init);
--module_exit(lp_gpio_exit);
-+subsys_platform_driver(lp_gpio_driver);
+-module_exit(da9055_gpio_exit);
++subsys_platform_driver(da9055_gpio_driver);
  
- MODULE_AUTHOR("Mathias Nyman (Intel)");
- MODULE_DESCRIPTION("GPIO interface for Intel Lynxpoint");
+ MODULE_AUTHOR("David Dajun Chen <dchen@diasemi.com>");
+ MODULE_DESCRIPTION("DA9055 GPIO Device Driver");
 -- 
 1.9.1
 
