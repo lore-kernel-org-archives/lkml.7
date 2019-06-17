@@ -2,98 +2,121 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACA3C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:58:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEA79C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8D6E2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:58:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560783538;
-	bh=/fR2HWK5uL8FSzP6RGAa3koV2Eucrv0t/Hx+K7pxtUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zyHbY9AW7a/ZIIyWkUUPotyysmekJALNTBRa2Sm6TmTDA/iONifd087O+xNamT5qx
-	 N34s3WxKomn+4tlQWks+Zgsi5CkmFriXj3wSF24CNxccmK4iWso1UDwCqHvPAM42d/
-	 Krg+DBi4GlUj5bwYk2rYgwcr7LvnUy6nxvyWT/jA=
+	by mail.kernel.org (Postfix) with ESMTP id A405A2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:59:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x2rtsNq8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728090AbfFQO64 (ORCPT
+        id S1728286AbfFQO7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:58:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36616 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQO64 (ORCPT
+        Mon, 17 Jun 2019 10:59:25 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:42252 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfFQO7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:58:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KrQp+kHGo/s8VYNxSYJcNa3J6gA8cYR0tmZplHF5Dfw=; b=oJd2LEYu9LVw8yHwIIprxwQot
-        K4fJL9MOSXojhTUAcRT99AUXtqYnTjMiaybDUGAOkCcATtGdYG59fNIX57WtSUuWjTMbuFjSQwKI3
-        m5LWmuYa2HqBZURiLF4RZ9sjngucE+phqpi5dbFG/1u1RM+rG0IS1cd5xFBo3GSyKFAf0=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hct5x-0001sI-Oj; Mon, 17 Jun 2019 14:58:53 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 448F6440046; Mon, 17 Jun 2019 15:58:53 +0100 (BST)
-Date:   Mon, 17 Jun 2019 15:58:53 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 0/7] PM8005 and PMS405 regulator support
-Message-ID: <20190617145853.GT5316@sirena.org.uk>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
+        Mon, 17 Jun 2019 10:59:24 -0400
+Received: by mail-vk1-f196.google.com with SMTP id 130so2117244vkn.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:59:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VeDj455KpUjyGeFAvU/iNT8gTzAGIt+VE2V1K3FogGo=;
+        b=x2rtsNq8v/D8WowlfZi68S9op6AgNbvw20AEk01oXwgbgkkIqGoh7yUHC2b/x+Fpks
+         hklTr4vyJFfnu46NYXoNF6cujUaH2nJQMgSndZx6YhVWpyXQREM/XIlZFWsCPzzqbYiZ
+         d9i05TZWygp+RIske9k1qLrWcaQAd/Qz+aN1n8KuXzvzWd2HFoqGQgZsdgg5slwtqKvh
+         pPhE+uUNLhxtsRLRSEVjSrQiG5JEQ60sNKYn0vQTydYe4bzRPTx6iuUywg9Zsu/SsUjU
+         fWFjgza4amZzX20SY1DLOo9T5LBGUNCZv8ErViIL7AVqDk5W7UW8sqW9LT4snHzVQcPl
+         Y31w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VeDj455KpUjyGeFAvU/iNT8gTzAGIt+VE2V1K3FogGo=;
+        b=SZ1JQHJUF07UqoZWuHdhQMCvbdlpsG8o+ycJIZ0dB+hgI+6XVY+JFVMjaPClTQzPUR
+         R9jk2FxRv853/k5qYpBOd5diYd1ukQFdS/BuhdUQ2vYC1PmjnlXjPGiXwScVJ9m5MPYL
+         kc87kM+wRAGXQqLJJ9W384chDNCdHlne03Pp9XQdOzDxoiA5AwkKVW+jlm1eUNjIe/U6
+         Eyn5d3RnfsIphgkQ4WOCXPJy793NefoM5CY77u8ctTcQqEfX89sdMtqKIQhLQGgC1dJI
+         REyqjksBu4VEta1gO8ueOdLD9DEjA3Fj/K1nf3cZvrRwsGuybuIWAuMrkUqI8LnwzfGW
+         WzBQ==
+X-Gm-Message-State: APjAAAXQstI6xMqitOfjXQwlby5xPKLgxKIgmS3Z2Qi+vCF4rXjIHbBl
+        firAniMly3SGK8EXCeq13+76AONx3mNExlGkvPe6wA==
+X-Google-Smtp-Source: APXvYqx84xD50NIMODd6WRKKp6Two4nx8BrixlFjO5oD+vW8e0fmtGE84cRELHAfY18BaMIh0MTDpgLtd01jmw7jVCA=
+X-Received: by 2002:a1f:8744:: with SMTP id j65mr43978757vkd.17.1560783563932;
+ Mon, 17 Jun 2019 07:59:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="NZ00oluAJr3A0NMv"
-Content-Disposition: inline
-In-Reply-To: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1560247011-26369-1-git-send-email-manish.narani@xilinx.com>
+ <1560247011-26369-4-git-send-email-manish.narani@xilinx.com>
+ <CAPDyKFrJwpwUUX_q2kcR9QY_fv9Lgos+ixPmU6JMeJVqJAiFpg@mail.gmail.com>
+ <5feac3fb-bef3-b7d1-57d6-81e115e1f555@xilinx.com> <CAPDyKFp_ZvSjFp2FGonzGsnc9xPyZ7qOCaRnX1SimBxLpfz9-Q@mail.gmail.com>
+ <948514a0-e310-75fd-e8a8-6ef8bb14e41f@xilinx.com>
+In-Reply-To: <948514a0-e310-75fd-e8a8-6ef8bb14e41f@xilinx.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 17 Jun 2019 16:58:47 +0200
+Message-ID: <CAPDyKFp6O8rPZDZS4iKJam2+tXeen_ZMOXKw=WVzJNpBXcSc9g@mail.gmail.com>
+Subject: Re: [PATCH 3/3] mmc: sdhci-of-arasan: Add support for ZynqMP Platform
+ Tap Delays Setup
+To:     Michal Simek <michal.simek@xilinx.com>
+Cc:     Manish Narani <manish.narani@xilinx.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Adrian Hunter <adrian.hunter@intel.com>, rajan.vaja@xilinx.com,
+        jolly.shah@xilinx.com, nava.manne@xilinx.com,
+        Olof Johansson <olof@lixom.net>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[...]
 
---NZ00oluAJr3A0NMv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> >>
+> >>
+> >>> In regards to the mmc data part, I suggest to drop the
+> >>> ->set_tap_delay() callback, but rather use a boolean flag to indicate
+> >>> whether clock phases needs to be changed for the variant. Potentially
+> >>> that could even be skipped and instead call clk_set_phase()
+> >>> unconditionally, as the clock core deals fine with clock providers
+> >>> that doesn't support the ->set_phase() callback.
+> >>
+> >> In connection to another version of this driver for latest Xilinx chip
+> >> it would be better to keep set_tap_delay callback in the driver. The
+> >> reason is that new chip/ip is capable to setup tap delays directly
+> >> without asking firmware to do it. That's why for versal IP there is a
+> >> need to call different setup_tap_delay function.
+> >
+> > The ->set_tap_delay() callback is for ZyncMp pointing to
+> > sdhci_arasan_zynqmp_set_tap_delay(). This function calls the
+> > clk_set_phase() API.
+> >
+> > What does ->set_tap_delay() do for the latest version?
+>
+> There is different set of default tap delays which should be programmed
+> and it is done just via writing to registers which are the part of
+> controller address space.
 
-On Thu, Jun 13, 2019 at 02:24:36PM -0700, Jeffrey Hugo wrote:
-> The MSM8998 MTP reference platform supplies VDD_GFX from s1 of the
-> pm8005 PMIC.  VDD_GFX is needed to turn on the GPU.  As we are looking
-> to bring up the GPU, add the support for pm8005 and wire up s1 in a
-> basic manner so that we have this dependency out of the way and can
-> focus on enabling the GPU driver.
+Okay, I see.
 
-There's something really weird with the threading in how you posted
-these, a few of the patches are in reply to the prior patch so indented
-a level down.
+Not sure what makes most sense to do here, but it sounds to me like
+another ->set_phase() callback should be implemented for the clock
+provider. In other words, calling clk_set_phase() should continue to
+works just fine for this case as well. If it turns out to be
+inconvenient, we can always add the ->set_tap_delay() at a later point
+when it makes more sense.
 
---NZ00oluAJr3A0NMv
-Content-Type: application/pgp-signature; name="signature.asc"
+[...]
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HqqwACgkQJNaLcl1U
-h9D8RQf+OxNLRt9KY0qAKM/axbtNoK16v0PmHjNYLhYl5yBMi63SehdoXh1DkZY5
-pBVOnlHPnB3usazND0knM12bH9x/qWXJZeA4PPGCDwUz2SOJRxIYr7wsKNmNjV/u
-nZwsZ0dCbIFjRTZ8YCrc2FTsjCUVylqDeHzFJJ/I9nstD8POAs043rd5FIuNlGGS
-sb2Qhu94o6C8u7YUjWciJ3zjXtQM5rfcuxVpMpxX8dg55PPvk6cTeSnQwto+lpeU
-HypcRzk7F36tl5ElZPhf/WkPycNHdx8h+0oy85CVQ4/bqNb8rNDUFymfDE5qGI4o
-6qoIyaY8tuzHoiLnJNXFhtl6YzjKbw==
-=dHUK
------END PGP SIGNATURE-----
-
---NZ00oluAJr3A0NMv--
+Kind regards
+Uffe
