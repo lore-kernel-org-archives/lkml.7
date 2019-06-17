@@ -2,101 +2,67 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D23A4C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E850AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF7FB20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2D6B20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728737AbfFQSlp (ORCPT
+        id S1728780AbfFQSlv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:41:45 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:47939 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfFQSln (ORCPT
+        Mon, 17 Jun 2019 14:41:51 -0400
+Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34028 "EHLO
+        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727409AbfFQSln (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 14:41:43 -0400
-Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1M3DBb-1hdkz93fAL-003e79; Mon, 17 Jun 2019 20:41:23 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     thloh@altera.com, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, andriy.shevchenko@linux.intel.com,
-        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com, grygorii.strashko@ti.com,
-        ssantosh@kernel.org, khilman@kernel.org, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
-        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
-        patches@opensource.cirrus.com
-Subject: [PATCH 03/30] drivers: gpio: da9055: use subsys_platform_driver()
-Date:   Mon, 17 Jun 2019 20:40:44 +0200
-Message-Id: <1560796871-18560-3-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
-References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:Q5PltQXfiTOKHrKSj/Mo0rLI3IO7ONIoPXqcrcBIRXSnUAJ8vQ3
- wn1jtR1xBNHqfmRS0rbCc116r5T7LrtGwvVWsxrPVqXea/YZ+pVMj1nPRE2rsfDfskBXB3t
- 8Sndve/+Bc55xXUqoxgSYGiBcYrkPefxqHAChWvwJ9wKATWTH801QzMXNEgcGFdwiALljoc
- r/1VvOX6UEa2O5X8ha6mw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UWp2ZL6PlN4=:2AH/c8BuRTW47BCMNdDqvv
- yDVEK3Sv4llPKToTHOQF9SMBJIZb2gIqZ+qlt9lapxCJmy9hoXYI1IaNCNIRmYtyvdRIvxmfM
- ui6NqAxXdTXfiOjsYp7VXNocwVi6KByYslGsgOTi4Vf2ZGW0KR9/1BqTK8R3kCveCp9r1piUe
- MQCG9K0PcWW4DORT5Mq1WJHM2+EtfDlfetIjsUJec1T04gjF8BOiKMfzQMLPkucA01pCymdSk
- UJD+eSoCMsj0CLHhDkHwwJO0KfWnoziwFNF2KIzhI0KxEmYTDGBSkT95mivFWNPXlhO5M0i8e
- WFtkZ8HE9bADucd0aFdICO9KPPhN1UoeVfN7EhdvsCGm+dtwRDvMYab1T8fKI3P9ULDhLGiPs
- DUyCsJxi6SmvFbV9McDe1bV3L/iyGS/1o9jTlMbnBBJULkTruOqNQ8ViAo3FaoNcnwwlqcarQ
- tRqfkew9JOrFLtQVzLzSa3/3itNZ4QHjMsQdF5evdMVI2gBP+GQmNUS/upSlqNmrM40v+rd/m
- scq/1nIJFUNzhBV5pA/JDqCru9IiWbw0D4DfpAp2EI78InNrxkmsFgbFQswJWLxHz1Z9nlBN5
- WzOswPED15wnkSUOpZ1C/+IE8aSVSjYdjtCiKWFSdWEXDVO9T7YSbqz41O1aou9QOU0cBKgrv
- OvFJhbVGlwvLY9Hxx82oEi4LIjFCB6ig8JM3d+EHGzKOCNa33TESzJSrCIqzpPRncZFBNGPnU
- aI6WiZpqzYApZDDynptHCCxAyvi/wlJ5T1FfPGqJMhy1CMZVBzTUP4R8oQZPX1jBt0vOfnneT
- UdQSn0whmPLAuIQpa2O0EATeqv7qvhc027itMVC+wv1DzEWhE2KBm07GQeCuGQll/T3BMuTJB
- SUuDBQddwizJpxw0KcIlY63jUEU5U/cPmxKwokiATJYCGXc8l/0oXIhaJQMkdc1FSbqVbSoqb
- kRmWLcTUP6Q==
+Received: from Internal Mail-Server by MTLPINE2 (envelope-from sramani@mellanox.com)
+        with ESMTPS (AES256-SHA encrypted); 17 Jun 2019 21:41:41 +0300
+Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
+        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x5HIfeLY003389;
+        Mon, 17 Jun 2019 14:41:40 -0400
+Received: (from sramani@localhost)
+        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x5HIfd96011255;
+        Mon, 17 Jun 2019 14:41:39 -0400
+From:   Shravan Kumar Ramani <sramani@mellanox.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        James Morse <james.morse@arm.com>
+Cc:     Shravan Kumar Ramani <sramani@mellanox.com>,
+        Liming Sun <lsun@mellanox.com>, linux-edac@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v5 0/1] EDAC, mellanox: Add ECC support for BlueField DDR4
+Date:   Mon, 17 Jun 2019 14:41:15 -0400
+Message-Id: <cover.1560786127.git.sramani@mellanox.com>
+X-Mailer: git-send-email 2.1.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Enrico Weigelt <info@metux.net>
+Changes since v4:
+Shorten long macro names.
 
-Reduce driver init boilerplate by using the new
-subsys_platform_driver() macro.
+Changes since v3:
+Replace bitfields with shifts and masks.
+Make use of SZ_ and PAGE_ macros.
+Read DIMM count from the ACPI table instead of hard-coding the info in
+the driver.
 
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- drivers/gpio/gpio-da9055.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+Shravan Kumar Ramani (1):
+  EDAC, mellanox: Add ECC support for BlueField DDR4
 
-diff --git a/drivers/gpio/gpio-da9055.c b/drivers/gpio/gpio-da9055.c
-index 6ad0c37..d93f8ba 100644
---- a/drivers/gpio/gpio-da9055.c
-+++ b/drivers/gpio/gpio-da9055.c
-@@ -163,18 +163,7 @@ static int da9055_gpio_probe(struct platform_device *pdev)
- 		.name	= "da9055-gpio",
- 	},
- };
--
--static int __init da9055_gpio_init(void)
--{
--	return platform_driver_register(&da9055_gpio_driver);
--}
--subsys_initcall(da9055_gpio_init);
--
--static void __exit da9055_gpio_exit(void)
--{
--	platform_driver_unregister(&da9055_gpio_driver);
--}
--module_exit(da9055_gpio_exit);
-+subsys_platform_driver(da9055_gpio_driver);
- 
- MODULE_AUTHOR("David Dajun Chen <dchen@diasemi.com>");
- MODULE_DESCRIPTION("DA9055 GPIO Device Driver");
+ MAINTAINERS                   |   5 +
+ drivers/edac/Kconfig          |   7 +
+ drivers/edac/Makefile         |   1 +
+ drivers/edac/bluefield_edac.c | 366 ++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 379 insertions(+)
+ create mode 100644 drivers/edac/bluefield_edac.c
+
 -- 
-1.9.1
+2.1.2
 
