@@ -4,203 +4,105 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E5AC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE06BC31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAA22084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B22B72084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfFQLJJ (ORCPT
+        id S1727735AbfFQLKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:09:09 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:55229 "EHLO
+        Mon, 17 Jun 2019 07:10:40 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:41567 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726730AbfFQLJJ (ORCPT
+        with ESMTP id S1726730AbfFQLKk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:09:09 -0400
+        Mon, 17 Jun 2019 07:10:40 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MZSym-1i5r5w3peI-00WRtT; Mon, 17 Jun 2019 13:08:59 +0200
+ (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MFb38-1hqXBM2ZJe-00H9YY; Mon, 17 Jun 2019 13:10:02 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Oz Shlomo <ozsh@mellanox.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Eli Britstein <elibr@mellanox.com>,
-        Mark Bloch <markb@mellanox.com>,
-        Or Gerlitz <ogerlitz@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] net/mlx5e: reduce stack usage in mlx5_eswitch_termtbl_create
-Date:   Mon, 17 Jun 2019 13:08:22 +0200
-Message-Id: <20190617110855.2085326-1-arnd@arndb.de>
+To:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Shreeya Patel <shreeya.patel23498@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jeremy Fertic <jeremyfertic@gmail.com>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] Staging: iio: adt7316: use correct headers for gpio
+Date:   Mon, 17 Jun 2019 13:09:20 +0200
+Message-Id: <20190617110951.2085648-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:xpealiSDqaGMOSOW167AmUNZ9keZ5oPMTcByDXU0S+i0b4fbvlg
- UJW7rl7HuiMTPTQXUHK4SEs+H2Cm0UCkKGBPGjL8RpVDWZhxHsDq941KnbmhxHV8dvUNpI7
- U7YHMsPKWIFXcncEpu0dtswxPB3kZP/gPfKzFRxscff2Rfi/Vq/x4XaYEuyEhUJmJy3wsV2
- l6dWCJfvRcK/lsafzoicg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:8eSzBrY2/xk=:02bA9zm8tIK+y6WJJQ9r0q
- Jk21B3ElC1T8zOiw1/+FRSDTbSbPzHXU8BAOwfUwwQkjf9m7HkjJbLlMio2zc/kKXIxlgLWkE
- kfch+THVAbSVZVQ3Cv8jQEwFirU4EFac9SfJOJrMAIFoUzSoetUNLEnkEIEz29IBg7hmHVTwh
- 24kK2OLa9M0t4JMoJnLUeVPgU5Gzxd1gJphvMujTVbj9D3KkSLAwoCNFZl7PvDC7h4XH+CoJY
- +4YD1iGthGJM43udOXgXXEQg4vbI4fg+iQ/pUMDre5YWY5OOj/aDHRsQYqEln1FlvzDP8bP/8
- YzzYNkhqudCtWEuBKLa8X0iIVRtS3GErHS9U/Z3VZmlTTlcT+fdyq2w6yA8LO9ogEDylMLpl6
- 2SCRw+RCn9jmgyaLepxZNvBP+a4AspHY21m5uP8Vg8S75JcChXQ2YrvEOjQlwBNy7YXHDMQ8j
- FiqpXod4HlHa9Lomgf3xcdRLyMvdHESSMnKSgM6FKyteP/ISoKModZ0P3lDmuXefOO/QvZFah
- go8bY2xBs4qwr3YXA9So7cpfnMhZq+CAtzyCSRwuOOrsYEuBp+Fr17gZno1Efcad9gAeg0Tvp
- fJ01fdQuGiLeRQfqvSh5Oluet/e25lAr72xC4Jl77+VxwcWK0VK2ljSaylYG9MzHRLg9rFHnh
- Z4YLjGBHtquRucuxfdShoSChA0N4irT2h6E3U+R5Mhk0K8cZa0Twdmzh3xZA/vz73XQr2EBY0
- /BOflpxH7K/NVHfm1ChxTdLnTS/R9PWxWK+ZvA==
+X-Provags-ID: V03:K1:cTNvSQ9TaXGrz6GNYn/l47SM2aOEl9ewVkuzYHttzbQ18FhJ43p
+ XbN9BwodkIHe7auBf9exzPpX8+XLgvTH0lskZMyeAenvZIHswz3XX+WWI/HSZDipF1HT4m5
+ +350Y5/T+jrkz3leY7UMJfO/q8w8r3WBf06lna+Lp4989vU93D9IYu+l7mUwiYxsfENmgwK
+ ucyY2l2PxMpaYqqMvJYSA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:V5BTVesWKOo=:2cXnZF3aZ8tbG/yPkPAQM4
+ gxfPEl22HrRSJj6PwZC5Mc707yi5tWA3AVHPm9Pe6P4oGnr55t4/ucVn+OqL4Cm43bR+JMgez
+ CMMZV0bG3J0s3TVgTtsIB3wt1wZMc/PJnelZ5+aiqDX/AoUin7FdA0QT2atsJTVPgoDZcFjEx
+ 5IXX9jOQPvdXaC5PqauYzhgA3lbrKIhDz+X8/ewBMMLPLfsF5mrZd6PMzP4rPGwmH8TeDofH+
+ 9CYYoOARCCnZxoNpn1rUk4POaCRobviaPCfeEJJuM8H64CewD/UkoaQtA28Ido0VO6bKXC+Xj
+ rZA7iOT16yy+KJDKO0CgnH9DNNyq+F+sOrrhcfB0MTFjvfZIYgYb7qx+QZ3/U7y83DamcrRel
+ qnx/l7e0j8pF/kOfHoHbLnRlRvBDZlXmpa0cZi/hGD+pxkHN2+FLE5j/9SVFo4Z03oBkpStHj
+ k+sqDO3czfdaMLujhR+83Z44IoRwA2uueMI8C/ixZRIJ5dzuDD6aTp/jfRhcvk92Y3MI1svZs
+ CKn+Go8wNfN+kJMY1HKxOUZwoUed8HGKep6WKgqidaEzbQ0YO1sgFEoftT3UauT2wDbbKlixy
+ bg+nZtwn4tXS1RVUN+YvkgOc1txR9dql4Cxtsihecfq6sjWLfG1vV0xmlbtDP6vqI71Ta6fRX
+ sdF/eBvyc/tLtRJTYdY1zWBn58SOPU67j/wm8NoY2zI0R/ECVFKmiWRh2xf46DZ7MfWX+Rdue
+ bHAGGNwweL3jnWPJ7YRS5yvyM0fvYK7s2aFNpA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Putting an empty 'mlx5_flow_spec' structure on the stack is a bit
-wasteful and causes a warning on 32-bit architectures when building
-with clang -fsanitize-coverage:
+When building without CONFIG_GPIOLIB, we get a compile-time failure:
 
-drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c: In function 'mlx5_eswitch_termtbl_create':
-drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c:90:1: error: the frame size of 1032 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
+drivers/staging/iio/addac/adt7316.c:947:3: error: implicit declaration of function 'gpiod_set_value' [-Werror,-Wimplicit-function-declaration]
+                gpiod_set_value(chip->ldac_pin, 0);
+                ^
+drivers/staging/iio/addac/adt7316.c:947:3: note: did you mean 'gpio_set_value'?
+include/linux/gpio.h:169:20: note: 'gpio_set_value' declared here
+static inline void gpio_set_value(unsigned gpio, int value)
+                   ^
+drivers/staging/iio/addac/adt7316.c:947:3: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
+                gpiod_set_value(chip->ldac_pin, 0);
+                ^
+drivers/staging/iio/addac/adt7316.c:1805:13: error: implicit declaration of function 'irqd_get_trigger_type' [-Werror,-Wimplicit-function-declaration]
+        irq_type = irqd_get_trigger_type(irq_get_irq_data(chip->bus.irq));
 
-Since the structure is never written to, we can statically allocate
-it to avoid the stack usage. To be on the safe side, mark all
-subsequent function arguments that we pass it into as 'const'
-as well.
+Include the correct headers that contain the declarations for these
+functions.
 
-Fixes: 10caabdaad5a ("net/mlx5e: Use termination table for VLAN push actions")
+Fixes: c63460c4298f ("Staging: iio: adt7316: Use device tree data to set ldac_pin")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- .../mlx5/core/eswitch_offloads_termtbl.c      |  2 +-
- .../net/ethernet/mellanox/mlx5/core/fs_core.c | 20 +++++++++----------
- include/linux/mlx5/fs.h                       |  2 +-
- 3 files changed, 12 insertions(+), 12 deletions(-)
+ drivers/staging/iio/addac/adt7316.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
-index cb7d8ebe2c95..171f3d4ef9ac 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
-@@ -50,7 +50,7 @@ mlx5_eswitch_termtbl_create(struct mlx5_core_dev *dev,
- 			    struct mlx5_flow_act *flow_act)
- {
- 	struct mlx5_flow_namespace *root_ns;
--	struct mlx5_flow_spec spec = {};
-+	static const struct mlx5_flow_spec spec = {};
- 	int prio, flags;
- 	int err;
- 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-index fe76c6fd6d80..739123e1363b 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
-@@ -584,7 +584,7 @@ static int insert_fte(struct mlx5_flow_group *fg, struct fs_fte *fte)
- }
- 
- static struct fs_fte *alloc_fte(struct mlx5_flow_table *ft,
--				u32 *match_value,
-+				const u32 *match_value,
- 				struct mlx5_flow_act *flow_act)
- {
- 	struct mlx5_flow_steering *steering = get_steering(&ft->node);
-@@ -612,7 +612,7 @@ static void dealloc_flow_group(struct mlx5_flow_steering *steering,
- 
- static struct mlx5_flow_group *alloc_flow_group(struct mlx5_flow_steering *steering,
- 						u8 match_criteria_enable,
--						void *match_criteria,
-+						const void *match_criteria,
- 						int start_index,
- 						int end_index)
- {
-@@ -642,7 +642,7 @@ static struct mlx5_flow_group *alloc_flow_group(struct mlx5_flow_steering *steer
- 
- static struct mlx5_flow_group *alloc_insert_flow_group(struct mlx5_flow_table *ft,
- 						       u8 match_criteria_enable,
--						       void *match_criteria,
-+						       const void *match_criteria,
- 						       int start_index,
- 						       int end_index,
- 						       struct list_head *prev)
-@@ -1285,7 +1285,7 @@ add_rule_fte(struct fs_fte *fte,
- }
- 
- static struct mlx5_flow_group *alloc_auto_flow_group(struct mlx5_flow_table  *ft,
--						     struct mlx5_flow_spec *spec)
-+						     const struct mlx5_flow_spec *spec)
- {
- 	struct list_head *prev = &ft->node.children;
- 	struct mlx5_flow_group *fg;
-@@ -1451,7 +1451,7 @@ static int check_conflicting_ftes(struct fs_fte *fte, const struct mlx5_flow_act
- }
- 
- static struct mlx5_flow_handle *add_rule_fg(struct mlx5_flow_group *fg,
--					    u32 *match_value,
-+					    const u32 *match_value,
- 					    struct mlx5_flow_act *flow_act,
- 					    struct mlx5_flow_destination *dest,
- 					    int dest_num,
-@@ -1536,7 +1536,7 @@ static void free_match_list(struct match_list_head *head)
- 
- static int build_match_list(struct match_list_head *match_head,
- 			    struct mlx5_flow_table *ft,
--			    struct mlx5_flow_spec *spec)
-+			    const struct mlx5_flow_spec *spec)
- {
- 	struct rhlist_head *tmp, *list;
- 	struct mlx5_flow_group *g;
-@@ -1589,7 +1589,7 @@ static u64 matched_fgs_get_version(struct list_head *match_head)
- 
- static struct fs_fte *
- lookup_fte_locked(struct mlx5_flow_group *g,
--		  u32 *match_value,
-+		  const u32 *match_value,
- 		  bool take_write)
- {
- 	struct fs_fte *fte_tmp;
-@@ -1622,7 +1622,7 @@ lookup_fte_locked(struct mlx5_flow_group *g,
- static struct mlx5_flow_handle *
- try_add_to_existing_fg(struct mlx5_flow_table *ft,
- 		       struct list_head *match_head,
--		       struct mlx5_flow_spec *spec,
-+		       const struct mlx5_flow_spec *spec,
- 		       struct mlx5_flow_act *flow_act,
- 		       struct mlx5_flow_destination *dest,
- 		       int dest_num,
-@@ -1715,7 +1715,7 @@ try_add_to_existing_fg(struct mlx5_flow_table *ft,
- 
- static struct mlx5_flow_handle *
- _mlx5_add_flow_rules(struct mlx5_flow_table *ft,
--		     struct mlx5_flow_spec *spec,
-+		     const struct mlx5_flow_spec *spec,
- 		     struct mlx5_flow_act *flow_act,
- 		     struct mlx5_flow_destination *dest,
- 		     int dest_num)
-@@ -1823,7 +1823,7 @@ static bool fwd_next_prio_supported(struct mlx5_flow_table *ft)
- 
- struct mlx5_flow_handle *
- mlx5_add_flow_rules(struct mlx5_flow_table *ft,
--		    struct mlx5_flow_spec *spec,
-+		    const struct mlx5_flow_spec *spec,
- 		    struct mlx5_flow_act *flow_act,
- 		    struct mlx5_flow_destination *dest,
- 		    int num_dest)
-diff --git a/include/linux/mlx5/fs.h b/include/linux/mlx5/fs.h
-index 2ddaa97f2179..c0c029664527 100644
---- a/include/linux/mlx5/fs.h
-+++ b/include/linux/mlx5/fs.h
-@@ -200,7 +200,7 @@ struct mlx5_flow_act {
+diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
+index 37ce563cb0e1..9cb3d0e42c38 100644
+--- a/drivers/staging/iio/addac/adt7316.c
++++ b/drivers/staging/iio/addac/adt7316.c
+@@ -6,7 +6,8 @@
   */
- struct mlx5_flow_handle *
- mlx5_add_flow_rules(struct mlx5_flow_table *ft,
--		    struct mlx5_flow_spec *spec,
-+		    const struct mlx5_flow_spec *spec,
- 		    struct mlx5_flow_act *flow_act,
- 		    struct mlx5_flow_destination *dest,
- 		    int num_dest);
+ 
+ #include <linux/interrupt.h>
+-#include <linux/gpio.h>
++#include <linux/gpio/consumer.h>
++#include <linux/irq.h>
+ #include <linux/workqueue.h>
+ #include <linux/device.h>
+ #include <linux/kernel.h>
 -- 
 2.20.0
 
