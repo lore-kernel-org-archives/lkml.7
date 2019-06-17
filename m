@@ -2,111 +2,123 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFB1C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24C33C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0637B208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E545120863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2mPajXvU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728788AbfFQTGN (ORCPT
+        id S1728800AbfFQTG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:06:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54774 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbfFQTGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:06:13 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 991556EBA2;
-        Mon, 17 Jun 2019 19:06:12 +0000 (UTC)
-Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D1DF7DF66;
-        Mon, 17 Jun 2019 19:06:11 +0000 (UTC)
-Message-ID: <b8a3714af85a4a798bd205bd152a2098b4124820.camel@redhat.com>
-Subject: Re: [PATCH trivial] IB/hfi1: Spelling s/statisfied/satisfied/
-From:   Doug Ledford <dledford@redhat.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mike Marciniszyn <mike.marciniszyn@intel.com>,
-        Dennis Dalessandro <dennis.dalessandro@intel.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Jiri Kosina <trivial@kernel.org>
-Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 17 Jun 2019 15:06:08 -0400
-In-Reply-To: <20190617140138.734-1-geert+renesas@glider.be>
-References: <20190617140138.734-1-geert+renesas@glider.be>
-Organization: Red Hat, Inc.
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-uV6aTJ3m0eystd3cMwoh"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Mon, 17 Jun 2019 15:06:29 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:50140 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfFQTG3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:06:29 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HJ3dlE006806;
+        Mon, 17 Jun 2019 19:06:17 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2018-07-02; bh=OaHbeR0lOY/DEBGaqTG6p1kztv8w3JP2A32htJKCwpk=;
+ b=2mPajXvU+J9LkdGoyF0fTtoih1vrC3SprPxHN7uv4HsbySfuNvTMb6s/CfDyjexfzd6s
+ EvXOHmymsiQ1GEXA/73SDyJeimba5snAnfo9eFEsUjXFkucunwSY7O4JLxgbLUP3PXT3
+ kcUMM6OyxqFWbcHgR/qcUrA3IhIArNdPZfGJejszE0f7Nfd8Gha1erlHdEk6OU9UFKRo
+ cshsbDlc09VoJ/UJto5SiqRhse8e6NPhgUvRFKiOZM9L7oImbTzYYuKLjUiH2NxKRWoh
+ RIEkELcWKDeYtCxmmkpxL9INKUxeYfgKDaBKdXsyJW8cdIJ8kY6Jtx/PE2IJeEMN1yEo Mg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2t4saq86qn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 19:06:17 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HJ4PY0118043;
+        Mon, 17 Jun 2019 19:06:16 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2t5mgbh6nu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 19:06:16 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5HJ6ECm024547;
+        Mon, 17 Jun 2019 19:06:14 GMT
+Received: from mwanda (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 12:06:13 -0700
+Date:   Mon, 17 Jun 2019 22:06:05 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Amelie Delaunay <amelie.delaunay@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Subject: [PATCH] mfd: stmfx: Fix an endian bug in stmfx_irq_handler()
+Message-ID: <20190617190605.GA21332@mwanda>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 17 Jun 2019 19:06:13 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
+X-Mailer: git-send-email haha only kidding
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906170169
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906170169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's not okay to cast a "u32 *" to "unsigned long *" when you are
+doing a for_each_set_bit() loop because that will break on big
+endian systems.
 
---=-uV6aTJ3m0eystd3cMwoh
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 386145601b82 ("mfd: stmfx: Uninitialized variable in stmfx_irq_handler()")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ drivers/mfd/stmfx.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On Mon, 2019-06-17 at 16:01 +0200, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/infiniband/hw/hfi1/tid_rdma.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/infiniband/hw/hfi1/tid_rdma.c
-> b/drivers/infiniband/hw/hfi1/tid_rdma.c
-> index 6fb93032fbefcb7e..24f30ff6b5fbc868 100644
-> --- a/drivers/infiniband/hw/hfi1/tid_rdma.c
-> +++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
-> @@ -477,7 +477,7 @@ static struct rvt_qp *first_qp(struct
-> hfi1_ctxtdata *rcd,
->   * Must hold the qp s_lock and the exp_lock.
->   *
->   * Return:
-> - * false if either of the conditions below are statisfied:
-> + * false if either of the conditions below are satisfied:
->   * 1. The list is empty or
->   * 2. The indicated qp is at the head of the list and the
->   *    HFI1_S_WAIT_TID_SPACE bit is set in qp->s_flags.
-
-Thanks, applied to for-next.
-
---=20
-Doug Ledford <dledford@redhat.com>
-    GPG KeyID: B826A3330E572FDD
-    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
-2FDD
-
---=-uV6aTJ3m0eystd3cMwoh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0H5KAACgkQuCajMw5X
-L93CIw/+IhiUDg8ipstsI788cxfhZ0Fzg3YRv/bOAkc5Mpyle0jyr2UVJiuUwlC6
-X2imbQx3GIDS0Q+widP4HmB2USrYen9B7waoQ8Y0HBiw01xG1479+1thRG2ujiDd
-iJTUtRE7JhkLVQ3+GQSbdxXtgdnkqHH0/52w/EX5jtEXwaDZUaEMfb5gkgze/89F
-pniweNJU+I1y0sRqoSrK8CrcQ++fGAHQbYHrOqeccujB0PsC2v8kHoA2LsLWJxkm
-lX1oyaIK+KbSoue3q6meH9iSmW4KSB4vnCYDeitMqSzr0+vSvGESXKrDvwaV4PDr
-6dZsq5vnJGQ1LpzePZ/ky/xCXdBFvh0YgUiSC3O0VD42rVhC3UlCjqJhSotAgaac
-PXG6AAB/upnVeiLtAi6FdQab0Gc/og+p1pH7+1Z6S2h9ZKTFBs20PKuTZZBj2cLm
-j7Zoa4KF1VOH3sP01ysCB488QMbY1oXW5QslWPTCbDJg6bppHEFSrQTxNUtxMEKD
-ttHUPati9V7QQkNBPDbUFr1NjqLhAdLx9WGHgyII1DpV5EBObNfh6OyjqC/MOKG+
-69pf+LuhoxyhoFQzYFtPTEtzp4808qfxW76fmDYtun9gypyrZVxl+jpoAPSYSIzj
-ZEzaMHBsY2ybwDrPbFI+P/AoNmfbIfveZuwtC3aVWrP0ZDp8VXo=
-=QIBC
------END PGP SIGNATURE-----
-
---=-uV6aTJ3m0eystd3cMwoh--
+diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
+index 7c419c078688..857991cb3cbb 100644
+--- a/drivers/mfd/stmfx.c
++++ b/drivers/mfd/stmfx.c
+@@ -204,6 +204,7 @@ static struct irq_chip stmfx_irq_chip = {
+ static irqreturn_t stmfx_irq_handler(int irq, void *data)
+ {
+ 	struct stmfx *stmfx = data;
++	unsigned long bits;
+ 	u32 pending, ack;
+ 	int n, ret;
+ 
+@@ -222,7 +223,8 @@ static irqreturn_t stmfx_irq_handler(int irq, void *data)
+ 			return IRQ_NONE;
+ 	}
+ 
+-	for_each_set_bit(n, (unsigned long *)&pending, STMFX_REG_IRQ_SRC_MAX)
++	bits = pending;
++	for_each_set_bit(n, &bits, STMFX_REG_IRQ_SRC_MAX)
+ 		handle_nested_irq(irq_find_mapping(stmfx->irq_domain, n));
+ 
+ 	return IRQ_HANDLED;
+-- 
+2.20.1
 
