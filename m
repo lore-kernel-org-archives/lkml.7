@@ -2,100 +2,205 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34318C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:38:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E98DBC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0890E20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:38:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J6S3J1f8"
+	by mail.kernel.org (Postfix) with ESMTP id C964A20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfFQMiU (ORCPT
+        id S1727848AbfFQMiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:38:20 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:40127 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725962AbfFQMiS (ORCPT
+        Mon, 17 Jun 2019 08:38:50 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:45035 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfFQMiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:38:18 -0400
-Received: by mail-pl1-f194.google.com with SMTP id a93so4054241pla.7;
-        Mon, 17 Jun 2019 05:38:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7HWS4OashOxAu0e1Juzv8tlFO0zblpeid6xA2lhMlp4=;
-        b=J6S3J1f84Zwu6Y3ZzFFPM7DpYB486MjmnZBP/sqOf33QXpzFgPuCQSQp4ZU5FZFnEo
-         S6VhLSmehHb65I9XEe8Z6erpru496cFjymfaJ0i2lPD3zE9DDoT+ynQaah/gazY+2wpp
-         55iLn6sMJ9l1y1vTbC9JQqKHcimU9DG/jJfgPuugSeeUQxKttVnkXaiKgVfxI6Y8jonq
-         FRpEMtrSMl1kPmafLdReQ1YkquOZsMK+skETn0R3v3zG0Bc4QmToQisIZF5UgU+xkeaO
-         AAvP8v3ld61VeHzfvtdC7eMFxE1cxyEwUy2Uk7wr+bWXmS9qy4tkx4XT2kfDVM/ZJUAe
-         BlTg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7HWS4OashOxAu0e1Juzv8tlFO0zblpeid6xA2lhMlp4=;
-        b=o/T6/mwElWFQUmu4Lz2WEdu4sCa+0v6yUbm8/ZSBSlcd1PE/fQChrrplsFJrdGPAcX
-         H2tKaSRK87X2+7XGVMKZ4YNzkf3VwYjYzneHTJZgAsm13BzZxHIcH/cdj56wcmzqXvGW
-         CkofjM70Gt6VYs8JP6uSBr+1qiZkQKKMrSFKi0dQCoanV6bZejs3Ph+KTTj6aOMA3N3T
-         5xIpIaAHsaHMtLRS1OfmRbhgsXT5aZTZHgxG1r4C/Cfk8TzL83ONLCKhGpGHgN17va4l
-         X67JInidTcIcuy4B2S++4MpUfo71EirQEbqud9QNyPqBVxnvEVtByOXiRpfwVj9/+mAo
-         6rlQ==
-X-Gm-Message-State: APjAAAXlIjWPj9mVIUmtIGblA4qtpqanv+FLBIg7Z98QI6gaDkcNViWi
-        KNOhpqzv3Z5++xyhoR/fagu3AXoDmHLg0klfZSs=
-X-Google-Smtp-Source: APXvYqx+yy63ODmg/F64jxbPLOKpMrfSxgN8vbV93mC8Nz62YF97HAjvgU+PCq0F3nowgVzCM8859Vh72huTJmX06Mg=
-X-Received: by 2002:a17:902:694a:: with SMTP id k10mr34059666plt.255.1560775097738;
- Mon, 17 Jun 2019 05:38:17 -0700 (PDT)
+        Mon, 17 Jun 2019 08:38:50 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1M2fDl-1hd7l83wTv-004C56; Mon, 17 Jun 2019 14:38:42 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Hsin-Yi Wang <hsinyi@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Rob Herring <robh@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] of/fdt: hide of_ftd_match() if unused
+Date:   Mon, 17 Jun 2019 14:38:19 +0200
+Message-Id: <20190617123840.911593-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <20190612124053.119182-1-me@myself5.de> <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
- <CAHp75Vdzf7bMQq2WP59Pux6QXD4GTcPLjryEecAsHJiAEewjcA@mail.gmail.com>
-In-Reply-To: <CAHp75Vdzf7bMQq2WP59Pux6QXD4GTcPLjryEecAsHJiAEewjcA@mail.gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 17 Jun 2019 15:38:07 +0300
-Message-ID: <CAHp75VeSPYakPF-xUcaVOmnMEpv-UZFSrERMSCBi53ov5oA=0g@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Update Hi10 Air filter
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Christian Oder <me@myself5.de>, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:C9EgkRJlRV+uUkgeQXJ+viZ12Os+ic8aUZ0U22arhnLAFNw45Wn
+ CoIq1FnerQpG/ubXsFQvljsdA4vy1ibxvexiKshRTvr/so8dEoz3+aGQiS84J9nuJPFCYFZ
+ KHf7hTZ3LspgE9JcBWCwJSr90DsFbVLeorbN9nkL1+ofBOc8m0HRUEGGXOM8+UwQRDMyDtl
+ +oqEqUemR5J8ePqsUgrrg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:t/do7VlCqaQ=:DAOKGMK8s9JWSU3wDjs0vh
+ OLYNBNzpo6PFyNS9aObN7XICzBfuRAScYObG4sGonUJoA7Sg+stP8UTtnZmzsimBRtYh54+56
+ QorehnUFCQMsnkXI/yD/p+z4uh6ZtHPx0dYHpvs2uSBH0s2Tpl9pxsnzNPJ2VCKHl5sOu2Ffy
+ /7jIxiFazKDGx/7d5hlVg1Ge+JPsMuydb6ptaTCdDEZAvB5zmEg/nwszjCJMQr5Ssit3v7tc9
+ qwp+TRWmEoYsPiGB43axYhi633GGllB1LnrD4GYTpA4POz5zthz3r3CB5aBIH9H/ayzpsVqM9
+ +WROXbaSla325gse3uItEK+OWheddGj5o62DlZMnDR/b4O+7lmNCyZkaEKAz1M7vf/iV4Ac/h
+ FnkyDc1rhNBe4hk9HiXvVoWLF4OnfxruTswom9W8F0MV8f9L4Luoe5Tk/MPDhxaJ2CPDBrGAi
+ n2EUwsU/ptD5F8RjvlfcbHtPpAWwufxWv65lDvnv1UOPAIst4CMzwl0Z+t9nZ7nFY0CHZ6AHY
+ WHfLPSOaXyQr9Pd1Ij9bisiz+8PX0IeOtazDlGDQ26uvP9dycc8PjuGCbPdEJlbttmmiRW+6y
+ EA+LHrG12iU6iyQTTaIn0a7k6UPZmRUg24OTtxcWQvdZffgOUI/M2+4kOGK3HstYb2Kh5VFGx
+ wkJAwbg4qHdKUnNx/2kt3p7qUsElqP3JWCS0HcvmCvqS3G3IfIFzteUnHtKZJBAQVsUvLQoYD
+ 3jfvNcOFf0kqYclTnAyOV8Rzjbc4RUSIMFoO2w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 3:37 PM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Wed, Jun 12, 2019 at 3:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
-> >
-> > Hi,
-> >
-> > On 12-06-19 14:40, Christian Oder wrote:
-> > > Turns out the Hi10 Air is built by multiple companies so using Hampoo
-> > > as a filter is not enough to cover all variants.
-> > >
-> > > This has been verified as working on the Hampoo and Morshow version.
-> > >
-> > > Signed-off-by: Christian Oder <me@myself5.de>
-> >
-> > Patch looks good to me:
-> >
-> > Reviewed-by: Hans de Goede <hdegoede@redhat.com>
->
+The only caller of this function is built conditionally:
 
-> By some reason patchwork doesn't have a trace of this.
+drivers/of/fdt.c:129:19: error: 'of_fdt_match' defined but not used [-Werror=unused-function]
 
-I meant, Hans, your message, the patch itself is there.
+Move the definition into the same #ifdef block.
 
+Fixes: 9b4d2b635bd0 ("of/fdt: Remove dead code and mark functions with __init")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
+ 1 file changed, 53 insertions(+), 53 deletions(-)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 3d36b5afd9bd..424981786c79 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
+ 	}
+ }
+ 
+-/**
+- * of_fdt_is_compatible - Return true if given node from the given blob has
+- * compat in its compatible list
+- * @blob: A device tree blob
+- * @node: node to test
+- * @compat: compatible string to compare with compatible list.
+- *
+- * On match, returns a non-zero value with smaller values returned for more
+- * specific compatible values.
+- */
+-static int of_fdt_is_compatible(const void *blob,
+-		      unsigned long node, const char *compat)
+-{
+-	const char *cp;
+-	int cplen;
+-	unsigned long l, score = 0;
+-
+-	cp = fdt_getprop(blob, node, "compatible", &cplen);
+-	if (cp == NULL)
+-		return 0;
+-	while (cplen > 0) {
+-		score++;
+-		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
+-			return score;
+-		l = strlen(cp) + 1;
+-		cp += l;
+-		cplen -= l;
+-	}
+-
+-	return 0;
+-}
+-
+ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+ {
+ 	const char *status = fdt_getprop(blob, node, "status", NULL);
+@@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
+ 	return false;
+ }
+ 
+-/**
+- * of_fdt_match - Return true if node matches a list of compatible values
+- */
+-static int __init of_fdt_match(const void *blob, unsigned long node,
+-			       const char *const *compat)
+-{
+-	unsigned int tmp, score = 0;
+-
+-	if (!compat)
+-		return 0;
+-
+-	while (*compat) {
+-		tmp = of_fdt_is_compatible(blob, node, *compat);
+-		if (tmp && (score == 0 || (tmp < score)))
+-			score = tmp;
+-		compat++;
+-	}
+-
+-	return score;
+-}
+-
+ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+ 				       unsigned long align)
+ {
+@@ -522,6 +469,59 @@ void *initial_boot_params __ro_after_init;
+ 
+ static u32 of_fdt_crc32;
+ 
++/**
++ * of_fdt_is_compatible - Return true if given node from the given blob has
++ * compat in its compatible list
++ * @blob: A device tree blob
++ * @node: node to test
++ * @compat: compatible string to compare with compatible list.
++ *
++ * On match, returns a non-zero value with smaller values returned for more
++ * specific compatible values.
++ */
++static int of_fdt_is_compatible(const void *blob,
++		      unsigned long node, const char *compat)
++{
++	const char *cp;
++	int cplen;
++	unsigned long l, score = 0;
++
++	cp = fdt_getprop(blob, node, "compatible", &cplen);
++	if (cp == NULL)
++		return 0;
++	while (cplen > 0) {
++		score++;
++		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
++			return score;
++		l = strlen(cp) + 1;
++		cp += l;
++		cplen -= l;
++	}
++
++	return 0;
++}
++
++/**
++ * of_fdt_match - Return true if node matches a list of compatible values
++ */
++static int __init of_fdt_match(const void *blob, unsigned long node,
++			       const char *const *compat)
++{
++	unsigned int tmp, score = 0;
++
++	if (!compat)
++		return 0;
++
++	while (*compat) {
++		tmp = of_fdt_is_compatible(blob, node, *compat);
++		if (tmp && (score == 0 || (tmp < score)))
++			score = tmp;
++		compat++;
++	}
++
++	return score;
++}
++
+ /**
+  * res_mem_reserve_reg() - reserve all memory described in 'reg' property
+  */
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.0
+
