@@ -5,40 +5,40 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64C3C31E5E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09FBEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70D8B20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1EEC2147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806484;
-	bh=Cq2LmbZqcnKDEIkkBXHPoqwlToVHfkXB0LMTankAEzI=;
+	s=default; t=1560806487;
+	bh=LrKsTihjQHV9cAQ8nPfhHje9OKoxZbhk79uJdJxwCoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wd/75s+baBsBnjk5Em5a0SLySLPAWHcWEIlvei9tig/SRo4fprrtBZQgZgMeG7mXG
-	 h+zlNMPwHA/mpnZvONie/lLMtP21IIk0trmTedRnQF1m1Cy7531srf7oIkjOVFhCTM
-	 I+W5Pk0GPGxF+ryUpSUXCsAVOeSpexj5EWTCEBQ8=
+	b=nNcf5XrfVCGmSWNiAm6yJAveUKPR6WLEtU17shslZKz2JuEdbIhRKiqMjFSDQgtEt
+	 l/XsFdsU+ODINq6d5k9mhd17kpoLzW5tXE/MBUmAX3xZ2B8hTZy3mKZqPxrnpvBop9
+	 up+0C2vUpVy/YmgmFY4HN72cNYjSk8pphO99L8CE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729338AbfFQVVW (ORCPT
+        id S1729351AbfFQVVZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:21:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45854 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:21:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfFQVVU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:21:20 -0400
+        id S1726427AbfFQVVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:21:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BB63821655;
-        Mon, 17 Jun 2019 21:21:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C912E20652;
+        Mon, 17 Jun 2019 21:21:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806479;
-        bh=Cq2LmbZqcnKDEIkkBXHPoqwlToVHfkXB0LMTankAEzI=;
+        s=default; t=1560806482;
+        bh=LrKsTihjQHV9cAQ8nPfhHje9OKoxZbhk79uJdJxwCoo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T3D+ZUIJP/+SvYeecuSSI49MJRTML1d7lBB7nVY1JHC+b7MkrsM2vkvMb8T9I43L9
-         fX75jN4d9EFM8UOkBafAB/a9gsBS4lavHatJC2tXFlaQ3Ulc6m4Jmpv+8rxjnrFT2x
-         qqKQEgoR4h702b7TkTYfT+jnz4T0XY6RnNxt0/B8=
+        b=iIDs7Tyqq78tV34gMYfakJUnYP2iMCJLSisGOMxH184mq322CD9J9x162SLHAC4Is
+         Q68zqEFy2CPQHzzfA3cWhx5Yo842UBtqlc5znMvquLnzMX9SeNQgFQKm/iOtKI72AV
+         zfHZTQmaq35EO9GHYYRWdrmmAiAQdzsli7ut7RL0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -46,9 +46,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Keith Busch <keith.busch@intel.com>,
         Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 066/115] nvme: fix srcu locking on error return in nvme_get_ns_from_disk
-Date:   Mon, 17 Jun 2019 23:09:26 +0200
-Message-Id: <20190617210803.524641727@linuxfoundation.org>
+Subject: [PATCH 5.1 067/115] nvme: remove the ifdef around nvme_nvm_ioctl
+Date:   Mon, 17 Jun 2019 23:09:27 +0200
+Message-Id: <20190617210803.556722878@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -61,53 +61,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 100c815cbd56480b3e31518475b04719c363614a ]
+[ Upstream commit 3f98bcc58cd5f1e4668db289dcab771874cc0920 ]
 
-If we can't get a namespace don't leak the SRCU lock.  nvme_ioctl was
-working around this, but nvme_pr_command wasn't handling this properly.
-Just do what callers would usually expect.
+We already have a proper stub if lightnvm is not enabled, so don't bother
+with the ifdef.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reviewed-by: Keith Busch <keith.busch@intel.com>
 Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/nvme/host/core.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 8782d86a8ca3..e29c395f44d2 100644
+index e29c395f44d2..decc0b3a3854 100644
 --- a/drivers/nvme/host/core.c
 +++ b/drivers/nvme/host/core.c
-@@ -1362,9 +1362,14 @@ static struct nvme_ns *nvme_get_ns_from_disk(struct gendisk *disk,
- {
- #ifdef CONFIG_NVME_MULTIPATH
- 	if (disk->fops == &nvme_ns_head_ops) {
-+		struct nvme_ns *ns;
-+
- 		*head = disk->private_data;
- 		*srcu_idx = srcu_read_lock(&(*head)->srcu);
--		return nvme_find_path(*head);
-+		ns = nvme_find_path(*head);
-+		if (!ns)
-+			srcu_read_unlock(&(*head)->srcu, *srcu_idx);
-+		return ns;
- 	}
- #endif
- 	*head = NULL;
-@@ -1411,9 +1416,9 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 
- 	ns = nvme_get_ns_from_disk(bdev->bd_disk, &head, &srcu_idx);
- 	if (unlikely(!ns))
--		ret = -EWOULDBLOCK;
--	else
--		ret = nvme_ns_ioctl(ns, cmd, arg);
-+		return -EWOULDBLOCK;
-+
-+	ret = nvme_ns_ioctl(ns, cmd, arg);
- 	nvme_put_ns_from_disk(head, srcu_idx);
- 	return ret;
- }
+@@ -1396,10 +1396,8 @@ static int nvme_ns_ioctl(struct nvme_ns *ns, unsigned cmd, unsigned long arg)
+ 	case NVME_IOCTL_SUBMIT_IO:
+ 		return nvme_submit_io(ns, (void __user *)arg);
+ 	default:
+-#ifdef CONFIG_NVM
+ 		if (ns->ndev)
+ 			return nvme_nvm_ioctl(ns, cmd, arg);
+-#endif
+ 		if (is_sed_ioctl(cmd))
+ 			return sed_ioctl(ns->ctrl->opal_dev, cmd,
+ 					 (void __user *) arg);
 -- 
 2.20.1
 
