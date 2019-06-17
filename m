@@ -2,80 +2,62 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84FFFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465F2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F9A2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:54:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 212F62084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:55:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727373AbfFQSyL (ORCPT
+        id S1727467AbfFQSzW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:54:11 -0400
-Received: from mail-lj1-f173.google.com ([209.85.208.173]:41723 "EHLO
-        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725772AbfFQSyK (ORCPT
+        Mon, 17 Jun 2019 14:55:22 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:59742 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725772AbfFQSzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:54:10 -0400
-Received: by mail-lj1-f173.google.com with SMTP id s21so10371799lji.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 11:54:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=66m4iUUvYIXxs91ImWOwQpe/gowMn0dh9jwp7NXwltk=;
-        b=kkgx5GryyrSEQE7/3soXS1on3Hyi36tM18M2SFySXIzj7JscZrIvTXutx0L2GU7lOM
-         xecqhsl9xMmWji8seDlON3jj1hool9nwt1zP3zIqeM8MWaBHm4VP2P1vtwVcfQ6yfoO+
-         O8GTiUv6SpispaFb+hTt/gmpKLOuRrCZPVQmGSTQbPHoN4mQXI/ybCZWx9dsftHN1I9g
-         nlUP/fpJPxWQhTwh9+KFvjTGf46Dwgy3a8qXd036fQru7HiKHuZpYtAGI1j+qI7ewFFK
-         1uaTqv0P/igkGGtXZ41dMGxAkvEHmBWTJoanvmUPFxk157w6LQMOukEWdDexSerAaVAs
-         /mZw==
-X-Gm-Message-State: APjAAAVyXFVxnd0hTDH1CwBNJdvobvFqjTIoo0yFdw8T0G6uKMW+qj/4
-        Yw0VMSENthlLXcKWdsAkHS8z4UZpJRpHmICEq5I=
-X-Google-Smtp-Source: APXvYqxmc0OIHh1u8In/WbFdOyPZmFDCbAj41wxY9ICm/ETICkV5L88DRwCmmCfwk1E5mh9JaqqSXC67mdkWs9VyE/g=
-X-Received: by 2002:a2e:b0f0:: with SMTP id h16mr36540791ljl.21.1560797648597;
- Mon, 17 Jun 2019 11:54:08 -0700 (PDT)
+        Mon, 17 Jun 2019 14:55:21 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcwmi-0004Gq-Rq; Mon, 17 Jun 2019 18:55:16 +0000
+Date:   Mon, 17 Jun 2019 19:55:16 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] fs/namespace: fix unprivileged mount propagation
+Message-ID: <20190617185516.GU17978@ZenIV.linux.org.uk>
+References: <20190617184711.21364-1-christian@brauner.io>
+ <CAHk-=wh+OWQ2s-NZC4RzfHtgNfhV9sbtP6dXV4WnsVRQ3A3hnA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190614102126.8402-1-hch@lst.de>
-In-Reply-To: <20190614102126.8402-1-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 17 Jun 2019 20:53:55 +0200
-Message-ID: <CAMuHMdVPU5RQyX4FnHFEhxXZeG3v0uh_-t2FB=vAzQ8_3u-gSw@mail.gmail.com>
-Subject: Re: [RFC] switch m68k to use the generic remapping DMA allocator
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Greg Ungerer <gerg@linux-m68k.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Linux IOMMU <iommu@lists.linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh+OWQ2s-NZC4RzfHtgNfhV9sbtP6dXV4WnsVRQ3A3hnA@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+On Mon, Jun 17, 2019 at 11:50:13AM -0700, Linus Torvalds wrote:
+> On Mon, Jun 17, 2019 at 11:47 AM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > When propagating mounts across mount namespaces owned by different user
+> > namespaces it is not possible anymore to move or umount the mount in the
+> > less privileged mount namespace.
+> 
+> I will wait a short while in the hope of getting Al's ack for this,
+> but since it looks about as good as it likely can be, I suspect I'll
+> just apply it later today even without such an ack..
 
-On Fri, Jun 14, 2019 at 12:21 PM Christoph Hellwig <hch@lst.de> wrote:
-> can you take a look at the (untested) patches below?  They convert m68k
-> to use the generic remapping DMA allocator, which is also used by
-> arm64 and csky.
-
-Thanks. But what does this buy us?
-
-bloat-o-meter says:
-
-add/remove: 75/0 grow/shrink: 11/6 up/down: 4122/-82 (4040)
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Give me a bit; I'm busy digging myself from under the pile of mail accumulated
+in the last few weeks (bronchitis sucked, especially when it got to the point
+where one can't stay asleep for more than an hour or get more than about 5 hours
+per day total).  I'm trying not to throw anything relevant out, but if I don't
+reply to something important today or tomorrow, please resend it my way -
+the pile had been 36Kmail (down to 24K now) ;-/
