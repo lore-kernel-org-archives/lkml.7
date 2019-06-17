@@ -2,52 +2,53 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F99C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C3DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9EE20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E8DE820673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806724;
-	bh=JEiq76uPupu5wSbzUc+/5bPp0j7rYM2+Zt2cLThnE4M=;
+	s=default; t=1560806730;
+	bh=mKtyJluVbixW8qvdlr8Grs/hbKxOyEeZGEwPJY1SwsA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AHenIhH1qPTV6WyF1jdOhFePAJd23gy4syn4aB3QFAAXOwgn2WOz7fR8Fe/nlzhnt
-	 F6VGYBqMhf06E1rUhMIpmO+s9fQYqV1WOSucp1q/ddWqAsjBl2/JWQjxK1HLnYDktx
-	 I7JITz2GOpFP6qdxsUOeXneNQs+rvdL6w/UkckGI=
+	b=frPPsLZkyUJZUwa3dD+5P61yuwJf1Osh94apsY5226bOb6VnU1EcnzOVGE2hyrGG4
+	 5iu5WjU0L4DyWL5/joJbANxN9kCHrOivkf1sVRHva7ImRnf2O+h8zxLUfUDi4LGjuR
+	 V/AKeBaCiidLLO6pJHwZ2fHqGrb/UDsIiGycOfVs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728894AbfFQVZW (ORCPT
+        id S1730071AbfFQVZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:25:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51294 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:25:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730051AbfFQVZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:25:16 -0400
+        id S1727523AbfFQVZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:25:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 252B720673;
-        Mon, 17 Jun 2019 21:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3070206B7;
+        Mon, 17 Jun 2019 21:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806715;
-        bh=JEiq76uPupu5wSbzUc+/5bPp0j7rYM2+Zt2cLThnE4M=;
+        s=default; t=1560806721;
+        bh=mKtyJluVbixW8qvdlr8Grs/hbKxOyEeZGEwPJY1SwsA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yddTTVi6+zBjR3Hd7IuohD5kehlXJN/PNYM3DpwZwXRUiZNQubbHEH5mVK5Us0E9U
-         3tsKr2jfDEyhBsadPSE1ajApdtSqWf27Sqf4PQ5pPrRNyD3a9zZzSTPSfBoTcfqzJ6
-         v9GBtRh3R05ZULwPWvHWsnJ36mrJE6HGr8ieGeag=
+        b=DysEY6XRkD7jHWqSguX3rGeS5eoKcuzqR0nOOWVvPvf0Db7BaifyVz+Xdz1Y6BqxS
+         WFUFS80BnrmEZwS0SZ4YW7V2iRzwEIDRYUeAvLj6pe+6Na88PGbiJV48PeHxBkTRi+
+         nz+mhW0yPBCu2S0vh1LRw2f8h7i7zmayjvd9mJyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 25/75] ASoC: fsl_asrc: Fix the issue about unsupported rate
-Date:   Mon, 17 Jun 2019 23:09:36 +0200
-Message-Id: <20190617210753.811130111@linuxfoundation.org>
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Manish Rangankar <mrangankar@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 35/75] scsi: qedi: remove set but not used variables cdev and udev
+Date:   Mon, 17 Jun 2019 23:09:46 +0200
+Message-Id: <20190617210754.141452451@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -60,40 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+[ Upstream commit d0adee5d12752256ff0c87ad7f002f21fe49d618 ]
 
-commit b06c58c2a1eed571ea2a6640fdb85b7b00196b1e upstream.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-When the output sample rate is [8kHz, 30kHz], the limitation
-of the supported ratio range is [1/24, 8]. In the driver
-we use (8kHz, 30kHz) instead of [8kHz, 30kHz].
-So this patch is to fix this issue and the potential rounding
-issue with divider.
+drivers/scsi/qedi/qedi_iscsi.c: In function 'qedi_ep_connect':
+drivers/scsi/qedi/qedi_iscsi.c:813:23: warning: variable 'udev' set but not used [-Wunused-but-set-variable]
+drivers/scsi/qedi/qedi_iscsi.c:812:18: warning: variable 'cdev' set but not used [-Wunused-but-set-variable]
 
-Fixes: fff6e03c7b65 ("ASoC: fsl_asrc: add support for 8-30kHz
-output sample rate")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+These have never been used since introduction.
 
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_asrc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/scsi/qedi/qedi_iscsi.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -282,8 +282,8 @@ static int fsl_asrc_config_pair(struct f
- 		return -EINVAL;
+diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
+index 4130b9117055..1b7049dce169 100644
+--- a/drivers/scsi/qedi/qedi_iscsi.c
++++ b/drivers/scsi/qedi/qedi_iscsi.c
+@@ -810,8 +810,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
+ 	struct qedi_endpoint *qedi_ep;
+ 	struct sockaddr_in *addr;
+ 	struct sockaddr_in6 *addr6;
+-	struct qed_dev *cdev  =  NULL;
+-	struct qedi_uio_dev *udev = NULL;
+ 	struct iscsi_path path_req;
+ 	u32 msg_type = ISCSI_KEVENT_IF_DOWN;
+ 	u32 iscsi_cid = QEDI_CID_RESERVED;
+@@ -831,8 +829,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
  	}
  
--	if ((outrate > 8000 && outrate < 30000) &&
--	    (outrate/inrate > 24 || inrate/outrate > 8)) {
-+	if ((outrate >= 8000 && outrate <= 30000) &&
-+	    (outrate > 24 * inrate || inrate > 8 * outrate)) {
- 		pair_err("exceed supported ratio range [1/24, 8] for \
- 				inrate/outrate: %d/%d\n", inrate, outrate);
- 		return -EINVAL;
+ 	qedi = iscsi_host_priv(shost);
+-	cdev = qedi->cdev;
+-	udev = qedi->udev;
+ 
+ 	if (test_bit(QEDI_IN_OFFLINE, &qedi->flags) ||
+ 	    test_bit(QEDI_IN_RECOVERY, &qedi->flags)) {
+-- 
+2.20.1
+
 
 
