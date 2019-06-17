@@ -4,50 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1533C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F39C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B7AA208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17F132147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806436;
-	bh=7ZbpBeuw0/PJSwmrd6GiDblX1MVXsc6Yng5kAfWeLn0=;
+	s=default; t=1560806441;
+	bh=HCezjMQjWUHojgI7GRlZ24BxBV9CBvXrMfU/Ay8TccQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Un4KlZJnl+xfYMPVRUyXZ/dpAbwJthiYqiCuOKg3/NjJvqYZ/oq62eeO1AiyA1icV
-	 L+1f5OC3yza8Ws+gua9jgTCOw5WaaJm+rWMAxGMOIyYpqp1qHDPPIaZtAnsVlFga0C
-	 ukxW7rRbxWFpojJVoqDBBte3uOlxjTFFXV4N5vRk=
+	b=COYiVp4EVR04v/OBhgV0h20Q75DEsub6Zz2yqJAxOeq9JACTgMlLWHUK4kIBzmgEd
+	 A8nj33lTGJMX91+5NPl039SOzHSSh1aVnbsNZm9t+IoLMbu+x6APh9Au8sStlEAtER
+	 MwyBwTwhD6jxzF6bZw7Jr2f8xeVXAYGrikUBZrYE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729155AbfFQVUf (ORCPT
+        id S1726469AbfFQVUk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:20:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44794 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:20:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729141AbfFQVUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:20:33 -0400
+        id S1729157AbfFQVUg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:20:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E04252089E;
-        Mon, 17 Jun 2019 21:20:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA2B020861;
+        Mon, 17 Jun 2019 21:20:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806432;
-        bh=7ZbpBeuw0/PJSwmrd6GiDblX1MVXsc6Yng5kAfWeLn0=;
+        s=default; t=1560806435;
+        bh=HCezjMQjWUHojgI7GRlZ24BxBV9CBvXrMfU/Ay8TccQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yzfzBiEDVpnjqfU10BMdPn7pFYic2vwVt/saJ/UcTbWseC/xlbl8NEAL9rA9jEpGT
-         STiWLwM8zSqOdPFdmnYl4qcf0b09q7bZKx9MVHKafSVhsYlMcpdLnNlCRq00zke1nz
-         Zu4few/efmjPZMvpPdw2cPQ5VKfaZyFNo08fb1Cc=
+        b=rFPa+wyC3jJ0bjG0aAEgbBfOLtgpCS9cstDrDDyekjAl54j+SPTFVc2SIovNFHLo+
+         g0A3LwrhkwDWcFzduIM0OQOwQA63ZJqHLU8o8jrVIJiMMSLVDBpaiF7MUIvkVAuB/t
+         4t+gZ6o9SpKH6FOqX0FzP0fL4RNDG8xnkHBURdkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Quinn Tran <qutran@marvell.com>,
+        Himanshu Madhani <hmadhani@marvell.com>,
+        "Ewan D. Milne" <emilne@redhat.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 051/115] bpf: sockmap fix msg->sg.size account on ingress skb
-Date:   Mon, 17 Jun 2019 23:09:11 +0200
-Message-Id: <20190617210803.071458219@linuxfoundation.org>
+Subject: [PATCH 5.1 052/115] scsi: qla2xxx: Add cleanup for PCI EEH recovery
+Date:   Mon, 17 Jun 2019 23:09:12 +0200
+Message-Id: <20190617210803.104970120@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -60,35 +62,302 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cabede8b4f2b746232aa25730a0b752de1cb82ca ]
+[ Upstream commit 5386a4e6c7fecd282d265a24d930a74ba3c5917b ]
 
-When converting a skb to msg->sg we forget to set the size after the
-latest ktls/tls code conversion. This patch can be reached by doing
-a redir into ingress path from BPF skb sock recv hook. Then trying to
-read the size fails.
+During EEH error recovery testing it was discovered that driver's reset()
+callback partially frees resources used by driver, leaving some stale
+memory.  After reset() is done and when resume() callback in driver uses
+old data which results into error leaving adapter disabled due to PCIe
+error.
 
-Fix this by setting the size.
+This patch does cleanup for EEH recovery code path and prevents adapter
+from getting disabled.
 
-Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Quinn Tran <qutran@marvell.com>
+Signed-off-by: Himanshu Madhani <hmadhani@marvell.com>
+Reviewed-by: Ewan D. Milne <emilne@redhat.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/skmsg.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/qla2xxx/qla_os.c | 221 +++++++++++++---------------------
+ 1 file changed, 82 insertions(+), 139 deletions(-)
 
-diff --git a/net/core/skmsg.c b/net/core/skmsg.c
-index 49d1efa329d7..93bffaad2135 100644
---- a/net/core/skmsg.c
-+++ b/net/core/skmsg.c
-@@ -411,6 +411,7 @@ static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb)
- 	sk_mem_charge(sk, skb->len);
- 	copied = skb->len;
- 	msg->sg.start = 0;
-+	msg->sg.size = copied;
- 	msg->sg.end = num_sge == MAX_MSG_FRAGS ? 0 : num_sge;
- 	msg->skb = skb;
+diff --git a/drivers/scsi/qla2xxx/qla_os.c b/drivers/scsi/qla2xxx/qla_os.c
+index 91f576d743fe..d377e50a6c19 100644
+--- a/drivers/scsi/qla2xxx/qla_os.c
++++ b/drivers/scsi/qla2xxx/qla_os.c
+@@ -6838,6 +6838,78 @@ qla2x00_release_firmware(void)
+ 	mutex_unlock(&qla_fw_lock);
+ }
  
++static void qla_pci_error_cleanup(scsi_qla_host_t *vha)
++{
++	struct qla_hw_data *ha = vha->hw;
++	scsi_qla_host_t *base_vha = pci_get_drvdata(ha->pdev);
++	struct qla_qpair *qpair = NULL;
++	struct scsi_qla_host *vp;
++	fc_port_t *fcport;
++	int i;
++	unsigned long flags;
++
++	ha->chip_reset++;
++
++	ha->base_qpair->chip_reset = ha->chip_reset;
++	for (i = 0; i < ha->max_qpairs; i++) {
++		if (ha->queue_pair_map[i])
++			ha->queue_pair_map[i]->chip_reset =
++			    ha->base_qpair->chip_reset;
++	}
++
++	/* purge MBox commands */
++	if (atomic_read(&ha->num_pend_mbx_stage3)) {
++		clear_bit(MBX_INTR_WAIT, &ha->mbx_cmd_flags);
++		complete(&ha->mbx_intr_comp);
++	}
++
++	i = 0;
++
++	while (atomic_read(&ha->num_pend_mbx_stage3) ||
++	    atomic_read(&ha->num_pend_mbx_stage2) ||
++	    atomic_read(&ha->num_pend_mbx_stage1)) {
++		msleep(20);
++		i++;
++		if (i > 50)
++			break;
++	}
++
++	ha->flags.purge_mbox = 0;
++
++	mutex_lock(&ha->mq_lock);
++	list_for_each_entry(qpair, &base_vha->qp_list, qp_list_elem)
++		qpair->online = 0;
++	mutex_unlock(&ha->mq_lock);
++
++	qla2x00_mark_all_devices_lost(vha, 0);
++
++	spin_lock_irqsave(&ha->vport_slock, flags);
++	list_for_each_entry(vp, &ha->vp_list, list) {
++		atomic_inc(&vp->vref_count);
++		spin_unlock_irqrestore(&ha->vport_slock, flags);
++		qla2x00_mark_all_devices_lost(vp, 0);
++		spin_lock_irqsave(&ha->vport_slock, flags);
++		atomic_dec(&vp->vref_count);
++	}
++	spin_unlock_irqrestore(&ha->vport_slock, flags);
++
++	/* Clear all async request states across all VPs. */
++	list_for_each_entry(fcport, &vha->vp_fcports, list)
++		fcport->flags &= ~(FCF_LOGIN_NEEDED | FCF_ASYNC_SENT);
++
++	spin_lock_irqsave(&ha->vport_slock, flags);
++	list_for_each_entry(vp, &ha->vp_list, list) {
++		atomic_inc(&vp->vref_count);
++		spin_unlock_irqrestore(&ha->vport_slock, flags);
++		list_for_each_entry(fcport, &vp->vp_fcports, list)
++			fcport->flags &= ~(FCF_LOGIN_NEEDED | FCF_ASYNC_SENT);
++		spin_lock_irqsave(&ha->vport_slock, flags);
++		atomic_dec(&vp->vref_count);
++	}
++	spin_unlock_irqrestore(&ha->vport_slock, flags);
++}
++
++
+ static pci_ers_result_t
+ qla2xxx_pci_error_detected(struct pci_dev *pdev, pci_channel_state_t state)
+ {
+@@ -6863,20 +6935,7 @@ qla2xxx_pci_error_detected(struct pci_dev *pdev, pci_channel_state_t state)
+ 		return PCI_ERS_RESULT_CAN_RECOVER;
+ 	case pci_channel_io_frozen:
+ 		ha->flags.eeh_busy = 1;
+-		/* For ISP82XX complete any pending mailbox cmd */
+-		if (IS_QLA82XX(ha)) {
+-			ha->flags.isp82xx_fw_hung = 1;
+-			ql_dbg(ql_dbg_aer, vha, 0x9001, "Pci channel io frozen\n");
+-			qla82xx_clear_pending_mbx(vha);
+-		}
+-		qla2x00_free_irqs(vha);
+-		pci_disable_device(pdev);
+-		/* Return back all IOs */
+-		qla2x00_abort_all_cmds(vha, DID_RESET << 16);
+-		if (ql2xmqsupport || ql2xnvmeenable) {
+-			set_bit(QPAIR_ONLINE_CHECK_NEEDED, &vha->dpc_flags);
+-			qla2xxx_wake_dpc(vha);
+-		}
++		qla_pci_error_cleanup(vha);
+ 		return PCI_ERS_RESULT_NEED_RESET;
+ 	case pci_channel_io_perm_failure:
+ 		ha->flags.pci_channel_io_perm_failure = 1;
+@@ -6930,122 +6989,14 @@ qla2xxx_pci_mmio_enabled(struct pci_dev *pdev)
+ 		return PCI_ERS_RESULT_RECOVERED;
+ }
+ 
+-static uint32_t
+-qla82xx_error_recovery(scsi_qla_host_t *base_vha)
+-{
+-	uint32_t rval = QLA_FUNCTION_FAILED;
+-	uint32_t drv_active = 0;
+-	struct qla_hw_data *ha = base_vha->hw;
+-	int fn;
+-	struct pci_dev *other_pdev = NULL;
+-
+-	ql_dbg(ql_dbg_aer, base_vha, 0x9006,
+-	    "Entered %s.\n", __func__);
+-
+-	set_bit(ABORT_ISP_ACTIVE, &base_vha->dpc_flags);
+-
+-	if (base_vha->flags.online) {
+-		/* Abort all outstanding commands,
+-		 * so as to be requeued later */
+-		qla2x00_abort_isp_cleanup(base_vha);
+-	}
+-
+-
+-	fn = PCI_FUNC(ha->pdev->devfn);
+-	while (fn > 0) {
+-		fn--;
+-		ql_dbg(ql_dbg_aer, base_vha, 0x9007,
+-		    "Finding pci device at function = 0x%x.\n", fn);
+-		other_pdev =
+-		    pci_get_domain_bus_and_slot(pci_domain_nr(ha->pdev->bus),
+-		    ha->pdev->bus->number, PCI_DEVFN(PCI_SLOT(ha->pdev->devfn),
+-		    fn));
+-
+-		if (!other_pdev)
+-			continue;
+-		if (atomic_read(&other_pdev->enable_cnt)) {
+-			ql_dbg(ql_dbg_aer, base_vha, 0x9008,
+-			    "Found PCI func available and enable at 0x%x.\n",
+-			    fn);
+-			pci_dev_put(other_pdev);
+-			break;
+-		}
+-		pci_dev_put(other_pdev);
+-	}
+-
+-	if (!fn) {
+-		/* Reset owner */
+-		ql_dbg(ql_dbg_aer, base_vha, 0x9009,
+-		    "This devfn is reset owner = 0x%x.\n",
+-		    ha->pdev->devfn);
+-		qla82xx_idc_lock(ha);
+-
+-		qla82xx_wr_32(ha, QLA82XX_CRB_DEV_STATE,
+-		    QLA8XXX_DEV_INITIALIZING);
+-
+-		qla82xx_wr_32(ha, QLA82XX_CRB_DRV_IDC_VERSION,
+-		    QLA82XX_IDC_VERSION);
+-
+-		drv_active = qla82xx_rd_32(ha, QLA82XX_CRB_DRV_ACTIVE);
+-		ql_dbg(ql_dbg_aer, base_vha, 0x900a,
+-		    "drv_active = 0x%x.\n", drv_active);
+-
+-		qla82xx_idc_unlock(ha);
+-		/* Reset if device is not already reset
+-		 * drv_active would be 0 if a reset has already been done
+-		 */
+-		if (drv_active)
+-			rval = qla82xx_start_firmware(base_vha);
+-		else
+-			rval = QLA_SUCCESS;
+-		qla82xx_idc_lock(ha);
+-
+-		if (rval != QLA_SUCCESS) {
+-			ql_log(ql_log_info, base_vha, 0x900b,
+-			    "HW State: FAILED.\n");
+-			qla82xx_clear_drv_active(ha);
+-			qla82xx_wr_32(ha, QLA82XX_CRB_DEV_STATE,
+-			    QLA8XXX_DEV_FAILED);
+-		} else {
+-			ql_log(ql_log_info, base_vha, 0x900c,
+-			    "HW State: READY.\n");
+-			qla82xx_wr_32(ha, QLA82XX_CRB_DEV_STATE,
+-			    QLA8XXX_DEV_READY);
+-			qla82xx_idc_unlock(ha);
+-			ha->flags.isp82xx_fw_hung = 0;
+-			rval = qla82xx_restart_isp(base_vha);
+-			qla82xx_idc_lock(ha);
+-			/* Clear driver state register */
+-			qla82xx_wr_32(ha, QLA82XX_CRB_DRV_STATE, 0);
+-			qla82xx_set_drv_active(base_vha);
+-		}
+-		qla82xx_idc_unlock(ha);
+-	} else {
+-		ql_dbg(ql_dbg_aer, base_vha, 0x900d,
+-		    "This devfn is not reset owner = 0x%x.\n",
+-		    ha->pdev->devfn);
+-		if ((qla82xx_rd_32(ha, QLA82XX_CRB_DEV_STATE) ==
+-		    QLA8XXX_DEV_READY)) {
+-			ha->flags.isp82xx_fw_hung = 0;
+-			rval = qla82xx_restart_isp(base_vha);
+-			qla82xx_idc_lock(ha);
+-			qla82xx_set_drv_active(base_vha);
+-			qla82xx_idc_unlock(ha);
+-		}
+-	}
+-	clear_bit(ABORT_ISP_ACTIVE, &base_vha->dpc_flags);
+-
+-	return rval;
+-}
+-
+ static pci_ers_result_t
+ qla2xxx_pci_slot_reset(struct pci_dev *pdev)
+ {
+ 	pci_ers_result_t ret = PCI_ERS_RESULT_DISCONNECT;
+ 	scsi_qla_host_t *base_vha = pci_get_drvdata(pdev);
+ 	struct qla_hw_data *ha = base_vha->hw;
+-	struct rsp_que *rsp;
+-	int rc, retries = 10;
++	int rc;
++	struct qla_qpair *qpair = NULL;
+ 
+ 	ql_dbg(ql_dbg_aer, base_vha, 0x9004,
+ 	    "Slot Reset.\n");
+@@ -7074,24 +7025,16 @@ qla2xxx_pci_slot_reset(struct pci_dev *pdev)
+ 		goto exit_slot_reset;
+ 	}
+ 
+-	rsp = ha->rsp_q_map[0];
+-	if (qla2x00_request_irqs(ha, rsp))
+-		goto exit_slot_reset;
+ 
+ 	if (ha->isp_ops->pci_config(base_vha))
+ 		goto exit_slot_reset;
+ 
+-	if (IS_QLA82XX(ha)) {
+-		if (qla82xx_error_recovery(base_vha) == QLA_SUCCESS) {
+-			ret = PCI_ERS_RESULT_RECOVERED;
+-			goto exit_slot_reset;
+-		} else
+-			goto exit_slot_reset;
+-	}
+-
+-	while (ha->flags.mbox_busy && retries--)
+-		msleep(1000);
++	mutex_lock(&ha->mq_lock);
++	list_for_each_entry(qpair, &base_vha->qp_list, qp_list_elem)
++		qpair->online = 1;
++	mutex_unlock(&ha->mq_lock);
+ 
++	base_vha->flags.online = 1;
+ 	set_bit(ABORT_ISP_ACTIVE, &base_vha->dpc_flags);
+ 	if (ha->isp_ops->abort_isp(base_vha) == QLA_SUCCESS)
+ 		ret =  PCI_ERS_RESULT_RECOVERED;
+@@ -7115,13 +7058,13 @@ qla2xxx_pci_resume(struct pci_dev *pdev)
+ 	ql_dbg(ql_dbg_aer, base_vha, 0x900f,
+ 	    "pci_resume.\n");
+ 
++	ha->flags.eeh_busy = 0;
++
+ 	ret = qla2x00_wait_for_hba_online(base_vha);
+ 	if (ret != QLA_SUCCESS) {
+ 		ql_log(ql_log_fatal, base_vha, 0x9002,
+ 		    "The device failed to resume I/O from slot/link_reset.\n");
+ 	}
+-
+-	ha->flags.eeh_busy = 0;
+ }
+ 
+ static void
 -- 
 2.20.1
 
