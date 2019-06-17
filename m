@@ -2,96 +2,201 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3E05C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4382C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:45:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A1E20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:45:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3A8D20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:45:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfFQLpR (ORCPT
+        id S1726711AbfFQLp1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:45:17 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:51187 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFQLpR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:45:17 -0400
-X-Originating-IP: 90.88.23.150
-Received: from localhost (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 569CD4000D;
-        Mon, 17 Jun 2019 11:45:04 +0000 (UTC)
-Date:   Mon, 17 Jun 2019 13:45:03 +0200
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>, dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi@googlegroups.com, linux-amarula@amarulasolutions.com
-Subject: Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock gates in probe
-Message-ID: <20190617114503.pclqsf6bo3ih47nt@flea>
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com>
+        Mon, 17 Jun 2019 07:45:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48672 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbfFQLp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:45:27 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1932C8E224;
+        Mon, 17 Jun 2019 11:45:26 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12FE361369;
+        Mon, 17 Jun 2019 11:45:21 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Joseph Myers <joseph@codesourcery.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Paul Burton <pburton@wavecomp.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] uapi: avoid namespace conflict in linux/posix_types.h
+References: <20190319165123.3967889-1-arnd@arndb.de>
+        <alpine.DEB.2.21.1905072249570.19308@digraph.polyomino.org.uk>
+        <87tvd2j9ye.fsf@oldenburg2.str.redhat.com>
+        <CAHk-=wio1e4=WUUwmo-Ph55BEgH_X3oXzBpvPyLQg2TxzfGYuw@mail.gmail.com>
+        <871s05fd8o.fsf@oldenburg2.str.redhat.com>
+        <CAHk-=wg4ijSoPq-w7ct_VuZvgHx+tUv_QX-We-62dEwK+AOf2w@mail.gmail.com>
+Date:   Mon, 17 Jun 2019 13:45:20 +0200
+In-Reply-To: <CAHk-=wg4ijSoPq-w7ct_VuZvgHx+tUv_QX-We-62dEwK+AOf2w@mail.gmail.com>
+        (Linus Torvalds's message of "Fri, 7 Jun 2019 11:56:16 -0700")
+Message-ID: <87sgs8igfj.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xp6yljizo7kvgkxb"
-Content-Disposition: inline
-In-Reply-To: <20190614164324.9427-6-jagan@amarulasolutions.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 17 Jun 2019 11:45:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+* Linus Torvalds:
 
---xp6yljizo7kvgkxb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Jun 14, 2019 at 10:13:20PM +0530, Jagan Teki wrote:
-> TCON TOP have clock gates for TV0, TV1, dsi and right
-> now these are register during bind call.
+> On Fri, Jun 7, 2019 at 11:43 AM Florian Weimer <fweimer@redhat.com> wrote:
+>>
+>> On the glibc side, we nowadays deal with this by splitting headers
+>> further.  (We used to suppress definitions with macros, but that tended
+>> to become convoluted.)  In this case, moving the definition of
+>> __kernel_long_t to its own header, so that
+>> include/uapi/asm-generic/socket.h can include that should fix it.
 >
-> Of which, dsi clock gate would required during DPHY probe
-> but same can miss to get since tcon top is not bound at
-> that time.
+> I think we should strive to do that on the kernel side too, since
+> clearly we shouldn't expose that "val[]" thing in the core posix types
+> due to namespace rules, but at the same time I think the patch to
+> rename val[] is fundamentally broken too.
 >
-> To solve, this circular dependency move the clock gate
-> registration from bind to probe so-that DPHY can get the
-> dsi gate clock on time.
+> Can you describe how you split things (perhaps even with a patch ;)?
+> Is this literally the only issue you currently have? Because I'd
+> expect similar issues to show up elsewhere too, but who knows.. You
+> presumably do.
 
-It's not really clear to me what the circular dependency is?
+I wanted to introduce a new header, <asm/kernel_long_t.h>, and include
+it where the definition of __kernel_long_t is needed, something like
+this (incomplete, untested):
 
-if you have a chain that is:
+diff --git a/arch/sparc/include/uapi/asm/posix_types.h b/arch/sparc/include/uapi/asm/posix_types.h
+index f139e0048628..6510d7538605 100644
+--- a/arch/sparc/include/uapi/asm/posix_types.h
++++ b/arch/sparc/include/uapi/asm/posix_types.h
+@@ -8,6 +8,8 @@
+ #ifndef __SPARC_POSIX_TYPES_H
+ #define __SPARC_POSIX_TYPES_H
+ 
++#include <asm/kernel_long_t.h>
++
+ #if defined(__sparc__) && defined(__arch64__)
+ /* sparc 64 bit */
+ 
+@@ -19,10 +21,6 @@ typedef unsigned short         __kernel_old_gid_t;
+ typedef int		       __kernel_suseconds_t;
+ #define __kernel_suseconds_t __kernel_suseconds_t
+ 
+-typedef long		__kernel_long_t;
+-typedef unsigned long	__kernel_ulong_t;
+-#define __kernel_long_t __kernel_long_t
+-
+ struct __kernel_old_timeval {
+ 	__kernel_long_t tv_sec;
+ 	__kernel_suseconds_t tv_usec;
+diff --git a/arch/x86/include/uapi/asm/kernel_long_t.h b/arch/x86/include/uapi/asm/kernel_long_t.h
+new file mode 100644
+index 000000000000..ed3bff40e1e8
+--- /dev/null
++++ b/arch/x86/include/uapi/asm/kernel_long_t.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef __KERNEL__
++# ifdef defined(__x86_64__) && defined(__ILP32__)
++#  include <asm/kernel_long_t_x32.h>
++# else
++#  include <asm-generic/kernel_long_t.h>
++# endif
++#endif
+diff --git a/arch/x86/include/uapi/asm/kernel_long_t_x32.h b/arch/x86/include/uapi/asm/kernel_long_t_x32.h
+new file mode 100644
+index 000000000000..a71cbce7e966
+--- /dev/null
++++ b/arch/x86/include/uapi/asm/kernel_long_t_x32.h
+@@ -0,0 +1,6 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef _ASM_X86_KERNEL_LONG_T_X32_H
++#define _ASM_X86_KERNEL_LONG_T_X32_H
++typedef long long __kernel_long_t;
++typedef unsigned long long __kernel_ulong_t;
++#endif /* _ASM_X86_KERNEL_LONG_T_X32_H */
+diff --git a/arch/x86/include/uapi/asm/posix_types_x32.h b/arch/x86/include/uapi/asm/posix_types_x32.h
+index f60479b07fc8..92c7af21da9e 100644
+--- a/arch/x86/include/uapi/asm/posix_types_x32.h
++++ b/arch/x86/include/uapi/asm/posix_types_x32.h
+@@ -11,10 +11,6 @@
+  *
+  */
+ 
+-typedef long long __kernel_long_t;
+-typedef unsigned long long __kernel_ulong_t;
+-#define __kernel_long_t __kernel_long_t
+-
+ #include <asm/posix_types_64.h>
+ 
+ #endif /* _ASM_X86_POSIX_TYPES_X32_H */
+diff --git a/include/uapi/asm-generic/kernel_long_t.h b/include/uapi/asm-generic/kernel_long_t.h
+new file mode 100644
+index 000000000000..649a97a8c304
+--- /dev/null
++++ b/include/uapi/asm-generic/kernel_long_t.h
+@@ -0,0 +1,8 @@
++/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
++#ifndef __ASM_GENERIC_KERNEL_LONG_T_H
++#define __ASM_GENERIC_KERNEL_LONG_T_H
++
++typedef long		__kernel_long_t;
++typedef unsigned long	__kernel_ulong_t;
++
++#endif /* __ASM_GENERIC_POSIX_TYPES_H */
+diff --git a/include/uapi/asm-generic/posix_types.h b/include/uapi/asm-generic/posix_types.h
+index f0733a26ebfc..2715ba4599bd 100644
+--- a/include/uapi/asm-generic/posix_types.h
++++ b/include/uapi/asm-generic/posix_types.h
+@@ -11,10 +11,7 @@
+  * architectures, so that you can override them.
+  */
+ 
+-#ifndef __kernel_long_t
+-typedef long		__kernel_long_t;
+-typedef unsigned long	__kernel_ulong_t;
+-#endif
++#include <asm/kernel_long_t.h>
+ 
+ #ifndef __kernel_ino_t
+ typedef __kernel_ulong_t __kernel_ino_t;
 
-tcon-top +-> DSI
-         +-> D-PHY
+Additional architectures need conversion as well, but I think this
+suggests where this is going.  Would that be acceptable?
 
-There's no loop, right?
+A different approach would rename <asm/posix_types.h> to something more
+basic, exclude the two structs, and move all internal #includes which do
+need the structs to the new header.  A new <asm/posix_types.h> would
+include the renamed header and add back the two structs, for
+compatibility.
 
-Maxime
+For a less strict definition of compatibility, it would also be possible
+to introduce <asm/fsid_t.h> (for __kernel_fsid_t) and <linux/fd_set.h>
+(for __kernel_fd_set), and remove the definition of those from
+<asm/posix_types.h>.
 
---
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The other question is whether this __kernel_long_t dependency in
+<asm/socket.h> is even valid because it makes the constants SO_RCVTIMEO
+etc. unusable in a preprocessor expression (although POSIX does not make
+such a requirement as far as I can see).
 
---xp6yljizo7kvgkxb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXQd9PwAKCRDj7w1vZxhR
-xQVoAP9ttJDwkjwRPMkOwKzqZRD7nZXrcU8a7rson89BVm0nsgEA4p4DLpSvch57
-JKorQlZPylei2HZiG2eUjBHTxqK0tAo=
-=b7B3
------END PGP SIGNATURE-----
-
---xp6yljizo7kvgkxb--
+Thanks,
+Florian
