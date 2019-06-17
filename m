@@ -2,116 +2,131 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC364C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F12BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:49:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832AA208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:48:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="DYbfUmrC"
+	by mail.kernel.org (Postfix) with ESMTP id 135DA20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:49:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfFQQsz (ORCPT
+        id S1728247AbfFQQtS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:48:55 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:37503 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQQsz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:48:55 -0400
-Received: by mail-yw1-f68.google.com with SMTP id 186so5352467ywo.4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 09:48:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+bhc7wfVjCBaM/En8KIXc3jvZNzrMiSbZDMErO7mmcg=;
-        b=DYbfUmrCCAumnmXWODR8+LTnOQ7KCdpvfaHsby+TAizkhkgf9X+hDwVKW4YCRvdsbR
-         /DOd5z4sNTjXhhHg4CBJHxUJprspmaW8XaWIiWkX+EV8vLcn2YwQSz+9l1BWRwYW+73b
-         sRLre+0lZ4TKnygun0iG/ayZWy5ATKzXzNZl5MrbxQC3DEEIjRdnA13dv/ZlgoicmAOp
-         g+jvdpAKS2ONslZ6WLqsoHuzSs2omaxjORyd3O7XTFtCOfvPuIEcfVq6Aw0u+QZRs2wk
-         T+cp2SBxHX7+kuygOvMGZO3uv0/dBlh/APwxh1cjz+fNoqmHVtoZvU29KFhUYSks2J70
-         GFHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+bhc7wfVjCBaM/En8KIXc3jvZNzrMiSbZDMErO7mmcg=;
-        b=jJoYU+Gr49RqF4b1lmy2Afo9EZ9fJQlvGCR8N6wKOrlgn22N5jYxocWdUPwBY7QCap
-         dXm5xYbvHW11Hg35ZKF1kVLCWIO6kNcnwwp+yIR/PWFjzhIfqR9JZU89fUHRfpUhWGCV
-         ouVbYT1f3MVGO0h8UF70K+E/YPpZ0TGuOECOjX3A4e0uCfn7bX+/DTIkchjFTxPmuQ99
-         7OX5jcfzL+XFTKjAWIupekXhvfZFyA1ekipdEPLD6n2uho8wmb0BriiEUWedUAUJChvG
-         cF6RekVVoulr2NGgklNxaXy+L3erwXIIxJn8PvQOdkZrEtVFRAVQp1RN9EXLzcMNGAxi
-         Latg==
-X-Gm-Message-State: APjAAAVt53HuY0KjN8v/ESKECTFDxOnb+rEPvalQ2MYIOCSf2wNTglX/
-        x8ugUSKwJJXK1rvJDC9YioIw1FuE3eZdzx/NjHZURB6o68Y3jQ==
-X-Google-Smtp-Source: APXvYqxYDlg2DGtdAFSTrNecvf6mKBN+e0hfaf7Tt/m0UWAiagrxescZo68t6wSXRTD7aC9x4EqbsMND7aHUQSudaIQ=
-X-Received: by 2002:a81:a55:: with SMTP id 82mr29118544ywk.205.1560790134326;
- Mon, 17 Jun 2019 09:48:54 -0700 (PDT)
+        Mon, 17 Jun 2019 12:49:18 -0400
+Received: from mga09.intel.com ([134.134.136.24]:41735 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbfFQQtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:49:18 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 09:49:17 -0700
+X-ExtLoop1: 1
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Jun 2019 09:49:15 -0700
+Date:   Mon, 17 Jun 2019 09:49:15 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
+        Cedric Xing <cedric.xing@intel.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        selinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        pmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
+        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
+        "Huang, Haitao" <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        "Huang, Kai" <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        "Roberts, William C" <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
+ SELinux
+Message-ID: <20190617164915.GA25085@linux.intel.com>
+References: <cover.1560131039.git.cedric.xing@intel.com>
+ <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
+ <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
+ <20190611220243.GB3416@linux.intel.com>
+ <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
+ <20190614004600.GF18385@linux.intel.com>
+ <20190614153840.GC12191@linux.intel.com>
+ <CALCETrXcOQkvMHdh5DgdQ6JAgzsZCNFVEtnQz-5RbNr4vsadDQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190617155954.155791-1-shakeelb@google.com> <20190617161702.GE1492@dhcp22.suse.cz>
-In-Reply-To: <20190617161702.GE1492@dhcp22.suse.cz>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Mon, 17 Jun 2019 09:48:42 -0700
-Message-ID: <CALvZod6mO0-nK+aVP+-neFt3B95ztNGQMXLYFZ7oEeasTsXRCA@mail.gmail.com>
-Subject: Re: [PATCH] mm, oom: fix oom_unkillable_task for memcg OOMs
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>, Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CALCETrXcOQkvMHdh5DgdQ6JAgzsZCNFVEtnQz-5RbNr4vsadDQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 9:17 AM Michal Hocko <mhocko@kernel.org> wrote:
->
-> On Mon 17-06-19 08:59:54, Shakeel Butt wrote:
-> > Currently oom_unkillable_task() checks mems_allowed even for memcg OOMs
-> > which does not make sense as memcg OOMs can not be triggered due to
-> > numa constraints. Fixing that.
-> >
-> > Also if memcg is given, oom_unkillable_task() will check the task's
-> > memcg membership as well to detect oom killability. However all the
-> > memcg related code paths leading to oom_unkillable_task(), other than
-> > dump_tasks(), come through mem_cgroup_scan_tasks() which traverses
-> > tasks through memcgs. Once dump_tasks() is converted to use
-> > mem_cgroup_scan_tasks(), there is no need to do memcg membership check
-> > in oom_unkillable_task().
->
-> I think this patch just does too much in one go. Could you split out
-> the dump_tasks part and the oom_unkillable_task parts into two patches
-> please? It should be slightly easier to review.
->
+On Sun, Jun 16, 2019 at 03:14:51PM -0700, Andy Lutomirski wrote:
+> On Fri, Jun 14, 2019 at 8:38 AM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+> > > Andy and/or Cedric, can you please weigh in with a concrete (and practical)
+> > > use case that will break if we go with #1?  The auditing issues for #2/#3
+> > > are complex to say the least...
+> 
+> The most significant issue I see is the following.  Consider two
+> cases. First, an SGX2 enclave that dynamically allocates memory but
+> doesn't execute code from dynamic memory.  Second, an SGX2 enclave
+> that *does* execute code from dynamic memory.  In #1, the untrusted
+> stack needs to decide whether to ALLOW_EXEC when the memory is
+> allocated, which means that it either needs to assume the worst or it
+> needs to know at allocation time whether the enclave ever intends to
+> change the permission to X.
 
-Yes, will do in v2.
+I'm just not convinced that folks running enclaves that can't communicate
+their basic functionality will care one whit about SELinux restrictions,
+i.e. will happily give EXECMOD even if it's not strictly necessary.
+ 
+> I suppose there's a middle ground.  The driver could use model #1 for
+> driver-filled pages and model #2 for dynamic pages.  I haven't tried
+> to fully work it out, but I think there would be the ALLOW_READ /
+> ALLOW_WRITE / ALLOW_EXEC flag for EADD-ed pages but, for EAUG-ed
+> pages, there would be a different policy.  This might be as simple as
+> internally having four flags instead of three:
+> 
+> ALLOW_READ, ALLOW_WRITE, ALLOW_EXEC: as before
+> 
+> ALLOW_EXEC_COND: set implicitly by the driver for EAUG.
+> 
+> As in #1, if you try to mmap or protect a page with neither ALLOW_EXEC
+> variant, it fails (-EACCES, perhaps).  But, if you try to mmap or
+> mprotect an ALLOW_EXEC_COND page with PROT_EXEC, you ask LSM for
+> permission.  There is no fancy DIRTY tracking here, since it's
+> reasonable to just act as though *every* ALLOW_EXEC_COND page is
+> dirty.  There is no real auditing issue here, since LSM can just log
+> what permission is missing.
+> 
+> Does this seem sensible?  It might give us the best of #1 and #2.
 
-> [...]
-> > +static bool oom_unkillable_task(struct task_struct *p, struct oom_control *oc)
-> >  {
-> >       if (is_global_init(p))
-> >               return true;
-> >       if (p->flags & PF_KTHREAD)
-> >               return true;
-> > +     if (!oc)
-> > +             return false;
->
-> Bah, this is just too ugly. AFAICS this is only because oom_score still
-> uses oom_unkillable_task which is kinda dubious, no? While you are
-> touching this code, can we remove this part as well? I would be really
-> surprised if any code really depends on ineligible tasks reporting 0
-> oom_score.
+It would work and is easy to implement *if* SELinux ties permissions to
+the process, as the SIGSTRUCT vma/file won't be available at
+EAUG+mprotect().  I already have a set of patches to that effect, I'll
+send 'em out in a bit.
 
-I think it is safer to just localize the is_global_init() and
-PF_KTHREAD checks in oom_badness() instead of invoking
-oom_unkillable_task(). Also I think cpuset_mems_allowed_intersects()
-check from /proc/[pid]/oom_score is unintentional.
+FWIW, we still need to differentiate W->X from WX on SGX1, i.e. declaring
+ALLOW_WRITE + ALLOW_EXEC shouldn't imply WX.  This is also addressed in
+the forthcoming updated RFC.
 
-Shakeel
+> > Follow-up question, is #1 any more palatable if SELinux adds SGX specific
+> > permissions and ties them to the process (instead of the vma or sigstruct)?
+> 
+> I'm not sure this makes a difference.  It simplifies SIGSTRUCT
+> handling, which is handy.
