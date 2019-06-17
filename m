@@ -2,117 +2,100 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58002C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:05:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5B67C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E056208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:05:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916332084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfFQMFF (ORCPT
+        id S1726334AbfFQMHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:05:05 -0400
-Received: from albert.telenet-ops.be ([195.130.137.90]:43556 "EHLO
-        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFQMFF (ORCPT
+        Mon, 17 Jun 2019 08:07:52 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:43517 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfFQMHv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:05:05 -0400
-Received: from ramsan ([84.194.111.163])
-        by albert.telenet-ops.be with bizsmtp
-        id Ro542000A3XaVaC06o54q9; Mon, 17 Jun 2019 14:05:04 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hcqNk-0001e0-5T; Mon, 17 Jun 2019 14:05:04 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hcqNk-0002eV-3i; Mon, 17 Jun 2019 14:05:04 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] clk: Add support for setting clk_rate via debugfs
-Date:   Mon, 17 Jun 2019 14:05:02 +0200
-Message-Id: <20190617120502.10153-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Jun 2019 08:07:51 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hcqQP-0006Vc-2V; Mon, 17 Jun 2019 14:07:49 +0200
+Date:   Mon, 17 Jun 2019 14:07:48 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Xu <peterx@redhat.com>
+cc:     linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH] timers: Fix up get_target_base() to use old base
+ properly
+In-Reply-To: <20190617091122.GC12456@xz-x1>
+Message-ID: <alpine.DEB.2.21.1906171400050.1854@nanos.tec.linutronix.de>
+References: <20190603132944.9726-1-peterx@redhat.com> <alpine.DEB.2.21.1906170732410.1760@nanos.tec.linutronix.de> <20190617091122.GC12456@xz-x1>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For testing, it is useful to be able to specify a clock rate manually.
-As this is a dangerous feature, it is not enabled by default.
-Users need to modify the source directly and #define
-CLOCK_ALLOW_WRITE_DEBUGFS.
+Peter,
 
-This follows the spirit of commit 09c6ecd394105c48 ("regmap: Add support
-for writing to regmap registers via debugfs").
+On Mon, 17 Jun 2019, Peter Xu wrote:
+> On Mon, Jun 17, 2019 at 08:09:20AM +0200, Thomas Gleixner wrote:
+> > You might argue that in case of an explicit pinned timer, the above logic
+> > is wrong when the timer is modified as it might move to a different
+> > CPU. But from day one when the pinned logic was introduced, pinned just
+> > prevents it from being queued on a remote CPU. If you need a timer to stay
+> > on a particular CPU even if modified from a remote CPU, then the only way
+> > right now is to dequeue and requeue it with add_timer_on(). 
+> 
+> Indeed.  If add_timer_on() should always be used when with pinned
+> timers, IMHO it would be good to comment probably above TIMER_PINNED
+> about the fact so people will never misuse the interfaces (it seems to
+> be mis-used somehow but I cannot be 100% sure, please see below).
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- drivers/clk/clk.c | 38 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 37 insertions(+), 1 deletion(-)
+Yeah, some documentation would be good.
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index c68bc5f695912bf5..0529ac624ed73ba0 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2953,6 +2953,41 @@ static int clk_dump_show(struct seq_file *s, void *data)
- }
- DEFINE_SHOW_ATTRIBUTE(clk_dump);
+> > If we really want to change that, then we need to audit all usage sites of
+> > pinned timers and figure out whether this would break anything.
+> > 
+> > The proper change would be in that case:
+> > 
+> >       return pinned ? base : get_timer_this_cpu_base(tflags);
+> 
+> Purely for curiousity - why would we like to use current cpu base even
+> if it's unpinned?  My humble opinion is that if we use base directly
+> at least we can avoid potential migration of the timer.  But I can be
+> missing some real reason here...
+
+In most cases it's desired to move the timer over. Assume you have a
+network interrupt moving from one cpu to the other and then the tcp timers
+would stay on the old cpu forever. So you'd pay the remote access price
+every time you touch it and if it fires the callback is pretty much
+guaranteed to be cache cold.
+
+> Though, I see two outliers:
+> 
+> ======================
+> 
+> *** drivers/cpufreq/powernv-cpufreq.c:
+> powernv_cpufreq_cpu_init[867]  TIMER_PINNED | TIMER_DEFERRABLE);
+> 
+> *** net/ipv4/inet_timewait_sock.c:
+> inet_twsk_alloc[189]           timer_setup(&tw->tw_timer, tw_timer_handler, TIMER_PINNED);
+
+That's fine. It just wants to make sure that the timer is not queued on a
+remote CPU if NOHZ is active. That gives them a serialization guarantee of
+the network softirq vs. the timer softirq so they can spare some locking
+stuff.
  
-+#undef CLOCK_ALLOW_WRITE_DEBUGFS
-+#ifdef CLOCK_ALLOW_WRITE_DEBUGFS
-+/*
-+ * This can be dangerous, therefore don't provide any real compile time
-+ * configuration option for this feature.
-+ * People who want to use this will need to modify the source code directly.
-+ */
-+static int clk_rate_set(void *data, u64 val)
-+{
-+	struct clk_core *core = data;
-+	int ret;
-+
-+	clk_prepare_lock();
-+	ret = clk_core_set_rate_nolock(core, val);
-+	clk_prepare_unlock();
-+
-+	return ret;
-+}
-+
-+#define clk_rate_mode	0644
-+#else
-+#define clk_rate_set	NULL
-+#define clk_rate_mode	0444
-+#endif
-+
-+static int clk_rate_get(void *data, u64 *val)
-+{
-+	struct clk_core *core = data;
-+
-+	*val = core->rate;
-+	return 0;
-+}
-+
-+DEFINE_DEBUGFS_ATTRIBUTE(clk_rate_fops, clk_rate_get, clk_rate_set, "%llu\n");
-+
- static const struct {
- 	unsigned long flag;
- 	const char *name;
-@@ -3029,7 +3064,8 @@ static void clk_debug_create_one(struct clk_core *core, struct dentry *pdentry)
- 	root = debugfs_create_dir(core->name, pdentry);
- 	core->dentry = root;
- 
--	debugfs_create_ulong("clk_rate", 0444, root, &core->rate);
-+	debugfs_create_file("clk_rate", clk_rate_mode, root, core,
-+			    &clk_rate_fops);
- 	debugfs_create_ulong("clk_accuracy", 0444, root, &core->accuracy);
- 	debugfs_create_u32("clk_phase", 0444, root, &core->phase);
- 	debugfs_create_file("clk_flags", 0444, root, core, &clk_flags_fops);
--- 
-2.17.1
+Thanks,
 
+	tglx
