@@ -2,98 +2,90 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7849FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B94CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C41C20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807333;
-	bh=xAd0l4WamYl1Zv3TSZdd9NxnwWlSdcbYomFJUMpZK8o=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=To3oW34t/AkpE2sbgRsta/kuaCLp4e4maSzlERn6Xwym9GqegpSyA7vIXj6MTBI7V
-	 pOWtZQoRx4b7j/0BDrn2YxjXYEVCnOzSb+u11ZUYsqLiKjz6wvP2Ojl1oQwU1dph2T
-	 dbQlmuhqir/r6XVXBs9/S5OM+lHiswksGbR1J4Ig=
+	by mail.kernel.org (Postfix) with ESMTP id 052E82063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfFQVfc (ORCPT
+        id S1729570AbfFQVWf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:35:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47506 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729173AbfFQVWn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:22:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Mon, 17 Jun 2019 17:22:35 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:51939 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729135AbfFQVW0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:22:26 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45SPLR482Fz1rWT1;
+        Mon, 17 Jun 2019 23:22:23 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45SPLR3Sk9z1qql7;
+        Mon, 17 Jun 2019 23:22:23 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id Ofi2Vk0dQod8; Mon, 17 Jun 2019 23:22:22 +0200 (CEST)
+X-Auth-Info: kxoQWfsuvJNGfuKCoxPyz8lu9v+YflcEBGhwLMkqB17xmmElfILuca/iqbizjt6/
+Received: from igel.home (ppp-46-244-166-202.dynamic.mnet-online.de [46.244.166.202])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 68E2D20673;
-        Mon, 17 Jun 2019 21:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806562;
-        bh=xAd0l4WamYl1Zv3TSZdd9NxnwWlSdcbYomFJUMpZK8o=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KxYtrX1/veFlF4SKzVAVvK+bBYECEAUk9KmM1IHKNvG+xDgDjNoJDq1VQxj+jGu3j
-         R11KMZrjx3rc1BZibk4XH2GcuOEZIahQ+wI1EIWPPwmXjcGF+DPElf9S7CfYA0d4tE
-         wcWbzFypJFwx5E7KPcSN6apz2xeVn/3CDqMtOqKU=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 050/115] bpf: sockmap remove duplicate queue free
-Date:   Mon, 17 Jun 2019 23:09:10 +0200
-Message-Id: <20190617210803.036791634@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-References: <20190617210759.929316339@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 17 Jun 2019 23:22:22 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id 852962C1101; Mon, 17 Jun 2019 23:22:20 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: [PATCH] powerpc/mm/32s: fix condition that is always true
+References: <cover.1550775950.git.christophe.leroy@c-s.fr>
+        <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
+X-Yow:  ..  I have a VISION!  It's a RANCID double-FISHWICH on an ENRICHED BUN!!
+Date:   Mon, 17 Jun 2019 23:22:20 +0200
+In-Reply-To: <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
+        (Christophe Leroy's message of "Thu, 21 Feb 2019 19:08:49 +0000
+        (UTC)")
+Message-ID: <87muif52lv.fsf_-_@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c42253cc88206fd0e9868c8b2fd7f9e79f9e0e03 ]
+Move a misplaced paren that makes the condition always true.
 
-In tcp bpf remove we free the cork list and purge the ingress msg
-list. However we do this before the ref count reaches zero so it
-could be possible some other access is in progress. In this case
-(tcp close and/or tcp_unhash) we happen to also hold the sock
-lock so no path exists but lets fix it otherwise it is extremely
-fragile and breaks the reference counting rules. Also we already
-check the cork list and ingress msg queue and free them once the
-ref count reaches zero so its wasteful to check twice.
-
-Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
-Signed-off-by: John Fastabend <john.fastabend@gmail.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
+Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
 ---
- net/ipv4/tcp_bpf.c | 2 --
- 1 file changed, 2 deletions(-)
+ arch/powerpc/mm/pgtable_32.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
-index 1bb7321a256d..4a619c85daed 100644
---- a/net/ipv4/tcp_bpf.c
-+++ b/net/ipv4/tcp_bpf.c
-@@ -528,8 +528,6 @@ static void tcp_bpf_remove(struct sock *sk, struct sk_psock *psock)
- {
- 	struct sk_psock_link *link;
+diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
+index d53188dee18f..35cb96cfc258 100644
+--- a/arch/powerpc/mm/pgtable_32.c
++++ b/arch/powerpc/mm/pgtable_32.c
+@@ -360,7 +360,7 @@ void mark_initmem_nx(void)
+ 	unsigned long numpages = PFN_UP((unsigned long)_einittext) -
+ 				 PFN_DOWN((unsigned long)_sinittext);
  
--	sk_psock_cork_free(psock);
--	__sk_psock_purge_ingress_msg(psock);
- 	while ((link = sk_psock_link_pop(psock))) {
- 		sk_psock_unlink(sk, link);
- 		sk_psock_free_link(link);
+-	if (v_block_mapped((unsigned long)_stext) + 1)
++	if (v_block_mapped((unsigned long)_stext + 1))
+ 		mmu_mark_initmem_nx();
+ 	else
+ 		change_page_attr(page, numpages, PAGE_KERNEL);
 -- 
-2.20.1
+2.22.0
 
-
-
+-- 
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
