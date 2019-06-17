@@ -2,90 +2,102 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B94CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F619C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052E82063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6423E2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560807342;
+	bh=W0AM3mZ2w2n/ClyM2senMPvoTAFPrTIAe6at9yE9fyc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=cQDEB9XCicJOzQdgcxk3ztXsJM4Rfk44MoTeAX5QEqdpN7HjeEagdf8zn2C3rAV0E
+	 tLEcX7W4ZS4Gkw/6ROtEeTAjkZYS7Oo4heThEVnhU0pSuOXgHlJHsTqa59WPCGFHKE
+	 GmSNFst82Asi66yUhen2oruxYtQLHjhCuuQQdtAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729570AbfFQVWf (ORCPT
+        id S1729299AbfFQVfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:22:35 -0400
-Received: from mail-out.m-online.net ([212.18.0.10]:51939 "EHLO
-        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729135AbfFQVW0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:22:26 -0400
-Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
-        by mail-out.m-online.net (Postfix) with ESMTP id 45SPLR482Fz1rWT1;
-        Mon, 17 Jun 2019 23:22:23 +0200 (CEST)
-Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
-        by mail.m-online.net (Postfix) with ESMTP id 45SPLR3Sk9z1qql7;
-        Mon, 17 Jun 2019 23:22:23 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at mnet-online.de
-Received: from mail.mnet-online.de ([192.168.8.182])
-        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
-        with ESMTP id Ofi2Vk0dQod8; Mon, 17 Jun 2019 23:22:22 +0200 (CEST)
-X-Auth-Info: kxoQWfsuvJNGfuKCoxPyz8lu9v+YflcEBGhwLMkqB17xmmElfILuca/iqbizjt6/
-Received: from igel.home (ppp-46-244-166-202.dynamic.mnet-online.de [46.244.166.202])
+        Mon, 17 Jun 2019 17:35:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729556AbfFQVWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:22:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.mnet-online.de (Postfix) with ESMTPSA;
-        Mon, 17 Jun 2019 23:22:22 +0200 (CEST)
-Received: by igel.home (Postfix, from userid 1000)
-        id 852962C1101; Mon, 17 Jun 2019 23:22:20 +0200 (CEST)
-From:   Andreas Schwab <schwab@linux-m68k.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>, j.neuschaefer@gmx.net,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH] powerpc/mm/32s: fix condition that is always true
-References: <cover.1550775950.git.christophe.leroy@c-s.fr>
-        <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
-X-Yow:  ..  I have a VISION!  It's a RANCID double-FISHWICH on an ENRICHED BUN!!
-Date:   Mon, 17 Jun 2019 23:22:20 +0200
-In-Reply-To: <1e412310cc18ea654fb2ce4c935654d8d1069f27.1550775950.git.christophe.leroy@c-s.fr>
-        (Christophe Leroy's message of "Thu, 21 Feb 2019 19:08:49 +0000
-        (UTC)")
-Message-ID: <87muif52lv.fsf_-_@igel.home>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
+        by mail.kernel.org (Postfix) with ESMTPSA id C125320673;
+        Mon, 17 Jun 2019 21:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560806551;
+        bh=W0AM3mZ2w2n/ClyM2senMPvoTAFPrTIAe6at9yE9fyc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RGNqAsozvz4fmVFOMz//X9jC8gIssrJwVcGG7eLwhuTSR2z+Kv8jH190nYRxvzIpS
+         NiqXeZrvnWFb00yI0fB7WLZmrNTKzvElr78sfXyeOXEUSK0iPCfg0MBhBCIvGCX/nu
+         2My5ulyq1djq0WCPsY1Rbk03SIiGBxz2jw7uyaMc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 046/115] Drivers: misc: fix out-of-bounds access in function param_set_kgdbts_var
+Date:   Mon, 17 Jun 2019 23:09:06 +0200
+Message-Id: <20190617210802.647826725@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
+References: <20190617210759.929316339@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move a misplaced paren that makes the condition always true.
+[ Upstream commit b281218ad4311a0342a40cb02fb17a363df08b48 ]
 
-Fixes: 63b2bc619565 ("powerpc/mm/32s: Use BATs for STRICT_KERNEL_RWX")
-Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
+There is an out-of-bounds access to "config[len - 1]" array when the
+variable "len" is zero.
+
+See commit dada6a43b040 ("kgdboc: fix KASAN global-out-of-bounds bug
+in param_set_kgdboc_var()") for details.
+
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/mm/pgtable_32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/misc/kgdbts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/mm/pgtable_32.c b/arch/powerpc/mm/pgtable_32.c
-index d53188dee18f..35cb96cfc258 100644
---- a/arch/powerpc/mm/pgtable_32.c
-+++ b/arch/powerpc/mm/pgtable_32.c
-@@ -360,7 +360,7 @@ void mark_initmem_nx(void)
- 	unsigned long numpages = PFN_UP((unsigned long)_einittext) -
- 				 PFN_DOWN((unsigned long)_sinittext);
+diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+index de20bdaa148d..8b01257783dd 100644
+--- a/drivers/misc/kgdbts.c
++++ b/drivers/misc/kgdbts.c
+@@ -1135,7 +1135,7 @@ static void kgdbts_put_char(u8 chr)
+ static int param_set_kgdbts_var(const char *kmessage,
+ 				const struct kernel_param *kp)
+ {
+-	int len = strlen(kmessage);
++	size_t len = strlen(kmessage);
  
--	if (v_block_mapped((unsigned long)_stext) + 1)
-+	if (v_block_mapped((unsigned long)_stext + 1))
- 		mmu_mark_initmem_nx();
- 	else
- 		change_page_attr(page, numpages, PAGE_KERNEL);
+ 	if (len >= MAX_CONFIG_LEN) {
+ 		printk(KERN_ERR "kgdbts: config string too long\n");
+@@ -1155,7 +1155,7 @@ static int param_set_kgdbts_var(const char *kmessage,
+ 
+ 	strcpy(config, kmessage);
+ 	/* Chop out \n char as a result of echo */
+-	if (config[len - 1] == '\n')
++	if (len && config[len - 1] == '\n')
+ 		config[len - 1] = '\0';
+ 
+ 	/* Go and configure with the new params. */
 -- 
-2.22.0
+2.20.1
 
--- 
-Andreas Schwab, schwab@linux-m68k.org
-GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
-"And now for something completely different."
+
+
