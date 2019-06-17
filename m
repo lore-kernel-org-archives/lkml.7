@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A1EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:20:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC147C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460202085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:20:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9843B2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:21:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cQzPiUM1"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="BY2+6jqa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728085AbfFQTUf (ORCPT
+        id S1728388AbfFQTVP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:20:35 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51051 "EHLO
+        Mon, 17 Jun 2019 15:21:15 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51485 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFQTUe (ORCPT
+        with ESMTP id S1725829AbfFQTVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:20:34 -0400
+        Mon, 17 Jun 2019 15:21:14 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJKBQo3560384
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJKro83560486
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:20:12 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJKBQo3560384
+        Mon, 17 Jun 2019 12:20:53 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJKro83560486
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560799212;
-        bh=/lZecDiBchJ3TJH73LYnG20o+Xg127Ffr40i4aA6qxo=;
+        s=2019051801; t=1560799254;
+        bh=KA5D41dpDaw8lXCMv2MsVclwjNxtdAVn+2wXzflv/Nc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=cQzPiUM12Vap6UtS4FIbSqkSvJLRli5nIJw+1LtWHRvQRXSzuyMHLTrEq7bHoFcl5
-         dpW26B41sXXHS22EymlqL6yB7j3I5j4H1zX/KHzZ2Ku/I7vSop/ea7PxkNRZpXJZp8
-         w8mbQYD52LlaFkXOJ6MELGI66qCBxbh3PjjDKYghistO4+x2PgaxjS+0/IWYngK209
-         dwxhuw9YFYQK7dofgLTzkmJ8e/3X6s+1i+6KOeDok2JOkKGXHhGv21sI1uGwQ/zZo7
-         KQIIkjMGWP5n0MzDEVCy6WVKiqvmvPAoEt3W2GmGDz3Pn4hZapJHVLYQRYsuqxcTwd
-         knWRH2sM9Angg==
+        b=BY2+6jqa8AVw1+3swP9iM+kKIxd4HcfbI3xoyUUr0Em5FGyY1ZUIX+2CCc1hmsN3+
+         0QJKds6b//UcbDpUEuy++fpPO8hO0OpML2Ta8WFt42qmp3xchM9yDQz81m8DWMYXf2
+         qF1jZNI45TpMo/0aHqanrOFyn5eVhxTLZNaII13ihbw5X3lH95r4h4zcBZRDDyn/75
+         lYAE7w/Piu9vdnKv1FVLzUwKtL2BRQhBw/e0jXSqtB03x6ft3RgQamDLJImBIJLCn2
+         72wiVtY4PjWwq97vPZMDgydnZho+yMTN3ny0hISnwtd/LsJVQQNSlOhobsVK+IoGCw
+         Vvft0nuQX+ZYQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJKBIG3560381;
-        Mon, 17 Jun 2019 12:20:11 -0700
-Date:   Mon, 17 Jun 2019 12:20:11 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJKrAb3560483;
+        Mon, 17 Jun 2019 12:20:53 -0700
+Date:   Mon, 17 Jun 2019 12:20:53 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Mathieu Poirier <tipbot@zytor.com>
-Message-ID: <tip-3399ad9ac234364396f75531203c38be5d2872c7@git.kernel.org>
-Cc:     namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-        leo.yan@linaro.org, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        acme@redhat.com, tglx@linutronix.de, mathieu.poirier@linaro.org,
-        hpa@zytor.com, suzuki.poulose@arm.com, jolsa@redhat.com,
-        peterz@infradead.org
-Reply-To: linux-kernel@vger.kernel.org, leo.yan@linaro.org,
-          namhyung@kernel.org, alexander.shishkin@linux.intel.com,
-          peterz@infradead.org, mathieu.poirier@linaro.org, hpa@zytor.com,
-          jolsa@redhat.com, suzuki.poulose@arm.com, mingo@kernel.org,
-          acme@redhat.com, tglx@linutronix.de
-In-Reply-To: <20190524173508.29044-2-mathieu.poirier@linaro.org>
-References: <20190524173508.29044-2-mathieu.poirier@linaro.org>
+Message-ID: <tip-1c839a5a4061bf4554430037b04a115efc9dd8a1@git.kernel.org>
+Cc:     peterz@infradead.org, suzuki.poulose@arm.com, tglx@linutronix.de,
+        mingo@kernel.org, hpa@zytor.com, mathieu.poirier@linaro.org,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, leo.yan@linaro.org, acme@redhat.com,
+        alexander.shishkin@linux.intel.com
+Reply-To: jolsa@redhat.com, mingo@kernel.org, tglx@linutronix.de,
+          suzuki.poulose@arm.com, peterz@infradead.org, hpa@zytor.com,
+          mathieu.poirier@linaro.org, namhyung@kernel.org,
+          leo.yan@linaro.org, linux-kernel@vger.kernel.org,
+          alexander.shishkin@linux.intel.com, acme@redhat.com
+In-Reply-To: <20190524173508.29044-3-mathieu.poirier@linaro.org>
+References: <20190524173508.29044-3-mathieu.poirier@linaro.org>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf cs-etm: Configure contextID tracing in
+Subject: [tip:perf/core] perf cs-etm: Configure timestamp generation in
  CPU-wide mode
-Git-Commit-ID: 3399ad9ac234364396f75531203c38be5d2872c7
+Git-Commit-ID: 1c839a5a4061bf4554430037b04a115efc9dd8a1
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,21 +74,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3399ad9ac234364396f75531203c38be5d2872c7
-Gitweb:     https://git.kernel.org/tip/3399ad9ac234364396f75531203c38be5d2872c7
+Commit-ID:  1c839a5a4061bf4554430037b04a115efc9dd8a1
+Gitweb:     https://git.kernel.org/tip/1c839a5a4061bf4554430037b04a115efc9dd8a1
 Author:     Mathieu Poirier <mathieu.poirier@linaro.org>
-AuthorDate: Fri, 24 May 2019 11:34:52 -0600
+AuthorDate: Fri, 24 May 2019 11:34:53 -0600
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 10 Jun 2019 15:50:01 -0300
 
-perf cs-etm: Configure contextID tracing in CPU-wide mode
+perf cs-etm: Configure timestamp generation in CPU-wide mode
 
-When operating in CPU-wide mode being notified of contextID changes is
-required so that the decoding mechanic is aware of the process context
-switch.
+When operating in CPU-wide mode tracers need to generate timestamps in
+order to correlate the code being traced on one CPU with what is executed
+on other CPUs.
 
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Reviewed-by: Suzuki Poulouse <suzuki.poulose@arm.com>
 Tested-by: Leo Yan <leo.yan@linaro.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
@@ -97,38 +96,22 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
 Cc: coresight@lists.linaro.org
 Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-2-mathieu.poirier@linaro.org
+Link: http://lkml.kernel.org/r/20190524173508.29044-3-mathieu.poirier@linaro.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/arch/arm/util/cs-etm.c | 126 ++++++++++++++++++++++++++++++++------
- tools/perf/util/cs-etm.h          |  12 ++++
- 2 files changed, 119 insertions(+), 19 deletions(-)
+ tools/perf/arch/arm/util/cs-etm.c | 57 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
 diff --git a/tools/perf/arch/arm/util/cs-etm.c b/tools/perf/arch/arm/util/cs-etm.c
-index 911426721170..3912f0bf04ed 100644
+index 3912f0bf04ed..be1e4f20affa 100644
 --- a/tools/perf/arch/arm/util/cs-etm.c
 +++ b/tools/perf/arch/arm/util/cs-etm.c
-@@ -35,8 +35,100 @@ struct cs_etm_recording {
- 	size_t			snapshot_size;
- };
+@@ -99,6 +99,54 @@ out:
+ 	return err;
+ }
  
-+static const char *metadata_etmv3_ro[CS_ETM_PRIV_MAX] = {
-+	[CS_ETM_ETMCCER]	= "mgmt/etmccer",
-+	[CS_ETM_ETMIDR]		= "mgmt/etmidr",
-+};
-+
-+static const char *metadata_etmv4_ro[CS_ETMV4_PRIV_MAX] = {
-+	[CS_ETMV4_TRCIDR0]		= "trcidr/trcidr0",
-+	[CS_ETMV4_TRCIDR1]		= "trcidr/trcidr1",
-+	[CS_ETMV4_TRCIDR2]		= "trcidr/trcidr2",
-+	[CS_ETMV4_TRCIDR8]		= "trcidr/trcidr8",
-+	[CS_ETMV4_TRCAUTHSTATUS]	= "mgmt/trcauthstatus",
-+};
-+
- static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu);
- 
-+static int cs_etm_set_context_id(struct auxtrace_record *itr,
-+				 struct perf_evsel *evsel, int cpu)
++static int cs_etm_set_timestamp(struct auxtrace_record *itr,
++				struct perf_evsel *evsel, int cpu)
 +{
 +	struct cs_etm_recording *ptr;
 +	struct perf_pmu *cs_etm_pmu;
@@ -142,9 +125,9 @@ index 911426721170..3912f0bf04ed 100644
 +	if (!cs_etm_is_etmv4(itr, cpu))
 +		goto out;
 +
-+	/* Get a handle on TRCIRD2 */
++	/* Get a handle on TRCIRD0 */
 +	snprintf(path, PATH_MAX, "cpu%d/%s",
-+		 cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR2]);
++		 cpu, metadata_etmv4_ro[CS_ETMV4_TRCIDR0]);
 +	err = perf_pmu__scan_file(cs_etm_pmu, path, "%x", &val);
 +
 +	/* There was a problem reading the file, bailing out */
@@ -155,159 +138,49 @@ index 911426721170..3912f0bf04ed 100644
 +	}
 +
 +	/*
-+	 * TRCIDR2.CIDSIZE, bit [9-5], indicates whether contextID tracing
++	 * TRCIDR0.TSSIZE, bit [28-24], indicates whether global timestamping
 +	 * is supported:
-+	 *  0b00000 Context ID tracing is not supported.
-+	 *  0b00100 Maximum of 32-bit Context ID size.
-+	 *  All other values are reserved.
++	 *  0b00000 Global timestamping is not implemented
++	 *  0b00110 Implementation supports a maximum timestamp of 48bits.
++	 *  0b01000 Implementation supports a maximum timestamp of 64bits.
 +	 */
-+	val = BMVAL(val, 5, 9);
-+	if (!val || val != 0x4) {
++	val &= GENMASK(28, 24);
++	if (!val) {
 +		err = -EINVAL;
 +		goto out;
 +	}
 +
 +	/* All good, let the kernel know */
-+	evsel->attr.config |= (1 << ETM_OPT_CTXTID);
++	evsel->attr.config |= (1 << ETM_OPT_TS);
 +	err = 0;
 +
 +out:
-+
 +	return err;
 +}
 +
-+static int cs_etm_set_option(struct auxtrace_record *itr,
-+			     struct perf_evsel *evsel, u32 option)
-+{
-+	int i, err = -EINVAL;
-+	struct cpu_map *event_cpus = evsel->evlist->cpus;
-+	struct cpu_map *online_cpus = cpu_map__new(NULL);
-+
-+	/* Set option of each CPU we have */
-+	for (i = 0; i < cpu__max_cpu(); i++) {
-+		if (!cpu_map__has(event_cpus, i) ||
-+		    !cpu_map__has(online_cpus, i))
-+			continue;
-+
-+		switch (option) {
-+		case ETM_OPT_CTXTID:
-+			err = cs_etm_set_context_id(itr, evsel, i);
+ static int cs_etm_set_option(struct auxtrace_record *itr,
+ 			     struct perf_evsel *evsel, u32 option)
+ {
+@@ -118,6 +166,11 @@ static int cs_etm_set_option(struct auxtrace_record *itr,
+ 			if (err)
+ 				goto out;
+ 			break;
++		case ETM_OPT_TS:
++			err = cs_etm_set_timestamp(itr, evsel, i);
 +			if (err)
 +				goto out;
 +			break;
-+		default:
-+			goto out;
-+		}
-+	}
+ 		default:
+ 			goto out;
+ 		}
+@@ -343,6 +396,10 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
+ 		err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_CTXTID);
+ 		if (err)
+ 			goto out;
 +
-+	err = 0;
-+out:
-+	cpu_map__put(online_cpus);
-+	return err;
-+}
-+
- static int cs_etm_parse_snapshot_options(struct auxtrace_record *itr,
- 					 struct record_opts *opts,
- 					 const char *str)
-@@ -105,8 +197,9 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 				container_of(itr, struct cs_etm_recording, itr);
- 	struct perf_pmu *cs_etm_pmu = ptr->cs_etm_pmu;
- 	struct perf_evsel *evsel, *cs_etm_evsel = NULL;
--	const struct cpu_map *cpus = evlist->cpus;
-+	struct cpu_map *cpus = evlist->cpus;
- 	bool privileged = (geteuid() == 0 || perf_event_paranoid() < 0);
-+	int err = 0;
- 
- 	ptr->evlist = evlist;
- 	ptr->snapshot_mode = opts->auxtrace_snapshot_mode;
-@@ -241,19 +334,24 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 
- 	/*
- 	 * In the case of per-cpu mmaps, we need the CPU on the
--	 * AUX event.
-+	 * AUX event.  We also need the contextID in order to be notified
-+	 * when a context switch happened.
- 	 */
--	if (!cpu_map__empty(cpus))
-+	if (!cpu_map__empty(cpus)) {
- 		perf_evsel__set_sample_bit(cs_etm_evsel, CPU);
- 
-+		err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_CTXTID);
++		err = cs_etm_set_option(itr, cs_etm_evsel, ETM_OPT_TS);
 +		if (err)
 +			goto out;
-+	}
-+
- 	/* Add dummy event to keep tracking */
- 	if (opts->full_auxtrace) {
- 		struct perf_evsel *tracking_evsel;
--		int err;
- 
- 		err = parse_events(evlist, "dummy:u", NULL);
- 		if (err)
--			return err;
-+			goto out;
- 
- 		tracking_evsel = perf_evlist__last(evlist);
- 		perf_evlist__set_tracking_event(evlist, tracking_evsel);
-@@ -266,7 +364,8 @@ static int cs_etm_recording_options(struct auxtrace_record *itr,
- 			perf_evsel__set_sample_bit(tracking_evsel, TIME);
  	}
  
--	return 0;
-+out:
-+	return err;
- }
- 
- static u64 cs_etm_get_config(struct auxtrace_record *itr)
-@@ -314,6 +413,8 @@ static u64 cs_etmv4_get_config(struct auxtrace_record *itr)
- 	config_opts = cs_etm_get_config(itr);
- 	if (config_opts & BIT(ETM_OPT_CYCACC))
- 		config |= BIT(ETM4_CFG_BIT_CYCACC);
-+	if (config_opts & BIT(ETM_OPT_CTXTID))
-+		config |= BIT(ETM4_CFG_BIT_CTXTID);
- 	if (config_opts & BIT(ETM_OPT_TS))
- 		config |= BIT(ETM4_CFG_BIT_TS);
- 	if (config_opts & BIT(ETM_OPT_RETSTK))
-@@ -363,19 +464,6 @@ cs_etm_info_priv_size(struct auxtrace_record *itr __maybe_unused,
- 	       (etmv3 * CS_ETMV3_PRIV_SIZE));
- }
- 
--static const char *metadata_etmv3_ro[CS_ETM_PRIV_MAX] = {
--	[CS_ETM_ETMCCER]	= "mgmt/etmccer",
--	[CS_ETM_ETMIDR]		= "mgmt/etmidr",
--};
--
--static const char *metadata_etmv4_ro[CS_ETMV4_PRIV_MAX] = {
--	[CS_ETMV4_TRCIDR0]		= "trcidr/trcidr0",
--	[CS_ETMV4_TRCIDR1]		= "trcidr/trcidr1",
--	[CS_ETMV4_TRCIDR2]		= "trcidr/trcidr2",
--	[CS_ETMV4_TRCIDR8]		= "trcidr/trcidr8",
--	[CS_ETMV4_TRCAUTHSTATUS]	= "mgmt/trcauthstatus",
--};
--
- static bool cs_etm_is_etmv4(struct auxtrace_record *itr, int cpu)
- {
- 	bool ret = false;
-diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-index 0e97c196147a..826c9eedaf5c 100644
---- a/tools/perf/util/cs-etm.h
-+++ b/tools/perf/util/cs-etm.h
-@@ -103,6 +103,18 @@ struct intlist *traceid_list;
- #define KiB(x) ((x) * 1024)
- #define MiB(x) ((x) * 1024 * 1024)
- 
-+/*
-+ * Create a contiguous bitmask starting at bit position @l and ending at
-+ * position @h. For example
-+ * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-+ *
-+ * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
-+ */
-+#define GENMASK(h, l) \
-+	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
-+
-+#define BMVAL(val, lsb, msb)	((val & GENMASK(msb, lsb)) >> lsb)
-+
- #define CS_ETM_HEADER_SIZE (CS_HEADER_VERSION_0_MAX * sizeof(u64))
- 
- #define __perf_cs_etmv3_magic 0x3030303030303030ULL
+ 	/* Add dummy event to keep tracking */
