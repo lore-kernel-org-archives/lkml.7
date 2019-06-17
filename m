@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACBB5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:42:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FA8C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1EE2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:42:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 740C42084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfFQSmb (ORCPT
+        id S1729016AbfFQSme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:42:31 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:37191 "EHLO
+        Mon, 17 Jun 2019 14:42:34 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:37201 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728950AbfFQSm0 (ORCPT
+        with ESMTP id S1728950AbfFQSmc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:42:26 -0400
+        Mon, 17 Jun 2019 14:42:32 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MWiYo-1i9ske2RCq-00X3Ti; Mon, 17 Jun 2019 20:42:12 +0200
+ 1MvJsF-1iTG9P2nw1-00rDzz; Mon, 17 Jun 2019 20:42:06 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -33,31 +33,28 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 30/30] drivers: gpio: max732x: use subsys_i2c_driver()
-Date:   Mon, 17 Jun 2019 20:41:11 +0200
-Message-Id: <1560796871-18560-30-git-send-email-info@metux.net>
+Subject: [PATCH 25/30] drivers: gpio: omap: use postcore_platform_driver()
+Date:   Mon, 17 Jun 2019 20:41:06 +0200
+Message-Id: <1560796871-18560-25-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
 References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:cCDeCfM59RF90RxmymdnnTZyFuGyFovFw66CIcAmzljQAcUCv50
- GHZdz+78OGvTtCBTcKJL1JKtM2LAYUAGqkUZqHriMkIzaNvafUq+aNA3OY0YiHro69MDLZO
- dzbzbBXy+eMl7t+QG7QOmjCDfgqFoeDxvYkR8c8FaSIw1+kNxxx8GG2B93NHJBZFBODWVDA
- fWLGs8s2d7UAj+faSe7SQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:f9JpWGPh8+Q=:Prle+yo3zB8vcfwdoAK2g8
- 2gzxvbqD4NKKJ2D+vj4cO6yWP8/PFEBRWr5iN+PXDLZyCbNsNXUxhNjPKPHLA/MleKDaAKAHq
- vRyvmeLVGHug2/ZCDG5xOg8Kfn/TuG9DIABDPhGru8LjN1ocaWeawNrBH0qdgMdtpLai+JCTq
- lHwZVLspVxps/zV8WoEQeGIMlyBc/+eJksIkDYaZZ6BbxFNmv1Zk+S5dkoacPYkWx7nVGKWmH
- A+KH1mOv7cbTvc8DJhJjSbHcHvhR7Xo3VLPASfFAEdtSkI7MFZRtc93r1RypaqwSRZHNU4zty
- hjoCIDx8p3cZer1X9VxiAQ8R6sIyth4oleJq6vYVmTFTpzBXpZaRRgPmhJl7XZUP0m3Kjjqan
- NYcTOPjLsplRrF4jzuOvB+kRMNlZPsKiyqNFhkrNUenAP7fQFViNMwupkjbrmGwkwA+2f2bL4
- fk99ZsSFhw9us+GK1fJBNNwY4ZHiX6+6O6gnmm9EjrKERGveNEEGehdRM9ibMts7hJ06T8Uvs
- uct1NQJDCExlFFiLE6sWZG+eEgtGzc6gfexFgnc/mNrqP0otK0WEplszhV4Cv6VdOrLPM5CKE
- gQpeep9J3O14sWRUXtFLlX+fCQXRIqWTfaUuBfA4EAE4kYrUNQ80fF8uCjWMZ0f4XEhE41Fio
- cE8tn3zxz3BV3B2GVly5P7ER/T9/5w3KX38GX49rjtPSfK0kAi1rocik3cLojD5kKNjvd2mja
- W73zWA9QHbNCRh2SMvxxy9fagBYWlWMNJ2RMxxa3TnERt6EaKgfI0NeeI5WOyZqw7eMOSR/ZI
- 31NIBLNdWnFGTJeFcRrHz/lEEY5fmQPR0BJDVFxsjJ8VwhI1RNzbLxltqhayQ/ftVC1LzoxT+
- cCQvpIJA8QBJ5MQkMLd/GpDXHnO7Z2LogOqS1JLOTo/H/4snP0zZfciNYNUb1k7PStVktEUNX
- fHkDDIqKqQg==
+X-Provags-ID: V03:K1:tFS0GjzX6alLG19pcq9DPLM369DFPeY4/FfXiA6BRRzIIxKJuJS
+ bNXHsgS/ru29Ym7LEcgtLqQ3RSCyKDKmMYd5nivpxeZUG7FiU8NWBBgmuutqWHyKZzUc5UG
+ ma9M+hvWKe7effQ+FlIgyLiZ2wM+1bixOYbyXiJCjT2qfzwjQcV2uenT++3Ohkqd8O4Dqxj
+ XYAPhfVY4/p46MS5cMn5A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tRv4K84lkKs=:dWeeZq/NGKHGQccUiV53fX
+ +TfnnmpNbzSLBFctGjq0ZTz3GwgPFnGl8nJzS5loTtjj91jpEHPgmzHy20qTEKNbcJ8z2p9Vo
+ GoZWKgp4S8lU8U0K5YvE2EWtrZEHZWWbmNzDc2hqR8bubuonqv17GXKP1+qwKI6mcTf/pfH0E
+ gLp/OjbJg0A+2U3wLlbOXbuGjAP3gS+BybkKK7aE9WBly+37grzgb/VC1S2Ug/DUJyYdwOWGP
+ YWNoFFW25yYVetpKsxQ9lPaRN3BoIyNFq9N7MuE7cWhXLji6QiupVcD2zHpo9mF3cf3rmoLIm
+ dysQtuLi6MEYzE2fDslmkQqP6vc1xaff0aed7EZe3RL9sVEAmkp0cPFZX3Zl46YP8Bc5G39Y4
+ 1XC+/luChxFwaqixJcDv/yk712JGHzyXmJWousJnNZULeTSKujdCqplWg5kkke5kSXWnVyb7y
+ NVPWSOw+igxbB4ELKpxhpBnO/N0x/LiISRS8wd46IsLz/cXE3XDK5VrBGSnctaYKfyhfYpcEJ
+ X4iesZkyfZxA2yqyjCVTft6d1UYPl5kd7gnVF+Tph9SJvX+oISt5vrukTM51oo1GLGYPah6Bg
+ Pv4STYGP5Z1zEPhWs29Eo+/K8DaWlejvl1o1RfjlZrLjfAYnJU2xbVSjyjep4QuFg4hBzhgYj
+ onJrNyJyln7JMHYLZHt3WUB6C7bUbLO7eqqeIqsaac1WUQ4ehR7pkxyaJmXwwsDYCswjUqXcp
+ QNfgRPg2hiT6q831hXs8IAWVANa8TbsHfWtwNA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -66,40 +63,36 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 From: Enrico Weigelt <info@metux.net>
 
 Reduce driver init boilerplate by using the new
-subsys_i2c_driver() macro.
+postcore_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-max732x.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+ drivers/gpio/gpio-omap.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/gpio/gpio-max732x.c b/drivers/gpio/gpio-max732x.c
-index 5e4102e..c340883 100644
---- a/drivers/gpio/gpio-max732x.c
-+++ b/drivers/gpio/gpio-max732x.c
-@@ -756,21 +756,10 @@ static int max732x_remove(struct i2c_client *client)
- 	.remove		= max732x_remove,
- 	.id_table	= max732x_id,
- };
--
--static int __init max732x_init(void)
--{
--	return i2c_add_driver(&max732x_driver);
--}
- /* register after i2c postcore initcall and before
-  * subsys initcalls that may rely on these GPIOs
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 16289ba..3ea02d3 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -1693,17 +1693,7 @@ static int __maybe_unused omap_gpio_runtime_resume(struct device *dev)
+  * machine_init functions access gpio APIs.
+  * Hence omap_gpio_drv_reg() is a postcore_initcall.
   */
--subsys_initcall(max732x_init);
--
--static void __exit max732x_exit(void)
+-static int __init omap_gpio_drv_reg(void)
 -{
--	i2c_del_driver(&max732x_driver);
+-	return platform_driver_register(&omap_gpio_driver);
 -}
--module_exit(max732x_exit);
-+subsys_i2c_driver(max732x_driver);
+-postcore_initcall(omap_gpio_drv_reg);
+-
+-static void __exit omap_gpio_exit(void)
+-{
+-	platform_driver_unregister(&omap_gpio_driver);
+-}
+-module_exit(omap_gpio_exit);
++postcore_platform_driver(omap_gpio_driver);
  
- MODULE_AUTHOR("Eric Miao <eric.miao@marvell.com>");
- MODULE_DESCRIPTION("GPIO expander driver for MAX732X");
+ MODULE_DESCRIPTION("omap gpio driver");
+ MODULE_ALIAS("platform:gpio-omap");
 -- 
 1.9.1
 
