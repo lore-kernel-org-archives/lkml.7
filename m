@@ -2,126 +2,163 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED0E8C31E54
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73565C31E53
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4E2121C38
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560759722;
-	bh=6KHkhl2yUddnhuVguNE898kFnkPgg4HNqSCEyc4821U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0OcS3v96REMtA6dT1rzynGeEctdx+WSmb59V0Mjg9A2aS7jgOcsrGTaKGTUrMkGmu
-	 /KnJOvFWeABKAHNOlBDKG9d/CcrH9L6o9+q8j8TaAhD42l9Q5rSbSIAXoXATvBKd1N
-	 h73OhroAk+US1MYJ78J+FkmtWIjRHoZynRa0uUPA=
+	by mail.kernel.org (Postfix) with ESMTP id 564E820652
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfFQIWB (ORCPT
+        id S1727140AbfFQIWR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:22:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52094 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725791AbfFQIWB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:22:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 642EFAF4C;
-        Mon, 17 Jun 2019 08:21:59 +0000 (UTC)
-Date:   Mon, 17 Jun 2019 10:21:56 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Alastair D'Silva <alastair@d-silva.org>
-Cc:     'Alastair D'Silva' <alastair@au1.ibm.com>,
-        'Arun KS' <arunks@codeaurora.org>,
-        'Mukesh Ojha' <mojha@codeaurora.org>,
-        'Logan Gunthorpe' <logang@deltatee.com>,
-        'Wei Yang' <richard.weiyang@gmail.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        'Ingo Molnar' <mingo@kernel.org>, linux-mm@kvack.org,
-        'Qian Cai' <cai@lca.pw>,
-        'Thomas Gleixner' <tglx@linutronix.de>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        'Mike Rapoport' <rppt@linux.vnet.ibm.com>,
-        'Baoquan He' <bhe@redhat.com>,
-        'David Hildenbrand' <david@redhat.com>,
-        'Josh Poimboeuf' <jpoimboe@redhat.com>,
-        'Pavel Tatashin' <pasha.tatashin@soleen.com>,
-        'Juergen Gross' <jgross@suse.com>,
-        'Oscar Salvador' <osalvador@suse.com>,
-        'Jiri Kosina' <jkosina@suse.cz>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/5] mm/hotplug: Avoid RCU stalls when removing large
- amounts of memory
-Message-ID: <20190617082156.GA1492@dhcp22.suse.cz>
-References: <20190617043635.13201-1-alastair@au1.ibm.com>
- <20190617043635.13201-5-alastair@au1.ibm.com>
- <20190617074715.GE30420@dhcp22.suse.cz>
- <068b01d524e2$4a5f5c30$df1e1490$@d-silva.org>
+        Mon, 17 Jun 2019 04:22:17 -0400
+Received: from aclms3.advantech.com.tw ([125.252.70.86]:40383 "EHLO
+        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfFQIWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 04:22:17 -0400
+Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Td872a26ee3ac1401c810b8@ACLMS3.advantech.com.tw>;
+ Mon, 17 Jun 2019 16:16:23 +0800
+From:   <Amy.Shih@advantech.com.tw>
+To:     <she90122@gmail.com>
+CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
+        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [v2 8/9] hwmon: (nct7904) Fix wrong attribute names for temperature.
+Date:   Mon, 17 Jun 2019 08:16:09 +0000
+Message-ID: <f499d63b7a62447fedf466399f1f924eea6f016a.1560756733.git.amy.shih@advantech.com.tw>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
+References: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <068b01d524e2$4a5f5c30$df1e1490$@d-silva.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [172.17.10.58]
+X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
+ taipei08.ADVANTECH.CORP (172.20.0.235)
+X-StopIT: No
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 17-06-19 17:57:16, Alastair D'Silva wrote:
-> > -----Original Message-----
-> > From: Michal Hocko <mhocko@kernel.org>
-> > Sent: Monday, 17 June 2019 5:47 PM
-> > To: Alastair D'Silva <alastair@au1.ibm.com>
-> > Cc: alastair@d-silva.org; Arun KS <arunks@codeaurora.org>; Mukesh Ojha
-> > <mojha@codeaurora.org>; Logan Gunthorpe <logang@deltatee.com>; Wei
-> > Yang <richard.weiyang@gmail.com>; Peter Zijlstra <peterz@infradead.org>;
-> > Ingo Molnar <mingo@kernel.org>; linux-mm@kvack.org; Qian Cai
-> > <cai@lca.pw>; Thomas Gleixner <tglx@linutronix.de>; Andrew Morton
-> > <akpm@linux-foundation.org>; Mike Rapoport <rppt@linux.vnet.ibm.com>;
-> > Baoquan He <bhe@redhat.com>; David Hildenbrand <david@redhat.com>;
-> > Josh Poimboeuf <jpoimboe@redhat.com>; Pavel Tatashin
-> > <pasha.tatashin@soleen.com>; Juergen Gross <jgross@suse.com>; Oscar
-> > Salvador <osalvador@suse.com>; Jiri Kosina <jkosina@suse.cz>; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH 4/5] mm/hotplug: Avoid RCU stalls when removing large
-> > amounts of memory
-> > 
-> > On Mon 17-06-19 14:36:30,  Alastair D'Silva  wrote:
-> > > From: Alastair D'Silva <alastair@d-silva.org>
-> > >
-> > > When removing sufficiently large amounts of memory, we trigger RCU
-> > > stall detection. By periodically calling cond_resched(), we avoid
-> > > bogus stall warnings.
-> > >
-> > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > > ---
-> > >  mm/memory_hotplug.c | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c index
-> > > e096c987d261..382b3a0c9333 100644
-> > > --- a/mm/memory_hotplug.c
-> > > +++ b/mm/memory_hotplug.c
-> > > @@ -578,6 +578,9 @@ void __remove_pages(struct zone *zone, unsigned
-> > long phys_start_pfn,
-> > >  		__remove_section(zone, __pfn_to_section(pfn),
-> > map_offset,
-> > >  				 altmap);
-> > >  		map_offset = 0;
-> > > +
-> > > +		if (!(i & 0x0FFF))
-> > > +			cond_resched();
-> > 
-> > We already do have cond_resched before __remove_section. Why is an
-> > additional needed?
-> 
-> I was getting stalls when removing ~1TB of memory.
+From: "amy.shih" <amy.shih@advantech.com.tw>
 
-Have debugged what is the source of the stall? We do cond_resched once a
-memory section which should be a constant unit of work regardless of the
-total amount of memory to be removed.
+Emergency attributes without crit attributes are not acceptable.
+In datasheet there are registers labeled "critical", and there is
+no mention of "emergency". Thus, set the attribute names from
+"temp[1-*]_emergency" and "temp[1-*]_emergency_hyst" to
+"temp[1-*]_crit" and "temp[1-*]_crit_hyst".
+
+Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
+---
+Changes in v2:
+- Fix wrong attribute names for temperature.
+
+ drivers/hwmon/nct7904.c | 48 ++++++++++++++++++++---------------------
+ 1 file changed, 24 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
+index c74f919c0181..fc145c73a4e7 100644
+--- a/drivers/hwmon/nct7904.c
++++ b/drivers/hwmon/nct7904.c
+@@ -407,12 +407,12 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
+ 		reg2 = TEMP_CH1_CH_REG;
+ 		reg3 = DTS_T_CPU1_CH_REG;
+ 		break;
+-	case hwmon_temp_emergency:
++	case hwmon_temp_crit:
+ 		reg1 = LTD_HV_LL_REG;
+ 		reg2 = TEMP_CH1_W_REG;
+ 		reg3 = DTS_T_CPU1_W_REG;
+ 		break;
+-	case hwmon_temp_emergency_hyst:
++	case hwmon_temp_crit_hyst:
+ 		reg1 = LTD_LV_LL_REG;
+ 		reg2 = TEMP_CH1_WH_REG;
+ 		reg3 = DTS_T_CPU1_WH_REG;
+@@ -454,8 +454,8 @@ static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
+ 		break;
+ 	case hwmon_temp_max:
+ 	case hwmon_temp_max_hyst:
+-	case hwmon_temp_emergency:
+-	case hwmon_temp_emergency_hyst:
++	case hwmon_temp_crit:
++	case hwmon_temp_crit_hyst:
+ 		if (channel < 5) {
+ 			if (data->tcpu_mask & BIT(channel))
+ 				return 0644;
+@@ -516,12 +516,12 @@ static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
+ 		reg2 = TEMP_CH1_CH_REG;
+ 		reg3 = DTS_T_CPU1_CH_REG;
+ 		break;
+-	case hwmon_temp_emergency:
++	case hwmon_temp_crit:
+ 		reg1 = LTD_HV_LL_REG;
+ 		reg2 = TEMP_CH1_W_REG;
+ 		reg3 = DTS_T_CPU1_W_REG;
+ 		break;
+-	case hwmon_temp_emergency_hyst:
++	case hwmon_temp_crit_hyst:
+ 		reg1 = LTD_LV_LL_REG;
+ 		reg2 = TEMP_CH1_WH_REG;
+ 		reg3 = DTS_T_CPU1_WH_REG;
+@@ -799,32 +799,32 @@ static const struct hwmon_channel_info *nct7904_info[] = {
+ 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
+ 	HWMON_CHANNEL_INFO(temp,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST,
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST,
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST,
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST,
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST,
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST,
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST,
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST,
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST,
+ 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
+-			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
+-			   HWMON_T_EMERGENCY_HYST),
++			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
++			   HWMON_T_CRIT_HYST),
+ 	NULL
+ };
+ 
 -- 
-Michal Hocko
-SUSE Labs
+2.17.1
+
