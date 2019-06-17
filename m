@@ -2,76 +2,99 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F236C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:14:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9976C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E74021C38
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:14:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8882C21C38
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfFQIN6 (ORCPT
+        id S1726401AbfFQIOq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:13:58 -0400
-Received: from aclms3.advantech.com.tw ([125.252.70.86]:39229 "EHLO
-        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725810AbfFQIN6 (ORCPT
+        Mon, 17 Jun 2019 04:14:46 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:48903 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfFQIOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:13:58 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td872a02fbdac1401c810b8@ACLMS3.advantech.com.tw>;
- Mon, 17 Jun 2019 16:13:56 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v2 5/9] hwmon: (nct7904) Fix incorrect register bit mapping of temperature alarm.
-Date:   Mon, 17 Jun 2019 08:12:30 +0000
-Message-ID: <87e748a5f2e7d8e6ef69fa5acb177cb0a1474cb2.1560756733.git.amy.shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
-References: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
+        Mon, 17 Jun 2019 04:14:45 -0400
+Received: from xps13 (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 0372B200003;
+        Mon, 17 Jun 2019 08:14:35 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 10:14:34 +0200
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-mtd@lists.infradead.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Richard Weinberger <richard@nod.at>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] jffs2: do not use C++ style comments in uapi header
+Message-ID: <20190617101434.3d29808c@xps13>
+In-Reply-To: <20190603165027.11831-1-yamada.masahiro@socionext.com>
+References: <20190603165027.11831-1-yamada.masahiro@socionext.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.58]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
+Hi Masahiro,
 
-In function nct7904_read_temp, the bit to shift for register
-SMI_STS1_REG should be bit 1 & 3 & 5 &7 for TEMP_CH1~4.
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue,  4 Jun
+2019 01:50:27 +0900:
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
----
-Changes in v2:
-- Fix incorrect register bit mapping of temperature alarm.
+> Linux kernel tolerates C++ style comments these days. Actually, the
+> SPDX License Identifier for .c files uses C++ comment style.
+> 
+> On the other hand, uapi headers are strict, where the C++ comment
+> style is banned.
+> 
+> Looks like these lines are temporarily commented out, so I did not
+> use the block comment style.
+> 
+> Having said that, they have been commented out since the pre-git era.
+> (so, at least 14 years). 'Maybe later' may not happen. Alternative fix
+> might be to delete these lines entirely.
 
- drivers/hwmon/nct7904.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Richard's POV on the question would be interesting but mine would be to
+simple drop these lines.
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 402c1bb2a99f..95348eebe8e4 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -356,7 +356,7 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 					       SMI_STS1_REG);
- 			if (ret < 0)
- 				return ret;
--			*val = (ret >> (channel & 0x07)) & 1;
-+			*val = (ret >> (((channel * 2) + 1) & 0x07)) & 1;
- 		} else {
- 			if ((channel - 5) < 4) {
- 				ret = nct7904_read_reg(data, BANK_0,
--- 
-2.17.1
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+> 
+>  include/uapi/linux/jffs2.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/include/uapi/linux/jffs2.h b/include/uapi/linux/jffs2.h
+> index a18b719f49d4..5dee6d930d5b 100644
+> --- a/include/uapi/linux/jffs2.h
+> +++ b/include/uapi/linux/jffs2.h
+> @@ -77,10 +77,10 @@
+>  
+>  #define JFFS2_ACL_VERSION		0x0001
+>  
+> -// Maybe later...
+> -//#define JFFS2_NODETYPE_CHECKPOINT (JFFS2_FEATURE_RWCOMPAT_DELETE | JFFS2_NODE_ACCURATE | 3)
+> -//#define JFFS2_NODETYPE_OPTIONS (JFFS2_FEATURE_RWCOMPAT_COPY | JFFS2_NODE_ACCURATE | 4)
+> -
+> +/* Maybe later...
+> +#define JFFS2_NODETYPE_CHECKPOINT (JFFS2_FEATURE_RWCOMPAT_DELETE | JFFS2_NODE_ACCURATE | 3)
+> +#define JFFS2_NODETYPE_OPTIONS (JFFS2_FEATURE_RWCOMPAT_COPY | JFFS2_NODE_ACCURATE | 4)
+> +*/
+>  
+>  #define JFFS2_INO_FLAG_PREREAD	  1	/* Do read_inode() for this one at
+>  					   mount time, don't wait for it to
 
+Thanks,
+Miquèl
