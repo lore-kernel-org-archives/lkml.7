@@ -2,115 +2,113 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ACEC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D01AC31E54
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11B992189F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:24:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C209218CD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560752712;
+	bh=co4CH3+SDS8TMkRgK/NCJ9ECqQhqAHMJdhoNOGwoOuo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=h5MGQjAhoAmsQlFxUzQ3jtNOVbR4hURsYNhNxSVO9CYAJTaslURuZqsCJzUBSGcMf
+	 boHnc+qGyPf71eZTaDTr2ZKmze6+lyWp8vtxrECtufGgganReeV7yYueXsbNb+IA3q
+	 KKv3eqwA+6BmgmYxY1uflb1etPEqMpSnaRG2gJ8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725958AbfFQGYY (ORCPT
+        id S1726043AbfFQGZI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 02:24:24 -0400
-Received: from mail.steuer-voss.de ([85.183.69.95]:36734 "EHLO
-        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfFQGYX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 02:24:23 -0400
-X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
-Received: by mail.steuer-voss.de (Postfix, from userid 1000)
-        id 824734CD6C; Mon, 17 Jun 2019 08:24:18 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.steuer-voss.de (Postfix) with ESMTP id 7E5FC4CD50;
-        Mon, 17 Jun 2019 08:24:18 +0200 (CEST)
-Date:   Mon, 17 Jun 2019 08:24:18 +0200 (CEST)
-From:   Nikolaus Voss <nv@vosn.de>
-X-X-Sender: nv@fox.voss.local
-To:     "Moore, Robert" <robert.moore@intel.com>
-cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        nikolaus.voss@loewensteinmedical.de
-Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
- loads
-In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
-Message-ID: <alpine.DEB.2.20.1906170746150.12344@fox.voss.local>
-References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de> <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
- <alpine.DEB.2.20.1906141114490.6579@fox.voss.local> <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
-User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
+        Mon, 17 Jun 2019 02:25:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49596 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725468AbfFQGZH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 02:25:07 -0400
+Received: from localhost (unknown [122.178.208.218])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D14202189F;
+        Mon, 17 Jun 2019 06:25:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560752706;
+        bh=co4CH3+SDS8TMkRgK/NCJ9ECqQhqAHMJdhoNOGwoOuo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=X8Pfmd/rIU96IjvzY+RN4dwMfiLLpJtl74U3hxuwtuKX/aTl4lbPWXvaSFakH+RUi
+         qzB5vRYtTNTN5ASjIF9dNN6HsKOMCJzQkTwiZEyN/jzyp/7Me3DJi6EuSi/Ywpm4en
+         J8eG7dVIMlCWxnrBDNra6ZL/TyA0skTChyzI2CT4=
+Date:   Mon, 17 Jun 2019 11:51:58 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Isaac J . Manjarres" <isaacm@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SM8150 pinctrl
+ binding
+Message-ID: <20190617062158.GG2962@vkoul-mobl>
+References: <20190614053032.24208-1-vkoul@kernel.org>
+ <20190617042032.GE750@tuxbook-pro>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617042032.GE750@tuxbook-pro>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bob,
+On 16-06-19, 21:20, Bjorn Andersson wrote:
+> On Thu 13 Jun 22:30 PDT 2019, Vinod Koul wrote:
 
-On Fri, 14 Jun 2019, Moore, Robert wrote:
->
->
-> -----Original Message-----
-> From: Nikolaus Voss [mailto:nv@vosn.de]
-> Sent: Friday, June 14, 2019 2:26 AM
-> To: Rafael J. Wysocki <rafael@kernel.org>
-> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Moore, Robert <robert.moore@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>; linux-leds@vger.kernel.org; Linux PWM List <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-> Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table loads
->
-> Hi Rafael,
->
-> On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
->> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
->> <nikolaus.voss@loewensteinmedical.de> wrote:
->>>
->>> If an ACPI SSDT overlay is loaded after built-in tables have been
->>> loaded e.g. via configfs or efivar_ssdt_load() it is necessary to
->>> rewalk the namespace to resolve references. Without this, relative
->>> and absolute paths like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
->>> correctly.
->>>
->>> Make configfs load use the same method as efivar_ssdt_load().
->>>
->>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
->>
->> This is fine by me, so
->>
->> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
->>
->> Or if you want me to take this patch (without the other two in the
->> series), please let me know.
->
-> thanks. I think it would be the best if you take up this patch as it is 
-> an independent topic. In retrospect it wasn't a good idea to put it into 
-> this series.
->
-> Kind regards,
-> Niko
->
-> I would have to ask, why is additional code needed for package 
-> initialization/resolution? It already happens elsewhere in acpica. Bob
+> > +- reg:
+> > +	Usage: required
+> > +	Value type: <prop-encoded-array>
+> > +	Definition: the base address and size of the north, south , west
+> 
+> Extra space after south.
 
-for built-in tables loaded via acpi_ex_load_table_op() everything is fine, 
-because after acpi_tb_load_table() acpi_ns_walk_namespace() is called to 
-resolve references.
+Thanks will fix that
 
-My fix only affects tables loaded dynamically via either 
-acpi_configfs driver (for debugging purposes) or efivar_ssdt_load() (to 
-specify a table on the kernel's command line). They use acpi_load_table() 
-to load the table from a caller-owned buffer. To resolve the references, 
-it is again necessary to rewalk the namespace, which was simply missing in 
-acpi_load_table().
+> > +- #gpio-cells:
+> > +	Usage: required
+> > +	Value type: <u32>
+> > +	Definition: must be 2. Specifying the pin number and flags, as defined
+> > +		    in <dt-bindings/gpio/gpio.h>
+> > +
+> 
+> Please also document gpio-ranges and gpio-reserved-ranges.
 
-Niko
+Will add
+
+> > +Example:
+> > +
+> > +	tlmm: pinctrl@3000000 {
+> > +		compatible = "qcom,sm8150-pinctrl";
+> > +		reg = <0x03100000 0x300000>,
+> > +		      <0x03500000 0x300000>,
+> > +		      <0x03900000 0x300000>,
+> > +		      <0x03D00000 0x300000>;
+> > +		reg-names = "west", "east", "north", "south";
+> > +		interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		interrupt-controller;
+> > +		#interrupt-cells = <2>;
+> 
+> You're missing the required gpio-ranges from the example, see e.g.
+> msm8996 (and please send a patch to the binding you based this on).
+
+I ported this from downstream but did look at existing upstream
+examples so will do that
+
+-- 
+~Vinod
