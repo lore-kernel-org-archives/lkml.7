@@ -2,95 +2,155 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BF0C31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC39AC31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:39:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F8752084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2D172084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:39:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2ulbqfp"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eBZB6Ktt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727530AbfFQNjS (ORCPT
+        id S1727653AbfFQNjg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:39:18 -0400
-Received: from mail-pl1-f176.google.com ([209.85.214.176]:35384 "EHLO
-        mail-pl1-f176.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726642AbfFQNjR (ORCPT
+        Mon, 17 Jun 2019 09:39:36 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:46441 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfFQNjg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:39:17 -0400
-Received: by mail-pl1-f176.google.com with SMTP id p1so4115756plo.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 06:39:17 -0700 (PDT)
+        Mon, 17 Jun 2019 09:39:36 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v24so9306047ljg.13;
+        Mon, 17 Jun 2019 06:39:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:subject:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=fgHUs9kjH3FZpHlrbFs05iqP48Eq3TNSHKTRIJZ7Has=;
-        b=g2ulbqfpyQKBQfPRgzwRDDicgkFjWeJHrFCNwqD0gtlhthmI8XuZ0LWywtLBFl2dvt
-         HEvGFpC2CFd0tFxU4G8vsNEIIjRaI1DJk+d7nXm7GfxStmjfCqDynQl0nNwJADBKsi9o
-         Ol6GVy9rIS5ycHPLV4vvq1sGeFyhFvF2iXLJmHF9YR8NV3prUSSLrkXw9j1rKI3yUvBY
-         uVi+vL6Cf+09n9fHO5Wp+bQi8p0jvkmX5wy9MdqBF3917KJbAQ0RQglGjnrnpzTgWDoT
-         1GoKq9GKyROXeg+kbth/yqhFjbRGbWFka32ffWjHJbsNRjaLxAd5Lxfz+2mbFocyviGn
-         IpQA==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/Xn4FKi4pS79qTYkAlktf3pPwvzDG3mz0PV2qfVT1UY=;
+        b=eBZB6KtttmzFZTlMq3EkCTrMo74VbkU5pNyW8dNcrLHpmS0YmwQ5LFUwHXwA8SRH2w
+         E2DzGFBZYnXxKJwn7erVv2PPh8wV8tr7/f2YlPpsKykU4d0hG+ADAxQUoJw9Awf5snmZ
+         VNmqk2QGf74TcM4ixOAYP/GvqNB3U/OREsdz7YQtN8DGPPX9ew+wbncV9ZEZ4XSN6TQs
+         T4QnlHCRU+t1T3/i1OdwW+NBaaEhZ1CvSmuS5bMRlJMSphfU32V4hgxltB74Rh3sDaSm
+         htkhx+zrbeJ+s1S8o0PAun2FduyVv30z0Zl0DKey107g9Q9K3QIEGjzgkajfeqdYJJDC
+         rl3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=fgHUs9kjH3FZpHlrbFs05iqP48Eq3TNSHKTRIJZ7Has=;
-        b=PT7t106mM34Chg5SWjP4jo5ZZtXVo4sPFPFAtnvxSlY49SxCQCXYTxuztnq6dQ6JbT
-         YhdnSuf3pEfG9Z4JCQ/Cz5xyYLHfH7r8M/oiyeCOM26GkKpF5rllvJHHMvPp+uFF+KFO
-         iGHoOoRiMz1BVhHGC70QkT8xk8Vm/LHvJw3tyum3oa1LxREUeDb52pC5IlSEHk2bQOTT
-         Uxp1/Y+pUi0DNjQpYSszaUPKqpa8LHIZENSMpX5gjeJ40rOGjvBPornRAP/BnWl45D2w
-         GnMeQ11zZFHxlroxVUAwXuDkTHNQC2D8LXT5kzzrkdGDJbdNkYpnN+L2Qr0qo/PTTrc6
-         BPQQ==
-X-Gm-Message-State: APjAAAWTKgcA4R+7/gxoxYUaE9QvMzKY/vPw1s+XehTXEIn9jCbsHyo7
-        LqTDKDQQ+Sr2dP/YP8iVwpa7Mp4V
-X-Google-Smtp-Source: APXvYqw0Qt/GtN5XRxtiYmkNSh7xBuXb4u0JWUto8tta7KkHxAdkPbw3aOtlUGu/l2ip/WyO+vL7wg==
-X-Received: by 2002:a17:902:7618:: with SMTP id k24mr44797137pll.208.1560778756883;
-        Mon, 17 Jun 2019 06:39:16 -0700 (PDT)
-Received: from [10.44.0.192] ([103.48.210.53])
-        by smtp.gmail.com with ESMTPSA id j13sm10895919pgh.44.2019.06.17.06.39.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 06:39:16 -0700 (PDT)
-From:   Greg Ungerer <gregungerer00@gmail.com>
-X-Google-Original-From: Greg Ungerer <gerg@linux-m68k.org>
-Subject: Re: [RFC] switch m68k to use the generic remapping DMA allocator
-To:     Christoph Hellwig <hch@lst.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     linux-m68k@lists.linux-m68k.org, iommu@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-References: <20190614102126.8402-1-hch@lst.de>
-Message-ID: <ad248f50-bbf6-42a6-612c-85b288575dfb@linux-m68k.org>
-Date:   Mon, 17 Jun 2019 23:39:11 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/Xn4FKi4pS79qTYkAlktf3pPwvzDG3mz0PV2qfVT1UY=;
+        b=Mc//PHx/QX5sfP77HtMOk/BO0kaMe+4+n4nqns3Bd532OA5iPRDwnIE4ciR3dBbjUK
+         ZsJwr+IjxJg+LfzaMBvV/SAX0/oV5OzOdWuF8Dw+DTtI51kZ735mPVNSgg2crJyA4Uki
+         i0pkwFGuRNA7Qmj2eZeb+WStSmXGyeX0N9ZyeTQ4jCpE3qYSlDm9YYB1DtgQy6C3MUQE
+         imY1BcccJLLC7D88ZUf0FyUi+Q2wiiQlEDA6l0PaBuP3VBBX8i1T3DZts4yat7PGCiGM
+         J9rgtdfPsCV4+8JeoEOI48qgR/wi323LunjX+hHyUEUKTAkyWoDSYASp7EBVnEX2AA/p
+         Fw3Q==
+X-Gm-Message-State: APjAAAVOBCbyfE3HR38TZsppzwWjZrf2bpapbC18rssZv2rf2vE2XJB3
+        yPztYNErD7ItJfC1oTlYK+s=
+X-Google-Smtp-Source: APXvYqwxSyu4OoOIg30eHLgmXLwIL9t4T4vtBagbdbw7GaVTGLTC/ymqaQsTkNSB4NkRJO6t2GDUPg==
+X-Received: by 2002:a2e:8846:: with SMTP id z6mr10684541ljj.20.1560778773687;
+        Mon, 17 Jun 2019 06:39:33 -0700 (PDT)
+Received: from mobilestation ([5.164.217.122])
+        by smtp.gmail.com with ESMTPSA id t3sm1778357lfk.59.2019.06.17.06.39.31
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 06:39:32 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 16:39:30 +0300
+From:   Serge Semin <fancer.lancer@gmail.com>
+To:     Paul Burton <paul.burton@mips.com>
+Cc:     Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Huacai Chen <chenhc@lemote.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Juergen Gross <jgross@suse.com>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 3/5] mips: Print the kernel virtual mem layout on
+ debugging
+Message-ID: <20190617133929.uz7fweirm4a6oqnk@mobilestation>
+References: <20190503175041.7949-1-fancer.lancer@gmail.com>
+ <20190503175041.7949-4-fancer.lancer@gmail.com>
+ <20190506191419.w3qtkgcjrjjuzwmu@pburton-laptop>
+ <20190507223603.ewuye6lutbb5wz2l@mobilestation>
+ <20190507224108.qhoxlyrdvgwayb4k@pburton-laptop>
+ <20190507233849.7z6kqfxitlnp2qtk@mobilestation>
 MIME-Version: 1.0
-In-Reply-To: <20190614102126.8402-1-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507233849.7z6kqfxitlnp2qtk@mobilestation>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Christoph,
+Hello Paul
 
-On 14/6/19 8:21 pm, Christoph Hellwig wrote:
-> Hi Geert and Greg,
+On Wed, May 08, 2019 at 02:38:49AM +0300, Serge Semin wrote:
+> On Tue, May 07, 2019 at 10:41:10PM +0000, Paul Burton wrote:
+> > Hi Serge,
+> > 
+> > On Wed, May 08, 2019 at 01:36:07AM +0300, Serge Semin wrote:
+> > > Thanks for the report regarding this issue. I actually thought I
+> > > tested the patch being buildable for 64bit systems. It turns out I
+> > > didn't.(
+> > 
+> > Easily done :)
+> > 
+> > > Should I resend the fixed patch as a separate v3 one In-Reply-to this
+> > > v2 patch or resubmit the patchset with cover-letter and only the fixed
+> > > patch being there?
+> > 
+> > Replying with just v3 of this patch will be fine, no need to resend the
+> > cover letter.
+> > 
 > 
-> can you take a look at the (untested) patches below?  They convert m68k
-> to use the generic remapping DMA allocator, which is also used by
-> arm64 and csky.
+> Ok. I've just submitted the v3 version with fixed buildability problem.
+> 
+> > I currently plan to submit a pull request for mips-next as-is, without
+> > this patch, in the next day or two. There are a few last minute
+> > submissions this time round that I'll then queue up & send a second pull
+> > request next week, which this can be part of.
+> > 
+> > Thanks,
+> >     Paul
+> 
+> Regarding this patch being part of the mips mm init code. I've just found out
+> that 32-bit arm subsystem maintainers removed the same functionality from the
+> kernel 5.1. This also was removed from arm64 in kernel 4.15:
+> commit 1c31d4e96b8c ("ARM: 8820/1: mm: Stop printing the virtual memory layout")
+> commit 071929dbdd86 ("arm64: Stop printing the virtual memory layout")
+> 
+> Maintainer of m68k and unicore32 discarded the printing as well:
+> commit 1476ea250cf0 ("unicore32: stop printing the virtual memory layout")
+> commit 31833332f798 ("m68k/mm: Stop printing the virtual memory layout")
+> 
+> The reasoning of these removal was that since commit ad67b74d2469 ("printk:
+> hash addresses printed with %p") the kernel virtual addresses weren't
+> printed to the system log anyway. So instead of replacing the format string with
+> "%px" they decided not to leak a virtual memory layout information and completely
+> removed the printing. I don't really know why they didn't closed the printing for
+> debug kernel only as we did, since the info might be useful in this case.
+> 
+> Since I see a tendency of this functionality removal, we might need to
+> reconsider this patch integration into the MIPS arch code. What do you think?
+> 
+> Although some architectures still perform the virtual memory layout printing
+> at boot-time: x86_32, parisc, xtensa, sh, nds32 (might be others).
+> 
+> Cheers,
+> -Sergey
 
-No impact to ColdFire targets, so I'll have to defer to Geert
-for his thoughts on the legacy m68k impact.
+So any update on this patch status?
 
-Regards
-Greg
-
+Regards,
+-Sergey
