@@ -2,224 +2,201 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0779AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93566C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:28:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5AD8208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:24:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="kszkO1r/"
+	by mail.kernel.org (Postfix) with ESMTP id 6BE142084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728242AbfFQSY3 (ORCPT
+        id S1726384AbfFQS2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:24:29 -0400
-Received: from mail-eopbgr10052.outbound.protection.outlook.com ([40.107.1.52]:56809
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725764AbfFQSY2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:24:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+otVGrslUjcNF4z35Hs8y42x8e5TXGDUEhFxmJ05taA=;
- b=kszkO1r/IoSQzugPrAMwEU2Idp35T/YViLHPQkb0nhoD4JYpd7zi6WomuLiv1ij6DHK7LP8rw3f/wCfSP8OQLLGoAyUSbjmXqQZnuhm9oKknUXT3j6EPJW67NmyryU7/rpmScxwVsXVtwvj0gLrubq8dfE6xGDfHpMdQUwfBKTw=
-Received: from AM0PR05MB4403.eurprd05.prod.outlook.com (52.134.125.139) by
- AM0PR05MB4498.eurprd05.prod.outlook.com (52.134.94.11) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.10; Mon, 17 Jun 2019 18:24:22 +0000
-Received: from AM0PR05MB4403.eurprd05.prod.outlook.com
- ([fe80::edf6:f68:cb6c:777f]) by AM0PR05MB4403.eurprd05.prod.outlook.com
- ([fe80::edf6:f68:cb6c:777f%7]) with mapi id 15.20.1987.014; Mon, 17 Jun 2019
- 18:24:22 +0000
-From:   Mark Bloch <markb@mellanox.com>
-To:     Saeed Mahameed <saeedm@mellanox.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "leon@kernel.org" <leon@kernel.org>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        Or Gerlitz <ogerlitz@mellanox.com>,
-        Oz Shlomo <ozsh@mellanox.com>,
-        Paul Blakey <paulb@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Eli Britstein <elibr@mellanox.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: Re: [PATCH] net/mlx5e: reduce stack usage in
- mlx5_eswitch_termtbl_create
-Thread-Topic: [PATCH] net/mlx5e: reduce stack usage in
- mlx5_eswitch_termtbl_create
-Thread-Index: AQHVJP0S5k/4heTy2UiEdxM8FtaiC6agI7mAgAAGBIA=
-Date:   Mon, 17 Jun 2019 18:24:22 +0000
-Message-ID: <6937bfcd-b290-8372-f117-323eb7955aeb@mellanox.com>
-References: <20190617110855.2085326-1-arnd@arndb.de>
- <9efb76f79369b8577ef425c7f6e694132719353e.camel@mellanox.com>
-In-Reply-To: <9efb76f79369b8577ef425c7f6e694132719353e.camel@mellanox.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BY5PR03CA0012.namprd03.prod.outlook.com
- (2603:10b6:a03:1e0::22) To AM0PR05MB4403.eurprd05.prod.outlook.com
- (2603:10a6:208:65::11)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=markb@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [208.186.24.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a5a51e9e-20b8-4899-80b0-08d6f35104b2
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:AM0PR05MB4498;
-x-ms-traffictypediagnostic: AM0PR05MB4498:
-x-microsoft-antispam-prvs: <AM0PR05MB4498241519CA48E7D639F95BD2EB0@AM0PR05MB4498.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0071BFA85B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(136003)(366004)(39860400002)(189003)(199004)(486006)(54906003)(99286004)(76176011)(110136005)(2201001)(86362001)(4326008)(316002)(52116002)(6246003)(26005)(8676002)(6506007)(386003)(102836004)(53546011)(81166006)(81156014)(36756003)(8936002)(6116002)(3846002)(55236004)(5660300002)(68736007)(66066001)(14454004)(31686004)(478600001)(11346002)(2906002)(6436002)(476003)(71190400001)(71200400001)(31696002)(7736002)(14444005)(256004)(2501003)(446003)(229853002)(305945005)(66946007)(66446008)(6512007)(53936002)(186003)(64756008)(66556008)(66476007)(6486002)(25786009)(2616005)(73956011);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB4498;H:AM0PR05MB4403.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: g/cwKi+cIrIeKela78MrVRqrj9OCyB/w7hipBDCX2jJN7v6wI9/V1fBy/5s+CwgkYuYFl1OVoJX/05QHTJPqwFeSnr6Rifg9cU0K+4AwrcGX9t3P2Ii4X+bsa6XVoWrx/H4Nt0bHq8mU2ZhsKORyQD+mKptK9S3EZOTPnHEWEbzFf4p6gflHhUvZ8EZ0QEYjhBFUzR1O2h+mrQ9SvnWZlYCmmpBGtdtLNIsucf7KuCA6dL5T2lv3ShdfAXC7SeyyooNtKb7h3pEpp3g9XWrbRMpmuGYWgIKkL8HNJtsLo1SA2srm88oQgmRd59HnzUC6oShKKSJhr2PBHPuBRQtytrjRMHLkfcEg1M+Z4w80jDHEfmUiIo1umSSeTvqTUyZO7IRGUUAQ0UMsMIGzkOcto4dRrFPMXFMIub+VT7yYzPw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <3840B7142885964D84C3DFE1C109911B@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 17 Jun 2019 14:28:01 -0400
+Received: from mga14.intel.com ([192.55.52.115]:26944 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725601AbfFQS2B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 14:28:01 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 11:28:00 -0700
+X-ExtLoop1: 1
+Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
+  by orsmga002.jf.intel.com with ESMTP; 17 Jun 2019 11:27:59 -0700
+Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for
+ MKTME
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
+        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
+ <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
+ <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com>
+ <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
+Date:   Mon, 17 Jun 2019 11:27:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5a51e9e-20b8-4899-80b0-08d6f35104b2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2019 18:24:22.3087
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: markb@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB4498
+In-Reply-To: <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDYvMTcvMTkgMTE6MDIgQU0sIFNhZWVkIE1haGFtZWVkIHdyb3RlOg0KPiBPbiBNb24s
-IDIwMTktMDYtMTcgYXQgMTM6MDggKzAyMDAsIEFybmQgQmVyZ21hbm4gd3JvdGU6DQo+PiBQdXR0
-aW5nIGFuIGVtcHR5ICdtbHg1X2Zsb3dfc3BlYycgc3RydWN0dXJlIG9uIHRoZSBzdGFjayBpcyBh
-IGJpdA0KPj4gd2FzdGVmdWwgYW5kIGNhdXNlcyBhIHdhcm5pbmcgb24gMzItYml0IGFyY2hpdGVj
-dHVyZXMgd2hlbiBidWlsZGluZw0KPj4gd2l0aCBjbGFuZyAtZnNhbml0aXplLWNvdmVyYWdlOg0K
-Pj4NCj4+IGRyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lc3dpdGNoX29m
-ZmxvYWRzX3Rlcm10YmwuYzoNCj4+IEluIGZ1bmN0aW9uICdtbHg1X2Vzd2l0Y2hfdGVybXRibF9j
-cmVhdGUnOg0KPj4gZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2Vzd2l0
-Y2hfb2ZmbG9hZHNfdGVybXRibC5jOjkwDQo+PiA6MTogZXJyb3I6IHRoZSBmcmFtZSBzaXplIG9m
-IDEwMzIgYnl0ZXMgaXMgbGFyZ2VyIHRoYW4gMTAyNCBieXRlcyBbLQ0KPj4gV2Vycm9yPWZyYW1l
-LWxhcmdlci10aGFuPV0NCj4+DQo+PiBTaW5jZSB0aGUgc3RydWN0dXJlIGlzIG5ldmVyIHdyaXR0
-ZW4gdG8sIHdlIGNhbiBzdGF0aWNhbGx5IGFsbG9jYXRlDQo+PiBpdCB0byBhdm9pZCB0aGUgc3Rh
-Y2sgdXNhZ2UuIFRvIGJlIG9uIHRoZSBzYWZlIHNpZGUsIG1hcmsgYWxsDQo+PiBzdWJzZXF1ZW50
-IGZ1bmN0aW9uIGFyZ3VtZW50cyB0aGF0IHdlIHBhc3MgaXQgaW50byBhcyAnY29uc3QnDQo+PiBh
-cyB3ZWxsLg0KPj4NCj4+IEZpeGVzOiAxMGNhYWJkYWFkNWEgKCJuZXQvbWx4NWU6IFVzZSB0ZXJt
-aW5hdGlvbiB0YWJsZSBmb3IgVkxBTiBwdXNoDQo+PiBhY3Rpb25zIikNCj4+IFNpZ25lZC1vZmYt
-Ynk6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+DQo+PiAtLS0NCj4+ICAuLi4vbWx4NS9j
-b3JlL2Vzd2l0Y2hfb2ZmbG9hZHNfdGVybXRibC5jICAgICAgfCAgMiArLQ0KPj4gIC4uLi9uZXQv
-ZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2ZzX2NvcmUuYyB8IDIwICsrKysrKysrKy0tLS0t
-LQ0KPj4gLS0tLQ0KPj4gIGluY2x1ZGUvbGludXgvbWx4NS9mcy5oICAgICAgICAgICAgICAgICAg
-ICAgICB8ICAyICstDQo+PiAgMyBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAxMiBk
-ZWxldGlvbnMoLSkNCj4+DQo+PiBkaWZmIC0tZ2l0DQo+PiBhL2RyaXZlcnMvbmV0L2V0aGVybmV0
-L21lbGxhbm94L21seDUvY29yZS9lc3dpdGNoX29mZmxvYWRzX3Rlcm10YmwuYw0KPj4gYi9kcml2
-ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZXN3aXRjaF9vZmZsb2Fkc190ZXJt
-dGJsLmMNCj4+IGluZGV4IGNiN2Q4ZWJlMmM5NS4uMTcxZjNkNGVmOWFjIDEwMDY0NA0KPj4gLS0t
-DQo+PiBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lc3dpdGNoX29m
-ZmxvYWRzX3Rlcm10YmwuYw0KPj4gKysrDQo+PiBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxh
-bm94L21seDUvY29yZS9lc3dpdGNoX29mZmxvYWRzX3Rlcm10YmwuYw0KPj4gQEAgLTUwLDcgKzUw
-LDcgQEAgbWx4NV9lc3dpdGNoX3Rlcm10YmxfY3JlYXRlKHN0cnVjdCBtbHg1X2NvcmVfZGV2DQo+
-PiAqZGV2LA0KPj4gIAkJCSAgICBzdHJ1Y3QgbWx4NV9mbG93X2FjdCAqZmxvd19hY3QpDQo+PiAg
-ew0KPj4gIAlzdHJ1Y3QgbWx4NV9mbG93X25hbWVzcGFjZSAqcm9vdF9uczsNCj4+IC0Jc3RydWN0
-IG1seDVfZmxvd19zcGVjIHNwZWMgPSB7fTsNCj4+ICsJc3RhdGljIGNvbnN0IHN0cnVjdCBtbHg1
-X2Zsb3dfc3BlYyBzcGVjID0ge307DQo+IA0KPiBMR1RNLCBqdXN0IG1ha2Ugc3VyZSBwbGVhc2Ug
-dG8gaGF2ZSBhIHJldmVyc2UgeG1hcyB0cmVlIGhlcmUuDQo+IA0KPiBNYXJrLCBwbGVhc2UgbGV0
-IG1lIGtub3cgaWYgeW91IGFyZSBvayB3aXRoIHN1Y2ggQVBJIGNvbnN0cmFpbiB0byBmbG93DQo+
-IHN0ZWVyaW5nIChzcGVjIG11c3QgYmUgY29uc3QpLg0KDQpJIGRvbid0IHRoaW5rIHRoZSBzdGVl
-cmluZyBjb3JlIGxheWVyIHNob3VsZCBjaGFuZ2UgdGhlIG1hdGNoaW5nIGFza2VkIGJ5IHRoZSB1
-c2VyLg0KRXZlbiB3aXRob3V0IHRoZSBmcmFtZSBzaXplIGlzc3VlIEkgbGlrZSB0aGlzIGNoYW5n
-ZSwgdGhhbmtzIQ0KDQpMR1RNDQoNClRoYW5rcywNCk1hcmsNCg0KPiANCj4gVGhhbmtzLA0KPiBT
-YWVlZC4NCj4gDQo+PiAgCWludCBwcmlvLCBmbGFnczsNCj4+ICAJaW50IGVycjsNCj4+ICANCj4+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZnNf
-Y29yZS5jDQo+PiBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9mc19j
-b3JlLmMNCj4+IGluZGV4IGZlNzZjNmZkNmQ4MC4uNzM5MTIzZTEzNjNiIDEwMDY0NA0KPj4gLS0t
-IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2ZzX2NvcmUuYw0KPj4g
-KysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2ZzX2NvcmUuYw0K
-Pj4gQEAgLTU4NCw3ICs1ODQsNyBAQCBzdGF0aWMgaW50IGluc2VydF9mdGUoc3RydWN0IG1seDVf
-Zmxvd19ncm91cCAqZmcsDQo+PiBzdHJ1Y3QgZnNfZnRlICpmdGUpDQo+PiAgfQ0KPj4gIA0KPj4g
-IHN0YXRpYyBzdHJ1Y3QgZnNfZnRlICphbGxvY19mdGUoc3RydWN0IG1seDVfZmxvd190YWJsZSAq
-ZnQsDQo+PiAtCQkJCXUzMiAqbWF0Y2hfdmFsdWUsDQo+PiArCQkJCWNvbnN0IHUzMiAqbWF0Y2hf
-dmFsdWUsDQo+PiAgCQkJCXN0cnVjdCBtbHg1X2Zsb3dfYWN0ICpmbG93X2FjdCkNCj4+ICB7DQo+
-PiAgCXN0cnVjdCBtbHg1X2Zsb3dfc3RlZXJpbmcgKnN0ZWVyaW5nID0gZ2V0X3N0ZWVyaW5nKCZm
-dC0+bm9kZSk7DQo+PiBAQCAtNjEyLDcgKzYxMiw3IEBAIHN0YXRpYyB2b2lkIGRlYWxsb2NfZmxv
-d19ncm91cChzdHJ1Y3QNCj4+IG1seDVfZmxvd19zdGVlcmluZyAqc3RlZXJpbmcsDQo+PiAgDQo+
-PiAgc3RhdGljIHN0cnVjdCBtbHg1X2Zsb3dfZ3JvdXAgKmFsbG9jX2Zsb3dfZ3JvdXAoc3RydWN0
-DQo+PiBtbHg1X2Zsb3dfc3RlZXJpbmcgKnN0ZWVyaW5nLA0KPj4gIAkJCQkJCXU4DQo+PiBtYXRj
-aF9jcml0ZXJpYV9lbmFibGUsDQo+PiAtCQkJCQkJdm9pZCAqbWF0Y2hfY3JpdGVyaWEsDQo+PiAr
-CQkJCQkJY29uc3Qgdm9pZA0KPj4gKm1hdGNoX2NyaXRlcmlhLA0KPj4gIAkJCQkJCWludCBzdGFy
-dF9pbmRleCwNCj4+ICAJCQkJCQlpbnQgZW5kX2luZGV4KQ0KPj4gIHsNCj4+IEBAIC02NDIsNyAr
-NjQyLDcgQEAgc3RhdGljIHN0cnVjdCBtbHg1X2Zsb3dfZ3JvdXANCj4+ICphbGxvY19mbG93X2dy
-b3VwKHN0cnVjdCBtbHg1X2Zsb3dfc3RlZXJpbmcgKnN0ZWVyDQo+PiAgDQo+PiAgc3RhdGljIHN0
-cnVjdCBtbHg1X2Zsb3dfZ3JvdXAgKmFsbG9jX2luc2VydF9mbG93X2dyb3VwKHN0cnVjdA0KPj4g
-bWx4NV9mbG93X3RhYmxlICpmdCwNCj4+ICAJCQkJCQkgICAgICAgdTgNCj4+IG1hdGNoX2NyaXRl
-cmlhX2VuYWJsZSwNCj4+IC0JCQkJCQkgICAgICAgdm9pZA0KPj4gKm1hdGNoX2NyaXRlcmlhLA0K
-Pj4gKwkJCQkJCSAgICAgICBjb25zdCB2b2lkDQo+PiAqbWF0Y2hfY3JpdGVyaWEsDQo+PiAgCQkJ
-CQkJICAgICAgIGludCBzdGFydF9pbmRleCwNCj4+ICAJCQkJCQkgICAgICAgaW50IGVuZF9pbmRl
-eCwNCj4+ICAJCQkJCQkgICAgICAgc3RydWN0IGxpc3RfaGVhZA0KPj4gKnByZXYpDQo+PiBAQCAt
-MTI4NSw3ICsxMjg1LDcgQEAgYWRkX3J1bGVfZnRlKHN0cnVjdCBmc19mdGUgKmZ0ZSwNCj4+ICB9
-DQo+PiAgDQo+PiAgc3RhdGljIHN0cnVjdCBtbHg1X2Zsb3dfZ3JvdXAgKmFsbG9jX2F1dG9fZmxv
-d19ncm91cChzdHJ1Y3QNCj4+IG1seDVfZmxvd190YWJsZSAgKmZ0LA0KPj4gLQkJCQkJCSAgICAg
-c3RydWN0DQo+PiBtbHg1X2Zsb3dfc3BlYyAqc3BlYykNCj4+ICsJCQkJCQkgICAgIGNvbnN0IHN0
-cnVjdA0KPj4gbWx4NV9mbG93X3NwZWMgKnNwZWMpDQo+PiAgew0KPj4gIAlzdHJ1Y3QgbGlzdF9o
-ZWFkICpwcmV2ID0gJmZ0LT5ub2RlLmNoaWxkcmVuOw0KPj4gIAlzdHJ1Y3QgbWx4NV9mbG93X2dy
-b3VwICpmZzsNCj4+IEBAIC0xNDUxLDcgKzE0NTEsNyBAQCBzdGF0aWMgaW50IGNoZWNrX2NvbmZs
-aWN0aW5nX2Z0ZXMoc3RydWN0IGZzX2Z0ZQ0KPj4gKmZ0ZSwgY29uc3Qgc3RydWN0IG1seDVfZmxv
-d19hY3QNCj4+ICB9DQo+PiAgDQo+PiAgc3RhdGljIHN0cnVjdCBtbHg1X2Zsb3dfaGFuZGxlICph
-ZGRfcnVsZV9mZyhzdHJ1Y3QgbWx4NV9mbG93X2dyb3VwDQo+PiAqZmcsDQo+PiAtCQkJCQkgICAg
-dTMyICptYXRjaF92YWx1ZSwNCj4+ICsJCQkJCSAgICBjb25zdCB1MzIgKm1hdGNoX3ZhbHVlLA0K
-Pj4gIAkJCQkJICAgIHN0cnVjdCBtbHg1X2Zsb3dfYWN0DQo+PiAqZmxvd19hY3QsDQo+PiAgCQkJ
-CQkgICAgc3RydWN0DQo+PiBtbHg1X2Zsb3dfZGVzdGluYXRpb24gKmRlc3QsDQo+PiAgCQkJCQkg
-ICAgaW50IGRlc3RfbnVtLA0KPj4gQEAgLTE1MzYsNyArMTUzNiw3IEBAIHN0YXRpYyB2b2lkIGZy
-ZWVfbWF0Y2hfbGlzdChzdHJ1Y3QNCj4+IG1hdGNoX2xpc3RfaGVhZCAqaGVhZCkNCj4+ICANCj4+
-ICBzdGF0aWMgaW50IGJ1aWxkX21hdGNoX2xpc3Qoc3RydWN0IG1hdGNoX2xpc3RfaGVhZCAqbWF0
-Y2hfaGVhZCwNCj4+ICAJCQkgICAgc3RydWN0IG1seDVfZmxvd190YWJsZSAqZnQsDQo+PiAtCQkJ
-ICAgIHN0cnVjdCBtbHg1X2Zsb3dfc3BlYyAqc3BlYykNCj4+ICsJCQkgICAgY29uc3Qgc3RydWN0
-IG1seDVfZmxvd19zcGVjICpzcGVjKQ0KPj4gIHsNCj4+ICAJc3RydWN0IHJobGlzdF9oZWFkICp0
-bXAsICpsaXN0Ow0KPj4gIAlzdHJ1Y3QgbWx4NV9mbG93X2dyb3VwICpnOw0KPj4gQEAgLTE1ODks
-NyArMTU4OSw3IEBAIHN0YXRpYyB1NjQgbWF0Y2hlZF9mZ3NfZ2V0X3ZlcnNpb24oc3RydWN0DQo+
-PiBsaXN0X2hlYWQgKm1hdGNoX2hlYWQpDQo+PiAgDQo+PiAgc3RhdGljIHN0cnVjdCBmc19mdGUg
-Kg0KPj4gIGxvb2t1cF9mdGVfbG9ja2VkKHN0cnVjdCBtbHg1X2Zsb3dfZ3JvdXAgKmcsDQo+PiAt
-CQkgIHUzMiAqbWF0Y2hfdmFsdWUsDQo+PiArCQkgIGNvbnN0IHUzMiAqbWF0Y2hfdmFsdWUsDQo+
-PiAgCQkgIGJvb2wgdGFrZV93cml0ZSkNCj4+ICB7DQo+PiAgCXN0cnVjdCBmc19mdGUgKmZ0ZV90
-bXA7DQo+PiBAQCAtMTYyMiw3ICsxNjIyLDcgQEAgbG9va3VwX2Z0ZV9sb2NrZWQoc3RydWN0IG1s
-eDVfZmxvd19ncm91cCAqZywNCj4+ICBzdGF0aWMgc3RydWN0IG1seDVfZmxvd19oYW5kbGUgKg0K
-Pj4gIHRyeV9hZGRfdG9fZXhpc3RpbmdfZmcoc3RydWN0IG1seDVfZmxvd190YWJsZSAqZnQsDQo+
-PiAgCQkgICAgICAgc3RydWN0IGxpc3RfaGVhZCAqbWF0Y2hfaGVhZCwNCj4+IC0JCSAgICAgICBz
-dHJ1Y3QgbWx4NV9mbG93X3NwZWMgKnNwZWMsDQo+PiArCQkgICAgICAgY29uc3Qgc3RydWN0IG1s
-eDVfZmxvd19zcGVjICpzcGVjLA0KPj4gIAkJICAgICAgIHN0cnVjdCBtbHg1X2Zsb3dfYWN0ICpm
-bG93X2FjdCwNCj4+ICAJCSAgICAgICBzdHJ1Y3QgbWx4NV9mbG93X2Rlc3RpbmF0aW9uICpkZXN0
-LA0KPj4gIAkJICAgICAgIGludCBkZXN0X251bSwNCj4+IEBAIC0xNzE1LDcgKzE3MTUsNyBAQCB0
-cnlfYWRkX3RvX2V4aXN0aW5nX2ZnKHN0cnVjdCBtbHg1X2Zsb3dfdGFibGUNCj4+ICpmdCwNCj4+
-ICANCj4+ICBzdGF0aWMgc3RydWN0IG1seDVfZmxvd19oYW5kbGUgKg0KPj4gIF9tbHg1X2FkZF9m
-bG93X3J1bGVzKHN0cnVjdCBtbHg1X2Zsb3dfdGFibGUgKmZ0LA0KPj4gLQkJICAgICBzdHJ1Y3Qg
-bWx4NV9mbG93X3NwZWMgKnNwZWMsDQo+PiArCQkgICAgIGNvbnN0IHN0cnVjdCBtbHg1X2Zsb3df
-c3BlYyAqc3BlYywNCj4+ICAJCSAgICAgc3RydWN0IG1seDVfZmxvd19hY3QgKmZsb3dfYWN0LA0K
-Pj4gIAkJICAgICBzdHJ1Y3QgbWx4NV9mbG93X2Rlc3RpbmF0aW9uICpkZXN0LA0KPj4gIAkJICAg
-ICBpbnQgZGVzdF9udW0pDQo+PiBAQCAtMTgyMyw3ICsxODIzLDcgQEAgc3RhdGljIGJvb2wgZndk
-X25leHRfcHJpb19zdXBwb3J0ZWQoc3RydWN0DQo+PiBtbHg1X2Zsb3dfdGFibGUgKmZ0KQ0KPj4g
-IA0KPj4gIHN0cnVjdCBtbHg1X2Zsb3dfaGFuZGxlICoNCj4+ICBtbHg1X2FkZF9mbG93X3J1bGVz
-KHN0cnVjdCBtbHg1X2Zsb3dfdGFibGUgKmZ0LA0KPj4gLQkJICAgIHN0cnVjdCBtbHg1X2Zsb3df
-c3BlYyAqc3BlYywNCj4+ICsJCSAgICBjb25zdCBzdHJ1Y3QgbWx4NV9mbG93X3NwZWMgKnNwZWMs
-DQo+PiAgCQkgICAgc3RydWN0IG1seDVfZmxvd19hY3QgKmZsb3dfYWN0LA0KPj4gIAkJICAgIHN0
-cnVjdCBtbHg1X2Zsb3dfZGVzdGluYXRpb24gKmRlc3QsDQo+PiAgCQkgICAgaW50IG51bV9kZXN0
-KQ0KPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWx4NS9mcy5oIGIvaW5jbHVkZS9saW51
-eC9tbHg1L2ZzLmgNCj4+IGluZGV4IDJkZGFhOTdmMjE3OS4uYzBjMDI5NjY0NTI3IDEwMDY0NA0K
-Pj4gLS0tIGEvaW5jbHVkZS9saW51eC9tbHg1L2ZzLmgNCj4+ICsrKyBiL2luY2x1ZGUvbGludXgv
-bWx4NS9mcy5oDQo+PiBAQCAtMjAwLDcgKzIwMCw3IEBAIHN0cnVjdCBtbHg1X2Zsb3dfYWN0IHsN
-Cj4+ICAgKi8NCj4+ICBzdHJ1Y3QgbWx4NV9mbG93X2hhbmRsZSAqDQo+PiAgbWx4NV9hZGRfZmxv
-d19ydWxlcyhzdHJ1Y3QgbWx4NV9mbG93X3RhYmxlICpmdCwNCj4+IC0JCSAgICBzdHJ1Y3QgbWx4
-NV9mbG93X3NwZWMgKnNwZWMsDQo+PiArCQkgICAgY29uc3Qgc3RydWN0IG1seDVfZmxvd19zcGVj
-ICpzcGVjLA0KPj4gIAkJICAgIHN0cnVjdCBtbHg1X2Zsb3dfYWN0ICpmbG93X2FjdCwNCj4+ICAJ
-CSAgICBzdHJ1Y3QgbWx4NV9mbG93X2Rlc3RpbmF0aW9uICpkZXN0LA0KPj4gIAkJICAgIGludCBu
-dW1fZGVzdCk7DQo=
+Tom Lendacky, could you take a look down in the message to the talk of
+SEV?  I want to make sure I'm not misrepresenting what it does today.
+...
+
+
+>> I actually don't care all that much which one we end up with.  It's not
+>> like the extra syscall in the second options means much.
+> 
+> The benefit of the second one is that, if sys_encrypt is absent, it
+> just works.  In the first model, programs need a fallback because
+> they'll segfault of mprotect_encrypt() gets ENOSYS.
+
+Well, by the time they get here, they would have already had to allocate
+and set up the encryption key.  I don't think this would really be the
+"normal" malloc() path, for instance.
+
+>>  How do we
+>> eventually stack it on top of persistent memory filesystems or Device
+>> DAX?
+> 
+> How do we stack anonymous memory on top of persistent memory or Device
+> DAX?  I'm confused.
+
+If our interface to MKTME is:
+
+	fd = open("/dev/mktme");
+	ptr = mmap(fd);
+
+Then it's hard to combine with an interface which is:
+
+	fd = open("/dev/dax123");
+	ptr = mmap(fd);
+
+Where if we have something like mprotect() (or madvise() or something
+else taking pointer), we can just do:
+
+	fd = open("/dev/anything987");
+	ptr = mmap(fd);
+	sys_encrypt(ptr);
+
+Now, we might not *do* it that way for dax, for instance, but I'm just
+saying that if we go the /dev/mktme route, we never get a choice.
+
+> I think that, in the long run, we're going to have to either expand
+> the core mm's concept of what "memory" is or just have a whole
+> parallel set of mechanisms for memory that doesn't work like memory.
+...
+> I expect that some day normal memory will  be able to be repurposed as
+> SGX pages on the fly, and that will also look a lot more like SEV or
+> XPFO than like the this model of MKTME.
+
+I think you're drawing the line at pages where the kernel can manage
+contents vs. not manage contents.  I'm not sure that's the right
+distinction to make, though.  The thing that is important is whether the
+kernel can manage the lifetime and location of the data in the page.
+
+Basically: Can the kernel choose where the page comes from and get the
+page back when it wants?
+
+I really don't like the current state of things like with SEV or with
+KVM direct device assignment where the physical location is quite locked
+down and the kernel really can't manage the memory.  I'm trying really
+hard to make sure future hardware is more permissive about such things.
+ My hope is that these are a temporary blip and not the new normal.
+
+> So, if we upstream MKTME as anonymous memory with a magic config
+> syscall, I predict that, in a few years, it will be end up inheriting
+> all downsides of both approaches with few of the upsides.  Programs
+> like QEMU will need to learn to manipulate pages that can't be
+> accessed outside the VM without special VM buy-in, so the fact that
+> MKTME pages are fully functional and can be GUP-ed won't be very
+> useful.  And the VM will learn about all these things, but MKTME won't
+> really fit in.
+
+Kai Huang (who is on cc) has been doing the QEMU enabling and might want
+to weigh in.  I'd also love to hear from the AMD folks in case I'm not
+grokking some aspect of SEV.
+
+But, my understanding is that, even today, neither QEMU nor the kernel
+can see SEV-encrypted guest memory.  So QEMU should already understand
+how to not interact with guest memory.  I _assume_ it's also already
+doing this with anonymous memory, without needing /dev/sme or something.
+
+> And, one of these days, someone will come up with a version of XPFO
+> that could actually be upstreamed, and it seems entirely plausible
+> that it will be totally incompatible with MKTME-as-anonymous-memory
+> and that users of MKTME will actually get *worse* security.
+
+I'm not following here.  XPFO just means that we don't keep the direct
+map around all the time for all memory.  If XPFO and
+MKTME-as-anonymous-memory were both in play, I think we'd just be
+creating/destroying the MKTME-enlightened direct map instead of a
+vanilla one.
