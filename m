@@ -2,241 +2,111 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC31C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0B4C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:08:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0818B20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:07:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D352080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:08:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OneVp8Oo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="1SzaizZl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727994AbfFQJHp (ORCPT
+        id S1727932AbfFQJIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:07:45 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44332 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727706AbfFQJHo (ORCPT
+        Mon, 17 Jun 2019 05:08:44 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:58920 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfFQJIn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:07:44 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k18so8481597ljc.11
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 02:07:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/TxligxYY+aC6zWv3opQDSxtXze7SE7PmAaCKTySTbw=;
-        b=OneVp8OoS59dMfuq/SVYMseCzQMdKItcQ9lOFapT7muQ91/cHSc9gI+mm1EskhPgWJ
-         GxqVIKdh4rtjOt5d7TxbpV0zqSy0zC/I+8yOGIJWzlnzMY/mMRIr/g36Ry9EGvTEiBn8
-         Q7JLH2gJMb3Jnmf/kG9LlXnb6KjRMOMwJbc+IAVbRwf600Y9OslI4zNgq1ZBclOalNVy
-         W4DPtpI690/UWbXIkguNC6uEyrXLAwEEDkC1aq6cS1Isj5l0PndwjSNeGfpPb8ES9aL2
-         Cec4hz3bXFPFVNsp4N0V6fpTHFN9/MeQhcXF5WIq7gdRVfTUsHymJyRUM9f+D8EKIb3Q
-         NWbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/TxligxYY+aC6zWv3opQDSxtXze7SE7PmAaCKTySTbw=;
-        b=JseHJuV8QWhcwxa4oetv/8M93gXTODH9C4W6IY8JemE25QEUpX2PQNxNKC/QvqAi+c
-         HFY0YnRievfm6MDkvTBYHHijzBLEdKONi32AcCIrRbQGv8eoCdtx6cVzbqlKfGwlKikp
-         NpSerMMY7ZsbYtpoV3KD+aTOKKMuRPmmI46xpm0PwU9C1tDYZjzBWLgHdLdBFIC5Pusb
-         /zt5rT88Zp7Yoz4yPXMrzKTHAGYohr5EWM+YwwxcMlcprSJhQOuBfG9XhhuaL0x7vVBd
-         m50OEjRFRiP/MUjhdz7DR38tTUaLBoMW4ObEh09oPEDOCwGx1uk/W7R5eAKpbP6DeZSE
-         8gQw==
-X-Gm-Message-State: APjAAAUW6UpXRqwADZLPHak/82v8Qts9pz4NNqVNLWDEJg06TCLLXLfA
-        is0IVQ8TEQufEZrqTGHKRlFWwg==
-X-Google-Smtp-Source: APXvYqzT3vJzFja/mIdCxlpicnnkGB232vyK8CsXjU7jJNTIiyqc91dE/5odfcwqIBnVGt0bssu39Q==
-X-Received: by 2002:a2e:9610:: with SMTP id v16mr12037660ljh.229.1560762461168;
-        Mon, 17 Jun 2019 02:07:41 -0700 (PDT)
-Received: from [192.168.27.209] ([37.157.136.206])
-        by smtp.googlemail.com with ESMTPSA id v2sm2024909ljb.65.2019.06.17.02.07.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 02:07:40 -0700 (PDT)
-Subject: Re: [PATCH 5/5] media: venus: Update core selection
-To:     Aniket Masule <amasule@codeaurora.org>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        vgarodia@codeaurora.org
-References: <1560233130-27264-1-git-send-email-amasule@codeaurora.org>
- <1560233130-27264-6-git-send-email-amasule@codeaurora.org>
-From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Message-ID: <8f2e1cf4-9d9c-088b-740f-d8bf1c9028df@linaro.org>
-Date:   Mon, 17 Jun 2019 12:07:39 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 05:08:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wRdvOfPDETJvARv+zW+J5HAlYTlZLHmPl7FzG8lv1Ps=; b=1SzaizZlFZrcso1vWkqcGDQl+
+        3GTCltkdhp6F4a07txN0iCkbOsUS3i2IcD+SBI6D6d9SwZsu4Oycx+PvZZikN/HOdKTZel19mOF2J
+        +peAXjqfCZilEMVgF0K7ZJwWBaqoYufu0uC0+iuDeKKct2mo+pCFPu/C1lPHumKWDgt7haPR9GIgQ
+        TBo8KuIZVoi+uAFMs/Z1tHQ3wg+4yhY5/sfjUYVByRFDQ9XvfpYTwgHraXRrjLA1aP+Bk0x0UN4An
+        y0z13wfIJsgXhGdYqGoUMe0nZyQTlF1QGFr2mKt6F9CN05mSKBVY3Glim/3cO/Ed3NCdpaqW/QkYQ
+        ElKV/y6YQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcncs-0005vu-7b; Mon, 17 Jun 2019 09:08:30 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D430F2025A803; Mon, 17 Jun 2019 11:08:27 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 11:08:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alison Schofield <alison.schofield@intel.com>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>, linux-mm@kvack.org,
+        kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call
+ for MKTME
+Message-ID: <20190617090827.GY3436@hirez.programming.kicks-ass.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
+ <20190614115137.GF3436@hirez.programming.kicks-ass.net>
+ <20190615003231.GA15479@alison-desk.jf.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1560233130-27264-6-git-send-email-amasule@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190615003231.GA15479@alison-desk.jf.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Aniket,
+On Fri, Jun 14, 2019 at 05:32:31PM -0700, Alison Schofield wrote:
+> On Fri, Jun 14, 2019 at 01:51:37PM +0200, Peter Zijlstra wrote:
+> > On Wed, May 08, 2019 at 05:44:05PM +0300, Kirill A. Shutemov wrote:
+> snip
+> > >  /*
+> > > - * When pkey==NO_KEY we get legacy mprotect behavior here.
+> > > + * do_mprotect_ext() supports the legacy mprotect behavior plus extensions
+> > > + * for Protection Keys and Memory Encryption Keys. These extensions are
+> > > + * mutually exclusive and the behavior is:
 
-On 6/11/19 9:05 AM, Aniket Masule wrote:
-> Present core assignment is static. Introduced load balancing
-> across the cores. Load on earch core is calculated and core
-> with minimum load is assigned to given instance.
+Well, here it states that the extentions are mutually exclusive.
+
+> > > + *	(pkey==NO_KEY && keyid==NO_KEY) ==> legacy mprotect
+> > > + *	(pkey is valid)  ==> legacy mprotect plus Protection Key extensions
+> > > + *	(keyid is valid) ==> legacy mprotect plus Encryption Key extensions
+> > >   */
+> > >  static int do_mprotect_ext(unsigned long start, size_t len,
+> > > -		unsigned long prot, int pkey)
+> > > +			   unsigned long prot, int pkey, int keyid)
+> > >  {
 > 
-> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
-> ---
->  drivers/media/platform/qcom/venus/helpers.c | 50 +++++++++++++++++++++++++----
->  drivers/media/platform/qcom/venus/helpers.h |  2 +-
->  drivers/media/platform/qcom/venus/vdec.c    |  5 +--
->  drivers/media/platform/qcom/venus/venc.c    |  4 ++-
->  4 files changed, 51 insertions(+), 10 deletions(-)
+> snip
 > 
-> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
-> index edb653e..38d617b 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.c
-> +++ b/drivers/media/platform/qcom/venus/helpers.c
-> @@ -497,6 +497,16 @@ static int load_scale_clocks(struct venus_inst *inst)
->  		return scale_clocks_vpu4(inst);
->  }
->  
-> +int set_core_usage(struct venus_inst *inst, u32 usage)
-> +{
-> +	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
-> +	struct hfi_videocores_usage_type cu;
-> +
-> +	cu.video_core_enable_mask = usage;
-> +
-> +	return hfi_session_set_property(inst, ptype, &cu);
-> +}
-> +
->  static void fill_buffer_desc(const struct venus_buffer *buf,
->  			     struct hfi_buffer_desc *bd, bool response)
->  {
-> @@ -800,19 +810,47 @@ int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode)
->  }
->  EXPORT_SYMBOL_GPL(venus_helper_set_work_mode);
->  
-> -int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage)
-> +int venus_helper_decide_core(struct venus_inst *inst, u32 cores_max)
-
-I think venus_helper_set_core is better?
-
->  {
-> -	const u32 ptype = HFI_PROPERTY_CONFIG_VIDEOCORES_USAGE;
-> -	struct hfi_videocores_usage_type cu;
-> +	struct venus_core *core = inst->core;
-> +	u32 min_core_id = 0, core0_load = 0, core1_load = 0;
-> +	unsigned long min_load, max_freq, cur_inst_load;
-> +	int ret;
->  
->  	if (!IS_V4(inst->core))
->  		return 0;
->  
-> -	cu.video_core_enable_mask = usage;
-> +	core0_load = load_per_core(core, VIDC_CORE_ID_1);
-> +	core1_load = load_per_core(core, VIDC_CORE_ID_2);
->  
-> -	return hfi_session_set_property(inst, ptype, &cu);
-> +	min_core_id = core0_load < core1_load ? VIDC_CORE_ID_1 : VIDC_CORE_ID_2;
-> +	min_load = min(core0_load, core1_load);
-> +
-> +	if (cores_max < VIDC_CORE_ID_1) {
-> +		min_core_id = VIDC_CORE_ID_1;
-> +		min_load = core0_load;
-> +	}
-
-could you please move that fragment just after IS_V4 check and return an
-error if cores_max < VIDC_CORE_ID_1.
-
-> +
-> +	cur_inst_load = load_per_instance(inst) *
-> +		inst->clk_data.codec_data->vpp_cycles;
-> +	max_freq = core->res->freq_tbl[0].freq;
-> +
-> +	if ((cur_inst_load + min_load)	> max_freq) {
-> +		dev_warn(core->dev, "HW is overloaded, needed: %lu max: %lu\n",
-> +			 cur_inst_load, max_freq);
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = set_core_usage(inst, min_core_id);
-> +
-> +	if (ret)
-> +		return ret;
-> +
-> +	inst->clk_data.core_id = min_core_id;
-> +
-> +	return 0;
->  }
-> -EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
-> +EXPORT_SYMBOL_GPL(venus_helper_decide_core);
->  
->  int venus_helper_init_codec_data(struct venus_inst *inst)
->  {
-> diff --git a/drivers/media/platform/qcom/venus/helpers.h b/drivers/media/platform/qcom/venus/helpers.h
-> index f9360a8..c41ceb3 100644
-> --- a/drivers/media/platform/qcom/venus/helpers.h
-> +++ b/drivers/media/platform/qcom/venus/helpers.h
-> @@ -42,7 +42,7 @@ int venus_helper_set_output_resolution(struct venus_inst *inst,
->  				       u32 buftype);
->  int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode);
->  int venus_helper_init_codec_data(struct venus_inst *inst);
-> -int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage);
-> +int venus_helper_decide_core(struct venus_inst *inst, u32 cores_max);
->  int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int input_bufs,
->  			      unsigned int output_bufs,
->  			      unsigned int output2_bufs);
-> diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-> index 51795fd..9f988ba 100644
-> --- a/drivers/media/platform/qcom/venus/vdec.c
-> +++ b/drivers/media/platform/qcom/venus/vdec.c
-> @@ -544,14 +544,15 @@ static int vdec_output_conf(struct venus_inst *inst)
->  	u32 height = inst->out_height;
->  	u32 out_fmt, out2_fmt;
->  	bool ubwc = false;
-> -	u32 ptype;
-> +	u32 ptype, cores_max;
->  	int ret;
->  
->  	ret = venus_helper_set_work_mode(inst, VIDC_WORK_MODE_2);
->  	if (ret)
->  		return ret;
->  
-> -	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_1);
-> +	cores_max = core_num_max(inst);
-
-please move core_max calculation in the venus_helper_decide_core() here
-and below.
-
-> +	ret = venus_helper_decide_core(inst, cores_max);
->  	if (ret)
->  		return ret;
->  
-> diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-> index 792cdce..ed39efd 100644
-> --- a/drivers/media/platform/qcom/venus/venc.c
-> +++ b/drivers/media/platform/qcom/venus/venc.c
-> @@ -654,13 +654,15 @@ static int venc_set_properties(struct venus_inst *inst)
->  	struct hfi_quantization quant;
->  	struct hfi_quantization_range quant_range;
->  	u32 ptype, rate_control, bitrate, profile = 0, level = 0;
-> +	u32 cores_max;
->  	int ret;
->  
->  	ret = venus_helper_set_work_mode(inst, VIDC_WORK_MODE_2);
->  	if (ret)
->  		return ret;
->  
-> -	ret = venus_helper_set_core_usage(inst, VIDC_CORE_ID_2);
-> +	cores_max = core_num_max(inst);
-> +	ret = venus_helper_decide_core(inst, cores_max);
->  	if (ret)
->  		return ret;
->  
+> >
+> > I've missed the part where pkey && keyid results in a WARN or error or
+> > whatever.
+> > 
+> I wasn't so sure about that since do_mprotect_ext()
+> is the call 'behind' the system calls. 
 > 
+> legacy mprotect always calls with: NO_KEY, NO_KEY
+> pkey_mprotect always calls with:  pkey, NO_KEY
+> encrypt_mprotect always calls with  NO_KEY, keyid
+> 
+> Would a check on those arguments be debug only 
+> to future proof this?
 
--- 
-regards,
-Stan
+But you then don't check that, anywhere, afaict.
