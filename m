@@ -4,159 +4,108 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 767C7C31E53
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E16C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB13218C9
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:29:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5496D218C9
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:31:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560752982;
-	bh=UcxbS7rUCgcBM/DB0jqfsiIGehfsD3/yjUCvwOkO9hs=;
+	s=default; t=1560753083;
+	bh=E1N41cylcCvClx041UaN3kZbEpO1JBbXfqyUD8vU8Ec=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nPVGTXFD1m9Vx6yWY1KHTXhn0Q17q4rg1MgWDrz9EhK4IOmt7QkUrTtTx1JrOi1j4
-	 NeOj3uG4IdJiVqyBha7ApiYTuQ3njSyQpbLxObUttDscTtLkA18ivknmBDlAc9lkCb
-	 o7F7DRaxgY8gETcL+u+RtCB8G4YyElhvfOL9/N4E=
+	b=yJt0n01O5qDeOLbwjYrnKGNpTUA7uzT9GzROtpC+rsjS3rkwIoPcIVvDHxZT+bjJG
+	 AkYmfONDLw4Jc1PkPC5ubRC9MpimdXq4x6AFwW4CLZeg15TbFIUggkQeXbMnTHG3pw
+	 B+kwnA1aG+AVztht+QBHZEnS7JM4wAtV0vnXeP3k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfFQG3l (ORCPT
+        id S1725886AbfFQGbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 02:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52612 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbfFQG3k (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 02:29:40 -0400
-Received: from localhost (unknown [122.178.208.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25351218C9;
-        Mon, 17 Jun 2019 06:29:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560752980;
-        bh=UcxbS7rUCgcBM/DB0jqfsiIGehfsD3/yjUCvwOkO9hs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0GW+tvR3UXIHVn9kTa0d5frYtD6j+epz/de/4QneHVmb5DBuSFjAFqdL3XYA/J3uQ
-         e/bvSEtKodHJBIsJ9rfClmB3o6sqj5rGgTb4BZ3RqgqPZcwHW91VAaio+6ZVD2vbw8
-         O+uJnoyHifdLQUaWJdBj6JZocjTJu8rctL4+IwS0=
-Date:   Mon, 17 Jun 2019 11:56:31 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        "Isaac J . Manjarres" <isaacm@codeaurora.org>
-Subject: Re: [PATCH 2/2] pinctrl: qcom: Add SM8150 pinctrl driver
-Message-ID: <20190617062631.GH2962@vkoul-mobl>
-References: <20190614053032.24208-1-vkoul@kernel.org>
- <20190614053032.24208-2-vkoul@kernel.org>
- <20190617041736.GD750@tuxbook-pro>
+        Mon, 17 Jun 2019 02:31:22 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46972 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725554AbfFQGbW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 02:31:22 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6195FAFAC;
+        Mon, 17 Jun 2019 06:31:20 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 08:31:18 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Shakeel Butt <shakeelb@google.com>,
+        syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        yuzhoujian@didichuxing.com
+Subject: Re: general protection fault in oom_unkillable_task
+Message-ID: <20190617063118.GA30420@dhcp22.suse.cz>
+References: <0000000000004143a5058b526503@google.com>
+ <CALvZod72=KuBZkSd0ey5orJFGFpwx462XY=cZvO3NOXC0MogFw@mail.gmail.com>
+ <20190615134955.GA28441@dhcp22.suse.cz>
+ <CALvZod4hT39PfGt9Ohj+g77om5=G0coHK=+G1=GKcm-PowkXsw@mail.gmail.com>
+ <5bb1fe5d-f0e1-678b-4f64-82c8d5d81f61@i-love.sakura.ne.jp>
+ <CALvZod4etSv9Hv4UD=E6D7U4vyjCqhxQgq61AoTUCd+VubofFg@mail.gmail.com>
+ <791594c6-45a3-d78a-70b5-901aa580ed9f@i-love.sakura.ne.jp>
+ <840fa9f1-07e2-e206-2fc0-725392f96baf@i-love.sakura.ne.jp>
+ <c763afc8-f0ae-756a-56a7-395f625b95fc@i-love.sakura.ne.jp>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617041736.GD750@tuxbook-pro>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <c763afc8-f0ae-756a-56a7-395f625b95fc@i-love.sakura.ne.jp>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16-06-19, 21:17, Bjorn Andersson wrote:
-> On Thu 13 Jun 22:30 PDT 2019, Vinod Koul wrote:
+On Mon 17-06-19 00:13:47, Tetsuo Handa wrote:
+[...]
+> >From 415e52cf55bc4ad931e4f005421b827f0b02693d Mon Sep 17 00:00:00 2001
+> From: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+> Date: Mon, 17 Jun 2019 00:09:38 +0900
+> Subject: [PATCH] mm: memcontrol: Use CSS_TASK_ITER_PROCS at mem_cgroup_scan_tasks().
 > 
-> > From: Prasad Sodagudi <psodagud@codeaurora.org>
-> > 
-> > Add initial pinctrl driver to support pin configuration with
-> > pinctrl framework for SM8150
-> > 
-> > Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> > Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+> Since commit c03cd7738a83b137 ("cgroup: Include dying leaders with live
+> threads in PROCS iterations") corrected how CSS_TASK_ITER_PROCS works,
+> mem_cgroup_scan_tasks() can use CSS_TASK_ITER_PROCS in order to check
+> only one thread from each thread group.
+
+O(Threads#) is definitely much worse than O(proc#)
+
+> Signed-off-by: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+Thanks!
+
+> ---
+>  mm/memcontrol.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> I presume you did stuff to make it fit with my upstream tiling, mention
-> that here.
-
-Thanks for pointing I did miss the changes I did
-
-> 
-> [..]
-> > diff --git a/drivers/pinctrl/qcom/pinctrl-sm8150.c b/drivers/pinctrl/qcom/pinctrl-sm8150.c
-> [..]
-> > +static const struct pinctrl_pin_desc sm8150_pins[] = {
-> [..]
-> > +	PINCTRL_PIN(178, "UFS_RESET"),
-> 
-> Please follow
-> https://lore.kernel.org/linux-arm-msm/20190606010249.3538-2-bjorn.andersson@linaro.org/
-> for ufs_reset.
-
-Sure will update 
-> 
-> > +};
-> [..]
-> > +enum sm8150_functions {
-> > +	msm_mux_phase_flag8,
-> 
-> Please sort these alphabetically and please squash all the phase_flag*
-> into msm_mux_phase_flag.
-
-Will do, is there a reason why we want to squash them?
-> 
-> > +	msm_mux_phase_flag7,
-> > +	msm_mux_emac_pps,
-> > +	msm_mux_qup12,
-> > +	msm_mux_qup16,
-> > +	msm_mux_tsif1_clk,
-> 
-> Please squash all tsif1 into msm_mux_tsif1.
-
-Will do
-
-> 
-> > +	msm_mux_qup8,
-> > +	msm_mux_qspi_cs,
-> > +	msm_mux_tgu_ch3,
-> > +	msm_mux_tsif1_en,
-> > +	msm_mux_qspi0,
-> > +	msm_mux_mdp_vsync0,
-> > +	msm_mux_mdp_vsync1,
-> > +	msm_mux_mdp_vsync2,
-> > +	msm_mux_mdp_vsync3,
-> > +	msm_mux_tgu_ch0,
-> > +	msm_mux_tsif1_data,
-> > +	msm_mux_qspi1,
-> > +	msm_mux_sdc4_cmd,
-> 
-> Squash sdc4_cmd, sdc4_clk and sdc4{0,1,2,3} into msm_mux_sdc4.
-
-Sure will do on all and again what is the motivation. I am trying to
-understand the reasoning so that next time I know what to do :-)
-
-> > +static const struct msm_function sm8150_functions[] = {
-> > +	FUNCTION(phase_flag8),
-> 
-> Please sort this array as well.
-
-okay
-
-> > +static const struct msm_pingroup sm8150_groups[] = {
-> [..]
-> > +	[58] = PINGROUP(58, SOUTH, qup17, qup19, qdss_cti, qdss_cti, _, _, _, _, _),
-> 
-> qdss_cti can't be both function 3 and 4 of a single pin.
-
-Let me check, maybe error in downstream code
-
-> > +static struct platform_driver sm8150_pinctrl_driver = {
-> > +	.driver = {
-> > +		.name = "sm8150-pinctrl",
-> > +		.owner = THIS_MODULE,
-> 
-> No .owner in platform_driver
-
-Yeah missed to remove
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index ba9138a..b09ff45 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -1163,7 +1163,7 @@ int mem_cgroup_scan_tasks(struct mem_cgroup *memcg,
+>  		struct css_task_iter it;
+>  		struct task_struct *task;
+>  
+> -		css_task_iter_start(&iter->css, 0, &it);
+> +		css_task_iter_start(&iter->css, CSS_TASK_ITER_PROCS, &it);
+>  		while (!ret && (task = css_task_iter_next(&it)))
+>  			ret = fn(task, arg);
+>  		css_task_iter_end(&it);
+> -- 
+> 1.8.3.1
 
 -- 
-~Vinod
+Michal Hocko
+SUSE Labs
