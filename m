@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6500C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3593BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0FB3204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F064221019
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806921;
-	bh=dWVdzyFw/kW4VEJVfIN/63D9uXOjsA+XKaX9gzPpKQg=;
+	s=default; t=1560806924;
+	bh=/W2GDSSfhmcFCYLBTRD+1nC0aSX/pAnuIWfuvhvjAt0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUv/EnMBIwLPV/dFgZb/lFcmYa4WgGgaS5Om9y+VwW2Zx3gM7h9l70ivj2XU0ZAX0
-	 RXsKrZ5Pmg8MYR0DzfXFSi1qH+9m7AJ6MPDupYC+UGFW/xLWtHHlnCtSdU1DeNr1Kk
-	 W7pqIH02Pkd6PIPwy2METffZ9SmIbGktdb2m7Ilc=
+	b=vxL2ysIRNqSCRUysmeliiBa1jyVf7sM5jUTyobby08CYnVBQ+8r9eAm6JRtjlfqZ5
+	 exfWoYvSOq6GUmDUEI1pgRC1bExhTcBsUug5G7kRlVu3U4qnanvzyz1bHKnR4vk8QF
+	 2PS+yO35kOPwmvXFxWR1fIIFgLIiU1QW/Yej1hlE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730044AbfFQV2k (ORCPT
+        id S1730581AbfFQV2m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:28:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55664 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:28:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730565AbfFQV2g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:28:36 -0400
+        id S1730268AbfFQV2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:28:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F155220861;
-        Mon, 17 Jun 2019 21:28:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C153204FD;
+        Mon, 17 Jun 2019 21:28:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806914;
-        bh=dWVdzyFw/kW4VEJVfIN/63D9uXOjsA+XKaX9gzPpKQg=;
+        s=default; t=1560806917;
+        bh=/W2GDSSfhmcFCYLBTRD+1nC0aSX/pAnuIWfuvhvjAt0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Bl5ctscXMLYOdphzWvidZV2WfRdNZmg+iBE0HAmvCMPEe4oBIWyRbTyhCKds/iIGz
-         Cx2TyGJyozTpovUuftT8h6H0e4DteYi5sCQZvoDKJc0lDuR/hWdecvJFXBfPXJgCHY
-         zmiQtyAOWpfAotOVAR5lrrKjaBAjsMr2Df9pWP1k=
+        b=RpGw6HUhL7j20zRCXly8+bJpcbmh53sTM/RJoOvAFbOTtTwSRm5Qq/KC6y22UBhmU
+         RNl4d4lRLa9yilE7N9VL2ZpAN4gx9demTlcmSoGmv/p+daBMMNdaXb/cqFXgx5CO0w
+         JhOtPzB6oNb4l82nHacZeqgijCBVlEhbP9NAbwq8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 06/53] ALSA: hda/realtek - Update headset mode for ALC256
-Date:   Mon, 17 Jun 2019 23:09:49 +0200
-Message-Id: <20190617210746.403444756@linuxfoundation.org>
+Subject: [PATCH 4.14 07/53] ALSA: firewire-motu: fix destruction of data for isochronous resources
+Date:   Mon, 17 Jun 2019 23:09:50 +0200
+Message-Id: <20190617210746.740325540@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -59,190 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 717f43d81afc1250300479075952a0e36d74ded3 upstream.
+commit 0e3fb6995bfabb23c172e8b883bf5ac57102678e upstream.
 
-ALC255 and ALC256 were some difference for hidden register.
-This update was suitable for ALC256.
+The data for isochronous resources is not destroyed in expected place.
+This commit fixes the bug.
 
-Fixes: e69e7e03ed22 ("ALSA: hda/realtek - ALC256 speaker noise issue")
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
+Cc: <stable@vger.kernel.org> # v4.12+
+Fixes: 9b2bb4f2f4a2 ("ALSA: firewire-motu: add stream management functionality")
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   75 +++++++++++++++++++++++++++++++++---------
- 1 file changed, 60 insertions(+), 15 deletions(-)
+ sound/firewire/motu/motu-stream.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -3936,18 +3936,19 @@ static struct coef_fw alc225_pre_hsmode[
- static void alc_headset_mode_unplugged(struct hda_codec *codec)
- {
- 	static struct coef_fw coef0255[] = {
-+		WRITE_COEF(0x1b, 0x0c0b), /* LDO and MISC control */
- 		WRITE_COEF(0x45, 0xd089), /* UAJ function set to menual mode */
- 		UPDATE_COEFEX(0x57, 0x05, 1<<14, 0), /* Direct Drive HP Amp control(Set to verb control)*/
- 		WRITE_COEF(0x06, 0x6104), /* Set MIC2 Vref gate with HP */
- 		WRITE_COEFEX(0x57, 0x03, 0x8aa6), /* Direct Drive HP Amp control */
- 		{}
- 	};
--	static struct coef_fw coef0255_1[] = {
--		WRITE_COEF(0x1b, 0x0c0b), /* LDO and MISC control */
--		{}
--	};
- 	static struct coef_fw coef0256[] = {
- 		WRITE_COEF(0x1b, 0x0c4b), /* LDO and MISC control */
-+		WRITE_COEF(0x45, 0xd089), /* UAJ function set to menual mode */
-+		WRITE_COEF(0x06, 0x6104), /* Set MIC2 Vref gate with HP */
-+		WRITE_COEFEX(0x57, 0x03, 0x09a3), /* Direct Drive HP Amp control */
-+		UPDATE_COEFEX(0x57, 0x05, 1<<14, 0), /* Direct Drive HP Amp control(Set to verb control)*/
- 		{}
- 	};
- 	static struct coef_fw coef0233[] = {
-@@ -4010,13 +4011,11 @@ static void alc_headset_mode_unplugged(s
+--- a/sound/firewire/motu/motu-stream.c
++++ b/sound/firewire/motu/motu-stream.c
+@@ -345,7 +345,7 @@ static void destroy_stream(struct snd_mo
+ 	}
  
- 	switch (codec->core.vendor_id) {
- 	case 0x10ec0255:
--		alc_process_coef_fw(codec, coef0255_1);
- 		alc_process_coef_fw(codec, coef0255);
- 		break;
- 	case 0x10ec0236:
- 	case 0x10ec0256:
- 		alc_process_coef_fw(codec, coef0256);
--		alc_process_coef_fw(codec, coef0255);
- 		break;
- 	case 0x10ec0234:
- 	case 0x10ec0274:
-@@ -4066,6 +4065,12 @@ static void alc_headset_mode_mic_in(stru
- 		WRITE_COEF(0x06, 0x6100), /* Set MIC2 Vref gate to normal */
- 		{}
- 	};
-+	static struct coef_fw coef0256[] = {
-+		UPDATE_COEFEX(0x57, 0x05, 1<<14, 1<<14), /* Direct Drive HP Amp control(Set to verb control)*/
-+		WRITE_COEFEX(0x57, 0x03, 0x09a3),
-+		WRITE_COEF(0x06, 0x6100), /* Set MIC2 Vref gate to normal */
-+		{}
-+	};
- 	static struct coef_fw coef0233[] = {
- 		UPDATE_COEF(0x35, 0, 1<<14),
- 		WRITE_COEF(0x06, 0x2100),
-@@ -4113,14 +4118,19 @@ static void alc_headset_mode_mic_in(stru
- 	};
+ 	amdtp_stream_destroy(stream);
+-	fw_iso_resources_free(resources);
++	fw_iso_resources_destroy(resources);
+ }
  
- 	switch (codec->core.vendor_id) {
--	case 0x10ec0236:
- 	case 0x10ec0255:
--	case 0x10ec0256:
- 		alc_write_coef_idx(codec, 0x45, 0xc489);
- 		snd_hda_set_pin_ctl_cache(codec, hp_pin, 0);
- 		alc_process_coef_fw(codec, coef0255);
- 		snd_hda_set_pin_ctl_cache(codec, mic_pin, PIN_VREF50);
- 		break;
-+	case 0x10ec0236:
-+	case 0x10ec0256:
-+		alc_write_coef_idx(codec, 0x45, 0xc489);
-+		snd_hda_set_pin_ctl_cache(codec, hp_pin, 0);
-+		alc_process_coef_fw(codec, coef0256);
-+		snd_hda_set_pin_ctl_cache(codec, mic_pin, PIN_VREF50);
-+		break;
- 	case 0x10ec0234:
- 	case 0x10ec0274:
- 	case 0x10ec0294:
-@@ -4199,6 +4209,14 @@ static void alc_headset_mode_default(str
- 		WRITE_COEF(0x49, 0x0049),
- 		{}
- 	};
-+	static struct coef_fw coef0256[] = {
-+		WRITE_COEF(0x45, 0xc489),
-+		WRITE_COEFEX(0x57, 0x03, 0x0da3),
-+		WRITE_COEF(0x49, 0x0049),
-+		UPDATE_COEFEX(0x57, 0x05, 1<<14, 0), /* Direct Drive HP Amp control(Set to verb control)*/
-+		WRITE_COEF(0x06, 0x6100),
-+		{}
-+	};
- 	static struct coef_fw coef0233[] = {
- 		WRITE_COEF(0x06, 0x2100),
- 		WRITE_COEF(0x32, 0x4ea3),
-@@ -4246,11 +4264,16 @@ static void alc_headset_mode_default(str
- 		alc_process_coef_fw(codec, alc225_pre_hsmode);
- 		alc_process_coef_fw(codec, coef0225);
- 		break;
--	case 0x10ec0236:
- 	case 0x10ec0255:
--	case 0x10ec0256:
- 		alc_process_coef_fw(codec, coef0255);
- 		break;
-+	case 0x10ec0236:
-+	case 0x10ec0256:
-+		alc_write_coef_idx(codec, 0x1b, 0x0e4b);
-+		alc_write_coef_idx(codec, 0x45, 0xc089);
-+		msleep(50);
-+		alc_process_coef_fw(codec, coef0256);
-+		break;
- 	case 0x10ec0234:
- 	case 0x10ec0274:
- 	case 0x10ec0294:
-@@ -4294,8 +4317,7 @@ static void alc_headset_mode_ctia(struct
- 	};
- 	static struct coef_fw coef0256[] = {
- 		WRITE_COEF(0x45, 0xd489), /* Set to CTIA type */
--		WRITE_COEF(0x1b, 0x0c6b),
--		WRITE_COEFEX(0x57, 0x03, 0x8ea6),
-+		WRITE_COEF(0x1b, 0x0e6b),
- 		{}
- 	};
- 	static struct coef_fw coef0233[] = {
-@@ -4410,8 +4432,7 @@ static void alc_headset_mode_omtp(struct
- 	};
- 	static struct coef_fw coef0256[] = {
- 		WRITE_COEF(0x45, 0xe489), /* Set to OMTP Type */
--		WRITE_COEF(0x1b, 0x0c6b),
--		WRITE_COEFEX(0x57, 0x03, 0x8ea6),
-+		WRITE_COEF(0x1b, 0x0e6b),
- 		{}
- 	};
- 	static struct coef_fw coef0233[] = {
-@@ -4540,13 +4561,37 @@ static void alc_determine_headset_type(s
- 	};
- 
- 	switch (codec->core.vendor_id) {
--	case 0x10ec0236:
- 	case 0x10ec0255:
-+		alc_process_coef_fw(codec, coef0255);
-+		msleep(300);
-+		val = alc_read_coef_idx(codec, 0x46);
-+		is_ctia = (val & 0x0070) == 0x0070;
-+		break;
-+	case 0x10ec0236:
- 	case 0x10ec0256:
-+		alc_write_coef_idx(codec, 0x1b, 0x0e4b);
-+		alc_write_coef_idx(codec, 0x06, 0x6104);
-+		alc_write_coefex_idx(codec, 0x57, 0x3, 0x09a3);
-+
-+		snd_hda_codec_write(codec, 0x21, 0,
-+			    AC_VERB_SET_AMP_GAIN_MUTE, AMP_OUT_MUTE);
-+		msleep(80);
-+		snd_hda_codec_write(codec, 0x21, 0,
-+			    AC_VERB_SET_PIN_WIDGET_CONTROL, 0x0);
-+
- 		alc_process_coef_fw(codec, coef0255);
- 		msleep(300);
- 		val = alc_read_coef_idx(codec, 0x46);
- 		is_ctia = (val & 0x0070) == 0x0070;
-+
-+		alc_write_coefex_idx(codec, 0x57, 0x3, 0x0da3);
-+		alc_update_coefex_idx(codec, 0x57, 0x5, 1<<14, 0);
-+
-+		snd_hda_codec_write(codec, 0x21, 0,
-+			    AC_VERB_SET_PIN_WIDGET_CONTROL, PIN_OUT);
-+		msleep(80);
-+		snd_hda_codec_write(codec, 0x21, 0,
-+			    AC_VERB_SET_AMP_GAIN_MUTE, AMP_OUT_UNMUTE);
- 		break;
- 	case 0x10ec0234:
- 	case 0x10ec0274:
+ int snd_motu_stream_init_duplex(struct snd_motu *motu)
 
 
