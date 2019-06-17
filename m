@@ -6,129 +6,83 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CE94C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E38C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:16:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2624C2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:15:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4618C2082C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:16:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728088AbfFQNPg (ORCPT
+        id S1727972AbfFQNQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:15:36 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53289 "EHLO
+        Mon, 17 Jun 2019 09:16:49 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:41529 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfFQNPg (ORCPT
+        with ESMTP id S1725884AbfFQNQs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:15:36 -0400
+        Mon, 17 Jun 2019 09:16:48 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MYcy3-1i6v383M4x-00VdwG; Mon, 17 Jun 2019 15:15:17 +0200
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MrPVJ-1iNDSv3rCJ-00oWs2; Mon, 17 Jun 2019 15:16:27 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>, wenxu <wenxu@ucloud.cn>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, YueHaibing <yuehaibing@huawei.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] netfilter: fix nf_conntrack_bridge/ipv6 link error
-Date:   Mon, 17 Jun 2019 15:15:04 +0200
-Message-Id: <20190617131515.2334941-1-arnd@arndb.de>
+Subject: [PATCH] video: fbdev: pvr2fb: fix link error for pvr2fb_pci_exit
+Date:   Mon, 17 Jun 2019 15:16:12 +0200
+Message-Id: <20190617131624.2382303-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ffG0oEGFDr8AoakyTAVdhP3B7AKNLLG3JBgSsWHS4btNTkhoB1a
- nxW8SSPAesUa46zwzTQwKD7N5lcrt0rljJDuCGm2a/HV0XvlBRz5BfPy634OqmQDa38aH7G
- iojviMbZ8EQjarVdpdHhuKGvq0QcFxeiD1w2j9af4In6z8fqEfQ1dbDfkFZZJSRLOOgxtJ5
- CUyZgQgCcRgMeZ9Xl53VA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5G9iyEa0TYs=:2C1glk3K9ALdpIwcvXu/S8
- 4VTK8tqnpHtghO/u53o+qv+4cIDEcj6DZ53677TJSlo43+l4tDR1pw3BNwVOU7jd97GyMSWhS
- EecgllSIhHmrhfuMEED1R8EhLyNZz91+dHkbuMKQKHA0J5xV45PbiJIdFYmJZQXI7YdaidIdz
- CXenG6wOd4aXZpe+KBpStxmXib6mTBJcESMGVcz1LqiWobKkP+7UU99tw0q7a+44CDgcBjXZc
- tSsfiy/cysRrpiNZDaAFE2px39fR5YRECVinJKEldQyEUZXWq8ylD+O+UPtV6CzKFKD9f/CTk
- lezwZ1PWA0AUXBMkynDqNFrMiK5CIpmupY+9dGfgzbDE7z0zHX2+pKBluXVVSI6g17QfgxzW6
- HR7oVoSBOSJn4Wn473iQMn6wn7+x+iS8NtoZfHJciyJ/i0LsICHv/aG2tdYpnRqR98y7bDhMP
- bU0tPlvD43qmIhiKONvNBRfsnpDItqZTjWwuoTvvIRXsm5z2J96KbsuKx1sZNlHIcTm6+ZHJ2
- s31jiV0RRQCEVYdRsClLLkYPC4zt3DBUlnV1XZKLOSNLwn/NdUNx0VWsdUnQOtzuvY+UKem1M
- DDpekBNH+j0brexGCAAZGU8rkzafzkfY4XtkQQ8HNYxksuSopi2SCGhSrEhi4kEq/va9fG3tN
- Ia4ri3O3uVsvohA5/gSVMYPsdjNBeLLggbeCYh921ObSfHmB147DaOkDuHLNKoIXg9wl0/x4z
- 0Ll8sQfKPBgVqlta03hi50zZN1mG+6ZBrZeQJw==
+X-Provags-ID: V03:K1:Qe2+Mxqk7UNlW2kImG4dBpHk395qN3F7QKua6gNeiC02qC4dv/0
+ KyGHOwqMvARphB1xFvw1ZRVnRDGdoympCDhOCPbmLGZJ65qH0XZlGS8W5o8zpfeTn8G0p+j
+ U9ORexC2jg0VRUZbYphRu24L2mh7wPWzgPsqGF1zvefqLjoNciY31NbZSG5iTrZbcLPIGOz
+ abWHduBRPpuRTmnm5s9lA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:H9A3Z1xLXVI=:eEoA67w9aBjQBcOJXDFqN9
+ /iPd9cib0USpQoPAxAgbr+tggKDwCqcHbtEd/RLlOqzgrcZg5La4xZ5LdT1EfW25hW9Ph4Xw6
+ RuC7sLlSXHw6P1f6UIJTz3bzlpt51WmCGjmd149e4GOZzD20TGerjeo2jUM0OHJiw8D7zO+1y
+ QyisIco/v5yYKC6aWgfujquqXdoSONt/L2UseizZ9xDAoXV2IQViMJGjZSogVb2YDOSgphU3U
+ SNU7fWESOViEn+FgCQSyC6IzDt4OZ19kcga4I/J3Em4FTUo6ibpWArH8fuwf4+287IbBU6A4c
+ +3EPuAjBwvDY1chWV0mxutSdWWw5780fYoYj0LtRkodIQ3E2aZew6zz5zaMvos49Hlj7Pp54B
+ U8WoS3QGbiytFpUlWHXAJJFdu7ms4neA11pQ76qMJuYVQbslqm1UpW1XPG2AdgIVafv/ty9ai
+ BY8maX8WzpyIfziRRvzQF6IsmZNgO/9v/DqCfUbpZLvs5kcnO7w6yyNNPqS3daxKosKAi+eIR
+ K5EsGbyK28TR6BORQzhdEMSa8iNDiIahXXWRh3QQSSmKxRmMuq6LMMs7U+AVDdzxe1SQ6nTPb
+ b8STQpqH9i6DejA9h00x5u3iDuxumt9mZQw+QGVQjqVu6z4Z2I4pLn0kgaYbRzdZGSJUDmqnU
+ IzFDQ2E0jWnqGNw5TzI9Aijz/2EyccZ8ugOgnnCK1Eg9IGF03w0MsLD9r4rZfxJfz/3YKfQnZ
+ anbQI8kXmNSznPe3mn5FG6wHjRu4hxB9lGjAfw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_IPV6 is disabled, the bridge netfilter code
-produces a link error:
+When the driver is built-in for PCI, we reference the exit function
+after discarding it:
 
-ERROR: "br_ip6_fragment" [net/bridge/netfilter/nf_conntrack_bridge.ko] undefined!
-ERROR: "nf_ct_frag6_gather" [net/bridge/netfilter/nf_conntrack_bridge.ko] undefined!
+`pvr2fb_pci_exit' referenced in section `.ref.data' of drivers/video/fbdev/pvr2fb.o: defined in discarded section `.exit.text' of drivers/video/fbdev/pvr2fb.o
 
-The problem is that it assumes that whenever IPV6 is not a loadable
-module, we can call the functions direction. This is clearly
-not true when IPV6 is disabled.
+Just remove the __exit annotation as the easiest workaround.
 
-There are two other functions defined like this in linux/netfilter_ipv6.h,
-so change them all the same way.
-
-Fixes: 764dd163ac92 ("netfilter: nf_conntrack_bridge: add support for IPv6")
+Fixes: 0f5a5712ad1e ("video: fbdev: pvr2fb: add COMPILE_TEST support")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- include/linux/netfilter_ipv6.h | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ drivers/video/fbdev/pvr2fb.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
-index 3a3dc4b1f0e7..85d61db88b05 100644
---- a/include/linux/netfilter_ipv6.h
-+++ b/include/linux/netfilter_ipv6.h
-@@ -70,8 +70,10 @@ static inline int nf_ipv6_chk_addr(struct net *net, const struct in6_addr *addr,
- 		return 1;
- 
- 	return v6_ops->chk_addr(net, addr, dev, strict);
--#else
-+#elif IS_BUILTIN(CONFIG_IPV6)
- 	return ipv6_chk_addr(net, addr, dev, strict);
-+#else
-+	return 1;
- #endif
+diff --git a/drivers/video/fbdev/pvr2fb.c b/drivers/video/fbdev/pvr2fb.c
+index 299ea7db9220..cf9cfdc5e685 100644
+--- a/drivers/video/fbdev/pvr2fb.c
++++ b/drivers/video/fbdev/pvr2fb.c
+@@ -990,7 +990,7 @@ static int __init pvr2fb_pci_init(void)
+ 	return pci_register_driver(&pvr2fb_pci_driver);
  }
  
-@@ -108,8 +110,10 @@ static inline int nf_ipv6_br_defrag(struct net *net, struct sk_buff *skb,
- 		return 1;
- 
- 	return v6_ops->br_defrag(net, skb, user);
--#else
-+#elif IS_BUILTIN(CONFIG_IPV6)
- 	return nf_ct_frag6_gather(net, skb, user);
-+#else
-+	return 1;
- #endif
+-static void __exit pvr2fb_pci_exit(void)
++static void pvr2fb_pci_exit(void)
+ {
+ 	pci_unregister_driver(&pvr2fb_pci_driver);
  }
- 
-@@ -133,8 +137,10 @@ static inline int nf_br_ip6_fragment(struct net *net, struct sock *sk,
- 		return 1;
- 
- 	return v6_ops->br_fragment(net, sk, skb, data, output);
--#else
-+#elif IS_BUILTIN(CONFIG_IPV6)
- 	return br_ip6_fragment(net, sk, skb, data, output);
-+#else
-+	return 1;
- #endif
- }
- 
-@@ -149,8 +155,10 @@ static inline int nf_ip6_route_me_harder(struct net *net, struct sk_buff *skb)
- 		return -EHOSTUNREACH;
- 
- 	return v6_ops->route_me_harder(net, skb);
--#else
-+#elif IS_BUILTIN(CONFIG_IPV6)
- 	return ip6_route_me_harder(net, skb);
-+#else
-+	return -EHOSTUNREACH;
- #endif
- }
- 
 -- 
 2.20.0
 
