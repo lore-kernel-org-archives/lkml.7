@@ -2,132 +2,205 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15E74C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E5AC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:09:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3B282084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BAA22084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:09:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727861AbfFQLI6 (ORCPT
+        id S1727952AbfFQLJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:08:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58950 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726730AbfFQLI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:08:58 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 206F4356E7;
-        Mon, 17 Jun 2019 11:08:32 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EAC57BE78;
-        Mon, 17 Jun 2019 11:08:16 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-mm@kvack.org,
-        linux-arch@vger.kernel.org, linux-api@vger.kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an ELF file
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
-        <20190606200646.3951-23-yu-cheng.yu@intel.com>
-        <20190607180115.GJ28398@e103592.cambridge.arm.com>
-        <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
-        <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
-        <20190611114109.GN28398@e103592.cambridge.arm.com>
-        <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
-        <20190612093238.GQ28398@e103592.cambridge.arm.com>
-Date:   Mon, 17 Jun 2019 13:08:14 +0200
-In-Reply-To: <20190612093238.GQ28398@e103592.cambridge.arm.com> (Dave Martin's
-        message of "Wed, 12 Jun 2019 10:32:38 +0100")
-Message-ID: <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Mon, 17 Jun 2019 07:09:09 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:55229 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726730AbfFQLJJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:09:09 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MZSym-1i5r5w3peI-00WRtT; Mon, 17 Jun 2019 13:08:59 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Oz Shlomo <ozsh@mellanox.com>,
+        Paul Blakey <paulb@mellanox.com>,
+        Eli Britstein <elibr@mellanox.com>,
+        Mark Bloch <markb@mellanox.com>,
+        Or Gerlitz <ogerlitz@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] net/mlx5e: reduce stack usage in mlx5_eswitch_termtbl_create
+Date:   Mon, 17 Jun 2019 13:08:22 +0200
+Message-Id: <20190617110855.2085326-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 17 Jun 2019 11:08:57 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:xpealiSDqaGMOSOW167AmUNZ9keZ5oPMTcByDXU0S+i0b4fbvlg
+ UJW7rl7HuiMTPTQXUHK4SEs+H2Cm0UCkKGBPGjL8RpVDWZhxHsDq941KnbmhxHV8dvUNpI7
+ U7YHMsPKWIFXcncEpu0dtswxPB3kZP/gPfKzFRxscff2Rfi/Vq/x4XaYEuyEhUJmJy3wsV2
+ l6dWCJfvRcK/lsafzoicg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8eSzBrY2/xk=:02bA9zm8tIK+y6WJJQ9r0q
+ Jk21B3ElC1T8zOiw1/+FRSDTbSbPzHXU8BAOwfUwwQkjf9m7HkjJbLlMio2zc/kKXIxlgLWkE
+ kfch+THVAbSVZVQ3Cv8jQEwFirU4EFac9SfJOJrMAIFoUzSoetUNLEnkEIEz29IBg7hmHVTwh
+ 24kK2OLa9M0t4JMoJnLUeVPgU5Gzxd1gJphvMujTVbj9D3KkSLAwoCNFZl7PvDC7h4XH+CoJY
+ +4YD1iGthGJM43udOXgXXEQg4vbI4fg+iQ/pUMDre5YWY5OOj/aDHRsQYqEln1FlvzDP8bP/8
+ YzzYNkhqudCtWEuBKLa8X0iIVRtS3GErHS9U/Z3VZmlTTlcT+fdyq2w6yA8LO9ogEDylMLpl6
+ 2SCRw+RCn9jmgyaLepxZNvBP+a4AspHY21m5uP8Vg8S75JcChXQ2YrvEOjQlwBNy7YXHDMQ8j
+ FiqpXod4HlHa9Lomgf3xcdRLyMvdHESSMnKSgM6FKyteP/ISoKModZ0P3lDmuXefOO/QvZFah
+ go8bY2xBs4qwr3YXA9So7cpfnMhZq+CAtzyCSRwuOOrsYEuBp+Fr17gZno1Efcad9gAeg0Tvp
+ fJ01fdQuGiLeRQfqvSh5Oluet/e25lAr72xC4Jl77+VxwcWK0VK2ljSaylYG9MzHRLg9rFHnh
+ Z4YLjGBHtquRucuxfdShoSChA0N4irT2h6E3U+R5Mhk0K8cZa0Twdmzh3xZA/vz73XQr2EBY0
+ /BOflpxH7K/NVHfm1ChxTdLnTS/R9PWxWK+ZvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Dave Martin:
+Putting an empty 'mlx5_flow_spec' structure on the stack is a bit
+wasteful and causes a warning on 32-bit architectures when building
+with clang -fsanitize-coverage:
 
-> On Tue, Jun 11, 2019 at 12:31:34PM -0700, Yu-cheng Yu wrote:
->> On Tue, 2019-06-11 at 12:41 +0100, Dave Martin wrote:
->> > On Mon, Jun 10, 2019 at 07:24:43PM +0200, Florian Weimer wrote:
->> > > * Yu-cheng Yu:
->> > > 
->> > > > To me, looking at PT_GNU_PROPERTY and not trying to support anything is a
->> > > > logical choice.  And it breaks only a limited set of toolchains.
->> > > > 
->> > > > I will simplify the parser and leave this patch as-is for anyone who wants
->> > > > to
->> > > > back-port.  Are there any objections or concerns?
->> > > 
->> > > Red Hat Enterprise Linux 8 does not use PT_GNU_PROPERTY and is probably
->> > > the largest collection of CET-enabled binaries that exists today.
->> > 
->> > For clarity, RHEL is actively parsing these properties today?
->> > 
->> > > My hope was that we would backport the upstream kernel patches for CET,
->> > > port the glibc dynamic loader to the new kernel interface, and be ready
->> > > to run with CET enabled in principle (except that porting userspace
->> > > libraries such as OpenSSL has not really started upstream, so many
->> > > processes where CET is particularly desirable will still run without
->> > > it).
->> > > 
->> > > I'm not sure if it is a good idea to port the legacy support if it's not
->> > > part of the mainline kernel because it comes awfully close to creating
->> > > our own private ABI.
->> > 
->> > I guess we can aim to factor things so that PT_NOTE scanning is
->> > available as a fallback on arches for which the absence of
->> > PT_GNU_PROPERTY is not authoritative.
->> 
->> We can probably check PT_GNU_PROPERTY first, and fallback (based on ld-linux
->> version?) to PT_NOTE scanning?
->
-> For arm64, we can check for PT_GNU_PROPERTY and then give up
-> unconditionally.
->
-> For x86, we would fall back to PT_NOTE scanning, but this will add a bit
-> of cost to binaries that don't have NT_GNU_PROPERTY_TYPE_0.  The ld.so
-> version doesn't tell you what ELF ABI a given executable conforms to.
->
-> Since this sounds like it's largely a distro-specific issue, maybe there
-> could be a Kconfig option to turn the fallback PT_NOTE scanning on?
+drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c: In function 'mlx5_eswitch_termtbl_create':
+drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c:90:1: error: the frame size of 1032 bytes is larger than 1024 bytes [-Werror=frame-larger-than=]
 
-I'm worried that this causes interop issues similarly to what we see
-with VSYSCALL today.  If we need both and a way to disable it, it should
-be something like a personality flag which can be configured for each
-process tree separately.  Ideally, we'd settle on one correct approach
-(i.e., either always process both, or only process PT_GNU_PROPERTY) and
-enforce that.
+Since the structure is never written to, we can statically allocate
+it to avoid the stack usage. To be on the safe side, mark all
+subsequent function arguments that we pass it into as 'const'
+as well.
 
-Thanks,
-Florian
+Fixes: 10caabdaad5a ("net/mlx5e: Use termination table for VLAN push actions")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ .../mlx5/core/eswitch_offloads_termtbl.c      |  2 +-
+ .../net/ethernet/mellanox/mlx5/core/fs_core.c | 20 +++++++++----------
+ include/linux/mlx5/fs.h                       |  2 +-
+ 3 files changed, 12 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
+index cb7d8ebe2c95..171f3d4ef9ac 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch_offloads_termtbl.c
+@@ -50,7 +50,7 @@ mlx5_eswitch_termtbl_create(struct mlx5_core_dev *dev,
+ 			    struct mlx5_flow_act *flow_act)
+ {
+ 	struct mlx5_flow_namespace *root_ns;
+-	struct mlx5_flow_spec spec = {};
++	static const struct mlx5_flow_spec spec = {};
+ 	int prio, flags;
+ 	int err;
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+index fe76c6fd6d80..739123e1363b 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/fs_core.c
+@@ -584,7 +584,7 @@ static int insert_fte(struct mlx5_flow_group *fg, struct fs_fte *fte)
+ }
+ 
+ static struct fs_fte *alloc_fte(struct mlx5_flow_table *ft,
+-				u32 *match_value,
++				const u32 *match_value,
+ 				struct mlx5_flow_act *flow_act)
+ {
+ 	struct mlx5_flow_steering *steering = get_steering(&ft->node);
+@@ -612,7 +612,7 @@ static void dealloc_flow_group(struct mlx5_flow_steering *steering,
+ 
+ static struct mlx5_flow_group *alloc_flow_group(struct mlx5_flow_steering *steering,
+ 						u8 match_criteria_enable,
+-						void *match_criteria,
++						const void *match_criteria,
+ 						int start_index,
+ 						int end_index)
+ {
+@@ -642,7 +642,7 @@ static struct mlx5_flow_group *alloc_flow_group(struct mlx5_flow_steering *steer
+ 
+ static struct mlx5_flow_group *alloc_insert_flow_group(struct mlx5_flow_table *ft,
+ 						       u8 match_criteria_enable,
+-						       void *match_criteria,
++						       const void *match_criteria,
+ 						       int start_index,
+ 						       int end_index,
+ 						       struct list_head *prev)
+@@ -1285,7 +1285,7 @@ add_rule_fte(struct fs_fte *fte,
+ }
+ 
+ static struct mlx5_flow_group *alloc_auto_flow_group(struct mlx5_flow_table  *ft,
+-						     struct mlx5_flow_spec *spec)
++						     const struct mlx5_flow_spec *spec)
+ {
+ 	struct list_head *prev = &ft->node.children;
+ 	struct mlx5_flow_group *fg;
+@@ -1451,7 +1451,7 @@ static int check_conflicting_ftes(struct fs_fte *fte, const struct mlx5_flow_act
+ }
+ 
+ static struct mlx5_flow_handle *add_rule_fg(struct mlx5_flow_group *fg,
+-					    u32 *match_value,
++					    const u32 *match_value,
+ 					    struct mlx5_flow_act *flow_act,
+ 					    struct mlx5_flow_destination *dest,
+ 					    int dest_num,
+@@ -1536,7 +1536,7 @@ static void free_match_list(struct match_list_head *head)
+ 
+ static int build_match_list(struct match_list_head *match_head,
+ 			    struct mlx5_flow_table *ft,
+-			    struct mlx5_flow_spec *spec)
++			    const struct mlx5_flow_spec *spec)
+ {
+ 	struct rhlist_head *tmp, *list;
+ 	struct mlx5_flow_group *g;
+@@ -1589,7 +1589,7 @@ static u64 matched_fgs_get_version(struct list_head *match_head)
+ 
+ static struct fs_fte *
+ lookup_fte_locked(struct mlx5_flow_group *g,
+-		  u32 *match_value,
++		  const u32 *match_value,
+ 		  bool take_write)
+ {
+ 	struct fs_fte *fte_tmp;
+@@ -1622,7 +1622,7 @@ lookup_fte_locked(struct mlx5_flow_group *g,
+ static struct mlx5_flow_handle *
+ try_add_to_existing_fg(struct mlx5_flow_table *ft,
+ 		       struct list_head *match_head,
+-		       struct mlx5_flow_spec *spec,
++		       const struct mlx5_flow_spec *spec,
+ 		       struct mlx5_flow_act *flow_act,
+ 		       struct mlx5_flow_destination *dest,
+ 		       int dest_num,
+@@ -1715,7 +1715,7 @@ try_add_to_existing_fg(struct mlx5_flow_table *ft,
+ 
+ static struct mlx5_flow_handle *
+ _mlx5_add_flow_rules(struct mlx5_flow_table *ft,
+-		     struct mlx5_flow_spec *spec,
++		     const struct mlx5_flow_spec *spec,
+ 		     struct mlx5_flow_act *flow_act,
+ 		     struct mlx5_flow_destination *dest,
+ 		     int dest_num)
+@@ -1823,7 +1823,7 @@ static bool fwd_next_prio_supported(struct mlx5_flow_table *ft)
+ 
+ struct mlx5_flow_handle *
+ mlx5_add_flow_rules(struct mlx5_flow_table *ft,
+-		    struct mlx5_flow_spec *spec,
++		    const struct mlx5_flow_spec *spec,
+ 		    struct mlx5_flow_act *flow_act,
+ 		    struct mlx5_flow_destination *dest,
+ 		    int num_dest)
+diff --git a/include/linux/mlx5/fs.h b/include/linux/mlx5/fs.h
+index 2ddaa97f2179..c0c029664527 100644
+--- a/include/linux/mlx5/fs.h
++++ b/include/linux/mlx5/fs.h
+@@ -200,7 +200,7 @@ struct mlx5_flow_act {
+  */
+ struct mlx5_flow_handle *
+ mlx5_add_flow_rules(struct mlx5_flow_table *ft,
+-		    struct mlx5_flow_spec *spec,
++		    const struct mlx5_flow_spec *spec,
+ 		    struct mlx5_flow_act *flow_act,
+ 		    struct mlx5_flow_destination *dest,
+ 		    int num_dest);
+-- 
+2.20.0
+
