@@ -2,190 +2,113 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D64EC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7015C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:09:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41FFB218B0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UQTBP2Ma"
+	by mail.kernel.org (Postfix) with ESMTP id 8E638218A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:09:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725869AbfFQGGl (ORCPT
+        id S1725905AbfFQGJZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 02:06:41 -0400
-Received: from ozlabs.org ([203.11.71.1]:55559 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfFQGGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 02:06:41 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45S11n6X6bz9sBr;
-        Mon, 17 Jun 2019 16:06:37 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560751599;
-        bh=62pesImsmPdn3v0yKHcFLa/KA3fGklp7Xf2iXTBgdbw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=UQTBP2MaPeoNxMEWs/Hi/hRvGCcHSj9rLyV6rbKIAfbWN3qmbjjgFtF/fxYU7bRrk
-         LajdILJXBWYsY9SIBeKx8TcoPGLyjhUj4G1vd3mg955tT4oFk+CdHBI40EKv7NbCFG
-         +sK0riEXos+A+M2I/ox+XuKkvd58Bxvp3SJbp5x49EbWXxKz7jzjFXtUQtLn3j1VI3
-         dCsFD7Hd2LAeSnjwpqui4IhLyYYQZ+V/Yq8q9tbcakd2EMIG4JU090K6JZ8mYVVZW5
-         ysWdPZ+sgZMpQFqN60e2i1gZ/gDSpM0lP4/3BQngj1g1QSmp5r99odSF/GbwC8ksmN
-         m5r4nP5IXBQkg==
-Date:   Mon, 17 Jun 2019 16:06:35 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andreas Herrmann <aherrmann@suse.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: linux-next: manual merge of the cgroup tree with Linus' tree
-Message-ID: <20190617160635.30927c7a@canb.auug.org.au>
+        Mon, 17 Jun 2019 02:09:25 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:42461 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfFQGJZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 02:09:25 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hckpV-0006Rj-IE; Mon, 17 Jun 2019 08:09:21 +0200
+Date:   Mon, 17 Jun 2019 08:09:20 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Peter Xu <peterx@redhat.com>
+cc:     linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Luiz Capitulino <lcapitulino@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH] timers: Fix up get_target_base() to use old base
+ properly
+In-Reply-To: <20190603132944.9726-1-peterx@redhat.com>
+Message-ID: <alpine.DEB.2.21.1906170732410.1760@nanos.tec.linutronix.de>
+References: <20190603132944.9726-1-peterx@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/75/LhSlo7K=CdgqKqU+8OgH"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/75/LhSlo7K=CdgqKqU+8OgH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Peter,
 
-Hi all,
+On Mon, 3 Jun 2019, Peter Xu wrote:
 
-Today's linux-next merge of the cgroup tree got a conflict in:
+> get_target_base() in the timer code is not using the "base" parameter
+> at all.  My gut feeling is that instead of removing that extra
+> parameter, what we really want to do is "return the old base if it
+> does not suite for a new one".
 
-  Documentation/cgroup-v1/blkio-controller.rst
+Gut feelings are not really useful for technical decisions.
 
-between commit:
+>  kernel/time/timer.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
+> index 343c7ba33b1c..6ff6ffd2c719 100644
+> --- a/kernel/time/timer.c
+> +++ b/kernel/time/timer.c
+> @@ -868,7 +868,7 @@ get_target_base(struct timer_base *base, unsigned tflags)
+>  	    !(tflags & TIMER_PINNED))
+>  		return get_timer_cpu_base(tflags, get_nohz_timer_target());
+>  #endif
+> -	return get_timer_this_cpu_base(tflags);
+> +	return base;
+>  }
 
-  fb5772cbfe48 ("blkio-controller.txt: Remove references to CFQ")
+Timers are supposed to be queued on the local CPU except for the following
+cases:
 
-from Linus' tree and commit:
+ 1) timer migration is enabled and the timer is not pinned
 
-  99c8b231ae6c ("docs: cgroup-v1: convert docs to ReST and rename to *.rst")
+    In this case the get_nohz_timer_target() crystal ball logic tries to
+    find a useful base for the timer, which is doomed but its that way
+    until we reach the point where the pull model actually works.
 
-from the cgroup tree.
+ 2) add_timer_on() is invoked which puts a timer on an explicit target
+    CPU. That's not using the above.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+That has been that way forever and the base parameter is stale as older
+code used the base to check whether migration is enabled or not. When this
+was converted to a static branch the parameter stayed and got unused.
 
---=20
-Cheers,
-Stephen Rothwell
+So your change would prevent moving the timer to the current CPU.
 
-diff --cc Documentation/cgroup-v1/blkio-controller.rst
-index d1a1b7bdd03a,2c1b907afc14..000000000000
---- a/Documentation/cgroup-v1/blkio-controller.rst
-+++ b/Documentation/cgroup-v1/blkio-controller.rst
-@@@ -15,15 -19,71 +17,18 @@@ level logical devices like device mappe
- =20
-  HOWTO
-  =3D=3D=3D=3D=3D
- -Proportional Weight division of bandwidth
- ------------------------------------------
- -You can do a very simple testing of running two dd threads in two differe=
-nt
- -cgroups. Here is what you can do.
- -
- -- Enable Block IO controller::
- -
- -	CONFIG_BLK_CGROUP=3Dy
- -
- -- Enable group scheduling in CFQ:
- -
- -
- -	CONFIG_CFQ_GROUP_IOSCHED=3Dy
- -
- -- Compile and boot into kernel and mount IO controller (blkio); see
- -  cgroups.txt, Why are cgroups needed?.
- -
- -  ::
- -
- -	mount -t tmpfs cgroup_root /sys/fs/cgroup
- -	mkdir /sys/fs/cgroup/blkio
- -	mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
- -
- -- Create two cgroups::
- -
- -	mkdir -p /sys/fs/cgroup/blkio/test1/ /sys/fs/cgroup/blkio/test2
- -
- -- Set weights of group test1 and test2::
- -
- -	echo 1000 > /sys/fs/cgroup/blkio/test1/blkio.weight
- -	echo 500 > /sys/fs/cgroup/blkio/test2/blkio.weight
- -
- -- Create two same size files (say 512MB each) on same disk (file1, file2)=
- and
- -  launch two dd threads in different cgroup to read those files::
- -
- -	sync
- -	echo 3 > /proc/sys/vm/drop_caches
- -
- -	dd if=3D/mnt/sdb/zerofile1 of=3D/dev/null &
- -	echo $! > /sys/fs/cgroup/blkio/test1/tasks
- -	cat /sys/fs/cgroup/blkio/test1/tasks
- -
- -	dd if=3D/mnt/sdb/zerofile2 of=3D/dev/null &
- -	echo $! > /sys/fs/cgroup/blkio/test2/tasks
- -	cat /sys/fs/cgroup/blkio/test2/tasks
- -
- -- At macro level, first dd should finish first. To get more precise data,=
- keep
- -  on looking at (with the help of script), at blkio.disk_time and
- -  blkio.disk_sectors files of both test1 and test2 groups. This will tell=
- how
- -  much disk time (in milliseconds), each group got and how many sectors e=
-ach
- -  group dispatched to the disk. We provide fairness in terms of disk time=
-, so
- -  ideally io.disk_time of cgroups should be in proportion to the weight.
- -
-  Throttling/Upper Limit policy
-  -----------------------------
-- - Enable Block IO controller
-+ - Enable Block IO controller::
-+=20
-  	CONFIG_BLK_CGROUP=3Dy
- =20
-- - Enable throttling in block layer
-+ - Enable throttling in block layer::
-+=20
-  	CONFIG_BLK_DEV_THROTTLING=3Dy
- =20
-- - Mount blkio controller (see cgroups.txt, Why are cgroups needed?)
-+ - Mount blkio controller (see cgroups.txt, Why are cgroups needed?)::
-+=20
-          mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
- =20
-  - Specify a bandwidth rate on particular device for root group. The format
+You might argue that in case of an explicit pinned timer, the above logic
+is wrong when the timer is modified as it might move to a different
+CPU. But from day one when the pinned logic was introduced, pinned just
+prevents it from being queued on a remote CPU. If you need a timer to stay
+on a particular CPU even if modified from a remote CPU, then the only way
+right now is to dequeue and requeue it with add_timer_on(). 
 
---Sig_/75/LhSlo7K=CdgqKqU+8OgH
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+If we really want to change that, then we need to audit all usage sites of
+pinned timers and figure out whether this would break anything.
 
------BEGIN PGP SIGNATURE-----
+The proper change would be in that case:
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0HLesACgkQAVBC80lX
-0Gw8qQf9G8plcsmc+zHiVZHe5bUyFfU4eKBvh0ZSiay9FqoZ65t6hXCveZKH33NO
-k7ClPwc0qm06HNCHIGbrG2sg6bgyPMif+Hr3BtcpWt9MNPGV7FPljd0zBhuUhnIY
-ON5fsTdBVQ7RNKbCPXH0sUcTa8hifOpDflr7kv9310M9uUQ/nSbcPLVm3Gu7P1Pc
-rVuWhLjw2pqR1aOcf/e4Y34BwPv5rC0CGICCInlUR00DnhZpdBeZ3CU/I2+qNbnX
-qjoc2Z9YO94wNNOumG7pXidbG1+MNcyD/ENgvKj/Bq+9kXSOtp81vFpyHN4ptq2j
-p7xxfkkVEeG7U30yFan6D68neTIohg==
-=+T49
------END PGP SIGNATURE-----
+      return pinned ? base : get_timer_this_cpu_base(tflags);
 
---Sig_/75/LhSlo7K=CdgqKqU+8OgH--
+But unless you can come up with a use case where the current logic is truly
+broken, I don't see a reason to do that.
+
+Thanks,
+
+	tglx
