@@ -2,251 +2,116 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1549C46477
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8937DC31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C081B2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 623552087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:29:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="jhem4nax"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Xn3sBMkf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728171AbfFQM20 (ORCPT
+        id S1728349AbfFQM3D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:28:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43194 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728111AbfFQM2W (ORCPT
+        Mon, 17 Jun 2019 08:29:03 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35114 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728039AbfFQM2T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:28:22 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=h3EyOBgzIzwY5aTyr8+M/7FbufnJaVYVU0zNDtVIxKY=; b=jhem4naxAEB3/E/EyFooVJmX89
-        qYH2qsYs/WDwZEJOfMwfmQ54TUpvHqCIbNJXERKOBXmMMuBlvlvFiYclePuhxVw9aMmOnBuFSoTg3
-        9nkEIEN4dws8CB1+J5joluc+vAhIz4qZZLCHEnLI7ZCByChpUXt467Oq/VEDdzs7bieXwmeoPrO2x
-        KgQ2BwzHzEIcne54Dd9BteRJlLHjdSyN0m5Yni8Sgd6Tsoe2wG5c3TUBxETk3jiR8b4ztSc4W8aEm
-        8wlUFGy35bnQHU4m3UM73AVSFDm3CVKODVZedRI9fLQcm3LZ+v6aPfmiGLMjyb9Nbh0NFrTEkwdku
-        /dEEm1NA==;
-Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqkD-0000JC-2v; Mon, 17 Jun 2019 12:28:17 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 18/25] nouveau: use devm_memremap_pages directly
-Date:   Mon, 17 Jun 2019 14:27:26 +0200
-Message-Id: <20190617122733.22432-19-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190617122733.22432-1-hch@lst.de>
-References: <20190617122733.22432-1-hch@lst.de>
+        Mon, 17 Jun 2019 08:28:19 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HCLCqf009408;
+        Mon, 17 Jun 2019 14:28:07 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=E9NXlEGXNnvQZ3RULpw4oSl2qhYRA7pqUq0NxFi2maM=;
+ b=Xn3sBMkfKYiuf6tnzB0nw/OrQ40k70XSyR3NVXIQ0Tyf8cgYlIClW771t+KqxiHkmQ7J
+ Sl3H+GM6khJ7nB8zFPqU5RKM2siZIzdyCvSVaD5aKjcSSHjRcnbjam5zH5mCB9XunpMO
+ drxsAYB1f4oqSBPcsHMCIIWdBf1e47fdq6Q+Vvx6dIJOXt5GJI7mRoDWbx42/zhySbHj
+ n02S3xT2j0qnnBLjypHU37Nx73VwNIkVgTozZ9Efpyinwz+CThn65YlcQzo38Bq1KwUr
+ OVjJM2CQXCXAbHWjBFf+SbrmMOQqBAQGJHB1ILAFIZNc85414UIu0s/PM+LfPiiOVVGT pg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2t4qjhte0v-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 17 Jun 2019 14:28:07 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 935DB3A;
+        Mon, 17 Jun 2019 12:28:06 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 69B6829A9;
+        Mon, 17 Jun 2019 12:28:06 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.50) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 17 Jun
+ 2019 14:28:05 +0200
+Subject: Re: [PATCH v4 0/4] Add Avenger96 board support
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        <mcoquelin.stm32@gmail.com>, <robh+dt@kernel.org>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <loic.pallardy@st.com>
+References: <20190612075451.8643-1-manivannan.sadhasivam@linaro.org>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <e34e8160-d16e-bf18-e7c3-240098908df2@st.com>
+Date:   Mon, 17 Jun 2019 14:28:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190612075451.8643-1-manivannan.sadhasivam@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Originating-IP: [10.75.127.50]
+X-ClientProxiedBy: SFHDAG8NODE1.st.com (10.75.127.22) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Just use devm_memremap_pages instead of hmm_devmem_add pages to allow
-killing that wrapper which doesn't provide a whole lot of benefits.
+Hi Mani,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- drivers/gpu/drm/nouveau/nouveau_dmem.c | 82 ++++++++++++--------------
- 1 file changed, 38 insertions(+), 44 deletions(-)
+On 6/12/19 9:54 AM, Manivannan Sadhasivam wrote:
+> Hello,
+> 
+> This patchset adds Avenger96 board support. This board is one of the
+> Consumer Edition boards of the 96Boards family from Arrow Electronics
+> featuring STM32MP157A MPU and has the following features:
+> 
+> SoC: STM32MP157AAC
+> PMIC: STPMIC1A
+> RAM: 1024 Mbyte @ 533MHz
+> Storage: eMMC v4.51: 8 Gbyte
+>           microSD Socket: UHS-1 v3.01
+> Ethernet Port: 10/100/1000 Mbit/s, IEEE 802.3 Compliant
+> Wireless: WiFi 5 GHz & 2.4GHz IEEE 802.11a/b/g/n/ac
+>            Bluetooth®v4.2 (BR/EDR/BLE)
+> USB: 2x Type A (USB 2.0) Host and 1x Micro B (USB 2.0) OTG
+> Display: HDMI: WXGA (1366x768)@ 60 fps, HDMI 1.4
+> LED: 4x User LED, 1x WiFi LED, 1x BT LED
+> 
+> More information about this board can be found in 96Boards website:
+> https://www.96boards.org/product/avenger96/
+> 
+> Thanks,
+> Mani
+> 
 
-diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-index a50f6fd2fe24..0fb7a44b8bc4 100644
---- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
-@@ -72,7 +72,8 @@ struct nouveau_dmem_migrate {
- };
- 
- struct nouveau_dmem {
--	struct hmm_devmem *devmem;
-+	struct nouveau_drm *drm;
-+	struct dev_pagemap pagemap;
- 	struct nouveau_dmem_migrate migrate;
- 	struct list_head chunk_free;
- 	struct list_head chunk_full;
-@@ -80,6 +81,11 @@ struct nouveau_dmem {
- 	struct mutex mutex;
- };
- 
-+static inline struct nouveau_dmem *page_to_dmem(struct page *page)
-+{
-+	return container_of(page->pgmap, struct nouveau_dmem, pagemap);
-+}
-+
- struct nouveau_dmem_fault {
- 	struct nouveau_drm *drm;
- 	struct nouveau_fence *fence;
-@@ -96,8 +102,7 @@ struct nouveau_migrate {
- 	unsigned long dma_nr;
- };
- 
--static void
--nouveau_dmem_free(struct hmm_devmem *devmem, struct page *page)
-+static void nouveau_dmem_page_free(struct page *page)
- {
- 	struct nouveau_dmem_chunk *chunk;
- 	unsigned long idx;
-@@ -260,29 +265,21 @@ static const struct migrate_vma_ops nouveau_dmem_fault_migrate_ops = {
- 	.finalize_and_map	= nouveau_dmem_fault_finalize_and_map,
- };
- 
--static vm_fault_t
--nouveau_dmem_fault(struct hmm_devmem *devmem,
--		   struct vm_area_struct *vma,
--		   unsigned long addr,
--		   const struct page *page,
--		   unsigned int flags,
--		   pmd_t *pmdp)
-+static vm_fault_t nouveau_dmem_migrate_to_ram(struct vm_fault *vmf)
- {
--	struct drm_device *drm_dev = dev_get_drvdata(devmem->device);
-+	struct nouveau_dmem *dmem = page_to_dmem(vmf->page);
- 	unsigned long src[1] = {0}, dst[1] = {0};
--	struct nouveau_dmem_fault fault = {0};
-+	struct nouveau_dmem_fault fault = { .drm = dmem->drm };
- 	int ret;
- 
--
--
- 	/*
- 	 * FIXME what we really want is to find some heuristic to migrate more
- 	 * than just one page on CPU fault. When such fault happens it is very
- 	 * likely that more surrounding page will CPU fault too.
- 	 */
--	fault.drm = nouveau_drm(drm_dev);
--	ret = migrate_vma(&nouveau_dmem_fault_migrate_ops, vma, addr,
--			  addr + PAGE_SIZE, src, dst, &fault);
-+	ret = migrate_vma(&nouveau_dmem_fault_migrate_ops, vmf->vma,
-+			vmf->address, vmf->address + PAGE_SIZE,
-+			src, dst, &fault);
- 	if (ret)
- 		return VM_FAULT_SIGBUS;
- 
-@@ -292,10 +289,9 @@ nouveau_dmem_fault(struct hmm_devmem *devmem,
- 	return 0;
- }
- 
--static const struct hmm_devmem_ops
--nouveau_dmem_devmem_ops = {
--	.free = nouveau_dmem_free,
--	.fault = nouveau_dmem_fault,
-+static const struct dev_pagemap_ops nouveau_dmem_pagemap_ops = {
-+	.page_free		= nouveau_dmem_page_free,
-+	.migrate_to_ram		= nouveau_dmem_migrate_to_ram,
- };
- 
- static int
-@@ -581,7 +577,8 @@ void
- nouveau_dmem_init(struct nouveau_drm *drm)
- {
- 	struct device *device = drm->dev->dev;
--	unsigned long i, size;
-+	struct resource *res;
-+	unsigned long i, size, pfn_first;
- 	int ret;
- 
- 	/* This only make sense on PASCAL or newer */
-@@ -591,6 +588,7 @@ nouveau_dmem_init(struct nouveau_drm *drm)
- 	if (!(drm->dmem = kzalloc(sizeof(*drm->dmem), GFP_KERNEL)))
- 		return;
- 
-+	drm->dmem->drm = drm;
- 	mutex_init(&drm->dmem->mutex);
- 	INIT_LIST_HEAD(&drm->dmem->chunk_free);
- 	INIT_LIST_HEAD(&drm->dmem->chunk_full);
-@@ -600,11 +598,8 @@ nouveau_dmem_init(struct nouveau_drm *drm)
- 
- 	/* Initialize migration dma helpers before registering memory */
- 	ret = nouveau_dmem_migrate_init(drm);
--	if (ret) {
--		kfree(drm->dmem);
--		drm->dmem = NULL;
--		return;
--	}
-+	if (ret)
-+		goto out_free;
- 
- 	/*
- 	 * FIXME we need some kind of policy to decide how much VRAM we
-@@ -612,14 +607,16 @@ nouveau_dmem_init(struct nouveau_drm *drm)
- 	 * and latter if we want to do thing like over commit then we
- 	 * could revisit this.
- 	 */
--	drm->dmem->devmem = hmm_devmem_add(&nouveau_dmem_devmem_ops,
--					   device, size);
--	if (IS_ERR(drm->dmem->devmem)) {
--		kfree(drm->dmem);
--		drm->dmem = NULL;
--		return;
--	}
--
-+	res = devm_request_free_mem_region(device, &iomem_resource, size);
-+	if (IS_ERR(res))
-+		goto out_free;
-+	drm->dmem->pagemap.type = MEMORY_DEVICE_PRIVATE;
-+	drm->dmem->pagemap.res = *res;
-+	drm->dmem->pagemap.ops = &nouveau_dmem_pagemap_ops;
-+	if (IS_ERR(devm_memremap_pages(device, &drm->dmem->pagemap)))
-+		goto out_free;
-+
-+	pfn_first = res->start >> PAGE_SHIFT;
- 	for (i = 0; i < (size / DMEM_CHUNK_SIZE); ++i) {
- 		struct nouveau_dmem_chunk *chunk;
- 		struct page *page;
-@@ -632,8 +629,7 @@ nouveau_dmem_init(struct nouveau_drm *drm)
- 		}
- 
- 		chunk->drm = drm;
--		chunk->pfn_first = drm->dmem->devmem->pfn_first;
--		chunk->pfn_first += (i * DMEM_CHUNK_NPAGES);
-+		chunk->pfn_first = pfn_first + (i * DMEM_CHUNK_NPAGES);
- 		list_add_tail(&chunk->list, &drm->dmem->chunk_empty);
- 
- 		page = pfn_to_page(chunk->pfn_first);
-@@ -643,6 +639,10 @@ nouveau_dmem_init(struct nouveau_drm *drm)
- 	}
- 
- 	NV_INFO(drm, "DMEM: registered %ldMB of device memory\n", size >> 20);
-+	return;
-+out_free:
-+	kfree(drm->dmem);
-+	drm->dmem = NULL;
- }
- 
- static void
-@@ -833,13 +833,7 @@ nouveau_dmem_migrate_vma(struct nouveau_drm *drm,
- static inline bool
- nouveau_dmem_page(struct nouveau_drm *drm, struct page *page)
- {
--	if (!is_device_private_page(page))
--		return false;
--
--	if (drm->dmem->devmem != page->pgmap->data)
--		return false;
--
--	return true;
-+	return is_device_private_page(page) && drm->dmem == page_to_dmem(page);
- }
- 
- void
--- 
-2.20.1
+Thanks to extend the stm32 family!
+I just format commit message title for device tree patches ("ARM: dts: 
+stm32 ...").
+
+Rob, I took also the dt-binding patches.
+
+Series applied on stm32-next.
+
+Regards
+Alex
+
 
