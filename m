@@ -2,71 +2,72 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E94FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:34:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B272C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B72920861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:34:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2912F208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:36:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560803774;
+	bh=RBEoU7K4ZyXjT/BPfVR3ydSkkFVBWSYhZLSbBJZIwnE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LXuc6KMMiymF+laJ4coxE8F6S78ulmJbQCp78i38ltvTI/nrN5FL8jhs9tAqN/we9
+	 251HTZb65PVo5zQjmkkyUvsRMnur8HDHDJ1trSxJRMNJCOQnT0InRIfw5a3F23/T1H
+	 OkQ/dsmMXK1hRa8l48VugL11Vwkh3PDFyPzWbOTQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728645AbfFQUea (ORCPT
+        id S1728577AbfFQUgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:34:30 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:37906 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfFQUe3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:34:29 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 0231215110457;
-        Mon, 17 Jun 2019 13:34:28 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 13:34:28 -0700 (PDT)
-Message-Id: <20190617.133428.1681715924857496492.davem@davemloft.net>
-To:     xuechaojing@huawei.com
-Cc:     linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        luoshaokai@huawei.com, cloud.wangxiaoyun@huawei.com,
-        chiqijun@huawei.com, wulike1@huawei.com
-Subject: Re: [PATCH net-next v4 1/3] hinic: add rss support
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190617054601.3056-2-xuechaojing@huawei.com>
-References: <20190617054601.3056-1-xuechaojing@huawei.com>
-        <20190617054601.3056-2-xuechaojing@huawei.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 17 Jun 2019 13:34:29 -0700 (PDT)
+        Mon, 17 Jun 2019 16:36:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55488 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725844AbfFQUgM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 16:36:12 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA4532084B;
+        Mon, 17 Jun 2019 20:36:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560803771;
+        bh=RBEoU7K4ZyXjT/BPfVR3ydSkkFVBWSYhZLSbBJZIwnE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ii0V8rWo4jEGHSK7qh1pFdLGpxHb2Hv219ILGasyXFoTZazQP6oCwgztS3yHEs1P2
+         XyAUH9b7y+2Edk6GIYsLYLsn/4FzQIFDG5rF8iJmQ3RSzDK4jEiX/8AoEb8yMGpEXE
+         Zy71RMbIL59ib2in0pJ2SNuk/itNAXD/1eOMafqU=
+Date:   Mon, 17 Jun 2019 22:36:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     chao@kernel.org, devel@driverdev.osuosl.org,
+        linux-erofs@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>,
+        weidu.du@huawei.com, Fang Wei <fangwei1@huawei.com>,
+        linux-fsdevel@vger.kernel.org, Miao Xie <miaoxie@huawei.com>
+Subject: Re: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
+Message-ID: <20190617203609.GA22034@kroah.com>
+References: <20190614181619.64905-1-gaoxiang25@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614181619.64905-1-gaoxiang25@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xue Chaojing <xuechaojing@huawei.com>
-Date: Mon, 17 Jun 2019 05:45:59 +0000
+On Sat, Jun 15, 2019 at 02:16:11AM +0800, Gao Xiang wrote:
+> At last, this is RFC patch v1, which means it is not suitable for
+> merging soon... I'm still working on it, testing its stability
+> these days and hope these patches get merged for 5.3 LTS
+> (if 5.3 is a LTS version).
 
-> +static int hinic_rss_init(struct hinic_dev *nic_dev)
-> +{
-> +	u8 default_rss_key[HINIC_RSS_KEY_SIZE] = { 0 };
-> +	u32 indir_tbl[HINIC_RSS_INDIR_SIZE] = { 0 };
-> +	u8 tmpl_idx = nic_dev->rss_tmpl_idx;
-> +	int err, i;
-> +
-> +	netdev_rss_key_fill(default_rss_key, sizeof(default_rss_key));
+Why would 5.3 be a LTS kernel?
 
-Since netdev_rss_key_fill() fills the entire object, you don't need the
-variable initializer for default_rss_key here, please remove it.
+curious as to how you came up with that :)
 
-> +int hinic_rss_set_indir_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
-> +			    const u32 *indir_table)
-> +{
-> +	for (i = 0; i < HINIC_RSS_INDIR_SIZE; i++) {
-> +		indir_tbl->entry[i] = (u8)(*(indir_table + i));
+thanks,
 
-Please index the array normally using "indir_table[i]", I also suspect
-the u8 cast is also unnecessary.
+greg k-h
