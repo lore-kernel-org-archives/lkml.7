@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCBAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E5EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BF5120833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D0A720833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560785094;
-	bh=7uyDQvDWazF0fB/U8WRWirjR0cx/XnRRecaslnlrth4=;
+	s=default; t=1560785097;
+	bh=mbzGcLdVtTof6uHC+F2lTONtInASaRG1qfRK1rYkSno=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=jCnIK9ek+kCUsz+EkZZrD8maLj93bBWHbxwYoIncZPApjJ66Of5fL7OnsRsYTbIL3
-	 Yo6h4oXHjiqgwV4gN6swxuiikqsK4biddqWk38Fe3vHFc9B4wuQZDIDfqupw1D8yCo
-	 UZMrIqWdq3E9QbCz8bt9gjVRmyr7ue5tM6Acha/o=
+	b=oOavQhujQom1IsxXgZMp/5AQbYAIRq+FPFvO/MyjiFNzCAMpag0UtOnQUrHbl+GPx
+	 K2/s2zB0PYWaAiBU4KZsSg42HTi/qUnJQd9P+lVsy0wbJLKWJA04WmAd8LhO16Hr89
+	 rmGIsZ/r2EVByviiHcox1zIAm0AAbal/bJMSMZzY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728643AbfFQPYx (ORCPT
+        id S1728632AbfFQPYw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:24:53 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52094 "EHLO
+        Mon, 17 Jun 2019 11:24:52 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52062 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728602AbfFQPYt (ORCPT
+        with ESMTP id S1726822AbfFQPYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 11:24:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,29 +34,28 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=BjW9HNHz5KOtc9NkCfpQrJY++tgx8ed1xcEUiVcmxgw=; b=jB1vsl8oPtHT
-        xPNUZhDDvuPNUwhZaHfdcjoBw2YJuEwKMG3h5FMXxGO1Uu58pLOoBNwv0OASzMiyYe3ejIL5tQLR0
-        BcxHv1cFfsk/7NL1YurTrJp/XxBXNynf1w5jovc3BSg2y/dV0IVsFHfl1AzNehTVplV8HDN5+233X
-        h3XsM=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        List-Archive; bh=FGYGt9gR3ov0mDYFBrKxZVHm7Q6JC8o022bDhrc2nks=; b=sgV9DYSdi17l
+        bXgPQR71kqZ1Os9L7ZHn5N9IsX02P/ySrrZgxuo+MoIm9RIp5y08NjpUhq+zGI8ImlMqPenYSlMYQ
+        cz80uDmUWQFmegcK2Vi3D+A3k3/5fl+tq0fEiSqOoCjGXUilWHh4kLYAadyIjpXrG9bJ91IkMHWri
+        4yOK8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hctV0-0001zm-8i; Mon, 17 Jun 2019 15:24:46 +0000
+        id 1hctUz-0001zj-Ll; Mon, 17 Jun 2019 15:24:45 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id B71F1440049; Mon, 17 Jun 2019 16:24:45 +0100 (BST)
+        id 34116440046; Mon, 17 Jun 2019 16:24:45 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 Cc:     agross@kernel.org, bjorn.andersson@linaro.org, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, lgirdwood@gmail.com,
+        devicetree@vger.kernel.org, lgirdwood@gmail.com,
         linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
         robh+dt@kernel.org
-Subject: Applied "regulator: qcom_spmi: enable linear range info" to the regulator tree
-In-Reply-To: <20190613212531.10452-1-jeffrey.l.hugo@gmail.com>
+Subject: Applied "regulator: qcom_spmi: Refactor get_mode/set_mode" to the regulator tree
+In-Reply-To: <20190613212531.10452-2-jeffrey.l.hugo@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190617152445.B71F1440049@finisterre.sirena.org.uk>
+Message-Id: <20190617152445.34116440046@finisterre.sirena.org.uk>
 Date:   Mon, 17 Jun 2019 16:24:45 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -65,7 +64,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: qcom_spmi: enable linear range info
+   regulator: qcom_spmi: Refactor get_mode/set_mode
 
 has been applied to the regulator tree at
 
@@ -90,43 +89,71 @@ to this mail.
 Thanks,
 Mark
 
-From 86f4ff7a0c0cd8e391ffa4dd0edb82ae0eedcc9e Mon Sep 17 00:00:00 2001
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Date: Thu, 13 Jun 2019 14:25:30 -0700
-Subject: [PATCH] regulator: qcom_spmi: enable linear range info
+From ba576a6232dc06605f4edfaeea9b526ba7724f84 Mon Sep 17 00:00:00 2001
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date: Thu, 13 Jun 2019 14:25:31 -0700
+Subject: [PATCH] regulator: qcom_spmi: Refactor get_mode/set_mode
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
+multi-level ifs which mirror a switch statement.  Refactor to use a switch
+statement to make the code flow more clear.
+
 Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/qcom_spmi-regulator.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/regulator/qcom_spmi-regulator.c | 26 +++++++++++++++++--------
+ 1 file changed, 18 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-index 53a61fb65642..42c429d50743 100644
+index 42c429d50743..1b3383a24c9d 100644
 --- a/drivers/regulator/qcom_spmi-regulator.c
 +++ b/drivers/regulator/qcom_spmi-regulator.c
-@@ -1744,6 +1744,7 @@ MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
- static int qcom_spmi_regulator_probe(struct platform_device *pdev)
- {
- 	const struct spmi_regulator_data *reg;
-+	const struct spmi_voltage_range *range;
- 	const struct of_device_id *match;
- 	struct regulator_config config = { };
- 	struct regulator_dev *rdev;
-@@ -1833,6 +1834,12 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
- 			}
- 		}
+@@ -911,13 +911,16 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
  
-+		if (vreg->set_points->count == 1) {
-+			/* since there is only one range */
-+			range = vreg->set_points->range;
-+			vreg->desc.uV_step = range->step_uV;
-+		}
-+
- 		config.dev = dev;
- 		config.driver_data = vreg;
- 		config.regmap = regmap;
+ 	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
+ 
+-	if (reg & SPMI_COMMON_MODE_HPM_MASK)
+-		return REGULATOR_MODE_NORMAL;
++	reg &= SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
+ 
+-	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
++	switch (reg) {
++	case SPMI_COMMON_MODE_HPM_MASK:
++		return REGULATOR_MODE_NORMAL;
++	case SPMI_COMMON_MODE_AUTO_MASK:
+ 		return REGULATOR_MODE_FAST;
+-
+-	return REGULATOR_MODE_IDLE;
++	default:
++		return REGULATOR_MODE_IDLE;
++	}
+ }
+ 
+ static int
+@@ -925,12 +928,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
+ {
+ 	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+ 	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
+-	u8 val = 0;
++	u8 val;
+ 
+-	if (mode == REGULATOR_MODE_NORMAL)
++	switch (mode) {
++	case REGULATOR_MODE_NORMAL:
+ 		val = SPMI_COMMON_MODE_HPM_MASK;
+-	else if (mode == REGULATOR_MODE_FAST)
++		break;
++	case REGULATOR_MODE_FAST:
+ 		val = SPMI_COMMON_MODE_AUTO_MASK;
++		break;
++	default:
++		val = 0;
++		break;
++	}
+ 
+ 	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
+ }
 -- 
 2.20.1
 
