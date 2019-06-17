@@ -2,97 +2,100 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 455FDC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:31:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27843C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D21021783
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:31:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 000EB20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:31:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ENOJaDIc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfFQNbW (ORCPT
+        id S1727846AbfFQNb0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:31:22 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:60331 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfFQNbW (ORCPT
+        Mon, 17 Jun 2019 09:31:26 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52359 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfFQNb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:31:22 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MMWcT-1hsbSL1duZ-00JXkC; Mon, 17 Jun 2019 15:31:02 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Joerg Roedel <joro@8bytes.org>
-Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Oza Pawandeep <poza@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iommu: fix integer truncation
-Date:   Mon, 17 Jun 2019 15:30:54 +0200
-Message-Id: <20190617133101.2817807-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 17 Jun 2019 09:31:26 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s3so9297363wms.2;
+        Mon, 17 Jun 2019 06:31:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=TK/taqnh4uTdUXYrgyPWRNDtNYlU83EQagbd52Vya7Q=;
+        b=ENOJaDIcKIyM2ugEwPbDz5yXeyQ4yLGFt0UoLTW/SfFBEE1GI2WZm4B05Cd7QL89vm
+         i0uC0fZ45h8c9+AtE188tELX/cImyDiX8JOdrOjRAPst2wYL72WdZkzlsLKHDbKwO88A
+         fBFmMZpUnBGo/OcqPiFLq31dtZ7vEz5ltwwm5fW1BBQoxHLdm68UDAUY0eWDPuCJUMO6
+         7HRMfUWEw3KrXVWJwrHfxbWhDffWtoEfx2r//PsTOBcWzfEFH4v6yI6qU44K4tN05rq5
+         SPtgc4Ts8aT7Zs16DyZAZzSzKhli314JMqBmSk3V1umqS0zyyySyltYGB4IxrHJrp70g
+         7cgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TK/taqnh4uTdUXYrgyPWRNDtNYlU83EQagbd52Vya7Q=;
+        b=ERJf3MjkwqXu3lyNHDZGXS21aN6FzW2T1u9voYJoCUw7R0JmHFXRdKRdaJWW0SAANN
+         KZLoEhXuQCmOEs1c+W8ATnDrVZ9b1KLee0LfrWEQSyxF93Y73073coDz7np+WA4ulRGy
+         GhQABTAxTiPYMuOD7u1rBnbROvFbp75jpEdbuD5gATVekIerbKmmGgHq0+n8kXGkgDnP
+         QORMBsEsioOMtlALc97PI3kY51aPnE7rVIPJ5zM8Xo3+uI4okus6sZLPWTu1RBxViOHi
+         CxrwiveEjYGJLG9cnMsh/3EaQSWnOxiYacc4prusne69RXQbgCz2Tz9SwJcTcGxp5S5m
+         bcdQ==
+X-Gm-Message-State: APjAAAU2ovnyxBO+cUCHkpal4xIa3rMSP7zvqrr7pTKDOJb/1CiZQPjg
+        L+aZuJ/dFevy554l5jbOZ6Q=
+X-Google-Smtp-Source: APXvYqzEgy4mPVF+JIAdiL5lPe21YfSxEYStzjxJIEXrMdKSlb4M+1ecnl0Nvbc2TqZFJIsyNWZttw==
+X-Received: by 2002:a1c:700b:: with SMTP id l11mr18910782wmc.106.1560778283508;
+        Mon, 17 Jun 2019 06:31:23 -0700 (PDT)
+Received: from [172.22.36.64] (redhat-nat.vtp.fi.muni.cz. [78.128.215.6])
+        by smtp.gmail.com with ESMTPSA id q12sm8027900wrp.50.2019.06.17.06.31.22
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 06:31:23 -0700 (PDT)
+Subject: Re: [RFC PATCH v4 1/1] Add dm verity root hash pkcs7 sig validation.
+To:     Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>,
+        linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        jmorris@namei.org, scottsh@microsoft.com, ebiggers@google.com,
+        mpatocka@redhat.com
+References: <20190613010610.4364-1-jaskarankhurana@linux.microsoft.com>
+ <20190613010610.4364-2-jaskarankhurana@linux.microsoft.com>
+From:   Milan Broz <gmazyland@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <ab346931-1d1b-bd2f-8314-ee4779bd44bf@gmail.com>
+Date:   Mon, 17 Jun 2019 15:31:21 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:chTa38z/gjbzCpsUfTMZ6NKpNwxA24x4uqV4fTfRNlScDoohZxE
- 1UR/Jwd1cvsBZi9Cwv+CO14naU7ifAmSljpXWNFEf53fU9hdB6iM1CqSUCsspUGu0vXhGrA
- eGscsZlCrDJPIncYviaP81EDiKdWdO3eE8blN7GXzwc0BPHW8ybWkzP+mCcPefHu5pCJXDe
- etGOFg30YMgkRmbiSvkNw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:A9saYNOYImg=:MVpURSDPPJlAyB6iXvqW2g
- avKf+edpDy4W5PssdS5cRVc4QNS1IlH8SqaiwcpcqQXD5AG730d6miFbVQm+3NfvN2fKB5ypX
- mekwCj9hp4VhkTs/rAmlhLLgKhakc25AoveIlnlqhQ82UR013qCyjfBEggCtnz6JFyWCpY0Ae
- gpTuCoiLcCBfgpb93voa3QEQAbcc0kFG+LuKCP1c/aQ3c6oOiynW3XBvMU1o7eMy0MXdh5WFc
- 3CqkjBO90fS7PmvkJIzCgYFlqiilL9QIwK6xN7TsZu3cqJMUMU59rRybbxHKwPqzWdZw7Uajc
- onvzMU9c/4dJsQkE/NcH1hreerofhpQpfKiUcTnp/NVxYIIU+FQzBYMaytFte09AFjS6hH5SI
- OgCNV/LEkhtk9accU8jWFayunL9DI2LkoRgWJM+Xd8aPqJvIUQSZAWkKkSWdSzZxkuK9mvted
- Dnvvr+TU5OPkk3Ry5JtTQ6oLS2tdlvdswGpG/ZWDQmxkHrMl3554mxtCA/4zXhT8qYxVtK0HI
- P2+eToyhOGotRjL8WKjylitmFO37HSxajlTmyBsMLbjhD9INYY51awWfebQE6EIRyd9v5U3G8
- n7kUgACkf13306KMTVkAjJroK7sZ2Jfnowpg2mBA/VR39OVzCyTW9BW94kXMGi0HRm7uG5ycZ
- BxugJchd22/ncPSJ9wx634vmWAW+yb/5sub343qczvMcyzJVnW9t47eD2Y3EOt1aLs0CIkDAG
- fqoBrshYUPEhHxepgHU3v2EJ3Vzlr27+eDCJbw==
+In-Reply-To: <20190613010610.4364-2-jaskarankhurana@linux.microsoft.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit architectures, phys_addr_t may be different from dma_add_t,
-both smaller and bigger. This can lead to an overflow during an assignment
-that clang warns about:
+On 13/06/2019 03:06, Jaskaran Khurana wrote:
+...
 
-drivers/iommu/dma-iommu.c:230:10: error: implicit conversion from 'dma_addr_t' (aka 'unsigned long long') to
-      'phys_addr_t' (aka 'unsigned int') changes value from 18446744073709551615 to 4294967295 [-Werror,-Wconstant-conversion]
+> Adds DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE: roothash signature *must* be
+> specified for all dm verity volumes and verification must succeed prior
+> to creation of device mapper block device.
 
-Use phys_addr_t here because that is the type that the variable was
-declared as.
+I had a quick discussion about this and one suggestion was
+to add dm-verity kernel module parameter instead of a new config option.
 
-Fixes: aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible DMA address")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/iommu/dma-iommu.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The idea is that if you can control kernel boot commandline, you can add it
+there with the same effect (expecting that root device is on dm-verity as well).
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index cc0613c83d71..a9f13313a22f 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -226,8 +226,8 @@ static int iova_reserve_pci_windows(struct pci_dev *dev,
- 		start = window->res->end - window->offset + 1;
- 		/* If window is last entry */
- 		if (window->node.next == &bridge->dma_ranges &&
--		    end != ~(dma_addr_t)0) {
--			end = ~(dma_addr_t)0;
-+		    end != ~(phys_addr_t)0) {
-+			end = ~(phys_addr_t)0;
- 			goto resv_iova;
- 		}
- 	}
--- 
-2.20.0
+Isn't this better option or it is not going to work for you?
 
+Milan
