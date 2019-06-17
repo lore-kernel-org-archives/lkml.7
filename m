@@ -2,106 +2,87 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D21DC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBD45C31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:48:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11D6C2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:47:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VGDMPQ8T"
+	by mail.kernel.org (Postfix) with ESMTP id 9736F2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:48:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727822AbfFQNr4 (ORCPT
+        id S1727662AbfFQNsf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:47:56 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:42566 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727594AbfFQNr4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:47:56 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5HDllBo011598;
-        Mon, 17 Jun 2019 08:47:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560779267;
-        bh=t1KAotzGb16F2+YW609QwX/IexDUFZIor3j/XUDLU9I=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VGDMPQ8T1wa25BRTfbCxoFN1bT3M8KVCDBobeTCnxdm6jOtXHYvWWrGNPaZYbAjnM
-         T/SytxkHNOfp1LIKO4nvrxU6oqoP5XGQju4DIWxfEgjaKM4oPBDruG38fki7tQfwdg
-         yE9UDoE3X/cnS5STAM2GrWfgecgTbbGAtrAVakHw=
-Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5HDllQj110909
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Jun 2019 08:47:47 -0500
-Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
- Jun 2019 08:47:46 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 17 Jun 2019 08:47:46 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5HDlkFV106459;
-        Mon, 17 Jun 2019 08:47:46 -0500
-Subject: Re: [PATCH v3 0/9] Multicolor Framework update
-To:     Pavel Machek <pavel@ucw.cz>, Alexander Dahl <ada@thorsis.com>
-CC:     <linux-leds@vger.kernel.org>, <jacek.anaszewski@gmail.com>,
-        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190523190820.29375-1-dmurphy@ti.com> <55737098.K72IVJ5cDM@ada>
- <20190616154934.GC24837@xo-6d-61-c0.localdomain>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <2a540277-01e3-abb6-f19f-6d52671ae4ce@ti.com>
-Date:   Mon, 17 Jun 2019 08:47:46 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 09:48:35 -0400
+Received: from ms.lwn.net ([45.79.88.28]:42882 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbfFQNsf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:48:35 -0400
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 13F10300;
+        Mon, 17 Jun 2019 13:48:32 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 07:48:29 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide
+ book
+Message-ID: <20190617074829.70cbaa48@lwn.net>
+In-Reply-To: <20190617125438.GA18554@kroah.com>
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+        <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org>
+        <87o930uvur.fsf@intel.com>
+        <20190614140603.GB7234@kroah.com>
+        <20190614122755.1c7b4898@coco.lan>
+        <874l4ov16m.fsf@intel.com>
+        <20190617125438.GA18554@kroah.com>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190616154934.GC24837@xo-6d-61-c0.localdomain>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello
+On Mon, 17 Jun 2019 14:54:38 +0200
+Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
 
-On 6/16/19 10:49 AM, Pavel Machek wrote:
-> Hi!
->
->> Am Donnerstag, 23. Mai 2019, 14:08:11 CEST schrieb Dan Murphy:
->>>    leds: multicolor: Add sysfs interface definition
->>>    dt: bindings: Add multicolor class dt bindings documention
->>>    documention: leds: Add multicolor class documentation
->>>    dt-bindings: leds: Add multicolor ID to the color ID  list
->>>    leds: Add multicolor ID to the color ID list
->>>    leds: multicolor: Introduce a multicolor class definition
->>>    dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
->>>    leds: lp50xx: Add the LP50XX family of the RGB LED driver
->>>    leds: Update the lp55xx to use the multi color framework
->> While not having much experience with the implementation of the LED subsystem,
->> I've had a short look at those. Curious question: would it be possible to take
->> three gpio-leds and group those together to one multicolor-led? I know at
->> least one board, where things are wired up like this, see e.g.
->> at91-sama5d27_som1_ek.dts
-> Probably could be done, but is not really a good match. Multicolor was meant for
-> LEDs with many brightness levels.
+> > I think it's just sad to see the documentation system slowly drift
+> > further away from the ideals we had, and towards the old ways we worked
+> > so hard to fix.  
+> 
+> What are those ideals?
+> 
+> I thought the goal was to be able to write documentation in a as much
+> as a normal text file as possible and have automation turn those files
+> into "pretty" documentation that we can all use.
 
-Well that is one aspect of the MC FW.  The other aspect was to collate 
-cluster RGB modules into a single
+That was indeed one of the goals.  Another was to replace the incredible
+pile of fragile duct tape that the docs build system had become with
+something more robust, understandable, and maintainable.  We did that, to
+an extent at least, and life is better.
 
-LED node as that RGB cluster would inherently display a functional color 
-(ie RGB battery LED, multi-color
+Jani worries that we have been regressing toward duct-tape mode, and I
+suspect he may be right.  I'm certainly as guilty as anybody of tossing
+stuff in because it's expedient right now.  It is right to ask whether we
+should continue in that direction.
 
-notification LEDs, Multicolor LED keyboards...)
+Can we slow down just a bit on the ABI files?  It may be that Mauro's
+solution is the best one, but I would really like to think a bit about
+how all this stuff fits together, and life isn't really even giving me
+time to tie my shoes these days.  I don't think that this is screamingly
+urgent right now.
 
-Dan
+Thanks,
 
-
-> 									Pavel
+jon
