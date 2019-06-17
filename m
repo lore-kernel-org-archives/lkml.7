@@ -2,392 +2,171 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5439CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:56:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C673CC46477
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B6520578
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:56:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HNkEd08n"
+	by mail.kernel.org (Postfix) with ESMTP id A22DE208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728173AbfFQX4N (ORCPT
+        id S1728329AbfFQX70 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 19:56:13 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36424 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726928AbfFQX4M (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 19:56:12 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so3901997plt.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 16:56:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dKg8IWpKy6c+Mmm1x/ABv30wGFR4GljyNfxBcgFg2Pw=;
-        b=HNkEd08n0fBuvBSUwxcbRfbKKjX+xSbWeqKu4ot+NY2JjAFNZCJ4VapUFaJvf+fMvT
-         tqY2DPwXtRBKhQhqcmAzjW4Kc1FuGRWI5p4BuK7xaR1ep2WDotDuthkf2H1DcFzAkg78
-         sZu82XOcZnOo7nkSOVbc25g0UmjqDnGri30f0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dKg8IWpKy6c+Mmm1x/ABv30wGFR4GljyNfxBcgFg2Pw=;
-        b=SB6Q6xRmd1Y830Rer1Z9qQA6Td2SPleQ0mXslXXDy4I6jVP+NQObaX+rxI6uLJe4ta
-         ZdSXptTKpkjsRl8s7R3SWbHD/h4Xe6G4gp81dokAkyBBHFN24inA7hhRufAzKxPaQEqC
-         L7LqgsuHOWAcDXFQUgMObm/jlS8VIuadKhcY9RYjd4ZJS2MWwH+v2UifCeGPQh5DF4T0
-         ppEoDMGdnUlRQTPIKinlMvH33Q228aQngPqEgNQ7WqG+2I1UFZLeshXrvZOjCQE9jHnD
-         1ixlErV2abEzpQtqUQI7HugYRSXrTzedCwHyDIHt4gHf6Yt+2spMZsE/3XPAT4afW6nl
-         ZY8g==
-X-Gm-Message-State: APjAAAV2NdYwyrPDDH1lJJVlzhP4yW7Rnfe9J9AWxXGtcSazbqMDUqtx
-        xXt8Tw9dwy/e35PIPHGVLzMycA==
-X-Google-Smtp-Source: APXvYqwTeHKWWT81BsAjxR2wreRo/dxEMF8gYczQSvkIo0doGPaqaqO4KFYbKGwqMQRYkmwUzOrLlw==
-X-Received: by 2002:a17:902:44a4:: with SMTP id l33mr31117002pld.174.1560815771850;
-        Mon, 17 Jun 2019 16:56:11 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id k16sm12661878pfa.87.2019.06.17.16.56.10
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 16:56:11 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        seanpaul@chromium.org
-Cc:     jernej.skrabec@siol.net, heiko@sntech.de, jonas@kwiboo.se,
-        linux-rockchip@lists.infradead.org, narmstrong@baylibre.com,
-        dgreid@chromium.org, cychiang@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Zheng Yang <zhengyang@rock-chips.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH] drm/bridge/synopsys: dw-hdmi: Handle audio for more clock rates
-Date:   Mon, 17 Jun 2019 16:55:58 -0700
-Message-Id: <20190617235558.64571-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Mon, 17 Jun 2019 19:59:26 -0400
+Received: from mga01.intel.com ([192.55.52.88]:46877 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726427AbfFQX70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 19:59:26 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 16:59:25 -0700
+X-ExtLoop1: 1
+Received: from khuang2-desk.gar.corp.intel.com ([10.255.91.82])
+  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2019 16:59:20 -0700
+Message-ID: <1560815959.5187.57.camel@linux.intel.com>
+Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call
+ for MKTME
+From:   Kai Huang <kai.huang@linux.intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
+        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Date:   Tue, 18 Jun 2019 11:59:19 +1200
+In-Reply-To: <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+         <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
+         <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
+         <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com>
+         <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
+         <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.24.6 (3.24.6-1.fc26) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Let's add some better support for HDMI audio to dw_hdmi.
-Specifically:
+On Mon, 2019-06-17 at 11:27 -0700, Dave Hansen wrote:
+> Tom Lendacky, could you take a look down in the message to the talk of
+> SEV?  I want to make sure I'm not misrepresenting what it does today.
+> ...
+> 
+> 
+> > > I actually don't care all that much which one we end up with.  It's not
+> > > like the extra syscall in the second options means much.
+> > 
+> > The benefit of the second one is that, if sys_encrypt is absent, it
+> > just works.  In the first model, programs need a fallback because
+> > they'll segfault of mprotect_encrypt() gets ENOSYS.
+> 
+> Well, by the time they get here, they would have already had to allocate
+> and set up the encryption key.  I don't think this would really be the
+> "normal" malloc() path, for instance.
+> 
+> > >  How do we
+> > > eventually stack it on top of persistent memory filesystems or Device
+> > > DAX?
+> > 
+> > How do we stack anonymous memory on top of persistent memory or Device
+> > DAX?  I'm confused.
+> 
+> If our interface to MKTME is:
+> 
+> 	fd = open("/dev/mktme");
+> 	ptr = mmap(fd);
+> 
+> Then it's hard to combine with an interface which is:
+> 
+> 	fd = open("/dev/dax123");
+> 	ptr = mmap(fd);
+> 
+> Where if we have something like mprotect() (or madvise() or something
+> else taking pointer), we can just do:
+> 
+> 	fd = open("/dev/anything987");
+> 	ptr = mmap(fd);
+> 	sys_encrypt(ptr);
+> 
+> Now, we might not *do* it that way for dax, for instance, but I'm just
+> saying that if we go the /dev/mktme route, we never get a choice.
+> 
+> > I think that, in the long run, we're going to have to either expand
+> > the core mm's concept of what "memory" is or just have a whole
+> > parallel set of mechanisms for memory that doesn't work like memory.
+> 
+> ...
+> > I expect that some day normal memory will  be able to be repurposed as
+> > SGX pages on the fly, and that will also look a lot more like SEV or
+> > XPFO than like the this model of MKTME.
+> 
+> I think you're drawing the line at pages where the kernel can manage
+> contents vs. not manage contents.  I'm not sure that's the right
+> distinction to make, though.  The thing that is important is whether the
+> kernel can manage the lifetime and location of the data in the page.
+> 
+> Basically: Can the kernel choose where the page comes from and get the
+> page back when it wants?
+> 
+> I really don't like the current state of things like with SEV or with
+> KVM direct device assignment where the physical location is quite locked
+> down and the kernel really can't manage the memory.  I'm trying really
+> hard to make sure future hardware is more permissive about such things.
+>  My hope is that these are a temporary blip and not the new normal.
+> 
+> > So, if we upstream MKTME as anonymous memory with a magic config
+> > syscall, I predict that, in a few years, it will be end up inheriting
+> > all downsides of both approaches with few of the upsides.  Programs
+> > like QEMU will need to learn to manipulate pages that can't be
+> > accessed outside the VM without special VM buy-in, so the fact that
+> > MKTME pages are fully functional and can be GUP-ed won't be very
+> > useful.  And the VM will learn about all these things, but MKTME won't
+> > really fit in.
+> 
+> Kai Huang (who is on cc) has been doing the QEMU enabling and might want
+> to weigh in.  I'd also love to hear from the AMD folks in case I'm not
+> grokking some aspect of SEV.
+> 
+> But, my understanding is that, even today, neither QEMU nor the kernel
+> can see SEV-encrypted guest memory.  So QEMU should already understand
+> how to not interact with guest memory.  I _assume_ it's also already
+> doing this with anonymous memory, without needing /dev/sme or something.
 
-1. For 44.1 kHz audio the old code made the assumption that an N of
-6272 was right most of the time.  That wasn't true and the new table
-should give better 44.1 kHz audio for many more rates.
+Correct neither Qemu nor kernel can see SEV-encrypted guest memory. Qemu requires guest's
+cooperation when it needs to interacts with guest, i.e. to support virtual DMA (of virtual devices
+in SEV-guest), qemu requires SEV-guest to setup bounce buffer (which will not be SEV-encrypted
+memory, but shared memory can be accessed from host side too), so that guest kernel can copy DMA
+data from bounce buffer to its own SEV-encrypted memory after qemu/host kernel puts DMA data to
+bounce buffer.
 
-2. The new table has values from the HDMI spec for 297 MHz and 594
-MHz.
+And yes from my reading (better to have AMD guys to confirm) SEV guest uses anonymous memory, but it
+also pins all guest memory (by calling GUP from KVM -- SEV specifically introduced 2 KVM ioctls for
+this purpose), since SEV architecturally cannot support swapping, migraiton of SEV-encrypted guest
+memory, because SME/SEV also uses physical address as "tweak", and there's no way that kernel can
+get or use SEV-guest's memory encryption key. In order to swap/migrate SEV-guest memory, we need SGX
+EPC eviction/reload similar thing, which SEV doesn't have today.
 
-3. There is now code to try to come up with a more idea N/CTS for
-clock rates that aren't in the table.  This code is a bit slow because
-it iterates over every possible value of N and picks the best one, but
-it should make a good fallback.
+From this perspective, I think driver proposal kinda makes sense since we already have security
+feature which uses normal memory some kind like "device memory" (no swap, no migration, etc), so it
+makes sense that MKTME just follows that (although from HW MKTME can support swap, page migration,
+etc). The downside of driver proposal for MKTME I think is, like Dave mentioned, it's hard (or not
+sure whether it is possible) to extend to support NVDIMM (and file backed guest memory), since for
+virtual NVDIMM, Qemu needs to call mmap against fd of NVDIMM.
 
-4. The new code allows for platforms that know they make a clock rate
-slightly differently to pick different N/CTS values.  For instance on
-rk3288 we can make 25,176,471 Hz instead of 25,174,825.1748... Hz
-(25.2 MHz / 1.001).  A future patch to the rk3288 platform code could
-enable support for this clock rate and specify the N/CTS that would be
-ideal.
-
-NOTE: the oddest part of this patch comes about because computing the
-ideal N/CTS means knowing the _exact_ clock rate, not a rounded
-version of it.  The drm framework makes this harder by rounding rates
-to kHz, but even if it didn't there might be cases where the ideal
-rate could only be calculated if we knew the real (non-integral) rate.
-This means that in cases where we know (or believe) that the true rate
-is something other than the rate we are told by drm.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
----
-
- drivers/gpu/drm/bridge/synopsys/dw-hdmi.c | 208 +++++++++++++++++-----
- include/drm/bridge/dw_hdmi.h              |   8 +
- 2 files changed, 175 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-index c6490949d9db..edede21e85e4 100644
---- a/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-+++ b/drivers/gpu/drm/bridge/synopsys/dw-hdmi.c
-@@ -60,6 +60,75 @@ enum hdmi_datamap {
- 	YCbCr422_12B = 0x12,
- };
- 
-+/*
-+ * Unless otherwise noted, entries in this table are 100% optimization.
-+ * Values can be obtained from hdmi_compute_n() but that function is
-+ * slow so we pre-compute values we expect to see.
-+ *
-+ * All 32k and 48k values are expected to be the same (due to the way
-+ * the math works) for any rate that's an exact kHz.
-+ *
-+ * If a particular platform knows that it makes a rate slightly
-+ * differently then it should add a platform-specific match.
-+ */
-+static const struct dw_hdmi_audio_tmds_n common_tmds_n_table[] = {
-+	/* Doesn't match computations, assumes real clock = 25.2 MHz / 1.001 */
-+	{ .tmds = 25175000, .n_32k = 4576, .n_44k1 = 7007, .n_48k = 6864, },
-+
-+	{ .tmds = 25200000, .n_32k = 4096, .n_44k1 = 5656, .n_48k = 6144, },
-+	{ .tmds = 27000000, .n_32k = 4096, .n_44k1 = 5488, .n_48k = 6144, },
-+	{ .tmds = 27027000, .n_32k = 4096, .n_44k1 = 6272, .n_48k = 6144, },
-+	{ .tmds = 28320000, .n_32k = 4096, .n_44k1 = 5586, .n_48k = 6144, },
-+	{ .tmds = 30240000, .n_32k = 4096, .n_44k1 = 5642, .n_48k = 6144, },
-+	{ .tmds = 31500000, .n_32k = 4096, .n_44k1 = 5600, .n_48k = 6144, },
-+	{ .tmds = 32000000, .n_32k = 4096, .n_44k1 = 5733, .n_48k = 6144, },
-+	{ .tmds = 33750000, .n_32k = 4096, .n_44k1 = 6272, .n_48k = 6144, },
-+	{ .tmds = 36000000, .n_32k = 4096, .n_44k1 = 5684, .n_48k = 6144, },
-+	{ .tmds = 40000000, .n_32k = 4096, .n_44k1 = 5733, .n_48k = 6144, },
-+	{ .tmds = 49500000, .n_32k = 4096, .n_44k1 = 5488, .n_48k = 6144, },
-+	{ .tmds = 50000000, .n_32k = 4096, .n_44k1 = 5292, .n_48k = 6144, },
-+	{ .tmds = 54000000, .n_32k = 4096, .n_44k1 = 5684, .n_48k = 6144, },
-+	{ .tmds = 65000000, .n_32k = 4096, .n_44k1 = 7056, .n_48k = 6144, },
-+	{ .tmds = 68250000, .n_32k = 4096, .n_44k1 = 5376, .n_48k = 6144, },
-+	{ .tmds = 71000000, .n_32k = 4096, .n_44k1 = 7056, .n_48k = 6144, },
-+	{ .tmds = 72000000, .n_32k = 4096, .n_44k1 = 5635, .n_48k = 6144, },
-+	{ .tmds = 73250000, .n_32k = 4096, .n_44k1 = 14112, .n_48k = 6144, },
-+
-+	/* Doesn't match computations, assumes real clock = 74.25 MHz / 1.001 */
-+	{ .tmds = 74176000, .n_32k = 11648, .n_44k1 = 17836, .n_48k = 11648, },
-+
-+	{ .tmds = 74250000, .n_32k = 4096, .n_44k1 = 6272, .n_48k = 6144, },
-+	{ .tmds = 75000000, .n_32k = 4096, .n_44k1 = 5880, .n_48k = 6144, },
-+	{ .tmds = 78750000, .n_32k = 4096, .n_44k1 = 5600, .n_48k = 6144, },
-+	{ .tmds = 78800000, .n_32k = 4096, .n_44k1 = 5292, .n_48k = 6144, },
-+	{ .tmds = 79500000, .n_32k = 4096, .n_44k1 = 4704, .n_48k = 6144, },
-+	{ .tmds = 83500000, .n_32k = 4096, .n_44k1 = 7056, .n_48k = 6144, },
-+	{ .tmds = 85500000, .n_32k = 4096, .n_44k1 = 5488, .n_48k = 6144, },
-+	{ .tmds = 88750000, .n_32k = 4096, .n_44k1 = 14112, .n_48k = 6144, },
-+	{ .tmds = 97750000, .n_32k = 4096, .n_44k1 = 14112, .n_48k = 6144, },
-+	{ .tmds = 101000000, .n_32k = 4096, .n_44k1 = 7056, .n_48k = 6144, },
-+	{ .tmds = 106500000, .n_32k = 4096, .n_44k1 = 4704, .n_48k = 6144, },
-+	{ .tmds = 108000000, .n_32k = 4096, .n_44k1 = 5684, .n_48k = 6144, },
-+	{ .tmds = 115500000, .n_32k = 4096, .n_44k1 = 5712, .n_48k = 6144, },
-+	{ .tmds = 119000000, .n_32k = 4096, .n_44k1 = 5544, .n_48k = 6144, },
-+	{ .tmds = 135000000, .n_32k = 4096, .n_44k1 = 5488, .n_48k = 6144, },
-+	{ .tmds = 146250000, .n_32k = 4096, .n_44k1 = 6272, .n_48k = 6144, },
-+
-+	/* Doesn't match computations, assumes real clock = 148.5 MHz / 1.001 */
-+	{ .tmds = 148352000, .n_32k = 11648, .n_44k1 = 8918, .n_48k = 5824, },
-+
-+	{ .tmds = 148500000, .n_32k = 4096, .n_44k1 = 5488, .n_48k = 6144, },
-+	{ .tmds = 154000000, .n_32k = 4096, .n_44k1 = 5544, .n_48k = 6144, },
-+	{ .tmds = 162000000, .n_32k = 4096, .n_44k1 = 5684, .n_48k = 6144, },
-+
-+	/* For 297 MHz+ HDMI spec has some other rule for setting N */
-+	{ .tmds = 297000000, .n_32k = 3073, .n_44k1 = 4704, .n_48k = 5120, },
-+	{ .tmds = 594000000, .n_32k = 3073, .n_44k1 = 9408, .n_48k = 10240, },
-+
-+	/* End of table */
-+	{ .tmds = 0,         .n_32k = 0,    .n_44k1 = 0,    .n_48k = 0, },
-+};
-+
- static const u16 csc_coeff_default[3][4] = {
- 	{ 0x2000, 0x0000, 0x0000, 0x0000 },
- 	{ 0x0000, 0x2000, 0x0000, 0x0000 },
-@@ -518,60 +587,117 @@ static void hdmi_set_cts_n(struct dw_hdmi *hdmi, unsigned int cts,
- 	hdmi_writeb(hdmi, n & 0xff, HDMI_AUD_N1);
- }
- 
--static unsigned int hdmi_compute_n(unsigned int freq, unsigned long pixel_clk)
-+static int hdmi_match_tmds_n_table(struct dw_hdmi *hdmi, unsigned int freq,
-+				   unsigned long pixel_clk)
- {
--	unsigned int n = (128 * freq) / 1000;
--	unsigned int mult = 1;
-+	const struct dw_hdmi_plat_data *plat_data = hdmi->plat_data;
-+	const struct dw_hdmi_audio_tmds_n *tmds_n = NULL;
-+	int mult = 1;
-+	int i;
- 
- 	while (freq > 48000) {
- 		mult *= 2;
- 		freq /= 2;
- 	}
- 
-+	if (plat_data->tmds_n_table) {
-+		for (i = 0; plat_data->tmds_n_table[i].tmds != 0; i++) {
-+			if (pixel_clk == plat_data->tmds_n_table[i].tmds) {
-+				tmds_n = &plat_data->tmds_n_table[i];
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (tmds_n == NULL) {
-+		for (i = 0; common_tmds_n_table[i].tmds != 0; i++) {
-+			if (pixel_clk == common_tmds_n_table[i].tmds) {
-+				tmds_n = &common_tmds_n_table[i];
-+				break;
-+			}
-+		}
-+	}
-+
-+	if (tmds_n == NULL)
-+		return -ENOENT;
-+
- 	switch (freq) {
- 	case 32000:
--		if (pixel_clk == 25175000)
--			n = 4576;
--		else if (pixel_clk == 27027000)
--			n = 4096;
--		else if (pixel_clk == 74176000 || pixel_clk == 148352000)
--			n = 11648;
--		else
--			n = 4096;
--		n *= mult;
--		break;
--
-+		return tmds_n->n_32k * mult;
- 	case 44100:
--		if (pixel_clk == 25175000)
--			n = 7007;
--		else if (pixel_clk == 74176000)
--			n = 17836;
--		else if (pixel_clk == 148352000)
--			n = 8918;
--		else
--			n = 6272;
--		n *= mult;
--		break;
--
-+		return tmds_n->n_44k1 * mult;
- 	case 48000:
--		if (pixel_clk == 25175000)
--			n = 6864;
--		else if (pixel_clk == 27027000)
--			n = 6144;
--		else if (pixel_clk == 74176000)
--			n = 11648;
--		else if (pixel_clk == 148352000)
--			n = 5824;
--		else
--			n = 6144;
--		n *= mult;
--		break;
--
-+		return tmds_n->n_48k * mult;
- 	default:
--		break;
-+		return -ENOENT;
- 	}
-+}
-+
-+static u64 hdmi_audio_math_diff(unsigned int freq, unsigned int n,
-+				unsigned int pixel_clk)
-+{
-+	u64 final, diff;
-+	u64 cts;
-+
-+	final = (u64)pixel_clk * n;
-+
-+	cts = final;
-+	do_div(cts, 128 * freq);
-+
-+	diff = final - (u64)cts * (128 * freq);
-+
-+	return diff;
-+}
-+
-+static unsigned int hdmi_compute_n(struct dw_hdmi *hdmi, unsigned int freq,
-+				   unsigned long pixel_clk)
-+{
-+	unsigned int min_n = DIV_ROUND_UP((128 * freq), 1500);
-+	unsigned int max_n = (128 * freq) / 300;
-+	unsigned int ideal_n = (128 * freq) / 1000;
-+	unsigned int best_n_distance = ideal_n;
-+	unsigned int best_n = 0;
-+	u64 best_diff = U64_MAX;
-+	int n;
-+
-+	/* If the ideal N could satisfy the audio math, then just take it */
-+	if (hdmi_audio_math_diff(freq, ideal_n, pixel_clk) == 0)
-+		return ideal_n;
-+
-+	for (n = min_n; n <= max_n; n++) {
-+		u64 diff = hdmi_audio_math_diff(freq, n, pixel_clk);
-+
-+		if (diff < best_diff || (diff == best_diff &&
-+		    abs(n - ideal_n) < best_n_distance)) {
-+			best_n = n;
-+			best_diff = diff;
-+			best_n_distance = abs(best_n - ideal_n);
-+		}
-+
-+		/*
-+		 * The best N already satisfy the audio math, and also be
-+		 * the closest value to ideal N, so just cut the loop.
-+		 */
-+		if ((best_diff == 0) && (abs(n - ideal_n) > best_n_distance))
-+			break;
-+	}
-+
-+	return best_n;
-+}
-+
-+static unsigned int hdmi_find_n(struct dw_hdmi *hdmi, unsigned int freq,
-+				unsigned long pixel_clk)
-+{
-+	int n;
-+
-+	n = hdmi_match_tmds_n_table(hdmi, freq, pixel_clk);
-+	if (n > 0)
-+		return n;
-+
-+	dev_warn(hdmi->dev, "Rate %lu missing; compute N dynamically\n",
-+		 pixel_clk);
- 
--	return n;
-+	return hdmi_compute_n(hdmi, freq, pixel_clk);
- }
- 
- static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
-@@ -581,7 +707,7 @@ static void hdmi_set_clk_regenerator(struct dw_hdmi *hdmi,
- 	unsigned int n, cts;
- 	u64 tmp;
- 
--	n = hdmi_compute_n(sample_rate, pixel_clk);
-+	n = hdmi_find_n(hdmi, sample_rate, pixel_clk);
- 
- 	/*
- 	 * Compute the CTS value from the N value.  Note that CTS and N
-diff --git a/include/drm/bridge/dw_hdmi.h b/include/drm/bridge/dw_hdmi.h
-index c402364aec0d..5ee6b0a127aa 100644
---- a/include/drm/bridge/dw_hdmi.h
-+++ b/include/drm/bridge/dw_hdmi.h
-@@ -90,6 +90,13 @@ enum dw_hdmi_phy_type {
- 	DW_HDMI_PHY_VENDOR_PHY = 0xfe,
- };
- 
-+struct dw_hdmi_audio_tmds_n {
-+	unsigned long tmds;
-+	unsigned int n_32k;
-+	unsigned int n_44k1;
-+	unsigned int n_48k;
-+};
-+
- struct dw_hdmi_mpll_config {
- 	unsigned long mpixelclock;
- 	struct {
-@@ -137,6 +144,7 @@ struct dw_hdmi_plat_data {
- 	const struct dw_hdmi_mpll_config *mpll_cfg;
- 	const struct dw_hdmi_curr_ctrl *cur_ctr;
- 	const struct dw_hdmi_phy_config *phy_config;
-+	const struct dw_hdmi_audio_tmds_n *tmds_n_table;
- 	int (*configure_phy)(struct dw_hdmi *hdmi,
- 			     const struct dw_hdmi_plat_data *pdata,
- 			     unsigned long mpixelclock);
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+Thanks,
+-Kai
