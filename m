@@ -2,89 +2,58 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D42C31E59
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62E8C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:39:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707592086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:38:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560764325;
-	bh=1MmPNbYWZDKNu+tc8X2hB5HstMq/o4InRnTu+0NxeX4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x5Lk5kMkxNPTJtj6mNqgzY1UVFOMavpzRxbQZDHoHrn3J/kaw//SUq9RKW6daA5Su
-	 WU2hpu2tiEU5SqFyDh1vJtqV08qbH8Buck+1qrORquDBrJymezU9jG1ECIdnLvEVcd
-	 a1UNhhDHSUEQ2g81NNDTLpR9e5o3KeSWJoDBbnIA=
+	by mail.kernel.org (Postfix) with ESMTP id 91B552085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:39:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726864AbfFQJio (ORCPT
+        id S1727508AbfFQJju (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:38:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 05:39:50 -0400
+Received: from mga07.intel.com ([134.134.136.100]:20451 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725837AbfFQJin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:38:43 -0400
-Received: from localhost (unknown [122.178.208.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81B682085A;
-        Mon, 17 Jun 2019 09:38:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560764323;
-        bh=1MmPNbYWZDKNu+tc8X2hB5HstMq/o4InRnTu+0NxeX4=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=l5ZQs+Ws1wpbolkQeLk4pmztF464THsCz5/kU6dg08HqAvIizOfA+uPBdYpwm43Q2
-         0SptEJfjZu+aic1Q/cGFLXFZQlKAn/9YDKWXYuXjluyoFLjcr/6Ims+5W+jEuC8zg2
-         sflA3O5D/6NJEcsd/GIvI25Mm7v4yIo2oSr7mHmk=
-Date:   Mon, 17 Jun 2019 15:05:34 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Prasad Sodagudi <psodagud@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Isaac J . Manjarres" <isaacm@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SM8150 pinctrl
- binding
-Message-ID: <20190617093534.GI2962@vkoul-mobl>
-References: <20190614053032.24208-1-vkoul@kernel.org>
- <20190617063732.GA18010@mani>
+        id S1725837AbfFQJju (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:39:50 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 02:39:48 -0700
+X-ExtLoop1: 1
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 17 Jun 2019 02:39:44 -0700
+Received: by lahna (sSMTP sendmail emulation); Mon, 17 Jun 2019 12:39:44 +0300
+Date:   Mon, 17 Jun 2019 12:39:44 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, Wolfram Sang <wsa@the-dreams.de>,
+        linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 21/28] drivers: Introduce
+ bus_find_device_by_acpi_dev() helper
+Message-ID: <20190617093944.GP2640@lahna.fi.intel.com>
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-22-git-send-email-suzuki.poulose@arm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617063732.GA18010@mani>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <1560534863-15115-22-git-send-email-suzuki.poulose@arm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-06-19, 12:07, Manivannan Sadhasivam wrote:
-> Hey Vinod,
+On Fri, Jun 14, 2019 at 06:54:16PM +0100, Suzuki K Poulose wrote:
+> Add a wrapper to bus_find_device() to search for a device
+> by the ACPI COMPANION device, reusing the generic match function.
+> Also convert the existing users to make use of the new helper.
 > 
-> On Fri, Jun 14, 2019 at 11:00:31AM +0530, Vinod Koul wrote:
-> > From: Prasad Sodagudi <psodagud@codeaurora.org>
-> > 
-> > Add the binding for the TLMM pinctrl block found in the SM8150 platform.
-> > 
-> > Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
-> > Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > ---
-> >  .../bindings/pinctrl/qcom,sm8150-pinctrl      | 200 ++++++++++++++++++
-> 
-> Looks like you missed the .txt extension for binding :-)
+> Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-Looks like I did :( Thanks for pointing Mani!
-
--- 
-~Vinod
+Acked-by: Mika Westerberg <mika.westerberg@linux.intel.com>
