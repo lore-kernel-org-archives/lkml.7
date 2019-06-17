@@ -2,176 +2,154 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8843FC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:29:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61966C31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:29:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1A42087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4494A2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:29:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728074AbfFQL3A (ORCPT
+        id S1728146AbfFQL3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:29:00 -0400
-Received: from s3.sipsolutions.net ([144.76.43.62]:40282 "EHLO
-        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfFQL3A (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:29:00 -0400
-Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <johannes@sipsolutions.net>)
-        id 1hcpoX-0003Tn-Jd; Mon, 17 Jun 2019 13:28:41 +0200
-Message-ID: <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-From:   Johannes Berg <johannes@sipsolutions.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
-        Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        Dan Williams <dcbw@redhat.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        syadagir@codeaurora.org
-Date:   Mon, 17 Jun 2019 13:28:39 +0200
-In-Reply-To: <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com> (sfid-20190611_135708_651569_0097B773)
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
-         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
-         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
-         (sfid-20190611_135708_651569_0097B773)
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 07:29:43 -0400
+Received: from foss.arm.com ([217.140.110.172]:46288 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725681AbfFQL3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:29:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7936B344;
+        Mon, 17 Jun 2019 04:29:42 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 030E33F246;
+        Mon, 17 Jun 2019 04:31:26 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 12:29:39 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Ley Foon Tan <ley.foon.tan@intel.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, lftan.linux@gmail.com
+Subject: Re: [PATCH v2] PCI: altera: Fix configuration type based on
+ secondary number
+Message-ID: <20190617112939.GB24968@e121166-lin.cambridge.arm.com>
+References: <1560321720-4083-1-git-send-email-ley.foon.tan@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560321720-4083-1-git-send-email-ley.foon.tan@intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
-> On Tue, Jun 11, 2019 at 10:12 AM Johannes Berg
-> <johannes@sipsolutions.net> wrote:
+On Wed, Jun 12, 2019 at 02:42:00PM +0800, Ley Foon Tan wrote:
+> This fix issue when access config from PCIe switch.
 > 
-> > > As I've made clear before, my work on this has been focused on the IPA transport,
-> > > and some of this higher-level LTE architecture is new to me.  But it
-> > > seems pretty clear that an abstracted WWAN subsystem is a good plan,
-> > > because these devices represent a superset of what a "normal" netdev
-> > > implements.
-> > 
-> > I'm not sure I'd actually call it a superset. By themselves, these
-> > netdevs are actually completely useless to the network stack, AFAICT.
-> > Therefore, the overlap with netdevs you can really use with the network
-> > stack is pretty small?
+> Stratix 10 PCIe controller does not support Type 1 to Type 0 conversion
+> as previous version (V1) does.
 > 
-> I think Alex meant the concept of having a type of netdev with a generic
-> user space interface for wwan and similar to a wlan device, as I understood
-> you had suggested as well, as opposed to a stacked device as in
-> rmnet or those drivers it seems to be modeled after (vlan, ip tunnel, ...)/.
-
-I guess. It is indeed currently modelled after the stacked devices, but
-those regular netdevs are inherently useful by themselves, you don't
-*have* to tunnel or use VLANs after all.
-
-With rmnet, the underlying netdev *isn't* useful by itself, because
-you're always forced to have the stacked rmnet device on top.
-
-
-> > > HOWEVER I disagree with your suggestion that the IPA code should
-> > > not be committed until after that is all sorted out.  In part it's
-> > > for selfish reasons, but I think there are legitimate reasons to
-> > > commit IPA now *knowing* that it will need to be adapted to fit
-> > > into the generic model that gets defined and developed.  Here
-> > > are some reasons why.
-> > 
-> > I can't really argue with those, though I would point out that the
-> > converse also holds - if we commit to this now, then we will have to
-> > actually keep the API offered by IPA/rmnet today, so we cannot actually
-> > remove the netdev again, even if we do migrate it to offer support for a
-> > WWAN framework in the future.
+> The PCIe controller need to send Type 0 config TLP if the targeting bus
+> matches with the secondary bus number, which is when the TLP is targeting
+> the immediate device on the link.
 > 
-> Right. The interface to support rmnet might be simple enough to keep
-> next to what becomes the generic interface, but it will always continue
-> to be an annoyance.
-
-Not easily, because fundamentally it requires an underlying netdev to
-have an ifindex, so it wouldn't just be another API to keep around
-(which I'd classify as an annoyance) but also a whole separate netdev
-that's exposed by this IPA driver, for basically this purpose only.
-
-> > I dunno if it really has to be months. I think we can cobble something
-> > together relatively quickly that addresses the needs of IPA more
-> > specifically, and then extend later?
-> > 
-> > But OTOH it may make sense to take a more paced approach and think
-> > about the details more carefully than we have over in the other thread so far.
+> The PCIe controller send Type 1 config TLP if the targeting bus is
+> larger than the secondary bus, which is when the TLP is targeting the
+> device not immediate on the link.
 > 
-> I would hope that as soon as we can agree on a general approach, it
-> would also be possible to merge a minimal implementation into the kernel
-> along with IPA. Alex already mentioned that IPA in its current state does
-> not actually support more than one data channel, so the necessary
-> setup for it becomes even simpler.
-
-Interesting, I'm not even sure how the driver can stop multiple channels
-in the rmnet model?
-
-> At the moment, the rmnet configuration in include/uapi/linux/if_link.h
-> is almost trivial, with the three pieces of information needed being
-> an IFLA_LINK to point to the real device (not needed if there is only
-> one device per channel, instead of two), the IFLA_RMNET_MUX_ID
-> setting the ID of the muxing channel (not needed if there is only
-> one channel ?), a way to specify software bridging between channels
-> (not useful if there is only one channel) 
-
-I think the MUX ID is something we *would* want, and we'd probably want
-a channel type as well, so as to not paint ourselves into a corner where
-the default ends up being whatever IPA supports right now.
-
-The software bridging is very questionable to start with, I'd advocate
-not supporting that at all but adding tracepoints or similar if needed
-for debugging instead.
-
-
-> and a few flags that I assume
-> must match the remote end:
+> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
 > 
-> #define RMNET_FLAGS_INGRESS_DEAGGREGATION         (1U << 0)
-> #define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
-> #define RMNET_FLAGS_INGRESS_MAP_CKSUMV4           (1U << 2)
-> #define RMNET_FLAGS_EGRESS_MAP_CKSUMV4            (1U << 3)
+> ---
+> v2:
+> - Add get_tlp_header() function.
+> ---
+>  drivers/pci/controller/pcie-altera.c | 41 ++++++++++++++++++----------
+>  1 file changed, 27 insertions(+), 14 deletions(-)
 
-I don't really know about these.
+Applied to pci/altera for v5.3, thanks.
 
-> > If true though, then I think this would be the killer argument *in
-> > favour* of *not* merging this - because that would mean we *don't* have
-> > to actually keep the rmnet API around for all foreseeable future.
+Lorenzo
+
+> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
+> index 27222071ace7..d2497ca43828 100644
+> --- a/drivers/pci/controller/pcie-altera.c
+> +++ b/drivers/pci/controller/pcie-altera.c
+> @@ -44,6 +44,8 @@
+>  #define S10_RP_RXCPL_STATUS		0x200C
+>  #define S10_RP_CFG_ADDR(pcie, reg)	\
+>  	(((pcie)->hip_base) + (reg) + (1 << 20))
+> +#define S10_RP_SECONDARY(pcie)		\
+> +	readb(S10_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
+>  
+>  /* TLP configuration type 0 and 1 */
+>  #define TLP_FMTTYPE_CFGRD0		0x04	/* Configuration Read Type 0 */
+> @@ -55,14 +57,9 @@
+>  #define TLP_WRITE_TAG			0x10
+>  #define RP_DEVFN			0
+>  #define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
+> -#define TLP_CFGRD_DW0(pcie, bus)					\
+> -	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgrd0		\
+> -				: pcie->pcie_data->cfgrd1) << 24) |	\
+> -				TLP_PAYLOAD_SIZE)
+> -#define TLP_CFGWR_DW0(pcie, bus)					\
+> -	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0		\
+> -				: pcie->pcie_data->cfgwr1) << 24) |	\
+> -				TLP_PAYLOAD_SIZE)
+> +#define TLP_CFG_DW0(pcie, cfg)		\
+> +		(((cfg) << 24) |	\
+> +		  TLP_PAYLOAD_SIZE)
+>  #define TLP_CFG_DW1(pcie, tag, be)	\
+>  	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
+>  #define TLP_CFG_DW2(bus, devfn, offset)	\
+> @@ -322,14 +319,31 @@ static void s10_tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
+>  	s10_tlp_write_tx(pcie, data, RP_TX_EOP);
+>  }
+>  
+> +static void get_tlp_header(struct altera_pcie *pcie, u8 bus, u32 devfn,
+> +			   int where, u8 byte_en, bool read, u32 *headers)
+> +{
+> +	u8 cfg;
+> +	u8 cfg0 = read ? pcie->pcie_data->cfgrd0 : pcie->pcie_data->cfgwr0;
+> +	u8 cfg1 = read ? pcie->pcie_data->cfgrd1 : pcie->pcie_data->cfgwr1;
+> +	u8 tag = read ? TLP_READ_TAG : TLP_WRITE_TAG;
+> +
+> +	if (pcie->pcie_data->version == ALTERA_PCIE_V1)
+> +		cfg = (bus == pcie->root_bus_nr) ? cfg0 : cfg1;
+> +	else
+> +		cfg = (bus > S10_RP_SECONDARY(pcie)) ? cfg0 : cfg1;
+> +
+> +	headers[0] = TLP_CFG_DW0(pcie, cfg);
+> +	headers[1] = TLP_CFG_DW1(pcie, tag, byte_en);
+> +	headers[2] = TLP_CFG_DW2(bus, devfn, where);
+> +}
+> +
+>  static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  			      int where, u8 byte_en, u32 *value)
+>  {
+>  	u32 headers[TLP_HDR_SIZE];
+>  
+> -	headers[0] = TLP_CFGRD_DW0(pcie, bus);
+> -	headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
+> -	headers[2] = TLP_CFG_DW2(bus, devfn, where);
+> +	get_tlp_header(pcie, bus, devfn, where, byte_en, true,
+> +		       headers);
+>  
+>  	pcie->pcie_data->ops->tlp_write_pkt(pcie, headers, 0, false);
+>  
+> @@ -342,9 +356,8 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
+>  	u32 headers[TLP_HDR_SIZE];
+>  	int ret;
+>  
+> -	headers[0] = TLP_CFGWR_DW0(pcie, bus);
+> -	headers[1] = TLP_CFG_DW1(pcie, TLP_WRITE_TAG, byte_en);
+> -	headers[2] = TLP_CFG_DW2(bus, devfn, where);
+> +	get_tlp_header(pcie, bus, devfn, where, byte_en, false,
+> +		       headers);
+>  
+>  	/* check alignment to Qword */
+>  	if ((where & 0x7) == 0)
+> -- 
+> 2.19.0
 > 
-> I would agree with that. From the code I can see no other driver
-> including the rmnet protocol header (see the discussion about moving
-> the header to include/linux in order to merge ipa), and I don't see
-> any other driver referencing ETH_P_MAP either. My understanding
-> is that any driver used by rmnet would require both, but they are
-> all out-of-tree at the moment.
-
-I guess that would mean we have more work to do here, but it also means
-we don't have to support these interfaces forever.
-
-I'm not *entirely* convinced though. rmnet in itself doesn't really seem
-to require anything from the underlying netdev, so if there's a driver
-that just blindly passes things through to the hardware expecting the
-right configuration, we wouldn't really see it this way?
-
-OTOH, such a driver would probably blow up completely if somebody tried
-to use it without rmnet on top, and so it would at least have to check
-for ETH_P_MAP?
-
-johannes
-
