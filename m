@@ -2,87 +2,183 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB923C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:56:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F3CC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 843892086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:56:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B19620861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:57:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gWIH3E3+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727582AbfFQK4C (ORCPT
+        id S1727655AbfFQK53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 06:56:02 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60332 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726174AbfFQK4B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 06:56:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A1C0CAB99;
-        Mon, 17 Jun 2019 10:56:00 +0000 (UTC)
-Subject: Re: [RFC PATCH 16/16] xen/grant-table: host_addr fixup in mapping on
- xenhost_r0
-To:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org,
-        joao.m.martins@oracle.com
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-17-ankur.a.arora@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <a35ab9a8-4874-fbc8-0148-aa07543e8672@suse.com>
-Date:   Mon, 17 Jun 2019 12:55:59 +0200
+        Mon, 17 Jun 2019 06:57:29 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:7206 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfFQK52 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 06:57:28 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0772150000>; Mon, 17 Jun 2019 03:57:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 03:57:25 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 17 Jun 2019 03:57:25 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
+ 2019 10:57:23 +0000
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
+ <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
+ <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <d34c100d-e82a-bb00-22c6-c5f2f6cdb03a@nvidia.com>
+Date:   Mon, 17 Jun 2019 11:57:21 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190509172540.12398-17-ankur.a.arora@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560769045; bh=ezUnyuKGHlbPhYjLZf5Spom5VDavEjqfyB+JBE4bVJU=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=gWIH3E3+v+rzCFyiimf1UtBRbcTKw21IjQoX8qYax0Wf6gBrBTLcmUWsqLkh6/UFy
+         XnEHI+bHpHAWxiEQNNpyC3s8qwK0gRHLZUsw+p43zIRlE5esrVIhmBEHrK6ha5IEO5
+         SwoCWHmt1WDwQGta6Gn11HgPQMDQbwSlDy2VKK0qBuoQU7JZVGPR3iOa1BbQc2Emml
+         RagrWT3XGNyE3x6cgN4POnafe8qguNKYs1BkRdtZ44LxUr5t2jWlFmsegBnDB3SiVF
+         rqyarHsvzvafNb0sOCafZNxoGJVRvFVbaC9NGqQxAlQVVcID3JLhI4YES9cU6AJn8v
+         orsF7W/+m6vuw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.05.19 19:25, Ankur Arora wrote:
-> Xenhost type xenhost_r0 does not support standard GNTTABOP_map_grant_ref
-> semantics (map a gref onto a specified host_addr). That's because
-> since the hypervisor is local (same address space as the caller of
-> GNTTABOP_map_grant_ref), there is no external entity that could
-> map an arbitrary page underneath an arbitrary address.
-> 
-> To handle this, the GNTTABOP_map_grant_ref hypercall on xenhost_r0
-> treats the host_addr as an OUT parameter instead of IN and expects the
-> gnttab_map_refs() and similar to fixup any state that caches the
-> value of host_addr from before the hypercall.
-> 
-> Accordingly gnttab_map_refs() now adds two parameters, a fixup function
-> and a pointer to cached maps to fixup:
->   int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref *map_ops,
->   		    struct gnttab_map_grant_ref *kmap_ops,
-> -		    struct page **pages, unsigned int count)
-> +		    struct page **pages, gnttab_map_fixup_t map_fixup_fn,
-> +		    void **map_fixup[], unsigned int count)
-> 
-> The reason we use a fixup function and not an additional mapping op
-> in the xenhost_t is because, depending on the caller, what we are fixing
-> might be different: blkback, netback for instance cache host_addr in
-> via a struct page *, while __xenbus_map_ring() caches a phys_addr.
-> 
-> This patch fixes up xen-blkback and xen-gntdev drivers.
-> 
-> TODO:
->    - also rewrite gnttab_batch_map() and __xenbus_map_ring().
->    - modify xen-netback, scsiback, pciback etc
-> 
-> Co-developed-by: Joao Martins <joao.m.martins@oracle.com>
-> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 
-Without seeing the __xenbus_map_ring() modification it is impossible to
-do a proper review of this patch.
+On 14/06/2019 17:44, Dmitry Osipenko wrote:
+> 14.06.2019 18:24, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 14/06/2019 16:21, Jon Hunter wrote:
+>>>
+>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>> Tegra's APB DMA engine updates words counter after each transferred bu=
+rst
+>>>> of data, hence it can report transfer's residual with more fidelity wh=
+ich
+>>>> may be required in cases like audio playback. In particular this fixes
+>>>> audio stuttering during playback in a chromiuim web browser. The patch=
+ is
+>>>> based on the original work that was made by Ben Dooks [1]. It was test=
+ed
+>>>> on Tegra20 and Tegra30 devices.
+>>>>
+>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@code=
+think.co.uk/
+>>>>
+>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++------=
+-
+>>>>  1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-d=
+ma.c
+>>>> index 79e9593815f1..c5af8f703548 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_ch=
+an *dc)
+>>>>  	return 0;
+>>>>  }
+>>>> =20
+>>>> +static unsigned int tegra_dma_update_residual(struct tegra_dma_channe=
+l *tdc,
+>>>> +					      struct tegra_dma_sg_req *sg_req,
+>>>> +					      struct tegra_dma_desc *dma_desc,
+>>>> +					      unsigned int residual)
+>>>> +{
+>>>> +	unsigned long status, wcount =3D 0;
+>>>> +
+>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>> +		return residual;
+>>>> +
+>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>> +
+>>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>> +
+>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +		wcount =3D status;
+>>>> +
+>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>> +		return residual - sg_req->req_len;
+>>>> +
+>>>> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>> +}
+>>>> +
+>>>>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
+>>>>  {
+>>>>  	struct tegra_dma_channel *tdc =3D to_tegra_dma_chan(dc);
+>>>> +	struct tegra_dma_sg_req *sg_req =3D NULL;
+>>>>  	struct tegra_dma_desc *dma_desc;
+>>>> -	struct tegra_dma_sg_req *sg_req;
+>>>>  	enum dma_status ret;
+>>>>  	unsigned long flags;
+>>>>  	unsigned int residual;
+>>>> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct =
+dma_chan *dc,
+>>>>  		residual =3D dma_desc->bytes_requested -
+>>>>  			   (dma_desc->bytes_transferred %
+>>>>  			    dma_desc->bytes_requested);
+>>>> +		residual =3D tegra_dma_update_residual(tdc, sg_req, dma_desc,
+>>>> +						     residual);
+>>>
+>>> I had a quick look at this, I am not sure that we want to call
+>>> tegra_dma_update_residual() here for cases where the dma_desc is on the
+>>> free_dma_desc list. In fact, couldn't this be simplified a bit for case
+>>> where the dma_desc is on the free list? In that case I believe that the
+>>> residual should always be 0.
+>>
+>> Actually, no, it could be non-zero in the case the transfer is aborted.
+>=20
+> Looks like everything should be fine as-is.
 
+I am still not sure we want to call this for the case where dma_desc is
+on the free list.
 
-Juergen
+> BTW, it's a bit hard to believe that there is any real benefit from the
+> free_dma_desc list at all, maybe worth to just remove it?
+
+I think you need to elaborate a bit more here. I am not a massive fan of
+this driver, but I am also not in the mood for changing unless there is
+a good reason.
+
+Cheers
+Jon
+
+--=20
+nvpublic
