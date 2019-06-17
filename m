@@ -2,70 +2,114 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF1C9C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2972FC31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C01208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BC50208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:59:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726823AbfFQL6v (ORCPT
+        id S1726969AbfFQL7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:58:51 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43504 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFQL6v (ORCPT
+        Mon, 17 Jun 2019 07:59:18 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:33899 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfFQL7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:58:51 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hcqHY-0006Ld-Kj; Mon, 17 Jun 2019 13:58:40 +0200
-Date:   Mon, 17 Jun 2019 13:58:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Petr Mladek <pmladek@suse.com>
-cc:     Miroslav Benes <mbenes@suse.cz>, jpoimboe@redhat.com,
-        jikos@kernel.org, joe.lawrence@redhat.com,
-        kamalesh@linux.vnet.ibm.com, live-patching@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/3] stacktrace: Remove weak version of
- save_stack_trace_tsk_reliable()
-In-Reply-To: <20190617111626.vkqayqf3tvleff37@pathway.suse.cz>
-Message-ID: <alpine.DEB.2.21.1906171357160.1854@nanos.tec.linutronix.de>
-References: <20190611141320.25359-1-mbenes@suse.cz> <20190611141320.25359-2-mbenes@suse.cz> <alpine.DEB.2.21.1906161044490.1760@nanos.tec.linutronix.de> <20190617111626.vkqayqf3tvleff37@pathway.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 17 Jun 2019 07:59:18 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N1Oft-1idn5x173T-012p0I; Mon, 17 Jun 2019 13:58:46 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mimi Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ima: dynamically allocate shash_desc
+Date:   Mon, 17 Jun 2019 13:20:37 +0200
+Message-Id: <20190617115838.2397872-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Aok4LcHbJEGe4AaznFIfACC7Rx178p41ovN43L+MyVducbpJUmo
+ Ks3nYiQFYUumaQQDtFktb7FASBDgNt0aWrEmebIaB2QKuW7eKXp/C3mpmUcUcD6KVf3YWcB
+ cHciwJcVESXqtHG5EZm3ls+ZpDxsTRQTdcm0F/UvIc6M6Ypeq63DAIUrs/oUOxrkLyMFvCw
+ XFmMdwOf5uOdyLU9P5gpA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:jHvm8xVNDAg=:2tQYUYi5EHZK8Jj9NnbR8R
+ Eo7gZUfrH0IV231kubqyOXrM2KIdTUI7lkeT64oWq+/f71gkLCOBA3NzPI6XwDwGl8OwX+/5w
+ yVDiKGLnOGCxf+S0vbTYzsRNBq76ZlUCUzWuIjpHVVGjeN5SAyE6MywStp8xA1h/cRWcK3cSx
+ Bwgbt7JUQDgtp4jOKoxHjqlrVcLSbpbu8rpnkIYtSBmEobq2yDokeJyj1QugUmAg+hNXmMcM4
+ pVvePhrtr24jnquz/odgNTRAHaD5VQY3uTcDpF6QdL9zrmy6UCL8SCxFf5EeaJeTzSiiW+uPk
+ bCVCbyUWrELjuHEt22u1i1oJ2sBS1ldJ9xecgj7l+X+Sj5Jouj+A+Zbi5xcgrU/ngnLRiabOU
+ 5TLlpJZgM7xeHyJcibAzzh034agXYUkyVbw0mEZZW8Tjq5nL6IkBWYphrpAfGzFQ946pBaF1p
+ nPVIq+92AGgeXZ3Cv0v7IQ2bLUq3YUj5fsawacZO1BG8fAaSf+EgYJsPg6RYip3gbP5uDLPyF
+ Gi7rVAPX3uwg04Pe4uBMsw41abY2iVQBULvYBbFi9ohYBnVty966idrZjgx+Pyg3inltOFtVj
+ M/fpwbgM2WhO2KGKKzFiiOs+uajZha0drkVdDo1ZbPf2NM+4BAb+90WhFspBAfibbneJlHCMx
+ kakkUzVCB2p/ES21GFZU+Q2++wdThYh8RzHe6rYlRywsa2B879EEe/j1On0RzPHJxZa/QOEFJ
+ 3HYbjkqetrngw4zwpfpkit5NhMMqT6RJEFSXnA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Petr Mladek wrote:
-> On Sun 2019-06-16 10:44:59, Thomas Gleixner wrote:
-> > On Tue, 11 Jun 2019, Miroslav Benes wrote:
-> > 
-> > > Recent rework of stack trace infrastructure introduced a new set of
-> > > helpers for common stack trace operations (commit e9b98e162aa5
-> > > ("stacktrace: Provide helpers for common stack trace operations") and
-> > > related). As a result, save_stack_trace_tsk_reliable() is not directly
-> > > called anywhere. Livepatch, currently the only user of the reliable
-> > > stack trace feature, now calls stack_trace_save_tsk_reliable().
-> > > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > > Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> > 
-> > Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> 
-> Would you like to push this patch via your tree?
-> Or is it OK to push it via the livepatch tree for 5.3?
+On 32-bit ARM, we get a warning about excessive stack usage when
+building with clang.
 
-Just pick it up. I don't think we have anything conflicting.
+security/integrity/ima/ima_crypto.c:504:5: error: stack frame size of 1152 bytes in function 'ima_calc_field_array_hash' [-Werror,-Wframe-larger-than=]
 
-Thanks,
+Using kmalloc to get the descriptor reduces this to 320 bytes.
 
-	tglx
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ security/integrity/ima/ima_crypto.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
+
+diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
+index d4c7b8e1b083..8a66bab4c435 100644
+--- a/security/integrity/ima/ima_crypto.c
++++ b/security/integrity/ima/ima_crypto.c
+@@ -461,16 +461,21 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
+ 					 struct ima_digest_data *hash,
+ 					 struct crypto_shash *tfm)
+ {
+-	SHASH_DESC_ON_STACK(shash, tfm);
++	struct shash_desc *shash;
+ 	int rc, i;
+ 
++	shash = kmalloc(sizeof(struct shash_desc) + crypto_shash_descsize(tfm),
++			GFP_KERNEL);
++	if (!shash)
++		return -ENOMEM;
++
+ 	shash->tfm = tfm;
+ 
+ 	hash->length = crypto_shash_digestsize(tfm);
+ 
+ 	rc = crypto_shash_init(shash);
+ 	if (rc != 0)
+-		return rc;
++		goto out;
+ 
+ 	for (i = 0; i < num_fields; i++) {
+ 		u8 buffer[IMA_EVENT_NAME_LEN_MAX + 1] = { 0 };
+@@ -497,7 +502,8 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
+ 
+ 	if (!rc)
+ 		rc = crypto_shash_final(shash, hash->digest);
+-
++out:
++	kfree(shash);
+ 	return rc;
+ }
+ 
+-- 
+2.20.0
 
