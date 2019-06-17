@@ -6,137 +6,203 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BBEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88065C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806E52084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 512092084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:47:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UWwN4JHu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SAnZ3X0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726731AbfFQSrM (ORCPT
+        id S1728476AbfFQSrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:47:12 -0400
-Received: from mail-eopbgr760091.outbound.protection.outlook.com ([40.107.76.91]:3687
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725844AbfFQSrL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:47:11 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=dmiNxrXXn0BdDQNvqqurGNfVYVjCHJQbWH4E710+FHJBOSTY+GBh+44W+GeA+Wrgya5aZjLSyh0LbWnCTey/bKrqR/jzLZkNNSG4jfsqMVmUXmDxDrTW+9L9atSLavQU6Zpt+lAQrt1Uc7rEuqyjC5u2JPyYjgTBn2FWquC/8xY=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WFKC25shXYrQn1Zb+aiqUiGWjF6sjLeR8ccIU8ad7B0=;
- b=JTrkk45flZJSB5buKtHXmWB/0e4X2sFYwQWYrQgMAacIUXOJj6X6C79z1WH5Es08LK8q3UUNFVUKVqIkyaXWLfnzgHxcuz+Dxht0Qbg0rrxtgENFUOxsYoSXXh64VrblaN2xLaHIfPMeq5KQdC41XAabMr7zqe3tMR1ZK7CI254=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=WFKC25shXYrQn1Zb+aiqUiGWjF6sjLeR8ccIU8ad7B0=;
- b=UWwN4JHuuPuCbHHgaUqhh4oRei+v1jMwDhXlb/z16xGhX9Q7JB/FRq4mcD2n/R6KZI8N866xLcaLYGthElXJwM6LtUQg3xWhaeNPtAwPEupCaXZEYV4B/2J3xcwUR13XzwCoQT2XKitx9L1hEDbBemSrsmtCmtMrtm+WoyZe+K8=
-Received: from MW2PR2101MB1116.namprd21.prod.outlook.com (2603:10b6:302:a::33)
- by MW2PR2101MB1066.namprd21.prod.outlook.com (2603:10b6:302:a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.3; Mon, 17 Jun
- 2019 18:47:08 +0000
-Received: from MW2PR2101MB1116.namprd21.prod.outlook.com
- ([fe80::a1f6:c002:82ba:ad47]) by MW2PR2101MB1116.namprd21.prod.outlook.com
- ([fe80::a1f6:c002:82ba:ad47%9]) with mapi id 15.20.2008.007; Mon, 17 Jun 2019
- 18:47:08 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     David Miller <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>
-CC:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        "sashal@kernel.org" <sashal@kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH net] hvsock: fix epollout hang from race condition
-Thread-Topic: [PATCH net] hvsock: fix epollout hang from race condition
-Thread-Index: AdUhY/kd1+XRZykcRS6vcxcYhC9DaQBvCbgAAAJcZAAAVwongAAsXmzA
-Date:   Mon, 17 Jun 2019 18:47:08 +0000
-Message-ID: <MW2PR2101MB111697FDA0BEDA81237FECB3C0EB0@MW2PR2101MB1116.namprd21.prod.outlook.com>
-References: <MW2PR2101MB11164C6EEAA5C511B395EF3AC0EC0@MW2PR2101MB1116.namprd21.prod.outlook.com>
-        <20190614.191456.407433636343988177.davem@davemloft.net>
-        <PU1P153MB0169BACDA500F94910849770BFE90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
- <20190616.135445.822152500838073831.davem@davemloft.net>
-In-Reply-To: <20190616.135445.822152500838073831.davem@davemloft.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sunilmut@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:3:8d7e:cb94:2f88:ec90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ba657bec-d31d-49f8-aaa5-08d6f3543391
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MW2PR2101MB1066;
-x-ms-traffictypediagnostic: MW2PR2101MB1066:
-x-microsoft-antispam-prvs: <MW2PR2101MB10664099FD6AA6F4E50CDFB9C0EB0@MW2PR2101MB1066.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0071BFA85B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(376002)(136003)(366004)(396003)(39860400002)(13464003)(189003)(199004)(7696005)(81166006)(7736002)(8936002)(229853002)(76176011)(6506007)(53546011)(102836004)(81156014)(6436002)(8676002)(99286004)(52396003)(55016002)(74316002)(305945005)(9686003)(186003)(2906002)(76116006)(53936002)(86362001)(33656002)(4326008)(52536014)(1511001)(6246003)(66446008)(64756008)(66556008)(66476007)(66946007)(25786009)(8990500004)(446003)(11346002)(73956011)(10090500001)(316002)(22452003)(46003)(68736007)(10290500003)(478600001)(54906003)(110136005)(71200400001)(71190400001)(5660300002)(256004)(14444005)(14454004)(486006)(476003)(6636002)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1066;H:MW2PR2101MB1116.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SBywSH2KhgdrlUaQrEgFsUHw7IwrKE4HPBOmpxZgRksG1bZH5R/FY7YURMSevygX4QNhowbiBsnisbG5d0dGiuRGhU76kwnkotTgRS/fJQgGdgLxCkHom+Nj67okhF0M6FyjPgO0YSTixyRxaPJcKcTtUBdWAWYRMM8gcJq6eDzHbexR6JRUHhCF6nFX6N/M9k1+o/XiCUllLezUSefkgiNzeuAqMvDUB3zKd03tNYEFRrKqiDvYMw0UbeFlcbfsjtUIBpu5AUEvrXaQYkxVKOssPohE2haIMLiZZu8PlAjn6WsjMqMfz5gY4LMnn6zJl/UFn37388fQbjvZYpCMH5IolshjjZvUgxlP01XllVYVOVzaZ7ogKVxVvqARfbdAMeP673evcGfo0UrWJ6J1YRpX0ATLGiEx/uLO8Xolzrk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Jun 2019 14:47:18 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:45203 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727317AbfFQSrR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 14:47:17 -0400
+Received: by mail-io1-f66.google.com with SMTP id e3so23460660ioc.12
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 11:47:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=N++lS1o+MDz9+i4mzKncc0qVpXXpsoR+Jo3R2g+KlCo=;
+        b=SAnZ3X0db+ry3DfdGKhXmDVRB1ay1ZXQyzAHIfdFfY354qGzD+/MI11JpexYGS29uJ
+         j/eWkJnZhvOuHS/+zRUH8o7WpVEbUQkgyLS8HmbtOP1YHy+H+Pbb/FMLh460HskPqysH
+         pUl3dQYa5lFFHCpPM7xu1Tgu8PXg+wPzShMxM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=N++lS1o+MDz9+i4mzKncc0qVpXXpsoR+Jo3R2g+KlCo=;
+        b=iJIXOi7YnuV9MksWo4XKijH8tJhEgT0JKnKptVrwJhpeYyrhFh10NzneBZ9X7PNDGw
+         1cfk6PnJ4y3fA285MH3BQTz1E/lo1e6Z5uE73RR76sRHXTBS8g7bsRsv1YAS46H5mIux
+         xqXaIcEg1/RasVUkuVEU4EFBPireRvv1vdzDMhUeuaySVpYIsYOBQ0XKLr0jpPwI4QBb
+         /X/0mOStQ1Vn37l1UCKCvYx7ff2hre/nf2lveDPg+oe2MaKOtdf7AGuaBCsHUNs1sccJ
+         x8SROi8ABolMQ6q+S09OJBYK5yYFyyEFHXCl8GRotXf06NWalKIrecUVBtpXVWjZlFzx
+         mMFg==
+X-Gm-Message-State: APjAAAVXV1JLW2fjx8/UMnKfIpFwNvwxW+XTnIE3ZeGr6FBzBaeK23SD
+        lvuYDhchC7S0a7S7yJFzqqSS46X8738=
+X-Google-Smtp-Source: APXvYqw6byYZADq/e4f5nKHM8Kn6Wu4+kMxyqtfGyLkIDWvBFXbUjy9toJR4stA6IAtiBv1/dzAgMA==
+X-Received: by 2002:a5d:97d8:: with SMTP id k24mr3849596ios.84.1560797236315;
+        Mon, 17 Jun 2019 11:47:16 -0700 (PDT)
+Received: from mail-io1-f46.google.com (mail-io1-f46.google.com. [209.85.166.46])
+        by smtp.gmail.com with ESMTPSA id b20sm10330165ios.44.2019.06.17.11.47.13
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 11:47:15 -0700 (PDT)
+Received: by mail-io1-f46.google.com with SMTP id r185so17610838iod.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 11:47:13 -0700 (PDT)
+X-Received: by 2002:a5e:db0a:: with SMTP id q10mr77753iop.168.1560797232212;
+ Mon, 17 Jun 2019 11:47:12 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ba657bec-d31d-49f8-aaa5-08d6f3543391
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2019 18:47:08.6061
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1066
+References: <20190617175653.21756-1-dianders@chromium.org> <CAPDyKFpaX6DSM_BjtghAHUf7qYCyEG+wMagXPUdgz3Eutovqfw@mail.gmail.com>
+In-Reply-To: <CAPDyKFpaX6DSM_BjtghAHUf7qYCyEG+wMagXPUdgz3Eutovqfw@mail.gmail.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Mon, 17 Jun 2019 11:46:59 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=U5+j8V7qckLJf0N+xMeuaOqF+ThL3th98y63aTAVe57g@mail.gmail.com>
+Message-ID: <CAD=FV=U5+j8V7qckLJf0N+xMeuaOqF+ThL3th98y63aTAVe57g@mail.gmail.com>
+Subject: Re: [PATCH v5 0/5] brcmfmac: sdio: Deal better w/ transmission errors
+ related to idle
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev <netdev@vger.kernel.org>,
+        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Ondrej Jirman <megous@megous.com>,
+        Jiong Wu <lohengrin1024@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Avri Altman <avri.altman@wdc.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+On Mon, Jun 17, 2019 at 11:39 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>
+> On Mon, 17 Jun 2019 at 19:57, Douglas Anderson <dianders@chromium.org> wrote:
+> >
+> > This series attempts to deal better with the expected transmission
+> > errors related to the idle states (handled by the Always-On-Subsystem
+> > or AOS) on the SDIO-based WiFi on rk3288-veyron-minnie,
+> > rk3288-veyron-speedy, and rk3288-veyron-mickey.
+> >
+> > Some details about those errors can be found in
+> > <https://crbug.com/960222>, but to summarize it here: if we try to
+> > send the wakeup command to the WiFi card at the same time it has
+> > decided to wake up itself then it will behave badly on the SDIO bus.
+> > This can cause timeouts or CRC errors.
+> >
+> > When I tested on 4.19 and 4.20 these CRC errors can be seen to cause
+> > re-tuning.  Since I am currently developing on 4.19 this was the
+> > original problem I attempted to solve.
+> >
+> > On mainline it turns out that you don't see the retuning errors but
+> > you see tons of spam about timeouts trying to wakeup from sleep.  I
+> > tracked down the commit that was causing that and have partially
+> > reverted it here.  I have no real knowledge about Broadcom WiFi, but
+> > the commit that was causing problems sounds (from the descriptioin) to
+> > be a hack commit penalizing all Broadcom WiFi users because of a bug
+> > in a Cypress SD controller.  I will let others comment if this is
+> > truly the case and, if so, what the right solution should be.
+> >
+> > For v3 of this series I have added 2 patches to the end of the series
+> > to address errors that would show up on systems with these same SDIO
+> > WiFi cards when used on controllers that do periodic retuning.  These
+> > systems need an extra fix to prevent the retuning from happening when
+> > the card is asleep.
+> >
+> > I believe v5 of this series is all ready to go assuming Kalle Valo is
+> > good with it.  I've added after-the-cut notes to patches awaiting his
+> > Ack and have added other tags collected so far.
+> >
+> > Changes in v5:
+> > - Add missing sdio_retune_crc_enable() in comments (Ulf).
+> > - /s/reneable/re-enable (Ulf).
+> > - Remove leftover prototypes: mmc_expect_errors_begin() / end() (Ulf).
+> > - Rewording of "sleep command" in commit message (Arend).
+> >
+> > Changes in v4:
+> > - Moved to SDIO API only (Adrian, Ulf).
+> > - Renamed to make it less generic, now retune_crc_disable (Ulf).
+> > - Function header makes it clear host must be claimed (Ulf).
+> > - No more WARN_ON (Ulf).
+> > - Adjust to API rename (Adrian, Ulf).
+> > - Moved retune hold/release to SDIO API (Adrian).
+> > - Adjust to API rename (Adrian).
+> >
+> > Changes in v3:
+> > - Took out the spinlock since I believe this is all in one context.
+> > - Expect errors for all of brcmf_sdio_kso_control() (Adrian).
+> > - ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
+> > - ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
+> >
+> > Changes in v2:
+> > - A full revert, not just a partial one (Arend).  ...with explicit Cc.
+> > - Updated commit message to clarify based on discussion of v1.
+> >
+> > Douglas Anderson (5):
+> >   Revert "brcmfmac: disable command decode in sdio_aos"
+> >   mmc: core: API to temporarily disable retuning for SDIO CRC errors
+> >   brcmfmac: sdio: Disable auto-tuning around commands expected to fail
+> >   mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
+> >   brcmfmac: sdio: Don't tune while the card is off
+> >
+> >  drivers/mmc/core/core.c                       |  5 +-
+> >  drivers/mmc/core/sdio_io.c                    | 77 +++++++++++++++++++
+> >  .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 ++--
+> >  include/linux/mmc/host.h                      |  1 +
+> >  include/linux/mmc/sdio_func.h                 |  6 ++
+> >  5 files changed, 99 insertions(+), 7 deletions(-)
+> >
+> > --
+> > 2.22.0.410.gd8fdbe21b5-goog
+> >
+>
+> Applied for fixes, thanks!
+>
+> Some minor changes:
+> 1) Dropped the a few "commit notes", that was more related to version
+> and practical information about the series.
+> 2) Dropped fixes tags for patch 2->5, but instead put a stable tag
+> targeted for v4.18+.
+
+OK, sounds good.  Thanks!  :-)
+
+I guess when I see the # v4.18+ in the commit message it makes me
+believe that the problem only existed on 4.18+, but maybe that's just
+me reading too much into it.  ;-)  In any case, presumably anyone who
+had these problems on earlier kernels already has solved them with
+local patches.
 
 
-> -----Original Message-----
-> From: linux-hyperv-owner@vger.kernel.org <linux-hyperv-owner@vger.kernel.=
-org> On Behalf Of David Miller
-> Sent: Sunday, June 16, 2019 1:55 PM
-> To: Dexuan Cui <decui@microsoft.com>
-> Cc: Sunil Muthuswamy <sunilmut@microsoft.com>; KY Srinivasan <kys@microso=
-ft.com>; Haiyang Zhang <haiyangz@microsoft.com>;
-> Stephen Hemminger <sthemmin@microsoft.com>; sashal@kernel.org; Michael Ke=
-lley <mikelley@microsoft.com>;
-> netdev@vger.kernel.org; linux-hyperv@vger.kernel.org; linux-kernel@vger.k=
-ernel.org
-> Subject: Re: [PATCH net] hvsock: fix epollout hang from race condition
->=20
-> From: Dexuan Cui <decui@microsoft.com>
-> Date: Sat, 15 Jun 2019 03:22:32 +0000
->=20
-> > These warnings are not introduced by this patch from Sunil.
-> >
-> > I'm not sure why I didn't notice these warnings before.
-> > Probably my gcc version is not new eought?
-> >
-> > Actually these warnings are bogus, as I checked the related functions,
-> > which may confuse the compiler's static analysis.
-> >
-> > I'm going to make a patch to initialize the pointers to NULL to suppres=
-s
-> > the warnings. My patch will be based on the latest's net.git + this pat=
-ch
-> > from Sunil.
->=20
-> Sunil should then resubmit his patch against something that has the
-> warning suppression patch applied.
-
-David, Dexuan's patch to suppress the warnings seems to be applied now
-to the 'net' branch. Can we please get this patch applied as well?
+-Doug
