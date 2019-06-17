@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFD8DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C28D7C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A39B42166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92BAE2166E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806590;
-	bh=4yvtAM7qHurqZoqOgK/az7hQ/Lqy1pFdIvE0aijfz2w=;
+	s=default; t=1560806594;
+	bh=JA+p7wrGBfD3DC0g1p9qRNUiBsLsU3ExILISMxqH+iM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Dz4T8ALqga8+pKOAAaqep3qpcFolcsZriKRssr86itbjRcNHWct88Ottiyqu/HA48
-	 55w3YqsfZw8w8JL66DMtWQgA+UlndlbFF8VuSy0T+5+7Qlvx9aF0E4A8IkpPfam8Yb
-	 BK8yhFDiW0XcuRBdPkjv+0YsYxui97aQfRf26lok=
+	b=jR6ht95h62kQ3cIpyMsAwYRTuL4ZXmTYNnys+TaS5Nc7PlVPHt93L06DZlm2N65dK
+	 C0iLs36hfhpS/pHWNv/eBXUKrodnhmIMIt6RTkpLXY2G8nGYyFpMHJ4MfYfStOM5Wq
+	 WwbA0SsB5Hp4gq+aSVUnU9gviLbFru/5tyXzX3Eo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729667AbfFQVXJ (ORCPT
+        id S1729676AbfFQVXM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:23:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48036 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:23:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729644AbfFQVXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:23:06 -0400
+        id S1729663AbfFQVXJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:23:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 808C320657;
-        Mon, 17 Jun 2019 21:23:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22EC920673;
+        Mon, 17 Jun 2019 21:23:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806586;
-        bh=4yvtAM7qHurqZoqOgK/az7hQ/Lqy1pFdIvE0aijfz2w=;
+        s=default; t=1560806588;
+        bh=JA+p7wrGBfD3DC0g1p9qRNUiBsLsU3ExILISMxqH+iM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=V7oR0n3HVsfsemLCRYym4SMLBzw/fUWWttWsTFAThBRGSeyzeGp8BVkP445tHE5I1
-         2JH52qdBOmtoEU7vkVebKuaWmfAVoKSEN8lGYCE6wxs7bFTFpu5fH1BAvIvXYfgLkj
-         IWgp6fzRHP4itLtD+rd1Bfv6KMG0SjP7C3haQznY=
+        b=0Zehl1di2IQktnyku2HnQAfgSISyC34D8YSfYu5t3Tl8d9SN7mXH/YIoWJYXfQ4zM
+         G3W8kTH8f2LYTIR2TT4o4x0EYzljZbUAIvSvLsoNyIF6E6PBXb0tVKmtM5fT3ehCpb
+         yQ8Lv0Gv87TkLH4qbm/UxQp48izm7JSao1nVLXqk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Srikar Dronamraju <srikar@linux.vnet.ibm.com>,
-        Eiichi Tsukata <devel@etsukata.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-Subject: [PATCH 5.1 104/115] tracing/uprobe: Fix NULL pointer dereference in trace_uprobe_create()
-Date:   Mon, 17 Jun 2019 23:10:04 +0200
-Message-Id: <20190617210805.334636445@linuxfoundation.org>
+        stable@vger.kernel.org, "Jason A. Donenfeld" <Jason@zx2c4.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Clemens Ladisch <clemens@ladisch.de>,
+        Sultan Alsawaf <sultan@kerneltoast.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH 5.1 105/115] timekeeping: Repair ktime_get_coarse*() granularity
+Date:   Mon, 17 Jun 2019 23:10:05 +0200
+Message-Id: <20190617210805.365201879@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -61,90 +64,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eiichi Tsukata <devel@etsukata.com>
+From: Thomas Gleixner <tglx@linutronix.de>
 
-commit f01098c74b5219f3969d4750eeed1a36bfc038e3 upstream.
+commit e3ff9c3678b4d80e22d2557b68726174578eaf52 upstream.
 
-Just like the case of commit 8b05a3a7503c ("tracing/kprobes: Fix NULL
-pointer dereference in trace_kprobe_create()"), writing an incorrectly
-formatted string to uprobe_events can trigger NULL pointer dereference.
+Jason reported that the coarse ktime based time getters advance only once
+per second and not once per tick as advertised.
 
-Reporeducer:
+The code reads only the monotonic base time, which advances once per
+second. The nanoseconds are accumulated on every tick in xtime_nsec up to
+a second and the regular time getters take this nanoseconds offset into
+account, but the ktime_get_coarse*() implementation fails to do so.
 
-  # echo r > /sys/kernel/debug/tracing/uprobe_events
+Add the accumulated xtime_nsec value to the monotonic base time to get the
+proper per tick advancing coarse tinme.
 
-dmesg:
-
-  BUG: kernel NULL pointer dereference, address: 0000000000000000
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 8000000079d12067 P4D 8000000079d12067 PUD 7b7ab067 PMD 0
-  Oops: 0000 [#1] PREEMPT SMP PTI
-  CPU: 0 PID: 1903 Comm: bash Not tainted 5.2.0-rc3+ #15
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.12.0-2.fc30 04/01/2014
-  RIP: 0010:strchr+0x0/0x30
-  Code: c0 eb 0d 84 c9 74 18 48 83 c0 01 48 39 d0 74 0f 0f b6 0c 07 3a 0c 06 74 ea 19 c0 83 c8 01 c3 31 c0 c3 0f 1f 84 00 00 00 00 00 <0f> b6 07 89 f2 40 38 f0 75 0e eb 13 0f b6 47 01 48 83 c
-  RSP: 0018:ffffb55fc0403d10 EFLAGS: 00010293
-
-  RAX: ffff993ffb793400 RBX: 0000000000000000 RCX: ffffffffa4852625
-  RDX: 0000000000000000 RSI: 000000000000002f RDI: 0000000000000000
-  RBP: ffffb55fc0403dd0 R08: ffff993ffb793400 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-  R13: ffff993ff9cc1668 R14: 0000000000000001 R15: 0000000000000000
-  FS:  00007f30c5147700(0000) GS:ffff993ffda00000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000000000000 CR3: 000000007b628000 CR4: 00000000000006f0
-  Call Trace:
-   trace_uprobe_create+0xe6/0xb10
-   ? __kmalloc_track_caller+0xe6/0x1c0
-   ? __kmalloc+0xf0/0x1d0
-   ? trace_uprobe_create+0xb10/0xb10
-   create_or_delete_trace_uprobe+0x35/0x90
-   ? trace_uprobe_create+0xb10/0xb10
-   trace_run_command+0x9c/0xb0
-   trace_parse_run_command+0xf9/0x1eb
-   ? probes_open+0x80/0x80
-   __vfs_write+0x43/0x90
-   vfs_write+0x14a/0x2a0
-   ksys_write+0xa2/0x170
-   do_syscall_64+0x7f/0x200
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Link: http://lkml.kernel.org/r/20190614074026.8045-1-devel@etsukata.com
-
+Fixes: b9ff604cff11 ("timekeeping: Add ktime_get_coarse_with_offset")
+Reported-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Clemens Ladisch <clemens@ladisch.de>
+Cc: Sultan Alsawaf <sultan@kerneltoast.com>
+Cc: Waiman Long <longman@redhat.com>
 Cc: stable@vger.kernel.org
-Fixes: 0597c49c69d5 ("tracing/uprobes: Use dyn_event framework for uprobe events")
-Reviewed-by: Srikar Dronamraju <srikar@linux.vnet.ibm.com>
-Signed-off-by: Eiichi Tsukata <devel@etsukata.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1906132136280.1791@nanos.tec.linutronix.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/trace/trace_uprobe.c |   13 ++++++++++---
- 1 file changed, 10 insertions(+), 3 deletions(-)
+ kernel/time/timekeeping.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
---- a/kernel/trace/trace_uprobe.c
-+++ b/kernel/trace/trace_uprobe.c
-@@ -434,10 +434,17 @@ static int trace_uprobe_create(int argc,
- 	ret = 0;
- 	ref_ctr_offset = 0;
+--- a/kernel/time/timekeeping.c
++++ b/kernel/time/timekeeping.c
+@@ -807,17 +807,18 @@ ktime_t ktime_get_coarse_with_offset(enu
+ 	struct timekeeper *tk = &tk_core.timekeeper;
+ 	unsigned int seq;
+ 	ktime_t base, *offset = offsets[offs];
++	u64 nsecs;
  
--	/* argc must be >= 1 */
--	if (argv[0][0] == 'r')
-+	switch (argv[0][0]) {
-+	case 'r':
- 		is_return = true;
--	else if (argv[0][0] != 'p' || argc < 2)
-+		break;
-+	case 'p':
-+		break;
-+	default:
-+		return -ECANCELED;
-+	}
-+
-+	if (argc < 2)
- 		return -ECANCELED;
+ 	WARN_ON(timekeeping_suspended);
  
- 	if (argv[0][1] == ':')
+ 	do {
+ 		seq = read_seqcount_begin(&tk_core.seq);
+ 		base = ktime_add(tk->tkr_mono.base, *offset);
++		nsecs = tk->tkr_mono.xtime_nsec >> tk->tkr_mono.shift;
+ 
+ 	} while (read_seqcount_retry(&tk_core.seq, seq));
+ 
+-	return base;
+-
++	return base + nsecs;
+ }
+ EXPORT_SYMBOL_GPL(ktime_get_coarse_with_offset);
+ 
 
 
