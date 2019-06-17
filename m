@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3338EC31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E7B8C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FCB320861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:23:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AA3521670
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:24:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728124AbfFQUXD (ORCPT
+        id S1728276AbfFQUX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:23:03 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:45602 "EHLO
+        Mon, 17 Jun 2019 16:23:58 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:45621 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfFQUXD (ORCPT
+        with ESMTP id S1726023AbfFQUX6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:23:03 -0400
+        Mon, 17 Jun 2019 16:23:58 -0400
 Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tglx@linutronix.de>)
-        id 1hcy8X-0004Us-6L; Mon, 17 Jun 2019 22:21:53 +0200
-Date:   Mon, 17 Jun 2019 22:21:51 +0200 (CEST)
+        id 1hcyAG-0004Xp-Rt; Mon, 17 Jun 2019 22:23:41 +0200
+Date:   Mon, 17 Jun 2019 22:23:39 +0200 (CEST)
 From:   Thomas Gleixner <tglx@linutronix.de>
 To:     Tim Chen <tim.c.chen@linux.intel.com>
 cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
@@ -52,9 +52,9 @@ cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
         LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
 Subject: Re: [PATCH v3] Documentation: Add section about CPU vulnerabilities
  for Spectre
-In-Reply-To: <c63945d34bfc9df2412f813d0b9b3a321a65de5d.1560795378.git.tim.c.chen@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906172217540.1963@nanos.tec.linutronix.de>
-References: <c63945d34bfc9df2412f813d0b9b3a321a65de5d.1560795378.git.tim.c.chen@linux.intel.com>
+In-Reply-To: <alpine.DEB.2.21.1906172217540.1963@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1906172222430.1963@nanos.tec.linutronix.de>
+References: <c63945d34bfc9df2412f813d0b9b3a321a65de5d.1560795378.git.tim.c.chen@linux.intel.com> <alpine.DEB.2.21.1906172217540.1963@nanos.tec.linutronix.de>
 User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -68,42 +68,47 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 Tim,
 
-On Mon, 17 Jun 2019, Tim Chen wrote:
+On Mon, 17 Jun 2019, Thomas Gleixner wrote:
 
-> +Spectre variant 1 attacks take advantage of speculative execution of
-> +conditional branches, while Spectre variant 2 attacks use speculative
-> +execution of indirect branches to leak privileged memory. See [1] [5]
-> +[7] [10] [11].
+> Tim,
+> 
+> On Mon, 17 Jun 2019, Tim Chen wrote:
+> 
+> > +Spectre variant 1 attacks take advantage of speculative execution of
+> > +conditional branches, while Spectre variant 2 attacks use speculative
+> > +execution of indirect branches to leak privileged memory. See [1] [5]
+> > +[7] [10] [11].
+> 
+> It would be great to actually link these [N] to the actual http link at the
+> bottom. No idea what's the best way to do that.
+> 
+> Jonathan?
+> 
+> > +Mitigation control on the kernel command line
+> > +---------------------------------------------
+> > +
+> > +Spectre variant 2 mitigation can be disabled or force enabled at the
+> > +kernel command line.
+> 
+> The below renders horribly when converted to HTML
+> 
+> You probably want to wrap these into a table
+> 
+> > +	nospectre_v2	[X86] Disable all mitigations for the Spectre variant 2
+> > +			(indirect branch prediction) vulnerability. System may
+> > +			allow data leaks with this option, which is equivalent
+> > +			to spectre_v2=off.
+> > +
+> > +
+> > +        spectre_v2=     [X86] Control mitigation of Spectre variant 2
+> > +			(indirect branch speculation) vulnerability.
+> > +			The default operation protects the kernel from
+> > +			user space attacks.
+> 
+> Maybe Jonathan has a better idea.
 
-It would be great to actually link these [N] to the actual http link at the
-bottom. No idea what's the best way to do that.
-
-Jonathan?
-
-> +Mitigation control on the kernel command line
-> +---------------------------------------------
-> +
-> +Spectre variant 2 mitigation can be disabled or force enabled at the
-> +kernel command line.
-
-The below renders horribly when converted to HTML
-
-You probably want to wrap these into a table
-
-> +	nospectre_v2	[X86] Disable all mitigations for the Spectre variant 2
-> +			(indirect branch prediction) vulnerability. System may
-> +			allow data leaks with this option, which is equivalent
-> +			to spectre_v2=off.
-> +
-> +
-> +        spectre_v2=     [X86] Control mitigation of Spectre variant 2
-> +			(indirect branch speculation) vulnerability.
-> +			The default operation protects the kernel from
-> +			user space attacks.
-
-Maybe Jonathan has a better idea.
-
-Other than those formatting detail, this looks really good. Well done!
+But ideally you follow the table style which is used for the L1TF and MDS
+command line options.
 
 Thanks,
 
