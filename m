@@ -2,83 +2,114 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E40FC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 687A3C31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1157520861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4185A2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:16:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jT6Q8qRl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727080AbfFQMPD (ORCPT
+        id S1727127AbfFQMQR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:15:03 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43568 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFQMPD (ORCPT
+        Mon, 17 Jun 2019 08:16:17 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:32930 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFQMQR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:15:03 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hcqXK-0006f3-C3; Mon, 17 Jun 2019 14:14:58 +0200
-Date:   Mon, 17 Jun 2019 14:14:57 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     =?GB2312?B?zqy/tcqv?= <swkhack@gmail.com>
-cc:     John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, swkhack@qq.com,
-        Miroslav Lichvar <mlichvar@redhat.com>
-Subject: Re: [PATCH] time: fix a assignment error in ntp module
-In-Reply-To: <CAObeVcdBDbSiyQCX7C_G3p6TpB9yjRyrWwsvPgh11V8v+BNaqQ@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1906171409250.1854@nanos.tec.linutronix.de>
-References: <20190422093421.47896-1-swkhack@gmail.com> <alpine.DEB.2.21.1906170814590.1760@nanos.tec.linutronix.de> <CAObeVcdBDbSiyQCX7C_G3p6TpB9yjRyrWwsvPgh11V8v+BNaqQ@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 17 Jun 2019 08:16:17 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y17so6356087lfe.0;
+        Mon, 17 Jun 2019 05:16:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=udosfGcsxFjuEN1zHDqJn+M1NCMIGyoOGu6CEwS0pac=;
+        b=jT6Q8qRlLptMoZIpkA1ya0gK8Hw5DW2D9Hc/oZSFod6/4ON8smZ2C7pacHVBKJtwif
+         M+xf14CBbD/qagu98vIVvN7eUlakgVL6aPxSZYBEugSmRZnoCp0Eew+WqZufuoPMUzTv
+         9PpvWRw8UiFn9Ge4YwGlGP1kyvOhW34lP9M3ZdXvxWhMHUa9k4uCr/Xfz4dpv+Eehvzn
+         UTvd6YRbzndJvOK79fD9uLdXHE7VJ/WhdmlBLoVQBbzlkg3ocRIB6IAxJNYllvdAiw3H
+         5Qo9n8tqkBDMSJgvjKMS5O6eWZtW5svcIMoXivzy2xeNcbNmX8/E3FiRCv9Tcuwj6D1P
+         Jnsg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=udosfGcsxFjuEN1zHDqJn+M1NCMIGyoOGu6CEwS0pac=;
+        b=FOjOFKtECsYnTp6z6bUcsh7OPKhQbhdxFN9E6qTeaWE36MXwjA3s7GJdkkfL5qel7S
+         nP8ZavD/IjYvcUr+txuxwpWiNPPXCK766PVbiAok2Tv1enkRzwgtxkTFYVjtEH+TFReJ
+         4DlXsdeph8sJt2iL35Lcwd0WZPMuy/O8SjG8g0PzrijCNMd1T4VXRSJoR/HTxP8A+25C
+         iJ/ZNBE0bpwTbNhCYQOa9P8uSIJ0a2UyDFTQvaC2MoXPU2l0yEkPu7LSAmjqzOE0PbLM
+         ckLfcyO4nfczG7vz6DCC1oM/tBi1amW2cehsD19E8OcL6KKhsjp7qbQNLvXbfIdvcPBw
+         g0MQ==
+X-Gm-Message-State: APjAAAXbseUN1XADJymcRlFytk06JvQoUxAA2TtmjEr6g1d6Z8HS5fWn
+        l03zxGselx5oqHPe43+9SGI=
+X-Google-Smtp-Source: APXvYqwKB+ebv49DdCC7IQFSoLc/U1801tvGqjIasHp0bM9bHN0LQJ7nTRElnvd5f7F/YByM2GjGqA==
+X-Received: by 2002:ac2:48a5:: with SMTP id u5mr49615261lfg.62.1560773774658;
+        Mon, 17 Jun 2019 05:16:14 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id k12sm1940837lfm.90.2019.06.17.05.16.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 05:16:14 -0700 (PDT)
+Subject: Re: [PATCH V3] i2c: busses: tegra: Add suspend-resume support
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     Wolfram Sang <wsa@the-dreams.de>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
+ <20190614211129.GG17899@ninjato>
+ <758d6dc2-f044-6be3-6896-196ef477d393@nvidia.com>
+ <20190615045405.GA1023@kunai>
+ <69a9a7e3-f885-b6ab-60bb-a1165ce2db23@gmail.com>
+ <20190617070259.GA30126@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <3f5adcda-49e3-46b3-9881-bc33532db4df@gmail.com>
+Date:   Mon, 17 Jun 2019 15:16:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-426885459-1560773698=:1854"
+In-Reply-To: <20190617070259.GA30126@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+17.06.2019 10:02, Thierry Reding пишет:
+> On Sun, Jun 16, 2019 at 04:56:06PM +0300, Dmitry Osipenko wrote:
+>> 15.06.2019 7:54, Wolfram Sang пишет:
+>>>
+>>>>> Without a maintainer ack, this is an exception this time. Should we add
+>>>>> Dmitry as another maintainer or reviewer at least?
+>>>>>
+>>>> I shall followup with Maintainer for ACK in future I2C tegra patches.
+>>>
+>>> This comment was not directed at you, sorry if that was not clear. It
+>>> was more for Laxman, Thierry, Jonathan, and Dmitry (if he is
+>>> interested).
+>>>
+>>
+>> I don't mind at all to review and test patches for the driver and can propose myself
+>> as a reviewer if that helps and if there are no objections from the Tegra maintainers.
+>> My primary interest is to have my devices working after next kernel update, but I also
+>> like to review patches in general if they are touching area that I'm familiar with.
+> 
+> No objection from me.
 
---8323329-426885459-1560773698=:1854
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Thanks! I guess the same from Laxman and Jon?
 
-On Mon, 17 Jun 2019, 维康石 wrote:
-
-  A: Because it messes up the order in which people normally read text.
-  Q: Why is top-posting such a bad thing?
-  A: Top-posting.
-  Q: What is the most annoying thing in e-mail?
-
-  A: No.
-  Q: Should I include quotations after my reply?
-
-  http://daringfireball.net/2007/07/on_top
-
-> Yes,the  >UINT_MAX value can be passed by
-> syscall adjtimex->do_adjtimex->__do_adjtimex->process_adjtimex_modes by the
-> proper arugments.
-
-So there is clearly some sanity check missing, but surely not that
-type cast.
-
-> > > -     if (txc->modes & ADJ_TAI && txc->constant > 0)
-> > > +     if (txc->modes & ADJ_TAI && (int)txc->constant > 0)
-> > >               *time_tai = txc->constant;
-> >
-> > The way more interesting question is whether txc->constant can be >
-> > UINT_MAX. In that case the txc->constant would be truncated.
-> >
-> > Miroslav?
-
-Thanks,
-
-         tglx
---8323329-426885459-1560773698=:1854--
+I'll prepare the patch to add myself as a reviewer.
