@@ -2,66 +2,113 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 643EEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6632C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4278120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 898B02085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbfFQVVA (ORCPT
+        id S1729397AbfFQVgt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:21:00 -0400
-Received: from www62.your-server.de ([213.133.104.62]:47160 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728714AbfFQVU6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:20:58 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hcz3a-0001JJ-NN; Mon, 17 Jun 2019 23:20:50 +0200
-Received: from [178.199.41.31] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hcz3a-0002B3-Hm; Mon, 17 Jun 2019 23:20:50 +0200
-Subject: Re: [PATCH bpf] bpf: fix the check that forwarding is enabled in
- bpf_ipv6_fib_lookup
-To:     Anton Protopopov <a.s.protopopov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190615225348.2539-1-a.s.protopopov@gmail.com>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <afd146bd-2a6a-14ce-8ea2-8f928960736d@iogearbox.net>
-Date:   Mon, 17 Jun 2019 23:20:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190615225348.2539-1-a.s.protopopov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25483/Mon Jun 17 09:56:00 2019)
+        Mon, 17 Jun 2019 17:36:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57660 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727479AbfFQVgr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:36:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4B06AAD4C;
+        Mon, 17 Jun 2019 21:36:46 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 23:36:46 +0200
+Message-ID: <s5h7e9jc2s1.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Ranjani Sridharan" <ranjani.sridharan@linux.intel.com>
+Cc:     <alsa-devel@alsa-project.org>,
+        =?UTF-8?B?IkFtYWRldXN6IFPFgmF3acWEc2tp?= =?UTF-8?B?Ig==?= 
+        <amadeuszx.slawinski@linux.intel.com>,
+        "Liam Girdwood" <lgirdwood@gmail.com>,
+        "Cezary Rojewski" <cezary.rojewski@intel.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        "Pierre-Louis Bossart" <pierre-louis.bossart@linux.intel.com>,
+        "Jie Yang" <yang.jie@linux.intel.com>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 09/11] ASoC: Intel: hdac_hdmi: Set ops to NULL on remove
+In-Reply-To: <75be86354032f4886cbaf7d430de2aa89eaab573.camel@linux.intel.com>
+References: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
+        <20190617113644.25621-10-amadeuszx.slawinski@linux.intel.com>
+        <75be86354032f4886cbaf7d430de2aa89eaab573.camel@linux.intel.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/16/2019 12:53 AM, Anton Protopopov wrote:
-> The bpf_ipv6_fib_lookup function should return BPF_FIB_LKUP_RET_FWD_DISABLED
-> when forwarding is disabled for the input device.  However instead of checking
-> if forwarding is enabled on the input device, it checked the global
-> net->ipv6.devconf_all->forwarding flag.  Change it to behave as expected.
+On Mon, 17 Jun 2019 22:51:42 +0200,
+Ranjani Sridharan wrote:
 > 
-> Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+> On Mon, 2019-06-17 at 13:36 +0200, Amadeusz Sławiński wrote:
+> > When we unload Skylake driver we may end up calling
+> > hdac_component_master_unbind(), it uses acomp->audio_ops, which we
+> > set
+> > in hdmi_codec_probe(), so we need to set it to NULL in
+> > hdmi_codec_remove(),
+> > otherwise we will dereference no longer existing pointer.
+> 
+> Hi Amadeusz,
+> 
+> It looks like the audio_ops should be deleted snd_hdac_acomp_exit().
 
-Applied, thanks!
+It's a different one.  The codec driver registers / de-registers the
+notifier at its probe/remove, while the controller driver takes care
+of snd_hdac_acomp_init().  snd_hdac_acomp_exit() is usually not needed
+to be called explicitly, as it's managed via devres.
+
+
+Takashi
+
+> Also, this doesnt seem to be the case with when the SOF driver is
+> removed.
+> Could you please give a bit more context on what error you see when
+> this happens?
+> 
+> Thanks,
+> Ranjani
+> > 
+> > Signed-off-by: Amadeusz Sławiński <
+> > amadeuszx.slawinski@linux.intel.com>
+> > ---
+> >  sound/soc/codecs/hdac_hdmi.c | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/sound/soc/codecs/hdac_hdmi.c
+> > b/sound/soc/codecs/hdac_hdmi.c
+> > index 911bb6e2a1ac..9ee1bff548d8 100644
+> > --- a/sound/soc/codecs/hdac_hdmi.c
+> > +++ b/sound/soc/codecs/hdac_hdmi.c
+> > @@ -1890,6 +1890,12 @@ static void hdmi_codec_remove(struct
+> > snd_soc_component *component)
+> >  {
+> >  	struct hdac_hdmi_priv *hdmi =
+> > snd_soc_component_get_drvdata(component);
+> >  	struct hdac_device *hdev = hdmi->hdev;
+> > +	int ret;
+> > +
+> > +	ret = snd_hdac_acomp_register_notifier(hdev->bus, NULL);
+> > +	if (ret < 0)
+> > +		dev_err(&hdev->dev, "notifier unregister failed: err:
+> > %d\n",
+> > +				ret);
+> >  
+> >  	pm_runtime_disable(&hdev->dev);
+> >  }
+> 
+> 
