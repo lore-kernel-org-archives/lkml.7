@@ -6,82 +6,87 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD9D8C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:06:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 664EEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 886842086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:06:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 428332084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:07:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728302AbfFQPGo (ORCPT
+        id S1728400AbfFQPHH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:06:44 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:44387 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727121AbfFQPGn (ORCPT
+        Mon, 17 Jun 2019 11:07:07 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:27844 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728248AbfFQPHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:06:43 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hctDP-0004mS-V4; Mon, 17 Jun 2019 17:06:36 +0200
-Date:   Mon, 17 Jun 2019 17:06:35 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Miroslav Lichvar <mlichvar@redhat.com>
-cc:     =?GB2312?B?zqy/tcqv?= <swkhack@gmail.com>,
-        John Stultz <john.stultz@linaro.org>, sboyd@kernel.org,
-        LKML <linux-kernel@vger.kernel.org>, swkhack@qq.com
-Subject: Re: [PATCH] time: fix a assignment error in ntp module
-In-Reply-To: <20190617132133.GA7851@localhost>
-Message-ID: <alpine.DEB.2.21.1906171705280.1854@nanos.tec.linutronix.de>
-References: <20190422093421.47896-1-swkhack@gmail.com> <alpine.DEB.2.21.1906170814590.1760@nanos.tec.linutronix.de> <CAObeVcdBDbSiyQCX7C_G3p6TpB9yjRyrWwsvPgh11V8v+BNaqQ@mail.gmail.com> <alpine.DEB.2.21.1906171409250.1854@nanos.tec.linutronix.de>
- <20190617132133.GA7851@localhost>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 17 Jun 2019 11:07:06 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-73-7E6ddmnkOVuQR4rZ3FkrjQ-1; Mon, 17 Jun 2019 16:07:03 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
+ 17 Jun 2019 16:07:03 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 17 Jun 2019 16:07:03 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Josh Poimboeuf' <jpoimboe@redhat.com>
+CC:     'Alexei Starovoitov' <alexei.starovoitov@gmail.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        "Kairui Song" <kasong@redhat.com>
+Subject: RE: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
+Thread-Topic: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
+Thread-Index: AQHVIjMat8Fq1dO6sUKm4aXwvliIEKaa+NdggAAgcYCAABJOQIAAJoAAgASjjuA=
+Date:   Mon, 17 Jun 2019 15:07:03 +0000
+Message-ID: <a1942e57ed0844fab62b6bdf0f465578@AcuMS.aculab.com>
+References: <cover.1560431531.git.jpoimboe@redhat.com>
+ <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
+ <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
+ <57f6e69da6b3461a9c39d71aa1b58662@AcuMS.aculab.com>
+ <20190614134401.q2wbh6mvo4nzmw2o@treble>
+ <9b8aa912df694d25b581786100d3e2e2@AcuMS.aculab.com>
+ <20190614170720.57yxtxvd4qee337l@treble>
+In-Reply-To: <20190614170720.57yxtxvd4qee337l@treble>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-54536811-1560783995=:1854"
+X-MC-Unique: 7E6ddmnkOVuQR4rZ3FkrjQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+RnJvbTogSm9zaCBQb2ltYm9ldWYNCj4gU2VudDogMTQgSnVuZSAyMDE5IDE4OjA3DQouLi4NCj4g
+PiBJIGRvIHJlbWVtYmVyIGEgc3RhY2sgdHJhY2UgcHJpbnRlciBmb3IgeDg2IHRoaXMgZGlkbid0
+IG5lZWQNCj4gPiBhbnkgYW5ub3RhdGlvbiBvZiB0aGUgb2JqZWN0IGNvZGUgYW5kIGRpZG4ndCBu
+ZWVkIGZyYW1lIHBvaW50ZXJzLg0KPiA+IFRoZSBvbmx5IGRvd25zaWRlIHdhcyB0aGF0IGl0IGhh
+ZCB0byAnZ3Vlc3MnIChpZSBzY2FuIHRoZSBzdGFjaykNCj4gPiB0byBnZXQgb3V0IG9mIGZ1bmN0
+aW9ucyB0aGF0IGNvdWxkbid0IHJldHVybi4NCj4gPiBCYXNpY2FsbHkgaXQgZm9sbG93ZWQgdGhl
+IGNvbnRyb2wgZmxvdyBmb3J3YXJkcyB0cmFja2luZyB0aGUNCj4gPiB2YWx1ZXMgb2YgJXNwIGFu
+ZCAlYnAgdW50aWwgaXQgZm91bmQgYSByZXR1cm4gaW5zdHVjdGlvbi4NCj4gPiBBbGwgaXQgaGFz
+IHRvIGRvIGlzIGRldGVjdCBsb29wcyBhbmQgcmV0cnkgZnJvbSB0aGUgb3RoZXINCj4gPiB0YXJn
+ZXQgb2YgY29uZGl0aW9uYWwgYnJhbmNoZXMuDQo+IA0KPiBUaGF0IGFjdHVhbGx5IHNvdW5kcyBr
+aW5kIG9mIGNvb2wsIHRob3VnaCBJIGRvbid0IHRoaW5rIHdlIG5lZWQgdGhhdCBmb3INCj4gdGhl
+IGtlcm5lbC4NCg0KTm8gcmVhc29uIHdoeSBub3QuDQpJdCB3b3VsZCBzYXZlIG1vc3Qgb2YgdGhl
+IGluc3RydW1lbnRhdGlvbiB0aGUgb3JjIHVud2luZGVyIG5lZWRzLg0KSXQgaXNuJ3QgYXMgdGhv
+dWdoIHRoZSBwZXJmb3JtYW5jZSBvZiBrZXJuZWwgdHJhY2ViYWNrcyBpcyB0aGF0DQppbXBvcnRh
+bnQgKHByaW50ZiBhbmQgc3ltYm9sIGxvb2t1cCBwcm9iYWJseSBhbHdheXMgZG9taW5hdGVzKS4N
+ClRoZSBvbmx5IGRpZmZpY3VsdHkgZm9yIHg4NiBpcyBxdWlja2x5IGRldGVybWluaW5nIHRoZSBz
+aXplIG9mDQppbnN0cnVjdGlvbnMuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3Mg
+TGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQ
+VCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
 
---8323329-54536811-1560783995=:1854
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-Miroslav,
-
-On Mon, 17 Jun 2019, Miroslav Lichvar wrote:
-
-> On Mon, Jun 17, 2019 at 02:14:57PM +0200, Thomas Gleixner wrote:
-> > On Mon, 17 Jun 2019, 维康石 wrote:
-> > > Yes,the  >UINT_MAX value can be passed by
-> > > syscall adjtimex->do_adjtimex->__do_adjtimex->process_adjtimex_modes by the
-> > > proper arugments.
-> > 
-> > So there is clearly some sanity check missing, but surely not that
-> > type cast.
-> 
-> As the offset is saved in an int (and returned via adjtimex() in the
-> tai field), should be the maximum INT_MAX?
-
-Right.
-
-> We probably also want to avoid overflow in the offset on a leap second
-> and the CLOCK_TAI clock itself, so maybe it would make sense to
-> specify a much smaller maximum like 1000000?
-> 
-> Even 1000 should be good enough for near future. Negative values are
-> not allowed anyway. If the Earth's rotation changed significantly
-> (e.g. hitting a very large asteroid), there probably wouldn't be
-> anyone left to care about TAI. 
-
-Hehehe. I leave it to you to find a sane limit taking all the possible
-events into account :)
-
-Thanks,
-
-	tglx
---8323329-54536811-1560783995=:1854--
