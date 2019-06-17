@@ -2,74 +2,107 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05FAC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9966C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41DC208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91E022089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560776145;
+	bh=lwqMZcmomoJHiJmOU3YR0Sts5aUdBFDfr3WzLnWu6pY=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=Z9VuA9YzHAyL1IGdiqngidexCKCM2k6jTfmscaVYgFQbFC4LtQjEDMd8fPIychrfU
+	 V1ipHS0R73T2yl7hzMxHGfoaev3FtQZRWVWxXzzWOhAU3tr6GJBk8m/sLmZmV+u1Jn
+	 WA9aymltrFJoofIbmjsgm1GFDT7aWXeGfeUKZrl0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfFQMzm (ORCPT
+        id S1727957AbfFQMzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 17 Jun 2019 08:55:43 -0400
+Received: from mga17.intel.com ([192.55.52.151]:3200 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfFQMzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 08:55:42 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:48083 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726028AbfFQMzl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:55:41 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hcrAX-0005Q0-EF; Mon, 17 Jun 2019 12:55:29 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Gao Xiang <gaoxiang25@huawei.com>, Chao Yu <yuchao0@huawei.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-erofs@lists.ozlabs.org, devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: erofs: clean up initialization of pointer de
-Date:   Mon, 17 Jun 2019 13:55:29 +0100
-Message-Id: <20190617125529.28327-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 05:55:42 -0700
+X-ExtLoop1: 1
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Jun 2019 05:55:39 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
+        agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RESEND v4 0/4] I2C: DWC3 USB: Add support for ACPI based AArch64 Laptops
+In-Reply-To: <20190617125105.6186-1-lee.jones@linaro.org>
+References: <20190617125105.6186-1-lee.jones@linaro.org>
+Date:   Mon, 17 Jun 2019 15:55:35 +0300
+Message-ID: <87lfy0gym0.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Currently pointer de is being initialized with a value that is
-never read and a few statements later de is being re-assigned. Clean
-this up by ininitialzing de and removing the re-assignment.
+Lee Jones <lee.jones@linaro.org> writes:
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/staging/erofs/dir.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> This patch-set ensures the kernel is bootable on the newly released
+> AArch64 based Laptops using ACPI configuration tables.  The Pinctrl
+> changes have been accepted, leaving only I2C (keyboard, touchpad,
+> touchscreen, fingerprint, etc, HID device) and USB (root filesystem,
+> camera, networking, etc) enablement.
+>
+> RESEND: Stripped I2C patches as they have also been merged into
+>         their respective subsystem.
+>
+> v4:
+>  * Collecting Acks
+>  * Adding Andy Gross' new email
+>  * Removing applied Pinctrl patches
+>
+> Lee Jones (4):
+>   soc: qcom: geni: Add support for ACPI
+>   usb: dwc3: qcom: Add support for booting with ACPI
+>   usb: dwc3: qcom: Start USB in 'host mode' on the SDM845
+>   usb: dwc3: qcom: Improve error handling
 
-diff --git a/drivers/staging/erofs/dir.c b/drivers/staging/erofs/dir.c
-index 9bbc68729c11..dbf6a151886c 100644
---- a/drivers/staging/erofs/dir.c
-+++ b/drivers/staging/erofs/dir.c
-@@ -42,10 +42,9 @@ static int erofs_fill_dentries(struct dir_context *ctx,
- 			       void *dentry_blk, unsigned int *ofs,
- 			       unsigned int nameoff, unsigned int maxsize)
- {
--	struct erofs_dirent *de = dentry_blk;
-+	struct erofs_dirent *de = dentry_blk + *ofs;
- 	const struct erofs_dirent *end = dentry_blk + nameoff;
- 
--	de = dentry_blk + *ofs;
- 	while (de < end) {
- 		const char *de_name;
- 		unsigned int de_namelen;
--- 
-2.20.1
+pushed to testing/next
 
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0HjccACgkQzL64meEa
+mQZhsA/9GPXGmz10q8n644hKI3owpJviGwOTfR0L0fAavSjDtLvI3avmcYMZ1a+h
+oYvJDVOAZNvc97WMt8JeF1Dc9rfutyq+jtmkpRwTAZ1Xy8cg+9nu1GLSaajLu/OU
+kECtbgtUXf76/srOfseNyRk8aFnEW6YZXviTW0q1L6ayYhtxHibF8y1Z3ltKl8Wq
+xgFLb1EeffqtNfQze/6Fg7y20XfPA2VeeJGqy+e3IFN6p4GJsRtGhLtJUObxmclR
+vSaelq0UrPylodnFK+5GhcPHhXwYZKA28JNlZmw91kplKCvLHR32goJsfTY6fq4W
+xTZvHn54vnQ6xoNgxQCtzpFa4A9m5Eqabsq2HzrRzha/HbzCj5kKnFIhHxLV+N4a
+CGtDJzcB9nZbuspSsjTGrumTtKPKedrmwHkbxD9sWW/mMwTbavqu0MAiRqBkm/eU
+v1lGqBNjIvMX+246KG/iCLvfYZjANYM84cLxz//ODfKjS67WKrIgqCFHXGflEpd0
+DBjFHGtIX2JJKtCFOcSkzyxyPo4qiRvdM5wP+MStR2YNa9e+DZrd+DgRV1HlkOBR
+A/r4yTd8mqlCCw7F1gkP689+zCQUhZn4SASDwWeuXtqaQigXDFYuA8gMMbVbBG/Z
+ieiHtc8WmhlI11GgO5Qbj6ucJHNuzKhJcpKMeMf5d6jR1nNACdo=
+=yt0c
+-----END PGP SIGNATURE-----
+--=-=-=--
