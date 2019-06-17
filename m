@@ -5,61 +5,61 @@ X-Spam-Level:
 X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFB31C31E53
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFD4C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:27:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7D23222FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D38BE222FA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:27:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QRuUpR7f"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dqLUMwrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfFQI1I (ORCPT
+        id S1727849AbfFQI1P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:27:08 -0400
-Received: from mail-vk1-f201.google.com ([209.85.221.201]:35920 "EHLO
-        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727777AbfFQI1D (ORCPT
+        Mon, 17 Jun 2019 04:27:15 -0400
+Received: from mail-qt1-f201.google.com ([209.85.160.201]:35958 "EHLO
+        mail-qt1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727400AbfFQI1M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:27:03 -0400
-Received: by mail-vk1-f201.google.com with SMTP id s3so4486863vkb.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 01:27:02 -0700 (PDT)
+        Mon, 17 Jun 2019 04:27:12 -0400
+Received: by mail-qt1-f201.google.com with SMTP id q26so8635001qtr.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 01:27:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=x00LgSmLKToDFMVzGBRd3p5tkepZRYMdj+2oyEasIr8=;
-        b=QRuUpR7fe5b6KQBbrm5CJpf+ld0Qdmum4wKPR1jUB+VQRr9GS6e7oJ5ulOSoALkGRP
-         ovpTcXb4G9btECrBBzgf45fxCMM2GXv30izjPgnZKuYLFrpwe3HXhZDQB73XVrAejJxD
-         IgfII4Z9jaY8fPVzbtqxbOwVsCvGiB0RF4Mffv1td7BVKS1Kx0JJZAXyrkGkivyiYA63
-         hsgbC0KTmy8G9zVu3WhXcfLq7dYt6rebWJmZYOhXohOw40uDx9fx1rlyjCam74q3M300
-         OpJon9kmObZYZt7VkAjWX8Hir7yRWcNZaLM02mxdF6GX3sH1HnSt2LSrmWpaGI1AehdZ
-         m5iA==
+        bh=P7qQxupR077m/rPxlenNGlU3U4VVv+id9WBQp+CCiSA=;
+        b=dqLUMwrRZQiMFvm38V0z6iKhsbbQcU8U8N8pSEIsFltqJAqDIL/1dU9s/SknImAoiG
+         1jAZQEw1jfjkQsGEKRRwb9c9VUuPvm1EKJpmDRR2Dx395sZirD9rolf3UZGnMkXVT/0g
+         B3W+XYMY5/uFttGCyyCOCwERc21fwwPtQ60cuJu7C6FZEa+rCRJoJDWrBrFGXpHe4lpW
+         7DlYd2qA6sgsitjocepZeYwQsJtKZWf+m6SkXaSyypkDwrgPqUoUG19PSneUhdkmbpZl
+         HjkxdkJ4mI1ik3KnnJs+UUjsWS4abEl/JWsf72O68EzBa7qdBYOno2uD0pv3+2nii6q2
+         tKqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=x00LgSmLKToDFMVzGBRd3p5tkepZRYMdj+2oyEasIr8=;
-        b=UTuMJ2dwZIwd6wHNgvKaSsVOAR6Ctm2gXuCUYtO72W/7C29rM0YcVb5L8NaGfiigGY
-         yQSljwU910LT80zvhp8q2Qs/KQ/qqtKW/BPLYAHmDHzy3SAvk1oX/XX4FJ9VVql/UDzu
-         bm9b8YqhbPrIn8/OhwewJGvZYA1kEfVBVddxFFf6Jm0JW0uV5dSMRjHfPwUaPyb1Wvyi
-         uyCnyXv8ZvDld/fKgizy/PU20okXm88yJRMGHLpQbNoppb6C3SAb+DayOzAc4/rSryM0
-         JU4k24LJ0hFboFvCvn0vcmFSfVrnjgthiQvh2AiaARIQRW7SeOLwsymDgoifJ0Iu+Wvr
-         kCiA==
-X-Gm-Message-State: APjAAAWdSklyXB/tQLGABQbFtdYBnU9WBPrHa4dt9DFgbuCVI7DHStkd
-        T/qljYtkoH2zp+udEPpAVm2Kzhb5sEg6PpdDJivvhA==
-X-Google-Smtp-Source: APXvYqw0AQqNp/70EN0nmAb/HcpHOuljd/qoLNtxJ0Hn2/jd1Zqa5j+kjBpA0VFAeCRj9jxoqQZAwaaDKLUcJqXCrNqWPg==
-X-Received: by 2002:a67:6d44:: with SMTP id i65mr58904024vsc.106.1560760022147;
- Mon, 17 Jun 2019 01:27:02 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 01:26:01 -0700
+        bh=P7qQxupR077m/rPxlenNGlU3U4VVv+id9WBQp+CCiSA=;
+        b=DEY7WUAkW06yn68xQIhFy7w4mqFODMsBZ5SdVtwcJtaihu+yVFlOQv7gqA7XDTM7rw
+         /FNrBh1m0Hc2dpFoOklGbK+Vt/y+1uAQHTj6O1ML+JXsHFoCNMpLYQ0Pr8InB3yT//fx
+         yc+NiNGLjPxql4BHA8ovstJV0dkg6mQYkHHSEyL/kyPGrbirO7o/CmCbdBE1Y31wtZpW
+         ee6cNp7IFPcgjkcLMrmrZuUoZfokotkV+zB4ZnTJKwLkRhNTQjPhgP9Pv/t6lEMbeEgV
+         mgxmAV6D6geiXF1V/F7u/6SPzvbk2JMLaO1mpbLA9Km9tmpcNYJfEv19zlAtdFzEPwD6
+         jMLA==
+X-Gm-Message-State: APjAAAUDPetrzCtPy4HdbylPf3qP+w1JjcfU9gGwKW5moOhD7eOL4upo
+        OKxouOCSTUV+dE+X6v4FhY+WCjlfZTTHPUYb+LWC/A==
+X-Google-Smtp-Source: APXvYqx0YR1LOvLx8MrLc4kC+IavL77YnqU0ZCY8iQpLJogfIJFPCQppkE8daCg0rbTkPkzwWah6Jy7PTx84UaIsCg506w==
+X-Received: by 2002:a37:47d1:: with SMTP id u200mr53840375qka.21.1560760032086;
+ Mon, 17 Jun 2019 01:27:12 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 01:26:03 -0700
 In-Reply-To: <20190617082613.109131-1-brendanhiggins@google.com>
-Message-Id: <20190617082613.109131-7-brendanhiggins@google.com>
+Message-Id: <20190617082613.109131-9-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20190617082613.109131-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v5 06/18] kbuild: enable building KUnit
+Subject: [PATCH v5 08/18] objtool: add kunit_try_catch_throw to the noreturn list
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
         jpoimboe@redhat.com, keescook@google.com,
@@ -77,48 +77,42 @@ Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
         khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
         mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
         richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>,
+        kbuild test robot <lkp@intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-KUnit is a new unit testing framework for the kernel and when used is
-built into the kernel as a part of it. Add KUnit to the root Kconfig and
-Makefile to allow it to be actually built.
+Fix the following warning seen on GCC 7.3:
+  kunit/test-test.o: warning: objtool: kunit_test_unsuccessful_try() falls through to next function kunit_test_catch()
 
+kunit_try_catch_throw is a function added in the following patch in this
+series; it allows KUnit, a unit testing framework for the kernel, to
+bail out of a broken test. As a consequence, it is a new __noreturn
+function that objtool thinks is broken (as seen above). So fix this
+warning by adding kunit_try_catch_throw to objtool's noreturn list.
+
+Reported-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+Link: https://www.spinics.net/lists/linux-kbuild/msg21708.html
 ---
- Kconfig  | 2 ++
- Makefile | 2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ tools/objtool/check.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Kconfig b/Kconfig
-index 48a80beab6853..10428501edb78 100644
---- a/Kconfig
-+++ b/Kconfig
-@@ -30,3 +30,5 @@ source "crypto/Kconfig"
- source "lib/Kconfig"
+diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+index 172f991957269..98db5fe85c797 100644
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -134,6 +134,7 @@ static int __dead_end_function(struct objtool_file *file, struct symbol *func,
+ 		"usercopy_abort",
+ 		"machine_real_restart",
+ 		"rewind_stack_do_exit",
++		"kunit_try_catch_throw",
+ 	};
  
- source "lib/Kconfig.debug"
-+
-+source "kunit/Kconfig"
-diff --git a/Makefile b/Makefile
-index b81e172612507..4b544a8eebee4 100644
---- a/Makefile
-+++ b/Makefile
-@@ -991,7 +991,7 @@ endif
- PHONY += prepare0
- 
- ifeq ($(KBUILD_EXTMOD),)
--core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
-+core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/ kunit/
- 
- vmlinux-dirs	:= $(patsubst %/,%,$(filter %/, $(init-y) $(init-m) \
- 		     $(core-y) $(core-m) $(drivers-y) $(drivers-m) \
+ 	if (func->bind == STB_WEAK)
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
