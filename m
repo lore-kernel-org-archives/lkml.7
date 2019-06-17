@@ -2,103 +2,125 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CABC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1F26C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:41:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E97072089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:36:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FvhSsFe0"
+	by mail.kernel.org (Postfix) with ESMTP id B3AE2208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:41:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727736AbfFQWgI (ORCPT
+        id S1727974AbfFQWlE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 18:36:08 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43601 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfFQWgI (ORCPT
+        Mon, 17 Jun 2019 18:41:04 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:64736 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727000AbfFQWlE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:36:08 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cl9so4769813plb.10
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:36:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=jdPOeSR0Djd1OnJVTCbTPPRB0AwFbffNcyIU9XNlUrI=;
-        b=FvhSsFe0xJQ6kkNZED5XOWFPTr+5IIUSXOWSREhWeRO0F48d81LQ8TTYnGcPBXDvwF
-         rYV3zplOT0xAd+7DVtHF16M2D6+csR5oXsaXVBOzFqE8yQIkh++z6eboFnElJFXoMq1m
-         X4Y4mNJW+Ai5wy4/JE+mzwXHflc3Nn09x4Bqjcdeq7EXvdqRMkQxp4LbJ+2yzLQ60tLI
-         oFuC0BnD6KkH0w84v/jAN/ELhWiTBD7YnstocUq/IOWTE9dm8P0Wl3y3brBWzIEipQ+Z
-         UJXSPWu3w/Kft0QNl59+twLoJHubqrEmg5Z8QhbrePuorJ6vpo5oEKk1Rrdf1iq+/+5n
-         FeLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=jdPOeSR0Djd1OnJVTCbTPPRB0AwFbffNcyIU9XNlUrI=;
-        b=Xy7EeEuv7HcY5gL6t49rw+Qt/60wx7VXEBlOip5moOhd05tBbS13QO4eBV2Z6HFznr
-         K6kDbSf523L8j2GaDGMAVfK4LIAbCKKTXxQOym4zwpxDC4V4JmksgNsWHyQLW2H0e/kp
-         l33L0kDUYz+oHxHIhoxShz3jJGPfJoTyzWysiadPeKel6/fnS2MHV6FGftQ21uj7lIHh
-         RzCwfbZ9QzWblBN3dtgwBCcDP0GSHpK07IiQW7zZQIL17bGcns4z0rJJbjeECTybLDGC
-         tAj3tdNz7hMoQQexW8jHDo/0Xpaw4i2PI3gCw1QQKAUyTNbh1l0kHoNc9O2oDT2ADAvV
-         /H5w==
-X-Gm-Message-State: APjAAAXUuabeG0kRSpS+o/DL3VGRVTXeJpzOlgWEdd7TBzbiizr1r7FN
-        lJHVhzPRdOk2uhQWs8QQ/gcxQ8+/8318lGOghZy7ug==
-X-Google-Smtp-Source: APXvYqyIDfYRgcl0TzgvphcVwpNSKrCUQNyUrhxHdebAHU6PpFtHnmbpQ4raVuEfYLlFhJaCw6WhbN8sqI4ojiHbmo8=
-X-Received: by 2002:a17:902:b696:: with SMTP id c22mr105753228pls.119.1560810966818;
- Mon, 17 Jun 2019 15:36:06 -0700 (PDT)
+        Mon, 17 Jun 2019 18:41:04 -0400
+Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id be3d876888b6f07f; Tue, 18 Jun 2019 00:41:01 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Keith Busch <keith.busch@intel.com>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>
+Subject: Re: [PATCH] PCI/PME: Fix race on PME polling
+Date:   Tue, 18 Jun 2019 00:41:01 +0200
+Message-ID: <2521908.csJO6TsRBn@kreacher>
+In-Reply-To: <20190617143510.GT2640@lahna.fi.intel.com>
+References: <0113014581dbe2d1f938813f1783905bd81b79db.1560079442.git.lukas@wunner.de> <1957149.eOSnrBRbHu@kreacher> <20190617143510.GT2640@lahna.fi.intel.com>
 MIME-Version: 1.0
-References: <20190617222034.10799-1-linux@rasmusvillemoes.dk> <20190617222034.10799-8-linux@rasmusvillemoes.dk>
-In-Reply-To: <20190617222034.10799-8-linux@rasmusvillemoes.dk>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Mon, 17 Jun 2019 15:35:55 -0700
-Message-ID: <CAKwvOdn5fhCTqtciKBwAj3vYQMhi06annzxcdC1GjKxri=dHnw@mail.gmail.com>
-Subject: Re: [PATCH v6 7/8] dynamic_debug: add asm-generic implementation for DYNAMIC_DEBUG_RELATIVE_POINTERS
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 3:20 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> A 64 bit architecture can allow reducing the size of the kernel image by
-> selecting HAVE_DYNAMIC_DEBUG_RELATIVE_POINTERS, but it must provide
-> a proper DEFINE_DYNAMIC_DEBUG_METADATA macro for emitting the struct
-> _ddebug in assembly. However, since that does not involve any
-> instructions, this generic implementation should be usable by most if
-> not all.
->
-> It relies on
->
-> (1) standard assembly directives that should work on
-> all architectures
-> (2) the "i" constraint for an constant, and
-> (3) %cN emitting the constant operand N without punctuation
->
-> and of course the layout of _ddebug being what one expects.
->
-> Now, clang before 9.0 doesn't satisfy (3) for non-x86 targets.
+On Monday, June 17, 2019 4:35:10 PM CEST Mika Westerberg wrote:
+> On Mon, Jun 17, 2019 at 12:37:06PM +0200, Rafael J. Wysocki wrote:
+> > On Sunday, June 9, 2019 1:29:33 PM CEST Lukas Wunner wrote:
+> > > Since commit df17e62e5bff ("PCI: Add support for polling PME state on
+> > > suspended legacy PCI devices"), the work item pci_pme_list_scan() polls
+> > > the PME status flag of devices and wakes them up if the bit is set.
+> > > 
+> > > The function performs a check whether a device's upstream bridge is in
+> > > D0 for otherwise the device is inaccessible, rendering PME polling
+> > > impossible.  However the check is racy because it is performed before
+> > > polling the device.  If the upstream bridge runtime suspends to D3hot
+> > > after pci_pme_list_scan() checks its power state and before it invokes
+> > > pci_pme_wakeup(), the latter will read the PMCSR as "all ones" and
+> > > mistake it for a set PME status flag.  I am seeing this race play out as
+> > > a Thunderbolt controller going to D3cold and occasionally immediately
+> > > going to D0 again because PM polling was performed at just the wrong
+> > > time.
+> > > 
+> > > Avoid by checking for an "all ones" PMCSR in pci_check_pme_status().
+> > > 
+> > > Fixes: 58ff463396ad ("PCI PM: Add function for checking PME status of devices")
+> > > Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+> > > Signed-off-by: Lukas Wunner <lukas@wunner.de>
+> > > Cc: stable@vger.kernel.org # v2.6.34+
+> > > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> > > ---
+> > >  drivers/pci/pci.c | 2 ++
+> > >  1 file changed, 2 insertions(+)
+> > > 
+> > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> > > index 8abc843b1615..eed5db9f152f 100644
+> > > --- a/drivers/pci/pci.c
+> > > +++ b/drivers/pci/pci.c
+> > > @@ -1989,6 +1989,8 @@ bool pci_check_pme_status(struct pci_dev *dev)
+> > >  	pci_read_config_word(dev, pmcsr_pos, &pmcsr);
+> > >  	if (!(pmcsr & PCI_PM_CTRL_PME_STATUS))
+> > >  		return false;
+> > > +	if (pmcsr == 0xffff)
+> > > +		return false;
+> > >  
+> > >  	/* Clear PME status. */
+> > >  	pmcsr |= PCI_PM_CTRL_PME_STATUS;
+> > > 
+> > 
+> > Added to my 5.3 queue, thanks!
+> 
+> Today when doing some PM testing I noticed that this patch actually
+> reveals an issue in our native PME handling. Problem is in
+> pcie_pme_handle_request() where we first convert req_id to struct
+> pci_dev and then call pci_check_pme_status() for it. Now, when a device
+> triggers wake the link is first brought up and then the PME is sent to
+> root complex with req_id matching the originating device. However, if
+> there are PCIe ports in the middle they may still be in D3 which means
+> that pci_check_pme_status() returns 0xffff for the device below so there
+> are lots of
+> 
+> 	Spurious native interrupt"
+> 
+> messages in the dmesg but the actual PME is never handled.
+> 
+> It has been working because pci_check_pme_status() returned true in case
+> of 0xffff as well and we went and runtime resumed to originating device.
 
-Thanks so much for resending with this case fixed, and sorry I did not
-implement (3) sooner!  I appreciate your patience.
-Acked-by: Nick Desaulniers <ndesaulniers@google.com>
+In this case 0xffff is as good as PME Status set, that is the device needs to be
+resumed.
 
-I'm happy to help test this series, do you have a tree I could pull
-these from quickly?  Anything I should test at runtime besides a boot
-test?
--- 
-Thanks,
-~Nick Desaulniers
+This is a regression in the $subject patch, not a bug in the PME code.
+
+> I think the correct way to handle this is actually drop the call to
+> pci_check_pme_status() in pcie_pme_handle_request() because the whole
+> idea of req_id in PME message is to allow the root complex and SW to
+> identify the device without need to poll for the PME status bit.
+
+Not really, because if there is a PCIe-to-PCI bridge below the port, it is
+expected to use the req_id of the bridge for all of the devices below it.
+
+I'm going to drop this patch from my queue.
+
+
+
