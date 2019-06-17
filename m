@@ -2,245 +2,312 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A08C1C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF24C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:09:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7246F20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:09:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84FC2208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:09:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560794997;
+	bh=oMYDQUXKSwPcLkBmI9wP3NaGmS+6lBlRr2hYTuc/Bwo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TkXT5GkjeezUl/UEZaU8CgvCZJSKODasNsrkLusAdqb8xktK7ACiOt56g3J7OWsU/
+	 5HeiJYHKfkz7va0p06x0v0vZqeVGqSA2fxIZCcYTSl+tpUlO1HvWxZuD06jMqKS4gG
+	 WkqWBzcASiyrMfZ4Cx4+nOKKGhZwUXNKQV47EBMg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728647AbfFQSJx (ORCPT
+        id S1728666AbfFQSJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:09:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:62757 "EHLO mga18.intel.com"
+        Mon, 17 Jun 2019 14:09:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44704 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfFQSJw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:09:52 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 11:09:51 -0700
-X-ExtLoop1: 1
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 17 Jun 2019 11:09:51 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        "Christopherson Sean J" <sean.j.christopherson@intel.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Radim Krcmar" <rkrcmar@redhat.com>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>
-Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v2 1/2] x86/cpufeatures: Combine word 11 and 12 into new scattered features word 11
-Date:   Mon, 17 Jun 2019 11:00:15 -0700
-Message-Id: <1560794416-217638-2-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1560794416-217638-1-git-send-email-fenghua.yu@intel.com>
-References: <1560794416-217638-1-git-send-email-fenghua.yu@intel.com>
+        id S1727580AbfFQSJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 14:09:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E7FA208C4;
+        Mon, 17 Jun 2019 18:09:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560794994;
+        bh=oMYDQUXKSwPcLkBmI9wP3NaGmS+6lBlRr2hYTuc/Bwo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UXGs3mALRyEzzWf3kzgD76Fj4N+m51teyPFBy4f9WAmMAHFPG/n5kQ1ipQz6n5dQd
+         eLvnqYj/5+JYzfre4bMtgw+fRbOoHej1CQ7jT68THpE9gyAAVac83btTtvLD/4uLpB
+         /KwUF151X4LdVj6tcqK0fICvln1K3vOdSsBXKLig=
+Date:   Mon, 17 Jun 2019 20:09:51 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 5.1.11
+Message-ID: <20190617180951.GB16975@kroah.com>
+References: <20190617180944.GA16975@kroah.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617180944.GA16975@kroah.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's a waste for the four X86_FEATURE_CQM_* features to occupy two
-pure feature bits words. To better utilize feature words, re-define
-word 11 to host scattered features and move the four X86_FEATURE_CQM_*
-features into Linux defined word 11. More scattered features can be added
-in word 11 in the future.
-
-Leaf 11 in cpuid_leafs is renamed as CPUID_LNX_4 to reflect it's a Linux
-defined leaf.
-
-Although word 12 doesn't have any feature now, leaf 12 in cpuid_leafs
-still needs to be kept because cpuid_leafs must have NCAPINTS leafs.
-Rename leaf 12 as CPUID_DUMMY which will be replaced by a meaningful name
-in the next patch when CPUID.7.1:EAX occupies world 12.
-
-Maximum number of RMID and cache occupancy scale are retrieved from
-CPUID.0xf.1 after scattered CQM features are enumerated. Carve out the
-code into a separate function.
-
-KVM doesn't support resctrl now. So it's safe to move the
-X86_FEATURE_CQM_* features to scattered features word 11 for KVM.
-
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- arch/x86/include/asm/cpufeature.h  |  4 +--
- arch/x86/include/asm/cpufeatures.h | 17 ++++++----
- arch/x86/kernel/cpu/common.c       | 53 +++++++++++++++---------------
- arch/x86/kernel/cpu/cpuid-deps.c   |  3 ++
- arch/x86/kernel/cpu/scattered.c    |  4 +++
- arch/x86/kvm/cpuid.h               |  2 --
- 6 files changed, 45 insertions(+), 38 deletions(-)
-
-diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
-index 1d337c51f7e6..403f70c2e431 100644
---- a/arch/x86/include/asm/cpufeature.h
-+++ b/arch/x86/include/asm/cpufeature.h
-@@ -22,8 +22,8 @@ enum cpuid_leafs
- 	CPUID_LNX_3,
- 	CPUID_7_0_EBX,
- 	CPUID_D_1_EAX,
--	CPUID_F_0_EDX,
--	CPUID_F_1_EDX,
-+	CPUID_LNX_4,
-+	CPUID_DUMMY,
- 	CPUID_8000_0008_EBX,
- 	CPUID_6_EAX,
- 	CPUID_8000_000A_EDX,
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index 75f27ee2c263..4f0a3d093794 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -269,13 +269,16 @@
- #define X86_FEATURE_XGETBV1		(10*32+ 2) /* XGETBV with ECX = 1 instruction */
- #define X86_FEATURE_XSAVES		(10*32+ 3) /* XSAVES/XRSTORS instructions */
+diff --git a/Documentation/networking/ip-sysctl.txt b/Documentation/networking/ip-sysctl.txt
+index c4ac35234f05..f0d09162c7a3 100644
+--- a/Documentation/networking/ip-sysctl.txt
++++ b/Documentation/networking/ip-sysctl.txt
+@@ -250,6 +250,14 @@ tcp_base_mss - INTEGER
+ 	Path MTU discovery (MTU probing).  If MTU probing is enabled,
+ 	this is the initial MSS used by the connection.
  
--/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:0 (EDX), word 11 */
--#define X86_FEATURE_CQM_LLC		(11*32+ 1) /* LLC QoS if 1 */
--
--/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:1 (EDX), word 12 */
--#define X86_FEATURE_CQM_OCCUP_LLC	(12*32+ 0) /* LLC occupancy monitoring */
--#define X86_FEATURE_CQM_MBM_TOTAL	(12*32+ 1) /* LLC Total MBM monitoring */
--#define X86_FEATURE_CQM_MBM_LOCAL	(12*32+ 2) /* LLC Local MBM monitoring */
-+/*
-+ * Extended auxiliary flags: Linux defined - For features scattered in various
-+ * CPUID levels like 0xf, word 11.
-+ *
-+ * Reuse free bits when adding new feature flags!
-+ */
-+#define X86_FEATURE_CQM_LLC		(11*32+ 0) /* LLC QoS if 1 */
-+#define X86_FEATURE_CQM_OCCUP_LLC	(11*32+ 1) /* LLC occupancy monitoring */
-+#define X86_FEATURE_CQM_MBM_TOTAL	(11*32+ 2) /* LLC Total MBM monitoring */
-+#define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
++tcp_min_snd_mss - INTEGER
++	TCP SYN and SYNACK messages usually advertise an ADVMSS option,
++	as described in RFC 1122 and RFC 6691.
++	If this ADVMSS option is smaller than tcp_min_snd_mss,
++	it is silently capped to tcp_min_snd_mss.
++
++	Default : 48 (at least 8 bytes of payload per segment)
++
+ tcp_congestion_control - STRING
+ 	Set the congestion control algorithm to be used for new
+ 	connections. The algorithm "reno" is always available, but
+diff --git a/Makefile b/Makefile
+index e7d1973d9c26..5171900e5c93 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 5
+ PATCHLEVEL = 1
+-SUBLEVEL = 10
++SUBLEVEL = 11
+ EXTRAVERSION =
+ NAME = Shy Crocodile
  
- /* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
- #define X86_FEATURE_CLZERO		(13*32+ 0) /* CLZERO instruction */
-diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
-index 2c57fffebf9b..f080be35da41 100644
---- a/arch/x86/kernel/cpu/common.c
-+++ b/arch/x86/kernel/cpu/common.c
-@@ -801,6 +801,31 @@ static void init_speculation_control(struct cpuinfo_x86 *c)
- 	}
+diff --git a/include/linux/tcp.h b/include/linux/tcp.h
+index a9b0280687d5..2ba676469f98 100644
+--- a/include/linux/tcp.h
++++ b/include/linux/tcp.h
+@@ -488,4 +488,8 @@ static inline u16 tcp_mss_clamp(const struct tcp_sock *tp, u16 mss)
+ 
+ 	return (user_mss && user_mss < mss) ? user_mss : mss;
  }
- 
-+static void get_cqm_info(struct cpuinfo_x86 *c)
-+{
-+	if (cpu_has(c, X86_FEATURE_CQM_LLC)) {
-+		u32 eax, ebx, ecx, edx;
 +
-+		/* QoS sub-leaf, EAX=0Fh, ECX=0 */
-+		cpuid_count(0x0000000F, 0, &eax, &ebx, &ecx, &edx);
-+		/* will be overridden if occupancy monitoring exists */
-+		c->x86_cache_max_rmid = ebx;
++int tcp_skb_shift(struct sk_buff *to, struct sk_buff *from, int pcount,
++		  int shiftlen);
 +
-+		if (cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC) ||
-+		    cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL) ||
-+		    cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)) {
-+			/* QoS sub-leaf, EAX=0Fh, ECX=1 */
-+			cpuid_count(0x0000000F, 1, &eax, &ebx, &ecx, &edx);
-+
-+			c->x86_cache_max_rmid = ecx;
-+			c->x86_cache_occ_scale = ebx;
-+		}
-+	} else {
-+		c->x86_cache_max_rmid = -1;
-+		c->x86_cache_occ_scale = -1;
-+	}
-+}
-+
- void get_cpu_cap(struct cpuinfo_x86 *c)
- {
- 	u32 eax, ebx, ecx, edx;
-@@ -832,33 +857,6 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
- 		c->x86_capability[CPUID_D_1_EAX] = eax;
- 	}
+ #endif	/* _LINUX_TCP_H */
+diff --git a/include/net/netns/ipv4.h b/include/net/netns/ipv4.h
+index 7698460a3dd1..623cfbb7b8dc 100644
+--- a/include/net/netns/ipv4.h
++++ b/include/net/netns/ipv4.h
+@@ -117,6 +117,7 @@ struct netns_ipv4 {
+ #endif
+ 	int sysctl_tcp_mtu_probing;
+ 	int sysctl_tcp_base_mss;
++	int sysctl_tcp_min_snd_mss;
+ 	int sysctl_tcp_probe_threshold;
+ 	u32 sysctl_tcp_probe_interval;
  
--	/* Additional Intel-defined flags: level 0x0000000F */
--	if (c->cpuid_level >= 0x0000000F) {
--
--		/* QoS sub-leaf, EAX=0Fh, ECX=0 */
--		cpuid_count(0x0000000F, 0, &eax, &ebx, &ecx, &edx);
--		c->x86_capability[CPUID_F_0_EDX] = edx;
--
--		if (cpu_has(c, X86_FEATURE_CQM_LLC)) {
--			/* will be overridden if occupancy monitoring exists */
--			c->x86_cache_max_rmid = ebx;
--
--			/* QoS sub-leaf, EAX=0Fh, ECX=1 */
--			cpuid_count(0x0000000F, 1, &eax, &ebx, &ecx, &edx);
--			c->x86_capability[CPUID_F_1_EDX] = edx;
--
--			if ((cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC)) ||
--			      ((cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL)) ||
--			       (cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)))) {
--				c->x86_cache_max_rmid = ecx;
--				c->x86_cache_occ_scale = ebx;
--			}
--		} else {
--			c->x86_cache_max_rmid = -1;
--			c->x86_cache_occ_scale = -1;
--		}
--	}
--
- 	/* AMD-defined flags: level 0x80000001 */
- 	eax = cpuid_eax(0x80000000);
- 	c->extended_cpuid_level = eax;
-@@ -889,6 +887,7 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 68ee02523b87..36fcd0ad0515 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -55,6 +55,8 @@ void tcp_time_wait(struct sock *sk, int state, int timeo);
  
- 	init_scattered_cpuid_features(c);
- 	init_speculation_control(c);
-+	get_cqm_info(c);
+ #define MAX_TCP_HEADER	(128 + MAX_HEADER)
+ #define MAX_TCP_OPTION_SPACE 40
++#define TCP_MIN_SND_MSS		48
++#define TCP_MIN_GSO_SIZE	(TCP_MIN_SND_MSS - MAX_TCP_OPTION_SPACE)
  
- 	/*
- 	 * Clear/Set all flags overridden by options, after probe.
-diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
-index 2c0bd38a44ab..fa07a224e7b9 100644
---- a/arch/x86/kernel/cpu/cpuid-deps.c
-+++ b/arch/x86/kernel/cpu/cpuid-deps.c
-@@ -59,6 +59,9 @@ static const struct cpuid_dep cpuid_deps[] = {
- 	{ X86_FEATURE_AVX512_4VNNIW,	X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_4FMAPS,	X86_FEATURE_AVX512F   },
- 	{ X86_FEATURE_AVX512_VPOPCNTDQ, X86_FEATURE_AVX512F   },
-+	{ X86_FEATURE_CQM_OCCUP_LLC,	X86_FEATURE_CQM_LLC   },
-+	{ X86_FEATURE_CQM_MBM_TOTAL,	X86_FEATURE_CQM_LLC   },
-+	{ X86_FEATURE_CQM_MBM_LOCAL,	X86_FEATURE_CQM_LLC   },
- 	{}
+ /*
+  * Never offer a window over 32767 without using window scaling. Some
+diff --git a/include/uapi/linux/snmp.h b/include/uapi/linux/snmp.h
+index 86dc24a96c90..fd42c1316d3d 100644
+--- a/include/uapi/linux/snmp.h
++++ b/include/uapi/linux/snmp.h
+@@ -283,6 +283,7 @@ enum
+ 	LINUX_MIB_TCPACKCOMPRESSED,		/* TCPAckCompressed */
+ 	LINUX_MIB_TCPZEROWINDOWDROP,		/* TCPZeroWindowDrop */
+ 	LINUX_MIB_TCPRCVQDROP,			/* TCPRcvQDrop */
++	LINUX_MIB_TCPWQUEUETOOBIG,		/* TCPWqueueTooBig */
+ 	__LINUX_MIB_MAX
  };
  
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 94aa1c72ca98..adf9b71386ef 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -26,6 +26,10 @@ struct cpuid_bit {
- static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_APERFMPERF,       CPUID_ECX,  0, 0x00000006, 0 },
- 	{ X86_FEATURE_EPB,		CPUID_ECX,  3, 0x00000006, 0 },
-+	{ X86_FEATURE_CQM_LLC,		CPUID_EDX,  1, 0x0000000f, 0 },
-+	{ X86_FEATURE_CQM_OCCUP_LLC,	CPUID_EDX,  0, 0x0000000f, 1 },
-+	{ X86_FEATURE_CQM_MBM_TOTAL,	CPUID_EDX,  1, 0x0000000f, 1 },
-+	{ X86_FEATURE_CQM_MBM_LOCAL,	CPUID_EDX,  2, 0x0000000f, 1 },
- 	{ X86_FEATURE_CAT_L3,		CPUID_EBX,  1, 0x00000010, 0 },
- 	{ X86_FEATURE_CAT_L2,		CPUID_EBX,  2, 0x00000010, 0 },
- 	{ X86_FEATURE_CDP_L3,		CPUID_ECX,  2, 0x00000010, 1 },
-diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
-index 9a327d5b6d1f..d78a61408243 100644
---- a/arch/x86/kvm/cpuid.h
-+++ b/arch/x86/kvm/cpuid.h
-@@ -47,8 +47,6 @@ static const struct cpuid_reg reverse_cpuid[] = {
- 	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
- 	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
- 	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
--	[CPUID_F_0_EDX]       = {       0xf, 0, CPUID_EDX},
--	[CPUID_F_1_EDX]       = {       0xf, 1, CPUID_EDX},
- 	[CPUID_8000_0008_EBX] = {0x80000008, 0, CPUID_EBX},
- 	[CPUID_6_EAX]         = {         6, 0, CPUID_EAX},
- 	[CPUID_8000_000A_EDX] = {0x8000000a, 0, CPUID_EDX},
--- 
-2.19.1
-
+diff --git a/net/ipv4/proc.c b/net/ipv4/proc.c
+index c3610b37bb4c..dff6755dc1a7 100644
+--- a/net/ipv4/proc.c
++++ b/net/ipv4/proc.c
+@@ -291,6 +291,7 @@ static const struct snmp_mib snmp4_net_list[] = {
+ 	SNMP_MIB_ITEM("TCPAckCompressed", LINUX_MIB_TCPACKCOMPRESSED),
+ 	SNMP_MIB_ITEM("TCPZeroWindowDrop", LINUX_MIB_TCPZEROWINDOWDROP),
+ 	SNMP_MIB_ITEM("TCPRcvQDrop", LINUX_MIB_TCPRCVQDROP),
++	SNMP_MIB_ITEM("TCPWqueueTooBig", LINUX_MIB_TCPWQUEUETOOBIG),
+ 	SNMP_MIB_SENTINEL
+ };
+ 
+diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
+index eeb4041fa5f9..4f1fa744d3c8 100644
+--- a/net/ipv4/sysctl_net_ipv4.c
++++ b/net/ipv4/sysctl_net_ipv4.c
+@@ -39,6 +39,8 @@ static int ip_local_port_range_min[] = { 1, 1 };
+ static int ip_local_port_range_max[] = { 65535, 65535 };
+ static int tcp_adv_win_scale_min = -31;
+ static int tcp_adv_win_scale_max = 31;
++static int tcp_min_snd_mss_min = TCP_MIN_SND_MSS;
++static int tcp_min_snd_mss_max = 65535;
+ static int ip_privileged_port_min;
+ static int ip_privileged_port_max = 65535;
+ static int ip_ttl_min = 1;
+@@ -748,6 +750,15 @@ static struct ctl_table ipv4_net_table[] = {
+ 		.mode		= 0644,
+ 		.proc_handler	= proc_dointvec,
+ 	},
++	{
++		.procname	= "tcp_min_snd_mss",
++		.data		= &init_net.ipv4.sysctl_tcp_min_snd_mss,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= &tcp_min_snd_mss_min,
++		.extra2		= &tcp_min_snd_mss_max,
++	},
+ 	{
+ 		.procname	= "tcp_probe_threshold",
+ 		.data		= &init_net.ipv4.sysctl_tcp_probe_threshold,
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 6baa6dc1b13b..365c8490b34b 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3889,6 +3889,7 @@ void __init tcp_init(void)
+ 	unsigned long limit;
+ 	unsigned int i;
+ 
++	BUILD_BUG_ON(TCP_MIN_SND_MSS <= MAX_TCP_OPTION_SPACE);
+ 	BUILD_BUG_ON(sizeof(struct tcp_skb_cb) >
+ 		     FIELD_SIZEOF(struct sk_buff, cb));
+ 
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 731d3045b50a..d48f935c8e28 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -1296,7 +1296,7 @@ static bool tcp_shifted_skb(struct sock *sk, struct sk_buff *prev,
+ 	TCP_SKB_CB(skb)->seq += shifted;
+ 
+ 	tcp_skb_pcount_add(prev, pcount);
+-	BUG_ON(tcp_skb_pcount(skb) < pcount);
++	WARN_ON_ONCE(tcp_skb_pcount(skb) < pcount);
+ 	tcp_skb_pcount_add(skb, -pcount);
+ 
+ 	/* When we're adding to gso_segs == 1, gso_size will be zero,
+@@ -1362,6 +1362,21 @@ static int skb_can_shift(const struct sk_buff *skb)
+ 	return !skb_headlen(skb) && skb_is_nonlinear(skb);
+ }
+ 
++int tcp_skb_shift(struct sk_buff *to, struct sk_buff *from,
++		  int pcount, int shiftlen)
++{
++	/* TCP min gso_size is 8 bytes (TCP_MIN_GSO_SIZE)
++	 * Since TCP_SKB_CB(skb)->tcp_gso_segs is 16 bits, we need
++	 * to make sure not storing more than 65535 * 8 bytes per skb,
++	 * even if current MSS is bigger.
++	 */
++	if (unlikely(to->len + shiftlen >= 65535 * TCP_MIN_GSO_SIZE))
++		return 0;
++	if (unlikely(tcp_skb_pcount(to) + pcount > 65535))
++		return 0;
++	return skb_shift(to, from, shiftlen);
++}
++
+ /* Try collapsing SACK blocks spanning across multiple skbs to a single
+  * skb.
+  */
+@@ -1467,7 +1482,7 @@ static struct sk_buff *tcp_shift_skb_data(struct sock *sk, struct sk_buff *skb,
+ 	if (!after(TCP_SKB_CB(skb)->seq + len, tp->snd_una))
+ 		goto fallback;
+ 
+-	if (!skb_shift(prev, skb, len))
++	if (!tcp_skb_shift(prev, skb, pcount, len))
+ 		goto fallback;
+ 	if (!tcp_shifted_skb(sk, prev, skb, state, pcount, len, mss, dup_sack))
+ 		goto out;
+@@ -1485,11 +1500,10 @@ static struct sk_buff *tcp_shift_skb_data(struct sock *sk, struct sk_buff *skb,
+ 		goto out;
+ 
+ 	len = skb->len;
+-	if (skb_shift(prev, skb, len)) {
+-		pcount += tcp_skb_pcount(skb);
+-		tcp_shifted_skb(sk, prev, skb, state, tcp_skb_pcount(skb),
++	pcount = tcp_skb_pcount(skb);
++	if (tcp_skb_shift(prev, skb, pcount, len))
++		tcp_shifted_skb(sk, prev, skb, state, pcount,
+ 				len, mss, 0);
+-	}
+ 
+ out:
+ 	return prev;
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index a2896944aa37..72cb13cf41e7 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -2626,6 +2626,7 @@ static int __net_init tcp_sk_init(struct net *net)
+ 	net->ipv4.sysctl_tcp_ecn_fallback = 1;
+ 
+ 	net->ipv4.sysctl_tcp_base_mss = TCP_BASE_MSS;
++	net->ipv4.sysctl_tcp_min_snd_mss = TCP_MIN_SND_MSS;
+ 	net->ipv4.sysctl_tcp_probe_threshold = TCP_PROBE_THRESHOLD;
+ 	net->ipv4.sysctl_tcp_probe_interval = TCP_PROBE_INTERVAL;
+ 
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 4522579aaca2..2d86e1bc483c 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -1299,6 +1299,11 @@ int tcp_fragment(struct sock *sk, enum tcp_queue tcp_queue,
+ 	if (nsize < 0)
+ 		nsize = 0;
+ 
++	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf)) {
++		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
++		return -ENOMEM;
++	}
++
+ 	if (skb_unclone(skb, gfp))
+ 		return -ENOMEM;
+ 
+@@ -1457,8 +1462,7 @@ static inline int __tcp_mtu_to_mss(struct sock *sk, int pmtu)
+ 	mss_now -= icsk->icsk_ext_hdr_len;
+ 
+ 	/* Then reserve room for full set of TCP options and 8 bytes of data */
+-	if (mss_now < 48)
+-		mss_now = 48;
++	mss_now = max(mss_now, sock_net(sk)->ipv4.sysctl_tcp_min_snd_mss);
+ 	return mss_now;
+ }
+ 
+@@ -2750,7 +2754,7 @@ static bool tcp_collapse_retrans(struct sock *sk, struct sk_buff *skb)
+ 		if (next_skb_size <= skb_availroom(skb))
+ 			skb_copy_bits(next_skb, 0, skb_put(skb, next_skb_size),
+ 				      next_skb_size);
+-		else if (!skb_shift(skb, next_skb, next_skb_size))
++		else if (!tcp_skb_shift(skb, next_skb, 1, next_skb_size))
+ 			return false;
+ 	}
+ 	tcp_highest_sack_replace(sk, next_skb, skb);
+diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
+index f0c86398e6a7..cec6c542ca39 100644
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -154,6 +154,7 @@ static void tcp_mtu_probing(struct inet_connection_sock *icsk, struct sock *sk)
+ 		mss = tcp_mtu_to_mss(sk, icsk->icsk_mtup.search_low) >> 1;
+ 		mss = min(net->ipv4.sysctl_tcp_base_mss, mss);
+ 		mss = max(mss, 68 - tcp_sk(sk)->tcp_header_len);
++		mss = max(mss, net->ipv4.sysctl_tcp_min_snd_mss);
+ 		icsk->icsk_mtup.search_low = tcp_mss_to_mtu(sk, mss);
+ 	}
+ 	tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
