@@ -7,34 +7,34 @@ X-Spam-Status: No, score=-7.6 required=3.0 tests=DATE_IN_PAST_06_12,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76F8FC31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:36:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D80CC31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:36:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C67C20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:36:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33D0120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:36:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfFQNgS (ORCPT
+        id S1727927AbfFQNgW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:36:18 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18590 "EHLO huawei.com"
+        Mon, 17 Jun 2019 09:36:22 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18589 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726065AbfFQNgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:36:17 -0400
+        id S1726215AbfFQNgS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:36:18 -0400
 Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 0F39B29498399E2AB982;
+        by Forcepoint Email with ESMTP id 0907736F5BA76C1C56FC;
         Mon, 17 Jun 2019 21:36:15 +0800 (CST)
 Received: from localhost.localdomain (10.175.34.53) by
  DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 17 Jun 2019 21:36:06 +0800
+ 14.3.439.0; Mon, 17 Jun 2019 21:36:05 +0800
 From:   Xue Chaojing <xuechaojing@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
         <luoshaokai@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
         <xuechaojing@huawei.com>, <chiqijun@huawei.com>,
         <wulike1@huawei.com>
-Subject: [PATCH net-next v4 3/3] hinic: add support for rss parameters with ethtool
-Date:   Mon, 17 Jun 2019 05:46:01 +0000
-Message-ID: <20190617054601.3056-4-xuechaojing@huawei.com>
+Subject: [PATCH net-next v4 1/3] hinic: add rss support
+Date:   Mon, 17 Jun 2019 05:45:59 +0000
+Message-ID: <20190617054601.3056-2-xuechaojing@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190617054601.3056-1-xuechaojing@huawei.com>
 References: <20190617054601.3056-1-xuechaojing@huawei.com>
@@ -47,538 +47,671 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support rss parameters with ethtool,
-user can change hash key, hash indirection table, hash
-function by ethtool -X, and show rss parameters by ethtool -x.
+This patch adds rss support for the HINIC driver.
 
 Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
 ---
- drivers/net/ethernet/huawei/hinic/hinic_dev.h |   2 +
- .../net/ethernet/huawei/hinic/hinic_ethtool.c | 295 ++++++++++++++++++
- .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  12 +-
- .../net/ethernet/huawei/hinic/hinic_port.c    | 126 ++++++++
- .../net/ethernet/huawei/hinic/hinic_port.h    |  45 +++
- 5 files changed, 479 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/huawei/hinic/hinic_dev.h |  26 ++
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.c  |  10 +-
+ .../net/ethernet/huawei/hinic/hinic_hw_dev.h  |  26 ++
+ .../net/ethernet/huawei/hinic/hinic_hw_wqe.h  |  16 ++
+ .../net/ethernet/huawei/hinic/hinic_main.c    | 126 ++++++++-
+ .../net/ethernet/huawei/hinic/hinic_port.c    | 263 ++++++++++++++++++
+ .../net/ethernet/huawei/hinic/hinic_port.h    |  82 ++++++
+ 7 files changed, 541 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/net/ethernet/huawei/hinic/hinic_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-index 8926768280f2..5c9bc3319880 100644
+index 5186cc9023aa..8926768280f2 100644
 --- a/drivers/net/ethernet/huawei/hinic/hinic_dev.h
 +++ b/drivers/net/ethernet/huawei/hinic/hinic_dev.h
-@@ -85,6 +85,8 @@ struct hinic_dev {
- 	u16				num_rss;
- 	u16				rss_limit;
- 	struct hinic_rss_type		rss_type;
-+	u8				*rss_hkey_user;
-+	s32				*rss_indir_user;
+@@ -31,6 +31,7 @@
+ enum hinic_flags {
+ 	HINIC_LINK_UP = BIT(0),
+ 	HINIC_INTF_UP = BIT(1),
++	HINIC_RSS_ENABLE = BIT(2),
+ };
+ 
+ struct hinic_rx_mode_work {
+@@ -38,6 +39,23 @@ struct hinic_rx_mode_work {
+ 	u32                     rx_mode;
+ };
+ 
++struct hinic_rss_type {
++	u8 tcp_ipv6_ext;
++	u8 ipv6_ext;
++	u8 tcp_ipv6;
++	u8 ipv6;
++	u8 tcp_ipv4;
++	u8 ipv4;
++	u8 udp_ipv6;
++	u8 udp_ipv4;
++};
++
++enum hinic_rss_hash_type {
++	HINIC_RSS_HASH_ENGINE_TYPE_XOR,
++	HINIC_RSS_HASH_ENGINE_TYPE_TOEP,
++	HINIC_RSS_HASH_ENGINE_TYPE_MAX,
++};
++
+ struct hinic_dev {
+ 	struct net_device               *netdev;
+ 	struct hinic_hwdev              *hwdev;
+@@ -45,6 +63,8 @@ struct hinic_dev {
+ 	u32                             msg_enable;
+ 	unsigned int                    tx_weight;
+ 	unsigned int                    rx_weight;
++	u16				num_qps;
++	u16				max_qps;
+ 
+ 	unsigned int                    flags;
+ 
+@@ -59,6 +79,12 @@ struct hinic_dev {
+ 
+ 	struct hinic_txq_stats          tx_stats;
+ 	struct hinic_rxq_stats          rx_stats;
++
++	u8				rss_tmpl_idx;
++	u8				rss_hash_engine;
++	u16				num_rss;
++	u16				rss_limit;
++	struct hinic_rss_type		rss_type;
  };
  
  #endif
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-index 2cc97bfef0b8..be28a9a7f033 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -149,12 +149,307 @@ static void hinic_get_channels(struct net_device *netdev,
- 	channels->combined_count = 0;
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+index 756a7e3280bd..5e01672fd47b 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.c
+@@ -98,9 +98,6 @@ static int get_capability(struct hinic_hwdev *hwdev,
+ 	if (nic_cap->num_qps > HINIC_Q_CTXT_MAX)
+ 		nic_cap->num_qps = HINIC_Q_CTXT_MAX;
+ 
+-	/* num_qps must be power of 2 */
+-	nic_cap->num_qps = BIT(fls(nic_cap->num_qps) - 1);
+-
+ 	nic_cap->max_qps = dev_cap->max_sqs + 1;
+ 	if (nic_cap->max_qps != (dev_cap->max_rqs + 1))
+ 		return -EFAULT;
+@@ -883,6 +880,13 @@ void hinic_free_hwdev(struct hinic_hwdev *hwdev)
+ 	hinic_free_hwif(hwdev->hwif);
  }
  
-+static int hinic_get_rss_hash_opts(struct hinic_dev *nic_dev,
-+				   struct ethtool_rxnfc *cmd)
++int hinic_hwdev_max_num_qps(struct hinic_hwdev *hwdev)
 +{
-+	struct hinic_rss_type rss_type = { 0 };
-+	int err;
++	struct hinic_cap *nic_cap = &hwdev->nic_cap;
 +
-+	cmd->data = 0;
++	return nic_cap->max_qps;
++}
 +
-+	if (!(nic_dev->flags & HINIC_RSS_ENABLE))
-+		return 0;
+ /**
+  * hinic_hwdev_num_qps - return the number QPs available for use
+  * @hwdev: the NIC HW device
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+index fba4fe82472a..9c55374077f7 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
+@@ -56,6 +56,14 @@ enum hinic_port_cmd {
+ 
+ 	HINIC_PORT_CMD_SET_PORT_STATE   = 41,
+ 
++	HINIC_PORT_CMD_SET_RSS_TEMPLATE_TBL = 43,
 +
-+	err = hinic_get_rss_type(nic_dev, nic_dev->rss_tmpl_idx,
-+				 &rss_type);
++	HINIC_PORT_CMD_SET_RSS_HASH_ENGINE  = 45,
++
++	HINIC_PORT_CMD_RSS_TEMP_MGR	= 49,
++
++	HINIC_PORT_CMD_RSS_CFG		= 66,
++
+ 	HINIC_PORT_CMD_FWCTXT_INIT      = 69,
+ 
+ 	HINIC_PORT_CMD_SET_FUNC_STATE   = 93,
+@@ -71,6 +79,22 @@ enum hinic_port_cmd {
+ 	HINIC_PORT_CMD_SET_LRO_TIMER	= 244,
+ };
+ 
++enum hinic_ucode_cmd {
++	HINIC_UCODE_CMD_MODIFY_QUEUE_CONTEXT    = 0,
++	HINIC_UCODE_CMD_CLEAN_QUEUE_CONTEXT,
++	HINIC_UCODE_CMD_ARM_SQ,
++	HINIC_UCODE_CMD_ARM_RQ,
++	HINIC_UCODE_CMD_SET_RSS_INDIR_TABLE,
++	HINIC_UCODE_CMD_SET_RSS_CONTEXT_TABLE,
++	HINIC_UCODE_CMD_GET_RSS_INDIR_TABLE,
++	HINIC_UCODE_CMD_GET_RSS_CONTEXT_TABLE,
++	HINIC_UCODE_CMD_SET_IQ_ENABLE,
++	HINIC_UCODE_CMD_SET_RQ_FLUSH            = 10
++};
++
++#define NIC_RSS_CMD_TEMP_ALLOC  0x01
++#define NIC_RSS_CMD_TEMP_FREE   0x02
++
+ enum hinic_mgmt_msg_cmd {
+ 	HINIC_MGMT_MSG_CMD_BASE         = 160,
+ 
+@@ -230,6 +254,8 @@ struct hinic_hwdev *hinic_init_hwdev(struct pci_dev *pdev);
+ 
+ void hinic_free_hwdev(struct hinic_hwdev *hwdev);
+ 
++int hinic_hwdev_max_num_qps(struct hinic_hwdev *hwdev);
++
+ int hinic_hwdev_num_qps(struct hinic_hwdev *hwdev);
+ 
+ struct hinic_sq *hinic_hwdev_get_sq(struct hinic_hwdev *hwdev, int i);
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_wqe.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_wqe.h
+index ef852b7b57a3..a441b0b89d6f 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_hw_wqe.h
++++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_wqe.h
+@@ -239,6 +239,22 @@
+ #define HINIC_GET_RX_PKT_TYPE(offload_type)	\
+ 			RQ_CQE_OFFOLAD_TYPE_GET(offload_type, PKT_TYPE)
+ 
++#define HINIC_RSS_TYPE_VALID_SHIFT			23
++#define HINIC_RSS_TYPE_TCP_IPV6_EXT_SHIFT		24
++#define HINIC_RSS_TYPE_IPV6_EXT_SHIFT			25
++#define HINIC_RSS_TYPE_TCP_IPV6_SHIFT			26
++#define HINIC_RSS_TYPE_IPV6_SHIFT			27
++#define HINIC_RSS_TYPE_TCP_IPV4_SHIFT			28
++#define HINIC_RSS_TYPE_IPV4_SHIFT			29
++#define HINIC_RSS_TYPE_UDP_IPV6_SHIFT			30
++#define HINIC_RSS_TYPE_UDP_IPV4_SHIFT			31
++
++#define HINIC_RSS_TYPE_SET(val, member)                        \
++		(((u32)(val) & 0x1) << HINIC_RSS_TYPE_##member##_SHIFT)
++
++#define HINIC_RSS_TYPE_GET(val, member)                        \
++		(((u32)(val) >> HINIC_RSS_TYPE_##member##_SHIFT) & 0x1)
++
+ enum hinic_l4offload_type {
+ 	HINIC_L4_OFF_DISABLE            = 0,
+ 	HINIC_TCP_OFFLOAD_ENABLE        = 1,
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+index 419880564ee5..5135754b7bd8 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
+@@ -391,11 +391,118 @@ static int hinic_configure_max_qnum(struct hinic_dev *nic_dev)
+ 	return 0;
+ }
+ 
++static int hinic_rss_init(struct hinic_dev *nic_dev)
++{
++	u8 default_rss_key[HINIC_RSS_KEY_SIZE] = { 0 };
++	u32 indir_tbl[HINIC_RSS_INDIR_SIZE] = { 0 };
++	u8 tmpl_idx = nic_dev->rss_tmpl_idx;
++	int err, i;
++
++	netdev_rss_key_fill(default_rss_key, sizeof(default_rss_key));
++	for (i = 0; i < HINIC_RSS_INDIR_SIZE; i++)
++		indir_tbl[i] = ethtool_rxfh_indir_default(i, nic_dev->num_rss);
++
++	err = hinic_rss_set_template_tbl(nic_dev, tmpl_idx, default_rss_key);
 +	if (err)
 +		return err;
 +
-+	cmd->data = RXH_IP_SRC | RXH_IP_DST;
-+	switch (cmd->flow_type) {
-+	case TCP_V4_FLOW:
-+		if (rss_type.tcp_ipv4)
-+			cmd->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
-+		break;
-+	case TCP_V6_FLOW:
-+		if (rss_type.tcp_ipv6)
-+			cmd->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
-+		break;
-+	case UDP_V4_FLOW:
-+		if (rss_type.udp_ipv4)
-+			cmd->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
-+		break;
-+	case UDP_V6_FLOW:
-+		if (rss_type.udp_ipv6)
-+			cmd->data |= RXH_L4_B_0_1 | RXH_L4_B_2_3;
-+		break;
-+	case IPV4_FLOW:
-+	case IPV6_FLOW:
-+		break;
-+	default:
-+		cmd->data = 0;
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int set_l4_rss_hash_ops(struct ethtool_rxnfc *cmd,
-+			       struct hinic_rss_type *rss_type)
-+{
-+	u8 rss_l4_en = 0;
-+
-+	switch (cmd->data & (RXH_L4_B_0_1 | RXH_L4_B_2_3)) {
-+	case 0:
-+		rss_l4_en = 0;
-+		break;
-+	case (RXH_L4_B_0_1 | RXH_L4_B_2_3):
-+		rss_l4_en = 1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	switch (cmd->flow_type) {
-+	case TCP_V4_FLOW:
-+		rss_type->tcp_ipv4 = rss_l4_en;
-+		break;
-+	case TCP_V6_FLOW:
-+		rss_type->tcp_ipv6 = rss_l4_en;
-+		break;
-+	case UDP_V4_FLOW:
-+		rss_type->udp_ipv4 = rss_l4_en;
-+		break;
-+	case UDP_V6_FLOW:
-+		rss_type->udp_ipv6 = rss_l4_en;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static int hinic_set_rss_hash_opts(struct hinic_dev *nic_dev,
-+				   struct ethtool_rxnfc *cmd)
-+{
-+	struct hinic_rss_type *rss_type = &nic_dev->rss_type;
-+	int err;
-+
-+	if (!(nic_dev->flags & HINIC_RSS_ENABLE)) {
-+		cmd->data = 0;
-+		return -EOPNOTSUPP;
-+	}
-+
-+	/* RSS does not support anything other than hashing
-+	 * to queues on src and dst IPs and ports
-+	 */
-+	if (cmd->data & ~(RXH_IP_SRC | RXH_IP_DST | RXH_L4_B_0_1 |
-+		RXH_L4_B_2_3))
-+		return -EINVAL;
-+
-+	/* We need at least the IP SRC and DEST fields for hashing */
-+	if (!(cmd->data & RXH_IP_SRC) || !(cmd->data & RXH_IP_DST))
-+		return -EINVAL;
-+
-+	err = hinic_get_rss_type(nic_dev,
-+				 nic_dev->rss_tmpl_idx, rss_type);
++	err = hinic_rss_set_indir_tbl(nic_dev, tmpl_idx, indir_tbl);
 +	if (err)
-+		return -EFAULT;
++		return err;
 +
-+	switch (cmd->flow_type) {
-+	case TCP_V4_FLOW:
-+	case TCP_V6_FLOW:
-+	case UDP_V4_FLOW:
-+	case UDP_V6_FLOW:
-+		err = set_l4_rss_hash_ops(cmd, rss_type);
-+		if (err)
-+			return err;
-+		break;
-+	case IPV4_FLOW:
-+		rss_type->ipv4 = 1;
-+		break;
-+	case IPV6_FLOW:
-+		rss_type->ipv6 = 1;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	err = hinic_set_rss_type(nic_dev, nic_dev->rss_tmpl_idx,
-+				 *rss_type);
++	err = hinic_set_rss_type(nic_dev, tmpl_idx, nic_dev->rss_type);
 +	if (err)
-+		return -EFAULT;
++		return err;
++
++	err = hinic_rss_set_hash_engine(nic_dev, tmpl_idx,
++					nic_dev->rss_hash_engine);
++	if (err)
++		return err;
++
++	err = hinic_rss_cfg(nic_dev, 1, tmpl_idx);
++	if (err)
++		return err;
 +
 +	return 0;
 +}
 +
-+static int __set_rss_rxfh(struct net_device *netdev,
-+			  const u32 *indir, const u8 *key)
++static void hinic_rss_deinit(struct hinic_dev *nic_dev)
 +{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	int err;
-+
-+	if (indir) {
-+		if (!nic_dev->rss_indir_user) {
-+			nic_dev->rss_indir_user =
-+				kzalloc(sizeof(u32) * HINIC_RSS_INDIR_SIZE,
-+					GFP_KERNEL);
-+			if (!nic_dev->rss_indir_user)
-+				return -ENOMEM;
-+		}
-+
-+		memcpy(nic_dev->rss_indir_user, indir,
-+		       sizeof(u32) * HINIC_RSS_INDIR_SIZE);
-+
-+		err = hinic_rss_set_indir_tbl(nic_dev,
-+					      nic_dev->rss_tmpl_idx, indir);
-+		if (err)
-+			return -EFAULT;
-+	}
-+
-+	if (key) {
-+		if (!nic_dev->rss_hkey_user) {
-+			nic_dev->rss_hkey_user =
-+				kzalloc(HINIC_RSS_KEY_SIZE * 2, GFP_KERNEL);
-+
-+			if (!nic_dev->rss_hkey_user)
-+				return -ENOMEM;
-+		}
-+
-+		memcpy(nic_dev->rss_hkey_user, key, HINIC_RSS_KEY_SIZE);
-+
-+		err = hinic_rss_set_template_tbl(nic_dev,
-+						 nic_dev->rss_tmpl_idx, key);
-+		if (err)
-+			return -EFAULT;
-+	}
-+
-+	return 0;
++	hinic_rss_cfg(nic_dev, 0, nic_dev->rss_tmpl_idx);
 +}
 +
-+static int hinic_get_rxnfc(struct net_device *netdev,
-+			   struct ethtool_rxnfc *cmd, u32 *rule_locs)
++static void hinic_init_rss_parameters(struct hinic_dev *nic_dev)
 +{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	int err = 0;
-+
-+	switch (cmd->cmd) {
-+	case ETHTOOL_GRXRINGS:
-+		cmd->data = nic_dev->num_qps;
-+		break;
-+	case ETHTOOL_GRXFH:
-+		err = hinic_get_rss_hash_opts(nic_dev, cmd);
-+		break;
-+	default:
-+		err = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	return err;
++	nic_dev->rss_hash_engine = HINIC_RSS_HASH_ENGINE_TYPE_XOR;
++	nic_dev->rss_type.tcp_ipv6_ext = 1;
++	nic_dev->rss_type.ipv6_ext = 1;
++	nic_dev->rss_type.tcp_ipv6 = 1;
++	nic_dev->rss_type.ipv6 = 1;
++	nic_dev->rss_type.tcp_ipv4 = 1;
++	nic_dev->rss_type.ipv4 = 1;
++	nic_dev->rss_type.udp_ipv6 = 1;
++	nic_dev->rss_type.udp_ipv4 = 1;
 +}
 +
-+static int hinic_set_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *cmd)
++static void hinic_enable_rss(struct hinic_dev *nic_dev)
 +{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	int err = 0;
-+
-+	switch (cmd->cmd) {
-+	case ETHTOOL_SRXFH:
-+		err = hinic_set_rss_hash_opts(nic_dev, cmd);
-+		break;
-+	default:
-+		err = -EOPNOTSUPP;
-+		break;
-+	}
-+
-+	return err;
-+}
-+
-+static int hinic_get_rxfh(struct net_device *netdev,
-+			  u32 *indir, u8 *key, u8 *hfunc)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	u8 hash_engine_type = 0;
-+	int err = 0;
-+
-+	if (!(nic_dev->flags & HINIC_RSS_ENABLE))
-+		return -EOPNOTSUPP;
-+
-+	if (hfunc) {
-+		err = hinic_rss_get_hash_engine(nic_dev,
-+						nic_dev->rss_tmpl_idx,
-+						&hash_engine_type);
-+		if (err)
-+			return -EFAULT;
-+
-+		*hfunc = hash_engine_type ? ETH_RSS_HASH_TOP : ETH_RSS_HASH_XOR;
-+	}
-+
-+	if (indir) {
-+		err = hinic_rss_get_indir_tbl(nic_dev,
-+					      nic_dev->rss_tmpl_idx, indir);
-+		if (err)
-+			return -EFAULT;
-+	}
-+
-+	if (key)
-+		err = hinic_rss_get_template_tbl(nic_dev,
-+						 nic_dev->rss_tmpl_idx, key);
-+
-+	return err;
-+}
-+
-+static int hinic_set_rxfh(struct net_device *netdev, const u32 *indir,
-+			  const u8 *key, const u8 hfunc)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	int err = 0;
-+
-+	if (!(nic_dev->flags & HINIC_RSS_ENABLE))
-+		return -EOPNOTSUPP;
-+
-+	if (hfunc != ETH_RSS_HASH_NO_CHANGE) {
-+		if (hfunc != ETH_RSS_HASH_TOP && hfunc != ETH_RSS_HASH_XOR)
-+			return -EOPNOTSUPP;
-+
-+		nic_dev->rss_hash_engine = (hfunc == ETH_RSS_HASH_XOR) ?
-+			HINIC_RSS_HASH_ENGINE_TYPE_XOR :
-+			HINIC_RSS_HASH_ENGINE_TYPE_TOEP;
-+		err = hinic_rss_set_hash_engine
-+			(nic_dev, nic_dev->rss_tmpl_idx,
-+			nic_dev->rss_hash_engine);
-+		if (err)
-+			return -EFAULT;
-+	}
-+
-+	err = __set_rss_rxfh(netdev, indir, key);
-+
-+	return err;
-+}
-+
-+static u32 hinic_get_rxfh_key_size(struct net_device *netdev)
-+{
-+	return HINIC_RSS_KEY_SIZE;
-+}
-+
-+static u32 hinic_get_rxfh_indir_size(struct net_device *netdev)
-+{
-+	return HINIC_RSS_INDIR_SIZE;
-+}
-+
- static const struct ethtool_ops hinic_ethtool_ops = {
- 	.get_link_ksettings = hinic_get_link_ksettings,
- 	.get_drvinfo = hinic_get_drvinfo,
- 	.get_link = ethtool_op_get_link,
- 	.get_ringparam = hinic_get_ringparam,
- 	.get_channels = hinic_get_channels,
-+	.get_rxnfc = hinic_get_rxnfc,
-+	.set_rxnfc = hinic_set_rxnfc,
-+	.get_rxfh_key_size = hinic_get_rxfh_key_size,
-+	.get_rxfh_indir_size = hinic_get_rxfh_indir_size,
-+	.get_rxfh = hinic_get_rxfh,
-+	.set_rxfh = hinic_set_rxfh,
- };
- 
- void hinic_set_ethtool_ops(struct net_device *netdev)
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-index 9c55374077f7..7f854392f4e7 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_hw_dev.h
-@@ -54,11 +54,21 @@ enum hinic_port_cmd {
- 
- 	HINIC_PORT_CMD_SET_RX_CSUM	= 26,
- 
-+	HINIC_PORT_CMD_GET_RSS_TEMPLATE_INDIR_TBL = 37,
-+
- 	HINIC_PORT_CMD_SET_PORT_STATE   = 41,
- 
- 	HINIC_PORT_CMD_SET_RSS_TEMPLATE_TBL = 43,
- 
--	HINIC_PORT_CMD_SET_RSS_HASH_ENGINE  = 45,
-+	HINIC_PORT_CMD_GET_RSS_TEMPLATE_TBL = 44,
-+
-+	HINIC_PORT_CMD_SET_RSS_HASH_ENGINE = 45,
-+
-+	HINIC_PORT_CMD_GET_RSS_HASH_ENGINE = 46,
-+
-+	HINIC_PORT_CMD_GET_RSS_CTX_TBL  = 47,
-+
-+	HINIC_PORT_CMD_SET_RSS_CTX_TBL  = 48,
- 
- 	HINIC_PORT_CMD_RSS_TEMP_MGR	= 49,
- 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-index 92a0ec00f1b7..04ec2251fa22 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-@@ -625,6 +625,36 @@ int hinic_rss_set_indir_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
- 	return err;
- }
- 
-+int hinic_rss_get_indir_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
-+			    u32 *indir_table)
-+{
-+	struct hinic_rss_indir_table rss_cfg = { 0 };
++	struct net_device *netdev = nic_dev->netdev;
 +	struct hinic_hwdev *hwdev = nic_dev->hwdev;
 +	struct hinic_hwif *hwif = hwdev->hwif;
 +	struct pci_dev *pdev = hwif->pdev;
-+	u16 out_size = sizeof(rss_cfg);
-+	int err = 0, i;
++	int i, node, err = 0;
++	u16 num_cpus = 0;
++
++	nic_dev->max_qps = hinic_hwdev_max_num_qps(hwdev);
++	if (nic_dev->max_qps <= 1) {
++		nic_dev->flags &= ~HINIC_RSS_ENABLE;
++		nic_dev->rss_limit = nic_dev->max_qps;
++		nic_dev->num_qps = nic_dev->max_qps;
++		nic_dev->num_rss = nic_dev->max_qps;
++
++		return;
++	}
++
++	err = hinic_rss_template_alloc(nic_dev, &nic_dev->rss_tmpl_idx);
++	if (err) {
++		netif_err(nic_dev, drv, netdev,
++			  "Failed to alloc tmpl_idx for rss, can't enable rss for this function\n");
++		nic_dev->flags &= ~HINIC_RSS_ENABLE;
++		nic_dev->max_qps = 1;
++		nic_dev->rss_limit = nic_dev->max_qps;
++		nic_dev->num_qps = nic_dev->max_qps;
++		nic_dev->num_rss = nic_dev->max_qps;
++
++		return;
++	}
++
++	nic_dev->flags |= HINIC_RSS_ENABLE;
++
++	for (i = 0; i < num_online_cpus(); i++) {
++		node = cpu_to_node(i);
++		if (node == dev_to_node(&pdev->dev))
++			num_cpus++;
++	}
++
++	if (!num_cpus)
++		num_cpus = num_online_cpus();
++
++	nic_dev->num_qps = min_t(u16, nic_dev->max_qps, num_cpus);
++
++	nic_dev->rss_limit = nic_dev->num_qps;
++	nic_dev->num_rss = nic_dev->num_qps;
++
++	hinic_init_rss_parameters(nic_dev);
++	err = hinic_rss_init(nic_dev);
++	if (err)
++		netif_err(nic_dev, drv, netdev, "Failed to init rss\n");
++}
++
+ static int hinic_open(struct net_device *netdev)
+ {
+ 	struct hinic_dev *nic_dev = netdev_priv(netdev);
+ 	enum hinic_port_link_state link_state;
+-	int err, ret, num_qps;
++	int err, ret;
+ 
+ 	if (!(nic_dev->flags & HINIC_INTF_UP)) {
+ 		err = hinic_hwdev_ifup(nic_dev->hwdev);
+@@ -420,6 +527,8 @@ static int hinic_open(struct net_device *netdev)
+ 		goto err_create_rxqs;
+ 	}
+ 
++	hinic_enable_rss(nic_dev);
++
+ 	err = hinic_configure_max_qnum(nic_dev);
+ 	if (err) {
+ 		netif_err(nic_dev, drv, nic_dev->netdev,
+@@ -427,9 +536,8 @@ static int hinic_open(struct net_device *netdev)
+ 		goto err_port_state;
+ 	}
+ 
+-	num_qps = hinic_hwdev_num_qps(nic_dev->hwdev);
+-	netif_set_real_num_tx_queues(netdev, num_qps);
+-	netif_set_real_num_rx_queues(netdev, num_qps);
++	netif_set_real_num_tx_queues(netdev, nic_dev->num_qps);
++	netif_set_real_num_rx_queues(netdev, nic_dev->num_qps);
+ 
+ 	err = hinic_port_set_state(nic_dev, HINIC_PORT_ENABLE);
+ 	if (err) {
+@@ -485,9 +593,12 @@ static int hinic_open(struct net_device *netdev)
+ 	if (ret)
+ 		netif_warn(nic_dev, drv, netdev,
+ 			   "Failed to revert port state\n");
+-
+ err_port_state:
+ 	free_rxqs(nic_dev);
++	if (nic_dev->flags & HINIC_RSS_ENABLE) {
++		hinic_rss_deinit(nic_dev);
++		hinic_rss_template_free(nic_dev, nic_dev->rss_tmpl_idx);
++	}
+ 
+ err_create_rxqs:
+ 	free_txqs(nic_dev);
+@@ -531,6 +642,11 @@ static int hinic_close(struct net_device *netdev)
+ 		return err;
+ 	}
+ 
++	if (nic_dev->flags & HINIC_RSS_ENABLE) {
++		hinic_rss_deinit(nic_dev);
++		hinic_rss_template_free(nic_dev, nic_dev->rss_tmpl_idx);
++	}
++
+ 	free_rxqs(nic_dev);
+ 	free_txqs(nic_dev);
+ 
+diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
+index c9aedecd19c9..92a0ec00f1b7 100644
+--- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
++++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
+@@ -553,3 +553,266 @@ int hinic_set_rx_lro_state(struct hinic_dev *nic_dev, u8 lro_en,
+ 
+ 	return 0;
+ }
++
++int hinic_rss_set_indir_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
++			    const u32 *indir_table)
++{
++	struct hinic_rss_indirect_tbl *indir_tbl;
++	struct hinic_func_to_io *func_to_io;
++	struct hinic_cmdq_buf cmd_buf;
++	struct hinic_hwdev *hwdev;
++	struct hinic_hwif *hwif;
++	struct pci_dev *pdev;
++	u32 indir_size;
++	u64 out_param;
++	int err, i;
++	u32 *temp;
++
++	hwdev = nic_dev->hwdev;
++	func_to_io = &hwdev->func_to_io;
++	hwif = hwdev->hwif;
++	pdev = hwif->pdev;
++
++	err = hinic_alloc_cmdq_buf(&func_to_io->cmdqs, &cmd_buf);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to allocate cmdq buf\n");
++		return err;
++	}
++
++	cmd_buf.size = sizeof(*indir_tbl);
++
++	indir_tbl = cmd_buf.buf;
++	indir_tbl->group_index = cpu_to_be32(tmpl_idx);
++
++	for (i = 0; i < HINIC_RSS_INDIR_SIZE; i++) {
++		indir_tbl->entry[i] = (u8)(*(indir_table + i));
++
++		if (0x3 == (i & 0x3)) {
++			temp = (u32 *)&indir_tbl->entry[i - 3];
++			*temp = cpu_to_be32(*temp);
++		}
++	}
++
++	/* cfg the rss indirect table by command queue */
++	indir_size = HINIC_RSS_INDIR_SIZE / 2;
++	indir_tbl->offset = 0;
++	indir_tbl->size = cpu_to_be32(indir_size);
++
++	err = hinic_cmdq_direct_resp(&func_to_io->cmdqs, HINIC_MOD_L2NIC,
++				     HINIC_UCODE_CMD_SET_RSS_INDIR_TABLE,
++				     &cmd_buf, &out_param);
++	if (err || out_param != 0) {
++		dev_err(&pdev->dev, "Failed to set rss indir table\n");
++		err = -EFAULT;
++		goto free_buf;
++	}
++
++	indir_tbl->offset = cpu_to_be32(indir_size);
++	indir_tbl->size = cpu_to_be32(indir_size);
++	memcpy(&indir_tbl->entry[0], &indir_tbl->entry[indir_size], indir_size);
++
++	err = hinic_cmdq_direct_resp(&func_to_io->cmdqs, HINIC_MOD_L2NIC,
++				     HINIC_UCODE_CMD_SET_RSS_INDIR_TABLE,
++				     &cmd_buf, &out_param);
++	if (err || out_param != 0) {
++		dev_err(&pdev->dev, "Failed to set rss indir table\n");
++		err = -EFAULT;
++	}
++
++free_buf:
++	hinic_free_cmdq_buf(&func_to_io->cmdqs, &cmd_buf);
++
++	return err;
++}
++
++int hinic_set_rss_type(struct hinic_dev *nic_dev, u32 tmpl_idx,
++		       struct hinic_rss_type rss_type)
++{
++	struct hinic_rss_context_tbl *ctx_tbl;
++	struct hinic_func_to_io *func_to_io;
++	struct hinic_cmdq_buf cmd_buf;
++	struct hinic_hwdev *hwdev;
++	struct hinic_hwif *hwif;
++	struct pci_dev *pdev;
++	u64 out_param;
++	u32 ctx = 0;
++	int err;
++
++	hwdev = nic_dev->hwdev;
++	func_to_io = &hwdev->func_to_io;
++	hwif = hwdev->hwif;
++	pdev = hwif->pdev;
++
++	err = hinic_alloc_cmdq_buf(&func_to_io->cmdqs, &cmd_buf);
++	if (err) {
++		dev_err(&pdev->dev, "Failed to allocate cmd buf\n");
++		return -ENOMEM;
++	}
++
++	ctx |=  HINIC_RSS_TYPE_SET(1, VALID) |
++		HINIC_RSS_TYPE_SET(rss_type.ipv4, IPV4) |
++		HINIC_RSS_TYPE_SET(rss_type.ipv6, IPV6) |
++		HINIC_RSS_TYPE_SET(rss_type.ipv6_ext, IPV6_EXT) |
++		HINIC_RSS_TYPE_SET(rss_type.tcp_ipv4, TCP_IPV4) |
++		HINIC_RSS_TYPE_SET(rss_type.tcp_ipv6, TCP_IPV6) |
++		HINIC_RSS_TYPE_SET(rss_type.tcp_ipv6_ext, TCP_IPV6_EXT) |
++		HINIC_RSS_TYPE_SET(rss_type.udp_ipv4, UDP_IPV4) |
++		HINIC_RSS_TYPE_SET(rss_type.udp_ipv6, UDP_IPV6);
++
++	cmd_buf.size = sizeof(struct hinic_rss_context_tbl);
++
++	ctx_tbl = (struct hinic_rss_context_tbl *)cmd_buf.buf;
++	ctx_tbl->group_index = cpu_to_be32(tmpl_idx);
++	ctx_tbl->offset = 0;
++	ctx_tbl->size = sizeof(u32);
++	ctx_tbl->size = cpu_to_be32(ctx_tbl->size);
++	ctx_tbl->rsvd = 0;
++	ctx_tbl->ctx = cpu_to_be32(ctx);
++
++	/* cfg the rss context table by command queue */
++	err = hinic_cmdq_direct_resp(&func_to_io->cmdqs, HINIC_MOD_L2NIC,
++				     HINIC_UCODE_CMD_SET_RSS_CONTEXT_TABLE,
++				     &cmd_buf, &out_param);
++
++	hinic_free_cmdq_buf(&func_to_io->cmdqs, &cmd_buf);
++
++	if (err || out_param != 0) {
++		dev_err(&pdev->dev, "Failed to set rss context table, err: %d\n",
++			err);
++		return -EFAULT;
++	}
++
++	return 0;
++}
++
++int hinic_rss_set_template_tbl(struct hinic_dev *nic_dev, u32 template_id,
++			       const u8 *temp)
++{
++	struct hinic_hwdev *hwdev = nic_dev->hwdev;
++	struct hinic_hwif *hwif = hwdev->hwif;
++	struct hinic_rss_key rss_key = { 0 };
++	struct pci_dev *pdev = hwif->pdev;
++	u16 out_size;
++	int err;
++
++	rss_key.func_id = HINIC_HWIF_FUNC_IDX(hwif);
++	rss_key.template_id = (u8)template_id;
++	memcpy(rss_key.key, temp, HINIC_RSS_KEY_SIZE);
++
++	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_SET_RSS_TEMPLATE_TBL,
++				 &rss_key, sizeof(rss_key),
++				 &rss_key, &out_size);
++	if (err || !out_size || rss_key.status) {
++		dev_err(&pdev->dev,
++			"Failed to set rss hash key, err: %d, status: 0x%x, out size: 0x%x\n",
++			err, rss_key.status, out_size);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++int hinic_rss_set_hash_engine(struct hinic_dev *nic_dev, u8 template_id,
++			      u8 type)
++{
++	struct hinic_rss_engine_type rss_engine = { 0 };
++	struct hinic_hwdev *hwdev = nic_dev->hwdev;
++	struct hinic_hwif *hwif = hwdev->hwif;
++	struct pci_dev *pdev = hwif->pdev;
++	u16 out_size;
++	int err;
++
++	rss_engine.func_id = HINIC_HWIF_FUNC_IDX(hwif);
++	rss_engine.hash_engine = type;
++	rss_engine.template_id = template_id;
++
++	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_SET_RSS_HASH_ENGINE,
++				 &rss_engine, sizeof(rss_engine),
++				 &rss_engine, &out_size);
++	if (err || !out_size || rss_engine.status) {
++		dev_err(&pdev->dev,
++			"Failed to set hash engine, err: %d, status: 0x%x, out size: 0x%x\n",
++			err, rss_engine.status, out_size);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++int hinic_rss_cfg(struct hinic_dev *nic_dev, u8 rss_en, u8 template_id)
++{
++	struct hinic_hwdev *hwdev = nic_dev->hwdev;
++	struct hinic_rss_config rss_cfg = { 0 };
++	struct hinic_hwif *hwif = hwdev->hwif;
++	struct pci_dev *pdev = hwif->pdev;
++	u16 out_size;
++	int err;
 +
 +	rss_cfg.func_id = HINIC_HWIF_FUNC_IDX(hwif);
-+	rss_cfg.template_id = (u8)tmpl_idx;
++	rss_cfg.rss_en = rss_en;
++	rss_cfg.template_id = template_id;
++	rss_cfg.rq_priority_number = 0;
 +
-+	err = hinic_port_msg_cmd(hwdev,
-+				 HINIC_PORT_CMD_GET_RSS_TEMPLATE_INDIR_TBL,
-+				 &rss_cfg, sizeof(rss_cfg), &rss_cfg,
-+				 &out_size);
++	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_RSS_CFG,
++				 &rss_cfg, sizeof(rss_cfg),
++				 &rss_cfg, &out_size);
 +	if (err || !out_size || rss_cfg.status) {
-+		dev_err(&pdev->dev, "Failed to get indir table, err: %d, status: 0x%x, out size: 0x%x\n",
++		dev_err(&pdev->dev,
++			"Failed to set rss cfg, err: %d, status: 0x%x, out size: 0x%x\n",
 +			err, rss_cfg.status, out_size);
 +		return -EINVAL;
 +	}
 +
-+	hinic_be32_to_cpu(rss_cfg.indir, HINIC_RSS_INDIR_SIZE);
-+	for (i = 0; i < HINIC_RSS_INDIR_SIZE; i++)
-+		indir_table[i] = rss_cfg.indir[i];
-+
 +	return 0;
 +}
 +
- int hinic_set_rss_type(struct hinic_dev *nic_dev, u32 tmpl_idx,
- 		       struct hinic_rss_type rss_type)
- {
-@@ -685,6 +715,44 @@ int hinic_set_rss_type(struct hinic_dev *nic_dev, u32 tmpl_idx,
- 	return 0;
- }
- 
-+int hinic_get_rss_type(struct hinic_dev *nic_dev, u32 tmpl_idx,
-+		       struct hinic_rss_type *rss_type)
++int hinic_rss_template_alloc(struct hinic_dev *nic_dev, u8 *tmpl_idx)
 +{
-+	struct hinic_rss_context_table ctx_tbl = { 0 };
++	struct hinic_rss_template_mgmt template_mgmt = { 0 };
 +	struct hinic_hwdev *hwdev = nic_dev->hwdev;
 +	struct hinic_hwif *hwif = hwdev->hwif;
 +	struct pci_dev *pdev = hwif->pdev;
-+	u16 out_size = sizeof(ctx_tbl);
++	u16 out_size;
 +	int err;
 +
-+	if (!hwdev || !rss_type)
-+		return -EINVAL;
++	template_mgmt.func_id = HINIC_HWIF_FUNC_IDX(hwif);
++	template_mgmt.cmd = NIC_RSS_CMD_TEMP_ALLOC;
 +
-+	ctx_tbl.func_id = HINIC_HWIF_FUNC_IDX(hwif);
-+	ctx_tbl.template_id = (u8)tmpl_idx;
-+
-+	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_GET_RSS_CTX_TBL,
-+				 &ctx_tbl, sizeof(ctx_tbl),
-+				 &ctx_tbl, &out_size);
-+	if (err || !out_size || ctx_tbl.status) {
-+		dev_err(&pdev->dev, "Failed to get hash type, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, ctx_tbl.status, out_size);
++	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_RSS_TEMP_MGR,
++				 &template_mgmt, sizeof(template_mgmt),
++				 &template_mgmt, &out_size);
++	if (err || !out_size || template_mgmt.status) {
++		dev_err(&pdev->dev, "Failed to alloc rss template, err: %d, status: 0x%x, out size: 0x%x\n",
++			err, template_mgmt.status, out_size);
 +		return -EINVAL;
 +	}
 +
-+	rss_type->ipv4          = HINIC_RSS_TYPE_GET(ctx_tbl.context, IPV4);
-+	rss_type->ipv6          = HINIC_RSS_TYPE_GET(ctx_tbl.context, IPV6);
-+	rss_type->ipv6_ext      = HINIC_RSS_TYPE_GET(ctx_tbl.context, IPV6_EXT);
-+	rss_type->tcp_ipv4      = HINIC_RSS_TYPE_GET(ctx_tbl.context, TCP_IPV4);
-+	rss_type->tcp_ipv6      = HINIC_RSS_TYPE_GET(ctx_tbl.context, TCP_IPV6);
-+	rss_type->tcp_ipv6_ext  = HINIC_RSS_TYPE_GET(ctx_tbl.context,
-+						     TCP_IPV6_EXT);
-+	rss_type->udp_ipv4      = HINIC_RSS_TYPE_GET(ctx_tbl.context, UDP_IPV4);
-+	rss_type->udp_ipv6      = HINIC_RSS_TYPE_GET(ctx_tbl.context, UDP_IPV6);
++	*tmpl_idx = template_mgmt.template_id;
 +
 +	return 0;
 +}
 +
- int hinic_rss_set_template_tbl(struct hinic_dev *nic_dev, u32 template_id,
- 			       const u8 *temp)
- {
-@@ -712,6 +780,36 @@ int hinic_rss_set_template_tbl(struct hinic_dev *nic_dev, u32 template_id,
- 	return 0;
- }
- 
-+int hinic_rss_get_template_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
-+			       u8 *temp)
++int hinic_rss_template_free(struct hinic_dev *nic_dev, u8 tmpl_idx)
 +{
-+	struct hinic_rss_template_key temp_key = { 0 };
++	struct hinic_rss_template_mgmt template_mgmt = { 0 };
 +	struct hinic_hwdev *hwdev = nic_dev->hwdev;
 +	struct hinic_hwif *hwif = hwdev->hwif;
 +	struct pci_dev *pdev = hwif->pdev;
-+	u16 out_size = sizeof(temp_key);
++	u16 out_size;
 +	int err;
 +
-+	if (!hwdev || !temp)
-+		return -EINVAL;
++	template_mgmt.func_id = HINIC_HWIF_FUNC_IDX(hwif);
++	template_mgmt.template_id = tmpl_idx;
++	template_mgmt.cmd = NIC_RSS_CMD_TEMP_FREE;
 +
-+	temp_key.func_id = HINIC_HWIF_FUNC_IDX(hwif);
-+	temp_key.template_id = (u8)tmpl_idx;
-+
-+	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_GET_RSS_TEMPLATE_TBL,
-+				 &temp_key, sizeof(temp_key),
-+				 &temp_key, &out_size);
-+	if (err || !out_size || temp_key.status) {
-+		dev_err(&pdev->dev, "Failed to set hash key, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, temp_key.status, out_size);
++	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_RSS_TEMP_MGR,
++				 &template_mgmt, sizeof(template_mgmt),
++				 &template_mgmt, &out_size);
++	if (err || !out_size || template_mgmt.status) {
++		dev_err(&pdev->dev, "Failed to free rss template, err: %d, status: 0x%x, out size: 0x%x\n",
++			err, template_mgmt.status, out_size);
 +		return -EINVAL;
 +	}
 +
-+	memcpy(temp, temp_key.key, HINIC_RSS_KEY_SIZE);
-+
 +	return 0;
 +}
-+
- int hinic_rss_set_hash_engine(struct hinic_dev *nic_dev, u8 template_id,
- 			      u8 type)
- {
-@@ -739,6 +837,34 @@ int hinic_rss_set_hash_engine(struct hinic_dev *nic_dev, u8 template_id,
- 	return 0;
- }
- 
-+int hinic_rss_get_hash_engine(struct hinic_dev *nic_dev, u8 tmpl_idx, u8 *type)
-+{
-+	struct hinic_rss_engine_type hash_type = { 0 };
-+	struct hinic_hwdev *hwdev = nic_dev->hwdev;
-+	struct hinic_hwif *hwif = hwdev->hwif;
-+	struct pci_dev *pdev = hwif->pdev;
-+	u16 out_size = sizeof(hash_type);
-+	int err;
-+
-+	if (!hwdev || !type)
-+		return -EINVAL;
-+
-+	hash_type.func_id = HINIC_HWIF_FUNC_IDX(hwif);
-+	hash_type.template_id = tmpl_idx;
-+
-+	err = hinic_port_msg_cmd(hwdev, HINIC_PORT_CMD_GET_RSS_HASH_ENGINE,
-+				 &hash_type, sizeof(hash_type),
-+				 &hash_type, &out_size);
-+	if (err || !out_size || hash_type.status) {
-+		dev_err(&pdev->dev, "Failed to get hash engine, err: %d, status: 0x%x, out size: 0x%x\n",
-+			err, hash_type.status, out_size);
-+		return -EINVAL;
-+	}
-+
-+	*type = hash_type.hash_engine;
-+	return 0;
-+}
-+
- int hinic_rss_cfg(struct hinic_dev *nic_dev, u8 rss_en, u8 template_id)
- {
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
 diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.h b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-index dafa3ca18af4..f177945d64ae 100644
+index 972b7be460a8..0c9ed17134a7 100644
 --- a/drivers/net/ethernet/huawei/hinic/hinic_port.h
 +++ b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-@@ -242,6 +242,17 @@ struct hinic_rss_template_mgmt {
- 	u8	rsvd1[4];
+@@ -22,6 +22,9 @@
+ 
+ #include "hinic_dev.h"
+ 
++#define HINIC_RSS_KEY_SIZE	40
++#define HINIC_RSS_INDIR_SIZE	256
++
+ enum hinic_rx_mode {
+ 	HINIC_RX_MODE_UC        = BIT(0),
+ 	HINIC_RX_MODE_MC        = BIT(1),
+@@ -228,6 +231,67 @@ struct hinic_lro_timer {
+ 	u32	timer;
  };
  
-+struct hinic_rss_template_key {
++struct hinic_rss_template_mgmt {
++	u8	status;
++	u8	version;
++	u8	rsvd0[6];
++
++	u16	func_id;
++	u8	cmd;
++	u8	template_id;
++	u8	rsvd1[4];
++};
++
++struct hinic_rss_context_tbl {
++	u32 group_index;
++	u32 offset;
++	u32 size;
++	u32 rsvd;
++	u32 ctx;
++};
++
++struct hinic_rss_indirect_tbl {
++	u32 group_index;
++	u32 offset;
++	u32 size;
++	u32 rsvd;
++	u8 entry[HINIC_RSS_INDIR_SIZE];
++};
++
++struct hinic_rss_key {
 +	u8	status;
 +	u8	version;
 +	u8	rsvd0[6];
@@ -589,61 +722,54 @@ index dafa3ca18af4..f177945d64ae 100644
 +	u8	key[HINIC_RSS_KEY_SIZE];
 +};
 +
- struct hinic_rss_context_tbl {
- 	u32 group_index;
- 	u32 offset;
-@@ -250,6 +261,17 @@ struct hinic_rss_context_tbl {
- 	u32 ctx;
- };
- 
-+struct hinic_rss_context_table {
-+	u8      status;
-+	u8      version;
-+	u8      rsvd0[6];
++struct hinic_rss_engine_type {
++	u8	status;
++	u8	version;
++	u8	rsvd0[6];
 +
-+	u16     func_id;
-+	u8      template_id;
-+	u8      rsvd1;
-+	u32     context;
++	u16	func_id;
++	u8	template_id;
++	u8	hash_engine;
++	u8	rsvd1[4];
 +};
 +
- struct hinic_rss_indirect_tbl {
- 	u32 group_index;
- 	u32 offset;
-@@ -258,6 +280,17 @@ struct hinic_rss_indirect_tbl {
- 	u8 entry[HINIC_RSS_INDIR_SIZE];
- };
- 
-+struct hinic_rss_indir_table {
-+	u8      status;
-+	u8      version;
-+	u8      rsvd0[6];
++struct hinic_rss_config {
++	u8	status;
++	u8	version;
++	u8	rsvd0[6];
 +
-+	u16     func_id;
-+	u8      template_id;
-+	u8      rsvd1;
-+	u8      indir[HINIC_RSS_INDIR_SIZE];
++	u16	func_id;
++	u8	rss_en;
++	u8	template_id;
++	u8	rq_priority_number;
++	u8	rsvd1[11];
 +};
 +
- struct hinic_rss_key {
- 	u8	status;
- 	u8	version;
-@@ -348,4 +381,16 @@ int hinic_rss_template_alloc(struct hinic_dev *nic_dev, u8 *tmpl_idx);
- int hinic_rss_template_free(struct hinic_dev *nic_dev, u8 tmpl_idx);
+ int hinic_port_add_mac(struct hinic_dev *nic_dev, const u8 *addr,
+ 		       u16 vlan_id);
  
- void hinic_set_ethtool_ops(struct net_device *netdev);
+@@ -264,4 +328,22 @@ int hinic_set_rx_csum_offload(struct hinic_dev *nic_dev, u32 en);
+ 
+ int hinic_set_rx_lro_state(struct hinic_dev *nic_dev, u8 lro_en,
+ 			   u32 lro_timer, u32 wqe_num);
 +
-+int hinic_get_rss_type(struct hinic_dev *nic_dev, u32 tmpl_idx,
-+		       struct hinic_rss_type *rss_type);
++int hinic_set_rss_type(struct hinic_dev *nic_dev, u32 tmpl_idx,
++		       struct hinic_rss_type rss_type);
 +
-+int hinic_rss_get_indir_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
-+			    u32 *indir_table);
++int hinic_rss_set_indir_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
++			    const u32 *indir_table);
 +
-+int hinic_rss_get_template_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
-+			       u8 *temp);
++int hinic_rss_set_template_tbl(struct hinic_dev *nic_dev, u32 template_id,
++			       const u8 *temp);
 +
-+int hinic_rss_get_hash_engine(struct hinic_dev *nic_dev, u8 tmpl_idx,
-+			      u8 *type);
++int hinic_rss_set_hash_engine(struct hinic_dev *nic_dev, u8 template_id,
++			      u8 type);
++
++int hinic_rss_cfg(struct hinic_dev *nic_dev, u8 rss_en, u8 template_id);
++
++int hinic_rss_template_alloc(struct hinic_dev *nic_dev, u8 *tmpl_idx);
++
++int hinic_rss_template_free(struct hinic_dev *nic_dev, u8 tmpl_idx);
  #endif
 -- 
 2.17.1
