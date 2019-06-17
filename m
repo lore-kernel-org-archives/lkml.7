@@ -2,185 +2,175 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D70C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:43:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 700D0C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A48B208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:43:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edDnf1za"
+	by mail.kernel.org (Postfix) with ESMTP id 4FD2220833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:43:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728509AbfFQOni (ORCPT
+        id S1728460AbfFQOnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:43:38 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:44611 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727467AbfFQOng (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:43:36 -0400
-Received: by mail-qk1-f194.google.com with SMTP id p144so6275882qke.11;
-        Mon, 17 Jun 2019 07:43:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tM4hoxeAgaP+/Vpct6XZW9tfikLT2DbVn921Xun18eY=;
-        b=edDnf1zaHfpFOXrOPGVhqVe/oTUWzIpiJ3aDd/odd1yU9H6hDy1E7LQqs5znG9Bnhf
-         rGlbyBnzC+pLOSHPXkUToRoL62nINSOjKmJhyHYqGr5IIlJX0OH4AQJ0UJbb+/bmvKam
-         SNu7Jnt0SEL2a6U0h4oePiv5yoRwVCcEHS6Lt41Z38F5xm0GxsizToeap8p0hUIhdqHC
-         b22iPrlDPUyAPPoB7pn2wnwxkFDsjQRDb6PqR/qJ6KuL/8jaIr5b6aCeLHQIcXJcrwG5
-         VWNk00hg7D98dsr2HHfoy3I5KhFjL8l9aNJMnf+5r3McvY545Tso0hbTQccwbyMf7D4O
-         Yq5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tM4hoxeAgaP+/Vpct6XZW9tfikLT2DbVn921Xun18eY=;
-        b=b/uYeveWqpzh7aNnbv9Hx77Wh8rDyuqY6dYEoaceqYNMoMNkXhHMU1z63lhOF8peU8
-         EV9e8SPBALxmDuMoAHFOftYa3VEGnGDhjGJn6arEIOfcUy3YEdO5HmwlFcCN0Fk3IgmB
-         3nztf9WI4SMghxaOu+E4ZlY0BCJsm05LP6+uI79xrnQMrq3OgNNt5NlJfl9ZWUpvXx4U
-         +Y02VNBIeW7IlqjLgcbxVwuxCsIUKd360dWIi+gkGrYzl3WdglLBWzU4AmiQODCMVxXf
-         zNVD6zBFbPfP6uFhGcHZyK424J6CEgJ+Nblt50U3WQZH+E3xODPN2GbTRhBEHt+5tZhk
-         NfSA==
-X-Gm-Message-State: APjAAAVyG/lHypQCimKLNz0SSOFIHoBLhm9bLH0czGMhZ4a79uxzye/A
-        /FIgemA3p6bOmKpysRrtwjQ=
-X-Google-Smtp-Source: APXvYqyaPXsO66e1Ln+iRy56I/iqNuPfEpXABoQu52+wf2UaSaBrFOrritp8w7dHTuCgikaoBrxqqQ==
-X-Received: by 2002:a37:7786:: with SMTP id s128mr3297499qkc.345.1560782614987;
-        Mon, 17 Jun 2019 07:43:34 -0700 (PDT)
-Received: from localhost.localdomain ([2001:1284:f013:ed8b:101b:c686:4add:18ab])
-        by smtp.gmail.com with ESMTPSA id g5sm8298955qta.77.2019.06.17.07.43.33
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 07:43:34 -0700 (PDT)
-Received: by localhost.localdomain (Postfix, from userid 1000)
-        id E0D95C1BD6; Mon, 17 Jun 2019 11:43:31 -0300 (-03)
-Date:   Mon, 17 Jun 2019 11:43:31 -0300
-From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     syzbot <syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com>,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        linux-sctp@vger.kernel.org, lucien.xin@gmail.com,
-        netdev@vger.kernel.org, nhorman@tuxdriver.com,
-        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
-Subject: Re: general protection fault in sctp_sched_prio_sched
-Message-ID: <20190617144331.GE3500@localhost.localdomain>
-References: <20190616153804.3604-1-hdanton@sina.com>
- <20190617134913.GL3436@localhost.localdomain>
+        Mon, 17 Jun 2019 10:43:55 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:34476 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727417AbfFQOnz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 10:43:55 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hcsrD-0001iw-Tl; Mon, 17 Jun 2019 22:43:39 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hcsr9-0003Za-JF; Mon, 17 Jun 2019 22:43:35 +0800
+Date:   Mon, 17 Jun 2019 22:43:35 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Roland Kammerer <roland.kammerer@linbit.com>,
+        Eric Biggers <ebiggers@google.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>, drbd-dev@lists.linbit.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drbd: dynamically allocate shash descriptor
+Message-ID: <20190617144335.q243r7l7ox7galhl@gondor.apana.org.au>
+References: <20190617132440.2721536-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617134913.GL3436@localhost.localdomain>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190617132440.2721536-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:49:13AM -0300, Marcelo Ricardo Leitner wrote:
-> Hi,
+On Mon, Jun 17, 2019 at 03:24:13PM +0200, Arnd Bergmann wrote:
+> Building with clang and KASAN, we get a warning about an overly large
+> stack frame on 32-bit architectures:
 > 
-> On Sun, Jun 16, 2019 at 11:38:03PM +0800, Hillf Danton wrote:
-> > 
-> > Hello Syzbot
-> > 
-> > On Sat, 15 Jun 2019 16:36:06 -0700 (PDT) syzbot wrote:
-> > > Hello,
-> > > 
-> > > syzbot found the following crash on:
-> > > 
-> ...
-> > Check prio_head and bail out if it is not valid.
-> > 
-> > Thanks
-> > Hillf
-> > ----->8---
-> > ---
-> > net/sctp/stream_sched_prio.c | 2 ++
-> > 1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/net/sctp/stream_sched_prio.c b/net/sctp/stream_sched_prio.c
-> > index 2245083..db25a43 100644
-> > --- a/net/sctp/stream_sched_prio.c
-> > +++ b/net/sctp/stream_sched_prio.c
-> > @@ -135,6 +135,8 @@ static void sctp_sched_prio_sched(struct sctp_stream *stream,
-> > 	struct sctp_stream_priorities *prio, *prio_head;
-> > 
-> > 	prio_head = soute->prio_head;
-> > +	if (!prio_head)
-> > +		return;
-> > 
-> > 	/* Nothing to do if already scheduled */
-> > 	if (!list_empty(&soute->prio_list))
-> > --
+> drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
+>       [-Werror,-Wframe-larger-than=]
 > 
-> Thanks but this is not a good fix for this. It will cause the stream
-> to never be scheduled.
+> We already allocate other data dynamically in this function, so
+> just do the same for the shash descriptor, which makes up most of
+> this memory.
 > 
-> The problem happens because of the fault injection that happened a bit
-> before the crash, in here:
-> 
-> int sctp_stream_init_ext(struct sctp_stream *stream, __u16 sid)
-> {
->         struct sctp_stream_out_ext *soute;
-> 
->         soute = kzalloc(sizeof(*soute), GFP_KERNEL);
->         if (!soute)
->                 return -ENOMEM;
->         SCTP_SO(stream, sid)->ext = soute;  <---- [A]
-> 
->         return sctp_sched_init_sid(stream, sid, GFP_KERNEL);
->                       ^^^^^^^^^^^^---- [B] failed
-> }
-> 
-> This causes the 1st sendmsg to bail out with the error. When the 2nd
-> one gets in, it will:
-> 
-> sctp_sendmsg_to_asoc()
-> {
-> ...
->         if (unlikely(!SCTP_SO(&asoc->stream, sinfo->sinfo_stream)->ext)) {
->                                                                  ^^^^^--- [C]
->                 err = sctp_stream_init_ext(&asoc->stream, sinfo->sinfo_stream);
->                 if (err)
->                         goto err;
->         }
-> 
-> [A] leaves ext initialized, despite the failed in [B]. Then in [C], it
-> will not try to initialize again.
-> 
-> We need to either uninitialize ->ext as error handling for [B], or
-> improve the check on [C].
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/block/drbd/drbd_receiver.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 
-The former one, please. This should be enough (untested):
+Does this patch fix the warning as well?
 
-diff --git a/net/sctp/stream.c b/net/sctp/stream.c
-index 93ed07877337..25946604af85 100644
---- a/net/sctp/stream.c
-+++ b/net/sctp/stream.c
-@@ -153,13 +153,20 @@ int sctp_stream_init(struct sctp_stream *stream, __u16 outcnt, __u16 incnt,
- int sctp_stream_init_ext(struct sctp_stream *stream, __u16 sid)
- {
- 	struct sctp_stream_out_ext *soute;
-+	int ret;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 90ebfcae0ce6..ead13a6b3887 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -5401,6 +5401,35 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ #else
+ #define CHALLENGE_LEN 64
  
- 	soute = kzalloc(sizeof(*soute), GFP_KERNEL);
- 	if (!soute)
- 		return -ENOMEM;
- 	SCTP_SO(stream, sid)->ext = soute;
- 
--	return sctp_sched_init_sid(stream, sid, GFP_KERNEL);
-+	ret = sctp_sched_init_sid(stream, sid, GFP_KERNEL);
-+	if (ret) {
-+		kfree(SCTP_SO(stream, sid)->ext);
-+		SCTP_SO(stream, sid)->ext = NULL;
++static char *drbd_get_response(struct drbd_connection *connection,
++			       const char *challenge, unsigned int len)
++{
++	unsigned dlen = crypto_shash_digestsize(connection->cram_hmac_tfm);
++	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
++	char *response;
++	int err;
++
++	desc->tfm = connection->cram_hmac_tfm;
++
++	response = kmalloc(dlen, GFP_NOIO);
++	if (!response) {
++		drbd_err(connection, "kmalloc of response failed\n");
++		goto out;
 +	}
 +
-+	return ret;
- }
++	err = crypto_shash_digest(desc, challenge, len, response);
++	if (err) {
++		drbd_err(connection, "crypto_shash_digest() failed with %d\n",
++			 err);
++		kfree(response);
++		response = NULL;
++	}
++
++out:
++	shash_desc_zero(desc);
++	return response;
++}
++
+ /* Return value:
+ 	1 - auth succeeded,
+ 	0 - failed, try again (network error),
+@@ -5417,7 +5446,6 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	unsigned int key_len;
+ 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
+ 	unsigned int resp_size;
+-	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
+ 	struct packet_info pi;
+ 	struct net_conf *nc;
+ 	int err, rv;
+@@ -5430,8 +5458,6 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	memcpy(secret, nc->shared_secret, key_len);
+ 	rcu_read_unlock();
  
- void sctp_stream_free(struct sctp_stream *stream)
-
+-	desc->tfm = connection->cram_hmac_tfm;
+-
+ 	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
+ 	if (rv) {
+ 		drbd_err(connection, "crypto_shash_setkey() failed with %d\n", rv);
+@@ -5496,16 +5522,8 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	}
+ 
+ 	resp_size = crypto_shash_digestsize(connection->cram_hmac_tfm);
+-	response = kmalloc(resp_size, GFP_NOIO);
++	response = drbd_get_response(connection, peers_ch, pi.size);
+ 	if (response == NULL) {
+-		drbd_err(connection, "kmalloc of response failed\n");
+-		rv = -1;
+-		goto fail;
+-	}
+-
+-	rv = crypto_shash_digest(desc, peers_ch, pi.size, response);
+-	if (rv) {
+-		drbd_err(connection, "crypto_hash_digest() failed with %d\n", rv);
+ 		rv = -1;
+ 		goto fail;
+ 	}
+@@ -5544,17 +5562,9 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 		goto fail;
+ 	}
+ 
+-	right_response = kmalloc(resp_size, GFP_NOIO);
++	right_response = drbd_get_response(connection, my_challenge,
++					   CHALLENGE_LEN);
+ 	if (right_response == NULL) {
+-		drbd_err(connection, "kmalloc of right_response failed\n");
+-		rv = -1;
+-		goto fail;
+-	}
+-
+-	rv = crypto_shash_digest(desc, my_challenge, CHALLENGE_LEN,
+-				 right_response);
+-	if (rv) {
+-		drbd_err(connection, "crypto_hash_digest() failed with %d\n", rv);
+ 		rv = -1;
+ 		goto fail;
+ 	}
+@@ -5571,7 +5581,6 @@ static int drbd_do_auth(struct drbd_connection *connection)
+ 	kfree(peers_ch);
+ 	kfree(response);
+ 	kfree(right_response);
+-	shash_desc_zero(desc);
+ 
+ 	return rv;
+ }
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
