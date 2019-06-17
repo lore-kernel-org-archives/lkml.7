@@ -6,31 +6,31 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4829AC31E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:38:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1AFC31E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25A2E20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8687120861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:39:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727527AbfFQBiV convert rfc822-to-8bit (ORCPT
+        id S1727544AbfFQBjw convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 21:38:21 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:36420 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727389AbfFQBiV (ORCPT
+        Sun, 16 Jun 2019 21:39:52 -0400
+Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:34605 "EHLO
+        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727389AbfFQBjv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 21:38:21 -0400
-Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+        Sun, 16 Jun 2019 21:39:51 -0400
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
+ (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 17 Jun
- 2019 09:38:18 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
- (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 09:39:49 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx1.zhaoxin.com
+ (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 17 Jun
- 2019 09:38:17 +0800
+ 2019 09:39:49 +0800
 Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
  zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
- 15.01.1261.035; Mon, 17 Jun 2019 09:38:17 +0800
+ 15.01.1261.035; Mon, 17 Jun 2019 09:39:49 +0800
 From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
 To:     "tglx@linutronix.de" <tglx@linutronix.de>,
         "mingo@redhat.com" <mingo@redhat.com>,
@@ -43,13 +43,13 @@ CC:     David Wang <DavidWang@zhaoxin.com>,
         "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
         "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
         "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: [PATCH v2 2/3] ACPI, x86: add Zhaoxin processors support for NONSTOP
- TSC
-Thread-Topic: [PATCH v2 2/3] ACPI, x86: add Zhaoxin processors support for
- NONSTOP TSC
-Thread-Index: AdUkrOpoMH2rNjrMT+S2lZq3wpqRFw==
-Date:   Mon, 17 Jun 2019 01:38:17 +0000
-Message-ID: <97b2d9d81a8446d0b204ddd6e5e930b7@zhaoxin.com>
+Subject: [PATCH v2 3/3] x86/acpi/cstate: add Zhaoxin processors support for
+ cache flush policy in C3
+Thread-Topic: [PATCH v2 3/3] x86/acpi/cstate: add Zhaoxin processors support
+ for cache flush policy in C3
+Thread-Index: AdUkrXhnHd9IGiblThumHNDQwkBrAQ==
+Date:   Mon, 17 Jun 2019 01:39:49 +0000
+Message-ID: <1ee81e03f6fd4f989151d02fcf95d35b@zhaoxin.com>
 Accept-Language: en-US, zh-CN
 Content-Language: zh-CN
 X-MS-Has-Attach: 
@@ -63,38 +63,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Zhaoxin CPUs have NONSTOP TSC feature, so enable the ACPI
-driver support for it.
+Same as Intel, Zhaoxin MP CPUs support C3 share cache and on all
+recent Zhaoxin platforms ARB_DISABLE is a nop. So set related
+flags correctly in the same way as Intel does.
 
 Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
 ---
- drivers/acpi/acpi_pad.c       | 1 +
- drivers/acpi/processor_idle.c | 1 +
- 2 files changed, 2 insertions(+)
+ arch/x86/kernel/acpi/cstate.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
-index a47676a..c06306e 100644
---- a/drivers/acpi/acpi_pad.c
-+++ b/drivers/acpi/acpi_pad.c
-@@ -73,6 +73,7 @@ static void power_saving_mwait_init(void)
- 	case X86_VENDOR_HYGON:
- 	case X86_VENDOR_AMD:
- 	case X86_VENDOR_INTEL:
-+	case X86_VENDOR_ZHAOXIN:
- 		/*
- 		 * AMD Fam10h TSC will tick in all
- 		 * C/P/S0/S1 states when this bit is set.
-diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
-index 98d4ec5..fa95ce9 100644
---- a/drivers/acpi/processor_idle.c
-+++ b/drivers/acpi/processor_idle.c
-@@ -209,6 +209,7 @@ static void tsc_check_state(int state)
- 	case X86_VENDOR_AMD:
- 	case X86_VENDOR_INTEL:
- 	case X86_VENDOR_CENTAUR:
-+	case X86_VENDOR_ZHAOXIN:
- 		/*
- 		 * AMD Fam10h TSC will tick in all
- 		 * C/P/S0/S1 states when this bit is set.
+diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
+index a5e5484..caf2edc 100644
+--- a/arch/x86/kernel/acpi/cstate.c
++++ b/arch/x86/kernel/acpi/cstate.c
+@@ -64,6 +64,21 @@ void acpi_processor_power_init_bm_check(struct acpi_processor_flags *flags,
+ 		    c->x86_stepping >= 0x0e))
+ 			flags->bm_check = 1;
+ 	}
++
++	if (c->x86_vendor == X86_VENDOR_ZHAOXIN) {
++		/*
++		 * All Zhaoxin CPUs that support C3 share cache.
++		 * And caches should not be flushed by software while
++		 * entering C3 type state.
++		 */
++		flags->bm_check = 1;
++		/*
++		 * On all recent Zhaoxin platforms, ARB_DISABLE is a nop.
++		 * So, set bm_control to zero to indicate that ARB_DISABLE
++		 * is not required while entering C3 type state.
++		 */
++		flags->bm_control = 0;
++	}
+ }
+ EXPORT_SYMBOL(acpi_processor_power_init_bm_check);
+ 
 -- 
 2.7.4
