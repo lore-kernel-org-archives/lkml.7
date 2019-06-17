@@ -2,234 +2,126 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CBBC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6062AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1CC2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30B932085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="UtosAepl"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IbzbYZzl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728854AbfFQT0a (ORCPT
+        id S1728915AbfFQT07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:26:30 -0400
-Received: from mail-eopbgr780100.outbound.protection.outlook.com ([40.107.78.100]:30953
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725938AbfFQT03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:26:29 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
- b=prhJ9XhbQjGXGvM1sfqUNJRViX6Y4TW8KrGIcDimCmHu7ptyWIDUyPRa5K/+KITDs/i2BWQAIzCmxqlAauenGjmpcdhFJaMtiK48jlU0w6uzdDF6vfQ/gDGvVUKTd7l2u+b0hCOUSra8GIcYOPzsT8vt+5Ib8IDl0RMbCHhw4h8=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=testarcselector01;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qQwRWmI7W0cV7a9cwT5eWPZGNqIzTEBH6HUL+k8WGHk=;
- b=lzB3+k174Zs732BPsiafXseg5zFtax8ynKRmYKbnP3NHJOuNnL3KM72kE0DKvHb4iWBeFiIvO/Xe4dxnYZf3EVocTe/AaZOCH5mefkCInHY3ZSdV6mnshCRl3WeKYnJKcZu/KFDah1ZuCUU4Hi1qdTs53ZTQ5KMFZCYFBmYimxY=
-ARC-Authentication-Results: i=1; test.office365.com
- 1;spf=none;dmarc=none;dkim=none;arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qQwRWmI7W0cV7a9cwT5eWPZGNqIzTEBH6HUL+k8WGHk=;
- b=UtosAeplbxCQn5jGdFt62s+7eWUkDiwFwUHfrwV+gfP/gHJ3n/KEh358vCMdrULvGOPpZTGPE1FEhVW6ZA+T803WImWixbF+MUIY/+0b7wjqwHgmaePpAQbk897uoba/Wl/I+gZi2629MbS4i1AIcorOjorplsFYtbb1X08seIw=
-Received: from MW2PR2101MB1116.namprd21.prod.outlook.com (2603:10b6:302:a::33)
- by MW2PR2101MB1114.namprd21.prod.outlook.com (2603:10b6:302:a::31) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.2; Mon, 17 Jun
- 2019 19:26:25 +0000
-Received: from MW2PR2101MB1116.namprd21.prod.outlook.com
- ([fe80::a1f6:c002:82ba:ad47]) by MW2PR2101MB1116.namprd21.prod.outlook.com
- ([fe80::a1f6:c002:82ba:ad47%9]) with mapi id 15.20.2008.007; Mon, 17 Jun 2019
- 19:26:25 +0000
-From:   Sunil Muthuswamy <sunilmut@microsoft.com>
-To:     KY Srinivasan <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Dexuan Cui <decui@microsoft.com>,
-        Michael Kelley <mikelley@microsoft.com>
-CC:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH net v2] hvsock: fix epollout hang from race condition
-Thread-Topic: [PATCH net v2] hvsock: fix epollout hang from race condition
-Thread-Index: AdUlQoBZAbnr1Kw4SGmEewBGCyepWg==
-Date:   Mon, 17 Jun 2019 19:26:25 +0000
-Message-ID: <MW2PR2101MB111670139C7F5DC567129DD3C0EB0@MW2PR2101MB1116.namprd21.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=sunilmut@microsoft.com; 
-x-originating-ip: [2001:4898:80e8:3:8d7e:cb94:2f88:ec90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 86d7fc2e-dcb4-49da-f4a5-08d6f359b063
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MW2PR2101MB1114;
-x-ms-traffictypediagnostic: MW2PR2101MB1114:
-x-microsoft-antispam-prvs: <MW2PR2101MB111437119FE3627F455103D3C0EB0@MW2PR2101MB1114.namprd21.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0071BFA85B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(39860400002)(366004)(396003)(346002)(189003)(199004)(8676002)(81156014)(81166006)(8936002)(316002)(22452003)(478600001)(305945005)(7736002)(10090500001)(68736007)(6116002)(99286004)(52396003)(7696005)(6636002)(8990500004)(110136005)(54906003)(1511001)(102836004)(10290500003)(6506007)(14454004)(66446008)(73956011)(66946007)(64756008)(66476007)(66556008)(5660300002)(52536014)(33656002)(4326008)(76116006)(53936002)(46003)(25786009)(2906002)(74316002)(71190400001)(71200400001)(86362001)(9686003)(55016002)(476003)(486006)(6436002)(256004)(14444005)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1114;H:MW2PR2101MB1116.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: microsoft.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: gTNVgLMIeDrMf0qNxDAxCdA05+1EW9FFvyV+ZGBLCAu5Ej4RcHfVJzBQHGyC0xjvIEa1Z7KuRvqAWUPWJDcr4M2bbpVG3qV2jLzFfxjQpakQ3eKN0fjeigYeis9JeLz8kEheI08eKfdsx+kOz4nSVhzuwZ+rniG+MepK6r4ZTUrtvHuPOWfbqQdvNNZBn9/F/2t6mieH3j8kw4wcCcVb4RIZ9Y6oZiRBdGWEc9kt4s3oiNyrp5hdr1OQ2s598deAE0JIuqTs5LJixE+UM1jy2iogMDq1ZEerfbWM03VOHjk1kkkH587PcNtyidTtLvuLM9t2KiUXt4aMCnX9vhPaf3SIQPQr8ia07eCT0OVllFig2sudbUAZSVtJlVAs9w5ZAteJFxCmMEa8svFg2heDzvyWHVJGXUHqf2m9+zEKRF0=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Jun 2019 15:26:59 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:37966 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfFQT07 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:26:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=tTa6YLg6Fw8pyO+p/GpITBEPaY2o10TxNKbfMEC5jGQ=; b=IbzbYZzlV6AJRQPzQc3Eo34AEp
+        esr+xNKMcFGEUw+XaszOj/VQ8JCkicLwy1U1RvfaJlaU5kf7/TQaZv0a4r/We2Nv/mIlz9XDb3p7L
+        XjO7laBbjM6tq84Fs9Kw3tz/slUsLfKisuP4h7sGRRkPATlNNCnDoJWTak7gImHYtVRHxSNf0qA3S
+        szFohYlOFNhxSpiqa4ULIJRwJtJgIpLgEY2vebhWNJKfFrYPAXOKTXZd0o3gmaTowGUXsMmGYPXZG
+        /devuciK1QPb+7Fab78TP1/57fgaCU0+UdN4dkJpFKk049Uz03/FulFPtrrLM2m77HMp4qL4SZ04D
+        ahyuwcXQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcxGh-0002pp-JK; Mon, 17 Jun 2019 19:26:15 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5377B201F4619; Mon, 17 Jun 2019 21:26:12 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 21:26:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Nadav Amit <namit@vmware.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@aculab.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20190617192612.GD3419@hirez.programming.kicks-ass.net>
+References: <20190605131945.005681046@infradead.org>
+ <20190608004708.7646b287151cf613838ce05f@kernel.org>
+ <20190607173427.GK3436@hirez.programming.kicks-ass.net>
+ <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net>
+ <20190611080307.GN3436@hirez.programming.kicks-ass.net>
+ <20190611112254.576226fe@gandalf.local.home>
+ <20190611155537.GB3436@hirez.programming.kicks-ass.net>
+ <D9439F7B-3384-4BD5-B3BA-13EE52FEC15E@vmware.com>
+ <20190617144213.GE3436@hirez.programming.kicks-ass.net>
+ <CALCETrW7u0HFzWvULou5pKDW1=MsPg9pGFqFnOEiHxpniy8S8Q@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: microsoft.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86d7fc2e-dcb4-49da-f4a5-08d6f359b063
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2019 19:26:25.5104
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1114
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CALCETrW7u0HFzWvULou5pKDW1=MsPg9pGFqFnOEiHxpniy8S8Q@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, hvsock can enter into a state where epoll_wait on EPOLLOUT will
-not return even when the hvsock socket is writable, under some race
-condition. This can happen under the following sequence:
-- fd =3D socket(hvsocket)
-- fd_out =3D dup(fd)
-- fd_in =3D dup(fd)
-- start a writer thread that writes data to fd_out with a combination of
-  epoll_wait(fd_out, EPOLLOUT) and
-- start a reader thread that reads data from fd_in with a combination of
-  epoll_wait(fd_in, EPOLLIN)
-- On the host, there are two threads that are reading/writing data to the
-  hvsocket
+On Mon, Jun 17, 2019 at 10:25:27AM -0700, Andy Lutomirski wrote:
+> On Mon, Jun 17, 2019 at 7:42 AM Peter Zijlstra <peterz@infradead.org> wrote:
+> >
+> > On Wed, Jun 12, 2019 at 07:44:12PM +0000, Nadav Amit wrote:
+> >
+> > > I have run into similar problems before.
+> > >
+> > > I had two problematic scenarios. In the first case, I had a “call” in the
+> > > middle of the patched code-block, but this call was always followed by a
+> > > “jump” to the end of the potentially patched code-block, so I did not have
+> > > the problem.
+> > >
+> > > In the second case, I had an indirect call (which is shorter than a direct
+> >
+> > Longer, 6 bytes vs 5 if I'm not mistaken.
+> >
+> > > call) being patched into a direct call. In this case, I preceded the
+> > > indirect call with NOPs so indeed the indirect call was at the end of the
+> > > patched block.
+> > >
+> > > In certain cases, if a shorter instruction should be potentially patched
+> > > into a longer one, the shorter one can be preceded by some prefixes. If
+> > > there are multiple REX prefixes, for instance, the CPU only uses the last
+> > > one, IIRC. This can allow to avoid synchronize_sched() when patching a
+> > > single instruction into another instruction with a different length.
+> > >
+> > > Not sure how helpful this information is, but sharing - just in case.
+> >
+> > I think we can patch multiple instructions provided:
+> >
+> >  - all but one instruction are a NOP,
+> >  - there are no branch targets inside the range.
+> >
+> > By poking INT3 at every instruction in the range and then doing the
+> > machine wide IPI+SYNC, we'll trap every CPU that is in-side the range.
+> 
+> How do you know you'll trap them?  You need to IPI, serialize, and get
+> them to execute an instruction.  If the CPU is in an interrupt and RIP
+> just happens to be pointed to the INT3, you need them to execute a
+> whole lot more than just one instruction.
 
-stack:
-hvs_stream_has_space
-hvs_notify_poll_out
-vsock_poll
-sock_poll
-ep_poll
-
-Race condition:
-check for epollout from ep_poll():
-	assume no writable space in the socket
-	hvs_stream_has_space() returns 0
-check for epollin from ep_poll():
-	assume socket has some free space < HVS_PKT_LEN(HVS_SEND_BUF_SIZE)
-	hvs_stream_has_space() will clear the channel pending send size
-	host will not notify the guest because the pending send size has
-		been cleared and so the hvsocket will never mark the
-		socket writable
-
-Now, the EPOLLOUT will never return even if the socket write buffer is
-empty.
-
-The fix is to set the pending size to the default size and never change it.
-This way the host will always notify the guest whenever the writable space
-is bigger than the pending size. The host is already optimized to *only*
-notify the guest when the pending size threshold boundary is crossed and
-not everytime.
-
-This change also reduces the cpu usage somewhat since hv_stream_has_space()
-is in the hotpath of send:
-vsock_stream_sendmsg()->hv_stream_has_space()
-Earlier hv_stream_has_space was setting/clearing the pending size on every
-call.
-
-Signed-off-by: Sunil Muthuswamy <sunilmut@microsoft.com>
-Reviewed-by: Dexuan Cui <decui@microsoft.com>
----
-- Resubmitting the patch after taking care of some spurious warnings.
-
- net/vmw_vsock/hyperv_transport.c | 39 ++++++++----------------------------=
----
- 1 file changed, 8 insertions(+), 31 deletions(-)
-
-diff --git a/net/vmw_vsock/hyperv_transport.c b/net/vmw_vsock/hyperv_transp=
-ort.c
-index e4801c7..cd3f47f 100644
---- a/net/vmw_vsock/hyperv_transport.c
-+++ b/net/vmw_vsock/hyperv_transport.c
-@@ -220,18 +220,6 @@ static void hvs_set_channel_pending_send_size(struct v=
-mbus_channel *chan)
- 	set_channel_pending_send_size(chan,
- 				      HVS_PKT_LEN(HVS_SEND_BUF_SIZE));
-=20
--	/* See hvs_stream_has_space(): we must make sure the host has seen
--	 * the new pending send size, before we can re-check the writable
--	 * bytes.
--	 */
--	virt_mb();
--}
--
--static void hvs_clear_channel_pending_send_size(struct vmbus_channel *chan=
-)
--{
--	set_channel_pending_send_size(chan, 0);
--
--	/* Ditto */
- 	virt_mb();
- }
-=20
-@@ -301,9 +289,6 @@ static void hvs_channel_cb(void *ctx)
- 	if (hvs_channel_readable(chan))
- 		sk->sk_data_ready(sk);
-=20
--	/* See hvs_stream_has_space(): when we reach here, the writable bytes
--	 * may be already less than HVS_PKT_LEN(HVS_SEND_BUF_SIZE).
--	 */
- 	if (hv_get_bytes_to_write(&chan->outbound) > 0)
- 		sk->sk_write_space(sk);
- }
-@@ -404,6 +389,13 @@ static void hvs_open_connection(struct vmbus_channel *=
-chan)
- 	set_per_channel_state(chan, conn_from_host ? new : sk);
- 	vmbus_set_chn_rescind_callback(chan, hvs_close_connection);
-=20
-+	/* Set the pending send size to max packet size to always get
-+	 * notifications from the host when there is enough writable space.
-+	 * The host is optimized to send notifications only when the pending
-+	 * size boundary is crossed, and not always.
-+	 */
-+	hvs_set_channel_pending_send_size(chan);
-+
- 	if (conn_from_host) {
- 		new->sk_state =3D TCP_ESTABLISHED;
- 		sk->sk_ack_backlog++;
-@@ -697,23 +689,8 @@ static s64 hvs_stream_has_data(struct vsock_sock *vsk)
- static s64 hvs_stream_has_space(struct vsock_sock *vsk)
- {
- 	struct hvsock *hvs =3D vsk->trans;
--	struct vmbus_channel *chan =3D hvs->chan;
--	s64 ret;
--
--	ret =3D hvs_channel_writable_bytes(chan);
--	if (ret > 0)  {
--		hvs_clear_channel_pending_send_size(chan);
--	} else {
--		/* See hvs_channel_cb() */
--		hvs_set_channel_pending_send_size(chan);
--
--		/* Re-check the writable bytes to avoid race */
--		ret =3D hvs_channel_writable_bytes(chan);
--		if (ret > 0)
--			hvs_clear_channel_pending_send_size(chan);
--	}
-=20
--	return ret;
-+	return hvs_channel_writable_bytes(hvs->chan);
- }
-=20
- static u64 hvs_stream_rcvhiwat(struct vsock_sock *vsk)
---=20
-2.7.4
-
+Argh, yes, I'm an idiot.
