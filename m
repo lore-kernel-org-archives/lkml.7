@@ -2,114 +2,101 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8173FC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:38:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6BEC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5613421E6C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:38:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="lU0A/K51"
+	by mail.kernel.org (Postfix) with ESMTP id 318F921995
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:44:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727521AbfFQHiO (ORCPT
+        id S1726108AbfFQHn6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:38:14 -0400
-Received: from smtp-fw-2101.amazon.com ([72.21.196.25]:17391 "EHLO
-        smtp-fw-2101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfFQHiO (ORCPT
+        Mon, 17 Jun 2019 03:43:58 -0400
+Received: from xavier.telenet-ops.be ([195.130.132.52]:42054 "EHLO
+        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfFQHn6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:38:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1560757091; x=1592293091;
-  h=subject:to:cc:references:from:message-id:date:
-   mime-version:in-reply-to:content-transfer-encoding;
-  bh=8xZP6BRYVHqRBD1v3aCylovGhFA01FEft+IhJzUopnA=;
-  b=lU0A/K514EP44LlSbe7+gAvDPtiOstqo0LpUj+nsacdnconLiACx9kTw
-   eEJWABrBVCs6WKnRLtbqL40F8UG7SZxepHUItn1WHzLolesXSb+0g7L7t
-   TLozrtFQNGmrF+R8mNqUmlOaEDLmQ+H2hD2CseAUNBRXNguRMYNfyoZ+A
-   U=;
-X-IronPort-AV: E=Sophos;i="5.62,384,1554768000"; 
-   d="scan'208";a="737725018"
-Received: from iad6-co-svc-p1-lb1-vlan2.amazon.com (HELO email-inbound-relay-1a-67b371d8.us-east-1.amazon.com) ([10.124.125.2])
-  by smtp-border-fw-out-2101.iad2.amazon.com with ESMTP; 17 Jun 2019 07:38:09 +0000
-Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan3.iad.amazon.com [10.40.159.166])
-        by email-inbound-relay-1a-67b371d8.us-east-1.amazon.com (Postfix) with ESMTPS id 11569A2B0B;
-        Mon, 17 Jun 2019 07:38:07 +0000 (UTC)
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 17 Jun 2019 07:38:07 +0000
-Received: from 38f9d3867b82.ant.amazon.com (10.43.160.69) by
- EX13D20UWC001.ant.amazon.com (10.43.162.244) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Mon, 17 Jun 2019 07:38:04 +0000
-Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
- secrets
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@amacapital.net>
-CC:     Dave Hansen <dave.hansen@intel.com>,
-        Marius Hillenbrand <mhillenb@amazon.de>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <kernel-hardening@lists.openwall.com>, <linux-mm@kvack.org>,
-        Alexander Graf <graf@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>
-References: <20190612170834.14855-1-mhillenb@amazon.de>
- <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
- <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
- <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
-From:   Alexander Graf <graf@amazon.com>
-Message-ID: <58788f05-04c3-e71c-12c3-0123be55012c@amazon.com>
-Date:   Mon, 17 Jun 2019 09:38:00 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.43.160.69]
-X-ClientProxiedBy: EX13D20UWC004.ant.amazon.com (10.43.162.41) To
- EX13D20UWC001.ant.amazon.com (10.43.162.244)
+        Mon, 17 Jun 2019 03:43:58 -0400
+Received: from ramsan ([84.194.111.163])
+        by xavier.telenet-ops.be with bizsmtp
+        id Rjji2000G3XaVaC01jjiki; Mon, 17 Jun 2019 09:43:47 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hcmIo-0000TT-2k; Mon, 17 Jun 2019 09:43:42 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hcmIo-0003Kr-0l; Mon, 17 Jun 2019 09:43:42 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] initramfs: Fix populate_initrd_image() section mismatch
+Date:   Mon, 17 Jun 2019 09:43:40 +0200
+Message-Id: <20190617074340.12779-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+With gcc-4.6.3:
 
-On 14.06.19 16:21, Thomas Gleixner wrote:
-> On Wed, 12 Jun 2019, Andy Lutomirski wrote:
->>> On Jun 12, 2019, at 12:55 PM, Dave Hansen <dave.hansen@intel.com> wrote:
->>>
->>>> On 6/12/19 10:08 AM, Marius Hillenbrand wrote:
->>>> This patch series proposes to introduce a region for what we call
->>>> process-local memory into the kernel's virtual address space.
->>> It might be fun to cc some x86 folks on this series.  They might have
->>> some relevant opinions. ;)
->>>
->>> A few high-level questions:
->>>
->>> Why go to all this trouble to hide guest state like registers if all the
->>> guest data itself is still mapped?
->>>
->>> Where's the context-switching code?  Did I just miss it?
->>>
->>> We've discussed having per-cpu page tables where a given PGD is only in
->>> use from one CPU at a time.  I *think* this scheme still works in such a
->>> case, it just adds one more PGD entry that would have to context-switched.
->> Fair warning: Linus is on record as absolutely hating this idea. He might
->> change his mind, but it’s an uphill battle.
-> Yes I know, but as a benefit we could get rid of all the GSBASE horrors in
-> the entry code as we could just put the percpu space into the local PGD.
+    WARNING: vmlinux.o(.text.unlikely+0x140): Section mismatch in reference from the function populate_initrd_image() to the variable .init.ramfs.info:__initramfs_size
+    The function populate_initrd_image() references
+    the variable __init __initramfs_size.
+    This is often because populate_initrd_image lacks a __init
+    annotation or the annotation of __initramfs_size is wrong.
 
+    WARNING: vmlinux.o(.text.unlikely+0x14c): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:unpack_to_rootfs()
+    The function populate_initrd_image() references
+    the function __init unpack_to_rootfs().
+    This is often because populate_initrd_image lacks a __init
+    annotation or the annotation of unpack_to_rootfs is wrong.
 
-Would that mean that with Meltdown affected CPUs we open speculation 
-attacks against the mmlocal memory from KVM user space?
+    WARNING: vmlinux.o(.text.unlikely+0x198): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:xwrite()
+    The function populate_initrd_image() references
+    the function __init xwrite().
+    This is often because populate_initrd_image lacks a __init
+    annotation or the annotation of xwrite is wrong.
 
+Indeed, if the compiler decides not to inline populate_initrd_image(), a
+warning is generated.
 
-Alex
+Fix this by adding the missing __init annotations.
+
+Fixes: 7c184ecd262fe64f ("initramfs: factor out a helper to populate the initrd image")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ init/initramfs.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/init/initramfs.c b/init/initramfs.c
+index 178130fd61c25d58..c47dad0884f7f10d 100644
+--- a/init/initramfs.c
++++ b/init/initramfs.c
+@@ -617,7 +617,7 @@ static inline void clean_rootfs(void)
+ #endif /* CONFIG_BLK_DEV_RAM */
+ 
+ #ifdef CONFIG_BLK_DEV_RAM
+-static void populate_initrd_image(char *err)
++static void __init populate_initrd_image(char *err)
+ {
+ 	ssize_t written;
+ 	int fd;
+@@ -637,7 +637,7 @@ static void populate_initrd_image(char *err)
+ 	ksys_close(fd);
+ }
+ #else
+-static void populate_initrd_image(char *err)
++static void __init populate_initrd_image(char *err)
+ {
+ 	printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
+ }
+-- 
+2.17.1
 
