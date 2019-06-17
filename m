@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47D94C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784E1C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BE1420673
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 473E020861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806765;
-	bh=SK3oSmqXwer41s9Yr8FkCSvEhPOOeSfkILVtbJpAmIk=;
+	s=default; t=1560806770;
+	bh=ZDmmVoPhIp1mq/TvKtY0HDmQNyoK47fziOfMSlrhMEQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Whz3+BIOUXzPmx8OgLDFGUkeU/Dmt8oHo8PBNudSmyFa7kijTTL9CsmzEfQvdKQso
-	 aSvXEZQ2wJvZN6PLj4V6qXPDtBPg0BvW6zK3JTA8MPymAVBX3Jf+Im1SkXBrQtpYL/
-	 fj1kSUnNfM6C1lb3xPGPO//tFYig/1E77tLJPFdw=
+	b=vxsOXY9fHa8cpatItpenWv/2xZUut8ufGAqanJQ/5iHIkuwUIVzE4ywmlk88dPOBt
+	 oeXCnBuvyCi0S6cqJnrNQwz5Z9mCVxXFl5QmKiC6a76rM368l9GgAzT/kwm9XI6rB4
+	 MY7Czrbq0McWHiRYgeNuF78vM2ZtDXgp0oktjR8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730166AbfFQV0D (ORCPT
+        id S1728837AbfFQV0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:26:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52392 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:26:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730132AbfFQV0A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:26:00 -0400
+        id S1729615AbfFQV0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:26:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 786FF20657;
-        Mon, 17 Jun 2019 21:25:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1E8F320657;
+        Mon, 17 Jun 2019 21:26:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806759;
-        bh=SK3oSmqXwer41s9Yr8FkCSvEhPOOeSfkILVtbJpAmIk=;
+        s=default; t=1560806761;
+        bh=ZDmmVoPhIp1mq/TvKtY0HDmQNyoK47fziOfMSlrhMEQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M0LuQ8HI3a02NiI5CjjCIAVl0NlVsavgQvN23bZ9lqAARA0HcWU8Flv9jQ11RJpfE
-         DYdFnu45BbGNUxZ0os1cKjC118gdlZccvguf/+ILBaEzeJ3fsy4sCDma26C63hXII7
-         rGOQ8/GgF8Ny2MQjT9c3qTGezbXMBJi/5YiEYk10=
+        b=zHNFRsbrMK1XGLYMO5m9To5OYgTap2mlPmacXZTv6VKwGdSwN1kLHVbYGg4fiFF8V
+         8Pa2/+uc7bXwcsmaqrw48wER+UjTDAG2iCIEm+IgOJh9Btm/eulsecXU8Ksh7r9hRO
+         p1bzsDqpPCg5d4Ajc9BITgfJri5f9hzq3SyoTTyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Qian Cai <cai@lca.pw>, Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Hangbin Liu <liuhangbin@gmail.com>,
+        David Ahern <dsahern@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 47/75] libnvdimm: Fix compilation warnings with W=1
-Date:   Mon, 17 Jun 2019 23:09:58 +0200
-Message-Id: <20190617210754.573771786@linuxfoundation.org>
+Subject: [PATCH 4.19 48/75] selftests: fib_rule_tests: fix local IPv4 address typo
+Date:   Mon, 17 Jun 2019 23:09:59 +0200
+Message-Id: <20190617210754.607470699@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -60,84 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c01dafad77fea8d64c4fdca0a6031c980842ad65 ]
+[ Upstream commit fc82d93e57e3d41f79eff19031588b262fc3d0b6 ]
 
-Several places (dimm_devs.c, core.c etc) include label.h but only
-label.c uses NSINDEX_SIGNATURE, so move its definition to label.c
-instead.
+The IPv4 testing address are all in 192.51.100.0 subnet. It doesn't make
+sense to set a 198.51.100.1 local address. Should be a typo.
 
-In file included from drivers/nvdimm/dimm_devs.c:23:
-drivers/nvdimm/label.h:41:19: warning: 'NSINDEX_SIGNATURE' defined but
-not used [-Wunused-const-variable=]
-
-Also, some places abuse "/**" which is only reserved for the kernel-doc.
-
-drivers/nvdimm/bus.c:648: warning: cannot understand function prototype:
-'struct attribute_group nd_device_attribute_group = '
-drivers/nvdimm/bus.c:677: warning: cannot understand function prototype:
-'struct attribute_group nd_numa_attribute_group = '
-
-Those are just some member assignments for the "struct attribute_group"
-instances and it can't be expressed in the kernel-doc.
-
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Fixes: 65b2b4939a64 ("selftests: net: initial fib rule tests")
+Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Reviewed-by: David Ahern <dsahern@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/bus.c   | 4 ++--
- drivers/nvdimm/label.c | 2 ++
- drivers/nvdimm/label.h | 2 --
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/fib_rule_tests.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index 9148015ed803..a3132a9eb91c 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -612,7 +612,7 @@ static struct attribute *nd_device_attributes[] = {
- 	NULL,
- };
+diff --git a/tools/testing/selftests/net/fib_rule_tests.sh b/tools/testing/selftests/net/fib_rule_tests.sh
+index d84193bdc307..dbd90ca73e44 100755
+--- a/tools/testing/selftests/net/fib_rule_tests.sh
++++ b/tools/testing/selftests/net/fib_rule_tests.sh
+@@ -55,7 +55,7 @@ setup()
  
--/**
-+/*
-  * nd_device_attribute_group - generic attributes for all devices on an nd bus
-  */
- struct attribute_group nd_device_attribute_group = {
-@@ -641,7 +641,7 @@ static umode_t nd_numa_attr_visible(struct kobject *kobj, struct attribute *a,
- 	return a->mode;
- }
+ 	$IP link add dummy0 type dummy
+ 	$IP link set dev dummy0 up
+-	$IP address add 198.51.100.1/24 dev dummy0
++	$IP address add 192.51.100.1/24 dev dummy0
+ 	$IP -6 address add 2001:db8:1::1/64 dev dummy0
  
--/**
-+/*
-  * nd_numa_attribute_group - NUMA attributes for all devices on an nd bus
-  */
- struct attribute_group nd_numa_attribute_group = {
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 452ad379ed70..9f1b7e3153f9 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -25,6 +25,8 @@ static guid_t nvdimm_btt2_guid;
- static guid_t nvdimm_pfn_guid;
- static guid_t nvdimm_dax_guid;
- 
-+static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
-+
- static u32 best_seq(u32 a, u32 b)
- {
- 	a &= NSINDEX_SEQ_MASK;
-diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-index 18bbe183b3a9..52f9fcada00a 100644
---- a/drivers/nvdimm/label.h
-+++ b/drivers/nvdimm/label.h
-@@ -38,8 +38,6 @@ enum {
- 	ND_NSINDEX_INIT = 0x1,
- };
- 
--static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
--
- /**
-  * struct nd_namespace_index - label set superblock
-  * @sig: NAMESPACE_INDEX\0
+ 	set +e
 -- 
 2.20.1
 
