@@ -2,180 +2,247 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE76FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E26B5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1252084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A4D8D2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YopBetrA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTzDSwZ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728487AbfFQTyV (ORCPT
+        id S1729106AbfFQTyb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:54:21 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35047 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfFQTyU (ORCPT
+        Mon, 17 Jun 2019 15:54:31 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:40146 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfFQTyb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:54:20 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJraSi3570891
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:53:36 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJraSi3570891
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560801217;
-        bh=Rzo0baNNo6xSxGbeyFpsmtO3SJ2LPXYBvECxFKlMfCM=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=YopBetrACyMm/eQme48LXZMVu/oOLv2NyV76v5yf5nEM6r+x8SxLSR91VKPt/Na+l
-         Maep9ZHyEy4nl/d+GCDNEmrVZkpK552QIctOZ8JBL4kX0IyBAaD6nkkAMUxudERSJs
-         GQwvo0QS4pzUz7Dvy/MqcXDPiefVR3toZW5IMi3kurr25xjiWnwkVybvpQOatDNKos
-         nyRplhr/oMQD0CH20HRQ4l5YbX2fcM589OJKA/feyiDE4Zj21ZezFNDPyJxoSl5ptN
-         Baj1J3te3tFe9yuTg0TvpMQOrvRn9KACAvxWEomlq47cl9OUT3J/OrZkugtBA3cnZF
-         vghdHQOqC2IHw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJra9u3570888;
-        Mon, 17 Jun 2019 12:53:36 -0700
-Date:   Mon, 17 Jun 2019 12:53:36 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-04c41bcb862bbec1fb225243ecf07a3219593f81@git.kernel.org>
-Cc:     adrian.hunter@intel.com, namhyung@kernel.org, jolsa@redhat.com,
-        alexander.shishkin@linux.intel.com, yhs@fb.com, acme@redhat.com,
-        mingo@kernel.org, mathieu.poirier@linaro.org,
-        suzuki.poulose@arm.com, songliubraving@fb.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, kafai@fb.com,
-        daniel@iogearbox.net, leo.yan@linaro.org, mike.leach@linaro.org,
-        hpa@zytor.com, ast@kernel.org
-Reply-To: kafai@fb.com, daniel@iogearbox.net, leo.yan@linaro.org,
-          mike.leach@linaro.org, tglx@linutronix.de, ast@kernel.org,
-          hpa@zytor.com, jolsa@redhat.com, adrian.hunter@intel.com,
-          namhyung@kernel.org, suzuki.poulose@arm.com,
-          songliubraving@fb.com, linux-kernel@vger.kernel.org,
-          acme@redhat.com, mingo@kernel.org, yhs@fb.com,
-          alexander.shishkin@linux.intel.com, mathieu.poirier@linaro.org
-In-Reply-To: <20190610184754.GU21245@kernel.org>
-References: <20190610184754.GU21245@kernel.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf trace: Skip unknown syscalls when expanding
- strace like syscall groups
-Git-Commit-ID: 04c41bcb862bbec1fb225243ecf07a3219593f81
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 15:54:31 -0400
+Received: by mail-qk1-f196.google.com with SMTP id c70so6993132qkg.7;
+        Mon, 17 Jun 2019 12:54:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xtD34BI+vrOR7JucDAJ9tu3vs6a298a0lx7kQQSa3yc=;
+        b=KTzDSwZ1yy1nJQOYBucAoW72auHwAOIEY5sMRGzgr2WKEQSgOUuh7LHOqgkgwruSo0
+         PmttiIWDpJqtIHZOabWmb5YfLWMt5cdWfRPWqcYOwbI7ItiGBdt6+6v490EnqToT5Gge
+         mb04RJdWpQiAF9dpWjirMZ609LArpoZ2a5BvRjfc8x6eqgWque5LndFse42MKT+Q33s1
+         feHdUD/WND5P2qk7r+J1fAqQ+L+pJjgnAByB8hBB9kRd+mpl4TAPni8/5IBnfjBQYc2X
+         hwraQ0Kes3uFo8yzLC9bRzl/nUaZVTviqfSPMb7+0pP8AGzCeSjnYiXLcWUIAOho628g
+         jZ7w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xtD34BI+vrOR7JucDAJ9tu3vs6a298a0lx7kQQSa3yc=;
+        b=N+gWRCTys37uPQE/30Wh231OqZ6Gjfu7XgLnCTcYHSz0XegxguyX3lp6Py76uOU2Uj
+         OU//hQrr6A2LDLNIseppHn5ZLGNHRTXdoluBUAikf0eAIC06eEiRTbCm6PmaesRe2tlR
+         fnJRHTdJqmKrV/LSl6rocGdNhiP/tdn8UHN90sShRNYiYabQ4jMFAgrfO9xik7TFuQKI
+         JE4fNSsEiDULerUnCurxqOhS2+fTz5YzoFeMFaiQZfBXfHVulOfX6c/p3XOjRqJSJhWG
+         jgvx9F0odUhAaq2XV9HD8nTyvpX4dKIAQz5VEPCwNkw4me1wJlSbYYRv4fdWNdOALX99
+         pNKA==
+X-Gm-Message-State: APjAAAUwv33KQcNGto7PArDibLUyz7D8mZj6CYVnBcFs+/o/os6oYVjd
+        Mjz4G1ZpZOOqUpIsnyRfc1k=
+X-Google-Smtp-Source: APXvYqxC+QVDUdcmTZ129xnM091bQ2vjaS8JVt0YpWL93xXEY+lsGPJxYoOW2ZzsqtQm/CYdS2IuHA==
+X-Received: by 2002:ae9:c30e:: with SMTP id n14mr85350845qkg.220.1560801269520;
+        Mon, 17 Jun 2019 12:54:29 -0700 (PDT)
+Received: from localhost.localdomain (mtrlpq02hsy-lp140-01-174-93-144-21.dsl.bell.ca. [174.93.144.21])
+        by smtp.gmail.com with ESMTPSA id z18sm8522078qka.12.2019.06.17.12.54.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 12:54:28 -0700 (PDT)
+From:   Detlev Casanova <detlev.casanova@gmail.com>
+To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Detlev Casanova <detlev.casanova@gmail.com>
+Subject: [PATCH] e1000e: Make watchdog use delayed work
+Date:   Mon, 17 Jun 2019 15:54:18 -0400
+Message-Id: <20190617195418.3499-1-detlev.casanova@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  04c41bcb862bbec1fb225243ecf07a3219593f81
-Gitweb:     https://git.kernel.org/tip/04c41bcb862bbec1fb225243ecf07a3219593f81
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Mon, 10 Jun 2019 15:37:45 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 10 Jun 2019 17:50:04 -0300
+Use delayed work instead of timers to run the watchdog of the e1000e
+driver.
 
-perf trace: Skip unknown syscalls when expanding strace like syscall groups
+Simplify the code with one less middle function.
 
-We have $INSTALL_DIR/share/perf-core/strace/groups/string files with
-syscalls that should be selected when 'string' is used, meaning, in this
-case, syscalls that receive as one of its arguments a string, like a
-pathname.
-
-But those were first selected and tested on x86_64, and end up failing
-in architectures where some of those syscalls are not available, like
-the 'access' syscall on arm64, which makes using 'perf trace -e string'
-in such archs to fail.
-
-Since this the routine doing the validation is used only when reading
-such files, do not fail when some syscall is not found in the
-syscalltbl, instead just use pr_debug() to register that in case people
-are suspicious of problems.
-
-Now using 'perf trace -e string' should work on arm64, selecting only
-the syscalls that have a string and are available on that architecture.
-
-Reported-by: Leo Yan <leo.yan@linaro.org>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Daniel Borkmann <daniel@iogearbox.net>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Martin KaFai Lau <kafai@fb.com>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mike Leach <mike.leach@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Song Liu <songliubraving@fb.com>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc: Yonghong Song <yhs@fb.com>
-Link: https://lkml.kernel.org/r/20190610184754.GU21245@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Detlev Casanova <detlev.casanova@gmail.com>
 ---
- tools/perf/builtin-trace.c | 25 +++++++++++++------------
- 1 file changed, 13 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/intel/e1000e/e1000.h  |  3 +-
+ drivers/net/ethernet/intel/e1000e/netdev.c | 52 +++++++++++-----------
+ 2 files changed, 28 insertions(+), 27 deletions(-)
 
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 1a2a605cf068..eb70a4b71755 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1529,6 +1529,7 @@ static int trace__read_syscall_info(struct trace *trace, int id)
- static int trace__validate_ev_qualifier(struct trace *trace)
- {
- 	int err = 0, i;
-+	bool printed_invalid_prefix = false;
- 	size_t nr_allocated;
- 	struct str_node *pos;
+diff --git a/drivers/net/ethernet/intel/e1000e/e1000.h b/drivers/net/ethernet/intel/e1000e/e1000.h
+index be13227f1697..942ab74030ca 100644
+--- a/drivers/net/ethernet/intel/e1000e/e1000.h
++++ b/drivers/net/ethernet/intel/e1000e/e1000.h
+@@ -186,12 +186,11 @@ struct e1000_phy_regs {
  
-@@ -1555,14 +1556,15 @@ static int trace__validate_ev_qualifier(struct trace *trace)
- 			if (id >= 0)
- 				goto matches;
+ /* board specific private data structure */
+ struct e1000_adapter {
+-	struct timer_list watchdog_timer;
+ 	struct timer_list phy_info_timer;
+ 	struct timer_list blink_timer;
  
--			if (err == 0) {
--				fputs("Error:\tInvalid syscall ", trace->output);
--				err = -EINVAL;
-+			if (!printed_invalid_prefix) {
-+				pr_debug("Skipping unknown syscalls: ");
-+				printed_invalid_prefix = true;
- 			} else {
--				fputs(", ", trace->output);
-+				pr_debug(", ");
- 			}
+ 	struct work_struct reset_task;
+-	struct work_struct watchdog_task;
++	struct delayed_work watchdog_task;
  
--			fputs(sc, trace->output);
-+			pr_debug("%s", sc);
-+			continue;
+ 	const struct e1000_info *ei;
+ 
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 0e09bede42a2..f62434aa24ad 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -39,6 +39,8 @@ static int debug = -1;
+ module_param(debug, int, 0);
+ MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
+ 
++static struct workqueue_struct *e1000_workqueue;
++
+ static const struct e1000_info *e1000_info_tbl[] = {
+ 	[board_82571]		= &e1000_82571_info,
+ 	[board_82572]		= &e1000_82572_info,
+@@ -1780,7 +1782,7 @@ static irqreturn_t e1000_intr_msi(int __always_unused irq, void *data)
  		}
- matches:
- 		trace->ev_qualifier_ids.entries[i++] = id;
-@@ -1591,15 +1593,14 @@ matches:
- 		}
+ 		/* guard against interrupt when we're going down */
+ 		if (!test_bit(__E1000_DOWN, &adapter->state))
+-			mod_timer(&adapter->watchdog_timer, jiffies + 1);
++			queue_delayed_work(e1000_workqueue, &adapter->watchdog_task, 1);
  	}
  
--	if (err < 0) {
--		fputs("\nHint:\ttry 'perf list syscalls:sys_enter_*'"
--		      "\nHint:\tand: 'man syscalls'\n", trace->output);
--out_free:
--		zfree(&trace->ev_qualifier_ids.entries);
--		trace->ev_qualifier_ids.nr = 0;
--	}
- out:
-+	if (printed_invalid_prefix)
-+		pr_debug("\n");
- 	return err;
-+out_free:
-+	zfree(&trace->ev_qualifier_ids.entries);
-+	trace->ev_qualifier_ids.nr = 0;
-+	goto out;
+ 	/* Reset on uncorrectable ECC error */
+@@ -1860,7 +1862,7 @@ static irqreturn_t e1000_intr(int __always_unused irq, void *data)
+ 		}
+ 		/* guard against interrupt when we're going down */
+ 		if (!test_bit(__E1000_DOWN, &adapter->state))
+-			mod_timer(&adapter->watchdog_timer, jiffies + 1);
++			queue_delayed_work(e1000_workqueue, &adapter->watchdog_task, 1);
+ 	}
+ 
+ 	/* Reset on uncorrectable ECC error */
+@@ -1905,7 +1907,7 @@ static irqreturn_t e1000_msix_other(int __always_unused irq, void *data)
+ 		hw->mac.get_link_status = true;
+ 		/* guard against interrupt when we're going down */
+ 		if (!test_bit(__E1000_DOWN, &adapter->state))
+-			mod_timer(&adapter->watchdog_timer, jiffies + 1);
++			queue_delayed_work(e1000_workqueue, &adapter->watchdog_task, 0);
+ 	}
+ 
+ 	if (!test_bit(__E1000_DOWN, &adapter->state))
+@@ -4278,7 +4280,6 @@ void e1000e_down(struct e1000_adapter *adapter, bool reset)
+ 
+ 	napi_synchronize(&adapter->napi);
+ 
+-	del_timer_sync(&adapter->watchdog_timer);
+ 	del_timer_sync(&adapter->phy_info_timer);
+ 
+ 	spin_lock(&adapter->stats64_lock);
+@@ -5150,25 +5151,11 @@ static void e1000e_check_82574_phy_workaround(struct e1000_adapter *adapter)
+ 	}
  }
  
- /*
+-/**
+- * e1000_watchdog - Timer Call-back
+- * @data: pointer to adapter cast into an unsigned long
+- **/
+-static void e1000_watchdog(struct timer_list *t)
+-{
+-	struct e1000_adapter *adapter = from_timer(adapter, t, watchdog_timer);
+-
+-	/* Do the rest outside of interrupt context */
+-	schedule_work(&adapter->watchdog_task);
+-
+-	/* TODO: make this use queue_delayed_work() */
+-}
+-
+ static void e1000_watchdog_task(struct work_struct *work)
+ {
+ 	struct e1000_adapter *adapter = container_of(work,
+ 						     struct e1000_adapter,
+-						     watchdog_task);
++						     watchdog_task.work);
+ 	struct net_device *netdev = adapter->netdev;
+ 	struct e1000_mac_info *mac = &adapter->hw.mac;
+ 	struct e1000_phy_info *phy = &adapter->hw.phy;
+@@ -5395,8 +5382,8 @@ static void e1000_watchdog_task(struct work_struct *work)
+ 
+ 	/* Reset the timer */
+ 	if (!test_bit(__E1000_DOWN, &adapter->state))
+-		mod_timer(&adapter->watchdog_timer,
+-			  round_jiffies(jiffies + 2 * HZ));
++		queue_delayed_work(e1000_workqueue, &adapter->watchdog_task,
++				   round_jiffies(2 * HZ));
+ }
+ 
+ #define E1000_TX_FLAGS_CSUM		0x00000001
+@@ -7251,11 +7238,21 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto err_eeprom;
+ 	}
+ 
+-	timer_setup(&adapter->watchdog_timer, e1000_watchdog, 0);
++	e1000_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
++			                  e1000e_driver_name);
++
++	if (!e1000_workqueue)
++	{
++		err = -ENOMEM;
++		goto err_workqueue;
++	}
++
++	INIT_DELAYED_WORK(&adapter->watchdog_task, e1000_watchdog_task);
++	queue_delayed_work(e1000_workqueue, &adapter->watchdog_task, 0);
++
+ 	timer_setup(&adapter->phy_info_timer, e1000_update_phy_info, 0);
+ 
+ 	INIT_WORK(&adapter->reset_task, e1000_reset_task);
+-	INIT_WORK(&adapter->watchdog_task, e1000_watchdog_task);
+ 	INIT_WORK(&adapter->downshift_task, e1000e_downshift_workaround);
+ 	INIT_WORK(&adapter->update_phy_task, e1000e_update_phy_task);
+ 	INIT_WORK(&adapter->print_hang_task, e1000_print_hw_hang);
+@@ -7349,6 +7346,9 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	return 0;
+ 
+ err_register:
++	flush_workqueue(e1000_workqueue);
++	destroy_workqueue(e1000_workqueue);
++err_workqueue:
+ 	if (!(adapter->flags & FLAG_HAS_AMT))
+ 		e1000e_release_hw_control(adapter);
+ err_eeprom:
+@@ -7395,15 +7395,17 @@ static void e1000_remove(struct pci_dev *pdev)
+ 	 */
+ 	if (!down)
+ 		set_bit(__E1000_DOWN, &adapter->state);
+-	del_timer_sync(&adapter->watchdog_timer);
+ 	del_timer_sync(&adapter->phy_info_timer);
+ 
+ 	cancel_work_sync(&adapter->reset_task);
+-	cancel_work_sync(&adapter->watchdog_task);
+ 	cancel_work_sync(&adapter->downshift_task);
+ 	cancel_work_sync(&adapter->update_phy_task);
+ 	cancel_work_sync(&adapter->print_hang_task);
+ 
++	cancel_delayed_work(&adapter->watchdog_task);
++	flush_workqueue(e1000_workqueue);
++	destroy_workqueue(e1000_workqueue);
++
+ 	if (adapter->flags & FLAG_HAS_HW_TIMESTAMP) {
+ 		cancel_work_sync(&adapter->tx_hwtstamp_work);
+ 		if (adapter->tx_hwtstamp_skb) {
+-- 
+2.22.0
+
