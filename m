@@ -2,159 +2,122 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC985C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:15:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53621C46477
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:16:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2C2420657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:15:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="t+fWdAO+"
+	by mail.kernel.org (Postfix) with ESMTP id 344B12089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:16:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfFQWPd (ORCPT
+        id S1728729AbfFQWQD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 18:15:33 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46260 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfFQWPc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:15:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z15so7688635lfh.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:15:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c5UIf+bhX+TscweExnBplZZa2iUS4eVkN91TUCyDIjc=;
-        b=t+fWdAO+kDytO6Qe2BvENv40nSMghSAZkq/QjTqjeur22v/BBMKMR2T2iwMdgFuCK/
-         wL4fe2VCXZMM9bnyZ6OGwplg3xS0ff5gcj3IsH/BpmxTyAJIlE4GVMGvFgeBH0WC6h8B
-         4kIv18eoGH+jcMa2iKr08PaRi3yYeLj32DUAdKpPzKLrHKPpTdX9F30IORcnvkGkmHnq
-         CTb3nYcsO3Rja53nkvmFYBBsi67iNt1EapUWX5nVD7RPNrV6p/7IFNz3cP1v4DoICSSg
-         tAtsAqm78XQx9N/+QnXmtpeDQwOMmd9jJulg0P5RVzzXQFu7wHyys0WZ5jhwSga67MW4
-         L8fQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c5UIf+bhX+TscweExnBplZZa2iUS4eVkN91TUCyDIjc=;
-        b=DnxRBEOl00lO6qXSFqb84Cca7gMRgAk23nGrzbGLfEEVrjTLZXU2f4vtaGPc/L9w75
-         Uv2P/qQu9eeT6S+AbqTxRTMdN68ahHLyt8SqMxmmctIAclhuFvsnEMHsFGLwvY+wleKH
-         ykosrYIWT70zeHdT//FT15l4uK39COOM1TTH57Y3R4RDCw6hMJ8F72CZmy0uiqhRC12/
-         yXtqk5dVSMO/35feiVIzRK094Wh9aZ/Lc2xSrPkTHrzCMe4yDPkUBtcypG6mKXMlhrP/
-         BbzeP46lsIhqUNEIOJYfBxhw6o7ifH9K7024gtXVqURsXRWDtKDTP6W1lHAjwJIPJg3l
-         9mfg==
-X-Gm-Message-State: APjAAAU7NMqSdvbbAP9YQK11QlcUtPsuiWZIyIGaktLsMljLAOncSZO2
-        /IkhJJ1ppSOMOSynxEiSJBSFNW5NezsNmzlMeCEk
-X-Google-Smtp-Source: APXvYqzJk1+r3WEYAvcSc4G69gUJrY/Lj0o95tRZ6iNfY9UKCSo0STH+khxu8QVrnuz2PewmDfXmvQA2r6UC6596xrU=
-X-Received: by 2002:ac2:410a:: with SMTP id b10mr6357850lfi.175.1560809730743;
- Mon, 17 Jun 2019 15:15:30 -0700 (PDT)
+        Mon, 17 Jun 2019 18:16:03 -0400
+Received: from ms.lwn.net ([45.79.88.28]:45402 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726116AbfFQWQD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 18:16:03 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id B3B20A4D;
+        Mon, 17 Jun 2019 22:16:01 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 16:16:00 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Greear <greearb@candelatech.com>, stable@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mark Gross <mgross@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
+Subject: Re: [PATCH v3] Documentation: Add section about CPU vulnerabilities
+ for Spectre
+Message-ID: <20190617161600.77f5f5eb@lwn.net>
+In-Reply-To: <alpine.DEB.2.21.1906172217540.1963@nanos.tec.linutronix.de>
+References: <c63945d34bfc9df2412f813d0b9b3a321a65de5d.1560795378.git.tim.c.chen@linux.intel.com>
+        <alpine.DEB.2.21.1906172217540.1963@nanos.tec.linutronix.de>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <53af233d05da5e07d75d122878387288a10276df.1560447640.git.rgb@redhat.com>
- <CAFqZXNvTAj_MhgbUB0kbQwF+gDQTTO5jXPagQfW9qwfHEzc1iQ@mail.gmail.com>
-In-Reply-To: <CAFqZXNvTAj_MhgbUB0kbQwF+gDQTTO5jXPagQfW9qwfHEzc1iQ@mail.gmail.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Mon, 17 Jun 2019 18:15:19 -0400
-Message-ID: <CAHC9VhRnwnzPikvBg1GaJU30zhj009zN7N8HmM_kt6v8o+8HBg@mail.gmail.com>
-Subject: Re: [PATCH ghak57 V1] selinux: format all invalid context as untrusted
-To:     Ondrej Mosnacek <omosnace@redhat.com>,
-        Richard Guy Briggs <rgb@redhat.com>
-Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        SElinux list <selinux@vger.kernel.org>,
-        Eric Paris <eparis@redhat.com>, Steve Grubb <sgrubb@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 4:05 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> On Thu, Jun 13, 2019 at 8:43 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+On Mon, 17 Jun 2019 22:21:51 +0200 (CEST)
+Thomas Gleixner <tglx@linutronix.de> wrote:
 
-...
+> > +Spectre variant 1 attacks take advantage of speculative execution of
+> > +conditional branches, while Spectre variant 2 attacks use speculative
+> > +execution of indirect branches to leak privileged memory. See [1] [5]
+> > +[7] [10] [11].  
+> 
+> It would be great to actually link these [N] to the actual http link at the
+> bottom. No idea what's the best way to do that.
+> 
+> Jonathan?
 
-> > diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
-> > index cc043bc8fd4c..817576802f7d 100644
-> > --- a/security/selinux/ss/services.c
-> > +++ b/security/selinux/ss/services.c
-> > @@ -1588,6 +1588,8 @@ static int compute_sid_handle_invalid_context(
-> >         struct policydb *policydb = &state->ss->policydb;
-> >         char *s = NULL, *t = NULL, *n = NULL;
-> >         u32 slen, tlen, nlen;
-> > +       struct audit_buffer *ab;
-> > +       size_t audit_size;
-> >
-> >         if (context_struct_to_string(policydb, scontext, &s, &slen))
-> >                 goto out;
-> > @@ -1595,12 +1597,22 @@ static int compute_sid_handle_invalid_context(
-> >                 goto out;
-> >         if (context_struct_to_string(policydb, newcontext, &n, &nlen))
-> >                 goto out;
-> > -       audit_log(audit_context(), GFP_ATOMIC, AUDIT_SELINUX_ERR,
-> > -                 "op=security_compute_sid invalid_context=%s"
-> > -                 " scontext=%s"
-> > -                 " tcontext=%s"
-> > -                 " tclass=%s",
-> > -                 n, s, t, sym_name(policydb, SYM_CLASSES, tclass-1));
-> > +       /* We strip a nul only if it is at the end, otherwise the
-> > +        * context contains a nul and we should audit that */
-> > +       if (n) {
-> > +               if (n[nlen - 1] == '\0')
-> > +                       audit_size = nlen - 1;
-> > +               else
-> > +                       audit_size = nlen;
-> > +       } else {
-> > +               audit_size = 0;
-> > +       }
->
-> If you reasonably assume that (n == NULL) implies (nlen == 0), then
-> you can simplify this down to:
->
->     audit_size = nlen;
->     if (nlen && n[nlen - 1] == '\0')
->         audit_size--;
->
-> (or similar), see my recent patch to log *rawcon as untrusted [2].
-> That is IMHO faster to parse. But I see you copied it from
-> selinux_inode_setxattr(), where it is like this...
+Append an underscore to the link text, so:
 
-You could likely simplify this even further by getting rid of
-audit_size and just using nlen; there is no reason why we need to
-preserve the original nlen value in this function.  Also, keep in mind
-that if you are hitting that chunk of code, and not jumping to "out"
-due to a context_struct_to_string() error, then you should have a
-properly formatted SELinux label, it just happens to be invalid for
-the currently loaded policy.  Something like the following should be
-safe:
+	See [1_] [5_] ...
+	
+Then, when adding the links:
 
-  if (n[nlen - 1] == '\0')
-    nlen--;
-  audit_log_start(...);
-  audit_log_format("... invalid_context=");
-  audit_log_n_untrustedstring(n, nlen);
-  audit_log_format(...);
-  audit_log_end(...);
+	.. _1: https://.../
 
-Also, to be honest, the string you get back from
-context_struct_to_string() is always going to be NUL-terminated so you
-could simplify this further:
+There are other ways; see
 
-  audit_log_start(...);
-  audit_log_format("... invalid_context=");
-  /* no need to record the NUL with untrusted strings */
-  audit_log_n_untrustedstring(n, nlen - 1);
-  audit_log_format(...);
-  audit_log_end(...);
+    http://docutils.sourceforge.net/docs/user/rst/quickref.html#external-hyperlink-targets 
 
-> I'm not sure if it
-> is worth changing this patch / consolidating the style across all
-> places that do this / creating a helper function...
+for the list.
 
-If anyone is going to look into that, it should be done in a separate patch.
+> The below renders horribly when converted to HTML
+> 
+> You probably want to wrap these into a table
+> 
+> > +	nospectre_v2	[X86] Disable all mitigations for the Spectre variant 2
+> > +			(indirect branch prediction) vulnerability. System may
+> > +			allow data leaks with this option, which is equivalent
+> > +			to spectre_v2=off.
+> > +
+> > +
+> > +        spectre_v2=     [X86] Control mitigation of Spectre variant 2
+> > +			(indirect branch speculation) vulnerability.
+> > +			The default operation protects the kernel from
+> > +			user space attacks.  
+> 
+> Maybe Jonathan has a better idea.
 
--- 
-paul moore
-www.paul-moore.com
+The easiest thing is probably a definition list:
+
+	nospectre_v2
+	    [X86] Disable all mitigations for the Spectre variant 2
+	    (indirect branch prediction) ...
+
+	spectrev2=
+	    ...
+
+i.e. just move the descriptive text into an indented block below the term
+of interest.
+
+jon
