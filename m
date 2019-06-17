@@ -2,101 +2,113 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A6BEC31E44
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3BBC31E54
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:44:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 318F921995
+	by mail.kernel.org (Postfix) with ESMTP id 6065E21995
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:44:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aPPH25yI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aPPH25yI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726108AbfFQHn6 (ORCPT
+        id S1727053AbfFQHoY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:43:58 -0400
-Received: from xavier.telenet-ops.be ([195.130.132.52]:42054 "EHLO
-        xavier.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfFQHn6 (ORCPT
+        Mon, 17 Jun 2019 03:44:24 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:34880 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfFQHoX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:43:58 -0400
-Received: from ramsan ([84.194.111.163])
-        by xavier.telenet-ops.be with bizsmtp
-        id Rjji2000G3XaVaC01jjiki; Mon, 17 Jun 2019 09:43:47 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hcmIo-0000TT-2k; Mon, 17 Jun 2019 09:43:42 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hcmIo-0003Kr-0l; Mon, 17 Jun 2019 09:43:42 +0200
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] initramfs: Fix populate_initrd_image() section mismatch
-Date:   Mon, 17 Jun 2019 09:43:40 +0200
-Message-Id: <20190617074340.12779-1-geert@linux-m68k.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Jun 2019 03:44:23 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E3E6460A44; Mon, 17 Jun 2019 07:44:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560757462;
+        bh=Aenf+RXfbj5RyVkcFJ9IyGNg4Qewwd+uSbm54mHar40=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=aPPH25yIRrzE1LFahKN8Lh5dxfRHYl+Y7UyF9Qm6o92zBPiSrNw6zj1DBg32PDrfa
+         +bpio/2cwWakTG2A/aQpsZwRGKI8ZTVJb5lH7KUJvtNiskh4UTpOxNdJlP/g1KbtSB
+         BToLNB+1clr0ByeaN2sdcGys3VY92ZSpMA0QkU+4=
+Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A50A602DD;
+        Mon, 17 Jun 2019 07:44:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560757462;
+        bh=Aenf+RXfbj5RyVkcFJ9IyGNg4Qewwd+uSbm54mHar40=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=aPPH25yIRrzE1LFahKN8Lh5dxfRHYl+Y7UyF9Qm6o92zBPiSrNw6zj1DBg32PDrfa
+         +bpio/2cwWakTG2A/aQpsZwRGKI8ZTVJb5lH7KUJvtNiskh4UTpOxNdJlP/g1KbtSB
+         BToLNB+1clr0ByeaN2sdcGys3VY92ZSpMA0QkU+4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2A50A602DD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Nathan Huckleberry <nhuck@google.com>, eliad@wizery.com,
+        arik@wizery.com, "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Subject: Re: [PATCH] wl18xx: Fix Wunused-const-variable
+References: <20190614171713.89262-1-nhuck@google.com>
+        <CAKwvOd=jFYn=7NGPD8UDx3_g30qD+40bCjzmWJJSzmb6pNUusQ@mail.gmail.com>
+Date:   Mon, 17 Jun 2019 10:44:18 +0300
+In-Reply-To: <CAKwvOd=jFYn=7NGPD8UDx3_g30qD+40bCjzmWJJSzmb6pNUusQ@mail.gmail.com>
+        (Nick Desaulniers's message of "Fri, 14 Jun 2019 13:54:16 -0700")
+Message-ID: <87h88ofygd.fsf@codeaurora.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With gcc-4.6.3:
+Nick Desaulniers <ndesaulniers@google.com> writes:
 
-    WARNING: vmlinux.o(.text.unlikely+0x140): Section mismatch in reference from the function populate_initrd_image() to the variable .init.ramfs.info:__initramfs_size
-    The function populate_initrd_image() references
-    the variable __init __initramfs_size.
-    This is often because populate_initrd_image lacks a __init
-    annotation or the annotation of __initramfs_size is wrong.
+> On Fri, Jun 14, 2019 at 10:17 AM 'Nathan Huckleberry' via Clang Built
+> Linux <clang-built-linux@googlegroups.com> wrote:
+>>
+>> Clang produces the following warning
+>>
+>> drivers/net/wireless/ti/wl18xx/main.c:1850:43: warning: unused variable
+>> 'wl18xx_iface_ap_cl_limits' [-Wunused-const-variable] static const struct
+>> ieee80211_iface_limit wl18xx_iface_ap_cl_limits[] = { ^
+>> drivers/net/wireless/ti/wl18xx/main.c:1869:43: warning: unused variable
+>> 'wl18xx_iface_ap_go_limits' [-Wunused-const-variable] static const struct
+>> ieee80211_iface_limit wl18xx_iface_ap_go_limits[] = { ^
+>>
+>> The commit that added these variables never used them. Removing them.
+>
+> Previous thread, for context:
+> https://groups.google.com/forum/#!topic/clang-built-linux/1Lu1GT9ic94
+>
+> Looking at drivers/net/wireless/ti/wl18xx/main.c, there 4 globally
+> declared `struct ieee80211_iface_limit` but as your patch notes, only
+> 2 are used.  The thing is, their uses are in a `struct
+> ieee80211_iface_limit []`.
+>
+> Looking at
+> $ git blame drivers/net/wireless/ti/wl18xx/main.c -L 1850
+> points to
+> commit 7845af35e0de ("wlcore: add p2p device support")
+> Adding Eliad and Arik to the thread; it's not clear to me what the
+> these variables were supposed to do, but seeing as the code in
+> question was already dead, this is no functional change from a user's
+> perspective.  With that in mind:
+> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> So I'd at least add the tag.
+> Fixes: 7845af35e0de ("wlcore: add p2p device support")
 
-    WARNING: vmlinux.o(.text.unlikely+0x14c): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:unpack_to_rootfs()
-    The function populate_initrd_image() references
-    the function __init unpack_to_rootfs().
-    This is often because populate_initrd_image lacks a __init
-    annotation or the annotation of unpack_to_rootfs is wrong.
+I can't see any functional changes when applying this patch so I don't
+think a fixes line is needed, it's just cleanup.
 
-    WARNING: vmlinux.o(.text.unlikely+0x198): Section mismatch in reference from the function populate_initrd_image() to the function .init.text:xwrite()
-    The function populate_initrd_image() references
-    the function __init xwrite().
-    This is often because populate_initrd_image lacks a __init
-    annotation or the annotation of xwrite is wrong.
-
-Indeed, if the compiler decides not to inline populate_initrd_image(), a
-warning is generated.
-
-Fix this by adding the missing __init annotations.
-
-Fixes: 7c184ecd262fe64f ("initramfs: factor out a helper to populate the initrd image")
-Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
----
- init/initramfs.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/init/initramfs.c b/init/initramfs.c
-index 178130fd61c25d58..c47dad0884f7f10d 100644
---- a/init/initramfs.c
-+++ b/init/initramfs.c
-@@ -617,7 +617,7 @@ static inline void clean_rootfs(void)
- #endif /* CONFIG_BLK_DEV_RAM */
- 
- #ifdef CONFIG_BLK_DEV_RAM
--static void populate_initrd_image(char *err)
-+static void __init populate_initrd_image(char *err)
- {
- 	ssize_t written;
- 	int fd;
-@@ -637,7 +637,7 @@ static void populate_initrd_image(char *err)
- 	ksys_close(fd);
- }
- #else
--static void populate_initrd_image(char *err)
-+static void __init populate_initrd_image(char *err)
- {
- 	printk(KERN_EMERG "Initramfs unpacking failed: %s\n", err);
- }
 -- 
-2.17.1
-
+Kalle Valo
