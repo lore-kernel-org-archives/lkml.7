@@ -2,144 +2,127 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3F69C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:17:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51184C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA592084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21BF7208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:18:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XW0NKdf8"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ed4ihMNW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfFQPRd (ORCPT
+        id S1728429AbfFQPSp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:17:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33914 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728267AbfFQPRc (ORCPT
+        Mon, 17 Jun 2019 11:18:45 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:43102 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfFQPSp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:17:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id k8so22102463iot.1;
-        Mon, 17 Jun 2019 08:17:32 -0700 (PDT)
+        Mon, 17 Jun 2019 11:18:45 -0400
+Received: by mail-vk1-f196.google.com with SMTP id m193so2131315vke.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:18:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=sifive.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=3+wD3SVXZ3PrXa1HtjvCKKY1g2uXLotDdh/IZjbwZD4=;
-        b=XW0NKdf8HYq8QBc4Mxuma9s8F0Gia3HEyU125mLUA7j/kI9hW+ksgPSsrEAbd0r2JU
-         rAIP4ROAGs+4Mft6ygNPQmeunP+4KdhfWgNzmdSIiWlD99x6hcDUcitu2sVS229onCY3
-         Vb04HaUnieL1TmikiqpAkjJRRNjvY3JzJ9tpNYF8l6CNZYsj9ikncEZihBy4ONe/RFnd
-         Itu9TtwwXfkFNRIOnpgbeJl8qJ11JmreOrGU0kTkL6im2jAJUGaXLgD5rCMrjIfJa0h+
-         K+u49csTAsCMIpv0GBJJU/z+ygok9Q5T62cq4TKiIPTu8bo+RgL6kvt9WJHiXsIXuUTH
-         FbyA==
+        bh=avGzyCxZclKT79pADY4DKIxqTozcBYUh0WnJ9dBhi1E=;
+        b=ed4ihMNWHG89e7Xaq5+FGLxCCA+5JtfbgMQTrutcVtIUFc/8Xc5p7ERp90dJ5a/5lF
+         I3MGOvl69DQXjZF3l5qryq0cR5T9YK/n7VaKJIq8hQYccky5s/xwoqen9GCkilKTSuxr
+         AOWz1z+0Y+6fxqgfwix4gWIl+ilS5v/XR8eTCycB790d93Cc9++z4t8IOSbvO5teSBI5
+         lEEHEiIwabUNKwbt+MXom5V9VOXoBLX2Rxtf3aW4eo8I5FnOBSAc3SW5aWluQArodm2k
+         qtImm0+eKkSivZ+3lgV2Y7j+JamcqthViHOiZj8EcoF25bQFpsL5ypPvdyqcBHiLMus1
+         Ut0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=3+wD3SVXZ3PrXa1HtjvCKKY1g2uXLotDdh/IZjbwZD4=;
-        b=aVLzkshRYxJisro94B2XXCGi1TqRuqq8gU++ketjNrkAQFtQUsdnfh1vuf9IWAZ2sm
-         yt5SMoDyzDOpG9xsUFGyLC4+qeuA6mkyeVIZ/5E6wcGeNfzGHTu3k4jdCb+bf4c9WxZX
-         CMSbI+RsFBSQ0HLup1HYBNNu/L3+GYV+dj+g29stZnavo+Has4UaBVz4Bd/ES4urahOu
-         /q3oManMH8JqL3pza4mT00MdGtheYvNyXS+9JZhp/R3rd8hQWlrNEi/6l50oxh0vcIO0
-         TY7PNng5DnCGqKyK6EFIV5GKryaFoQyYKk8yxb70vIwsincxgxepgUbKJhMtiRQLxVkK
-         8B4Q==
-X-Gm-Message-State: APjAAAU/KFkDeKrPY5IUKv8grkxY4779iFv5iqUCj6TYz+rSEuvK7xXf
-        gN/bh39VO2bZvXc+ho0DfTPBj/7XH8bsIGYdnpXE6hWF
-X-Google-Smtp-Source: APXvYqzHko/RHOucNVkRDhgeF7jxqsQrYHP/teYkSGuN2gCpAyHtQ4kD7zLzznSbAeTHSrrBWQClAN66pqYh6uIt6ZA=
-X-Received: by 2002:a6b:901:: with SMTP id t1mr228382ioi.42.1560784651888;
- Mon, 17 Jun 2019 08:17:31 -0700 (PDT)
+        bh=avGzyCxZclKT79pADY4DKIxqTozcBYUh0WnJ9dBhi1E=;
+        b=C0bE/smpVKJghCgos+T4TrRtSGGHYPkJsrqDTI3aTtoAcwwcet+TKo6Fw4LREKpFnF
+         zomUbratNwPXCmuNfv4qJDIoEF+g4O52QN3zBGc0STTINBKsLmXlSGxCdPu3+kJ9oeJk
+         GXs49z2vLSX9N8KqKlo9K1Gxk5u2LBwaKkLmd9Nl+B2S/CjdKx/+Qew6OVI3Qngc/kv+
+         qiiXwrHb28yAKml7p3dC06m10+1gsQsjeByNRWuD6BNK+xdx+8qT1PJvVuwzlScjsE47
+         kjtyTDabsHLCRqq+sO9wN3XCyJ6UIIsS02YAwt75nhZ4euMXcKrFgCUO3XulM5/NMoRU
+         /Ydw==
+X-Gm-Message-State: APjAAAUdh6vVtD+U79FvcxOOYSVZt/jhnO4du0IADtgj+O2Z0QMOGhXi
+        8vt+VymxYjwXwj3yDozHnPUaEQvxv0N2sjPVkY4Rjw==
+X-Google-Smtp-Source: APXvYqybEt7W3M5qE6N0FBs9dBKJrhuavtDPLL4WFwFs7pHHWurEb3V/bgCHCADGQFV/vQ+BSWlb509dkOgV0n8YRMo=
+X-Received: by 2002:a1f:2909:: with SMTP id p9mr27668514vkp.23.1560784724394;
+ Mon, 17 Jun 2019 08:18:44 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212553.10541-1-jeffrey.l.hugo@gmail.com> <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
- <20190617150502.GU5316@sirena.org.uk>
-In-Reply-To: <20190617150502.GU5316@sirena.org.uk>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 17 Jun 2019 09:17:21 -0600
-Message-ID: <CAOCk7NrwYezbVyLKOZdxgGRVemKtBmHKP+fSO0a2p3bCPNdW3w@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
-To:     Mark Brown <broonie@kernel.org>
-Cc:     lgirdwood@gmail.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
+ <1560336476-31763-2-git-send-email-sagar.kadam@sifive.com> <325855d0-00f9-df8a-ea57-c140d39dd6ef@ti.com>
+In-Reply-To: <325855d0-00f9-df8a-ea57-c140d39dd6ef@ti.com>
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+Date:   Mon, 17 Jun 2019 20:48:33 +0530
+Message-ID: <CAARK3H=O=h1VDgOMxs_0ThcisrH=2tzpW5pQqt0O9oYs=MFFVw@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] mtd: spi-nor: add support for is25wp256
+To:     Vignesh Raghavendra <vigneshr@ti.com>
+Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
+        dwmw2@infradead.org, computersforpeace@gmail.com,
+        miquel.raynal@bootlin.com, richard@nod.at,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Wesley Terpstra <wesley@sifive.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 9:05 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Thu, Jun 13, 2019 at 02:25:53PM -0700, Jeffrey Hugo wrote:
->
-> > +static int spmi_regulator_ftsmps426_set_voltage(struct regulator_dev *rdev,
-> > +                                           unsigned selector)
-> > +{
-> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> > +     u8 buf[2];
-> > +     int mV;
-> > +
-> > +     mV = spmi_regulator_common_list_voltage(rdev, selector) / 1000;
-> > +
-> > +     buf[0] = mV & 0xff;
-> > +     buf[1] = mV >> 8;
-> > +     return spmi_vreg_write(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
-> > +}
->
-> This could just be a set_voltage_sel(), no need for it to be a
-> set_voltage() operation....
+Hello Vignesh,
 
-This is a set_voltage_sel() in spmi_ftsmps426_ops.  Is the issue because this
-function is "spmi_regulator_ftsmps426_set_voltage" and not
-"spmi_regulator_ftsmps426_set_voltage_sel"?
+Thanks for your review comments.
 
+On Sun, Jun 16, 2019 at 6:14 PM Vignesh Raghavendra <vigneshr@ti.com> wrote:
 >
-> > +static int spmi_regulator_ftsmps426_get_voltage(struct regulator_dev *rdev)
-> > +{
-> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> > +     u8 buf[2];
-> > +
-> > +     spmi_vreg_read(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
-> > +
-> > +     return (((unsigned int)buf[1] << 8) | (unsigned int)buf[0]) * 1000;
-> > +}
+> Hi,
 >
-> ...or if the conversion is this trivial why do the list_voltage() lookup
-> above?
+> On 12-Jun-19 4:17 PM, Sagar Shrikant Kadam wrote:
+> [...]
+>
+> > @@ -4129,7 +4137,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
+> >       if (ret)
+> >               return ret;
+> >
+> > -     if (nor->addr_width) {
+> > +     if (nor->addr_width && JEDEC_MFR(info) != SNOR_MFR_ISSI) {
+> >               /* already configured from SFDP */
+>
+> Hmm, why would you want to ignore addr_width that's read from SFDP table?
 
-We already have code in the driver to convert a selector to the
-voltage.  Why duplicate
-that inline in spmi_regulator_ftsmps426_set_voltage?
+The SFDP table for ISSI device considered here, has addr_width set to
+3 byte, and the flash considered
+here is 32MB. With 3 byte address width we won't be able to access
+flash memories higher address range.
+Hence I have ignored the addr width from SFDP.  I have verified that
+with 3 byte address width, the
+flascp util fails while verifying the written data.  Please let me
+know your views on this?
 
->
-> > +spmi_regulator_ftsmps426_set_mode(struct regulator_dev *rdev, unsigned int mode)
-> > +{
-> > +     struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> > +     u8 mask = SPMI_FTSMPS426_MODE_MASK;
-> > +     u8 val;
-> > +
-> > +     switch (mode) {
-> > +     case REGULATOR_MODE_NORMAL:
-> > +             val = SPMI_FTSMPS426_MODE_HPM_MASK;
-> > +             break;
-> > +     case REGULATOR_MODE_FAST:
-> > +             val = SPMI_FTSMPS426_MODE_AUTO_MASK;
-> > +             break;
-> > +     default:
-> > +             val = SPMI_FTSMPS426_MODE_LPM_MASK;
-> > +             break;
-> > +     }
->
-> This should validate, it shouldn't just translate invalid values into
-> valid ones.
+BR,
+Sagar Kadam
 
-Validate what?  The other defines are REGULATOR_MODE_IDLE
-and REGULATOR_MODE_STANDBY which correspond to the LPM
-mode.  Or are you suggesting that regulator framework is going to pass
-REGULATOR_MODE_INVALID to this operation?
+> Regards
+> Vignesh
+>
+>
+> >       } else if (info->addr_width) {
+> >               nor->addr_width = info->addr_width;
+> > diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> > index b3d360b..ff13297 100644
+> > --- a/include/linux/mtd/spi-nor.h
+> > +++ b/include/linux/mtd/spi-nor.h
+> > @@ -19,6 +19,7 @@
+> >  #define SNOR_MFR_ATMEL               CFI_MFR_ATMEL
+> >  #define SNOR_MFR_GIGADEVICE  0xc8
+> >  #define SNOR_MFR_INTEL               CFI_MFR_INTEL
+> > +#define SNOR_MFR_ISSI                0x9d            /* ISSI */
+> >  #define SNOR_MFR_ST          CFI_MFR_ST      /* ST Micro */
+> >  #define SNOR_MFR_MICRON              CFI_MFR_MICRON  /* Micron */
+> >  #define SNOR_MFR_MACRONIX    CFI_MFR_MACRONIX
+> >
