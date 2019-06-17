@@ -2,205 +2,97 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E98DBC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:38:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D58AC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:39:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C964A20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0D9420861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:39:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727848AbfFQMiu (ORCPT
+        id S1726957AbfFQMj1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:38:50 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:45035 "EHLO
+        Mon, 17 Jun 2019 08:39:27 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:37707 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfFQMiu (ORCPT
+        with ESMTP id S1725884AbfFQMj0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:38:50 -0400
+        Mon, 17 Jun 2019 08:39:26 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M2fDl-1hd7l83wTv-004C56; Mon, 17 Jun 2019 14:38:42 +0200
+ (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MkpOZ-1iL19m1NHz-00mJjL; Mon, 17 Jun 2019 14:39:17 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Hsin-Yi Wang <hsinyi@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>, devicetree@vger.kernel.org,
+To:     Harry Wentland <harry.wentland@amd.com>,
+        Leo Li <sunpeng.li@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Thomas Lim <Thomas.Lim@amd.com>,
+        Eric Yang <eric.yang2@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Tony Cheng <tony.cheng@amd.com>,
+        Anthony Koo <Anthony.Koo@amd.com>,
+        Charlene Liu <charlene.liu@amd.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] of/fdt: hide of_ftd_match() if unused
-Date:   Mon, 17 Jun 2019 14:38:19 +0200
-Message-Id: <20190617123840.911593-1-arnd@arndb.de>
+Subject: [PATCH] drm/amd/display: include missing linux/delay.h
+Date:   Mon, 17 Jun 2019 14:38:55 +0200
+Message-Id: <20190617123915.926526-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:C9EgkRJlRV+uUkgeQXJ+viZ12Os+ic8aUZ0U22arhnLAFNw45Wn
- CoIq1FnerQpG/ubXsFQvljsdA4vy1ibxvexiKshRTvr/so8dEoz3+aGQiS84J9nuJPFCYFZ
- KHf7hTZ3LspgE9JcBWCwJSr90DsFbVLeorbN9nkL1+ofBOc8m0HRUEGGXOM8+UwQRDMyDtl
- +oqEqUemR5J8ePqsUgrrg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:t/do7VlCqaQ=:DAOKGMK8s9JWSU3wDjs0vh
- OLYNBNzpo6PFyNS9aObN7XICzBfuRAScYObG4sGonUJoA7Sg+stP8UTtnZmzsimBRtYh54+56
- QorehnUFCQMsnkXI/yD/p+z4uh6ZtHPx0dYHpvs2uSBH0s2Tpl9pxsnzNPJ2VCKHl5sOu2Ffy
- /7jIxiFazKDGx/7d5hlVg1Ge+JPsMuydb6ptaTCdDEZAvB5zmEg/nwszjCJMQr5Ssit3v7tc9
- qwp+TRWmEoYsPiGB43axYhi633GGllB1LnrD4GYTpA4POz5zthz3r3CB5aBIH9H/ayzpsVqM9
- +WROXbaSla325gse3uItEK+OWheddGj5o62DlZMnDR/b4O+7lmNCyZkaEKAz1M7vf/iV4Ac/h
- FnkyDc1rhNBe4hk9HiXvVoWLF4OnfxruTswom9W8F0MV8f9L4Luoe5Tk/MPDhxaJ2CPDBrGAi
- n2EUwsU/ptD5F8RjvlfcbHtPpAWwufxWv65lDvnv1UOPAIst4CMzwl0Z+t9nZ7nFY0CHZ6AHY
- WHfLPSOaXyQr9Pd1Ij9bisiz+8PX0IeOtazDlGDQ26uvP9dycc8PjuGCbPdEJlbttmmiRW+6y
- EA+LHrG12iU6iyQTTaIn0a7k6UPZmRUg24OTtxcWQvdZffgOUI/M2+4kOGK3HstYb2Kh5VFGx
- wkJAwbg4qHdKUnNx/2kt3p7qUsElqP3JWCS0HcvmCvqS3G3IfIFzteUnHtKZJBAQVsUvLQoYD
- 3jfvNcOFf0kqYclTnAyOV8Rzjbc4RUSIMFoO2w==
+X-Provags-ID: V03:K1:r3X+Mcq4GDZ3qYDRz2Ihhnt91TQ2U5GxOpABsFsYrkC/K9q9h5n
+ iCNKaLTm4verJxBR2gbf1xeYHX3t8DdWTTAtUV2POtlSaUwtwRKQpa/71TAsiTm5UPIGKjd
+ J+/kRqcTWmqyST8H4wUAR9xdOfp8NF8rU2uoLqYwzwxpz1WNbRaP7oI+RNniNHlcacXAddZ
+ P3NzvMWZ/HEnTZr5TlA8Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:gIkHZ7VzfnU=:BghEa7Q00cCOgUdn2Xy4TN
+ ntd/ikOW70/jka68RwgFFOvVsWZe0SRnkOLrlD6m4vvpa3mNH+WGlAgiV0rWs/pb9jlCNt6Xt
+ zE9ZQPtlwXqbvFfCpQXJ8rrIxLEZdSMoVZGxQo3PKYGstUbVA4Hagc6jwbt19jS+sR9+i22DZ
+ yCU3d+eWNpaKdQ+mvAPkyc3kf6izzC8ErJR9OrGqIElMTaBQkPrvWIe9OPByQNtAqWEu22oc4
+ qG36PmJKAKH0jZTIah0v3v5BrAtsPWJrAt5IinFummsUJyxnzK58ju/9NufZpCShKrNIClbx9
+ 7a/iR6RBWMwuXvhy+k2e0pp60ApueRRa10iwdjfxhsJattT1IwM+kfth+3L+eEOPIf0WiKc9S
+ AJtgCNdEPKgMYVQOi9mopZuEDH3P5gv3xJkpKmmo7WOizDK+D3SlibAmM+NZr+wl7pGwOAEWh
+ PsCgN1fGOBExJV3NwJb2/ORp6y4q5Qtu6uR3p85vmBmMeDwDzUnZCoJxfZ8avsSGBZUbQoq+L
+ GB6gtPOZbWDlpLUNaFXDkiy5ikcQDsDY5Cfz/LEBCBG6w0C0oP6h/jVVufGzzzsV0Lx0eW2oy
+ VlrL1mwfeJjmn4ndivGszp8rsuL/QQdgWY7l0VaUQQNUjorzSPlkQIoaoeVED018PHS1MLrTE
+ Xr2FQ0iQU0XgNykaHZFKfd7naYgIc2gtgju13fhBusm6aIiduAolLzigm2zWIz9s/4d2i4xXq
+ QQgxMyA193iIPTvQhRBv/3vIdQgooZVG0reFQw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only caller of this function is built conditionally:
+Some randconfig builds fail to compile the dcn10 code because of
+a missing declaration:
 
-drivers/of/fdt.c:129:19: error: 'of_fdt_match' defined but not used [-Werror=unused-function]
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c: In function 'dcn10_apply_ctx_for_surface':
+drivers/gpu/drm/amd/amdgpu/../display/dc/dcn10/dcn10_hw_sequencer.c:2378:3: error: implicit declaration of function 'udelay' [-Werror=implicit-function-declaration]
 
-Move the definition into the same #ifdef block.
+Include the appropriate kernel header.
 
-Fixes: 9b4d2b635bd0 ("of/fdt: Remove dead code and mark functions with __init")
+Fixes: 9ed43ef84d9d ("drm/amd/display: Add Underflow Asserts to dc")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/of/fdt.c | 106 +++++++++++++++++++++++------------------------
- 1 file changed, 53 insertions(+), 53 deletions(-)
+ drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 3d36b5afd9bd..424981786c79 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -78,38 +78,6 @@ void __init of_fdt_limit_memory(int limit)
- 	}
- }
- 
--/**
-- * of_fdt_is_compatible - Return true if given node from the given blob has
-- * compat in its compatible list
-- * @blob: A device tree blob
-- * @node: node to test
-- * @compat: compatible string to compare with compatible list.
-- *
-- * On match, returns a non-zero value with smaller values returned for more
-- * specific compatible values.
-- */
--static int of_fdt_is_compatible(const void *blob,
--		      unsigned long node, const char *compat)
--{
--	const char *cp;
--	int cplen;
--	unsigned long l, score = 0;
--
--	cp = fdt_getprop(blob, node, "compatible", &cplen);
--	if (cp == NULL)
--		return 0;
--	while (cplen > 0) {
--		score++;
--		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
--			return score;
--		l = strlen(cp) + 1;
--		cp += l;
--		cplen -= l;
--	}
--
--	return 0;
--}
--
- static bool of_fdt_device_is_available(const void *blob, unsigned long node)
- {
- 	const char *status = fdt_getprop(blob, node, "status", NULL);
-@@ -123,27 +91,6 @@ static bool of_fdt_device_is_available(const void *blob, unsigned long node)
- 	return false;
- }
- 
--/**
-- * of_fdt_match - Return true if node matches a list of compatible values
-- */
--static int __init of_fdt_match(const void *blob, unsigned long node,
--			       const char *const *compat)
--{
--	unsigned int tmp, score = 0;
--
--	if (!compat)
--		return 0;
--
--	while (*compat) {
--		tmp = of_fdt_is_compatible(blob, node, *compat);
--		if (tmp && (score == 0 || (tmp < score)))
--			score = tmp;
--		compat++;
--	}
--
--	return score;
--}
--
- static void *unflatten_dt_alloc(void **mem, unsigned long size,
- 				       unsigned long align)
- {
-@@ -522,6 +469,59 @@ void *initial_boot_params __ro_after_init;
- 
- static u32 of_fdt_crc32;
- 
-+/**
-+ * of_fdt_is_compatible - Return true if given node from the given blob has
-+ * compat in its compatible list
-+ * @blob: A device tree blob
-+ * @node: node to test
-+ * @compat: compatible string to compare with compatible list.
-+ *
-+ * On match, returns a non-zero value with smaller values returned for more
-+ * specific compatible values.
-+ */
-+static int of_fdt_is_compatible(const void *blob,
-+		      unsigned long node, const char *compat)
-+{
-+	const char *cp;
-+	int cplen;
-+	unsigned long l, score = 0;
-+
-+	cp = fdt_getprop(blob, node, "compatible", &cplen);
-+	if (cp == NULL)
-+		return 0;
-+	while (cplen > 0) {
-+		score++;
-+		if (of_compat_cmp(cp, compat, strlen(compat)) == 0)
-+			return score;
-+		l = strlen(cp) + 1;
-+		cp += l;
-+		cplen -= l;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * of_fdt_match - Return true if node matches a list of compatible values
-+ */
-+static int __init of_fdt_match(const void *blob, unsigned long node,
-+			       const char *const *compat)
-+{
-+	unsigned int tmp, score = 0;
-+
-+	if (!compat)
-+		return 0;
-+
-+	while (*compat) {
-+		tmp = of_fdt_is_compatible(blob, node, *compat);
-+		if (tmp && (score == 0 || (tmp < score)))
-+			score = tmp;
-+		compat++;
-+	}
-+
-+	return score;
-+}
-+
- /**
-  * res_mem_reserve_reg() - reserve all memory described in 'reg' property
+diff --git a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+index 1ac9a4f03990..d87ddc7de9c6 100644
+--- a/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
++++ b/drivers/gpu/drm/amd/display/dc/dcn10/dcn10_hw_sequencer.c
+@@ -22,6 +22,7 @@
+  * Authors: AMD
+  *
   */
++#include <linux/delay.h>
+ 
+ #include <linux/delay.h>
+ #include "dm_services.h"
 -- 
 2.20.0
 
