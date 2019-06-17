@@ -5,58 +5,58 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8656DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C75C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C59820B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB965208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dG+wreBx"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GlT2ug/H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728692AbfFQQPs (ORCPT
+        id S1728432AbfFQQPL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:15:48 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44894 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728496AbfFQQPP (ORCPT
+        Mon, 17 Jun 2019 12:15:11 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45367 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728304AbfFQQPJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:15:15 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n2so6074998pgp.11;
-        Mon, 17 Jun 2019 09:15:14 -0700 (PDT)
+        Mon, 17 Jun 2019 12:15:09 -0400
+Received: by mail-pg1-f193.google.com with SMTP id s21so6063892pga.12;
+        Mon, 17 Jun 2019 09:15:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZZ90DhHT8CO/5qNgjTb6mBPSn8GWQK6QCs0cgFE8TtA=;
-        b=dG+wreBxEaHsComMHuxEBKpM4K02esxOz2dAqzsHat4NaD3V2dYuDVPU84ZlxCU0j0
-         IlohTIpmFk+eRGQRtVBZ4n/8+SYjiNqM2ddLvkfsd5l/KS1Z79pdKMAYb5JEqOKLKvcN
-         ppZrbxw7MwuZo6fRg5Wxz+dW/NB+Qoncc9n1AZJyxZndHpKWp3jW22+1Xnj9lLV1+e1R
-         /BQ5maDg1LlZPWgjMPwOCfqAxOqRfUBCLW3iw6Qdbx4ab9DfzUAU6zQ6oMig58oEdh0y
-         bQznKkgpuxVv3lEayF1PsFliiYTNZjg+011u3uj8bYb7ljqBxMFZCNHVyveef5ZU6VOQ
-         jiHA==
+        bh=b/Aa9vwcoAMXBLeFkFUyEGUfoQF1uTYSZwVAiF+3Oqc=;
+        b=GlT2ug/HSjv4GGon437P/ehTwiRLbxG6v5lCkV5vMKCNl0qO+mvmfX7iEM9KIooYdt
+         KGXYW2jaN3sITlepnDl5qKIrHTF+C2gn6jutz4WgIvAWHjXTy3hknf5Owo4jiIQECcuf
+         nTer61WeBlfYOSzGsMiZ646Dn2OfFLfHO6doVlvgT3Z5tikR7QWHbpTYSnUlUBvp2CDT
+         Jce2VIWwhSv7aq4HiEJGiJqPt5jlka8t+NoOqFKdNeJ67SfdqMkrbfuOBeXV4gKn4DuP
+         4QhKbVQT1aV0uq8ZRrGNYOjWJtkgtes1OvvNl2wbU7rUG/ccsYSnj0R0iqFAZzW0Jmwh
+         ysaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZZ90DhHT8CO/5qNgjTb6mBPSn8GWQK6QCs0cgFE8TtA=;
-        b=hxl6ZzuElwTMnxeq5y8P/Bw9P9wIivXAAM5zU0OVXx3o7GRKUeL2drwfj8uvig1kKT
-         AK3amwA0JogKbSczbi5WQ7ETEh4cx5mkPqSABHazrBUd60Wr3oc89bDqycRsV54InzVz
-         HKO4U//k3O4KlSLiFdRXm64dk6iZvdrlZg5qO8bVhV+HGqVxPvUPpoNTubBmGNrVQ7n2
-         eXMWumhoYB134ny2imUUNJadKLemEpKeGvVSVIP6X+HGNTySvUESWcCS1H5nHr1gcKCp
-         ozwIrFsLiv/sV87GOJ/Veh9hzrEuUkc8sSJb4/L8YoOMVg6iiKRMqq+Dog/2szOPxfM/
-         e0oA==
-X-Gm-Message-State: APjAAAWrTxyOhCZ7EvHKeh8mEkPS7zrOAscNJMpxTdCc7wPaH3+h0ROq
-        Y8HzRvoysJZGmz30R5YG2JmNQFiltJU=
-X-Google-Smtp-Source: APXvYqw6Qhib+IyT1joRfGJMLyhc/2ztGk+uWqSnqm9Cb9VXKUul3LISBGmNRLlV/5b2VEPAwacAWA==
-X-Received: by 2002:a63:6c87:: with SMTP id h129mr51006479pgc.427.1560788114037;
-        Mon, 17 Jun 2019 09:15:14 -0700 (PDT)
+        bh=b/Aa9vwcoAMXBLeFkFUyEGUfoQF1uTYSZwVAiF+3Oqc=;
+        b=DZkYPQf3H3LUOOUfBKZeSO/6JcxQH72kXRRKrMoih32yevAJKR4WlNIAvahvT4vRMH
+         gZ5sUMyz3v5nWbyxhHB95dUVpDxA/l+OszHLKIMHZFuke6S+CTA+5AsrRDMYso3Qdrd6
+         1IqfQokN/h9+XqZ7LMLltp4EvsAS/RA9h//HgZKOPR32JzhBZlH7+T8LgsW1SO+OXD5a
+         zWMPwcpdQrULVYHNyaxmT0yWhnwR/a+zI0HNSViDw2WMMO5twIzKwslPyb/6/GWAnho6
+         ch9u88b5beQXEXPJyTPTlTB5sZ1PmsWA2jqu6Jc7OEyq5oWU6F2R+YkXN3BpjkRsFQLh
+         qhNA==
+X-Gm-Message-State: APjAAAUfdRDYo6Duill+lZZWXQ8l4NjgmlFYS/WmQytfODi1a/BVPADX
+        X/aEjjwRDJR5ANO7uAFPMSuy0VAY79U=
+X-Google-Smtp-Source: APXvYqyBLDInGrf+gDcwc8xUoXlwkGbgBzs80bwXB54WWnxwZECvnFj7lUaXPwumdRxpgpIC4R8DAQ==
+X-Received: by 2002:a17:90a:fa07:: with SMTP id cm7mr27367435pjb.115.1560788108703;
+        Mon, 17 Jun 2019 09:15:08 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id c9sm14791953pfn.3.2019.06.17.09.15.12
+        by smtp.gmail.com with ESMTPSA id c9sm14791953pfn.3.2019.06.17.09.15.07
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 09:15:13 -0700 (PDT)
+        Mon, 17 Jun 2019 09:15:08 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-pm@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -66,9 +66,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Eduardo Valentin <edubezval@gmail.com>,
         Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 05/12] thermal: qoriq: Pass data to qoriq_tmu_register_tmu_zone() directly
-Date:   Mon, 17 Jun 2019 09:14:51 -0700
-Message-Id: <20190617161458.3754-6-andrew.smirnov@gmail.com>
+Subject: [PATCH v6 01/12] thermal: qoriq: Add local struct device pointer
+Date:   Mon, 17 Jun 2019 09:14:47 -0700
+Message-Id: <20190617161458.3754-2-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190617161458.3754-1-andrew.smirnov@gmail.com>
 References: <20190617161458.3754-1-andrew.smirnov@gmail.com>
@@ -79,9 +79,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Pass all necessary data to qoriq_tmu_register_tmu_zone() directly
-instead of passing a paltform device and then deriving it. This is
-done as a first step to simplify resource deallocation code.
+Use a local "struct device *dev" for brevity. No functional change
+intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
@@ -95,43 +94,42 @@ Cc: linux-imx@nxp.com
 Cc: linux-pm@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/thermal/qoriq_thermal.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/thermal/qoriq_thermal.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-index 4d5c74173f08..61700881d9f0 100644
+index 7b364933bfb1..91f9f49d2776 100644
 --- a/drivers/thermal/qoriq_thermal.c
 +++ b/drivers/thermal/qoriq_thermal.c
-@@ -109,9 +109,9 @@ static const struct thermal_zone_of_device_ops tmu_tz_ops = {
- 	.get_temp = tmu_get_temp,
- };
+@@ -192,8 +192,9 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 	int ret;
+ 	struct qoriq_tmu_data *data;
+ 	struct device_node *np = pdev->dev.of_node;
++	struct device *dev = &pdev->dev;
  
--static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
-+static int qoriq_tmu_register_tmu_zone(struct device *dev,
-+				       struct qoriq_tmu_data *qdata)
- {
--	struct qoriq_tmu_data *qdata = platform_get_drvdata(pdev);
- 	int id, sites = 0;
+-	data = devm_kzalloc(&pdev->dev, sizeof(struct qoriq_tmu_data),
++	data = devm_kzalloc(dev, sizeof(struct qoriq_tmu_data),
+ 			    GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+@@ -204,7 +205,7 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
  
- 	for (id = 0; id < SITES_MAX; id++) {
-@@ -120,7 +120,7 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
- 
- 		sensor->id = id;
- 
--		tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, id,
-+		tzd = devm_thermal_zone_of_sensor_register(dev, id,
- 							   sensor,
- 							   &tmu_tz_ops);
- 		if (IS_ERR(tzd)) {
-@@ -216,7 +216,7 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
- 	if (ret < 0)
- 		goto err_tmu;
- 
--	ret = qoriq_tmu_register_tmu_zone(pdev);
-+	ret = qoriq_tmu_register_tmu_zone(dev, data);
- 	if (ret < 0) {
- 		dev_err(dev, "Failed to register sensors\n");
+ 	data->regs = of_iomap(np, 0);
+ 	if (!data->regs) {
+-		dev_err(&pdev->dev, "Failed to get memory region\n");
++		dev_err(dev, "Failed to get memory region\n");
  		ret = -ENODEV;
+ 		goto err_iomap;
+ 	}
+@@ -217,7 +218,7 @@ static int qoriq_tmu_probe(struct platform_device *pdev)
+ 
+ 	ret = qoriq_tmu_register_tmu_zone(pdev);
+ 	if (ret < 0) {
+-		dev_err(&pdev->dev, "Failed to register sensors\n");
++		dev_err(dev, "Failed to register sensors\n");
+ 		ret = -ENODEV;
+ 		goto err_iomap;
+ 	}
 -- 
 2.21.0
 
