@@ -4,50 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BAFBC31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:33:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8B29C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:33:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA9342063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:33:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD1022063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:33:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807190;
-	bh=3ie9uaHAKQRRDf5gHffup/LU2y2OJeM07FarmKK3MWM=;
+	s=default; t=1560807195;
+	bh=HDgyxRbS7Y5MKai9g6/OosFhjudM21WjrT0W8yrktfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zk+swhT+5LjF9gfrm2rJnYyHLdnL9ddExEqnJ+1jZTUIBjeC51KmYdixsEuuUgQ3U
-	 d7Rwe4IFHqHETcSYIDbOHAEQxNGigWUjZXtQprz0qRuTVKdPx33sgZvhYDquRWz6BO
-	 8Gwui1dyXtMe/A56bZ6ScB7Q/P5TZj5HRnTqvYTw=
+	b=yN+9o1Y83DZvmW8KxekDU0l5qEhBPlHVHWSgpsb3qL3KKOPOXTPudwvumxS7/XmJu
+	 Qx/Cc3KRJ1BrdZDKIWptNxgQSYxQugjT+uqvEg3X9O+hlM3y4QnzVn9trcaXwWhCLZ
+	 PMQBLs3MQrDXsjLMpL0wGwBhH5v+hp8yqprTqVQI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730209AbfFQV0Z (ORCPT
+        id S1729255AbfFQVdO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:26:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52920 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:33:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52830 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730203AbfFQV0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:26:22 -0400
+        id S1729798AbfFQV0T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:26:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5BEF920673;
-        Mon, 17 Jun 2019 21:26:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 35905206B7;
+        Mon, 17 Jun 2019 21:26:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806781;
-        bh=3ie9uaHAKQRRDf5gHffup/LU2y2OJeM07FarmKK3MWM=;
+        s=default; t=1560806778;
+        bh=HDgyxRbS7Y5MKai9g6/OosFhjudM21WjrT0W8yrktfI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vgF7hXt9X5s96/Gloq2iHcGhq9d9shIbnYZrK5EjtMABgjJbcSfL6g6VYx3clfWGX
-         X7x95GDQa1OnAsHNuM+fm+b+3Gh7QdLB/TmjFdvS71ak/0ybkhIW0DUS4S6zIF3qt9
-         HQY9LHoUXkcq9FaVlmJliuReEaiDojNWglbykrEI=
+        b=Pe8j/4tDxddXGvvjrqYodNUUh30z3/P0PIC4oeXAp7uNz1us2QJTXeje72gBVu09v
+         Safj0xUbBxN3Olk9Z5WesBcGnjIlYJOGUpZGcOuIIVF0Kj3KB6cpXOPwEMPHNJMeRH
+         F2oaY6I6FQJi577bo5sagnu8O6Bc3SH/llRsP+us=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 54/75] KVM: x86/pmu: do not mask the value that is written to fixed PMUs
-Date:   Mon, 17 Jun 2019 23:10:05 +0200
-Message-Id: <20190617210754.875882996@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 27/75] x86/uaccess, kcov: Disable stack protector
+Date:   Mon, 17 Jun 2019 23:09:38 +0200
+Message-Id: <20190617210753.885928021@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -60,46 +64,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2924b52117b2812e9633d5ea337333299166d373 ]
+[ Upstream commit 40ea97290b08be2e038b31cbb33097d1145e8169 ]
 
-According to the SDM, for MSR_IA32_PERFCTR0/1 "the lower-order 32 bits of
-each MSR may be written with any value, and the high-order 8 bits are
-sign-extended according to the value of bit 31", but the fixed counters
-in real hardware are limited to the width of the fixed counters ("bits
-beyond the width of the fixed-function counter are reserved and must be
-written as zeros").  Fix KVM to do the same.
+New tooling noticed this mishap:
 
-Reported-by: Nadav Amit <nadav.amit@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+  kernel/kcov.o: warning: objtool: write_comp_data()+0x138: call to __stack_chk_fail() with UACCESS enabled
+  kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0xd9: call to __stack_chk_fail() with UACCESS enabled
+
+All the other instrumentation (KASAN,UBSAN) also have stack protector
+disabled.
+
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/pmu_intel.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ kernel/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
-index ad7ea81fbfbf..c3f103e2b08e 100644
---- a/arch/x86/kvm/pmu_intel.c
-+++ b/arch/x86/kvm/pmu_intel.c
-@@ -240,11 +240,14 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		}
- 		break;
- 	default:
--		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
--		    (pmc = get_fixed_pmc(pmu, msr))) {
--			if (!msr_info->host_initiated)
--				data = (s64)(s32)data;
--			pmc->counter += data - pmc_read_counter(pmc);
-+		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-+			if (msr_info->host_initiated)
-+				pmc->counter = data;
-+			else
-+				pmc->counter = (s32)data;
-+			return 0;
-+		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
-+			pmc->counter = data;
- 			return 0;
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			if (data == pmc->eventsel)
+diff --git a/kernel/Makefile b/kernel/Makefile
+index 7a63d567fdb5..df5e3ca30acd 100644
+--- a/kernel/Makefile
++++ b/kernel/Makefile
+@@ -30,6 +30,7 @@ KCOV_INSTRUMENT_extable.o := n
+ # Don't self-instrument.
+ KCOV_INSTRUMENT_kcov.o := n
+ KASAN_SANITIZE_kcov.o := n
++CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+ 
+ # cond_syscall is currently not LTO compatible
+ CFLAGS_sys_ni.o = $(DISABLE_LTO)
 -- 
 2.20.1
 
