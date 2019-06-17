@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD39C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC3C7C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 508AC20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9566320673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806943;
-	bh=ZWpMkuWmbfLwj0OMCJk7OZbjBGU0Sjk3VHvoQX/itak=;
+	s=default; t=1560806946;
+	bh=tat8kJLMMzp6+0dG0uqa4TISq6Ol7sETiiDu8zf1xgQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=105aH2EZ4MPNeBHENYU8MhbfAkAUvwXE3DzXQ6Deda+Mg5iAG8C4Z27gGnXk9f+Uf
-	 IpyWdXHcdMnaFQc3FYHT3X6goXjde07bh4A4bESPwaeR9qEH7FfoMMhTyvT4VBGd0l
-	 gkr5s1PqxLxN8GCcs6j4kVrTRhD9xJhVyDCBAceI=
+	b=CLs05/j4V16rCHI4N/xEDh87uf0jDjQsjKg4r8st2UgAj+xaOELOmWj6YDFrmN/Bs
+	 lvaGXajNd+Q+4UTjlYWGK9xpqXYXiPvazVHSFslNb7OrJ5NDHpWm62fTCKUDzh008E
+	 OKto9QFRpwo8qNbCS6159NRjB79Ti9H0ByRBDjzo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730639AbfFQV3B (ORCPT
+        id S1730646AbfFQV3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56130 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:29:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730629AbfFQV26 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:28:58 -0400
+        id S1730625AbfFQV3B (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 900A22082C;
-        Mon, 17 Jun 2019 21:28:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C99620673;
+        Mon, 17 Jun 2019 21:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806938;
-        bh=ZWpMkuWmbfLwj0OMCJk7OZbjBGU0Sjk3VHvoQX/itak=;
+        s=default; t=1560806940;
+        bh=tat8kJLMMzp6+0dG0uqa4TISq6Ol7sETiiDu8zf1xgQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UC2BUCuX0IjK7wyTkFA6HcQDdwKGnuLYQTecdDWzuu0oEt1J8G9jqZ2tqrV7uBK4W
-         ekx65/De2tXWXsr9NCZw9upZM8p4Db+VoOiAJx0ILPmkwgC+POLAr4hBN76p4KyTvK
-         LvbiyJVuBumRgWpLNkel+BNnvtu2rN0B9w80wtg8=
+        b=EKSV1bZ91fNRHUjL1sIfcfOtKH8vjqtMbtkocD/OHFolSxbIL13SM40TWzR9/f+wj
+         zF/0K5rG5a/d8pZx1JEnG1blIz183mT9Zq2kLe0T0u47BKeEkd8ZbtPOBOyFHwH95N
+         NAO7TuQrYxzbHFYIhqmkywdzUrsHWDMAAOItPjJs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
+        Saurav Kashyap <skashyap@marvell.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/53] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table
-Date:   Mon, 17 Jun 2019 23:10:17 +0200
-Message-Id: <20190617210751.371574901@linuxfoundation.org>
+Subject: [PATCH 4.14 35/53] scsi: bnx2fc: fix incorrect cast to u64 on shift operation
+Date:   Mon, 17 Jun 2019 23:10:18 +0200
+Message-Id: <20190617210751.446729352@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -61,56 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6423bd03031c020121da26c41a26bd5cc6d0da3 ]
+[ Upstream commit d0c0d902339249c75da85fd9257a86cbb98dfaa5 ]
 
-There are several Beckhoff Automation industrial PC boards which use
-pmc_plt_clk* clocks for ethernet controllers. This adds affected boards
-to critclk_systems DMI table so the clocks are marked as CLK_CRITICAL and
-not turned off.
+Currently an int is being shifted and the result is being cast to a u64
+which leads to undefined behaviour if the shift is more than 31 bits. Fix
+this by casting the integer value 1 to u64 before the shift operation.
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Addresses-Coverity: ("Bad shift operation")
+Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Acked-by: Saurav Kashyap <skashyap@marvell.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/pmc_atom.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index e3e1f83a2dd7..d4d089c37944 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -443,6 +443,30 @@ static const struct dmi_system_id critclk_systems[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
- 		},
- 	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB3163",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB6263",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB6263"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB6363",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
-+		},
-+	},
- 	{ /*sentinel*/ }
- };
- 
+diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+index 26de61d65a4d..1bdff75ae903 100644
+--- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
++++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
+@@ -830,7 +830,7 @@ ret_err_rqe:
+ 			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
+ 			(u64)err_entry->data.err_warn_bitmap_lo;
+ 		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
+-			if (err_warn_bit_map & (u64) (1 << i)) {
++			if (err_warn_bit_map & ((u64)1 << i)) {
+ 				err_warn = i;
+ 				break;
+ 			}
 -- 
 2.20.1
 
