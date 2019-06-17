@@ -2,53 +2,88 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A75DBC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0448AC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846F72084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D085F2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729146AbfFQTyj (ORCPT
+        id S1729158AbfFQTyu convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:54:39 -0400
-Received: from verein.lst.de ([213.95.11.211]:40590 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729128AbfFQTyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:54:36 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 306A367358; Mon, 17 Jun 2019 21:54:05 +0200 (CEST)
-Date:   Mon, 17 Jun 2019 21:54:04 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 07/25] memremap: validate the pagemap type passed to
- devm_memremap_pages
-Message-ID: <20190617195404.GA20275@lst.de>
-References: <20190617122733.22432-1-hch@lst.de> <20190617122733.22432-8-hch@lst.de> <CAPcyv4hbGfOawfafqQ-L1CMr6OMFGmnDtdgLTXrgQuPxYNHA2w@mail.gmail.com>
+        Mon, 17 Jun 2019 15:54:50 -0400
+Received: from lithops.sigma-star.at ([195.201.40.130]:54082 "EHLO
+        lithops.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727419AbfFQTyu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:54:50 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 50DCC6125473;
+        Mon, 17 Jun 2019 21:54:47 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id pX_4MBQoTrkS; Mon, 17 Jun 2019 21:54:45 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 9CE1A6125474;
+        Mon, 17 Jun 2019 21:54:45 +0200 (CEST)
+Received: from lithops.sigma-star.at ([127.0.0.1])
+        by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id L-9kwGPTSA4Y; Mon, 17 Jun 2019 21:54:45 +0200 (CEST)
+Received: from lithops.sigma-star.at (lithops.sigma-star.at [195.201.40.130])
+        by lithops.sigma-star.at (Postfix) with ESMTP id 717096125473;
+        Mon, 17 Jun 2019 21:54:45 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 21:54:45 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kjeld Flarup <kfa@deif.com>,
+        Patrick Havelange <patrick.havelange@essensium.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>
+Message-ID: <1644235064.95157.1560801285401.JavaMail.zimbra@nod.at>
+In-Reply-To: <e33254e5-3e8e-fc86-de72-b3dd2f6c310c@infradead.org>
+References: <e33254e5-3e8e-fc86-de72-b3dd2f6c310c@infradead.org>
+Subject: Re: [PATCH] counter: fix ftm-quaddec build error on UML
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4hbGfOawfafqQ-L1CMr6OMFGmnDtdgLTXrgQuPxYNHA2w@mail.gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+X-Originating-IP: [195.201.40.130]
+X-Mailer: Zimbra 8.8.8_GA_3025 (ZimbraWebClient - FF60 (Linux)/8.8.8_GA_1703)
+Thread-Topic: counter: fix ftm-quaddec build error on UML
+Thread-Index: eEfWTSXRju2JBcEkIrpay7AI04j7dg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:02:09PM -0700, Dan Williams wrote:
-> Need a lead in patch that introduces MEMORY_DEVICE_DEVDAX, otherwise:
+Hi!
 
-Or maybe a MEMORY_DEVICE_DEFAULT = 0 shared by fsdax and p2pdma?
+----- Ursprüngliche Mail -----
+> Von: "Randy Dunlap" <rdunlap@infradead.org>
+> An: "linux-kernel" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
+> CC: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Kjeld Flarup" <kfa@deif.com>, "Patrick Havelange"
+> <patrick.havelange@essensium.com>, "William Breathitt Gray" <vilhelm.gray@gmail.com>, "richard" <richard@nod.at>
+> Gesendet: Montag, 17. Juni 2019 18:21:40
+> Betreff: [PATCH] counter: fix ftm-quaddec build error on UML
+
+> From: Randy Dunlap <rdunlap@infradead.org>
+> 
+> Fix build error on user-mode Linux, which does not set HAS_IOMEM,
+> so devm_ioremap() is not available.  Fixes this build error:
+> 
+> ERROR: "devm_ioremap" [drivers/counter/ftm-quaddec.ko] undefined!
+> 
+> Fixes: a3b9a99980d9 ("counter: add FlexTimer Module Quadrature decoder counter
+> driver")
+> 
+> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+
+AFAICT Patrick fixed this already.
+
+Thanks,
+//richard
