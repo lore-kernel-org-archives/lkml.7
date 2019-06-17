@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07703C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05BD8C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D41E820861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E992084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="b/Db0BK2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WbZMNH56"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727691AbfFQMU2 (ORCPT
+        id S1727545AbfFQMUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:20:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59252 "EHLO
+        Mon, 17 Jun 2019 08:20:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59198 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727627AbfFQMUY (ORCPT
+        with ESMTP id S1727428AbfFQMUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:20:24 -0400
+        Mon, 17 Jun 2019 08:20:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=QmF+hMORbQndpCz32PB+cZz6ZyE8AYGsI14jgQiJTGk=; b=b/Db0BK20TJuwRjOioLVHLjfCP
-        h0tNT6G+x72Lb4VACGbEjLKCc2EuIorIcUIk9AjaDE40GJ1TGwMHfizV9PYWXJwG0aaxpjF6pssHC
-        n9KdkoApYCeHtw3BBhh3ksfCB0QgJ52hSU2Mz9QF8wrEXte7SlPAHC5AdHuL2Gqql87SxzSI2ivWh
-        9VdpkfuSLKJhmFJF3+1+1bolgO0OHXcQPBbYx10GjZxfvZLBw9JjG6NBOi6coBDLpbSZyVhmB4Lqr
-        wr8eE/xR16kTjIKNT7AOV9jfx2e8yqxuZTdBZ/Ev1K0ETjeySqndLq0HnXl8ymTavhst/9jyH3PK/
-        ZZ9NnB7A==;
+        bh=tcdrMn143Ts78QpGHmQeJDKDdB3ysuM20BTYoXIK2ys=; b=WbZMNH56ewuVfs/dzNTmQLvHdi
+        zfK3X8Cyjf8E7/DCsud9mKrqUTseRKQ8JgwzZ56tGuR+LwIbVBhrWgPE3QB3n/Ux9IKKDjhoGleOG
+        bil9Fs7KWBtBNEMV6EaA8p91CTmUj0EcQPjLdNApAaYGfZXJ2HZYb8EkqsEDtrkS3ZSk4LrO3zvt0
+        iTw0b8Qx+8GG9pYGVAfHcRAagg1hy5DUVIFwo5d+01Jek6vJN6tV8x3OeNoBhIUQIwIEJjhwMlxi2
+        JoazszsoqQx//nwLhMvzSGkbyKx3/mag8wD9rAMv4sUFqv/cI2w+ro81ba1ll3Ef+n/PcI6SD7G+d
+        k9uZsq4w==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqcY-0004hd-7k; Mon, 17 Jun 2019 12:20:22 +0000
+        id 1hcqcN-0004fd-4P; Mon, 17 Jun 2019 12:20:11 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "Martin K . Petersen" <martin.petersen@oracle.com>
 Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
@@ -45,9 +45,9 @@ Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
         linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
         megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
         linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 8/8] megaraid_sas: set an unlimited max_segment_size
-Date:   Mon, 17 Jun 2019 14:20:00 +0200
-Message-Id: <20190617122000.22181-9-hch@lst.de>
+Subject: [PATCH 3/8] ufshcd: set max_segment_size in the scsi host template
+Date:   Mon, 17 Jun 2019 14:19:55 +0200
+Message-Id: <20190617122000.22181-4-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190617122000.22181-1-hch@lst.de>
 References: <20190617122000.22181-1-hch@lst.de>
@@ -59,35 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using a virt_boundary_mask, as done for NVMe devices attached to
-megaraid_sas controllers we require an unlimited max_segment_size, as
-the virt boundary merging code assumes that.  But we also need to
-propagate that to the DMA mapping layer to make dma-debug happy.  The
-SCSI layer takes care of that when using the per-host virt_boundary
-setting, but given that megaraid_sas only wants to set the virt_boundary
-for actual NVMe devices we can't rely on that.  The DMA layer maximum
-segment is global to the HBA however, so we have to set it explicitly.
-This patch assumes that megaraid_sas does not have a segment size
-limitation, which seems true based on the SGL format, but will need
-to be verified.
+We need to also mirror the value to the device to ensure IOMMU merging
+doesn't undo it, and the SCSI host level parameter will ensure that.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- drivers/scsi/megaraid/megaraid_sas_base.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/scsi/ufs/ufshcd.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-index 3dd1df472dc6..59f709dbbab9 100644
---- a/drivers/scsi/megaraid/megaraid_sas_base.c
-+++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-@@ -3207,6 +3207,7 @@ static struct scsi_host_template megasas_template = {
- 	.shost_attrs = megaraid_host_attrs,
- 	.bios_param = megasas_bios_param,
- 	.change_queue_depth = scsi_change_queue_depth,
-+	.max_segment_size = 0xffffffff,
- 	.no_write_same = 1,
- };
+diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
+index 3fe3029617a8..505d625ed28d 100644
+--- a/drivers/scsi/ufs/ufshcd.c
++++ b/drivers/scsi/ufs/ufshcd.c
+@@ -4587,8 +4587,6 @@ static int ufshcd_slave_configure(struct scsi_device *sdev)
+ 	struct request_queue *q = sdev->request_queue;
  
+ 	blk_queue_update_dma_pad(q, PRDT_DATA_BYTE_COUNT_PAD - 1);
+-	blk_queue_max_segment_size(q, PRDT_DATA_BYTE_COUNT_MAX);
+-
+ 	return 0;
+ }
+ 
+@@ -6991,6 +6989,7 @@ static struct scsi_host_template ufshcd_driver_template = {
+ 	.sg_tablesize		= SG_ALL,
+ 	.cmd_per_lun		= UFSHCD_CMD_PER_LUN,
+ 	.can_queue		= UFSHCD_CAN_QUEUE,
++	.max_segment_size	= PRDT_DATA_BYTE_COUNT_MAX,
+ 	.max_host_blocked	= 1,
+ 	.track_queue_depth	= 1,
+ 	.sdev_groups		= ufshcd_driver_groups,
 -- 
 2.20.1
 
