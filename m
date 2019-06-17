@@ -2,209 +2,106 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3816C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:33:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35888C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B613F206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:33:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 155CA20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727876AbfFQNdP (ORCPT
+        id S1727941AbfFQNd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:33:15 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:54198 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfFQNdO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:33:14 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: tonyk)
-        with ESMTPSA id 28789282442
-From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-To:     linux-media@vger.kernel.org
-Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
-        kernel@collabora.com, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
-Subject: [PATCH v3 2/2] media: docs: create vimc documentation
-Date:   Mon, 17 Jun 2019 10:32:21 -0300
-Message-Id: <20190617133221.21246-2-andrealmeid@collabora.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617133221.21246-1-andrealmeid@collabora.com>
-References: <20190617133221.21246-1-andrealmeid@collabora.com>
+        Mon, 17 Jun 2019 09:33:27 -0400
+Received: from foss.arm.com ([217.140.110.172]:50190 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbfFQNd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:33:27 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7A2CC28;
+        Mon, 17 Jun 2019 06:33:26 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5AB533F246;
+        Mon, 17 Jun 2019 06:33:26 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 260E9682413; Mon, 17 Jun 2019 14:33:25 +0100 (BST)
+Date:   Mon, 17 Jun 2019 14:33:25 +0100
+From:   Liviu Dudau <liviu.dudau@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "James (Qian) Wang" <james.qian.wang@arm.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drm/komeda: fix 32-bit komeda_crtc_update_clock_ratio
+Message-ID: <20190617133325.GZ4173@e110455-lin.cambridge.arm.com>
+References: <20190617125121.1414507-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190617125121.1414507-1-arnd@arndb.de>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Create vimc documentation file to explain it basics features, it's
-topology, how to configure it and to document vimc's subdevices.
+On Mon, Jun 17, 2019 at 02:51:04PM +0200, Arnd Bergmann wrote:
+> clang points out a bug in the clock calculation on 32-bit, that leads
+> to the clock_ratio always being zero:
+> 
+> drivers/gpu/drm/arm/display/komeda/komeda_crtc.c:31:36: error: shift count >= width of type [-Werror,-Wshift-count-overflow]
+>         aclk = komeda_calc_aclk(kcrtc_st) << 32;
+> 
+> Move the shift into the division to make it apply on a 64-bit
+> variable. Also use the more expensive div64_u64() instead of div_u64()
+> to account for pxlclk being a 64-bit integer.
+> 
+> Fixes: a962091227ed ("drm/komeda: Add engine clock requirement check for the downscaling")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Signed-off-by: André Almeida <andrealmeid@collabora.com>
-Suggested-by: Helen Koike <helen.koike@collabora.com>
----
-Changes in v3: none
+Acked-by: Liviu Dudau <liviu.dudau@arm.com>
 
-Changes in v2:
-- Fix typos
-- Make clear what does means scale factor
+Thanks for the patch, I will pull it into the komeda tree.
 
- Documentation/media/v4l-drivers/index.rst |  1 +
- Documentation/media/v4l-drivers/vimc.dot  | 22 +++++
- Documentation/media/v4l-drivers/vimc.rst  | 98 +++++++++++++++++++++++
- 3 files changed, 121 insertions(+)
- create mode 100644 Documentation/media/v4l-drivers/vimc.dot
- create mode 100644 Documentation/media/v4l-drivers/vimc.rst
+Best regards,
+Liviu
 
-diff --git a/Documentation/media/v4l-drivers/index.rst b/Documentation/media/v4l-drivers/index.rst
-index 33a055907258..c4c78a28654c 100644
---- a/Documentation/media/v4l-drivers/index.rst
-+++ b/Documentation/media/v4l-drivers/index.rst
-@@ -64,5 +64,6 @@ For more details see the file COPYING in the source distribution of Linux.
- 	si476x
- 	soc-camera
- 	uvcvideo
-+	vimc
- 	vivid
- 	zr364xx
-diff --git a/Documentation/media/v4l-drivers/vimc.dot b/Documentation/media/v4l-drivers/vimc.dot
-new file mode 100644
-index 000000000000..57863a13fa39
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/vimc.dot
-@@ -0,0 +1,22 @@
-+# SPDX-License-Identifier: GPL-2.0
-+
-+digraph board {
-+	rankdir=TB
-+	n00000001 [label="{{} | Sensor A\n/dev/v4l-subdev0 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-+	n00000001:port0 -> n00000005:port0 [style=bold]
-+	n00000001:port0 -> n0000000b [style=bold]
-+	n00000003 [label="{{} | Sensor B\n/dev/v4l-subdev1 | {<port0> 0}}", shape=Mrecord, style=filled, fillcolor=green]
-+	n00000003:port0 -> n00000008:port0 [style=bold]
-+	n00000003:port0 -> n0000000f [style=bold]
-+	n00000005 [label="{{<port0> 0} | Debayer A\n/dev/v4l-subdev2 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-+	n00000005:port1 -> n00000017:port0
-+	n00000008 [label="{{<port0> 0} | Debayer B\n/dev/v4l-subdev3 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-+	n00000008:port1 -> n00000017:port0 [style=dashed]
-+	n0000000b [label="Raw Capture 0\n/dev/video0", shape=box, style=filled, fillcolor=yellow]
-+	n0000000f [label="Raw Capture 1\n/dev/video1", shape=box, style=filled, fillcolor=yellow]
-+	n00000013 [label="RGB/YUV Input\n/dev/video2", shape=box, style=filled, fillcolor=yellow]
-+	n00000013 -> n00000017:port0 [style=dashed]
-+	n00000017 [label="{{<port0> 0} | Scaler\n/dev/v4l-subdev4 | {<port1> 1}}", shape=Mrecord, style=filled, fillcolor=green]
-+	n00000017:port1 -> n0000001a [style=bold]
-+	n0000001a [label="RGB/YUV Capture\n/dev/video3", shape=box, style=filled, fillcolor=yellow]
-+}
-diff --git a/Documentation/media/v4l-drivers/vimc.rst b/Documentation/media/v4l-drivers/vimc.rst
-new file mode 100644
-index 000000000000..e235f806e252
---- /dev/null
-+++ b/Documentation/media/v4l-drivers/vimc.rst
-@@ -0,0 +1,98 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+The Virtual Media Controller Driver (vimc)
-+==========================================
-+
-+The vimc driver emulates complex video hardware using the V4L2 API and the Media
-+API. It has a capture device and three subdevices: sensor, debayer and scaler.
-+
-+Topology
-+--------
-+
-+The topology is hardcoded, although you could modify it in vimc-core and
-+recompile the driver to achieve your own topology. This is the default topology:
-+
-+.. _vimc_topology_graph:
-+
-+.. kernel-figure:: vimc.dot
-+    :alt:   vimc.dot
-+    :align: center
-+
-+    Media pipeline graph on vimc
-+
-+Configuring the topology
-+~~~~~~~~~~~~~~~~~~~~~~~~
-+
-+Each subdevice will come with its default configuration (pixelformat, height,
-+width, ...). One needs to configure the topology in order to match the
-+configuration on each linked subdevice to stream frames through the pipeline.
-+If the configuration doesn't match, the stream will fail. The ``v4l2-utils``
-+is a bundle of user-space applications, that comes with ``media-ctl`` and
-+``v4l2-ctl`` that can be used to configure the vimc configuration. This sequence
-+of commands fits for the default topology:
-+
-+.. code-block:: bash
-+
-+        media-ctl -d platform:vimc -V '"Sensor A":0[fmt:SBGGR8_1X8/640x480]'
-+        media-ctl -d platform:vimc -V '"Debayer A":0[fmt:SBGGR8_1X8/640x480]'
-+        media-ctl -d platform:vimc -V '"Sensor B":0[fmt:SBGGR8_1X8/640x480]'
-+        media-ctl -d platform:vimc -V '"Debayer B":0[fmt:SBGGR8_1X8/640x480]'
-+        v4l2-ctl -z platform:vimc -d "RGB/YUV Capture" -v width=1920,height=1440
-+        v4l2-ctl -z platform:vimc -d "Raw Capture 0" -v pixelformat=BA81
-+        v4l2-ctl -z platform:vimc -d "Raw Capture 1" -v pixelformat=BA81
-+
-+Subdevices
-+----------
-+
-+Subdevices define the behavior of an entity in the topology. Depending on the
-+subdevice, the entity can have multiple pads of type source or sink.
-+
-+vimc-sensor:
-+	Generates images in several formats using video test pattern generator.
-+	Exposes:
-+
-+	* 1 Pad source
-+
-+vimc-debayer:
-+	Transforms images in bayer format into a non-bayer format.
-+	Exposes:
-+
-+	* 1 Pad sink
-+	* 1 Pad source
-+
-+vimc-scaler:
-+	Scale up the image by a factor of 3. E.g.: a 640x480 image becomes a
-+        1920x1440 image. (this value can be configured, see at
-+        `Module options`_).
-+	Exposes:
-+
-+	* 1 Pad sink
-+	* 1 Pad source
-+
-+vimc-capture:
-+	Exposes node /dev/videoX to allow userspace to capture the stream.
-+	Exposes:
-+
-+	* 1 Pad sink
-+	* 1 Pad source
-+
-+Module options
-+---------------
-+
-+Vimc has a few module parameters to configure the driver. You should pass
-+those arguments to each subdevice, not to the vimc module. For example::
-+
-+        vimc_subdevice.param=value
-+
-+* ``vimc_scaler.sca_mult=<unsigned int>``
-+
-+        Image size multiplier factor to be used to multiply both width and
-+        height, so the image size will be ``sca_mult^2`` bigger than the
-+        original one. Currently, only supports scaling up (the default value
-+        is 3).
-+
-+* ``vimc_debayer.deb_mean_win_size=<unsigned int>``
-+
-+        Window size to calculate the mean. Note: the window size needs to be an
-+        odd number, as the main pixel stays in the center of the window,
-+        otherwise the next odd number is considered (the default value is 3).
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> index cafb4457e187..3f222f464eb2 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> @@ -28,10 +28,9 @@ static void komeda_crtc_update_clock_ratio(struct komeda_crtc_state *kcrtc_st)
+>  	}
+>  
+>  	pxlclk = kcrtc_st->base.adjusted_mode.clock * 1000;
+> -	aclk = komeda_calc_aclk(kcrtc_st) << 32;
+> +	aclk = komeda_calc_aclk(kcrtc_st);
+>  
+> -	do_div(aclk, pxlclk);
+> -	kcrtc_st->clock_ratio = aclk;
+> +	kcrtc_st->clock_ratio = div64_u64(aclk << 32, pxlclk);
+>  }
+>  
+>  /**
+> -- 
+> 2.20.0
+> 
+
 -- 
-2.22.0
-
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
