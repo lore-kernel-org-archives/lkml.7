@@ -2,141 +2,128 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3637AC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AAEDC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:50:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1464820657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E66B820861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:50:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BuTo/QN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726636AbfFQLs6 (ORCPT
+        id S1726355AbfFQLuX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:48:58 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46120 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbfFQLs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:48:57 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 443A130872E6;
-        Mon, 17 Jun 2019 11:48:57 +0000 (UTC)
-Received: from xz-x1 (ovpn-12-34.pek2.redhat.com [10.72.12.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D05847DF6F;
-        Mon, 17 Jun 2019 11:48:54 +0000 (UTC)
-Date:   Mon, 17 Jun 2019 19:48:51 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: Re: [PATCH v4 1/5] KVM: LAPIC: Make lapic timer unpinned
-Message-ID: <20190617114850.GC30983@xz-x1>
-References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
- <1560770687-23227-2-git-send-email-wanpengli@tencent.com>
+        Mon, 17 Jun 2019 07:50:23 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:37513 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725810AbfFQLuW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:50:22 -0400
+Received: by mail-lj1-f196.google.com with SMTP id 131so9002524ljf.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:50:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jUC3oAv954DDdM3Qoub7t5o8CIOFNWz/tUxECd+JQ9s=;
+        b=BuTo/QN7Xsk7pkbu1e9KTEhJat0l1vZhloCRxm0xW7p0PHAtECvTmN4DyRUvWnjY7F
+         425/HzaReo/WGxA2vRP+9whOnA8l5R7G/hCUShepGlHEpyWlnF0+klfqxV0Zkhi8Bz+0
+         jV4gq1J37BAZ3kW71udx4PVHTSDbvB43bURTwX7+6ZvcQpXKeN2toNqRAhr7RformkLw
+         6pgUeq7MQcctyJamYjgMyuyaJSaXDbS9aSDe2bU6HRcHWNpFKZb1PUVZ5EBagKifKxOf
+         +jrOWqbqJ4KyIlrZlv7VHhbJJqtfvDqgRIULjvBBernbELvj0uJYjzQabAfqGTX916DY
+         uIWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jUC3oAv954DDdM3Qoub7t5o8CIOFNWz/tUxECd+JQ9s=;
+        b=mF09FHh4ut++NuQRTj8Nc5N0pk5deKn/eFU/tfJdeetSqVmV717TcHE4amtq9FkyGs
+         0QA/RY43yhuHhxhcjI/Smd1Aea75fv+J5V+9U5A7Bqzz+l8RwF4dSO5sc5NEAAP+aPA5
+         bPQY16jVksrSgbSbUfskzobUZlbAAylb6HRF+7bYl2wC2gfHg6WUdvs7l+RAre+6STur
+         O/iKsI61RLeaB3jKykWLFhh1yvddBI/PgUaYRp8hPgWHqY7q1cQWrH1i6K6b/+l3iWd9
+         gUMz0QWcbpshCqTr7w5JfZvZBvkCo6PQ/Y90oIvyIw3V+/lVfPxN7J7N1P6fz4tMBOxz
+         ezjg==
+X-Gm-Message-State: APjAAAW6P3UrekzqmdnJHpd18t+0DVsIgAGjOVIKQmR0eRg7py3nFdQI
+        CX0EYysAL1k7lxgmTgx+bq57g9HhUIeI4+d5lfoqLQ==
+X-Google-Smtp-Source: APXvYqxc9icfPV6JO31y7/yaQv+ExXgLV0eomSpNfThNBkfv0HxBRb+mT8ya0W5DCcu8LUONsl0ZC4+8TIbqz0JTEG0=
+X-Received: by 2002:a2e:a0cf:: with SMTP id f15mr29112501ljm.180.1560772220963;
+ Mon, 17 Jun 2019 04:50:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560770687-23227-2-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 17 Jun 2019 11:48:57 +0000 (UTC)
+References: <20190611185102.368ED21744@mail.kernel.org> <671f87d6-f4a4-6d2c-967b-e1aa0677d83e@codeaurora.org>
+ <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
+In-Reply-To: <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Mon, 17 Jun 2019 13:50:09 +0200
+Message-ID: <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
+Subject: Re: Fwd: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
+To:     Neeraj Upadhyay <neeraju@codeaurora.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Tengfei Fan <tengfeif@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, sramana@codeaurora.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 07:24:43PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Make lapic timer unpinned when timer is injected by posted-interrupt,
+On Mon, Jun 17, 2019 at 12:35 PM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
 
-It has nothing to do with PI, yet?
+> Hi Stephen, there is one use case with is not covered by commit
+> b55326dc969e (
+>
+> "pinctrl: msm: Really mask level interrupts to prevent latching"). That
+> happens when
+>
+> gpio line is toggled between i/o mode and interrupt mode :
+>
+> 1. GPIO is configured as irq line. Peripheral raises interrupt.
+>
+> 2. IRQ handler runs and disables the irq line (through wq work).
+>
+> 3. GPIO is configured for input and and data is received from the
+> peripheral.
 
-And, how about mentioning 61abdbe0bc and telling that this could be
-another solution for that problem (but will be used in follow up
-patches)?
+There is no distinction between using a GPIO line as input
+and using it for IRQ. All input GPIOs can be used for IRQs,
+if the hardware supports it (has an irqchip).
 
-> the emulated timer can be offload to the housekeeping cpus, kick after 
-> setting the pending timer request as alternative to commit 61abdbe0bcc.
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c | 8 ++++----
->  arch/x86/kvm/x86.c   | 6 +-----
->  2 files changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index e82a18c..87ecb56 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1578,7 +1578,7 @@ static void start_sw_tscdeadline(struct kvm_lapic *apic)
->  	    likely(ns > apic->lapic_timer.timer_advance_ns)) {
->  		expire = ktime_add_ns(now, ns);
->  		expire = ktime_sub_ns(expire, ktimer->timer_advance_ns);
-> -		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS_PINNED);
-> +		hrtimer_start(&ktimer->timer, expire, HRTIMER_MODE_ABS);
->  	} else
->  		apic_timer_expired(apic);
->  
-> @@ -1680,7 +1680,7 @@ static void start_sw_period(struct kvm_lapic *apic)
->  
->  	hrtimer_start(&apic->lapic_timer.timer,
->  		apic->lapic_timer.target_expiration,
-> -		HRTIMER_MODE_ABS_PINNED);
-> +		HRTIMER_MODE_ABS);
->  }
->  
->  bool kvm_lapic_hv_timer_in_use(struct kvm_vcpu *vcpu)
-> @@ -2317,7 +2317,7 @@ int kvm_create_lapic(struct kvm_vcpu *vcpu, int timer_advance_ns)
->  	apic->vcpu = vcpu;
->  
->  	hrtimer_init(&apic->lapic_timer.timer, CLOCK_MONOTONIC,
-> -		     HRTIMER_MODE_ABS_PINNED);
-> +		     HRTIMER_MODE_ABS);
->  	apic->lapic_timer.timer.function = apic_timer_fn;
->  	if (timer_advance_ns == -1) {
->  		apic->lapic_timer.timer_advance_ns = 1000;
-> @@ -2506,7 +2506,7 @@ void __kvm_migrate_apic_timer(struct kvm_vcpu *vcpu)
->  
->  	timer = &vcpu->arch.apic->lapic_timer.timer;
->  	if (hrtimer_cancel(timer))
-> -		hrtimer_start_expires(timer, HRTIMER_MODE_ABS_PINNED);
-> +		hrtimer_start_expires(timer, HRTIMER_MODE_ABS);
->  }
->  
->  /*
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 0a05a4e..9450a16 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1437,12 +1437,8 @@ static void update_pvclock_gtod(struct timekeeper *tk)
->  
->  void kvm_set_pending_timer(struct kvm_vcpu *vcpu)
->  {
-> -	/*
-> -	 * Note: KVM_REQ_PENDING_TIMER is implicitly checked in
-> -	 * vcpu_enter_guest.  This function is only called from
-> -	 * the physical CPU that is running vcpu.
-> -	 */
->  	kvm_make_request(KVM_REQ_PENDING_TIMER, vcpu);
-> +	kvm_vcpu_kick(vcpu);
->  }
->  
->  static void kvm_write_wall_clock(struct kvm *kvm, gpa_t wall_clock)
-> -- 
-> 2.7.4
-> 
+> 4. Now, when GPIO is re-enabled as irq, we see spurious irq, and there
+> isn't
+>
+> any data received on the gpio line, when it is read back after
+> configuring as input.
 
-Regards,
+That's an interesting usecase. Hans Verkuil reworked the
+GPIO irq support very elegantly exactly to support this type
+of usecase (irq switch on and off dynamically), where he
+was even switching the line into output mode between
+the IRQ trains. (one-wire transcactions for CEC).
 
--- 
-Peter Xu
+> Patch https://lkml.org/lkml/2019/6/17/226 tries to cover this use case.
+> Can you please provide your comments?
+
+What this patch does is clear all pending IRQs at irq
+unmask. This is usually safe, unless there may be cases
+where you *want* to catch any pending IRQs. I guess
+normally you don't so it should be safe?
+
+The corner case is when you start some transaction
+or whatever that gets ACKed by an IRQ and you actually
+get the IRQ back before you had time to execute the code
+enabling the IRQ.
+
+That would be racy and bad code, as you should clearly
+enable the IRQ first, then start the transaction. So I think
+this patch is safe.
+
+But let's see what Bjorn says.
+
+Yours,
+Linus Walleij
