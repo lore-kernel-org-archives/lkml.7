@@ -2,153 +2,68 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD2BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:08:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA3E4C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC3921855
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:08:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560791322;
-	bh=5R6xDskFo1W1bXui/OcZCdDdAlnmmhG5gfSqm8uvSoE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=PenDfQJ3q6GnWstrbYmPEWRYBXvaVqPfSF6UGLNXngWdA5mePZZbqLTR5g9/jrwud
-	 RifH9+x0Fwq5eVWrRf3wVq1llwPM8ECrq+fnI1VQ1ON1hTs/fXrN04E18tg/PET7d4
-	 lQ1JuUSVKN55z3Qmx/5D2KGzISHXLoSSfD23octU=
+	by mail.kernel.org (Postfix) with ESMTP id 82EE02084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:09:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Qgnf5gK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728619AbfFQRIl (ORCPT
+        id S1728148AbfFQRJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 13:08:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52308 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 13:09:52 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33854 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728236AbfFQRIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:08:41 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0F57521783
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 17:08:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560791320;
-        bh=5R6xDskFo1W1bXui/OcZCdDdAlnmmhG5gfSqm8uvSoE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=xYdijfmfTphWyPXH20r+WsQV/8bkdrpNf5ibbWfFWcolh4o7lgLLyHNhUoOcMFVw8
-         +WYXkUoR55tMro4HvvFV1GRH5zTPG3gIVxqy74/sPuKECJfSLHHxgnUluE5iRUKpj/
-         NRTZo4RmfdcET+NZD2Qm2k1y2o3YBjTLJ4ayCuCA=
-Received: by mail-wr1-f41.google.com with SMTP id k11so10827784wrl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 10:08:39 -0700 (PDT)
-X-Gm-Message-State: APjAAAVgvkMEsTGU4BJ7mrcHpsP1tu+1JawPpKxku9TZfmjZ1+MbMsRK
-        tljVlk7NLtUSthTZC/BmIOCUCfu5pODy7esZhjtW7g==
-X-Google-Smtp-Source: APXvYqwJHAurY7hvHw2/82bN4jOKbE4ziYeXFj4WJqCoYJI/jl9Qcr06/LypPNy+GyRTR0MD+ZEmtD8+BcxUgcL5e8E=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr10588715wro.343.1560791317691;
- Mon, 17 Jun 2019 10:08:37 -0700 (PDT)
+        id S1726047AbfFQRJv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:09:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=uS9tcbuzM74Tnp95/jr2g8D6vZqSCnR3ThHPQVUFsdw=; b=Qgnf5gK33ITbHZlPmUqn+3zpvx
+        QR3lSlUMuN2QO7Ykf88M/bz/LvjINl3Io9q2uMSwU2OXayJYkvJn/W8OIrXpnOkqWTNKTznWPr6dv
+        tUB0bdf3wlnMrB1AuGHwInJ6ImP6BF5cL+GFCwVMyfYRGxoc5BrlNJCuFgXY0p0AaeyM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hcv8N-0001xo-Na; Mon, 17 Jun 2019 19:09:31 +0200
+Date:   Mon, 17 Jun 2019 19:09:31 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linus.walleij@linaro.org,
+        jason@lakedaemon.net, gregory.clement@bootlin.com,
+        sebastian.hesselbarth@gmail.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH 2/4] dt-bindings: clock: mvebu: Add compatible string for
+ 98dx1135 core clock
+Message-ID: <20190617170931.GG17551@lunn.ch>
+References: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
+ <20190617100432.13037-3-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-References: <cover.1560131039.git.cedric.xing@intel.com> <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov> <20190611220243.GB3416@linux.intel.com>
- <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov> <20190614004600.GF18385@linux.intel.com>
- <20190614153840.GC12191@linux.intel.com> <CALCETrXcOQkvMHdh5DgdQ6JAgzsZCNFVEtnQz-5RbNr4vsadDQ@mail.gmail.com>
- <20190617164915.GA25085@linux.intel.com>
-In-Reply-To: <20190617164915.GA25085@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 17 Jun 2019 10:08:26 -0700
-X-Gmail-Original-Message-ID: <CALCETrW9Mt70UY3NWGQq3rpxCxSpR4GfsBgt0jTib3bNDMTXkw@mail.gmail.com>
-Message-ID: <CALCETrW9Mt70UY3NWGQq3rpxCxSpR4GfsBgt0jTib3bNDMTXkw@mail.gmail.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in SELinux
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Cedric Xing <cedric.xing@intel.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        selinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        pmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617100432.13037-3-chris.packham@alliedtelesis.co.nz>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 9:49 AM Sean Christopherson
-<sean.j.christopherson@intel.com> wrote:
->
-> On Sun, Jun 16, 2019 at 03:14:51PM -0700, Andy Lutomirski wrote:
-> > On Fri, Jun 14, 2019 at 8:38 AM Sean Christopherson
-> > <sean.j.christopherson@intel.com> wrote:
-> > > > Andy and/or Cedric, can you please weigh in with a concrete (and practical)
-> > > > use case that will break if we go with #1?  The auditing issues for #2/#3
-> > > > are complex to say the least...
-> >
-> > The most significant issue I see is the following.  Consider two
-> > cases. First, an SGX2 enclave that dynamically allocates memory but
-> > doesn't execute code from dynamic memory.  Second, an SGX2 enclave
-> > that *does* execute code from dynamic memory.  In #1, the untrusted
-> > stack needs to decide whether to ALLOW_EXEC when the memory is
-> > allocated, which means that it either needs to assume the worst or it
-> > needs to know at allocation time whether the enclave ever intends to
-> > change the permission to X.
->
-> I'm just not convinced that folks running enclaves that can't communicate
-> their basic functionality will care one whit about SELinux restrictions,
-> i.e. will happily give EXECMOD even if it's not strictly necessary.
+On Mon, Jun 17, 2019 at 10:04:30PM +1200, Chris Packham wrote:
+> Add compatible string for the core clock on the 98dx1135 switch with
+> integrated CPU.
 
-At least when permissions are learned, if there's no ALLOW_EXEC for
-EAUG, then EXECMOD won't get learned if there's no eventual attempt to
-execute the memory.
+Hi Chris
 
->
-> > I suppose there's a middle ground.  The driver could use model #1 for
-> > driver-filled pages and model #2 for dynamic pages.  I haven't tried
-> > to fully work it out, but I think there would be the ALLOW_READ /
-> > ALLOW_WRITE / ALLOW_EXEC flag for EADD-ed pages but, for EAUG-ed
-> > pages, there would be a different policy.  This might be as simple as
-> > internally having four flags instead of three:
-> >
-> > ALLOW_READ, ALLOW_WRITE, ALLOW_EXEC: as before
-> >
-> > ALLOW_EXEC_COND: set implicitly by the driver for EAUG.
-> >
-> > As in #1, if you try to mmap or protect a page with neither ALLOW_EXEC
-> > variant, it fails (-EACCES, perhaps).  But, if you try to mmap or
-> > mprotect an ALLOW_EXEC_COND page with PROT_EXEC, you ask LSM for
-> > permission.  There is no fancy DIRTY tracking here, since it's
-> > reasonable to just act as though *every* ALLOW_EXEC_COND page is
-> > dirty.  There is no real auditing issue here, since LSM can just log
-> > what permission is missing.
-> >
-> > Does this seem sensible?  It might give us the best of #1 and #2.
->
-> It would work and is easy to implement *if* SELinux ties permissions to
-> the process, as the SIGSTRUCT vma/file won't be available at
-> EAUG+mprotect().  I already have a set of patches to that effect, I'll
-> send 'em out in a bit.
+Should there be a list of provider IDs and clock names?
 
-I'm okay with that.
-
->
-> FWIW, we still need to differentiate W->X from WX on SGX1, i.e. declaring
-> ALLOW_WRITE + ALLOW_EXEC shouldn't imply WX.  This is also addressed in
-> the forthcoming updated RFC.
-
-Sounds good.
+Thanks
+	Andrew
