@@ -2,56 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A64BCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE2EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 709DC206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001F92070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806621;
-	bh=B1zwTSDONWABOLKYkfAxJ8lPwHHjtB7Eafy5TrOALlQ=;
+	s=default; t=1560806628;
+	bh=yFz7mf582VIah1G03076oUHRNaFg2u1aaFc2TEYEWfM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RjYVoCSYulWPoWrrYikLp83jynFd8DsL0LLlYAyX43KLbbXjI2yeU5G6S83lr9uTZ
-	 oISyOj17gWx82xRhlfr5u+R4pE3D/Dp5bCwM/HHS33O5IeG4zB6HXbpiTXVG11N+JR
-	 v5/0yBaoZlWTGjJ8ng5J8Qo2pZ6xvgy07ZVdR+AA=
+	b=Ez1PA5X/BIxn3NWM1x8x2ADzMgNh5jXL+TT6pNTN4aIB2U/oDHToelpWQsGwaXy9v
+	 JTDZsX0IYRV7aVB++5+a8hTSNe2wFESTwgw3lTfJbOeu7oX3BgDV6DOYnuTrvCLBf6
+	 crgLjQYAty38Rc1+LHIdmiwSwArIhp+wVEu6ftzM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729387AbfFQVXk (ORCPT
+        id S1729792AbfFQVXq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:23:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48792 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:23:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729749AbfFQVXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:23:37 -0400
+        id S1729407AbfFQVXo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:23:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B2DE206B7;
-        Mon, 17 Jun 2019 21:23:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32148206B7;
+        Mon, 17 Jun 2019 21:23:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806615;
-        bh=B1zwTSDONWABOLKYkfAxJ8lPwHHjtB7Eafy5TrOALlQ=;
+        s=default; t=1560806623;
+        bh=yFz7mf582VIah1G03076oUHRNaFg2u1aaFc2TEYEWfM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KPc4UpA7kZRGR2uGiG0BlWe6Bl+2DXv8rKLaLFA9njoZyXOQtNwBS5HyyaqurYOIY
-         tiOSFmyMZYjstfvzmmsZEFMGCxMv6EbV1Ofw5WDQbD4OtPDJmWEQ04Dv9Dc8Nra7Yt
-         sOe6eh2gojsj6zUuP0PKgjstfw2J9hTZD8B+bkj4=
+        b=SEuc7RN/NYG9m/56xR8lGD6YL0zOC7EeyoILy3e3K9+ZsGH6+6JoBeH6NV4SJh/2p
+         1vdxOm5iLTd4x0l9bh2GJhvWSFbEUVbAMQ/kff5xKak/9SEAC/ZsMWzD9diTGC4PwO
+         42AYIOZAZkf+Sxj6beiCKmE2NgyW7GYrxTGn5Jl8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Wise <pabs3@bonedaddy.net>,
-        =?UTF-8?q?Ilpo=20J=C3=A4rvinen?= <ilpo.jarvinen@cs.helsinki.fi>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Harish Chegondi <harish.chegondi@intel.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.1 113/115] drm: add fallback override/firmware EDID modes workaround
-Date:   Mon, 17 Jun 2019 23:10:13 +0200
-Message-Id: <20190617210805.622907792@linuxfoundation.org>
+        stable@vger.kernel.org, Andrew Jones <drjones@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 092/115] kvm: selftests: aarch64: dirty_log_test: fix unaligned memslot size
+Date:   Mon, 17 Jun 2019 23:09:52 +0200
+Message-Id: <20190617210804.625344902@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -64,139 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jani Nikula <jani.nikula@intel.com>
+[ Upstream commit bffed38d4fb536c5d5d6c37846a7fb8fde1452fa ]
 
-commit 48eaeb7664c76139438724d520a1ea4a84a3ed92 upstream.
+The memory slot size must be aligned to the host's page size. When
+testing a guest with a 4k page size on a host with a 64k page size,
+then 3 guest pages are not host page size aligned. Since we just need
+a nearly arbitrary number of extra pages to ensure the memslot is not
+aligned to a 64 host-page boundary for this test, then we can use
+16, as that's 64k aligned, but not 64 * 64k aligned.
 
-We've moved the override and firmware EDID (simply "override EDID" from
-now on) handling to the low level drm_do_get_edid() function in order to
-transparently use the override throughout the stack. The idea is that
-you get the override EDID via the ->get_modes() hook.
-
-Unfortunately, there are scenarios where the DDC probe in drm_get_edid()
-called via ->get_modes() fails, although the preceding ->detect()
-succeeds.
-
-In the case reported by Paul Wise, the ->detect() hook,
-intel_crt_detect(), relies on hotplug detect, bypassing the DDC. In the
-case reported by Ilpo Järvinen, there is no ->detect() hook, which is
-interpreted as connected. The subsequent DDC probe reached via
-->get_modes() fails, and we don't even look at the override EDID,
-resulting in no modes being added.
-
-Because drm_get_edid() is used via ->detect() all over the place, we
-can't trivially remove the DDC probe, as it leads to override EDID
-effectively meaning connector forcing. The goal is that connector
-forcing and override EDID remain orthogonal.
-
-Generally, the underlying problem here is the conflation of ->detect()
-and ->get_modes() via drm_get_edid(). The former should just detect, and
-the latter should just get the modes, typically via reading the EDID. As
-long as drm_get_edid() is used in ->detect(), it needs to retain the DDC
-probe. Or such users need to have a separate DDC probe step first.
-
-The EDID caching between ->detect() and ->get_modes() done by some
-drivers is a further complication that prevents us from making
-drm_do_get_edid() adapt to the two cases.
-
-Work around the regression by falling back to a separate attempt at
-getting the override EDID at drm_helper_probe_single_connector_modes()
-level. With a working DDC and override EDID, it'll never be called; the
-override EDID will come via ->get_modes(). There will still be a failing
-DDC probe attempt in the cases that require the fallback.
-
-v2:
-- Call drm_connector_update_edid_property (Paul)
-- Update commit message about EDID caching (Daniel)
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=107583
-Reported-by: Paul Wise <pabs3@bonedaddy.net>
-Cc: Paul Wise <pabs3@bonedaddy.net>
-Reported-by: Ilpo Järvinen <ilpo.jarvinen@cs.helsinki.fi>
-Cc: Ilpo Järvinen <ilpo.jarvinen@cs.helsinki.fi>
-Suggested-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Fixes: 53fd40a90f3c ("drm: handle override and firmware EDID at drm_do_get_edid() level")
-Cc: <stable@vger.kernel.org> # v4.15+ 56a2b7f2a39a drm/edid: abstract override/firmware EDID retrieval
-Cc: <stable@vger.kernel.org> # v4.15+
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Harish Chegondi <harish.chegondi@intel.com>
-Tested-by: Paul Wise <pabs3@bonedaddy.net>
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190610093054.28445-1-jani.nikula@intel.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 76d58e0f07ec ("KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned size", 2019-04-17)
+Signed-off-by: Andrew Jones <drjones@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/drm_edid.c         |   30 ++++++++++++++++++++++++++++++
- drivers/gpu/drm/drm_probe_helper.c |    7 +++++++
- include/drm/drm_edid.h             |    1 +
- 3 files changed, 38 insertions(+)
+ tools/testing/selftests/kvm/dirty_log_test.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/drm_edid.c
-+++ b/drivers/gpu/drm/drm_edid.c
-@@ -1595,6 +1595,36 @@ static struct edid *drm_get_override_edi
- }
- 
- /**
-+ * drm_add_override_edid_modes - add modes from override/firmware EDID
-+ * @connector: connector we're probing
-+ *
-+ * Add modes from the override/firmware EDID, if available. Only to be used from
-+ * drm_helper_probe_single_connector_modes() as a fallback for when DDC probe
-+ * failed during drm_get_edid() and caused the override/firmware EDID to be
-+ * skipped.
-+ *
-+ * Return: The number of modes added or 0 if we couldn't find any.
-+ */
-+int drm_add_override_edid_modes(struct drm_connector *connector)
-+{
-+	struct edid *override;
-+	int num_modes = 0;
-+
-+	override = drm_get_override_edid(connector);
-+	if (override) {
-+		drm_connector_update_edid_property(connector, override);
-+		num_modes = drm_add_edid_modes(connector, override);
-+		kfree(override);
-+
-+		DRM_DEBUG_KMS("[CONNECTOR:%d:%s] adding %d modes via fallback override/firmware EDID\n",
-+			      connector->base.id, connector->name, num_modes);
-+	}
-+
-+	return num_modes;
-+}
-+EXPORT_SYMBOL(drm_add_override_edid_modes);
-+
-+/**
-  * drm_do_get_edid - get EDID data using a custom EDID block read function
-  * @connector: connector we're probing
-  * @get_edid_block: EDID block read function
---- a/drivers/gpu/drm/drm_probe_helper.c
-+++ b/drivers/gpu/drm/drm_probe_helper.c
-@@ -479,6 +479,13 @@ retry:
- 
- 	count = (*connector_funcs->get_modes)(connector);
- 
-+	/*
-+	 * Fallback for when DDC probe failed in drm_get_edid() and thus skipped
-+	 * override/firmware EDID.
-+	 */
-+	if (count == 0 && connector->status == connector_status_connected)
-+		count = drm_add_override_edid_modes(connector);
-+
- 	if (count == 0 && connector->status == connector_status_connected)
- 		count = drm_add_modes_noedid(connector, 1024, 768);
- 	count += drm_helper_probe_add_cmdline_mode(connector);
---- a/include/drm/drm_edid.h
-+++ b/include/drm/drm_edid.h
-@@ -465,6 +465,7 @@ struct edid *drm_get_edid_switcheroo(str
- 				     struct i2c_adapter *adapter);
- struct edid *drm_edid_duplicate(const struct edid *edid);
- int drm_add_edid_modes(struct drm_connector *connector, struct edid *edid);
-+int drm_add_override_edid_modes(struct drm_connector *connector);
- 
- u8 drm_match_cea_mode(const struct drm_display_mode *to_match);
- enum hdmi_picture_aspect drm_get_cea_aspect_ratio(const u8 video_code);
+diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
+index 93f99c6b7d79..a2542ed42819 100644
+--- a/tools/testing/selftests/kvm/dirty_log_test.c
++++ b/tools/testing/selftests/kvm/dirty_log_test.c
+@@ -292,7 +292,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
+ 	 * A little more than 1G of guest page sized pages.  Cover the
+ 	 * case where the size is not aligned to 64 pages.
+ 	 */
+-	guest_num_pages = (1ul << (30 - guest_page_shift)) + 3;
++	guest_num_pages = (1ul << (30 - guest_page_shift)) + 16;
+ 	host_page_size = getpagesize();
+ 	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
+ 			 !!((guest_num_pages * guest_page_size) % host_page_size);
+-- 
+2.20.1
+
 
 
