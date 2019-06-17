@@ -7,53 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 326ADC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0ECBC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0826F20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99F9520833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560785063;
-	bh=GIOIZS5NG/Iq/9tqWRegDBfQkb/hacgBx2BrwLFwSow=;
+	s=default; t=1560785066;
+	bh=cWAt8YpgTE3dLssIXuGyG8/sirpsLWNjKLmV3zSCO3o=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=RSJhCRCNcPZQ6HrChMgd/n66fZkXA7gp9bhfr+WahHZW4D4WM3bT9PSmhqufVbQc8
-	 hyVveIPfkBJFekRiF4aNpr7lht4riaIF6pjCpL0erQZvvrMLIFYFXeweTRhqwl6Fts
-	 b45avoKl3BLAdiXLYqH1oClPd/c/f2eswQCLeCCo=
+	b=c778c1b45u9zLE4iWC24N6RMHC1e16seKjhQCIH9GGqxLJ3Rtctkit/aTiqY84asa
+	 690a0eIytQJQtCXksolfn7sTXmRCUjBgl3MbdnzSQPRroep1beEbB0OobPoGeouVVw
+	 ai9GoJ3N+7Siq8cddmerRaCxntQlsa/vvDTNFGx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfFQPYV (ORCPT
+        id S1728537AbfFQPYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:24:21 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51108 "EHLO
+        Mon, 17 Jun 2019 11:24:25 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51164 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQPYU (ORCPT
+        with ESMTP id S1728507AbfFQPYY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:24:20 -0400
+        Mon, 17 Jun 2019 11:24:24 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=it1kr7G1wlh1P22+SaO0uRfhU0JKkzwSA2wuovs4jF0=; b=jtD/gwDGkvm6
-        R6q64Us9xmw21xC57TOxF42gxJkYUXBIC4wudEgmZFXBjePk9E1sWv2dyJvLsPslx7MWstlHX31oy
-        eDD0eQQjGXR1JABfOt5TmO4Mvo4Oxa1/bk0EQA0ypCPfzLe12aY+567WK+kbb/DCcVHuU4PHGh6Us
-        NOPRQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        List-Archive; bh=UJRWJ09xP8ootXMPZbq+lZFFHZl9CzFTpyiDR3ZdmWY=; b=SBSudCfs52nT
+        rQwg8QArgmgTqBMDqy1eqmjMImJfunmIiiVoAhHVL15oPz/wqMH4LYzExDvsR9X33l25FaUdaGmtp
+        UOG0oaK3L2sh8y3RaGUGp3yaYytPbJ+2xs042nC8k37o2VBFCyfH6dk3cW62sYgP7ygE+NiT3ChWd
+        LOBV4=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hctUV-0001wj-KA; Mon, 17 Jun 2019 15:24:15 +0000
+        id 1hctUY-0001x0-5u; Mon, 17 Jun 2019 15:24:18 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 2AD7D440046; Mon, 17 Jun 2019 16:24:15 +0100 (BST)
+        id 9FBC0440046; Mon, 17 Jun 2019 16:24:17 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: Add missing newline at end of file" to the asoc tree
-In-Reply-To: <20190617144048.5450-1-geert+renesas@glider.be>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     alsa-devel@alsa-project.org,
+        Kai Vehmanen <kai.vehmanen@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Zhu Yingjiang <yingjiang.zhu@linux.intel.com>
+Subject: Applied "ASoC: SOF: disallow building without CONFIG_PCI again" to the asoc tree
+In-Reply-To: <20190617124632.1176809-1-arnd@arndb.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190617152415.2AD7D440046@finisterre.sirena.org.uk>
-Date:   Mon, 17 Jun 2019 16:24:15 +0100 (BST)
+Message-Id: <20190617152417.9FBC0440046@finisterre.sirena.org.uk>
+Date:   Mon, 17 Jun 2019 16:24:17 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: Add missing newline at end of file
+   ASoC: SOF: disallow building without CONFIG_PCI again
 
 has been applied to the asoc tree at
 
@@ -86,57 +90,137 @@ to this mail.
 Thanks,
 Mark
 
-From 501e94b52aeda5841a60ceead5984ff575aeefa0 Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Mon, 17 Jun 2019 16:40:48 +0200
-Subject: [PATCH] ASoC: Add missing newline at end of file
+From 9de7eaddfa7f47fbb1cd9cdb9aab405599ef414e Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Mon, 17 Jun 2019 14:45:49 +0200
+Subject: [PATCH] ASoC: SOF: disallow building without CONFIG_PCI again
 
-"git diff" says:
+Compile-testing without PCI just causes warnings:
 
-    \ No newline at end of file
+sound/soc/sof/sof-pci-dev.c:330:13: error: 'sof_pci_remove' defined but not used [-Werror=unused-function]
+ static void sof_pci_remove(struct pci_dev *pci)
+             ^~~~~~~~~~~~~~
+sound/soc/sof/sof-pci-dev.c:230:12: error: 'sof_pci_probe' defined but not used [-Werror=unused-function]
+ static int sof_pci_probe(struct pci_dev *pci,
+            ^~~~~~~~~~~~~
 
-after modifying the files.
+I tried to fix this in a way that would still allow compile
+tests, but it got too ugly, so this just reverts the patch
+that allowed it in the first place.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Most architectures do allow enabling PCI, so the value of the
+COMPILE_TEST alternative was not very high to start with.
+
+Fixes: e13ef82a9ab8 ("ASoC: SOF: add COMPILE_TEST for PCI options")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/mediatek/common/Makefile | 2 +-
- sound/soc/tegra/Makefile           | 2 +-
- sound/usb/bcd2000/Makefile         | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ sound/soc/sof/Kconfig       |  2 +-
+ sound/soc/sof/intel/hda.c   | 13 ++-----------
+ sound/soc/sof/sof-pci-dev.c |  4 ----
+ 3 files changed, 3 insertions(+), 16 deletions(-)
 
-diff --git a/sound/soc/mediatek/common/Makefile b/sound/soc/mediatek/common/Makefile
-index 9ab90433a8d7..acbe01e9e928 100644
---- a/sound/soc/mediatek/common/Makefile
-+++ b/sound/soc/mediatek/common/Makefile
-@@ -3,4 +3,4 @@
- snd-soc-mtk-common-objs := mtk-afe-platform-driver.o mtk-afe-fe-dai.o
- obj-$(CONFIG_SND_SOC_MEDIATEK) += snd-soc-mtk-common.o
+diff --git a/sound/soc/sof/Kconfig b/sound/soc/sof/Kconfig
+index 1d4b4dced4b6..bc6d7b311af4 100644
+--- a/sound/soc/sof/Kconfig
++++ b/sound/soc/sof/Kconfig
+@@ -10,7 +10,7 @@ if SND_SOC_SOF_TOPLEVEL
  
--obj-$(CONFIG_SND_SOC_MTK_BTCVSD) += mtk-btcvsd.o
-\ No newline at end of file
-+obj-$(CONFIG_SND_SOC_MTK_BTCVSD) += mtk-btcvsd.o
-diff --git a/sound/soc/tegra/Makefile b/sound/soc/tegra/Makefile
-index 2329b72c93e3..c84f183919f2 100644
---- a/sound/soc/tegra/Makefile
-+++ b/sound/soc/tegra/Makefile
-@@ -37,4 +37,4 @@ obj-$(CONFIG_SND_SOC_TEGRA_WM9712) += snd-soc-tegra-wm9712.o
- obj-$(CONFIG_SND_SOC_TEGRA_TRIMSLICE) += snd-soc-tegra-trimslice.o
- obj-$(CONFIG_SND_SOC_TEGRA_ALC5632) += snd-soc-tegra-alc5632.o
- obj-$(CONFIG_SND_SOC_TEGRA_MAX98090) += snd-soc-tegra-max98090.o
--obj-$(CONFIG_SND_SOC_TEGRA_SGTL5000) += snd-soc-tegra-sgtl5000.o
-\ No newline at end of file
-+obj-$(CONFIG_SND_SOC_TEGRA_SGTL5000) += snd-soc-tegra-sgtl5000.o
-diff --git a/sound/usb/bcd2000/Makefile b/sound/usb/bcd2000/Makefile
-index f09ccc0af6ff..0a100310a671 100644
---- a/sound/usb/bcd2000/Makefile
-+++ b/sound/usb/bcd2000/Makefile
-@@ -1,3 +1,3 @@
- snd-bcd2000-y := bcd2000.o
+ config SND_SOC_SOF_PCI
+ 	tristate "SOF PCI enumeration support"
+-	depends on PCI || COMPILE_TEST
++	depends on PCI
+ 	select SND_SOC_SOF
+ 	select SND_SOC_ACPI if ACPI
+ 	select SND_SOC_SOF_OPTIONS
+diff --git a/sound/soc/sof/intel/hda.c b/sound/soc/sof/intel/hda.c
+index af546e42e1d9..8754dfe75000 100644
+--- a/sound/soc/sof/intel/hda.c
++++ b/sound/soc/sof/intel/hda.c
+@@ -525,9 +525,7 @@ int hda_dsp_probe(struct snd_sof_dev *sdev)
+ 	 * TODO: support interrupt mode selection with kernel parameter
+ 	 *       support msi multiple vectors
+ 	 */
+-#if IS_ENABLED(CONFIG_PCI)
+ 	ret = pci_alloc_irq_vectors(pci, 1, 1, PCI_IRQ_MSI);
+-#endif
+ 	if (ret < 0) {
+ 		dev_info(sdev->dev, "use legacy interrupt mode\n");
+ 		/*
+@@ -539,9 +537,7 @@ int hda_dsp_probe(struct snd_sof_dev *sdev)
+ 		sdev->msi_enabled = 0;
+ 	} else {
+ 		dev_info(sdev->dev, "use msi interrupt mode\n");
+-#if IS_ENABLED(CONFIG_PCI)
+ 		hdev->irq = pci_irq_vector(pci, 0);
+-#endif
+ 		/* ipc irq number is the same of hda irq */
+ 		sdev->ipc_irq = hdev->irq;
+ 		sdev->msi_enabled = 1;
+@@ -598,10 +594,8 @@ int hda_dsp_probe(struct snd_sof_dev *sdev)
+ free_hda_irq:
+ 	free_irq(hdev->irq, bus);
+ free_irq_vector:
+-#if IS_ENABLED(CONFIG_PCI)
+ 	if (sdev->msi_enabled)
+ 		pci_free_irq_vectors(pci);
+-#endif
+ free_streams:
+ 	hda_dsp_stream_free(sdev);
+ /* dsp_unmap: not currently used */
+@@ -616,6 +610,7 @@ int hda_dsp_remove(struct snd_sof_dev *sdev)
+ {
+ 	struct sof_intel_hda_dev *hda = sdev->pdata->hw_pdata;
+ 	struct hdac_bus *bus = sof_to_bus(sdev);
++	struct pci_dev *pci = to_pci_dev(sdev->dev);
+ 	const struct sof_intel_dsp_desc *chip = hda->desc;
  
--obj-$(CONFIG_SND_BCD2000) += snd-bcd2000.o
-\ No newline at end of file
-+obj-$(CONFIG_SND_BCD2000) += snd-bcd2000.o
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+@@ -644,12 +639,8 @@ int hda_dsp_remove(struct snd_sof_dev *sdev)
+ 
+ 	free_irq(sdev->ipc_irq, sdev);
+ 	free_irq(hda->irq, bus);
+-#if IS_ENABLED(CONFIG_PCI)
+-	if (sdev->msi_enabled) {
+-		struct pci_dev *pci = to_pci_dev(sdev->dev);
++	if (sdev->msi_enabled)
+ 		pci_free_irq_vectors(pci);
+-	}
+-#endif
+ 
+ 	hda_dsp_stream_free(sdev);
+ #if IS_ENABLED(CONFIG_SND_SOC_SOF_HDA)
+diff --git a/sound/soc/sof/sof-pci-dev.c b/sound/soc/sof/sof-pci-dev.c
+index ab58d4f9119f..e2b19782f01a 100644
+--- a/sound/soc/sof/sof-pci-dev.c
++++ b/sound/soc/sof/sof-pci-dev.c
+@@ -251,11 +251,9 @@ static int sof_pci_probe(struct pci_dev *pci,
+ 	if (!sof_pdata)
+ 		return -ENOMEM;
+ 
+-#if IS_ENABLED(CONFIG_PCI)
+ 	ret = pcim_enable_device(pci);
+ 	if (ret < 0)
+ 		return ret;
+-#endif
+ 
+ 	ret = pci_request_regions(pci, "Audio DSP");
+ 	if (ret < 0)
+@@ -388,7 +386,6 @@ static const struct pci_device_id sof_pci_ids[] = {
+ };
+ MODULE_DEVICE_TABLE(pci, sof_pci_ids);
+ 
+-#if IS_ENABLED(CONFIG_PCI)
+ /* pci_driver definition */
+ static struct pci_driver snd_sof_pci_driver = {
+ 	.name = "sof-audio-pci",
+@@ -400,6 +397,5 @@ static struct pci_driver snd_sof_pci_driver = {
+ 	},
+ };
+ module_pci_driver(snd_sof_pci_driver);
+-#endif
+ 
+ MODULE_LICENSE("Dual BSD/GPL");
 -- 
 2.20.1
 
