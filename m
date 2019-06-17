@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1362C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABCBAC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6BD12133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BF5120833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560785083;
-	bh=udmihUrKT6cE5uQwhkZeZb7XLzfwpr9DAHPFAuXUY00=;
+	s=default; t=1560785094;
+	bh=7uyDQvDWazF0fB/U8WRWirjR0cx/XnRRecaslnlrth4=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=QRnPV85NoCg1JApVgx+dbsDp2Ziy/eBc+WERRo57VS9Z30D3KgiXFxNNxvVRQ/54O
-	 CPOBidnYMLBV1rnPEELlR4q7WRUBMlhuU8h2uXyoZG6hgplMboHuVHnwIEOH9Nqccv
-	 pUdtjOCVJUXWbtJDC4SKVnMg6LjzJ8eE7gEYRLQA=
+	b=jCnIK9ek+kCUsz+EkZZrD8maLj93bBWHbxwYoIncZPApjJ66Of5fL7OnsRsYTbIL3
+	 Yo6h4oXHjiqgwV4gN6swxuiikqsK4biddqWk38Fe3vHFc9B4wuQZDIDfqupw1D8yCo
+	 UZMrIqWdq3E9QbCz8bt9gjVRmyr7ue5tM6Acha/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728610AbfFQPYm (ORCPT
+        id S1728643AbfFQPYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:24:42 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51786 "EHLO
+        Mon, 17 Jun 2019 11:24:53 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52094 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfFQPYj (ORCPT
+        with ESMTP id S1728602AbfFQPYt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:24:39 -0400
+        Mon, 17 Jun 2019 11:24:49 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=mXT3yitbyZnxBe2413FqA72JCo4Ve+k70RyNGsE2ah0=; b=DsEaMmLgI/f/
-        RcL7eLiDgWL7syjhVaMu5DTPGgIuM30Bqne7TAym74+VahqW3HA6XWlTsbn9G+t9ilirhHOPEMPQN
-        i6Ss1rbh1ee3ND8NLwEi8djYzMZ+xT225S0XkiqMhdTTaMrHjDcb67iK1DPBCBz/x0HpGeqUwJpSp
-        O7O5s=;
+        List-Archive; bh=BjW9HNHz5KOtc9NkCfpQrJY++tgx8ed1xcEUiVcmxgw=; b=jB1vsl8oPtHT
+        xPNUZhDDvuPNUwhZaHfdcjoBw2YJuEwKMG3h5FMXxGO1Uu58pLOoBNwv0OASzMiyYe3ejIL5tQLR0
+        BcxHv1cFfsk/7NL1YurTrJp/XxBXNynf1w5jovc3BSg2y/dV0IVsFHfl1AzNehTVplV8HDN5+233X
+        h3XsM=;
 Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hctUl-0001zG-4M; Mon, 17 Jun 2019 15:24:31 +0000
+        id 1hctV0-0001zm-8i; Mon, 17 Jun 2019 15:24:46 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 93BA7440046; Mon, 17 Jun 2019 16:24:30 +0100 (BST)
+        id B71F1440049; Mon, 17 Jun 2019 16:24:45 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     alsa-devel@alsa-project.org, Heiko Stuebner <heiko@sntech.de>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        Mark Brown <broonie@kernel.org>,
-        Sugar Zhang <sugar.zhang@rock-chips.com>
-Subject: Applied "ASoC: rockchip: pdm: select CONFIG_RATIONAL" to the asoc tree
-In-Reply-To: <20190617110415.2084205-1-arnd@arndb.de>
+To:     Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>, lgirdwood@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
+        robh+dt@kernel.org
+Subject: Applied "regulator: qcom_spmi: enable linear range info" to the regulator tree
+In-Reply-To: <20190613212531.10452-1-jeffrey.l.hugo@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190617152430.93BA7440046@finisterre.sirena.org.uk>
-Date:   Mon, 17 Jun 2019 16:24:30 +0100 (BST)
+Message-Id: <20190617152445.B71F1440049@finisterre.sirena.org.uk>
+Date:   Mon, 17 Jun 2019 16:24:45 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -65,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: rockchip: pdm: select CONFIG_RATIONAL
+   regulator: qcom_spmi: enable linear range info
 
-has been applied to the asoc tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -90,35 +90,43 @@ to this mail.
 Thanks,
 Mark
 
-From 41d92e0c835bff7dec343bf41e79d24b326d94c1 Mon Sep 17 00:00:00 2001
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Mon, 17 Jun 2019 13:03:51 +0200
-Subject: [PATCH] ASoC: rockchip: pdm: select CONFIG_RATIONAL
+From 86f4ff7a0c0cd8e391ffa4dd0edb82ae0eedcc9e Mon Sep 17 00:00:00 2001
+From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Date: Thu, 13 Jun 2019 14:25:30 -0700
+Subject: [PATCH] regulator: qcom_spmi: enable linear range info
 
-Without this, we get a link error:
-
-sound/soc/rockchip/rockchip_pdm.o: In function `rockchip_pdm_hw_params':
-rockchip_pdm.c:(.text+0x754): undefined reference to `rational_best_approximation'
-
-Fixes: 624e8e00acaf ("ASoC: rockchip: pdm: fixup pdm fractional div")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/rockchip/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/regulator/qcom_spmi-regulator.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/sound/soc/rockchip/Kconfig b/sound/soc/rockchip/Kconfig
-index 957046ac6c8c..d88555e0c389 100644
---- a/sound/soc/rockchip/Kconfig
-+++ b/sound/soc/rockchip/Kconfig
-@@ -19,6 +19,7 @@ config SND_SOC_ROCKCHIP_PDM
- 	tristate "Rockchip PDM Controller Driver"
- 	depends on CLKDEV_LOOKUP && SND_SOC_ROCKCHIP
- 	select SND_SOC_GENERIC_DMAENGINE_PCM
-+	select RATIONAL
- 	help
- 	  Say Y or M if you want to add support for PDM driver for
- 	  Rockchip PDM Controller. The Controller supports up to maximum of
+diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+index 53a61fb65642..42c429d50743 100644
+--- a/drivers/regulator/qcom_spmi-regulator.c
++++ b/drivers/regulator/qcom_spmi-regulator.c
+@@ -1744,6 +1744,7 @@ MODULE_DEVICE_TABLE(of, qcom_spmi_regulator_match);
+ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ {
+ 	const struct spmi_regulator_data *reg;
++	const struct spmi_voltage_range *range;
+ 	const struct of_device_id *match;
+ 	struct regulator_config config = { };
+ 	struct regulator_dev *rdev;
+@@ -1833,6 +1834,12 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 			}
+ 		}
+ 
++		if (vreg->set_points->count == 1) {
++			/* since there is only one range */
++			range = vreg->set_points->range;
++			vreg->desc.uV_step = range->step_uV;
++		}
++
+ 		config.dev = dev;
+ 		config.driver_data = vreg;
+ 		config.regmap = regmap;
 -- 
 2.20.1
 
