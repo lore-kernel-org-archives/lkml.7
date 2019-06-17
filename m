@@ -2,85 +2,105 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3F0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:17:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79682C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA1F20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:17:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D3AB20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:17:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="VJvdI4tE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728016AbfFQTR2 (ORCPT
+        id S1728707AbfFQTRc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 17 Jun 2019 15:17:32 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:47318 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFQTR2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 15:17:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38350 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfFQTR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:17:28 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 22EF32F8BD0;
-        Mon, 17 Jun 2019 19:17:28 +0000 (UTC)
-Received: from flask (unknown [10.43.2.199])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D15C27D65D;
-        Mon, 17 Jun 2019 19:17:25 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Mon, 17 Jun 2019 21:17:24 +0200
-Date:   Mon, 17 Jun 2019 21:17:24 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        vkuznets@redhat.com, stable@vger.kernel.org
-Subject: Re: [PATCH 22/43] KVM: nVMX: Don't dump VMCS if virtual APIC page
- can't be mapped
-Message-ID: <20190617191724.GA26860@flask>
-References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
- <1560445409-17363-23-git-send-email-pbonzini@redhat.com>
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HJDblY117470;
+        Mon, 17 Jun 2019 19:17:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=N0fZ/pjg81/eD/DCiE/Dh3t4JVgGmGh6DJ1D5AK3Z3Q=;
+ b=VJvdI4tE4D/3ZymNHHArHH/jlE8zJGuCXu4vIJnrNn4uTKYkE2Fy2wfCXYCehc/MU59c
+ s2Fut7gx4dYV5eVgbDHUthGgxIhhVUKyIXqvrN19IvvQML8XqdlyYWvFF2fEO0cQCPlW
+ MajN4wuAEWwcD+RHuuTlrK2ieId0HOijUDcB5JY2dvT+MMogmbHMGQacVeA/SsprrROp
+ wumbb14BZPZ2EL+Fw8Wy+8tJhF/19bpUXiLw+A1gfDnScj+VkRu+ozqKzXE/6RPIcw+U
+ ibhFBW0fZINkMFl2v/QyZygvgVIsaaWI4wD0LujG1BAeA2HZoJ0K2J2UvR3xvRoPbgIF Jg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2t4rmp09fh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 19:17:18 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HJGPBS155680;
+        Mon, 17 Jun 2019 19:17:18 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2t5mgbhd9u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 19:17:18 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5HJHG0a003467;
+        Mon, 17 Jun 2019 19:17:16 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 12:17:16 -0700
+Date:   Mon, 17 Jun 2019 22:17:08 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][V2] net: lio_core: fix potential sign-extension overflow
+ on large shift
+Message-ID: <20190617191708.GI28859@kadam>
+References: <20190617161249.28846-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560445409-17363-23-git-send-email-pbonzini@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 17 Jun 2019 19:17:28 +0000 (UTC)
+In-Reply-To: <20190617161249.28846-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906170171
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906170171
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-06-13 19:03+0200, Paolo Bonzini:
-> From: Sean Christopherson <sean.j.christopherson@intel.com>
+On Mon, Jun 17, 2019 at 05:12:49PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> ... as a malicious userspace can run a toy guest to generate invalid
-> virtual-APIC page addresses in L1, i.e. flood the kernel log with error
-> messages.
+> Left shifting the signed int value 1 by 31 bits has undefined behaviour
+> and the shift amount oq_no can be as much as 63.  Fix this by using
+> BIT_ULL(oq_no) instead.
 > 
-> Fixes: 690908104e39d ("KVM: nVMX: allow tests to use bad virtual-APIC page address")
-> Cc: stable@vger.kernel.org
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> Addresses-Coverity: ("Bad shift operation")
+> Fixes: f21fb3ed364b ("Add support of Cavium Liquidio ethernet adapters")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
 
-Makes me wonder why it looks like this in kvm/queue. :)
+Looks good.  Thanks!
 
-  commit 1971a835297f9098ce5a735d38916830b8313a65
-  Author:     Sean Christopherson <sean.j.christopherson@xxxxxxxxx>
-  AuthorDate: Tue May 7 09:06:26 2019 -0700
-  Commit:     Paolo Bonzini <pbonzini@redhat.com>
-  CommitDate: Thu Jun 13 16:23:13 2019 +0200
-  
-      KVM: nVMX: Don't dump VMCS if virtual APIC page can't be mapped
-      
-      ... as a malicious userspace can run a toy guest to generate invalid
-      virtual-APIC page addresses in L1, i.e. flood the kernel log with error
-      messages.
-      
-      Fixes: 690908104e39d ("KVM: nVMX: allow tests to use bad virtual-APIC page address")
-      Cc: stable@xxxxxxxxxxxxxxx
-      Cc: Paolo Bonzini <pbonzini@xxxxxxxxxx>
-      Signed-off-by: Sean Christopherson <sean.j.christopherson@xxxxxxxxx>
-      Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+
+regards,
+dan carpenter
+
