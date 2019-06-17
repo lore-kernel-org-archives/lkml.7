@@ -2,137 +2,131 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D76ECC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:31:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFA3C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:31:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7B64208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:31:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2034D208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:31:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfFQQbY (ORCPT
+        id S1728269AbfFQQb2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:31:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:55768 "EHLO foss.arm.com"
+        Mon, 17 Jun 2019 12:31:28 -0400
+Received: from smtp3.goneo.de ([85.220.129.37]:36582 "EHLO smtp3.goneo.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726336AbfFQQbY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:31:24 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3BA5E28;
-        Mon, 17 Jun 2019 09:31:23 -0700 (PDT)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.51])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 012AF3F718;
-        Mon, 17 Jun 2019 09:31:21 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 17:31:19 +0100
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Quentin Perret <quentin.perret@arm.com>
-Subject: Re: [PATCH v3 5/6] sched: Add sched_overutilized tracepoint
-Message-ID: <20190617163119.iawzbpc4pgsoljme@e107158-lin.cambridge.arm.com>
-References: <20190604111459.2862-1-qais.yousef@arm.com>
- <20190604111459.2862-6-qais.yousef@arm.com>
- <20190617155010.GH3436@hirez.programming.kicks-ass.net>
+        id S1726292AbfFQQbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:31:25 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by smtp3.goneo.de (Postfix) with ESMTP id DD80323F252;
+        Mon, 17 Jun 2019 18:31:21 +0200 (CEST)
+X-Virus-Scanned: by goneo
+Received: from smtp3.goneo.de ([127.0.0.1])
+        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id s76l7b57MjrH; Mon, 17 Jun 2019 18:31:20 +0200 (CEST)
+Received: from [192.168.10.227] (ip-109-91-78-216.hsi12.unitymediagroup.de [109.91.78.216])
+        by smtp3.goneo.de (Postfix) with ESMTPSA id 18BDE23F021;
+        Mon, 17 Jun 2019 18:31:20 +0200 (CEST)
+Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide
+ book
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+ <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org>
+ <87o930uvur.fsf@intel.com> <2955920a-3d6a-8e41-e8fe-b7db3cefed8b@darmarit.de>
+ <20190614081546.64101411@lwn.net>
+ <327067f6-2609-41e6-c987-e37620e7154e@darmarit.de>
+ <20190617061146.06975213@coco.lan>
+From:   Markus Heiser <markus.heiser@darmarit.de>
+Message-ID: <c3caf35e-9790-661f-e9db-0a050d31ca7d@darmarit.de>
+Date:   Mon, 17 Jun 2019 18:31:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190617155010.GH3436@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20190617061146.06975213@coco.lan>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/17/19 17:50, Peter Zijlstra wrote:
-> On Tue, Jun 04, 2019 at 12:14:58PM +0100, Qais Yousef wrote:
-> > The new tracepoint allows us to track the changes in overutilized
-> > status.
-> > 
-> > Overutilized status is associated with EAS. It indicates that the system
-> > is in high performance state. EAS is disabled when the system is in this
-> > state since there's not much energy savings while high performance tasks
-> > are pushing the system to the limit and it's better to default to the
-> > spreading behavior of the scheduler.
-> > 
-> > This tracepoint helps understanding and debugging the conditions under
-> > which this happens.
-> > 
-> > Signed-off-by: Qais Yousef <qais.yousef@arm.com>
-> > ---
-> >  include/trace/events/sched.h |  4 ++++
-> >  kernel/sched/fair.c          | 11 +++++++++--
-> >  2 files changed, 13 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
-> > index c7dd9bc7f001..edd96e04049f 100644
-> > --- a/include/trace/events/sched.h
-> > +++ b/include/trace/events/sched.h
-> > @@ -621,6 +621,10 @@ DECLARE_TRACE(pelt_se_tp,
-> >  	TP_PROTO(struct sched_entity *se),
-> >  	TP_ARGS(se));
-> >  
-> > +DECLARE_TRACE(sched_overutilized_tp,
-> > +	TP_PROTO(int overutilized, struct root_domain *rd),
-> > +	TP_ARGS(overutilized, rd));
-> > +
-> 
-> strictly speaking you only need @rd :-)
 
-Yes. Sorry my brain was hardwired this is overutilized event so we need to
-pass this info :-)
+Am 17.06.19 um 11:11 schrieb Mauro Carvalho Chehab:
+> Em Sun, 16 Jun 2019 18:04:01 +0200
+> Markus Heiser <markus.heiser@darmarit.de> escreveu:
+> 
+>> Am 14.06.19 um 16:15 schrieb Jonathan Corbet:
+>>> On Fri, 14 Jun 2019 16:10:31 +0200
+>>> Markus Heiser <markus.heiser@darmarit.de> wrote:
+>>>    
+>>>> I agree with Jani. No matter how the decision ends, since I can't help here, I'd
+>>>> rather not show up in the copyright.
+>>>
+>>> Is there something specific you are asking us to do here?
+>>>    
+>>
+>>
+>> I have lost the overview, but there was a patch Mauro added a
+>> kernel_abi.py.  There was my name (Markus Heiser) listed with a
+>> copyright notation.
+>>
+>> I guess Mauro picked up some old RFC or an other old patch of
+>> mine from 2016 and made some C&P .. whatever .. ATM I do not have
+>> time to give any support on parsing ABI and I'am not interested
+>> in holding copyrights on a C&P of a old source  ;)
+> 
+> Well, the code was basically written by you :-)
+> 
+> It was written to be a script capable of running a generic
+> script. On that time, my contribution to it was basically
+> to hardcode it to run "get_abi.pl".
+
+Thanks for clarifying.
 
 > 
-> >  #endif /* _TRACE_SCHED_H */
-> >  
-> >  /* This part must be outside protection */
-> > diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> > index 8e0015ebf109..e2418741608e 100644
-> > --- a/kernel/sched/fair.c
-> > +++ b/kernel/sched/fair.c
-> > @@ -5179,8 +5179,10 @@ static inline bool cpu_overutilized(int cpu)
-> >  
-> >  static inline void update_overutilized_status(struct rq *rq)
-> >  {
-> > -	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
-> > +	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
-> >  		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
-> > +		trace_sched_overutilized_tp(1, rq->rd);
-> > +	}
-> >  }
-> >  #else
-> >  static inline void update_overutilized_status(struct rq *rq) { }
-> > @@ -8542,8 +8544,13 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
-> >  
-> >  		/* Update over-utilization (tipping point, U >= 0) indicator */
-> >  		WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
-> > +
-> > +		trace_sched_overutilized_tp(!!(sg_status & SG_OVERUTILIZED), rd);
-> >  	} else if (sg_status & SG_OVERUTILIZED) {
-> > -		WRITE_ONCE(env->dst_rq->rd->overutilized, SG_OVERUTILIZED);
-> > +		struct root_domain *rd = env->dst_rq->rd;
-> > +
-> > +		WRITE_ONCE(rd->overutilized, SG_OVERUTILIZED);
-> > +		trace_sched_overutilized_tp(1, rd);
-> >  	}
-> >  }
+> This came from an old branch where the last change was back in 2017.
+> It was resurrected due to a discussion at KS ML.
 > 
-> But I figure since we need both values anyway, this isn't too much of a
-> bother.
+> There, the discussion was related to what's left to be converted
+> to ReST.
 > 
-> I'm going to flip the argument order though.
+> While I can't simply remove your copyright, would you be happy
+> with something like that?
 
-Sounds good to me. The good news is that changing the signature should be
-doable in the future if we felt the need to evolve it :-)
+Yes, but basically I share Jani's and Jon's doubts about this solution.
 
-Thanks
+-- Markus --
 
---
-Qais Yousef
+> 
+> 
+> Thanks,
+> Mauro
+> 
+> diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
+> index 2d5d582207f7..ef91b1e1ff4b 100644
+> --- a/Documentation/sphinx/kernel_abi.py
+> +++ b/Documentation/sphinx/kernel_abi.py
+> @@ -7,7 +7,8 @@ u"""
+>       Implementation of the ``kernel-abi`` reST-directive.
+>   
+>       :copyright:  Copyright (C) 2016  Markus Heiser
+> -    :copyright:  Copyright (C) 2016  Mauro Carvalho Chehab
+> +    :copyright:  Copyright (C) 2016-2019  Mauro Carvalho Chehab
+> +    :maintained-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+>       :license:    GPL Version 2, June 1991 see Linux/COPYING for details.
+>   
+>       The ``kernel-abi`` (:py:class:`KernelCmd`) directive calls the
+> 
+> 
+
+
