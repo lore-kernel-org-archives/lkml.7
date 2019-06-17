@@ -2,98 +2,89 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 287CDC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:08:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AE88C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B612085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:08:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EAB1208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728901AbfFQUIS (ORCPT
+        id S1728988AbfFQUIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:08:18 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48412 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfFQUIS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:08:18 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hcxvM-0004o2-QE; Mon, 17 Jun 2019 14:08:17 -0600
-To:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190617122733.22432-1-hch@lst.de>
- <20190617122733.22432-9-hch@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <d68c5e4c-b2de-95c3-0b75-1f2391b25a34@deltatee.com>
-Date:   Mon, 17 Jun 2019 14:08:14 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 17 Jun 2019 16:08:23 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39616 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfFQUIU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 16:08:20 -0400
+Received: by mail-qt1-f195.google.com with SMTP id i34so7097299qta.6;
+        Mon, 17 Jun 2019 13:08:19 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zmogzjeNfdvyQHIHPql3oMPQQB85wlj8S3ap4Uhkqn8=;
+        b=XsFyt+CT9YA6cKZgB5FzO7KCsMonBolkQ0HF5RYA++rqoEoi/De5is9wPZT/tX1wpc
+         8PMXFD38FNjfEDNsdMx+6yOD6M0qkLSPouFqD+TKj6NvYZNkFm/zncKFoZ8+hJb2pjHj
+         NNTx2zwSV6/cEhZeGv5tgAwncJVY96FfH/L7+6bUV+kiBfS4MxYDxrN8CIkSB3RA0PQM
+         UlMf1f1LX+D/MX0H6O37ofVuB/3cmrkMHIBCDMcMrWZ/6oCDHejw53xKT2uOOUUZyg4V
+         3ps1ODQLukMlf6siHdIkrbjVaYYHOSZ/a7Ew/phRiQhVUcLODc9qjCXfZsZ1O21pVkY6
+         aJOA==
+X-Gm-Message-State: APjAAAUvS21xsZZy1s6rSKH3FVzV9WQVW1pp4p56uyDVgTYLnMYXOo8O
+        +4LVb294H7G85UBFna2UM9bbX9BTAVaAo/JjcwA=
+X-Google-Smtp-Source: APXvYqx/EkSHtqxjK+IK19lRpttkWTjepWnFxOKVDYNVPZwMKEsgt97sUiKYUHDMpSqx8lo70kw5hKq/+zvLn7YNsDs=
+X-Received: by 2002:ac8:3485:: with SMTP id w5mr18793022qtb.142.1560802099413;
+ Mon, 17 Jun 2019 13:08:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190617122733.22432-9-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvdimm@lists.01.org, dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, linux-mm@kvack.org, bskeggs@redhat.com, jgg@mellanox.com, jglisse@redhat.com, dan.j.williams@intel.com, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 08/25] memremap: move dev_pagemap callbacks into a
- separate structure
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20190617115838.2397872-1-arnd@arndb.de> <1560786951.4072.103.camel@linux.ibm.com>
+ <1560794826.4072.169.camel@linux.ibm.com>
+In-Reply-To: <1560794826.4072.169.camel@linux.ibm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 17 Jun 2019 22:08:02 +0200
+Message-ID: <CAK8P3a1Q2JG3KBYNYgWg0_XtGUufNc6zuqcUBqiGSaBRp+au-w@mail.gmail.com>
+Subject: Re: [PATCH] ima: dynamically allocate shash_desc
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 8:08 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> On Mon, 2019-06-17 at 11:55 -0400, Mimi Zohar wrote:
+> > On Mon, 2019-06-17 at 13:20 +0200, Arnd Bergmann wrote:
+> > > On 32-bit ARM, we get a warning about excessive stack usage when
+> > > building with clang.
+> > >
+> > > security/integrity/ima/ima_crypto.c:504:5: error: stack frame size
+> > > of 1152 bytes in function 'ima_calc_field_array_hash' [-Werror,-
+> > > Wframe-larger-than=]
+> >
+> > I'm definitely not seeing this.  Is this problem a result of non
+> > upstreamed patches?  For sha1, currently the only possible hash
+> > algorithm, I'm seeing 664.
 
+You won't see it with gcc, only with clang in some randconfig builds,
+I suppose only when KASAN is enabled.
 
-On 2019-06-17 6:27 a.m., Christoph Hellwig wrote:
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index a98126ad9c3a..e083567d26ef 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -100,7 +100,7 @@ static void pci_p2pdma_percpu_cleanup(struct percpu_ref *ref)
->  	struct p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(ref);
->  
->  	wait_for_completion(&p2p_pgmap->ref_done);
-> -	percpu_ref_exit(&p2p_pgmap->ref);
-> +	percpu_ref_exit(ref);
->  }
->  
->  static void pci_p2pdma_release(void *data)
-> @@ -152,6 +152,11 @@ static int pci_p2pdma_setup(struct pci_dev *pdev)
->  	return error;
->  }
->  
-> +static const struct dev_pagemap_ops pci_p2pdma_pagemap_ops = {
-> +	.kill		= pci_p2pdma_percpu_kill,
-> +	.cleanup	= pci_p2pdma_percpu_cleanup,
-> +};
-> +
->  /**
->   * pci_p2pdma_add_resource - add memory for use as p2p memory
->   * @pdev: the device to add the memory to
-> @@ -207,8 +212,6 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
->  	pgmap->pci_p2pdma_bus_offset = pci_bus_address(pdev, bar) -
->  		pci_resource_start(pdev, bar);
-> -	pgmap->kill = pci_p2pdma_percpu_kill;
-> -	pgmap->cleanup = pci_p2pdma_percpu_cleanup;
+> Every time a measurement is added to the measurement list, the memory
+> would be allocated/freed.  The frequency of new measurements is policy
+> dependent.  For performance reasons, I'd prefer if the allocation
+> remains on the stack.
 
-I just noticed this is missing a line to set pgmap->ops to
-pci_p2pdma_pagemap_ops. I must have gotten confused by the other users
-in my original review. Though I'm not sure how this compiles as the new
-struct is static and unused. However, it is rendered moot in Patch 16
-when this is all removed.
+Is there a way to preallocate the shash_desc instead? That would
+avoid the overhead.
 
-Logan
+        Arnd
