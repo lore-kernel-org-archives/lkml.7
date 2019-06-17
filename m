@@ -2,114 +2,78 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1400EC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:40:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A87C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:42:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D76AF20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:40:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560771657;
-	bh=rM96KOWd4bfHzmHk4U7lcmV6rxYtyFINkCP7DCMHEi8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZLXsbshKF2N7kCsTcnoIsU2jAyfk7DLFV1VsT39Zh3F7YkdvGDKk5P4K1epUZMijQ
-	 LcfanBKPlHulyKQg2p/l6peRU6xKbivpdAfMddmyqYKrJQ7boAo8KTaXrWGcZNPzBf
-	 3NniaN+rCjQBTlnw370pKBr3kvEpWwig4mXB8xz4=
+	by mail.kernel.org (Postfix) with ESMTP id 6322920861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:42:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726183AbfFQLk4 (ORCPT
+        id S1726320AbfFQLmT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:40:56 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42378 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFQLkz (ORCPT
+        Mon, 17 Jun 2019 07:42:19 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45809 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfFQLmT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:40:55 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TGS1jJo4f0gqZ+d4CFQwjoWxEngjb1gvJrhJoe43XXw=; b=ZBwbG3Gn/ueMgLs/6/3z0n1QM
-        507hzQfk0t9Zw1uJnlZeDzAPWNYDhAeo/UV94aOVTVW/5AywlPRBL02pEaEpoEFyUUdrxrGJh99mn
-        Nrzcw971o/sV50QDOkFF03USVvyeXz4z1PhCPhdiQ1rV4M9BBGW0dKByZQECxSQ73jPf8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hcq0H-0001VF-Pe; Mon, 17 Jun 2019 11:40:49 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 0FA79440046; Mon, 17 Jun 2019 12:40:49 +0100 (BST)
-Date:   Mon, 17 Jun 2019 12:40:48 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andreas Kemnade <andreas@kemnade.info>
-Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
-Message-ID: <20190617114048.GN5316@sirena.org.uk>
-Mail-Followup-To: Andreas Kemnade <andreas@kemnade.info>, tony@atomide.com,
-        lgirdwood@gmail.com, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
-        letux-kernel@openphoenux.org
-References: <20190615163314.28173-1-andreas@kemnade.info>
- <20190617103111.GM5316@sirena.org.uk>
- <20190617130357.41204ff7@kemnade.info>
+        Mon, 17 Jun 2019 07:42:19 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hcq1e-0000cD-U1; Mon, 17 Jun 2019 11:42:15 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Yisen Zhuang <yisen.zhuang@huawei.com>,
+        Salil Mehta <salil.mehta@huawei.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net: hns3: fix dereference of ae_dev before it is null checked
+Date:   Mon, 17 Jun 2019 12:42:14 +0100
+Message-Id: <20190617114214.25276-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ukZ3tWq1IjZw6zEx"
-Content-Disposition: inline
-In-Reply-To: <20190617130357.41204ff7@kemnade.info>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
---ukZ3tWq1IjZw6zEx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Pointer ae_dev is null checked however, prior to that it is dereferenced
+when assigned pointer ops. Fix this by assigning pointer ops after ae_dev
+has been null checked.
 
-On Mon, Jun 17, 2019 at 01:03:57PM +0200, Andreas Kemnade wrote:
-> Mark Brown <broonie@kernel.org> wrote:
-> > On Sat, Jun 15, 2019 at 06:33:14PM +0200, Andreas Kemnade wrote:
+Addresses-Coverity: ("Dereference before null check")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > Why is this a good fix and not defining the supported voltages?  These
-> > look like fairly standard linear range regulators.
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+index 951a8125ea0c..58633cdcdcfd 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
+@@ -1940,13 +1940,14 @@ static pci_ers_result_t hns3_error_detected(struct pci_dev *pdev,
+ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
+ {
+ 	struct hnae3_ae_dev *ae_dev = pci_get_drvdata(pdev);
+-	const struct hnae3_ae_ops *ops = ae_dev->ops;
++	const struct hnae3_ae_ops *ops;
+ 	enum hnae3_reset_type reset_type;
+ 	struct device *dev = &pdev->dev;
+ 
+ 	if (!ae_dev || !ae_dev->ops)
+ 		return PCI_ERS_RESULT_NONE;
+ 
++	ops = ae_dev->ops;
+ 	/* request the reset */
+ 	if (ops->reset_event) {
+ 		if (!ae_dev->override_pci_need_reset) {
+-- 
+2.20.1
 
-> I am fixing the definition of the two regulators in the patch.
-> I am defining them as continuous.=20
-> Voltage ranges are defined in
-> arch/arm/boot/dts/twl4030.dtsi
-> Only the continuous flag is missing.
-
-> Is there anything else do you want to be defined?
-
-These regulators are not continuous regulators as far as I can see, they
-are normal linear range regulators and so should have their voltages
-enumerable like any other linear range regulator.
-
---ukZ3tWq1IjZw6zEx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HfEAACgkQJNaLcl1U
-h9C9fgf/demCydc2jv+vdSyZVH8mb+/coXKQUhsJXvaspY3plQYlF5HnzQrABgHC
-nFoahPYWwqbuRl4WzotNHAnblTLZz54cPzr+W89TPLVlfRLxKuF44I3807SJYW4f
-+eh/7+cyOcyiA+eJba+PAG72l5oIkJszxNywvIDZENBjIc7exIxo5I8ee4zfTSoI
-2uv7ZzaeVVrI/1j7SIuC2KlBhQ6j3qOPew1r0kpl66Q7zPNFf4AWzl2LbhjIuUVk
-3BxJcetz+zA7NbCR2QIEr5o7vCnOuOLQQN8Dk1LNI4QxItF7MD0PXkSA33GCu8rD
-uYW9FLSQK0YzKaeddERgm1nLLKkKYg==
-=U7Iy
------END PGP SIGNATURE-----
-
---ukZ3tWq1IjZw6zEx--
