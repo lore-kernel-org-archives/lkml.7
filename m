@@ -2,99 +2,148 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97EEAC31E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:08:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 285D9C31E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550E021473
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:08:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="pMNesVI1";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="PBfRxPvi"
+	by mail.kernel.org (Postfix) with ESMTP id 03BE22147A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:09:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727618AbfFQDIM (ORCPT
+        id S1727576AbfFQDJa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 23:08:12 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54125 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727413AbfFQDIL (ORCPT
+        Sun, 16 Jun 2019 23:09:30 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35340 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727413AbfFQDJa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 23:08:11 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 39AAE2073F;
-        Sun, 16 Jun 2019 23:08:08 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Sun, 16 Jun 2019 23:08:08 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to:cc
-        :subject:content-type; s=fm3; bh=7Ke5IHCQc6To6gIdApJVmoXexrwL5gM
-        UiXPsvkOjLXQ=; b=pMNesVI1iH2mLTkcSmMSUIrW148uXc6UNhcPpSv18rjIepT
-        lE7oFtHZHsEGeOe+nWDyxXaIWrBcGeVQ02PVcIL0MZYA0yucnwQtKU49l76uVWRc
-        YUcBkvA92NXbqz0c8otKug1mtQBTzP2bzOR6IfqqYbjkDWpUkXn3/NnBIv+tuEQj
-        SywVfPs/k8rB4XtIROYBrVNs/S/BRCRyBr478E6glnnG4SE1pxiUNQSTlfXri+hB
-        /MxLJvsMrjmfgOx0B/tOGIgdZTHblxOTN1KfA77aMd0EFcw0VO2wmFwC29jFGPYf
-        2Dm3Wu/YsbvdmNjGl03xgemqHVojIbUkVud4stw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=7Ke5IH
-        CQc6To6gIdApJVmoXexrwL5gMUiXPsvkOjLXQ=; b=PBfRxPviRr8swajBEeMOGu
-        whlErxWIxJGztiT4/OCYkPaUpOA8McouLsXMuEzNEwTal9QHZ6ZEl7M9I7wqfBhh
-        4qwHjpGxDVaN/pws6ecCfQbPOEwUKAbcVjfrcxzm+qjpTAK5Cp6PrvgldPl1o3Dr
-        BbJfAqdyklN0+7AppE6hDjiVMUkPg8+VfGEImxIema5M1Dl58w3w5IEv+/1hMr7V
-        bz0Zp2glkvQSQjghqooKYttA5wLx1vlN2yNj50EzYSpx+SFMbZUp3JXW8bSsnokQ
-        3i1wm9IlFItIut3x3YQp9ixnzbGka1Cjrmy2sV0d51Kp9IRyA+aW44JTR/QKAJ3A
-        ==
-X-ME-Sender: <xms:FwQHXSeON9UDPz2jG4Iqlr-inXy-tPH4uCUzU48dw1vCrdwha1ngNA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrudeiiedgiedvucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvffutgesthdtredtreertdenucfhrhhomhepfdetnhgu
-    rhgvficulfgvfhhfvghrhidfuceorghnughrvgifsegrjhdrihgurdgruheqnecurfgrrh
-    grmhepmhgrihhlfhhrohhmpegrnhgurhgvfiesrghjrdhiugdrrghunecuvehluhhsthgv
-    rhfuihiivgeptd
-X-ME-Proxy: <xmx:FwQHXfIm4G2IoAWckCVAwkz8hHS9PzHJq6VVkyDcpCEbZOOCtmiC4w>
-    <xmx:FwQHXXvMhwYuLOOf78QHC3vVoZdH4oAhbXh_vNYt7igaFAD-3j2VIg>
-    <xmx:FwQHXdIVnRTr-O_EQxpxlc9VV117FsfT7rYYeqLuxhB-JlCMNkX6xA>
-    <xmx:GAQHXX-UPOTzKKughhtwmokFom6azpOym-54dORZSvpXuveABjsstw>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id DE09BE00A1; Sun, 16 Jun 2019 23:08:06 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-663-gf46ad30-fmstable-20190607v1
-Mime-Version: 1.0
-Message-Id: <70de7e7a-2b2b-4409-beb8-7f61d4d25def@www.fastmail.com>
-In-Reply-To: <C4D5C095-A715-4D39-9DEB-1B7734760666@fb.com>
-References: <20190530203654.3860925-1-vijaykhemka@fb.com>
- <6828A39D-8950-4C07-8340-7AE9E2DD3EC0@fb.com>
- <C4D5C095-A715-4D39-9DEB-1B7734760666@fb.com>
-Date:   Mon, 17 Jun 2019 12:38:06 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Vijay Khemka" <vijaykhemka@fb.com>,
-        "Joel Stanley" <joel@jms.id.au>,
-        "Patrick Venture" <venture@google.com>,
-        "Olof Johansson" <olof@lixom.net>, "Arnd Bergmann" <arnd@arndb.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc:     "Sai Dasari" <sdasari@fb.com>,
-        "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2] soc: aspeed: lpc-ctrl: make parameter optional
-Content-Type: text/plain
+        Sun, 16 Jun 2019 23:09:30 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p1so3467925plo.2
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 20:09:29 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=oUh6hfLSAJw1NhYrQppNGg6oKv5nxfUTJWLmGY+P1as=;
+        b=U5L6Wlos7LggIg1TVyreoxJiIq3d0mjUjaVdRwFpNI4Dh9OS2keNYwYEmv9kXSm/LJ
+         JLdw0EEODa8FCVDj0k8b5DfgKJTgkShimjPFAcuFyZ8b8RqrQH3FdeUhRX2e6QLxv+1O
+         B4PjRallQM92DHH0CZVu69rf7RhvooMN5Sr2jLAtRiwWpW2S2HxrdMNVeuoxIlECoaXt
+         eCTLGZSIGvvbbo7ryENuykI+B+WhbtBSeEa9hy6zYWcn4YZXsKsD0x+RdhXhLcSYUhHa
+         JNzTgJJ+tMahVOT4In2BuUfv4C+fIzMyButuYckDR8df1xSwGwKiPW5O9mNXJjbq7s1I
+         EgrA==
+X-Gm-Message-State: APjAAAWan8ml7rmHf9td7BCmgt1oe5F9RGaUc+6T88ReO3t2akTYeDOL
+        UwSNvhh4bT9IBeq0pG2v+P8cQA==
+X-Google-Smtp-Source: APXvYqyz7axLzPrBHaIfjrC0NzlkNQ6sUaPo3U0hNhjMZH+KhaZs43iAQFTwcnTHm4QfLzA1fMH9YQ==
+X-Received: by 2002:a17:902:6b44:: with SMTP id g4mr12630512plt.152.1560740969406;
+        Sun, 16 Jun 2019 20:09:29 -0700 (PDT)
+Received: from localhost ([14.215.134.187])
+        by smtp.gmail.com with ESMTPSA id q7sm11042023pfb.32.2019.06.16.20.09.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 16 Jun 2019 20:09:28 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 20:09:28 -0700 (PDT)
+X-Google-Original-Date: Sun, 16 Jun 2019 20:08:25 PDT (-0700)
+Subject:     Re: [PATCH v2] RISC-V: Break load reservations during switch_to
+In-Reply-To: <20190616175405.GF61734@hippo.sing.id.au>
+CC:     linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, marco@decred.org,
+        me@carlosedp.com, linux-kernel@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     joel@sing.id.au
+Message-ID: <mhng-778da899-6dc7-4b10-825d-85284990534b@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, 16 Jun 2019 10:54:06 PDT (-0700), joel@sing.id.au wrote:
+> On 19-06-07 15:22:22, Palmer Dabbelt wrote:
+>> The comment describes why in detail.  This was found because QEMU never
+>> gives up load reservations, the issue is unlikely to manifest on real
+>> hardware.
+>
+> Makes sense, however it obviously will not help until qemu actually
+> clears load reservations on SC (or otherwise handles the interleaved
+> SC case).
 
+Ya, I wasn't paying close enough attention.  I think this should do it
 
-On Sat, 15 Jun 2019, at 07:11, Vijay Khemka wrote:
-> Hi Andrew,
-> Any update on this patch or do I need any more rework.
+    diff --git a/target/riscv/insn_trans/trans_rva.inc.c b/target/riscv/insn_trans/trans_rva.inc.c
+    index f6dbbc065e15..001a68ced005 100644
+    --- a/target/riscv/insn_trans/trans_rva.inc.c
+    +++ b/target/riscv/insn_trans/trans_rva.inc.c
+    @@ -69,6 +69,7 @@ static inline bool gen_sc(DisasContext *ctx, arg_atomic *a, TCGMemOp mop)
+         gen_set_gpr(a->rd, dat);
+    
+         gen_set_label(l2);
+    +    tcg_gen_movi_tl(load_res, -1);
+         tcg_temp_free(dat);
+         tcg_temp_free(src1);
+         tcg_temp_free(src2);
 
-No, no more reworks. I've pinged Joel, he'll pick it up.
+I'll send the patch out to the QEMU mailing list.
 
-Andrew
+> See comment inline.
+>
+>> Thanks to Carlos Eduardo for finding the bug!
+>>
+>> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+>> ---
+>> Changes since v1 <20190605231735.26581-1-palmer@sifive.com>:
+>>
+>> * REG_SC is now defined as a helper macro, for any code that wants to SC
+>>   a register-sized value.
+>> * The explicit #ifdef to check that TASK_THREAD_RA_RA is 0 has been
+>>   removed.  Instead we rely on the assembler to catch non-zero SC
+>>   offsets.  I've tested this does actually work.
+>>
+>>  arch/riscv/include/asm/asm.h |  1 +
+>>  arch/riscv/kernel/entry.S    | 11 +++++++++++
+>>  2 files changed, 12 insertions(+)
+>>
+>> diff --git a/arch/riscv/include/asm/asm.h b/arch/riscv/include/asm/asm.h
+>> index 5ad4cb622bed..946b671f996c 100644
+>> --- a/arch/riscv/include/asm/asm.h
+>> +++ b/arch/riscv/include/asm/asm.h
+>> @@ -30,6 +30,7 @@
+>>
+>>  #define REG_L		__REG_SEL(ld, lw)
+>>  #define REG_S		__REG_SEL(sd, sw)
+>> +#define REG_SC		__REG_SEL(sc.w, sc.d)
+>
+> The instructions appear to be inverted here (i.e. "sc.d, sc.w").
+
+Thanks, I'll send a v3.
+
+>>  #define SZREG		__REG_SEL(8, 4)
+>>  #define LGREG		__REG_SEL(3, 2)
+>>
+>> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+>> index 1c1ecc238cfa..af685782af17 100644
+>> --- a/arch/riscv/kernel/entry.S
+>> +++ b/arch/riscv/kernel/entry.S
+>> @@ -330,6 +330,17 @@ ENTRY(__switch_to)
+>>  	add   a3, a0, a4
+>>  	add   a4, a1, a4
+>>  	REG_S ra,  TASK_THREAD_RA_RA(a3)
+>> +	/*
+>> +	 * The Linux ABI allows programs to depend on load reservations being
+>> +	 * broken on context switches, but the ISA doesn't require that the
+>> +	 * hardware ever breaks a load reservation.  The only way to break a
+>> +	 * load reservation is with a store conditional, so we emit one here.
+>> +	 * Since nothing ever takes a load reservation on TASK_THREAD_RA_RA we
+>> +	 * know this will always fail, but just to be on the safe side this
+>> +	 * writes the same value that was unconditionally written by the
+>> +	 * previous instruction.
+>> +	 */
+>> +	REG_SC x0, ra, TASK_THREAD_RA_RA(a3)
+>>  	REG_S sp,  TASK_THREAD_SP_RA(a3)
+>>  	REG_S s0,  TASK_THREAD_S0_RA(a3)
+>>  	REG_S s1,  TASK_THREAD_S1_RA(a3)
+>> --
+>> 2.21.0
+>>
