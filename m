@@ -2,85 +2,117 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A734C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8093AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B00208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52C2C208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:06:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcuH+7Eu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C+f+q17L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfFQQEz (ORCPT
+        id S1727996AbfFQQGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:04:55 -0400
-Received: from mail-vs1-f42.google.com ([209.85.217.42]:37295 "EHLO
-        mail-vs1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfFQQEz (ORCPT
+        Mon, 17 Jun 2019 12:06:41 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:34394 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726362AbfFQQGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:04:55 -0400
-Received: by mail-vs1-f42.google.com with SMTP id v6so6467041vsq.4;
-        Mon, 17 Jun 2019 09:04:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pnnc1YqqDFPd8WzGDfGgqKol4mW6SfIm1hkAQXkloAQ=;
-        b=FcuH+7EurKK2QioEYceTZLdpXz6DMaf+I3nLQhr1rnEhvteqQRCEdYh9VookY4398q
-         Q5V4dmEg2BL6OgSV1CbZqhFz5NoPB0YmWjp015Yy4iDWwOrZjJ7UFXqHkK4h7XKAOaHv
-         TwGSuEruYPrkT6i4edpcLtmPbgFzxPXSo/OsV5olbaxn6TFZOgMsKA0axRi3ip0pNJsW
-         iJmRApuDDjW2Uuo73o9qc6Fg3OQ4qbIsYz92XcxxJ2PheSoKi8/t4kJ6g0ukJPhRz85s
-         5M7sKwU2IjER2XwDCQF2X4nFFGx916qmgqqAwVnLIMwAm7Zk+WYB//sshYpWNY5duKyn
-         iD6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pnnc1YqqDFPd8WzGDfGgqKol4mW6SfIm1hkAQXkloAQ=;
-        b=SSAQA7YUOXLyJ5+tnC1QBTy2x5kvfs1qsF/xbKOfLK/PLxnWcLwK+dVhylodzZ2334
-         JfpRi09LFKPRQYm8xNELm8HPnqzlUmjl8fTMo9ILfJSi1sx+EYyXggPJa8jMeprSQqpF
-         vr++h7es95eEyp5PMecEIIyYpGFvKHV/w7jOLVkaDlod904hEknN1gAp3DEt7t1gzx+Z
-         Q6HrzrEBIPUOyQHNAiopmKGGGV638IaEh76G1PlJkjjj/pTqxqkIYYFqHkBJX021fE+L
-         wEIPRTog0mj29qKggQwmLbgNNBqH1viEhipB2Cavx2Dtts57iODAiiXWsoFn4au8EmKb
-         z74w==
-X-Gm-Message-State: APjAAAUYU2iqrEANIlHy1sX/DigM7FFjyfbFcK31Jen0DuT8+zjYzedE
-        DqfhzQISrWojAo2hQE58fqtgEeAgfo0dkTDyMH8=
-X-Google-Smtp-Source: APXvYqxauZ6Wqdr1a6x/fpJLFsVERHU34VPVNMXn1iKL+e4p9OfXuz7VWrsJtK4Kn2WxOdyeEuBc+E97plQbyrlmZx0=
-X-Received: by 2002:a67:e3da:: with SMTP id k26mr20351031vsm.131.1560787493667;
- Mon, 17 Jun 2019 09:04:53 -0700 (PDT)
+        Mon, 17 Jun 2019 12:06:40 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HG3OZS060045;
+        Mon, 17 Jun 2019 16:06:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=MwKsbM5LDpPZOa0hosVEj1C2BYiLDVw8p7q7vlNExhs=;
+ b=C+f+q17L+QwliOrIbbe5MDJsgAPz883cBN/PN6naOCGa/LJzDvyHlWKTnJL5LE6EUqnp
+ 1z/vg0XAAt/lX643kC4VJ/MXPmo30wPgCY1+kTP1mhTZIVqVwyzwtTEOrzOXfO/jaVU0
+ xl6IfIL4vev5ZIEL+ydL5PDpQrkkXDecFQkejtmj1B3DcYoNFFxBRpj37eS8EMVvPAz4
+ jewb8o+mhCq46VaaNNpRz21iHYTYsT/p+/sBAEDhNfx43asEJzODwYtjgiIywYn/nc/n
+ 5hiTGTmpaoZvLuQpnKCLcx/9IpEFLCwE3F17nZjpvA0AKPpQ20ggKlLemYcF/nhmkkra gQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t4saq7dgq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 16:06:24 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HG56Xo098370;
+        Mon, 17 Jun 2019 16:06:24 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2t5h5t7cvh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 16:06:24 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5HG6Lm4004432;
+        Mon, 17 Jun 2019 16:06:21 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 16:06:20 +0000
+Date:   Mon, 17 Jun 2019 19:06:09 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Derek Chickles <dchickles@marvell.com>,
+        Satanand Burla <sburla@marvell.com>,
+        Felix Manlunas <fmanlunas@marvell.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] net: lio_core: fix potential sign-extension overflow on
+ large shift
+Message-ID: <20190617160609.GH28859@kadam>
+References: <20190617155325.27017-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20190617153025.12120-1-andrew.smirnov@gmail.com>
-In-Reply-To: <20190617153025.12120-1-andrew.smirnov@gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Mon, 17 Jun 2019 13:05:03 -0300
-Message-ID: <CAOMZO5CALFFcUQ7mY6L7DqB+iuJHzk_WKhZ1=BePjHqpT6pOYA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ARM: dts: Add ZII support for ZII i.MX7 RMU2 board
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Bob Langer <Bob.Langer@zii.aero>,
-        Liang Pan <Liang.Pan@zii.aero>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617155325.27017-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906170143
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906170143
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:30 PM Andrey Smirnov
-<andrew.smirnov@gmail.com> wrote:
->
-> Add support for ZII's i.MX7 based Remote Modem Unit 2 (RMU2) board.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+On Mon, Jun 17, 2019 at 04:53:25PM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> Left shifting the signed int value 1 by 31 bits has undefined behaviour
+> and the shift amount oq_no can be as much as 63.  Fix this by widening
+> the int 1 to 1ULL.
+> 
+> Addresses-Coverity: ("Bad shift operation")
+> Fixes: f21fb3ed364b ("Add support of Cavium Liquidio ethernet adapters")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/ethernet/cavium/liquidio/lio_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/ethernet/cavium/liquidio/lio_core.c b/drivers/net/ethernet/cavium/liquidio/lio_core.c
+> index 1c50c10b5a16..e78bdcee200f 100644
+> --- a/drivers/net/ethernet/cavium/liquidio/lio_core.c
+> +++ b/drivers/net/ethernet/cavium/liquidio/lio_core.c
+> @@ -964,7 +964,7 @@ static void liquidio_schedule_droq_pkt_handlers(struct octeon_device *oct)
+>  
+>  			if (droq->ops.poll_mode) {
+>  				droq->ops.napi_fn(droq);
+> -				oct_priv->napi_mask |= (1 << oq_no);
+> +				oct_priv->napi_mask |= (1ULL << oq_no);
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+The function uses BIT_ULL(oq_no) earlier, so we should probably do the
+same here.
+
+regards,
+dan carpenter
+
