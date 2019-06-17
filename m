@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3593BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAF3DC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F064221019
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 756F321670
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806924;
-	bh=/W2GDSSfhmcFCYLBTRD+1nC0aSX/pAnuIWfuvhvjAt0=;
+	s=default; t=1560806926;
+	bh=pqqMoh4kSdEk2DEIsnrNK7jouv7DEcJKU0l6FIR54m4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vxL2ysIRNqSCRUysmeliiBa1jyVf7sM5jUTyobby08CYnVBQ+8r9eAm6JRtjlfqZ5
-	 exfWoYvSOq6GUmDUEI1pgRC1bExhTcBsUug5G7kRlVu3U4qnanvzyz1bHKnR4vk8QF
-	 2PS+yO35kOPwmvXFxWR1fIIFgLIiU1QW/Yej1hlE=
+	b=ZfErD0shECi/vUwx6dcaSX1LDc60z8pv8utdqVXCrqll3fZIy19cAf49j22Xxiv+u
+	 ORcGRbXC6q7C8jlHffura5WGf8ScBT2ExK61nzgmvQTlN3IMcFThIOOah1pp49K/cy
+	 hZrAF37trHgk6FTTlnREpsnIqPsXrYyDGgMV6Upw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730581AbfFQV2m (ORCPT
+        id S1729600AbfFQV2p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:28:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55706 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:28:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730268AbfFQV2h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:28:37 -0400
+        id S1730285AbfFQV2l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:28:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C153204FD;
-        Mon, 17 Jun 2019 21:28:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BCEEF2082C;
+        Mon, 17 Jun 2019 21:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806917;
-        bh=/W2GDSSfhmcFCYLBTRD+1nC0aSX/pAnuIWfuvhvjAt0=;
+        s=default; t=1560806920;
+        bh=pqqMoh4kSdEk2DEIsnrNK7jouv7DEcJKU0l6FIR54m4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RpGw6HUhL7j20zRCXly8+bJpcbmh53sTM/RJoOvAFbOTtTwSRm5Qq/KC6y22UBhmU
-         RNl4d4lRLa9yilE7N9VL2ZpAN4gx9demTlcmSoGmv/p+daBMMNdaXb/cqFXgx5CO0w
-         JhOtPzB6oNb4l82nHacZeqgijCBVlEhbP9NAbwq8=
+        b=mxQqmdWNt29DQ4f8grj0JqLuY67fR6HK5lsEw9T3xutJYwxpL/JCG8XdlmbEcCCym
+         n+0muL1MdSBW7/CtCPYMRnS9HSOD/bETigS8wURxfAfKzZdphaZEwZipBMej27uRs4
+         yO1+BUkes/lPk40AMTJ72PbFK73bpV4LEazGAmkI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.14 07/53] ALSA: firewire-motu: fix destruction of data for isochronous resources
-Date:   Mon, 17 Jun 2019 23:09:50 +0200
-Message-Id: <20190617210746.740325540@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 08/53] libata: Extend quirks for the ST1000LM024 drives with NOLPM quirk
+Date:   Mon, 17 Jun 2019 23:09:51 +0200
+Message-Id: <20190617210746.926705221@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -59,33 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 0e3fb6995bfabb23c172e8b883bf5ac57102678e upstream.
+commit 31f6264e225fb92cf6f4b63031424f20797c297d upstream.
 
-The data for isochronous resources is not destroyed in expected place.
-This commit fixes the bug.
+We've received a bugreport that using LPM with ST1000LM024 drives leads
+to system lockups. So it seems that these models are buggy in more then
+1 way. Add NOLPM quirk to the existing quirks entry for BROKEN_FPDMA_AA.
 
-Cc: <stable@vger.kernel.org> # v4.12+
-Fixes: 9b2bb4f2f4a2 ("ALSA: firewire-motu: add stream management functionality")
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1571330
+Cc: stable@vger.kernel.org
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/motu/motu-stream.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/libata-core.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/sound/firewire/motu/motu-stream.c
-+++ b/sound/firewire/motu/motu-stream.c
-@@ -345,7 +345,7 @@ static void destroy_stream(struct snd_mo
- 	}
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -4472,9 +4472,12 @@ static const struct ata_blacklist_entry
+ 	{ "ST3320[68]13AS",	"SD1[5-9]",	ATA_HORKAGE_NONCQ |
+ 						ATA_HORKAGE_FIRMWARE_WARN },
  
- 	amdtp_stream_destroy(stream);
--	fw_iso_resources_free(resources);
-+	fw_iso_resources_destroy(resources);
- }
+-	/* drives which fail FPDMA_AA activation (some may freeze afterwards) */
+-	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
+-	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
++	/* drives which fail FPDMA_AA activation (some may freeze afterwards)
++	   the ST disks also have LPM issues */
++	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
++						ATA_HORKAGE_NOLPM, },
++	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
++						ATA_HORKAGE_NOLPM, },
+ 	{ "VB0250EAVER",	"HPG7",		ATA_HORKAGE_BROKEN_FPDMA_AA },
  
- int snd_motu_stream_init_duplex(struct snd_motu *motu)
+ 	/* Blacklist entries taken from Silicon Image 3124/3132
 
 
