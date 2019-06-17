@@ -2,145 +2,97 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96B61C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DF6C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:38:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDA62084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:36:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="OQATRfzO"
+	by mail.kernel.org (Postfix) with ESMTP id 0746D2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:38:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560800287;
+	bh=Ou8ovWcUbQ7QgJV1jf4OKeCz/aEauP8/c2IuQt74M9g=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=D8iMfZ4Wsyuxz+e7FH3CgpI+S8s7ahvwHICdIeoiCNdMkfvVgl2cYUJUTUQ9ASsY1
+	 OE1c+PifgTTl2QHzOy9G6MRzuY6+OI/kUwrMcEsCaWdNHrvbSrRQsq9OKbkMeB9XSd
+	 NihUb9WPSIzl+wg4qaoENe4Ku682yWjJ8CUbxA3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728824AbfFQTgt (ORCPT
+        id S1727948AbfFQTiF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:36:49 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:52871 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfFQTgt (ORCPT
+        Mon, 17 Jun 2019 15:38:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:32788 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfFQTiF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:36:49 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJZTab3565605
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:35:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJZTab3565605
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560800130;
-        bh=MBXOwA4rpmjuC7sDNtWsv8DLbEfZSsKX8z7jw9/TwM0=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=OQATRfzOJ4RZ+8CpgujyJ+DYuGdvq3DqOFAHC//L6kgmitjzN8OCkhAfYQgltoHBw
-         +zx7HjiP5/iGEMoqXGJp/+ziwXKLtub+3Xh+E4wZqwwvGfEbEQMS8V86Jp2mL9s+0o
-         CyUGhaFVSh094yt6kCKVGaj5roe7s2qVUHCoFuwrmGY93nC0FXM6RChWqhoneX6WqJ
-         Jyr1BDM+VYvF0kWSbpRGq4IFXdkSnyfMUhQpGC6UWJEbOg8kXSD6poYKVtyBLuCvuW
-         rW6XmhJGnR/2Bq22Xv7mMTcwApmN2R9aJe+iG5kps0l/Jk4sLMApzn/S/xF3NS5feK
-         PdeziAH60Xsmw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJZTUh3565601;
-        Mon, 17 Jun 2019 12:35:29 -0700
-Date:   Mon, 17 Jun 2019 12:35:29 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-nubi6mxp2n8ofvlx7ph6k3h6@git.kernel.org>
-Cc:     peterz@infradead.org, ak@linux.intel.com, mingo@kernel.org,
-        hpa@zytor.com, adrian.hunter@intel.com, tglx@linutronix.de,
-        kan.liang@linux.intel.com, acme@redhat.com, namhyung@kernel.org,
-        jolsa@kernel.org, linux-kernel@vger.kernel.org
-Reply-To: hpa@zytor.com, mingo@kernel.org, peterz@infradead.org,
-          ak@linux.intel.com, namhyung@kernel.org, acme@redhat.com,
-          jolsa@kernel.org, linux-kernel@vger.kernel.org,
-          adrian.hunter@intel.com, tglx@linutronix.de,
-          kan.liang@linux.intel.com
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf data: Fix perf.data documentation for
- HEADER_CPU_TOPOLOGY
-Git-Commit-ID: 36edfb940195b62c79bc8b148720c8275659a8c7
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 15:38:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=5xRzFtDdaivjnv581uo/jwZarInLXzLaBnfMiJtw2P4=; b=oTQkCjimhA9QyQPppsvvXssX6
+        +TAuWE5s3YBqDGLe3vudoWbIeJxwx1r2klft9CRq0y+WXixQqWKJWYaGqcy9iSdkGy6W8piXK1ALz
+        JtM9cvEuuAwsEuOdd3sw4PDgisU2FwvuSB61f07HkLthRE42WUyFptK7k7dntcwbEm+NoNYXAQ1hr
+        /rJhiAs5J6I7689enMHgmkciNrPm0S0EQ+VuFKcNRIejrVRveC/8c0M2P8D/OIcYfvX6obJlM1I7C
+        4O9yIR7yvYEuXpWB96tDSy9PSq4FiN8lkOZ9hxoEOscW0Vo9BKYH8AAGbFrXbtW9LgE/tStE/p4dd
+        6jEhzeOcw==;
+Received: from 179.186.105.91.dynamic.adsl.gvt.net.br ([179.186.105.91] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcxS8-0001Y2-GO; Mon, 17 Jun 2019 19:38:04 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hcxS6-0002jG-5T; Mon, 17 Jun 2019 16:38:02 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 3/2] scripts/get_feat.pl: handle ".." special case
+Date:   Mon, 17 Jun 2019 16:38:00 -0300
+Message-Id: <59a9078408e4c4bf593c60af48e30ddfee845354.1560800240.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  36edfb940195b62c79bc8b148720c8275659a8c7
-Gitweb:     https://git.kernel.org/tip/36edfb940195b62c79bc8b148720c8275659a8c7
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Thu, 6 Jun 2019 17:03:18 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 10 Jun 2019 16:20:11 -0300
+The status ".." Means that the feature can't be implemented
+on a given architecture.
 
-perf data: Fix perf.data documentation for HEADER_CPU_TOPOLOGY
+The problem is that this doesn't show anything at the
+output, so replace it by "---", with is a markup for a long
+hyphen.
 
-The 'die' info isn't in the same array as core and socket ids, and we
-missed the 'dies' string list, that comes right after the 'core' +
-'socket' id variable length array, followed by the VLA for the dies.
-
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Kan Liang <kan.liang@linux.intel.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Fixes: c9cb12c5ba08 ("perf header: Add die information in CPU topology")
-Link: https://lkml.kernel.org/n/tip-nubi6mxp2n8ofvlx7ph6k3h6@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- tools/perf/Documentation/perf.data-file-format.txt | 29 ++++++++++++++++------
- 1 file changed, 22 insertions(+), 7 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index de78183f6881..5f54feb19977 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -151,20 +151,35 @@ struct {
+In time: this patch fixes an small issue with the series I just posted.
+
+ scripts/get_feat.pl | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/scripts/get_feat.pl b/scripts/get_feat.pl
+index 401cbc820caa..79d83595addd 100755
+--- a/scripts/get_feat.pl
++++ b/scripts/get_feat.pl
+@@ -141,6 +141,8 @@ sub parse_feat {
+ 				$max_size_arch = length($a);
+ 			}
  
- 	HEADER_CPU_TOPOLOGY = 13,
- 
--String lists defining the core and CPU threads topology.
--The string lists are followed by a variable length array
--which contains core_id, die_id (for x86) and socket_id of each cpu.
--The number of entries can be determined by the size of the
--section minus the sizes of both string lists.
--
- struct {
-+	/*
-+	 * First revision of HEADER_CPU_TOPOLOGY
-+	 *
-+	 * See 'struct perf_header_string_list' definition earlier
-+	 * in this file.
-+	 */
++			$status = "---" if ($status =~ m/^\.\.$/);
 +
-        struct perf_header_string_list cores; /* Variable length */
-        struct perf_header_string_list threads; /* Variable length */
-+
-+       /*
-+        * Second revision of HEADER_CPU_TOPOLOGY, older tools
-+        * will not consider what comes next
-+        */
-+
-        struct {
- 	      uint32_t core_id;
--	      uint32_t die_id;
- 	      uint32_t socket_id;
-        } cpus[nr]; /* Variable length records */
-+       /* 'nr' comes from previously processed HEADER_NRCPUS's nr_cpu_avail */
-+
-+        /*
-+	 * Third revision of HEADER_CPU_TOPOLOGY, older tools
-+	 * will not consider what comes next
-+	 */
-+
-+	struct perf_header_string_list dies; /* Variable length */
-+	uint32_t die_id[nr_cpus_avail]; /* from previously processed HEADER_NR_CPUS, VLA */
- };
- 
- Example:
+ 			$archs{$a} = 1;
+ 			$arch_table{$a} = $status;
+ 			next;
+-- 
+2.21.0
+
+
