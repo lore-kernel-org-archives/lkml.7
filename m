@@ -7,115 +7,95 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FEE0C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9647EC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E63342084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78EF02084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfFQLLk (ORCPT
+        id S1727898AbfFQLMM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:11:40 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:51055 "EHLO
+        Mon, 17 Jun 2019 07:12:12 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:40901 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfFQLLk (ORCPT
+        with ESMTP id S1726622AbfFQLML (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:11:40 -0400
+        Mon, 17 Jun 2019 07:12:11 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MvrVJ-1iRlfZ1c0t-00suZC; Mon, 17 Jun 2019 13:11:14 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1N32y5-1idHyv43rh-013RP4; Mon, 17 Jun 2019 13:12:01 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Paul Cercueil <paul@crapouillou.net>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mtd: rawnand: ingenic: fix ingenic_ecc dependency
-Date:   Mon, 17 Jun 2019 13:10:48 +0200
-Message-Id: <20190617111110.2103786-1-arnd@arndb.de>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] clk: imx6q: fix section mismatch warning
+Date:   Mon, 17 Jun 2019 13:11:35 +0200
+Message-Id: <20190617111159.2124152-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:3d5kPLvVE+Mc9VocHJ5QL+VG4ICGCL+ttTF1bO5RPZrywWViORJ
- J4UEAky7/1X2kY+6uHvrmIHQ7XjrD2blLBlde7aWejVbivUNHuxVqJ64iuGvyWcy6MGyobe
- b3z31TVpq0hJMmVqt1VT9ov4znfRlngYBsN+8AmkjxP/RiF758Gygi5TAFP2MyREaWJ05bQ
- zaAhuK21CjxYLMTKfVXOg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zmaDm1J/3pY=:C/lRGG3LiVMmI+mYfDDOhB
- yTIvj0o/OjngHQQTEqmUTTGy/WInYst1DqPO24w3furPv5tYb26El1BOBWOPeZcgMNUMXh9nP
- SkHTyj/K0Udn6oU5dU28acZP8LsYqiQURxAnoNAYAHnq9psTFySd1DQNudIt7kncrP/o/bQpG
- 6dd1RBjadw1Am0ex7q0lqYsllDzQEtiQXlCNr25WC9WmnDeahuGsTc6AD8lwt7GIa03V0ds1n
- rMZM9f7KjIvyupa+BPGfEF+AXatKuAczzwXi1jYmrCFS+TZY4s7UBDB2j0Yfv32nk7PwPbMzN
- Ucvh0jNCSah3wJuJOy+o3JllX5vvpGNeQgWmXBSH2Z+lQor5CJ8XF78/lcSm4uQ3hnj+K5xmJ
- ozSVZjZdwOSweZSH+p88q/aibNg1VQhd94eYaYc+Q1hf+7tyrEukvrZG6bkhmYMMYy+jVNwaw
- xlN48l+Ck8xJBOXy3eEtJ7hwz/h3pIqWuQjXcMDiz9Bjyp7JFFtJ8Cp5fT/aB5iu6c2Zc1DXO
- 4Z3Ez8WGh17giu/cZzddQXnJs6nwnbhPd8JKnBxngvu/LdSr/uAq0P0YzVaIumJM6hOvd7lo5
- FEpB3XEjVjTIeBy12G49jsAw/6QIR16G1pK6grnUK4r25Ta9SlQ0uOhuYgk0ckCijuWDU7pbJ
- V2TjwiRJSNdfuapuKyl4QTBKADC8oh4Kfk6uyBYxtfxQGT02i+CV5IhjRiMyTvRz4HNTt3grF
- TNwW/xc9cuUgfKnro1uyx+qJRCAbvY3GuZN7lA==
+X-Provags-ID: V03:K1:luZvn4Kw4EBR3RZaXipNa456cw8n9WOMC2IEWpCkVsAMKIG9gyf
+ Th7DcL93IXtSxW5GN6oGVvRO4qNociCYcoTyC6k9h91t+wCGdSDVEnnK99TtMYieeczzjce
+ TtDhTLgMfYl53zOD+f9PVhF6IwrEPIgWIxTCcOP4Zf5dIvjTSMHxmkpBZda2gbOuYSf2paE
+ RKvO5Om4GSzeijIMxk+HQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:M3B5Knar0Ik=:A+6jFaGJ6IonTlxDIyFvi7
+ gEa4cgrbowRmLVoa0iMQU1P1GYnSiU2VRShQMF1ULKS4MZtmzGY7IBMo1dJd9Y1M8qxsaYjrQ
+ wVyx/F2362nHnaj3rKglLoq+Prt92d5dd/D4Nqur0Sz1+s/gVrRN8hz0jYOxGOKWhMkmC9jNv
+ ZZ9lS7KTgc8/wdABoPeaTI+7eVeA2+VvqJJQsrTZOMm2cDhB7BgvwItmUsAAZy6jWI/XHFaZE
+ VJ7FABvEEU9hwK9AKqUOGA0QpSjJ1WlF53J+7B3x1u2ZoNdsbwqouAAQJqljGIiuTIVlvBipk
+ ZNir5dVDGvprYRQVzLlyinh78mFDamwd4fOnyKniEmhKAjfonrt/6RQFPXF6oaHOMsp0DMlv1
+ 21z12ITap2G/izeQTekeLukhqf64x4w65h0jz8Ry3Cc0SceHMDOO9TYgtH39WqroVrY/3eo0p
+ 3xHZ7CGdjNtqoPS0WK/ibk13QYv6iKX/cK7Hx/ywGB2OoUHDC9ivgXAxf8WI7dGwpEfhaccgO
+ i91HiWGI9UQvTD5MFAt1nNt/VBSsgc1j0zW6E2wVRXup1iLl8hbUpzu+s4/+4I+e5GacGAOI7
+ R8W+FofVhOq/qOAuX1BfoSGgytorucDElYDjEZQOyQB2y832ZANXRJNiuIqCzktWVv8Udzk3v
+ CkREuhO7uCqcdV8yXdfkI5yYj1iBg+qu4Dc1mGc6aW+vBD/eM/CEwATLznPECjp3Gy83CPe4p
+ qQnrLatlgY5nAhzrlKagqWXzTjU/xlpv4pbriw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ecc code is called from the main ingenic_nand module, but the
-Kconfig symbol gets selected by the dependent ones.
+The imx6q_obtain_fixed_clk_hw lacks an __init marker, which
+leads to this otherwise harmless warning:
 
-If the child drivers are loadable modules, this leads to a link
-error:
+WARNING: vmlinux.o(.text+0x495358): Section mismatch in reference from the function imx6q_obtain_fixed_clk_hw() to the function .init.text:imx_obtain_fixed_clock_hw()
+The function imx6q_obtain_fixed_clk_hw() references
+the function __init imx_obtain_fixed_clock_hw().
+This is often because imx6q_obtain_fixed_clk_hw lacks a __init
+annotation or the annotation of imx_obtain_fixed_clock_hw is wrong.
 
-drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function `ingenic_nand_remove':
-ingenic_nand.c:(.text+0x1a1): undefined reference to `ingenic_ecc_release'
-drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function `ingenic_nand_ecc_correct':
-ingenic_nand.c:(.text+0x1fa): undefined reference to `ingenic_ecc_correct'
-drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function `ingenic_nand_ecc_calculate':
-ingenic_nand.c:(.text+0x255): undefined reference to `ingenic_ecc_calculate'
-drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function `ingenic_nand_probe':
-ingenic_nand.c:(.text+0x3ca): undefined reference to `of_ingenic_ecc_get'
-ingenic_nand.c:(.text+0x685): undefined reference to `ingenic_ecc_release'
-
-Rearrange this to have the ecc code linked the same way as the main
-driver.
-
-Fixes: 15de8c6efd0e ("mtd: rawnand: ingenic: Separate top-level and SoC specific code")
+Fixes: 992b703b5b38 ("clk: imx6q: Switch to clk_hw based API")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/mtd/nand/raw/ingenic/Kconfig  | 2 +-
- drivers/mtd/nand/raw/ingenic/Makefile | 5 ++++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
+ drivers/clk/imx/clk-imx6q.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig b/drivers/mtd/nand/raw/ingenic/Kconfig
-index 19a96ce515c1..66b7cffdb0c2 100644
---- a/drivers/mtd/nand/raw/ingenic/Kconfig
-+++ b/drivers/mtd/nand/raw/ingenic/Kconfig
-@@ -16,7 +16,7 @@ config MTD_NAND_JZ4780
- if MTD_NAND_JZ4780
+diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
+index 2caa71e91119..a875d0bc12ee 100644
+--- a/drivers/clk/imx/clk-imx6q.c
++++ b/drivers/clk/imx/clk-imx6q.c
+@@ -418,8 +418,9 @@ static void disable_anatop_clocks(void __iomem *anatop_base)
+ 	writel_relaxed(reg, anatop_base + CCM_ANALOG_PLL_VIDEO);
+ }
  
- config MTD_NAND_INGENIC_ECC
--	tristate
-+	bool
- 
- config MTD_NAND_JZ4740_ECC
- 	tristate "Hardware BCH support for JZ4740 SoC"
-diff --git a/drivers/mtd/nand/raw/ingenic/Makefile b/drivers/mtd/nand/raw/ingenic/Makefile
-index 1ac4f455baea..5a55efc5d9bb 100644
---- a/drivers/mtd/nand/raw/ingenic/Makefile
-+++ b/drivers/mtd/nand/raw/ingenic/Makefile
-@@ -2,7 +2,10 @@
- obj-$(CONFIG_MTD_NAND_JZ4740) += jz4740_nand.o
- obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_nand.o
- 
--obj-$(CONFIG_MTD_NAND_INGENIC_ECC) += ingenic_ecc.o
-+ifdef CONFIG_MTD_NAND_INGENIC_ECC
-+obj-$(CONFIG_MTD_NAND_JZ4780) += ingenic_ecc.o
-+endif
-+
- obj-$(CONFIG_MTD_NAND_JZ4740_ECC) += jz4740_ecc.o
- obj-$(CONFIG_MTD_NAND_JZ4725B_BCH) += jz4725b_bch.o
- obj-$(CONFIG_MTD_NAND_JZ4780_BCH) += jz4780_bch.o
+-static struct clk_hw *imx6q_obtain_fixed_clk_hw(struct device_node *np,
+-						const char *name, unsigned long rate)
++static struct clk_hw * __init imx6q_obtain_fixed_clk_hw(struct device_node *np,
++							const char *name,
++							unsigned long rate)
+ {
+ 	struct clk *clk = of_clk_get_by_name(np, name);
+ 	struct clk_hw *hw;
 -- 
 2.20.0
 
