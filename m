@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EADB2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7932EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAD4E20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D33E21530
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806413;
-	bh=QJf27Qb/dJuewX1xtCeVJs7PldHnm/zNe9TQQdObKf8=;
+	s=default; t=1560806421;
+	bh=GMZqX2X3Vukih/0rye6TPz5iz4qZJB9tSJRMUj4xMR8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NOZw03oEPUTgKns7QagAO43xxCv1s8xefcWi64tck/ATfRuNgMJb2Ncq5FnUj71RP
-	 CM882jnz+wvWVJxc3d/ARlyeNusU93bCte4Jj8In7kSuwIuX1BVQPUc9+vo1yrr20Y
-	 hwvM+hZTj6gvT4SmqzOUxEk0HKQdbL/awk0lorls=
+	b=1hhWmaMwx56VNYFyd9jI9hYfNDYUa2hwNOZVRMGGKhl4pgYXCDjAYmD0hPTNH4PSf
+	 GAwZBlt930/1WXb8C5vbHdCB99d94VlXFcKE3dZimX6aYo9YJhHCArcHVTh4w4dO5N
+	 zZ2HEWwIAxJakbq1vAGEy7O6o5XfCfBKh7Bn5C4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729030AbfFQVUM (ORCPT
+        id S1728209AbfFQVUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:20:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44262 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:20:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44422 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbfFQVUK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:20:10 -0400
+        id S1729037AbfFQVUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:20:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1960D20B1F;
-        Mon, 17 Jun 2019 21:20:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7C3822089E;
+        Mon, 17 Jun 2019 21:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806409;
-        bh=QJf27Qb/dJuewX1xtCeVJs7PldHnm/zNe9TQQdObKf8=;
+        s=default; t=1560806416;
+        bh=GMZqX2X3Vukih/0rye6TPz5iz4qZJB9tSJRMUj4xMR8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MgETYPXX4MM5aBVZl8qjnuadRH8SwaP/VhJOfSUQd6vH3uGzPBNpk22eqXoTQbuth
-         xShcYT4lD56X4HkYuQqhCGlVrZUowdY73lx18J0z6z8h23T5DFH0ypbBi6a1sL1iuP
-         hmKlf3mfrMAp6CP+TJoPQhHY12GSP3ADOhZ9iGRk=
+        b=D+Q9Nkv5dcfygdar+JPNr1mddrKqExRXlaWU16CjFvbLeMMCeH4mXztzZdsq+uLvZ
+         oyy8CdwSArJ/HhBOIohl72WljA3ure3Ts8NpK5PbLvwCSCHUxwmXs13zWUpxO7c5sh
+         RoAEWV6PNIH6s2IE/63bnPpt/dj7vny0kJtDO84w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Matt Roper <matthew.d.roper@intel.com>,
-        Heinrich Fink <heinrich.fink@daqri.com>,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.1 040/115] drm/i915: Fix per-pixel alpha with CCS
-Date:   Mon, 17 Jun 2019 23:09:00 +0200
-Message-Id: <20190617210802.066159118@linuxfoundation.org>
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Breno Leitao <leitao@debian.org>
+Subject: [PATCH 5.1 006/115] HID: multitouch: handle faulty Elo touch device
+Date:   Mon, 17 Jun 2019 23:08:26 +0200
+Message-Id: <20190617210800.232008225@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -64,53 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ville Syrjälä <ville.syrjala@linux.intel.com>
+From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 
-commit 77ce94dbe586c1a6a26cf021c08109c9ce71b3e0 upstream.
+commit 81bcbad53bab4bf9f200eda303d7a05cdb9bd73b upstream.
 
-We forgot to set .has_alpha=true for the A+CCS formats when the code
-started to consult .has_alpha. This manifests as A+CCS being treated
-as X+CCS which means no per-pixel alpha blending. Fix the format
-list appropriately.
+Since kernel v5.0, one single win8 touchscreen device failed.
+And it turns out this is because it reports 2 InRange usage per touch.
 
-Cc: stable@vger.kernel.org
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Matt Roper <matthew.d.roper@intel.com>
-Cc: Heinrich Fink <heinrich.fink@daqri.com>
-Reported-by: Heinrich Fink <heinrich.fink@daqri.com>
-Tested-by: Heinrich Fink <heinrich.fink@daqri.com>
-Fixes: b20815255693 ("drm/i915: Add plane alpha blending support, v2.")
-Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190603142500.25680-1-ville.syrjala@linux.intel.com
-Reviewed-by: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-(cherry picked from commit 38f300410f3e15b6fec76c8d8baed7111b5ea4e4)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+It's a first, and I *really* wonder how this was allowed by Microsoft in
+the first place. But IIRC, Breno told me this happened *after* a firmware
+upgrade...
+
+Anyway, better be safe for those crappy devices, and make sure we have
+a full slot before jumping to the next.
+This won't prevent all crappy devices to fail here, but at least we will
+have a safeguard as long as the contact ID and the X and Y coordinates
+are placed in the report after the grabage.
+
+Fixes: 01eaac7e5713 ("HID: multitouch: remove one copy of values")
+CC: stable@vger.kernel.org # v5.0+
+Reported-and-tested-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/intel_display.c |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ drivers/hid/hid-multitouch.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -2444,10 +2444,14 @@ static unsigned int intel_fb_modifier_to
-  * main surface.
-  */
- static const struct drm_format_info ccs_formats[] = {
--	{ .format = DRM_FORMAT_XRGB8888, .depth = 24, .num_planes = 2, .cpp = { 4, 1, }, .hsub = 8, .vsub = 16, },
--	{ .format = DRM_FORMAT_XBGR8888, .depth = 24, .num_planes = 2, .cpp = { 4, 1, }, .hsub = 8, .vsub = 16, },
--	{ .format = DRM_FORMAT_ARGB8888, .depth = 32, .num_planes = 2, .cpp = { 4, 1, }, .hsub = 8, .vsub = 16, },
--	{ .format = DRM_FORMAT_ABGR8888, .depth = 32, .num_planes = 2, .cpp = { 4, 1, }, .hsub = 8, .vsub = 16, },
-+	{ .format = DRM_FORMAT_XRGB8888, .depth = 24, .num_planes = 2,
-+	  .cpp = { 4, 1, }, .hsub = 8, .vsub = 16, },
-+	{ .format = DRM_FORMAT_XBGR8888, .depth = 24, .num_planes = 2,
-+	  .cpp = { 4, 1, }, .hsub = 8, .vsub = 16, },
-+	{ .format = DRM_FORMAT_ARGB8888, .depth = 32, .num_planes = 2,
-+	  .cpp = { 4, 1, }, .hsub = 8, .vsub = 16, .has_alpha = true, },
-+	{ .format = DRM_FORMAT_ABGR8888, .depth = 32, .num_planes = 2,
-+	  .cpp = { 4, 1, }, .hsub = 8, .vsub = 16, .has_alpha = true, },
- };
- 
- static const struct drm_format_info *
+--- a/drivers/hid/hid-multitouch.c
++++ b/drivers/hid/hid-multitouch.c
+@@ -641,6 +641,13 @@ static void mt_store_field(struct hid_de
+ 	if (*target != DEFAULT_TRUE &&
+ 	    *target != DEFAULT_FALSE &&
+ 	    *target != DEFAULT_ZERO) {
++		if (usage->contactid == DEFAULT_ZERO ||
++		    usage->x == DEFAULT_ZERO ||
++		    usage->y == DEFAULT_ZERO) {
++			hid_dbg(hdev,
++				"ignoring duplicate usage on incomplete");
++			return;
++		}
+ 		usage = mt_allocate_usage(hdev, application);
+ 		if (!usage)
+ 			return;
 
 
