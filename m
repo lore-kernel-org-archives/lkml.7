@@ -2,52 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B69C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69231C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09E9204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38A8720861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806904;
-	bh=V6tQn4HFIztHAZOLl7a11pHzVOa2UdR1sZyTUKsSDcU=;
+	s=default; t=1560806911;
+	bh=B+A0jrXQLUwkgQ3OicSor+/qD60JiGZS8SZX+l/RJbs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LSXoGwhQBaWxSr1rXq2B19scGG8/lMFwMYEbTgcXOY5vftUlWhWtkMNPKaRa6nFeW
-	 23J66Wbbzq/0nlm7ScCiLyrLogWPLFnyVO+U9wMyt9Ja4tnYT3MpLdiWT5eY6FLZhd
-	 bPyc08kEqTEl4TVPDFtmYve47ODMbGK8zBMS6lZY=
+	b=JQ1trv9sw6zDxrPSlRZeWovPaKVx+P+fOY8oV172DppPg21exuMNlOgl+bMeOyR3+
+	 G7ef3s2/sIQ2OnMxGT2VqL2RTpnCk1T8OKQPcZcoa3+QV0Ko/coKmbyTbgF4bDjj87
+	 NEV/hsjQyQDN2lMVc5yqSoN0k8pO9FbchFAuWMgY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730543AbfFQV2X (ORCPT
+        id S1730558AbfFQV23 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:28:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55414 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:28:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55520 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730528AbfFQV2U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:28:20 -0400
+        id S1728930AbfFQV20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:28:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 49AC920673;
-        Mon, 17 Jun 2019 21:28:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 030642063F;
+        Mon, 17 Jun 2019 21:28:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806899;
-        bh=V6tQn4HFIztHAZOLl7a11pHzVOa2UdR1sZyTUKsSDcU=;
+        s=default; t=1560806905;
+        bh=B+A0jrXQLUwkgQ3OicSor+/qD60JiGZS8SZX+l/RJbs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LiSNWizuqHdn218X0HgfJ1UzBNTml12PdeHfLSaSUtPV58zKXYUI0cvc6jHqWBy7I
-         id576XgCYJFu4a1uMJZdlFwZyjvj/VOAAkY9YyzZvxo4sC+w9j2fdJr8IOC9J4tBf8
-         gyaPhz6Fl047+2osrqzyXCvVzq4ajjzuNWwo5FrQ=
+        b=hHLoWuqfU4am+FXvA+Dg3jDYWpoHMWQZi7wGLhSHiguoSEEyTaAHIoNqoovFpKqH1
+         LneNq+uXxftgXORSfNw16sLNyckKMF572NinvIZy1LdnM8dyyign20YcA5lb3vxDSE
+         5RwEttkxA/WArBaWq44+0s7Qhx0lEmykoSRnK9E4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 20/53] ASoC: fsl_asrc: Fix the issue about unsupported rate
-Date:   Mon, 17 Jun 2019 23:10:03 +0200
-Message-Id: <20190617210749.359319700@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Aaron Skomra <aaron.skomra@wacom.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 4.14 03/53] HID: wacom: Correct button numbering 2nd-gen Intuos Pro over Bluetooth
+Date:   Mon, 17 Jun 2019 23:09:46 +0200
+Message-Id: <20190617210745.732538492@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -60,40 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+From: Jason Gerecke <jason.gerecke@wacom.com>
 
-commit b06c58c2a1eed571ea2a6640fdb85b7b00196b1e upstream.
+commit 6441fc781c344df61402be1fde582c4491fa35fa upstream.
 
-When the output sample rate is [8kHz, 30kHz], the limitation
-of the supported ratio range is [1/24, 8]. In the driver
-we use (8kHz, 30kHz) instead of [8kHz, 30kHz].
-So this patch is to fix this issue and the potential rounding
-issue with divider.
+The button numbering of the 2nd-gen Intuos Pro is not consistent between
+the USB and Bluetooth interfaces. Over USB, the HID_GENERIC codepath
+enumerates the eight ExpressKeys first (BTN_0 - BTN_7) followed by the
+center modeswitch button (BTN_8). The Bluetooth codepath, however, has
+the center modeswitch button as BTN_0 and the the eight ExpressKeys as
+BTN_1 - BTN_8. To ensure userspace button mappings do not change
+depending on how the tablet is connected, modify the Bluetooth codepath
+to report buttons in the same order as USB.
 
-Fixes: fff6e03c7b65 ("ASoC: fsl_asrc: add support for 8-30kHz
-output sample rate")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+To ensure the mode switch LED continues to toggle in response to the
+mode switch button, the `wacom_is_led_toggled` function also requires
+a small update.
+
+Link: https://github.com/linuxwacom/input-wacom/pull/79
+Fixes: 4922cd26f03c ("HID: wacom: Support 2nd-gen Intuos Pro's Bluetooth classic interface")
+Cc: <stable@vger.kernel.org> # 4.11+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Reviewed-by: Aaron Skomra <aaron.skomra@wacom.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_asrc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/hid/wacom_wac.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -286,8 +286,8 @@ static int fsl_asrc_config_pair(struct f
- 		return -EINVAL;
- 	}
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -1340,7 +1340,7 @@ static void wacom_intuos_pro2_bt_pad(str
+ 	struct input_dev *pad_input = wacom->pad_input;
+ 	unsigned char *data = wacom->data;
  
--	if ((outrate > 8000 && outrate < 30000) &&
--	    (outrate/inrate > 24 || inrate/outrate > 8)) {
-+	if ((outrate >= 8000 && outrate <= 30000) &&
-+	    (outrate > 24 * inrate || inrate > 8 * outrate)) {
- 		pair_err("exceed supported ratio range [1/24, 8] for \
- 				inrate/outrate: %d/%d\n", inrate, outrate);
- 		return -EINVAL;
+-	int buttons = (data[282] << 1) | ((data[281] >> 6) & 0x01);
++	int buttons = data[282] | ((data[281] & 0x40) << 2);
+ 	int ring = data[285] & 0x7F;
+ 	bool ringstatus = data[285] & 0x80;
+ 	bool prox = buttons || ringstatus;
+@@ -3650,7 +3650,7 @@ static void wacom_24hd_update_leds(struc
+ static bool wacom_is_led_toggled(struct wacom *wacom, int button_count,
+ 				 int mask, int group)
+ {
+-	int button_per_group;
++	int group_button;
+ 
+ 	/*
+ 	 * 21UX2 has LED group 1 to the left and LED group 0
+@@ -3660,9 +3660,12 @@ static bool wacom_is_led_toggled(struct
+ 	if (wacom->wacom_wac.features.type == WACOM_21UX2)
+ 		group = 1 - group;
+ 
+-	button_per_group = button_count/wacom->led.count;
++	group_button = group * (button_count/wacom->led.count);
+ 
+-	return mask & (1 << (group * button_per_group));
++	if (wacom->wacom_wac.features.type == INTUOSP2_BT)
++		group_button = 8;
++
++	return mask & (1 << group_button);
+ }
+ 
+ static void wacom_update_led(struct wacom *wacom, int button_count, int mask,
 
 
