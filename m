@@ -2,82 +2,113 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83432C31E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:11:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24143C31E54
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AB42147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:11:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560741081;
-	bh=oclaxGHsPXHpPlyCLAX4cyEJYIL9z7zWp6co+UbOkT8=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=iCLuaUSWgiAOaQCtJtZKxR7w7LmeflHk9fiUyfD0KmMcCa4E9SR/8KWEH+RaMsgaS
-	 bweIrJWyLc2LzobwLI+k9hhgCMziio7qnZ2sA/ZT/6EOrKuxRrcbg2nslZys4A5XRX
-	 /RhJkWto+YZsGebuTzx+eI2ZMw7+B3+nnkpTHtvg=
+	by mail.kernel.org (Postfix) with ESMTP id F0D5C214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:13:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="kP0QHqRi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfFQDLT (ORCPT
+        id S1727528AbfFQDNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 23:11:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60118 "EHLO mail.kernel.org"
+        Sun, 16 Jun 2019 23:13:02 -0400
+Received: from ozlabs.org ([203.11.71.1]:53021 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727413AbfFQDLT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 23:11:19 -0400
-Received: from localhost.localdomain (user-0ccsrjt.cable.mindspring.com [24.206.110.125])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        id S1727383AbfFQDNC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 23:13:02 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DDD6D2147A;
-        Mon, 17 Jun 2019 03:11:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560741078;
-        bh=oclaxGHsPXHpPlyCLAX4cyEJYIL9z7zWp6co+UbOkT8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=s16WMEiciHYCTT9kivoRCFyGXMt6p82dMWh/HabxbLF9bsRmiPzapTabOVRORI6Xz
-         9ITGVR0xcK+nB4rQ8e+2MM67TN9XtV5uhCydL7wq2xRNjOkDjjCuDC1WjRcBDtFLMc
-         4KLb8NQwGLxds34ehRZb1bR2qi3by0Tfa9fgcTeI=
-From:   Alan Tull <atull@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Moritz Fischer <mdf@kernel.org>
-Cc:     Alan Tull <atull@kernel.org>, Dinh Nguyen <dinguyen@kernel.org>,
-        Thor Thayer <thor.thayer@linux.intel.com>,
-        Richard Gong <richard.gong@linux.intel.com>,
-        linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
-Subject: [PATCH] MAINTAINERS: fpga: hand off maintainership to Moritz
-Date:   Sun, 16 Jun 2019 22:11:13 -0500
-Message-Id: <20190617031113.4506-1-atull@kernel.org>
-X-Mailer: git-send-email 2.21.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Rx9R2VJ5z9s7h;
+        Mon, 17 Jun 2019 13:12:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560741179;
+        bh=dii/HBw3ZnI4e+hFv439RvrNBRhuS3jfce2LXRNFDRs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=kP0QHqRiJeq6VP6/hfMI0Aeoz/JwTg15jiDBwKjgxjvk+VgCGgd2SC21YTTSP3yV/
+         eNA/GVhMT4HnuMa0FaoVLzKsMsGej4PLTFP+Osex8GAiEh8WUV5cNIKgQD35O2q24t
+         f6Z5L03dzGICk2KSA7GGPkl46D7uC0umgYPlZ4WHsKGCkufTIz60jeC+3/TGpxCWCQ
+         +5GFtqJ/leUMdsTXPQdLTyn4D5CdW8V4sX8Ho3iEBJRLWGDi1fNdCG1Jl1QvclamNR
+         VlQipglFayAB/yrkoPNY7zetWht7sQbE+tmqMyDRZAdThbLItR7Rja52t2nyaqB6HO
+         fDVaojAR5IKFg==
+Date:   Mon, 17 Jun 2019 13:12:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yintian Tao <yttao@amd.com>, Prike Liang <Prike.Liang@amd.com>,
+        Trigger Huang <Trigger.Huang@amd.com>
+Subject: linux-next: manual merge of the amdgpu tree with Linus' tree
+Message-ID: <20190617131258.323a4a90@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/w.oAuHCOhQJq8XNheooQ4HH"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm moving on to a new position and stepping down as FPGA subsystem
-maintainer.  Moritz has graciously agreed to take over the
-maintainership.
+--Sig_/w.oAuHCOhQJq8XNheooQ4HH
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Alan Tull <atull@kernel.org>
----
- MAINTAINERS | 1 -
- 1 file changed, 1 deletion(-)
+Hi Alex,
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 80e2bfa049d7..448730982545 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6266,7 +6266,6 @@ F:	include/linux/ipmi-fru.h
- K:	fmc_d.*register
- 
- FPGA MANAGER FRAMEWORK
--M:	Alan Tull <atull@kernel.org>
- M:	Moritz Fischer <mdf@kernel.org>
- L:	linux-fpga@vger.kernel.org
- S:	Maintained
--- 
-2.21.0
+Today's linux-next merge of the amdgpu tree got a conflict in:
 
+  drivers/gpu/drm/amd/amdgpu/amdgpu_pm.c
+
+between commits:
+
+  192905989302 ("drm/amd/amdgpu: add RLC firmware to support raven1 refresh=
+")
+  f3a5231c8f14 ("drm/amdgpu: return 0 by default in amdgpu_pm_load_smu_firm=
+ware")
+
+from Linus' tree and commits:
+
+  80f41f84ae2c ("drm/amd/amdgpu: add RLC firmware to support raven1 refresh=
+")
+  4a39ec6ac5f3 ("drm/amdgpu: fix pm_load_smu_firmware for SR-IOV")
+  e9bc1bf7916e ("drm/amdgpu: register pm sysfs for sriov (v2)")
+  0079f82e710c ("drm/amdgpu: return 0 by default in amdgpu_pm_load_smu_firm=
+ware")
+
+from the amdgpu tree.
+
+I fixed it up (I used the latter version) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/w.oAuHCOhQJq8XNheooQ4HH
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0HBToACgkQAVBC80lX
+0Gzslwf9GupTS+jmfa7PlhO6ZMsEWqHasNXT3zRsMT3QUKYadrC6JhfJm7uDLq6H
+rcHjkvhc7VCVjZxcM8DpHTXtx3YNuVwr+Ctx7onzf5i8nR84BrczCtLOAOK2aJ0P
+cptHzW1nRxTLQL6yn/d8qkVUdgaXhx8r/zoVoPsbmTMaMj75x9IaXdqWBAGInQYM
+bdUIOt3XySZ+hxTttKRMqJcyDMMR8D4roxUh0sefibiun4IRodjRu7qFNOFJN187
+uxvCUTswzgnpHOL9ZqwkUNdBplEp/Ekvx+uCbuJybXMJPilG5z0wjXPVIvHn1sjK
+dEYTbFPROJZUUdRhxMJ2Ii9gSP0JBA==
+=eU9y
+-----END PGP SIGNATURE-----
+
+--Sig_/w.oAuHCOhQJq8XNheooQ4HH--
