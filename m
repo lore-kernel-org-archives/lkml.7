@@ -2,54 +2,54 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F50C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DD79C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6F920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331C420861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806648;
-	bh=9Uu2P+0tXcD/Wapl3Z4SCnB0cUKh2ZVQTx4ZFSkCqgQ=;
+	s=default; t=1560806653;
+	bh=CRUyWK9NyptmT2V8ZmUnha77qJW0NiUSmcI4NGUdFCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=f1yFPZhgWVxGuJevgDBhDx6mSAL+OOWtVSXlJyvVeR49Tf/75tIQQ9ju5AlIIEP7z
-	 Yz+jGK/Z/c9e2EtlHobf2sRPMUDifl7wWqWBNROCfff8iIghc9Rn/K/ESdQeMOTZi9
-	 yae8WplL/z2a26T0izuUU9p+BWNCDRVFetmV2zGg=
+	b=IdL/9JymmCJ4LZqtK6AyRjFGjswNPDwxwtDUjczB1VmcAbTSUDN7RDJAjUrC7PeKi
+	 opV4rKZYY3JvvdIGUrnOZm/qq1qSalQdmb56fbIR0UFhGGWh0T9XBTwfW8FlHGvTDK
+	 ERwDnWP0KMbx9SJ4se0N/5mGSIkXx3KLMgPd4cl4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729853AbfFQVYH (ORCPT
+        id S1729871AbfFQVYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:24:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49498 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:24:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729845AbfFQVYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:24:04 -0400
+        id S1729215AbfFQVYK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:24:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E8E72070B;
-        Mon, 17 Jun 2019 21:24:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DB8C820657;
+        Mon, 17 Jun 2019 21:24:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806643;
-        bh=9Uu2P+0tXcD/Wapl3Z4SCnB0cUKh2ZVQTx4ZFSkCqgQ=;
+        s=default; t=1560806649;
+        bh=CRUyWK9NyptmT2V8ZmUnha77qJW0NiUSmcI4NGUdFCY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TgPh4wYYbb1gVISTHE5PA9aZ5reUfyNgMLWo5T//FnITLwoRvjzObzgGIT8FZUPmP
-         a0JIEXIPw6n0hlJ+AZdekBhdOOgCPGP8co0v2MKOILIcpMtPNZ7xhBWF0zArABtjFk
-         llXOHtx0NShSkWbl/hvTq9Ak5WYp9BxFBbDDCquE=
+        b=f8Hq3N/X0Bl3XVFsgJJKvdtwv4LlvWBxADjIh/JUE1IwEBBrwL7t3PTjtSXl1M+fa
+         5165vjX2TpViKreE80HUaqG+y3OHQOjYW/OC8bF3kR9vy0eGqtV6+vHWK/FXjOb+Ot
+         JR24QoNpJoO1rJmFLj1oVgeXlsPoQgAEThQcG7ek=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 089/115] KVM: x86/pmu: mask the result of rdpmc according to the width of the counters
-Date:   Mon, 17 Jun 2019 23:09:49 +0200
-Message-Id: <20190617210804.501479428@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 10/75] ALSA: oxfw: allow PCM capture for Stanton SCS.1m
+Date:   Mon, 17 Jun 2019 23:09:21 +0200
+Message-Id: <20190617210753.265413601@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-References: <20190617210759.929316339@linuxfoundation.org>
+In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
+References: <20190617210752.799453599@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -59,118 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0e6f467ee28ec97f68c7b74e35ec1601bb1368a7 ]
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-This patch will simplify the changes in the next, by enforcing the
-masking of the counters to RDPMC and RDMSR.
+commit d8fa87c368f5b4096c4746894fdcc195da285df1 upstream.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Stanton SCS.1m can transfer isochronous packet with Multi Bit Linear
+Audio data channels, therefore it allows software to capture PCM
+substream. However, ALSA oxfw driver doesn't.
+
+This commit changes the driver to add one PCM substream for capture
+direction.
+
+Fixes: de5126cc3c0b ("ALSA: oxfw: add stream format quirk for SCS.1 models")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/x86/kvm/pmu.c           | 10 +++-------
- arch/x86/kvm/pmu.h           |  3 ++-
- arch/x86/kvm/pmu_amd.c       |  2 +-
- arch/x86/kvm/vmx/pmu_intel.c | 13 +++++++++----
- 4 files changed, 15 insertions(+), 13 deletions(-)
+ sound/firewire/oxfw/oxfw.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu.c b/arch/x86/kvm/pmu.c
-index e39741997893..dd745b58ffd8 100644
---- a/arch/x86/kvm/pmu.c
-+++ b/arch/x86/kvm/pmu.c
-@@ -283,7 +283,7 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
- 	bool fast_mode = idx & (1u << 31);
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	struct kvm_pmc *pmc;
--	u64 ctr_val;
-+	u64 mask = fast_mode ? ~0u : ~0ull;
+--- a/sound/firewire/oxfw/oxfw.c
++++ b/sound/firewire/oxfw/oxfw.c
+@@ -170,9 +170,6 @@ static int detect_quirks(struct snd_oxfw
+ 		oxfw->midi_input_ports = 0;
+ 		oxfw->midi_output_ports = 0;
  
- 	if (!pmu->version)
- 		return 1;
-@@ -291,15 +291,11 @@ int kvm_pmu_rdpmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *data)
- 	if (is_vmware_backdoor_pmc(idx))
- 		return kvm_pmu_rdpmc_vmware(vcpu, idx, data);
- 
--	pmc = kvm_x86_ops->pmu_ops->msr_idx_to_pmc(vcpu, idx);
-+	pmc = kvm_x86_ops->pmu_ops->msr_idx_to_pmc(vcpu, idx, &mask);
- 	if (!pmc)
- 		return 1;
- 
--	ctr_val = pmc_read_counter(pmc);
--	if (fast_mode)
--		ctr_val = (u32)ctr_val;
+-		/* Output stream exists but no data channels are useful. */
+-		oxfw->has_output = false;
 -
--	*data = ctr_val;
-+	*data = pmc_read_counter(pmc) & mask;
- 	return 0;
- }
+ 		return snd_oxfw_scs1x_add(oxfw);
+ 	}
  
-diff --git a/arch/x86/kvm/pmu.h b/arch/x86/kvm/pmu.h
-index ba8898e1a854..22dff661145a 100644
---- a/arch/x86/kvm/pmu.h
-+++ b/arch/x86/kvm/pmu.h
-@@ -25,7 +25,8 @@ struct kvm_pmu_ops {
- 	unsigned (*find_fixed_event)(int idx);
- 	bool (*pmc_is_enabled)(struct kvm_pmc *pmc);
- 	struct kvm_pmc *(*pmc_idx_to_pmc)(struct kvm_pmu *pmu, int pmc_idx);
--	struct kvm_pmc *(*msr_idx_to_pmc)(struct kvm_vcpu *vcpu, unsigned idx);
-+	struct kvm_pmc *(*msr_idx_to_pmc)(struct kvm_vcpu *vcpu, unsigned idx,
-+					  u64 *mask);
- 	int (*is_valid_msr_idx)(struct kvm_vcpu *vcpu, unsigned idx);
- 	bool (*is_valid_msr)(struct kvm_vcpu *vcpu, u32 msr);
- 	int (*get_msr)(struct kvm_vcpu *vcpu, u32 msr, u64 *data);
-diff --git a/arch/x86/kvm/pmu_amd.c b/arch/x86/kvm/pmu_amd.c
-index 50fa9450fcf1..d3118088f1cd 100644
---- a/arch/x86/kvm/pmu_amd.c
-+++ b/arch/x86/kvm/pmu_amd.c
-@@ -186,7 +186,7 @@ static int amd_is_valid_msr_idx(struct kvm_vcpu *vcpu, unsigned idx)
- }
- 
- /* idx is the ECX register of RDPMC instruction */
--static struct kvm_pmc *amd_msr_idx_to_pmc(struct kvm_vcpu *vcpu, unsigned idx)
-+static struct kvm_pmc *amd_msr_idx_to_pmc(struct kvm_vcpu *vcpu, unsigned idx, u64 *mask)
- {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	struct kvm_pmc *counters;
-diff --git a/arch/x86/kvm/vmx/pmu_intel.c b/arch/x86/kvm/vmx/pmu_intel.c
-index 5ab4a364348e..ad7ea81fbfbf 100644
---- a/arch/x86/kvm/vmx/pmu_intel.c
-+++ b/arch/x86/kvm/vmx/pmu_intel.c
-@@ -126,7 +126,7 @@ static int intel_is_valid_msr_idx(struct kvm_vcpu *vcpu, unsigned idx)
- }
- 
- static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
--					    unsigned idx)
-+					    unsigned idx, u64 *mask)
- {
- 	struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
- 	bool fixed = idx & (1u << 30);
-@@ -138,6 +138,7 @@ static struct kvm_pmc *intel_msr_idx_to_pmc(struct kvm_vcpu *vcpu,
- 	if (fixed && idx >= pmu->nr_arch_fixed_counters)
- 		return NULL;
- 	counters = fixed ? pmu->fixed_counters : pmu->gp_counters;
-+	*mask &= pmu->counter_bitmask[fixed ? KVM_PMC_FIXED : KVM_PMC_GP];
- 
- 	return &counters[idx];
- }
-@@ -183,9 +184,13 @@ static int intel_pmu_get_msr(struct kvm_vcpu *vcpu, u32 msr, u64 *data)
- 		*data = pmu->global_ovf_ctrl;
- 		return 0;
- 	default:
--		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
--		    (pmc = get_fixed_pmc(pmu, msr))) {
--			*data = pmc_read_counter(pmc);
-+		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-+			u64 val = pmc_read_counter(pmc);
-+			*data = val & pmu->counter_bitmask[KVM_PMC_GP];
-+			return 0;
-+		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
-+			u64 val = pmc_read_counter(pmc);
-+			*data = val & pmu->counter_bitmask[KVM_PMC_FIXED];
- 			return 0;
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			*data = pmc->eventsel;
--- 
-2.20.1
-
 
 
