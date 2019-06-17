@@ -2,122 +2,95 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95091C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:47:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C644C31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BD620861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:47:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B5732087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="fNK2WQ+o"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="YbmA7fSX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfFQJrt (ORCPT
+        id S1727671AbfFQJtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:47:49 -0400
-Received: from mout.web.de ([217.72.192.78]:56847 "EHLO mout.web.de"
+        Mon, 17 Jun 2019 05:49:04 -0400
+Received: from ozlabs.org ([203.11.71.1]:46445 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfFQJrt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:47:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1560764846;
-        bh=H/PHN8avuX81CPYaydwdQJ4ODG2xpiWuNDvE+koj39c=;
-        h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
-        b=fNK2WQ+oRZ/RzK25qnZ8cCqDfo+bKS6e8WdMsiPM+b2Z2EatEo37K9JTj/z9uhMFM
-         RY4WACpsATZsu6UC5J96jC+fpPIRVrcH3qju+F3v/U0nGJE7R/JZJupAqzFNKxLkip
-         XMGg8lRLxH133WDc0RxvMJDceXa5ij4c1nJyd/uA=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from localhost.localdomain ([89.15.236.75]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0LilAv-1iCyrT2O0z-00cyrg; Mon, 17
- Jun 2019 11:47:26 +0200
-From:   Soeren Moch <smoch@web.de>
-To:     Stanislaw Gruszka <sgruszka@redhat.com>
-Cc:     Soeren Moch <smoch@web.de>,
-        Helmut Schaa <helmut.schaa@googlemail.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: [PATCH] rt2x00: fix rx queue hang
-Date:   Mon, 17 Jun 2019 11:46:56 +0200
-Message-Id: <20190617094656.3952-1-smoch@web.de>
-X-Mailer: git-send-email 2.17.1
-X-Provags-ID: V03:K1:3a3ZYjP+AqN63izDtlh9rhWTl4i2jSWid+rszOAEsfpWHT8/y3O
- NdCi9iShGxrhUFBc6Es54sBTPUJuMyXPc3yNbDBFXXGRwm4DAAe/x4XDBjHUNQ0qmtuvbNO
- sYmTTsA0/x9X7NxUg5LpzwtFCMeayiAdwkTFTeDPU1PQuB4uiN2rva5TVRB03K2WDgdQmH/
- EpLigVkko/2sDNhEnfXFQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:p7/ouLm1HwM=:fr/6/hQornvx+OdS9e2yaU
- qY4oB+R2aQjIw78QJfTgz+kmgAjSFQNMjXSOfG5Uofda9cS8HmoeTUnJ367rs1FVRPf7UUOHu
- TcoHrLmezI2c9TvtcmFqeZb9GTwrOYk26HULwMBkC2ncnyD9PPAiW+IVafhW97Uti8QtOaNh3
- 3arunkYxota5wdKoQ7dHtTqcBiO6YyOZqdxFIwS+vh2kf3s3QPybCUpRHOtyv6Xw87wFHEIO0
- oKVW3psf+fIgn/xbRCLCv/fWRE5WTbnokIV/4rWFVFGbR/7yEJMsBk9XZqemgvgMiUaqhLyJ5
- imJk8S5ePfmtHidCBCbMXcvUuecsKe2Yy0yoKYDd8ys4L2waHe3+PPxZTIK8KSd6ifYxtDuqm
- zzNvOCvy+ZzsePbUtYctsIRvzI8+ysFAnd274yVg1xFfVr2iF3+Sx+8DDzap57q83ota4uDRn
- 4qv992ws15CN56is/U1HTYYqTxtZRcfb5PfEbTf3Sdey1ZSGZg/dGqxaowRQocnn4AoTc3Tyw
- PUVYS53eJWSoj/VMVF2EoK8fh8bTf38b9wuBe+43TXEp9KoAj3J1ySP/3Oxyuoakz949jvdnD
- qZtOSig34oOdQsy5Apz2/O6iWADeMh3b2eK+RfMKlZLRNgvdBbluGa7o4EnmEv2i+DLFmrPaC
- ksmyaXSDb9s/VkS4PrRLEHucLesPKgShpFF4j46+Ax4cmz1Q+YMo5lqgERfDLdneEgvrwS/QO
- a7V7G6E3huQIRhLEAdrxLo0f00A53otwzLvhooeb9qna6wC1ELT3eSFn+wdlRm/kI8DmA3/si
- 59n0FHb6owOMqlGHdnxuuQKDBwPpG83MnIbS8JxfsnW2uu4fLzYUMVUxOcHyslvgvDWMCw6AN
- F3rs85H3+3eh2TGjPKk88Zqg45OGx1Pu+8B56rEMCWaBadqqz/W1whqaxzz9C2CgkGhuhLm53
- 9US0CObCLBOUFkAIfUUCEzccmJOaX2iY=
-Content-Transfer-Encoding: quoted-printable
+        id S1726048AbfFQJtD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:49:03 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45S5yP0DPLz9sDX;
+        Mon, 17 Jun 2019 19:49:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560764941;
+        bh=A3gq5DWaBnsG+nyNgGh44hy1hkBKp2cGfOnCCsFC/Fk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=YbmA7fSXiGhkk5KU/CztidRKXCVIlhobEQG94+gEmajCLLkMMTQEZoxlitqGIRFDq
+         R6sMxjccV4GS9bwqJN8rdA8id2TZTQIvuKdpgwcSONcmOqhFwXaCd7Yg4dvj5+vbOE
+         neleRcN0DOOi6kmSXeVIslmQzJ83Kj8qJa938gaPsPFD9Z1M7qun0k5B//dDM53p3T
+         RXJKPIkz/ppyt6lshvhW2mPTYv0sh6NtiMmsDrnrjhztGum6DJoMy+ucdjqyaRML9f
+         BzaZDFPJ0OzJx3yaUZzSFWJRQT3kkirIPDsFHJgmFc/gyQ9ayXC8lyzvolHyMsNNXq
+         I64fslW98VigA==
+Date:   Mon, 17 Jun 2019 19:49:00 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Steffen Klassert <steffen.klassert@secunet.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Florian Westphal <fw@strlen.de>
+Subject: linux-next: Fixes tag needs some work in the ipsec-next tree
+Message-ID: <20190617194900.02d13c09@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_//OMI5uG7L7sng0Tdf2Qoq4k"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since commit ed194d136769 ("usb: core: remove local_irq_save() around
- ->complete() handler") the handlers rt2x00usb_interrupt_rxdone() and
-rt2x00usb_interrupt_txdone() are not running with interrupts disabled
-anymore. So these handlers are not guaranteed to run completely before
-workqueue processing starts. So only mark entries ready for workqueue
-processing after proper accounting in the dma done queue.
-Note that rt2x00usb_work_rxdone() processes all available entries, not
-only such for which queue_work() was called.
+--Sig_//OMI5uG7L7sng0Tdf2Qoq4k
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This fixes a regression on a RT5370 based wifi stick in AP mode, which
-suddenly stopped data transmission after some period of heavy load. Also
-stopping the hanging hostapd resulted in the error message "ieee80211
-phy0: rt2x00queue_flush_queue: Warning - Queue 14 failed to flush".
-Other operation modes are probably affected as well, this just was
-the used testcase.
+Hi all,
 
-Fixes: ed194d136769 ("usb: core: remove local_irq_save() around ->complete=
-() handler")
-Cc: Stanislaw Gruszka <sgruszka@redhat.com>
-Cc: Helmut Schaa <helmut.schaa@googlemail.com>
-Cc: Kalle Valo <kvalo@codeaurora.org>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: linux-wireless@vger.kernel.org
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: stable@vger.kernel.org # 4.20+
-Signed-off-by: Soeren Moch <smoch@web.de>
-=2D--
- drivers/net/wireless/ralink/rt2x00/rt2x00dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In commit
 
-diff --git a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c b/drivers/net/=
-wireless/ralink/rt2x00/rt2x00dev.c
-index 1b08b01db27b..9c102a501ee6 100644
-=2D-- a/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-+++ b/drivers/net/wireless/ralink/rt2x00/rt2x00dev.c
-@@ -263,9 +263,9 @@ EXPORT_SYMBOL_GPL(rt2x00lib_dmastart);
+  1be451d99317 ("xfrm: fix bogus WARN_ON with ipv6")
 
- void rt2x00lib_dmadone(struct queue_entry *entry)
- {
--	set_bit(ENTRY_DATA_STATUS_PENDING, &entry->flags);
- 	clear_bit(ENTRY_OWNER_DEVICE_DATA, &entry->flags);
- 	rt2x00queue_index_inc(entry, Q_INDEX_DMA_DONE);
-+	set_bit(ENTRY_DATA_STATUS_PENDING, &entry->flags);
- }
- EXPORT_SYMBOL_GPL(rt2x00lib_dmadone);
+Fixes tag
 
-=2D-
-2.17.1
+  Fixes: 4c203b0454b ("xfrm: remove eth_proto value from xfrm_state_afinfo")
 
+has these problem(s):
+
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_//OMI5uG7L7sng0Tdf2Qoq4k
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0HYgwACgkQAVBC80lX
+0GxVygf/QlOYSK0D+ZEZLH2SoUzAeastCjWRDekFanVDuaxdMBKWOle/q3OxuVI0
+dOLhgAZQCD2ZzlzWo9OXkNZK9SBZSTpk3X6X4NWiAgFi4n3GlvxA/JVUug9gtJas
+6zx7YBChXmsyTfW15Bf7oZQfIvrLRV58b7LxFG9P1hDks03APPoxiF3ijAwOYTyC
+MdBCcTiPxVKNQnu3GOZRjgpGUGOQv4P3bxENG+JZM7E4y5UgXgvRMniMWkhKKODc
+jEmkcdsphw94Hc5AZJpVbnzZ+Sx/pglJ9KwzHIlcSAF9BJWYsQkosS2yfSxgQARO
+sDVj37ZhlQzKol9b4Er2ihW+I4f1nw==
+=o1gT
+-----END PGP SIGNATURE-----
+
+--Sig_//OMI5uG7L7sng0Tdf2Qoq4k--
