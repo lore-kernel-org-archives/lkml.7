@@ -2,120 +2,137 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC04C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:53:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96943C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CF02086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:53:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C4462089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:54:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560776083;
+	bh=vjYiSvVQdR3JA3dPjhZJabq2wvGGMHTWiZ5C19FCbeM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TyF+EvwnJTyISrOhEHbNnr0jhXqpBgpf+RG1LjhlNfPWeeMYQO7LE9XperPOHXE/F
+	 NdR4rBemnX5Hvj3VQxL1ba1U5URQ0J3lPTsOD5BKiyAHwST2bxJ2pLSu8eshZcNAGp
+	 SWp6h9ehP+RiKpHyoRULnCBwZIUjKQ1y48E6oxSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727541AbfFQMxz (ORCPT
+        id S1727643AbfFQMym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:53:55 -0400
-Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:55911 "EHLO
-        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726028AbfFQMxy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:53:54 -0400
-Received: from [IPv6:2001:983:e9a7:1:9450:c90a:3140:14fc] ([IPv6:2001:983:e9a7:1:9450:c90a:3140:14fc])
-        by smtp-cloud7.xs4all.net with ESMTPA
-        id cr8whuvNH5qKacr8xhWxwg; Mon, 17 Jun 2019 14:53:52 +0200
-Subject: Re: [PATCH v7 0/3] media: v4l2-subdev: Verify arguments in
- v4l2_subdev_call()
-To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190520212747.368-1-jmkrzyszt@gmail.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <4e2951b6-2fa7-c0c0-9c3c-85a6b04c3691@xs4all.nl>
-Date:   Mon, 17 Jun 2019 14:53:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 17 Jun 2019 08:54:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfFQMyl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:54:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 79B73204EC;
+        Mon, 17 Jun 2019 12:54:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560776081;
+        bh=vjYiSvVQdR3JA3dPjhZJabq2wvGGMHTWiZ5C19FCbeM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Y+V2FTnaE9McfD6PC9Ha2Yrarg+z2tNKy8h0c+cp6hWDrLLNkYYjL7AyUofCHeeH+
+         TMYJCAnup3M0xU7xcW++aQQw1qGKJTpNvCQ6KUgOFat/c2aT7l+JWbBW/i/H/QWvqV
+         zqDLdzUd73msDhX6AOKD5WL+RnnKBeOrZzfUfNEo=
+Date:   Mon, 17 Jun 2019 14:54:38 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide
+ book
+Message-ID: <20190617125438.GA18554@kroah.com>
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+ <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org>
+ <87o930uvur.fsf@intel.com>
+ <20190614140603.GB7234@kroah.com>
+ <20190614122755.1c7b4898@coco.lan>
+ <874l4ov16m.fsf@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520212747.368-1-jmkrzyszt@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfBSmRzw+70wJnkv0H2WIQ8akfhoXjb1lZzw4t7GNm4BMPzwyLgzgqgx+Fg4vk9x6UDtuL0Z3lkS4K+H+n3yqFYU5+Sjrtg8c/2DCDo9W1/MAnMm5YA+l
- keekHiLcWJD68JQX+/OBTCB2l5Lpn0Dg1q68uCSVApyw5vitFXjQyUVxSQW0h9CyWRhewJgFTbhiFUClStK4zB5W1ha9+Fy2CoNYKgHFPnUjnh9TIDII8MYa
- t4dg6jTzRi0vkkK3qBMeEIGLULLbddKGxeXhpLTc+XRGAZPOI8M5I3wcmzNbZbQWgN3dOMGZO9jsx/UVc2yCPrddweLVsdsbs8AV1Ay92I6p/DYy1W4OtoKA
- ou4BAU7S2lMw6tyogCb39iNwY2tH4ZfR+OW/imBdz5i0365azoIpGAApPwuGsYKMMftejhCZtGHmprCssdOkX4jfnkgd9g==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <874l4ov16m.fsf@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sakari,
+On Mon, Jun 17, 2019 at 03:36:17PM +0300, Jani Nikula wrote:
+> On Fri, 14 Jun 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> > Em Fri, 14 Jun 2019 16:06:03 +0200
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+> >
+> >> On Fri, Jun 14, 2019 at 04:42:20PM +0300, Jani Nikula wrote:
+> >> > 2) Have the python extension read the ABI files directly, without an
+> >> >    extra pipeline.  
+> >> 
+> >> He who writes the script, get's to dictate the language of the script :)
+> 
+> The point is, it's an extension to a python based tool, written in perl,
+> using pipes for communication, and losing any advantages of integrating
+> with the tool it's extending.
+> 
+> I doubt you'd want to see system() to be used to subsequently extend the
+> perl tool.
+> 
+> I think it's just sad to see the documentation system slowly drift
+> further away from the ideals we had, and towards the old ways we worked
+> so hard to fix.
 
-Are you OK with this series? Please Ack if that's the case, so that I can
-merge it.
+What are those ideals?
 
-Regards,
+I thought the goal was to be able to write documentation in a as much
+as a normal text file as possible and have automation turn those files
+into "pretty" documentation that we can all use.
 
-	Hans
+And I think that fits with the way this patch set goes, right?  We are
+not on a quest for purity of scripts to generate the documentation at
+the expense of having to force hundreds, or thousands, of developers to
+change their ways, or to force a "flag day" conversion of existing
+documentation resulting in a huge merge mess.
 
-On 5/20/19 11:27 PM, Janusz Krzysztofik wrote:
-> Correctness of format type (try or active) and pad ID parameters passed
-> to subdevice operation callbacks is now verified only for IOCTL calls.
-> However, those callbacks are also used by drivers, e.g., V4L2 host
-> interfaces.
-> 
-> Since both subdev_do_ioctl() and drivers are using v4l2_subdev_call()
-> macro while calling subdevice operations, move those parameter checks
-> from subdev_do_ioctl() to v4l2_subdev_call().  Also, add check for
-> non-NULL pointers, including pad config if V4L2_SUBDEV_FORMAT_TRY is
-> requested.
-> 
-> Having that done, we can avoid taking care of those checks inside
-> drivers.
-> 
-> Janusz Krzysztofik (3):
->   media: v4l2-subdev: Verify arguments in v4l2_subdev_call()
->   media: v4l2-subdev: Verify v4l2_subdev_call() pointer arguments
->   media: v4l2-subdev: Verify v4l2_subdev_call() pad config argument
-> 
->  drivers/media/v4l2-core/v4l2-subdev.c | 268 +++++++++++++++++---------
->  include/media/v4l2-subdev.h           |   6 +
->  2 files changed, 188 insertions(+), 86 deletions(-)
-> 
-> Changelog:
-> v6->v7:
-> Changes suggested by Sakari - thanks!
-> - never succeed pad check on media entities with pad_num == 0,
-> - allow pad 0 on subdevies not registered as media entities.
-> 
-> v5->v6:
-> - rename wrappers to call_something() as suggested by Sakari - thanks!
-> - make check_ functions inline - also on Sakari's suggestion, thanks!
-> - drop patch 2/4 and remove WARN_ONs from remaining patches to avoid
->   kernel WARNs on non-kernel bugs - thanks Hans for pointing this out!
-> 
-> v4->v5:
-> - a few coding style and code formatting changes,
-> - require CONFIG_MEDIA_CONTROLLER, not CONFIG_VIDEO_V4L2_SUBDEV_API,
->   for a valid pad ID check,
-> - perform pad ID check only if at least one pad is configured so
->   drivers which don't configure pads are not affected if built with
->   CONFIG_MEDIA_CONTROLLER defined,
-> - issue kernel warnings on invalid parameters (new patch - 2/4),
-> - validate pointers before using them (new patch - 3/4).
-> 
-> v3->v4:
-> - fix 'struct' keyword missing from patch 2/2,
-> - fix checkpatch reported style issue in patch 2/2
-> Sorry for that.
-> 
-> v2->v3:
-> - add patch 2/2 with pad config check,
-> - adjust continuation line alignments in patch 1/2 to match those
->   used in 2/2.
-> 
-> v1->v2:
-> - replace the horrible macro with a structure of wrapper functions;
->   inspired by Hans' and Sakari's comments - thanks!
-> 
+So, we are stuck with the current structure that I totally made up for
+Documentation/ABI/.  Turns out it is almost parsable, as Mauro's tool
+shows.  His tool also validates the existing text, which is great, and
+has caused fixes for it.
 
+If someone wants to write that tool in some other language, like python,
+wonderful, I have no objection, but as it is, this is a useful tool
+already, allowing us to validate, and search, existing documentation
+entries that we have never been able to do before.  It also provides an
+output that can be turned into pretty html/pdf/whatever files by other
+tools in the pipeline, a totally bonus benefit.
+
+So what is going backwards here?
+
+Maybe the processing pipeline isn't as nice as you would like, but
+remember to view this from a normal developer's point of view, not a
+documentation pipeline developer's point of view please.
+
+So, in short, my requirements are:
+	- keep Documentation/ABI/ file formats as close as possible to
+	  what we have today, preventing any flag-day issues or merge
+	  problems
+	- be able to query and validate Documentation/ABI/
+	- be able to turn Documentation/ABI into pretty documentation.
+
+If you object to the mechanics of the last requirement here, I don't
+object either, provide something else that works better.  But don't
+throw away the whole thing just because you don't like how things are
+hooked up here.
+
+I'm going to go apply most of the rest of these patches to my
+driver-core tree, stopping at the "hook it up to the kernel
+documentation" point.  Is that ok?
+
+thanks,
+
+greg k-h
