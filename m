@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991D5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6C6C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69491204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BB60204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807066;
-	bh=bARVfcUCbmuW2vaRSIe61rMyBmPVikjcO8HqO9tWEhw=;
+	s=default; t=1560807076;
+	bh=eoircKri8yZq6TBBlqggoJktGga+3JD24JCOXyw7Q5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JHy3+DYtwE05klkwo02UkpKU2MYqoi0bU9w6rP1yQozoHpMvNXZhOPs5nVu331+Sx
-	 5lDqE1A3B4rLA0IJ1Obbl4QJSEjNsDSqIw5HttVMwOTXg4PECfiGGpLcoMge7zrLQH
-	 sFUarsbr38sgYsNSfWJ8cbaRv8O4WLorfhCyZgFM=
+	b=cVpBhLF2xyVECYed202CvnFj388g5wnMZLnWCtGwYjWnLGMeJjxManx7NV2/0maRt
+	 RV0VhQr4JaPNRiE5HXwmMLY7pPSsDmWXJBGCdPmustf0W93i3o3bZCcJb3cLiX43ac
+	 6GOFflFGL6ex4Eq+ghCge6mloIJrHNOoQGkzFL5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730421AbfFQV3Z (ORCPT
+        id S1730192AbfFQVbO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56526 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:31:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730168AbfFQV3V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:21 -0400
+        id S1730129AbfFQV3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EFC9D2070B;
-        Mon, 17 Jun 2019 21:29:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7CA39204FD;
+        Mon, 17 Jun 2019 21:29:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806960;
-        bh=bARVfcUCbmuW2vaRSIe61rMyBmPVikjcO8HqO9tWEhw=;
+        s=default; t=1560806949;
+        bh=eoircKri8yZq6TBBlqggoJktGga+3JD24JCOXyw7Q5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1fY9+/86piSsLONH9ZWkzmFAdtl4B3DjLvvKq4zNS5A3/KaubU2ePqj2Nk7oeGGj2
-         SzX9Zbl6Zcq2hj3kIb5qDTwJPL/XBtY2lTZC5hRsULmXQAoOUWlHzKVZLT78yzVvd7
-         wiT6bZvcxIEEwOAhbNyxdazhCpVPzQ01kBdAbu4s=
+        b=cJSYzBz+F7zIYIT6azmVS+fz2gndgzvgsPudy8yurAfg6uKo3+JR8sZK8eR4PpAqQ
+         4M+7XeecaowjRuAyTMBg/n7ySjkgOzfnlhePu9JWQPw18zA0uaWq9f9ptSv69FDJsG
+         TpPA0J/ytwkCg/3kYuADWJLTWPHMnAAH2Dd/Lw4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+9437020c82413d00222d@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 24/53] ALSA: seq: Fix race of get-subscription call vs port-delete ioctls
-Date:   Mon, 17 Jun 2019 23:10:07 +0200
-Message-Id: <20190617210750.044414043@linuxfoundation.org>
+        stable@vger.kernel.org, Oliver Zweigle <Oliver.Zweigle@faro.com>,
+        Bernd Eckstein <3ernd.Eckstein@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 38/53] usbnet: ipheth: fix racing condition
+Date:   Mon, 17 Jun 2019 23:10:21 +0200
+Message-Id: <20190617210751.822790637@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -60,100 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2eabc5ec8ab4d4748a82050dfcb994119b983750 ]
+[ Upstream commit 94d250fae48e6f873d8362308f5c4d02cd1b1fd2 ]
 
-The snd_seq_ioctl_get_subscription() retrieves the port subscriber
-information as a pointer, while the object isn't protected, hence it
-may be deleted before the actual reference.  This race was spotted by
-syzkaller and may lead to a UAF.
+Fix a racing condition in ipheth.c that can lead to slow performance.
 
-The fix is simply copying the data in the lookup function that
-performs in the rwsem to protect against the deletion.
+Bug: In ipheth_tx(), netif_wake_queue() may be called on the callback
+ipheth_sndbulk_callback(), _before_ netif_stop_queue() is called.
+When this happens, the queue is stopped longer than it needs to be,
+thus reducing network performance.
 
-Reported-by: syzbot+9437020c82413d00222d@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fix: Move netif_stop_queue() in front of usb_submit_urb(). Now the order
+is always correct. In case, usb_submit_urb() fails, the queue is woken up
+again as callback will not fire.
+
+Testing: This racing condition is usually not noticeable, as it has to
+occur very frequently to slowdown the network. The callback from the USB
+is usually triggered slow enough, so the situation does not appear.
+However, on a Ubuntu Linux on VMWare Workstation, running on Windows 10,
+the we loose the race quite often and the following speedup can be noticed:
+
+Without this patch: Download:  4.10 Mbit/s, Upload:  4.01 Mbit/s
+With this patch:    Download: 36.23 Mbit/s, Upload: 17.61 Mbit/s
+
+Signed-off-by: Oliver Zweigle <Oliver.Zweigle@faro.com>
+Signed-off-by: Bernd Eckstein <3ernd.Eckstein@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c | 10 ++--------
- sound/core/seq/seq_ports.c     | 13 ++++++++-----
- sound/core/seq/seq_ports.h     |  5 +++--
- 3 files changed, 13 insertions(+), 15 deletions(-)
+ drivers/net/usb/ipheth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index 692631bd4a35..068880ac47b5 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1904,20 +1904,14 @@ static int snd_seq_ioctl_get_subscription(struct snd_seq_client *client,
- 	int result;
- 	struct snd_seq_client *sender = NULL;
- 	struct snd_seq_client_port *sport = NULL;
--	struct snd_seq_subscribers *p;
+diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
+index 3d8a70d3ea9b..3d71f1716390 100644
+--- a/drivers/net/usb/ipheth.c
++++ b/drivers/net/usb/ipheth.c
+@@ -437,17 +437,18 @@ static int ipheth_tx(struct sk_buff *skb, struct net_device *net)
+ 			  dev);
+ 	dev->tx_urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
  
- 	result = -EINVAL;
- 	if ((sender = snd_seq_client_use_ptr(subs->sender.client)) == NULL)
- 		goto __end;
- 	if ((sport = snd_seq_port_use_ptr(sender, subs->sender.port)) == NULL)
- 		goto __end;
--	p = snd_seq_port_get_subscription(&sport->c_src, &subs->dest);
--	if (p) {
--		result = 0;
--		*subs = p->info;
--	} else
--		result = -ENOENT;
--
-+	result = snd_seq_port_get_subscription(&sport->c_src, &subs->dest,
-+					       subs);
-       __end:
-       	if (sport)
- 		snd_seq_port_unlock(sport);
-diff --git a/sound/core/seq/seq_ports.c b/sound/core/seq/seq_ports.c
-index d3fc73ac230b..c8fa4336bccd 100644
---- a/sound/core/seq/seq_ports.c
-+++ b/sound/core/seq/seq_ports.c
-@@ -635,20 +635,23 @@ int snd_seq_port_disconnect(struct snd_seq_client *connector,
- 
- 
- /* get matched subscriber */
--struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
--							  struct snd_seq_addr *dest_addr)
-+int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
-+				  struct snd_seq_addr *dest_addr,
-+				  struct snd_seq_port_subscribe *subs)
- {
--	struct snd_seq_subscribers *s, *found = NULL;
-+	struct snd_seq_subscribers *s;
-+	int err = -ENOENT;
- 
- 	down_read(&src_grp->list_mutex);
- 	list_for_each_entry(s, &src_grp->list_head, src_list) {
- 		if (addr_match(dest_addr, &s->info.dest)) {
--			found = s;
-+			*subs = s->info;
-+			err = 0;
- 			break;
- 		}
++	netif_stop_queue(net);
+ 	retval = usb_submit_urb(dev->tx_urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->intf->dev, "%s: usb_submit_urb: %d\n",
+ 			__func__, retval);
+ 		dev->net->stats.tx_errors++;
+ 		dev_kfree_skb_any(skb);
++		netif_wake_queue(net);
+ 	} else {
+ 		dev->net->stats.tx_packets++;
+ 		dev->net->stats.tx_bytes += skb->len;
+ 		dev_consume_skb_any(skb);
+-		netif_stop_queue(net);
  	}
- 	up_read(&src_grp->list_mutex);
--	return found;
-+	return err;
- }
  
- /*
-diff --git a/sound/core/seq/seq_ports.h b/sound/core/seq/seq_ports.h
-index 26bd71f36c41..06003b36652e 100644
---- a/sound/core/seq/seq_ports.h
-+++ b/sound/core/seq/seq_ports.h
-@@ -135,7 +135,8 @@ int snd_seq_port_subscribe(struct snd_seq_client_port *port,
- 			   struct snd_seq_port_subscribe *info);
- 
- /* get matched subscriber */
--struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
--							  struct snd_seq_addr *dest_addr);
-+int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
-+				  struct snd_seq_addr *dest_addr,
-+				  struct snd_seq_port_subscribe *subs);
- 
- #endif
+ 	return NETDEV_TX_OK;
 -- 
 2.20.1
 
