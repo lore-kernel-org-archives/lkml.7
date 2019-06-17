@@ -7,37 +7,37 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86515C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2452FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523042147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC91F2089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="mht+KGEK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qgnwzBVA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727622AbfFQM2F (ORCPT
+        id S1727985AbfFQM2L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:28:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42596 "EHLO
+        Mon, 17 Jun 2019 08:28:11 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42700 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727829AbfFQM2B (ORCPT
+        with ESMTP id S1727957AbfFQM2K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:28:01 -0400
+        Mon, 17 Jun 2019 08:28:10 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/E0slfLWeDjdtwPv18O2DXUsqAiZEZlsuEH6ro3Vi90=; b=mht+KGEKXAnAR1V8Ic6+i6oeHW
-        0tWBsrinEJoG1Q6hZYaYJZDrE5WGaooV4xMjhwwD4YH4ibn3pjK8izm0lzl80dlub7D0orE8Fdkf5
-        IzofW4vELGo9HDVR8Gwc0xrPDGISCb8EGT81cEagR2geTnwgoEHNfc4dGwCSfRdXcU/IqTpRLx69U
-        /yQ1RGQWhb/Jj50NzebHdvB/+B+EqPw7AmGeHKXz5A4TdKANBAkq9sL2W45y72Bzm/RHdno4LDYdl
-        VX6SZ0S352riLt1COZSy1nR/GcbbajQqK32Bc73IiJn4fglImtfxfFJHeg0/SX7cLIatO+K34Do2X
-        vCG/QNGA==;
+        bh=uSjp1MI0/DxR5xPXt73Wodait3XTLM3SgT/b55inJKw=; b=qgnwzBVAM+YfsPgl6+X6TbbF07
+        np3jaACyDrf8sNmktsLdcgBaaniAVDeCLEeQ1gpYchqPIqHg4ak6NXvf2IJbGFdSl4aCzlD/6OUh3
+        tSYPKbtPsWfr38tg5LTwBSiIUlRVqlIw2ifK+8dcXBt4+cgCEG+ciSFR6zQN1YKLVc6VqF892bUfL
+        LSQ0uCxY4lml+pzKNaVcoXiUAwilJZgRIFAbn91YKF5rn2p9b24wvcEy3iBEwf8p8r9baGeuEL0MJ
+        MKm42Vy8pvrogb7MNbe7XgcEEeT4QghjEE4XfaQ19W2XHXBi3YlixlAfVU0is7KKYc9tryjtzxtyz
+        QAiVkQmQ==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqjt-00008z-Cu; Mon, 17 Jun 2019 12:27:57 +0000
+        id 1hcqk2-0000Dt-40; Mon, 17 Jun 2019 12:28:06 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -45,11 +45,10 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Ben Skeggs <bskeggs@redhat.com>
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Logan Gunthorpe <logang@deltatee.com>
-Subject: [PATCH 09/25] memremap: pass a struct dev_pagemap to ->kill and ->cleanup
-Date:   Mon, 17 Jun 2019 14:27:17 +0200
-Message-Id: <20190617122733.22432-10-hch@lst.de>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 13/25] memremap: replace the altmap_valid field with a PGMAP_ALTMAP_VALID flag
+Date:   Mon, 17 Jun 2019 14:27:21 +0200
+Message-Id: <20190617122733.22432-14-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190617122733.22432-1-hch@lst.de>
 References: <20190617122733.22432-1-hch@lst.de>
@@ -61,220 +60,272 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Passing the actual typed structure leads to more understandable code
-vs just passing the ref member.
+Add a flags field to struct dev_pagemap to replace the altmap_valid
+boolean to be a little more extensible.  Also add a pgmap_altmap() helper
+to find the optional altmap and clean up the code using the altmap using
+it.
 
-Reported-by: Logan Gunthorpe <logang@deltatee.com>
 Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 ---
- drivers/dax/device.c              | 12 ++++++------
- drivers/nvdimm/pmem.c             | 18 +++++++++---------
- drivers/pci/p2pdma.c              | 11 ++++++-----
- include/linux/memremap.h          |  4 ++--
- kernel/memremap.c                 |  8 ++++----
- mm/hmm.c                          | 10 +++++-----
- tools/testing/nvdimm/test/iomap.c |  4 ++--
- 7 files changed, 34 insertions(+), 33 deletions(-)
+ arch/powerpc/mm/mem.c     | 10 +---------
+ arch/x86/mm/init_64.c     |  8 ++------
+ drivers/nvdimm/pfn_devs.c |  3 +--
+ drivers/nvdimm/pmem.c     |  1 -
+ include/linux/memremap.h  | 12 +++++++++++-
+ kernel/memremap.c         | 26 ++++++++++----------------
+ mm/hmm.c                  |  1 -
+ mm/memory_hotplug.c       |  6 ++----
+ mm/page_alloc.c           |  5 ++---
+ 9 files changed, 29 insertions(+), 43 deletions(-)
 
-diff --git a/drivers/dax/device.c b/drivers/dax/device.c
-index cd483050a775..17b46c1a76b4 100644
---- a/drivers/dax/device.c
-+++ b/drivers/dax/device.c
-@@ -27,21 +27,21 @@ static void dev_dax_percpu_release(struct percpu_ref *ref)
- 	complete(&dev_dax->cmp);
- }
- 
--static void dev_dax_percpu_exit(struct percpu_ref *ref)
-+static void dev_dax_percpu_exit(struct dev_pagemap *pgmap)
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index cba29131bccc..f774d80df025 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -131,17 +131,9 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
  {
--	struct dev_dax *dev_dax = ref_to_dev_dax(ref);
-+	struct dev_dax *dev_dax = container_of(pgmap, struct dev_dax, pgmap);
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+-	struct page *page;
++	struct page *page = pfn_to_page(start_pfn) + vmem_altmap_offset(altmap);
+ 	int ret;
  
- 	dev_dbg(&dev_dax->dev, "%s\n", __func__);
- 	wait_for_completion(&dev_dax->cmp);
--	percpu_ref_exit(ref);
-+	percpu_ref_exit(pgmap->ref);
- }
+-	/*
+-	 * If we have an altmap then we need to skip over any reserved PFNs
+-	 * when querying the zone.
+-	 */
+-	page = pfn_to_page(start_pfn);
+-	if (altmap)
+-		page += vmem_altmap_offset(altmap);
+-
+ 	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
  
--static void dev_dax_percpu_kill(struct percpu_ref *ref)
-+static void dev_dax_percpu_kill(struct dev_pagemap *pgmap)
+ 	/* Remove htab bolted mappings for this section of memory */
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 693aaf28d5fe..3139e992ef9d 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1211,13 +1211,9 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
  {
--	struct dev_dax *dev_dax = ref_to_dev_dax(ref);
-+	struct dev_dax *dev_dax = container_of(pgmap, struct dev_dax, pgmap);
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+-	struct page *page = pfn_to_page(start_pfn);
+-	struct zone *zone;
++	struct page *page = pfn_to_page(start_pfn) + vmem_altmap_offset(altmap);
++	struct zone *zone = page_zone(page);
  
- 	dev_dbg(&dev_dax->dev, "%s\n", __func__);
--	percpu_ref_kill(ref);
-+	percpu_ref_kill(pgmap->ref);
+-	/* With altmap the first mapped page is offset from @start */
+-	if (altmap)
+-		page += vmem_altmap_offset(altmap);
+-	zone = page_zone(page);
+ 	__remove_pages(zone, start_pfn, nr_pages, altmap);
+ 	kernel_physical_mapping_remove(start, start + size);
  }
+diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
+index 01f40672507f..24924a442129 100644
+--- a/drivers/nvdimm/pfn_devs.c
++++ b/drivers/nvdimm/pfn_devs.c
+@@ -630,7 +630,6 @@ static int __nvdimm_setup_pfn(struct nd_pfn *nd_pfn, struct dev_pagemap *pgmap)
+ 		if (offset < reserve)
+ 			return -EINVAL;
+ 		nd_pfn->npfns = le64_to_cpu(pfn_sb->npfns);
+-		pgmap->altmap_valid = false;
+ 	} else if (nd_pfn->mode == PFN_MODE_PMEM) {
+ 		nd_pfn->npfns = PFN_SECTION_ALIGN_UP((resource_size(res)
+ 					- offset) / PAGE_SIZE);
+@@ -642,7 +641,7 @@ static int __nvdimm_setup_pfn(struct nd_pfn *nd_pfn, struct dev_pagemap *pgmap)
+ 		memcpy(altmap, &__altmap, sizeof(*altmap));
+ 		altmap->free = PHYS_PFN(offset - reserve);
+ 		altmap->alloc = 0;
+-		pgmap->altmap_valid = true;
++		pgmap->flags |= PGMAP_ALTMAP_VALID;
+ 	} else
+ 		return -ENXIO;
  
- static int check_vma(struct dev_dax *dev_dax, struct vm_area_struct *vma,
 diff --git a/drivers/nvdimm/pmem.c b/drivers/nvdimm/pmem.c
-index 1a9986dc4dc6..469a0f5b3380 100644
+index 1ff4b1c4c7c3..7c3d388cf2f7 100644
 --- a/drivers/nvdimm/pmem.c
 +++ b/drivers/nvdimm/pmem.c
-@@ -311,24 +311,24 @@ static const struct attribute_group *pmem_attribute_groups[] = {
- 	NULL,
- };
- 
--static void pmem_pagemap_cleanup(struct percpu_ref *ref)
-+static void pmem_pagemap_cleanup(struct dev_pagemap *pgmap)
- {
--	struct request_queue *q;
-+	struct request_queue *q =
-+		container_of(pgmap->ref, struct request_queue, q_usage_counter);
- 
--	q = container_of(ref, typeof(*q), q_usage_counter);
- 	blk_cleanup_queue(q);
- }
- 
--static void pmem_release_queue(void *ref)
-+static void pmem_release_queue(void *pgmap)
- {
--	pmem_pagemap_cleanup(ref);
-+	pmem_pagemap_cleanup(pgmap);
- }
- 
--static void pmem_pagemap_kill(struct percpu_ref *ref)
-+static void pmem_pagemap_kill(struct dev_pagemap *pgmap)
- {
--	struct request_queue *q;
-+	struct request_queue *q =
-+		container_of(pgmap->ref, struct request_queue, q_usage_counter);
- 
--	q = container_of(ref, typeof(*q), q_usage_counter);
- 	blk_freeze_queue_start(q);
- }
- 
-@@ -443,7 +443,7 @@ static int pmem_attach_disk(struct device *dev,
- 		memcpy(&bb_res, &pmem->pgmap.res, sizeof(bb_res));
- 	} else {
- 		if (devm_add_action_or_reset(dev, pmem_release_queue,
--					&q->q_usage_counter))
-+					&pmem->pgmap))
- 			return -ENOMEM;
- 		addr = devm_memremap(dev, pmem->phys_addr,
- 				pmem->size, ARCH_MEMREMAP_PMEM);
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index e083567d26ef..48a88158e46a 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -90,17 +90,18 @@ static void pci_p2pdma_percpu_release(struct percpu_ref *ref)
- 	complete(&p2p_pgmap->ref_done);
- }
- 
--static void pci_p2pdma_percpu_kill(struct percpu_ref *ref)
-+static void pci_p2pdma_percpu_kill(struct dev_pagemap *pgmap)
- {
--	percpu_ref_kill(ref);
-+	percpu_ref_kill(pgmap->ref);
- }
- 
--static void pci_p2pdma_percpu_cleanup(struct percpu_ref *ref)
-+static void pci_p2pdma_percpu_cleanup(struct dev_pagemap *pgmap)
- {
--	struct p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(ref);
-+	struct p2pdma_pagemap *p2p_pgmap =
-+		container_of(pgmap, struct p2pdma_pagemap, pgmap);
- 
- 	wait_for_completion(&p2p_pgmap->ref_done);
--	percpu_ref_exit(ref);
-+	percpu_ref_exit(&p2p_pgmap->ref);
- }
- 
- static void pci_p2pdma_release(void *data)
+@@ -420,7 +420,6 @@ static int pmem_attach_disk(struct device *dev,
+ 		bb_res.start += pmem->data_offset;
+ 	} else if (pmem_should_map_pages(dev)) {
+ 		memcpy(&pmem->pgmap.res, &nsio->res, sizeof(pmem->pgmap.res));
+-		pmem->pgmap.altmap_valid = false;
+ 		pmem->pgmap.type = MEMORY_DEVICE_FS_DAX;
+ 		pmem->pgmap.ops = &fsdax_pagemap_ops;
+ 		addr = devm_memremap_pages(dev, &pmem->pgmap);
 diff --git a/include/linux/memremap.h b/include/linux/memremap.h
-index 1cdcfd595770..cec02d5400f1 100644
+index 036c637f0150..7289eb091b04 100644
 --- a/include/linux/memremap.h
 +++ b/include/linux/memremap.h
-@@ -74,12 +74,12 @@ struct dev_pagemap_ops {
- 	/*
- 	 * Transition the refcount in struct dev_pagemap to the dead state.
- 	 */
--	void (*kill)(struct percpu_ref *ref);
-+	void (*kill)(struct dev_pagemap *pgmap);
- 
- 	/*
- 	 * Wait for refcount in struct dev_pagemap to be idle and reap it.
- 	 */
--	void (*cleanup)(struct percpu_ref *ref);
-+	void (*cleanup)(struct dev_pagemap *pgmap);
+@@ -88,6 +88,8 @@ struct dev_pagemap_ops {
+ 	vm_fault_t (*migrate_to_ram)(struct vm_fault *vmf);
  };
  
++#define PGMAP_ALTMAP_VALID	(1 << 0)
++
  /**
+  * struct dev_pagemap - metadata for ZONE_DEVICE mappings
+  * @altmap: pre-allocated/reserved memory for vmemmap allocations
+@@ -96,19 +98,27 @@ struct dev_pagemap_ops {
+  * @dev: host device of the mapping for debug
+  * @data: private data pointer for page_free()
+  * @type: memory type: see MEMORY_* in memory_hotplug.h
++ * @flags: PGMAP_* flags to specify defailed behavior
+  * @ops: method table
+  */
+ struct dev_pagemap {
+ 	struct vmem_altmap altmap;
+-	bool altmap_valid;
+ 	struct resource res;
+ 	struct percpu_ref *ref;
+ 	struct device *dev;
+ 	enum memory_type type;
++	unsigned int flags;
+ 	u64 pci_p2pdma_bus_offset;
+ 	const struct dev_pagemap_ops *ops;
+ };
+ 
++static inline struct vmem_altmap *pgmap_altmap(struct dev_pagemap *pgmap)
++{
++	if (pgmap->flags & PGMAP_ALTMAP_VALID)
++		return &pgmap->altmap;
++	return NULL;
++}
++
+ #ifdef CONFIG_ZONE_DEVICE
+ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap);
+ void devm_memunmap_pages(struct device *dev, struct dev_pagemap *pgmap);
 diff --git a/kernel/memremap.c b/kernel/memremap.c
-index 85635ff57e04..ba7156bd52d1 100644
+index 9dd5ccdb1adb..b41d98a64ebf 100644
 --- a/kernel/memremap.c
 +++ b/kernel/memremap.c
-@@ -92,10 +92,10 @@ static void devm_memremap_pages_release(void *data)
- 	unsigned long pfn;
- 	int nid;
+@@ -54,14 +54,8 @@ static void pgmap_array_delete(struct resource *res)
  
--	pgmap->ops->kill(pgmap->ref);
-+	pgmap->ops->kill(pgmap);
- 	for_each_device_pfn(pfn, pgmap)
- 		put_page(pfn_to_page(pfn));
--	pgmap->ops->cleanup(pgmap->ref);
-+	pgmap->ops->cleanup(pgmap);
- 
- 	/* pages are dead and unused, undo the arch mapping */
- 	align_start = res->start & ~(SECTION_SIZE - 1);
-@@ -299,8 +299,8 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
-  err_pfn_remap:
- 	pgmap_array_delete(res);
-  err_array:
--	pgmap->ops->kill(pgmap->ref);
--	pgmap->ops->cleanup(pgmap->ref);
-+	pgmap->ops->kill(pgmap);
-+	pgmap->ops->cleanup(pgmap);
- 	return ERR_PTR(error);
+ static unsigned long pfn_first(struct dev_pagemap *pgmap)
+ {
+-	const struct resource *res = &pgmap->res;
+-	struct vmem_altmap *altmap = &pgmap->altmap;
+-	unsigned long pfn;
+-
+-	pfn = res->start >> PAGE_SHIFT;
+-	if (pgmap->altmap_valid)
+-		pfn += vmem_altmap_offset(altmap);
+-	return pfn;
++	return (pgmap->res.start >> PAGE_SHIFT) +
++		vmem_altmap_offset(pgmap_altmap(pgmap));
  }
- EXPORT_SYMBOL_GPL(devm_memremap_pages);
+ 
+ static unsigned long pfn_end(struct dev_pagemap *pgmap)
+@@ -109,7 +103,7 @@ static void devm_memremap_pages_release(void *data)
+ 				align_size >> PAGE_SHIFT, NULL);
+ 	} else {
+ 		arch_remove_memory(nid, align_start, align_size,
+-				pgmap->altmap_valid ? &pgmap->altmap : NULL);
++				pgmap_altmap(pgmap));
+ 		kasan_remove_zero_shadow(__va(align_start), align_size);
+ 	}
+ 	mem_hotplug_done();
+@@ -129,8 +123,8 @@ static void devm_memremap_pages_release(void *data)
+  * 1/ At a minimum the res, ref and type and ops members of @pgmap must be
+  *    initialized by the caller before passing it to this function
+  *
+- * 2/ The altmap field may optionally be initialized, in which case altmap_valid
+- *    must be set to true
++ * 2/ The altmap field may optionally be initialized, in which case
++ *    PGMAP_ALTMAP_VALID must be set in pgmap->flags.
+  *
+  * 3/ pgmap->ref must be 'live' on entry and will be killed and reaped
+  *    at devm_memremap_pages_release() time, or if this routine fails.
+@@ -142,15 +136,13 @@ static void devm_memremap_pages_release(void *data)
+ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ {
+ 	resource_size_t align_start, align_size, align_end;
+-	struct vmem_altmap *altmap = pgmap->altmap_valid ?
+-			&pgmap->altmap : NULL;
+ 	struct resource *res = &pgmap->res;
+ 	struct dev_pagemap *conflict_pgmap;
+ 	struct mhp_restrictions restrictions = {
+ 		/*
+ 		 * We do not want any optional features only our own memmap
+ 		*/
+-		.altmap = altmap,
++		.altmap = pgmap_altmap(pgmap),
+ 	};
+ 	pgprot_t pgprot = PAGE_KERNEL;
+ 	int error, nid, is_ram;
+@@ -277,7 +269,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 
+ 		zone = &NODE_DATA(nid)->node_zones[ZONE_DEVICE];
+ 		move_pfn_range_to_zone(zone, align_start >> PAGE_SHIFT,
+-				align_size >> PAGE_SHIFT, altmap);
++				align_size >> PAGE_SHIFT, pgmap_altmap(pgmap));
+ 	}
+ 
+ 	mem_hotplug_done();
+@@ -322,7 +314,9 @@ EXPORT_SYMBOL_GPL(devm_memunmap_pages);
+ unsigned long vmem_altmap_offset(struct vmem_altmap *altmap)
+ {
+ 	/* number of pfns from base where pfn_to_page() is valid */
+-	return altmap->reserve + altmap->free;
++	if (altmap)
++		return altmap->reserve + altmap->free;
++	return 0;
+ }
+ 
+ void vmem_altmap_free(struct vmem_altmap *altmap, unsigned long nr_pfns)
 diff --git a/mm/hmm.c b/mm/hmm.c
-index 694e53bc55f4..ec3bf2c5c699 100644
+index 8a0e04bbeee6..307c12d7531c 100644
 --- a/mm/hmm.c
 +++ b/mm/hmm.c
-@@ -1349,18 +1349,18 @@ static void hmm_devmem_ref_release(struct percpu_ref *ref)
- 	complete(&devmem->completion);
- }
+@@ -1439,7 +1439,6 @@ struct hmm_devmem *hmm_devmem_add(const struct hmm_devmem_ops *ops,
+ 	devmem->pagemap.type = MEMORY_DEVICE_PRIVATE;
+ 	devmem->pagemap.res = *devmem->resource;
+ 	devmem->pagemap.ops = &hmm_pagemap_ops;
+-	devmem->pagemap.altmap_valid = false;
+ 	devmem->pagemap.ref = &devmem->ref;
  
--static void hmm_devmem_ref_exit(struct percpu_ref *ref)
-+static void hmm_devmem_ref_exit(struct dev_pagemap *pgmap)
+ 	result = devm_memremap_pages(devmem->device, &devmem->pagemap);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index e096c987d261..6166ba5a15f3 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -557,10 +557,8 @@ void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
+ 	int sections_to_remove;
+ 
+ 	/* In the ZONE_DEVICE case device driver owns the memory region */
+-	if (is_dev_zone(zone)) {
+-		if (altmap)
+-			map_offset = vmem_altmap_offset(altmap);
+-	}
++	if (is_dev_zone(zone))
++		map_offset = vmem_altmap_offset(altmap);
+ 
+ 	clear_zone_contiguous(zone);
+ 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d66bc8abe0af..17a39d40a556 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5853,6 +5853,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
  {
- 	struct hmm_devmem *devmem;
- 
--	devmem = container_of(ref, struct hmm_devmem, ref);
-+	devmem = container_of(pgmap, struct hmm_devmem, pagemap);
- 	wait_for_completion(&devmem->completion);
--	percpu_ref_exit(ref);
-+	percpu_ref_exit(pgmap->ref);
- }
- 
--static void hmm_devmem_ref_kill(struct percpu_ref *ref)
-+static void hmm_devmem_ref_kill(struct dev_pagemap *pgmap)
- {
--	percpu_ref_kill(ref);
-+	percpu_ref_kill(pgmap->ref);
- }
- 
- static vm_fault_t hmm_devmem_fault(struct vm_area_struct *vma,
-diff --git a/tools/testing/nvdimm/test/iomap.c b/tools/testing/nvdimm/test/iomap.c
-index a667d974155e..3a1fa7735f47 100644
---- a/tools/testing/nvdimm/test/iomap.c
-+++ b/tools/testing/nvdimm/test/iomap.c
-@@ -108,8 +108,8 @@ static void nfit_test_kill(void *_pgmap)
- {
- 	WARN_ON(!pgmap || !pgmap->ref || !pgmap->ops->kill ||
- 		!pgmap->ops->cleanup);
--	pgmap->ops->kill(pgmap->ref);
--	pgmap->ops->cleanup(pgmap->ref);
-+	pgmap->ops->kill(pgmap);
-+	pgmap->ops->cleanup(pgmap);
- }
- 
- void *__wrap_devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
+ 	unsigned long pfn, end_pfn = start_pfn + size;
+ 	struct pglist_data *pgdat = zone->zone_pgdat;
++	struct vmem_altmap *altmap = pgmap_altmap(pgmap);
+ 	unsigned long zone_idx = zone_idx(zone);
+ 	unsigned long start = jiffies;
+ 	int nid = pgdat->node_id;
+@@ -5865,9 +5866,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ 	 * of the pages reserved for the memmap, so we can just jump to
+ 	 * the end of that region and start processing the device pages.
+ 	 */
+-	if (pgmap->altmap_valid) {
+-		struct vmem_altmap *altmap = &pgmap->altmap;
+-
++	if (altmap) {
+ 		start_pfn = altmap->base_pfn + vmem_altmap_offset(altmap);
+ 		size = end_pfn - start_pfn;
+ 	}
 -- 
 2.20.1
 
