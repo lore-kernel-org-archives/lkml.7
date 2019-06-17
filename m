@@ -2,99 +2,99 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3C7CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B430C46477
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:09:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6E7E20861
+	by mail.kernel.org (Postfix) with ESMTP id D2A9620861
 	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:09:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="1CPoHsv8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727772AbfFQVJg (ORCPT
+        id S1727924AbfFQVJi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:09:36 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39678 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726529AbfFQVJg (ORCPT
+        Mon, 17 Jun 2019 17:09:38 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:45712 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFQVJh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:09:36 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so8273951otq.6
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 14:09:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=WJY8mRWNKYbMrxiqtcC6On1cSl2WUj/ZIwS4ootoQak=;
-        b=1CPoHsv8eJYyjii0r2v+tpwEGCkSWwSYtZacx/AqtzGMRs3fZPgZrV7RbEeA45KDwP
-         lsJvq7QgmiqEwVzp5wdQHibzWroOdc9btguH5MJ/BTdcEtQKRrkY2A644oJ5v1entk28
-         jQX1i10dz7Bzaag9WMXeIi4g9aL/drgYMGhz0EwOOdHkXNcNmVY9Lux9aw2TbX6HsoFA
-         rgd+c/SR//qS9xH7huYep7vdqcSElSiqUL7CnczUCly0wMqqGAQdyboSJvis9joomSOv
-         KyK08LiIatM0igaxt5Yo3ksIlA7sTKvevIo1tgB6DFbvKhgZgBfO8B1hLUl5bdDehAB/
-         2KGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=WJY8mRWNKYbMrxiqtcC6On1cSl2WUj/ZIwS4ootoQak=;
-        b=NkOkAzeATLpWPsbLFiDVg+6mU2m9LEwf5Ye1QHEp9SumQ8AIfEmpLdByiuDCL44s1u
-         Bj5bXLekfbGxCUh7814xR5j+yhIfJU2+1OBwojhRQxAp8P2lcIglNahBE+MKYHP7vme2
-         romQhLjrlwSJfjiTIqtLNOp0vd+sGzBG78OZA6fyPsrn/A6TVlAM1YEAkrPMHiZK5oiw
-         7/+LLNLNZjxg2bijJZIKM+oOGv6dODwFYsTYVU28aAhVpgAx2jUYy/7GRb5vipTzn95l
-         w/+nQwv+ecPb82AKU6E+XUm4mCdgW1EcsZTbRyVixm706EE3N8QTaooKp7Jwzhn/UgGM
-         J2ew==
-X-Gm-Message-State: APjAAAWuOHn1OWegsthvPqKcBhaOP7U0xGPZet97Grbth+7I9ODrxJIN
-        gV4915He4Hz2SQbWthnznBavPsEvWEXrL/KUahoDdA==
-X-Google-Smtp-Source: APXvYqyAU1TcMvPiGYVYhBbyC0eVXwwhkAqKTWqXoLyuFCBz8f0kthsk9jFJXToSNfs33gSFBQCmV/94ID8R2le9oJQ=
-X-Received: by 2002:a9d:7a8b:: with SMTP id l11mr55835238otn.247.1560805775819;
- Mon, 17 Jun 2019 14:09:35 -0700 (PDT)
+        Mon, 17 Jun 2019 17:09:37 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hcyse-0005Xx-QB; Mon, 17 Jun 2019 23:09:33 +0200
+Date:   Mon, 17 Jun 2019 23:09:32 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     John Ogness <john.ogness@linutronix.de>
+cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 0/2] printk: new ringbuffer implementation
+In-Reply-To: <20190607162349.18199-1-john.ogness@linutronix.de>
+Message-ID: <alpine.DEB.2.21.1906172309170.1963@nanos.tec.linutronix.de>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190617122733.22432-1-hch@lst.de> <20190617122733.22432-9-hch@lst.de>
- <CAPcyv4i_0wUJHDqY91R=x5M2o_De+_QKZxPyob5=E9CCv8rM7A@mail.gmail.com> <20190617195526.GB20275@lst.de>
-In-Reply-To: <20190617195526.GB20275@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 17 Jun 2019 14:09:24 -0700
-Message-ID: <CAPcyv4iYP-7QtO7hDkAeaxJsfUCrCTBSJi3bK6e5v-VVAKQz-w@mail.gmail.com>
-Subject: Re: [PATCH 08/25] memremap: move dev_pagemap callbacks into a
- separate structure
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:59 PM Christoph Hellwig <hch@lst.de> wrote:
->
-> On Mon, Jun 17, 2019 at 10:51:35AM -0700, Dan Williams wrote:
-> > > -       struct dev_pagemap *pgmap =3D _pgmap;
-> >
-> > Whoops, needed to keep this line to avoid:
-> >
-> > tools/testing/nvdimm/test/iomap.c:109:11: error: =E2=80=98pgmap=E2=80=
-=99 undeclared
-> > (first use in this function); did you mean =E2=80=98_pgmap=E2=80=99?
->
-> So I really shouldn't be tripping over this anymore, but can we somehow
-> this mess?
->
->  - at least add it to the normal build system and kconfig deps instead
->    of stashing it away so that things like buildbot can build it?
->  - at least allow building it (under COMPILE_TEST) if needed even when
->    pmem.ko and friends are built in the kernel?
+On Fri, 7 Jun 2019, John Ogness wrote:
 
-Done: https://patchwork.kernel.org/patch/11000477/
+Polite ping ....
+
+> This is a follow-up RFC on the work to reimplement much of
+> the core of printk. The original thread can be seen here[0].
+> 
+> One of the results of that thread was that the work needs to
+> be broken up into several pieces. A roadmap was laid out[1]
+> and this RFC is for the base component of the first piece:
+> a new ringbuffer implementation for printk.
+> 
+> This series does not touch any existing printk code. It is
+> only the ringbuffer implementation. I am particularly
+> interested in feedback relating to the design of the
+> ringbuffer and the use of memory barriers.
+> 
+> The series also includes a test module that performs some
+> heavy writer stress testing. I have successfully run these
+> tests on a 16-core ARM64 platform.
+> 
+> John Ogness
+> 
+> [0] https://lkml.kernel.org/r/20190212143003.48446-1-john.ogness@linutronix.de
+> [1] https://lkml.kernel.org/r/87y35hn6ih.fsf@linutronix.de
+> 
+> John Ogness (2):
+>   printk-rb: add a new printk ringbuffer implementation
+>   printk-rb: add test module
+> 
+>  Documentation/core-api/index.rst             |   1 +
+>  Documentation/core-api/printk-ringbuffer.rst | 104 +++
+>  include/linux/printk_ringbuffer.h            | 238 +++++++
+>  lib/Makefile                                 |   2 +
+>  lib/printk_ringbuffer.c                      | 924 +++++++++++++++++++++++++++
+>  lib/test_prb.c                               | 237 +++++++
+>  6 files changed, 1506 insertions(+)
+>  create mode 100644 Documentation/core-api/printk-ringbuffer.rst
+>  create mode 100644 include/linux/printk_ringbuffer.h
+>  create mode 100644 lib/printk_ringbuffer.c
+>  create mode 100644 lib/test_prb.c
+> 
+> -- 
+> 2.11.0
+> 
+> 
