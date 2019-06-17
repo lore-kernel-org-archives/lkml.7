@@ -2,79 +2,101 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00865C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710EDC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D17D22070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:38:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36FD72070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727118AbfFQQi4 (ORCPT
+        id S1727873AbfFQQjA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 17 Jun 2019 12:39:00 -0400
+Received: from mga09.intel.com ([134.134.136.24]:41077 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725863AbfFQQi4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 12:38:56 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60244 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725863AbfFQQiz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:38:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8CE35AE54;
-        Mon, 17 Jun 2019 16:38:54 +0000 (UTC)
-Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Mark Brown <broonie@kernel.org>
-Cc:     lee.jones@linaro.org, lgirdwood@gmail.com, robh+dt@kernel.org,
-        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
-        thomas.liau@actions-semi.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
- <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
- <20190617163015.GD5316@sirena.org.uk>
- <20190617163413.GA16152@Mani-XPS-13-9360>
-From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Openpgp: preference=signencrypt
-Organization: SUSE Linux GmbH
-Message-ID: <a38d26d1-213c-31ef-9cc7-1d4bdda4ceab@suse.de>
-Date:   Mon, 17 Jun 2019 18:38:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 09:38:55 -0700
+X-ExtLoop1: 1
+Received: from rameshr1-mobl.gar.corp.intel.com (HELO localhost) ([10.252.60.156])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Jun 2019 09:38:44 -0700
+Date:   Mon, 17 Jun 2019 19:38:47 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Cedric Xing <cedric.xing@intel.com>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Paul Moore <paul@paul-moore.com>,
+        Eric Paris <eparis@parisplace.org>, selinux@vger.kernel.org,
+        Jethro Beekman <jethro@fortanix.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        linux-sgx@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
+        npmccallum@redhat.com, Serge Ayoun <serge.ayoun@intel.com>,
+        Shay Katz-zamir <shay.katz-zamir@intel.com>,
+        Haitao Huang <haitao.huang@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Kai Svahn <kai.svahn@intel.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Kai Huang <kai.huang@intel.com>,
+        David Rientjes <rientjes@google.com>,
+        William Roberts <william.c.roberts@intel.com>,
+        Philip Tricca <philip.b.tricca@intel.com>
+Subject: Re: [RFC PATCH v2 5/5] security/selinux: Add enclave_load()
+ implementation
+Message-ID: <20190617163655.GA8710@linux.intel.com>
+References: <20190606021145.12604-1-sean.j.christopherson@intel.com>
+ <20190606021145.12604-6-sean.j.christopherson@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190617163413.GA16152@Mani-XPS-13-9360>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190606021145.12604-6-sean.j.christopherson@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 05, 2019 at 07:11:45PM -0700, Sean Christopherson wrote:
+> The goal of selinux_enclave_load() is to provide a facsimile of the
+> existing selinux_file_mprotect() and file_map_prot_check() policies,
+> but tailored to the unique properties of SGX.
+> 
+> For example, an enclave page is technically backed by a MAP_SHARED file,
+> but the "file" is essentially shared memory that is never persisted
+> anywhere and also requires execute permissions (for some pages).
+> 
+> The basic concept is to require appropriate execute permissions on the
+> source of the enclave for pages that are requesting PROT_EXEC, e.g. if
+> an enclave page is being loaded from a regular file, require
+> FILE__EXECUTE and/or FILE__EXECMOND, and if it's coming from an
+> anonymous/private mapping, require PROCESS__EXECMEM since the process
+> is essentially executing from the mapping, albeit in a roundabout way.
+> 
+> Note, FILE__READ and FILE__WRITE are intentionally not required even if
+> the source page is backed by a regular file.  Writes to the enclave page
+> are contained to the EPC, i.e. never hit the original file, and read
+> permissions have already been vetted (or the VMA doesn't have PROT_READ,
+> in which case loading the page into the enclave will fail).
+> 
+> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 
-Am 17.06.19 um 18:34 schrieb Manivannan Sadhasivam:
-> On Mon, Jun 17, 2019 at 05:30:15PM +0100, Mark Brown wrote:
->> On Mon, Jun 17, 2019 at 09:20:10PM +0530, Manivannan Sadhasivam wrote:
->>
->>> +++ b/drivers/regulator/atc260x-regulator.c
->>> @@ -0,0 +1,389 @@
->>> +// SPDX-License-Identifier: GPL-2.0+
->>> +/*
->>> + * Regulator driver for ATC260x PMICs
->>
->> Please make the entire comment a C++ one so this looks more intentional.
+In the end of the day, the main problem with this patch is that the
+existing LSM hooks are generic. I don't we can have specific hooks
+for proprietary hardware.
 
-No, this is intentional and the official style requested by GregKH.
-
-He suggested I patch the SPDX documentation to make this clearer, but I
-did not find time for this yet (and am not the one making this rule).
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
-HRB 21284 (AG Nürnberg)
+/Jarkko
