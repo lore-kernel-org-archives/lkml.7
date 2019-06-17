@@ -2,121 +2,68 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B71EC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:37:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D7CC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:37:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 299BD20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:37:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cqZZGlvd"
+	by mail.kernel.org (Postfix) with ESMTP id D1F3020861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:37:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727079AbfFQMhq (ORCPT
+        id S1727501AbfFQMhv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:37:46 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37440 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFQMhq (ORCPT
+        Mon, 17 Jun 2019 08:37:51 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:47591 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfFQMhu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:37:46 -0400
-Received: by mail-pg1-f195.google.com with SMTP id n65so1302342pga.4;
-        Mon, 17 Jun 2019 05:37:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AE6Et66yryfONYAMntqgdER4kITdwcL5ML+i9VnMs/g=;
-        b=cqZZGlvd+Zl4W5jMYAk32QGfO3OEQpJTfcCzuh+wxK0pWmggZCnfxng+QKe6or/B7k
-         /vWLTbCYdltTYOmhAZg15CT91dRlIn2l2klflxkj2Jk7mFC/pfVGoDkO/dnjrEsEyBXN
-         pimbNwEjN2vFnq4COWOId38M1GOV1HMFogBlGq/iEEhP+YPEkf4+lEBzH2EhTSWNizyC
-         O2McxuBW2rKav62BGpET79Wqrm1IMxvHqkfY9VwAA7EjXw0IpciBc8xP2Cgoq3yIZAWg
-         i5X3FixUmucP5D6B4G6H/2JwEH77QouB4mjbOiKGCY8qfmWEkkWheCG/YfLywO1J1aS+
-         A9nw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AE6Et66yryfONYAMntqgdER4kITdwcL5ML+i9VnMs/g=;
-        b=RBQyGgaUW3EtoS3/aVetijBfSqWHPxUV9A0mGlTBLRTdetZwucqPYbAwC8GSc1wiCt
-         /4WBWAmzdNvjHKYq5p/v45n2RQ2OOhwg8O30yYtS/DYe1V2xICuJu+Ztb3j32BqZp0Cd
-         XVmEDyTKf64nALY2TY6T4uju5ldWJOAV4/R8EEeEtgWqySA4UquetrGlrvjRSTtc4sON
-         Sgh5XTA/6RYkIT2eu3sqz136uMYoHhMRF5nHZRwAj0d9bWJMEiI0TCrVWItWieTcqeFT
-         TTkLdVVkhD9cjnfrGfpYImS/oHQ1+u2bYD1UpapBanJP38zR6tSNMfUNoOW6AwYCNvtQ
-         qhRw==
-X-Gm-Message-State: APjAAAUKNI9aeR8BIDT9pSKH0Z3odxiZGXM7U/+po0pMMEyxyuhciJG/
-        iKOQvmIRCnmnBVZ8Xq1mKs1wO+h23z1lMkYJ3bQ=
-X-Google-Smtp-Source: APXvYqyGgsn1lKfEW49fWsF/lsg3qMdplI5bCfSwovHXs50WzCRLKF3s8LXACrS4vxqBwJdgsQggoOK5CMoZLOdJ4NA=
-X-Received: by 2002:a17:90b:d8b:: with SMTP id bg11mr25973351pjb.30.1560775065609;
- Mon, 17 Jun 2019 05:37:45 -0700 (PDT)
+        Mon, 17 Jun 2019 08:37:50 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hcqt0-0004HI-T2; Mon, 17 Jun 2019 12:37:22 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] tracing: remove redundant assignment to pointer 'event'
+Date:   Mon, 17 Jun 2019 13:37:22 +0100
+Message-Id: <20190617123722.27376-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190612124053.119182-1-me@myself5.de> <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
-In-Reply-To: <736848fd-1c45-0bd9-bfd1-747c716bd953@redhat.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Mon, 17 Jun 2019 15:37:34 +0300
-Message-ID: <CAHp75Vdzf7bMQq2WP59Pux6QXD4GTcPLjryEecAsHJiAEewjcA@mail.gmail.com>
-Subject: Re: [PATCH] platform/x86: touchscreen_dmi: Update Hi10 Air filter
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Christian Oder <me@myself5.de>, Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 3:55 PM Hans de Goede <hdegoede@redhat.com> wrote:
->
-> Hi,
->
-> On 12-06-19 14:40, Christian Oder wrote:
-> > Turns out the Hi10 Air is built by multiple companies so using Hampoo
-> > as a filter is not enough to cover all variants.
-> >
-> > This has been verified as working on the Hampoo and Morshow version.
-> >
-> > Signed-off-by: Christian Oder <me@myself5.de>
->
-> Patch looks good to me:
->
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+From: Colin Ian King <colin.king@canonical.com>
 
-By some reason patchwork doesn't have a trace of this.
+The value assigned to pointer 'event' is never read and hence it
+is redundant and can be removed.
 
->
-> Regards,
->
-> Hans
->
->
-> > ---
-> >   drivers/platform/x86/touchscreen_dmi.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/platform/x86/touchscreen_dmi.c b/drivers/platform/x86/touchscreen_dmi.c
-> > index b662cb2d7cd5..61e7c4987d0d 100644
-> > --- a/drivers/platform/x86/touchscreen_dmi.c
-> > +++ b/drivers/platform/x86/touchscreen_dmi.c
-> > @@ -597,7 +597,8 @@ static const struct dmi_system_id touchscreen_dmi_table[] = {
-> >               /* Chuwi Hi10 Air */
-> >               .driver_data = (void *)&chuwi_hi10_air_data,
-> >               .matches = {
-> > -                     DMI_MATCH(DMI_BOARD_VENDOR, "Hampoo"),
-> > +                     DMI_MATCH(DMI_SYS_VENDOR, "CHUWI INNOVATION AND TECHNOLOGY(SHENZHEN)CO.LTD"),
-> > +                     DMI_MATCH(DMI_BOARD_NAME, "Cherry Trail CR"),
-> >                       DMI_MATCH(DMI_PRODUCT_SKU, "P1W6_C109D_B"),
-> >               },
-> >       },
-> >
+Addresses-Coverity: ("Unused value")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ kernel/trace/trace_events_hist.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-
-
+diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
+index ca6b0dff60c5..0013b43d8b4d 100644
+--- a/kernel/trace/trace_events_hist.c
++++ b/kernel/trace/trace_events_hist.c
+@@ -1294,7 +1294,6 @@ static int __create_synth_event(int argc, const char *name, const char **argv)
+ 	event = alloc_synth_event(name, n_fields, fields);
+ 	if (IS_ERR(event)) {
+ 		ret = PTR_ERR(event);
+-		event = NULL;
+ 		goto err;
+ 	}
+ 	ret = register_synth_event(event);
 -- 
-With Best Regards,
-Andy Shevchenko
+2.20.1
+
