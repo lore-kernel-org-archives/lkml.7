@@ -2,170 +2,101 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CCA5C46477
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:32:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155C6C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9B3B20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:32:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E269520644
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:32:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I1ob8Mw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727962AbfFQMcX (ORCPT
+        id S1728001AbfFQMc1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:32:23 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:21595 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726005AbfFQMcW (ORCPT
+        Mon, 17 Jun 2019 08:32:27 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:33354 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfFQMcZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:32:22 -0400
-X-UUID: f6edc7ac94bd449186c8b83a503b53db-20190617
-X-UUID: f6edc7ac94bd449186c8b83a503b53db-20190617
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <walter-zh.wu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 904270075; Mon, 17 Jun 2019 20:32:16 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 17 Jun 2019 20:32:14 +0800
-Received: from [172.21.84.99] (172.21.84.99) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 17 Jun 2019 20:32:14 +0800
-Message-ID: <1560774735.15814.54.camel@mtksdccf07>
-Subject: Re: [PATCH v3] kasan: add memory corruption identification for
- software tag-based mode
-From:   Walter Wu <walter-zh.wu@mediatek.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-CC:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>,
-        Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Vasily Gorbik" <gor@linux.ibm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Jason A . Donenfeld" <Jason@zx2c4.com>,
-        Miles Chen <miles.chen@mediatek.com>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        wsd_upstream <wsd_upstream@mediatek.com>
-Date:   Mon, 17 Jun 2019 20:32:15 +0800
-In-Reply-To: <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
-References: <20190613081357.1360-1-walter-zh.wu@mediatek.com>
-         <da7591c9-660d-d380-d59e-6d70b39eaa6b@virtuozzo.com>
-         <1560447999.15814.15.camel@mtksdccf07>
-         <1560479520.15814.34.camel@mtksdccf07>
-         <1560744017.15814.49.camel@mtksdccf07>
-         <CACT4Y+Y3uS59rXf92ByQuFK_G4v0H8NNnCY1tCbr4V+PaZF3ag@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 08:32:25 -0400
+Received: by mail-pg1-f195.google.com with SMTP id k187so5758820pga.0;
+        Mon, 17 Jun 2019 05:32:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ETsv5V713PqfBbxptdNaDO/9A5O3HqtK22qegpsPBRM=;
+        b=I1ob8Mw2H2thmUye5x2sp6jGFUWg2hZKIUIc/UrJ+3N1DO8dQGyfs5jjf1X8TfiWyF
+         GE6xVtsVQKhU4Am+J1AK8bN0EH1spxrKp1IqsjoozcvJj9pJUru0j2GyVnpj79ISMr05
+         yNaNPNxyZnJ+7uajXj2oyTsWc+Rmkffu72ZghFlFCNXS9nFeWOyL1orT41z+DvjlYtN3
+         Gare/0NStEccjZLKTzGfOk+hUaGAH0UxRpLAuZ0gOLaHUEsMBQDICy6MK3ktHNK1/FCa
+         BgoRYJ2B1WM91HdLmOjgImT3TYFTU0ZTxabb5/8WcUuf8IwHscDfL4TkwcS57O0J/ep2
+         c6vg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ETsv5V713PqfBbxptdNaDO/9A5O3HqtK22qegpsPBRM=;
+        b=LnPYBirZJt0bMUD2DY1+0dKLuffzUBVFJeJFTdANADiPQPTKnKRyEa6Mzn32jF436e
+         yJtZPfZi51gOLpC9XWnD3twE6X2r9glDQLaK6cNRmgT02ln37P5AOkVzK0m0iO8kiD4P
+         5Gotkp3ry7J/tgy2pHWoE70yg7j99nMM0zr8PtLezbJAH3aLmfWIvQjsSPoP+hFK7/wb
+         HH3Bf7er4FzbhQxhx0kTdn9nuEe46aKhC/+Qcw9Z/1gK89DxmNEFHinAbk3vj17cLeT0
+         x2xUCyeFT7IT7Gsp5Zc9UhrcS3umoWnPcshKhPdt+eoj+2I4UFoZ2yMWdjf3peP2/5pV
+         eKRQ==
+X-Gm-Message-State: APjAAAVibtklCNznIdPddahofKbAUrVIHg/5sDEKlYVKgX/ziMlTt8cZ
+        g1U3XKiQhCw4XPgzcen2ba1cLTu71zXJkJyuCKQ=
+X-Google-Smtp-Source: APXvYqy0mtPFb8J/e+TcLeJbV0prtKSvy/MF15YIH1l6Aq9HxxWDYk6n2e9vLDDfCY9aVzucB9Wm04E2uK0EkphnEW8=
+X-Received: by 2002:a63:f346:: with SMTP id t6mr43106755pgj.203.1560774744359;
+ Mon, 17 Jun 2019 05:32:24 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-SNTS-SMTP: 792F3DD2252100ED132A309A0254155715B3B58D81E671EBE2156836FF5FF2582000:8
-X-MTK:  N
+References: <20190612121258.19535-1-gregkh@linuxfoundation.org>
+ <CAHp75VeQy9o6tHtqKEE3o9ijBE4c11cWcc00+RqCj+P1FOky1w@mail.gmail.com> <20190614065339.GB21447@kroah.com>
+In-Reply-To: <20190614065339.GB21447@kroah.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 17 Jun 2019 15:32:13 +0300
+Message-ID: <CAHp75Vc7HeHgkq6h9TKrNHO-g_5uDtbnD8jY9HpHLuu607AUkA@mail.gmail.com>
+Subject: Re: [PATCH 1/8] platform: x86: acer-wmi: no need to check return
+ value of debugfs_create functions
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        "Lee, Chun-Yi" <jlee@suse.com>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 13:57 +0200, Dmitry Vyukov wrote:
-> On Mon, Jun 17, 2019 at 6:00 AM Walter Wu <walter-zh.wu@mediatek.com> wrote:
-> >
-> > On Fri, 2019-06-14 at 10:32 +0800, Walter Wu wrote:
-> > > On Fri, 2019-06-14 at 01:46 +0800, Walter Wu wrote:
-> > > > On Thu, 2019-06-13 at 15:27 +0300, Andrey Ryabinin wrote:
-> > > > >
-> > > > > On 6/13/19 11:13 AM, Walter Wu wrote:
-> > > > > > This patch adds memory corruption identification at bug report for
-> > > > > > software tag-based mode, the report show whether it is "use-after-free"
-> > > > > > or "out-of-bound" error instead of "invalid-access" error.This will make
-> > > > > > it easier for programmers to see the memory corruption problem.
-> > > > > >
-> > > > > > Now we extend the quarantine to support both generic and tag-based kasan.
-> > > > > > For tag-based kasan, the quarantine stores only freed object information
-> > > > > > to check if an object is freed recently. When tag-based kasan reports an
-> > > > > > error, we can check if the tagged addr is in the quarantine and make a
-> > > > > > good guess if the object is more like "use-after-free" or "out-of-bound".
-> > > > > >
-> > > > >
-> > > > >
-> > > > > We already have all the information and don't need the quarantine to make such guess.
-> > > > > Basically if shadow of the first byte of object has the same tag as tag in pointer than it's out-of-bounds,
-> > > > > otherwise it's use-after-free.
-> > > > >
-> > > > > In pseudo-code it's something like this:
-> > > > >
-> > > > > u8 object_tag = *(u8 *)kasan_mem_to_shadow(nearest_object(cacche, page, access_addr));
-> > > > >
-> > > > > if (access_addr_tag == object_tag && object_tag != KASAN_TAG_INVALID)
-> > > > >   // out-of-bounds
-> > > > > else
-> > > > >   // use-after-free
-> > > >
-> > > > Thanks your explanation.
-> > > > I see, we can use it to decide corruption type.
-> > > > But some use-after-free issues, it may not have accurate free-backtrace.
-> > > > Unfortunately in that situation, free-backtrace is the most important.
-> > > > please see below example
-> > > >
-> > > > In generic KASAN, it gets accurate free-backrace(ptr1).
-> > > > In tag-based KASAN, it gets wrong free-backtrace(ptr2). It will make
-> > > > programmer misjudge, so they may not believe tag-based KASAN.
-> > > > So We provide this patch, we hope tag-based KASAN bug report is the same
-> > > > accurate with generic KASAN.
-> > > >
-> > > > ---
-> > > >     ptr1 = kmalloc(size, GFP_KERNEL);
-> > > >     ptr1_free(ptr1);
-> > > >
-> > > >     ptr2 = kmalloc(size, GFP_KERNEL);
-> > > >     ptr2_free(ptr2);
-> > > >
-> > > >     ptr1[size] = 'x';  //corruption here
-> > > >
-> > > >
-> > > > static noinline void ptr1_free(char* ptr)
-> > > > {
-> > > >     kfree(ptr);
-> > > > }
-> > > > static noinline void ptr2_free(char* ptr)
-> > > > {
-> > > >     kfree(ptr);
-> > > > }
-> > > > ---
-> > > >
-> > > We think of another question about deciding by that shadow of the first
-> > > byte.
-> > > In tag-based KASAN, it is immediately released after calling kfree(), so
-> > > the slub is easy to be used by another pointer, then it will change
-> > > shadow memory to the tag of new pointer, it will not be the
-> > > KASAN_TAG_INVALID, so there are many false negative cases, especially in
-> > > small size allocation.
+On Fri, Jun 14, 2019 at 9:53 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Fri, Jun 14, 2019 at 09:48:04AM +0300, Andy Shevchenko wrote:
+> > On Wed, Jun 12, 2019 at 3:13 PM Greg Kroah-Hartman
+> > <gregkh@linuxfoundation.org> wrote:
 > > >
-> > > Our patch is to solve those problems. so please consider it, thanks.
+> > > When calling debugfs functions, there is no need to ever check the
+> > > return value.  The function can work or not, but the code logic should
+> > > never do something different based on this.
 > > >
-> > Hi, Andrey and Dmitry,
+> > > Also, because there is no need to save the file dentry, remove the
+> > > variable that was saving it and just recursively delete the whole
+> > > directory.
+> > >
 > >
-> > I am sorry to bother you.
-> > Would you tell me what you think about this patch?
-> > We want to use tag-based KASAN, so we hope its bug report is clear and
-> > correct as generic KASAN.
-> >
-> > Thanks your review.
-> > Walter
-> 
-> Hi Walter,
-> 
-> I will probably be busy till the next week. Sorry for delays.
+> > Through which tree you want to proceed this?
+>
+> What ever is easier for you, I can take it through mine, as I have a lot
+> of other patches like this queued up already, or it can go through
+> yours.
 
-It's ok. Thanks your kindly help.
-I hope I can contribute to tag-based KASAN. It is a very important tool
-for us.
+All 8 pushed to my review and testing queue, thanks!
 
+-- 
+With Best Regards,
+Andy Shevchenko
