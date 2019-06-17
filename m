@@ -2,195 +2,146 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B570AC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:26:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525EEC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:28:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82FF2219BE
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:26:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2681219BE
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:28:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=126.com header.i=@126.com header.b="RmmWGbfu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726066AbfFQH0Z (ORCPT
+        id S1726204AbfFQH2U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:26:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47326 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfFQH0Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:26:25 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B45FA30872F1;
-        Mon, 17 Jun 2019 07:26:17 +0000 (UTC)
-Received: from [10.36.116.141] (ovpn-116-141.ams2.redhat.com [10.36.116.141])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E866468405;
-        Mon, 17 Jun 2019 07:26:07 +0000 (UTC)
-Subject: Re: [PATCH 2/5] mm: don't hide potentially null memmap pointer in
- sparse_remove_one_section
-To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Juergen Gross <jgross@suse.com>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Arun KS <arunks@codeaurora.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
+        Mon, 17 Jun 2019 03:28:20 -0400
+Received: from mail-m963.mail.126.com ([123.126.96.3]:49322 "EHLO
+        mail-m963.mail.126.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfFQH2U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 03:28:20 -0400
+X-Greylist: delayed 1883 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jun 2019 03:28:18 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=126.com;
+        s=s110527; h=Subject:From:Message-ID:Date:MIME-Version; bh=gmRVQ
+        eFD/AvA76XiNCTGu/tE4Cf08n894khgBNT06SI=; b=RmmWGbfuaCwybYrxa9B2n
+        0vsIOv+45oFhaYglUvudhvHLa8kkyUnVkTFksFJfxph+13IMctWkPX8e4InwT1Ww
+        vsvup0N52OSQgO/nsKOuDMvD3a+bP8cAfG4ibb2BjCAqRN6qZWMl4g8Xb9uV7/68
+        2Cug2IwENgFxvtbbmKic9s=
+Received: from [172.20.10.3] (unknown [124.64.16.121])
+        by smtp8 (Coremail) with SMTP id NORpCgCXti+bOQdd3TrACg--.697S2;
+        Mon, 17 Jun 2019 14:56:29 +0800 (CST)
+Subject: Re: [PATCH] 9p: Transport error uninitialized
+To:     Dominique Martinet <asmadeus@codewreck.org>
+Cc:     ericvh@gmail.com, lucho@ionkov.net, davem@davemloft.net,
+        v9fs-developer@lists.sourceforge.net, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190617043635.13201-1-alastair@au1.ibm.com>
- <20190617043635.13201-3-alastair@au1.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
- 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
- xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
- jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
- s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
- m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
- MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
- z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
- dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
- UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
- 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
- uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
- 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
- 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
- xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
- 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
- hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
- u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
- gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
- rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
- BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
- KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
- NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
- YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
- lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
- qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
- C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
- W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
- TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
- +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <e3dd8031-2091-4d65-7c76-0ec7283f92f5@redhat.com>
-Date:   Mon, 17 Jun 2019 09:26:07 +0200
+References: <20190613070854.10434-1-shuaibinglu@126.com>
+ <20190613111027.GB9525@nautica>
+From:   Shuaibing Lu <shuaibinglu@126.com>
+Message-ID: <692e328c-3d4a-c39c-0e6d-ba86828c6b41@126.com>
+Date:   Mon, 17 Jun 2019 14:56:25 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190617043635.13201-3-alastair@au1.ibm.com>
+In-Reply-To: <20190613111027.GB9525@nautica>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 17 Jun 2019 07:26:24 +0000 (UTC)
+Content-Language: en-US
+X-CM-TRANSID: NORpCgCXti+bOQdd3TrACg--.697S2
+X-Coremail-Antispam: 1Uf129KBjvJXoWxXrWrZr17GF1rCw1DXF17Awb_yoW5try5pr
+        sxKFWxCw4ktryjva1jya1kJF10yF4kA3W3Jr1fKr12k3WkGr1kAa4UtF4jgFyUur98AFy7
+        JFyjq390qr1UJw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07bIXocUUUUU=
+X-Originating-IP: [124.64.16.121]
+X-CM-SenderInfo: 5vkxtxpelqwzbx6rjloofrz/1tbinx3Wq1pD8zTPZwAAsJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.06.19 06:36, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> By adding offset to memmap before passing it in to clear_hwpoisoned_pages,
-> is hides a potentially null memmap from the null check inside
-> clear_hwpoisoned_pages.
-> 
-> This patch passes the offset to clear_hwpoisoned_pages instead, allowing
-> memmap to successfully peform it's null check.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
->  mm/sparse.c | 12 +++++++-----
->  1 file changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index 104a79fedd00..66a99da9b11b 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -746,12 +746,14 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
->  		kfree(usemap);
->  		__kfree_section_memmap(memmap, altmap);
->  	}
-> +
->  	return ret;
->  }
->  
->  #ifdef CONFIG_MEMORY_HOTREMOVE
->  #ifdef CONFIG_MEMORY_FAILURE
-> -static void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
-> +static void clear_hwpoisoned_pages(struct page *memmap,
-> +		unsigned long map_offset, int nr_pages)
->  {
->  	int i;
->  
-> @@ -767,7 +769,7 @@ static void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
->  	if (atomic_long_read(&num_poisoned_pages) == 0)
->  		return;
->  
-> -	for (i = 0; i < nr_pages; i++) {
-> +	for (i = map_offset; i < nr_pages; i++) {
->  		if (PageHWPoison(&memmap[i])) {
->  			atomic_long_sub(1, &num_poisoned_pages);
->  			ClearPageHWPoison(&memmap[i]);
-> @@ -775,7 +777,8 @@ static void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
->  	}
->  }
->  #else
-> -static inline void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
-> +static inline void clear_hwpoisoned_pages(struct page *memmap,
-> +		unsigned long map_offset, int nr_pages)
+在 2019/6/13 下午7:10, Dominique Martinet 写道:
+> Lu Shuaibing wrote on Thu, Jun 13, 2019:
+>> The p9_tag_alloc() does not initialize the transport error t_err field.
+>> The struct p9_req_t *req is allocated and stored in a struct p9_client
+>> variable. The field t_err is never initialized before p9_conn_cancel()
+>> checks its value.
+>>
+>> KUMSAN(KernelUninitializedMemorySantizer, a new error detection tool)
+>> reports this bug.
+>>
+>> ==================================================================
+>> BUG: KUMSAN: use of uninitialized memory in p9_conn_cancel+0x2d9/0x3b0
+>> Read of size 4 at addr ffff88805f9b600c by task kworker/1:2/1216
+>>
+>> CPU: 1 PID: 1216 Comm: kworker/1:2 Not tainted 5.2.0-rc4+ #28
+>> Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS Ubuntu-1.8.2-1ubuntu1 04/01/2014
+>> Workqueue: events p9_write_work
+>> Call Trace:
+>>  dump_stack+0x75/0xae
+>>  __kumsan_report+0x17c/0x3e6
+>>  kumsan_report+0xe/0x20
+>>  p9_conn_cancel+0x2d9/0x3b0
+>>  p9_write_work+0x183/0x4a0
+>>  process_one_work+0x4d1/0x8c0
+>>  worker_thread+0x6e/0x780
+>>  kthread+0x1ca/0x1f0
+>>  ret_from_fork+0x35/0x40
+>>
+>> Allocated by task 1979:
+>>  save_stack+0x19/0x80
+>>  __kumsan_kmalloc.constprop.3+0xbc/0x120
+>>  kmem_cache_alloc+0xa7/0x170
+>>  p9_client_prepare_req.part.9+0x3b/0x380
+>>  p9_client_rpc+0x15e/0x880
+>>  p9_client_create+0x3d0/0xac0
+>>  v9fs_session_init+0x192/0xc80
+>>  v9fs_mount+0x67/0x470
+>>  legacy_get_tree+0x70/0xd0
+>>  vfs_get_tree+0x4a/0x1c0
+>>  do_mount+0xba9/0xf90
+>>  ksys_mount+0xa8/0x120
+>>  __x64_sys_mount+0x62/0x70
+>>  do_syscall_64+0x6d/0x1e0
+>>  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+>>
+>> Freed by task 0:
+>> (stack is not available)
+>>
+>> The buggy address belongs to the object at ffff88805f9b6008
+>>  which belongs to the cache p9_req_t of size 144
+>> The buggy address is located 4 bytes inside of
+>>  144-byte region [ffff88805f9b6008, ffff88805f9b6098)
+>> The buggy address belongs to the page:
+>> page:ffffea00017e6d80 refcount:1 mapcount:0 mapping:ffff888068b63740 index:0xffff88805f9b7d90 compound_mapcount: 0
+>> flags: 0x100000000010200(slab|head)
+>> raw: 0100000000010200 ffff888068b66450 ffff888068b66450 ffff888068b63740
+>> raw: ffff88805f9b7d90 0000000000100001 00000001ffffffff 0000000000000000
+>> page dumped because: kumsan: bad access detected
+>> ==================================================================
+>>
+>> Signed-off-by: Lu Shuaibing <shuaibinglu@126.com>
+> Looks good to me, will queue it up for -next after I've had time to run
+> some tests - probably early next week.
+>
+> This made me realize that this refcount_set is too late, it is possible
+> in theory to find the request with p9_tag_lookup as soon as the tag
+> alloc worked so both this req->t_err and refcount initialization should
+> go before the idr chunk with the other field initializations.
+>
+> I also checked by the way that no other fields were forgotten, the only
+> field that is not initialized now is ->aux, but that field is never used
+> so it might be just as fast to remove the field instead...
+> I'll submit a couple of patches to move these two inits up and remove
+> the aux field when I find time.
+>
+>
+> Thanks!
 
-I somewhat dislike that map_offset modifies nr_pages internally.
+Thanks for your reply. The kumsan tool finds only one field is used
+initialized. The ->aux field could
 
-I would prefer decoupling both and passing the actual number of pages to
-clear instead:
+be replaced.
 
-clear_hwpoisoned_pages(memmap, map_offset,
-		       PAGES_PER_SECTION - map_offset);
-
-
->  {
->  }
->  #endif
-> @@ -822,8 +825,7 @@ void sparse_remove_one_section(struct zone *zone, struct mem_section *ms,
->  		ms->pageblock_flags = NULL;
->  	}
->  
-> -	clear_hwpoisoned_pages(memmap + map_offset,
-> -			PAGES_PER_SECTION - map_offset);
-> +	clear_hwpoisoned_pages(memmap, map_offset, PAGES_PER_SECTION);
->  	free_section_usemap(memmap, usemap, altmap);
->  }
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
-> 
-
-
--- 
-
-Thanks,
-
-David / dhildenb
