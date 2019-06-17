@@ -2,146 +2,98 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B21B6C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58E4BC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 904142238C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D2AB2238C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:30:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="k9yBV2lk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727828AbfFQI3c (ORCPT
+        id S1727650AbfFQIay (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:29:32 -0400
-Received: from mga01.intel.com ([192.55.52.88]:62593 "EHLO mga01.intel.com"
+        Mon, 17 Jun 2019 04:30:54 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47544 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfFQI3c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:29:32 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 01:29:31 -0700
-X-ExtLoop1: 1
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.198]) ([10.237.72.198])
-  by fmsmga008.fm.intel.com with ESMTP; 17 Jun 2019 01:29:27 -0700
-Subject: Re: [PATCH v4 5/5] brcmfmac: sdio: Don't tune while the card is off
-To:     Douglas Anderson <dianders@chromium.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>
-Cc:     brcm80211-dev-list.pdl@broadcom.com,
-        linux-rockchip@lists.infradead.org,
-        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
-        linux-wireless@vger.kernel.org,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
-        Franky Lin <franky.lin@broadcom.com>,
-        linux-kernel@vger.kernel.org,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        "David S. Miller" <davem@davemloft.net>
-References: <20190613234153.59309-1-dianders@chromium.org>
- <20190613234153.59309-6-dianders@chromium.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <dac34482-cf74-5db9-ec0f-124af0ace811@intel.com>
-Date:   Mon, 17 Jun 2019 11:28:10 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725791AbfFQIax (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 04:30:53 -0400
+Received: from zn.tnic (p200300EC2F0613003807E25F1A502EA7.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:1300:3807:e25f:1a50:2ea7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DB9311EC0249;
+        Mon, 17 Jun 2019 10:30:51 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560760252;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=aJdX6aisVO6H6FX3DU14pzHYLHpJbMPF2yQU35n6wlI=;
+        b=k9yBV2lkDqaBHEX+629qfc0frCfOzwCqJUoHm0ZRuvYobLUcH6Mj/BmzQsRRAMNhLgCZVq
+        qDh0NaEdfqcyKOG5oZJ8rGyB1A6eUzER4n2KtHSzuKkOla8LfZESBKdWehA5wMpO2gEJrm
+        k5x/vYFze7YwIqwQ9jjuCpV7pqRGVuc=
+Date:   Mon, 17 Jun 2019 10:30:48 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 1/3] x86/resctrl: Get max rmid and occupancy scale
+ directly from CPUID instead of cpuinfo_x86
+Message-ID: <20190617083048.GE27127@zn.tnic>
+References: <1560705250-211820-1-git-send-email-fenghua.yu@intel.com>
+ <1560705250-211820-2-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906162141301.1760@nanos.tec.linutronix.de>
+ <20190617031808.GA214090@romley-ivt3.sc.intel.com>
+ <20190617075214.GB27127@zn.tnic>
+ <20190617080909.GC214090@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613234153.59309-6-dianders@chromium.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <20190617080909.GC214090@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/19 2:41 AM, Douglas Anderson wrote:
-> When Broadcom SDIO cards are idled they go to sleep and a whole
-> separate subsystem takes over their SDIO communication.  This is the
-> Always-On-Subsystem (AOS) and it can't handle tuning requests.
+On Mon, Jun 17, 2019 at 01:09:09AM -0700, Fenghua Yu wrote:
+> I just keep the code a bit uniform around the calling area where
+> a few functions are called. So get_cqm_info() makes the code a bit more
+> readable.
 > 
-> Specifically, as tested on rk3288-veyron-minnie (which reports having
-> BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
-> when "on = 1" (aka we're transition from sleep to wake) by whacking:
->   bus->sdiodev->func1->card->host->need_retune = 1
-> ...then I can often see tuning fail.  In this case dw_mmc reports "All
-> phases bad!").  Note that I don't get 100% failure, presumably because
-> sometimes the card itself has already transitioned away from the AOS
-> itself by the time we try to wake it up.  If I force retuning when "on
-> = 0" (AKA force retuning right before sending the command to go to
-> sleep) then retuning is always OK.
+>         init_scattered_cpuid_features(c);
+>         init_speculation_control(c);
+> +       get_cqm_info(c);
 > 
-> NOTE: we need _both_ this patch and the patch to avoid triggering
-> tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
-> sdio: Disable auto-tuning around commands expected to fail").  Though
-> both patches handle issues with Broadcom's AOS, the problems are
-> distinct:
-> 1. We want to defer (but not ignore) asynchronous (like
->    timer-requested) tuning requests till the card is awake.  However,
->    we want to ignore CRC errors during the transition, we don't want
->    to queue deferred tuning request.
-> 2. You could imagine that the AOS could implement retuning but we
->    could still get errors while transitioning in and out of the AOS.
->    Similarly you could imagine a seamless transition into and out of
->    the AOS (with no CRC errors) even if the AOS couldn't handle
->    tuning.
+>         /*
+>          * Clear/Set all flags overridden by options, after probe.
+>          * This needs to happen each time we re-probe, which may happen
+>          * several times during CPU initialization.
+>          */
+>         apply_forced_caps(c);
+> }
 > 
-> ALSO NOTE: presumably there is never a desperate need to retune in
-> order to wake up the card, since doing so is impossible.  Luckily the
-> only way the card can get into sleep state is if we had a good enough
-> tuning to send it a sleep command, so presumably that "good enough"
-> tuning is enough to wake us up, at least with a few retries.
-> 
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> Maybe not? If the function is not good, I can directly put the code here?
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+If you want to have it cleaner, make that a separate patch and say so in
+the commit message. Patches should do one logical thing and not mix up
+different changes which makes review harder.
 
-> ---
-> 
-> Changes in v4:
-> - Adjust to API rename (Adrian).
-> 
-> Changes in v3:
-> - ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
-> 
-> Changes in v2: None
-> 
->  drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> index ee76593259a7..629140b6d7e2 100644
-> --- a/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> +++ b/drivers/net/wireless/broadcom/brcm80211/brcmfmac/sdio.c
-> @@ -669,6 +669,10 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
->  
->  	sdio_retune_crc_disable(bus->sdiodev->func1);
->  
-> +	/* Cannot re-tune if device is asleep; defer till we're awake */
-> +	if (on)
-> +		sdio_retune_hold_now(bus->sdiodev->func1);
-> +
->  	wr_val = (on << SBSDIO_FUNC1_SLEEPCSR_KSO_SHIFT);
->  	/* 1st KSO write goes to AOS wake up core if device is asleep  */
->  	brcmf_sdiod_writeb(bus->sdiodev, SBSDIO_FUNC1_SLEEPCSR, wr_val, &err);
-> @@ -729,6 +733,9 @@ brcmf_sdio_kso_control(struct brcmf_sdio *bus, bool on)
->  	if (try_cnt > MAX_KSO_ATTEMPTS)
->  		brcmf_err("max tries: rd_val=0x%x err=%d\n", rd_val, err);
->  
-> +	if (on)
-> +		sdio_retune_release(bus->sdiodev->func1);
-> +
->  	sdio_retune_crc_enable(bus->sdiodev->func1);
->  
->  	return err;
-> 
+-- 
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
