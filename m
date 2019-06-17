@@ -6,110 +6,83 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2972FC31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE80C31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BC50208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21CB208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:59:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfFQL7S (ORCPT
+        id S1727013AbfFQL7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:59:18 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:33899 "EHLO
+        Mon, 17 Jun 2019 07:59:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:53163 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFQL7S (ORCPT
+        with ESMTP id S1725681AbfFQL7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:59:18 -0400
+        Mon, 17 Jun 2019 07:59:48 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N1Oft-1idn5x173T-012p0I; Mon, 17 Jun 2019 13:58:46 +0200
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mq2vS-1iObZe1orS-00n8eA; Mon, 17 Jun 2019 13:59:32 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ima: dynamically allocate shash_desc
-Date:   Mon, 17 Jun 2019 13:20:37 +0200
-Message-Id: <20190617115838.2397872-1-arnd@arndb.de>
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@google.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: serpent - mark __serpent_setkey_sbox noinline
+Date:   Mon, 17 Jun 2019 13:59:08 +0200
+Message-Id: <20190617115927.3813471-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Aok4LcHbJEGe4AaznFIfACC7Rx178p41ovN43L+MyVducbpJUmo
- Ks3nYiQFYUumaQQDtFktb7FASBDgNt0aWrEmebIaB2QKuW7eKXp/C3mpmUcUcD6KVf3YWcB
- cHciwJcVESXqtHG5EZm3ls+ZpDxsTRQTdcm0F/UvIc6M6Ypeq63DAIUrs/oUOxrkLyMFvCw
- XFmMdwOf5uOdyLU9P5gpA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:jHvm8xVNDAg=:2tQYUYi5EHZK8Jj9NnbR8R
- Eo7gZUfrH0IV231kubqyOXrM2KIdTUI7lkeT64oWq+/f71gkLCOBA3NzPI6XwDwGl8OwX+/5w
- yVDiKGLnOGCxf+S0vbTYzsRNBq76ZlUCUzWuIjpHVVGjeN5SAyE6MywStp8xA1h/cRWcK3cSx
- Bwgbt7JUQDgtp4jOKoxHjqlrVcLSbpbu8rpnkIYtSBmEobq2yDokeJyj1QugUmAg+hNXmMcM4
- pVvePhrtr24jnquz/odgNTRAHaD5VQY3uTcDpF6QdL9zrmy6UCL8SCxFf5EeaJeTzSiiW+uPk
- bCVCbyUWrELjuHEt22u1i1oJ2sBS1ldJ9xecgj7l+X+Sj5Jouj+A+Zbi5xcgrU/ngnLRiabOU
- 5TLlpJZgM7xeHyJcibAzzh034agXYUkyVbw0mEZZW8Tjq5nL6IkBWYphrpAfGzFQ946pBaF1p
- nPVIq+92AGgeXZ3Cv0v7IQ2bLUq3YUj5fsawacZO1BG8fAaSf+EgYJsPg6RYip3gbP5uDLPyF
- Gi7rVAPX3uwg04Pe4uBMsw41abY2iVQBULvYBbFi9ohYBnVty966idrZjgx+Pyg3inltOFtVj
- M/fpwbgM2WhO2KGKKzFiiOs+uajZha0drkVdDo1ZbPf2NM+4BAb+90WhFspBAfibbneJlHCMx
- kakkUzVCB2p/ES21GFZU+Q2++wdThYh8RzHe6rYlRywsa2B879EEe/j1On0RzPHJxZa/QOEFJ
- 3HYbjkqetrngw4zwpfpkit5NhMMqT6RJEFSXnA==
+X-Provags-ID: V03:K1:nlRKSlHgvz2m3fKSfZ7wC9E0KZXX9jzM/z2eRxUPOPM/3xpzPV+
+ Zw3rBSyaQGObcrKRgaRZBxPqG/R0UConl0Iztg7s7WYIyKPn7P3/rl6YDLBpg4Wze3oViSl
+ AbUC34gVy0QvoEIx7GO+gSyXbln6QnK7KQ1WhH6FQ5BIPcxQOnQdQojUzLZutskEY55LrCR
+ uGptJwdiqTHn0XAHHUjdg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3c/M2mR4H6w=:n/NbLMsUQ62zu8ZHsbJLcH
+ zV+JBLdWrhAArxRLcX3E2VpK0xEiURubZba5QlXHF3JvBl0Q0Kp8G7vdEoJmSs5j0GwmkyL3o
+ 5dRwdGPNWcrmWt11IU0WAvt8cK4T2ak8c3fwmzzQwEigCekU/h55VKvNYT24rgTm4iHX7PSk/
+ aWtRQjtrOOhUlt1PRfrRsf8trlX05V5N5kmsnRGRG/nOXy7B+I5bL4tmN6dx146S+mR96kxEu
+ xAHrCf6ShdehcK/uXN/FgrCjlGEt6oYFupHkmfBS79w+oqq/BWGEh6lW0AjnGu4SJS+P58H0g
+ gYXJ2pl4sxktGQQzhBzPDv3N++NFzsGTz5P63s+/rgx6SQhJkPw4OUajRd4KLKf/59sSnYglV
+ m9CWbNbxZGmXdxhRujDksY/XLnnNGC8FTR+nZGq3n6MK83hCquDeGg1pj3CQ+lkxhalKbmI35
+ itORR+B7VGRpqd7WeQaLv1GvSO7GAubUgryDiq9WP3lPFnEas7Uw8CNpRgXQYBvE8BVRCrdOC
+ x98PvOuwhSELH2Zlhjqc8rs14vUpvH/dyjLsvnyVYz6BCjc7EM4sGz8F/c7Y8T8T7iOIMoIC5
+ bAG/PXQL20Y4xzcr9qXgV1CZad8HrupmPF5v57TptwICd6UBUtRICj9RInHHNmwFWgYEEClmZ
+ Tqgf8ubm98ekNFiEPD4hfSkBikODvaS9UB8yIeGwTFW00XXNkunUsTEXnhcTXbmXD3EQTDcgh
+ 1rZ2etgkbKeTh0RQivoyC6fiipKJ3pYp9eygbQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 32-bit ARM, we get a warning about excessive stack usage when
-building with clang.
+The same bug that gcc hit in the past is apparently now showing
+up with clang, which decides to inline __serpent_setkey_sbox:
 
-security/integrity/ima/ima_crypto.c:504:5: error: stack frame size of 1152 bytes in function 'ima_calc_field_array_hash' [-Werror,-Wframe-larger-than=]
+crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
 
-Using kmalloc to get the descriptor reduces this to 320 bytes.
+Marking it 'noinline' reduces the stack usage from 2112 bytes to
+192 and 96 bytes, respectively, and seems to generate more
+useful object code.
 
+Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- security/integrity/ima/ima_crypto.c | 12 +++++++++---
- 1 file changed, 9 insertions(+), 3 deletions(-)
+ crypto/serpent_generic.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/security/integrity/ima/ima_crypto.c b/security/integrity/ima/ima_crypto.c
-index d4c7b8e1b083..8a66bab4c435 100644
---- a/security/integrity/ima/ima_crypto.c
-+++ b/security/integrity/ima/ima_crypto.c
-@@ -461,16 +461,21 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
- 					 struct ima_digest_data *hash,
- 					 struct crypto_shash *tfm)
+diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
+index e57757904677..183661faf420 100644
+--- a/crypto/serpent_generic.c
++++ b/crypto/serpent_generic.c
+@@ -225,7 +225,7 @@
+ 	x4 ^= x2;					\
+ 	})
+ 
+-static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
++static void noinline __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
  {
--	SHASH_DESC_ON_STACK(shash, tfm);
-+	struct shash_desc *shash;
- 	int rc, i;
- 
-+	shash = kmalloc(sizeof(struct shash_desc) + crypto_shash_descsize(tfm),
-+			GFP_KERNEL);
-+	if (!shash)
-+		return -ENOMEM;
-+
- 	shash->tfm = tfm;
- 
- 	hash->length = crypto_shash_digestsize(tfm);
- 
- 	rc = crypto_shash_init(shash);
- 	if (rc != 0)
--		return rc;
-+		goto out;
- 
- 	for (i = 0; i < num_fields; i++) {
- 		u8 buffer[IMA_EVENT_NAME_LEN_MAX + 1] = { 0 };
-@@ -497,7 +502,8 @@ static int ima_calc_field_array_hash_tfm(struct ima_field_data *field_data,
- 
- 	if (!rc)
- 		rc = crypto_shash_final(shash, hash->digest);
--
-+out:
-+	kfree(shash);
- 	return rc;
- }
- 
+ 	k += 100;
+ 	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
 -- 
 2.20.0
 
