@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27C3DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5016BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8DE820673
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FC992063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806730;
-	bh=mKtyJluVbixW8qvdlr8Grs/hbKxOyEeZGEwPJY1SwsA=;
+	s=default; t=1560806735;
+	bh=fAdnBziSJffBYuKkdBsMDxs4Ewy2DtT/7aKScd6MlMg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=frPPsLZkyUJZUwa3dD+5P61yuwJf1Osh94apsY5226bOb6VnU1EcnzOVGE2hyrGG4
-	 5iu5WjU0L4DyWL5/joJbANxN9kCHrOivkf1sVRHva7ImRnf2O+h8zxLUfUDi4LGjuR
-	 V/AKeBaCiidLLO6pJHwZ2fHqGrb/UDsIiGycOfVs=
+	b=PlFtUS/KrTRusUGWlbCXtEID+TW0E6OcvJ8rWe+eh4WdfhwV4zf+jLkScvtsKgVq2
+	 qUkVF8RCmvrSTRvcEgbBDJvENaNG5ko1R8C/IAlpZbKNzjna3Go3GLViiMRqx3yBYE
+	 RFNSbYkmPhpaua+UKnTGY1Byf7XHcOLJqj036a78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730071AbfFQVZ1 (ORCPT
+        id S1729070AbfFQVZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:25:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51440 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:25:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51666 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727523AbfFQVZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:25:22 -0400
+        id S1729704AbfFQVZa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:25:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3070206B7;
-        Mon, 17 Jun 2019 21:25:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C58520657;
+        Mon, 17 Jun 2019 21:25:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806721;
-        bh=mKtyJluVbixW8qvdlr8Grs/hbKxOyEeZGEwPJY1SwsA=;
+        s=default; t=1560806730;
+        bh=fAdnBziSJffBYuKkdBsMDxs4Ewy2DtT/7aKScd6MlMg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DysEY6XRkD7jHWqSguX3rGeS5eoKcuzqR0nOOWVvPvf0Db7BaifyVz+Xdz1Y6BqxS
-         WFUFS80BnrmEZwS0SZ4YW7V2iRzwEIDRYUeAvLj6pe+6Na88PGbiJV48PeHxBkTRi+
-         nz+mhW0yPBCu2S0vh1LRw2f8h7i7zmayjvd9mJyc=
+        b=rABUamYi/fgyR8G6nFxht1hSa7VewI/iA4uHG6CDrFJAh88t4ZyvpdaCWjUNyd8vc
+         dDtSXLhAWXiTOCHvMgt2rEP/FSF4TvBEUU5MvAW8jTie7oKLquTju1go4LA7NKXLgB
+         32tJF5GMqZDOpqwLzZaUvU6fxyMB2VZGgqWLlOXc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/75] scsi: qedi: remove set but not used variables cdev and udev
-Date:   Mon, 17 Jun 2019 23:09:46 +0200
-Message-Id: <20190617210754.141452451@linuxfoundation.org>
+Subject: [PATCH 4.19 38/75] arm64/mm: Inhibit huge-vmap with ptdump
+Date:   Mon, 17 Jun 2019 23:09:49 +0200
+Message-Id: <20190617210754.255442955@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -61,46 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d0adee5d12752256ff0c87ad7f002f21fe49d618 ]
+[ Upstream commit 7ba36eccb3f83983a651efd570b4f933ecad1b5c ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+The arm64 ptdump code can race with concurrent modification of the
+kernel page tables. At the time this was added, this was sound as:
 
-drivers/scsi/qedi/qedi_iscsi.c: In function 'qedi_ep_connect':
-drivers/scsi/qedi/qedi_iscsi.c:813:23: warning: variable 'udev' set but not used [-Wunused-but-set-variable]
-drivers/scsi/qedi/qedi_iscsi.c:812:18: warning: variable 'cdev' set but not used [-Wunused-but-set-variable]
+* Modifications to leaf entries could result in stale information being
+  logged, but would not result in a functional problem.
 
-These have never been used since introduction.
+* Boot time modifications to non-leaf entries (e.g. freeing of initmem)
+  were performed when the ptdump code cannot be invoked.
 
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+* At runtime, modifications to non-leaf entries only occurred in the
+  vmalloc region, and these were strictly additive, as intermediate
+  entries were never freed.
+
+However, since commit:
+
+  commit 324420bf91f6 ("arm64: add support for ioremap() block mappings")
+
+... it has been possible to create huge mappings in the vmalloc area at
+runtime, and as part of this existing intermediate levels of table my be
+removed and freed.
+
+It's possible for the ptdump code to race with this, and continue to
+walk tables which have been freed (and potentially poisoned or
+reallocated). As a result of this, the ptdump code may dereference bogus
+addresses, which could be fatal.
+
+Since huge-vmap is a TLB and memory optimization, we can disable it when
+the runtime ptdump code is in use to avoid this problem.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: 324420bf91f60582 ("arm64: add support for ioremap() block mappings")
+Acked-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/arm64/mm/mmu.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index 4130b9117055..1b7049dce169 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -810,8 +810,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
- 	struct qedi_endpoint *qedi_ep;
- 	struct sockaddr_in *addr;
- 	struct sockaddr_in6 *addr6;
--	struct qed_dev *cdev  =  NULL;
--	struct qedi_uio_dev *udev = NULL;
- 	struct iscsi_path path_req;
- 	u32 msg_type = ISCSI_KEVENT_IF_DOWN;
- 	u32 iscsi_cid = QEDI_CID_RESERVED;
-@@ -831,8 +829,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
- 	}
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 8080c9f489c3..0fa558176fb1 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -921,13 +921,18 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
  
- 	qedi = iscsi_host_priv(shost);
--	cdev = qedi->cdev;
--	udev = qedi->udev;
+ int __init arch_ioremap_pud_supported(void)
+ {
+-	/* only 4k granule supports level 1 block mappings */
+-	return IS_ENABLED(CONFIG_ARM64_4K_PAGES);
++	/*
++	 * Only 4k granule supports level 1 block mappings.
++	 * SW table walks can't handle removal of intermediate entries.
++	 */
++	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
++	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+ }
  
- 	if (test_bit(QEDI_IN_OFFLINE, &qedi->flags) ||
- 	    test_bit(QEDI_IN_RECOVERY, &qedi->flags)) {
+ int __init arch_ioremap_pmd_supported(void)
+ {
+-	return 1;
++	/* See arch_ioremap_pud_supported() */
++	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+ }
+ 
+ int pud_set_huge(pud_t *pudp, phys_addr_t phys, pgprot_t prot)
 -- 
 2.20.1
 
