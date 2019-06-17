@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA222C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A7DDC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E11B2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0652063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806642;
-	bh=Sqcme+VWlYgXM3RIsP6CG6OkhM/xpEogeAgWCEriq2g=;
+	s=default; t=1560806645;
+	bh=dUArKPhFpV2IgSelYWVIJcPeMHCO/pkOXIoKozc6Zfw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fApUaByHBroOX1y+eQQrcUkWKxVn9jkXP9hqHdlEC2RWiOuwjgCvo+GsVa5NUPpgf
-	 JjhDvraViwynXa70M8Dd8lyGKCd0Ao28Q9dJoXr7qa1nh9zZu1syM1wJs3JtLftWG9
-	 8vbQu1CjCVH1r/p2XOuT1iPbqhqp30O+koIm1gak=
+	b=RjpOwQSraQ2HZuUMaCtbZvpEIdjhgbOliv8UGknJ3DnCq+NM7Ld3k6XhrRpmYP0+M
+	 sRbr3gWKQ7ULlgNzBFaAgj6OMdkKMND4CHTFPLVpJibj6Ifwyafn0ZSwM9Y2LbAMw7
+	 mutZKF0bupJ3k/hC586waHEoj4ABE6jpzhfMSwoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729834AbfFQVYA (ORCPT
+        id S1729843AbfFQVYD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:24:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49330 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:24:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729017AbfFQVX6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:23:58 -0400
+        id S1729833AbfFQVYB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:24:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 69CF22063F;
-        Mon, 17 Jun 2019 21:23:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 160F520657;
+        Mon, 17 Jun 2019 21:23:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806637;
-        bh=Sqcme+VWlYgXM3RIsP6CG6OkhM/xpEogeAgWCEriq2g=;
+        s=default; t=1560806640;
+        bh=dUArKPhFpV2IgSelYWVIJcPeMHCO/pkOXIoKozc6Zfw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NdenmgdGG2NtD7rWP49I5JXRBz3Qb4FSjgtMPbhkVs/XxXk9/lAJ+d5gn0heAALIr
-         RKF+IhmWoPB/oOP1IY1WWY2hskSteymfbRvl4iCRUK2u41Pzohbz6j345sZo1TVJpf
-         KvZNxT8iCbi/rfIh6Ewi7SMIArNtCCV/yE7PGulM=
+        b=K8cJIuH3US90TR8bgLprLi8OhPmHzcZckOQUGDlghbLUzr8NdrGxXQHlPfC3jhb12
+         8AQccwhjZKbFkqMwGLj8ty9oPS31N4AN7ThTlI9V06SCn/FGr1R6O1SqNxdxyB+EbU
+         nE0fDzzrsyl8tFX+YgMCJLH6NDABrW9JamC3pnRo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Martin Schiller <ms@dev.tdt.de>,
+        stable@vger.kernel.org, Minas Harutyunyan <hminas@synopsys.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
         Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 5.1 097/115] usb: dwc2: Fix DMA cache alignment issues
-Date:   Mon, 17 Jun 2019 23:09:57 +0200
-Message-Id: <20190617210804.850628684@linuxfoundation.org>
+Subject: [PATCH 5.1 098/115] usb: dwc2: host: Fix wMaxPacketSize handling (fix webcam regression)
+Date:   Mon, 17 Jun 2019 23:09:58 +0200
+Message-Id: <20190617210804.895590534@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -61,62 +61,240 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Douglas Anderson <dianders@chromium.org>
 
-commit 4a4863bf2e7932e584a3a462d3c6daf891142ddc upstream.
+commit babd183915e91a64e976b9e8ab682bb56624df76 upstream.
 
-Insert a padding between data and the stored_xfer_buffer pointer to
-ensure they are not on the same cache line.
+In commit abb621844f6a ("usb: ch9: make usb_endpoint_maxp() return
+only packet size") the API to usb_endpoint_maxp() changed.  It used to
+just return wMaxPacketSize but after that commit it returned
+wMaxPacketSize with the high bits (the multiplier) masked off.  If you
+wanted to get the multiplier it was now up to your code to call the
+new usb_endpoint_maxp_mult() which was introduced in
+commit 541b6fe63023 ("usb: add helper to extract bits 12:11 of
+wMaxPacketSize").
 
-Otherwise, the stored_xfer_buffer gets corrupted for IN URBs on
-non-cache-coherent systems. (In my case: Lantiq xRX200 MIPS)
+Prior to the API change most host drivers were updated, but no update
+was made to dwc2.  Presumably it was assumed that dwc2 was too
+simplistic to use the multiplier and thus just didn't support a
+certain class of USB devices.  However, it turns out that dwc2 did use
+the multiplier and many devices using it were working quite nicely.
+That means that many USB devices have been broken since the API
+change.  One such device is a Logitech HD Pro Webcam C920.
 
-Fixes: 3bc04e28a030 ("usb: dwc2: host: Get aligned DMA in a more supported way")
-Fixes: 56406e017a88 ("usb: dwc2: Fix DMA alignment to start at allocated boundary")
-Cc: <stable@vger.kernel.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Specifically, though dwc2 didn't directly call usb_endpoint_maxp(), it
+did call usb_maxpacket() which in turn called usb_endpoint_maxp().
+
+Let's update dwc2 to work properly with the new API.
+
+Fixes: abb621844f6a ("usb: ch9: make usb_endpoint_maxp() return only packet size")
+Cc: stable@vger.kernel.org
 Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
 Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc2/hcd.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ drivers/usb/dwc2/hcd.c       |   29 +++++++++++++++++------------
+ drivers/usb/dwc2/hcd.h       |   20 +++++++++++---------
+ drivers/usb/dwc2/hcd_intr.c  |    5 +++--
+ drivers/usb/dwc2/hcd_queue.c |   10 ++++++----
+ 4 files changed, 37 insertions(+), 27 deletions(-)
 
 --- a/drivers/usb/dwc2/hcd.c
 +++ b/drivers/usb/dwc2/hcd.c
-@@ -2664,8 +2664,10 @@ static void dwc2_free_dma_aligned_buffer
- 		return;
+@@ -2796,7 +2796,7 @@ static int dwc2_assign_and_init_hc(struc
+ 	chan->dev_addr = dwc2_hcd_get_dev_addr(&urb->pipe_info);
+ 	chan->ep_num = dwc2_hcd_get_ep_num(&urb->pipe_info);
+ 	chan->speed = qh->dev_speed;
+-	chan->max_packet = dwc2_max_packet(qh->maxp);
++	chan->max_packet = qh->maxp;
  
- 	/* Restore urb->transfer_buffer from the end of the allocated area */
--	memcpy(&stored_xfer_buffer, urb->transfer_buffer +
--	       urb->transfer_buffer_length, sizeof(urb->transfer_buffer));
-+	memcpy(&stored_xfer_buffer,
-+	       PTR_ALIGN(urb->transfer_buffer + urb->transfer_buffer_length,
-+			 dma_get_cache_alignment()),
-+	       sizeof(urb->transfer_buffer));
+ 	chan->xfer_started = 0;
+ 	chan->halt_status = DWC2_HC_XFER_NO_HALT_STATUS;
+@@ -2874,7 +2874,7 @@ static int dwc2_assign_and_init_hc(struc
+ 		 * This value may be modified when the transfer is started
+ 		 * to reflect the actual transfer length
+ 		 */
+-		chan->multi_count = dwc2_hb_mult(qh->maxp);
++		chan->multi_count = qh->maxp_mult;
  
- 	if (usb_urb_dir_in(urb)) {
- 		if (usb_pipeisoc(urb->pipe))
-@@ -2697,6 +2699,7 @@ static int dwc2_alloc_dma_aligned_buffer
- 	 * DMA
- 	 */
- 	kmalloc_size = urb->transfer_buffer_length +
-+		(dma_get_cache_alignment() - 1) +
- 		sizeof(urb->transfer_buffer);
+ 	if (hsotg->params.dma_desc_enable) {
+ 		chan->desc_list_addr = qh->desc_list_dma;
+@@ -3994,19 +3994,21 @@ static struct dwc2_hcd_urb *dwc2_hcd_urb
  
- 	kmalloc_ptr = kmalloc(kmalloc_size, mem_flags);
-@@ -2707,7 +2710,8 @@ static int dwc2_alloc_dma_aligned_buffer
- 	 * Position value of original urb->transfer_buffer pointer to the end
- 	 * of allocation for later referencing
- 	 */
--	memcpy(kmalloc_ptr + urb->transfer_buffer_length,
-+	memcpy(PTR_ALIGN(kmalloc_ptr + urb->transfer_buffer_length,
-+			 dma_get_cache_alignment()),
- 	       &urb->transfer_buffer, sizeof(urb->transfer_buffer));
+ static void dwc2_hcd_urb_set_pipeinfo(struct dwc2_hsotg *hsotg,
+ 				      struct dwc2_hcd_urb *urb, u8 dev_addr,
+-				      u8 ep_num, u8 ep_type, u8 ep_dir, u16 mps)
++				      u8 ep_num, u8 ep_type, u8 ep_dir,
++				      u16 maxp, u16 maxp_mult)
+ {
+ 	if (dbg_perio() ||
+ 	    ep_type == USB_ENDPOINT_XFER_BULK ||
+ 	    ep_type == USB_ENDPOINT_XFER_CONTROL)
+ 		dev_vdbg(hsotg->dev,
+-			 "addr=%d, ep_num=%d, ep_dir=%1x, ep_type=%1x, mps=%d\n",
+-			 dev_addr, ep_num, ep_dir, ep_type, mps);
++			 "addr=%d, ep_num=%d, ep_dir=%1x, ep_type=%1x, maxp=%d (%d mult)\n",
++			 dev_addr, ep_num, ep_dir, ep_type, maxp, maxp_mult);
+ 	urb->pipe_info.dev_addr = dev_addr;
+ 	urb->pipe_info.ep_num = ep_num;
+ 	urb->pipe_info.pipe_type = ep_type;
+ 	urb->pipe_info.pipe_dir = ep_dir;
+-	urb->pipe_info.mps = mps;
++	urb->pipe_info.maxp = maxp;
++	urb->pipe_info.maxp_mult = maxp_mult;
+ }
  
- 	if (usb_urb_dir_out(urb))
+ /*
+@@ -4097,8 +4099,9 @@ void dwc2_hcd_dump_state(struct dwc2_hso
+ 					dwc2_hcd_is_pipe_in(&urb->pipe_info) ?
+ 					"IN" : "OUT");
+ 				dev_dbg(hsotg->dev,
+-					"      Max packet size: %d\n",
+-					dwc2_hcd_get_mps(&urb->pipe_info));
++					"      Max packet size: %d (%d mult)\n",
++					dwc2_hcd_get_maxp(&urb->pipe_info),
++					dwc2_hcd_get_maxp_mult(&urb->pipe_info));
+ 				dev_dbg(hsotg->dev,
+ 					"      transfer_buffer: %p\n",
+ 					urb->buf);
+@@ -4665,8 +4668,10 @@ static void dwc2_dump_urb_info(struct us
+ 	}
+ 
+ 	dev_vdbg(hsotg->dev, "  Speed: %s\n", speed);
+-	dev_vdbg(hsotg->dev, "  Max packet size: %d\n",
+-		 usb_maxpacket(urb->dev, urb->pipe, usb_pipeout(urb->pipe)));
++	dev_vdbg(hsotg->dev, "  Max packet size: %d (%d mult)\n",
++		 usb_endpoint_maxp(&urb->ep->desc),
++		 usb_endpoint_maxp_mult(&urb->ep->desc));
++
+ 	dev_vdbg(hsotg->dev, "  Data buffer length: %d\n",
+ 		 urb->transfer_buffer_length);
+ 	dev_vdbg(hsotg->dev, "  Transfer buffer: %p, Transfer DMA: %08lx\n",
+@@ -4749,8 +4754,8 @@ static int _dwc2_hcd_urb_enqueue(struct
+ 	dwc2_hcd_urb_set_pipeinfo(hsotg, dwc2_urb, usb_pipedevice(urb->pipe),
+ 				  usb_pipeendpoint(urb->pipe), ep_type,
+ 				  usb_pipein(urb->pipe),
+-				  usb_maxpacket(urb->dev, urb->pipe,
+-						!(usb_pipein(urb->pipe))));
++				  usb_endpoint_maxp(&ep->desc),
++				  usb_endpoint_maxp_mult(&ep->desc));
+ 
+ 	buf = urb->transfer_buffer;
+ 
+--- a/drivers/usb/dwc2/hcd.h
++++ b/drivers/usb/dwc2/hcd.h
+@@ -171,7 +171,8 @@ struct dwc2_hcd_pipe_info {
+ 	u8 ep_num;
+ 	u8 pipe_type;
+ 	u8 pipe_dir;
+-	u16 mps;
++	u16 maxp;
++	u16 maxp_mult;
+ };
+ 
+ struct dwc2_hcd_iso_packet_desc {
+@@ -264,6 +265,7 @@ struct dwc2_hs_transfer_time {
+  *                       - USB_ENDPOINT_XFER_ISOC
+  * @ep_is_in:           Endpoint direction
+  * @maxp:               Value from wMaxPacketSize field of Endpoint Descriptor
++ * @maxp_mult:          Multiplier for maxp
+  * @dev_speed:          Device speed. One of the following values:
+  *                       - USB_SPEED_LOW
+  *                       - USB_SPEED_FULL
+@@ -340,6 +342,7 @@ struct dwc2_qh {
+ 	u8 ep_type;
+ 	u8 ep_is_in;
+ 	u16 maxp;
++	u16 maxp_mult;
+ 	u8 dev_speed;
+ 	u8 data_toggle;
+ 	u8 ping_state;
+@@ -503,9 +506,14 @@ static inline u8 dwc2_hcd_get_pipe_type(
+ 	return pipe->pipe_type;
+ }
+ 
+-static inline u16 dwc2_hcd_get_mps(struct dwc2_hcd_pipe_info *pipe)
++static inline u16 dwc2_hcd_get_maxp(struct dwc2_hcd_pipe_info *pipe)
++{
++	return pipe->maxp;
++}
++
++static inline u16 dwc2_hcd_get_maxp_mult(struct dwc2_hcd_pipe_info *pipe)
+ {
+-	return pipe->mps;
++	return pipe->maxp_mult;
+ }
+ 
+ static inline u8 dwc2_hcd_get_dev_addr(struct dwc2_hcd_pipe_info *pipe)
+@@ -620,12 +628,6 @@ static inline bool dbg_urb(struct urb *u
+ static inline bool dbg_perio(void) { return false; }
+ #endif
+ 
+-/* High bandwidth multiplier as encoded in highspeed endpoint descriptors */
+-#define dwc2_hb_mult(wmaxpacketsize) (1 + (((wmaxpacketsize) >> 11) & 0x03))
+-
+-/* Packet size for any kind of endpoint descriptor */
+-#define dwc2_max_packet(wmaxpacketsize) ((wmaxpacketsize) & 0x07ff)
+-
+ /*
+  * Returns true if frame1 index is greater than frame2 index. The comparison
+  * is done modulo FRLISTEN_64_SIZE. This accounts for the rollover of the
+--- a/drivers/usb/dwc2/hcd_intr.c
++++ b/drivers/usb/dwc2/hcd_intr.c
+@@ -1617,8 +1617,9 @@ static void dwc2_hc_ahberr_intr(struct d
+ 
+ 	dev_err(hsotg->dev, "  Speed: %s\n", speed);
+ 
+-	dev_err(hsotg->dev, "  Max packet size: %d\n",
+-		dwc2_hcd_get_mps(&urb->pipe_info));
++	dev_err(hsotg->dev, "  Max packet size: %d (mult %d)\n",
++		dwc2_hcd_get_maxp(&urb->pipe_info),
++		dwc2_hcd_get_maxp_mult(&urb->pipe_info));
+ 	dev_err(hsotg->dev, "  Data buffer length: %d\n", urb->length);
+ 	dev_err(hsotg->dev, "  Transfer buffer: %p, Transfer DMA: %08lx\n",
+ 		urb->buf, (unsigned long)urb->dma);
+--- a/drivers/usb/dwc2/hcd_queue.c
++++ b/drivers/usb/dwc2/hcd_queue.c
+@@ -708,7 +708,7 @@ static void dwc2_hs_pmap_unschedule(stru
+ static int dwc2_uframe_schedule_split(struct dwc2_hsotg *hsotg,
+ 				      struct dwc2_qh *qh)
+ {
+-	int bytecount = dwc2_hb_mult(qh->maxp) * dwc2_max_packet(qh->maxp);
++	int bytecount = qh->maxp_mult * qh->maxp;
+ 	int ls_search_slice;
+ 	int err = 0;
+ 	int host_interval_in_sched;
+@@ -1332,7 +1332,7 @@ static int dwc2_check_max_xfer_size(stru
+ 	u32 max_channel_xfer_size;
+ 	int status = 0;
+ 
+-	max_xfer_size = dwc2_max_packet(qh->maxp) * dwc2_hb_mult(qh->maxp);
++	max_xfer_size = qh->maxp * qh->maxp_mult;
+ 	max_channel_xfer_size = hsotg->params.max_transfer_size;
+ 
+ 	if (max_xfer_size > max_channel_xfer_size) {
+@@ -1517,8 +1517,9 @@ static void dwc2_qh_init(struct dwc2_hso
+ 	u32 prtspd = (hprt & HPRT0_SPD_MASK) >> HPRT0_SPD_SHIFT;
+ 	bool do_split = (prtspd == HPRT0_SPD_HIGH_SPEED &&
+ 			 dev_speed != USB_SPEED_HIGH);
+-	int maxp = dwc2_hcd_get_mps(&urb->pipe_info);
+-	int bytecount = dwc2_hb_mult(maxp) * dwc2_max_packet(maxp);
++	int maxp = dwc2_hcd_get_maxp(&urb->pipe_info);
++	int maxp_mult = dwc2_hcd_get_maxp_mult(&urb->pipe_info);
++	int bytecount = maxp_mult * maxp;
+ 	char *speed, *type;
+ 
+ 	/* Initialize QH */
+@@ -1531,6 +1532,7 @@ static void dwc2_qh_init(struct dwc2_hso
+ 
+ 	qh->data_toggle = DWC2_HC_PID_DATA0;
+ 	qh->maxp = maxp;
++	qh->maxp_mult = maxp_mult;
+ 	INIT_LIST_HEAD(&qh->qtd_list);
+ 	INIT_LIST_HEAD(&qh->qh_list_entry);
+ 
 
 
