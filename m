@@ -2,173 +2,152 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1062EC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:33:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B01FC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:35:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1B262084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:33:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 437542084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:35:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W1ZOcvRX";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="W1ZOcvRX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726871AbfFQJdm (ORCPT
+        id S1726521AbfFQJfI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:33:42 -0400
-Received: from foss.arm.com ([217.140.110.172]:43130 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfFQJdm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:33:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A35D8344;
-        Mon, 17 Jun 2019 02:33:41 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CA903F246;
-        Mon, 17 Jun 2019 02:33:39 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 10:33:37 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     "Z.q. Hou" <zhiqiang.hou@nxp.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
- MSI_FLAG_MULTI_PCI_MSI
-Message-ID: <20190617093337.GD18020@e121166-lin.cambridge.arm.com>
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com>
- <20190412083635.33626-5-Zhiqiang.Hou@nxp.com>
- <20190611165935.GA22836@redmoon>
- <AM0PR04MB67383023B81AEB33DAF9C35584EC0@AM0PR04MB6738.eurprd04.prod.outlook.com>
- <20190612130813.GA15747@redmoon>
- <AM0PR04MB6738B93C7F1B5BE433753CF584E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM0PR04MB6738B93C7F1B5BE433753CF584E90@AM0PR04MB6738.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Mon, 17 Jun 2019 05:35:08 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47804 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725837AbfFQJfH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:35:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 7D9E7608BA; Mon, 17 Jun 2019 09:35:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560764106;
+        bh=OJbahePcE2ec6ZxEJb8UDNZ0O+db2KmSKPFs24UUzRE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=W1ZOcvRXsqJrU2jAsG2JlT2lsG5XC05Mb5P35CsQe9y+3au/pNLvVmNALeeeWc1R1
+         SHPCrQvsR1gu/4+inLNSHBuZ7Vw3UTSB/coiTp/baZSXvyxqnD0FvofGGPNeZH/zsb
+         FlBDaYGIHgedIS7bdbg7JY5J7SkCOoVmoooVPVWE=
+Received: from neeraju-linux.qualcomm.com (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 525A960867;
+        Mon, 17 Jun 2019 09:35:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560764106;
+        bh=OJbahePcE2ec6ZxEJb8UDNZ0O+db2KmSKPFs24UUzRE=;
+        h=From:To:Cc:Subject:Date:From;
+        b=W1ZOcvRXsqJrU2jAsG2JlT2lsG5XC05Mb5P35CsQe9y+3au/pNLvVmNALeeeWc1R1
+         SHPCrQvsR1gu/4+inLNSHBuZ7Vw3UTSB/coiTp/baZSXvyxqnD0FvofGGPNeZH/zsb
+         FlBDaYGIHgedIS7bdbg7JY5J7SkCOoVmoooVPVWE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 525A960867
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+To:     bjorn.andersson@linaro.org, sboyd@codeaurora.org,
+        linus.walleij@linaro.org, timur@codeaurora.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Srinivas Ramana <sramana@codeaurora.org>,
+        Neeraj Upadhyay <neeraju@codeaurora.org>
+Subject: [PATCH v2] pinctrl: qcom: Add irq_enable callback for msm gpio
+Date:   Mon, 17 Jun 2019 15:04:50 +0530
+Message-Id: <1560764090-22740-1-git-send-email-neeraju@codeaurora.org>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 01:30:39AM +0000, Z.q. Hou wrote:
-> Hi Lorenzo,
-> 
-> > -----Original Message-----
-> > From: Lorenzo Pieralisi [mailto:lorenzo.pieralisi@arm.com]
-> > Sent: 2019年6月12日 21:08
-> > To: Z.q. Hou <zhiqiang.hou@nxp.com>
-> > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
-> > <leoyang.li@nxp.com>; catalin.marinas@arm.com; will.deacon@arm.com;
-> > Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian <minghuan.lian@nxp.com>;
-> > Xiaowei Bao <xiaowei.bao@nxp.com>
-> > Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
-> > MSI_FLAG_MULTI_PCI_MSI
-> > 
-> > On Wed, Jun 12, 2019 at 11:34:51AM +0000, Z.q. Hou wrote:
-> > > Hi Lorenzo,
-> > >
-> > > Thanks a lot for your comments!
-> > >
-> > > > -----Original Message-----
-> > > > From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > > > Sent: 2019年6月12日 1:00
-> > > > To: Z.q. Hou <zhiqiang.hou@nxp.com>
-> > > > Cc: linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
-> > > > devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
-> > > > bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
-> > > > l.subrahmanya@mobiveil.co.in; shawnguo@kernel.org; Leo Li
-> > > > <leoyang.li@nxp.com>; catalin.marinas@arm.com;
-> > will.deacon@arm.com;
-> > > > Mingkai Hu <mingkai.hu@nxp.com>; M.h. Lian
-> > <minghuan.lian@nxp.com>;
-> > > > Xiaowei Bao <xiaowei.bao@nxp.com>
-> > > > Subject: Re: [PATCHv5 04/20] PCI: mobiveil: Remove the flag
-> > > > MSI_FLAG_MULTI_PCI_MSI
-> > > >
-> > > > On Fri, Apr 12, 2019 at 08:35:36AM +0000, Z.q. Hou wrote:
-> > > > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > >
-> > > > > The current code does not support multiple MSIs, so remove the
-> > > > > corresponding flag from the msi_domain_info structure.
-> > > >
-> > > > Please explain me what's the problem before removing multi MSI support.
-> > >
-> > > NXP LX2 PCIe use the GIC-ITS instead of Mobiveil IP internal MSI
-> > > controller, so, I didn't encounter problem.
-> > 
-> > Well, you sent a patch to fix an issue, explain me the issue you are fixing then,
-> > aka what have you sent this patch for ?
-> 
-> I did not face issue, as I have explained NXP does not use the
-> Mobiveil IP's MSI controller.  But obviously the MSI allocate function
-> does not support multiple MSI, so I submitted this patch.
+From: Srinivas Ramana <sramana@codeaurora.org>
 
-There is nothing obvious. Write what you are fixing in the commit log
-and I will apply the patch, I won't write the commit log for you. Anyone
-should be able to understand why a patch was needed by reading the
-commit log, it is as important as writing the code itself.
+Introduce the irq_enable callback which will be same as irq_unmask
+except that it will also clear the status bit before unmask.
 
-Thanks,
-Lorenzo
+This will help in clearing any erroneous interrupts that would
+have got latched when the interrupt is not in use.
 
-> Thanks,
-> Zhiqiang
-> 
-> > 
-> > Lorenzo
-> > 
-> > > Subbu, did you test with Endpoint supporting multi MSI?
-> > >
-> > > Thanks,
-> > > Zhiqiang
-> > >
-> > > >
-> > > > Thanks,
-> > > > Lorenzo
-> > > >
-> > > > > Fixes: 1e913e58335f ("PCI: mobiveil: Add MSI support")
-> > > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > > > ---
-> > > > > V5:
-> > > > >  - Corrected the subject.
-> > > > >
-> > > > >  drivers/pci/controller/pcie-mobiveil.c | 2 +-
-> > > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/drivers/pci/controller/pcie-mobiveil.c
-> > > > > b/drivers/pci/controller/pcie-mobiveil.c
-> > > > > index 563210e731d3..a0dd337c6214 100644
-> > > > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > > > @@ -703,7 +703,7 @@ static struct irq_chip mobiveil_msi_irq_chip =
-> > > > > {
-> > > > >
-> > > > >  static struct msi_domain_info mobiveil_msi_domain_info = {
-> > > > >  	.flags	= (MSI_FLAG_USE_DEF_DOM_OPS |
-> > > > MSI_FLAG_USE_DEF_CHIP_OPS |
-> > > > > -		   MSI_FLAG_MULTI_PCI_MSI | MSI_FLAG_PCI_MSIX),
-> > > > > +		   MSI_FLAG_PCI_MSIX),
-> > > > >  	.chip	= &mobiveil_msi_irq_chip,
-> > > > >  };
-> > > > >
-> > > > > --
-> > > > > 2.17.1
-> > > > >
+There may be devices like UART which can use the same gpio line
+for data rx as well as a wakeup gpio when in suspend. The data that
+was flowing on the line may latch the interrupt and when we enable
+the interrupt before going to suspend, this would trigger the
+unexpected interrupt. This change helps clearing the interrupt
+so that these unexpected interrupts gets cleared.
+
+Signed-off-by: Srinivas Ramana <sramana@codeaurora.org>
+Signed-off-by: Neeraj Upadhyay <neeraju@codeaurora.org>
+---
+
+Changes since v1:
+- Extracted common code into __msm_gpio_irq_unmask().
+
+ drivers/pinctrl/qcom/pinctrl-msm.c | 25 ++++++++++++++++++++++++-
+ 1 file changed, 24 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 6e319bc..2a127f0 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -729,7 +729,7 @@ static void msm_gpio_irq_mask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+ 
+-static void msm_gpio_irq_unmask(struct irq_data *d)
++static void __msm_gpio_irq_unmask(struct irq_data *d, bool status_clear)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct msm_pinctrl *pctrl = gpiochip_get_data(gc);
+@@ -741,6 +741,17 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 
+ 	raw_spin_lock_irqsave(&pctrl->lock, flags);
+ 
++	if (status_clear) {
++		/*
++		 * clear the interrupt status bit before unmask to avoid
++		 * any erroneous interrupts that would have got latched
++		 * when the interrupt is not in use.
++		 */
++		val = msm_readl_intr_status(pctrl, g);
++		val &= ~BIT(g->intr_status_bit);
++		msm_writel_intr_status(val, pctrl, g);
++	}
++
+ 	val = msm_readl_intr_cfg(pctrl, g);
+ 	val |= BIT(g->intr_raw_status_bit);
+ 	val |= BIT(g->intr_enable_bit);
+@@ -751,6 +762,17 @@ static void msm_gpio_irq_unmask(struct irq_data *d)
+ 	raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+ }
+ 
++static void msm_gpio_irq_enable(struct irq_data *d)
++{
++
++	__msm_gpio_irq_unmask(d, true);
++}
++
++static void msm_gpio_irq_unmask(struct irq_data *d)
++{
++	__msm_gpio_irq_unmask(d, false);
++}
++
+ static void msm_gpio_irq_ack(struct irq_data *d)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+@@ -978,6 +1000,7 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+ 	chip->need_valid_mask = msm_gpio_needs_valid_mask(pctrl);
+ 
+ 	pctrl->irq_chip.name = "msmgpio";
++	pctrl->irq_chip.irq_enable = msm_gpio_irq_enable;
+ 	pctrl->irq_chip.irq_mask = msm_gpio_irq_mask;
+ 	pctrl->irq_chip.irq_unmask = msm_gpio_irq_unmask;
+ 	pctrl->irq_chip.irq_ack = msm_gpio_irq_ack;
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
+
