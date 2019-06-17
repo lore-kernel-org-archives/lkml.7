@@ -2,53 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBB3C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC023C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C332D2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D5132063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807001;
-	bh=i9Ko+0/eQ4ec+hUVmpS3MjI3uwmIUDUjQmFTmcYNk1s=;
+	s=default; t=1560807006;
+	bh=P0LIOFq/wF6tmB19nDw5NC14GjcgOnPUKzgCtfUQLYg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HKACI/Pm3C5NMNEO2SSTUXiW6qfU4ZO4PGOmsgu7pVMpsAQ9EAJnH/A49/kJgu1CV
-	 neFLfkrkaOWc2zYeE7OeGOn3pWsxLpzrjvj3O+pvY2itiQEzCXIEzLUgEPY1IATqXO
-	 e4lQU1OQkQCpStPJPUSDILAiOvsDaLdGQsTYtQ8A=
+	b=imSKemlsc0X/hbUQRhuLUJGQGOyu3JN9lcvZO+TsBpv2prHLyJOgcDUa+xlX9oVv1
+	 OjlL2vLO0+e1MAKKBH/24tYsjEKRI9X9TvX5poBpkYkuj0RUkOKUT2QshnBPQaoJtf
+	 K3mFk2QZstdLqVBlz2/LbocAFFkSNz0JkhzABrMc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbfFQVaA (ORCPT
+        id S1730787AbfFQVaE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:30:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57172 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:30:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730763AbfFQV36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:58 -0400
+        id S1730328AbfFQVaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:30:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9CB882063F;
-        Mon, 17 Jun 2019 21:29:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8746D20673;
+        Mon, 17 Jun 2019 21:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806998;
-        bh=i9Ko+0/eQ4ec+hUVmpS3MjI3uwmIUDUjQmFTmcYNk1s=;
+        s=default; t=1560807001;
+        bh=P0LIOFq/wF6tmB19nDw5NC14GjcgOnPUKzgCtfUQLYg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J4FuHOyq/LcCOPsvzeVcD9GCx9c1k+kb4wtRuoQqkjEP8RhKolEm66DRGM8QAvJpJ
-         GZeRD02GCp/TSNSmPtE2xvJRXFuH0OUVlVZMfnz23givu6ztumKnfRIbXHV7av9Hpr
-         JMO6ogiiAHDXbNLak6jnS8jypOGrWbcimLPErfTs=
+        b=Qxx8uq2uouU31M/2hYbC24Lxf9YmGjzwvJofvL6WnIyLnDwsbUV69qNcIZzksjhB2
+         9TXwNxxLo5IG6nMsudONvilFx/bBuw7mzaaUlwX5JA/4eXA50LrtQ6PQpdFJjaPqDO
+         ApI1Yk9IkjrvRM5ZFNKiz5f8NF0j9Cdm1TE8BO+c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Erik=20=C4=8Cuk?= <erik.cuk@domel.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.14 53/53] rtc: pcf8523: dont return invalid date when battery is low
-Date:   Mon, 17 Jun 2019 23:10:36 +0200
-Message-Id: <20190617210752.684594543@linuxfoundation.org>
+        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 26/53] s390/kasan: fix strncpy_from_user kasan checks
+Date:   Mon, 17 Jun 2019 23:10:09 +0200
+Message-Id: <20190617210750.342730819@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -61,80 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baruch Siach <baruch@tkos.co.il>
+[ Upstream commit 01eb42afb45719cb41bb32c278e068073738899d ]
 
-commit ecb4a353d3afd45b9bb30c85d03ee113a0589079 upstream.
+arch/s390/lib/uaccess.c is built without kasan instrumentation. Kasan
+checks are performed explicitly in copy_from_user/copy_to_user
+functions. But since those functions could be inlined, calls from
+files like uaccess.c with instrumentation disabled won't generate
+kasan reports. This is currently the case with strncpy_from_user
+function which was revealed by newly added kasan test. Avoid inlining of
+copy_from_user/copy_to_user when the kernel is built with kasan support
+to make sure kasan checks are fully functional.
 
-The RTC_VL_READ ioctl reports the low battery condition. Still,
-pcf8523_rtc_read_time() happily returns invalid dates in this case.
-Check the battery health on pcf8523_rtc_read_time() to avoid that.
-
-Reported-by: Erik Čuk <erik.cuk@domel.com>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf8523.c |   32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+ arch/s390/include/asm/uaccess.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/rtc/rtc-pcf8523.c
-+++ b/drivers/rtc/rtc-pcf8523.c
-@@ -82,6 +82,18 @@ static int pcf8523_write(struct i2c_clie
- 	return 0;
- }
+diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
+index cdd0f0d999e2..689eae8d3859 100644
+--- a/arch/s390/include/asm/uaccess.h
++++ b/arch/s390/include/asm/uaccess.h
+@@ -67,8 +67,10 @@ raw_copy_from_user(void *to, const void __user *from, unsigned long n);
+ unsigned long __must_check
+ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
  
-+static int pcf8523_voltage_low(struct i2c_client *client)
-+{
-+	u8 value;
-+	int err;
-+
-+	err = pcf8523_read(client, REG_CONTROL3, &value);
-+	if (err < 0)
-+		return err;
-+
-+	return !!(value & REG_CONTROL3_BLF);
-+}
-+
- static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
- {
- 	u8 value;
-@@ -164,6 +176,14 @@ static int pcf8523_rtc_read_time(struct
- 	struct i2c_msg msgs[2];
- 	int err;
++#ifndef CONFIG_KASAN
+ #define INLINE_COPY_FROM_USER
+ #define INLINE_COPY_TO_USER
++#endif
  
-+	err = pcf8523_voltage_low(client);
-+	if (err < 0) {
-+		return err;
-+	} else if (err > 0) {
-+		dev_err(dev, "low voltage detected, time is unreliable\n");
-+		return -EINVAL;
-+	}
-+
- 	msgs[0].addr = client->addr;
- 	msgs[0].flags = 0;
- 	msgs[0].len = 1;
-@@ -248,17 +268,13 @@ static int pcf8523_rtc_ioctl(struct devi
- 			     unsigned long arg)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
--	u8 value;
--	int ret = 0, err;
-+	int ret;
+ #ifdef CONFIG_HAVE_MARCH_Z10_FEATURES
  
- 	switch (cmd) {
- 	case RTC_VL_READ:
--		err = pcf8523_read(client, REG_CONTROL3, &value);
--		if (err < 0)
--			return err;
--
--		if (value & REG_CONTROL3_BLF)
--			ret = 1;
-+		ret = pcf8523_voltage_low(client);
-+		if (ret < 0)
-+			return ret;
- 
- 		if (copy_to_user((void __user *)arg, &ret, sizeof(int)))
- 			return -EFAULT;
+-- 
+2.20.1
+
 
 
