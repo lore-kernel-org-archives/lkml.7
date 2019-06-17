@@ -2,135 +2,94 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BA8C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60651C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AE0B208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8C22084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zfpt3uun"
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="B+WUu6Cx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728232AbfFQSui (ORCPT
+        id S1726405AbfFQSwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:50:38 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41784 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfFQSuh (ORCPT
+        Mon, 17 Jun 2019 14:52:12 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:51815 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFQSwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:50:37 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m7so879648pls.8;
-        Mon, 17 Jun 2019 11:50:37 -0700 (PDT)
+        Mon, 17 Jun 2019 14:52:12 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 207so522283wma.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 11:52:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=YT9HuF+UAL5f5ci7H4JzJ/S6XavqO8+S9ops45crT04=;
-        b=Zfpt3uunBLYcSG089usKV8UfK0qMkW9RgZ/ht+cK7fx45yQdRXzuM4k6DPI6zvCSfi
-         0b3jkIINqBOHb/zU/1f0XcGlK9C4FAg1iZvHzrqz40G30DXvdJOSbiC4XdmQGerLkQoR
-         aT5EgFrx3EcOeDl7CDlpQ/A7/rYmh9HJ3rnFe7W2D9/WpSraIO3SQSjJc5BPwRcg+dHw
-         SPuWuixjDd2kTd8bJJKGjPMpHwnDksjI2b6kT33SjyErxJAJ+adv5BIpRJz1FUgmsg31
-         WMNCDArPFaqyMrcsw7wSYB32SF083r7pR7XN3BQJ2niCYfBu5lNlOnPi4o+qmzNvSq00
-         xS6w==
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=pjVCWmNKxJeMAm6vkG2OfPRISxnV9sN5LGap4EcCEdo=;
+        b=B+WUu6CxHD4qe+TlSAj2yNeYIMsbQe/yaBB02OkJTg5NiS3kyUv9Lp9FAJwZmSU0LE
+         SVriiYqjv/UGUwQEVeOPpDNqrofNWxjCMOoCDFADZ0X7UpnM0vv0lHlX5LKHj4OpWQ6+
+         6eJB84hV6fK4q2g58Ejmrpb0dkKy7EyiwfwhJ3iGxWICFQcYrQP8YweYI2xplosJMicO
+         WWLd2d9/99gLwbz58RMjaNJOYeuKmG4BmVDV+jQwakD6hz7/nqVw2aa/fvYHR6rK6JPB
+         atGlNfH7HiiMn5g3+kUddiBZKx1QedfnFavgp10cEfTPiGgUVgpuAwxvHIv8LSQoCk46
+         Uk7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=YT9HuF+UAL5f5ci7H4JzJ/S6XavqO8+S9ops45crT04=;
-        b=UCSgS4deqGLCX+CSokBFkOSjx9KcNevDlb5p2/llRSeV1MpdubiliUxSpp8WMYQDXk
-         d8yD7QqsjpZnqEcjXUqWK5c6lvnjNmTf0QYZX4gYzPUivvN/2GAakSWwWSN7blbORHF2
-         HZCECwKA1x7G8VizXXXv6mUUQNX1QIvNi5Nitf+cYfDX/ExNnuyelrv3jCbwS1DSGJcE
-         DrDE18LDdglKCE0tmD7jmbdl8LtT6O3pWl9Z329QSLK9uuZMbW2hcozVushzcmueLpSi
-         1NJeU8ehfLMCFWAalMedjt+AXsfuEPtSnCTXSYC1wGvmDxKsRFuM/GaXaxM0KLCDOoga
-         h7XA==
-X-Gm-Message-State: APjAAAWQLRTdHCIlPL/rbOPtyzfjQvXKQqUhpDFRgwtlgGgt11IuW/yJ
-        71730fD6F54fZNWUDV1olL/+XSqJ
-X-Google-Smtp-Source: APXvYqx5UAroLnXpaBq2i2aaY3z6bqvsMT+mzSSAf5PPJfwRApihHPP0h7obDCWJIslPN6lv94WgXg==
-X-Received: by 2002:a17:902:2862:: with SMTP id e89mr110159490plb.258.1560797436896;
-        Mon, 17 Jun 2019 11:50:36 -0700 (PDT)
-Received: from [10.33.114.148] ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id x25sm12686727pfm.48.2019.06.17.11.50.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 11:50:36 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
- secrets
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <f6f352ed-750e-d735-a1c9-7ff133ca8aea@intel.com>
-Date:   Mon, 17 Jun 2019 11:50:34 -0700
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Alexander Graf <graf@amazon.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marius Hillenbrand <mhillenb@amazon.de>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <3131CDA2-F6CF-43AC-A9FC-448DC6983596@gmail.com>
-References: <20190612170834.14855-1-mhillenb@amazon.de>
- <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
- <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
- <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
- <58788f05-04c3-e71c-12c3-0123be55012c@amazon.com>
- <63b1b249-6bc7-ffd9-99db-d36dd3f1a962@intel.com>
- <CALCETrXph3Zg907kWTn6gAsZVsPbCB3A2XuNf0hy5Ez2jm2aNQ@mail.gmail.com>
- <698ca264-123d-46ae-c165-ed62ea149896@intel.com>
- <CALCETrVt=X+FB2cM5hMN9okvbcROFfT4_KMwaKaN2YVvc7UQTw@mail.gmail.com>
- <5AA8BF10-8987-4FCB-870C-667A5228D97B@gmail.com>
- <f6f352ed-750e-d735-a1c9-7ff133ca8aea@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-X-Mailer: Apple Mail (2.3445.104.11)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=pjVCWmNKxJeMAm6vkG2OfPRISxnV9sN5LGap4EcCEdo=;
+        b=YBWmjBthC+gXFuofVFI8IIFiFCXsxoc9Ho2+VjmjbH5iUk/ZE7Y4hVD+s9y41HmDK4
+         tMG4aClyxhLqKCA+fT4Tzwjhwjn4AKGMIpj9iElSxdmhKEM8wNkZi4C/kAKTCUySSrQb
+         x0It9Ztk9V3MaF8MQ0j09oKeEsrbfZtVSgRypSaK20QczSe7JuwJ0UPCycssPg5GRT1g
+         DOleTUll5Uo1/QPwygcUlsOSWQATfv61ja+AbPSd0Mnyzg0wDlQOhubQ2oaOW94mnYR6
+         ipMQpZfsEv/DZhH0ljHXcs0zXOI6B/EKbStDhVHv7WZqg2K0lDxhSMKbquEkVNz1OQqU
+         Me8A==
+X-Gm-Message-State: APjAAAWet5N/lmh1oXT6i1KxRK0wUVE9IXTeUQK52XuA1gn/nm0azBvD
+        X7Lej0raedYWsNXlyT8/qISfkg==
+X-Google-Smtp-Source: APXvYqxYsUkV6LBwIvTZu2KJAp90AA0hqZy0BsFn4HMpQzgJAaJrC3xWXPFP641RvogUgHDt6YB8TA==
+X-Received: by 2002:a1c:c255:: with SMTP id s82mr91486wmf.6.1560797530287;
+        Mon, 17 Jun 2019 11:52:10 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id j189sm86126wmb.48.2019.06.17.11.52.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 11:52:09 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 20:52:09 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>
+Subject: Re: [PATCH] fs/namespace: fix unprivileged mount propagation
+Message-ID: <20190617185208.3qij2fl7acwuewy3@brauner.io>
+References: <20190617184711.21364-1-christian@brauner.io>
+ <CAHk-=wh+OWQ2s-NZC4RzfHtgNfhV9sbtP6dXV4WnsVRQ3A3hnA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wh+OWQ2s-NZC4RzfHtgNfhV9sbtP6dXV4WnsVRQ3A3hnA@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 17, 2019, at 11:07 AM, Dave Hansen <dave.hansen@intel.com> =
-wrote:
->=20
-> On 6/17/19 9:53 AM, Nadav Amit wrote:
->>>> For anyone following along at home, I'm going to go off into crazy
->>>> per-cpu-pgds speculation mode now...  Feel free to stop reading =
-now. :)
->>>>=20
->>>> But, I was thinking we could get away with not doing this on =
-_every_
->>>> context switch at least.  For instance, couldn't 'struct =
-tlb_context'
->>>> have PGD pointer (or two with PTI) in addition to the TLB info?  =
-That
->>>> way we only do the copying when we change the context.  Or does =
-that tie
->>>> the implementation up too much with PCIDs?
->>> Hmm, that seems entirely reasonable.  I think the nasty bit would be
->>> figuring out all the interactions with PV TLB flushing.  PV TLB
->>> flushes already don't play so well with PCID tracking, and this will
->>> make it worse.  We probably need to rewrite all that code =
-regardless.
->> How is PCID (as you implemented) related to TLB flushing of kernel =
-(not
->> user) PTEs? These kernel PTEs would be global, so they would be =
-invalidated
->> from all the address-spaces using INVLPG, I presume. No?
->=20
-> The idea is that you have a per-cpu address space.  Certain kernel
-> virtual addresses would map to different physical address based on =
-where
-> you are running.  Each of the physical addresses would be "owned" by a
-> single CPU and would, by convention, never use a PGD that mapped an
-> address unless that CPU that "owned" it.
->=20
-> In that case, you never really invalidate those addresses.
+On Mon, Jun 17, 2019 at 11:50:13AM -0700, Linus Torvalds wrote:
+> On Mon, Jun 17, 2019 at 11:47 AM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > When propagating mounts across mount namespaces owned by different user
+> > namespaces it is not possible anymore to move or umount the mount in the
+> > less privileged mount namespace.
+> 
+> I will wait a short while in the hope of getting Al's ack for this,
+> but since it looks about as good as it likely can be, I suspect I'll
+> just apply it later today even without such an ack..
 
-I understand, but as I see it, this is not related directly to PCIDs.
+Thanks!
+Note that I stupidly messed up whitespace by accidently adding an
+additional newline. I'll just send a v1 that fixes this nonsense.
 
+Christian
