@@ -2,134 +2,134 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEC79C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:20:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E131C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:21:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78D99208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:20:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59848208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:21:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="0VHjZjnB"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="FR9ugC9L"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfFQRUx (ORCPT
+        id S1728560AbfFQRVf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 13:20:53 -0400
-Received: from mail-eopbgr820073.outbound.protection.outlook.com ([40.107.82.73]:55360
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725995AbfFQRUw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:20:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MqaJrCrgxnuP9FTTiF6b+cE/nLHB0A2RzP/qo3U1IHg=;
- b=0VHjZjnBANeb/w95G5I4u/F8mI6XdaGx/ooExrQjTuq5TDk9eK2kRkRbh9BZ7t8YHjyQmhrX8NAXGHQI0mRRKJjGHJyAuswraNyFY2FS/9k5AtfLwEpZQoHRQ78TC72BVMskpE3K8tMLzWL2WpGln3VVVObFrpJhsUTk15mjPUk=
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
- BYAPR05MB5303.namprd05.prod.outlook.com (20.177.127.20) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.12; Mon, 17 Jun 2019 17:20:48 +0000
-Received: from BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
- ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2008.007; Mon, 17 Jun 2019
- 17:20:48 +0000
-From:   Nadav Amit <namit@vmware.com>
-To:     Sasha Levin <sashal@kernel.org>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Borislav Petkov <bp@suse.de>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 3/3] resource: Introduce resource cache
-Thread-Topic: [PATCH 3/3] resource: Introduce resource cache
-Thread-Index: AQHVJTEB4XE0tBkHtk2lJa7fZ26NHA==
-Date:   Mon, 17 Jun 2019 17:20:48 +0000
-Message-ID: <11F97160-C769-461F-ADE8-70D4A2A7A071@vmware.com>
-References: <20190613045903.4922-4-namit@vmware.com>
- <20190615221607.4B44521841@mail.kernel.org>
-In-Reply-To: <20190615221607.4B44521841@mail.kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=namit@vmware.com; 
-x-originating-ip: [66.170.99.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a704e7df-9b53-4be6-fcbf-08d6f34823de
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR05MB5303;
-x-ms-traffictypediagnostic: BYAPR05MB5303:
-x-microsoft-antispam-prvs: <BYAPR05MB5303E3EBAE721E55CCF845B3D0EB0@BYAPR05MB5303.namprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0071BFA85B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(39860400002)(136003)(376002)(346002)(189003)(199004)(6512007)(8676002)(11346002)(3846002)(86362001)(81156014)(76176011)(2616005)(446003)(486006)(2906002)(186003)(26005)(476003)(6116002)(54906003)(256004)(53546011)(6506007)(25786009)(53936002)(7416002)(6246003)(4326008)(76116006)(73956011)(66946007)(7736002)(66446008)(305945005)(71190400001)(71200400001)(36756003)(64756008)(66476007)(66556008)(66066001)(6916009)(316002)(6486002)(5660300002)(99286004)(102836004)(81166006)(478600001)(8936002)(33656002)(14454004)(6436002)(229853002)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB5303;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: c0xtzHxGc//Ba5vScAd1vLJiGHgeZNx61W7wQFdC6Oe/dkp3xjgMkZ6Be2KqYy1N/9V38F16z/p/D5JnQZRA7Q72YSPn4qxqwjkHa9Yhllr01Qf+UILx7nhRBD3NJ7nZhdAE+MbWL6OV6w/wShoCe8sJ28cjStnx7OEEAnU41ckqdS+qiAThcJl501Lfy3Xw4bmeZUDs/X7IFb0Ea7Bi5vWvb55vD7xY8xQCitgoeNZ+0M9Czp34mdbVHZHNbAHggmeVQ6mNhTXneDtno0neH5gr3/7NvUaGE1YvWJBSvbsPFUOInstFjrTQNZEnZEzbvl9YDpJhuvUqEFbRxenIPvOny4yaxQuJ1AIpXvPO5p2ZGXZZv4b2WGH9ZD5EYzPZoYmKkfhxt0uXpjtdwh3uIgy6B/V/2ztFy5mVKB+C6CA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7FDAAD65E28C72469E1292356FAF4612@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 17 Jun 2019 13:21:35 -0400
+Received: from mail.andi.de1.cc ([85.214.239.24]:58880 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbfFQRVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:21:35 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4afMFHfci1u5XXeLng+byGIrAzWSNyHsyI06871YI5k=; b=FR9ugC9LJ0EMC2/WW4dLztG7v
+        Z9BFt8fEyX5RVGOXY8z489nJKdESRtqNRSNS5QHNxjvaXV0RnundYRxH+Vx87UQTZp3a0HPVzEDna
+        nPP0c7qOVDer/AdFchb2UCLDMJiwwy2CLxPoHPRWNjCzYHTknewrQi9lZbL/JKINkSPLo=;
+Received: from p200300ccff076f007ee9d3fffe1fa246.dip0.t-ipconnect.de ([2003:cc:ff07:6f00:7ee9:d3ff:fe1f:a246] helo=eeepc)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hcvJz-0004Db-89; Mon, 17 Jun 2019 19:21:31 +0200
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hcvJy-0005Fn-DA; Mon, 17 Jun 2019 19:21:30 +0200
+Date:   Mon, 17 Jun 2019 19:21:16 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
+Message-ID: <20190617192116.053951e8@kemnade.info>
+In-Reply-To: <20190617170255.GF5316@sirena.org.uk>
+References: <20190615163314.28173-1-andreas@kemnade.info>
+        <20190617103111.GM5316@sirena.org.uk>
+        <20190617130357.41204ff7@kemnade.info>
+        <20190617114048.GN5316@sirena.org.uk>
+        <20190617182743.7f40f2ee@aktux>
+        <20190617170255.GF5316@sirena.org.uk>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a704e7df-9b53-4be6-fcbf-08d6f34823de
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2019 17:20:48.3625
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB5303
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/VP/ge4m0D4p08_w=ity.hXK"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiBPbiBKdW4gMTUsIDIwMTksIGF0IDM6MTYgUE0sIFNhc2hhIExldmluIDxzYXNoYWxAa2VybmVs
-Lm9yZz4gd3JvdGU6DQo+IA0KPiBIaSwNCj4gDQo+IFtUaGlzIGlzIGFuIGF1dG9tYXRlZCBlbWFp
-bF0NCj4gDQo+IFRoaXMgY29tbWl0IGhhcyBiZWVuIHByb2Nlc3NlZCBiZWNhdXNlIGl0IGNvbnRh
-aW5zIGEgIkZpeGVzOiIgdGFnLA0KPiBmaXhpbmcgY29tbWl0OiBmZjNjYzk1MmQzZjAgcmVzb3Vy
-Y2U6IEFkZCByZW1vdmVfcmVzb3VyY2UgaW50ZXJmYWNlLg0KDQpUaGlzIGNvbW1pdCAoUGF0Y2gg
-My8zKSBkb2VzIG5vdCBoYXZlIHRoZSDigJxGaXhlczrigJ0gdGFnIChhbmQgaXQgaXMgYQ0KcGVy
-Zm9ybWFuY2UgZW5oYW5jZW1lbnQpLCBzbyBJIGRvbuKAmXQga25vdyB3aHkgaXQgd2FzIHByb2Nl
-c3NlZC4NCg0KSU9XOiBwbGVhc2UgZG8gbm90IGJhY2twb3J0IGl0Lg0KDQo+IFRoZSBib3QgaGFz
-IHRlc3RlZCB0aGUgZm9sbG93aW5nIHRyZWVzOiB2NS4xLjksIHY0LjE5LjUwLCB2NC4xNC4xMjUs
-IHY0LjkuMTgxLg0KPiANCj4gdjUuMS45OiBCdWlsZCBPSyENCj4gdjQuMTkuNTA6IEZhaWxlZCB0
-byBhcHBseSEgUG9zc2libGUgZGVwZW5kZW5jaWVzOg0KPiAgICAwMTBhOTNiZjk3YzcgKCJyZXNv
-dXJjZTogRml4IGZpbmRfbmV4dF9pb21lbV9yZXMoKSBpdGVyYXRpb24gaXNzdWUiKQ0KPiAgICA3
-YTUzYmIzMDllYjMgKCJyZXNvdXJjZTogRml4IGxvY2tpbmcgaW4gZmluZF9uZXh0X2lvbWVtX3Jl
-cygpIikNCj4gICAgYTk4OTU5ZmRiZGExICgicmVzb3VyY2U6IEluY2x1ZGUgcmVzb3VyY2UgZW5k
-IGluIHdhbGtfKigpIGludGVyZmFjZXMiKQ0KPiANCj4gdjQuMTQuMTI1OiBGYWlsZWQgdG8gYXBw
-bHkhIFBvc3NpYmxlIGRlcGVuZGVuY2llczoNCj4gICAgMDEwYTkzYmY5N2M3ICgicmVzb3VyY2U6
-IEZpeCBmaW5kX25leHRfaW9tZW1fcmVzKCkgaXRlcmF0aW9uIGlzc3VlIikNCj4gICAgMGU0YzEy
-YjQ1YWE4ICgieDg2L21tLCByZXNvdXJjZTogVXNlIFBBR0VfS0VSTkVMIHByb3RlY3Rpb24gZm9y
-IGlvcmVtYXAgb2YgbWVtb3J5IHBhZ2VzIikNCj4gICAgMWQyZTczM2IxM2I0ICgicmVzb3VyY2U6
-IFByb3ZpZGUgcmVzb3VyY2Ugc3RydWN0IGluIHJlc291cmNlIHdhbGsgY2FsbGJhY2siKQ0KPiAg
-ICA0YWMyYWVkODM3Y2IgKCJyZXNvdXJjZTogQ29uc29saWRhdGUgcmVzb3VyY2Ugd2Fsa2luZyBj
-b2RlIikNCj4gICAgN2E1M2JiMzA5ZWIzICgicmVzb3VyY2U6IEZpeCBsb2NraW5nIGluIGZpbmRf
-bmV4dF9pb21lbV9yZXMoKSIpDQo+ICAgIGE5ODk1OWZkYmRhMSAoInJlc291cmNlOiBJbmNsdWRl
-IHJlc291cmNlIGVuZCBpbiB3YWxrXyooKSBpbnRlcmZhY2VzIikNCj4gDQo+IHY0LjkuMTgxOiBG
-YWlsZWQgdG8gYXBwbHkhIFBvc3NpYmxlIGRlcGVuZGVuY2llczoNCj4gICAgMDEwYTkzYmY5N2M3
-ICgicmVzb3VyY2U6IEZpeCBmaW5kX25leHRfaW9tZW1fcmVzKCkgaXRlcmF0aW9uIGlzc3VlIikN
-Cj4gICAgMGU0YzEyYjQ1YWE4ICgieDg2L21tLCByZXNvdXJjZTogVXNlIFBBR0VfS0VSTkVMIHBy
-b3RlY3Rpb24gZm9yIGlvcmVtYXAgb2YgbWVtb3J5IHBhZ2VzIikNCj4gICAgMWQyZTczM2IxM2I0
-ICgicmVzb3VyY2U6IFByb3ZpZGUgcmVzb3VyY2Ugc3RydWN0IGluIHJlc291cmNlIHdhbGsgY2Fs
-bGJhY2siKQ0KPiAgICA0YWMyYWVkODM3Y2IgKCJyZXNvdXJjZTogQ29uc29saWRhdGUgcmVzb3Vy
-Y2Ugd2Fsa2luZyBjb2RlIikNCj4gICAgNjBmZTM5MTBiYjAyICgia2V4ZWNfZmlsZTogQWxsb3cg
-YXJjaC1zcGVjaWZpYyBtZW1vcnkgd2Fsa2luZyBmb3Iga2V4ZWNfYWRkX2J1ZmZlciIpDQo+ICAg
-IDdhNTNiYjMwOWViMyAoInJlc291cmNlOiBGaXggbG9ja2luZyBpbiBmaW5kX25leHRfaW9tZW1f
-cmVzKCkiKQ0KPiAgICBhMDQ1ODI4NGYwNjIgKCJwb3dlcnBjOiBBZGQgc3VwcG9ydCBjb2RlIGZv
-ciBrZXhlY19maWxlX2xvYWQoKSIpDQo+ICAgIGE5ODk1OWZkYmRhMSAoInJlc291cmNlOiBJbmNs
-dWRlIHJlc291cmNlIGVuZCBpbiB3YWxrXyooKSBpbnRlcmZhY2VzIikNCj4gICAgZGE2NjU4ODU5
-YjljICgicG93ZXJwYzogQ2hhbmdlIHBsYWNlcyB1c2luZyBDT05GSUdfS0VYRUMgdG8gdXNlIENP
-TkZJR19LRVhFQ19DT1JFIGluc3RlYWQuIikNCj4gICAgZWMyYjliZmFhYzQ0ICgia2V4ZWNfZmls
-ZTogQ2hhbmdlIGtleGVjX2FkZF9idWZmZXIgdG8gdGFrZSBrZXhlY19idWYgYXMgYXJndW1lbnQu
-IikNCj4gDQo+IA0KPiBIb3cgc2hvdWxkIHdlIHByb2NlZWQgd2l0aCB0aGlzIHBhdGNoPw0KPiAN
-Cj4gLS0NCj4gVGhhbmtzLA0KPiBTYXNoYQ0KDQoNCg==
+--Sig_/VP/ge4m0D4p08_w=ity.hXK
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, 17 Jun 2019 18:02:55 +0100
+Mark Brown <broonie@kernel.org> wrote:
+
+> On Mon, Jun 17, 2019 at 06:27:43PM +0200, Andreas Kemnade wrote:
+>=20
+> > Citing tps65950 trm page 55: =20
+>=20
+> > The device contains three switch-mode power supplies (SMPS):
+> > =E2=80=A2 VDD1: 1.2-A, buck DC/DC converter (VOUT =3D 0.6 V to 1.45 V, =
+in steps of 12.5 mV)
+> > =E2=80=A2 VDD2: 600-mA buck DC/DC converter (VOUT =3D 0.6 V to 1.45 V, =
+in steps of 12.5 mV, and 1.5 V as a
+> >    single programmable value) =20
+>=20
+> > you are right, they are not really continuous. So should I add these
+> > 68 steps they have as a voltage list? =20
+>=20
+> There's helpers for linear mappings, you should be able to use those
+> (see helpers.c).
+>=20
+ok, I will send a 2 with such a list.
+
+Thanks for the hint.
+
+> > I think they are nearly continuous, so we should IMHO rather take that
+> > not that strict. I guess there are no really continuous regulators, all
+> > have steps as voltage is specified in a limited resolution. So what is
+> > the exact meaning of that flag here? =20
+>=20
+> This was added for devices with extremely high resolution interfaces
+> like some microcontroller interfaces that take voltage values directly
+> (mirroring the regulator API) or PWM regulators - it's for cases where
+> enumerating all the voltages is unreasonable.  The TWL4030 regulators
+> look fairly standard in comparison.
+
+well, VDD1 is a lot more continuous than e.g. VAUX3, but your examples
+seem to be even more continuous. But maybe a comment in the api documentati=
+on
+might be helpful so that people do not misinterpret the meaning.
+
+Regards,
+Andreas
+
+--Sig_/VP/ge4m0D4p08_w=ity.hXK
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl0HzAwACgkQl4jFM1s/
+ye/IoxAAuLW2LEMjp4xn39FDONGqu0QFyP9KNVd/Qur8jRIjxoXWgvkzwPTufX4R
+WMpf0hIhoyLcZVk+EJ46FeGqNavX77W2R+kqx8qPo57uVt+ZhP2vgda7V32xE/9l
+kYiyAzDnO7iVREnSSV39d8JRMz+QM86aKoGK7Int93AsIFwlTdRpaAOHXsf3dRiw
+PO6EZv96aytWmchRcvMAGMz02L65AkFRpyPCUbVCfd6QqVq+ddz4SHQPJTh1dtU8
+ubUE9oYmsLYg+5MeiOR6hNx+xZgIk086SbmeqRqdFZ8f21G44p8AIGDRRBx3HNX7
+usoIhX6O+kHR6m3tyTLbsINjURG60AvYRvNj2xqvIkRo9yr92Cr1moE/gzblckp4
+s8Jw/nA9cI7F7htdAFPJBRT+t5KZl2uI+HyxoA3kAzAuqSx2ZbD8lYJk2uSGLDOb
+gC4Ii/XIuweASfSLIkMcKBNPOvX62d2++rYVWrBmWhLYp8GA4ofNJzvCWhBPZkE5
+rLt8U3ejevmb0s8Embx+9M9Bs1DriliGMrdRqLpjg56T4sWiWfJYGy9exud0svhE
+cKU8XnylrRtOJvu9yHE3BDqR34FAMLjpwI+jKHnhJCfb+qWgpA7/+xmbpT01Rd7x
+DFHHIfoLhwJCM/2q/sWzan+S8AMgt9mmF7bbxxt6IThSEuhc8ic=
+=D/c6
+-----END PGP SIGNATURE-----
+
+--Sig_/VP/ge4m0D4p08_w=ity.hXK--
