@@ -2,111 +2,66 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CAAC31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 643EEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E6C20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807402;
-	bh=H5s03YtNMgZZCgh2/o5/ZQ9c/DeSnUl0LjC1EaxMO9U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MgHs1GYM82CwETyQF+c9XufWLECR9vuPURkV7CGeb2XWAvWMIUe3gqF4SlvuI6UjH
-	 QeFBT/AT+ofkj43SNumtEmjKEqTBFEpRTpqPYDxHLihj/tsg/wzFeBWUGKu5RJsd4Y
-	 vduaAauFQwKIYV/Rp9uu+4Vu9IEPK04H9YSDqTGs=
+	by mail.kernel.org (Postfix) with ESMTP id 4278120657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728752AbfFQVVH (ORCPT
+        id S1729261AbfFQVVA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:21:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45486 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729267AbfFQVVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:21:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6C92F2089E;
-        Mon, 17 Jun 2019 21:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806461;
-        bh=H5s03YtNMgZZCgh2/o5/ZQ9c/DeSnUl0LjC1EaxMO9U=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PiZh5Zb3xRpqlFb0TW9FL5u7oQJVPc/+7r2RJKS5vSClPS2VxAhgMVMBZsWJtmF8F
-         LQY9s2ikw2w/hifxbxPSvpSfbUkvoFZKkgyiLLLqLCnZwvXv5p/Ky0BP0bVRSdyY/q
-         NRe5io3i9KySkZRcyytkGY4OMKKllJccrW/uJjtk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 043/115] ALSA: seq: Protect in-kernel ioctl calls with mutex
-Date:   Mon, 17 Jun 2019 23:09:03 +0200
-Message-Id: <20190617210802.258998943@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-References: <20190617210759.929316339@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Jun 2019 17:21:00 -0400
+Received: from www62.your-server.de ([213.133.104.62]:47160 "EHLO
+        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728714AbfFQVU6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:20:58 -0400
+Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
+        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89_1)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hcz3a-0001JJ-NN; Mon, 17 Jun 2019 23:20:50 +0200
+Received: from [178.199.41.31] (helo=linux.home)
+        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.89)
+        (envelope-from <daniel@iogearbox.net>)
+        id 1hcz3a-0002B3-Hm; Mon, 17 Jun 2019 23:20:50 +0200
+Subject: Re: [PATCH bpf] bpf: fix the check that forwarding is enabled in
+ bpf_ipv6_fib_lookup
+To:     Anton Protopopov <a.s.protopopov@gmail.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190615225348.2539-1-a.s.protopopov@gmail.com>
+From:   Daniel Borkmann <daniel@iogearbox.net>
+Message-ID: <afd146bd-2a6a-14ce-8ea2-8f928960736d@iogearbox.net>
+Date:   Mon, 17 Jun 2019 23:20:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190615225348.2539-1-a.s.protopopov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Authenticated-Sender: daniel@iogearbox.net
+X-Virus-Scanned: Clear (ClamAV 0.100.3/25483/Mon Jun 17 09:56:00 2019)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
+On 06/16/2019 12:53 AM, Anton Protopopov wrote:
+> The bpf_ipv6_fib_lookup function should return BPF_FIB_LKUP_RET_FWD_DISABLED
+> when forwarding is disabled for the input device.  However instead of checking
+> if forwarding is enabled on the input device, it checked the global
+> net->ipv6.devconf_all->forwarding flag.  Change it to behave as expected.
+> 
+> Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
 
-ALSA OSS sequencer calls the ioctl function indirectly via
-snd_seq_kernel_client_ctl().  While we already applied the protection
-against races between the normal ioctls and writes via the client's
-ioctl_mutex, this code path was left untouched.  And this seems to be
-the cause of still remaining some rare UAF as spontaneously triggered
-by syzkaller.
-
-For the sake of robustness, wrap the ioctl_mutex also for the call via
-snd_seq_kernel_client_ctl(), too.
-
-Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- sound/core/seq/seq_clientmgr.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
-
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index 38e7deab6384..b3280e81bfd1 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -2343,14 +2343,19 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
- {
- 	const struct ioctl_handler *handler;
- 	struct snd_seq_client *client;
-+	int err;
- 
- 	client = clientptr(clientid);
- 	if (client == NULL)
- 		return -ENXIO;
- 
- 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
--		if (handler->cmd == cmd)
--			return handler->func(client, arg);
-+		if (handler->cmd == cmd) {
-+			mutex_lock(&client->ioctl_mutex);
-+			err = handler->func(client, arg);
-+			mutex_unlock(&client->ioctl_mutex);
-+			return err;
-+		}
- 	}
- 
- 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
--- 
-2.20.1
-
-
-
+Applied, thanks!
