@@ -7,104 +7,113 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 753DFC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66856C31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:36:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DB6C208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD532087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:36:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uONy/nna"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GhSJZeoC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728370AbfFQLfw (ORCPT
+        id S1728382AbfFQLf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:35:52 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:46740 "EHLO
+        Mon, 17 Jun 2019 07:35:58 -0400
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:35002 "EHLO
         mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728359AbfFQLfu (ORCPT
+        with ESMTP id S1728373AbfFQLf5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:35:50 -0400
-Received: by mail-vs1-f66.google.com with SMTP id l125so5844119vsl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:35:50 -0700 (PDT)
+        Mon, 17 Jun 2019 07:35:57 -0400
+Received: by mail-vs1-f66.google.com with SMTP id u124so5887450vsu.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:35:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=iaMaGenOD4N8b325Sjijr4yZaXPGNKq+TVNXE6cscOU=;
-        b=uONy/nnaWJS5YnlekVpZ6hSp62ck/n140Ql6GM+iMx5eXARgkLsu4yUoBGQG4mZMsx
-         JPVEPfAUizflPNYzQdAVNWMEA+EAePkbnAJmhUlLB1bc9cmVnPmYGUe8epJp5QRsr7fv
-         3fSXKdbmbUX+lHk+i8IZcWgfzItQYtk1ZrzNZcpygYy0Z2Qzk9paEqGWaq+M8yYUov9n
-         vpC1pQkpankIn0pzLQ2yYcH5hlWPq7YsyyIzcAvDY/jZDYHlmnHNvaGaRm+o9V74zP+U
-         oCm4zuFp1UkSyXq49pkhH3XgX9bG4WBP7ub8KNmwdmacoeTwtN1G7qFUgr+N7SXLJ2iA
-         cPyQ==
+        bh=otnv9cTgTfe5r23dfOto9MZjGxvYYJ6GS/smezsERbw=;
+        b=GhSJZeoC/oXLyZ+TRiMZ0YoXyHryTR3BQ9q66WqrqpWj4KduSA9n3Udj3Q7AiY94c7
+         ApmEGyvfHjEeCnF+Bow7WWJquaPIFB/gMPr49O2j6bcgghpvg0XWk/cc4JHNjEdz7yxi
+         3icABA7wUklyEK6MablY/noFcwcUfOP3MqD3ooi54cey/mH1qVhQzu81icq43SWOvl8k
+         3VEbBqiExhkaV+MutYoQNaN0MHEf5ou1YKkOclJVHN73qhp9Gh04uCnDKw/GCo4h7T5N
+         RUktUXFcT0j/RWnPTbUMjGO6Ottd0/ODo86n5mbFPW0+6YhmJ6Jg4cX0RsNVBFGx7ZPt
+         uZAQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=iaMaGenOD4N8b325Sjijr4yZaXPGNKq+TVNXE6cscOU=;
-        b=WHT3aTQuJn+rC5LzXDz113peij5sEVo61ajBffOn7zkNwn44U16LSqv1yc/e8pM4Hk
-         jaPCQCOh/ILV7aLOe9GzZIiHh9y+0A6PtCBQxtegGyE1X8MnAg88D21yhMLjdQIEZWoH
-         fCr64Yliq9EJ7att8nX9o00IHv8L1Hww7EvVg0MpxxDHaAchEKUOCTgOFI2Wav/+1CxY
-         C+5RIPABHG/FfhcdsZnp0JftJJ695z+0T0j6p9k9RRnZBsVp2UweKotAvAkaxbmW/Hwu
-         nepR7Ps4D3I7FebRe6yK9VxH4E4vBvrO8rmveribst/wxXgevvYH3ctCcny2p7tlvoRt
-         vt9A==
-X-Gm-Message-State: APjAAAUYfrzgWrj/0iT30hLZTIGXbOIm/J+UXLd5pJfMO4+hQcbdYaux
-        XBe5fYhypffWW6Poup7qhd3izOuLtSWbRQgdmb4+xg==
-X-Google-Smtp-Source: APXvYqy1iw03xovxVxG7DFIiObqWByOSpxIG6znLpJdvU2E+tvGtVv5f1UFVBS4cZkKB5nErh4SPzFnfR6lB6yyVJvQ=
-X-Received: by 2002:a67:3254:: with SMTP id y81mr20641150vsy.34.1560771350006;
- Mon, 17 Jun 2019 04:35:50 -0700 (PDT)
+        bh=otnv9cTgTfe5r23dfOto9MZjGxvYYJ6GS/smezsERbw=;
+        b=mo/j4qqPpy485j45YTfPSyh/eYs1XPX/Zyn2L6w98fmlRuEgufXETuASpI6ypFy/tR
+         DY5D8msqBbheKXMvNoTcdkZi1aTH98xzXCY+ip0mpbZsVOwmo7WFEx2rOn1mXuh8RyeJ
+         c7Hf0W8QfLKhfG4UIE4m7NDuV2yyOaGBXsHMPt7oaAdRd4e95gvQt+m7qx+X6DIu1YVx
+         XALYG22HiCJDHTkHomUcgt1zOztGgHZya6WT61gP9nBO3PuVGyKemOM7so491zUm9Osc
+         GYCweQYv+FUNAU0M5/P1aTwGArpMhUQCJOGKZP3abNeSFwtGsczOLPXFVINfgfRFLAFT
+         /E1Q==
+X-Gm-Message-State: APjAAAXBsCO0evjCP4DzbA8AmrwjdXKsDcZxz00nrQQtB5DfLwzXDx26
+        0ub2rky2AJAppHmR5oWXpyBRWzy9zouhg3rqXNPRIw==
+X-Google-Smtp-Source: APXvYqwBVjsPbGBBhP5ZVvSPIZSSHx/Xzfdo7b8id4zHbReP84EdzxehZlurqqpezNNACpbcKL5o3Jdqu3aySrLPFcM=
+X-Received: by 2002:a67:ee5b:: with SMTP id g27mr9846vsp.165.1560771356174;
+ Mon, 17 Jun 2019 04:35:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <1560769448-23070-1-git-send-email-jjian.zhou@mediatek.com> <1560769448-23070-2-git-send-email-jjian.zhou@mediatek.com>
-In-Reply-To: <1560769448-23070-2-git-send-email-jjian.zhou@mediatek.com>
+References: <20190614082954.39648-1-yinbo.zhu@nxp.com>
+In-Reply-To: <20190614082954.39648-1-yinbo.zhu@nxp.com>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 17 Jun 2019 13:35:13 +0200
-Message-ID: <CAPDyKFoTBhCy2bB8uzzDTNMBPnNjD81134BGt2Op3USFCW1R7Q@mail.gmail.com>
-Subject: Re: [PATCH V2 2/2] mmc: mediatek: fix SDIO IRQ detection issue
-To:     Jjian Zhou <jjian.zhou@mediatek.com>
-Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
+Date:   Mon, 17 Jun 2019 13:35:20 +0200
+Message-ID: <CAPDyKFq-zb3aA7SjFPxx3-xDb+UUwEGG5EK1UW951LyQnBNopA@mail.gmail.com>
+Subject: Re: [PATCH v1] mmc: sdhci-of-esdhc: set the sd clock divisor value
+ above 3
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Adrian Hunter <adrian.hunter@intel.com>,
+        Xiaobo Xie <xiaobo.xie@nxp.com>,
+        Jiafei Pan <jiafei.pan@nxp.com>,
         "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-mediatek@lists.infradead.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yong Mao <yong.mao@mediatek.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
+        Yangbo Lu <yangbo.lu@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019 at 13:04, Jjian Zhou <jjian.zhou@mediatek.com> wrote:
+On Fri, 14 Jun 2019 at 10:28, Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
 >
-> From: jjian zhou <jjian.zhou@mediatek.com>
+> From: Yangbo Lu <yangbo.lu@nxp.com>
 >
-> If cmd19 timeout or response crcerr occurs during execute_tuning(),
-> it need invoke msdc_reset_hw(). Otherwise SDIO IRQ can't be detected.
+> This patch is to set the sd clock divisor value above 3 in tuning mode
 >
-> Signed-off-by: jjian zhou <jjian.zhou@mediatek.com>
-> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 
-Applied for fixes and by adding a fixes/stable tag, thanks!
+Applied for next, thanks!
+
+Kind regards
+Uffe
 
 
 > ---
->  drivers/mmc/host/mtk-sd.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/mmc/host/sdhci-of-esdhc.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
-> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> index fa7d420..ba1ad5e 100644
-> --- a/drivers/mmc/host/mtk-sd.c
-> +++ b/drivers/mmc/host/mtk-sd.c
-> @@ -1031,6 +1031,8 @@ static void msdc_request_done(struct msdc_host *host, struct mmc_request *mrq)
->         msdc_track_cmd_data(host, mrq->cmd, mrq->data);
->         if (mrq->data)
->                 msdc_unprepare_data(host, mrq);
-> +       if (host->error)
-> +               msdc_reset_hw(host);
->         mmc_request_done(host->mmc, mrq);
->  }
+> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
+> index d4ec0a959a75..c4af026c3fba 100644
+> --- a/drivers/mmc/host/sdhci-of-esdhc.c
+> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
+> @@ -824,9 +824,17 @@ static int esdhc_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>         struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+>         struct sdhci_esdhc *esdhc = sdhci_pltfm_priv(pltfm_host);
+>         bool hs400_tuning;
+> +       unsigned int clk;
+>         u32 val;
+>         int ret;
 >
+> +       /* For tuning mode, the sd clock divisor value
+> +        * must be larger than 3 according to reference manual.
+> +        */
+> +       clk = esdhc->peripheral_clock / 3;
+> +       if (host->clock > clk)
+> +               esdhc_of_set_clock(host, clk);
+> +
+>         if (esdhc->quirk_limited_clk_division &&
+>             host->flags & SDHCI_HS400_TUNING)
+>                 esdhc_of_set_clock(host, host->clock);
 > --
-> 1.9.1
+> 2.17.1
 >
