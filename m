@@ -8,119 +8,110 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98707C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:38:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DADC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:38:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B7432084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:38:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBCD42084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:38:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K5VvM6Em"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JGrHDxV5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728519AbfFQSiC (ORCPT
+        id S1728605AbfFQSiG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:38:02 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:38925 "EHLO
+        Mon, 17 Jun 2019 14:38:06 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:42388 "EHLO
         mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728093AbfFQShy (ORCPT
+        with ESMTP id S1726331AbfFQSiC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:37:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id j2so6144767pfe.6;
-        Mon, 17 Jun 2019 11:37:54 -0700 (PDT)
+        Mon, 17 Jun 2019 14:38:02 -0400
+Received: by mail-pf1-f195.google.com with SMTP id q10so6140097pff.9;
+        Mon, 17 Jun 2019 11:38:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0IvJHoD0x6Z/N31hvvGGVGsE7+bjH2MX+F9HjOeromU=;
-        b=K5VvM6EmSXz4ivm9/g8rYxPjDUFNZ/MoANmdQz6nC6nVbOHQxg+YZICcrWb79YUyC4
-         FzbK4ZNp/MysCu1npO9XtWZmOU/+NYIWOEMtTlGxa2a0FKPRTKCw078iZCMH7EzHB0Xk
-         fkb3PgqvTY0PNnVMbcRq64VpoFmEOiERWC8gSM4/I+sWtbhr6Gzvwa+PeLhcYm1Lacua
-         nJH7jXumZ9/poiqaNiqLVS+J9A3nRPByY7+g+LvMqXJb2aOn6fze8Nlxg4INXE8klrFc
-         RSPpJ5WYXIDGI16i5wEdIkoXF/yvU465EB6eGt9sdchxK6acao9YXhtCytzwtWJZk/dj
-         jvrw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=ShYV+EbWvX524xQNClO0SMbhJ4ngTe/5gGFiTlAJkmg=;
+        b=JGrHDxV5HntRdMyUpnXDZs9iUchZ6oVcamrM1EpziJuwBUfmiyGWpmNHZGnl+j+WLI
+         b5aMoWSmW2RqMrCEO8mtRrKDMHGmkdse1ti5n2A6+wSxLYHYJNwcpiaJLgE6sqvhbxP5
+         sUWIVlqE73d2Ed1B5sedzgea+ZVwFQpGu68HZPpfYlvg5F5+s6xEA9OMJ7D0Pz51DP2/
+         ir68XjSxZFTEFZVPPfkX8ArhkVlpY3Kxmpod4xsGrQVjX0RuxfO/1096KdSmPiK2Tkgq
+         UEMNLcH1rsQDiRvMhZC1NJUp7Fo0IA+vkuuK0MQ7H0zcyHTPn1n+0MnOVQ5Bal/LZzvd
+         Ozkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0IvJHoD0x6Z/N31hvvGGVGsE7+bjH2MX+F9HjOeromU=;
-        b=BGT4L2TORZH1o3oatiFSJWdYKBIOP+m8KQUdW0G3Lp72+q24o51AfLYW+OAf/uMdn2
-         nCOnURhvjOjhdBPMnQEVguNpki0nonDI9CUOCqfDwNwq8EXlnxCgrAbyraRsiVXsB1CM
-         XO8STCUSd/G/4BF1I2bP8P3WEqsZjnEmONwtuqOmwJ3xh+Sbj1MnPnxHZHxM0V2Hy523
-         OCMaRf6dKmK24/Ae3su4fpVDjc678FYqwN7+Q3vu5AO3fdNspAdEISvv9CiilclNFn1Q
-         RUPTO63+9lUTefscHchUYD2UfXbKbYmY82Y7FBMuEb5Vm9WWVjMMMWvFFIV46VNbLbld
-         AvRQ==
-X-Gm-Message-State: APjAAAXEsXCVz1ZdUonsz1kCdwsOCsmFLgVoqp0ifwDx6a7o3p1PQTvf
-        Lplbj6Y1pi1kmNzEEAPkJq/a2VBH
-X-Google-Smtp-Source: APXvYqymGKsAdhabgMr/sqOOF6zIueU9f78kTBHqULt5aG6vZq7ms3evfhAYLVKm3KISQRYexflmPQ==
-X-Received: by 2002:a17:90a:c503:: with SMTP id k3mr252796pjt.46.1560796673717;
-        Mon, 17 Jun 2019 11:37:53 -0700 (PDT)
-Received: from localhost.localdomain ([167.220.56.169])
-        by smtp.gmail.com with ESMTPSA id f17sm13104817pgv.16.2019.06.17.11.37.52
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 11:37:52 -0700 (PDT)
-From:   Prakhar Srivastava <prsriva02@gmail.com>
-To:     linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     zohar@linux.ibm.com, roberto.sassu@huawei.com,
-        Prakhar Srivastava <prsriva02@gmail.com>
-Subject: [PATCH V9 3/3] KEXEC:Call ima_kexec_cmdline to measure the boot command line args
-Date:   Mon, 17 Jun 2019 11:37:38 -0700
-Message-Id: <20190617183738.14484-4-prsriva02@gmail.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190617183738.14484-1-prsriva02@gmail.com>
-References: <20190617183738.14484-1-prsriva02@gmail.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+         :references;
+        bh=ShYV+EbWvX524xQNClO0SMbhJ4ngTe/5gGFiTlAJkmg=;
+        b=eTrfUMbTCjrBfUhU9M/yrt4W8EaqVxhfgAmrhgsKFFqEDifFHkN08tIij8VROsiDde
+         P4lGFEnDixI/Msipw4B5SxzRsXh0nJR7Lzph5aEcRI07YQgZuPEWwryZS1yoFs5+WimJ
+         +gMh8nsEe7sJeJbkkS31l8+enKwZV9VKON24T0TCWkxxiSVTN59punrkAdja0TqJvrDB
+         X14jYiSbllE8Y0pBcT4cvvm6sfYN/nAfOi+CyYjIULgdGwUzpxVOUOk795TCN1BhszQx
+         nNSHd9oEgk9T8XYqR7JukEZgPm9MoY47tJn1F2CQmXne+CBi++L11uivsaoZuIU+OQCI
+         cb0A==
+X-Gm-Message-State: APjAAAW8b/7y404QLIqJKz6CNiziNfDN7OmFQnQ2s3rAA0JohaLZ5umj
+        +kf4gm44EhLwBCWYJ+zVQTs=
+X-Google-Smtp-Source: APXvYqw3kis71scyqsC3QmWFa66mq2V/8JuTK+2CY3GG9ixnSDg98rsUY6U2LDpCExTt4fD1u9HtCA==
+X-Received: by 2002:a17:90a:22c6:: with SMTP id s64mr230415pjc.5.1560796682298;
+        Mon, 17 Jun 2019 11:38:02 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id i133sm8541348pfe.75.2019.06.17.11.38.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 11:38:01 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     lgirdwood@gmail.com, broonie@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v5 3/5] arm64: dts: msm8998-mtp: Add pm8005_s1 regulator
+Date:   Mon, 17 Jun 2019 11:37:58 -0700
+Message-Id: <20190617183759.13605-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190617183643.13449-1-jeffrey.l.hugo@gmail.com>
+References: <20190617183643.13449-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During soft reboot(kexec_file_load) boot command line
-arguments are not measured.
+The pm8005_s1 is VDD_GFX, and needs to be on to enable the GPU.
+This should be hooked up to the GPU CPR, but we don't have support for that
+yet, so until then, just turn on the regulator and keep it on so that we
+can focus on basic GPU bringup.
 
-Call ima hook ima_kexec_cmdline to measure the boot command line
-arguments into IMA measurement list.
-
-- call ima_kexec_cmdline from kexec_file_load.
-- move the call ima_add_kexec_buffer after the cmdline
-args have been measured.
-
-Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-Reviewed-by: James Morris <jamorris@linux.microsoft.com>
-Acked-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- kernel/kexec_file.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 072b6ee55e3f..b0c724e5d86c 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -198,9 +198,6 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 		return ret;
- 	image->kernel_buf_len = size;
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index f09f3e03f708..108667ce4f31 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -27,6 +27,23 @@
+ 	status = "okay";
+ };
  
--	/* IMA needs to pass the measurement list to the next kernel. */
--	ima_add_kexec_buffer(image);
--
- 	/* Call arch image probe handlers */
- 	ret = arch_kexec_kernel_image_probe(image, image->kernel_buf,
- 					    image->kernel_buf_len);
-@@ -241,8 +238,14 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 			ret = -EINVAL;
- 			goto out;
- 		}
++&pm8005_lsid1 {
++	pm8005-regulators {
++		compatible = "qcom,pm8005-regulators";
 +
-+		ima_kexec_cmdline(image->cmdline_buf,
-+				  image->cmdline_buf_len - 1);
- 	}
- 
-+	/* IMA needs to pass the measurement list to the next kernel. */
-+	ima_add_kexec_buffer(image);
++		vdd_s1-supply = <&vph_pwr>;
 +
- 	/* Call arch image load handlers */
- 	ldata = arch_kexec_kernel_image_load(image);
++		pm8005_s1: s1 { /* VDD_GFX supply */
++			regulator-min-microvolt = <524000>;
++			regulator-max-microvolt = <1100000>;
++			regulator-enable-ramp-delay = <500>;
++
++			/* hack until we rig up the gpu consumer */
++			regulator-always-on;
++		};
++	};
++};
++
+ &qusb2phy {
+ 	status = "okay";
  
 -- 
-2.19.1
+2.17.1
 
