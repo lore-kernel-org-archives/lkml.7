@@ -2,64 +2,64 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2759BC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD10FC31E53
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:28:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06B8222FA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5621223A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:28:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="o3ogFQ5r"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q/ODDwhA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728065AbfFQI2T (ORCPT
+        id S1727902AbfFQI13 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:28:19 -0400
-Received: from mail-qt1-f202.google.com ([209.85.160.202]:44310 "EHLO
+        Mon, 17 Jun 2019 04:27:29 -0400
+Received: from mail-qt1-f202.google.com ([209.85.160.202]:52232 "EHLO
         mail-qt1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727624AbfFQI2C (ORCPT
+        with ESMTP id S1727878AbfFQI1Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:28:02 -0400
-Received: by mail-qt1-f202.google.com with SMTP id x10so8594535qti.11
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 01:28:02 -0700 (PDT)
+        Mon, 17 Jun 2019 04:27:24 -0400
+Received: by mail-qt1-f202.google.com with SMTP id d26so682104qte.19
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 01:27:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=bPJF89cE4tB1wXKocb/qXW7wfYtIegjLntcYJJ0aEtU=;
-        b=o3ogFQ5rdp7cs19G6mteH4rVDUn7teQlurDS0jWzA1kqGwAdqcTxbcDaERqO0pAcK0
-         Eh/sClefw5IpL+NRbzQmr6gm3oBb2p8bAzIgg9VsGdKoZ8PJcp2xIjTn/DeBFhMeb7uR
-         dNswLweSgYBoYpma1nvfuatrGqhK85GbkGMdIeoO4zRE00IECRglOhzr+/nawhYV39ee
-         bQDQC5r2qfCqDqtCzLuaxcLPUb91JojIyYu9tnH2DTcRG9G6JLjrnwscNnQBm+FLS7Tv
-         KGYroA3avaB1RnLa65qQXoiFVl6APqQtkplsbvke9XY0m46ewZR6DehJ3wQkF6J665bz
-         WPSg==
+        bh=KY/n5n08DNNwzzOt2NpPZO1jsdMpuV8r/7DR2vhL0/g=;
+        b=q/ODDwhAqKOOiCxSwz4+lG1McMEc9y5H+DzydXrrUKfUIpWOITBaQS4h6r5e8uhTYL
+         35FkAc8AkNNK9UGFxQmNhZzLUq2bTCf0YNU1/9lCVMoiMJv3ozdOP1dE2VJcykod8SYA
+         fp1WPz4nTHkiPystbW71OVZ7DbBbmEcnaGFpE2WcWzFxXqsAjaSuAI46xWLRPlbms8fp
+         XIbX/yt+4xjWdOf/AMYK0Lc91DnlTl5wg5wcf5ltaqWPgiCJlAVUwLmrFI5rg8wuJ4u7
+         BOOpAtZX3oVW6pMsQyR698D5r9Vz+Oj2QB1TUXqKDYi5g5rSgHnEmf7Qsg+zHHi1eTV9
+         lITA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=bPJF89cE4tB1wXKocb/qXW7wfYtIegjLntcYJJ0aEtU=;
-        b=cLTKEPY7gyByMcXfhvfgKDwKG/1+iQA22XhnRxS7bo4Sox7nwclH/U3FxhCWHq7wzU
-         4hs2WVsMBdIYyk734BJAkxc7bxpyFDckoN0H4M9Yom4jCH/ZZ+XGkvgRDRH756F9cJov
-         veUuAwstS3+guKgWTUE3lAuQPq0I5Lk49W3v/t3OMCIVqGRS4sPnpSIiwDYeHAR9moX3
-         ZRYiRPMjjQgtR0byN8O3pv51rWJsR8jtBFbmugP0/EIWNb51XbVJZ3EhL03Z5zePfy7c
-         Dskd/aNu3pDHGpH2O0U7+lNEa3eC25xwrzqd/YuR/jsa986zYJ42ZW/A6a/QZynphf3+
-         U9Kw==
-X-Gm-Message-State: APjAAAXCRdXmXiXEvWyk9uf0OZB9rihKBHnfQINUOlr59rEoVe5Ukzfh
-        zf3vX6klV1IGZjlwe4A/n8AkE+Q2pe4ZX5cH03VOHQ==
-X-Google-Smtp-Source: APXvYqyTbtjCAcLDWOBf80YN420uGxHfWPtOCpnCXNoMdm2lw18nK8fM3CaU+vc/SrSDk5njDqLK9j/e5783XfBqOv3IRQ==
-X-Received: by 2002:ac8:2ac5:: with SMTP id c5mr86955007qta.332.1560760081475;
- Mon, 17 Jun 2019 01:28:01 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 01:26:11 -0700
+        bh=KY/n5n08DNNwzzOt2NpPZO1jsdMpuV8r/7DR2vhL0/g=;
+        b=PWlWUh5njMtUGsxmw3KAJO7sb+T8usLUUMNAvVIVHoallPLir6DFqqRPqTK/HVyoyK
+         fyk4lfY98QR3ME301Wb2CUX6Nfzgb4TJvr4bDhH1M24s5MuCdTLUB0rW1EjKxhyIoW4Z
+         u/R+EC8NtmesCu9D/W3F7/GdpxLZTUc+hYvwE2DtcBVOHO4xTA5f+CIVlbF6i0rT3LT3
+         2cVNjSHtXqDr0DV6kyIkzOEHgUH5YUn6rpJ7ZFHLs9P7bC8+7uO6+fWHXujHiWwolBMT
+         9rPBRxinlYOsLbNEnGDX64CIkfjBOAElSdIT+au8m3lvl1uPiAnuOmRMU5TCwYUDc4ya
+         rGRQ==
+X-Gm-Message-State: APjAAAXOrqqqyqaEg+RzMnigg+XaFTuWCP4t3BdBoCuhYPRDScUrDBpL
+        gF2GM/ojBEPiOlfXLAVRQdtJH6nfGLAw0K+b5QetZg==
+X-Google-Smtp-Source: APXvYqzCMX5H8mzcZVVnWvfekHxFcv5ncZ0if0igGLkx+XMDy6e5vPqV21Ji4VVBaW7z5lkEKQEg8ZEKZALn4G6Eqn99xg==
+X-Received: by 2002:a05:620a:136d:: with SMTP id d13mr62994339qkl.22.1560760043194;
+ Mon, 17 Jun 2019 01:27:23 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 01:26:05 -0700
 In-Reply-To: <20190617082613.109131-1-brendanhiggins@google.com>
-Message-Id: <20190617082613.109131-17-brendanhiggins@google.com>
+Message-Id: <20190617082613.109131-11-brendanhiggins@google.com>
 Mime-Version: 1.0
 References: <20190617082613.109131-1-brendanhiggins@google.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v5 16/18] MAINTAINERS: add entry for KUnit the unit testing framework
+Subject: [PATCH v5 10/18] kunit: test: add tests for kunit test abort
 From:   Brendan Higgins <brendanhiggins@google.com>
 To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
         jpoimboe@redhat.com, keescook@google.com,
@@ -84,38 +84,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add myself as maintainer of KUnit, the Linux kernel's unit testing
-framework.
+Add KUnit tests for the KUnit test abort mechanism (see preceding
+commit). Add tests both for general try catch mechanism as well as
+non-architecture specific mechanism.
 
 Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
 Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 ---
- MAINTAINERS | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ kunit/Makefile    |   3 +-
+ kunit/test-test.c | 101 ++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 103 insertions(+), 1 deletion(-)
+ create mode 100644 kunit/test-test.c
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 57f496cff9997..f3fb3fc30853e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -8590,6 +8590,17 @@ S:	Maintained
- F:	tools/testing/selftests/
- F:	Documentation/dev-tools/kselftest*
+diff --git a/kunit/Makefile b/kunit/Makefile
+index 1f7680cfa11ad..533355867abd2 100644
+--- a/kunit/Makefile
++++ b/kunit/Makefile
+@@ -3,6 +3,7 @@ obj-$(CONFIG_KUNIT) +=			test.o \
+ 					kunit-stream.o \
+ 					try-catch.o
  
-+KERNEL UNIT TESTING FRAMEWORK (KUnit)
-+M:	Brendan Higgins <brendanhiggins@google.com>
-+L:	linux-kselftest@vger.kernel.org
-+L:	kunit-dev@googlegroups.com
-+W:	https://google.github.io/kunit-docs/third_party/kernel/docs/
-+S:	Maintained
-+F:	Documentation/dev-tools/kunit/
-+F:	include/kunit/
-+F:	kunit/
-+F:	tools/testing/kunit/
+-obj-$(CONFIG_KUNIT_TEST) +=		string-stream-test.o
++obj-$(CONFIG_KUNIT_TEST) +=		test-test.o \
++					string-stream-test.o
+ 
+ obj-$(CONFIG_KUNIT_EXAMPLE_TEST) +=	example-test.o
+diff --git a/kunit/test-test.c b/kunit/test-test.c
+new file mode 100644
+index 0000000000000..5d14e1ae35ed5
+--- /dev/null
++++ b/kunit/test-test.c
+@@ -0,0 +1,101 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * KUnit test for core test infrastructure.
++ *
++ * Copyright (C) 2019, Google LLC.
++ * Author: Brendan Higgins <brendanhiggins@google.com>
++ */
++#include <kunit/test.h>
 +
- KERNEL USERMODE HELPER
- M:	Luis Chamberlain <mcgrof@kernel.org>
- L:	linux-kernel@vger.kernel.org
++struct kunit_try_catch_test_context {
++	struct kunit_try_catch *try_catch;
++	bool function_called;
++};
++
++void kunit_test_successful_try(void *data)
++{
++	struct kunit *test = data;
++	struct kunit_try_catch_test_context *ctx = test->priv;
++
++	ctx->function_called = true;
++}
++
++void kunit_test_no_catch(void *data)
++{
++	struct kunit *test = data;
++
++	KUNIT_FAIL(test, "Catch should not be called\n");
++}
++
++static void kunit_test_try_catch_successful_try_no_catch(struct kunit *test)
++{
++	struct kunit_try_catch_test_context *ctx = test->priv;
++	struct kunit_try_catch *try_catch = ctx->try_catch;
++
++	kunit_try_catch_init(try_catch,
++			     test,
++			     kunit_test_successful_try,
++			     kunit_test_no_catch);
++	kunit_try_catch_run(try_catch, test);
++
++	KUNIT_EXPECT_TRUE(test, ctx->function_called);
++}
++
++void kunit_test_unsuccessful_try(void *data)
++{
++	struct kunit *test = data;
++	struct kunit_try_catch_test_context *ctx = test->priv;
++	struct kunit_try_catch *try_catch = ctx->try_catch;
++
++	kunit_try_catch_throw(try_catch);
++	KUNIT_FAIL(test, "This line should never be reached\n");
++}
++
++void kunit_test_catch(void *data)
++{
++	struct kunit *test = data;
++	struct kunit_try_catch_test_context *ctx = test->priv;
++
++	ctx->function_called = true;
++}
++
++static void kunit_test_try_catch_unsuccessful_try_does_catch(struct kunit *test)
++{
++	struct kunit_try_catch_test_context *ctx = test->priv;
++	struct kunit_try_catch *try_catch = ctx->try_catch;
++
++	kunit_try_catch_init(try_catch,
++			     test,
++			     kunit_test_unsuccessful_try,
++			     kunit_test_catch);
++	kunit_try_catch_run(try_catch, test);
++
++	KUNIT_EXPECT_TRUE(test, ctx->function_called);
++}
++
++static int kunit_try_catch_test_init(struct kunit *test)
++{
++	struct kunit_try_catch_test_context *ctx;
++
++	ctx = kunit_kzalloc(test, sizeof(*ctx), GFP_KERNEL);
++	test->priv = ctx;
++
++	ctx->try_catch = kunit_kmalloc(test,
++				       sizeof(*ctx->try_catch),
++				       GFP_KERNEL);
++
++	return 0;
++}
++
++static struct kunit_case kunit_try_catch_test_cases[] = {
++	KUNIT_CASE(kunit_test_try_catch_successful_try_no_catch),
++	KUNIT_CASE(kunit_test_try_catch_unsuccessful_try_does_catch),
++	{}
++};
++
++static struct kunit_module kunit_try_catch_test_module = {
++	.name = "kunit-try-catch-test",
++	.init = kunit_try_catch_test_init,
++	.test_cases = kunit_try_catch_test_cases,
++};
++module_test(kunit_try_catch_test_module);
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
