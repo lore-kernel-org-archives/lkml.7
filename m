@@ -2,134 +2,76 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4188CC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:23:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80E59C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2082820652
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:23:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5F3092229B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:25:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfFQIXW (ORCPT
+        id S1726437AbfFQIZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:23:22 -0400
-Received: from aclms1.advantech.com.tw ([61.58.41.199]:53019 "EHLO
-        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725862AbfFQIXW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:23:22 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td872a8c9b5ac14014b1070@ACLMS1.advantech.com.tw>;
- Mon, 17 Jun 2019 16:23:20 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v2 9/9] hwmon: (nct7904) Fix wrong registers setting for temperature.
-Date:   Mon, 17 Jun 2019 08:22:55 +0000
-Message-ID: <9b03a23bbb5385658c21bf5129a5b1c9b5065237.1560756733.git.amy.shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
-References: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
+        Mon, 17 Jun 2019 04:25:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:41058 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbfFQIZR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 04:25:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C12D628;
+        Mon, 17 Jun 2019 01:25:16 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2FB13F246;
+        Mon, 17 Jun 2019 01:25:15 -0700 (PDT)
+Subject: Re: [PATCH -next] coresight: replicator: Add terminate entry for
+ acpi_device_id tables
+To:     weiyongjun1@huawei.com, mathieu.poirier@linaro.org,
+        alexander.shishkin@linux.intel.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190615104440.94149-1-weiyongjun1@huawei.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <06c751dc-0a23-b33b-1ff1-a98d6503408c@arm.com>
+Date:   Mon, 17 Jun 2019 09:25:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.58]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+In-Reply-To: <20190615104440.94149-1-weiyongjun1@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
+Hi
 
-For "attributes temp[1-*]_max" and "temp[1-*]_max_hyst", should
-show the reading of "WARNING TEMPERATURE" and "WARNING TEMPERATURE
-HYSTERESIS" registers. For attribute "temp[1-*]_crit" and
-"temp[1-*]_crit_hyst", shuld show the reading of "CRITICAL TEMPERATURE"
-and "CRITICAL TEMPERATURE HYSTERESIS" registers in datasheet.
+Thanks for the fix, please find my comment below.
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
----
-Changes in v2:
-- Fix wrong registers setting for temperature.
+On 15/06/2019 11:44, Wei Yongjun wrote:
+> Make sure acpi_device_id tables have terminate entry.
+> 
+> Fixes: 8f35caae1e1f ("coresight: acpi: Support for platform devices")
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> ---
+>   drivers/hwtracing/coresight/coresight-replicator.c | 1 +
+>   1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index 542952759941..0c73dc1073c0 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -300,6 +300,7 @@ static const struct of_device_id static_replicator_match[] = {
+>   #ifdef CONFIG_ACPI
+>   static const struct acpi_device_id static_replicator_acpi_ids[] = {
+>   	{"ARMHC985", 0}, /* ARM CoreSight Static Replicator */
+> +	{"", 0},
 
- drivers/hwmon/nct7904.c | 32 ++++++++++++++++----------------
- 1 file changed, 16 insertions(+), 16 deletions(-)
+nit: I would leave it {}, instead of creating an empty string.
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index fc145c73a4e7..d842c10ba11f 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -399,23 +399,23 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 		return 0;
- 	case hwmon_temp_max:
- 		reg1 = LTD_HV_HL_REG;
--		reg2 = TEMP_CH1_C_REG;
--		reg3 = DTS_T_CPU1_C_REG;
-+		reg2 = TEMP_CH1_W_REG;
-+		reg3 = DTS_T_CPU1_W_REG;
- 		break;
- 	case hwmon_temp_max_hyst:
- 		reg1 = LTD_LV_HL_REG;
--		reg2 = TEMP_CH1_CH_REG;
--		reg3 = DTS_T_CPU1_CH_REG;
-+		reg2 = TEMP_CH1_WH_REG;
-+		reg3 = DTS_T_CPU1_WH_REG;
- 		break;
- 	case hwmon_temp_crit:
- 		reg1 = LTD_HV_LL_REG;
--		reg2 = TEMP_CH1_W_REG;
--		reg3 = DTS_T_CPU1_W_REG;
-+		reg2 = TEMP_CH1_C_REG;
-+		reg3 = DTS_T_CPU1_C_REG;
- 		break;
- 	case hwmon_temp_crit_hyst:
- 		reg1 = LTD_LV_LL_REG;
--		reg2 = TEMP_CH1_WH_REG;
--		reg3 = DTS_T_CPU1_WH_REG;
-+		reg2 = TEMP_CH1_CH_REG;
-+		reg3 = DTS_T_CPU1_CH_REG;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
-@@ -508,23 +508,23 @@ static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
- 	switch (attr) {
- 	case hwmon_temp_max:
- 		reg1 = LTD_HV_HL_REG;
--		reg2 = TEMP_CH1_C_REG;
--		reg3 = DTS_T_CPU1_C_REG;
-+		reg2 = TEMP_CH1_W_REG;
-+		reg3 = DTS_T_CPU1_W_REG;
- 		break;
- 	case hwmon_temp_max_hyst:
- 		reg1 = LTD_LV_HL_REG;
--		reg2 = TEMP_CH1_CH_REG;
--		reg3 = DTS_T_CPU1_CH_REG;
-+		reg2 = TEMP_CH1_WH_REG;
-+		reg3 = DTS_T_CPU1_WH_REG;
- 		break;
- 	case hwmon_temp_crit:
- 		reg1 = LTD_HV_LL_REG;
--		reg2 = TEMP_CH1_W_REG;
--		reg3 = DTS_T_CPU1_W_REG;
-+		reg2 = TEMP_CH1_C_REG;
-+		reg3 = DTS_T_CPU1_C_REG;
- 		break;
- 	case hwmon_temp_crit_hyst:
- 		reg1 = LTD_LV_LL_REG;
--		reg2 = TEMP_CH1_WH_REG;
--		reg3 = DTS_T_CPU1_WH_REG;
-+		reg2 = TEMP_CH1_CH_REG;
-+		reg3 = DTS_T_CPU1_CH_REG;
- 		break;
- 	default:
- 		return -EOPNOTSUPP;
--- 
-2.17.1
+With that :
 
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
