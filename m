@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A735C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5701C31E5E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E18920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9616B20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806699;
-	bh=e+Lsv/MIKKNOfUyXwD4b4TllhIgGSYg3AmE6k5xgPZw=;
+	s=default; t=1560806700;
+	bh=8AZXDN5az/P3ZHNDwkQykMB35CKW4NUB8QoKxRQ8Qrk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=izkdEYATLWY+uCNZsPlPFJ9cflyPwDDo+7OjyqPHGhXg4InlKoHyhy/LBv15Rt2eh
-	 JsCfAw5Qt4ntSo04QJnINifj0QA7DtMprKkXyNNW56/JlTvfJgBQ1YpLklqePvvUrz
-	 FVtY1+1BnsErTStWDmm8lB1TXNxptw4F6gxxWCb8=
+	b=xD1WN0HHYJbuRvWIN6UDRcT/FMkRJnvQ893sGo18Ln8uaTs7Yxp/z86x7nUv6rFvN
+	 KLlRmWsiQaTpYlyYVW67KV2cx/3DzdnT88KgDjafsHUV+IxvGchE7myFa+1yEzl+zD
+	 R3vAVdtlVQ38WtDMWhSPKo/X7vsK0i3c261oc4i8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730008AbfFQVY5 (ORCPT
+        id S1729505AbfFQVYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:24:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50658 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:24:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729994AbfFQVYv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:24:51 -0400
+        id S1729592AbfFQVYr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:24:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F7CD2063F;
-        Mon, 17 Jun 2019 21:24:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 43C602063F;
+        Mon, 17 Jun 2019 21:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806689;
-        bh=e+Lsv/MIKKNOfUyXwD4b4TllhIgGSYg3AmE6k5xgPZw=;
+        s=default; t=1560806686;
+        bh=8AZXDN5az/P3ZHNDwkQykMB35CKW4NUB8QoKxRQ8Qrk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jAWgD0i6HhoErP9XuDZwulzuyzlsDNln9WAqRfg1AM+LHiEkqXkKBrx1u1hZLWmyY
-         2C8bMCyNCb7mE7YdmIZj3RsKEI7DOf3rm+XtHAt9vzjUblEumOA/MdFFtmZlmpMWLy
-         qAma3/w9JlEG7Oen9PeCvDcbgluS1XYRvF+ExT6k=
+        b=cxt9Xi6iiWiK+GB04B0uN/gXEFcef2DVe8aCEnL+9/NjrXBozsPE0vVcmBFOTQHNR
+         CNf2F9ZdHYZNP+9wHU4YMkmimX12t2twD5JRizsWcyTmaMRzFyStIcNkmgg1cLSqNf
+         Ho161SJEx8zYRI7ufpgsIcq+WJTbQEAJfWsgmwJ0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.19 23/75] cgroup: Use css_tryget() instead of css_tryget_online() in task_get_css()
-Date:   Mon, 17 Jun 2019 23:09:34 +0200
-Message-Id: <20190617210753.742447720@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 22/75] bcache: only set BCACHE_DEV_WB_RUNNING when cached device attached
+Date:   Mon, 17 Jun 2019 23:09:33 +0200
+Message-Id: <20190617210753.709500958@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -58,88 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Coly Li <colyli@suse.de>
 
-commit 18fa84a2db0e15b02baa5d94bdb5bd509175d2f6 upstream.
+commit 1f0ffa67349c56ea54c03ccfd1e073c990e7411e upstream.
 
-A PF_EXITING task can stay associated with an offline css.  If such
-task calls task_get_css(), it can get stuck indefinitely.  This can be
-triggered by BSD process accounting which writes to a file with
-PF_EXITING set when racing against memcg disable as in the backtrace
-at the end.
+When people set a writeback percent via sysfs file,
+  /sys/block/bcache<N>/bcache/writeback_percent
+current code directly sets BCACHE_DEV_WB_RUNNING to dc->disk.flags
+and schedules kworker dc->writeback_rate_update.
 
-After this change, task_get_css() may return a css which was already
-offline when the function was called.  None of the existing users are
-affected by this change.
+If there is no cache set attached to, the writeback kernel thread is
+not running indeed, running dc->writeback_rate_update does not make
+sense and may cause NULL pointer deference when reference cache set
+pointer inside update_writeback_rate().
 
-  INFO: rcu_sched self-detected stall on CPU
-  INFO: rcu_sched detected stalls on CPUs/tasks:
-  ...
-  NMI backtrace for cpu 0
-  ...
-  Call Trace:
-   <IRQ>
-   dump_stack+0x46/0x68
-   nmi_cpu_backtrace.cold.2+0x13/0x57
-   nmi_trigger_cpumask_backtrace+0xba/0xca
-   rcu_dump_cpu_stacks+0x9e/0xce
-   rcu_check_callbacks.cold.74+0x2af/0x433
-   update_process_times+0x28/0x60
-   tick_sched_timer+0x34/0x70
-   __hrtimer_run_queues+0xee/0x250
-   hrtimer_interrupt+0xf4/0x210
-   smp_apic_timer_interrupt+0x56/0x110
-   apic_timer_interrupt+0xf/0x20
-   </IRQ>
-  RIP: 0010:balance_dirty_pages_ratelimited+0x28f/0x3d0
-  ...
-   btrfs_file_write_iter+0x31b/0x563
-   __vfs_write+0xfa/0x140
-   __kernel_write+0x4f/0x100
-   do_acct_process+0x495/0x580
-   acct_process+0xb9/0xdb
-   do_exit+0x748/0xa00
-   do_group_exit+0x3a/0xa0
-   get_signal+0x254/0x560
-   do_signal+0x23/0x5c0
-   exit_to_usermode_loop+0x5d/0xa0
-   prepare_exit_to_usermode+0x53/0x80
-   retint_user+0x8/0x8
+This patch checks whether the cache set point (dc->disk.c) is NULL in
+sysfs interface handler, and only set BCACHE_DEV_WB_RUNNING and
+schedule dc->writeback_rate_update when dc->disk.c is not NULL (it
+means the cache device is attached to a cache set).
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: stable@vger.kernel.org # v4.2+
-Fixes: ec438699a9ae ("cgroup, block: implement task_get_css() and use it in bio_associate_current()")
+This problem might be introduced from initial bcache commit, but
+commit 3fd47bfe55b0 ("bcache: stop dc->writeback_rate_update properly")
+changes part of the original code piece, so I add 'Fixes: 3fd47bfe55b0'
+to indicate from which commit this patch can be applied.
+
+Fixes: 3fd47bfe55b0 ("bcache: stop dc->writeback_rate_update properly")
+Reported-by: Bjørn Forsman <bjorn.forsman@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Bjørn Forsman <bjorn.forsman@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/cgroup.h |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/md/bcache/sysfs.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -485,7 +485,7 @@ static inline struct cgroup_subsys_state
-  *
-  * Find the css for the (@task, @subsys_id) combination, increment a
-  * reference on and return it.  This function is guaranteed to return a
-- * valid css.
-+ * valid css.  The returned css may already have been offlined.
-  */
- static inline struct cgroup_subsys_state *
- task_get_css(struct task_struct *task, int subsys_id)
-@@ -495,7 +495,13 @@ task_get_css(struct task_struct *task, i
- 	rcu_read_lock();
- 	while (true) {
- 		css = task_css(task, subsys_id);
--		if (likely(css_tryget_online(css)))
-+		/*
-+		 * Can't use css_tryget_online() here.  A task which has
-+		 * PF_EXITING set may stay associated with an offline css.
-+		 * If such task calls this function, css_tryget_online()
-+		 * will keep failing.
-+		 */
-+		if (likely(css_tryget(css)))
- 			break;
- 		cpu_relax();
- 	}
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -393,8 +393,13 @@ STORE(bch_cached_dev)
+ 	if (attr == &sysfs_writeback_running)
+ 		bch_writeback_queue(dc);
+ 
++	/*
++	 * Only set BCACHE_DEV_WB_RUNNING when cached device attached to
++	 * a cache set, otherwise it doesn't make sense.
++	 */
+ 	if (attr == &sysfs_writeback_percent)
+-		if (!test_and_set_bit(BCACHE_DEV_WB_RUNNING, &dc->disk.flags))
++		if ((dc->disk.c != NULL) &&
++		    (!test_and_set_bit(BCACHE_DEV_WB_RUNNING, &dc->disk.flags)))
+ 			schedule_delayed_work(&dc->writeback_rate_update,
+ 				      dc->writeback_rate_update_seconds * HZ);
+ 
 
 
