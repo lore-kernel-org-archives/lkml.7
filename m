@@ -2,131 +2,133 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DC0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:05:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEF6C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:05:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5811E2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:05:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD9D720863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:05:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CqvU74Kr"
+	dkim=pass (1024-bit key) header.d=appneta.com header.i=@appneta.com header.b="A4X/KhXA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728143AbfFQTFB (ORCPT
+        id S1726098AbfFQTF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:05:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51303 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQTFB (ORCPT
+        Mon, 17 Jun 2019 15:05:27 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42657 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726623AbfFQTF0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:05:01 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJ4lK13556909
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:04:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJ4lK13556909
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560798287;
-        bh=Bhyh4t1aHK4kXDWtnoLXpFJA0caSpHxkZicLf55t41E=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=CqvU74KrNFtZzeIArlguVY/UIAhkxt7LyfuXEdkz0cHjnz/rnzK3jH4asAM8lNMua
-         xipsrifbM/1SS+Yan6w9d4CEeWzRR1PwANseubQUN/kzkaVTCdU4g2R/uvskOxKhBX
-         oS/J3uY4oJ/yoGvFfKF7ewyyHlxmy4kDnPBYR7B/U5TRuYpLu3O0iU3m5qAs96tOsP
-         FgmKXKt7gMZE/4PfkAdGLuEc/+FgoM9rb3FtbQiX2++/sPiLKIcMl7Y3iSU/kxzez2
-         gpy+HtPxzxjoxMSNDPRTAYGgkhFJHAFV7Iaf+I4cfVzN75ZaXHJvkqOsegF6nYTWG+
-         jdhANsPY4ehmg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJ4lYS3556906;
-        Mon, 17 Jun 2019 12:04:47 -0700
-Date:   Mon, 17 Jun 2019 12:04:47 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-5db47f43ccbbdee8c48f76ace4c287187a28b87f@git.kernel.org>
-Cc:     jolsa@redhat.com, mingo@kernel.org, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, adrian.hunter@intel.com, acme@redhat.com,
-        hpa@zytor.com
-Reply-To: hpa@zytor.com, acme@redhat.com, mingo@kernel.org,
-          jolsa@redhat.com, adrian.hunter@intel.com,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de
-In-Reply-To: <20190520113728.14389-13-adrian.hunter@intel.com>
-References: <20190520113728.14389-13-adrian.hunter@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf intel-pt: Document IPC usage
-Git-Commit-ID: 5db47f43ccbbdee8c48f76ace4c287187a28b87f
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+        Mon, 17 Jun 2019 15:05:26 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so6175064pff.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 12:05:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=appneta.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=YnCb3pKFcjJQDWfuu4zZ4IPAqdP8bDj70tQarrqJA4E=;
+        b=A4X/KhXA7O5XTHuY6NfApDEsClzY9VLycFoj+ighBJrb+Bt694nnq+36B/8JuZa4NF
+         Kom2/gAYRcGqoiOyePIQcIgNPOLRMzlzsFb4hOPHoDsAGJR9rSJOdvpsR1bwSCgsq8mL
+         oDqOpKOvGsTrxnmb8gabRYqod4AIDAhsdJ7jg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=YnCb3pKFcjJQDWfuu4zZ4IPAqdP8bDj70tQarrqJA4E=;
+        b=MV2YwSR2xwnZFEdImli3bxFdKoxl/l7dAstng0/uWLIMAlTgdMcTqu9KOtQoDfkUC4
+         vwOACyXrgSZrVhEv5utYZ+XBIprOCPcaR+CObHKvPfXX3GtfBhOcPLQANopkefAvikVH
+         Al+S1rw8GsbITRuF8Smg+71ImYO1pEvcGkZOqsrlcoZ6APY3ayTmNvLHfEpm4+JBYTRa
+         4fPl7q7bnCu46dwdW4JgiotQHTP8jJti3KxI0DjvVIzkJ1kkeOvkZ9/I1CVgOTTV/DRX
+         3SiQRSGWWfzJD/cyleH4bec1wlQFeMnp2x1YQUMog7PN1TJVx5W+Ku+hD+zKbAr4/8dp
+         W4Iw==
+X-Gm-Message-State: APjAAAUPCrb1Yjd3tlGRaWfLgLVF16TssyDGFPTMnwSgAL+IyCk+SKkM
+        aUas4v3fbalJdF5VurNAU5HFjg==
+X-Google-Smtp-Source: APXvYqyfGNVM3XuLS06e9v7G9O4NGlFdS+43bjHE9rkWn//VId1KvzFuE1PdRbwS03I5cQfwI7Y3EQ==
+X-Received: by 2002:a62:e515:: with SMTP id n21mr48498381pff.186.1560798325712;
+        Mon, 17 Jun 2019 12:05:25 -0700 (PDT)
+Received: from linux-net-fred.jaalam.net ([2001:4958:15a0:24:5054:ff:fecb:7a95])
+        by smtp.googlemail.com with ESMTPSA id l63sm13042616pfl.181.2019.06.17.12.05.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 12:05:24 -0700 (PDT)
+From:   Fred Klassen <fklassen@appneta.com>
+To:     "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Willem de Bruijn <willemb@google.com>
+Cc:     Fred Klassen <fklassen@appneta.com>
+Subject: [PATCH net v4] net/udp_gso: Allow TX timestamp with UDP GSO
+Date:   Mon, 17 Jun 2019 12:05:07 -0700
+Message-Id: <20190617190507.12730-1-fklassen@appneta.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5db47f43ccbbdee8c48f76ace4c287187a28b87f
-Gitweb:     https://git.kernel.org/tip/5db47f43ccbbdee8c48f76ace4c287187a28b87f
-Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Mon, 20 May 2019 14:37:18 +0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 5 Jun 2019 09:47:57 -0300
+Fixes an issue where TX Timestamps are not arriving on the error queue
+when UDP_SEGMENT CMSG type is combined with CMSG type SO_TIMESTAMPING.
+This can be illustrated with an updated updgso_bench_tx program which
+includes the '-T' option to test for this condition. It also introduces
+the '-P' option which will call poll() before reading the error queue.
 
-perf intel-pt: Document IPC usage
+    ./udpgso_bench_tx -4ucTPv -S 1472 -l2 -D 172.16.120.18
+    poll timeout
+    udp tx:      0 MB/s        1 calls/s      1 msg/s
 
-Add brief documentation about instructions-per-cycle (IPC) information
-derived from Intel PT.
+The "poll timeout" message above indicates that TX timestamp never
+arrived.
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190520113728.14389-13-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+This patch preserves tx_flags for the first UDP GSO segment. Only the
+first segment is timestamped, even though in some cases there may be
+benefital in timestamping both the first and last segment.
+
+Factors in deciding on first segment timestamp only:
+
+- Timestamping both first and last segmented is not feasible. Hardware
+can only have one outstanding TS request at a time.
+
+- Timestamping last segment may under report network latency of the
+previous segments. Even though the doorbell is suppressed, the ring
+producer counter has been incremented.
+
+- Timestamping the first segment has the upside in that it reports
+timestamps from the application's view, e.g. RTT.
+
+- Timestamping the first segment has the downside that it may
+underreport tx host network latency. It appears that we have to pick
+one or the other. And possibly follow-up with a config flag to choose
+behavior.
+
+v2: Remove tests as noted by Willem de Bruijn <willemb@google.com>
+    Moving tests from net to net-next
+
+v3: Update only relevant tx_flag bits as per
+    Willem de Bruijn <willemb@google.com>
+
+v4: Update comments and commit message as per
+    Willem de Bruijn <willemb@google.com>
+
+Fixes: ee80d1ebe5ba ("udp: add udp gso")
+Signed-off-by: Fred Klassen <fklassen@appneta.com>
 ---
- tools/perf/Documentation/intel-pt.txt | 30 ++++++++++++++++++++++++++++++
- 1 file changed, 30 insertions(+)
+ net/ipv4/udp_offload.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/tools/perf/Documentation/intel-pt.txt b/tools/perf/Documentation/intel-pt.txt
-index 60d99e5e7921..50c5b60101bd 100644
---- a/tools/perf/Documentation/intel-pt.txt
-+++ b/tools/perf/Documentation/intel-pt.txt
-@@ -103,6 +103,36 @@ The flags are "bcrosyiABEx" which stand for branch, call, return, conditional,
- system, asynchronous, interrupt, transaction abort, trace begin, trace end, and
- in transaction, respectively.
+diff --git a/net/ipv4/udp_offload.c b/net/ipv4/udp_offload.c
+index 06b3e2c1fcdc..9763464a75d7 100644
+--- a/net/ipv4/udp_offload.c
++++ b/net/ipv4/udp_offload.c
+@@ -224,6 +224,11 @@ struct sk_buff *__udp_gso_segment(struct sk_buff *gso_skb,
+ 	seg = segs;
+ 	uh = udp_hdr(seg);
  
-+Another interesting field that is not printed by default is 'ipc' which can be
-+displayed as follows:
++	/* preserve TX timestamp flags and TS key for first segment */
++	skb_shinfo(seg)->tskey = skb_shinfo(gso_skb)->tskey;
++	skb_shinfo(seg)->tx_flags |=
++			(skb_shinfo(gso_skb)->tx_flags & SKBTX_ANY_TSTAMP);
 +
-+	perf script --itrace=be -F+ipc
-+
-+There are two ways that instructions-per-cycle (IPC) can be calculated depending
-+on the recording.
-+
-+If the 'cyc' config term (see config terms section below) was used, then IPC is
-+calculated using the cycle count from CYC packets, otherwise MTC packets are
-+used - refer to the 'mtc' config term.  When MTC is used, however, the values
-+are less accurate because the timing is less accurate.
-+
-+Because Intel PT does not update the cycle count on every branch or instruction,
-+the values will often be zero.  When there are values, they will be the number
-+of instructions and number of cycles since the last update, and thus represent
-+the average IPC since the last IPC for that event type.  Note IPC for "branches"
-+events is calculated separately from IPC for "instructions" events.
-+
-+Also note that the IPC instruction count may or may not include the current
-+instruction.  If the cycle count is associated with an asynchronous branch
-+(e.g. page fault or interrupt), then the instruction count does not include the
-+current instruction, otherwise it does.  That is consistent with whether or not
-+that instruction has retired when the cycle count is updated.
-+
-+Another note, in the case of "branches" events, non-taken branches are not
-+presently sampled, so IPC values for them do not appear e.g. a CYC packet with a
-+TNT packet that starts with a non-taken branch.  To see every possible IPC
-+value, "instructions" events can be used e.g. --itrace=i0ns
-+
- While it is possible to create scripts to analyze the data, an alternative
- approach is available to export the data to a sqlite or postgresql database.
- Refer to script export-to-sqlite.py or export-to-postgresql.py for more details,
+ 	/* compute checksum adjustment based on old length versus new */
+ 	newlen = htons(sizeof(*uh) + mss);
+ 	check = csum16_add(csum16_sub(uh->check, uh->len), newlen);
+-- 
+2.11.0
+
