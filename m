@@ -2,90 +2,96 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C729C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F8C8C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:58:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1A2208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:57:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560776227;
-	bh=xdETj5mf6aeUoLj5hEhq8+dwhZFws6OLsC2VvsYVJ5o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mHSfJmmxd4ccZHakv5FM/vtVnBXo7jUqsHDirrO5xgTZ1gXzfe9q9SChzaIQzEiIr
-	 rnE8pQpkPWiZOR3T5EOrNt0q12GJvjQrzqUqCXsZ14dLPSUlsv+mk+aIm9VLJVxQPa
-	 W/zdqBMSsv/OhoaoLs2SDHNMHzJRe3NNFXhc8T9I=
+	by mail.kernel.org (Postfix) with ESMTP id E52182089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:58:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfFQM5F (ORCPT
+        id S1727742AbfFQM6d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:57:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60212 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbfFQM5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:57:05 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57C212089E;
-        Mon, 17 Jun 2019 12:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560776224;
-        bh=xdETj5mf6aeUoLj5hEhq8+dwhZFws6OLsC2VvsYVJ5o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nsEF4PxvDA0r6DHB4M8Djp8eU2sl7B8TBIQry4L9GCDem3Dfb8yTpDqmotIUb0OZy
-         hZpHMWVKkPrWYMhyuTH5/sQkNhYAP9BD8EXtxx9xuT7EXQPVLEeRcIM8v4VM5TfdW6
-         Q6QpII6vbYQCzD3w6o6EMQjuqfgzdxkH8KHx218o=
-Date:   Mon, 17 Jun 2019 14:57:02 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v2 03/16] scripts: add an script to parse the ABI files
-Message-ID: <20190617125702.GA20042@kroah.com>
-References: <3b8d7c64f887ddea01df3c4eeabc745c8ec45406.1560534648.git.mchehab+samsung@kernel.org>
- <680fb978ef9322c705eca9927c79b220cd3ccc4a.1560534648.git.mchehab+samsung@kernel.org>
+        Mon, 17 Jun 2019 08:58:33 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:48195 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfFQM6d (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:58:33 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MUGmL-1i2X5B21xb-00RGpA; Mon, 17 Jun 2019 14:57:26 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Andrii Nakryiko <andriin@fb.com>,
+        Yonghong Song <yhs@fb.com>, Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Matt Mullins <mmullins@fb.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] bpf: hide do_bpf_send_signal when unused
+Date:   Mon, 17 Jun 2019 14:57:07 +0200
+Message-Id: <20190617125724.1616165-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <680fb978ef9322c705eca9927c79b220cd3ccc4a.1560534648.git.mchehab+samsung@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:lv1nV0q2KbUMLMJzM+Nv3YOvipTsLH12zv/CeHO3aM7xRWpsk6s
+ MbUPGLsitpF3TOjYCzlqF0IIvcsMradip8JB0/CUnr3t/qfkB8u0XIVPwTaqXTUvD7uoH7a
+ yj/56+kA2aGM5QMT0yfoToSqTFfsRpsP5JbFYCWHtLMam1v2JccNpZQgvhoRuCWXd+8txJs
+ 2t1kKKuGSikq+VLG5PDRA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W8pOpR/fJNI=:RukQ8rvFS6v8Sdui3NcM/A
+ QXWuaCdtUF0v3yBtEnVuHl3st4RdUWL3hkaZKBc0iPvtUEtN5ddNlWxVsSbdG7oE4yKvcLK15
+ caHFgNzGyuVfraobUd4GpLTv5spdqPfybkKuoFYDIUweW/hqR/l73TBT9vglORMtJ5exJuTLX
+ JvKMjVpNLI4syHtmARttM/n7uHotzqntj5vmuPhNRDMgCjVsdpaHOx8KuDRJL7hSuHiAYMW6x
+ c7UBAA5LlMD0grB62BmTswCBNltaREih1d1rx6REAaUxLZsXSHvu3USMghAVYTSIcgL9g9JJB
+ xcJfKVC11w0HtL+tIJy4DeAXwHvue3CY7V3yXq8chijEI8GaMfD99Q4OFY6fGBroMgifs+PwI
+ 7JZhMzdUcs1M9EYaXit4XdlI6rb0vPrqOfgrm/f6DBghnXhvcP1Mg6bbnwv7pFsN5PX1ghQ3v
+ mdx7gjeOq1Nc5kD4sZMBKqh9VPeaBLeAfAL0lHYmakKzY7vNtzeh/1k+Yf1duWs4Ftht/P34J
+ 9tbD7y69nHGkyJJ0v9Y8Yn7pZdyydhr10byBMUNSbJVb2Cdkb36EEnMBJA6HiEFntAAQVsWuh
+ 9F4CQoR+XgZHuxdcW54J1xJcf3slxXdjxaCOiFWCLYNWY36CQKkmi2nF5ppQ43GZf31tOfq+N
+ kC7jiN730Jebq66xJLS1WcxEom2R4w88bIfZj6T3iejb8A+vJGso2JKPHhaCyoXEornIGc1Y1
+ ZkC+rbIHph++fVSRKPwnuMUJcrsjSf/+DcvTtQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 02:52:17PM -0300, Mauro Carvalho Chehab wrote:
-> Add a script to parse the Documentation/ABI files and produce
-> an output with all entries inside an ABI (sub)directory.
-> 
-> Right now, it outputs its contents on ReST format. It shouldn't
-> be hard to make it produce other kind of outputs, since the ABI
-> file parser is implemented in separate than the output generator.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  scripts/get_abi.pl | 212 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 212 insertions(+)
->  create mode 100755 scripts/get_abi.pl
-> 
-> diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
-> new file mode 100755
-> index 000000000000..f7c9944a833c
-> --- /dev/null
-> +++ b/scripts/get_abi.pl
-> @@ -0,0 +1,212 @@
-> +#!/usr/bin/perl
-> +
+When CONFIG_MODULES is disabled, this function is never called:
 
-Ok, I was going to apply this, but there is no SPDX line on the script.
-Can you resend this series with that on it, so that I can apply the
-patches of the series that adds the script to the kernel tree?
+kernel/trace/bpf_trace.c:581:13: error: 'do_bpf_send_signal' defined but not used [-Werror=unused-function]
 
-thanks,
+Add another #ifdef around it.
 
-greg k-h
+Fixes: 8b401f9ed244 ("bpf: implement bpf_send_signal() helper")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ kernel/trace/bpf_trace.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/kernel/trace/bpf_trace.c b/kernel/trace/bpf_trace.c
+index c102c240bb0b..b1a814e2d451 100644
+--- a/kernel/trace/bpf_trace.c
++++ b/kernel/trace/bpf_trace.c
+@@ -602,6 +602,7 @@ struct send_signal_irq_work {
+ 
+ static DEFINE_PER_CPU(struct send_signal_irq_work, send_signal_work);
+ 
++#ifdef CONFIG_MODULES
+ static void do_bpf_send_signal(struct irq_work *entry)
+ {
+ 	struct send_signal_irq_work *work;
+@@ -609,6 +610,7 @@ static void do_bpf_send_signal(struct irq_work *entry)
+ 	work = container_of(entry, struct send_signal_irq_work, irq_work);
+ 	group_send_sig_info(work->sig, SEND_SIG_PRIV, work->task, PIDTYPE_TGID);
+ }
++#endif
+ 
+ BPF_CALL_1(bpf_send_signal, u32, sig)
+ {
+-- 
+2.20.0
+
