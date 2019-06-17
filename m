@@ -6,87 +6,71 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 089DCC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:39:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 407CEC31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:39:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D021020644
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D09E20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:39:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728674AbfFQUjI (ORCPT
+        id S1728762AbfFQUjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:39:08 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:46126 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726614AbfFQUjI (ORCPT
+        Mon, 17 Jun 2019 16:39:53 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:48736 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfFQUjx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:39:08 -0400
-Received: by mail-qk1-f193.google.com with SMTP id x18so7072161qkn.13;
-        Mon, 17 Jun 2019 13:39:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LpZTAf50o7/PLh9CIzhk7vHJ2cGCWuaTKNqQ1cWqNqU=;
-        b=oOkYTJhy9twBIPx4+t93Kg0Kl/qS/3jcbrKRUQHXUOi2pl22YsJ3dZ79A7f9pXmwe2
-         kg8NtJ0eUG96LCT0UzEu8TmrSXzReFajx0er9Fazg6Phe2CdMzGWFQDMPCO9J66HSMDv
-         N/tFCl/FMkJjCFXSOVPDeu3HY/rpYZlGFEmjxaMqsSshjBGwqs2HiX3C1eIekrCUjAFk
-         Hs8/w9CGOwcNnNxpfe+ZjQeKD+Mx27CF7u4ydGG4zZoB8G7r7KVBsawBwuVHN7Qz4gS0
-         yIgi7VYLBSFJwnEC6iI8g0CL+nGP7DkZKb/iiZygzCtbXrw+UQbvKJO8sZfTi8HW5tH3
-         Evrg==
-X-Gm-Message-State: APjAAAXtpyASEEdj7YWOqpbEpd7tKPuKzVIaGQdfHDZFucD72x95e66W
-        caK4WkMkw1dKyfTek+vYF0z3VdEH3y6vDzQNtQkZiMmX
-X-Google-Smtp-Source: APXvYqxvkiU7uT50Vvb6ohuGYInfRfCjQ5Yqch5RcVO9LxFG+MQCn35pmZdu8YSFm96BJGPKBdyUGG9NgPKKxkQBSKU=
-X-Received: by 2002:a37:a4d3:: with SMTP id n202mr2958065qke.84.1560803946661;
- Mon, 17 Jun 2019 13:39:06 -0700 (PDT)
+        Mon, 17 Jun 2019 16:39:53 -0400
+Received: by linux.microsoft.com (Postfix, from userid 1029)
+        id EE5F720BCFC5; Mon, 17 Jun 2019 13:39:52 -0700 (PDT)
+Received: from localhost (localhost [127.0.0.1])
+        by linux.microsoft.com (Postfix) with ESMTP id E8F2C3010321;
+        Mon, 17 Jun 2019 13:39:52 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 13:39:52 -0700 (PDT)
+From:   Jaskaran Singh Khurana <jaskarankhurana@linux.microsoft.com>
+X-X-Sender: jaskarankhurana@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.internal.cloudapp.net
+To:     Milan Broz <gmazyland@gmail.com>
+cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, agk@redhat.com, snitzer@redhat.com,
+        dm-devel@redhat.com, jmorris@namei.org, scottsh@microsoft.com,
+        ebiggers@google.com, mpatocka@redhat.com
+Subject: Re: [RFC PATCH v4 1/1] Add dm verity root hash pkcs7 sig
+ validation.
+In-Reply-To: <ab346931-1d1b-bd2f-8314-ee4779bd44bf@gmail.com>
+Message-ID: <alpine.LRH.2.21.1906171338590.64763@linuxonhyperv3.guj3yctzbm1etfxqx2vob5hsef.xx.inter>
+References: <20190613010610.4364-1-jaskarankhurana@linux.microsoft.com> <20190613010610.4364-2-jaskarankhurana@linux.microsoft.com> <ab346931-1d1b-bd2f-8314-ee4779bd44bf@gmail.com>
+User-Agent: Alpine 2.21 (LRH 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190617132440.2721536-1-arnd@arndb.de> <20190617143635.xkbmoug5swqoi5em@rck.sh>
-In-Reply-To: <20190617143635.xkbmoug5swqoi5em@rck.sh>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 17 Jun 2019 22:38:49 +0200
-Message-ID: <CAK8P3a3PDznLXbaQNtFpgtJyP29mh2gGSm8DeSk0NfZCgZQ_kA@mail.gmail.com>
-Subject: Re: [PATCH] drbd: dynamically allocate shash descriptor
-To:     Roland Kammerer <roland.kammerer@linbit.com>
-Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Eric Biggers <ebiggers@google.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>, drbd-dev@lists.linbit.com,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 4:36 PM Roland Kammerer
-<roland.kammerer@linbit.com> wrote:
-> > @@ -5572,6 +5579,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
-> >       kfree(response);
-> >       kfree(right_response);
-> >       shash_desc_zero(desc);
-> > +     kfree(desc);
-> >
-> >       return rv;
-> >  }
->
-> Hi Arnd,
->
-> are you sure your cleanup is okay?
->
-> >       shash_desc_zero(desc);
-> > +     kfree(desc);
->
-> You shash_desc_zero() a potential NULL pointer. memzero_expicit() in the
-> function then dereferences it:
->
-> memzero_explicit(desc,
->         sizeof(*desc) + crypto_shash_descsize(desc->tfm));
->
-> Maybe some if (desc) guard?
 
-Good catch. I guess kzfree() would have been the right thing to call.
 
-        Arnd
+On Mon, 17 Jun 2019, Milan Broz wrote:
+
+> On 13/06/2019 03:06, Jaskaran Khurana wrote:
+> ...
+>
+>> Adds DM_VERITY_VERIFY_ROOTHASH_SIG_FORCE: roothash signature *must* be
+>> specified for all dm verity volumes and verification must succeed prior
+>> to creation of device mapper block device.
+>
+> I had a quick discussion about this and one suggestion was
+> to add dm-verity kernel module parameter instead of a new config option.
+>
+> The idea is that if you can control kernel boot commandline, you can add it
+> there with the same effect (expecting that root device is on dm-verity as well).
+>
+> Isn't this better option or it is not going to work for you?
+
+Seems like a better option to me, I will make the change and remove both 
+the configs.
+
+>
+> Milan
+>
+Regards,
+Jaskaran
