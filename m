@@ -2,34 +2,34 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D1EDC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7E5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:26:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 621CF20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 964BF208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfFQPZ0 (ORCPT
+        id S1727802AbfFQP01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:25:26 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28800 "EHLO mga05.intel.com"
+        Mon, 17 Jun 2019 11:26:27 -0400
+Received: from mga11.intel.com ([192.55.52.93]:31572 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726715AbfFQPZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:25:26 -0400
+        id S1725863AbfFQP00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:26:26 -0400
 X-Amp-Result: UNKNOWN
 X-Amp-Original-Verdict: FILE UNKNOWN
 X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 08:25:25 -0700
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 08:26:26 -0700
 X-ExtLoop1: 1
 Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Jun 2019 08:25:24 -0700
+  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2019 08:26:24 -0700
 Received: from kbuild by lkp-server01 with local (Exim 4.89)
         (envelope-from <lkp@intel.com>)
-        id 1hctVb-0006ty-SQ; Mon, 17 Jun 2019 23:25:23 +0800
+        id 1hctWZ-0003M0-UI; Mon, 17 Jun 2019 23:26:23 +0800
 Date:   Mon, 17 Jun 2019 23:25:23 +0800
 From:   kbuild test robot <lkp@intel.com>
 To:     Detlev Casanova <detlev.casanova@gmail.com>
@@ -38,8 +38,8 @@ Cc:     kbuild-all@01.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
         intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Detlev Casanova <detlev.casanova@gmail.com>
-Subject: Re: [PATCH] e1000e: Make watchdog use delayed work
-Message-ID: <201906172310.xCz4u1rq%lkp@intel.com>
+Subject: [RFC PATCH] e1000e: e1000_workqueue can be static
+Message-ID: <20190617152523.GA18852@lkp-kbuild08>
 References: <20190616145445.9637-1-detlev.casanova@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -52,31 +52,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Detlev,
 
-Thank you for the patch! Perhaps something to improve:
-
-[auto build test WARNING on jkirsher-next-queue/dev-queue]
-[also build test WARNING on v5.2-rc5 next-20190617]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
-
-url:    https://github.com/0day-ci/linux/commits/Detlev-Casanova/e1000e-Make-watchdog-use-delayed-work/20190617-154840
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jkirsher/next-queue.git dev-queue
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-rc1-7-g2b96cd8-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
-
-Please review and possibly fold the followup patch.
-
+Fixes: ef431cc0a6a5 ("e1000e: Make watchdog use delayed work")
+Signed-off-by: kbuild test robot <lkp@intel.com>
 ---
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+ netdev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
+index 0fc95fb..a1526e7 100644
+--- a/drivers/net/ethernet/intel/e1000e/netdev.c
++++ b/drivers/net/ethernet/intel/e1000e/netdev.c
+@@ -39,7 +39,7 @@ static int debug = -1;
+ module_param(debug, int, 0);
+ MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
+ 
+-struct workqueue_struct *e1000_workqueue;
++static struct workqueue_struct *e1000_workqueue;
+ 
+ static const struct e1000_info *e1000_info_tbl[] = {
+ 	[board_82571]		= &e1000_82571_info,
