@@ -7,56 +7,55 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF25C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:01:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569F5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F71A206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22444206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:02:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ov7YIzup"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="FvHLwQA3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728593AbfFQTBb (ORCPT
+        id S1728392AbfFQTCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:01:31 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:43763 "EHLO
+        Mon, 17 Jun 2019 15:02:14 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53401 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFQTBa (ORCPT
+        with ESMTP id S1725497AbfFQTCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:01:30 -0400
+        Mon, 17 Jun 2019 15:02:13 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJ1HSS3554565
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJ1ww13554677
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:01:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJ1HSS3554565
+        Mon, 17 Jun 2019 12:01:58 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJ1ww13554677
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560798077;
-        bh=jxWByRX3Ss6TGK3xmsPvWZ2PdNFy3FTjs5EFjDVIhFc=;
+        s=2019051801; t=1560798118;
+        bh=Qp+LpeQyySqjzDZKWf/gbaq82Kc5eAVLkt43shjjPTA=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Ov7YIzupa0MVEG1hLP2rNrOjFqmBbT1FtlR860IMMhUAhnbKV+4aFE7sgYJLTnRLK
-         hJp0jIXe9VdZequgz1GRt8hNTY4gkmplEyGYMtSIWNu4Q8njXmmLuYA7ciIt60JBM6
-         2BQEWlHkD/fYIkHxoufHpVBhLfYG657XgGJ2DOuWwi+LJ54s3wMJ2te1Lfs07mx7YM
-         QK6ku5O42uX6HvE3MWdkvtL4SQ0QHyyhDvUg3DB5qhOcIrhsC4CG3SofUU5w8x94NO
-         muMMpHYpzZs6D7HjOKeD5oOAIIdzcVFHyWJQbSYmZ/eRzfsurX8LkMPuvkYMxMOJ1/
-         0cRqD2kkpwVjg==
+        b=FvHLwQA3ItijswVsz+Uxs3DYi49KmK72WsRZGgbR+W+/FDaN1KI07I1UonnH0YXxK
+         fLGBgiiHkaoVehBhwpt1ubMrIYHUiyNN0eKm7RDX/StAG9E79uoo40UOvsdhIXRRvf
+         cXGiRygSdk7ruHCvtjvkmM/LqVqfE/S7zcq/pDVdSIRCl2YACemwQhZI0r4zswh5yp
+         pgQZpyZ0stBcR0PNPalj2otw5ngx/8UdUbeoLSsMjZs/XGwldV7AeND7ig9BlRlobL
+         akZAsze0ipEtBRH0XKDt4ACFq+vznBVe0dZB4VToNcTtkDSx4HAqDI8RY/qgnH9YlH
+         Mm/5/bF7cN2Wg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJ1GhM3554562;
-        Mon, 17 Jun 2019 12:01:16 -0700
-Date:   Mon, 17 Jun 2019 12:01:16 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJ1wvj3554674;
+        Mon, 17 Jun 2019 12:01:58 -0700
+Date:   Mon, 17 Jun 2019 12:01:58 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-5b1dc0fd1da06d6e89f1ca8736cfe0ee84e34cc7@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, acme@redhat.com, mingo@kernel.org,
-        jolsa@redhat.com, hpa@zytor.com, tglx@linutronix.de,
-        adrian.hunter@intel.com
-Reply-To: linux-kernel@vger.kernel.org, acme@redhat.com,
-          tglx@linutronix.de, mingo@kernel.org, adrian.hunter@intel.com,
-          jolsa@redhat.com, hpa@zytor.com
-In-Reply-To: <20190520113728.14389-8-adrian.hunter@intel.com>
-References: <20190520113728.14389-8-adrian.hunter@intel.com>
+Message-ID: <tip-68fb45bf175e702aec6668c776050e5dbd2a6f1f@git.kernel.org>
+Cc:     acme@redhat.com, adrian.hunter@intel.com, mingo@kernel.org,
+        hpa@zytor.com, jolsa@redhat.com, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org
+Reply-To: mingo@kernel.org, hpa@zytor.com, acme@redhat.com,
+          adrian.hunter@intel.com, linux-kernel@vger.kernel.org,
+          jolsa@redhat.com, tglx@linutronix.de
+In-Reply-To: <20190520113728.14389-9-adrian.hunter@intel.com>
+References: <20190520113728.14389-9-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf intel-pt: Add support for samples to contain
- IPC ratio
-Git-Commit-ID: 5b1dc0fd1da06d6e89f1ca8736cfe0ee84e34cc7
+Subject: [tip:perf/core] perf script: Add output of IPC ratio
+Git-Commit-ID: 68fb45bf175e702aec6668c776050e5dbd2a6f1f
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,91 +69,143 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5b1dc0fd1da06d6e89f1ca8736cfe0ee84e34cc7
-Gitweb:     https://git.kernel.org/tip/5b1dc0fd1da06d6e89f1ca8736cfe0ee84e34cc7
+Commit-ID:  68fb45bf175e702aec6668c776050e5dbd2a6f1f
+Gitweb:     https://git.kernel.org/tip/68fb45bf175e702aec6668c776050e5dbd2a6f1f
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Mon, 20 May 2019 14:37:13 +0300
+AuthorDate: Mon, 20 May 2019 14:37:14 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Wed, 5 Jun 2019 09:47:56 -0300
 
-perf intel-pt: Add support for samples to contain IPC ratio
+perf script: Add output of IPC ratio
 
-Copy the incremental instruction count and cycle count onto 'instructions'
-and 'branches' samples.
+Add field 'ipc' to display instructions-per-cycle.
 
-Because Intel PT does not update the cycle count on every branch or
-instruction, the incremental values will often be zero.
+Example:
 
-When there are values, they will be the number of instructions and
-number of cycles since the last update, and thus represent the average
-IPC since the last IPC value.
+ perf record -e intel_pt/cyc/u ls
+ perf script --insn-trace --xed -F+ipc,-dso,-cpu,-tid
+
+ ls  2670177.697113434:  7f0dfdbcd090 _start+0x0      mov %rsp, %rdi   IPC: 0.00 (1/877)
+ ls  2670177.697113434:  7f0dfdbcd093 _start+0x3      callq  0x7f0dfdbce030
+ ls  2670177.697113434:  7f0dfdbce030 _dl_start+0x0   pushq  %rbp
+ ls  2670177.697113434:  7f0dfdbce031 _dl_start+0x1   mov %rsp, %rbp
+ ls  2670177.697113434:  7f0dfdbce034 _dl_start+0x4   pushq  %r15
+ ls  2670177.697113434:  7f0dfdbce036 _dl_start+0x6   pushq  %r14
+ ls  2670177.697113434:  7f0dfdbce038 _dl_start+0x8   pushq  %r13
+ ls  2670177.697113434:  7f0dfdbce03a _dl_start+0xa   pushq  %r12
+ ls  2670177.697113434:  7f0dfdbce03c _dl_start+0xc   mov %rdi, %r12
+ ls  2670177.697113434:  7f0dfdbce03f _dl_start+0xf   pushq  %rbx
+ ls  2670177.697113434:  7f0dfdbce040 _dl_start+0x10  sub $0x38, %rsp
+ ls  2670177.697113434:  7f0dfdbce044 _dl_start+0x14  rdtsc
+ ls  2670177.697113434:  7f0dfdbce046 _dl_start+0x16  mov %eax, %eax
+ ls  2670177.697113434:  7f0dfdbce048 _dl_start+0x18  shl $0x20, %rdx
+ ls  2670177.697113434:  7f0dfdbce04c _dl_start+0x1c  or %rax, %rdx
+ ls  2670177.697114471:  7f0dfdbce04f _dl_start+0x1f  movq  0x27e22(%rip), %rax        IPC: 0.00 (15/1685)
+ ls  2670177.697116177:  7f0dfdbce056 _dl_start+0x26  movq  %rdx, 0x27683(%rip)        IPC: 0.00 (1/881)
+
+Note, the IPC values are low due to page faults at the beginning of
+execution. The additional cycles are due to the time to enter the
+kernel, not the actual kernel page fault handler.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190520113728.14389-8-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190520113728.14389-9-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/intel-pt.c | 29 +++++++++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
+ tools/perf/Documentation/perf-script.txt |  5 ++++-
+ tools/perf/builtin-script.c              | 23 ++++++++++++++++++++++-
+ 2 files changed, 26 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
-index 7a70693c1b91..3cff8fe2eaa0 100644
---- a/tools/perf/util/intel-pt.c
-+++ b/tools/perf/util/intel-pt.c
-@@ -157,6 +157,12 @@ struct intel_pt_queue {
- 	u32 flags;
- 	u16 insn_len;
- 	u64 last_insn_cnt;
-+	u64 ipc_insn_cnt;
-+	u64 ipc_cyc_cnt;
-+	u64 last_in_insn_cnt;
-+	u64 last_in_cyc_cnt;
-+	u64 last_br_insn_cnt;
-+	u64 last_br_cyc_cnt;
- 	char insn[INTEL_PT_INSN_BUF_SZ];
+diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
+index af8282782911..c59fd52e9e91 100644
+--- a/tools/perf/Documentation/perf-script.txt
++++ b/tools/perf/Documentation/perf-script.txt
+@@ -117,7 +117,7 @@ OPTIONS
+         Comma separated list of fields to print. Options are:
+         comm, tid, pid, time, cpu, event, trace, ip, sym, dso, addr, symoff,
+         srcline, period, iregs, uregs, brstack, brstacksym, flags, bpf-output, brstackinsn,
+-        brstackoff, callindent, insn, insnlen, synth, phys_addr, metric, misc, srccode.
++        brstackoff, callindent, insn, insnlen, synth, phys_addr, metric, misc, srccode, ipc.
+         Field list can be prepended with the type, trace, sw or hw,
+         to indicate to which event type the field list applies.
+         e.g., -F sw:comm,tid,time,ip,sym  and -F trace:time,cpu,trace
+@@ -203,6 +203,9 @@ OPTIONS
+ 	The synth field is used by synthesized events which may be created when
+ 	Instruction Trace decoding.
+ 
++	The ipc (instructions per cycle) field is synthesized and may have a value when
++	Instruction Trace decoding.
++
+ 	Finally, a user may not set fields to none for all event types.
+ 	i.e., -F "" is not allowed.
+ 
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 3a48a2627670..80c722ade852 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -102,6 +102,7 @@ enum perf_output_field {
+ 	PERF_OUTPUT_METRIC	    = 1U << 28,
+ 	PERF_OUTPUT_MISC            = 1U << 29,
+ 	PERF_OUTPUT_SRCCODE	    = 1U << 30,
++	PERF_OUTPUT_IPC             = 1U << 31,
  };
  
-@@ -1162,6 +1168,13 @@ static int intel_pt_synth_branch_sample(struct intel_pt_queue *ptq)
- 		sample.branch_stack = (struct branch_stack *)&dummy_bs;
+ struct output_option {
+@@ -139,6 +140,7 @@ struct output_option {
+ 	{.str = "metric", .field = PERF_OUTPUT_METRIC},
+ 	{.str = "misc", .field = PERF_OUTPUT_MISC},
+ 	{.str = "srccode", .field = PERF_OUTPUT_SRCCODE},
++	{.str = "ipc", .field = PERF_OUTPUT_IPC},
+ };
+ 
+ enum {
+@@ -1268,6 +1270,20 @@ static int perf_sample__fprintf_insn(struct perf_sample *sample,
+ 	return printed;
+ }
+ 
++static int perf_sample__fprintf_ipc(struct perf_sample *sample,
++				    struct perf_event_attr *attr, FILE *fp)
++{
++	unsigned int ipc;
++
++	if (!PRINT_FIELD(IPC) || !sample->cyc_cnt || !sample->insn_cnt)
++		return 0;
++
++	ipc = (sample->insn_cnt * 100) / sample->cyc_cnt;
++
++	return fprintf(fp, " \t IPC: %u.%02u (%" PRIu64 "/%" PRIu64 ") ",
++		       ipc / 100, ipc % 100, sample->insn_cnt, sample->cyc_cnt);
++}
++
+ static int perf_sample__fprintf_bts(struct perf_sample *sample,
+ 				    struct perf_evsel *evsel,
+ 				    struct thread *thread,
+@@ -1312,6 +1328,8 @@ static int perf_sample__fprintf_bts(struct perf_sample *sample,
+ 		printed += perf_sample__fprintf_addr(sample, thread, attr, fp);
  	}
  
-+	sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_br_cyc_cnt;
-+	if (sample.cyc_cnt) {
-+		sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_br_insn_cnt;
-+		ptq->last_br_insn_cnt = ptq->ipc_insn_cnt;
-+		ptq->last_br_cyc_cnt = ptq->ipc_cyc_cnt;
-+	}
++	printed += perf_sample__fprintf_ipc(sample, attr, fp);
 +
- 	return intel_pt_deliver_synth_b_event(pt, event, &sample,
- 					      pt->branches_sample_type);
- }
-@@ -1217,6 +1230,13 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
- 	sample.stream_id = ptq->pt->instructions_id;
- 	sample.period = ptq->state->tot_insn_cnt - ptq->last_insn_cnt;
+ 	if (print_srcline_last)
+ 		printed += map__fprintf_srcline(al->map, al->addr, "\n  ", fp);
  
-+	sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_in_cyc_cnt;
-+	if (sample.cyc_cnt) {
-+		sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_in_insn_cnt;
-+		ptq->last_in_insn_cnt = ptq->ipc_insn_cnt;
-+		ptq->last_in_cyc_cnt = ptq->ipc_cyc_cnt;
-+	}
+@@ -1859,6 +1877,9 @@ static void process_event(struct perf_script *script,
+ 
+ 	if (PRINT_FIELD(PHYS_ADDR))
+ 		fprintf(fp, "%16" PRIx64, sample->phys_addr);
 +
- 	ptq->last_insn_cnt = ptq->state->tot_insn_cnt;
- 
- 	return intel_pt_deliver_synth_event(pt, ptq, event, &sample,
-@@ -1488,6 +1508,15 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
- 
- 	ptq->have_sample = false;
- 
-+	if (ptq->state->tot_cyc_cnt > ptq->ipc_cyc_cnt) {
-+		/*
-+		 * Cycle count and instruction count only go together to create
-+		 * a valid IPC ratio when the cycle count changes.
-+		 */
-+		ptq->ipc_insn_cnt = ptq->state->tot_insn_cnt;
-+		ptq->ipc_cyc_cnt = ptq->state->tot_cyc_cnt;
-+	}
++	perf_sample__fprintf_ipc(sample, attr, fp);
 +
- 	if (pt->sample_pwr_events && (state->type & INTEL_PT_PWR_EVT)) {
- 		if (state->type & INTEL_PT_CBR_CHG) {
- 			err = intel_pt_synth_cbr_sample(ptq);
+ 	fprintf(fp, "\n");
+ 
+ 	if (PRINT_FIELD(SRCCODE)) {
+@@ -3433,7 +3454,7 @@ int cmd_script(int argc, const char **argv)
+ 		     "Fields: comm,tid,pid,time,cpu,event,trace,ip,sym,dso,"
+ 		     "addr,symoff,srcline,period,iregs,uregs,brstack,"
+ 		     "brstacksym,flags,bpf-output,brstackinsn,brstackoff,"
+-		     "callindent,insn,insnlen,synth,phys_addr,metric,misc",
++		     "callindent,insn,insnlen,synth,phys_addr,metric,misc,ipc",
+ 		     parse_output_fields),
+ 	OPT_BOOLEAN('a', "all-cpus", &system_wide,
+ 		    "system-wide collection from all CPUs"),
