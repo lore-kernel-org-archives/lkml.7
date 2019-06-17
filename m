@@ -2,138 +2,335 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38980C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:37:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E7EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A45E2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:37:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pDFORBCX"
+	by mail.kernel.org (Postfix) with ESMTP id B862420833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:37:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfFQOh0 (ORCPT
+        id S1728430AbfFQOh2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:37:26 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39777 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfFQOh0 (ORCPT
+        Mon, 17 Jun 2019 10:37:28 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58386 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725995AbfFQOh1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:37:26 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HEaFoQ3458597
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:36:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HEaFoQ3458597
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560782176;
-        bh=WZOVt5Al31fQSyk2wq6cOcPSLYFOYjKmjGllZ4BcJ/c=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=pDFORBCXS9NxxDXBlk4NVnJL0qbkVD8Ud4t/5jCrocixOTDtJzmN2impaItrEQqXn
-         VGeSj5Rd7vrZrBCfzU/emhmMWxCweM+C9JU2wJ+s3BuJT9RdgovWcEKStO74S3LsgL
-         K6N528N318GGeH9q+vU6nBzPu8ZIXcFEYVpuP1zx2J5/pMRHI3eH9EJoygkB+AoWP8
-         JMr2CZUm9q2KIVcAjpFqkR/swmGKZebi2PoQEIz6k5q/6qvD2tk3ovnZKPWB+cmheR
-         Y1Qm+vgeN/3SdNTOwtQn80jSc25icr3N/Xpygcr4sTXmIO5QAE3tTFO8xVqq4HT+6M
-         F5mk5WiabxE0Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HEaFCv3458594;
-        Mon, 17 Jun 2019 07:36:15 -0700
-Date:   Mon, 17 Jun 2019 07:36:15 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-543ac280b3576c0009e8c0fcd4d6bfc9978d7bd0@git.kernel.org>
-Cc:     mingo@kernel.org, peterz@infradead.org,
-        torvalds@linux-foundation.org, kan.liang@linux.intel.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de, hpa@zytor.com
-Reply-To: hpa@zytor.com, tglx@linutronix.de, linux-kernel@vger.kernel.org,
-          kan.liang@linux.intel.com, torvalds@linux-foundation.org,
-          peterz@infradead.org, mingo@kernel.org
-In-Reply-To: <1556672028-119221-2-git-send-email-kan.liang@linux.intel.com>
-References: <1556672028-119221-2-git-send-email-kan.liang@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86/intel/uncore: Handle invalid event coding
- for free-running counter
-Git-Commit-ID: 543ac280b3576c0009e8c0fcd4d6bfc9978d7bd0
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 10:37:27 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HEYl5D031475;
+        Mon, 17 Jun 2019 10:37:15 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t6bj8c021-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Jun 2019 10:37:14 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5HEX8Pu015665;
+        Mon, 17 Jun 2019 14:37:14 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma04dal.us.ibm.com with ESMTP id 2t4ra62haw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 17 Jun 2019 14:37:14 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5HEb9Xx27132172
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 14:37:09 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 852106E04C;
+        Mon, 17 Jun 2019 14:37:09 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F6266E052;
+        Mon, 17 Jun 2019 14:37:08 +0000 (GMT)
+Received: from [9.60.84.60] (unknown [9.60.84.60])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Jun 2019 14:37:08 +0000 (GMT)
+Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate resource
+ in use
+To:     Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, cohuck@redhat.com, frankja@linux.ibm.com,
+        david@redhat.com, mjrosato@linux.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com
+References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
+ <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
+ <c5e9bde9-4a0e-8ad8-d5d4-df852a33e232@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <e96b1293-0086-b133-4a1a-ec363d3f0f0a@linux.ibm.com>
+Date:   Mon, 17 Jun 2019 10:37:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <c5e9bde9-4a0e-8ad8-d5d4-df852a33e232@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906170131
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  543ac280b3576c0009e8c0fcd4d6bfc9978d7bd0
-Gitweb:     https://git.kernel.org/tip/543ac280b3576c0009e8c0fcd4d6bfc9978d7bd0
-Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Tue, 30 Apr 2019 17:53:43 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:36:17 +0200
+On 6/17/19 5:28 AM, Harald Freudenberger wrote:
+> On 13.06.19 21:39, Tony Krowiak wrote:
+>> Introduces a new driver callback to prevent a root user from unbinding
+>> an AP queue from its device driver if the queue is in use. This prevents
+>> a root user from inadvertently taking a queue away from a guest and
+>> giving it to the host, or vice versa. The callback will be invoked
+>> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
+>> result in one or more AP queues being removed from its driver. If the
+>> callback responds in the affirmative for any driver queried, the change
+>> to the apmask or aqmask will be rejected with a device in use error.
+>>
+>> For this patch, only non-default drivers will be queried. Currently,
+>> there is only one non-default driver, the vfio_ap device driver. The
+>> vfio_ap device driver manages AP queues passed through to one or more
+>> guests and we don't want to unexpectedly take AP resources away from
+>> guests which are most likely independently administered.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
+>>   drivers/s390/crypto/ap_bus.h |   3 +
+>>   2 files changed, 135 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+>> index b9fc502c58c2..1b06f47d0d1c 100644
+>> --- a/drivers/s390/crypto/ap_bus.c
+>> +++ b/drivers/s390/crypto/ap_bus.c
+>> @@ -35,6 +35,7 @@
+>>   #include <linux/mod_devicetable.h>
+>>   #include <linux/debugfs.h>
+>>   #include <linux/ctype.h>
+>> +#include <linux/module.h>
+>>   
+>>   #include "ap_bus.h"
+>>   #include "ap_debug.h"
+>> @@ -998,9 +999,11 @@ int ap_parse_mask_str(const char *str,
+>>   	newmap = kmalloc(size, GFP_KERNEL);
+>>   	if (!newmap)
+>>   		return -ENOMEM;
+>> -	if (mutex_lock_interruptible(lock)) {
+>> -		kfree(newmap);
+>> -		return -ERESTARTSYS;
+>> +	if (lock) {
+>> +		if (mutex_lock_interruptible(lock)) {
+>> +			kfree(newmap);
+>> +			return -ERESTARTSYS;
+>> +		}
+>>   	}
+>>   
+>>   	if (*str == '+' || *str == '-') {
+>> @@ -1012,7 +1015,10 @@ int ap_parse_mask_str(const char *str,
+>>   	}
+>>   	if (rc == 0)
+>>   		memcpy(bitmap, newmap, size);
+>> -	mutex_unlock(lock);
+>> +
+>> +	if (lock)
+>> +		mutex_unlock(lock);
+>> +
+>>   	kfree(newmap);
+>>   	return rc;
+>>   }
+>> @@ -1199,12 +1205,72 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
+>>   	return rc;
+>>   }
+>>   
+>> +int __verify_card_reservations(struct device_driver *drv, void *data)
+>> +{
+>> +	int rc = 0;
+>> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+>> +	unsigned long *newapm = (unsigned long *)data;
+>> +
+>> +	/*
+>> +	 * If the reserved bits do not identify cards reserved for use by the
+>> +	 * non-default driver, there is no need to verify the driver is using
+>> +	 * the queues.
+>> +	 */
+>> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+>> +		return 0;
+>> +
+>> +	/* The non-default driver's module must be loaded */
+>> +	if (!try_module_get(drv->owner))
+>> +		return 0;
+>> +
+>> +	if (ap_drv->in_use)
+>> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+>> +			rc = -EADDRINUSE;
+>> +
+>> +	module_put(drv->owner);
+>> +
+>> +	return rc;
+>> +}
+>> +
+>> +static int apmask_commit(unsigned long *newapm)
+>> +{
+>> +	int rc;
+>> +	unsigned long reserved[BITS_TO_LONGS(AP_DEVICES)];
+>> +
+>> +	/*
+>> +	 * Check if any bits in the apmask have been set which will
+>> +	 * result in queues being removed from non-default drivers
+>> +	 */
+>> +	if (bitmap_andnot(reserved, newapm, ap_perms.apm, AP_DEVICES)) {
+>> +		rc = (bus_for_each_drv(&ap_bus_type, NULL, reserved,
+>> +				       __verify_card_reservations));
+> Why surround the bus_for_each_drv() with additional parenthesis ?
 
-perf/x86/intel/uncore: Handle invalid event coding for free-running counter
+You are right, it is not necessary.
 
-Counting with invalid event coding for free-running counter may cause
-OOPs, e.g. uncore_iio_free_running_0/event=1/.
+>> +		if (rc)
+>> +			return rc;
+>> +	}
+>> +
+>> +	memcpy(ap_perms.apm, newapm, APMASKSIZE);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static ssize_t apmask_store(struct bus_type *bus, const char *buf,
+>>   			    size_t count)
+>>   {
+>>   	int rc;
+>> +	unsigned long newapm[BITS_TO_LONGS(AP_DEVICES)];
+>> +
+>> +	memcpy(newapm, ap_perms.apm, APMASKSIZE);
+>> +
+>> +	rc = ap_parse_mask_str(buf, newapm, AP_DEVICES, NULL);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	if (mutex_lock_interruptible(&ap_perms_mutex))
+>> +		return -ERESTARTSYS;
+> This lock is too late. Move it before the memcpy(newapm, ap_perms.apm, APMASKSIZE);
 
-Current code only validate the event with free-running event format,
-event=0xff,umask=0xXY. Non-free-running event format never be checked
-for the PMU with free-running counters.
+I agree, it shall be moved.
 
-Add generic hw_config() to check and reject the invalid event coding
-for free-running PMU.
+>> +
+>> +	rc = apmask_commit(newapm);
+>> +	mutex_unlock(&ap_perms_mutex);
+>>   
+>> -	rc = ap_parse_mask_str(buf, ap_perms.apm, AP_DEVICES, &ap_perms_mutex);
+>>   	if (rc)
+>>   		return rc;
+>>   
+>> @@ -1230,12 +1296,72 @@ static ssize_t aqmask_show(struct bus_type *bus, char *buf)
+>>   	return rc;
+>>   }
+>>   
+>> +int __verify_queue_reservations(struct device_driver *drv, void *data)
+>> +{
+>> +	int rc = 0;
+>> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+>> +	unsigned long *newaqm = (unsigned long *)data;
+>> +
+>> +	/*
+>> +	 * If the reserved bits do not identify queues reserved for use by the
+>> +	 * non-default driver, there is no need to verify the driver is using
+>> +	 * the queues.
+>> +	 */
+>> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+>> +		return 0;
+>> +
+>> +	/* The non-default driver's module must be loaded */
+>> +	if (!try_module_get(drv->owner))
+>> +		return 0;
+>> +
+>> +	if (ap_drv->in_use)
+>> +		if (ap_drv->in_use(ap_perms.apm, newaqm))
+>> +			rc = -EADDRINUSE;
+>> +
+>> +	module_put(drv->owner);
+>> +
+>> +	return rc;
+>> +}
+>> +
+>> +static int aqmask_commit(unsigned long *newaqm)
+>> +{
+>> +	int rc;
+>> +	unsigned long reserved[BITS_TO_LONGS(AP_DOMAINS)];
+>> +
+>> +	/*
+>> +	 * Check if any bits in the aqmask have been set which will
+>> +	 * result in queues being removed from non-default drivers
+>> +	 */
+>> +	if (bitmap_andnot(reserved, newaqm, ap_perms.aqm, AP_DOMAINS)) {
+>> +		rc = (bus_for_each_drv(&ap_bus_type, NULL, reserved,
+>> +				       __verify_queue_reservations));
+> Same here: please remove the surrounding ( ... ).
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: acme@kernel.org
-Cc: eranian@google.com
-Fixes: 0f519f0352e3 ("perf/x86/intel/uncore: Support IIO free-running counters on SKX")
-Link: https://lkml.kernel.org/r/1556672028-119221-2-git-send-email-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/events/intel/uncore.h       | 10 ++++++++++
- arch/x86/events/intel/uncore_snbep.c |  1 +
- 2 files changed, 11 insertions(+)
+Will do.
 
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 33aba2504cb1..b3cad2b65766 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -419,6 +419,16 @@ static inline bool is_freerunning_event(struct perf_event *event)
- 	       (((cfg >> 8) & 0xff) >= UNCORE_FREERUNNING_UMASK_START);
- }
- 
-+/* Check and reject invalid config */
-+static inline int uncore_freerunning_hw_config(struct intel_uncore_box *box,
-+					       struct perf_event *event)
-+{
-+	if (is_freerunning_event(event))
-+		return 0;
-+
-+	return -EINVAL;
-+}
-+
- static inline void uncore_disable_box(struct intel_uncore_box *box)
- {
- 	if (box->pmu->type->ops->disable_box)
-diff --git a/arch/x86/events/intel/uncore_snbep.c b/arch/x86/events/intel/uncore_snbep.c
-index bbe89bc589f9..fdb1a57ee1e5 100644
---- a/arch/x86/events/intel/uncore_snbep.c
-+++ b/arch/x86/events/intel/uncore_snbep.c
-@@ -3585,6 +3585,7 @@ static struct uncore_event_desc skx_uncore_iio_freerunning_events[] = {
- 
- static struct intel_uncore_ops skx_uncore_iio_freerunning_ops = {
- 	.read_counter		= uncore_msr_read_counter,
-+	.hw_config		= uncore_freerunning_hw_config,
- };
- 
- static struct attribute *skx_uncore_iio_freerunning_formats_attr[] = {
+>> +		if (rc)
+>> +			return rc;
+>> +	}
+>> +
+>> +	memcpy(ap_perms.aqm, newaqm, APMASKSIZE);
+> APMASKSIZE -> AQMASKSIZE
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>   static ssize_t aqmask_store(struct bus_type *bus, const char *buf,
+>>   			    size_t count)
+>>   {
+>>   	int rc;
+>> +	unsigned long newaqm[BITS_TO_LONGS(AP_DEVICES)];
+>> +
+>> +	memcpy(newaqm, ap_perms.aqm, AQMASKSIZE);
+>> +
+>> +	rc = ap_parse_mask_str(buf, newaqm, AP_DOMAINS, NULL);
+>> +	if (rc)
+>> +		return rc;
+>> +
+>> +	if (mutex_lock_interruptible(&ap_perms_mutex))
+>> +		return -ERESTARTSYS;
+> Please move the lock before the memcpy(newaqm, ...)
+
+Will do.
+
+>> +
+>> +	rc = aqmask_commit(newaqm);
+>> +	mutex_unlock(&ap_perms_mutex);
+>>   
+>> -	rc = ap_parse_mask_str(buf, ap_perms.aqm, AP_DOMAINS, &ap_perms_mutex);
+>>   	if (rc)
+>>   		return rc;
+>>   
+>> diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
+>> index 6f3cf37776ca..0f865c5545f2 100644
+>> --- a/drivers/s390/crypto/ap_bus.h
+>> +++ b/drivers/s390/crypto/ap_bus.h
+>> @@ -137,6 +137,7 @@ struct ap_driver {
+>>   	void (*remove)(struct ap_device *);
+>>   	void (*suspend)(struct ap_device *);
+>>   	void (*resume)(struct ap_device *);
+>> +	bool (*in_use)(unsigned long *apm, unsigned long *aqm);
+>>   };
+>>   
+>>   #define to_ap_drv(x) container_of((x), struct ap_driver, driver)
+>> @@ -265,6 +266,8 @@ void ap_queue_reinit_state(struct ap_queue *aq);
+>>   struct ap_card *ap_card_create(int id, int queue_depth, int raw_device_type,
+>>   			       int comp_device_type, unsigned int functions);
+>>   
+>> +#define APMASKSIZE (BITS_TO_LONGS(AP_DEVICES) * sizeof(unsigned long))
+>> +#define AQMASKSIZE (BITS_TO_LONGS(AP_DOMAINS) * sizeof(unsigned long))
+> add one empty line here please
+>>   struct ap_perms {
+>>   	unsigned long ioctlm[BITS_TO_LONGS(AP_IOCTLS)];
+>>   	unsigned long apm[BITS_TO_LONGS(AP_DEVICES)];
+> 
+
