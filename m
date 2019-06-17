@@ -2,193 +2,97 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E73BC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBB6EC31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:53:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AC182084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:53:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560779592;
-	bh=15Z96CeLChu7uOhbi5jJqcKnv3Kk8UOquo5h+04dZ08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GrwVbhxKXAlW/nSE0e9CtnEv87n0DeRSR4zjEf+TfWgcKX2zfb9XH3z4V//2azMcw
-	 M4XaLJdaoZCJyqD4TuzteQzAvo+fpzg67Uarz4OAvhv9RiS4woAs6ZdB0sMo95aWzX
-	 BtGFqFLq+zwgV6A0hxq8tKFcxdAoPUaWDWSN0yYo=
+	by mail.kernel.org (Postfix) with ESMTP id B03C12080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:53:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728239AbfFQNxL (ORCPT
+        id S1728262AbfFQNxS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:53:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39642 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 09:53:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56884 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726362AbfFQNxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:53:10 -0400
-Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726028AbfFQNxS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:53:18 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55042089E;
+        by mx1.redhat.com (Postfix) with ESMTPS id 3AADE821EF;
         Mon, 17 Jun 2019 13:53:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560779589;
-        bh=15Z96CeLChu7uOhbi5jJqcKnv3Kk8UOquo5h+04dZ08=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=J9EJy+SeuYw8wRvcpL4ArV7IJnqRj9rKlvsEfwtdrg80oKqUBIgijBki+rSX+7nkr
-         WRJXjMe8TWLtxcUJCeX1DVqBMNnnKNRr0uVf+Z7J+NaOk4axUfKlwawQRYwf3e0S56
-         dV1V3JzNB9aJyRR6CXeHyZJTymKmoV9GpAGuoDlY=
-Date:   Mon, 17 Jun 2019 08:53:07 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
-Subject: Re: [PATCH v3 2/2] PCI: Fix disabling of bridge BARs when assigning
- bus resources
-Message-ID: <20190617135307.GA13533@google.com>
-References: <20190531171216.20532-1-logang@deltatee.com>
- <20190531171216.20532-3-logang@deltatee.com>
+Received: from [10.36.117.84] (ovpn-117-84.ams2.redhat.com [10.36.117.84])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C2C1C7E5CC;
+        Mon, 17 Jun 2019 13:53:06 +0000 (UTC)
+Subject: Re: [PATCH] iommu/intel: remove an unused variable "length"
+To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
+Cc:     dwmw2@infradead.org, baolu.lu@linux.intel.com,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+References: <20190617132027.1960-1-cai@lca.pw>
+From:   Auger Eric <eric.auger@redhat.com>
+Message-ID: <ee4d4983-4297-a027-1844-a7648a0512ca@redhat.com>
+Date:   Mon, 17 Jun 2019 15:53:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190531171216.20532-3-logang@deltatee.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190617132027.1960-1-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 17 Jun 2019 13:53:17 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 11:12:16AM -0600, Logan Gunthorpe wrote:
-> One odd quirk of PLX switches is that their upstream bridge port has
-> 256K of space allocated behind its BAR0 (most other bridge
-> implementations do not report any BAR space).
+Hi Qian,
 
-Somewhat unusual, but completely legal, of course.
+On 6/17/19 3:20 PM, Qian Cai wrote:
+> The linux-next commit "iommu/vt-d: Duplicate iommu_resv_region objects
+> per device list" [1] left out an unused variable,
+> 
+> drivers/iommu/intel-iommu.c: In function 'dmar_parse_one_rmrr':
+> drivers/iommu/intel-iommu.c:4014:9: warning: variable 'length' set but
+> not used [-Wunused-but-set-variable]
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1083073/
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+Reviewed-by: Eric Auger <eric.auger@redhat.com>
 
-If a bridge has memory BARs, AFAIK it is impossible to enable a memory
-window without also enabling the BARs, so if we want to use the bridge
-at all, we *must* allocate space for its BARs, just like for any other
-device.
+Thank you for fixing this oversight
 
-> The lspci for such  device
-> looks like:
-> 
->   04:00.0 PCI bridge: PLX Technology, Inc. PEX 8724 24-Lane, 6-Port PCI
->             Express Gen 3 (8 GT/s) Switch, 19 x 19mm FCBGA (rev ca)
-> 	    (prog-if 00 [Normal decode])
->       Physical Slot: 1
->       Flags: bus master, fast devsel, latency 0, IRQ 30, NUMA node 0
->       Memory at 90a00000 (32-bit, non-prefetchable) [size=256K]
->       Bus: primary=04, secondary=05, subordinate=0a, sec-latency=0
->       I/O behind bridge: 00002000-00003fff
->       Memory behind bridge: 90000000-909fffff
->       Prefetchable memory behind bridge: 0000380000800000-0000380000bfffff
->       Kernel driver in use: pcieport
-> 
-> It's not clear what the purpose of the memory at 0x90a00000 is, and
-> currently the kernel never actually uses it for anything. In most cases,
-> it's safely ignored and does not cause a problem.
-> 
-> However, when the kernel assigns the resource addresses (with the
-> pci=realloc command line parameter, for example) it can inadvertently
-> disable the struct resource corresponding to the bar. When this happens,
-> lspci will report this memory as ignored:
-> 
->    Region 0: Memory at <ignored> (32-bit, non-prefetchable) [size=256K]
-> 
-> This is because the kernel reports a zero start address and zero flags
-> in the corresponding sysfs resource file and in /proc/bus/pci/devices.
-> Investigation with 'lspci -x', however shows the bios-assigned address
-> will still be programmed in the device's BAR registers.
+Best Regards
 
-Ugh, yep.  It took me a while to trace through this, but "lspci -v" by
-default shows the kernel view of addresses, i.e., the pdev->resource[]
-values, which it gets from the sysfs "resource" file (resource_show())
-or "/proc/bus/pci/devices" (show_device()).
+Eric
 
-But "lspci -x" shows the config space values (I think "lspci -bv"
-should also show these) from the sysfs "config" file
-(pci_read_config()).
-
-It's definitely a kernel bug that we lost track of what's in config
-space.
-
-> In many cases, this still isn't a problem. Nothing uses the memory,
-> so nothing is affected. However, a big problem shows up when an IOMMU
-> is in use: the IOMMU will not reserve this space in the IOVA because the
-> kernel no longer thinks the range is valid. (See
-> dmar_init_reserved_ranges() for the Intel implementation of this.)
-> 
-> Without the proper reserved range, we have a situation where a DMA
-> mapping may occasionally allocate an IOVA which the PCI bus will actually
-> route to a BAR in the PLX switch. This will result in some random DMA
-> writes not actually writing to the RAM they are supposed to, or random
-> DMA reads returning all FFs from the PLX BAR when it's supposed to have
-> read from RAM.
-> 
-> The problem is caused in pci_assign_unassigned_root_bus_resources().
-> When any resource from a bridge device fails to get assigned, the code
-> sets the resource's flags to zero. This makes sense for bridge resources,
-> as they will be re-enabled later, but for regular BARs, it disables them
-> permanently. To fix the problem, we only set the flags to zero for
-> bridge resources and treat any other resources like non-bridge devices.
-> 
-> Reported-by: Kit Chow <kchow@gigaio.com>
-> Fixes: da7822e5ad71 ("PCI: update bridge resources to get more big ranges when allocating space (again)")
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Yinghai Lu <yinghai@kernel.org>
 > ---
->  drivers/pci/setup-bus.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+>  drivers/iommu/intel-iommu.c | 3 ---
+>  1 file changed, 3 deletions(-)
 > 
-> diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> index 0eb40924169b..7adbd4bedd16 100644
-> --- a/drivers/pci/setup-bus.c
-> +++ b/drivers/pci/setup-bus.c
-> @@ -1784,11 +1784,16 @@ void pci_assign_unassigned_root_bus_resources(struct pci_bus *bus)
->  	/* restore size and flags */
->  	list_for_each_entry(fail_res, &fail_head, list) {
->  		struct resource *res = fail_res->res;
-> +		int idx;
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 478ac186570b..d86d4ee5cc78 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -4011,7 +4011,6 @@ int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
+>  {
+>  	struct acpi_dmar_reserved_memory *rmrr;
+>  	struct dmar_rmrr_unit *rmrru;
+> -	size_t length;
 >  
->  		res->start = fail_res->start;
->  		res->end = fail_res->end;
->  		res->flags = fail_res->flags;
-> -		if (fail_res->dev->subordinate)
-> +
-> +		idx = res - &fail_res->dev->resource[0];
-> +		if (fail_res->dev->subordinate &&
-> +		    idx >= PCI_BRIDGE_RESOURCES &&
-> +		    idx <= PCI_BRIDGE_RESOURCE_END)
->  			res->flags = 0;
-
-In my ideal world we wouldn't zap the flags of any resource.  I think
-we should derive the flags from the device's config space *once*
-during enumeration and remember them for the life of the device.
-
-This patch preserves res->flags for bridge BARs just like for any
-other device, so I think this is definitely a step in the right
-direction.
-
-I'm not sure the "dev->subordinate" test is really correct, though.
-I think the original intent of this code was to clear res->flags for
-bridge windows under the assumptions that (a) we can identify bridges
-by "dev->subordinate" being non-zero, and (b) bridges only have
-windows and didn't have BARs.
-
-This patch fixes assumption (b), but I think (a) is false, and we
-should fix it as well.  One can imagine a bridge device without a
-subordinate bus (maybe we ran out of bus numbers), so I don't think we
-should test dev->subordinate.
-
-We could test something like pci_is_bridge(), although testing for idx
-being in the PCI_BRIDGE_RESOURCES range should be sufficient because I
-don't think we use those resource for anything other than windows.
-
->  	}
->  	free_list(&fail_head);
-> -- 
-> 2.20.1
+>  	rmrru = kzalloc(sizeof(*rmrru), GFP_KERNEL);
+>  	if (!rmrru)
+> @@ -4022,8 +4021,6 @@ int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
+>  	rmrru->base_address = rmrr->base_address;
+>  	rmrru->end_address = rmrr->end_address;
+>  
+> -	length = rmrr->end_address - rmrr->base_address + 1;
+> -
+>  	rmrru->devices = dmar_alloc_dev_scope((void *)(rmrr + 1),
+>  				((void *)rmrr) + rmrr->header.length,
+>  				&rmrru->devices_cnt);
 > 
