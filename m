@@ -2,166 +2,189 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CE3C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:28:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E610C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:29:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FD12085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F982085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:29:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bI22uc2G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MAbgPHqq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728787AbfFQT2d (ORCPT
+        id S1728882AbfFQT3F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:28:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41313 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfFQT2c (ORCPT
+        Mon, 17 Jun 2019 15:29:05 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:45504 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfFQT3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:28:32 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJRABa3563789
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:27:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJRABa3563789
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560799630;
-        bh=qVrqCOSxoxKaGACE3JUe0YlCveq6puWgKfAYyVMSSTg=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=bI22uc2GzGld7ya2PNv/R4vLEFGvK3BkGvhfjrHdvEoA5Ec5Yhfb24CIvRjDl4cLT
-         nx/63UJuCUd9tfjB9fnWnXJacReEtdjAHnBkdZhWLnU6dLcEBwrVigVmNOxd4Xw4Ey
-         5aUdditOa5whZ5jfq3bAZwrHk76ElJgw7kM7/FbJxqrRrtQGY9ykKBtdnBzVTBo1Kl
-         hKzk/zyNKL8DmiXmuJijoD8Na7ODtXVJBUfBCJtvy5AeN6pmAiCfpn41TZTjFgvfhg
-         jaocN3RyJ+zg+gsYl+hApGQhVCoZYYKvCTrcJ3tLCI9/4lgg0xgwaYWd+meMCncFQO
-         kXDRQB3yPfosA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJR9GF3563786;
-        Mon, 17 Jun 2019 12:27:09 -0700
-Date:   Mon, 17 Jun 2019 12:27:09 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Mathieu Poirier <tipbot@zytor.com>
-Message-ID: <tip-3c21d7d813c55fa1688c2223fe15a1c5cb14a559@git.kernel.org>
-Cc:     jolsa@redhat.com, leo.yan@linaro.org, peterz@infradead.org,
-        mathieu.poirier@linaro.org, suzuki.poulose@arm.com,
-        linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-        hpa@zytor.com, acme@redhat.com, mingo@kernel.org,
-        namhyung@kernel.org, tglx@linutronix.de
-Reply-To: mathieu.poirier@linaro.org, peterz@infradead.org,
-          mingo@kernel.org, namhyung@kernel.org, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-          suzuki.poulose@arm.com, leo.yan@linaro.org, jolsa@redhat.com,
-          hpa@zytor.com, acme@redhat.com
-In-Reply-To: <20190524173508.29044-12-mathieu.poirier@linaro.org>
-References: <20190524173508.29044-12-mathieu.poirier@linaro.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf cs-etm: Move thread to traceid_queue
-Git-Commit-ID: 3c21d7d813c55fa1688c2223fe15a1c5cb14a559
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 15:29:04 -0400
+Received: by mail-wr1-f66.google.com with SMTP id f9so11208668wre.12;
+        Mon, 17 Jun 2019 12:29:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=zrxy0WllXzL1VTI6UrDNAs4m1yjH3oQJOE/ib7yHppg=;
+        b=MAbgPHqqsO3J32BGwB6IpY8PF/XmJCgTfJvWZ7YkJW1F8h5ldrRWzjVXxu4oMlm9fM
+         0N/HnnF5rGSz52qH582ZhhqGA3idNNN1hsQ7Q+0sXk/tD28PvS6eHVVMfc3qxeT4rHI6
+         aUhzjTV2CPsqxz/W71Sq+ZMoe4hKVQGuzRnHU5fPo1IqkBvhqn6dl/FBGDhsKMznGbun
+         +CKFELCHbDLLKQ6M9X76H0SY67K8/D4iD7ZwJ/DpjcxAplES1T5WxD+OK96bEkLhg8PJ
+         vboS23azarQJrDkky/cSyoT941k6O1W4UzC3x+qCcBNhYDs4zqJiWKj3MjfwMv4PrpFY
+         bFkw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zrxy0WllXzL1VTI6UrDNAs4m1yjH3oQJOE/ib7yHppg=;
+        b=DM6Ak2n0CEyee7OY/cShTkQFskd0VCurUqR+DbFwQ9r4ToKU3yiwJ6SEt/lO46GLh4
+         G8nBlC717K/oPuhWoqXXWjZLrDxGQ3qkkXaHJ5N89B4gPMC8sfFOpkGUe3hPbMJYsQ3c
+         mCwr4RXd/QlsRSEV9zeTY9bcXB02lXy+8SJLJ73roJVEykTfvWwCMxiC7Een3pJtWbrQ
+         vpQ0lNnzxqPRsoFBLXuCI3o9FCFyMomuLP32zQzWQl042Z+M1JJy0npG4xhs4E/U988h
+         ERx43rfb1Dv4rI4IfMwuynK3JlV2Alhbbc6C91aFMJPCuAJvZcPGoNjbI3oXL7GxHYA4
+         MgZw==
+X-Gm-Message-State: APjAAAWdNNBfX74nDPuuRJ+PFQuJ/Ez1g76uO/VuOirtuhS54nYYoOHw
+        yeh9sBl2haQdpBahfl8k5og=
+X-Google-Smtp-Source: APXvYqw+aPGfpkw1pikw+INM7bq89C7AwENHffGjJVzT0GoISwCZRBWoLMVPJTOjOqXkPEtRbsgUZQ==
+X-Received: by 2002:adf:b60f:: with SMTP id f15mr11642091wre.283.1560799741580;
+        Mon, 17 Jun 2019 12:29:01 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id o126sm400268wmo.1.2019.06.17.12.28.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 12:29:00 -0700 (PDT)
+Subject: Re: [PATCH V7] i2c: tegra: remove BUG, BUG_ON
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560748152-6575-1-git-send-email-bbiswas@nvidia.com>
+ <5a8ad23f-33c8-5140-cef8-f9cef70764b1@gmail.com>
+ <43a3fae8-dd3e-c7d3-42a7-493210e601e2@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <070ee927-be5a-327f-36d7-e6395c898574@gmail.com>
+Date:   Mon, 17 Jun 2019 22:28:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <43a3fae8-dd3e-c7d3-42a7-493210e601e2@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  3c21d7d813c55fa1688c2223fe15a1c5cb14a559
-Gitweb:     https://git.kernel.org/tip/3c21d7d813c55fa1688c2223fe15a1c5cb14a559
-Author:     Mathieu Poirier <mathieu.poirier@linaro.org>
-AuthorDate: Fri, 24 May 2019 11:35:02 -0600
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 10 Jun 2019 15:50:02 -0300
+17.06.2019 21:41, Bitan Biswas пишет:
+> 
+> 
+> On 6/17/19 5:13 AM, Dmitry Osipenko wrote:
+>> 17.06.2019 8:09, Bitan Biswas пишет:
+>>> Remove BUG, BUG_ON as it makes system usable:
+>>>   - Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+>>>     as needed.
+>>>   - Remove BUG() and mask Rx interrupt similar as Tx
+>>>     for message fully sent case.
+>>>   - Add caller error handling and WARN_ON_ONCE check for non-zero
+>>>     rx_fifo_avail in tegra_i2c_empty_rx_fifo() after all processing.
+>>
+>> The commit message should describe motivation of the change and not the change itself,
+>> unless it's some additional information which is required for better understanding of
+>> the code.
+>>
+>> In yours case it could be something like that:
+>>
+>>      The usage of BUG() macro is generally discouraged in kernel, unless
+>>      it's a problem that results in a physical damage or loss of data.
+>>      This patch removes unnecessary BUG() macros and replaces the rest
+>>      with a warnings.
+> I shall update as per above comments.
+> 
+>>
+>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>> ---
+>>>   drivers/i2c/busses/i2c-tegra.c | 45 ++++++++++++++++++++++++++++++++++--------
+>>>   1 file changed, 37 insertions(+), 8 deletions(-)
+>>>
+>>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+>>> index 4dfb4c1..b155b61 100644
+>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>> @@ -73,6 +73,7 @@
+>>>   #define I2C_ERR_NO_ACK                BIT(0)
+>>>   #define I2C_ERR_ARBITRATION_LOST        BIT(1)
+>>>   #define I2C_ERR_UNKNOWN_INTERRUPT        BIT(2)
+>>> +#define I2C_ERR_RX_BUFFER_OVERFLOW        BIT(3)
+>>>     #define PACKET_HEADER0_HEADER_SIZE_SHIFT    28
+>>>   #define PACKET_HEADER0_PACKET_ID_SHIFT        16
+>>> @@ -515,7 +516,11 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>>>        * prevent overwriting past the end of buf
+>>>        */
+>>>       if (rx_fifo_avail > 0 && buf_remaining > 0) {
+>>> -        BUG_ON(buf_remaining > 3);
+>>> +        /*
+>>> +         * buf_remaining > 3 check not needed as rx_fifo_avail == 0
+>>> +         * when (words_to_transfer was > rx_fifo_avail) earlier
+>>> +         * in this function.
+>>> +         */
+>>>           val = i2c_readl(i2c_dev, I2C_RX_FIFO);
+>>>           val = cpu_to_le32(val);
+>>>           memcpy(buf, &val, buf_remaining);
+>>> @@ -523,7 +528,15 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>>>           rx_fifo_avail--;
+>>>       }
+>>>   -    BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+>>> +    if ((!(i2c_dev->msg_buf_remaining)) &&
+>>
+>> The RX FIFO shall be drained completely no matter what.
+>>
+>> Hence why the "i2c_dev->msg_buf_remaining" checking is needed here?
+> I moved the part of below condition in Patch V6 to function tegra_i2c_empty_rx_fifo:
+> 
+>>> +            err_val = tegra_i2c_empty_rx_fifo(i2c_dev);
+>>> +            if ((!(i2c_dev->msg_buf_remaining)) &&
+> 
+>> Let's move this check into tegra_i2c_empty_rx_fifo() and return -EINVAL for that case.
+>> This will make code to look cleaner.
+> 
+> Is above condition not needed?
 
-perf cs-etm: Move thread to traceid_queue
+Let's put it at the very beginning. This may give a bit more information about the
+problem by knowing if the offending overflow happens after or during of the buffer's
+fill up.
 
-The thread field of structure cs_etm_queue is CPU dependent and as such
-need to be part of the cs_etm_traceid_queue in order to support CPU-wide
-trace scenarios.
+static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+{
+	u32 val;
+	int rx_fifo_avail;
+	u8 *buf = i2c_dev->msg_buf;
+	size_t buf_remaining = i2c_dev->msg_buf_remaining;
+	int words_to_transfer;
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-12-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/cs-etm.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+	if (WARN_ON(!i2c_dev->msg_buf_remaining))
+		return -EINVAL;
+...
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 531bbb355ba4..0d51d6d9a594 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -65,6 +65,7 @@ struct cs_etm_traceid_queue {
- 	u64 period_instructions;
- 	size_t last_branch_pos;
- 	union perf_event *event_buf;
-+	struct thread *thread;
- 	struct branch_stack *last_branch;
- 	struct branch_stack *last_branch_rb;
- 	struct cs_etm_packet *prev_packet;
-@@ -74,7 +75,6 @@ struct cs_etm_traceid_queue {
- 
- struct cs_etm_queue {
- 	struct cs_etm_auxtrace *etm;
--	struct thread *thread;
- 	struct cs_etm_decoder *decoder;
- 	struct auxtrace_buffer *buffer;
- 	unsigned int queue_nr;
-@@ -415,7 +415,7 @@ static void cs_etm__free_queue(void *priv)
- 	if (!etmq)
- 		return;
- 
--	thread__zput(etmq->thread);
-+	thread__zput(etmq->traceid_queues->thread);
- 	cs_etm_decoder__free(etmq->decoder);
- 	zfree(&etmq->traceid_queues->event_buf);
- 	zfree(&etmq->traceid_queues->last_branch);
-@@ -503,7 +503,7 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
- 	machine = etmq->etm->machine;
- 	cpumode = cs_etm__cpu_mode(etmq, address);
- 
--	thread = etmq->thread;
-+	thread = etmq->traceid_queues->thread;
- 	if (!thread) {
- 		if (cpumode != PERF_RECORD_MISC_KERNEL)
- 			return 0;
-@@ -819,18 +819,21 @@ cs_etm__get_trace(struct cs_etm_queue *etmq)
- static void cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
- 				    struct auxtrace_queue *queue)
- {
-+	struct cs_etm_traceid_queue *tidq;
- 	struct cs_etm_queue *etmq = queue->priv;
- 
-+	tidq = cs_etm__etmq_get_traceid_queue(etmq, CS_ETM_PER_THREAD_TRACEID);
-+
- 	/* CPU-wide tracing isn't supported yet */
- 	if (queue->tid == -1)
- 		return;
- 
--	if ((!etmq->thread) && (etmq->tid != -1))
--		etmq->thread = machine__find_thread(etm->machine, -1,
-+	if ((!tidq->thread) && (etmq->tid != -1))
-+		tidq->thread = machine__find_thread(etm->machine, -1,
- 						    etmq->tid);
- 
--	if (etmq->thread)
--		etmq->pid = etmq->thread->pid_;
-+	if (tidq->thread)
-+		etmq->pid = tidq->thread->pid_;
- }
- 
- static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
+In general, the original logic should be preserved during of refactoring. In this case
+we are keeping the original check and then also making it a bit more informative.
+
+> 
+>>
+>> Secondly, in the future please don't add parens where they are not needed. In this
+>> case parens around !i2c_dev->msg_buf_remaining are not needed at all.
+>>
+> I shall look out for similar unnecessary parentheses and update the patch.
+
+Yes, please clean up all the occurrences in the code if there are any. And please do
+it in a separate patch.
