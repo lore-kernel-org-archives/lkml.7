@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D72C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B72D3C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73CDE20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:22:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B372208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:22:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806530;
-	bh=oiaXuwdwqq/GHNRR2Kmron3M687TpMIX5+ylb2xkcXY=;
+	s=default; t=1560806533;
+	bh=eoircKri8yZq6TBBlqggoJktGga+3JD24JCOXyw7Q5Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DPtbLmFTEpPVAeeJwx5ujf7bBBGMJ8kx18Rx9QIyM6uAvK3F/cKVZLXtD5DMmf5Ms
-	 HuYVbogqbDxYl+tGDG+LX1kDhR5v+lXRxox3Bmp0r3F8Hxj3M+iDybrJvsomtlc1ry
-	 8De5Pm6tZxeMP1BKx/kQRBUT2c0DEC4Auclq64T4=
+	b=ttdGiW0xtx9W9n3vNsXD6pztE76JqexlzJeaV1hHpUVqFbzv1EV5MGIokwEhwvmG7
+	 vmJyPyStipeMFJ0s8HWX2R/0z2r2NhIsviWErfYLJzJJ9RbfyBYeAj+zP7x0Mtkxf7
+	 +fzkbW8++oM+z7vU/d4yG0UHccbhVJ5gIb+oVVh4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfFQVWJ (ORCPT
+        id S1728740AbfFQVWL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:22:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46540 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:22:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46614 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729446AbfFQVV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:21:59 -0400
+        id S1729026AbfFQVWD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:22:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1F5C20652;
-        Mon, 17 Jun 2019 21:21:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 080062089E;
+        Mon, 17 Jun 2019 21:22:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806519;
-        bh=oiaXuwdwqq/GHNRR2Kmron3M687TpMIX5+ylb2xkcXY=;
+        s=default; t=1560806522;
+        bh=eoircKri8yZq6TBBlqggoJktGga+3JD24JCOXyw7Q5Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D5FkdBUUazlJ4ozwMyo9QjQ2lFvaLCEFWIeLT9fD8G6Vx+WunqK9gwiel6nyMJvug
-         hbmZHwO0L3V+36xl9iHnCE14m/60mBvkeB3l9IKQifd0I+EjuqIno6mnDvXt593XZ2
-         CLt6+9hgxnu20/J6fE8EM54MsdoGVYpW5IV3IdMg=
+        b=v2jogH6bllmQ+FkN+iB8DSvwGI4DJgYYb/MiTZkmZZLKusw57fF/5JE8UJqncyV6n
+         +g3oFCE/zSx/PujfOunqd2oW+vdvum+aEo/rmFF+dIQMxEOndrV6bkzni1wColZjtR
+         aFKsuJzLvRKKkqBleQtwocXpkDTiJ2yacRzIBTl4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Bernat <vincent@bernat.ch>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        stable@vger.kernel.org, Oliver Zweigle <Oliver.Zweigle@faro.com>,
+        Bernd Eckstein <3ernd.Eckstein@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 079/115] tracing: Prevent hist_field_var_ref() from accessing NULL tracing_map_elts
-Date:   Mon, 17 Jun 2019 23:09:39 +0200
-Message-Id: <20190617210804.026342755@linuxfoundation.org>
+Subject: [PATCH 5.1 080/115] usbnet: ipheth: fix racing condition
+Date:   Mon, 17 Jun 2019 23:09:40 +0200
+Message-Id: <20190617210804.063164863@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -61,47 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 55267c88c003a3648567beae7c90512d3e2ab15e ]
+[ Upstream commit 94d250fae48e6f873d8362308f5c4d02cd1b1fd2 ]
 
-hist_field_var_ref() is an implementation of hist_field_fn_t(), which
-can be called with a null tracing_map_elt elt param when assembling a
-key in event_hist_trigger().
+Fix a racing condition in ipheth.c that can lead to slow performance.
 
-In the case of hist_field_var_ref() this doesn't make sense, because a
-variable can only be resolved by looking it up using an already
-assembled key i.e. a variable can't be used to assemble a key since
-the key is required in order to access the variable.
+Bug: In ipheth_tx(), netif_wake_queue() may be called on the callback
+ipheth_sndbulk_callback(), _before_ netif_stop_queue() is called.
+When this happens, the queue is stopped longer than it needs to be,
+thus reducing network performance.
 
-Upper layers should prevent the user from constructing a key using a
-variable in the first place, but in case one slips through, it
-shouldn't cause a NULL pointer dereference.  Also if one does slip
-through, we want to know about it, so emit a one-time warning in that
-case.
+Fix: Move netif_stop_queue() in front of usb_submit_urb(). Now the order
+is always correct. In case, usb_submit_urb() fails, the queue is woken up
+again as callback will not fire.
 
-Link: http://lkml.kernel.org/r/64ec8dc15c14d305295b64cdfcc6b2b9dd14753f.1555597045.git.tom.zanussi@linux.intel.com
+Testing: This racing condition is usually not noticeable, as it has to
+occur very frequently to slowdown the network. The callback from the USB
+is usually triggered slow enough, so the situation does not appear.
+However, on a Ubuntu Linux on VMWare Workstation, running on Windows 10,
+the we loose the race quite often and the following speedup can be noticed:
 
-Reported-by: Vincent Bernat <vincent@bernat.ch>
-Signed-off-by: Tom Zanussi <tom.zanussi@linux.intel.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Without this patch: Download:  4.10 Mbit/s, Upload:  4.01 Mbit/s
+With this patch:    Download: 36.23 Mbit/s, Upload: 17.61 Mbit/s
+
+Signed-off-by: Oliver Zweigle <Oliver.Zweigle@faro.com>
+Signed-off-by: Bernd Eckstein <3ernd.Eckstein@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/trace/trace_events_hist.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/usb/ipheth.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/trace/trace_events_hist.c b/kernel/trace/trace_events_hist.c
-index 0a200d42fa96..f50d57eac875 100644
---- a/kernel/trace/trace_events_hist.c
-+++ b/kernel/trace/trace_events_hist.c
-@@ -1815,6 +1815,9 @@ static u64 hist_field_var_ref(struct hist_field *hist_field,
- 	struct hist_elt_data *elt_data;
- 	u64 var_val = 0;
+diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
+index 3d8a70d3ea9b..3d71f1716390 100644
+--- a/drivers/net/usb/ipheth.c
++++ b/drivers/net/usb/ipheth.c
+@@ -437,17 +437,18 @@ static int ipheth_tx(struct sk_buff *skb, struct net_device *net)
+ 			  dev);
+ 	dev->tx_urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
  
-+	if (WARN_ON_ONCE(!elt))
-+		return var_val;
-+
- 	elt_data = elt->private_data;
- 	var_val = elt_data->var_ref_vals[hist_field->var_ref_idx];
++	netif_stop_queue(net);
+ 	retval = usb_submit_urb(dev->tx_urb, GFP_ATOMIC);
+ 	if (retval) {
+ 		dev_err(&dev->intf->dev, "%s: usb_submit_urb: %d\n",
+ 			__func__, retval);
+ 		dev->net->stats.tx_errors++;
+ 		dev_kfree_skb_any(skb);
++		netif_wake_queue(net);
+ 	} else {
+ 		dev->net->stats.tx_packets++;
+ 		dev->net->stats.tx_bytes += skb->len;
+ 		dev_consume_skb_any(skb);
+-		netif_stop_queue(net);
+ 	}
  
+ 	return NETDEV_TX_OK;
 -- 
 2.20.1
 
