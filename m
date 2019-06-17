@@ -2,82 +2,72 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2342CC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:14:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0006FC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:15:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C951C20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:14:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jqYp+0dJ"
+	by mail.kernel.org (Postfix) with ESMTP id CDA3920848
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:15:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfFQJOH (ORCPT
+        id S1728003AbfFQJPl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:14:07 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:54694 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbfFQJOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:14:07 -0400
-Received: from zn.tnic (p200300EC2F061300E197F1B82D7E4667.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:1300:e197:f1b8:2d7e:4667])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E4CCC1EC0AB9;
-        Mon, 17 Jun 2019 11:14:05 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560762846;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=esWtvvaU+HTDTE+bUZUafraMPobPs9RAIBfZm9WP3nE=;
-        b=jqYp+0dJxQc41097/0iTI7yAt2X7EbZ8TpnXunoKsxcrr+01XbII9oCW9JxWUA7kkEMc1b
-        pUUOWsQMvGmH4ri+t72y6IFGrRO5sjMF/ZNyR+EoECFC/EDM2KFWW/dhfWf27G/uhyI26Y
-        YQEhkhdqYKYjCGt7EjK3Hmg5Q885ygs=
-Date:   Mon, 17 Jun 2019 11:13:57 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: Re: [PATCH 1/3] x86/resctrl: Get max rmid and occupancy scale
- directly from CPUID instead of cpuinfo_x86
-Message-ID: <20190617091357.GF27127@zn.tnic>
-References: <1560705250-211820-1-git-send-email-fenghua.yu@intel.com>
- <1560705250-211820-2-git-send-email-fenghua.yu@intel.com>
- <alpine.DEB.2.21.1906162141301.1760@nanos.tec.linutronix.de>
- <20190617031808.GA214090@romley-ivt3.sc.intel.com>
- <20190617075214.GB27127@zn.tnic>
- <20190617080909.GC214090@romley-ivt3.sc.intel.com>
- <20190617083048.GE27127@zn.tnic>
- <20190617083502.GD214090@romley-ivt3.sc.intel.com>
+        Mon, 17 Jun 2019 05:15:41 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18626 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726753AbfFQJPl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:15:41 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 73CD570A31DEC0659387;
+        Mon, 17 Jun 2019 17:15:38 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS412-HUB.china.huawei.com (10.3.19.212) with Microsoft SMTP Server id
+ 14.3.439.0; Mon, 17 Jun 2019 17:15:29 +0800
+From:   Wei Yongjun <weiyongjun1@huawei.com>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>
+CC:     Wei Yongjun <weiyongjun1@huawei.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next v2] coresight: replicator: Add terminate entry for acpi_device_id tables
+Date:   Mon, 17 Jun 2019 09:22:53 +0000
+Message-ID: <20190617092253.167231-1-weiyongjun1@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190615104440.94149-1-weiyongjun1@huawei.com>
+References: <20190615104440.94149-1-weiyongjun1@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190617083502.GD214090@romley-ivt3.sc.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 01:35:02AM -0700, Fenghua Yu wrote:
-> Is this OK? Or the patch 0002 is unnecessary?
+Make sure acpi_device_id tables have terminate entry.
 
-One patch: carve out and move it where you think it should belong.
+Fixes: fe446287ec9f ("coresight: acpi: Support for platform devices")
+Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
+ drivers/hwtracing/coresight/coresight-replicator.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- 
-Regards/Gruss,
-    Boris.
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index 542952759941..b7d6d59d56db 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -300,6 +300,7 @@ static const struct of_device_id static_replicator_match[] = {
+ #ifdef CONFIG_ACPI
+ static const struct acpi_device_id static_replicator_acpi_ids[] = {
+ 	{"ARMHC985", 0}, /* ARM CoreSight Static Replicator */
++	{}
+ };
+ #endif
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+
+
