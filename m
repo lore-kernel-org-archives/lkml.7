@@ -2,104 +2,186 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22941C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9DAC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF000218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:05:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93EB121882
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="NGiJvBHc"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j2NCynJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726027AbfFQHFx (ORCPT
+        id S1726127AbfFQHHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:05:53 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:39872 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfFQHFx (ORCPT
+        Mon, 17 Jun 2019 03:07:46 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:16748 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725778AbfFQHHp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:05:53 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 31E9E2DC00DD;
-        Mon, 17 Jun 2019 03:05:50 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1560755150;
-        bh=TotXHfC7mkapkJQ2eQkYpljIPSR0AGxVy5++z04zxGQ=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=NGiJvBHcjG+CIJgh2IA052h5ANspPN8jd6fbOzhRCeYoBkvDtYW+xqsOtyM2owh+k
-         4I9pLIhjyYJt5cgWRd28JYXp0bTSacf9BS/6eJz79G4zkKDIgkw9/n0k8lHtFL3LYp
-         v6tzGJy8rz0AsiUeHmLRARxW04mbdQIaGytijoRJI+CsPgvLrNSlEWtF8+pQvi/FLC
-         q0pXW1PJbIhDE4w+Es0IRXymmb6XQY8I2CCHKSA0okkQJOroNpGsWvNPvzkkluzmSe
-         nI7bFZ3e2yV6m+5WsqT9A3jJepIOzW9z8JppoC0qktOWqNlBfmgSlBIWhb/PoN81MJ
-         JKgebF9nGgSxXHZsWCTsEeDnYxPk/FCZlReafmBAy4zMLzfAKV/09mSMxtjxVl3hbi
-         Iv4+6f6qw0YG+ODfXXtHDaPBQyac3wi6mHDBVabHjDUGlUpxQ/9oBxTIGVnSXjkcOr
-         TMZ2EN5AYJY6QToHs1sZLafhiOVj3hh66/5+qwuTIpzwKMGQgiJ5lWeiZBLgrWz4P5
-         EKcMctBcYaUoVyx6Fo4znLsXbgY2xD8wLUao2qjobGSSPvVBSrmKc0p6YuWv5cNS9X
-         JmmB1UF1DlY3K1Sj4QirQKVF2VopERlT4pcRhBeBhtPSbH2KloRI6VOS0aoo0bLBWT
-         qX8Q1bXR5rLneh8uTOVhd0rI=
-Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5H75Utj056973
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 17:05:46 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-Message-ID: <f1bad6f784efdd26508b858db46f0192a349c7a1.camel@d-silva.org>
-Subject: Re: [PATCH 5/5] mm/hotplug: export try_online_node
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Arun KS <arunks@codeaurora.org>, Qian Cai <cai@lca.pw>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Baoquan He <bhe@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Date:   Mon, 17 Jun 2019 17:05:30 +1000
-In-Reply-To: <20190617065921.GV3436@hirez.programming.kicks-ass.net>
-References: <20190617043635.13201-1-alastair@au1.ibm.com>
-         <20190617043635.13201-6-alastair@au1.ibm.com>
-         <20190617065921.GV3436@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Mon, 17 Jun 2019 03:07:45 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d073c400000>; Mon, 17 Jun 2019 00:07:44 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 00:07:43 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Mon, 17 Jun 2019 00:07:43 -0700
+Received: from [10.24.47.23] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
+ 2019 07:07:40 +0000
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
+        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
+        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
+References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
+ <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <20190613044352.GC9160@vkoul-mobl.Dlink>
+From:   Sameer Pujar <spujar@nvidia.com>
+Message-ID: <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
+Date:   Mon, 17 Jun 2019 12:37:37 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 17 Jun 2019 17:05:46 +1000 (AEST)
+In-Reply-To: <20190613044352.GC9160@vkoul-mobl.Dlink>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-GB
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560755264; bh=fQ5zngc9DCaICNEHs2kdSF0gET/YTvZczUqPlLXKJYA=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=j2NCynJopuXWCINkBGiy6gqLsgk3tZH3iRTvSzFQ5rAaoVXiF2zkvipMjtZQWIYXZ
+         dWSBEj8aGA2YMmTaRrCnhIkaB02LeWub16eCD11RoLLQ+uxIgzS48oX8Fd0+4aAysQ
+         uw1W2EKrvztVDrP5FWU1JuZF9z7r6oPVqzht/jyQbuAmff57wjpuR5yqzexSAL6n6B
+         FMW5+M+zac+K7BL5EkE0khippUr/GqLlLuHC+CbAfMuRaek4hex76B2m+QN8vUcc85
+         EYGPvsoLi/hmtp92XjXZHSTjR7pMdIZgqYPTKuHGM8lGiLVoeb7ktNRe+FUq38w+Lr
+         HIKBYwaIp/cnQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 08:59 +0200, Peter Zijlstra wrote:
-> On Mon, Jun 17, 2019 at 02:36:31PM +1000, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > If an external driver module supplies physical memory and needs to
-> > expose
-> 
-> Why would you ever want to allow a module to do such a thing?
-> 
 
-I'm working on a driver for Storage Class Memory, connected via an
-OpenCAPI link.
+On 6/13/2019 10:13 AM, Vinod Koul wrote:
+> On 06-06-19, 09:19, Sameer Pujar wrote:
+>
+>>> you are really going other way around about the whole picture. FWIW tha=
+t
+>>> is how *other* folks do audio with dmaengine!
+>> I discussed this internally with HW folks and below is the reason why DM=
+A
+>> needs
+>> to know FIFO size.
+>>
+>> - FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface=
+ to
+>> the audio sub-system.
+>> - ADMAIF has multiple channels and share FIFO buffer for individual
+>> operations. There is a provision
+>>  =C2=A0 to allocate specific fifo size for each individual ADMAIF channe=
+l from the
+>> shared buffer.
+>> - Tegra Audio DMA(ADMA) architecture is different from the usual DMA
+>> engines, which you described earlier.
+>> - The flow control logic is placed inside ADMA. Slave peripheral
+>> device(ADMAIF) signals ADMA whenever a
+>>  =C2=A0 read or write happens on the FIFO(per WORD basis). Please note t=
+hat the
+>> signaling is per channel. There is
+>>  =C2=A0 no other signaling present from ADMAIF to ADMA.
+>> - ADMA keeps a counter related to above signaling. Whenever a sufficient
+> when is signal triggered? When there is space available or some
+> threshold of space is reached?
+Signal is triggered when FIFO read/write happens on the peripheral side.=20
+In other words
+this happens when data is pushed/popped out of ADMAIF from/to one of the=20
+AHUB modules (I2S
+for example) This is on peripheral side and ADMAIF signals ADMA per WORD=20
+basis.
+ADMA <---(1. DMA transfers)---> ADMAIF <------ (2. FIFO read/write)=20
+------> I2S
+To be more clear ADMAIF signals ADMA when [2] happens.
 
-The memory is only usable once the card says it's OK to access it.
+FIFO_THRESHOLD field in ADMAIF is just to indicate when can ADMAIF do=20
+operation [2].
+Also please note FIFO_THRESHOLD field is present only for=20
+memory---->AHUB path (playback path)
+and there is no such threshold concept for AHUB----> memory path=20
+(capture path)
+>> space is available, it initiates a transfer.
+>>  =C2=A0 But the question is, how does it know when to transfer. This is =
+the
+>> reason, why ADMA has to be aware of FIFO
+>>  =C2=A0 depth of ADMAIF channel. Depending on the counters and FIFO dept=
+h, it
+>> knows exactly when a free space is available
+>>  =C2=A0 in the context of a specific channel. On ADMA, FIFO_SIZE is just=
+ a value
+>> which should match to actual FIFO_DEPTH/SIZE
+>>  =C2=A0 of ADMAIF channel.
+> That doesn't sound too different from typical dmaengine. To give an
+> example of a platform (and general DMAengine principles as well) I worked
+> on the FIFO was 16 word deep. DMA didn't knew!
+>
+> Peripheral driver would signal to DMA when a threshold is reached and
+No, In our case ADMAIF does not do any threshold based signalling to ADMA.
+> DMA would send a burst controlled by src/dst_burst_size. For example if
+> you have a FIFO with 16 words depth, typical burst_size would be 8 words
+> and peripheral will configure signalling for FIFO having 8 words, so
+> signal from peripheral will make dma transfer 8 words.
+The scenario is different in ADMA case, as ADMAIF cannot configure the
+signalling based on FIFO_THRESHOLD settings.
+>
+> Here the peripheral driver FIFO is important, but the driver
+> configures it and sets burst_size accordingly.
+>
+> So can you explain me what is the difference here that the peripheral
+> cannot configure and use burst size with passing fifo depth?
+Say for example FIFO_THRESHOLD is programmed as 16 WORDS, BURST_SIZE as=20
+8 WORDS.
+ADMAIF does not push data to AHUB(operation [2]) till threshold of 16=20
+WORDS is
+reached in ADMAIF FIFO. Hence 2 burst transfers are needed to reach the=20
+threshold.
+As mentioned earlier, threshold here is to just indicate when data=20
+transfer can happen
+to AHUB modules.
 
--- 
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva    
-Twitter: @EvilDeece
-blog: http://alastair.d-silva.org
-
-
+Once the data is popped from ADMAIF FIFO, ADMAIF signals ADMA. ADMA is=20
+the master
+and it keeps track of the buffer occupancy by knowing the FIFO_DEPTH and=20
+the signalling.
+Then finally it decides when to do next burst transfer depending on the=20
+free space
+available in ADMAIF.
+>> - Now consider two cases based on above logic,
+>>  =C2=A0 * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
+>>  =C2=A0=C2=A0=C2=A0 In this case, ADMA thinks that there is enough space=
+ available for
+>> transfer, when actually the FIFO data
+>>  =C2=A0=C2=A0=C2=A0 on slave is not consumed yet. It would result in OVE=
+RRUN.
+>>  =C2=A0 * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
+>>  =C2=A0=C2=A0=C2=A0 This is case where ADMA won=E2=80=99t transfer, even=
+ though sufficient space is
+>> available, resulting in UNDERRUN.
+>> - The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =3D
+>> SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
+>>  =C2=A0 way to communicate fifo size info to ADMA.
