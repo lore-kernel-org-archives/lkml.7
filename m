@@ -2,145 +2,158 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 865CFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C6E4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BDCB2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="AP9eqINZ"
+	by mail.kernel.org (Postfix) with ESMTP id E30482063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560807349;
+	bh=dvxxn4rysdrsxXAtrKY2Bdb2fzE5Pk706zOzmuoP2eA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=qpEPBRwtK802estbQ0LJoX7EuSG/aGagEJh29kiFMGcqgSnP3aEoi+13terXsMU5F
+	 goQLZTQAB1cRlr2USjUU5rHIkAuShm8Hhx5qxxyuKtDqZCNT5mt+FN1oPScTzKLwzF
+	 UDoUm/znuDvXwSWIV4h57ISDLHupy9HC4Tdvz2xk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729553AbfFQVWa (ORCPT
+        id S1729506AbfFQVfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:22:30 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:38018 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729527AbfFQVWZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:22:25 -0400
-Received: by mail-wm1-f67.google.com with SMTP id s15so901988wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 14:22:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TmAxRc5Ao15ufDfIpyVOarM24v8sriD2DFt+v+/KWs8=;
-        b=AP9eqINZr39hvjsQ/TSc9kqzZmxEst/Cs40Zx8C1pWL3K/ploASez5lUjyTP2D5cQm
-         ClADWsLajpphjVRYvYYbO3WaDBVywsDCN5Zr11KbOwq02iXK2HMMPjJochM82fCPPhv3
-         LzXfVYTbhmk6fhZFPVPI06zZwu3FRa07d+bVxj9Zj4XT58ggZVHk8fhpe8BY2jXHLw2f
-         WNbg+BRrVwOdcB3PMq8YbZjo04ByENHA/O+XgppEQgpxkRrse66OUGvSg/O6f5UmGQu+
-         TR5HiPEXDOM+7M+UqIhb/fcxmsepBUfzG+z8awdGoFJGt4JrnkeQ/eSkmnMCnJNLe7IH
-         Ckig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=TmAxRc5Ao15ufDfIpyVOarM24v8sriD2DFt+v+/KWs8=;
-        b=qmS7QefMzTvDXU0DaS/Eq7ODKBB+4wDmIhRjs+Akx4dPYDlnBYmg4sGfrScLYibwIs
-         O5GeWYOWW8/o4viDBsnwKkLsl3R0rzEmjAbuuBFkYKFUcwMUxhkFXiTjlUHrSWVZK9Dc
-         4Ab8u7MyPoxlbFJMJKWHypk+Q5zL9XA8++S8LqyCqeq0zufJEOq/dChs/FiHS8tNuFuB
-         i2ev2T6qBJWUbESuW5Yc6tHQ0+0IxE91o0MF06Im3JgyWq+yYYYQ6TwEe2QDtk0ZExAU
-         N3Km173X6guEinnmi99mZBIkW7T/pDVU3kt+317xSmV5eEQvxJOdBoGWbQfgLMHGs5sC
-         +YnA==
-X-Gm-Message-State: APjAAAUQXglb4OJ68DmsZcSFK1RPzaXm5E0lT0GHmEFvDz7s1yfHNyuZ
-        zMFgwSOhmOPGJNSqTqqjZQ75Rw==
-X-Google-Smtp-Source: APXvYqyg5EXyQIx5w7TwviJmLrfY1HyRUq/DFZ8ZsH7v6gi7rLdCxns1w21cpdGxRPv7bM1CRLWNOw==
-X-Received: by 2002:a1c:a842:: with SMTP id r63mr392815wme.117.1560806543320;
-        Mon, 17 Jun 2019 14:22:23 -0700 (PDT)
-Received: from localhost.localdomain ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id r131sm396216wmf.4.2019.06.17.14.22.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 14:22:22 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
-        ebiederm@xmission.com
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        Christian Brauner <christian@brauner.io>,
-        stable@vger.kernel.org
-Subject: [PATCH v1] fs/namespace: fix unprivileged mount propagation
-Date:   Mon, 17 Jun 2019 23:22:14 +0200
-Message-Id: <20190617212214.29868-1-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
+        Mon, 17 Jun 2019 17:35:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47174 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729547AbfFQVW3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:22:29 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABC9E20833;
+        Mon, 17 Jun 2019 21:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560806548;
+        bh=dvxxn4rysdrsxXAtrKY2Bdb2fzE5Pk706zOzmuoP2eA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TWHCoyQ7mpBCTKsXiVzi8fTLOmC0eWobV96SV1n7ECixdn0wDpeZ9CIDBsyfaLBTy
+         2xmypv6EsdBT+Fr1RpBkjIaPIbxv+VPpyLbfTpzovpJhbpCcb0/z6pXfikwce9LCS/
+         XH1ZhR9cOORZzUFTVuHeKRvUiF9k6hfophVrb1n8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 088/115] KVM: x86: do not spam dmesg with VMCS/VMCB dumps
+Date:   Mon, 17 Jun 2019 23:09:48 +0200
+Message-Id: <20190617210804.454133767@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
+References: <20190617210759.929316339@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When propagating mounts across mount namespaces owned by different user
-namespaces it is not possible anymore to move or umount the mount in the
-less privileged mount namespace.
+[ Upstream commit 6f2f84532c153d32a5e53b6083b06a3e24368d30 ]
 
-Here is a reproducer:
+Userspace can easily set up invalid processor state in such a way that
+dmesg will be filled with VMCS or VMCB dumps.  Disable this by default
+using a module parameter.
 
-  sudo mount -t tmpfs tmpfs /mnt
-  sudo --make-rshared /mnt
-
-  # create unprivileged user + mount namespace and preserve propagation
-  unshare -U -m --map-root --propagation=unchanged
-
-  # now change back to the original mount namespace in another terminal:
-  sudo mkdir /mnt/aaa
-  sudo mount -t tmpfs tmpfs /mnt/aaa
-
-  # now in the unprivileged user + mount namespace
-  mount --move /mnt/aaa /opt
-
-Unfortunately, this is a pretty big deal for userspace since this is
-e.g. used to inject mounts into running unprivileged containers.
-So this regression really needs to go away rather quickly.
-
-The problem is that a recent change falsely locked the root of the newly
-added mounts by setting MNT_LOCKED. Fix this by only locking the mounts
-on copy_mnt_ns() and not when adding a new mount.
-
-Fixes: 3bd045cc9c4b ("separate copying and locking mount tree on cross-userns copies")
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: <stable@vger.kernel.org>
-Tested-by: Christian Brauner <christian@brauner.io>
-Acked-by: Christian Brauner <christian@brauner.io>
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Christian Brauner <christian@brauner.io>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
-v1:
-- Christian Brauner <christian@brauner.io>:
-  - fix accidental whitespace change
----
- fs/namespace.c | 1 +
- fs/pnode.c     | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kvm/svm.c     |  9 ++++++++-
+ arch/x86/kvm/vmx/vmx.c | 26 +++++++++++++++++++-------
+ 2 files changed, 27 insertions(+), 8 deletions(-)
 
-diff --git a/fs/namespace.c b/fs/namespace.c
-index b26778bdc236..44b540e6feb9 100644
---- a/fs/namespace.c
-+++ b/fs/namespace.c
-@@ -2105,6 +2105,7 @@ static int attach_recursive_mnt(struct mount *source_mnt,
- 		/* Notice when we are propagating across user namespaces */
- 		if (child->mnt_parent->mnt_ns->user_ns != user_ns)
- 			lock_mnt_tree(child);
-+		child->mnt.mnt_flags &= ~MNT_LOCKED;
- 		commit_tree(child);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index ae6e51828a54..aa3b77acfbf9 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -379,6 +379,9 @@ module_param(vgif, int, 0444);
+ static int sev = IS_ENABLED(CONFIG_AMD_MEM_ENCRYPT_ACTIVE_BY_DEFAULT);
+ module_param(sev, int, 0444);
+ 
++static bool __read_mostly dump_invalid_vmcb = 0;
++module_param(dump_invalid_vmcb, bool, 0644);
++
+ static u8 rsm_ins_bytes[] = "\x0f\xaa";
+ 
+ static void svm_set_cr0(struct kvm_vcpu *vcpu, unsigned long cr0);
+@@ -4834,6 +4837,11 @@ static void dump_vmcb(struct kvm_vcpu *vcpu)
+ 	struct vmcb_control_area *control = &svm->vmcb->control;
+ 	struct vmcb_save_area *save = &svm->vmcb->save;
+ 
++	if (!dump_invalid_vmcb) {
++		pr_warn_ratelimited("set kvm_amd.dump_invalid_vmcb=1 to dump internal KVM state.\n");
++		return;
++	}
++
+ 	pr_err("VMCB Control Area:\n");
+ 	pr_err("%-20s%04x\n", "cr_read:", control->intercept_cr & 0xffff);
+ 	pr_err("%-20s%04x\n", "cr_write:", control->intercept_cr >> 16);
+@@ -4992,7 +5000,6 @@ static int handle_exit(struct kvm_vcpu *vcpu)
+ 		kvm_run->exit_reason = KVM_EXIT_FAIL_ENTRY;
+ 		kvm_run->fail_entry.hardware_entry_failure_reason
+ 			= svm->vmcb->control.exit_code;
+-		pr_err("KVM: FAILED VMRUN WITH VMCB:\n");
+ 		dump_vmcb(vcpu);
+ 		return 0;
  	}
- 	put_mountpoint(smp);
-diff --git a/fs/pnode.c b/fs/pnode.c
-index 595857a1883e..49f6d7ff2139 100644
---- a/fs/pnode.c
-+++ b/fs/pnode.c
-@@ -261,7 +261,6 @@ static int propagate_one(struct mount *m)
- 	child = copy_tree(last_source, last_source->mnt.mnt_root, type);
- 	if (IS_ERR(child))
- 		return PTR_ERR(child);
--	child->mnt.mnt_flags &= ~MNT_LOCKED;
- 	mnt_set_mountpoint(m, mp, child);
- 	last_dest = m;
- 	last_source = child;
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 2b4a3d32c511..cfb8f1ec9a0a 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -114,6 +114,9 @@ static u64 __read_mostly host_xss;
+ bool __read_mostly enable_pml = 1;
+ module_param_named(pml, enable_pml, bool, S_IRUGO);
+ 
++static bool __read_mostly dump_invalid_vmcs = 0;
++module_param(dump_invalid_vmcs, bool, 0644);
++
+ #define MSR_BITMAP_MODE_X2APIC		1
+ #define MSR_BITMAP_MODE_X2APIC_APICV	2
+ 
+@@ -5605,15 +5608,24 @@ static void vmx_dump_dtsel(char *name, uint32_t limit)
+ 
+ void dump_vmcs(void)
+ {
+-	u32 vmentry_ctl = vmcs_read32(VM_ENTRY_CONTROLS);
+-	u32 vmexit_ctl = vmcs_read32(VM_EXIT_CONTROLS);
+-	u32 cpu_based_exec_ctrl = vmcs_read32(CPU_BASED_VM_EXEC_CONTROL);
+-	u32 pin_based_exec_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
+-	u32 secondary_exec_control = 0;
+-	unsigned long cr4 = vmcs_readl(GUEST_CR4);
+-	u64 efer = vmcs_read64(GUEST_IA32_EFER);
++	u32 vmentry_ctl, vmexit_ctl;
++	u32 cpu_based_exec_ctrl, pin_based_exec_ctrl, secondary_exec_control;
++	unsigned long cr4;
++	u64 efer;
+ 	int i, n;
+ 
++	if (!dump_invalid_vmcs) {
++		pr_warn_ratelimited("set kvm_intel.dump_invalid_vmcs=1 to dump internal KVM state.\n");
++		return;
++	}
++
++	vmentry_ctl = vmcs_read32(VM_ENTRY_CONTROLS);
++	vmexit_ctl = vmcs_read32(VM_EXIT_CONTROLS);
++	cpu_based_exec_ctrl = vmcs_read32(CPU_BASED_VM_EXEC_CONTROL);
++	pin_based_exec_ctrl = vmcs_read32(PIN_BASED_VM_EXEC_CONTROL);
++	cr4 = vmcs_readl(GUEST_CR4);
++	efer = vmcs_read64(GUEST_IA32_EFER);
++	secondary_exec_control = 0;
+ 	if (cpu_has_secondary_exec_ctrls())
+ 		secondary_exec_control = vmcs_read32(SECONDARY_VM_EXEC_CONTROL);
+ 
 -- 
-2.21.0
+2.20.1
+
+
 
