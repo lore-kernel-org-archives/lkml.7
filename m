@@ -2,158 +2,107 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E5EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D84C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:25:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D0A720833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:24:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 678CA20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560785097;
-	bh=mbzGcLdVtTof6uHC+F2lTONtInASaRG1qfRK1rYkSno=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=oOavQhujQom1IsxXgZMp/5AQbYAIRq+FPFvO/MyjiFNzCAMpag0UtOnQUrHbl+GPx
-	 K2/s2zB0PYWaAiBU4KZsSg42HTi/qUnJQd9P+lVsy0wbJLKWJA04WmAd8LhO16Hr89
-	 rmGIsZ/r2EVByviiHcox1zIAm0AAbal/bJMSMZzY=
+	s=default; t=1560785120;
+	bh=AmfYV+pjj3qVlHielgPezv8awSw+bol8dvH1mYkefuw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1Re3gaApIXbG7uzAvWitZg8mH2TYWqmkJfQl7Sn3047v+PR2y/gkU33k6FavW0jhe
+	 VMbC3XyMVTqd7BKlMjMXL5GrJYUIKRHcacbcTJc8cz2UTM+F1twkqkLnDgMh5NB0Cy
+	 pvbwBDs1bNIGh/VHpmA+StFlLrMq7bAseKuru6oQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728632AbfFQPYw (ORCPT
+        id S1728653AbfFQPZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:24:52 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52062 "EHLO
+        Mon, 17 Jun 2019 11:25:19 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:52926 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfFQPYt (ORCPT
+        with ESMTP id S1726715AbfFQPZS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:24:49 -0400
+        Mon, 17 Jun 2019 11:25:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=FGYGt9gR3ov0mDYFBrKxZVHm7Q6JC8o022bDhrc2nks=; b=sgV9DYSdi17l
-        bXgPQR71kqZ1Os9L7ZHn5N9IsX02P/ySrrZgxuo+MoIm9RIp5y08NjpUhq+zGI8ImlMqPenYSlMYQ
-        cz80uDmUWQFmegcK2Vi3D+A3k3/5fl+tq0fEiSqOoCjGXUilWHh4kLYAadyIjpXrG9bJ91IkMHWri
-        4yOK8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NOy4r3sK5TQvgB754Cn8hFMYDa45Xa5S5aXrE6AfDIA=; b=XZyUDCvAuuquskuKRO9LvHdrh
+        d4N1PRm34V3AnEPhHk6fhVz0sLsIDvTS58+/Gu4oL4PzJyUzdSpOqdxKrE4oPSQ83I+LWbL8UbvSU
+        44sLHhpsObViKjnuaRT5JqSqAHBY/50JFwj8dRVK0ON/tt15steMMGENWhTjQ3rrnbepI=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hctUz-0001zj-Ll; Mon, 17 Jun 2019 15:24:45 +0000
+        id 1hctVT-00020M-1W; Mon, 17 Jun 2019 15:25:15 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 34116440046; Mon, 17 Jun 2019 16:24:45 +0100 (BST)
+        id 87DC8440046; Mon, 17 Jun 2019 16:25:14 +0100 (BST)
+Date:   Mon, 17 Jun 2019 16:25:14 +0100
 From:   Mark Brown <broonie@kernel.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, broonie@kernel.org,
-        devicetree@vger.kernel.org, lgirdwood@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, mark.rutland@arm.com,
-        robh+dt@kernel.org
-Subject: Applied "regulator: qcom_spmi: Refactor get_mode/set_mode" to the regulator tree
-In-Reply-To: <20190613212531.10452-2-jeffrey.l.hugo@gmail.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20190617152445.34116440046@finisterre.sirena.org.uk>
-Date:   Mon, 17 Jun 2019 16:24:45 +0100 (BST)
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/8] regulator: core: Parse max-spread value per
+ regulator couple
+Message-ID: <20190617152514.GY5316@sirena.org.uk>
+References: <20190603235904.19097-1-digetx@gmail.com>
+ <20190603235904.19097-3-digetx@gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="csti59zOqP8qx56L"
+Content-Disposition: inline
+In-Reply-To: <20190603235904.19097-3-digetx@gmail.com>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
 
-   regulator: qcom_spmi: Refactor get_mode/set_mode
+--csti59zOqP8qx56L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-has been applied to the regulator tree at
+On Tue, Jun 04, 2019 at 02:58:58AM +0300, Dmitry Osipenko wrote:
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.3
+> +#include <linux/regulator/driver.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/suspend.h>
+> =20
+> @@ -156,7 +157,7 @@ struct regulation_constraints {
+>  	int system_load;
+> =20
+>  	/* used for coupled regulators */
+> -	int max_spread;
+> +	int max_spread[MAX_COUPLED];
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+I'd rather move MAX_COUPLED into a separate header than include driver.h
+so we've got a bit more compile time sepration.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+--csti59zOqP8qx56L
+Content-Type: application/pgp-signature; name="signature.asc"
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
+-----BEGIN PGP SIGNATURE-----
 
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HsNkACgkQJNaLcl1U
+h9Ds0wf+Ow2WVLIAd7uSRuPgCkWfL5qPDrkNCdes2qVTogdzf+l0bEi2s7g36y4U
+UocF82di0IgOVQjkw4DbBTJNaDaF86PrH4+M3E7uE7egH9TW69S5wSwF13eQDxWx
+if3V5TMA7C5pW03WGvh59MRbaeTsthOaL5wnVX5gGV7osuWdUYkz/6RRpG4RASIs
+sGP+anp7dO/3VmX1Aq/h38OYLomU+0m0wW959jgdepTVnsaw86/BCesCvwc9M86k
+ki0BGR28baq+mLhvDsd17qWLwTgigeMBPmQuCEXNppizyGi3lmuUzuNiU12WtJ/n
++YVh9cmMrcndt259HzuYGB/QABYFTg==
+=evmc
+-----END PGP SIGNATURE-----
 
-Thanks,
-Mark
-
-From ba576a6232dc06605f4edfaeea9b526ba7724f84 Mon Sep 17 00:00:00 2001
-From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date: Thu, 13 Jun 2019 14:25:31 -0700
-Subject: [PATCH] regulator: qcom_spmi: Refactor get_mode/set_mode
-
-spmi_regulator_common_get_mode and spmi_regulator_common_set_mode use
-multi-level ifs which mirror a switch statement.  Refactor to use a switch
-statement to make the code flow more clear.
-
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/regulator/qcom_spmi-regulator.c | 26 +++++++++++++++++--------
- 1 file changed, 18 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-index 42c429d50743..1b3383a24c9d 100644
---- a/drivers/regulator/qcom_spmi-regulator.c
-+++ b/drivers/regulator/qcom_spmi-regulator.c
-@@ -911,13 +911,16 @@ static unsigned int spmi_regulator_common_get_mode(struct regulator_dev *rdev)
- 
- 	spmi_vreg_read(vreg, SPMI_COMMON_REG_MODE, &reg, 1);
- 
--	if (reg & SPMI_COMMON_MODE_HPM_MASK)
--		return REGULATOR_MODE_NORMAL;
-+	reg &= SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
- 
--	if (reg & SPMI_COMMON_MODE_AUTO_MASK)
-+	switch (reg) {
-+	case SPMI_COMMON_MODE_HPM_MASK:
-+		return REGULATOR_MODE_NORMAL;
-+	case SPMI_COMMON_MODE_AUTO_MASK:
- 		return REGULATOR_MODE_FAST;
--
--	return REGULATOR_MODE_IDLE;
-+	default:
-+		return REGULATOR_MODE_IDLE;
-+	}
- }
- 
- static int
-@@ -925,12 +928,19 @@ spmi_regulator_common_set_mode(struct regulator_dev *rdev, unsigned int mode)
- {
- 	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
- 	u8 mask = SPMI_COMMON_MODE_HPM_MASK | SPMI_COMMON_MODE_AUTO_MASK;
--	u8 val = 0;
-+	u8 val;
- 
--	if (mode == REGULATOR_MODE_NORMAL)
-+	switch (mode) {
-+	case REGULATOR_MODE_NORMAL:
- 		val = SPMI_COMMON_MODE_HPM_MASK;
--	else if (mode == REGULATOR_MODE_FAST)
-+		break;
-+	case REGULATOR_MODE_FAST:
- 		val = SPMI_COMMON_MODE_AUTO_MASK;
-+		break;
-+	default:
-+		val = 0;
-+		break;
-+	}
- 
- 	return spmi_vreg_update_bits(vreg, SPMI_COMMON_REG_MODE, val, mask);
- }
--- 
-2.20.1
-
+--csti59zOqP8qx56L--
