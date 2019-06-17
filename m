@@ -2,132 +2,146 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CEDC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93399C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:52:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BA7B2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6382F2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:52:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Oa1tNaR+"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="ZmPOJv+u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727421AbfFQKvr (ORCPT
+        id S1727642AbfFQKw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 06:51:47 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11531 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfFQKvr (ORCPT
+        Mon, 17 Jun 2019 06:52:56 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55603 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726174AbfFQKwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 06:51:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0770c30000>; Mon, 17 Jun 2019 03:51:47 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 17 Jun 2019 03:51:46 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 03:51:46 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
- 2019 10:51:45 +0000
-Subject: Re: [PATCH v2 3/6] clocksource/drivers/tegra: Set and use timer's
- period
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Joseph Lo <josephl@nvidia.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190610164400.11830-1-digetx@gmail.com>
- <20190610164400.11830-4-digetx@gmail.com>
- <ac8a1da8-9b82-3d5a-5fa6-0c1cc7f627f1@nvidia.com>
- <3e941c50-ac62-719e-aac1-7072e9a3bcd0@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <660f3645-3fa6-175c-75a6-3fcc79e972ad@nvidia.com>
-Date:   Mon, 17 Jun 2019 11:51:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 06:52:55 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a15so8728390wmj.5
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 03:52:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ZrGsAut7uTsx4N98mpJ5emxcDiHoXMt2HeuGIHuHDuY=;
+        b=ZmPOJv+uNeM7+bNBeQqLGswxWW9SMhfKnc014mIavxJdV79s0wjtcZT2VyUWK+UWrD
+         Movw97H2zsJ+JBlhl315a19BTQrUa1M7tC7Gn1UzYUsnywZm6KraZ77S5sjMvTlk+U8Z
+         LBfBBRYF8bxGvs2tbraE55QLhVFojz1qPLIU8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ZrGsAut7uTsx4N98mpJ5emxcDiHoXMt2HeuGIHuHDuY=;
+        b=O8JLxXIdEiPcvgaAB/lr/BJVNRQzjADLJcPhpHOogYyvhU42ueIopfvl9phYtbRlpu
+         WsIOX8G/Tm7AYW17o+CDzt9PsiZQK5t1+FLRYn1rQISRFmQfUR/dT9ndggHn6UlMsZIk
+         MpEEu0O6wOjEm4omWFpu7+d+f5Rfka9w5zFPLJ8DGlKZPplnKS0c5bIsNwheJxitbDRf
+         HDkUIGD0z+WCk2B38GW8FpGsGaYPP4nIGkvrHO3LYVn8KbtYTRqsp4dKpk47IIBDXdrA
+         wFBpP2eLBd+kh2UA/plhxbvT1y4XbV2dxXva/pNSEALND7xHkpUrxFWEvu17nTrsy/ZU
+         dpSw==
+X-Gm-Message-State: APjAAAUMAynr5EUiQZZIVzynvUi9ADyUX8fgDmtuvTmYeJ5ill+FKKF5
+        D//9ThXJeXXxrzBkgy9Awu1QbQ==
+X-Google-Smtp-Source: APXvYqxwU5akwxSHDxkkxP8iCz4MY4SSgr81eWPc6HIAiFo2nQ2pP4CVo+hHo0NsY+yWo6H1GCq6JQ==
+X-Received: by 2002:a1c:96c7:: with SMTP id y190mr16834836wmd.87.1560768773522;
+        Mon, 17 Jun 2019 03:52:53 -0700 (PDT)
+Received: from [10.176.68.244] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id y184sm9396231wmg.14.2019.06.17.03.52.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 03:52:52 -0700 (PDT)
+Subject: Re: [PATCH v4 5/5] brcmfmac: sdio: Don't tune while the card is off
+To:     Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     brcm80211-dev-list.pdl@broadcom.com,
+        linux-rockchip@lists.infradead.org,
+        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
+        linux-wireless@vger.kernel.org,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
+        Franky Lin <franky.lin@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20190613234153.59309-1-dianders@chromium.org>
+ <20190613234153.59309-6-dianders@chromium.org>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <f0dc6ef8-b339-8656-14d6-cf7c4e872b22@broadcom.com>
+Date:   Mon, 17 Jun 2019 12:52:51 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <3e941c50-ac62-719e-aac1-7072e9a3bcd0@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190613234153.59309-6-dianders@chromium.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560768707; bh=SgptNflpnXD1DnpgQHNTfQiFDVoOPgbP24o4RhvwUaA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Oa1tNaR+/D0beA/8ayKUethaiBYfObqF7GN9zyVeyEtQu4OX4ljLHte/5Dwd+uhXM
-         pWmtYHINoX9uN3b6lvyFD0IyCpATKOoS42ZnPt7w60VkWfZy5F06CMzlsWTZztEANY
-         ppeXPInYOjvBQ8jetFSykHBPZRSJJAw697CzmtmHoljopYLCiKrUsfYBAa9OXrqTb3
-         hhqKx+7ypz8TcJ+h/jb6RLKSZPDO9VjHT43p7kreJb2EHbTBS+J3FcNGTQ1SngoUOu
-         8jY6bpCxNriNPH9EZsm9vjtONxsQ5EvewgL/QtkLOIDDCSbIfhu9WeTdE0ue26J5SX
-         hDiAwYSPHvP1w==
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/14/2019 1:41 AM, Douglas Anderson wrote:
+> When Broadcom SDIO cards are idled they go to sleep and a whole
+> separate subsystem takes over their SDIO communication.  This is the
+> Always-On-Subsystem (AOS) and it can't handle tuning requests.
+> 
+> Specifically, as tested on rk3288-veyron-minnie (which reports having
+> BCM4354/1 in dmesg), if I force a retune in brcmf_sdio_kso_control()
+> when "on = 1" (aka we're transition from sleep to wake) by whacking:
+>    bus->sdiodev->func1->card->host->need_retune = 1
+> ...then I can often see tuning fail.  In this case dw_mmc reports "All
+> phases bad!").  Note that I don't get 100% failure, presumably because
+> sometimes the card itself has already transitioned away from the AOS
+> itself by the time we try to wake it up.  If I force retuning when "on
+> = 0" (AKA force retuning right before sending the command to go to
+> sleep) then retuning is always OK.
+> 
+> NOTE: we need _both_ this patch and the patch to avoid triggering
+> tuning due to CRC errors in the sleep/wake transition, AKA ("brcmfmac:
+> sdio: Disable auto-tuning around commands expected to fail").  Though
+> both patches handle issues with Broadcom's AOS, the problems are
+> distinct:
+> 1. We want to defer (but not ignore) asynchronous (like
+>     timer-requested) tuning requests till the card is awake.  However,
+>     we want to ignore CRC errors during the transition, we don't want
+>     to queue deferred tuning request.
+> 2. You could imagine that the AOS could implement retuning but we
+>     could still get errors while transitioning in and out of the AOS.
+>     Similarly you could imagine a seamless transition into and out of
+>     the AOS (with no CRC errors) even if the AOS couldn't handle
+>     tuning.
+> 
+> ALSO NOTE: presumably there is never a desperate need to retune in
+> order to wake up the card, since doing so is impossible.  Luckily the
+> only way the card can get into sleep state is if we had a good enough
+> tuning to send it a sleep command, so presumably that "good enough"
+> tuning is enough to wake us up, at least with a few retries.
 
-On 14/06/2019 17:45, Dmitry Osipenko wrote:
-> 14.06.2019 18:48, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 10/06/2019 17:43, Dmitry Osipenko wrote:
->>> The of_clk structure has a period field that is set up initially by
->>> timer_of_clk_init(), that period value need to be adjusted for a case o=
-f
->>> TIMER1-9 that are running at a fixed rate that doesn't match the clock'=
-s
->>> rate. Note that the period value is currently used only by some of the
->>> clocksource drivers internally and hence this is just a minor cleanup
->>> change that doesn't fix anything.
->>>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  drivers/clocksource/timer-tegra.c | 5 +++--
->>>  1 file changed, 3 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/ti=
-mer-tegra.c
->>> index 810b4e7435cf..646b3530c2d2 100644
->>> --- a/drivers/clocksource/timer-tegra.c
->>> +++ b/drivers/clocksource/timer-tegra.c
->>> @@ -71,9 +71,9 @@ static int tegra_timer_shutdown(struct clock_event_de=
-vice *evt)
->>>  static int tegra_timer_set_periodic(struct clock_event_device *evt)
->>>  {
->>>  	void __iomem *reg_base =3D timer_of_base(to_timer_of(evt));
->>> +	unsigned long period =3D timer_of_period(to_timer_of(evt));
->>> =20
->>> -	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER |
->>> -		       ((timer_of_rate(to_timer_of(evt)) / HZ) - 1),
->>> +	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER | (period - 1),
->>>  		       reg_base + TIMER_PTV);
->>> =20
->>>  	return 0;
->>> @@ -297,6 +297,7 @@ static int __init tegra_init_timer(struct device_no=
-de *np, bool tegra20,
->>>  		cpu_to->clkevt.rating =3D rating;
->>>  		cpu_to->clkevt.cpumask =3D cpumask_of(cpu);
->>>  		cpu_to->of_base.base =3D timer_reg_base + base;
->>> +		cpu_to->of_clk.period =3D DIV_ROUND_UP(rate, HZ);
->>
->> Any reason you made this a round-up?
->=20
-> That's what timer_of_clk_init() does, I assume it should be a more correc=
-t variant.
+The term "sleep command" is a bit confusing. There actually is a CMD14 
+defined in the eSD spec, but that is not what we are using (unless we 
+program the chip to do so) here. It is simply a specific register access 
+using CMD52.
 
-Sounds to me like this should be 2 patches, because you are changing the
-value. This is not just purely cleanup IMO.
+Apart from that....
 
-Jon
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
---=20
-nvpublic
+I think the stable version is mostly determined by change in MMC/SDIO so 
+4.18 as mentioned Adrian seems most sensible. bcm4354 support was 
+introduced in 3.14 and there were some earlier devices (4335) using same 
+sleep mechanism.
+
+Regards,
+Arend
