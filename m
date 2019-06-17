@@ -2,194 +2,98 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1EEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC5CC31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C2F2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SV7VogTP"
+	by mail.kernel.org (Postfix) with ESMTP id 270B72084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726956AbfFQSj1 (ORCPT
+        id S1727946AbfFQSjn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:39:27 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:42157 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfFQSj1 (ORCPT
+        Mon, 17 Jun 2019 14:39:43 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:35755 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfFQSjm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:39:27 -0400
-Received: by mail-vs1-f65.google.com with SMTP id 190so6820532vsf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 11:39:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HrHPxKrferT1JAd/MlzxZwSuGBA6gb0ENjpbrrRdk7w=;
-        b=SV7VogTP85EMqFS3Mzv6FQo/JuabZthZ0z2+w+f7x6cgdpjYwsindOdSBj6DYL7muZ
-         Ga32lSPxZzQMNTqIEKijrS3U0njBt8U1FGuYY4Bn4rgrKgquOm2fNDP7UUQXEBYolnJI
-         tn7JP7FeZbZ7RVkn3KRu0VDYevg8MpiDclJsfbC/y/ZrEIOggA73s9uvPuFHFS8yA2CC
-         heFrSIiAspsjbKU9EDZhdgXpre73gO+mIjJxiUOamg5k40ct/femc0WlL7O6TSLb3A4G
-         NRNKGp3iBcehgOVQvRCRA+xB8ZQD3fwNi1wkLzgmuBNRk4xNZhqIfi/sgaDYqDvi0YmT
-         6ceA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HrHPxKrferT1JAd/MlzxZwSuGBA6gb0ENjpbrrRdk7w=;
-        b=S2wfW4CWVAXe+ECEeZcHjXLGAWy8d5VAGjo4wNdGcWQnmzAZDuK51N8Eq2FR356Ct3
-         7zF0XsMhdfEw+bxRfxjJuVbfYV+6TeVHnqZR1rKCZlZN9o6sWD5fCmAYpbSFZ8YbJk4q
-         Lhb6TBi6v3P1u4qpfcwJq32f7BRQWB5Qs1rmZvkEJA7Yuq/MBu16oQr93Om3dhw4piAa
-         RONTtJfXvcKKWwsgi2RFGNZW7zscnmuIgMAxsw9kwwXxFkvMVYm+fpzXc+LOGLVhr0cm
-         s0zvS2r3LjxIYJ/3oGum6iztypABAqXDzlVU5g62+9NjWYBdH+lybp3Yzq4/GgV4D7Kh
-         BbLA==
-X-Gm-Message-State: APjAAAX9NWwNglEFn+anWg0wo34KwcYeXK8jjCENsIXmVlwib/598zq+
-        UtWToo6AT2VbuDG9590T8iF7qujIF2teJnL/gDz+0A==
-X-Google-Smtp-Source: APXvYqy0hy2tVDS6IPNJlT9E1K+7AzXLT3TMlyyG420beOQJMtebGkOnRtHj86zAn/Yfs7K2PHcRzwGpAQjwvWrfiXQ=
-X-Received: by 2002:a67:ee5b:: with SMTP id g27mr1171014vsp.165.1560796765659;
- Mon, 17 Jun 2019 11:39:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190617175653.21756-1-dianders@chromium.org>
-In-Reply-To: <20190617175653.21756-1-dianders@chromium.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 17 Jun 2019 20:38:49 +0200
-Message-ID: <CAPDyKFpaX6DSM_BjtghAHUf7qYCyEG+wMagXPUdgz3Eutovqfw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] brcmfmac: sdio: Deal better w/ transmission errors
- related to idle
-To:     Douglas Anderson <dianders@chromium.org>,
-        Kalle Valo <kvalo@codeaurora.org>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avri Altman <avri.altman@wdc.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 17 Jun 2019 14:39:42 -0400
+Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MKc0o-1hvYmm1ROO-00KvUQ; Mon, 17 Jun 2019 20:39:40 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        wsa@the-dreams.de, linux-gpio@vger.kernel.org,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH 1/3] include: linux: i2c: more helpers for declaring i2c drivers
+Date:   Mon, 17 Jun 2019 20:39:37 +0200
+Message-Id: <1560796779-17117-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:LNAGFFDSSGhrBJAVfAfdpZS3/d/gWgechh97rUsMMlo81oJiI31
+ H8SwkPnBK7lasHLpmX5/y50mEYh2o3n88GGUs0p+KHb3FmzIIeh3nSQZR7oqXRR6fFo2D80
+ mpyqat861/1S8USST1EKfXo0dsawOE0tgNb50Hlwy8Cw2r7b7XobktyLtfALDv4INcg1A/2
+ /PITBQ5p9pCcIC/tJ/vXA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xFB658LfSTA=:PoXhzmZr4oPSj16nxtRPl5
+ mUycdTT0pK945VaN81pKG6dLJu7IRYlgAkG5rMk4hkAXp/RVPXpS38JUztiE2OFzMRGYJhx0G
+ FdYP3NgSBfxCxM9CH2mYR7EoUqNyGeLNWCGcs9FmYh3IWzNBTQ3cj/3SwO79NOdoqJp3e9ir2
+ hIf8quAyjb6YHzCtVq5fhaQ2XA9nI6hVQOiVtp67geW/UMfBm1urLCiqLZXwHFuc5HqvjuADB
+ iQUqGl9lSXyRQ/N/sFJGPitT9vXekGa7zCrGmiB8bXPhtFQqBZKe1v+LxNANTPccTsL/IzuqT
+ 1WjxiOpN1yge1GACfsBm6dIL3euNqNYroF6+wmweRmZ1w8w5Au0BhVN0VYOWRMc4Yz/L4ERnI
+ jczN6rjB+WQWa0EdAefmxmkSULkCDKvIFXfbRIMi5E8u/r28i0gSlI+B6qhnHi8OCQ5JbHacm
+ l1qh8LWCNa4iu54sVARCmJbBCUVcOZU1KVN3JTSvcoGiWRibPC6/chr6m6WEuhn8N8bkBVwz7
+ YXcGJCdFG/cM6kzU063GILKduwgX6WuYC0U10+cJVGVYWo+8NQfxXkGNf266OWPrm6eteowyC
+ 32El8moHv+gHxzE8Ou4707JfCoW/YyHzn1JDekB8HKqmV7+6ya2WYpp8lGnPQN2rFxm6bVxc6
+ WF/KeCkUp5iLk13rEXfnZv0F3X67+3LTc+nf4NtYuNG41JXWZVlrhFMtcGZB4ByiPJNDEQKOr
+ lp1v2PQqHum5Ll80u+DZVx7WlQtxwVM8HQLkdA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019 at 19:57, Douglas Anderson <dianders@chromium.org> wrote:
->
-> This series attempts to deal better with the expected transmission
-> errors related to the idle states (handled by the Always-On-Subsystem
-> or AOS) on the SDIO-based WiFi on rk3288-veyron-minnie,
-> rk3288-veyron-speedy, and rk3288-veyron-mickey.
->
-> Some details about those errors can be found in
-> <https://crbug.com/960222>, but to summarize it here: if we try to
-> send the wakeup command to the WiFi card at the same time it has
-> decided to wake up itself then it will behave badly on the SDIO bus.
-> This can cause timeouts or CRC errors.
->
-> When I tested on 4.19 and 4.20 these CRC errors can be seen to cause
-> re-tuning.  Since I am currently developing on 4.19 this was the
-> original problem I attempted to solve.
->
-> On mainline it turns out that you don't see the retuning errors but
-> you see tons of spam about timeouts trying to wakeup from sleep.  I
-> tracked down the commit that was causing that and have partially
-> reverted it here.  I have no real knowledge about Broadcom WiFi, but
-> the commit that was causing problems sounds (from the descriptioin) to
-> be a hack commit penalizing all Broadcom WiFi users because of a bug
-> in a Cypress SD controller.  I will let others comment if this is
-> truly the case and, if so, what the right solution should be.
->
-> For v3 of this series I have added 2 patches to the end of the series
-> to address errors that would show up on systems with these same SDIO
-> WiFi cards when used on controllers that do periodic retuning.  These
-> systems need an extra fix to prevent the retuning from happening when
-> the card is asleep.
->
-> I believe v5 of this series is all ready to go assuming Kalle Valo is
-> good with it.  I've added after-the-cut notes to patches awaiting his
-> Ack and have added other tags collected so far.
->
-> Changes in v5:
-> - Add missing sdio_retune_crc_enable() in comments (Ulf).
-> - /s/reneable/re-enable (Ulf).
-> - Remove leftover prototypes: mmc_expect_errors_begin() / end() (Ulf).
-> - Rewording of "sleep command" in commit message (Arend).
->
-> Changes in v4:
-> - Moved to SDIO API only (Adrian, Ulf).
-> - Renamed to make it less generic, now retune_crc_disable (Ulf).
-> - Function header makes it clear host must be claimed (Ulf).
-> - No more WARN_ON (Ulf).
-> - Adjust to API rename (Adrian, Ulf).
-> - Moved retune hold/release to SDIO API (Adrian).
-> - Adjust to API rename (Adrian).
->
-> Changes in v3:
-> - Took out the spinlock since I believe this is all in one context.
-> - Expect errors for all of brcmf_sdio_kso_control() (Adrian).
-> - ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
-> - ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
->
-> Changes in v2:
-> - A full revert, not just a partial one (Arend).  ...with explicit Cc.
-> - Updated commit message to clarify based on discussion of v1.
->
-> Douglas Anderson (5):
->   Revert "brcmfmac: disable command decode in sdio_aos"
->   mmc: core: API to temporarily disable retuning for SDIO CRC errors
->   brcmfmac: sdio: Disable auto-tuning around commands expected to fail
->   mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
->   brcmfmac: sdio: Don't tune while the card is off
->
->  drivers/mmc/core/core.c                       |  5 +-
->  drivers/mmc/core/sdio_io.c                    | 77 +++++++++++++++++++
->  .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 ++--
->  include/linux/mmc/host.h                      |  1 +
->  include/linux/mmc/sdio_func.h                 |  6 ++
->  5 files changed, 99 insertions(+), 7 deletions(-)
->
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+From: Enrico Weigelt <info@metux.net>
 
-Applied for fixes, thanks!
+Add more helper macros for trivial driver init cases, similar to the
+already existing module_i2c_driver()+friends - now for those which
+are initialized at other stages (eg. by subsys_initcall()).
 
-Some minor changes:
-1) Dropped the a few "commit notes", that was more related to version
-and practical information about the series.
-2) Dropped fixes tags for patch 2->5, but instead put a stable tag
-targeted for v4.18+.
+This helps to further reduce driver init boilerplate.
 
-Awaiting an ack from Kalle before sending the PR to Linus.
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ include/linux/i2c.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-Kalle, perhaps you prefer to pick patch 1, as it could go separate.
-Then please tell - and/or if there is anything else you want me to
-change.
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index 1308126..fee59bd 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -920,6 +920,23 @@ static inline u8 i2c_8bit_addr_from_msg(const struct i2c_msg *msg)
+ #define builtin_i2c_driver(__i2c_driver) \
+ 	builtin_driver(__i2c_driver, i2c_add_driver)
+ 
++/* subsys_i2c_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces subsys_initcall() and module_exit()
++ */
++#define subsys_i2c_driver(__i2c_driver) \
++static int __init __i2c_driver##_init(void) \
++{ \
++       return i2c_add_driver(&(__i2c_driver)); \
++} \
++subsys_initcall(__i2c_driver##_init); \
++static void __exit __i2c_driver##_exit(void) \
++{ \
++       i2c_del_driver(&(__i2c_driver)); \
++} \
++module_exit(__i2c_driver##_exit);
++
+ #endif /* I2C */
+ 
+ #if IS_ENABLED(CONFIG_OF)
+-- 
+1.9.1
 
-Kind regards
-Uffe
