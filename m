@@ -2,198 +2,107 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04BD1C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:12:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABABEC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:15:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7266218E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:12:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560755539;
-	bh=auAmcgDb9/BI7xXD6SFrnCeWwfBK8vq66znDTU/qxiE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=DNKF84R1awef5wZEA96Awe7hHD5kdRQvY2MDXC7bnPNHoJy0mFhSAUSI20skAGHs8
-	 mr86e+A8XX7oYcGack8C5wF/fL/g3qWe68F4O3MR+WHte3ett9b/GXBkCXmB1d4R6M
-	 MNIh5f9iGNCGXB1DVhzfMecCaQgAXo2Nm+jh75B8=
+	by mail.kernel.org (Postfix) with ESMTP id 7A4FB21954
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:15:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PkNPQh9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726524AbfFQHMS (ORCPT
+        id S1726138AbfFQHPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:12:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfFQHMS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:12:18 -0400
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15848218EA;
-        Mon, 17 Jun 2019 07:12:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560755536;
-        bh=auAmcgDb9/BI7xXD6SFrnCeWwfBK8vq66znDTU/qxiE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Qs2uqqAu8v+vqQAIjksCHS2nPH9Zl4cZ+Ai0T1xtiD9snX6vO+jyYNN1d0e0gSq92
-         ILe9zqcpQL1wTn5pqSUWgIdYvGceHH+DhjfAkg9ezLxnrQyw9ZIEsEHnQmO1vj6Mfv
-         YYur0sZUvJzSPFlG2FUf9dKL3kAPlBNbkQaa7PDc=
-Received: by mail-lj1-f173.google.com with SMTP id t28so8182108lje.9;
-        Mon, 17 Jun 2019 00:12:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAXgsGofpJQvsq6vKf0/ODYJGNYSx8274opu8W4fXfu/G0cIS4Q1
-        MHWzS4iZj2CYrfdeJaWFVb8pdbsB7qDyOI7JjjI=
-X-Google-Smtp-Source: APXvYqxYdWi6u8+Af9xm4Ixw0NW9S2cn6fHEduei34f452pIJ4bgKmwQXZSGCJoSV5lYo97OVcCtb7ZtQ5e1o/emiPw=
-X-Received: by 2002:a2e:94c9:: with SMTP id r9mr12365447ljh.210.1560755534293;
- Mon, 17 Jun 2019 00:12:14 -0700 (PDT)
+        Mon, 17 Jun 2019 03:15:05 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51494 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfFQHPF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 03:15:05 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5H7F2sh045275;
+        Mon, 17 Jun 2019 02:15:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560755702;
+        bh=1KiWNol22bOYzL01WVy0sgNUkt47J5o6+/RPRsqVDlc=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=PkNPQh9JiJLF2L4LhcXUt2uveSVgOsls62y6XhwFUgsaf73c61j0d+CqocqP0Azz0
+         NvaLWILitMmJu2iR1EzjDfjE++A2q+fzBvcqvNWhzSCPgOSHSlaAaj9pTyW6xrfE/K
+         CRmB1SRUUj11VxGrT8fqYnapP/UZw4cXzm+Ps4SQ=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5H7F2SO123976
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Jun 2019 02:15:02 -0500
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
+ Jun 2019 02:15:02 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 17 Jun 2019 02:15:02 -0500
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5H7F0r4016991;
+        Mon, 17 Jun 2019 02:15:00 -0500
+Subject: Re: [GIT PULL] Immutable branch between MFD and Regulator due for the
+ v5.3 merge window
+To:     Lee Jones <lee.jones@linaro.org>
+CC:     <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-omap@vger.kernel.org>, <t-kristo@ti.com>
+References: <20190612144620.28331-1-j-keerthy@ti.com>
+ <20190617070341.GC16364@dell>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <2a3240e2-75f5-ef87-8fa7-0162a84fb590@ti.com>
+Date:   Mon, 17 Jun 2019 12:45:48 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190614163635.22413-1-enric.balletbo@collabora.com> <20190614163635.22413-11-enric.balletbo@collabora.com>
-In-Reply-To: <20190614163635.22413-11-enric.balletbo@collabora.com>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 17 Jun 2019 09:12:03 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPetaMmeQyZWVWRUSzbe1pKMweCpUx=phy8QowVQHTrdLA@mail.gmail.com>
-Message-ID: <CAJKOXPetaMmeQyZWVWRUSzbe1pKMweCpUx=phy8QowVQHTrdLA@mail.gmail.com>
-Subject: Re: [PATCH v2 10/10] arm/arm64: defconfig: Update configs to use the
- new CROS_EC options
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, gwendal@chromium.org,
-        Guenter Roeck <groeck@chromium.org>,
-        Benson Leung <bleung@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>, kernel@collabora.com,
-        dtor@chromium.org, Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Kukjin Kim <kgene@kernel.org>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        =?UTF-8?Q?Yannick_Fertr=C3=A9?= <yannick.fertre@st.com>,
-        Robert Jarzmik <robert.jarzmik@free.fr>,
-        Tony Lindgren <tony@atomide.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190617070341.GC16364@dell>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 18:37, Enric Balletbo i Serra
-<enric.balletbo@collabora.com> wrote:
->
-> Recently we refactored the CrOS EC drivers moving part of the code from
-> the MFD subsystem to the platform chrome subsystem. During this change
-> we needed to rename some config options, so, update the defconfigs
-> accordingly.
->
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-> ---
->
-> Changes in v2: None
->
->  arch/arm/configs/exynos_defconfig   | 4 +++-
->  arch/arm/configs/multi_v7_defconfig | 6 ++++--
->  arch/arm/configs/pxa_defconfig      | 4 +++-
->  arch/arm64/configs/defconfig        | 6 ++++--
->  4 files changed, 14 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/configs/exynos_defconfig b/arch/arm/configs/exynos_defconfig
-> index c95c54284da2..03448fba569f 100644
-> --- a/arch/arm/configs/exynos_defconfig
-> +++ b/arch/arm/configs/exynos_defconfig
-> @@ -154,7 +154,9 @@ CONFIG_CPU_THERMAL=y
->  CONFIG_THERMAL_EMULATION=y
->  CONFIG_WATCHDOG=y
->  CONFIG_S3C2410_WATCHDOG=y
-> -CONFIG_MFD_CROS_EC=y
-> +CONFIG_MFD_CROS_EC_DEV=y
-> +CONFIG_CHROME_PLATFORMS=y
-> +CONFIG_CROS_EC=y
->  CONFIG_CROS_EC_I2C=y
->  CONFIG_CROS_EC_SPI=y
->  CONFIG_MFD_MAX14577=y
-
-If you want to take it through mfd, arm-soc or other tree:
-For Exynos:
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Otherwise I could take exynos/multi_v7/arm64 changes but split per arm v7/v8.
-
-Best regards,
-Krzysztof
 
 
-> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-> index 6b748f214eae..9fe783abf3c5 100644
-> --- a/arch/arm/configs/multi_v7_defconfig
-> +++ b/arch/arm/configs/multi_v7_defconfig
-> @@ -510,10 +510,12 @@ CONFIG_MFD_BCM590XX=y
->  CONFIG_MFD_AC100=y
->  CONFIG_MFD_AXP20X_I2C=y
->  CONFIG_MFD_AXP20X_RSB=y
-> -CONFIG_MFD_CROS_EC=m
-> +CONFIG_MFD_CROS_EC_DEV=m
-> +CONFIG_CHROME_PLATFORMS=y
-> +CONFIG_CROS_EC=m
->  CONFIG_CROS_EC_I2C=m
->  CONFIG_CROS_EC_SPI=m
-> -CONFIG_MFD_CROS_EC_CHARDEV=m
-> +CONFIG_CROS_EC_CHARDEV=m
->  CONFIG_MFD_DA9063=m
->  CONFIG_MFD_MAX14577=y
->  CONFIG_MFD_MAX77686=y
-> diff --git a/arch/arm/configs/pxa_defconfig b/arch/arm/configs/pxa_defconfig
-> index 07ebbdce3645..e335b986cf70 100644
-> --- a/arch/arm/configs/pxa_defconfig
-> +++ b/arch/arm/configs/pxa_defconfig
-> @@ -394,7 +394,9 @@ CONFIG_SA1100_WATCHDOG=m
->  CONFIG_MFD_AS3711=y
->  CONFIG_MFD_BCM590XX=m
->  CONFIG_MFD_AXP20X=y
-> -CONFIG_MFD_CROS_EC=m
-> +CONFIG_MFD_CROS_EC_DEV=m
-> +CONFIG_CHROME_PLATFORMS=y
-> +CONFIG_CROS_EC=m
->  CONFIG_CROS_EC_I2C=m
->  CONFIG_CROS_EC_SPI=m
->  CONFIG_MFD_ASIC3=y
-> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> index 4d583514258c..b5bba5f04082 100644
-> --- a/arch/arm64/configs/defconfig
-> +++ b/arch/arm64/configs/defconfig
-> @@ -430,8 +430,7 @@ CONFIG_MFD_ALTERA_SYSMGR=y
->  CONFIG_MFD_BD9571MWV=y
->  CONFIG_MFD_AXP20X_I2C=y
->  CONFIG_MFD_AXP20X_RSB=y
-> -CONFIG_MFD_CROS_EC=y
-> -CONFIG_MFD_CROS_EC_CHARDEV=m
-> +CONFIG_MFD_CROS_EC_DEV=y
->  CONFIG_MFD_EXYNOS_LPASS=m
->  CONFIG_MFD_HI6421_PMIC=y
->  CONFIG_MFD_HI655X_PMIC=y
-> @@ -631,8 +630,11 @@ CONFIG_VIRTIO_BALLOON=y
->  CONFIG_VIRTIO_MMIO=y
->  CONFIG_XEN_GNTDEV=y
->  CONFIG_XEN_GRANT_DEV_ALLOC=y
-> +CONFIG_CHROME_PLATFORMS=y
-> +CONFIG_CROS_EC=y
->  CONFIG_CROS_EC_I2C=y
->  CONFIG_CROS_EC_SPI=y
-> +CONFIG_CROS_EC_CHARDEV=m
->  CONFIG_COMMON_CLK_RK808=y
->  CONFIG_COMMON_CLK_SCPI=y
->  CONFIG_COMMON_CLK_CS2000_CP=y
-> --
-> 2.20.1
->
+On 17/06/19 12:33 PM, Lee Jones wrote:
+> Enjoy!
+> 
+> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> 
+>    Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> 
+> are available in the Git repository at:
+> 
+>    git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v5.3
+> 
+> for you to fetch changes up to 7ee63bd74750a2c6fac31805ca0ac67f2522bfa5:
+> 
+>    regulator: lp87565: Add 4-phase lp87561 regulator support (2019-06-17 08:00:24 +0100)
+> 
+> ----------------------------------------------------------------
+> Immutable branch between MFD and Regulator due for the v5.3 merge window
+> 
+> ----------------------------------------------------------------
+> Keerthy (3):
+>        dt-bindings: mfd: lp87565: Add LP87561 configuration
+>        mfd: lp87565: Add support for 4-phase LP87561 combination
+>        regulator: lp87565: Add 4-phase lp87561 regulator support
+
+Thanks Lee Jones.
+
+> 
+>   Documentation/devicetree/bindings/mfd/lp87565.txt | 36 +++++++++++++++++++++++
+>   drivers/mfd/lp87565.c                             |  4 +++
+>   drivers/regulator/lp87565-regulator.c             | 17 ++++++++++-
+>   include/linux/mfd/lp87565.h                       |  2 ++
+>   4 files changed, 58 insertions(+), 1 deletion(-)
+> 
