@@ -2,141 +2,111 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68C02C31E59
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C9EEC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:35:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ECAE2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65AB92084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:35:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RWJWHyg5";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZvuoDROJ"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="LbaodTzM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727294AbfFQKf2 (ORCPT
+        id S1727658AbfFQKf4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 06:35:28 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55274 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfFQKf2 (ORCPT
+        Mon, 17 Jun 2019 06:35:56 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42181 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFQKfy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 06:35:28 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6844560770; Mon, 17 Jun 2019 10:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560767726;
-        bh=aTWPLJInIlt+CJHFbSDhIUEcaDKLsK68r/oR8Ij464E=;
-        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
-        b=RWJWHyg5ajnUDWx6bqjdQWb5CFqmzzeGIxaUpsbTUD5vg2R2qoPEUZkA0tpmbgkCT
-         ujf4B+swG6f6puziwEnGFoS70PAr3ZCJ8bacv6elOJFxupLlqhe0oIHdeMD+2jiIgY
-         ihsNWxPR/dXaV2556ke9HfFzD2bwAZq9kWe8cXSo=
-Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 31BE960237;
-        Mon, 17 Jun 2019 10:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560767725;
-        bh=aTWPLJInIlt+CJHFbSDhIUEcaDKLsK68r/oR8Ij464E=;
-        h=Subject:To:References:Cc:From:Date:In-Reply-To:From;
-        b=ZvuoDROJl7O9qCSp1Wns+yGOQBhfgx/WauQTdhK8Q8Etxrnbua9QqiuamUTSv+mAr
-         5Sm4IToZDX/erfRH5BYpwh1sw5tzJdrHDtpymI/j7eWkn0HIHFFeVJNM3J65buu3hE
-         Rnpy625qZG/7MJ510us7aKWr6ToPpAgakJjJS1uA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 31BE960237
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: Fwd: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
-To:     Stephen Boyd <sboyd@kernel.org>, tengfeif@codeaurora.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        bjorn.andersson@linaro.org
-References: <20190611185102.368ED21744@mail.kernel.org>
- <671f87d6-f4a4-6d2c-967b-e1aa0677d83e@codeaurora.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, sramana@codeaurora.org
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
-Date:   Mon, 17 Jun 2019 16:05:19 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 17 Jun 2019 06:35:54 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x17so9345720wrl.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 03:35:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=LdLD6/GLnt8m3EwyYjIGs7rafDrtX5c/RGMl/GKKl8o=;
+        b=LbaodTzMAL8u12y2crGYXzc5LcEcD4olP+PnKNNkq1Ry/FFWYTKTvPDF4uTM6VXEOO
+         Ok3b/58sc2ip+falSZ1Temq/KsMze8wnfJQLOklfCX2iBleXVj0ObJ1h1Mgls5NXnna/
+         SQSig9XOK4T0+hyMOxF8Xhmr/+4C1XqzOEM24=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=LdLD6/GLnt8m3EwyYjIGs7rafDrtX5c/RGMl/GKKl8o=;
+        b=ZPveAdI77QBydVgk4ALqPFnI6T8d8VfC/JIhUFZkhdNm7ht6sqUTecLnA/RLOWYMjQ
+         GM3VlIid8P8bnC0A1B26pX7BOrzLQkCciVwxfDW0AodAloXPJ3yppwzfL9QrHdttj5A3
+         5QIoC5QPuTE+ZbC0eAVAhU7nNtbFmBUoq6ynhin7Ibw1Wc5pnjzN4nMOowfAw6ylKqG2
+         vtk4SYsVm5mCoXtta3XPIkKyJVkyMhGLwAZEXWcHzEhUnfeH6K4nZG5jZ9BoxmsNkcLo
+         1N2mRvxv17SVh4ZPW8M6HEdm6Q/Rci0ljLZBmob78SDC8dbGCvVKzuzvRe2ScH4XY7lN
+         bFzQ==
+X-Gm-Message-State: APjAAAXqYwETflHE5uF8kli67PPdlZZn+BlstKOlzaj+l/8AE/at5DkQ
+        g/5wSS6eWMB3cs9IkOQaabv3WQ==
+X-Google-Smtp-Source: APXvYqzFFb4lC949Z60IWxorsffQZyTfPYve5pAYlHt07baOm8aNcHW8hBKNaqDa+JDSAIdRNBcnyw==
+X-Received: by 2002:adf:f84f:: with SMTP id d15mr75042119wrq.53.1560767752500;
+        Mon, 17 Jun 2019 03:35:52 -0700 (PDT)
+Received: from [10.176.68.244] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id p140sm3887001wme.31.2019.06.17.03.35.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 03:35:51 -0700 (PDT)
+Subject: Re: [PATCH v4 3/5] brcmfmac: sdio: Disable auto-tuning around
+ commands expected to fail
+To:     Douglas Anderson <dianders@chromium.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Adrian Hunter <adrian.hunter@intel.com>
+Cc:     brcm80211-dev-list.pdl@broadcom.com,
+        linux-rockchip@lists.infradead.org,
+        Double Lo <double.lo@cypress.com>, briannorris@chromium.org,
+        linux-wireless@vger.kernel.org,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>, mka@chromium.org,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev@vger.kernel.org, brcm80211-dev-list@cypress.com,
+        Hans de Goede <hdegoede@redhat.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        linux-kernel@vger.kernel.org,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+References: <20190613234153.59309-1-dianders@chromium.org>
+ <20190613234153.59309-4-dianders@chromium.org>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <be97a37a-d81b-5756-7a97-418d9b36a381@broadcom.com>
+Date:   Mon, 17 Jun 2019 12:35:50 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <671f87d6-f4a4-6d2c-967b-e1aa0677d83e@codeaurora.org>
+In-Reply-To: <20190613234153.59309-4-dianders@chromium.org>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/14/2019 1:41 AM, Douglas Anderson wrote:
+> There are certain cases, notably when transitioning between sleep and
+> active state, when Broadcom SDIO WiFi cards will produce errors on the
+> SDIO bus.  This is evident from the source code where you can see that
+> we try commands in a loop until we either get success or we've tried
+> too many times.  The comment in the code reinforces this by saying
+> "just one write attempt may fail"
+> 
+> Unfortunately these failures sometimes end up causing an "-EILSEQ"
+> back to the core which triggers a retuning of the SDIO card and that
+> blocks all traffic to the card until it's done.
+> 
+> Let's disable retuning around the commands we expect might fail.
+> 
+> Fixes: bd11e8bd03ca ("mmc: core: Flag re-tuning is needed on CRC errors")
 
-> Quoting tengfeif@codeaurora.org (2019-06-11 03:41:26)
->> On 2019-06-10 22:51, Stephen Boyd wrote:
->> > Quoting Linus Walleij (2019-06-07 14:08:10)
->> >> On Fri, May 31, 2019 at 8:52 AM Tengfei Fan 
->> <tengfeif@codeaurora.org> >> wrote:
->> >> >> > The gpio interrupt status bit is getting set after the
->> >> > irq is disabled and causing an immediate interrupt after
->> >> > enablling the irq, so clear status bit on irq_unmask.
->> >> >
->> >> > Signed-off-by: Tengfei Fan <tengfeif@codeaurora.org>
->> >> >> This looks pretty serious, can one of the Qcom maintainers ACK
->> >> this?
->> >> >> Should it be sent to fixes and even stable?
->> >> >> Fixes: tag?
->> >> > > How is the interrupt status bit getting set after the irq is 
->> disabled?
->> > It looks like this is a level type interrupt? I thought that after
->> > commit b55326dc969e ("pinctrl: msm: Really mask level interrupts to
->> > prevent latching") this wouldn't be a problem. Am I wrong, or is qcom
->> > just clearing out patches on drivers and this is the last one that 
->> > needs
->> > to be upstreamed?
->>
->> Your patch(commit b55326dc969e) can cover our issue, and my patch is 
->> no longer needed.
->> Your patch isn't included in our code, so I submitted this patch.
->
-> Alright cool. Sounds like this patch can be dropped then and you can
-> pick up the patch from upstream into your vendor kernel.
->
-
-Hi Stephen, there is one use case with is not covered by commit 
-b55326dc969e (
-
-"pinctrl: msm: Really mask level interrupts to prevent latching"). That 
-happens when
-
-gpio line is toggled between i/o mode and interrupt mode :
-
-1. GPIO is configured as irq line. Peripheral raises interrupt.
-
-2. IRQ handler runs and disables the irq line (through wq work).
-
-3. GPIO is configured for input and and data is received from the 
-peripheral.
-
-4. Now, when GPIO is re-enabled as irq, we see spurious irq, and there 
-isn't
-
-any data received on the gpio line, when it is read back after 
-configuring as input.
-
-This can happen for both edge and level interrupts.
-
-Patch https://lkml.org/lkml/2019/6/17/226 tries to cover this use case. 
-Can you please
-
-provide your comments?
-
-
-Thanks
-
-Neeraj
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
-
+Reviewed-by: Arend van Spriel <arend.vanspriel@broadcom.com>
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
