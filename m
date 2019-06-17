@@ -2,103 +2,167 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B127C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:27:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 130B5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:28:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 147EA2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:27:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D054E2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:28:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jLrmxlt5"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="Vg1bqXLb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729064AbfFQT1c (ORCPT
+        id S1727672AbfFQT21 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:27:32 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36731 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726357AbfFQT1b (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:27:31 -0400
-Received: by mail-io1-f66.google.com with SMTP id h6so23931561ioh.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 12:27:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=d9Oc7ZhRD3F3wXh7rQZIFZBIqOJRb70vgbqk6ZylyKs=;
-        b=jLrmxlt5HekviTDg4h9uqSmRgH3b0TRYfXS0MLnsFWdqKx4w7TePcVbPdyGajBZ5T7
-         E0/MgkfLKKRFYdi4U/7cMNAC/5BD62ZV7jZDA3ZIlvdPLYG+lUq17VnbFRFmKcxBuijW
-         b98VN0Hvx3L/bguKSJU68ZIk28pnHD1YfpnuGcqvMJVT80TFJybKvwSDGmg/WTMGyb5E
-         MJajgGG46mMfU5JzBy1BUM19j9gCBKCe7x7XgYhEzhlzBEn1hybyqb59cTV/qpUDXiVo
-         QB+ZGIrZuE5tY8P3wtvgueICm2JuGumEi96mvV4Ojoc6WIJs30xltebpiZh+JwiyMFDM
-         ySEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=d9Oc7ZhRD3F3wXh7rQZIFZBIqOJRb70vgbqk6ZylyKs=;
-        b=DUMweHcOZiMbM5dnk2hnQ0dNm90SLLVPqHEdHgL74VWgUNhDlpXpb9jh3b854pH12A
-         VrcM+1A2rYFWopqdZuxR5g59gDTBZinLAmZ2G7Jp5GE16LezanjA8PMMoMWNjS72Ib55
-         Ohi9bH+T97BBJ1k+GABfyD/73xL4GmXLJgwKVfuv2kv1xlSF18NYthSCtX8zTKgUdYQ0
-         FxtTrXsJpxuj4uc+3Q0ud/DRqrU0G0JoYQMoYTeT8t4hCWkkOs8fDtCHfpR4QaLm+R6j
-         QJUFRSsvvz4Ik/3AZIdC3/8VETbUmpfIPW2l+ArI1R0Ja7+yfSuNzyQ2aLv1DRRXBPdt
-         JLjA==
-X-Gm-Message-State: APjAAAVm/39NHAfjMs2f6jRTYWqcbcWecnuXANwYNdtl1JjBGUk4y2V0
-        cKRbEAElodyTe1HVaLDtLdr9LL867s//jwQ56vnbLg==
-X-Google-Smtp-Source: APXvYqwqAHJMpEIe+s+0XLSNvUalfFg//jHiamKU+Pa2/iD933a4OCsuMlXY4LBxYgwVV/deZOGHC6idGCgYYa5QioY=
-X-Received: by 2002:a5d:9613:: with SMTP id w19mr10341810iol.140.1560799650660;
- Mon, 17 Jun 2019 12:27:30 -0700 (PDT)
+        Mon, 17 Jun 2019 15:28:27 -0400
+Received: from mail-eopbgr780139.outbound.protection.outlook.com ([40.107.78.139]:54448
+        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726357AbfFQT20 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:28:26 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=ANxR3xDov/xIub1BTLnNc00bqpbMfLig6kOn36xmKyXi8jKRhQIEbcXA9dtEQEvohy63sRCfVzZ1XjBsua8SbBiw07RHqkImif1V4nJ2Kn6YmPlHvKJwLKWieMqFRL5JKEPm5q8gDpY9TVpWjX5R/nGNhBI6WdpBNtjbjjy4osA=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AgAptR3DM0iiC7slJUXaX+ofdmaisgM/VUpTuRkaEiA=;
+ b=d1KGLpXSc1CpufEZBb1XsNchNZdpEG8dpIqaX1UR2IF7/ozYXFjKuMRyvIjMwOKJGVwVw5514qBIkzPi8o484Qw+GQDBvqq20en0ter0Bqtm7WkNGWWqJQoXvkeWkMhi72Y2/x1eid1OhPVfz/Cw//Uatz6pq7bCMLoY2+c4DPQ=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=AgAptR3DM0iiC7slJUXaX+ofdmaisgM/VUpTuRkaEiA=;
+ b=Vg1bqXLbJnS2yqHNDfuCUNEp1xmPZB+rVIZijyhjEVBOErOwpfzMk2O9p22sRpqAF4m3pRs7GJZDRFYCyHLPQxlGK5Dv2ozl+b9Y7zzETHAsnMDoGRu7e5MfNEZXSuRt2ksDr/nZTYn6Ym4lbEvG0+D9GNWyXzBOdKwFyF2XzE0=
+Received: from MW2PR2101MB1116.namprd21.prod.outlook.com (2603:10b6:302:a::33)
+ by MW2PR2101MB1114.namprd21.prod.outlook.com (2603:10b6:302:a::31) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.2; Mon, 17 Jun
+ 2019 19:27:45 +0000
+Received: from MW2PR2101MB1116.namprd21.prod.outlook.com
+ ([fe80::a1f6:c002:82ba:ad47]) by MW2PR2101MB1116.namprd21.prod.outlook.com
+ ([fe80::a1f6:c002:82ba:ad47%9]) with mapi id 15.20.2008.007; Mon, 17 Jun 2019
+ 19:27:45 +0000
+From:   Sunil Muthuswamy <sunilmut@microsoft.com>
+To:     David Miller <davem@davemloft.net>
+CC:     Dexuan Cui <decui@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH net] hvsock: fix epollout hang from race condition
+Thread-Topic: [PATCH net] hvsock: fix epollout hang from race condition
+Thread-Index: AdUhY/kd1+XRZykcRS6vcxcYhC9DaQBvCbgAAAJcZAAAVwongAAsXmzAAAHItoAAAQ9BAA==
+Date:   Mon, 17 Jun 2019 19:27:45 +0000
+Message-ID: <MW2PR2101MB11168BA3D46BEC843D694E04C0EB0@MW2PR2101MB1116.namprd21.prod.outlook.com>
+References: <PU1P153MB0169BACDA500F94910849770BFE90@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        <20190616.135445.822152500838073831.davem@davemloft.net>
+        <MW2PR2101MB111697FDA0BEDA81237FECB3C0EB0@MW2PR2101MB1116.namprd21.prod.outlook.com>
+ <20190617.115615.91633577273679753.davem@davemloft.net>
+In-Reply-To: <20190617.115615.91633577273679753.davem@davemloft.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=sunilmut@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:3:8d7e:cb94:2f88:ec90]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b4b566a5-79e4-4304-b42b-08d6f359dfc3
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:MW2PR2101MB1114;
+x-ms-traffictypediagnostic: MW2PR2101MB1114:
+x-microsoft-antispam-prvs: <MW2PR2101MB11143926C3BE9132F79F6ADFC0EB0@MW2PR2101MB1114.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0071BFA85B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(376002)(39860400002)(366004)(396003)(346002)(189003)(199004)(13464003)(8676002)(81156014)(81166006)(8936002)(316002)(22452003)(478600001)(305945005)(7736002)(10090500001)(68736007)(6116002)(99286004)(52396003)(7696005)(6916009)(8990500004)(54906003)(76176011)(53546011)(102836004)(10290500003)(6506007)(14454004)(66446008)(73956011)(66946007)(64756008)(66476007)(66556008)(6246003)(5660300002)(229853002)(52536014)(33656002)(4326008)(76116006)(53936002)(46003)(25786009)(2906002)(74316002)(71190400001)(71200400001)(86362001)(9686003)(55016002)(476003)(486006)(6436002)(446003)(11346002)(256004)(14444005)(186003);DIR:OUT;SFP:1102;SCL:1;SRVR:MW2PR2101MB1114;H:MW2PR2101MB1116.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: UIPb1xRk/01q2kXGlJ43B1UplM2CAZQG8eMElPKMkNTGyBaHyfV/ZxExK05hRpAG9wCiasj/9Jt6A/s233u73MX+McICbahIemlcMTuKOAnmC7RDVhfssZReG3jvsfsRVPF8OosHRfSBr3qY7GklUHHWujYkoDS6K2ewwa0OyPdbIOBONiVpX7ektB0pcjTewTBAltEuhNtU9V82zLQ3syGRDDPw4ZbTpVPI0V3nn8JL9H2Mzru6cNaNqVKWzbTQCA0+tt48yFv7aYthOWtNDv+PtD8W05R+HKVoQF7YcHBBH6QVdtY1bgParRK8U+AszyiIyq1aSh/+Uqiwg/rtKpFtOTyqvpplquLdqKbObo2MQxINeDdymRXizxChWqFdhqkQ73IYbHi8Nix0E3VGWeK1XyezicXCnztYdUUMkq4=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190613065815.GF16334@mwanda>
-In-Reply-To: <20190613065815.GF16334@mwanda>
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-Date:   Mon, 17 Jun 2019 13:27:19 -0600
-Message-ID: <CANLsYkxnze-aJXwr6ogR_AjcXefjufgOnwgqnX0vVtkzkzAsVw@mail.gmail.com>
-Subject: Re: [PATCH] coresight: potential uninitialized variable in probe()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b4b566a5-79e4-4304-b42b-08d6f359dfc3
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2019 19:27:45.0458
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sunilmut@ntdev.microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW2PR2101MB1114
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 13 Jun 2019 at 00:59, Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> The "drvdata->atclk" clock is optional, but if it gets set to an error
-> pointer then we're accidentally return an uninitialized variable instead
-> of success.
->
-> Fixes: 78e6427b4e7b ("coresight: funnel: Support static funnel")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/hwtracing/coresight/coresight-funnel.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-funnel.c b/drivers/hwtracing/coresight/coresight-funnel.c
-> index 5867fcb4503b..fa97cb9ab4f9 100644
-> --- a/drivers/hwtracing/coresight/coresight-funnel.c
-> +++ b/drivers/hwtracing/coresight/coresight-funnel.c
-> @@ -244,6 +244,7 @@ static int funnel_probe(struct device *dev, struct resource *res)
->         }
->
->         pm_runtime_put(dev);
-> +       ret = 0;
 
-Applied - thanks.
 
->
->  out_disable_clk:
->         if (ret && !IS_ERR_OR_NULL(drvdata->atclk))
-> --
-> 2.20.1
->
+> -----Original Message-----
+> From: David Miller <davem@davemloft.net>
+> Sent: Monday, June 17, 2019 11:56 AM
+> To: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Cc: Dexuan Cui <decui@microsoft.com>; KY Srinivasan <kys@microsoft.com>; =
+Haiyang Zhang <haiyangz@microsoft.com>; Stephen
+> Hemminger <sthemmin@microsoft.com>; sashal@kernel.org; Michael Kelley <mi=
+kelley@microsoft.com>; netdev@vger.kernel.org;
+> linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: Re: [PATCH net] hvsock: fix epollout hang from race condition
+>=20
+> From: Sunil Muthuswamy <sunilmut@microsoft.com>
+> Date: Mon, 17 Jun 2019 18:47:08 +0000
+>=20
+> >
+> >
+> >> -----Original Message-----
+> >> From: linux-hyperv-owner@vger.kernel.org <linux-hyperv-owner@vger.kern=
+el.org> On Behalf Of David Miller
+> >> Sent: Sunday, June 16, 2019 1:55 PM
+> >> To: Dexuan Cui <decui@microsoft.com>
+> >> Cc: Sunil Muthuswamy <sunilmut@microsoft.com>; KY Srinivasan <kys@micr=
+osoft.com>; Haiyang Zhang
+> <haiyangz@microsoft.com>;
+> >> Stephen Hemminger <sthemmin@microsoft.com>; sashal@kernel.org; Michael=
+ Kelley <mikelley@microsoft.com>;
+> >> netdev@vger.kernel.org; linux-hyperv@vger.kernel.org; linux-kernel@vge=
+r.kernel.org
+> >> Subject: Re: [PATCH net] hvsock: fix epollout hang from race condition
+> >>
+> >> From: Dexuan Cui <decui@microsoft.com>
+> >> Date: Sat, 15 Jun 2019 03:22:32 +0000
+> >>
+> >> > These warnings are not introduced by this patch from Sunil.
+> >> >
+> >> > I'm not sure why I didn't notice these warnings before.
+> >> > Probably my gcc version is not new eought?
+> >> >
+> >> > Actually these warnings are bogus, as I checked the related function=
+s,
+> >> > which may confuse the compiler's static analysis.
+> >> >
+> >> > I'm going to make a patch to initialize the pointers to NULL to supp=
+ress
+> >> > the warnings. My patch will be based on the latest's net.git + this =
+patch
+> >> > from Sunil.
+> >>
+> >> Sunil should then resubmit his patch against something that has the
+> >> warning suppression patch applied.
+> >
+> > David, Dexuan's patch to suppress the warnings seems to be applied now
+> > to the 'net' branch. Can we please get this patch applied as well?
+>=20
+> I don't know how else to say "Suni should then resubmit his patch"
+>=20
+> Please just resubmit it!
+
+The patch does not change at all. So, I was hoping we could reapply it. But=
+, I have
+resubmitted the patch. Thanks.
