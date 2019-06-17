@@ -2,53 +2,56 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B6C6C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33C5FC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB60204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07F9D204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:31:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807076;
-	bh=eoircKri8yZq6TBBlqggoJktGga+3JD24JCOXyw7Q5Y=;
+	s=default; t=1560807090;
+	bh=4EQFF575OSksr+Czwy7Daf1KcxUt6KdPuAr8LL/g0+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cVpBhLF2xyVECYed202CvnFj388g5wnMZLnWCtGwYjWnLGMeJjxManx7NV2/0maRt
-	 RV0VhQr4JaPNRiE5HXwmMLY7pPSsDmWXJBGCdPmustf0W93i3o3bZCcJb3cLiX43ac
-	 6GOFflFGL6ex4Eq+ghCge6mloIJrHNOoQGkzFL5s=
+	b=TCeXxSTkrdp/F1Rt6WRuNw62Poo6x/CpihGSCybXaR80BYUQ30pPKw9N24pmVrzkH
+	 Y6jarAK1u24Aq1FUwXPfGd/jDFhabxJHS04x0UIGhJrwmqF67AXNwZ3RJNqe3D8M7u
+	 nYezJgN8LWKLSLa37jIiD6owhxX50W9GqLP+n2ak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730192AbfFQVbO (ORCPT
+        id S1730600AbfFQV2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56328 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:28:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730129AbfFQV3J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:09 -0400
+        id S1730583AbfFQV2o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:28:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CA39204FD;
-        Mon, 17 Jun 2019 21:29:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BF55204FD;
+        Mon, 17 Jun 2019 21:28:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806949;
-        bh=eoircKri8yZq6TBBlqggoJktGga+3JD24JCOXyw7Q5Y=;
+        s=default; t=1560806923;
+        bh=4EQFF575OSksr+Czwy7Daf1KcxUt6KdPuAr8LL/g0+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cJSYzBz+F7zIYIT6azmVS+fz2gndgzvgsPudy8yurAfg6uKo3+JR8sZK8eR4PpAqQ
-         4M+7XeecaowjRuAyTMBg/n7ySjkgOzfnlhePu9JWQPw18zA0uaWq9f9ptSv69FDJsG
-         TpPA0J/ytwkCg/3kYuADWJLTWPHMnAAH2Dd/Lw4s=
+        b=pvk2SXmSG1nFIwWL8oGotrs9MgoWFLsNqoetPh9T7KVW9wDAir9ICa2Y6I1GtsQig
+         cwfWGJuG8hPGLJCRAycJNU5x5IxruzUyCi31PcfPcWCIL0pncpnbKfeurg7ABmVLq7
+         bE3rfy3DXt2bbucFaULfDIRFLwoJxwNHhLXyQkBU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Oliver Zweigle <Oliver.Zweigle@faro.com>,
-        Bernd Eckstein <3ernd.Eckstein@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 38/53] usbnet: ipheth: fix racing condition
-Date:   Mon, 17 Jun 2019 23:10:21 +0200
-Message-Id: <20190617210751.822790637@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.14 09/53] mm/list_lru.c: fix memory leak in __memcg_init_list_lru_node
+Date:   Mon, 17 Jun 2019 23:09:52 +0200
+Message-Id: <20190617210746.973024958@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -61,62 +64,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 94d250fae48e6f873d8362308f5c4d02cd1b1fd2 ]
+From: Shakeel Butt <shakeelb@google.com>
 
-Fix a racing condition in ipheth.c that can lead to slow performance.
+commit 3510955b327176fd4cbab5baa75b449f077722a2 upstream.
 
-Bug: In ipheth_tx(), netif_wake_queue() may be called on the callback
-ipheth_sndbulk_callback(), _before_ netif_stop_queue() is called.
-When this happens, the queue is stopped longer than it needs to be,
-thus reducing network performance.
+Syzbot reported following memory leak:
 
-Fix: Move netif_stop_queue() in front of usb_submit_urb(). Now the order
-is always correct. In case, usb_submit_urb() fails, the queue is woken up
-again as callback will not fire.
+ffffffffda RBX: 0000000000000003 RCX: 0000000000441f79
+BUG: memory leak
+unreferenced object 0xffff888114f26040 (size 32):
+  comm "syz-executor626", pid 7056, jiffies 4294948701 (age 39.410s)
+  hex dump (first 32 bytes):
+    40 60 f2 14 81 88 ff ff 40 60 f2 14 81 88 ff ff  @`......@`......
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+     slab_post_alloc_hook mm/slab.h:439 [inline]
+     slab_alloc mm/slab.c:3326 [inline]
+     kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     kmalloc include/linux/slab.h:547 [inline]
+     __memcg_init_list_lru_node+0x58/0xf0 mm/list_lru.c:352
+     memcg_init_list_lru_node mm/list_lru.c:375 [inline]
+     memcg_init_list_lru mm/list_lru.c:459 [inline]
+     __list_lru_init+0x193/0x2a0 mm/list_lru.c:626
+     alloc_super+0x2e0/0x310 fs/super.c:269
+     sget_userns+0x94/0x2a0 fs/super.c:609
+     sget+0x8d/0xb0 fs/super.c:660
+     mount_nodev+0x31/0xb0 fs/super.c:1387
+     fuse_mount+0x2d/0x40 fs/fuse/inode.c:1236
+     legacy_get_tree+0x27/0x80 fs/fs_context.c:661
+     vfs_get_tree+0x2e/0x120 fs/super.c:1476
+     do_new_mount fs/namespace.c:2790 [inline]
+     do_mount+0x932/0xc50 fs/namespace.c:3110
+     ksys_mount+0xab/0x120 fs/namespace.c:3319
+     __do_sys_mount fs/namespace.c:3333 [inline]
+     __se_sys_mount fs/namespace.c:3330 [inline]
+     __x64_sys_mount+0x26/0x30 fs/namespace.c:3330
+     do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+     entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Testing: This racing condition is usually not noticeable, as it has to
-occur very frequently to slowdown the network. The callback from the USB
-is usually triggered slow enough, so the situation does not appear.
-However, on a Ubuntu Linux on VMWare Workstation, running on Windows 10,
-the we loose the race quite often and the following speedup can be noticed:
+This is a simple off by one bug on the error path.
 
-Without this patch: Download:  4.10 Mbit/s, Upload:  4.01 Mbit/s
-With this patch:    Download: 36.23 Mbit/s, Upload: 17.61 Mbit/s
+Link: http://lkml.kernel.org/r/20190528043202.99980-1-shakeelb@google.com
+Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
+Reported-by: syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: <stable@vger.kernel.org>	[4.0+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Oliver Zweigle <Oliver.Zweigle@faro.com>
-Signed-off-by: Bernd Eckstein <3ernd.Eckstein@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/usb/ipheth.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ mm/list_lru.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/usb/ipheth.c b/drivers/net/usb/ipheth.c
-index 3d8a70d3ea9b..3d71f1716390 100644
---- a/drivers/net/usb/ipheth.c
-+++ b/drivers/net/usb/ipheth.c
-@@ -437,17 +437,18 @@ static int ipheth_tx(struct sk_buff *skb, struct net_device *net)
- 			  dev);
- 	dev->tx_urb->transfer_flags |= URB_NO_TRANSFER_DMA_MAP;
- 
-+	netif_stop_queue(net);
- 	retval = usb_submit_urb(dev->tx_urb, GFP_ATOMIC);
- 	if (retval) {
- 		dev_err(&dev->intf->dev, "%s: usb_submit_urb: %d\n",
- 			__func__, retval);
- 		dev->net->stats.tx_errors++;
- 		dev_kfree_skb_any(skb);
-+		netif_wake_queue(net);
- 	} else {
- 		dev->net->stats.tx_packets++;
- 		dev->net->stats.tx_bytes += skb->len;
- 		dev_consume_skb_any(skb);
--		netif_stop_queue(net);
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -313,7 +313,7 @@ static int __memcg_init_list_lru_node(st
  	}
+ 	return 0;
+ fail:
+-	__memcg_destroy_list_lru_node(memcg_lrus, begin, i - 1);
++	__memcg_destroy_list_lru_node(memcg_lrus, begin, i);
+ 	return -ENOMEM;
+ }
  
- 	return NETDEV_TX_OK;
--- 
-2.20.1
-
 
 
