@@ -2,122 +2,146 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE4E1C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27619C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C719F2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:21:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F347520657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:22:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="Nl+Gx2+K"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jMkkk91r";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jMkkk91r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727646AbfFQNVt (ORCPT
+        id S1727428AbfFQNWc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:21:49 -0400
-Received: from smtp113.ord1c.emailsrvr.com ([108.166.43.113]:50846 "EHLO
-        smtp113.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725884AbfFQNVs (ORCPT
+        Mon, 17 Jun 2019 09:22:32 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:47530 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726065AbfFQNWc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:21:48 -0400
-X-Greylist: delayed 358 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jun 2019 09:21:47 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1560777347;
-        bh=ZvJvYkjr7iE1RIXRXDlijzKzJL0BitvNBM9T5FqQAmw=;
-        h=Subject:To:From:Date:From;
-        b=Nl+Gx2+KTHlZUrgrlD4OPdHaDIh8UJfTuRA5MZVnySfiilIiWgnddpiJk4/aln5DA
-         OAo8bcON3aHKJNRIUHN2qprmbAq2BRvH2IUzshdVkvRvYeZuB2iOeftPYIjVWn6ziI
-         KuJnFj51kem220yEC5D7kahxijPjmtFu66j0THaY=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp7.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id D9002A01B2;
-        Mon, 17 Jun 2019 09:15:44 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.62] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Mon, 17 Jun 2019 09:15:47 -0400
-Subject: Re: [PATCH 12/16] staging/comedi: mark as broken
-To:     Christoph Hellwig <hch@lst.de>,
-        Greg KH <gregkh@linuxfoundation.org>
-Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-References: <20190614134726.3827-1-hch@lst.de>
- <20190614134726.3827-13-hch@lst.de> <20190614140239.GA7234@kroah.com>
- <20190614144857.GA9088@lst.de> <20190614153032.GD18049@kroah.com>
- <20190614153428.GA10008@lst.de>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <60c6af3d-d8e4-5745-8d2b-9791a2f4ff56@mev.co.uk>
-Date:   Mon, 17 Jun 2019 14:15:43 +0100
+        Mon, 17 Jun 2019 09:22:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 8324260254; Mon, 17 Jun 2019 13:22:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560777750;
+        bh=ew/xbajXtVboXMA/g2sJySnJBP6r87Wf7tJKswJnaqs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jMkkk91rJHyKHUc8qdhdkxnNyBUBpMgikXZ9N35782cqteuJ+Xwi7CzdeQq7Zqcqk
+         flbAmjU4UdQ4glqfRCTixYWtV1KlJviVUyr+YJnj98lDnOLJj+7ZfdtkZXfJdRe4RI
+         wQGHzC1Cs36FFO0PNWaxdndHTc96p4IIiOPWSAMM=
+Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: neeraju@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7624B60265;
+        Mon, 17 Jun 2019 13:22:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560777750;
+        bh=ew/xbajXtVboXMA/g2sJySnJBP6r87Wf7tJKswJnaqs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=jMkkk91rJHyKHUc8qdhdkxnNyBUBpMgikXZ9N35782cqteuJ+Xwi7CzdeQq7Zqcqk
+         flbAmjU4UdQ4glqfRCTixYWtV1KlJviVUyr+YJnj98lDnOLJj+7ZfdtkZXfJdRe4RI
+         wQGHzC1Cs36FFO0PNWaxdndHTc96p4IIiOPWSAMM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7624B60265
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
+Subject: Re: Fwd: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Tengfei Fan <tengfeif@codeaurora.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        MSM <linux-arm-msm@vger.kernel.org>, sramana@codeaurora.org
+References: <20190611185102.368ED21744@mail.kernel.org>
+ <671f87d6-f4a4-6d2c-967b-e1aa0677d83e@codeaurora.org>
+ <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
+ <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
+From:   Neeraj Upadhyay <neeraju@codeaurora.org>
+Message-ID: <e88903a2-9b07-6eee-3776-0fc0ad429a2d@codeaurora.org>
+Date:   Mon, 17 Jun 2019 18:52:24 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190614153428.GA10008@lst.de>
+In-Reply-To: <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/2019 16:34, Christoph Hellwig wrote:
-> On Fri, Jun 14, 2019 at 05:30:32PM +0200, Greg KH wrote:
->> On Fri, Jun 14, 2019 at 04:48:57PM +0200, Christoph Hellwig wrote:
->>> On Fri, Jun 14, 2019 at 04:02:39PM +0200, Greg KH wrote:
->>>> Perhaps a hint as to how we can fix this up?  This is the first time
->>>> I've heard of the comedi code not handling dma properly.
->>>
->>> It can be fixed by:
->>>
->>>   a) never calling virt_to_page (or vmalloc_to_page for that matter)
->>>      on dma allocation
->>>   b) never remapping dma allocation with conflicting cache modes
->>>      (no remapping should be doable after a) anyway).
+Thanks for the review, Linus.
+
+On 6/17/19 5:20 PM, Linus Walleij wrote:
+> On Mon, Jun 17, 2019 at 12:35 PM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
+>
+>> Hi Stephen, there is one use case with is not covered by commit
+>> b55326dc969e (
 >>
->> Ok, fair enough, have any pointers of drivers/core code that does this
->> correctly?  I can put it on my todo list, but might take a week or so...
-> 
-> Just about everyone else.  They just need to remove the vmap and
-> either do one large allocation, or live with the fact that they need
-> helpers to access multiple array elements instead of one net vmap,
-> which most of the users already seem to do anyway, with just a few
-> using the vmap (which might explain why we didn't see blowups yet).
+>> "pinctrl: msm: Really mask level interrupts to prevent latching"). That
+>> happens when
+>>
+>> gpio line is toggled between i/o mode and interrupt mode :
+>>
+>> 1. GPIO is configured as irq line. Peripheral raises interrupt.
+>>
+>> 2. IRQ handler runs and disables the irq line (through wq work).
+>>
+>> 3. GPIO is configured for input and and data is received from the
+>> peripheral.
+> There is no distinction between using a GPIO line as input
+> and using it for IRQ. All input GPIOs can be used for IRQs,
+> if the hardware supports it (has an irqchip).
 
-Avoiding the vmap in comedi should be do-able as it already has other 
-means to get at the buffer pages.
+Ok
 
-When comedi makes the buffer from DMA coherent memory, it currently 
-allocates it as a series of page-sized chunks.  That cannot be mmap'ed 
-in one go with dma_mmap_coherent(), so I see the following solutions.
+>
+>> 4. Now, when GPIO is re-enabled as irq, we see spurious irq, and there
+>> isn't
+>>
+>> any data received on the gpio line, when it is read back after
+>> configuring as input.
+> That's an interesting usecase. Hans Verkuil reworked the
+> GPIO irq support very elegantly exactly to support this type
+> of usecase (irq switch on and off dynamically), where he
+> was even switching the line into output mode between
+> the IRQ trains. (one-wire transcactions for CEC).
+>
+>> Patch https://lkml.org/lkml/2019/6/17/226 tries to cover this use case.
+>> Can you please provide your comments?
+> What this patch does is clear all pending IRQs at irq
+> unmask. This is usually safe, unless there may be cases
+> where you *want* to catch any pending IRQs. I guess
+> normally you don't so it should be safe?
 
-1. Change the buffer allocation to allocate a single chunk of DMA 
-coherent memory and use dma_mmap_coherent() to mmap it.
+We want to clear pending status at irq enable. Afaik, no,
 
-2. Call dma_mmap_coherent() in a loop, adjusting vma->vm_start and 
-vma->vm_end for each iteration (vma->vm_pgoff will be 0), and restoring 
-the vma->vm_start and vma->vm_end at the end.
+we don't normally track these pending irqs. So, should be
 
-I'm not sure if 2 is a legal option.
+fine here.
+
+>
+> The corner case is when you start some transaction
+> or whatever that gets ACKed by an IRQ and you actually
+> get the IRQ back before you had time to execute the code
+> enabling the IRQ.
+>
+> That would be racy and bad code, as you should clearly
+> enable the IRQ first, then start the transaction. So I think
+> this patch is safe.
+>
+> But let's see what Bjorn says.
+>
+> Yours,
+> Linus Walleij
 
 -- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
+member of the Code Aurora Forum, hosted by The Linux Foundation
+
