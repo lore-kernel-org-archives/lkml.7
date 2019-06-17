@@ -2,183 +2,155 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F3CC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF1CC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B19620861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 159DF20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:00:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gWIH3E3+"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Q3LLb7Zj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfFQK53 (ORCPT
+        id S1727602AbfFQLAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 06:57:29 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:7206 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726174AbfFQK52 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 06:57:28 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0772150000>; Mon, 17 Jun 2019 03:57:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 17 Jun 2019 03:57:25 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 17 Jun 2019 03:57:25 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
- 2019 10:57:23 +0000
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190613210849.10382-1-digetx@gmail.com>
- <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
- <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
- <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <d34c100d-e82a-bb00-22c6-c5f2f6cdb03a@nvidia.com>
-Date:   Mon, 17 Jun 2019 11:57:21 +0100
+        Mon, 17 Jun 2019 07:00:42 -0400
+Received: from mout.web.de ([212.227.15.14]:51857 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726174AbfFQLAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:00:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1560769233;
+        bh=cl5hc3psPBqPufyRnHGOWRBIVEWwsgEkuVX5yPLzDMo=;
+        h=X-UI-Sender-Class:To:From:Subject:Cc:Date;
+        b=Q3LLb7Zj0QIdzsTXuLoGDhKtMRSW5CNCPh/vRO/BsbWXCJ3idYaDWUHS3HMrevnCt
+         mx0MXrTYLN2FZIwRYAnoJ6q8v4tFw4Licgnif8ioMWd0Ny36RJWkVuQC/aVGNjzkM3
+         pCrO+AkeX0KMmBdrAH9WDFh8X3dnpVgRm3rqcTeE=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([2.243.164.208]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MTPjb-1i1CWl3I99-00SLE6; Mon, 17
+ Jun 2019 13:00:32 +0200
+To:     linux-scsi@vger.kernel.org, megaraidlinux.pdl@broadcom.com,
+        "James E. J. Bottomley" <jejb@linux.ibm.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Shivasharan Srikanteshwara 
+        <shivasharan.srikanteshwara@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Subject: [PATCH] megaraid_sas: Delete a redundant memory setting in
+ megasas_alloc_cmds()
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Cc:     kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Message-ID: <3921d044-72d6-d092-e792-01c896ae222b@web.de>
+Date:   Mon, 17 Jun 2019 13:00:28 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560769045; bh=ezUnyuKGHlbPhYjLZf5Spom5VDavEjqfyB+JBE4bVJU=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gWIH3E3+v+rzCFyiimf1UtBRbcTKw21IjQoX8qYax0Wf6gBrBTLcmUWsqLkh6/UFy
-         XnEHI+bHpHAWxiEQNNpyC3s8qwK0gRHLZUsw+p43zIRlE5esrVIhmBEHrK6ha5IEO5
-         SwoCWHmt1WDwQGta6Gn11HgPQMDQbwSlDy2VKK0qBuoQU7JZVGPR3iOa1BbQc2Emml
-         RagrWT3XGNyE3x6cgN4POnafe8qguNKYs1BkRdtZ44LxUr5t2jWlFmsegBnDB3SiVF
-         rqyarHsvzvafNb0sOCafZNxoGJVRvFVbaC9NGqQxAlQVVcID3JLhI4YES9cU6AJn8v
-         orsF7W/+m6vuw==
+X-Provags-ID: V03:K1:+WQVPl0MeIdN58HXt3L50FnFytrpzbX4mxGHi9jzFA7Wa6D3ELC
+ ZY8UEdlvE+ehhxnqQ+sTJICvBZBPAgVPVLzgA8v47kzoQFiIgYTnDb4DnnPPfoep9XbPaem
+ bPwoP9Ze7Bm7e/NxoG2VxatVnyJw3rNV03UnjjvPmDgEPf1dEwpeJTot6K94luFrljDuZGP
+ sIcTYRJC5L6U0c0JJef8Q==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:CGh1YRyV2/0=:suECTuDYyCVBdte/xXqpdw
+ aMC5teckP2HLrF0H5oGeJsMT07evrjY5Lx9pYBoWwJvuBS+w6u9jaVaLNyhRoK5j3PDr0iPf9
+ wIve80QnnkHqLmn92Wr7Q6fKYAPru+NzL+ScP/aB9UTpH0A4dhL8BobjBmpK4UGtR/ERb5xB0
+ ICTeu2YK+f8iEJohMJ+EIOFNSp9SD6FW3dojJVb0wlSd+aHPU97iOZqAGeuUnMyWp8/9yIff1
+ FBapksg/Vtct8MBFr2wl0GSW+5j0uRjfQTokNUDpdCMD+a4h6jUMqqEpyTO9kJqcAaLijRIvt
+ QiQ1SWyQy+0F5G7sA2ZVNy8mvNMNk/ISn58sC2eEwHEGSEzkMcBXqq5gM2M6NU+cc4SO3+Rz+
+ 1jMDSHCgXSyzaY5+FPQjZ8VXLhqTm5S5aYK5UgYvhCVTJa7HgBz6eHideQqUOhXykNAldsCSZ
+ jlmy0iZFTo0xFL7hw8oaXYzBKacIK4+1SYBbk+w1hzUBnSazlS4+qaRd4/b6euhwwjC0VIvcO
+ 7sZjYLWeVgJ4WsJaF9gYmF4cFUYZ5Z+8U2X40qq2XmIWqe3Hkzg3DQwdmwrbXvS+KXTxE+oef
+ n+1TOKBSr3aoRddTg0+IEPI0S/OJDWrq2HASYvAWDp+Gop/+aqwecoJB+dPZ5Grz07/ScJ0bA
+ WyRKvtueyCtFMfXFxGwAj9XCKWckwpyQf3DLoaEp0hruweAtp5d4Q1yK7zfFCyUUbGS7UifHf
+ bRN6/niBVPcYBNxWo0KqlQpW5ptDca0FJzIxQBIcwlQI6g4BAAOexJJ1qpXmR8sOxOuigMNbV
+ PVsyVhxL5ofwMVFAeLT47um+RllGlwtpbp04gYemtL5eDiAnFxmlFQMs+fopk+gW6jjGy2HTK
+ E/01tX4iTtwt61JFOqsfXxNOspBWbmIBARbQDHlhm730Varod5m8aM2T0bSyyDa0CuZiKGpRV
+ WQm/MDyQiLrXFQ54cJji+UC62gdNKchN4dxkofcEr2yU/DsF4zRur
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Markus Elfring <elfring@users.sourceforge.net>
+Date: Mon, 17 Jun 2019 12:42:15 +0200
 
-On 14/06/2019 17:44, Dmitry Osipenko wrote:
-> 14.06.2019 18:24, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>
->> On 14/06/2019 16:21, Jon Hunter wrote:
->>>
->>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
->>>> Tegra's APB DMA engine updates words counter after each transferred bu=
-rst
->>>> of data, hence it can report transfer's residual with more fidelity wh=
-ich
->>>> may be required in cases like audio playback. In particular this fixes
->>>> audio stuttering during playback in a chromiuim web browser. The patch=
- is
->>>> based on the original work that was made by Ben Dooks [1]. It was test=
-ed
->>>> on Tegra20 and Tegra30 devices.
->>>>
->>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@code=
-think.co.uk/
->>>>
->>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++------=
+The memory was set to zero already by a call of the function =E2=80=9Ckcal=
+loc=E2=80=9D.
+Thus remove an extra call of the function =E2=80=9Cmemset=E2=80=9D for thi=
+s purpose.
+
+This issue was detected by using the Coccinelle software.
+
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+=2D--
+ drivers/scsi/megaraid/megaraid_sas_base.c | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/mega=
+raid/megaraid_sas_base.c
+index 176b59a34a79..047990d3cffd 100644
+=2D-- a/drivers/scsi/megaraid/megaraid_sas_base.c
++++ b/drivers/scsi/megaraid/megaraid_sas_base.c
+@@ -4239,8 +4239,6 @@ int megasas_alloc_cmds(struct megasas_instance *inst=
+ance)
+ 		return -ENOMEM;
+ 	}
+
+-	memset(instance->cmd_list, 0, sizeof(struct megasas_cmd *) *max_cmd);
 -
->>>>  1 file changed, 28 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-d=
-ma.c
->>>> index 79e9593815f1..c5af8f703548 100644
->>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_ch=
-an *dc)
->>>>  	return 0;
->>>>  }
->>>> =20
->>>> +static unsigned int tegra_dma_update_residual(struct tegra_dma_channe=
-l *tdc,
->>>> +					      struct tegra_dma_sg_req *sg_req,
->>>> +					      struct tegra_dma_desc *dma_desc,
->>>> +					      unsigned int residual)
->>>> +{
->>>> +	unsigned long status, wcount =3D 0;
->>>> +
->>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>>> +		return residual;
->>>> +
->>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>>> +
->>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>>> +
->>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>>> +		wcount =3D status;
->>>> +
->>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>>> +		return residual - sg_req->req_len;
->>>> +
->>>> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
->>>> +}
->>>> +
->>>>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
->>>>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
->>>>  {
->>>>  	struct tegra_dma_channel *tdc =3D to_tegra_dma_chan(dc);
->>>> +	struct tegra_dma_sg_req *sg_req =3D NULL;
->>>>  	struct tegra_dma_desc *dma_desc;
->>>> -	struct tegra_dma_sg_req *sg_req;
->>>>  	enum dma_status ret;
->>>>  	unsigned long flags;
->>>>  	unsigned int residual;
->>>> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct =
-dma_chan *dc,
->>>>  		residual =3D dma_desc->bytes_requested -
->>>>  			   (dma_desc->bytes_transferred %
->>>>  			    dma_desc->bytes_requested);
->>>> +		residual =3D tegra_dma_update_residual(tdc, sg_req, dma_desc,
->>>> +						     residual);
->>>
->>> I had a quick look at this, I am not sure that we want to call
->>> tegra_dma_update_residual() here for cases where the dma_desc is on the
->>> free_dma_desc list. In fact, couldn't this be simplified a bit for case
->>> where the dma_desc is on the free list? In that case I believe that the
->>> residual should always be 0.
->>
->> Actually, no, it could be non-zero in the case the transfer is aborted.
->=20
-> Looks like everything should be fine as-is.
+ 	for (i =3D 0; i < max_cmd; i++) {
+ 		instance->cmd_list[i] =3D kmalloc(sizeof(struct megasas_cmd),
+ 						GFP_KERNEL);
+=2D-
+2.22.0
 
-I am still not sure we want to call this for the case where dma_desc is
-on the free list.
-
-> BTW, it's a bit hard to believe that there is any real benefit from the
-> free_dma_desc list at all, maybe worth to just remove it?
-
-I think you need to elaborate a bit more here. I am not a massive fan of
-this driver, but I am also not in the mood for changing unless there is
-a good reason.
-
-Cheers
-Jon
-
---=20
-nvpublic
