@@ -2,405 +2,212 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DATE_IN_PAST_06_12,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C38AFC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:36:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23572C31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:37:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 931C320657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:36:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E2B4A20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:37:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vPwuP/5D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728039AbfFQNge (ORCPT
+        id S1728059AbfFQNhD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:36:34 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18591 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725884AbfFQNgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:36:17 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 14DBC53870DDE4300233;
-        Mon, 17 Jun 2019 21:36:15 +0800 (CST)
-Received: from localhost.localdomain (10.175.34.53) by
- DGGEMS405-HUB.china.huawei.com (10.3.19.205) with Microsoft SMTP Server id
- 14.3.439.0; Mon, 17 Jun 2019 21:36:05 +0800
-From:   Xue Chaojing <xuechaojing@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <luoshaokai@huawei.com>, <cloud.wangxiaoyun@huawei.com>,
-        <xuechaojing@huawei.com>, <chiqijun@huawei.com>,
-        <wulike1@huawei.com>
-Subject: [PATCH net-next v4 2/3] hinic: move ethtool code into hinic_ethtool
-Date:   Mon, 17 Jun 2019 05:46:00 +0000
-Message-ID: <20190617054601.3056-3-xuechaojing@huawei.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190617054601.3056-1-xuechaojing@huawei.com>
-References: <20190617054601.3056-1-xuechaojing@huawei.com>
+        Mon, 17 Jun 2019 09:37:03 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:37760 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfFQNhC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:37:02 -0400
+Received: by mail-wm1-f66.google.com with SMTP id f17so6639886wme.2;
+        Mon, 17 Jun 2019 06:37:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Pz+MJpArisYQrfWi1l8CgjJCZ0sBnaJmYJFQI+E8ins=;
+        b=vPwuP/5DaUP8MHatA256OU+MddlRTG15mE+/aKo0T3mbrwDrrIuLBK8fLPPRGOBX1X
+         oaI6M7Op4jX1pLz/bsmk6yo5txOt7BRJVvBG0md2TZQPiR1kUjy3suE/p07QZk4W73jL
+         qUJumPYSlCb9/yBkNBNLJFYm7LkFxnPEuVn0wJrOnGLLZfAysnt6/OtJ2Ivw6EMxFfkn
+         GILlR+EmSvMh3nh54hdB/f6M3NK636FoL5oGkpKtjsR+wR0HPKazRVHC+0idUyfqT/sI
+         +jCtSTZhap8sanpocCwvnbgyHlUE9jFniGLulkJPspMGJ9fE2YJOP7ULXGNepL7XeCiB
+         +yaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Pz+MJpArisYQrfWi1l8CgjJCZ0sBnaJmYJFQI+E8ins=;
+        b=QzQOJb29KzMy6rpwW98MQocyM+rMngTQTITLJz04PJWI1fB6mFHrbiPQ/n5WnqBTtm
+         TsuxTW7S8DVUvjqI1lC7q+5j8Br9SceY3uhPBIgMRGXiLmvxa2Ga+84+sY0wzZBeSOLP
+         WGTVOLtxXhY/XFD33T9JXh13S7qx/7E/V9JyZys33KK4WNSvFycMNlQ61o2jLksbyUH/
+         dIWbEww0TwBv4pbqws6E6DmLmTdV/9u1AYTQrw+WlyvpiJiO2Wqleadtc0HAvJcH8QEB
+         zRQe6nJT90B9JkxT1vmPx5JZA0skDuNsDrhzZKX3GTsqGURmUvMRAiHs3AV2JhrA8TB6
+         36Ww==
+X-Gm-Message-State: APjAAAWZn42F7vNwA4BD/6ESPHA4+06hDPteBz3adhP/4bC1nuJ3irg9
+        Pt8n3xdCeXCSqQt0iFPrbC+6jd+f
+X-Google-Smtp-Source: APXvYqyTub4yFw683PZGg3zLIzHE0p9JVXfc/pFFw7Uvu1JjB4Tf23crEMJMOqRO5zo3L/ty+KbLAA==
+X-Received: by 2002:a05:600c:1008:: with SMTP id c8mr19509319wmc.133.1560778619493;
+        Mon, 17 Jun 2019 06:36:59 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id t1sm15671157wra.74.2019.06.17.06.36.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 06:36:58 -0700 (PDT)
+Subject: Re: [PATCH v1 3/4] staging: media: tegra-vde: Add IOMMU support
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+References: <20190602213712.26857-1-digetx@gmail.com>
+ <20190602213712.26857-7-digetx@gmail.com>
+ <5c274249-6c88-b4bd-70fe-0751f5bbfdfc@xs4all.nl>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <06a73666-8985-68a6-66cf-cf9cc00d6929@gmail.com>
+Date:   Mon, 17 Jun 2019 16:36:57 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.175.34.53]
-X-CFilter-Loop: Reflected
+In-Reply-To: <5c274249-6c88-b4bd-70fe-0751f5bbfdfc@xs4all.nl>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch moves ethtool code from hinic_main.c to hinic_ethtool.c
+17.06.2019 16:31, Hans Verkuil пишет:
+> On 6/2/19 11:37 PM, Dmitry Osipenko wrote:
+>> All Tegra's could provide memory isolation for the video decoder
+>> hardware using IOMMU, it is also required for Tegra30+ in order
+>> to handle sparse dmabuf's which GPU exports in a default kernel
+>> configuration.
+>>
+>> Inspired-by: Thierry Reding <thierry.reding@gmail.com>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/staging/media/tegra-vde/Kconfig       |   1 +
+>>  drivers/staging/media/tegra-vde/Makefile      |   1 +
+>>  drivers/staging/media/tegra-vde/iommu.c       | 148 ++++++++++++++
+>>  drivers/staging/media/tegra-vde/trace.h       |   1 +
+>>  .../media/tegra-vde/{tegra-vde.c => vde.c}    | 188 +++++++++---------
+>>  drivers/staging/media/tegra-vde/vde.h         |  89 +++++++++
+>>  6 files changed, 335 insertions(+), 93 deletions(-)
+>>  create mode 100644 drivers/staging/media/tegra-vde/iommu.c
+>>  rename drivers/staging/media/tegra-vde/{tegra-vde.c => vde.c} (91%)
+>>  create mode 100644 drivers/staging/media/tegra-vde/vde.h
+>>
+>> diff --git a/drivers/staging/media/tegra-vde/Kconfig b/drivers/staging/media/tegra-vde/Kconfig
+>> index ff8e846cd15d..2e7f644ae591 100644
+>> --- a/drivers/staging/media/tegra-vde/Kconfig
+>> +++ b/drivers/staging/media/tegra-vde/Kconfig
+>> @@ -3,6 +3,7 @@ config TEGRA_VDE
+>>  	tristate "NVIDIA Tegra Video Decoder Engine driver"
+>>  	depends on ARCH_TEGRA || COMPILE_TEST
+>>  	select DMA_SHARED_BUFFER
+>> +	select IOMMU_IOVA if IOMMU_SUPPORT
+>>  	select SRAM
+>>  	help
+>>  	    Say Y here to enable support for the NVIDIA Tegra video decoder
+>> diff --git a/drivers/staging/media/tegra-vde/Makefile b/drivers/staging/media/tegra-vde/Makefile
+>> index 7f9020e634f3..c11867e28233 100644
+>> --- a/drivers/staging/media/tegra-vde/Makefile
+>> +++ b/drivers/staging/media/tegra-vde/Makefile
+>> @@ -1,2 +1,3 @@
+>>  # SPDX-License-Identifier: GPL-2.0
+>> +tegra-vde-y := vde.o iommu.o
+>>  obj-$(CONFIG_TEGRA_VDE)	+= tegra-vde.o
+>> diff --git a/drivers/staging/media/tegra-vde/iommu.c b/drivers/staging/media/tegra-vde/iommu.c
+>> new file mode 100644
+>> index 000000000000..295c3d7cccd3
+>> --- /dev/null
+>> +++ b/drivers/staging/media/tegra-vde/iommu.c
+>> @@ -0,0 +1,148 @@
+>> +// SPDX-License-Identifier: GPL-2.0+
+>> +/*
+>> + * NVIDIA Tegra Video decoder driver
+>> + *
+>> + * Copyright (C) 2016-2019 GRATE-DRIVER project
+>> + */
+>> +
+>> +#include <linux/iommu.h>
+>> +#include <linux/iova.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/platform_device.h>
+>> +
+>> +#if IS_ENABLED(CONFIG_ARM_DMA_USE_IOMMU)
+>> +#include <asm/dma-iommu.h>
+>> +#endif
+>> +
+>> +#include "vde.h"
+>> +
+>> +int tegra_vde_iommu_map(struct tegra_vde *vde,
+>> +			struct sg_table *sgt,
+>> +			struct iova **iovap,
+>> +			dma_addr_t *addrp,
+>> +			size_t size)
+>> +{
+>> +	struct iova *iova;
+>> +	unsigned long shift;
+>> +	unsigned long end;
+>> +	dma_addr_t addr;
+>> +
+>> +	end = vde->domain->geometry.aperture_end;
+>> +	size = iova_align(&vde->iova, size);
+>> +	shift = iova_shift(&vde->iova);
+>> +
+>> +	iova = alloc_iova(&vde->iova, size >> shift, end >> shift, true);
+>> +	if (!iova)
+>> +		return -ENOMEM;
+>> +
+>> +	addr = iova_dma_addr(&vde->iova, iova);
+>> +
+>> +	size = iommu_map_sg(vde->domain, addr, sgt->sgl, sgt->nents,
+>> +			    IOMMU_READ | IOMMU_WRITE);
+>> +	if (!size) {
+>> +		__free_iova(&vde->iova, iova);
+>> +		return -ENXIO;
+>> +	}
+>> +
+>> +	*iovap = iova;
+>> +	*addrp = addr;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +void tegra_vde_iommu_unmap(struct tegra_vde *vde, struct iova *iova)
+>> +{
+>> +	unsigned long shift = iova_shift(&vde->iova);
+>> +	unsigned long size = iova_size(iova) << shift;
+>> +	dma_addr_t addr = iova_dma_addr(&vde->iova, iova);
+>> +
+>> +	iommu_unmap(vde->domain, addr, size);
+>> +	__free_iova(&vde->iova, iova);
+>> +}
+>> +
+>> +int tegra_vde_iommu_init(struct tegra_vde *vde)
+>> +{
+>> +	struct iova *iova;
+>> +	unsigned long order;
+>> +	unsigned long shift;
+>> +	int err;
+>> +
+>> +	vde->group = iommu_group_get(vde->miscdev.parent);
+>> +	if (!vde->group)
+>> +		return 0;
+>> +
+>> +#if IS_ENABLED(CONFIG_ARM_DMA_USE_IOMMU)
+>> +	if (dev->archdata.mapping) {
+> 
+> 'dev' doesn't exist, so this fails to compile!
 
-Signed-off-by: Xue Chaojing <xuechaojing@huawei.com>
----
- drivers/net/ethernet/huawei/hinic/Makefile    |   2 +-
- .../net/ethernet/huawei/hinic/hinic_ethtool.c | 163 ++++++++++++++++++
- .../net/ethernet/huawei/hinic/hinic_main.c    | 134 +-------------
- .../net/ethernet/huawei/hinic/hinic_port.h    |   2 +
- 4 files changed, 167 insertions(+), 134 deletions(-)
- create mode 100644 drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-
-diff --git a/drivers/net/ethernet/huawei/hinic/Makefile b/drivers/net/ethernet/huawei/hinic/Makefile
-index 289ce88bb2d0..c592f1a0f54b 100644
---- a/drivers/net/ethernet/huawei/hinic/Makefile
-+++ b/drivers/net/ethernet/huawei/hinic/Makefile
-@@ -3,4 +3,4 @@ obj-$(CONFIG_HINIC) += hinic.o
- hinic-y := hinic_main.o hinic_tx.o hinic_rx.o hinic_port.o hinic_hw_dev.o \
- 	   hinic_hw_io.o hinic_hw_qp.o hinic_hw_cmdq.o hinic_hw_wq.o \
- 	   hinic_hw_mgmt.o hinic_hw_api_cmd.o hinic_hw_eqs.o hinic_hw_if.o \
--	   hinic_common.o
-+	   hinic_common.o hinic_ethtool.o
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-new file mode 100644
-index 000000000000..2cc97bfef0b8
---- /dev/null
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_ethtool.c
-@@ -0,0 +1,163 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Huawei HiNIC PCI Express Linux driver
-+ * Copyright(c) 2017 Huawei Technologies Co., Ltd
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
-+ * for more details.
-+ *
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/pci.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/types.h>
-+#include <linux/errno.h>
-+#include <linux/interrupt.h>
-+#include <linux/etherdevice.h>
-+#include <linux/netdevice.h>
-+#include <linux/if_vlan.h>
-+#include <linux/ethtool.h>
-+#include <linux/vmalloc.h>
-+
-+#include "hinic_hw_qp.h"
-+#include "hinic_hw_dev.h"
-+#include "hinic_port.h"
-+#include "hinic_tx.h"
-+#include "hinic_rx.h"
-+#include "hinic_dev.h"
-+
-+static void set_link_speed(struct ethtool_link_ksettings *link_ksettings,
-+			   enum hinic_speed speed)
-+{
-+	switch (speed) {
-+	case HINIC_SPEED_10MB_LINK:
-+		link_ksettings->base.speed = SPEED_10;
-+		break;
-+
-+	case HINIC_SPEED_100MB_LINK:
-+		link_ksettings->base.speed = SPEED_100;
-+		break;
-+
-+	case HINIC_SPEED_1000MB_LINK:
-+		link_ksettings->base.speed = SPEED_1000;
-+		break;
-+
-+	case HINIC_SPEED_10GB_LINK:
-+		link_ksettings->base.speed = SPEED_10000;
-+		break;
-+
-+	case HINIC_SPEED_25GB_LINK:
-+		link_ksettings->base.speed = SPEED_25000;
-+		break;
-+
-+	case HINIC_SPEED_40GB_LINK:
-+		link_ksettings->base.speed = SPEED_40000;
-+		break;
-+
-+	case HINIC_SPEED_100GB_LINK:
-+		link_ksettings->base.speed = SPEED_100000;
-+		break;
-+
-+	default:
-+		link_ksettings->base.speed = SPEED_UNKNOWN;
-+		break;
-+	}
-+}
-+
-+static int hinic_get_link_ksettings(struct net_device *netdev,
-+				    struct ethtool_link_ksettings
-+				    *link_ksettings)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	enum hinic_port_link_state link_state;
-+	struct hinic_port_cap port_cap;
-+	int err;
-+
-+	ethtool_link_ksettings_zero_link_mode(link_ksettings, advertising);
-+	ethtool_link_ksettings_add_link_mode(link_ksettings, supported,
-+					     Autoneg);
-+
-+	link_ksettings->base.speed = SPEED_UNKNOWN;
-+	link_ksettings->base.autoneg = AUTONEG_DISABLE;
-+	link_ksettings->base.duplex = DUPLEX_UNKNOWN;
-+
-+	err = hinic_port_get_cap(nic_dev, &port_cap);
-+	if (err)
-+		return err;
-+
-+	err = hinic_port_link_state(nic_dev, &link_state);
-+	if (err)
-+		return err;
-+
-+	if (link_state != HINIC_LINK_STATE_UP)
-+		return err;
-+
-+	set_link_speed(link_ksettings, port_cap.speed);
-+
-+	if (!!(port_cap.autoneg_cap & HINIC_AUTONEG_SUPPORTED))
-+		ethtool_link_ksettings_add_link_mode(link_ksettings,
-+						     advertising, Autoneg);
-+
-+	if (port_cap.autoneg_state == HINIC_AUTONEG_ACTIVE)
-+		link_ksettings->base.autoneg = AUTONEG_ENABLE;
-+
-+	link_ksettings->base.duplex = (port_cap.duplex == HINIC_DUPLEX_FULL) ?
-+					   DUPLEX_FULL : DUPLEX_HALF;
-+	return 0;
-+}
-+
-+static void hinic_get_drvinfo(struct net_device *netdev,
-+			      struct ethtool_drvinfo *info)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	struct hinic_hwdev *hwdev = nic_dev->hwdev;
-+	struct hinic_hwif *hwif = hwdev->hwif;
-+
-+	strlcpy(info->driver, HINIC_DRV_NAME, sizeof(info->driver));
-+	strlcpy(info->bus_info, pci_name(hwif->pdev), sizeof(info->bus_info));
-+}
-+
-+static void hinic_get_ringparam(struct net_device *netdev,
-+				struct ethtool_ringparam *ring)
-+{
-+	ring->rx_max_pending = HINIC_RQ_DEPTH;
-+	ring->tx_max_pending = HINIC_SQ_DEPTH;
-+	ring->rx_pending = HINIC_RQ_DEPTH;
-+	ring->tx_pending = HINIC_SQ_DEPTH;
-+}
-+
-+static void hinic_get_channels(struct net_device *netdev,
-+			       struct ethtool_channels *channels)
-+{
-+	struct hinic_dev *nic_dev = netdev_priv(netdev);
-+	struct hinic_hwdev *hwdev = nic_dev->hwdev;
-+
-+	channels->max_rx = hwdev->nic_cap.max_qps;
-+	channels->max_tx = hwdev->nic_cap.max_qps;
-+	channels->max_other = 0;
-+	channels->max_combined = 0;
-+	channels->rx_count = hinic_hwdev_num_qps(hwdev);
-+	channels->tx_count = hinic_hwdev_num_qps(hwdev);
-+	channels->other_count = 0;
-+	channels->combined_count = 0;
-+}
-+
-+static const struct ethtool_ops hinic_ethtool_ops = {
-+	.get_link_ksettings = hinic_get_link_ksettings,
-+	.get_drvinfo = hinic_get_drvinfo,
-+	.get_link = ethtool_op_get_link,
-+	.get_ringparam = hinic_get_ringparam,
-+	.get_channels = hinic_get_channels,
-+};
-+
-+void hinic_set_ethtool_ops(struct net_device *netdev)
-+{
-+	netdev->ethtool_ops = &hinic_ethtool_ops;
-+}
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_main.c b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-index 5135754b7bd8..f04b571e403f 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_main.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_main.c
-@@ -80,138 +80,6 @@ static int set_features(struct hinic_dev *nic_dev,
- 			netdev_features_t pre_features,
- 			netdev_features_t features, bool force_change);
- 
--static void set_link_speed(struct ethtool_link_ksettings *link_ksettings,
--			   enum hinic_speed speed)
--{
--	switch (speed) {
--	case HINIC_SPEED_10MB_LINK:
--		link_ksettings->base.speed = SPEED_10;
--		break;
--
--	case HINIC_SPEED_100MB_LINK:
--		link_ksettings->base.speed = SPEED_100;
--		break;
--
--	case HINIC_SPEED_1000MB_LINK:
--		link_ksettings->base.speed = SPEED_1000;
--		break;
--
--	case HINIC_SPEED_10GB_LINK:
--		link_ksettings->base.speed = SPEED_10000;
--		break;
--
--	case HINIC_SPEED_25GB_LINK:
--		link_ksettings->base.speed = SPEED_25000;
--		break;
--
--	case HINIC_SPEED_40GB_LINK:
--		link_ksettings->base.speed = SPEED_40000;
--		break;
--
--	case HINIC_SPEED_100GB_LINK:
--		link_ksettings->base.speed = SPEED_100000;
--		break;
--
--	default:
--		link_ksettings->base.speed = SPEED_UNKNOWN;
--		break;
--	}
--}
--
--static int hinic_get_link_ksettings(struct net_device *netdev,
--				    struct ethtool_link_ksettings
--				    *link_ksettings)
--{
--	struct hinic_dev *nic_dev = netdev_priv(netdev);
--	enum hinic_port_link_state link_state;
--	struct hinic_port_cap port_cap;
--	int err;
--
--	ethtool_link_ksettings_zero_link_mode(link_ksettings, advertising);
--	ethtool_link_ksettings_add_link_mode(link_ksettings, supported,
--					     Autoneg);
--
--	link_ksettings->base.speed   = SPEED_UNKNOWN;
--	link_ksettings->base.autoneg = AUTONEG_DISABLE;
--	link_ksettings->base.duplex  = DUPLEX_UNKNOWN;
--
--	err = hinic_port_get_cap(nic_dev, &port_cap);
--	if (err) {
--		netif_err(nic_dev, drv, netdev,
--			  "Failed to get port capabilities\n");
--		return err;
--	}
--
--	err = hinic_port_link_state(nic_dev, &link_state);
--	if (err) {
--		netif_err(nic_dev, drv, netdev,
--			  "Failed to get port link state\n");
--		return err;
--	}
--
--	if (link_state != HINIC_LINK_STATE_UP) {
--		netif_info(nic_dev, drv, netdev, "No link\n");
--		return err;
--	}
--
--	set_link_speed(link_ksettings, port_cap.speed);
--
--	if (!!(port_cap.autoneg_cap & HINIC_AUTONEG_SUPPORTED))
--		ethtool_link_ksettings_add_link_mode(link_ksettings,
--						     advertising, Autoneg);
--
--	if (port_cap.autoneg_state == HINIC_AUTONEG_ACTIVE)
--		link_ksettings->base.autoneg = AUTONEG_ENABLE;
--
--	link_ksettings->base.duplex = (port_cap.duplex == HINIC_DUPLEX_FULL) ?
--				       DUPLEX_FULL : DUPLEX_HALF;
--	return 0;
--}
--
--static void hinic_get_drvinfo(struct net_device *netdev,
--			      struct ethtool_drvinfo *info)
--{
--	struct hinic_dev *nic_dev = netdev_priv(netdev);
--	struct hinic_hwdev *hwdev = nic_dev->hwdev;
--	struct hinic_hwif *hwif = hwdev->hwif;
--
--	strlcpy(info->driver, HINIC_DRV_NAME, sizeof(info->driver));
--	strlcpy(info->bus_info, pci_name(hwif->pdev), sizeof(info->bus_info));
--}
--
--static void hinic_get_ringparam(struct net_device *netdev,
--				struct ethtool_ringparam *ring)
--{
--	ring->rx_max_pending = HINIC_RQ_DEPTH;
--	ring->tx_max_pending = HINIC_SQ_DEPTH;
--	ring->rx_pending = HINIC_RQ_DEPTH;
--	ring->tx_pending = HINIC_SQ_DEPTH;
--}
--
--static void hinic_get_channels(struct net_device *netdev,
--			       struct ethtool_channels *channels)
--{
--	struct hinic_dev *nic_dev = netdev_priv(netdev);
--	struct hinic_hwdev *hwdev = nic_dev->hwdev;
--
--	channels->max_rx = hwdev->nic_cap.max_qps;
--	channels->max_tx = hwdev->nic_cap.max_qps;
--	channels->max_other    = 0;
--	channels->max_combined = 0;
--	channels->rx_count = hinic_hwdev_num_qps(hwdev);
--	channels->tx_count = hinic_hwdev_num_qps(hwdev);
--	channels->other_count    = 0;
--	channels->combined_count = 0;
--}
--
--static const struct ethtool_ops hinic_ethtool_ops = {
--	.get_link_ksettings = hinic_get_link_ksettings,
--	.get_drvinfo = hinic_get_drvinfo,
--	.get_link = ethtool_op_get_link,
--	.get_ringparam = hinic_get_ringparam,
--	.get_channels = hinic_get_channels,
--};
--
- static void update_rx_stats(struct hinic_dev *nic_dev, struct hinic_rxq *rxq)
- {
- 	struct hinic_rxq_stats *nic_rx_stats = &nic_dev->rx_stats;
-@@ -1092,8 +960,8 @@ static int nic_dev_init(struct pci_dev *pdev)
- 		goto err_alloc_etherdev;
- 	}
- 
-+	hinic_set_ethtool_ops(netdev);
- 	netdev->netdev_ops = &hinic_netdev_ops;
--	netdev->ethtool_ops = &hinic_ethtool_ops;
- 	netdev->max_mtu = ETH_MAX_MTU;
- 
- 	nic_dev = netdev_priv(netdev);
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.h b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-index 0c9ed17134a7..dafa3ca18af4 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.h
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.h
-@@ -346,4 +346,6 @@ int hinic_rss_cfg(struct hinic_dev *nic_dev, u8 rss_en, u8 template_id);
- int hinic_rss_template_alloc(struct hinic_dev *nic_dev, u8 *tmpl_idx);
- 
- int hinic_rss_template_free(struct hinic_dev *nic_dev, u8 tmpl_idx);
-+
-+void hinic_set_ethtool_ops(struct net_device *netdev);
- #endif
--- 
-2.17.1
-
+Oh, indeed! I actually didn't even try to compile with CONFIG_ARM_DMA_USE_IOMMU. Will
+fix it in v2, thanks!
