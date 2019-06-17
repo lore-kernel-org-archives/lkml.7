@@ -2,55 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_SPAM,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B24C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9584FC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66AD82089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 695452133F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806363;
-	bh=01A+5FQdFk3a/VescfSS65qNI0btr0uawUD+sFtJ9B0=;
+	s=default; t=1560806366;
+	bh=t1pnHkiMF9SWwsIGha+06k/Ipy6GL626EqbrM5cEYcU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xYoOMcc5ad/GMvLb61Glr/Nr8JigEZnSEQVFq2bjQaF6WIYDVSb80WhdyddlMsCkI
-	 e8laIR4jJilkPv21u9PviG9XEPcjY0N4mG4sJWdHPPmJSfNfV/LAgUF/dByxif5erX
-	 0/y8xTXtQbiIGAT1Ra/DU3GIeMyEo4/R5Q6wsqvw=
+	b=D1NCydFx3WPnY/gAeuqcLCjgYqGZ3N8fvGTeJvBOk3iG5AFIllm/dSIXEP/6T5dcq
+	 iCGhedYSgO8og+uWAmy8IuROGcLcr57O9hawEAOnHa4jWq+Vzo0MkBpRrOwivAgwyU
+	 bQe4G2zqqo0PKZp8LYYYusoLRuoPYIQXlUJnj8zM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfFQVTV (ORCPT
+        id S1728803AbfFQVTZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:19:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43048 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:19:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43160 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728753AbfFQVTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:19:18 -0400
+        id S1728753AbfFQVTX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:19:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C695020861;
-        Mon, 17 Jun 2019 21:19:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8073120861;
+        Mon, 17 Jun 2019 21:19:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806357;
-        bh=01A+5FQdFk3a/VescfSS65qNI0btr0uawUD+sFtJ9B0=;
+        s=default; t=1560806363;
+        bh=t1pnHkiMF9SWwsIGha+06k/Ipy6GL626EqbrM5cEYcU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rvvxQ/zrD2OZc/+Wkbndwb2SlYy9rpPsCUwmL8ysG6JZlcYNmnFL971pfhtRKilrz
-         VGLC4rnRpvsCFprrlFJ5hQ2e7jlPHRke4dkF0267mgARjT5OI4ktKxrO4Qk6NXFA1P
-         vMTgYoj4v0jUgcCe2tWScyKqUAPGmF3jeyh/eNdY=
+        b=wE1hkPYNgL0wnDFqj2Zuu7qs4UKthEQGLF+79VdtfkqHkeiqDjKVCl6AzhoHBtIZV
+         jGGlrFoHnM1Hj6hEpHZnIjad9JoGec++/JZdZYbXEVMFeyf/RGuH8sotZYfrPdQkWc
+         4yM11MREmxeX7wBPqUToLSIZ8U5zm+rGjczywtds=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-        Wu Fangsuo <fangsuowu@asrmicro.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 024/115] mm/vmscan.c: fix trying to reclaim unevictable LRU page
-Date:   Mon, 17 Jun 2019 23:08:44 +0200
-Message-Id: <20190617210801.162984798@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>
+Subject: [PATCH 5.1 026/115] ptrace: restore smp_rmb() in __ptrace_may_access()
+Date:   Mon, 17 Jun 2019 23:08:46 +0200
+Message-Id: <20190617210801.285626070@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -63,79 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minchan Kim <minchan@kernel.org>
+From: Jann Horn <jannh@google.com>
 
-commit a58f2cef26e1ca44182c8b22f4f4395e702a5795 upstream.
+commit f6581f5b55141a95657ef5742cf6a6bfa20a109f upstream.
 
-There was the below bug report from Wu Fangsuo.
+Restore the read memory barrier in __ptrace_may_access() that was deleted
+a couple years ago. Also add comments on this barrier and the one it pairs
+with to explain why they're there (as far as I understand).
 
-On the CMA allocation path, isolate_migratepages_range() could isolate
-unevictable LRU pages and reclaim_clean_page_from_list() can try to
-reclaim them if they are clean file-backed pages.
-
-  page:ffffffbf02f33b40 count:86 mapcount:84 mapping:ffffffc08fa7a810 index:0x24
-  flags: 0x19040c(referenced|uptodate|arch_1|mappedtodisk|unevictable|mlocked)
-  raw: 000000000019040c ffffffc08fa7a810 0000000000000024 0000005600000053
-  raw: ffffffc009b05b20 ffffffc009b05b20 0000000000000000 ffffffc09bf3ee80
-  page dumped because: VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page))
-  page->mem_cgroup:ffffffc09bf3ee80
-  ------------[ cut here ]------------
-  kernel BUG at /home/build/farmland/adroid9.0/kernel/linux/mm/vmscan.c:1350!
-  Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-  Modules linked in:
-  CPU: 0 PID: 7125 Comm: syz-executor Tainted: G S              4.14.81 #3
-  Hardware name: ASR AQUILAC EVB (DT)
-  task: ffffffc00a54cd00 task.stack: ffffffc009b00000
-  PC is at shrink_page_list+0x1998/0x3240
-  LR is at shrink_page_list+0x1998/0x3240
-  pc : [<ffffff90083a2158>] lr : [<ffffff90083a2158>] pstate: 60400045
-  sp : ffffffc009b05940
-  ..
-     shrink_page_list+0x1998/0x3240
-     reclaim_clean_pages_from_list+0x3c0/0x4f0
-     alloc_contig_range+0x3bc/0x650
-     cma_alloc+0x214/0x668
-     ion_cma_allocate+0x98/0x1d8
-     ion_alloc+0x200/0x7e0
-     ion_ioctl+0x18c/0x378
-     do_vfs_ioctl+0x17c/0x1780
-     SyS_ioctl+0xac/0xc0
-
-Wu found it's due to commit ad6b67041a45 ("mm: remove SWAP_MLOCK in
-ttu").  Before that, unevictable pages go to cull_mlocked so that we
-can't reach the VM_BUG_ON_PAGE line.
-
-To fix the issue, this patch filters out unevictable LRU pages from the
-reclaim_clean_pages_from_list in CMA.
-
-Link: http://lkml.kernel.org/r/20190524071114.74202-1-minchan@kernel.org
-Fixes: ad6b67041a45 ("mm: remove SWAP_MLOCK in ttu")
-Signed-off-by: Minchan Kim <minchan@kernel.org>
-Reported-by: Wu Fangsuo <fangsuowu@asrmicro.com>
-Debugged-by: Wu Fangsuo <fangsuowu@asrmicro.com>
-Tested-by: Wu Fangsuo <fangsuowu@asrmicro.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-Cc: <stable@vger.kernel.org>	[4.12+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: bfedb589252c ("mm: Add a user_ns owner to mm_struct and fix ptrace permission checks")
+Cc: stable@vger.kernel.org
+Acked-by: Kees Cook <keescook@chromium.org>
+Acked-by: Oleg Nesterov <oleg@redhat.com>
+Signed-off-by: Jann Horn <jannh@google.com>
+Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- mm/vmscan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/cred.c   |    9 +++++++++
+ kernel/ptrace.c |   10 ++++++++++
+ 2 files changed, 19 insertions(+)
 
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1502,7 +1502,7 @@ unsigned long reclaim_clean_pages_from_l
+--- a/kernel/cred.c
++++ b/kernel/cred.c
+@@ -450,6 +450,15 @@ int commit_creds(struct cred *new)
+ 		if (task->mm)
+ 			set_dumpable(task->mm, suid_dumpable);
+ 		task->pdeath_signal = 0;
++		/*
++		 * If a task drops privileges and becomes nondumpable,
++		 * the dumpability change must become visible before
++		 * the credential change; otherwise, a __ptrace_may_access()
++		 * racing with this change may be able to attach to a task it
++		 * shouldn't be able to attach to (as if the task had dropped
++		 * privileges without becoming nondumpable).
++		 * Pairs with a read barrier in __ptrace_may_access().
++		 */
+ 		smp_wmb();
+ 	}
  
- 	list_for_each_entry_safe(page, next, page_list, lru) {
- 		if (page_is_file_cache(page) && !PageDirty(page) &&
--		    !__PageMovable(page)) {
-+		    !__PageMovable(page) && !PageUnevictable(page)) {
- 			ClearPageActive(page);
- 			list_move(&page->lru, &clean_pages);
- 		}
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -323,6 +323,16 @@ static int __ptrace_may_access(struct ta
+ 	return -EPERM;
+ ok:
+ 	rcu_read_unlock();
++	/*
++	 * If a task drops privileges and becomes nondumpable (through a syscall
++	 * like setresuid()) while we are trying to access it, we must ensure
++	 * that the dumpability is read after the credentials; otherwise,
++	 * we may be able to attach to a task that we shouldn't be able to
++	 * attach to (as if the task had dropped privileges without becoming
++	 * nondumpable).
++	 * Pairs with a write barrier in commit_creds().
++	 */
++	smp_rmb();
+ 	mm = task->mm;
+ 	if (mm &&
+ 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
 
 
