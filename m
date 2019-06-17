@@ -2,67 +2,120 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D177EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:12:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB20EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:18:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94632208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:12:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="tNF5qudZ"
+	by mail.kernel.org (Postfix) with ESMTP id BF35620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:18:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfFQRMc (ORCPT
+        id S1728254AbfFQRSW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 13:12:32 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33912 "EHLO vps0.lunn.ch"
+        Mon, 17 Jun 2019 13:18:22 -0400
+Received: from foss.arm.com ([217.140.110.172]:57064 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfFQRMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:12:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=UiPXLrts3a4GyCng7h+zP+L7X8WFuhV99/2M4gEuIWc=; b=tNF5qudZB7ehWIR+4fkCAiq+fJ
-        NmddZCAQJjuTC3oel8FhhTKIxcCS6NUIpYMxyJ2fi1Qr3q/IO+LckuTLxep2Gqqvo5hUd/6aYmgH/
-        lPmzf0Lw6Cthnb3pnm1i6T5Kddz1/EyjlwnkdQY9Q7TX/P6wC8Vo4u+Zfnoi4MMxOkNU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hcvB7-00021X-AR; Mon, 17 Jun 2019 19:12:21 +0200
-Date:   Mon, 17 Jun 2019 19:12:21 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, linus.walleij@linaro.org,
-        jason@lakedaemon.net, gregory.clement@bootlin.com,
-        sebastian.hesselbarth@gmail.com, linux-gpio@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-clk@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 4/4] clk: kirkwood: Add support for MV98DX1135
-Message-ID: <20190617171221.GI17551@lunn.ch>
-References: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
- <20190617100432.13037-5-chris.packham@alliedtelesis.co.nz>
+        id S1726005AbfFQRSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:18:21 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9B7128;
+        Mon, 17 Jun 2019 10:18:20 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08B543F246;
+        Mon, 17 Jun 2019 10:18:15 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 18:18:13 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Evgenii Stepanov <eugenis@google.com>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Memory Management List <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
+        kvm@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control
+ the tagged user addresses ABI
+Message-ID: <20190617171813.GC34565@arrakis.emea.arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
+ <20190617135636.GC1367@arrakis.emea.arm.com>
+ <CAFKCwrjJ+0ijNKa3ioOP7xa91QmZU0NhkO=tNC-Q_ThC69vTug@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617100432.13037-5-chris.packham@alliedtelesis.co.nz>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <CAFKCwrjJ+0ijNKa3ioOP7xa91QmZU0NhkO=tNC-Q_ThC69vTug@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:04:32PM +1200, Chris Packham wrote:
-> The 98DX1135 is a switch chip with an integrated CPU. This is similar to
-> the 98DX4122 except that the core clock speed is fixed to 166Mhz.
+On Mon, Jun 17, 2019 at 09:57:36AM -0700, Evgenii Stepanov wrote:
+> On Mon, Jun 17, 2019 at 6:56 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > On Wed, Jun 12, 2019 at 01:43:20PM +0200, Andrey Konovalov wrote:
+> > > From: Catalin Marinas <catalin.marinas@arm.com>
+> > >
+> > > It is not desirable to relax the ABI to allow tagged user addresses into
+> > > the kernel indiscriminately. This patch introduces a prctl() interface
+> > > for enabling or disabling the tagged ABI with a global sysctl control
+> > > for preventing applications from enabling the relaxed ABI (meant for
+> > > testing user-space prctl() return error checking without reconfiguring
+> > > the kernel). The ABI properties are inherited by threads of the same
+> > > application and fork()'ed children but cleared on execve().
+> > >
+> > > The PR_SET_TAGGED_ADDR_CTRL will be expanded in the future to handle
+> > > MTE-specific settings like imprecise vs precise exceptions.
+> > >
+> > > Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+> >
+> > A question for the user-space folk: if an application opts in to this
+> > ABI, would you want the sigcontext.fault_address and/or siginfo.si_addr
+> > to contain the tag? We currently clear it early in the arm64 entry.S but
+> > we could find a way to pass it down if needed.
 > 
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+> For HWASan this would not be useful because we instrument memory
+> accesses with explicit checks anyway. For MTE, on the other hand, it
+> would be very convenient to know the fault address tag without
+> disassembling the code.
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+I could as this differently: does anything break if, once the user
+opts in to TBI, fault_address and/or si_addr have non-zero top byte?
 
-    Andrew
+Alternatively, we could present the original FAR_EL1 register as a
+separate field as we do with ESR_EL1, independently of whether the user
+opted in to TBI or not.
+
+-- 
+Catalin
