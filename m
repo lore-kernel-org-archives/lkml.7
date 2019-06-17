@@ -2,78 +2,99 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACEEBC31E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4829AC31E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:38:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718A82089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25A2E20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:38:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfFQBbo (ORCPT
+        id S1727527AbfFQBiV convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 21:31:44 -0400
-Received: from foss.arm.com ([217.140.110.172]:32866 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727382AbfFQBbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 21:31:44 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73BDD28;
-        Sun, 16 Jun 2019 18:31:43 -0700 (PDT)
-Received: from [10.162.42.123] (p8cg001049571a15.blr.arm.com [10.162.42.123])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6CA773F246;
-        Sun, 16 Jun 2019 18:31:41 -0700 (PDT)
-Subject: Re: LTP hugemmap05 test case failure on arm64 with linux-next
- (next-20190613)
-To:     Qian Cai <cai@lca.pw>, Will Deacon <will.deacon@arm.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        Sun, 16 Jun 2019 21:38:21 -0400
+Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:36420 "EHLO
+        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727389AbfFQBiV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 21:38:21 -0400
+Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS1.zhaoxin.com
+ (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 17 Jun
+ 2019 09:38:18 +0800
+Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
+ (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 17 Jun
+ 2019 09:38:17 +0800
+Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
+ zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
+ 15.01.1261.035; Mon, 17 Jun 2019 09:38:17 +0800
+From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+To:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-References: <1560461641.5154.19.camel@lca.pw>
- <20190614102017.GC10659@fuggles.cambridge.arm.com>
- <1560514539.5154.20.camel@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <054b6532-a867-ec7c-0a72-6a58d4b2723e@arm.com>
-Date:   Mon, 17 Jun 2019 07:02:02 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>
+CC:     David Wang <DavidWang@zhaoxin.com>,
+        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
+        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
+        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
+Subject: [PATCH v2 2/3] ACPI, x86: add Zhaoxin processors support for NONSTOP
+ TSC
+Thread-Topic: [PATCH v2 2/3] ACPI, x86: add Zhaoxin processors support for
+ NONSTOP TSC
+Thread-Index: AdUkrOpoMH2rNjrMT+S2lZq3wpqRFw==
+Date:   Mon, 17 Jun 2019 01:38:17 +0000
+Message-ID: <97b2d9d81a8446d0b204ddd6e5e930b7@zhaoxin.com>
+Accept-Language: en-US, zh-CN
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.32.64.75]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <1560514539.5154.20.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Qian,
+Zhaoxin CPUs have NONSTOP TSC feature, so enable the ACPI
+driver support for it.
 
-On 06/14/2019 05:45 PM, Qian Cai wrote:
-> On Fri, 2019-06-14 at 11:20 +0100, Will Deacon wrote:
->> Hi Qian,
->>
->> On Thu, Jun 13, 2019 at 05:34:01PM -0400, Qian Cai wrote:
->>> LTP hugemmap05 test case [1] could not exit itself properly and then degrade
->>> the
->>> system performance on arm64 with linux-next (next-20190613). The bisection
->>> so
->>> far indicates,
->>>
->>> BAD:  30bafbc357f1 Merge remote-tracking branch 'arm64/for-next/core'
->>> GOOD: 0c3d124a3043 Merge remote-tracking branch 'arm64-fixes/for-next/fixes'
->>
->> Did you finish the bisection in the end? Also, what config are you using
->> (you usually have something fairly esoteric ;)?
-> 
-> No, it is still running.
-> 
-> https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
-> 
+Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
+---
+ drivers/acpi/acpi_pad.c       | 1 +
+ drivers/acpi/processor_idle.c | 1 +
+ 2 files changed, 2 insertions(+)
 
-Were you able to bisect the problem till a particular commit ?
-
-- Anshuman
+diff --git a/drivers/acpi/acpi_pad.c b/drivers/acpi/acpi_pad.c
+index a47676a..c06306e 100644
+--- a/drivers/acpi/acpi_pad.c
++++ b/drivers/acpi/acpi_pad.c
+@@ -73,6 +73,7 @@ static void power_saving_mwait_init(void)
+ 	case X86_VENDOR_HYGON:
+ 	case X86_VENDOR_AMD:
+ 	case X86_VENDOR_INTEL:
++	case X86_VENDOR_ZHAOXIN:
+ 		/*
+ 		 * AMD Fam10h TSC will tick in all
+ 		 * C/P/S0/S1 states when this bit is set.
+diff --git a/drivers/acpi/processor_idle.c b/drivers/acpi/processor_idle.c
+index 98d4ec5..fa95ce9 100644
+--- a/drivers/acpi/processor_idle.c
++++ b/drivers/acpi/processor_idle.c
+@@ -209,6 +209,7 @@ static void tsc_check_state(int state)
+ 	case X86_VENDOR_AMD:
+ 	case X86_VENDOR_INTEL:
+ 	case X86_VENDOR_CENTAUR:
++	case X86_VENDOR_ZHAOXIN:
+ 		/*
+ 		 * AMD Fam10h TSC will tick in all
+ 		 * C/P/S0/S1 states when this bit is set.
+-- 
+2.7.4
