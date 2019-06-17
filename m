@@ -4,54 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D0BEC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2654C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DD7F20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7373D20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807023;
-	bh=SWHeKYII11p3Y3JSi9uL6NsQXQDwo1vVSaZM6foGYPc=;
+	s=default; t=1560807025;
+	bh=ZJEh321ZjSB2kRnIHaSQrvNPnNFl8ZTzTjIEDmcabaI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jYE7GLWw07rBzcFqIwxrsVxi+SjTlW+hkw/IhPxzDSD05D9DV9r2B556GtqqHZexH
-	 oBFfauDwu/LSxsWjRqIfy610DujI0WHiHI1NfPo3Xc/XDXU1AczRlxzKyOJrOwvS95
-	 qaw3znqmXbgPcbaPczoaP5AacjLxyVHA2j8SIEYk=
+	b=s4emHBBFcgrpz6iyNZxNYOi0Y6a8rAJxGgo6cGOIcb+3rxu89tL620xAbStoEk2r4
+	 098osLKSubyo8ndzm34n/8+4hzAIIW7A8UVwpVcEyweal9R8UmE7aF4LKZiP8YkfAM
+	 tBT2YjU6hDwfGjitxW7tQ06wKInsGnyvpxrY2zgo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730825AbfFQVaV (ORCPT
+        id S1730816AbfFQVaS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:30:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57590 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:30:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57526 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730815AbfFQVaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:30:19 -0400
+        id S1730333AbfFQVaP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:30:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D17CF2063F;
-        Mon, 17 Jun 2019 21:30:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98352204FD;
+        Mon, 17 Jun 2019 21:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560807018;
-        bh=SWHeKYII11p3Y3JSi9uL6NsQXQDwo1vVSaZM6foGYPc=;
+        s=default; t=1560807015;
+        bh=ZJEh321ZjSB2kRnIHaSQrvNPnNFl8ZTzTjIEDmcabaI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=P6FDMPeISmBOdGyL1KHYGmmpnAJ6hIECf8uEtVDZzFoUPcSDDuSBn7Fky7LCLjdPM
-         SqhDKpNULLGfKFYNoDwWYT6C4w3dF/oc97K/tlZ/k5PpZy4yqr1HsLkW2Ef81CN2Ja
-         3yxBUjig49Aj4tAAJZpWmLgvGIbGgubFX8t2c+WU=
+        b=HL7HDJJoa0X5//PZtaY881fU4Em8vJd6WIhO5WZPlsiUPy1jnoqJ3anCp7cf8n5oz
+         GMvLJ5+WgK03k4rtfkifcJ7LUoGCSgAn3+kOcuMJEvNjUbn2sfNhZvxYZOuvSIBdI8
+         rbE5nmYndPXBWzJ+D47m1OJ6jGWna1yY24DWX4C8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 22/53] x86/uaccess, kcov: Disable stack protector
-Date:   Mon, 17 Jun 2019 23:10:05 +0200
-Message-Id: <20190617210749.797218208@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 31/53] arm64/mm: Inhibit huge-vmap with ptdump
+Date:   Mon, 17 Jun 2019 23:10:14 +0200
+Message-Id: <20190617210750.941334533@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -64,40 +63,74 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 40ea97290b08be2e038b31cbb33097d1145e8169 ]
+[ Upstream commit 7ba36eccb3f83983a651efd570b4f933ecad1b5c ]
 
-New tooling noticed this mishap:
+The arm64 ptdump code can race with concurrent modification of the
+kernel page tables. At the time this was added, this was sound as:
 
-  kernel/kcov.o: warning: objtool: write_comp_data()+0x138: call to __stack_chk_fail() with UACCESS enabled
-  kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0xd9: call to __stack_chk_fail() with UACCESS enabled
+* Modifications to leaf entries could result in stale information being
+  logged, but would not result in a functional problem.
 
-All the other instrumentation (KASAN,UBSAN) also have stack protector
-disabled.
+* Boot time modifications to non-leaf entries (e.g. freeing of initmem)
+  were performed when the ptdump code cannot be invoked.
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+* At runtime, modifications to non-leaf entries only occurred in the
+  vmalloc region, and these were strictly additive, as intermediate
+  entries were never freed.
+
+However, since commit:
+
+  commit 324420bf91f6 ("arm64: add support for ioremap() block mappings")
+
+... it has been possible to create huge mappings in the vmalloc area at
+runtime, and as part of this existing intermediate levels of table my be
+removed and freed.
+
+It's possible for the ptdump code to race with this, and continue to
+walk tables which have been freed (and potentially poisoned or
+reallocated). As a result of this, the ptdump code may dereference bogus
+addresses, which could be fatal.
+
+Since huge-vmap is a TLB and memory optimization, we can disable it when
+the runtime ptdump code is in use to avoid this problem.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: 324420bf91f60582 ("arm64: add support for ioremap() block mappings")
+Acked-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/Makefile | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/mm/mmu.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 172d151d429c..3085141c055c 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -30,6 +30,7 @@ KCOV_INSTRUMENT_extable.o := n
- # Don't self-instrument.
- KCOV_INSTRUMENT_kcov.o := n
- KASAN_SANITIZE_kcov.o := n
-+CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 6ac0d32d60a5..abb9d2ecc675 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -899,13 +899,18 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
  
- # cond_syscall is currently not LTO compatible
- CFLAGS_sys_ni.o = $(DISABLE_LTO)
+ int __init arch_ioremap_pud_supported(void)
+ {
+-	/* only 4k granule supports level 1 block mappings */
+-	return IS_ENABLED(CONFIG_ARM64_4K_PAGES);
++	/*
++	 * Only 4k granule supports level 1 block mappings.
++	 * SW table walks can't handle removal of intermediate entries.
++	 */
++	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
++	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+ }
+ 
+ int __init arch_ioremap_pmd_supported(void)
+ {
+-	return 1;
++	/* See arch_ioremap_pud_supported() */
++	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+ }
+ 
+ int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)
 -- 
 2.20.1
 
