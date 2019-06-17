@@ -2,128 +2,116 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0204C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE9DBC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798B520652
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:54:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WK8FGkjU"
+	by mail.kernel.org (Postfix) with ESMTP id A532920652
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:54:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560790451;
+	bh=jzwy6sc+pd0RPmHAI4fwhk46ytVWeFT3FR8ECvwsaPQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eTST75TeBK9ntZkBeoiv3UscCM7e9q3FSeBI81VTDwWOEkzaJuK60G+OPRmUGWrpq
+	 VrXAmdpqi9yRYJgj2IJGBYQUD7QceGlh/ClraON4N/ML29ZT9CmyQLBYmPFUAAnb9h
+	 EKgAtTCu21fgZvEt8zV1iRplH+vhu2lkVLLucl+s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727778AbfFQQx7 (ORCPT
+        id S1728208AbfFQQyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:53:59 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33211 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQQx6 (ORCPT
+        Mon, 17 Jun 2019 12:54:10 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32824 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfFQQyK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:53:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k187so6152518pga.0;
-        Mon, 17 Jun 2019 09:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5GIOr0j5QD0GGMq5iNvz4pmaxjrJeMOWrcA3ngAjb7A=;
-        b=WK8FGkjUVKq18qGzWscm8ahQHW1GUCF+ILUXe63ay3w9JUKolPUj+3YphhK0E8VUiO
-         D3VHOeRgF69Os5dNYBD+3tBeL+QGWRxe4O1lUNffI+ciOxTZnQUOovBJ8QJgdVFafc4r
-         vr9ia4ySytk0IJYT5noK89/yQrr24KTxwjB0P6wOHHrL6IXBMlSQnoyT65V9bcz8SQCW
-         DT5wZDEmNGYbA9YuMMPBYvx3OLXoNdO+ZjLbq7Clkt9R8M322Au0gCU1XYbms5dQt9A3
-         L+pOus4Fm3NyuNx6wxOGaBpjSeM0X2q/+qEIzrCnDdowFRbhBFU73gJDmUhuaF/pQcMj
-         BBUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=5GIOr0j5QD0GGMq5iNvz4pmaxjrJeMOWrcA3ngAjb7A=;
-        b=AflwHAJSDSYflgJBJ4vS5Cd0d1sRbILBAwPvDGCmydEBFMZ5y0HRNN/kIPAB8RVCmj
-         6g11e+dGWT5rzxU60MvkmJinj//SfoKa51UosawCm+ecpPvuT/FEuWVd+os5BZPjC0YA
-         N+0oi99bw475RlvIZ+9LUuNt7Q2Ac58UC7GMaaYfZ83sHCstvDwD024IjsbxnIrkbYcE
-         EHniCzRcGzqfGgYRg6Uojz9d0BGfcd5xdYc3f3Ii6DBxx3VMCBwNjvpx+ZHw7fHEn0ue
-         5dXB2W0D2MjOLpiIMMgOEC4QNM0lxxYt3VMS7iugao+HyMGczDQlk/7fwcBBPKXuWcAi
-         mWdA==
-X-Gm-Message-State: APjAAAW5zfdKFzByziCNbcpQgSIaRxejd3whD+RRmCYUo5TZCX7mqh7h
-        wPgTPbn+M75yRDSz7A6mMe/2JioH
-X-Google-Smtp-Source: APXvYqxQvlJR/5/Ch56UVr+neR0wtCeYjFoYvDMw4Dtm/ZsiOnsiu5rpaDFdeLO8KgOLgtgCCaiS3A==
-X-Received: by 2002:a63:5211:: with SMTP id g17mr46491750pgb.405.1560790437276;
-        Mon, 17 Jun 2019 09:53:57 -0700 (PDT)
-Received: from [10.33.114.148] ([66.170.99.1])
-        by smtp.gmail.com with ESMTPSA id t14sm13687953pfl.62.2019.06.17.09.53.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 09:53:56 -0700 (PDT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
-Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM
- secrets
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <CALCETrVt=X+FB2cM5hMN9okvbcROFfT4_KMwaKaN2YVvc7UQTw@mail.gmail.com>
-Date:   Mon, 17 Jun 2019 09:53:54 -0700
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Alexander Graf <graf@amazon.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marius Hillenbrand <mhillenb@amazon.de>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Transfer-Encoding: 7bit
-Message-Id: <5AA8BF10-8987-4FCB-870C-667A5228D97B@gmail.com>
-References: <20190612170834.14855-1-mhillenb@amazon.de>
- <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
- <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net>
- <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
- <58788f05-04c3-e71c-12c3-0123be55012c@amazon.com>
- <63b1b249-6bc7-ffd9-99db-d36dd3f1a962@intel.com>
- <CALCETrXph3Zg907kWTn6gAsZVsPbCB3A2XuNf0hy5Ez2jm2aNQ@mail.gmail.com>
- <698ca264-123d-46ae-c165-ed62ea149896@intel.com>
- <CALCETrVt=X+FB2cM5hMN9okvbcROFfT4_KMwaKaN2YVvc7UQTw@mail.gmail.com>
-To:     Andy Lutomirski <luto@kernel.org>
-X-Mailer: Apple Mail (2.3445.104.11)
+        Mon, 17 Jun 2019 12:54:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jzwy6sc+pd0RPmHAI4fwhk46ytVWeFT3FR8ECvwsaPQ=; b=oKpYDBqMUYHtZxOybCyzxMGa9
+        lXmE2ZPIQzEDm+fDIJTDAyVYmoWUxV2D3W/KT30SnefyxOvP0738Q/9VH3Y7uZOyaVmh9Ew5kYq6m
+        xUgW6biBfyDi/29nPCsOe7YOJlHkt4nQfLMGt1aLEFyhdrKqT+HcTk68In68hkovt+/d4=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hcutN-0002En-Fv; Mon, 17 Jun 2019 16:54:01 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id C6CC2440046; Mon, 17 Jun 2019 17:54:00 +0100 (BST)
+Date:   Mon, 17 Jun 2019 17:54:00 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
+        lee.jones@linaro.org, lgirdwood@gmail.com, robh+dt@kernel.org,
+        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
+        thomas.liau@actions-semi.com, devicetree@vger.kernel.org,
+        linus.walleij@linaro.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
+Message-ID: <20190617165400.GE5316@sirena.org.uk>
+References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
+ <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
+ <20190617163015.GD5316@sirena.org.uk>
+ <20190617163413.GA16152@Mani-XPS-13-9360>
+ <a38d26d1-213c-31ef-9cc7-1d4bdda4ceab@suse.de>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="eT+isKliMkztK06K"
+Content-Disposition: inline
+In-Reply-To: <a38d26d1-213c-31ef-9cc7-1d4bdda4ceab@suse.de>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Jun 17, 2019, at 9:14 AM, Andy Lutomirski <luto@kernel.org> wrote:
-> 
-> On Mon, Jun 17, 2019 at 9:09 AM Dave Hansen <dave.hansen@intel.com> wrote:
->> On 6/17/19 8:54 AM, Andy Lutomirski wrote:
->>>>> Would that mean that with Meltdown affected CPUs we open speculation
->>>>> attacks against the mmlocal memory from KVM user space?
->>>> Not necessarily.  There would likely be a _set_ of local PGDs.  We could
->>>> still have pair of PTI PGDs just like we do know, they'd just be a local
->>>> PGD pair.
->>> Unfortunately, this would mean that we need to sync twice as many
->>> top-level entries when we context switch.
->> 
->> Yeah, PTI sucks. :)
->> 
->> For anyone following along at home, I'm going to go off into crazy
->> per-cpu-pgds speculation mode now...  Feel free to stop reading now. :)
->> 
->> But, I was thinking we could get away with not doing this on _every_
->> context switch at least.  For instance, couldn't 'struct tlb_context'
->> have PGD pointer (or two with PTI) in addition to the TLB info?  That
->> way we only do the copying when we change the context.  Or does that tie
->> the implementation up too much with PCIDs?
-> 
-> Hmm, that seems entirely reasonable.  I think the nasty bit would be
-> figuring out all the interactions with PV TLB flushing.  PV TLB
-> flushes already don't play so well with PCID tracking, and this will
-> make it worse.  We probably need to rewrite all that code regardless.
 
-How is PCID (as you implemented) related to TLB flushing of kernel (not
-user) PTEs? These kernel PTEs would be global, so they would be invalidated
-from all the address-spaces using INVLPG, I presume. No?
+--eT+isKliMkztK06K
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Having said that, the fact that every hypervisor implements PV-TLB
-completely differently might be unwarranted.
+On Mon, Jun 17, 2019 at 06:38:53PM +0200, Andreas F=E4rber wrote:
+> Am 17.06.19 um 18:34 schrieb Manivannan Sadhasivam:
+> > On Mon, Jun 17, 2019 at 05:30:15PM +0100, Mark Brown wrote:
+
+> >>> @@ -0,0 +1,389 @@
+> >>> +// SPDX-License-Identifier: GPL-2.0+
+> >>> +/*
+> >>> + * Regulator driver for ATC260x PMICs
+
+> >> Please make the entire comment a C++ one so this looks more intentiona=
+l.
+
+> No, this is intentional and the official style requested by GregKH.
+
+The important bit for the tools is the first line, the rest of it the
+tools don't care about.
+
+> He suggested I patch the SPDX documentation to make this clearer, but I
+> did not find time for this yet (and am not the one making this rule).
+
+The other regulator API files are all the way I suggest...
+
+--eT+isKliMkztK06K
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HxacACgkQJNaLcl1U
+h9Ajxwf+Nb+pLbzQmwjNKosrH3fv70fMfbz4cH0bwwpA8IfE8kkDkD8+R5xM2XEE
+IjWs97/+dLz9ZKKOW+ueil9ySOIs9xXMfYfCCKEY97KMa+v8MCpmS0GPXpVszCwW
+r9LrLC8CXddWKroaUloEE+zoNvz3vCA6jbuIxV30hFa4qKELfxlq7PdVm+jnUTKy
+0F9rLO6/cGJ1kxg1wSHvhYagG3aDAyD7hDv9qfrFR9OyPc487ePeBpnOWDddVc1Z
+mGjV9yM7xxUXpb1kkHVn9Ug/3j7b/CHxJc0OAYnVHzQPrbJ8rtt61jCx9owFuXO9
+CwcUmE7kPQ3qijmR6SEvlJcL5TVAUA==
+=RJ5C
+-----END PGP SIGNATURE-----
+
+--eT+isKliMkztK06K--
