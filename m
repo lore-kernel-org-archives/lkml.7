@@ -4,145 +4,126 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAD1C31E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03A2C31E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91E420861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:40:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77ED120861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:41:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DclmCGjO"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="ElB77Qbj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727569AbfFQBkk (ORCPT
+        id S1727585AbfFQBlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 21:40:40 -0400
-Received: from ozlabs.org ([203.11.71.1]:40139 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727389AbfFQBkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 21:40:39 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Rv6r0kXyz9s3l;
-        Mon, 17 Jun 2019 11:40:35 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560735636;
-        bh=z075AqzJURu3z3H6UUHOCRHATUz4KC/gLfVxkTIRjBU=;
-        h=Date:From:To:Cc:Subject:From;
-        b=DclmCGjOA0UjHaDIWM83phtIIVllMOUAZ4niwCugLE6K7F/lDdA2JHhnN5NmgL8GH
-         rOfHBy2umdX18I7zy7nDPTaxep0/yzEuCyQaXmzKmDDtPlBAPuO5+HhVAHzo006yHD
-         DftP7Bs8pkzc3hYY4gIp3hi2SbihxfgvbtE4r6KPm2rs7iSI7YnjEDTYn/z7OOBOc9
-         bpKtczyy9ksTQshy0m7rnUKMkChWW0ZorDjrundZNq71gRIGRvGI4G1h3ogjh1QXMr
-         sX4yp2ZjoikTb/6Q1vn1BctXSIP1L88DaHJ86OHIOj9cSSlm/wpfSk3uS3EgH55ZQZ
-         6sEw5USQZqjlg==
-Date:   Mon, 17 Jun 2019 11:40:11 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jiri Pirko <jiri@mellanox.com>
-Subject: linux-next: manual merge of the net-next tree with the sh tree
-Message-ID: <20190617114011.4159295e@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/W_Stg192fWHnW6s/5Aj.VWh"; protocol="application/pgp-signature"
+        Sun, 16 Jun 2019 21:41:12 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38692 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727389AbfFQBlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 21:41:12 -0400
+Received: by mail-qk1-f194.google.com with SMTP id a27so5255454qkk.5
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 18:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yDNJnnWMnvyj74KJjqDNrTKP8BhcNS3oCZ7kmmIyfm4=;
+        b=ElB77QbjwicalLDAC/XLHtEXw3/UU+ToIyPskfkAUH1tIu/U9suKHVBjE+Gra7qlu4
+         SfROdnCJnmHBNN1JY8yyqKoevbAf71SEXwBAiHw3MoEKCkCFmzyQIstM4lJPVL9bE8sW
+         ol+INiBZwwHD7Vssk4wOLmuefAvt1+xQjPKj2pJEK/KBp0tmoraLJv3cwMQBU5ozFYrL
+         xqBlsK9d2XGk7Z//uN9nMV29HByV5hsqpWrEhHX5TfIdxdq9Kf7bd/MVMdbDKuKazbM0
+         w5ctKa0w7flVcDSgU+A3S9ntfWhtBXdpMaClcKumhtGa6lxEnKfQttxesKMVHWox44ln
+         1VJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=yDNJnnWMnvyj74KJjqDNrTKP8BhcNS3oCZ7kmmIyfm4=;
+        b=pjGtfFpYWJHWvjzkK6bk8ylD0OWT17XVvTjVix4AwXlPYmkgH+9u83eBjABKVkLs7w
+         5tqKKOeQW7LFi7sAmHoZ9MkjEmiPoIzyvU5+TjjJ/R6dDDgPQzrSxB0dmZqwOwyTvj+z
+         v4/WPfvSF5dUIUPdc6ybgjK5DTXQPo6Rgp1LPsFNeKtQdgBp7kEYGe+GvB+iAZEwnn2G
+         kawO+h+TxinPxH7GorhZPv4AsLOgrdTroHZlTZQwpl3lzYg3AdKF0SVitJzY4OA5h8Ny
+         vZhly2Ar1XFSnSr0oKhszjcjPP7h/kqjnHt4uHzO14eaDTBuLxRCEEF9L/uHJD91SD7f
+         PI0Q==
+X-Gm-Message-State: APjAAAU5u/Mlec4lQw9BWayd1Dc+i4o1TBXpy86y71LHH7RfZEaaxRcT
+        yO5vNHwmg402Dtm6dcHCf7yJWUNkJAE=
+X-Google-Smtp-Source: APXvYqz+ah+V71vGndXB9PVxkYf68i4b83LtgwwezyYhS64hdWj/C2Et4tvVQq+ACar89DMNZAxCaw==
+X-Received: by 2002:a37:4887:: with SMTP id v129mr6511552qka.17.1560735671205;
+        Sun, 16 Jun 2019 18:41:11 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id l6sm5718357qkf.83.2019.06.16.18.41.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 16 Jun 2019 18:41:10 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.11\))
+Subject: Re: LTP hugemmap05 test case failure on arm64 with linux-next
+ (next-20190613)
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <054b6532-a867-ec7c-0a72-6a58d4b2723e@arm.com>
+Date:   Sun, 16 Jun 2019 21:41:09 -0400
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <EC704BC3-62FF-4DCE-8127-40279ED50D65@lca.pw>
+References: <1560461641.5154.19.camel@lca.pw>
+ <20190614102017.GC10659@fuggles.cambridge.arm.com>
+ <1560514539.5154.20.camel@lca.pw>
+ <054b6532-a867-ec7c-0a72-6a58d4b2723e@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+X-Mailer: Apple Mail (2.3445.104.11)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/W_Stg192fWHnW6s/5Aj.VWh
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-Today's linux-next merge of the net-next tree got conflicts in:
+> On Jun 16, 2019, at 9:32 PM, Anshuman Khandual =
+<anshuman.khandual@arm.com> wrote:
+>=20
+> Hello Qian,
+>=20
+> On 06/14/2019 05:45 PM, Qian Cai wrote:
+>> On Fri, 2019-06-14 at 11:20 +0100, Will Deacon wrote:
+>>> Hi Qian,
+>>>=20
+>>> On Thu, Jun 13, 2019 at 05:34:01PM -0400, Qian Cai wrote:
+>>>> LTP hugemmap05 test case [1] could not exit itself properly and =
+then degrade
+>>>> the
+>>>> system performance on arm64 with linux-next (next-20190613). The =
+bisection
+>>>> so
+>>>> far indicates,
+>>>>=20
+>>>> BAD:  30bafbc357f1 Merge remote-tracking branch =
+'arm64/for-next/core'
+>>>> GOOD: 0c3d124a3043 Merge remote-tracking branch =
+'arm64-fixes/for-next/fixes'
+>>>=20
+>>> Did you finish the bisection in the end? Also, what config are you =
+using
+>>> (you usually have something fairly esoteric ;)?
+>>=20
+>> No, it is still running.
+>>=20
+>> https://raw.githubusercontent.com/cailca/linux-mm/master/arm64.config
+>>=20
+>=20
+> Were you able to bisect the problem till a particular commit ?
 
-  arch/sh/configs/se7712_defconfig
-  arch/sh/configs/se7721_defconfig
-  arch/sh/configs/titan_defconfig
+Not yet, it turned out the test case needs to run a few times (usually =
+within 5) to reproduce, so the previous bisection was totally wrong =
+where it assume the bad commit will fail every time. Once reproduced, =
+the test case becomes unkillable stuck in the D state.
 
-between commit:
+I am still in the middle of running a new round of bisection. The =
+current progress is,
 
-  7c04efc8d2ef ("sh: configs: Remove useless UEVENT_HELPER_PATH")
-
-from the sh tree and commit:
-
-  a51486266c3b ("net: sched: remove NET_CLS_IND config option")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc arch/sh/configs/se7712_defconfig
-index 6ac7d362e106,1e116529735f..000000000000
---- a/arch/sh/configs/se7712_defconfig
-+++ b/arch/sh/configs/se7712_defconfig
-@@@ -63,7 -63,7 +63,6 @@@ CONFIG_NET_SCH_NETEM=3D
-  CONFIG_NET_CLS_TCINDEX=3Dy
-  CONFIG_NET_CLS_ROUTE4=3Dy
-  CONFIG_NET_CLS_FW=3Dy
-- CONFIG_NET_CLS_IND=3Dy
- -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
-  CONFIG_MTD=3Dy
-  CONFIG_MTD_BLOCK=3Dy
-  CONFIG_MTD_CFI=3Dy
-diff --cc arch/sh/configs/se7721_defconfig
-index ffd15acc2a04,c66e512719ab..000000000000
---- a/arch/sh/configs/se7721_defconfig
-+++ b/arch/sh/configs/se7721_defconfig
-@@@ -62,7 -62,7 +62,6 @@@ CONFIG_NET_SCH_NETEM=3D
-  CONFIG_NET_CLS_TCINDEX=3Dy
-  CONFIG_NET_CLS_ROUTE4=3Dy
-  CONFIG_NET_CLS_FW=3Dy
-- CONFIG_NET_CLS_IND=3Dy
- -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
-  CONFIG_MTD=3Dy
-  CONFIG_MTD_BLOCK=3Dy
-  CONFIG_MTD_CFI=3Dy
-diff --cc arch/sh/configs/titan_defconfig
-index 1c1c78e74fbb,171ab05ce4fc..000000000000
---- a/arch/sh/configs/titan_defconfig
-+++ b/arch/sh/configs/titan_defconfig
-@@@ -142,7 -142,7 +142,6 @@@ CONFIG_GACT_PROB=3D
-  CONFIG_NET_ACT_MIRRED=3Dm
-  CONFIG_NET_ACT_IPT=3Dm
-  CONFIG_NET_ACT_PEDIT=3Dm
-- CONFIG_NET_CLS_IND=3Dy
- -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
-  CONFIG_FW_LOADER=3Dm
-  CONFIG_CONNECTOR=3Dm
-  CONFIG_MTD=3Dm
-
---Sig_/W_Stg192fWHnW6s/5Aj.VWh
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0G73sACgkQAVBC80lX
-0GxtgAf/WqE5lK//POEnbrqY5dg2m+0Vwr9YXdQn699cclXJj2ZBhVwI1SllC/h5
-y1u1MWiPNPIKnRHf2GO5Y0tVbm9wdErMwsk1CGetoSHA+6SJ7kwzPyst/k+jON5p
-qKbyx3PpM+fTl6kCpKc7pq/Lrmd/uw3Stqi30/NcXW0nBx2snM7HNPsj/iwsvsgv
-VUdb3EN9H9daXNXXMaZ+MK3AURgvuFDvERpbPHVRvGUwLpMDIx6IQ+VK4hEuaKIB
-eBqIT6N4DB1V8PIJcoViE6wyr1EGYrlKB2pOxwo6N416hzCklK9YPZu/ysfONl4c
-q3QaSIUtRWToXJR7WCqVhUWEsN3kWA==
-=HrYQ
------END PGP SIGNATURE-----
-
---Sig_/W_Stg192fWHnW6s/5Aj.VWh--
+35c99ffa20ed GOOD (survived 20 times)
+def0fdae813d BAD=
