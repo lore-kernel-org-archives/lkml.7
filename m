@@ -2,91 +2,110 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 664EEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F67C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:07:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 428332084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF7172086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:07:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560784064;
+	bh=Gxoxo21Lfkn/K7A7njUdmGutlMuh89H9AmOUNy6D3vQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=gkyZYfyDil1UyHn0aJ6BudtZ7sbdPPIlgXpM3WnK767FQ0cOroPyBWnwNKHPGM/5p
+	 mcI4pNVp88m6tHzH4Bz+StV03FKs4TAmImKtL2ozpoVaRq1WJhcA5JlyfZtbcE4O0G
+	 6N7pkLgnWfya8g5twREbhmeafpQ2E/811e37+lj0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728400AbfFQPHH (ORCPT
+        id S1728438AbfFQPHn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:07:07 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:27844 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728248AbfFQPHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:07:06 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-73-7E6ddmnkOVuQR4rZ3FkrjQ-1; Mon, 17 Jun 2019 16:07:03 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
- 17 Jun 2019 16:07:03 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 17 Jun 2019 16:07:03 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Josh Poimboeuf' <jpoimboe@redhat.com>
-CC:     'Alexei Starovoitov' <alexei.starovoitov@gmail.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        "Daniel Borkmann" <daniel@iogearbox.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        Song Liu <songliubraving@fb.com>,
-        "Kairui Song" <kasong@redhat.com>
-Subject: RE: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
-Thread-Topic: [PATCH 6/9] x86/bpf: Fix JIT frame pointer usage
-Thread-Index: AQHVIjMat8Fq1dO6sUKm4aXwvliIEKaa+NdggAAgcYCAABJOQIAAJoAAgASjjuA=
-Date:   Mon, 17 Jun 2019 15:07:03 +0000
-Message-ID: <a1942e57ed0844fab62b6bdf0f465578@AcuMS.aculab.com>
-References: <cover.1560431531.git.jpoimboe@redhat.com>
- <03ddea21a533b7b0e471c1d73ebff19dacdcf7e3.1560431531.git.jpoimboe@redhat.com>
- <20190613215807.wjcop6eaadirz5xm@ast-mbp.dhcp.thefacebook.com>
- <57f6e69da6b3461a9c39d71aa1b58662@AcuMS.aculab.com>
- <20190614134401.q2wbh6mvo4nzmw2o@treble>
- <9b8aa912df694d25b581786100d3e2e2@AcuMS.aculab.com>
- <20190614170720.57yxtxvd4qee337l@treble>
-In-Reply-To: <20190614170720.57yxtxvd4qee337l@treble>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 17 Jun 2019 11:07:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43024 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727999AbfFQPHm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:07:42 -0400
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D4C5421855
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:07:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560784062;
+        bh=Gxoxo21Lfkn/K7A7njUdmGutlMuh89H9AmOUNy6D3vQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=kijmrsYEnMsus0trgL5AcnNyXRdSURSsYmJ/F2iZvEm/37ek4Kg+AF9JdVMI9bh9W
+         JCFvsRZC0mD8yQbWZY9v8HJWBAPk96z9+JoD4uRu7MAO4S0KFeAtbR+55mQnDUe/5Z
+         nWYb6rdWQnZWVQMEPmADVTmw4jGsElcvfYdVki2M=
+Received: by mail-wr1-f43.google.com with SMTP id p11so10369207wre.7
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:07:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAUSswx6hyQjPmiwFkRENdweNUiBHK1o4qjDg0DkzhbYtBjnBrgK
+        Qam+eGtbEJKTHCBNe/74/Q4/A+KSsF8bXHtmdNd6Mw==
+X-Google-Smtp-Source: APXvYqyI1b9br6hsxubRzj9P6hDCchpenelMr+cbgYq59s/ECCE0jKzqk2QGDR5wJOWg+nRr7Sj8Tlmkt7OD9xMBD9U=
+X-Received: by 2002:a5d:6a42:: with SMTP id t2mr12131692wrw.352.1560784060277;
+ Mon, 17 Jun 2019 08:07:40 -0700 (PDT)
 MIME-Version: 1.0
-X-MC-Unique: 7E6ddmnkOVuQR4rZ3FkrjQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com> <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
+In-Reply-To: <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 17 Jun 2019 08:07:29 -0700
+X-Gmail-Original-Message-ID: <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
+Message-ID: <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
+Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for MKTME
+To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>, X86 ML <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
+        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogSm9zaCBQb2ltYm9ldWYNCj4gU2VudDogMTQgSnVuZSAyMDE5IDE4OjA3DQouLi4NCj4g
-PiBJIGRvIHJlbWVtYmVyIGEgc3RhY2sgdHJhY2UgcHJpbnRlciBmb3IgeDg2IHRoaXMgZGlkbid0
-IG5lZWQNCj4gPiBhbnkgYW5ub3RhdGlvbiBvZiB0aGUgb2JqZWN0IGNvZGUgYW5kIGRpZG4ndCBu
-ZWVkIGZyYW1lIHBvaW50ZXJzLg0KPiA+IFRoZSBvbmx5IGRvd25zaWRlIHdhcyB0aGF0IGl0IGhh
-ZCB0byAnZ3Vlc3MnIChpZSBzY2FuIHRoZSBzdGFjaykNCj4gPiB0byBnZXQgb3V0IG9mIGZ1bmN0
-aW9ucyB0aGF0IGNvdWxkbid0IHJldHVybi4NCj4gPiBCYXNpY2FsbHkgaXQgZm9sbG93ZWQgdGhl
-IGNvbnRyb2wgZmxvdyBmb3J3YXJkcyB0cmFja2luZyB0aGUNCj4gPiB2YWx1ZXMgb2YgJXNwIGFu
-ZCAlYnAgdW50aWwgaXQgZm91bmQgYSByZXR1cm4gaW5zdHVjdGlvbi4NCj4gPiBBbGwgaXQgaGFz
-IHRvIGRvIGlzIGRldGVjdCBsb29wcyBhbmQgcmV0cnkgZnJvbSB0aGUgb3RoZXINCj4gPiB0YXJn
-ZXQgb2YgY29uZGl0aW9uYWwgYnJhbmNoZXMuDQo+IA0KPiBUaGF0IGFjdHVhbGx5IHNvdW5kcyBr
-aW5kIG9mIGNvb2wsIHRob3VnaCBJIGRvbid0IHRoaW5rIHdlIG5lZWQgdGhhdCBmb3INCj4gdGhl
-IGtlcm5lbC4NCg0KTm8gcmVhc29uIHdoeSBub3QuDQpJdCB3b3VsZCBzYXZlIG1vc3Qgb2YgdGhl
-IGluc3RydW1lbnRhdGlvbiB0aGUgb3JjIHVud2luZGVyIG5lZWRzLg0KSXQgaXNuJ3QgYXMgdGhv
-dWdoIHRoZSBwZXJmb3JtYW5jZSBvZiBrZXJuZWwgdHJhY2ViYWNrcyBpcyB0aGF0DQppbXBvcnRh
-bnQgKHByaW50ZiBhbmQgc3ltYm9sIGxvb2t1cCBwcm9iYWJseSBhbHdheXMgZG9taW5hdGVzKS4N
-ClRoZSBvbmx5IGRpZmZpY3VsdHkgZm9yIHg4NiBpcyBxdWlja2x5IGRldGVybWluaW5nIHRoZSBz
-aXplIG9mDQppbnN0cnVjdGlvbnMuDQoNCglEYXZpZA0KDQotDQpSZWdpc3RlcmVkIEFkZHJlc3Mg
-TGFrZXNpZGUsIEJyYW1sZXkgUm9hZCwgTW91bnQgRmFybSwgTWlsdG9uIEtleW5lcywgTUsxIDFQ
-VCwgVUsNClJlZ2lzdHJhdGlvbiBObzogMTM5NzM4NiAoV2FsZXMpDQo=
+On Wed, May 8, 2019 at 7:44 AM Kirill A. Shutemov
+<kirill.shutemov@linux.intel.com> wrote:
+>
+> From: Alison Schofield <alison.schofield@intel.com>
+>
+> Implement memory encryption for MKTME (Multi-Key Total Memory
+> Encryption) with a new system call that is an extension of the
+> legacy mprotect() system call.
+>
+> In encrypt_mprotect the caller must pass a handle to a previously
+> allocated and programmed MKTME encryption key. The key can be
+> obtained through the kernel key service type "mktme". The caller
+> must have KEY_NEED_VIEW permission on the key.
+>
+> MKTME places an additional restriction on the protected data:
+> The length of the data must be page aligned. This is in addition
+> to the existing mprotect restriction that the addr must be page
+> aligned.
 
+I still find it bizarre that this is conflated with mprotect().
+
+I also remain entirely unconvinced that MKTME on anonymous memory is
+useful in the long run.  There will inevitably be all kinds of fancy
+new CPU features that make the underlying MKTME mechanisms much more
+useful.  For example, some way to bind a key to a VM, or a way to
+*sanely* encrypt persistent memory.  By making this thing a syscall
+that does more than just MKTME, you're adding combinatorial complexity
+(you forget pkey!) and you're tying other functionality (change of
+protection) to this likely-to-be-deprecated interface.
+
+This is part of why I much prefer the idea of making this style of
+MKTME a driver or some other non-intrusive interface.  Then, once
+everyone gets tired of it, the driver can just get turned off with no
+side effects.
+
+--Andy
