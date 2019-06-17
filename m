@@ -4,119 +4,99 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C92DC31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:09:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3165C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:10:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53E582084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:09:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 774F1208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:10:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="lUr0x2tV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ky0OhGyF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728386AbfFQPJh (ORCPT
+        id S1728414AbfFQPKM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:09:37 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:59626 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQPJh (ORCPT
+        Mon, 17 Jun 2019 11:10:12 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35673 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfFQPKL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:09:37 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5HF9QuK078617;
-        Mon, 17 Jun 2019 10:09:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560784166;
-        bh=rTV+SbefbDzPyGHW1pgcLCQYe9fYpv1qPT94iYiJ7RY=;
-        h=Subject:From:To:CC:References:Date:In-Reply-To;
-        b=lUr0x2tVaSTlbCLsfbI/X2vkSqoBl9kvvbSUDVLW5SUlVAOHHt1FZ4QBhtobls8QP
-         L8TO799xCuH9/hfiHgmmOv/K1otnnZw7y/kIStLLXjhCOZ8Z2nFC+0FFUr3m0GpN5o
-         /xI99dToHkRREEauRLeibCRMngedGR2BulqoOMNM=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5HF9Q7g029558
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Jun 2019 10:09:26 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
- Jun 2019 10:09:25 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 17 Jun 2019 10:09:25 -0500
-Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5HF9PFk034523;
-        Mon, 17 Jun 2019 10:09:25 -0500
-Subject: Re: [PATCH v12 1/5] can: m_can: Create a m_can platform framework
-From:   Dan Murphy <dmurphy@ti.com>
-To:     <wg@grandegger.com>, <mkl@pengutronix.de>, <davem@davemloft.net>
-CC:     <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190509161109.10499-1-dmurphy@ti.com>
- <dbb7bdef-820d-5dcc-d7b5-a82bc1b076fb@ti.com>
- <a8e3f2d3-18c3-3bdb-1318-8964afc7e032@ti.com>
- <93530d94-ec65-de82-448e-f2460dd39fb9@ti.com>
- <0f6c41c8-0071-ed3a-9e65-caf02a0fbefe@ti.com>
-Message-ID: <6fa79302-ad32-7f43-f9d5-af70aa789284@ti.com>
-Date:   Mon, 17 Jun 2019 10:09:25 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 11:10:11 -0400
+Received: by mail-pl1-f193.google.com with SMTP id p1so4215059plo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:10:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:to:from:subject:cc:user-agent:date;
+        bh=RrNEZkQt5HKoUfzRadgZa2XIFWt7gGNYEFg83I4dzHg=;
+        b=Ky0OhGyFU/8wdxd/wWoxfATOJXQA4oQm20lG4MLzYkk08eKB19NfpVHAK06+y3k/P9
+         Xu9XX3nfykiU6HkQdwBM9bz9QJ/ekFK15dya0gpRCL+FVayr8jsgCikYQc2Wo4KZnXqY
+         AF2EyiM8qv+WBCaoyXS93RlzrCj3eY+O/R4Vg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:to:from:subject:cc
+         :user-agent:date;
+        bh=RrNEZkQt5HKoUfzRadgZa2XIFWt7gGNYEFg83I4dzHg=;
+        b=Hz9BK9tYpsrQNUHCSlL5apvyZh6YKxv1h0ZosrRNZ4DFYKxOzcEwFhHajeFNBJXg+V
+         nXHicV0NKtJgT3C0ZkmINKs0wA1aAXtk/PnlZDV5G9y7kZDSTErl7cBK0fXf6rj21AQr
+         sYwIrnc5IT6Ivqm7sk0nf2VhIB/BNzJpPrxqGznja4OTZB2Zu7BccGHmlJ89xCs9LuIZ
+         bBbGoQXr49dSfKwp/s3mM0ruW7lqm0R/yDJBf3NqzDmQrTvG/sH+xDcp4Cq19epawWTl
+         vRy0BsxsQah/CJhsDYwV3vF/H8upIbZ0wOvnBNv2hsirObIOULbFc69JwZc35Cqv/zss
+         LA1Q==
+X-Gm-Message-State: APjAAAX+rMLJIPdy0pjd8T8Q2x0c62366lEA/QK651TptotuqjHF5w/0
+        1/QQ1ZN+OQ3eYbmtZfvqOQgL3A==
+X-Google-Smtp-Source: APXvYqylFmQKmBTKyHsSy1Ps5/Nh3sNrn1DbSH0wex7/W/BGfi9v5C7IT0RxX6UfE1Njsz5KtJUlkg==
+X-Received: by 2002:a17:902:760a:: with SMTP id k10mr88282143pll.83.1560784210920;
+        Mon, 17 Jun 2019 08:10:10 -0700 (PDT)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id g5sm10125082pjt.14.2019.06.17.08.10.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 08:10:09 -0700 (PDT)
+Message-ID: <5d07ad51.1c69fb81.25c8.f3a0@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <0f6c41c8-0071-ed3a-9e65-caf02a0fbefe@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190615030343.96524-1-wangkefeng.wang@huawei.com>
+References: <20190612010011.90185-1-wangkefeng.wang@huawei.com> <20190615030343.96524-1-wangkefeng.wang@huawei.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH next v2] of/fdt: Fix defined but not used compiler warning
+Cc:     Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Rob Herring <robh@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+User-Agent: alot/0.8.1
+Date:   Mon, 17 Jun 2019 08:10:08 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marc
+Quoting Kefeng Wang (2019-06-14 20:03:43)
+> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler
+> warning,
+>=20
+> drivers/of/fdt.c:129:19: warning: =E2=80=98of_fdt_match=E2=80=99 defined =
+but not used [-Wunused-function]
+>  static int __init of_fdt_match(const void *blob, unsigned long node,
+>=20
+> Since the only caller of of_fdt_match() is of_flat_dt_match(),
+> let's move the body of of_fdt_match() into of_flat_dt_match()
+> and eliminate of_fdt_match().
+>=20
+> Meanwhile, move of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE,
+> as all callers are over there.
+>=20
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
 
-On 6/10/19 11:35 AM, Dan Murphy wrote:
-> Bump
->
-> On 6/6/19 8:16 AM, Dan Murphy wrote:
->> Marc
->>
->> Bump
->>
->> On 5/31/19 6:51 AM, Dan Murphy wrote:
->>> Marc
->>>
->>> On 5/15/19 3:54 PM, Dan Murphy wrote:
->>>> Marc
->>>>
->>>> On 5/9/19 11:11 AM, Dan Murphy wrote:
->>>>> Create a m_can platform framework that peripheral
->>>>> devices can register to and use common code and register sets.
->>>>> The peripheral devices may provide read/write and configuration
->>>>> support of the IP.
->>>>>
->>>>> Acked-by: Wolfgang Grandegger <wg@grandegger.com>
->>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>> ---
->>>>>
->>>>> v12 - Update the m_can_read/write functions to create a backtrace 
->>>>> if the callback
->>>>> pointer is NULL. - https://lore.kernel.org/patchwork/patch/1052302/
->>>>>
->>>> Is this able to be merged now?
->>>
->>> ping
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
 
-Wondering if there is anything else we need to do?
+Arnd sent something similar now too.
 
-The part has officially shipped and we had hoped to have driver support 
-in Linux as part of the announcement.
-
-Dan
-
-
->>>
->>>
->>>> Dan
->>>>
->>>> <snip>
