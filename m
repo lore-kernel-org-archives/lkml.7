@@ -2,57 +2,56 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76EC8C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DC5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A8262089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E62E20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806314;
-	bh=lJfIZCFFMQ+3+weqOMdFEChPc+m93c73yWsmP5nWl4w=;
+	s=default; t=1560806318;
+	bh=loqM1FvE8p0d5XRVN46uVoBtpy2yvMzgd4zOq2yJjDs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ESweY+xsCKXAn6dDEmG/7jQVSBEc/ojMfyKRVluP19q8D6DEXjkv+j8zfW8wZynr3
-	 KkzHpqu9DQLiIVcgC+1MpMwa5sSunJaAZM11EHbbtYzZU62FJ4RtYc/nkPA7t94ncz
-	 BoZiu/YSUzx+ZCiP6knZxJ6TM7YD99Ti94lkvVAQ=
+	b=qeEgyfV8vb/Q9wtbk7ptls01agIjPkkCDhI3swXlFB9lbIOzqg4BNwGB7sTdgXYic
+	 Q0iyDHlmWMgclojobInOajzPRPkKrfLcGrG4GdCr/nkIBaWQVq1HpUj6KCEnjNC1Fs
+	 7xGMz8QAcyQFW9sjiHBODaAaj8Zh4A/GfHqPGlQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726822AbfFQVSd (ORCPT
+        id S1727163AbfFQVSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:18:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42002 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:18:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfFQVSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:18:33 -0400
+        id S1725839AbfFQVSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:18:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F8C820861;
-        Mon, 17 Jun 2019 21:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57920208CB;
+        Mon, 17 Jun 2019 21:18:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806312;
-        bh=lJfIZCFFMQ+3+weqOMdFEChPc+m93c73yWsmP5nWl4w=;
+        s=default; t=1560806314;
+        bh=loqM1FvE8p0d5XRVN46uVoBtpy2yvMzgd4zOq2yJjDs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nf4c9962HLLRLWNsPzZ/PYBq5MYQMfW3b92Q94n28UN+t8n1zG9D4Cpi1tk34Ju5b
-         ApIE9SsHe/Hcf34jxjWP+K4utd1EVA5PLfBGihPZbY5+Sy7mOUzOwvT1NUIy3dacDg
-         lCuOwQpE6zx8EjyHxaArArwO7WtK2xgV9+gb65qk=
+        b=GRB4q/SVrC1utdHxszvGjG9LpcyVHKxcIpK9vHhE7wsqo7vxzOhhSkpfiWxacF2zr
+         cFYH1XLOI2Cskr9CIHM0KMgEkrOI73gY7NBghDu+t0Ob0pI47+Xsev7klonyDkHt58
+         Lvj0nH3q5BaG97WzzvsYooe4ucScrCpTFVWTwlL8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 5.1 001/115] drm/nouveau: add kconfig option to turn off nouveau legacy contexts. (v3)
-Date:   Mon, 17 Jun 2019 23:08:21 +0200
-Message-Id: <20190617210800.005254704@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Aaron Skomra <aaron.skomra@wacom.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 5.1 010/115] HID: wacom: Correct button numbering 2nd-gen Intuos Pro over Bluetooth
+Date:   Mon, 17 Jun 2019 23:08:30 +0200
+Message-Id: <20190617210800.444784204@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,112 +60,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Jason Gerecke <jason.gerecke@wacom.com>
 
-commit b30a43ac7132cdda833ac4b13dd1ebd35ace14b7 upstream.
+commit 6441fc781c344df61402be1fde582c4491fa35fa upstream.
 
-There was a nouveau DDX that relied on legacy context ioctls to work,
-but we fixed it years ago, give distros that have a modern DDX the
-option to break the uAPI and close the mess of holes that legacy
-context support is.
+The button numbering of the 2nd-gen Intuos Pro is not consistent between
+the USB and Bluetooth interfaces. Over USB, the HID_GENERIC codepath
+enumerates the eight ExpressKeys first (BTN_0 - BTN_7) followed by the
+center modeswitch button (BTN_8). The Bluetooth codepath, however, has
+the center modeswitch button as BTN_0 and the the eight ExpressKeys as
+BTN_1 - BTN_8. To ensure userspace button mappings do not change
+depending on how the tablet is connected, modify the Bluetooth codepath
+to report buttons in the same order as USB.
 
-Full context of the story:
+To ensure the mode switch LED continues to toggle in response to the
+mode switch button, the `wacom_is_led_toggled` function also requires
+a small update.
 
-commit 0e975980d435d58df2d430d688b8c18778b42218
-Author: Peter Antoine <peter.antoine@intel.com>
-Date:   Tue Jun 23 08:18:49 2015 +0100
-
-    drm: Turn off Legacy Context Functions
-
-    The context functions are not used by the i915 driver and should not
-    be used by modeset drivers. These driver functions contain several bugs
-    and security holes. This change makes these functions optional can be
-    turned on by a setting, they are turned off by default for modeset
-    driver with the exception of the nouvea driver that may require them with
-    an old version of libdrm.
-
-    The previous attempt was
-
-    commit 7c510133d93dd6f15ca040733ba7b2891ed61fd1
-    Author: Daniel Vetter <daniel.vetter@ffwll.ch>
-    Date:   Thu Aug 8 15:41:21 2013 +0200
-
-        drm: mark context support as a legacy subsystem
-
-    but this had to be reverted
-
-    commit c21eb21cb50d58e7cbdcb8b9e7ff68b85cfa5095
-    Author: Dave Airlie <airlied@redhat.com>
-    Date:   Fri Sep 20 08:32:59 2013 +1000
-
-        Revert "drm: mark context support as a legacy subsystem"
-
-    v2: remove returns from void function, and formatting (Daniel Vetter)
-
-    v3:
-    - s/Nova/nouveau/ in the commit message, and add references to the
-      previous attempts
-    - drop the part touching the drm hw lock, that should be a separate
-      patch.
-
-    Signed-off-by: Peter Antoine <peter.antoine@intel.com> (v2)
-    Cc: Peter Antoine <peter.antoine@intel.com> (v2)
-    Reviewed-by: Peter Antoine <peter.antoine@intel.com>
-    Signed-off-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-v2: move DRM_VM dependency into legacy config.
-v3: fix missing dep (kbuild robot)
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
+Link: https://github.com/linuxwacom/input-wacom/pull/79
+Fixes: 4922cd26f03c ("HID: wacom: Support 2nd-gen Intuos Pro's Bluetooth classic interface")
+Cc: <stable@vger.kernel.org> # 4.11+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Reviewed-by: Aaron Skomra <aaron.skomra@wacom.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/nouveau/Kconfig       |   13 ++++++++++++-
- drivers/gpu/drm/nouveau/nouveau_drm.c |    7 +++++--
- 2 files changed, 17 insertions(+), 3 deletions(-)
+ drivers/hid/wacom_wac.c |   11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
---- a/drivers/gpu/drm/nouveau/Kconfig
-+++ b/drivers/gpu/drm/nouveau/Kconfig
-@@ -17,10 +17,21 @@ config DRM_NOUVEAU
- 	select INPUT if ACPI && X86
- 	select THERMAL if ACPI && X86
- 	select ACPI_VIDEO if ACPI && X86
--	select DRM_VM
- 	help
- 	  Choose this option for open-source NVIDIA support.
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -1383,7 +1383,7 @@ static void wacom_intuos_pro2_bt_pad(str
+ 	struct input_dev *pad_input = wacom->pad_input;
+ 	unsigned char *data = wacom->data;
  
-+config NOUVEAU_LEGACY_CTX_SUPPORT
-+	bool "Nouveau legacy context support"
-+	depends on DRM_NOUVEAU
-+	select DRM_VM
-+	default y
-+	help
-+	  There was a version of the nouveau DDX that relied on legacy
-+	  ctx ioctls not erroring out. But that was back in time a long
-+	  ways, so offer a way to disable it now. For uapi compat with
-+	  old nouveau ddx this should be on by default, but modern distros
-+	  should consider turning it off.
+-	int buttons = (data[282] << 1) | ((data[281] >> 6) & 0x01);
++	int buttons = data[282] | ((data[281] & 0x40) << 2);
+ 	int ring = data[285] & 0x7F;
+ 	bool ringstatus = data[285] & 0x80;
+ 	bool prox = buttons || ringstatus;
+@@ -3832,7 +3832,7 @@ static void wacom_24hd_update_leds(struc
+ static bool wacom_is_led_toggled(struct wacom *wacom, int button_count,
+ 				 int mask, int group)
+ {
+-	int button_per_group;
++	int group_button;
+ 
+ 	/*
+ 	 * 21UX2 has LED group 1 to the left and LED group 0
+@@ -3842,9 +3842,12 @@ static bool wacom_is_led_toggled(struct
+ 	if (wacom->wacom_wac.features.type == WACOM_21UX2)
+ 		group = 1 - group;
+ 
+-	button_per_group = button_count/wacom->led.count;
++	group_button = group * (button_count/wacom->led.count);
+ 
+-	return mask & (1 << (group * button_per_group));
++	if (wacom->wacom_wac.features.type == INTUOSP2_BT)
++		group_button = 8;
 +
- config NOUVEAU_PLATFORM_DRIVER
- 	bool "Nouveau (NVIDIA) SoC GPUs"
- 	depends on DRM_NOUVEAU && ARCH_TEGRA
---- a/drivers/gpu/drm/nouveau/nouveau_drm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_drm.c
-@@ -1094,8 +1094,11 @@ nouveau_driver_fops = {
- static struct drm_driver
- driver_stub = {
- 	.driver_features =
--		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER |
--		DRIVER_KMS_LEGACY_CONTEXT,
-+		DRIVER_GEM | DRIVER_MODESET | DRIVER_PRIME | DRIVER_RENDER
-+#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
-+		| DRIVER_KMS_LEGACY_CONTEXT
-+#endif
-+		,
++	return mask & (1 << group_button);
+ }
  
- 	.open = nouveau_drm_open,
- 	.postclose = nouveau_drm_postclose,
+ static void wacom_update_led(struct wacom *wacom, int button_count, int mask,
 
 
