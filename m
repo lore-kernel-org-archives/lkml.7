@@ -2,219 +2,162 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62163C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF4C6C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2829B208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:29:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="udf58+9D"
+	by mail.kernel.org (Postfix) with ESMTP id 9D4D2208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfFQT3O (ORCPT
+        id S1729000AbfFQT31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:29:14 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:50025 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726331AbfFQT3O (ORCPT
+        Mon, 17 Jun 2019 15:29:27 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:34418 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfFQT31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:29:14 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJRq943563920
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:27:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJRq943563920
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560799672;
-        bh=OQOcVr23e8H+o9eutxNbiWv1BHRO5RJhWUxwO5kiehs=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=udf58+9DeYfI8tkMuZUCuvy/XWYydiIF42MvpfyNpMWleymoKWpMVR7nd+baSbTvM
-         WcJ2hev+ALUJR7NdfJnCXPHWZKT+yDfmLyDDFhTIMnmDq/ra23semAfWfkJM6j5Gxz
-         yV8j9yUUKld+S5Al4u5msgNMnIxCGMU2WeK6XXnK9CUEfDDyFLJF+JFZ1TKIRaGkBP
-         H/0ABNaBq9HjfM/sKL8CR/6C/RhNghxFPdg9tJoMU0q9TzmQLj6mRjeXrzWYZx1PWh
-         c/h1wCaRuyHN44iAHYBOdCuFOtWZFWxpXFMTmLMxa0S7a5Y/gMlO8t8Au2/sKckU9F
-         ov4QEKNMXMyZw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJRpvE3563917;
-        Mon, 17 Jun 2019 12:27:51 -0700
-Date:   Mon, 17 Jun 2019 12:27:51 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Mathieu Poirier <tipbot@zytor.com>
-Message-ID: <tip-0abb868bbcbcf9f86e67bcbfaea7dcaba5a72ac0@git.kernel.org>
-Cc:     hpa@zytor.com, namhyung@kernel.org, suzuki.poulose@arm.com,
-        mathieu.poirier@linaro.org, mingo@kernel.org, tglx@linutronix.de,
-        peterz@infradead.org, alexander.shishkin@linux.intel.com,
-        leo.yan@linaro.org, linux-kernel@vger.kernel.org, acme@redhat.com,
-        jolsa@redhat.com
-Reply-To: linux-kernel@vger.kernel.org, jolsa@redhat.com, acme@redhat.com,
-          alexander.shishkin@linux.intel.com, leo.yan@linaro.org,
-          mathieu.poirier@linaro.org, mingo@kernel.org,
-          suzuki.poulose@arm.com, tglx@linutronix.de, peterz@infradead.org,
-          hpa@zytor.com, namhyung@kernel.org
-In-Reply-To: <20190524173508.29044-13-mathieu.poirier@linaro.org>
-References: <20190524173508.29044-13-mathieu.poirier@linaro.org>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf cs-etm: Move tid/pid to traceid_queue
-Git-Commit-ID: 0abb868bbcbcf9f86e67bcbfaea7dcaba5a72ac0
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 15:29:27 -0400
+Received: by mail-qt1-f195.google.com with SMTP id m29so12256201qtu.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 12:29:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/xlNlelotM+Dvc+xUSx9X17ASwHKHoVnlctg4TDQCb8=;
+        b=pnIKUK0yhUXApNPupv14FMaBkIH2OiOH6Sf3J5/ObemWPZtqBijS03f4MJgNGxY+uU
+         PhJtz6FV0/CPcYo0Yz989d5/JA13jRL4Zl5D3ohpxPH6pJG1XIr342CzeEVKwMhbj9kT
+         41KPSLxODNy8PDXnhqKeSesxdRJ5rqbbO0Jq2k1aB6SlG0LdsA/4O/UlXjmfS+jp7ODh
+         YcN/1qBq/82nId3P6X1y9+E28RctV/19t4rKqzwMaz2OpoSimP6wjxxp8Mdlzmv2Xtk/
+         c5fAYJm0AYrrJAWbFivZJ3vbr4dCYW5t7Z4dQAsyOoyyLYkR3QuZyDN0Cgl1/C6U4giC
+         sXBA==
+X-Gm-Message-State: APjAAAUuGgBlVANVGlYka7W7Sll3XIYusjpo2O1YNwTO9Pkn7eSEgJ2s
+        nzGxbuJ4L/62e1TAuCl7juX6SMa/02FIjsncfEg=
+X-Google-Smtp-Source: APXvYqzmfEEp6gZuCeDUa3GncclqO8Dliciq18czTA1lJjjPkfklni0CHo+I/ASPntOHr7eDK1ToeB1Yu+l+Zozbcl4=
+X-Received: by 2002:ac8:3485:: with SMTP id w5mr18630643qtb.142.1560799765930;
+ Mon, 17 Jun 2019 12:29:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190617121427.77565-1-arnd@arndb.de> <20190617141244.5x22nrylw7hodafp@pc636>
+ <CAK8P3a3sjuyeQBUprGFGCXUSDAJN_+c+2z=pCR5J05rByBVByQ@mail.gmail.com>
+ <CAK8P3a0pnEnzfMkCi7Nb97-nG4vnAj7fOepfOaW0OtywP8TLpw@mail.gmail.com> <20190617165730.5l7z47n3vg73q7mp@pc636>
+In-Reply-To: <20190617165730.5l7z47n3vg73q7mp@pc636>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 17 Jun 2019 21:29:08 +0200
+Message-ID: <CAK8P3a1Ab2MVVgSh4EW0Yef_BsxcRbkxarknMzV7tOA+s79qsA@mail.gmail.com>
+Subject: Re: [BUG]: mm/vmalloc: uninitialized variable access in pcpu_get_vm_areas
+To:     Uladzislau Rezki <urezki@gmail.com>
+Cc:     Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0abb868bbcbcf9f86e67bcbfaea7dcaba5a72ac0
-Gitweb:     https://git.kernel.org/tip/0abb868bbcbcf9f86e67bcbfaea7dcaba5a72ac0
-Author:     Mathieu Poirier <mathieu.poirier@linaro.org>
-AuthorDate: Fri, 24 May 2019 11:35:03 -0600
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 10 Jun 2019 15:50:02 -0300
+On Mon, Jun 17, 2019 at 6:57 PM Uladzislau Rezki <urezki@gmail.com> wrote:
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index a9213fc3802d..5b7e50de008b 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -915,7 +915,8 @@ adjust_va_to_fit_type(struct vmap_area *va,
+> >  {
+> >         struct vmap_area *lva;
+> >
+> > -       if (type == FL_FIT_TYPE) {
+> > +       switch (type) {
+> > +       case FL_FIT_TYPE:
+> >                 /*
+> >                  * No need to split VA, it fully fits.
+> >                  *
+> > @@ -925,7 +926,8 @@ adjust_va_to_fit_type(struct vmap_area *va,
+> >                  */
+> >                 unlink_va(va, &free_vmap_area_root);
+> >                 kmem_cache_free(vmap_area_cachep, va);
+> > -       } else if (type == LE_FIT_TYPE) {
+> > +               break;
+> > +       case LE_FIT_TYPE:
+> >                 /*
+> >                  * Split left edge of fit VA.
+> >                  *
+> > @@ -934,7 +936,8 @@ adjust_va_to_fit_type(struct vmap_area *va,
+> >                  * |-------|-------|
+> >                  */
+> >                 va->va_start += size;
+> > -       } else if (type == RE_FIT_TYPE) {
+> > +               break;
+> > +       case RE_FIT_TYPE:
+> >                 /*
+> >                  * Split right edge of fit VA.
+> >                  *
+> > @@ -943,7 +946,8 @@ adjust_va_to_fit_type(struct vmap_area *va,
+> >                  * |-------|-------|
+> >                  */
+> >                 va->va_end = nva_start_addr;
+> > -       } else if (type == NE_FIT_TYPE) {
+> > +               break;
+> > +       case NE_FIT_TYPE:
+> >                 /*
+> >                  * Split no edge of fit VA.
+> >                  *
+> > @@ -980,7 +984,8 @@ adjust_va_to_fit_type(struct vmap_area *va,
+> >                  * Shrink this VA to remaining size.
+> >                  */
+> >                 va->va_start = nva_start_addr + size;
+> > -       } else {
+> > +               break;
+> > +       default:
+> >                 return -1;
+> >         }
+> >
+> To me it is not clear how it would solve the warning. It sounds like
+> your GCC after this change is able to keep track of that variable
+> probably because of less generated code. But i am not sure about
+> other versions. For example i have:
+>
+> gcc version 6.3.0 20170516 (Debian 6.3.0-18+deb9u1)
+>
+> and it totally OK, i.e. it does not emit any related warning.
 
-perf cs-etm: Move tid/pid to traceid_queue
+To provide some background here, I'm doing randconfig tests, and
+this warning might be one that only shows up with a specific combination
+of options that add complexity to the build.
 
-The tid/pid fields of structure cs_etm_queue are CPU dependent and as
-such need to be part of the cs_etm_traceid_queue in order to support
-CPU-wide trace scenarios.
+I do run into a lot -Wmaybe-uninitialized warnings, and most of the time
+can figure out to change the code to be more readable by both
+humans and compilers in a way that shuts up the warning. The
+underlying algorithm in the compiler is NP-complete, so it can't
+ever get it right 100%, but it is a valuable warning in general.
 
-Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-Tested-by: Leo Yan <leo.yan@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Link: http://lkml.kernel.org/r/20190524173508.29044-13-mathieu.poirier@linaro.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/cs-etm.c | 44 ++++++++++++++++++++++++++------------------
- 1 file changed, 26 insertions(+), 18 deletions(-)
+Using switch/case makes it easier for the compiler because it
+seems to turn this into a single conditional instead of a set of
+conditions. It also seems to be the much more common style
+in the kernel.
 
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 0d51d6d9a594..7e3b4d10f5c4 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -62,6 +62,7 @@ struct cs_etm_auxtrace {
- 
- struct cs_etm_traceid_queue {
- 	u8 trace_chan_id;
-+	pid_t pid, tid;
- 	u64 period_instructions;
- 	size_t last_branch_pos;
- 	union perf_event *event_buf;
-@@ -78,7 +79,6 @@ struct cs_etm_queue {
- 	struct cs_etm_decoder *decoder;
- 	struct auxtrace_buffer *buffer;
- 	unsigned int queue_nr;
--	pid_t pid, tid;
- 	u64 offset;
- 	const unsigned char *buf;
- 	size_t buf_len, buf_used;
-@@ -159,10 +159,14 @@ static int cs_etm__init_traceid_queue(struct cs_etm_queue *etmq,
- 				      u8 trace_chan_id)
- {
- 	int rc = -ENOMEM;
-+	struct auxtrace_queue *queue;
- 	struct cs_etm_auxtrace *etm = etmq->etm;
- 
- 	cs_etm__clear_packet_queue(&tidq->packet_queue);
- 
-+	queue = &etmq->etm->queues.queue_array[etmq->queue_nr];
-+	tidq->tid = queue->tid;
-+	tidq->pid = -1;
- 	tidq->trace_chan_id = trace_chan_id;
- 
- 	tidq->packet = zalloc(sizeof(struct cs_etm_packet));
-@@ -598,8 +602,6 @@ static int cs_etm__setup_queue(struct cs_etm_auxtrace *etm,
- 	queue->priv = etmq;
- 	etmq->etm = etm;
- 	etmq->queue_nr = queue_nr;
--	etmq->tid = queue->tid;
--	etmq->pid = -1;
- 	etmq->offset = 0;
- 
- out:
-@@ -817,23 +819,19 @@ cs_etm__get_trace(struct cs_etm_queue *etmq)
- }
- 
- static void cs_etm__set_pid_tid_cpu(struct cs_etm_auxtrace *etm,
--				    struct auxtrace_queue *queue)
-+				    struct auxtrace_queue *queue,
-+				    struct cs_etm_traceid_queue *tidq)
- {
--	struct cs_etm_traceid_queue *tidq;
--	struct cs_etm_queue *etmq = queue->priv;
--
--	tidq = cs_etm__etmq_get_traceid_queue(etmq, CS_ETM_PER_THREAD_TRACEID);
--
- 	/* CPU-wide tracing isn't supported yet */
- 	if (queue->tid == -1)
- 		return;
- 
--	if ((!tidq->thread) && (etmq->tid != -1))
-+	if ((!tidq->thread) && (tidq->tid != -1))
- 		tidq->thread = machine__find_thread(etm->machine, -1,
--						    etmq->tid);
-+						    tidq->tid);
- 
- 	if (tidq->thread)
--		etmq->pid = tidq->thread->pid_;
-+		tidq->pid = tidq->thread->pid_;
- }
- 
- static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
-@@ -850,8 +848,8 @@ static int cs_etm__synth_instruction_sample(struct cs_etm_queue *etmq,
- 	event->sample.header.size = sizeof(struct perf_event_header);
- 
- 	sample.ip = addr;
--	sample.pid = etmq->pid;
--	sample.tid = etmq->tid;
-+	sample.pid = tidq->pid;
-+	sample.tid = tidq->tid;
- 	sample.id = etmq->etm->instructions_id;
- 	sample.stream_id = etmq->etm->instructions_id;
- 	sample.period = period;
-@@ -909,8 +907,8 @@ static int cs_etm__synth_branch_sample(struct cs_etm_queue *etmq,
- 	event->sample.header.size = sizeof(struct perf_event_header);
- 
- 	sample.ip = ip;
--	sample.pid = etmq->pid;
--	sample.tid = etmq->tid;
-+	sample.pid = tidq->pid;
-+	sample.tid = tidq->tid;
- 	sample.addr = cs_etm__first_executed_instr(tidq->packet);
- 	sample.id = etmq->etm->branches_id;
- 	sample.stream_id = etmq->etm->branches_id;
-@@ -1758,9 +1756,19 @@ static int cs_etm__process_timeless_queues(struct cs_etm_auxtrace *etm,
- 	for (i = 0; i < queues->nr_queues; i++) {
- 		struct auxtrace_queue *queue = &etm->queues.queue_array[i];
- 		struct cs_etm_queue *etmq = queue->priv;
-+		struct cs_etm_traceid_queue *tidq;
-+
-+		if (!etmq)
-+			continue;
-+
-+		tidq = cs_etm__etmq_get_traceid_queue(etmq,
-+						CS_ETM_PER_THREAD_TRACEID);
-+
-+		if (!tidq)
-+			continue;
- 
--		if (etmq && ((tid == -1) || (etmq->tid == tid))) {
--			cs_etm__set_pid_tid_cpu(etm, queue);
-+		if ((tid == -1) || (tidq->tid == tid)) {
-+			cs_etm__set_pid_tid_cpu(etm, queue, tidq);
- 			cs_etm__run_decoder(etmq);
- 		}
- 	}
+> Another thing is that, if we add mode code there or change the function
+> prototype, we might run into the same warning. Therefore i proposed that
+> we just set the variable to NULL, i.e. Initialize it.
+
+The problem with adding explicit NULL initializations is that this is
+more likely to hide actual bugs if the code changes again, and the
+compiler no longer notices the problem, so I try to avoid ever
+initializing a variable to something that would cause a runtime
+bug in place of a compile time warning later.
+
+       Arnd
