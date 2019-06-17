@@ -2,102 +2,145 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F619C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 865CFC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6423E2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807342;
-	bh=W0AM3mZ2w2n/ClyM2senMPvoTAFPrTIAe6at9yE9fyc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cQDEB9XCicJOzQdgcxk3ztXsJM4Rfk44MoTeAX5QEqdpN7HjeEagdf8zn2C3rAV0E
-	 tLEcX7W4ZS4Gkw/6ROtEeTAjkZYS7Oo4heThEVnhU0pSuOXgHlJHsTqa59WPCGFHKE
-	 GmSNFst82Asi66yUhen2oruxYtQLHjhCuuQQdtAM=
+	by mail.kernel.org (Postfix) with ESMTP id 4BDCB2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="AP9eqINZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729299AbfFQVfl (ORCPT
+        id S1729553AbfFQVWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:35:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47236 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729556AbfFQVWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:22:32 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C125320673;
-        Mon, 17 Jun 2019 21:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806551;
-        bh=W0AM3mZ2w2n/ClyM2senMPvoTAFPrTIAe6at9yE9fyc=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGNqAsozvz4fmVFOMz//X9jC8gIssrJwVcGG7eLwhuTSR2z+Kv8jH190nYRxvzIpS
-         NiqXeZrvnWFb00yI0fB7WLZmrNTKzvElr78sfXyeOXEUSK0iPCfg0MBhBCIvGCX/nu
-         2My5ulyq1djq0WCPsY1Rbk03SIiGBxz2jw7uyaMc=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 046/115] Drivers: misc: fix out-of-bounds access in function param_set_kgdbts_var
-Date:   Mon, 17 Jun 2019 23:09:06 +0200
-Message-Id: <20190617210802.647826725@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-References: <20190617210759.929316339@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Jun 2019 17:22:30 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:38018 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729527AbfFQVWZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:22:25 -0400
+Received: by mail-wm1-f67.google.com with SMTP id s15so901988wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 14:22:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TmAxRc5Ao15ufDfIpyVOarM24v8sriD2DFt+v+/KWs8=;
+        b=AP9eqINZr39hvjsQ/TSc9kqzZmxEst/Cs40Zx8C1pWL3K/ploASez5lUjyTP2D5cQm
+         ClADWsLajpphjVRYvYYbO3WaDBVywsDCN5Zr11KbOwq02iXK2HMMPjJochM82fCPPhv3
+         LzXfVYTbhmk6fhZFPVPI06zZwu3FRa07d+bVxj9Zj4XT58ggZVHk8fhpe8BY2jXHLw2f
+         WNbg+BRrVwOdcB3PMq8YbZjo04ByENHA/O+XgppEQgpxkRrse66OUGvSg/O6f5UmGQu+
+         TR5HiPEXDOM+7M+UqIhb/fcxmsepBUfzG+z8awdGoFJGt4JrnkeQ/eSkmnMCnJNLe7IH
+         Ckig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=TmAxRc5Ao15ufDfIpyVOarM24v8sriD2DFt+v+/KWs8=;
+        b=qmS7QefMzTvDXU0DaS/Eq7ODKBB+4wDmIhRjs+Akx4dPYDlnBYmg4sGfrScLYibwIs
+         O5GeWYOWW8/o4viDBsnwKkLsl3R0rzEmjAbuuBFkYKFUcwMUxhkFXiTjlUHrSWVZK9Dc
+         4Ab8u7MyPoxlbFJMJKWHypk+Q5zL9XA8++S8LqyCqeq0zufJEOq/dChs/FiHS8tNuFuB
+         i2ev2T6qBJWUbESuW5Yc6tHQ0+0IxE91o0MF06Im3JgyWq+yYYYQ6TwEe2QDtk0ZExAU
+         N3Km173X6guEinnmi99mZBIkW7T/pDVU3kt+317xSmV5eEQvxJOdBoGWbQfgLMHGs5sC
+         +YnA==
+X-Gm-Message-State: APjAAAUQXglb4OJ68DmsZcSFK1RPzaXm5E0lT0GHmEFvDz7s1yfHNyuZ
+        zMFgwSOhmOPGJNSqTqqjZQ75Rw==
+X-Google-Smtp-Source: APXvYqyg5EXyQIx5w7TwviJmLrfY1HyRUq/DFZ8ZsH7v6gi7rLdCxns1w21cpdGxRPv7bM1CRLWNOw==
+X-Received: by 2002:a1c:a842:: with SMTP id r63mr392815wme.117.1560806543320;
+        Mon, 17 Jun 2019 14:22:23 -0700 (PDT)
+Received: from localhost.localdomain ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id r131sm396216wmf.4.2019.06.17.14.22.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 14:22:22 -0700 (PDT)
+From:   Christian Brauner <christian@brauner.io>
+To:     viro@zeniv.linux.org.uk, torvalds@linux-foundation.org,
+        ebiederm@xmission.com
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        stable@vger.kernel.org
+Subject: [PATCH v1] fs/namespace: fix unprivileged mount propagation
+Date:   Mon, 17 Jun 2019 23:22:14 +0200
+Message-Id: <20190617212214.29868-1-christian@brauner.io>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b281218ad4311a0342a40cb02fb17a363df08b48 ]
+When propagating mounts across mount namespaces owned by different user
+namespaces it is not possible anymore to move or umount the mount in the
+less privileged mount namespace.
 
-There is an out-of-bounds access to "config[len - 1]" array when the
-variable "len" is zero.
+Here is a reproducer:
 
-See commit dada6a43b040 ("kgdboc: fix KASAN global-out-of-bounds bug
-in param_set_kgdboc_var()") for details.
+  sudo mount -t tmpfs tmpfs /mnt
+  sudo --make-rshared /mnt
 
-Signed-off-by: Young Xiao <YangX92@hotmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  # create unprivileged user + mount namespace and preserve propagation
+  unshare -U -m --map-root --propagation=unchanged
+
+  # now change back to the original mount namespace in another terminal:
+  sudo mkdir /mnt/aaa
+  sudo mount -t tmpfs tmpfs /mnt/aaa
+
+  # now in the unprivileged user + mount namespace
+  mount --move /mnt/aaa /opt
+
+Unfortunately, this is a pretty big deal for userspace since this is
+e.g. used to inject mounts into running unprivileged containers.
+So this regression really needs to go away rather quickly.
+
+The problem is that a recent change falsely locked the root of the newly
+added mounts by setting MNT_LOCKED. Fix this by only locking the mounts
+on copy_mnt_ns() and not when adding a new mount.
+
+Fixes: 3bd045cc9c4b ("separate copying and locking mount tree on cross-userns copies")
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: <stable@vger.kernel.org>
+Tested-by: Christian Brauner <christian@brauner.io>
+Acked-by: Christian Brauner <christian@brauner.io>
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Christian Brauner <christian@brauner.io>
 ---
- drivers/misc/kgdbts.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v1:
+- Christian Brauner <christian@brauner.io>:
+  - fix accidental whitespace change
+---
+ fs/namespace.c | 1 +
+ fs/pnode.c     | 1 -
+ 2 files changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
-index de20bdaa148d..8b01257783dd 100644
---- a/drivers/misc/kgdbts.c
-+++ b/drivers/misc/kgdbts.c
-@@ -1135,7 +1135,7 @@ static void kgdbts_put_char(u8 chr)
- static int param_set_kgdbts_var(const char *kmessage,
- 				const struct kernel_param *kp)
- {
--	int len = strlen(kmessage);
-+	size_t len = strlen(kmessage);
- 
- 	if (len >= MAX_CONFIG_LEN) {
- 		printk(KERN_ERR "kgdbts: config string too long\n");
-@@ -1155,7 +1155,7 @@ static int param_set_kgdbts_var(const char *kmessage,
- 
- 	strcpy(config, kmessage);
- 	/* Chop out \n char as a result of echo */
--	if (config[len - 1] == '\n')
-+	if (len && config[len - 1] == '\n')
- 		config[len - 1] = '\0';
- 
- 	/* Go and configure with the new params. */
+diff --git a/fs/namespace.c b/fs/namespace.c
+index b26778bdc236..44b540e6feb9 100644
+--- a/fs/namespace.c
++++ b/fs/namespace.c
+@@ -2105,6 +2105,7 @@ static int attach_recursive_mnt(struct mount *source_mnt,
+ 		/* Notice when we are propagating across user namespaces */
+ 		if (child->mnt_parent->mnt_ns->user_ns != user_ns)
+ 			lock_mnt_tree(child);
++		child->mnt.mnt_flags &= ~MNT_LOCKED;
+ 		commit_tree(child);
+ 	}
+ 	put_mountpoint(smp);
+diff --git a/fs/pnode.c b/fs/pnode.c
+index 595857a1883e..49f6d7ff2139 100644
+--- a/fs/pnode.c
++++ b/fs/pnode.c
+@@ -261,7 +261,6 @@ static int propagate_one(struct mount *m)
+ 	child = copy_tree(last_source, last_source->mnt.mnt_root, type);
+ 	if (IS_ERR(child))
+ 		return PTR_ERR(child);
+-	child->mnt.mnt_flags &= ~MNT_LOCKED;
+ 	mnt_set_mountpoint(m, mp, child);
+ 	last_dest = m;
+ 	last_source = child;
 -- 
-2.20.1
-
-
+2.21.0
 
