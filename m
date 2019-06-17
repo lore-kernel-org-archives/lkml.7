@@ -2,102 +2,64 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7050BC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:13:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB8C5C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:14:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4369F2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:13:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560766396;
-	bh=f5c48su2CvbBcrjQ8kijdYemzZ1gSqTahoVBb2xBPXA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=n/xX1uNrlEe2GQIYyndSjWxo5+sojoC/jJTW2HF9Fx0G1ykmfjwAB/bicYLOcZD7l
-	 /vgjzhuBzEEpcI8dfgU9sZdkr1Lx5CHtiQAEmeAA23mim250KaDwGyzIifz1emQkrX
-	 bVIBZmu51CPVXpJctBDzoTGStHTvHAQnOGQwmFTk=
+	by mail.kernel.org (Postfix) with ESMTP id 999BD2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:14:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbfFQKNO (ORCPT
+        id S1728201AbfFQKOR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 06:13:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51620 "EHLO mx1.suse.de"
+        Mon, 17 Jun 2019 06:14:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51840 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726311AbfFQKNO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 06:13:14 -0400
+        id S1726311AbfFQKOR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 06:14:17 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1D9A1AC11;
-        Mon, 17 Jun 2019 10:13:13 +0000 (UTC)
-Date:   Mon, 17 Jun 2019 12:13:10 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     Shakeel Butt <shakeelb@google.com>,
-        syzbot <syzbot+d0fc9d3c166bc5e4a94b@syzkaller.appspotmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        yuzhoujian@didichuxing.com
-Subject: Re: general protection fault in oom_unkillable_task
-Message-ID: <20190617101310.GB1492@dhcp22.suse.cz>
-References: <0000000000004143a5058b526503@google.com>
- <CALvZod72=KuBZkSd0ey5orJFGFpwx462XY=cZvO3NOXC0MogFw@mail.gmail.com>
- <20190615134955.GA28441@dhcp22.suse.cz>
- <CALvZod4hT39PfGt9Ohj+g77om5=G0coHK=+G1=GKcm-PowkXsw@mail.gmail.com>
- <20190617063319.GB30420@dhcp22.suse.cz>
- <268214f9-18ef-b63e-2d4f-c344a7dd5e72@i-love.sakura.ne.jp>
+        by mx1.suse.de (Postfix) with ESMTP id E4217AE1C;
+        Mon, 17 Jun 2019 10:14:15 +0000 (UTC)
+Subject: Re: [RFC PATCH 14/16] xen/blk: gnttab, evtchn, xenbus API changes
+To:     Ankur Arora <ankur.a.arora@oracle.com>,
+        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
+Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com, sstabellini@kernel.org,
+        joao.m.martins@oracle.com
+References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
+ <20190509172540.12398-15-ankur.a.arora@oracle.com>
+From:   Juergen Gross <jgross@suse.com>
+Message-ID: <1a4e2fe7-ed2d-05f1-9f2f-f0a940b30151@suse.com>
+Date:   Mon, 17 Jun 2019 12:14:14 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <268214f9-18ef-b63e-2d4f-c344a7dd5e72@i-love.sakura.ne.jp>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190509172540.12398-15-ankur.a.arora@oracle.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: de-DE
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 17-06-19 18:56:47, Tetsuo Handa wrote:
-> On 2019/06/17 15:33, Michal Hocko wrote:
-> > On Sat 15-06-19 09:11:37, Shakeel Butt wrote:
-> >> On Sat, Jun 15, 2019 at 6:50 AM Michal Hocko <mhocko@kernel.org> wrote:
-> > [...]
-> >>> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> >>> index 5a58778c91d4..43eb479a5dc7 100644
-> >>> --- a/mm/oom_kill.c
-> >>> +++ b/mm/oom_kill.c
-> >>> @@ -161,8 +161,8 @@ static bool oom_unkillable_task(struct task_struct *p,
-> >>>                 return true;
-> >>>
-> >>>         /* When mem_cgroup_out_of_memory() and p is not member of the group */
-> >>> -       if (memcg && !task_in_mem_cgroup(p, memcg))
-> >>> -               return true;
-> >>> +       if (memcg)
-> >>> +               return false;
-> >>
-> >> This will break the dump_tasks() usage of oom_unkillable_task(). We
-> >> can change dump_tasks() to traverse processes like
-> >> mem_cgroup_scan_tasks() for memcg OOMs.
-> > 
-> > Right you are. Doing a similar trick to the oom victim selection is
-> > indeed better. We should really strive to not doing a global process
-> > iteration when we can do a targeted scan. Care to send a patch?
+On 09.05.19 19:25, Ankur Arora wrote:
+> For the most part, we now pass xenhost_t * as a parameter.
 > 
-> I posted a patch that (as a side effect) avoids oom_unkillable_task() from dump_tasks() at
-> https://lore.kernel.org/linux-mm/1558519686-16057-2-git-send-email-penguin-kernel@I-love.SAKURA.ne.jp/ .
-> What do you think?
+> Co-developed-by: Joao Martins <joao.m.martins@oracle.com>
+> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 
-I am sorry but I didn't get to look at this series yet. Anyway, changing
-the dump_tasks to use a cgroup iterator for the memcg oom sounds like a
-straight forward thing to do without making much more changes around.
-Global task list iteration under a single RCU is a more complex problem
-that is not limited to the OOM path.
+I don't see how this can be a patch on its own.
 
--- 
-Michal Hocko
-SUSE Labs
+The only way to be able to use a patch for each driver would be to
+keep the original grant-, event- and xenbus-interfaces and add the
+new ones taking xenhost * with a new name. The original interfaces
+could then use xenhost_default and you can switch them to the new
+interfaces one by one. The last patch could then remove the old
+interfaces when there is no user left.
+
+
+Juergen
