@@ -2,100 +2,116 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A83C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:33:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC42C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:34:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 129A5208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:33:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 045E0208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560785586;
-	bh=nrWtFau8QBbmJF7FXKx0ywmXxDO07oH0XZFBBdNfoao=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NzISkN9uEo5MCU3Oe8BPklDfZiSGULDFs7OfQtHjoOhnES0SzmWwtjKjvez/XEPsl
-	 KQ5UKSKbFP4+VW6h/R1bpRdXChSSYSHrvQMvdEgD6XEiMUbUNDHCGaJ+yIv2knn9dT
-	 5l4rx9NZbORWtRZOAoUr2+wjvUuWd1H2xLbjBCx8=
+	s=default; t=1560785672;
+	bh=yUX2CWtSAKeDv1RU+9w/k8KvVW4jlJY27MWnYxozSOE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=oGPuBOiSF+VHCU+3IrwIJ9eFkQBmhshn0LbPiE5dRw62IGtyEMe0O9QAQdiMtCjM4
+	 cxV5y1N3jngza3/pKphx0mIEYUk9s7sYpEeORJdMixTyyv0PyInOo0It9Sr53GP80a
+	 BUShMRxBomj8xSLTAkulkocqG6n6HDYLrleqzJrc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfFQPdE (ORCPT
+        id S1728267AbfFQPea (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:33:04 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37670 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728390AbfFQPdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:33:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5n0Qq04gxXCu8dSk6/GBEW6XU3aU7NpprL9AD2yLI6g=; b=hiRVBALxOUt+f2Xln66yAjcFU
-        +CB+qC6AJi4nr/B3jLVAirvAqzTTBP6zUsVPdWTxRwc/3iNOuNNyCMryfoQuL5x7OyZrpvxHmdbs9
-        BqzK0HSJ84d3dMQPYsKrbAcrYNkgeC1oVRg/yEdc7y6ntQwQz/H1CH97C4af8u2K/pnTs=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hctcy-00021I-5Z; Mon, 17 Jun 2019 15:33:00 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 490DA440046; Mon, 17 Jun 2019 16:32:59 +0100 (BST)
-Date:   Mon, 17 Jun 2019 16:32:59 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 3/8] regulator: core: Expose some of core functions
-Message-ID: <20190617153259.GZ5316@sirena.org.uk>
-References: <20190603235904.19097-1-digetx@gmail.com>
- <20190603235904.19097-4-digetx@gmail.com>
+        Mon, 17 Jun 2019 11:34:30 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53090 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726121AbfFQPea (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:34:30 -0400
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 99CCF208E4;
+        Mon, 17 Jun 2019 15:34:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560785669;
+        bh=yUX2CWtSAKeDv1RU+9w/k8KvVW4jlJY27MWnYxozSOE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=j3OD/pzxDeACIl0ZztD7NpyJUBtaH8onIb8gBTSl096moBM9pVoOYDXVFtEcPjegF
+         O/R/mylR0GZBDBsLHSFC9u4Rgy4lCIIvAPlk4HwD3kOFj7bIOitrV/Gb0CW4T69G27
+         bX5DyuJ+BCSikNCUmd7CdMbb+Aulb6MNmZrtnATU=
+Received: by mail-ed1-f51.google.com with SMTP id p15so16748024eds.8;
+        Mon, 17 Jun 2019 08:34:29 -0700 (PDT)
+X-Gm-Message-State: APjAAAUDCz0iG869hHu9sDJfFZ+FFII1zKe3nTfVQYunwpVZ6Z6e15MH
+        vXE2MHJn/tFlm3oL2/76tPQK+0UcU4GRY2QVrp4=
+X-Google-Smtp-Source: APXvYqzCOXkvwPcWJEk6/a7G9wxosN19969+eIkHVk7gXjncQOJeib1+IDMy+/o2unGp70zpLGVjcu7VzCDX7F67g6U=
+X-Received: by 2002:a50:a485:: with SMTP id w5mr27878889edb.277.1560785668200;
+ Mon, 17 Jun 2019 08:34:28 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="GjiSaFH9IIUbbImY"
-Content-Disposition: inline
-In-Reply-To: <20190603235904.19097-4-digetx@gmail.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190617031113.4506-1-atull@kernel.org> <20190617033510.GA25342@archbook>
+In-Reply-To: <20190617033510.GA25342@archbook>
+From:   Alan Tull <atull@kernel.org>
+Date:   Mon, 17 Jun 2019 10:33:51 -0500
+X-Gmail-Original-Message-ID: <CANk1AXQTbMN2oDruwfS+NGtrKLMGJtp9R+2=o=yvwiuX1ebn9A@mail.gmail.com>
+Message-ID: <CANk1AXQTbMN2oDruwfS+NGtrKLMGJtp9R+2=o=yvwiuX1ebn9A@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: fpga: hand off maintainership to Moritz
+To:     Moritz Fischer <mdf@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-fpga@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sun, Jun 16, 2019 at 10:35 PM Moritz Fischer <mdf@kernel.org> wrote:
 
---GjiSaFH9IIUbbImY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Moritz,
 
-On Tue, Jun 04, 2019 at 02:58:59AM +0300, Dmitry Osipenko wrote:
-> Expose some of internal functions that are required for implementation of
-> customized regulator couplers.
+>
+> Hi Alan,
+>
+> On Sun, Jun 16, 2019 at 10:11:13PM -0500, Alan Tull wrote:
+> > I'm moving on to a new position and stepping down as FPGA subsystem
+> > maintainer.  Moritz has graciously agreed to take over the
+> > maintainership.
+>
+> Thanks a lot for all the work you put into this, it was good fun working
+> with you, and I hope you'll be back someday, or at least you'll keep
+> working on the Linux Kernel in other areas.
 
->  include/linux/regulator/driver.h | 11 ++++++
+Thank you for your support and all the good work and enthusiasm you've
+put into this subsystem!
 
-I'm a bit dubious about exposing any of this but there's no way we
-should be exposing it directly to random drivers, this needs a new
-header so it's more obvious that normal code shouldn't be using these
-interfaces.
+Alan
 
---GjiSaFH9IIUbbImY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HsqoACgkQJNaLcl1U
-h9A0Jwf+IR3w3BeDt0vdH+/tUjf9Ma255H7SF8BeBA+QxDBtM2j5UeC3xo7WVFBM
-J8RwyLm3u2q84WMZ4G2VD+jQD1BFEdyFOcD0Qa3JMCg07qJty29rwxrlR3H7TwtA
-B56FIFL4l3buz2un6cybfGKXNDmSRi8G37g41EnTry7TwtdIJJmK4zGeawbMNBzg
-2O2b34F1+V9+Oq8Jv/Ysl+Tl9gDIo0M4fqlLBtV6I5D7vA73OyamjvcRlBNqnXys
-X8uXAO0/BI+Ghb5OPb9P7ljHLvlI0lwv/gd7Qhfc0otz+wAqReoJl5kMz3KhAmtt
-Vkf2MxU0jPJupMmknxRUVwkCNqg3hw==
-=Wtow
------END PGP SIGNATURE-----
-
---GjiSaFH9IIUbbImY--
+>
+> All: It'll take me a bit to get everything sorted, since I just switched
+> jobs and am still getting set up there, too, so please be patient :)
+>
+> > Signed-off-by: Alan Tull <atull@kernel.org>
+> Acked-by: Moritz Fischer <mdf@kernel.org>
+> > ---
+> >  MAINTAINERS | 1 -
+> >  1 file changed, 1 deletion(-)
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 80e2bfa049d7..448730982545 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -6266,7 +6266,6 @@ F:      include/linux/ipmi-fru.h
+> >  K:   fmc_d.*register
+> >
+> >  FPGA MANAGER FRAMEWORK
+> > -M:   Alan Tull <atull@kernel.org>
+> >  M:   Moritz Fischer <mdf@kernel.org>
+> >  L:   linux-fpga@vger.kernel.org
+> >  S:   Maintained
+> > --
+> > 2.21.0
+> >
+>
+> Cheers,
+> Moritz
