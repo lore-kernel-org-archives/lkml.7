@@ -2,91 +2,112 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0D0C46477
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B530DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 241F82084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVdsXp5/"
+	by mail.kernel.org (Postfix) with ESMTP id 941F7208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728379AbfFQPEf (ORCPT
+        id S1728418AbfFQPEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:04:35 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44034 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQPEe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:04:34 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so21808277iob.11;
-        Mon, 17 Jun 2019 08:04:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OTD1u2qNrb/0/7aEjHb4eOnJekVh9jkQY4qQ+7iNk2U=;
-        b=AVdsXp5/9GFfwzExr0pUZOVDtunnFEYvPOMPfLBxUeDtlVYqUVcIUGRINBBKYj0jMz
-         n1CGyzri5StuE2A3ImnDJmyduzxp/w5qGp7UjAubUKf9gTtoTi+qcK2NzjBfqDi72yg8
-         r/4+V1bcJma7sNsRbVtyYNZQXybIPuKScQVrVZsO0UEFC+UzPllVqN4yZktMSQbhJvKc
-         QMoby1OdZDUtbXb6K8bDBAq/n9tX7VNIi5k9ZRGD4DL1yq94SIOmpkxRBWihzpEBer4A
-         6brBXcRe8K0jFNz+Cb/7QlG28VzvrBpk/zgvAezoPF9WahN+CUIvDEB0Yv59vMlwOjQz
-         joaQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OTD1u2qNrb/0/7aEjHb4eOnJekVh9jkQY4qQ+7iNk2U=;
-        b=UaNI48AVvJFN9sD0xhZFQrAKIyuU75p5WDq/ke/WJEXe+AKvIoPgUW5tn8jJJ8lJAv
-         VxzRyFtqZg+LKMeg01AZwWwWcstw6Z4G6YZjRrO5IgyYq4fxGA/oXFu+Gy0tc0fLxpeN
-         HHv+/kMJxqp5deH7AiH0g6T3HdpZhyyGL2ybvITAXsqkSHyXmTv024Guff5nqlDa56xd
-         C4zV73RKrSgNoe3P2C1dWLwNZnBTD8WK+TuEBwS06o/cvumyHNpy5CxsFET6MBT3AZ3v
-         hxtiOhV2lLOSICo6C+2GpN7iP37A426Nxwt0ID96MmEtSYxYBNC360wF8eZZWHyIG4II
-         TliQ==
-X-Gm-Message-State: APjAAAXA2N60PHL9vTR5M/SI6w0WIXOYl5OiaTlT0okOeoOP2YylXibF
-        6I0FpbIerIMNa61000IXFX6XRt239DNbFC6L2LPCPQ==
-X-Google-Smtp-Source: APXvYqzJOUOditiAVeURtLpNoIA2f2xjXKzFaadRj+FHCpzqHhDXq/Ren1Xv/Tc1KCFpN37LcghdUAE+7q4iELERadU=
-X-Received: by 2002:a5d:8049:: with SMTP id b9mr171243ior.199.1560783873997;
- Mon, 17 Jun 2019 08:04:33 -0700 (PDT)
+        Mon, 17 Jun 2019 11:04:48 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18594 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726215AbfFQPEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:04:47 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id C92BC1D85F75F7B0EB3E;
+        Mon, 17 Jun 2019 23:04:42 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 17 Jun 2019
+ 23:04:36 +0800
+Subject: Re: [PATCH v3] bus: hisi_lpc: Avoid use-after-free from probe failure
+To:     <xuwei5@huawei.com>
+References: <1560770148-57960-1-git-send-email-john.garry@huawei.com>
+CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <joe@perches.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <bda4130a-411e-cb51-5736-a51226c3a99f@huawei.com>
+Date:   Mon, 17 Jun 2019 16:04:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com> <20190617145853.GT5316@sirena.org.uk>
-In-Reply-To: <20190617145853.GT5316@sirena.org.uk>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 17 Jun 2019 09:04:23 -0600
-Message-ID: <CAOCk7NrSBjbyJ3YJoF22i9ysxVTw38SvsaSi9JwVrj7W8er24A@mail.gmail.com>
-Subject: Re: [PATCH v4 0/7] PM8005 and PMS405 regulator support
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        lgirdwood@gmail.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1560770148-57960-1-git-send-email-john.garry@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 8:58 AM Mark Brown <broonie@kernel.org> wrote:
+On 17/06/2019 12:15, John Garry wrote:
+> If, after registering a logical PIO range, the driver probe later fails,
+> the logical PIO range memory will be released automatically.
 >
-> On Thu, Jun 13, 2019 at 02:24:36PM -0700, Jeffrey Hugo wrote:
-> > The MSM8998 MTP reference platform supplies VDD_GFX from s1 of the
-> > pm8005 PMIC.  VDD_GFX is needed to turn on the GPU.  As we are looking
-> > to bring up the GPU, add the support for pm8005 and wire up s1 in a
-> > basic manner so that we have this dependency out of the way and can
-> > focus on enabling the GPU driver.
+> This causes an issue, in that the logical PIO range is not unregistered
+> and the released range memory may be later referenced.
 >
-> There's something really weird with the threading in how you posted
-> these, a few of the patches are in reply to the prior patch so indented
-> a level down.
+> As an interim fix, allocate the logical PIO range with kzalloc() to avoid
+> this memory being freed.
+>
+> Further memory will not be leaked from later attempts to probe the
+> driver, as any attempts to allocate logical PIO ranges will fail, and we
+> would release the 'range' memory.
+>
+> The correct fix for this problem would be to tear down what had been setup
+> during the probe, i.e. unregister the logical PIO range, but this is not
+> supported.
+>
+> Support for unregistering logical PIO ranges will need be to added in
+> future.
+>
+> Fixes: adf38bb0b5956 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
+> Signed-off-by: John Garry <john.garry@huawei.com>
+> ---
+>
 
-Sorry about that.  Bjorn pointed it out to me, and I think I figured
-out the glitch on
-my end.
+I just realized that there is another bug in this driver, regarding 
+unbinding the driver from the device.
 
-Are you ok to proceed in the review, or do you want a repost?
+@xuwei, please ignore this patch. I need to fix this all properly, 
+including adding the logical PIO unregister method.
+
+John
+
+> Change in v2:
+> - update commit message
+>
+> Change to v1:
+> - add comment, as advised by Joe Perches
+>
+> diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
+> index 19d7b6ff2f17..5f0130a693fe 100644
+> --- a/drivers/bus/hisi_lpc.c
+> +++ b/drivers/bus/hisi_lpc.c
+> @@ -599,7 +599,8 @@ static int hisi_lpc_probe(struct platform_device *pdev)
+>  	if (IS_ERR(lpcdev->membase))
+>  		return PTR_ERR(lpcdev->membase);
+>
+> -	range = devm_kzalloc(dev, sizeof(*range), GFP_KERNEL);
+> +	/* Logical PIO may reference 'range' memory even if the probe fails */
+> +	range = kzalloc(sizeof(*range), GFP_KERNEL);
+>  	if (!range)
+>  		return -ENOMEM;
+>
+> @@ -610,6 +611,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
+>  	ret = logic_pio_register_range(range);
+>  	if (ret) {
+>  		dev_err(dev, "register IO range failed (%d)!\n", ret);
+> +		kfree(range);
+>  		return ret;
+>  	}
+>  	lpcdev->io_host = range;
+>
+
+
