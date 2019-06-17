@@ -2,52 +2,51 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51DC5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56FC4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E62E20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211BF20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:18:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806318;
-	bh=loqM1FvE8p0d5XRVN46uVoBtpy2yvMzgd4zOq2yJjDs=;
+	s=default; t=1560806321;
+	bh=ajRhv9bEWYI3/lgF3yGQC/Gsg1TrjAEUXg/emisBKcQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qeEgyfV8vb/Q9wtbk7ptls01agIjPkkCDhI3swXlFB9lbIOzqg4BNwGB7sTdgXYic
-	 Q0iyDHlmWMgclojobInOajzPRPkKrfLcGrG4GdCr/nkIBaWQVq1HpUj6KCEnjNC1Fs
-	 7xGMz8QAcyQFW9sjiHBODaAaj8Zh4A/GfHqPGlQc=
+	b=TKcy/t68lhl2qzC1+p/bfUPddBx2YCCdpe2326RS1go4hgHPL0MzYktdx80PVZr0O
+	 WGsysS6tT5gVcnxxwp0MRX/5FHBt2aBg1cDz5lXMUJPm8g9z+u7bwizkb1CZ25dJt6
+	 Gr0/MuA5iyWndNJILaumw5u3RkHSA9ajPQtzqex0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfFQVSg (ORCPT
+        id S1727615AbfFQVSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:18:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42088 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:18:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42142 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbfFQVSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:18:35 -0400
+        id S1725839AbfFQVSh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:18:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57920208CB;
-        Mon, 17 Jun 2019 21:18:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06A5C2089E;
+        Mon, 17 Jun 2019 21:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806314;
-        bh=loqM1FvE8p0d5XRVN46uVoBtpy2yvMzgd4zOq2yJjDs=;
+        s=default; t=1560806317;
+        bh=ajRhv9bEWYI3/lgF3yGQC/Gsg1TrjAEUXg/emisBKcQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GRB4q/SVrC1utdHxszvGjG9LpcyVHKxcIpK9vHhE7wsqo7vxzOhhSkpfiWxacF2zr
-         cFYH1XLOI2Cskr9CIHM0KMgEkrOI73gY7NBghDu+t0Ob0pI47+Xsev7klonyDkHt58
-         Lvj0nH3q5BaG97WzzvsYooe4ucScrCpTFVWTwlL8=
+        b=dLlsml/e9hKEv2pCCOlNdRiRbswG0Kj5K+4XQ2hF2pIs4jM9XHePmWabD5N2oM/kt
+         y939gYZEiFIsMiX4zDI8EN9MtI9WYCXreXNm4+lDzzcKItbpsjQUzU8QltnAwy3aw1
+         XNj9V5bPC24waH7O1LdFBdMy/XwG01op6NZoTz/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Skomra <aaron.skomra@wacom.com>,
         Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 5.1 010/115] HID: wacom: Correct button numbering 2nd-gen Intuos Pro over Bluetooth
-Date:   Mon, 17 Jun 2019 23:08:30 +0200
-Message-Id: <20190617210800.444784204@linuxfoundation.org>
+Subject: [PATCH 5.1 011/115] HID: wacom: Sync INTUOSP2_BT touch state after each frame if necessary
+Date:   Mon, 17 Jun 2019 23:08:31 +0200
+Message-Id: <20190617210800.493930305@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -62,67 +61,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jason Gerecke <jason.gerecke@wacom.com>
 
-commit 6441fc781c344df61402be1fde582c4491fa35fa upstream.
+commit 69dbdfffef20c715df9f381b2cee4e9e0a4efd93 upstream.
 
-The button numbering of the 2nd-gen Intuos Pro is not consistent between
-the USB and Bluetooth interfaces. Over USB, the HID_GENERIC codepath
-enumerates the eight ExpressKeys first (BTN_0 - BTN_7) followed by the
-center modeswitch button (BTN_8). The Bluetooth codepath, however, has
-the center modeswitch button as BTN_0 and the the eight ExpressKeys as
-BTN_1 - BTN_8. To ensure userspace button mappings do not change
-depending on how the tablet is connected, modify the Bluetooth codepath
-to report buttons in the same order as USB.
+The Bluetooth interface of the 2nd-gen Intuos Pro batches together four
+independent "frames" of finger data into a single report. Each frame
+is essentially equivalent to a single USB report, with the up-to-10
+fingers worth of information being spread across two frames. At the
+moment the driver only calls `input_sync` after processing all four
+frames have been processed, which can result in the driver sending
+multiple updates for a single slot within the same SYN_REPORT. This
+can confuse userspace, so modify the driver to sync more often if
+necessary (i.e., after reporting the state of all fingers).
 
-To ensure the mode switch LED continues to toggle in response to the
-mode switch button, the `wacom_is_led_toggled` function also requires
-a small update.
-
-Link: https://github.com/linuxwacom/input-wacom/pull/79
 Fixes: 4922cd26f03c ("HID: wacom: Support 2nd-gen Intuos Pro's Bluetooth classic interface")
 Cc: <stable@vger.kernel.org> # 4.11+
 Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Reviewed-by: Aaron Skomra <aaron.skomra@wacom.com>
 Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_wac.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/hid/wacom_wac.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
 --- a/drivers/hid/wacom_wac.c
 +++ b/drivers/hid/wacom_wac.c
-@@ -1383,7 +1383,7 @@ static void wacom_intuos_pro2_bt_pad(str
- 	struct input_dev *pad_input = wacom->pad_input;
- 	unsigned char *data = wacom->data;
+@@ -1371,11 +1371,17 @@ static void wacom_intuos_pro2_bt_touch(s
+ 		if (wacom->num_contacts_left <= 0) {
+ 			wacom->num_contacts_left = 0;
+ 			wacom->shared->touch_down = wacom_wac_finger_count_touches(wacom);
++			input_sync(touch_input);
+ 		}
+ 	}
  
--	int buttons = (data[282] << 1) | ((data[281] >> 6) & 0x01);
-+	int buttons = data[282] | ((data[281] & 0x40) << 2);
- 	int ring = data[285] & 0x7F;
- 	bool ringstatus = data[285] & 0x80;
- 	bool prox = buttons || ringstatus;
-@@ -3832,7 +3832,7 @@ static void wacom_24hd_update_leds(struc
- static bool wacom_is_led_toggled(struct wacom *wacom, int button_count,
- 				 int mask, int group)
- {
--	int button_per_group;
-+	int group_button;
- 
- 	/*
- 	 * 21UX2 has LED group 1 to the left and LED group 0
-@@ -3842,9 +3842,12 @@ static bool wacom_is_led_toggled(struct
- 	if (wacom->wacom_wac.features.type == WACOM_21UX2)
- 		group = 1 - group;
- 
--	button_per_group = button_count/wacom->led.count;
-+	group_button = group * (button_count/wacom->led.count);
- 
--	return mask & (1 << (group * button_per_group));
-+	if (wacom->wacom_wac.features.type == INTUOSP2_BT)
-+		group_button = 8;
+-	input_report_switch(touch_input, SW_MUTE_DEVICE, !(data[281] >> 7));
+-	input_sync(touch_input);
++	if (wacom->num_contacts_left == 0) {
++		// Be careful that we don't accidentally call input_sync with
++		// only a partial set of fingers of processed
++		input_report_switch(touch_input, SW_MUTE_DEVICE, !(data[281] >> 7));
++		input_sync(touch_input);
++	}
 +
-+	return mask & (1 << group_button);
  }
  
- static void wacom_update_led(struct wacom *wacom, int button_count, int mask,
+ static void wacom_intuos_pro2_bt_pad(struct wacom_wac *wacom)
 
 
