@@ -2,85 +2,91 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2910C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93AD0C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:08:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9E120861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6210C2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:08:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727680AbfFQLG2 (ORCPT
+        id S1727814AbfFQLIA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:06:28 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:56837 "EHLO
+        Mon, 17 Jun 2019 07:08:00 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:58845 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726164AbfFQLG2 (ORCPT
+        with ESMTP id S1726730AbfFQLH7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:06:28 -0400
+        Mon, 17 Jun 2019 07:07:59 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MF35K-1hsBX83HGi-00FX24; Mon, 17 Jun 2019 13:06:18 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MHXSD-1hphfV0scb-00DVxN; Mon, 17 Jun 2019 13:07:44 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        simon.ho@synaptics.com, Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH] ASoC: cx2072x: mark PM function as __maybe_unused
-Date:   Mon, 17 Jun 2019 13:06:15 +0200
-Message-Id: <20190617110615.2084748-1-arnd@arndb.de>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Filipe Manana <fdmanana@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] btrfs: shut up bogus -Wmaybe-uninitialized warning
+Date:   Mon, 17 Jun 2019 13:07:28 +0200
+Message-Id: <20190617110738.2085060-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:imZ+6nmN3JNLX3mmZ/m85Tw3DUGLuQRqfp+OHv0e6v8Sna1BTqb
- Ia0NkHUM0xOVTKecq7eJVkaHlweKCwVnWwuER+8zeP2Hz09xud7svdcbfGvspIytpP3UE0k
- jm+h/cewI2Dtv5LN95ENIk3DIIcvb+9z6TkyhTyIbk9snxwrP+i48H8bY+xJzBfbU8Roz14
- FevkcIEAZMFuRlJOjH38w==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:UWLRdc/oTTw=:LHC1wNVDSBgYr0e7hr3Y2a
- wVXYdnSRqTmZB8VMYxiVgLIa9BL3ZZ5VZpQNxxRjyG6Mtp2EN4cVv1/pUW0gVzsHnEuArbhg0
- 1rEpVDQTWwW0NDzXrt6WQRO+7vcq9mtVdskwNjKU0QYdvvjePsBHcuZ85jDWoZC/cidNj8wey
- J7yTYoAjgdMaFy3PGgJbr6ZFmaJwQt73Lo1RXqDwkvipxqs+yXqJSoDGTtBkYOb9gnPCwsZRS
- 3CyZ7cVtAgNeOFfc4ksfRqPVNwojfCfhXDZOhLyktpv/S57Xhn6IPMSUuvy8i4i3WCWauIOYd
- SFoIcidvUvCcekS9JW0LXYvyMccJqESJG6kDY3vpjENpPpKREvm4Z/K2TCR4pmBIqK5D06LZr
- xgBNNQzI1C2We5i6+ow2wyvvOc7Z3wlwGxVXtuDtWpSxcRtn+NYpcpBlhPwRvt7md06RKF1tF
- GfP5pif9+vPkUrbrjBc2PuGOe8ddC8SJPUDRWSOZXcrOYvhuA46Gip4g58CZCw1H8R9K4wjSs
- D4Mh9JtLq+rALuzsOxIQMng8iNCVKdkJrC+wpbHk65C0Ac3Z/2vZD9gF7q5zlXmCAXhgUp/vj
- HVAN3ZMo2i2KZQiw7xO8UkG5aADAAnI76lSafwybmtphKuEsccFGMqjz7rkm1GYBOrrQrKAqC
- uk+C7XGnBVSySyV/sTJMEXBLzVIDXUMb+uE6AOYSkchln31VcMCFhRWMtip1bl8zvoTyljWV8
- sEWIlOh7XBBVwpoVMVL/f9/+KMyaL3JA4OMzdQ==
+X-Provags-ID: V03:K1:RwSP0+7X1t5QgfnR4q2ka6Ub+2Jpijl+t/7jQ+Cr6YedH8bQ/kk
+ KlwYdwGAsCgOFZxO+/Tk5lUAJ6L4zcSnDfCLne0M9V4bgUiCLO7+ZJKGk3W0jqQR8t45u4E
+ CTnWr2+Q54ccHMIZaPz3ZGIX1iiX4MuBGoYXBtIWRHRcs/7NPEfMpEssxcZWLv44nQR3HK+
+ sN0qCUmYyVwcme/AmDovw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:74SFdUEmAU0=:nBS2O7j265199nWBNA5Nh9
+ 6MWecxFoNhTv7OmvGH3GUBiQCKuG/P3j04jZPev7JDSiGnM0zj9Nl0HAg20iGDopxa3Owhgk6
+ dPLoUQ64VnojWCYjvGPKqBRmXsmL0hfoYO9MiRpmv1EgCCitTrZuZt/joI6I9S6peAXLticoC
+ ZWFG0jO9ZlJmTceF2i2AGjU2fsB/AAfreqhN7t+RzFgEDMc/8jicyCIF4A/Gvc2r0wLu5FARc
+ X8Am4PVte2ibalNo5MrFnmkz22QxUttBx26TVHpN8FsvunArGw1Cj/j2KmwYICdG2dCELMg7s
+ KgiU8KYsTGdJIlf17L/txxlizwZE49Urh8GEdqi5fWh45/F7CLGSccMTr3aGdnWFxXZV7oIRy
+ c9lrNoYY6UNk93kT9BTa/dndPhv3JLK/PLqw6SU9vuMPjCo/T04wQGANJ2L7F0krD1F+kwoci
+ nfdOtgG9zw4MTFO/tqXMvNYYq+8nBbo97FxWhC12pQlqTc0ABZaPAHv3/h4RVKD3A4LUe0kAF
+ YaX36zxm55/7/XPAzw2Bw3JsNOHVcc1fIb1WzMuwrc0+fvI9o9y8Kfb9Tkn6EhjH77TloJuTH
+ 8Seahx15DtyZHeLokPlMae6yUfQOLRILo1R65aCxYzftBZ99xXOmh5xiBvV1gMb0w2z1fefdW
+ pQ/lC6BmyRdNB0uMguG+AGpuQ68Di5wnh9l7KN7yivg58Y+AnxWPrO+8zjWpFOuZBcxYVWqFf
+ LN9NcaFv5GEXXBL4zeQ4pzPkT6mHU4HeiqJxkg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-While the suspend function is already marked __maybe_unused,
-the resume function is not, which leads to a warning when
-CONFIG_PM is disabled:
+gcc sometimes can't determine whether a variable has been initialized
+when both the initialization and the use are conditional:
 
-sound/soc/codecs/cx2072x.c:1625:12: error: unused function 'cx2072x_runtime_resume' [-Werror,-Wunused-function]
+fs/btrfs/props.c: In function 'inherit_props':
+fs/btrfs/props.c:389:4: error: 'num_bytes' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+    btrfs_block_rsv_release(fs_info, trans->block_rsv,
 
-Mark this one like the other one.
+This code is fine. Unfortunately, I cannot think of a good way to
+rephrase it in a way that makes gcc understand this, so I add
+a bogus initialization the way one should not.
 
-Fixes: a497a4363706 ("ASoC: Add support for Conexant CX2072X CODEC")
+Fixes: d7400ee1b476 ("btrfs: use the existing reserved items for our first prop for inheritance")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- sound/soc/codecs/cx2072x.c | 2 +-
+ fs/btrfs/props.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/codecs/cx2072x.c b/sound/soc/codecs/cx2072x.c
-index f2cb35a50726..1c1ba7bea4d8 100644
---- a/sound/soc/codecs/cx2072x.c
-+++ b/sound/soc/codecs/cx2072x.c
-@@ -1622,7 +1622,7 @@ static int __maybe_unused cx2072x_runtime_suspend(struct device *dev)
- 	return 0;
- }
+diff --git a/fs/btrfs/props.c b/fs/btrfs/props.c
+index a9e2e66152ee..9d47ae1cf5b2 100644
+--- a/fs/btrfs/props.c
++++ b/fs/btrfs/props.c
+@@ -341,7 +341,7 @@ static int inherit_props(struct btrfs_trans_handle *trans,
+ 	for (i = 0; i < ARRAY_SIZE(prop_handlers); i++) {
+ 		const struct prop_handler *h = &prop_handlers[i];
+ 		const char *value;
+-		u64 num_bytes;
++		u64 num_bytes = 0;
  
--static int cx2072x_runtime_resume(struct device *dev)
-+static int __maybe_unused cx2072x_runtime_resume(struct device *dev)
- {
- 	struct cx2072x_priv *cx2072x = dev_get_drvdata(dev);
- 
+ 		if (!h->inheritable)
+ 			continue;
 -- 
 2.20.0
 
