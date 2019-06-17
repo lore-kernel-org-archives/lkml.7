@@ -2,445 +2,767 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 194FEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B987C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:50:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C45242084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qr3Pg30p"
+	by mail.kernel.org (Postfix) with ESMTP id 59EB22084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:50:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728863AbfFQTuY (ORCPT
+        id S1729059AbfFQTuz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:50:24 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35061 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfFQTuY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:50:24 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJo7Oi3570301
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:50:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJo7Oi3570301
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560801008;
-        bh=wjJw2jKrVwcQIccR9Rih8gV4Q626KOOhSN5DE0VPK9E=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=qr3Pg30pTtv0nTF5mXoiWHPTHfIPz1k0XCLvqz3UILNu36QoplUyg7kQCpoeFcjs1
-         f2QaCb+pztS392wOS8U6jki1v7hpahq8HYXlFnmYwVWAJaOseqg+ZfiO+t1BveqXy9
-         JvS5oeW4M0FQTOTSCG8+JvuLlqU3OZysZ7sm+xYZXeNla/G9FNA63gVYOZfKf9UcOT
-         uDuN3sHLpzKIMvStSGYgBRvyMO+XybdR/tCOz9VAH2eBX4BHduGwHcm2D9o/fWJRZn
-         cqwfNTQ2181pvx28fHOLlIdrz8hdgQcZkFLVytpbZMYbPDsOtcgaghzfJoyQLLnVof
-         my1WJ2HJvpIPA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJo7Tq3570294;
-        Mon, 17 Jun 2019 12:50:07 -0700
-Date:   Mon, 17 Jun 2019 12:50:07 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-e39a12cbd2496edb4cab0f99efb0d217c55ba273@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, mingo@kernel.org,
-        yao.jin@linux.intel.com, jolsa@redhat.com, tglx@linutronix.de,
-        adrian.hunter@intel.com, hpa@zytor.com, acme@redhat.com
-Reply-To: hpa@zytor.com, adrian.hunter@intel.com, acme@redhat.com,
-          yao.jin@linux.intel.com, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, jolsa@redhat.com, tglx@linutronix.de
-In-Reply-To: <20190604130017.31207-19-adrian.hunter@intel.com>
-References: <20190604130017.31207-19-adrian.hunter@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf tests: Add a test for time-utils
-Git-Commit-ID: e39a12cbd2496edb4cab0f99efb0d217c55ba273
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 15:50:55 -0400
+Received: from mga09.intel.com ([134.134.136.24]:50974 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbfFQTuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:50:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 12:50:53 -0700
+X-ExtLoop1: 1
+Received: from skl-02.jf.intel.com ([10.54.74.145])
+  by orsmga007.jf.intel.com with ESMTP; 17 Jun 2019 12:50:53 -0700
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Greear <greearb@candelatech.com>, stable@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Jon Masters <jcm@redhat.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mark Gross <mgross@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
+Subject: [PATCH v3] Documentation: Add section about CPU vulnerabilities for Spectre
+Date:   Mon, 17 Jun 2019 12:11:52 -0700
+Message-Id: <c63945d34bfc9df2412f813d0b9b3a321a65de5d.1560795378.git.tim.c.chen@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e39a12cbd2496edb4cab0f99efb0d217c55ba273
-Gitweb:     https://git.kernel.org/tip/e39a12cbd2496edb4cab0f99efb0d217c55ba273
-Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Tue, 4 Jun 2019 16:00:16 +0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Mon, 10 Jun 2019 16:20:12 -0300
+Add documentation for Spectre vulnerability and the mitigation mechanisms:
 
-perf tests: Add a test for time-utils
+- Explain the problem and risks
+- Document the mitigation mechanisms
+- Document the command line controls
+- Document the sysfs files
 
-Test time ranges work as expected.
-
-Committer testing:
-
-  $ perf test "time utils"
-  59: time utils                                            : Ok
-  $ perf test -v "time utils"
-  59: time utils                                            :
-  --- start ---
-  test child forked, pid 31711
-
-  parse_nsec_time("0")
-  0
-
-  parse_nsec_time("1")
-  1000000000
-
-  parse_nsec_time("0.000000001")
-  1
-
-  parse_nsec_time("1.000000001")
-  1000000001
-
-  parse_nsec_time("123456.123456")
-  123456123456000
-
-  parse_nsec_time("1234567.123456789")
-  1234567123456789
-
-  parse_nsec_time("18446744073.709551615")
-  18446744073709551615
-
-  perf_time__parse_str("1234567.123456789,1234567.123456789")
-  start time 1234567123456789, end time 1234567123456789
-
-  perf_time__parse_str("1234567.123456789,1234567.123456790")
-  start time 1234567123456789, end time 1234567123456790
-
-  perf_time__parse_str("1234567.123456789,")
-  start time 1234567123456789, end time 0
-
-  perf_time__parse_str(",1234567.123456789")
-  start time 0, end time 1234567123456789
-
-  perf_time__parse_str("0,1234567.123456789")
-  start time 0, end time 1234567123456789
-
-  perf_time__parse_for_ranges("1234567.123456789,1234567.123456790")
-  start time 1234567123456789, end time 1234567123456790
-
-  perf_time__parse_for_ranges("10%/1")
-  first_sample_time 7654321000000000 last_sample_time 7654321000000100
-  start time 0: 7654321000000000, end time 0: 7654321000000009
-
-  perf_time__parse_for_ranges("10%/2")
-  first_sample_time 7654321000000000 last_sample_time 7654321000000100
-  start time 0: 7654321000000010, end time 0: 7654321000000019
-
-  perf_time__parse_for_ranges("10%/1,10%/2")
-  first_sample_time 11223344000000000 last_sample_time 11223344000000100
-  start time 0: 11223344000000000, end time 0: 11223344000000009
-  start time 1: 11223344000000010, end time 1: 11223344000000019
-
-  perf_time__parse_for_ranges("10%/1,10%/3,10%/10")
-  first_sample_time 11223344000000000 last_sample_time 11223344000000100
-  start time 0: 11223344000000000, end time 0: 11223344000000009
-  start time 1: 11223344000000020, end time 1: 11223344000000029
-  start time 2: 11223344000000090, end time 2: 11223344000000100
-
-  test child finished with 0
-  ---- end ----
-  time utils: Ok
-  $
-
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jin Yao <yao.jin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-19-adrian.hunter@intel.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Co-developed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Co-developed-by: Tim Chen <tim.c.chen@linux.intel.com>
+Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: stable@vger.kernel.org
 ---
- tools/perf/tests/Build             |   1 +
- tools/perf/tests/builtin-test.c    |   4 +
- tools/perf/tests/tests.h           |   1 +
- tools/perf/tests/time-utils-test.c | 234 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 240 insertions(+)
+ Documentation/admin-guide/hw-vuln/index.rst   |   1 +
+ Documentation/admin-guide/hw-vuln/spectre.rst | 651 ++++++++++++++++++
+ Documentation/userspace-api/spec_ctrl.rst     |   2 +
+ 3 files changed, 654 insertions(+)
+ create mode 100644 Documentation/admin-guide/hw-vuln/spectre.rst
 
-diff --git a/tools/perf/tests/Build b/tools/perf/tests/Build
-index 4afb6319ed51..e3ba63cef01e 100644
---- a/tools/perf/tests/Build
-+++ b/tools/perf/tests/Build
-@@ -51,6 +51,7 @@ perf-y += clang.o
- perf-y += unit_number__scnprintf.o
- perf-y += mem2node.o
- perf-y += map_groups.o
-+perf-y += time-utils-test.o
+diff --git a/Documentation/admin-guide/hw-vuln/index.rst b/Documentation/admin-guide/hw-vuln/index.rst
+index ffc064c1ec68..49311f3da6f2 100644
+--- a/Documentation/admin-guide/hw-vuln/index.rst
++++ b/Documentation/admin-guide/hw-vuln/index.rst
+@@ -9,5 +9,6 @@ are configurable at compile, boot or run time.
+ .. toctree::
+    :maxdepth: 1
  
- $(OUTPUT)tests/llvm-src-base.c: tests/bpf-script-example.c tests/Build
- 	$(call rule_mkdir)
-diff --git a/tools/perf/tests/builtin-test.c b/tools/perf/tests/builtin-test.c
-index 941c5456d625..cd72ff0f7658 100644
---- a/tools/perf/tests/builtin-test.c
-+++ b/tools/perf/tests/builtin-test.c
-@@ -289,6 +289,10 @@ static struct test generic_tests[] = {
- 		.desc = "mem2node",
- 		.func = test__mem2node,
- 	},
-+	{
-+		.desc = "time utils",
-+		.func = test__time_utils,
-+	},
- 	{
- 		.desc = "map_groups__merge_in",
- 		.func = test__map_groups__merge_in,
-diff --git a/tools/perf/tests/tests.h b/tools/perf/tests/tests.h
-index e5e3a57cd373..72912eb473cb 100644
---- a/tools/perf/tests/tests.h
-+++ b/tools/perf/tests/tests.h
-@@ -108,6 +108,7 @@ int test__clang_subtest_get_nr(void);
- int test__unit_number__scnprint(struct test *test, int subtest);
- int test__mem2node(struct test *t, int subtest);
- int test__map_groups__merge_in(struct test *t, int subtest);
-+int test__time_utils(struct test *t, int subtest);
- 
- bool test__bp_signal_is_supported(void);
- bool test__wp_is_supported(void);
-diff --git a/tools/perf/tests/time-utils-test.c b/tools/perf/tests/time-utils-test.c
++   spectre
+    l1tf
+    mds
+diff --git a/Documentation/admin-guide/hw-vuln/spectre.rst b/Documentation/admin-guide/hw-vuln/spectre.rst
 new file mode 100644
-index 000000000000..7504046b111c
+index 000000000000..dbcb356b2699
 --- /dev/null
-+++ b/tools/perf/tests/time-utils-test.c
-@@ -0,0 +1,234 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/compiler.h>
-+#include <linux/time64.h>
-+#include <inttypes.h>
-+#include <string.h>
-+#include "time-utils.h"
-+#include "evlist.h"
-+#include "session.h"
-+#include "debug.h"
-+#include "tests.h"
++++ b/Documentation/admin-guide/hw-vuln/spectre.rst
+@@ -0,0 +1,651 @@
++.. SPDX-License-Identifier: GPL-2.0
 +
-+static bool test__parse_nsec_time(const char *str, u64 expected)
-+{
-+	u64 ptime;
-+	int err;
++Spectre Side Channels
++=====================
 +
-+	pr_debug("\nparse_nsec_time(\"%s\")\n", str);
++Spectre is a class of side channel attacks that exploit branch prediction
++and speculative execution on modern CPUs to read memory, possibly
++bypassing access controls. Speculative execution side channel exploits
++do not modify memory but attempt to infer privileged data in the memory.
 +
-+	err = parse_nsec_time(str, &ptime);
-+	if (err) {
-+		pr_debug("error %d\n", err);
-+		return false;
-+	}
++This document covers Spectre variant 1 and Spectre variant 2.
 +
-+	if (ptime != expected) {
-+		pr_debug("Failed. ptime %" PRIu64 " expected %" PRIu64 "\n",
-+			 ptime, expected);
-+		return false;
-+	}
++Affected processors
++-------------------
 +
-+	pr_debug("%" PRIu64 "\n", ptime);
++Speculative execution side channel methods affect a wide range of modern
++high performance processors, since most modern high speed processors
++use branch prediction and speculative execution.
 +
-+	return true;
-+}
++The following CPUs are vulnerable:
 +
-+static bool test__perf_time__parse_str(const char *ostr, u64 start, u64 end)
-+{
-+	struct perf_time_interval ptime;
-+	int err;
++    - Intel Core, Atom, Pentium, and Xeon processors
 +
-+	pr_debug("\nperf_time__parse_str(\"%s\")\n", ostr);
++    - AMD Phenom, EPYC, and Zen processors
 +
-+	err = perf_time__parse_str(&ptime, ostr);
-+	if (err) {
-+		pr_debug("Error %d\n", err);
-+		return false;
-+	}
++    - IBM POWER and zSeries processors
 +
-+	if (ptime.start != start || ptime.end != end) {
-+		pr_debug("Failed. Expected %" PRIu64 " to %" PRIu64 "\n",
-+			 start, end);
-+		return false;
-+	}
++    - Higher end ARM processors
 +
-+	return true;
-+}
++    - Apple CPUs
 +
-+#define TEST_MAX 64
++    - Higher end MIPS CPUs
 +
-+struct test_data {
-+	const char *str;
-+	u64 first;
-+	u64 last;
-+	struct perf_time_interval ptime[TEST_MAX];
-+	int num;
-+	u64 skip[TEST_MAX];
-+	u64 noskip[TEST_MAX];
-+};
++    - Likely most other high performance CPUs. Contact your CPU vendor for details.
 +
-+static bool test__perf_time__parse_for_ranges(struct test_data *d)
-+{
-+	struct perf_evlist evlist = {
-+		.first_sample_time = d->first,
-+		.last_sample_time = d->last,
-+	};
-+	struct perf_session session = { .evlist = &evlist };
-+	struct perf_time_interval *ptime = NULL;
-+	int range_size, range_num;
-+	bool pass = false;
-+	int i, err;
++Whether a processor is affected or not can be read out from the Spectre
++vulnerability files in sysfs. See :ref:`spectre_sys_info`.
 +
-+	pr_debug("\nperf_time__parse_for_ranges(\"%s\")\n", d->str);
++Related CVEs
++------------
 +
-+	if (strchr(d->str, '%'))
-+		pr_debug("first_sample_time %" PRIu64 " last_sample_time %" PRIu64 "\n",
-+			 d->first, d->last);
++The following CVE entries describe Spectre variants:
 +
-+	err = perf_time__parse_for_ranges(d->str, &session, &ptime, &range_size,
-+					  &range_num);
-+	if (err) {
-+		pr_debug("error %d\n", err);
-+		goto out;
-+	}
++   =============   =======================  =================
++   CVE-2017-5753   Bounds check bypass      Spectre variant 1
++   CVE-2017-5715   Branch target injection  Spectre variant 2
++   =============   =======================  =================
 +
-+	if (range_size < d->num || range_num != d->num) {
-+		pr_debug("bad size: range_size %d range_num %d expected num %d\n",
-+			 range_size, range_num, d->num);
-+		goto out;
-+	}
++Problem
++-------
 +
-+	for (i = 0; i < d->num; i++) {
-+		if (ptime[i].start != d->ptime[i].start ||
-+		    ptime[i].end != d->ptime[i].end) {
-+			pr_debug("bad range %d expected %" PRIu64 " to %" PRIu64 "\n",
-+				 i, d->ptime[i].start, d->ptime[i].end);
-+			goto out;
-+		}
-+	}
++CPUs use speculative operations to improve performance. That may leave
++traces of memory accesses or computations in the processor's caches,
++buffers, and branch predictors. Malicious software may be able to
++influence the speculative execution paths, and then use the side effects
++of the speculative execution in the CPUs' caches and buffers to infer
++privileged data touched during the speculative execution.
 +
-+	if (perf_time__ranges_skip_sample(ptime, d->num, 0)) {
-+		pr_debug("failed to keep 0\n");
-+		goto out;
-+	}
++Spectre variant 1 attacks take advantage of speculative execution of
++conditional branches, while Spectre variant 2 attacks use speculative
++execution of indirect branches to leak privileged memory. See [1] [5]
++[7] [10] [11].
 +
-+	for (i = 0; i < TEST_MAX; i++) {
-+		if (d->skip[i] &&
-+		    !perf_time__ranges_skip_sample(ptime, d->num, d->skip[i])) {
-+			pr_debug("failed to skip %" PRIu64 "\n", d->skip[i]);
-+			goto out;
-+		}
-+		if (d->noskip[i] &&
-+		    perf_time__ranges_skip_sample(ptime, d->num, d->noskip[i])) {
-+			pr_debug("failed to keep %" PRIu64 "\n", d->noskip[i]);
-+			goto out;
-+		}
-+	}
++Spectre variant 1 (Bounds Check Bypass)
++---------------------------------------
 +
-+	pass = true;
-+out:
-+	free(ptime);
-+	return pass;
-+}
++The bounds check bypass attack [2] takes advantage of speculative
++execution that bypass conditional branch instructions used for memory
++access bounds check (e.g. checking if the index of an array results in
++memory access within a valid range). This results in memory accesses
++to invalid memory (with out-of-bound index) that are done speculatively
++before validation checks resolve. Such speculative memory accesses can
++leave side effects, creating side channels which leak information to
++the attacker.
 +
-+int test__time_utils(struct test *t __maybe_unused, int subtest __maybe_unused)
-+{
-+	bool pass = true;
++There are some extensions of Spectre variant 1 attacks for reading
++data over the network, see [12]. However such attacks are difficult,
++low bandwidth, fragile, and are considered low risk.
 +
-+	pass &= test__parse_nsec_time("0", 0);
-+	pass &= test__parse_nsec_time("1", 1000000000ULL);
-+	pass &= test__parse_nsec_time("0.000000001", 1);
-+	pass &= test__parse_nsec_time("1.000000001", 1000000001ULL);
-+	pass &= test__parse_nsec_time("123456.123456", 123456123456000ULL);
-+	pass &= test__parse_nsec_time("1234567.123456789", 1234567123456789ULL);
-+	pass &= test__parse_nsec_time("18446744073.709551615",
-+				      0xFFFFFFFFFFFFFFFFULL);
++Spectre variant 2 (Branch Target Injection)
++-------------------------------------------
 +
-+	pass &= test__perf_time__parse_str("1234567.123456789,1234567.123456789",
-+					   1234567123456789ULL, 1234567123456789ULL);
-+	pass &= test__perf_time__parse_str("1234567.123456789,1234567.123456790",
-+					   1234567123456789ULL, 1234567123456790ULL);
-+	pass &= test__perf_time__parse_str("1234567.123456789,",
-+					   1234567123456789ULL, 0);
-+	pass &= test__perf_time__parse_str(",1234567.123456789",
-+					   0, 1234567123456789ULL);
-+	pass &= test__perf_time__parse_str("0,1234567.123456789",
-+					   0, 1234567123456789ULL);
++The branch target injection attack takes advantage of speculative
++execution of indirect branches [3].  The indirect branch predictors
++inside the processor used to guess the target of indirect branches can
++be influenced by an attacker, causing gadget code to be speculatively
++executed, thus exposing sensitive data touched by the victim. The side
++effects left in the CPU's caches during speculative execution can be
++measured to infer data values.
 +
-+	{
-+		u64 b = 1234567123456789ULL;
-+		struct test_data d = {
-+			.str   = "1234567.123456789,1234567.123456790",
-+			.ptime = { {b, b + 1}, },
-+			.num = 1,
-+			.skip = { b - 1, b + 2, },
-+			.noskip = { b, b + 1, },
-+		};
++.. _poison_btb:
 +
-+		pass &= test__perf_time__parse_for_ranges(&d);
-+	}
++In Spectre variant 2 attacks, the attacker can steer speculative indirect
++branches in the victim to gadget code by poisoning the branch target
++buffer of a CPU used for predicting indirect branch addresses. Such
++poisoning could be done by indirect branching into existing code, with the
++address offset of the indirect branch under the attacker's control. Since
++the branch prediction hardware does not fully disambiguate branch address
++and uses the offset for prediction, this could cause privileged code's
++indirect branch to jump to a gadget code with the same offset.
 +
-+	{
-+		u64 b = 7654321ULL * NSEC_PER_SEC;
-+		struct test_data d = {
-+			.str    = "10%/1",
-+			.first  = b,
-+			.last   = b + 100,
-+			.ptime  = { {b, b + 9}, },
-+			.num    = 1,
-+			.skip   = { b - 1, b + 10, },
-+			.noskip = { b, b + 9, },
-+		};
++The most useful gadgets take an attacker-controlled input parameter (such
++as a register value) so that the memory read can be controlled. Gadgets
++without input parameters might be possible, but the attacker would have
++very little control over what memory can be read, reducing the risk of
++the attack revealing useful data.
 +
-+		pass &= test__perf_time__parse_for_ranges(&d);
-+	}
++One other variant 2 attack vector is for the attacker to poison the
++return stack buffer (RSB) [13] to cause speculative RET execution to go
++to an gadget.  An attacker's imbalanced CALL instructions might "poison"
++entries in the return stack buffer which are later consumed by a victim's
++RET instruction.  This attack can be mitigated by flushing the return
++stack buffer on context switch, or VM exit.
 +
-+	{
-+		u64 b = 7654321ULL * NSEC_PER_SEC;
-+		struct test_data d = {
-+			.str    = "10%/2",
-+			.first  = b,
-+			.last   = b + 100,
-+			.ptime  = { {b + 10, b + 19}, },
-+			.num    = 1,
-+			.skip   = { b + 9, b + 20, },
-+			.noskip = { b + 10, b + 19, },
-+		};
++On systems with simultaneous multi-threading (SMT), attacks are possible
++from from the sibling thread, as level 1 cache and branch target buffer
++(BTB) may be shared between hardware threads in a CPU core.  A malicious
++program running on the sibling thread may influence its peer's BTB to
++steer its indirect branch speculations to gadget code, and measure the
++speculative execution's side effects left in level 1 cache to infer the
++victim's data.
 +
-+		pass &= test__perf_time__parse_for_ranges(&d);
-+	}
++Attack scenarios
++----------------
 +
-+	{
-+		u64 b = 11223344ULL * NSEC_PER_SEC;
-+		struct test_data d = {
-+			.str    = "10%/1,10%/2",
-+			.first  = b,
-+			.last   = b + 100,
-+			.ptime  = { {b, b + 9}, {b + 10, b + 19}, },
-+			.num    = 2,
-+			.skip   = { b - 1, b + 20, },
-+			.noskip = { b, b + 8, b + 9, b + 10, b + 11, b + 12, b + 19, },
-+		};
++The following list of attack scenarios have been anticipated, but may
++not cover all possible attack vectors.
 +
-+		pass &= test__perf_time__parse_for_ranges(&d);
-+	}
++1. A user process attacking the kernel
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +
-+	{
-+		u64 b = 11223344ULL * NSEC_PER_SEC;
-+		struct test_data d = {
-+			.str    = "10%/1,10%/3,10%/10",
-+			.first  = b,
-+			.last   = b + 100,
-+			.ptime  = { {b, b + 9}, {b + 20, b + 29}, { b + 90, b + 100}, },
-+			.num    = 3,
-+			.skip   = { b - 1, b + 10, b + 19, b + 30, b + 89, b + 101 },
-+			.noskip = { b, b + 9, b + 20, b + 29, b + 90, b + 100},
-+		};
++   The attacker passes a parameter to the kernel via a register or
++   via a known address in memory during a syscall. Such parameter may
++   be used later by the kernel as an index to an array or to derive
++   a pointer for a Spectre variant 1 attack.  The index or pointer
++   is invalid, but bound checks are bypassed in the code branch taken
++   for speculative execution. This could cause privileged memory to be
++   accessed and leaked.
 +
-+		pass &= test__perf_time__parse_for_ranges(&d);
-+	}
++   For kernel code that has been identified where data pointers could
++   potentially be influenced for Spectre attacks, new "nospec" accessor
++   macros are used to prevent speculative loading of data.
 +
-+	pr_debug("\n");
++   Spectre variant 2 attacker can :ref:`poison <poison_btb>` the branch
++   target buffer (BTB) before issuing syscall to launch an attack.
++   After entering the kernel, the kernel could use the poisoned branch
++   target buffer on indirect jump and jump to gadget code in speculative
++   execution.
 +
-+	return pass ? 0 : TEST_FAIL;
-+}
++   If an attacker tries to control the memory addresses leaked during
++   speculative execution, he would also need to pass a parameter to the
++   gadget, either through a register or a known address in memory. After
++   the gadget has executed, he can measure the side effect.
++
++   The kernel can protect itself against consuming poisoned branch
++   target buffer entries by using return trampolines (also known as
++   "retpoline") [3] [9] for all indirect branches. Return trampolines
++   trap speculative execution paths to prevent jumping to gadget code
++   during speculative execution.  x86 CPUs with Enhanced Indirect
++   Branch Restricted Speculation (Enhanced IBRS) available in hardware
++   should use the feature to mitigate Spectre variant 2 instead of
++   retpoline. Enhanced IBRS is more efficient than retpoline.
++
++   There may be gadget code in firmware which could be exploited with
++   Spectre variant 2 attack by a rogue user process. To mitigate such
++   attacks on x86, Indirect Branch Restricted Speculation (IBRS) feature
++   is turned on before the kernel invokes any firmware code.
++
++2. A user process attacking another user process
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   A malicious user process can try to attack another user process,
++   either via a context switch on the same hardware thread, or from the
++   sibling hyperthread sharing a physical processor core on simultaneous
++   multi-threading (SMT) system.
++
++   Spectre variant 1 attacks generally require passing parameters
++   between the processes, which needs a data passing relationship, such
++   as remote procedure calls (RPC).  Those parameters are used in gadget
++   code to derive invalid data pointers accessing privileged memory in
++   the attacked process.
++
++   Spectre variant 2 attacks can be launched from a rogue process by
++   :ref:`poisoning <poison_btb>` the branch target buffer.  This can
++   influence the indirect branch targets for a victim process that either
++   runs later on the same hardware thread, or running concurrently on
++   a sibling hardware thread sharing the same physical core.
++
++   On x86, a user process can protect itself against Spectre variant
++   2 attacks by using the prctl() syscall to disable indirect branch
++   speculation for itself.  An administrator can also cordon off an
++   unsafe process from polluting the branch target buffer by disabling the
++   process's indirect branch speculation. This comes with a performance
++   cost from not using indirect branch speculation and clearing the
++   branch target buffer.  When SMT is enabled, for a process that has
++   indirect branch speculation disabled, Single Threaded Indirect Branch
++   Predictors (STIBP) [4] are turned on to prevent the sibling thread
++   from controlling branch target buffer.  In addition, the Indirect
++   Branch Prediction Barrier (IBPB) is issued to clear the branch target
++   buffer when context switching to and from such process.
++
++   On x86, the return stack buffer is stuffed on context switch.
++   This prevents the branch target buffer from being used for branch
++   prediction when the return stack buffer underflows while switching to
++   a deeper call stack. Any poisoned entries in the return stack buffer
++   left by the previous process will also be cleared.
++
++   User programs should use address space randomization to make attacks
++   more difficult (Set /proc/sys/kernel/randomize_va_space = 1 or 2).
++
++3. A virtualized guest attacking the host
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   The attack mechanism is similar to how user processes attack the
++   kernel.  The kernel is entered via hyper-calls or other virtualization
++   exit paths.
++
++   For Spectre variant 1 attacks, rogue guests can pass parameters
++   (e.g. in registers) via hyper-calls to derive invalid pointers to
++   speculate into privileged memory after entering the kernel.  For places
++   where such kernel code has been identified, nospec accessor macros
++   are used to stop speculative memory access.
++
++   For Spectre variant 2 attacks, rogue guests can :ref:`poison
++   <poison_btb>` the branch target buffer or return stack buffer, causing
++   the kernel to jump to gadget code in the speculative execution paths.
++
++   To mitigate variant 2, the host kernel can use return trampolines
++   for indirect branches to bypass the poisoned branch target buffer,
++   and flushing the return stack buffer on VM exit.  This prevents rogue
++   guests from affecting indirect branching in the host kernel.
++
++   To protect host processes from rogue guests, host processes can have
++   indirect branch speculation disabled via prctl().  The branch target
++   buffer is cleared before context switching to such processes.
++
++4. A virtualized guest attacking other guest
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   A rogue guest may attack another guest to get data accessible by the
++   other guest.
++
++   Spectre variant 1 attacks are possible if parameters can be passed
++   between guests.  This may be done via mechanisms such as shared memory
++   or message passing.  Such parameters could be used to derive data
++   pointers to privileged data in guest.  The privileged data could be
++   accessed by gadget code in the victim's speculation paths.
++
++   Spectre variant 2 attacks can be launched from a rogue guest by
++   :ref:`poisoning <poison_btb>` the branch target buffer or the return
++   stack buffer. Such poisoned entries could be used to influence
++   speculation execution paths in the victim guest.
++
++   Linux kernel mitigates attacks to other guests running in the same
++   CPU hardware thread by flushing the return stack buffer on VM exit,
++   and clearing the branch target buffer before switching to a new guest.
++
++   If SMT is used, Spectre variant 2 attacks from an untrusted guest
++   in the sibling hyperthread can be mitigated by the administrator,
++   by turning off the unsafe guest's indirect branch speculation via
++   prctl().  A guest can also protect itself by turning on microcode
++   based mitigations (such as IBPB or STIBP on x86) within the guest.
++
++.. _spectre_sys_info:
++
++Spectre system information
++--------------------------
++
++The Linux kernel provides a sysfs interface to enumerate the current
++mitigation status of the system for Spectre: whether the system is
++vulnerable, and which mitigations are active.
++
++The sysfs file showing Spectre variant 1 mitigation status is:
++
++   /sys/devices/system/cpu/vulnerabilities/spectre_v1
++
++The possible values in this file are:
++
++  =======================================  =================================
++  'Mitigation: __user pointer sanitation'  Protection in kernel on a case by
++                                           case base with explicit pointer
++                                           sanitation.
++  =======================================  =================================
++
++However, the protections are put in place on a case by case basis,
++and there is no guarantee that all possible attack vectors for Spectre
++variant 1 are covered.
++
++The spectre_v2 kernel file reports if the kernel has been compiled with
++retpoline mitigation or if the CPU has hardware mitigation, and if the
++CPU has support for additional process-specific mitigation.
++
++This file also reports CPU features enabled by microcode to mitigate
++attack between user processes:
++
++1. Indirect Branch Prediction Barrier (IBPB) to add additional
++   isolation between processes of different users.
++2. Single Thread Indirect Branch Predictors (STIBP) to add additional
++   isolation between CPU threads running on the same core.
++
++These CPU features may impact performance when used and can be enabled
++per process on a case-by-case base.
++
++The sysfs file showing Spectre variant 2 mitigation status is:
++
++   /sys/devices/system/cpu/vulnerabilities/spectre_v2
++
++The possible values in this file are:
++
++  - Kernel status:
++
++  ====================================  =================================
++  'Not affected'                        The processor is not vulnerable
++  'Vulnerable'                          Vulnerable, no mitigation
++  'Mitigation: Full generic retpoline'  Software-focused mitigation
++  'Mitigation: Full AMD retpoline'      AMD-specific software mitigation
++  'Mitigation: Enhanced IBRS'           Hardware-focused mitigation
++  ====================================  =================================
++
++  - Firmware status: Show if Indirect Branch Restricted Speculation (IBRS) is
++    used to protect against Spectre variant 2 attacks when calling firmware (x86 only).
++
++  ========== =============================================================
++  'IBRS_FW'  Protection against user program attacks when calling firmware
++  ========== =============================================================
++
++  - Indirect branch prediction barrier (IBPB) status for protection between
++    processes of different users. This feature can be controlled through
++    prctl() per process, or through kernel command line options. This is
++    an x86 only feature. For more details see below.
++
++  ===================   ========================================================
++  'IBPB: disabled'      IBPB unused
++  'IBPB: always-on'     Use IBPB on all tasks
++  'IBPB: conditional'   Use IBPB on SECCOMP or indirect branch restricted tasks
++  ===================   ========================================================
++
++  - Single threaded indirect branch prediction (STIBP) status for protection
++    between different hyper threads. This feature can be controlled through
++    prctl per process, or through kernel command line options. This is x86
++    only feature. For more details see below.
++
++  ====================  ========================================================
++  'STIBP: disabled'     STIBP unused
++  'STIBP: forced'       Use STIBP on all tasks
++  'STIBP: conditional'  Use STIBP on SECCOMP or indirect branch restricted tasks
++  ====================  ========================================================
++
++  - Return stack buffer (RSB) protection status:
++
++  =============   ===========================================
++  'RSB filling'   Protection of RSB on context switch enabled
++  =============   ===========================================
++
++Full mitigation might require an microcode update from the CPU
++vendor. When the necessary microcode is not available, the kernel will
++report vulnerability.
++
++Turning on mitigation for Spectre variant 1 and Spectre variant 2
++-----------------------------------------------------------------
++
++1. Kernel mitigation
++^^^^^^^^^^^^^^^^^^^^
++
++   For the Spectre variant 1, vulnerable kernel code (as determined by
++   code audit or scanning tools) are annotated on a case by case basis to
++   use nospec accessor macros for bounds clipping [2] to avoid any usable
++   disclosure gadgets. However, it may not cover all attack vectors for
++   Spectre variant 1.
++
++   For Spectre variant 2 mitigation, the compiler turns indirect calls or
++   jumps in the kernel into equivalent return trampolines (retpolines)
++   [3] [9] to go to the target addresses.  Speculative execution paths
++   under retpolines are trapped in an infinite loop to prevent any
++   speculative execution jumping to a gadget.
++
++   To turn on retpoline mitigation on a vulnerable CPU, the kernel
++   needs to be compiled with a gcc compiler that supports the
++   -mindirect-branch=thunk-extern -mindirect-branch-register options.
++   If the kernel is compiled with a Clang compiler, the compiler needs
++   to support -mretpoline-external-thunk option.  The kernel config
++   CONFIG_RETPOLINE needs to be turned on, and the CPU needs to run with
++   the latest updated microcode.
++
++   On Intel Skylake-era systems the mitigation covers most, but not all,
++   cases. See [3] for more details.
++
++   On CPUs with hardware mitigation for Spectre variant 2 (e.g. Enhanced
++   IBRS on x86), retpoline is automatically disabled at run time.
++
++   The retpoline mitigation is turned on by default on vulnerable
++   CPUs. It can be forced on or off by the administrator
++   via the kernel command line and sysfs control files. See
++   :ref:`spectre_mitigation_control_command_line`.
++
++   On x86, indirect branch restricted speculation is turned on by default
++   before invoking any firmware code to prevent Spectre variant 2 exploits
++   using the firmware.
++
++   Using kernel address space randomization (CONFIG_RANDOMIZE_SLAB=y
++   and CONFIG_SLAB_FREELIST_RANDOM=y in the kernel configuration) makes
++   attacks on the kernel generally more difficult.
++
++2. User program mitigation
++^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   User programs can mitigate Spectre variant 1 using LFENCE or "bounds
++   clipping". For more details see [2].
++
++   For Spectre variant 2 mitigation, individual user programs
++   can be compiled with return trampolines for indirect branches.
++   This protects them from consuming poisoned entries in the branch
++   target buffer left by malicious software.  Alternatively, the
++   programs can disable their indirect branch speculation via prctl()
++   (See :ref:`Documentation/userspace-api/spec_ctrl.rst <set_spec_ctrl>`)
++   On x86, this will turn on STIBP to guard against attacks from the
++   sibling thread when the user program is running, and use IBPB to
++   flush the branch target buffer when switching to/from the program.
++
++   Restricting indirect branch speculation on a user program will
++   also prevent the program from launching a variant 2 attack
++   on x86.  All sand-boxed SECCOMP programs have indirect branch
++   speculation restricted by default.  Administrators can change
++   that behavior via the kernel command line and sysfs control files.
++   See :ref:`spectre_mitigation_control_command_line`.
++
++   Programs that disable their indirect branch speculation will have
++   more overheads and run slower.
++
++   User programs should use address space randomization
++   (/proc/sys/kernel/randomize_va_space = 1 or 2) to make attacks more
++   difficult.
++
++3. VM mitigation
++^^^^^^^^^^^^^^^^
++
++   Within the kernel, Spectre variant 1 attacks from rogue guests are
++   mitigated on a case by case basis in VM exit paths. Vulnerable code
++   uses nospec accessor macros for "bounds clipping", to avoid any
++   usable disclosure gadgets.  However, this may not cover all variant
++   1 attack vectors.
++
++   For Spectre variant 2 attacks from rogue guests to the kernel, the
++   Linux kernel uses retpoline or Enhanced IBRS to prevent consumption of
++   poisoned entries in branch target buffer left by rogue guests.  It also
++   flushes the return stack buffer on every VM exit to prevent a return
++   stack buffer underflow so poisoned branch target buffer could be used,
++   or attacker guests leaving poisoned entries in the return stack buffer.
++
++   To mitigate guest-to-guest attacks in the same CPU hardware thread,
++   the branch target buffer is sanitized by flushing before switching
++   to a new guest on a CPU.
++
++   The above mitigations are turned on by default on vulnerable CPUs.
++
++   To mitigate guest-to-guest attacks from sibling thread when SMT is
++   in use, an untrusted guest running in the sibling thread can have
++   its indirect branch speculation disabled by administrator via prctl().
++
++   The kernel also allows guests to use any microcode based mitigation
++   they chose to use (such as IBPB or STIBP on x86) to protect themselves.
++
++.. _spectre_mitigation_control_command_line:
++
++Mitigation control on the kernel command line
++---------------------------------------------
++
++Spectre variant 2 mitigation can be disabled or force enabled at the
++kernel command line.
++
++	nospectre_v2	[X86] Disable all mitigations for the Spectre variant 2
++			(indirect branch prediction) vulnerability. System may
++			allow data leaks with this option, which is equivalent
++			to spectre_v2=off.
++
++
++        spectre_v2=     [X86] Control mitigation of Spectre variant 2
++			(indirect branch speculation) vulnerability.
++			The default operation protects the kernel from
++			user space attacks.
++
++			on   - unconditionally enable, implies
++			       spectre_v2_user=on
++			off  - unconditionally disable, implies
++			       spectre_v2_user=off
++			auto - kernel detects whether your CPU model is
++			       vulnerable
++
++			Selecting 'on' will, and 'auto' may, choose a
++			mitigation method at run time according to the
++			CPU, the available microcode, the setting of the
++			CONFIG_RETPOLINE configuration option, and the
++			compiler with which the kernel was built.
++
++			Selecting 'on' will also enable the mitigation
++			against user space to user space task attacks.
++
++			Selecting 'off' will disable both the kernel and
++			the user space protections.
++
++			Specific mitigations can also be selected manually:
++
++			retpoline         - replace indirect branches
++			retpoline,generic - google's original retpoline
++			retpoline,amd     - AMD-specific minimal thunk
++
++			Not specifying this option is equivalent to
++			spectre_v2=auto.
++
++For user space mitigation:
++
++        spectre_v2_user=
++			[X86] Control mitigation of Spectre variant 2
++			(indirect branch speculation) vulnerability between
++			user space tasks
++
++			on      - Unconditionally enable mitigations. Is
++				  enforced by spectre_v2=on
++
++			off     - Unconditionally disable mitigations. Is
++				  enforced by spectre_v2=off
++
++			prctl   - Indirect branch speculation is enabled,
++				  but mitigation can be enabled via prctl
++				  per thread. The mitigation control state
++				  is inherited on fork.
++
++			prctl,ibpb
++				- Like "prctl" above, but only STIBP is
++				  controlled per thread. IBPB is issued
++				  always when switching between different user
++				  space processes.
++
++			seccomp
++				- Same as "prctl" above, but all seccomp
++				  threads will enable the mitigation unless
++				  they explicitly opt out.
++
++			seccomp,ibpb
++				- Like "seccomp" above, but only STIBP is
++				  controlled per thread. IBPB is issued
++				  always when switching between different
++				  user space processes.
++
++			auto    - Kernel selects the mitigation depending on
++				  the available CPU features and vulnerability.
++
++			Default mitigation:
++			If CONFIG_SECCOMP=y then "seccomp", otherwise "prctl"
++
++			Not specifying this option is equivalent to
++			spectre_v2_user=auto.
++
++			In general the kernel by default selects
++			reasonable mitigations for the current CPU. To
++			disable Spectre variant 2 mitigations boot with
++			spectre_v2=off. Spectre variant 1 mitigations
++			cannot be disabled.
++
++Mitigation selection guide
++--------------------------
++
++1. Trusted userspace
++^^^^^^^^^^^^^^^^^^^^
++
++   If all userspace applications are from trusted sources and do not
++   execute externally supplied untrusted code, then the mitigations can
++   be disabled.
++
++2. Protect sensitive programs
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   For security-sensitive programs that have secrets (e.g. crypto
++   keys), protection against Spectre variant 2 can be put in place by
++   disabling indirect branch speculation when the program is running
++   (See :ref:`Documentation/userspace-api/spec_ctrl.rst <set_spec_ctrl>`).
++
++3. Sandbox untrusted programs
++^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++   Untrusted programs that could be a source of attacks can be cordoned
++   off by disabling their indirect branch speculation when they are run
++   (See :ref:`Documentation/userspace-api/spec_ctrl.rst <set_spec_ctrl>`).
++   This prevents untrusted programs from polluting the branch target
++   buffer.  All programs running in SECCOMP sandboxes have indirect
++   branch speculation restricted by default. This behavior can be
++   changed via the kernel command line and sysfs control files. See
++   :ref:`spectre_mitigation_control_command_line`.
++
++3. High security mode
++^^^^^^^^^^^^^^^^^^^^^
++
++   All Spectre variant 2 mitigations can be forced on
++   at boot time for all programs (See the "on" option in
++   :ref:`spectre_mitigation_control_command_line`).  This will add
++   overhead as indirect branch speculations for all programs will be
++   restricted.
++
++   On x86, branch target buffer will be flushed with IBPB when switching
++   to a new program. STIBP is left on all the time to protect programs
++   against variant 2 attacks originating from programs running on
++   sibling threads.
++
++   Alternatively, STIBP can be used only when running programs
++   whose indirect branch speculation is explicitly disabled,
++   while IBPB is still used all the time when switching to a new
++   program to clear the branch target buffer (See "ibpb" option in
++   :ref:`spectre_mitigation_control_command_line`).  This "ibpb" option
++   has less performance cost than the "on" option, which leaves STIBP
++   on all the time.
++
++References on Spectre
++---------------------
++
++Intel white papers:
++
++[1] `Intel analysis of speculative execution side channels <https://newsroom.intel.com/wp-content/uploads/sites/11/2018/01/Intel-Analysis-of-Speculative-Execution-Side-Channels.pdf>`_.
++
++[2] `Bounds check bypass <https://software.intel.com/security-software-guidance/software-guidance/bounds-check-bypass>`_.
++
++[3] `Deep dive: Retpoline: A branch target injection mitigation <https://software.intel.com/security-software-guidance/insights/deep-dive-retpoline-branch-target-injection-mitigation>`_.
++
++[4] `Deep Dive: Single Thread Indirect Branch Predictors <https://software.intel.com/security-software-guidance/insights/deep-dive-single-thread-indirect-branch-predictors>`_.
++
++AMD white papers:
++
++[5] `AMD64 technology indirect branch control extension <https://developer.amd.com/wp-content/resources/Architecture_Guidelines_Update_Indirect_Branch_Control.pdf>`_.
++
++[6] `Software techniques for managing speculation on AMD processors <https://developer.amd.com/wp-content/resources/90343-B_SoftwareTechniquesforManagingSpeculation_WP_7-18Update_FNL.pdf>`_.
++
++ARM white papers:
++
++[7] `Cache speculation side-channels <https://developer.arm.com/support/arm-security-updates/speculative-processor-vulnerability/download-the-whitepaper>`_.
++
++[8] `Cache speculation issues update <https://developer.arm.com/support/arm-security-updates/speculative-processor-vulnerability/latest-updates/cache-speculation-issues-update>`_.
++
++Google white paper:
++
++[9] `Retpoline: a software construct for preventing branch-target-injection <https://support.google.com/faqs/answer/7625886>`_.
++
++MIPS white paper:
++
++[10] `MIPS: response on speculative execution and side channel vulnerabilities <https://www.mips.com/blog/mips-response-on-speculative-execution-and-side-channel-vulnerabilities/>`_.
++
++Academic papers:
++
++[11] `Spectre Attacks: Exploiting Speculative Execution <https://spectreattack.com/spectre.pdf>`_.
++
++[12] `NetSpectre: Read Arbitrary Memory over Network <https://arxiv.org/abs/1807.10535>`_.
++
++[13] `Spectre Returns! Speculation Attacks using the Return Stack Buffer <https://www.usenix.org/system/files/conference/woot18/woot18-paper-koruyeh.pdf>`_.
+diff --git a/Documentation/userspace-api/spec_ctrl.rst b/Documentation/userspace-api/spec_ctrl.rst
+index 1129c7550a48..7ddd8f667459 100644
+--- a/Documentation/userspace-api/spec_ctrl.rst
++++ b/Documentation/userspace-api/spec_ctrl.rst
+@@ -49,6 +49,8 @@ If PR_SPEC_PRCTL is set, then the per-task control of the mitigation is
+ available. If not set, prctl(PR_SET_SPECULATION_CTRL) for the speculation
+ misfeature will fail.
+ 
++.. _set_spec_ctrl:
++
+ PR_SET_SPECULATION_CTRL
+ -----------------------
+ 
+-- 
+2.20.1
+
