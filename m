@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61CC6C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DEAC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 324D92063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F142063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807444;
-	bh=ZVYnyXlmr4r0ZjL3OXJl4+LVg+xG9Wy3Cn8VrSg8LPg=;
+	s=default; t=1560807448;
+	bh=6n+foonixuc31PF4ZuMbKS89R8pdNFk0aCM+W91tW0U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vkJrRtvouwzEC1whfM49aRSyUrHrMDtRP3xddRc0vCy1ysllESw42nmX8u7PjAgU2
-	 gaO/Cd1EVlebuGE9oprfrEK+4ke3JjeK+8kUEaJPAWQRor08f/DfUlJtlbNdbOYwl2
-	 XWmhUbgg3EcYOcvmPj7QuPvl7wv2VlOH/PLYZjTE=
+	b=jJ989mVRHgk90j12a5HvQN/K7P4McVE58t9zMxFKdcx+URDlzAyofYqtlCdieFVHO
+	 B+vhPSAICxslAA2JRKeK7QQh9YON/ez6qrxXykR7LGTVXrqsGHQf3THjcJ8BWt/1sA
+	 SztQO8CqOb8mdgznYfqbu57V4rkVYEe6tJphLTfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfFQVUS (ORCPT
+        id S1729224AbfFQVh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:20:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44348 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:37:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727768AbfFQVUO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:20:14 -0400
+        id S1725497AbfFQVUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:20:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD2B320B1F;
-        Mon, 17 Jun 2019 21:20:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A4F620861;
+        Mon, 17 Jun 2019 21:20:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806413;
-        bh=ZVYnyXlmr4r0ZjL3OXJl4+LVg+xG9Wy3Cn8VrSg8LPg=;
+        s=default; t=1560806403;
+        bh=6n+foonixuc31PF4ZuMbKS89R8pdNFk0aCM+W91tW0U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Njs8GaSx4dsD108x/x6E4iWfjsmDRJFSGKHNd0i01lAv+61lEm2Vn/HI0lGM4Byf2
-         WbIXdIIJToUnYc3lQ+lVUiPHxVpjRpI7DdtEFKybe+8V+Kbf5Kzo/yNbj7fU1GWg5d
-         gat7dd/pAwftCz0UVVL3B2ihtmcnIQDSgMcJBszE=
+        b=dD/KEKgKln2W6R1wwhfIS+Ly5K7JCqjI+hEI8yu7yOH9HhwjX7nn5kleBnvLcB4/+
+         atCjuNGoxzVSuOyjw1NDBz1CAS8OiyPr3058I4Rntb3dhiV8zJD4l41johQ8ZfD8pc
+         v3/uOH2yDGmO7IEZABudCaXy6EE8QC5kcGOWi7HU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jiri Kosina <jkosina@suse.cz>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 5.1 005/115] Revert "HID: Increase maximum report size allowed by hid_field_extract()"
-Date:   Mon, 17 Jun 2019 23:08:25 +0200
-Message-Id: <20190617210800.188656099@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 5.1 039/115] drm/i915/dsi: Use a fuzzy check for burst mode clock check
+Date:   Mon, 17 Jun 2019 23:08:59 +0200
+Message-Id: <20190617210802.013103791@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -59,45 +62,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 15fc1b5c86128f91c8c6699c3b0d9615740b13f1 upstream.
+commit f9a99131ce18d9dddcaa14ec2c436e42f0bbee5e upstream.
 
-This reverts commit 94a9992f7dbdfb28976b565af220e0c4a117144a.
+Prior to this commit we fail to init the DSI panel on the GPD MicroPC:
+https://www.indiegogo.com/projects/gpd-micropc-6-inch-handheld-industry-laptop#/
 
-The commit allows for more than 32 bits in hid_field_extract(),
-but the return value is a 32 bits int.
-So basically what this commit is doing is just silencing those
-legitimate errors.
+The problem is intel_dsi_vbt_init() failing with the following error:
+*ERROR* Burst mode freq is less than computed
 
-Revert to a previous situation in the hope that a proper
-fix will be impletemented.
+The pclk in the VBT panel modeline is 70000, together with 24 bpp and
+4 lines this results in a bitrate value of 70000 * 24 / 4 = 420000.
+But the target_burst_mode_freq in the VBT is 418000.
 
-Fixes: 94a9992f7dbd ("HID: Increase maximum report size allowed by hid_field_extract()")
-Cc: stable@vger.kernel.org # v5.1
-Acked-by: Jiri Kosina <jkosina@suse.cz>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+This commit works around this problem by adding an intel_fuzzy_clock_check
+when target_burst_mode_freq < bitrate and setting target_burst_mode_freq to
+bitrate when that checks succeeds, fixing the panel not working.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190524174028.21659-2-hdegoede@redhat.com
+(cherry picked from commit 2c1c55252647abd989b94f725b190c700312d053)
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-core.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/i915/intel_display.c |    2 +-
+ drivers/gpu/drm/i915/intel_drv.h     |    1 +
+ drivers/gpu/drm/i915/intel_dsi_vbt.c |   11 +++++++++++
+ 3 files changed, 13 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -1313,10 +1313,10 @@ static u32 __extract(u8 *report, unsigne
- u32 hid_field_extract(const struct hid_device *hid, u8 *report,
- 			unsigned offset, unsigned n)
- {
--	if (n > 256) {
--		hid_warn(hid, "hid_field_extract() called with n (%d) > 256! (%s)\n",
-+	if (n > 32) {
-+		hid_warn(hid, "hid_field_extract() called with n (%d) > 32! (%s)\n",
- 			 n, current->comm);
--		n = 256;
-+		n = 32;
- 	}
+--- a/drivers/gpu/drm/i915/intel_display.c
++++ b/drivers/gpu/drm/i915/intel_display.c
+@@ -11757,7 +11757,7 @@ encoder_retry:
+ 	return 0;
+ }
  
- 	return __extract(report, offset, n);
+-static bool intel_fuzzy_clock_check(int clock1, int clock2)
++bool intel_fuzzy_clock_check(int clock1, int clock2)
+ {
+ 	int diff;
+ 
+--- a/drivers/gpu/drm/i915/intel_drv.h
++++ b/drivers/gpu/drm/i915/intel_drv.h
+@@ -1707,6 +1707,7 @@ int vlv_force_pll_on(struct drm_i915_pri
+ 		     const struct dpll *dpll);
+ void vlv_force_pll_off(struct drm_i915_private *dev_priv, enum pipe pipe);
+ int lpt_get_iclkip(struct drm_i915_private *dev_priv);
++bool intel_fuzzy_clock_check(int clock1, int clock2);
+ 
+ /* modesetting asserts */
+ void assert_panel_unlocked(struct drm_i915_private *dev_priv,
+--- a/drivers/gpu/drm/i915/intel_dsi_vbt.c
++++ b/drivers/gpu/drm/i915/intel_dsi_vbt.c
+@@ -871,6 +871,17 @@ bool intel_dsi_vbt_init(struct intel_dsi
+ 		if (mipi_config->target_burst_mode_freq) {
+ 			u32 bitrate = intel_dsi_bitrate(intel_dsi);
+ 
++			/*
++			 * Sometimes the VBT contains a slightly lower clock,
++			 * then the bitrate we have calculated, in this case
++			 * just replace it with the calculated bitrate.
++			 */
++			if (mipi_config->target_burst_mode_freq < bitrate &&
++			    intel_fuzzy_clock_check(
++					mipi_config->target_burst_mode_freq,
++					bitrate))
++				mipi_config->target_burst_mode_freq = bitrate;
++
+ 			if (mipi_config->target_burst_mode_freq < bitrate) {
+ 				DRM_ERROR("Burst mode freq is less than computed\n");
+ 				return false;
 
 
