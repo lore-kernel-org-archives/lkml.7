@@ -4,58 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F5AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3152DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:49:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7F72166E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37A3208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:49:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SUt7ETwg"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Md8Q0ir9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfFQTsS (ORCPT
+        id S1728381AbfFQTth (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:48:18 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48381 "EHLO
+        Mon, 17 Jun 2019 15:49:37 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60685 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfFQTsR (ORCPT
+        with ESMTP id S1725878AbfFQTth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:48:17 -0400
+        Mon, 17 Jun 2019 15:49:37 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJluVs3569738
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJnLtR3570127
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:47:57 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJluVs3569738
+        Mon, 17 Jun 2019 12:49:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJnLtR3570127
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560800877;
-        bh=WAOZ6C3+Y0pl/mblFujh+KHc8Z64A+MSAQN27r68xXY=;
+        s=2019051801; t=1560800961;
+        bh=o72oEHSogqN+xw5BWRHuXKpRZyGSpztWBzpFqIFU//k=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=SUt7ETwgMR5oYGpZjkZ4qSgXnpyFr8fmHZe7JgPjRUt5AwwqKgJ3lW1LBv8geEHBR
-         l2klQt3ZSHBx4cg4J6mPccWmeb7uiglMJlyJtNA7xgfr08zXtVOHDc83xNtHxrMwj+
-         UG71TnrUDmr9RPyF8HSzB2+sFT3ziCy/wVrO5OncdVydyREjkchkS5M5JAXmoSLZdC
-         Kmu3VheOP/Q7rVoq5umkwK8U3SPe48DxjKeqFEBW81glalW6wvIWIytM6IMD8/prEy
-         pmjO5rwahAYJICoVkHEzYdejG1yTGgSLan8yMQ8wRGhIUd6zh8W4E5aA1zcaPbUq+Z
-         zx8HrhKaxT0bQ==
+        b=Md8Q0ir9/G8Z3c9o6zoEsJYsYKKQvC9MfMrPPGmdtuyk5Dru2k4MWeFP/OLdF9GO9
+         0RRCUCXWFTiJpPmDh2x4sM+VqRshBFAHVAuuI5c1GNleyH76HitEh3TDsEKnbzaKtU
+         mbMNHDRYe56UcOjzExsRLm1c8Lx2+UYLacTx3edXBJyU3nPSVXvOgRsZJ8D/N04x+L
+         eCnBeT6VTJOIhSAQS4sfeNaRdXsN9w53eG44wyZSxNLKkhbgfsZmulr61yEh+xxK1+
+         XD60k/cp6uCZzNrupIO4hpdoykqK4Wy/fM40bqE+qEuGARLG1IqLioL5J/OqXHGJgk
+         1jnxJcV9rxMsw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJlu413569735;
-        Mon, 17 Jun 2019 12:47:56 -0700
-Date:   Mon, 17 Jun 2019 12:47:56 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJnKN53570124;
+        Mon, 17 Jun 2019 12:49:20 -0700
+Date:   Mon, 17 Jun 2019 12:49:20 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-0ccc69ba0af46e3371c8cefb506aaf9f0e4f554c@git.kernel.org>
-Cc:     yao.jin@linux.intel.com, adrian.hunter@intel.com, acme@redhat.com,
-        hpa@zytor.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, jolsa@redhat.com
-Reply-To: jolsa@redhat.com, tglx@linutronix.de, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, acme@redhat.com,
-          yao.jin@linux.intel.com, adrian.hunter@intel.com
-In-Reply-To: <20190604130017.31207-16-adrian.hunter@intel.com>
-References: <20190604130017.31207-16-adrian.hunter@intel.com>
+Message-ID: <tip-929afa0092d0ea6be2fbd0ac087319092595eba6@git.kernel.org>
+Cc:     adrian.hunter@intel.com, hpa@zytor.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, acme@redhat.com, tglx@linutronix.de,
+        yao.jin@linux.intel.com, jolsa@redhat.com
+Reply-To: linux-kernel@vger.kernel.org, yao.jin@linux.intel.com,
+          tglx@linutronix.de, acme@redhat.com, mingo@kernel.org,
+          jolsa@redhat.com, adrian.hunter@intel.com, hpa@zytor.com
+In-Reply-To: <20190604130017.31207-18-adrian.hunter@intel.com>
+References: <20190604130017.31207-18-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf time-utils: Fix --time documentation
-Git-Commit-ID: 0ccc69ba0af46e3371c8cefb506aaf9f0e4f554c
+Subject: [tip:perf/core] perf time-utils: Make perf_time__parse_for_ranges()
+ more logical
+Git-Commit-ID: 929afa0092d0ea6be2fbd0ac087319092595eba6
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -69,83 +70,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0ccc69ba0af46e3371c8cefb506aaf9f0e4f554c
-Gitweb:     https://git.kernel.org/tip/0ccc69ba0af46e3371c8cefb506aaf9f0e4f554c
+Commit-ID:  929afa0092d0ea6be2fbd0ac087319092595eba6
+Gitweb:     https://git.kernel.org/tip/929afa0092d0ea6be2fbd0ac087319092595eba6
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Tue, 4 Jun 2019 16:00:13 +0300
+AuthorDate: Tue, 4 Jun 2019 16:00:15 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 10 Jun 2019 16:20:12 -0300
 
-perf time-utils: Fix --time documentation
+perf time-utils: Make perf_time__parse_for_ranges() more logical
 
-Correct some punctuation and spelling and correct the format to show
-that the time resolution is nanoseconds not microseconds.
+Explicit time ranges never contain a percent sign whereas percentage
+ranges always do, so it is possible to call the correct parser.
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-16-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190604130017.31207-18-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf-diff.txt   | 6 +++---
- tools/perf/Documentation/perf-report.txt | 6 +++---
- tools/perf/Documentation/perf-script.txt | 6 +++---
- 3 files changed, 9 insertions(+), 9 deletions(-)
+ tools/perf/util/time-utils.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/Documentation/perf-diff.txt b/tools/perf/Documentation/perf-diff.txt
-index da7809b15cc9..5732f69580ab 100644
---- a/tools/perf/Documentation/perf-diff.txt
-+++ b/tools/perf/Documentation/perf-diff.txt
-@@ -142,9 +142,9 @@ OPTIONS
- 	  perf diff --time 0%-10%,30%-40%
+diff --git a/tools/perf/util/time-utils.c b/tools/perf/util/time-utils.c
+index 9a463752dba8..d942840356e3 100644
+--- a/tools/perf/util/time-utils.c
++++ b/tools/perf/util/time-utils.c
+@@ -402,6 +402,7 @@ int perf_time__parse_for_ranges(const char *time_str,
+ 				struct perf_time_interval **ranges,
+ 				int *range_size, int *range_num)
+ {
++	bool has_percent = strchr(time_str, '%');
+ 	struct perf_time_interval *ptime_range;
+ 	int size, num, ret = -EINVAL;
  
- 	It also supports analyzing samples within a given time window
--	<start>,<stop>. Times have the format seconds.microseconds. If 'start'
--	is not given (i.e., time string is ',x.y') then analysis starts at
--	the beginning of the file. If stop time is not given (i.e, time
-+	<start>,<stop>. Times have the format seconds.nanoseconds. If 'start'
-+	is not given (i.e. time string is ',x.y') then analysis starts at
-+	the beginning of the file. If stop time is not given (i.e. time
- 	string is 'x.y,') then analysis goes to the end of the file. Time string is
- 	'a1.b1,c1.d1:a2.b2,c2.d2'. Use ':' to separate timestamps for different
- 	perf.data files.
-diff --git a/tools/perf/Documentation/perf-report.txt b/tools/perf/Documentation/perf-report.txt
-index f441baa794ce..3de029f6881d 100644
---- a/tools/perf/Documentation/perf-report.txt
-+++ b/tools/perf/Documentation/perf-report.txt
-@@ -412,12 +412,12 @@ OPTIONS
+@@ -409,7 +410,7 @@ int perf_time__parse_for_ranges(const char *time_str,
+ 	if (!ptime_range)
+ 		return -ENOMEM;
  
- --time::
- 	Only analyze samples within given time window: <start>,<stop>. Times
--	have the format seconds.microseconds. If start is not given (i.e., time
-+	have the format seconds.nanoseconds. If start is not given (i.e. time
- 	string is ',x.y') then analysis starts at the beginning of the file. If
--	stop time is not given (i.e, time string is 'x.y,') then analysis goes
-+	stop time is not given (i.e. time string is 'x.y,') then analysis goes
- 	to end of file.
+-	if (perf_time__parse_str(ptime_range, time_str) != 0) {
++	if (has_percent) {
+ 		if (session->evlist->first_sample_time == 0 &&
+ 		    session->evlist->last_sample_time == 0) {
+ 			pr_err("HINT: no first/last sample time found in perf data.\n"
+@@ -427,6 +428,8 @@ int perf_time__parse_for_ranges(const char *time_str,
+ 		if (num < 0)
+ 			goto error_invalid;
+ 	} else {
++		if (perf_time__parse_str(ptime_range, time_str))
++			goto error_invalid;
+ 		num = 1;
+ 	}
  
--	Also support time percent with multiple time range. Time string is
-+	Also support time percent with multiple time ranges. Time string is
- 	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
- 
- 	For example:
-diff --git a/tools/perf/Documentation/perf-script.txt b/tools/perf/Documentation/perf-script.txt
-index c59fd52e9e91..878349cce968 100644
---- a/tools/perf/Documentation/perf-script.txt
-+++ b/tools/perf/Documentation/perf-script.txt
-@@ -361,12 +361,12 @@ include::itrace.txt[]
- 
- --time::
- 	Only analyze samples within given time window: <start>,<stop>. Times
--	have the format seconds.microseconds. If start is not given (i.e., time
-+	have the format seconds.nanoseconds. If start is not given (i.e. time
- 	string is ',x.y') then analysis starts at the beginning of the file. If
--	stop time is not given (i.e, time string is 'x.y,') then analysis goes
-+	stop time is not given (i.e. time string is 'x.y,') then analysis goes
- 	to end of file.
- 
--	Also support time percent with multipe time range. Time string is
-+	Also support time percent with multiple time ranges. Time string is
- 	'a%/n,b%/m,...' or 'a%-b%,c%-%d,...'.
- 
- 	For example:
