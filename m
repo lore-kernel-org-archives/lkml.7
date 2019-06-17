@@ -2,135 +2,159 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9361FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF25C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6942D206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F71A206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:01:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="EKmfXpL7"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Ov7YIzup"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728812AbfFQTBD (ORCPT
+        id S1728593AbfFQTBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:01:03 -0400
-Received: from esa3.hgst.iphmx.com ([216.71.153.141]:59831 "EHLO
-        esa3.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFQTBB (ORCPT
+        Mon, 17 Jun 2019 15:01:31 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43763 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFQTBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:01:01 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1560798061; x=1592334061;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=41zR8QjGMqwDXm/EOxIo4VhtiejJSwkpc8NiWlOpJ0o=;
-  b=EKmfXpL7QA9KpvaBunhOEYkMXhcuYgxnYw/5yMyJNmZ89KmCKpiLqffl
-   i46ULg94aQNPjhbOM2gi4sIpnQEMxAFgG8FVKFmCTDbd2bqh05REjCPgx
-   q89rdZ+Op4B8TfLdouE5ScXeSPbnvyDrt64h3wm4DAYuB5JZ+2m7RbYdk
-   4R23N3jy+IsPOocHkO0D5skPAqnQNU+rCGo3jdPtzCo27fY/Nlzbb2RNX
-   QkzxnswsW3augTTHvPC43/cnR2mRi5acYEuET5uRXT30ZnSxypn6rM4N6
-   QOb0gSNYtGFFwdr91XZA6Ci50rIcF/1Eh/l3STg14pY0iRU9RPQKXRLS+
-   Q==;
-X-IronPort-AV: E=Sophos;i="5.63,386,1557158400"; 
-   d="scan'208";a="115695482"
-Received: from uls-op-cesaip01.wdc.com (HELO uls-op-cesaep01.wdc.com) ([199.255.45.14])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2019 03:01:01 +0800
-IronPort-SDR: spOuXSxRrjdAUR5Mf+tol6cicoxFy6dFp37yEtiIA1Nch8T1ddPewPRTfcSswfnmbGLgpN/qx+
- IQ6FwWZovP0BY5luNPn8kEm15kpGFQxoIA/wZwLsRvZ9cTNPgLuLtZeSFbE7PyyDowR0owe1r5
- qpi0XDaV42LK0wN7tg6bbFK/DmCDh37TX6erD7819+m0gidSeCLrFHZQH/hE4o+7tD1DrPqYtH
- skEMgKm2cdvCAhERy2SRCVxnOGnQaObZeH35sqCG6EaOSe7wDrdDU9kODS1H63VH3h87g0bP0A
- rmIoNafpStXSRnP5ksLBDWRD
-Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
-  by uls-op-cesaep01.wdc.com with ESMTP; 17 Jun 2019 12:00:34 -0700
-IronPort-SDR: 5sUm89DLg86LTT++XMnEPR2jSdCE5MaQwfzr9HlRyf5iwKcy5zp28LRQQmd7TMxYAuZ1fNw30B
- 459ZfbJFgwAVTKPs9nKxf1E4+lNKOaJVP0Fbr1Yl8K53d+JwBG5UWpUhzutPjcVT00hrkMYbdG
- Cae24DcFXM/uWBZR+PMIxGlEABrADVP8zbX2hGZgBNTHWXNel5CKyP9nufYJTM0aVyKGU9YlGZ
- CB93X6sU8FPK1IiwanicqFZIv/1vK9c/aeMY4WWXxRmO5T/cxXgiCdE69aDS0+1RIJBuY8Qv9J
- vsM=
-Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
-  by uls-op-cesaip01.wdc.com with ESMTP; 17 Jun 2019 12:00:59 -0700
-From:   Atish Patra <atish.patra@wdc.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: [PATCH v7 7/7] MAINTAINERS: Add an entry for generic architecture topology
-Date:   Mon, 17 Jun 2019 11:59:20 -0700
-Message-Id: <20190617185920.29581-8-atish.patra@wdc.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190617185920.29581-1-atish.patra@wdc.com>
-References: <20190617185920.29581-1-atish.patra@wdc.com>
+        Mon, 17 Jun 2019 15:01:30 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJ1HSS3554565
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 17 Jun 2019 12:01:17 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJ1HSS3554565
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560798077;
+        bh=jxWByRX3Ss6TGK3xmsPvWZ2PdNFy3FTjs5EFjDVIhFc=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=Ov7YIzupa0MVEG1hLP2rNrOjFqmBbT1FtlR860IMMhUAhnbKV+4aFE7sgYJLTnRLK
+         hJp0jIXe9VdZequgz1GRt8hNTY4gkmplEyGYMtSIWNu4Q8njXmmLuYA7ciIt60JBM6
+         2BQEWlHkD/fYIkHxoufHpVBhLfYG657XgGJ2DOuWwi+LJ54s3wMJ2te1Lfs07mx7YM
+         QK6ku5O42uX6HvE3MWdkvtL4SQ0QHyyhDvUg3DB5qhOcIrhsC4CG3SofUU5w8x94NO
+         muMMpHYpzZs6D7HjOKeD5oOAIIdzcVFHyWJQbSYmZ/eRzfsurX8LkMPuvkYMxMOJ1/
+         0cRqD2kkpwVjg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJ1GhM3554562;
+        Mon, 17 Jun 2019 12:01:16 -0700
+Date:   Mon, 17 Jun 2019 12:01:16 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
+Message-ID: <tip-5b1dc0fd1da06d6e89f1ca8736cfe0ee84e34cc7@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, acme@redhat.com, mingo@kernel.org,
+        jolsa@redhat.com, hpa@zytor.com, tglx@linutronix.de,
+        adrian.hunter@intel.com
+Reply-To: linux-kernel@vger.kernel.org, acme@redhat.com,
+          tglx@linutronix.de, mingo@kernel.org, adrian.hunter@intel.com,
+          jolsa@redhat.com, hpa@zytor.com
+In-Reply-To: <20190520113728.14389-8-adrian.hunter@intel.com>
+References: <20190520113728.14389-8-adrian.hunter@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf intel-pt: Add support for samples to contain
+ IPC ratio
+Git-Commit-ID: 5b1dc0fd1da06d6e89f1ca8736cfe0ee84e34cc7
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla@arm.com>
+Commit-ID:  5b1dc0fd1da06d6e89f1ca8736cfe0ee84e34cc7
+Gitweb:     https://git.kernel.org/tip/5b1dc0fd1da06d6e89f1ca8736cfe0ee84e34cc7
+Author:     Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate: Mon, 20 May 2019 14:37:13 +0300
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Wed, 5 Jun 2019 09:47:56 -0300
 
-arm and arm64 shared lot of CPU topology related code. This was
-consolidated under driver/base/arch_topology.c by Juri. Now RISC-V
-is also started sharing the same code pulling more code from arm64
-into arch_topology.c
+perf intel-pt: Add support for samples to contain IPC ratio
 
-Since I was involved in the review from the beginning, I would like
-to assume maintenance for the same.
+Copy the incremental instruction count and cycle count onto 'instructions'
+and 'branches' samples.
 
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Acked-by: Juri Lelli <juri.lelli@redhat.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+Because Intel PT does not update the cycle count on every branch or
+instruction, the incremental values will often be zero.
+
+When there are values, they will be the number of instructions and
+number of cycles since the last update, and thus represent the average
+IPC since the last IPC value.
+
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Link: http://lkml.kernel.org/r/20190520113728.14389-8-adrian.hunter@intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/perf/util/intel-pt.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 57f496cff999..c6f7d7152f01 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -6595,6 +6595,13 @@ W:	https://linuxtv.org
- S:	Maintained
- F:	drivers/media/radio/radio-gemtek*
+diff --git a/tools/perf/util/intel-pt.c b/tools/perf/util/intel-pt.c
+index 7a70693c1b91..3cff8fe2eaa0 100644
+--- a/tools/perf/util/intel-pt.c
++++ b/tools/perf/util/intel-pt.c
+@@ -157,6 +157,12 @@ struct intel_pt_queue {
+ 	u32 flags;
+ 	u16 insn_len;
+ 	u64 last_insn_cnt;
++	u64 ipc_insn_cnt;
++	u64 ipc_cyc_cnt;
++	u64 last_in_insn_cnt;
++	u64 last_in_cyc_cnt;
++	u64 last_br_insn_cnt;
++	u64 last_br_cyc_cnt;
+ 	char insn[INTEL_PT_INSN_BUF_SZ];
+ };
  
-+GENERIC ARCHITECTURE TOPOLOGY
-+M:	Sudeep Holla <sudeep.holla@arm.com>
-+L:	linux-kernel@vger.kernel.org
-+S:	Maintained
-+F:	drivers/base/arch_topology.c
-+F:	include/linux/arch_topology.h
+@@ -1162,6 +1168,13 @@ static int intel_pt_synth_branch_sample(struct intel_pt_queue *ptq)
+ 		sample.branch_stack = (struct branch_stack *)&dummy_bs;
+ 	}
+ 
++	sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_br_cyc_cnt;
++	if (sample.cyc_cnt) {
++		sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_br_insn_cnt;
++		ptq->last_br_insn_cnt = ptq->ipc_insn_cnt;
++		ptq->last_br_cyc_cnt = ptq->ipc_cyc_cnt;
++	}
 +
- GENERIC GPIO I2C DRIVER
- M:	Wolfram Sang <wsa+renesas@sang-engineering.com>
- S:	Supported
--- 
-2.21.0
-
+ 	return intel_pt_deliver_synth_b_event(pt, event, &sample,
+ 					      pt->branches_sample_type);
+ }
+@@ -1217,6 +1230,13 @@ static int intel_pt_synth_instruction_sample(struct intel_pt_queue *ptq)
+ 	sample.stream_id = ptq->pt->instructions_id;
+ 	sample.period = ptq->state->tot_insn_cnt - ptq->last_insn_cnt;
+ 
++	sample.cyc_cnt = ptq->ipc_cyc_cnt - ptq->last_in_cyc_cnt;
++	if (sample.cyc_cnt) {
++		sample.insn_cnt = ptq->ipc_insn_cnt - ptq->last_in_insn_cnt;
++		ptq->last_in_insn_cnt = ptq->ipc_insn_cnt;
++		ptq->last_in_cyc_cnt = ptq->ipc_cyc_cnt;
++	}
++
+ 	ptq->last_insn_cnt = ptq->state->tot_insn_cnt;
+ 
+ 	return intel_pt_deliver_synth_event(pt, ptq, event, &sample,
+@@ -1488,6 +1508,15 @@ static int intel_pt_sample(struct intel_pt_queue *ptq)
+ 
+ 	ptq->have_sample = false;
+ 
++	if (ptq->state->tot_cyc_cnt > ptq->ipc_cyc_cnt) {
++		/*
++		 * Cycle count and instruction count only go together to create
++		 * a valid IPC ratio when the cycle count changes.
++		 */
++		ptq->ipc_insn_cnt = ptq->state->tot_insn_cnt;
++		ptq->ipc_cyc_cnt = ptq->state->tot_cyc_cnt;
++	}
++
+ 	if (pt->sample_pwr_events && (state->type & INTEL_PT_PWR_EVT)) {
+ 		if (state->type & INTEL_PT_CBR_CHG) {
+ 			err = intel_pt_synth_cbr_sample(ptq);
