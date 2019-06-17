@@ -2,78 +2,115 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20234C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:15:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35ACEC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E752C2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:15:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11B992189F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:24:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725989AbfFQGPt (ORCPT
+        id S1725958AbfFQGYY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 02:15:49 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:34555 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725280AbfFQGPs (ORCPT
+        Mon, 17 Jun 2019 02:24:24 -0400
+Received: from mail.steuer-voss.de ([85.183.69.95]:36734 "EHLO
+        mail.steuer-voss.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725372AbfFQGYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 02:15:48 -0400
-Received: from nat-ies.mentorg.com ([192.94.31.2] helo=svr-ies-mbx-02.mgc.mentorg.com)
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hckvh-00071l-Df from Cedric_Hombourger@mentor.com ; Sun, 16 Jun 2019 23:15:45 -0700
-Received: from FRG-W10-HOMBOUR.world.mentorg.com (137.202.0.90) by
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Mon, 17 Jun 2019 07:15:41 +0100
-From:   Cedric Hombourger <Cedric_Hombourger@mentor.com>
-CC:     <isar-users@googlegroups.com>,
-        Cedric Hombourger <Cedric_Hombourger@mentor.com>,
-        <yamada.masahiro@socionext.com>, <michal.lkml@markovi.net>,
-        <linux-kbuild@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH] builddeb: generate multi-arch friendly linux-libc-dev package
-Date:   Mon, 17 Jun 2019 08:14:56 +0200
-Message-ID: <1560752096-1323-1-git-send-email-Cedric_Hombourger@mentor.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 17 Jun 2019 02:24:23 -0400
+X-Virus-Scanned: Debian amavisd-new at mail.steuer-voss.de
+Received: by mail.steuer-voss.de (Postfix, from userid 1000)
+        id 824734CD6C; Mon, 17 Jun 2019 08:24:18 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.steuer-voss.de (Postfix) with ESMTP id 7E5FC4CD50;
+        Mon, 17 Jun 2019 08:24:18 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 08:24:18 +0200 (CEST)
+From:   Nikolaus Voss <nv@vosn.de>
+X-X-Sender: nv@fox.voss.local
+To:     "Moore, Robert" <robert.moore@intel.com>
+cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        nikolaus.voss@loewensteinmedical.de
+Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+In-Reply-To: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
+Message-ID: <alpine.DEB.2.20.1906170746150.12344@fox.voss.local>
+References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de> <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de> <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+ <alpine.DEB.2.20.1906141114490.6579@fox.voss.local> <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
+User-Agent: Alpine 2.20 (DEB 67 2015-01-07)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Debian-based distributions place libc header files in a machine
-specific directory (/usr/include/<libc-machine>) instead of
-/usr/include/asm to support installation of the linux-libc-dev
-package from multiple architectures. Move headers installed by
-"make headers_install" accordingly.
+Bob,
 
-Signed-off-by: Cedric Hombourger <Cedric_Hombourger@mentor.com>
-Reviewed-by: Henning Schild <henning.schild@siemens.com>
----
- scripts/package/builddeb | 5 +++++
- 1 file changed, 5 insertions(+)
+On Fri, 14 Jun 2019, Moore, Robert wrote:
+>
+>
+> -----Original Message-----
+> From: Nikolaus Voss [mailto:nv@vosn.de]
+> Sent: Friday, June 14, 2019 2:26 AM
+> To: Rafael J. Wysocki <rafael@kernel.org>
+> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Moore, Robert <robert.moore@intel.com>; Schmauss, Erik <erik.schmauss@intel.com>; Jacek Anaszewski <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>; linux-leds@vger.kernel.org; Linux PWM List <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+> Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table loads
+>
+> Hi Rafael,
+>
+> On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
+>> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
+>> <nikolaus.voss@loewensteinmedical.de> wrote:
+>>>
+>>> If an ACPI SSDT overlay is loaded after built-in tables have been
+>>> loaded e.g. via configfs or efivar_ssdt_load() it is necessary to
+>>> rewalk the namespace to resolve references. Without this, relative
+>>> and absolute paths like ^PCI0.SBUS or \_SB.PCI0.SBUS are not resolved
+>>> correctly.
+>>>
+>>> Make configfs load use the same method as efivar_ssdt_load().
+>>>
+>>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+>>
+>> This is fine by me, so
+>>
+>> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>
+>> Or if you want me to take this patch (without the other two in the
+>> series), please let me know.
+>
+> thanks. I think it would be the best if you take up this patch as it is 
+> an independent topic. In retrospect it wasn't a good idea to put it into 
+> this series.
+>
+> Kind regards,
+> Niko
+>
+> I would have to ask, why is additional code needed for package 
+> initialization/resolution? It already happens elsewhere in acpica. Bob
 
-diff --git a/scripts/package/builddeb b/scripts/package/builddeb
-index b03dd56a4782..8f7afb3a84e9 100755
---- a/scripts/package/builddeb
-+++ b/scripts/package/builddeb
-@@ -132,6 +132,11 @@ fi
- if [ "$ARCH" != "um" ]; then
- 	$MAKE -f $srctree/Makefile headers_check
- 	$MAKE -f $srctree/Makefile headers_install INSTALL_HDR_PATH="$libc_headers_dir/usr"
-+	# move asm headers to /usr/include/<libc-machine>/asm to match the structure
-+	# used by Debian-based distros (to support multi-arch)
-+	libc_mach=$($CC -dumpmachine)
-+	mkdir $libc_headers_dir/usr/include/$libc_mach
-+	mv $libc_headers_dir/usr/include/asm $libc_headers_dir/usr/include/$libc_mach/
- fi
- 
- # Install the maintainer scripts
--- 
-2.11.0
+for built-in tables loaded via acpi_ex_load_table_op() everything is fine, 
+because after acpi_tb_load_table() acpi_ns_walk_namespace() is called to 
+resolve references.
 
+My fix only affects tables loaded dynamically via either 
+acpi_configfs driver (for debugging purposes) or efivar_ssdt_load() (to 
+specify a table on the kernel's command line). They use acpi_load_table() 
+to load the table from a caller-owned buffer. To resolve the references, 
+it is again necessary to rewalk the namespace, which was simply missing in 
+acpi_load_table().
+
+Niko
