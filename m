@@ -2,127 +2,235 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6166C31E53
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:25:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED41C31E54
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:26:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89015218A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAD8218A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:26:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="F28MpQer"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfFQIZv (ORCPT
+        id S1727635AbfFQI02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:25:51 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:42897 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727518AbfFQIZt (ORCPT
+        Mon, 17 Jun 2019 04:26:28 -0400
+Received: from mail-vk1-f202.google.com ([209.85.221.202]:35907 "EHLO
+        mail-vk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727483AbfFQI02 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:25:49 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hcmxN-0000zt-D9; Mon, 17 Jun 2019 10:25:37 +0200
-Date:   Mon, 17 Jun 2019 10:25:35 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Jacob Pan <jacob.jun.pan@intel.com>,
-        Juergen Gross <jgross@suse.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Wincy Van <fanwenyi0529@gmail.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Baoquan He <bhe@redhat.com>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>
-Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
- remampping table entry for watchdog
-In-Reply-To: <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1906171007360.1760@nanos.tec.linutronix.de>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com> <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Mon, 17 Jun 2019 04:26:28 -0400
+Received: by mail-vk1-f202.google.com with SMTP id s3so4486283vkb.3
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 01:26:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=zNrbPgNoeDBUYkvT6WCexqCkglYQYBNMsP2F15bRgzw=;
+        b=F28MpQerLXJBLIWRmLuUF47CK1rSBKHh7j1mspgJvxgCYybn8PwQ2icrUPzaqHKgGS
+         mIu6S0C5yyN6Zp7XldkF4xD6ADXRhtF07Z6XHvYu+FHZ9BpcPtjJxLCah/daYKhStBrL
+         e/azebcPGRR+yjxTyj/+CmfyBaWB+WOK/5hBX1ABlx6ES4eRURKdAl7TuCUbbrUa+sjf
+         9OQaMEJ7JNvJccGJ6qWVmFF6O+lhb+vAocDwkUu3q6gqVcuoz5bWd98JWAnSkbeD9kFd
+         w/O94T1vg1eotXi2ejHuC1Kdzez1DiJfvULK/QbuJ+i3Z9G8uOEi+IwB+QVFDgZbeEoQ
+         +qdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=zNrbPgNoeDBUYkvT6WCexqCkglYQYBNMsP2F15bRgzw=;
+        b=Rsi0jnT8ATEdTLvOmOJguw5PXQgJ9ruXOCpx0nAPlRliuGbNnxTNTtfzIPLtjd2+wf
+         zACwG4viwViVodry5HyjQWcROitYRdrr1Jtf+mJOgjpF3913lah9BexhTLMYvddVBK6H
+         Gd9Xu1iJgKz9Al37v75dg9dbM6DUlQrT3sNH1XaU2OTMam3DOixd7B3kp77++NrYpEp4
+         WmaG3c8j/pwpJ5akHW55Yfdp951DTObCUGdS+Sas7CP256VqWgjOJKoN8CdwIs+PykSN
+         vWDUdX69SlN0cJjWTa9qsA8SHfdJHeepc2CgbmSCWjhnBfJ/JkAhSeMXJ7k2YZGnzOtF
+         yUUw==
+X-Gm-Message-State: APjAAAVFQdoB/cIfBS+G4/eai1pgJ5FmXOFZpIoU54S0ugA1nSWbjaZ3
+        n+xfmOGCytY+3olr/YU6G+y2vyxedtg01Oxrr5NsQQ==
+X-Google-Smtp-Source: APXvYqyXlDV32pvvOQl7kYiQYbcmB9/A0bZjtVL0WweMM4MzW8RHZHRv/iYANe9ZkFTYpBh8wMtYLyjkF5jTpySuFxTL7Q==
+X-Received: by 2002:a67:c419:: with SMTP id c25mr46425824vsk.136.1560759986427;
+ Mon, 17 Jun 2019 01:26:26 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 01:25:55 -0700
+Message-Id: <20190617082613.109131-1-brendanhiggins@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v5 00/18] kunit: introduce KUnit, the Linux kernel unit
+ testing framework
+From:   Brendan Higgins <brendanhiggins@google.com>
+To:     frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, sboyd@kernel.org,
+        shuah@kernel.org, tytso@mit.edu, yamada.masahiro@socionext.com
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 16 Jun 2019, Thomas Gleixner wrote:
-> On Thu, 23 May 2019, Ricardo Neri wrote:
-> > When the hardlockup detector is enabled, the function
-> > hld_hpet_intremapactivate_irq() activates the recently created entry
-> > in the interrupt remapping table via the modify_irte() functions. While
-> > doing this, it specifies which CPU the interrupt must target via its APIC
-> > ID. This function can be called every time the destination iD of the
-> > interrupt needs to be updated; there is no need to allocate or remove
-> > entries in the interrupt remapping table.
-> 
-> Brilliant.
-> 
-> > +int hld_hpet_intremap_activate_irq(struct hpet_hld_data *hdata)
-> > +{
-> > +	u32 destid = apic->calc_dest_apicid(hdata->handling_cpu);
-> > +	struct intel_ir_data *data;
-> > +
-> > +	data = (struct intel_ir_data *)hdata->intremap_data;
-> > +	data->irte_entry.dest_id = IRTE_DEST(destid);
-> > +	return modify_irte(&data->irq_2_iommu, &data->irte_entry);
-> 
-> This calls modify_irte() which does at the very beginning:
-> 
->    raw_spin_lock_irqsave(&irq_2_ir_lock, flags);
-> 
-> How is that supposed to work from NMI context? Not to talk about the
-> other spinlocks which are taken in the subsequent call chain.
-> 
-> You cannot call in any of that code from NMI context.
-> 
-> The only reason why this never deadlocked in your testing is that nothing
-> else touched that particular iommu where the HPET hangs off concurrently.
-> 
-> But that's just pure luck and not design. 
+## TL;DR
 
-And just for the record. I warned you about that problem during the review
-of an earlier version and told you to talk to IOMMU folks whether there is
-a way to update the entry w/o running into that lock problem.
+A not so quick follow-up to Stephen's suggestions on PATCH v4. Nothing
+that really changes any functionality or usage with the minor exception
+of a couple public functions that Stephen asked me to rename.
+Nevertheless, a good deal of clean up and fixes. See changes below.
 
-Can you tell my why am I actually reviewing patches and spending time on
-this when the result is ignored anyway?
+As for our current status, right now we got Reviewed-bys on all patches
+except:
 
-I also tried to figure out why you went away from the IPI broadcast
-design. The only information I found is:
+- [PATCH v5 08/18] objtool: add kunit_try_catch_throw to the noreturn
+  list
 
-Changes vs. v1:
+However, it would probably be good to get reviews/acks from the
+subsystem maintainers on:
 
- * Brought back the round-robin mechanism proposed in v1 (this time not
-   using the interrupt subsystem). This also requires to compute
-   expiration times as in v1 (Andi Kleen, Stephane Eranian).
+- [PATCH v5 06/18] kbuild: enable building KUnit
+- [PATCH v5 08/18] objtool: add kunit_try_catch_throw to the noreturn
+  list
+- [PATCH v5 15/18] Documentation: kunit: add documentation for KUnit
+- [PATCH v5 17/18] kernel/sysctl-test: Add null pointer test for
+  sysctl.c:proc_dointvec()
+- [PATCH v5 18/18] MAINTAINERS: add proc sysctl KUnit test to PROC
+  SYSCTL section
 
-Great that there is no trace of any mail from Andi or Stephane about this
-on LKML. There is no problem with talking offlist about this stuff, but
-then you should at least provide a rationale for those who were not part of
-the private conversation.
+Other than that, I think we should be good to go.
 
-Thanks,
+One last thing, I updated the background to include my thoughts on KUnit
+vs. in kernel testing with kselftest in the background sections as
+suggested by Frank in the discussion on PATCH v2.
 
-	tglcx
+## Background
+
+This patch set proposes KUnit, a lightweight unit testing and mocking
+framework for the Linux kernel.
+
+Unlike Autotest and kselftest, KUnit is a true unit testing framework;
+it does not require installing the kernel on a test machine or in a VM
+(however, KUnit still allows you to run tests on test machines or in VMs
+if you want[1]) and does not require tests to be written in userspace
+running on a host kernel. Additionally, KUnit is fast: From invocation
+to completion KUnit can run several dozen tests in under a second.
+Currently, the entire KUnit test suite for KUnit runs in under a second
+from the initial invocation (build time excluded).
+
+KUnit is heavily inspired by JUnit, Python's unittest.mock, and
+Googletest/Googlemock for C++. KUnit provides facilities for defining
+unit test cases, grouping related test cases into test suites, providing
+common infrastructure for running tests, mocking, spying, and much more.
+
+### But wait! Doesn't kselftest support in kernel testing?!
+
+In a previous version of this patchset Frank pointed out that kselftest
+already supports writing a test that resides in the kernel using the
+test module feature[2]. LWN did a really great summary on this
+discussion here[3].
+
+Kselftest has a feature that allows a test module to be loaded into a
+kernel using the kselftest framework; this does allow someone to write
+tests against kernel code not directly exposed to userland; however, it
+does not provide much of a framework around how to structure the tests.
+The kselftest test module feature just provides a header which has a
+standardized way of reporting test failures, and then provides
+infrastructure to load and run the tests using the kselftest test
+harness.
+
+The kselftest test module does not seem to be opinionated at all in
+regards to how tests are structured, how they check for failures, how
+tests are organized. Even in the method it provides for reporting
+failures is pretty simple; it doesn't have any more advanced failure
+reporting or logging features. Given what's there, I think it is fair to
+say that it is not actually a framework, but a feature that makes it
+possible for someone to do some checks in kernel space.
+
+Furthermore, kselftest test module has very few users. I checked for all
+the tests that use it using the following grep command:
+
+grep -Hrn -e 'kselftest_module\.h'
+
+and only got three results: lib/test_strscpy.c, lib/test_printf.c, and
+lib/test_bitmap.c.
+
+So despite kselftest test module's existence, there really is no feature
+overlap between kselftest and KUnit, save one: that you can use either
+to write an in-kernel test, but this is a very small feature in
+comparison to everything that KUnit allows you to do. KUnit is a full
+x-unit style unit testing framework, whereas kselftest looks a lot more
+like an end-to-end/functional testing framework, with a feature that
+makes it possible to write in-kernel tests.
+
+### What's so special about unit testing?
+
+A unit test is supposed to test a single unit of code in isolation,
+hence the name. There should be no dependencies outside the control of
+the test; this means no external dependencies, which makes tests orders
+of magnitudes faster. Likewise, since there are no external dependencies,
+there are no hoops to jump through to run the tests. Additionally, this
+makes unit tests deterministic: a failing unit test always indicates a
+problem. Finally, because unit tests necessarily have finer granularity,
+they are able to test all code paths easily solving the classic problem
+of difficulty in exercising error handling code.
+
+### Is KUnit trying to replace other testing frameworks for the kernel?
+
+No. Most existing tests for the Linux kernel are end-to-end tests, which
+have their place. A well tested system has lots of unit tests, a
+reasonable number of integration tests, and some end-to-end tests. KUnit
+is just trying to address the unit test space which is currently not
+being addressed.
+
+### More information on KUnit
+
+There is a bunch of documentation near the end of this patch set that
+describes how to use KUnit and best practices for writing unit tests.
+For convenience I am hosting the compiled docs here[4].
+
+Additionally for convenience, I have applied these patches to a
+branch[5]. The repo may be cloned with:
+git clone https://kunit.googlesource.com/linux
+This patchset is on the kunit/rfc/v5.2-rc4/v5 branch.
+
+## Changes Since Last Version
+
+Aside from a couple public function renames, there isn't really anything
+in here that changes any functionality.
+
+- Went through and fixed a couple of anti-patterns suggested by Stephen
+  Boyd. Things like:
+  - Dropping an else clause at the end of a function.
+  - Dropping the comma on the closing sentinel, `{}`, of a list.
+- Inlines a bunch of functions in the test case running logic in patch
+  01/18 to make it more readable as suggested by Stephen Boyd
+- Found and fixed bug in resource deallocation logic in patch 02/18. Bug
+  was discovered as a result of making a change suggested by Stephen
+  Boyd. This does not substantially change how any of the code works
+  conceptually.
+- Renamed new_string_stream() to alloc_string_stream() as suggested by
+  Stephen Boyd.
+- Made string-stream a KUnit managed object - based on a suggestion made
+  by Stephen Boyd.
+- Renamed kunit_new_stream() to alloc_kunit_stream() as suggested by
+  Stephen Boyd.
+- Removed the ability to set log level after allocating a kunit_stream,
+  as suggested by Stephen Boyd.
+
+[1] https://google.github.io/kunit-docs/third_party/kernel/docs/usage.html#kunit-on-non-uml-architectures
+[2] https://www.kernel.org/doc/html/latest/dev-tools/kselftest.html#test-module
+[3] https://lwn.net/Articles/790235/
+[4] https://google.github.io/kunit-docs/third_party/kernel/docs/
+[5] https://kunit.googlesource.com/linux/+/kunit/rfc/v5.2-rc4/v5
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
