@@ -2,67 +2,74 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A3CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:42:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92976C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84D5E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="r894H6Ye"
+	by mail.kernel.org (Postfix) with ESMTP id 78E092084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728613AbfFQRmv (ORCPT
+        id S1728638AbfFQRnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 13:42:51 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34008 "EHLO vps0.lunn.ch"
+        Mon, 17 Jun 2019 13:43:23 -0400
+Received: from verein.lst.de ([213.95.11.211]:39910 "EHLO newverein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfFQRmu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:42:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nCH6BDC7J09reoJu/jQ/LAs4sV5ldXtOBNrWm5zFi3w=; b=r894H6YeNo8HsjgzjJq3zsze0B
-        waw1m8XMh8ijMLylgCTlJqmozUbl/f4bG7B2AJCb1xjcEnLU7dK6OLAugo/c9F7oDWSPBMMk6VAhP
-        DJLbZdlfYGaB75ghwdIeEphtjRTBXLQpBBIT40hYjF3KqmG2dvrEKfOrsBDbaIYYL5Z0=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hcveV-0002M1-0J; Mon, 17 Jun 2019 19:42:43 +0200
-Date:   Mon, 17 Jun 2019 19:42:42 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     nicolas.ferre@microchip.com, davem@davemloft.net,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-Subject: Re: [PATCH 1/6] net: macb: add phylink support
-Message-ID: <20190617174242.GL17551@lunn.ch>
-References: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
- <1560642367-26425-1-git-send-email-pthombar@cadence.com>
+        id S1726047AbfFQRnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:43:22 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id EE36B67358; Mon, 17 Jun 2019 19:42:51 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 19:42:51 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: Re: [PATCH 06/25] mm: factor out a devm_request_free_mem_region
+ helper
+Message-ID: <20190617174251.GA18249@lst.de>
+References: <20190617122733.22432-1-hch@lst.de> <20190617122733.22432-7-hch@lst.de> <CAPcyv4hoRR6gzTSkWnwMiUtX6jCKz2NMOhCUfXTji8f2H1v+rg@mail.gmail.com> <20190617174018.GA18185@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560642367-26425-1-git-send-email-pthombar@cadence.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190617174018.GA18185@lst.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -4217,8 +4257,8 @@ static int macb_probe(struct platform_device *pdev)
->  
->  	tasklet_init(&bp->hresp_err_tasklet, macb_hresp_error_task,
->  		     (unsigned long)bp);
-> -
-> -	phy_attached_info(phydev);
-> +	if (dev->phydev)
-> +		phy_attached_info(dev->phydev);
+On Mon, Jun 17, 2019 at 07:40:18PM +0200, Christoph Hellwig wrote:
+> On Mon, Jun 17, 2019 at 10:37:12AM -0700, Dan Williams wrote:
+> > > +struct resource *devm_request_free_mem_region(struct device *dev,
+> > > +               struct resource *base, unsigned long size);
+> > 
+> > This appears to need a 'static inline' helper stub in the
+> > CONFIG_DEVICE_PRIVATE=n case, otherwise this compile error triggers:
+> > 
+> > ld: mm/hmm.o: in function `hmm_devmem_add':
+> > /home/dwillia2/git/linux/mm/hmm.c:1427: undefined reference to
+> > `devm_request_free_mem_region'
+> 
+> *sigh* - hmm_devmem_add already only works for device private memory,
+> so it shouldn't be built if that option is not enabled, but in the
+> current code it is.  And a few patches later in the series we just
+> kill it off entirely, and the only real caller of this function
+> already depends on CONFIG_DEVICE_PRIVATE.  So I'm tempted to just
+> ignore the strict bisectability requirement here instead of making
+> things messy by either adding the proper ifdefs in hmm.c or providing
+> a stub we don't really need.
 
-When can this happen? I don't see anything assigning to dev->phydev.
-
-     Andrew
+Actually, I could just move the patch to mark CONFIG_DEVICE_PUBLIC
+broken earlier, which would force hmm_devmem_add to only be built
+when CONFIG_DEVICE_PRIVATE ist set.
