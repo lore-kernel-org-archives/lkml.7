@@ -7,57 +7,63 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B07CC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50137C31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA262084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:17:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EE2B20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:17:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="NqS8nYiJ"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CEvPQfAv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727836AbfFQORc (ORCPT
+        id S1727895AbfFQORf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:17:32 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51747 "EHLO
+        Mon, 17 Jun 2019 10:17:35 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:48035 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQORc (ORCPT
+        with ESMTP id S1726005AbfFQORd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:17:32 -0400
+        Mon, 17 Jun 2019 10:17:33 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HEHJ7q3452569
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HEGb1l3452484
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:17:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HEHJ7q3452569
+        Mon, 17 Jun 2019 07:16:37 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HEGb1l3452484
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560781039;
-        bh=IhSRg6Q/GvLXffLEpoF6WB6zBoZ9J4LxYzZ3dB/FoE0=;
+        s=2019051801; t=1560780998;
+        bh=rlKpGCYloCpmgmr8Oy56Sj+JOtl9+BZDTSNa68QN37E=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=NqS8nYiJ7IrKMEeY3+8hhw304IYNIwCaOGpVz1W84EU/jZ0EtP5RUa+q0fHotZYw3
-         HzJ1aV7eNdBpXLSpoF4kAZTuv9fT10xSXpKMbddXmY5RyC6btlYh5M+gibbeMnlTk7
-         CVY3vzIJXYvoKj8SHPuxlfNQ1csiub4tZKvigNlr5HgPYs2G/pGe1E1UC5vnPbQiz6
-         adS2+aLqbOxAzoqF9SqaivI70fSn7+DFwd4w3N/FRnToVkKosnPGFgetwlun/gFFte
-         teDn9QmdkKZ4FnP9rYjjcFVjZLF19jJoExw138ePoi2WbRKg3hcaGgkVlLih7oAeBm
-         cnORZhmXKt7KQ==
+        b=CEvPQfAvW2wUa0q+uzU1zKrjDFwiB+ZF1X8iy3uQZjRuOfnbgOQkoP5ID+F7VHfNe
+         xkhkb+IENxWrvN2oRU0iGnUdwVsA4JfoGD93q1noxDgHQVfkwGXATbd92Sp+iyJxYc
+         vpaC6Rs+bBDDBI3fbdal/Bb1Ed1THdi2wvwI9yIoB5wzZfYG7FuZMlkLLPQMtDE5U6
+         NqXOypW304qCEE2HUPyYpk66nhVg2qgbNKWdN6/rNOBm1obv7Rdnxdfi8bixOJmMjt
+         +lE6t9LkJfk/1yui4UjkKeaeb/iOUjK8hURccG5LXk5LTYHQwKq2JGEfayWznThWT/
+         FVy1LWNzmv1Hw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HEHJpo3452566;
-        Mon, 17 Jun 2019 07:17:19 -0700
-Date:   Mon, 17 Jun 2019 07:17:19 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HEGbvs3452481;
+        Mon, 17 Jun 2019 07:16:37 -0700
+Date:   Mon, 17 Jun 2019 07:16:37 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Nikolay Borisov <tipbot@zytor.com>
-Message-ID: <tip-9ffbe8ac05dbb4ab4a4836a55a47fc6be945a38f@git.kernel.org>
-Cc:     peterz@infradead.org, hpa@zytor.com, torvalds@linux-foundation.org,
-        mingo@kernel.org, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        nborisov@suse.com
-Reply-To: nborisov@suse.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, hpa@zytor.com,
-          peterz@infradead.org, torvalds@linux-foundation.org,
-          mingo@kernel.org
-In-Reply-To: <20190531100651.3969-1-nborisov@suse.com>
-References: <20190531100651.3969-1-nborisov@suse.com>
+From:   tip-bot for Daniel Bristot de Oliveira <tipbot@zytor.com>
+Message-ID: <tip-ba54f0c3f7c400a392c413d8ca21d3ada35f2584@git.kernel.org>
+Cc:     tglx@linutronix.de, hpa@zytor.com, rostedt@goodmis.org,
+        peterz@infradead.org, mingo@kernel.org, gregkh@linuxfoundation.org,
+        jbaron@akamai.com, bp@alien8.de, bristot@redhat.com,
+        mtosatti@redhat.com, swood@redhat.com, mhiramat@kernel.org,
+        jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
+        crecklin@redhat.com, torvalds@linux-foundation.org,
+        jkosina@suse.cz, williams@redhat.com
+Reply-To: mhiramat@kernel.org, swood@redhat.com, jpoimboe@redhat.com,
+          crecklin@redhat.com, linux-kernel@vger.kernel.org,
+          jkosina@suse.cz, torvalds@linux-foundation.org,
+          williams@redhat.com, hpa@zytor.com, tglx@linutronix.de,
+          rostedt@goodmis.org, peterz@infradead.org,
+          gregkh@linuxfoundation.org, jbaron@akamai.com, mingo@kernel.org,
+          bristot@redhat.com, bp@alien8.de, mtosatti@redhat.com
+In-Reply-To: <57b4caa654bad7e3b066301c9a9ae233dea065b5.1560325897.git.bristot@redhat.com>
+References: <57b4caa654bad7e3b066301c9a9ae233dea065b5.1560325897.git.bristot@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/lockdep: Rename
- lockdep_assert_held_exclusive() -> lockdep_assert_held_write()
-Git-Commit-ID: 9ffbe8ac05dbb4ab4a4836a55a47fc6be945a38f
+Subject: [tip:locking/core] x86/jump_label: Batch jump label updates
+Git-Commit-ID: ba54f0c3f7c400a392c413d8ca21d3ada35f2584
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,178 +77,156 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9ffbe8ac05dbb4ab4a4836a55a47fc6be945a38f
-Gitweb:     https://git.kernel.org/tip/9ffbe8ac05dbb4ab4a4836a55a47fc6be945a38f
-Author:     Nikolay Borisov <nborisov@suse.com>
-AuthorDate: Fri, 31 May 2019 13:06:51 +0300
+Commit-ID:  ba54f0c3f7c400a392c413d8ca21d3ada35f2584
+Gitweb:     https://git.kernel.org/tip/ba54f0c3f7c400a392c413d8ca21d3ada35f2584
+Author:     Daniel Bristot de Oliveira <bristot@redhat.com>
+AuthorDate: Wed, 12 Jun 2019 11:57:31 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:09:24 +0200
+CommitDate: Mon, 17 Jun 2019 12:09:23 +0200
 
-locking/lockdep: Rename lockdep_assert_held_exclusive() -> lockdep_assert_held_write()
+x86/jump_label: Batch jump label updates
 
-All callers of lockdep_assert_held_exclusive() use it to verify the
-correct locking state of either a semaphore (ldisc_sem in tty,
-mmap_sem for perf events, i_rwsem of inode for dax) or rwlock by
-apparmor. Thus it makes sense to rename _exclusive to _write since
-that's the semantics callers care. Additionally there is already
-lockdep_assert_held_read(), which this new naming is more consistent with.
+Currently, the jump label of a static key is transformed via the arch
+specific function:
 
-No functional changes.
+    void arch_jump_label_transform(struct jump_entry *entry,
+                                   enum jump_label_type type)
 
-Signed-off-by: Nikolay Borisov <nborisov@suse.com>
+The new approach (batch mode) uses two arch functions, the first has the
+same arguments of the arch_jump_label_transform(), and is the function:
+
+    bool arch_jump_label_transform_queue(struct jump_entry *entry,
+                                         enum jump_label_type type)
+
+Rather than transforming the code, it adds the jump_entry in a queue of
+entries to be updated. This functions returns true in the case of a
+successful enqueue of an entry. If it returns false, the caller must to
+apply the queue and then try to queue again, for instance, because the
+queue is full.
+
+This function expects the caller to sort the entries by the address before
+enqueueuing then. This is already done by the arch independent code, though.
+
+After queuing all jump_entries, the function:
+
+    void arch_jump_label_transform_apply(void)
+
+Applies the changes in the queue.
+
+Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Chris von Recklinghausen <crecklin@redhat.com>
+Cc: Clark Williams <williams@redhat.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: H. Peter Anvin <hpa@zytor.com>
+Cc: Jason Baron <jbaron@akamai.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Scott Wood <swood@redhat.com>
+Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190531100651.3969-1-nborisov@suse.com
+Link: https://lkml.kernel.org/r/57b4caa654bad7e3b066301c9a9ae233dea065b5.1560325897.git.bristot@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/core.c           | 2 +-
- drivers/infiniband/core/device.c | 2 +-
- drivers/tty/tty_ldisc.c          | 8 ++++----
- fs/dax.c                         | 2 +-
- include/linux/lockdep.h          | 4 ++--
- security/apparmor/label.c        | 8 ++++----
- 6 files changed, 13 insertions(+), 13 deletions(-)
+ arch/x86/include/asm/jump_label.h |  2 ++
+ arch/x86/kernel/jump_label.c      | 69 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 71 insertions(+)
 
-diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-index f315425d8468..cf91d80b8452 100644
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -2179,7 +2179,7 @@ static void x86_pmu_event_mapped(struct perf_event *event, struct mm_struct *mm)
- 	 * For now, this can't happen because all callers hold mmap_sem
- 	 * for write.  If this changes, we'll need a different solution.
- 	 */
--	lockdep_assert_held_exclusive(&mm->mmap_sem);
-+	lockdep_assert_held_write(&mm->mmap_sem);
+diff --git a/arch/x86/include/asm/jump_label.h b/arch/x86/include/asm/jump_label.h
+index 65191ce8e1cf..06c3cc22a058 100644
+--- a/arch/x86/include/asm/jump_label.h
++++ b/arch/x86/include/asm/jump_label.h
+@@ -2,6 +2,8 @@
+ #ifndef _ASM_X86_JUMP_LABEL_H
+ #define _ASM_X86_JUMP_LABEL_H
  
- 	if (atomic_inc_return(&mm->context.perf_rdpmc_allowed) == 1)
- 		on_each_cpu_mask(mm_cpumask(mm), refresh_pce, NULL, 1);
-diff --git a/drivers/infiniband/core/device.c b/drivers/infiniband/core/device.c
-index 29f7b15c81d9..d020bb4d03d5 100644
---- a/drivers/infiniband/core/device.c
-+++ b/drivers/infiniband/core/device.c
-@@ -457,7 +457,7 @@ static int alloc_name(struct ib_device *ibdev, const char *name)
- 	int rc;
- 	int i;
++#define HAVE_JUMP_LABEL_BATCH
++
+ #define JUMP_LABEL_NOP_SIZE 5
  
--	lockdep_assert_held_exclusive(&devices_rwsem);
-+	lockdep_assert_held_write(&devices_rwsem);
- 	ida_init(&inuse);
- 	xa_for_each (&devices, index, device) {
- 		char buf[IB_DEVICE_NAME_MAX];
-diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
-index e38f104db174..fde8d4073e74 100644
---- a/drivers/tty/tty_ldisc.c
-+++ b/drivers/tty/tty_ldisc.c
-@@ -487,7 +487,7 @@ static int tty_ldisc_open(struct tty_struct *tty, struct tty_ldisc *ld)
+ #ifdef CONFIG_X86_64
+diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
+index f33408f1c3f6..ea13808bf6da 100644
+--- a/arch/x86/kernel/jump_label.c
++++ b/arch/x86/kernel/jump_label.c
+@@ -101,6 +101,75 @@ void arch_jump_label_transform(struct jump_entry *entry,
+ 	mutex_unlock(&text_mutex);
+ }
  
- static void tty_ldisc_close(struct tty_struct *tty, struct tty_ldisc *ld)
- {
--	lockdep_assert_held_exclusive(&tty->ldisc_sem);
-+	lockdep_assert_held_write(&tty->ldisc_sem);
- 	WARN_ON(!test_bit(TTY_LDISC_OPEN, &tty->flags));
- 	clear_bit(TTY_LDISC_OPEN, &tty->flags);
- 	if (ld->ops->close)
-@@ -509,7 +509,7 @@ static int tty_ldisc_failto(struct tty_struct *tty, int ld)
- 	struct tty_ldisc *disc = tty_ldisc_get(tty, ld);
- 	int r;
- 
--	lockdep_assert_held_exclusive(&tty->ldisc_sem);
-+	lockdep_assert_held_write(&tty->ldisc_sem);
- 	if (IS_ERR(disc))
- 		return PTR_ERR(disc);
- 	tty->ldisc = disc;
-@@ -633,7 +633,7 @@ EXPORT_SYMBOL_GPL(tty_set_ldisc);
-  */
- static void tty_ldisc_kill(struct tty_struct *tty)
- {
--	lockdep_assert_held_exclusive(&tty->ldisc_sem);
-+	lockdep_assert_held_write(&tty->ldisc_sem);
- 	if (!tty->ldisc)
- 		return;
- 	/*
-@@ -681,7 +681,7 @@ int tty_ldisc_reinit(struct tty_struct *tty, int disc)
- 	struct tty_ldisc *ld;
- 	int retval;
- 
--	lockdep_assert_held_exclusive(&tty->ldisc_sem);
-+	lockdep_assert_held_write(&tty->ldisc_sem);
- 	ld = tty_ldisc_get(tty, disc);
- 	if (IS_ERR(ld)) {
- 		BUG_ON(disc == N_TTY);
-diff --git a/fs/dax.c b/fs/dax.c
-index 2e48c7ebb973..bf8686d48b2d 100644
---- a/fs/dax.c
-+++ b/fs/dax.c
-@@ -1188,7 +1188,7 @@ dax_iomap_rw(struct kiocb *iocb, struct iov_iter *iter,
- 	unsigned flags = 0;
- 
- 	if (iov_iter_rw(iter) == WRITE) {
--		lockdep_assert_held_exclusive(&inode->i_rwsem);
-+		lockdep_assert_held_write(&inode->i_rwsem);
- 		flags |= IOMAP_WRITE;
- 	} else {
- 		lockdep_assert_held(&inode->i_rwsem);
-diff --git a/include/linux/lockdep.h b/include/linux/lockdep.h
-index 30a0f81aa130..151d55711082 100644
---- a/include/linux/lockdep.h
-+++ b/include/linux/lockdep.h
-@@ -394,7 +394,7 @@ extern void lock_unpin_lock(struct lockdep_map *lock, struct pin_cookie);
- 		WARN_ON(debug_locks && !lockdep_is_held(l));	\
- 	} while (0)
- 
--#define lockdep_assert_held_exclusive(l)	do {			\
-+#define lockdep_assert_held_write(l)	do {			\
- 		WARN_ON(debug_locks && !lockdep_is_held_type(l, 0));	\
- 	} while (0)
- 
-@@ -479,7 +479,7 @@ struct lockdep_map { };
- #define lockdep_is_held_type(l, r)		(1)
- 
- #define lockdep_assert_held(l)			do { (void)(l); } while (0)
--#define lockdep_assert_held_exclusive(l)	do { (void)(l); } while (0)
-+#define lockdep_assert_held_write(l)	do { (void)(l); } while (0)
- #define lockdep_assert_held_read(l)		do { (void)(l); } while (0)
- #define lockdep_assert_held_once(l)		do { (void)(l); } while (0)
- 
-diff --git a/security/apparmor/label.c b/security/apparmor/label.c
-index 068e93c5d29c..59f1cc2557a7 100644
---- a/security/apparmor/label.c
-+++ b/security/apparmor/label.c
-@@ -76,7 +76,7 @@ void __aa_proxy_redirect(struct aa_label *orig, struct aa_label *new)
- 
- 	AA_BUG(!orig);
- 	AA_BUG(!new);
--	lockdep_assert_held_exclusive(&labels_set(orig)->lock);
-+	lockdep_assert_held_write(&labels_set(orig)->lock);
- 
- 	tmp = rcu_dereference_protected(orig->proxy->label,
- 					&labels_ns(orig)->lock);
-@@ -566,7 +566,7 @@ static bool __label_remove(struct aa_label *label, struct aa_label *new)
- 
- 	AA_BUG(!ls);
- 	AA_BUG(!label);
--	lockdep_assert_held_exclusive(&ls->lock);
-+	lockdep_assert_held_write(&ls->lock);
- 
- 	if (new)
- 		__aa_proxy_redirect(label, new);
-@@ -603,7 +603,7 @@ static bool __label_replace(struct aa_label *old, struct aa_label *new)
- 	AA_BUG(!ls);
- 	AA_BUG(!old);
- 	AA_BUG(!new);
--	lockdep_assert_held_exclusive(&ls->lock);
-+	lockdep_assert_held_write(&ls->lock);
- 	AA_BUG(new->flags & FLAG_IN_TREE);
- 
- 	if (!label_is_stale(old))
-@@ -640,7 +640,7 @@ static struct aa_label *__label_insert(struct aa_labelset *ls,
- 	AA_BUG(!ls);
- 	AA_BUG(!label);
- 	AA_BUG(labels_set(label) != ls);
--	lockdep_assert_held_exclusive(&ls->lock);
-+	lockdep_assert_held_write(&ls->lock);
- 	AA_BUG(label->flags & FLAG_IN_TREE);
- 
- 	/* Figure out where to put new node */
++#define TP_VEC_MAX (PAGE_SIZE / sizeof(struct text_poke_loc))
++static struct text_poke_loc tp_vec[TP_VEC_MAX];
++int tp_vec_nr = 0;
++
++bool arch_jump_label_transform_queue(struct jump_entry *entry,
++				     enum jump_label_type type)
++{
++	struct text_poke_loc *tp;
++	void *entry_code;
++
++	if (system_state == SYSTEM_BOOTING) {
++		/*
++		 * Fallback to the non-batching mode.
++		 */
++		arch_jump_label_transform(entry, type);
++		return true;
++	}
++
++	/*
++	 * No more space in the vector, tell upper layer to apply
++	 * the queue before continuing.
++	 */
++	if (tp_vec_nr == TP_VEC_MAX)
++		return false;
++
++	tp = &tp_vec[tp_vec_nr];
++
++	entry_code = (void *)jump_entry_code(entry);
++
++	/*
++	 * The INT3 handler will do a bsearch in the queue, so we need entries
++	 * to be sorted. We can survive an unsorted list by rejecting the entry,
++	 * forcing the generic jump_label code to apply the queue. Warning once,
++	 * to raise the attention to the case of an unsorted entry that is
++	 * better not happen, because, in the worst case we will perform in the
++	 * same way as we do without batching - with some more overhead.
++	 */
++	if (tp_vec_nr > 0) {
++		int prev = tp_vec_nr - 1;
++		struct text_poke_loc *prev_tp = &tp_vec[prev];
++
++		if (WARN_ON_ONCE(prev_tp->addr > entry_code))
++			return false;
++	}
++
++	__jump_label_set_jump_code(entry, type,
++				   (union jump_code_union *) &tp->opcode, 0);
++
++	tp->addr = entry_code;
++	tp->detour = entry_code + JUMP_LABEL_NOP_SIZE;
++	tp->len = JUMP_LABEL_NOP_SIZE;
++
++	tp_vec_nr++;
++
++	return true;
++}
++
++void arch_jump_label_transform_apply(void)
++{
++	if (!tp_vec_nr)
++		return;
++
++	mutex_lock(&text_mutex);
++	text_poke_bp_batch(tp_vec, tp_vec_nr);
++	mutex_unlock(&text_mutex);
++
++	tp_vec_nr = 0;
++}
++
+ static enum {
+ 	JL_STATE_START,
+ 	JL_STATE_NO_UPDATE,
