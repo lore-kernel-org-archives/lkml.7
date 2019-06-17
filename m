@@ -2,87 +2,101 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE80C31E59
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE8B4C31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B21CB208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7687208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:00:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="aZZBbp3y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727013AbfFQL7s (ORCPT
+        id S1726712AbfFQMAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:59:48 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:53163 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfFQL7s (ORCPT
+        Mon, 17 Jun 2019 08:00:47 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:42930 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfFQMAr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:59:48 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mq2vS-1iObZe1orS-00n8eA; Mon, 17 Jun 2019 13:59:32 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] crypto: serpent - mark __serpent_setkey_sbox noinline
-Date:   Mon, 17 Jun 2019 13:59:08 +0200
-Message-Id: <20190617115927.3813471-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 17 Jun 2019 08:00:47 -0400
+Received: by mail-lj1-f194.google.com with SMTP id t28so8989226lje.9
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 05:00:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=xGIILVfXf7VmS4FvscoSNixWx+XWfKfE5N4G3kPEMwo=;
+        b=aZZBbp3yrNPfUMQPOcjDFQV9k2zoDpsVWrIXoMpLQrpqRYkS1vahaodU+eBIGDVXJz
+         kI2kTUdwax/aS4nnG3MDZ8DhyuYmE+cSOHvgZpgGL7RULOilnoUmCZi8TFDXiJsq2dQ+
+         BDXIMsDwFhMnB+kub7yEt6iq/RZj+KS6PSIXX6wqpENgJUYOK3OawX/qVRQQJX2KwO+S
+         HHnqnU1JnuYnXBYtxCW7kD12ik2XNeAcTqqjNuxYb0k6bGP2yZobZnr2hS0VSj613A2t
+         sC0sUqWRmHYL3D0TbyuoJmiMaRs0D0SUhux+mEGPiEkd6V+AStCgIEYq/1XeM6VFOGBi
+         5O9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=xGIILVfXf7VmS4FvscoSNixWx+XWfKfE5N4G3kPEMwo=;
+        b=WaJX8ShswYDoj0u32UQ0Cra0CRuCtl+n0eO3dtDABb/kl8kXSqo6VLBZPn9Rr7m1x0
+         P0pXn69TPwkmNVfNSD0GxENpfnXQ1n57HxAUpE+NtieC+XRsJ+jTFDiXoZ/0Zn28tEzC
+         LTJxBOHGD4PG9ZHMQsVPchKsReB0giYtTg2Ekgv0YdqhKcr80BD7JCukVfR2hmN8L+75
+         0z/XWTmSwwn7CnIJwIdsgVQGdOu7FlaitwJ0mEjCn5VjE8h9YNIdvFlInKkM6ZsOfF/l
+         hiRLGGvNDvQWEb/ixaLJvENL3Tu3tS7FjEvyTF3VppzY1wRXg/SyICCt7zyu4CoHoJ61
+         Q9YQ==
+X-Gm-Message-State: APjAAAUvbMbI3eDnhK3VXh0d3b4525+qA90Q0f4so4//j/p1V8ax0OKf
+        HZRDtQeivIrjRGiUXyCy5090Mg==
+X-Google-Smtp-Source: APXvYqyp6cCFvtccc98Mr7cwSB/h75VTWC+F6gFL8fxb/D1x44pKnPB27rv0DjAhw1uUrmL7CbcgEw==
+X-Received: by 2002:a2e:8741:: with SMTP id q1mr31348628ljj.144.1560772845064;
+        Mon, 17 Jun 2019 05:00:45 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id m21sm1725308lfh.20.2019.06.17.05.00.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 05:00:43 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 04:40:22 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Li Yang <leoyang.li@nxp.com>
+Cc:     arm@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, shawnguo@kernel.org
+Subject: Re: [GIT PULL] updates to soc/fsl drivers for v5.3
+Message-ID: <20190617114022.54oznl3l35dzespw@localhost>
+References: <20190520195215.26515-1-leoyang.li@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:nlRKSlHgvz2m3fKSfZ7wC9E0KZXX9jzM/z2eRxUPOPM/3xpzPV+
- Zw3rBSyaQGObcrKRgaRZBxPqG/R0UConl0Iztg7s7WYIyKPn7P3/rl6YDLBpg4Wze3oViSl
- AbUC34gVy0QvoEIx7GO+gSyXbln6QnK7KQ1WhH6FQ5BIPcxQOnQdQojUzLZutskEY55LrCR
- uGptJwdiqTHn0XAHHUjdg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:3c/M2mR4H6w=:n/NbLMsUQ62zu8ZHsbJLcH
- zV+JBLdWrhAArxRLcX3E2VpK0xEiURubZba5QlXHF3JvBl0Q0Kp8G7vdEoJmSs5j0GwmkyL3o
- 5dRwdGPNWcrmWt11IU0WAvt8cK4T2ak8c3fwmzzQwEigCekU/h55VKvNYT24rgTm4iHX7PSk/
- aWtRQjtrOOhUlt1PRfrRsf8trlX05V5N5kmsnRGRG/nOXy7B+I5bL4tmN6dx146S+mR96kxEu
- xAHrCf6ShdehcK/uXN/FgrCjlGEt6oYFupHkmfBS79w+oqq/BWGEh6lW0AjnGu4SJS+P58H0g
- gYXJ2pl4sxktGQQzhBzPDv3N++NFzsGTz5P63s+/rgx6SQhJkPw4OUajRd4KLKf/59sSnYglV
- m9CWbNbxZGmXdxhRujDksY/XLnnNGC8FTR+nZGq3n6MK83hCquDeGg1pj3CQ+lkxhalKbmI35
- itORR+B7VGRpqd7WeQaLv1GvSO7GAubUgryDiq9WP3lPFnEas7Uw8CNpRgXQYBvE8BVRCrdOC
- x98PvOuwhSELH2Zlhjqc8rs14vUpvH/dyjLsvnyVYz6BCjc7EM4sGz8F/c7Y8T8T7iOIMoIC5
- bAG/PXQL20Y4xzcr9qXgV1CZad8HrupmPF5v57TptwICd6UBUtRICj9RInHHNmwFWgYEEClmZ
- Tqgf8ubm98ekNFiEPD4hfSkBikODvaS9UB8yIeGwTFW00XXNkunUsTEXnhcTXbmXD3EQTDcgh
- 1rZ2etgkbKeTh0RQivoyC6fiipKJ3pYp9eygbQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520195215.26515-1-leoyang.li@nxp.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The same bug that gcc hit in the past is apparently now showing
-up with clang, which decides to inline __serpent_setkey_sbox:
+On Mon, May 20, 2019 at 02:52:15PM -0500, Li Yang wrote:
+> Hi arm-soc maintainers,
+> 
+> This is a rebase of patches that missed 5.2 merge window.  Please
+> help to review and merge it.  Thanks.
+> 
+> 
+> Regards,
+> Leo
+> 
+> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
+> 
+>   Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/leo/linux.git tags/soc-fsl-next-v5.3
+> 
+> for you to fetch changes up to 5d1d046e2868fc876a69231eb2f24f000b521f1c:
+> 
+>   soc: fsl: qbman_portals: add APIs to retrieve the probing status (2019-05-20 14:28:16 -0500)
 
-crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
+Merged, thanks!
 
-Marking it 'noinline' reduces the stack usage from 2112 bytes to
-192 and 96 bytes, respectively, and seems to generate more
-useful object code.
 
-Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- crypto/serpent_generic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
-index e57757904677..183661faf420 100644
---- a/crypto/serpent_generic.c
-+++ b/crypto/serpent_generic.c
-@@ -225,7 +225,7 @@
- 	x4 ^= x2;					\
- 	})
- 
--static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
-+static void noinline __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
- {
- 	k += 100;
- 	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
--- 
-2.20.0
-
+-Olof
