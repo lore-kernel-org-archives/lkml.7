@@ -2,137 +2,115 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E212AC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:33:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879BBC31E54
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:37:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6D2C21C38
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:33:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="Ja48mdjz"
+	by mail.kernel.org (Postfix) with ESMTP id 69A2F21BF2
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:37:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726903AbfFQHda (ORCPT
+        id S1727232AbfFQHhH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:33:30 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35886 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725837AbfFQHd3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:33:29 -0400
-Received: by mail-pf1-f193.google.com with SMTP id r7so5192021pfl.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 00:33:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=ywNd6FY7AUBT3sYTN6SV4oEzYtCXFGicyXDDl1jnLqI=;
-        b=Ja48mdjzbIBjxM6ICHtJ7ZYhYq/LwS1xk4CacsW+A8a1K3qz3Hhpj3HSXJrkryfYPm
-         dFDaREvX0HvAk6/MZS2lhiNwpUANqW26W4bBYPyE3sKl70P6npdcKBVGbrLaNmR6qSCf
-         CoIb01mfDV17NZaDYhkwzUr6mioOg4bqY8n7CV1FNtMcY2NdiQEEuMvuZqRrDKk0C1yi
-         LJXqdY/OE+3laUl0q+sTNSWfWvvIrdkRMiD9eohg9K7lQVCUKBN4Iy+FgQ7uPBUyGs2w
-         /y2OKWQfq3Rw/A6BKNjNvrtPsGm09AgYHEW/Np6JFWlAv1ivxnrcV8PIjtvk0+Xfh4nz
-         xagw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=ywNd6FY7AUBT3sYTN6SV4oEzYtCXFGicyXDDl1jnLqI=;
-        b=jdLWrqO+fldEYkyy+kZ5JlCkRV6Y1SGDCcRNilRZLLZsPIchmHo28g1We6DjGPvgBy
-         A8y19vKqfHrxYG+1yxeHS4W7IfS8qg1dh5MoiNddq9FONI4Q6tdoyWY/2uMkFSDSTVNG
-         l4cnX8bdzC4/4yP6kYGC0TsVc6c1so6MtlUbubybX4hE5oX0wROFFuiYI4pB/UkCQCBf
-         y4xzJ6GrrkS+Ya0Pcb/VmeUOlDOJ/XjPIggSzNniWWNhhzWa+RkXC4IKn9JuYYlhphrl
-         ubyS9Y0k+aAsUGSVgsJiqZTxeB4mAKuAuwH6quJGfvBzurNMghs7nuU8nPaoCRy94luv
-         IttQ==
-X-Gm-Message-State: APjAAAWTpa4HXEPWYcJgCTvamBQjkNFF0ghliacY13RHinIvrPEsiHp1
-        Pwls0XSyQyMpPXh+M8mLwmJ0Sw==
-X-Google-Smtp-Source: APXvYqzUCRcCkhiopQTKPFpTMQD0JpEn0caMNq9f267x29zEZrGw7/dAUhOvALVP4k9768QcQ+cLfw==
-X-Received: by 2002:a63:e709:: with SMTP id b9mr46465039pgi.209.1560756808835;
-        Mon, 17 Jun 2019 00:33:28 -0700 (PDT)
-Received: from bogon.bytedance.net ([61.120.150.76])
-        by smtp.gmail.com with ESMTPSA id f3sm3635830pfg.165.2019.06.17.00.33.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 17 Jun 2019 00:33:28 -0700 (PDT)
-From:   Fei Li <lifei.shirley@bytedance.com>
-To:     davem@davemloft.net, jasowang@redhat.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     zhengfeiran@bytedance.com, duanxiongchun@bytedance.com,
-        Fei Li <lifei.shirley@bytedance.com>
-Subject: [PATCH] Fix tun: wake up waitqueues after IFF_UP is set
-Date:   Mon, 17 Jun 2019 15:33:20 +0800
-Message-Id: <20190617073320.69015-1-lifei.shirley@bytedance.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Mon, 17 Jun 2019 03:37:07 -0400
+Received: from mga14.intel.com ([192.55.52.115]:55174 "EHLO mga14.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726189AbfFQHhG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 03:37:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 00:37:06 -0700
+X-ExtLoop1: 1
+Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2019 00:36:57 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH v3 4/7] lib/hexdump.c: Replace ascii bool in hex_dump_to_buffer with flags
+In-Reply-To: <20190617020430.8708-5-alastair@au1.ibm.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190617020430.8708-1-alastair@au1.ibm.com> <20190617020430.8708-5-alastair@au1.ibm.com>
+Date:   Mon, 17 Jun 2019 10:39:53 +0300
+Message-ID: <87imt4vewm.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently after setting tap0 link up, the tun code wakes tx/rx waited
-queues up in tun_net_open() when .ndo_open() is called, however the
-IFF_UP flag has not been set yet. If there's already a wait queue, it
-would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
-Then the saving vhost_poll_start() will add the wq into wqh until it
-is waken up again. Although this works when IFF_UP flag has been set
-when tun_chr_poll detects; this is not true if IFF_UP flag has not
-been set at that time. Sadly the latter case is a fatal error, as
-the wq will never be waken up in future unless later manually
-setting link up on purpose.
+On Mon, 17 Jun 2019, "Alastair D'Silva" <alastair@au1.ibm.com> wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+>
+> In order to support additional features in hex_dump_to_buffer, replace
+> the ascii bool parameter with flags.
+>
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  drivers/gpu/drm/i915/intel_engine_cs.c            |  2 +-
+>  drivers/isdn/hardware/mISDN/mISDNisar.c           |  6 ++++--
+>  drivers/mailbox/mailbox-test.c                    |  2 +-
+>  drivers/net/ethernet/amd/xgbe/xgbe-drv.c          |  2 +-
+>  drivers/net/ethernet/synopsys/dwc-xlgmac-common.c |  2 +-
+>  drivers/net/wireless/ath/ath10k/debug.c           |  3 ++-
+>  drivers/net/wireless/intel/iwlegacy/3945-mac.c    |  2 +-
+>  drivers/platform/chrome/wilco_ec/debugfs.c        |  2 +-
+>  drivers/scsi/scsi_logging.c                       |  8 +++-----
+>  drivers/staging/fbtft/fbtft-core.c                |  2 +-
+>  fs/seq_file.c                                     |  3 ++-
+>  include/linux/printk.h                            |  8 ++++----
+>  lib/hexdump.c                                     | 15 ++++++++-------
+>  lib/test_hexdump.c                                |  5 +++--
+>  14 files changed, 33 insertions(+), 29 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/i915/intel_engine_cs.c b/drivers/gpu/drm/i915/intel_engine_cs.c
+> index eea9bec04f1b..5df5fffdb848 100644
+> --- a/drivers/gpu/drm/i915/intel_engine_cs.c
+> +++ b/drivers/gpu/drm/i915/intel_engine_cs.c
+> @@ -1340,7 +1340,7 @@ static void hexdump(struct drm_printer *m, const void *buf, size_t len)
+>  		WARN_ON_ONCE(hex_dump_to_buffer(buf + pos, len - pos,
+>  						rowsize, sizeof(u32),
+>  						line, sizeof(line),
+> -						false) >= sizeof(line));
+> +						0) >= sizeof(line));
+>  		drm_printf(m, "[%04zx] %s\n", pos, line);
+>  
+>  		prev = buf + pos;
 
-Fix this by moving the wakeup process into the NETDEV_UP event
-notifying process, this makes sure IFF_UP has been set before all
-waited queues been waken up.
+On i915,
 
-Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
----
- drivers/net/tun.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+Acked-by: Jani Nikula <jani.nikula@intel.com>
 
-diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-index c452d6d831dd..a3c9cab5a4d0 100644
---- a/drivers/net/tun.c
-+++ b/drivers/net/tun.c
-@@ -1015,17 +1015,9 @@ static void tun_net_uninit(struct net_device *dev)
- static int tun_net_open(struct net_device *dev)
- {
- 	struct tun_struct *tun = netdev_priv(dev);
--	int i;
- 
- 	netif_tx_start_all_queues(dev);
- 
--	for (i = 0; i < tun->numqueues; i++) {
--		struct tun_file *tfile;
--
--		tfile = rtnl_dereference(tun->tfiles[i]);
--		tfile->socket.sk->sk_write_space(tfile->socket.sk);
--	}
--
- 	return 0;
- }
- 
-@@ -3634,6 +3626,7 @@ static int tun_device_event(struct notifier_block *unused,
- {
- 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
- 	struct tun_struct *tun = netdev_priv(dev);
-+	int i;
- 
- 	if (dev->rtnl_link_ops != &tun_link_ops)
- 		return NOTIFY_DONE;
-@@ -3643,6 +3636,14 @@ static int tun_device_event(struct notifier_block *unused,
- 		if (tun_queue_resize(tun))
- 			return NOTIFY_BAD;
- 		break;
-+	case NETDEV_UP:
-+		for (i = 0; i < tun->numqueues; i++) {
-+			struct tun_file *tfile;
-+
-+			tfile = rtnl_dereference(tun->tfiles[i]);
-+			tfile->socket.sk->sk_write_space(tfile->socket.sk);
-+		}
-+		break;
- 	default:
- 		break;
- 	}
+
 -- 
-2.11.0
-
+Jani Nikula, Intel Open Source Graphics Center
