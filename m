@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61955C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4A5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3585621019
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15F8A20673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806679;
-	bh=/OoeYX4BnKXFt36txqAKdXO7B9CybLfnPWdIEhSqQ3k=;
+	s=default; t=1560806682;
+	bh=oywjT/WGxmlXWiGqewKHuaN1H1kBYOm+AcDn/SJIaZw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TbgqYLcmiVwa/4dqfQY030b7svbSzsmzPTRG2avt5eghYwjT2LlCrbFbGcdl1Dlmx
-	 OS79+E9Xa6V48Q6hH6+BlIyWiGuy4c9FnNKYMMG7ncY3jPpH0qZVcFcbwcNNklWW1l
-	 iXjip0dmhpjXrvhGIT/o/00be2bAcsMzeKMJuHtc=
+	b=SWbqwK4jTMzP6TPbSP2xiwtJjCkWRFGXCuo/BD2Tkh+T6NC0A8vCxMNyHerJBtcen
+	 OO5epji2bSt3Wzf5TfpEZ5SyY/Xt4VF8hnnNJ5YBuxL8bKiC8ljcWcqWh7FiIo/qrN
+	 qkCxOSdbCJjs9Nh54VKmRIYBaYxTZo+zRm47PFxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729966AbfFQVYh (ORCPT
+        id S1729975AbfFQVYk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:24:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50282 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:24:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729954AbfFQVYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:24:35 -0400
+        id S1728841AbfFQVYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:24:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FED821019;
-        Mon, 17 Jun 2019 21:24:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CB8E220673;
+        Mon, 17 Jun 2019 21:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806675;
-        bh=/OoeYX4BnKXFt36txqAKdXO7B9CybLfnPWdIEhSqQ3k=;
+        s=default; t=1560806678;
+        bh=oywjT/WGxmlXWiGqewKHuaN1H1kBYOm+AcDn/SJIaZw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=prcKMK3elRc2KsKld1yTl5s6fV0O5p9EmK2ZmtdoeGeDElnl+cVK3nU+6hqEyLu0S
-         opaFxA83CIT9vyer1Wf9OWxUEuSlAVzr0w9dAvBFciQS40czfJtwkrK3VkQ7DJTSlt
-         nauE05FssOnZ93ft9eql1fWokgatNNoNBmW432TA=
+        b=hRXh6VRCwD2QyCnf9EVICg14gc7I0+fUit8MT8uIt3aZ8btGneFfBXy0T7qQ+rvq+
+         j4EPmq4Wm9PwyT628jd5UyyVAs60het3zowWG6sDO5NGWSK/gU4SqT1pYDofc647iP
+         LsNInAoomS2x/Ni83g6R+NdC1WwNeP7V7EzBTG/s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        AngeloGioacchino Del Regno <kholk11@gmail.com>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 4.19 19/75] iommu/arm-smmu: Avoid constant zero in TLBI writes
-Date:   Mon, 17 Jun 2019 23:09:30 +0200
-Message-Id: <20190617210753.598203710@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Backlund <tmb@mageia.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sven Joachim <svenjoac@gmx.de>
+Subject: [PATCH 4.19 02/75] nouveau: Fix build with CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT disabled
+Date:   Mon, 17 Jun 2019 23:09:13 +0200
+Message-Id: <20190617210752.904005380@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -63,77 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Robin Murphy <robin.murphy@arm.com>
+From: Thomas Backlund <tmb@mageia.org>
 
-commit 4e4abae311e4b44aaf61f18a826fd7136037f199 upstream.
+Not-entirely-upstream-sha1-but-equivalent: bed2dd8421
+("drm/ttm: Quick-test mmap offset in ttm_bo_mmap()")
 
-Apparently, some Qualcomm arm64 platforms which appear to expose their
-SMMU global register space are still, in fact, using a hypervisor to
-mediate it by trapping and emulating register accesses. Sadly, some
-deployed versions of said trapping code have bugs wherein they go
-horribly wrong for stores using r31 (i.e. XZR/WZR) as the source
-register.
+Setting CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n (added by commit: b30a43ac7132)
+causes the build to fail with:
 
-While this can be mitigated for GCC today by tweaking the constraints
-for the implementation of writel_relaxed(), to avoid any potential
-arms race with future compilers more aggressively optimising register
-allocation, the simple way is to just remove all the problematic
-constant zeros. For the write-only TLB operations, the actual value is
-irrelevant anyway and any old nearby variable will provide a suitable
-GPR to encode. The one point at which we really do need a zero to clear
-a context bank happens before any of the TLB maintenance where crashes
-have been reported, so is apparently not a problem... :/
+ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
 
-Reported-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
-Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Acked-by: Will Deacon <will.deacon@arm.com>
+This does not happend upstream as the offending code got removed in:
+bed2dd8421 ("drm/ttm: Quick-test mmap offset in ttm_bo_mmap()")
+
+Fix that by adding check for CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT around
+the drm_legacy_mmap() call.
+
+Also, as Sven Joachim pointed out, we need to make the check in
+CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n case return -EINVAL as its done
+for basically all other gpu drivers, especially in upstream kernels
+drivers/gpu/drm/ttm/ttm_bo_vm.c as of the upstream commit bed2dd8421.
+
+NOTE. This is a minimal stable-only fix for trees where b30a43ac7132 is
+backported as the build error affects nouveau only.
+
+Fixes: b30a43ac7132 ("drm/nouveau: add kconfig option to turn off nouveau
+       legacy contexts. (v3)")
+Signed-off-by: Thomas Backlund <tmb@mageia.org>
 Cc: stable@vger.kernel.org
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Sven Joachim <svenjoac@gmx.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
 ---
- drivers/iommu/arm-smmu.c |   15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_ttm.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -56,6 +56,15 @@
- #include "io-pgtable.h"
- #include "arm-smmu-regs.h"
+--- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
++++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
+@@ -169,7 +169,11 @@ nouveau_ttm_mmap(struct file *filp, stru
+ 	struct nouveau_drm *drm = nouveau_drm(file_priv->minor->dev);
  
-+/*
-+ * Apparently, some Qualcomm arm64 platforms which appear to expose their SMMU
-+ * global register space are still, in fact, using a hypervisor to mediate it
-+ * by trapping and emulating register accesses. Sadly, some deployed versions
-+ * of said trapping code have bugs wherein they go horribly wrong for stores
-+ * using r31 (i.e. XZR/WZR) as the source register.
-+ */
-+#define QCOM_DUMMY_VAL -1
-+
- #define ARM_MMU500_ACTLR_CPRE		(1 << 1)
+ 	if (unlikely(vma->vm_pgoff < DRM_FILE_PAGE_OFFSET))
++#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
+ 		return drm_legacy_mmap(filp, vma);
++#else
++		return -EINVAL;
++#endif
  
- #define ARM_MMU500_ACR_CACHE_LOCK	(1 << 26)
-@@ -398,7 +407,7 @@ static void __arm_smmu_tlb_sync(struct a
- {
- 	unsigned int spin_cnt, delay;
- 
--	writel_relaxed(0, sync);
-+	writel_relaxed(QCOM_DUMMY_VAL, sync);
- 	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
- 		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
- 			if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
-@@ -1637,8 +1646,8 @@ static void arm_smmu_device_reset(struct
- 	}
- 
- 	/* Invalidate the TLB, just in case */
--	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
--	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
-+	writel_relaxed(QCOM_DUMMY_VAL, gr0_base + ARM_SMMU_GR0_TLBIALLH);
-+	writel_relaxed(QCOM_DUMMY_VAL, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
- 
- 	reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
- 
+ 	return ttm_bo_mmap(filp, vma, &drm->ttm.bdev);
+ }
 
 
