@@ -2,234 +2,165 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC14C31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93859C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B30AF20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:59:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HU2MhpCm"
+	by mail.kernel.org (Postfix) with ESMTP id 6BC8620863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728100AbfFQJ72 (ORCPT
+        id S1727887AbfFQKAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:59:28 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:33904 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727545AbfFQJ71 (ORCPT
+        Mon, 17 Jun 2019 06:00:33 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46898 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727518AbfFQKAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:59:27 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s49so15336106edb.1;
-        Mon, 17 Jun 2019 02:59:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Wk42T0Kn41hpMrw8onVz67gqbj9VTIvDZYpdkjVC3LU=;
-        b=HU2MhpCmFH5rFufEQWs7TJVnqXhA0pjjf7dg+aA8fqfagnr2AjBGI2ajPOwzvETN41
-         V5dlBx4pzhMJp4Y43GlmUc82x9F7ALUraweFErUOcRtBf5zJ6yeF9fxkomlsuXO+EXW8
-         lbaGX2Phztf+jdf0nemS3K8WapKXbR/Zg7LHQpthCxvDZ0hzj0uv3SiFPegCa5vi5jDl
-         yAyi49xqkLqv372JylnnOHwPCeDy0ecDR5uWMtlQ25gnRC0e5cbvy4JngL3diuYtSaLH
-         nz91frpKfAHMbZF4UTasneQ2fRP0hwF2MUmi35FtdggciKK6n9ulkuE2BM8vplTXFpFw
-         3F2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Wk42T0Kn41hpMrw8onVz67gqbj9VTIvDZYpdkjVC3LU=;
-        b=pUcu/8o05BsAjVNyGKefgV/bGsF/+p6vrueaaSwLEd9jpXZUlEkev2U1TAF0FrPEah
-         0NH5hpfFXerKdj39LIBBR1noYxnuKCvm0Xf6VXrRorNTOctn9ddbtgO7zq6WriePJTj6
-         J9WtT1GxYggJMEUJtajSDgr9DoCAWIKSDm8W6dTXaRqRLTqa3Z3uDrioJLr0C4FWly1a
-         lc3pZJ25JBKZEWXVjkD7L3GPD5B2zZmat4TFcnZM3qBwLf32z+Xa2B2Ag+M3CRl3skuD
-         nKuOv1fxo+h4TNi1VGy1aCoGnIkR1bCopY0ZSc7oU5L06Sk1EsBwOwdm8Lyhy+q6nWxc
-         jBDw==
-X-Gm-Message-State: APjAAAUT6OsAW7HVMydZLwMbGnAoY/MTg66216Bw9hadleCzIBWZiY15
-        S//3si6AoZigIzjX5gkNVTg=
-X-Google-Smtp-Source: APXvYqyxo+9xluvpBbZCqFC3HASFesyzzpYZWPZbzIX1BjzUO5MO4hxfTHOP3fjHpxYmNS0/vPOJSQ==
-X-Received: by 2002:a17:906:2acf:: with SMTP id m15mr94428745eje.31.1560765564160;
-        Mon, 17 Jun 2019 02:59:24 -0700 (PDT)
-Received: from ziggy.stardust ([37.223.140.27])
-        by smtp.gmail.com with ESMTPSA id u26sm3458355edf.91.2019.06.17.02.59.22
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 02:59:23 -0700 (PDT)
-Subject: Re: [PATCH v7 09/21] iommu/mediatek: Refine protect memory definition
-To:     Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Evan Green <evgreen@chromium.org>, Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com,
-        youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>,
-        anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-10-git-send-email-yong.wu@mediatek.com>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <d5bf7ef9-d6dd-2e09-5ad8-e72a26dd3880@gmail.com>
-Date:   Mon, 17 Jun 2019 11:59:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <1560169080-27134-10-git-send-email-yong.wu@mediatek.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 06:00:32 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5H9xhCQ075430
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 06:00:31 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t68au102x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 06:00:30 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Mon, 17 Jun 2019 11:00:28 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 17 Jun 2019 11:00:24 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5HA0Nq642401928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 10:00:23 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 963AEA405D;
+        Mon, 17 Jun 2019 10:00:23 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27194A404D;
+        Mon, 17 Jun 2019 10:00:22 +0000 (GMT)
+Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Jun 2019 10:00:21 +0000 (GMT)
+From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
+To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-pm@vger.kernel.org
+Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
+        dja@axtens.net, npiggin@gmail.com, ego@linux.vnet.ibm.com,
+        Abhishek Goel <huntbag@linux.vnet.ibm.com>
+Subject: [PATCH v2 0/1] Forced-wakeup for stop states on Powernv
+Date:   Mon, 17 Jun 2019 04:56:47 -0500
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19061710-0012-0000-0000-00000329CB13
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061710-0013-0000-0000-00002162E1DC
+Message-Id: <20190617095648.18847-1-huntbag@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=828 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906170093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, the cpuidle governors determine what idle state a idling CPU
+should enter into based on heuristics that depend on the idle history on
+that CPU. Given that no predictive heuristic is perfect, there are cases
+where the governor predicts a shallow idle state, hoping that the CPU will
+be busy soon. However, if no new workload is scheduled on that CPU in the
+near future, the CPU will end up in the shallow state.
+
+Motivation
+----------
+In case of POWER, this is problematic, when the predicted state in the
+aforementioned scenario is a shallow stop state on a tickless system. As
+we might get stuck into shallow states even for hours, in absence of ticks
+or interrupts.
+
+To address this, We forcefully wakeup the cpu by setting the decrementer.
+The decrementer is set to a value that corresponds with the residency of
+the next available state. Thus firing up a timer that will forcefully
+wakeup the cpu. Few such iterations will essentially train the governor to
+select a deeper state for that cpu, as the timer here corresponds to the
+next available cpuidle state residency. Thus, cpu will eventually end up
+in the deepest possible state and we won't get stuck in a shallow state
+for long duration.
+
+Experiment
+----------
+For earlier versions when this feature was meat to be only for shallow lite
+states, I performed experiments for three scenarios to collect some data.
+
+case 1 :
+Without this patch and without tick retained, i.e. in a upstream kernel,
+It would spend more than even a second to get out of stop0_lite.
+
+case 2 : With tick retained in a upstream kernel -
+
+Generally, we have a sched tick at 4ms(CONF_HZ = 250). Ideally I expected
+it to take 8 sched tick to get out of stop0_lite. Experimentally,
+observation was
+
+=========================================================
+sample          min            max           99percentile
+20              4ms            12ms          4ms
+=========================================================
+
+It would take atleast one sched tick to get out of stop0_lite.
+
+case 2 :  With this patch (not stopping tick, but explicitly queuing a
+          timer)
+
+============================================================
+sample          min             max             99percentile
+============================================================
+20              144us           192us           144us
+============================================================
 
 
-On 10/06/2019 14:17, Yong Wu wrote:
-> The protect memory setting is a little different in the different SoCs.
-> In the register REG_MMU_CTRL_REG(0x110), the TF_PROT(translation fault
-> protect) shift bit is normally 4 while it shift 5 bits only in the
-> mt8173. This patch delete the complex MACRO and use a common if-else
-> instead.
-> 
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
+Description of current implementation
+-------------------------------------
 
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+We calculate timeout for the current idle state as the residency value
+of the next available idle state. If the decrementer is set to be
+greater than this timeout, we update the decrementer value with the
+residency of next available idle state. Thus, essentially training the
+governor to select the next available deeper state until we reach the
+deepest state. Hence, we won't get stuck unnecessarily in shallow states
+for longer duration.
 
-> ---
->  drivers/iommu/mtk_iommu.c | 13 ++++++-------
->  1 file changed, 6 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index ad838b9..d38dfa2 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -52,12 +52,9 @@
->  #define REG_MMU_DCM_DIS				0x050
->  
->  #define REG_MMU_CTRL_REG			0x110
-> +#define F_MMU_TF_PROT_TO_PROGRAM_ADDR		(2 << 4)
->  #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
-> -#define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
-> -	((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
-> -/* It's named by F_MMU_TF_PROT_SEL in mt2712. */
-> -#define F_MMU_TF_PROTECT_SEL(prot, data) \
-> -	(((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
-> +#define F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173	(2 << 5)
->  
->  #define REG_MMU_IVRP_PADDR			0x114
->  
-> @@ -519,9 +516,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
->  		return ret;
->  	}
->  
-> -	regval = F_MMU_TF_PROTECT_SEL(2, data);
->  	if (data->plat_data->m4u_plat == M4U_MT8173)
-> -		regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
-> +		regval = F_MMU_PREFETCH_RT_REPLACE_MOD |
-> +			 F_MMU_TF_PROT_TO_PROGRAM_ADDR_MT8173;
-> +	else
-> +		regval = F_MMU_TF_PROT_TO_PROGRAM_ADDR;
->  	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
->  
->  	regval = F_L2_MULIT_HIT_EN |
-> 
+--------------------------------
+v1 of auto-promotion : https://lkml.org/lkml/2019/3/22/58 This patch was
+implemented only for shallow lite state in generic cpuidle driver.
+
+v2 of auto-promotion : Removed timeout_needed and rebased to current
+upstream kernel
+
+Then, 
+v1 of forced-wakeup : Moved the code to cpuidle powernv driver and started
+as forced wakeup instead of auto-promotion
+
+v2 of forced-wakeup : Extended the forced wakeup logic for all states.
+Setting the decrementer instead of queuing up a hrtimer to implement the
+logic.
+
+Abhishek Goel (1):
+  cpuidle-powernv : forced wakeup for stop states
+
+ drivers/cpuidle/cpuidle-powernv.c | 38 +++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+
+-- 
+2.17.1
+
