@@ -2,52 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C18BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C66AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED797208E4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38EF520673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806792;
-	bh=oF9suLnqZQ9gBdYVunJ7VyARLD44xus73sHTu7hwBmc=;
+	s=default; t=1560806800;
+	bh=rTRSA2ixgXrIK32n3nUn99ovwkIyyyPn4BpR/+aI+fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=11M++IKxsEE4eHgejoJjf2Tx+QAtQx+iCYY4AA4ujB315uZafVimJ2Wk3vXsuVUI5
-	 aFi9Bk8nbKnzETWVD4TbUfUbh6kpZm/NpbwY5KbNZa4t35dKLxFYczHDbgI98PZgBe
-	 VdoizpYgiVoU/thg7SUH9JgYHleCdmLpkU7lsCII=
+	b=Im4s0CuJeVxxxls/IIIXvqigs8ryMk1djyE60ckQFtJ7gCmDrtwalk14tlEhtBm0f
+	 rWJowSGZ8Ha+DP5k0zYDeJwFnKIRYP9mGdD6zIOY3SHvPkZK3jknnD8nrynnba3zKU
+	 WrDFGKV1TPtBK3u3Po18+DynGINWOTwRMHOtmRYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfFQV0a (ORCPT
+        id S1730247AbfFQV0h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:26:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53058 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:26:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53186 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729266AbfFQV03 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:26:29 -0400
+        id S1729021AbfFQV0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:26:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A7C9020657;
-        Mon, 17 Jun 2019 21:26:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42821206B7;
+        Mon, 17 Jun 2019 21:26:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806788;
-        bh=oF9suLnqZQ9gBdYVunJ7VyARLD44xus73sHTu7hwBmc=;
+        s=default; t=1560806793;
+        bh=rTRSA2ixgXrIK32n3nUn99ovwkIyyyPn4BpR/+aI+fI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SVPJp96qvLlYVRPsTneP7cPSR/odxIu+IYvCH9mDySrxDDf3Van85PxrXlsgWO6ro
-         xde3o5esY0BCoULQ1/ZdKs6B3xNsagaMvR9MxQ6nSNIErHdIFRoWRQTr+FLFQsGe9h
-         QRwQbqUjT5EJjFBtAzFz3dkN9ajtiKstWhbIfx48=
+        b=G+EkIXw/0cTNB+uDpJDZc7hSQvVLHzUy73SlBQKg17AdGR+9US/bmCpBpN6mCdsQ5
+         jc6ATyvSIH8ewKufW4vnKGh5OkznLEfcf3d9CBHrbt3T4DUzUv7/3HptiR7iLe5iwa
+         MHkCg/pHthXcp7Cis3bIApySNCEbcqm0XMT6O2w4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefan Raspl <raspl@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 56/75] tools/kvm_stat: fix fields filter for child events
-Date:   Mon, 17 Jun 2019 23:10:07 +0200
-Message-Id: <20190617210754.977526241@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Murray McAllister <murray.mcallister@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 4.19 58/75] drm/vmwgfx: NULL pointer dereference from vmw_cmd_dx_view_define()
+Date:   Mon, 17 Jun 2019 23:10:09 +0200
+Message-Id: <20190617210755.106215921@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -60,90 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 883d25e70b2f699fed9017e509d1ef8e36229b89 ]
+From: Murray McAllister <murray.mcallister@gmail.com>
 
-The fields filter would not work with child fields, as the respective
-parents would not be included. No parents displayed == no childs displayed.
-To reproduce, run on s390 (would work on other platforms, too, but would
-require a different filter name):
-- Run 'kvm_stat -d'
-- Press 'f'
-- Enter 'instruct'
-Notice that events like instruction_diag_44 or instruction_diag_500 are not
-displayed - the output remains empty.
-With this patch, we will filter by matching events and their parents.
-However, consider the following example where we filter by
-instruction_diag_44:
+commit bcd6aa7b6cbfd6f985f606c6f76046d782905820 upstream.
 
-  kvm statistics - summary
-                   regex filter: instruction_diag_44
-   Event                                         Total %Total CurAvg/s
-   exit_instruction                                276  100.0       12
-     instruction_diag_44                           256   92.8       11
-   Total                                           276              12
+If SVGA_3D_CMD_DX_DEFINE_RENDERTARGET_VIEW is called with a surface
+ID of SVGA3D_INVALID_ID, the srf struct will remain NULL after
+vmw_cmd_res_check(), leading to a null pointer dereference in
+vmw_view_add().
 
-Note that the parent ('exit_instruction') displays the total events, but
-the childs listed do not match its total (256 instead of 276). This is
-intended (since we're filtering all but one child), but might be confusing
-on first sight.
+Cc: <stable@vger.kernel.org>
+Fixes: d80efd5cb3de ("drm/vmwgfx: Initial DX support")
+Signed-off-by: Murray McAllister <murray.mcallister@gmail.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Stefan Raspl <raspl@linux.ibm.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+
 ---
- tools/kvm/kvm_stat/kvm_stat     | 16 ++++++++++++----
- tools/kvm/kvm_stat/kvm_stat.txt |  2 ++
- 2 files changed, 14 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/kvm/kvm_stat/kvm_stat b/tools/kvm/kvm_stat/kvm_stat
-index 195ba486640f..ba7ee74ee533 100755
---- a/tools/kvm/kvm_stat/kvm_stat
-+++ b/tools/kvm/kvm_stat/kvm_stat
-@@ -575,8 +575,12 @@ class TracepointProvider(Provider):
-     def update_fields(self, fields_filter):
-         """Refresh fields, applying fields_filter"""
-         self.fields = [field for field in self._get_available_fields()
--                       if self.is_field_wanted(fields_filter, field) or
--                       ARCH.tracepoint_is_child(field)]
-+                       if self.is_field_wanted(fields_filter, field)]
-+        # add parents for child fields - otherwise we won't see any output!
-+        for field in self._fields:
-+            parent = ARCH.tracepoint_is_child(field)
-+            if (parent and parent not in self._fields):
-+                self.fields.append(parent)
- 
-     @staticmethod
-     def _get_online_cpus():
-@@ -735,8 +739,12 @@ class DebugfsProvider(Provider):
-     def update_fields(self, fields_filter):
-         """Refresh fields, applying fields_filter"""
-         self._fields = [field for field in self._get_available_fields()
--                        if self.is_field_wanted(fields_filter, field) or
--                        ARCH.debugfs_is_child(field)]
-+                        if self.is_field_wanted(fields_filter, field)]
-+        # add parents for child fields - otherwise we won't see any output!
-+        for field in self._fields:
-+            parent = ARCH.debugfs_is_child(field)
-+            if (parent and parent not in self._fields):
-+                self.fields.append(parent)
- 
-     @property
-     def fields(self):
-diff --git a/tools/kvm/kvm_stat/kvm_stat.txt b/tools/kvm/kvm_stat/kvm_stat.txt
-index 0811d860fe75..c057ba52364e 100644
---- a/tools/kvm/kvm_stat/kvm_stat.txt
-+++ b/tools/kvm/kvm_stat/kvm_stat.txt
-@@ -34,6 +34,8 @@ INTERACTIVE COMMANDS
- *c*::	clear filter
- 
- *f*::	filter by regular expression
-+ ::     *Note*: Child events pull in their parents, and parents' stats summarize
-+                all child events, not just the filtered ones
- 
- *g*::	filter by guest name/PID
- 
--- 
-2.20.1
-
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+@@ -2733,6 +2733,10 @@ static int vmw_cmd_dx_view_define(struct
+ 	if (view_type == vmw_view_max)
+ 		return -EINVAL;
+ 	cmd = container_of(header, typeof(*cmd), header);
++	if (unlikely(cmd->sid == SVGA3D_INVALID_ID)) {
++		DRM_ERROR("Invalid surface id.\n");
++		return -EINVAL;
++	}
+ 	ret = vmw_cmd_res_check(dev_priv, sw_context, vmw_res_surface,
+ 				user_surface_converter,
+ 				&cmd->sid, &srf_node);
 
 
