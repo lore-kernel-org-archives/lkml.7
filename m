@@ -2,94 +2,90 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43352C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:21:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31868C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:22:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE732084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:21:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pyZwABOh"
+	by mail.kernel.org (Postfix) with ESMTP id 065FA2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:22:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727610AbfFQQV5 (ORCPT
+        id S1728123AbfFQQWh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:21:57 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35446 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfFQQV5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:21:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:Date:Message-ID:Subject:From:Cc:To:Sender:Reply-To:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=I+3dZymZ36bDT+SYPOPtFYrTLqbyyrx6FBC7YcP64m4=; b=pyZwABOhiF03uQ7pO88KTepolG
-        gJfIgqubE3Xu7VCulG5ILy+0XOzm1hQ5rRiurXcbjmtXZsEGtuSCCZ7JU1m8lH/MiZa5KvSc8lCAG
-        Ka/rLuHfNZutgYB/mKm+BhrkD+zuJujVaiwFvoKSM8hBRAVgQfMpqUJ7Kqu9+e17IT4x3dNc8m2rX
-        tb7v90vmBb6JtltQhMzZuafvyWNaEQpBZvMsUH3XUas8nh7CaR4ullem0UdebRSItFmJ2BADFJA3v
-        LM0ZSY+bUGWhGS4xg4Ga4Gf3cIgJS1bUb903//initn9ID+heZhXn94u8tpFMLuidvLqnpTPuzdeN
-        +QqnFq7w==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcuO7-0000qD-OH; Mon, 17 Jun 2019 16:21:44 +0000
-To:     LKML <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kjeld Flarup <kfa@deif.com>,
-        Patrick Havelange <patrick.havelange@essensium.com>,
-        William Breathitt Gray <vilhelm.gray@gmail.com>,
-        Richard Weinberger <richard@nod.at>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Subject: [PATCH] counter: fix ftm-quaddec build error on UML
-Message-ID: <e33254e5-3e8e-fc86-de72-b3dd2f6c310c@infradead.org>
-Date:   Mon, 17 Jun 2019 09:21:40 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 12:22:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:55450 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725863AbfFQQWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:22:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F004A28;
+        Mon, 17 Jun 2019 09:22:36 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B69B33F718;
+        Mon, 17 Jun 2019 09:22:35 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 17:22:33 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Zhangshaokun <zhangshaokun@hisilicon.com>
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org,
+        Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
+        Zhang Lei <zhang.lei@jp.fujitsu.com>
+Subject: Re: [PATCH v2] arm64/mm: Correct the cache line size warning with
+ non coherent device
+Message-ID: <20190617162233.GB34565@arrakis.emea.arm.com>
+References: <20190614131141.4428-1-msys.mizuma@gmail.com>
+ <aa445f8f-2576-4f78-a64e-1cde6a2f9593@hisilicon.com>
+ <20190617104555.GA1367@arrakis.emea.arm.com>
+ <7e567399-6f3d-b416-6636-c9f2f37ea407@hisilicon.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7e567399-6f3d-b416-6636-c9f2f37ea407@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Randy Dunlap <rdunlap@infradead.org>
+On Mon, Jun 17, 2019 at 07:00:34PM +0800, Zhangshaokun wrote:
+> On 2019/6/17 18:45, Catalin Marinas wrote:
+> > On Sat, Jun 15, 2019 at 10:44:33AM +0800, Zhangshaokun wrote:
+> >> On 2019/6/14 21:11, Masayoshi Mizuma wrote:
+> >>> diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
+> >>> index 1669618db08a..379589dc7113 100644
+> >>> --- a/arch/arm64/mm/dma-mapping.c
+> >>> +++ b/arch/arm64/mm/dma-mapping.c
+> >>> @@ -38,10 +38,6 @@ void arch_dma_prep_coherent(struct page *page, size_t size)
+> >>>  
+> >>>  static int __init arm64_dma_init(void)
+> >>>  {
+> >>> -	WARN_TAINT(ARCH_DMA_MINALIGN < cache_line_size(),
+> >>> -		   TAINT_CPU_OUT_OF_SPEC,
+> >>> -		   "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
+> >>> -		   ARCH_DMA_MINALIGN, cache_line_size());
+> >>>  	return dma_atomic_pool_init(GFP_DMA32, __pgprot(PROT_NORMAL_NC));
+> >>>  }
+> >>>  arch_initcall(arm64_dma_init);
+> >>> @@ -56,7 +52,17 @@ void arch_teardown_dma_ops(struct device *dev)
+> >>>  void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
+> >>>  			const struct iommu_ops *iommu, bool coherent)
+> >>>  {
+> >>> +	int cls = cache_line_size_of_cpu();
+> >>
+> >> whether we need this local variable, how about use cache_line_size_of_cpu
+> >> directly in WARN_TAINT just like before.
+> > 
+> > The reason being?
+> 
+> Since it is inline function,  maybe it is unnecessary, it is trivial.
 
-Fix build error on user-mode Linux, which does not set HAS_IOMEM,
-so devm_ioremap() is not available.  Fixes this build error:
+OTOH, you end up with two reads from the CTR_EL0 register.
 
-ERROR: "devm_ioremap" [drivers/counter/ftm-quaddec.ko] undefined!
-
-Fixes: a3b9a99980d9 ("counter: add FlexTimer Module Quadrature decoder counter driver")
-
-Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Kjeld Flarup <kfa@deif.com>
-Cc: Patrick Havelange <patrick.havelange@essensium.com>
-Cc: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: linux-iio@vger.kernel.org
----
-BTW, please fix these lines to have ending '>' characters:
-MODULE_AUTHOR("Kjeld Flarup <kfa@deif.com");
-MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com");
-
- drivers/counter/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
-
---- lnx-52-rc5.orig/drivers/counter/Kconfig
-+++ lnx-52-rc5/drivers/counter/Kconfig
-@@ -51,6 +51,7 @@ config STM32_LPTIMER_CNT
- 
- config FTM_QUADDEC
- 	tristate "Flex Timer Module Quadrature decoder driver"
-+	depends on HAS_IOMEM
- 	help
- 	  Select this option to enable the Flex Timer Quadrature decoder
- 	  driver.
-
-
+-- 
+Catalin
