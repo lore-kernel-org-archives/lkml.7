@@ -2,54 +2,51 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2313C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:34:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FC6C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D2D92063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:34:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D07820673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807248;
-	bh=qN6gGB5PPIYLr4+HleaWZ2ZOh4g15wqvVBggz4g76xw=;
+	s=default; t=1560807250;
+	bh=/b6D2v5AkpL+O5/7LJH+ix77sBO15xAX169kA2TaGH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=B+ifYc1aknmcD8kZ2VwRKeyNglr5uyP+j2DBxctitKyGfzRKvu2GMUmat45nMgmHx
-	 iqSreuAV650N9TdUmbMxKUZw9CgH4YNaWLyq6BCYGZO33nLAGmmynORTSlOt59NkDI
-	 vWZMY2oREgvyVBBJaROyeOcYFVvG3yupRXftHkIE=
+	b=du+2n/VSZaRiab2EUgKpkiTPzwOWkTtPQogQp4evKa1nAQaGbSgTXuBlCUfAMKO9/
+	 NLEn1KGQueJlyGtc7cgccSGKL/g5LkIPh5P/Oo12lMG5N7wqjD+hbchiujdVuWNx3w
+	 73NsiimiiT7ss3ETAFSk45Sannbn4sxi13dFZGIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730098AbfFQVeG (ORCPT
+        id S1730042AbfFQVZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:34:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51370 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:25:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51088 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728040AbfFQVZT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:25:19 -0400
+        id S1730028AbfFQVZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:25:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1AEF620657;
-        Mon, 17 Jun 2019 21:25:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9F9362070B;
+        Mon, 17 Jun 2019 21:25:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806718;
-        bh=qN6gGB5PPIYLr4+HleaWZ2ZOh4g15wqvVBggz4g76xw=;
+        s=default; t=1560806707;
+        bh=/b6D2v5AkpL+O5/7LJH+ix77sBO15xAX169kA2TaGH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fmQmN5BEMey+cXhYDaUmmzwcnSE9AzcTV0EDfRooRcN9MBJTKfo6sVnNkhWYqZthW
-         njGv5A0n1kyFTsEzIq44HMiC+7NLcKqFf6PRAbMOHqSzpaa85QR9t25Q6TgCknVlNt
-         jqVC2eyzoxslOAX1bSAsOHAnEPMEPxACxp3F3ltM=
+        b=ABL155fNibbSqx71RAbdlJ2PeIemAN8lD5nNNn/4xYOAUV455g8ju+EdDu+TdfVvy
+         aZqRt6WClSVjqfA16NXoYuK6GApTfhsyuJt45U99HeB/BcxVCrJD28ydGOoshxGsIs
+         kRTtsGfZydYBmaYzy2nTL94dt2nRNyU2LGeSdsMU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 34/75] scsi: qedi: remove memset/memcpy to nfunc and use func instead
-Date:   Mon, 17 Jun 2019 23:09:45 +0200
-Message-Id: <20190617210754.108464437@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 4.19 08/75] HID: wacom: Sync INTUOSP2_BT touch state after each frame if necessary
+Date:   Mon, 17 Jun 2019 23:09:19 +0200
+Message-Id: <20190617210753.170219676@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -62,167 +59,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c09581a52765a85f19fc35340127396d5e3379cc ]
+From: Jason Gerecke <jason.gerecke@wacom.com>
 
-KASAN reports this:
+commit 69dbdfffef20c715df9f381b2cee4e9e0a4efd93 upstream.
 
-BUG: KASAN: global-out-of-bounds in qedi_dbg_err+0xda/0x330 [qedi]
-Read of size 31 at addr ffffffffc12b0ae0 by task syz-executor.0/2429
+The Bluetooth interface of the 2nd-gen Intuos Pro batches together four
+independent "frames" of finger data into a single report. Each frame
+is essentially equivalent to a single USB report, with the up-to-10
+fingers worth of information being spread across two frames. At the
+moment the driver only calls `input_sync` after processing all four
+frames have been processed, which can result in the driver sending
+multiple updates for a single slot within the same SYN_REPORT. This
+can confuse userspace, so modify the driver to sync more often if
+necessary (i.e., after reporting the state of all fingers).
 
-CPU: 0 PID: 2429 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x1c4/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- memcpy+0x1f/0x50 mm/kasan/common.c:130
- qedi_dbg_err+0xda/0x330 [qedi]
- ? 0xffffffffc12d0000
- qedi_init+0x118/0x1000 [qedi]
- ? 0xffffffffc12d0000
- ? 0xffffffffc12d0000
- ? 0xffffffffc12d0000
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f2d57e55c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 00000000200003c0 RDI: 0000000000000003
-RBP: 00007f2d57e55c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2d57e566bc
-R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
+Fixes: 4922cd26f03c ("HID: wacom: Support 2nd-gen Intuos Pro's Bluetooth classic interface")
+Cc: <stable@vger.kernel.org> # 4.11+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The buggy address belongs to the variable:
- __func__.67584+0x0/0xffffffffffffd520 [qedi]
-
-Memory state around the buggy address:
- ffffffffc12b0980: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 05 fa
- ffffffffc12b0a00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 05 fa fa
-> ffffffffc12b0a80: fa fa fa fa 00 06 fa fa fa fa fa fa 00 02 fa fa
-                                                          ^
- ffffffffc12b0b00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 00 03 fa
- ffffffffc12b0b80: fa fa fa fa 00 00 02 fa fa fa fa fa 00 00 04 fa
-
-Currently the qedi_dbg_* family of functions can overrun the end of the
-source string if it is less than the destination buffer length because of
-the use of a fixed sized memcpy. Remove the memset/memcpy calls to nfunc
-and just use func instead as it is always a null terminated string.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_dbg.c | 32 ++++++++------------------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
+ drivers/hid/wacom_wac.c |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/qedi/qedi_dbg.c b/drivers/scsi/qedi/qedi_dbg.c
-index 8fd28b056f73..3383314a3882 100644
---- a/drivers/scsi/qedi/qedi_dbg.c
-+++ b/drivers/scsi/qedi/qedi_dbg.c
-@@ -16,10 +16,6 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- {
- 	va_list va;
- 	struct va_format vaf;
--	char nfunc[32];
--
--	memset(nfunc, 0, sizeof(nfunc));
--	memcpy(nfunc, func, sizeof(nfunc) - 1);
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -1369,11 +1369,17 @@ static void wacom_intuos_pro2_bt_touch(s
+ 		if (wacom->num_contacts_left <= 0) {
+ 			wacom->num_contacts_left = 0;
+ 			wacom->shared->touch_down = wacom_wac_finger_count_touches(wacom);
++			input_sync(touch_input);
+ 		}
+ 	}
  
- 	va_start(va, fmt);
- 
-@@ -28,9 +24,9 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- 
- 	if (likely(qedi) && likely(qedi->pdev))
- 		pr_err("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
--		       nfunc, line, qedi->host_no, &vaf);
-+		       func, line, qedi->host_no, &vaf);
- 	else
--		pr_err("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-+		pr_err("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
- 
- 	va_end(va);
+-	input_report_switch(touch_input, SW_MUTE_DEVICE, !(data[281] >> 7));
+-	input_sync(touch_input);
++	if (wacom->num_contacts_left == 0) {
++		// Be careful that we don't accidentally call input_sync with
++		// only a partial set of fingers of processed
++		input_report_switch(touch_input, SW_MUTE_DEVICE, !(data[281] >> 7));
++		input_sync(touch_input);
++	}
++
  }
-@@ -41,10 +37,6 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- {
- 	va_list va;
- 	struct va_format vaf;
--	char nfunc[32];
--
--	memset(nfunc, 0, sizeof(nfunc));
--	memcpy(nfunc, func, sizeof(nfunc) - 1);
  
- 	va_start(va, fmt);
- 
-@@ -56,9 +48,9 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- 
- 	if (likely(qedi) && likely(qedi->pdev))
- 		pr_warn("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
--			nfunc, line, qedi->host_no, &vaf);
-+			func, line, qedi->host_no, &vaf);
- 	else
--		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-+		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
- 
- ret:
- 	va_end(va);
-@@ -70,10 +62,6 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- {
- 	va_list va;
- 	struct va_format vaf;
--	char nfunc[32];
--
--	memset(nfunc, 0, sizeof(nfunc));
--	memcpy(nfunc, func, sizeof(nfunc) - 1);
- 
- 	va_start(va, fmt);
- 
-@@ -85,10 +73,10 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- 
- 	if (likely(qedi) && likely(qedi->pdev))
- 		pr_notice("[%s]:[%s:%d]:%d: %pV",
--			  dev_name(&qedi->pdev->dev), nfunc, line,
-+			  dev_name(&qedi->pdev->dev), func, line,
- 			  qedi->host_no, &vaf);
- 	else
--		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-+		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
- 
- ret:
- 	va_end(va);
-@@ -100,10 +88,6 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- {
- 	va_list va;
- 	struct va_format vaf;
--	char nfunc[32];
--
--	memset(nfunc, 0, sizeof(nfunc));
--	memcpy(nfunc, func, sizeof(nfunc) - 1);
- 
- 	va_start(va, fmt);
- 
-@@ -115,9 +99,9 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- 
- 	if (likely(qedi) && likely(qedi->pdev))
- 		pr_info("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
--			nfunc, line, qedi->host_no, &vaf);
-+			func, line, qedi->host_no, &vaf);
- 	else
--		pr_info("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-+		pr_info("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
- 
- ret:
- 	va_end(va);
--- 
-2.20.1
-
+ static void wacom_intuos_pro2_bt_pad(struct wacom_wac *wacom)
 
 
