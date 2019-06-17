@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3820C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 454B5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:21:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84BCF20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:21:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E6F920833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:21:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="dI6NDUIt"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Y92dmsqb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfFQWUx (ORCPT
+        id S1729036AbfFQWVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 18:20:53 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34172 "EHLO
+        Mon, 17 Jun 2019 18:21:07 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:34167 "EHLO
         mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728850AbfFQWUv (ORCPT
+        with ESMTP id S1727349AbfFQWUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:20:51 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s49so18483480edb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:20:50 -0700 (PDT)
+        Mon, 17 Jun 2019 18:20:49 -0400
+Received: by mail-ed1-f68.google.com with SMTP id s49so18483354edb.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:20:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=2/V2r9j2gZVk1sA5eZyOyZ148EpYAOs3e61Sgdw5EMs=;
-        b=dI6NDUItBQG57mwKO5FrrgxLQPD0rB5+WZpx17jnJbxmYZfReoAbrGeslSoXqxcewu
-         ix86vBM4ZOE8qePDgqhVDlR7/rf0OsypiFFWU+dddH/bnIAWpP7q+RZlhEHCZBQbfeSU
-         /ThksDc92j2cpRmjOYOtUgTupJRjzncOs/eAY=
+        bh=vRpZZ4IfQKGytYHR1q3gyvtG2oFgpC+iBYxFZ9TdPI4=;
+        b=Y92dmsqb2535eP39fja8Utwp0VjKIJ0UA79NymZgTkcN/lARsGyVCh60FZTZdZi8h7
+         Ct2XkOxATdDYCl2HC8jD7r9DBhcQ30mKLNPOetHYQYK393Pq2LQXECnt/JUVXIpKi55i
+         5FZwxX9EPUyqGfmN2+CwBdgS0BFeZJGVVvknc=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=2/V2r9j2gZVk1sA5eZyOyZ148EpYAOs3e61Sgdw5EMs=;
-        b=HFMXG/2JdgeO8LUHASELIFDfq91JcNeZq9orRIgcZ5+H6LVSI949lAd48aFwepaJLZ
-         +ALOPu1gkCX/o50s4MyuiJqtVDgwOekyNx1/PfOMsnUcfulfnBLS/sSMuZP8qdVHqcxz
-         qvE/uXjIF5C8RuIVIDzode7HoG/+sg0MvBTKQZMmHyTEl+OcSdc+vyxj9J0ghq6W29ZD
-         WK1ekRvZCEu7/H92sIvXlZTExcOP1zL00wqA1hFEkc1bCeJwF2UzEa8r989hQoEYAFi2
-         ZoCFSJM94Q4tU0fCeMFloPguSCybiut0aXdwJih0CCa6oeaMduM9zJax06XsAT+iiQJP
-         miJA==
-X-Gm-Message-State: APjAAAXTFEiRNnS9Be2C9lxvvd48UpzKoPwtunXF70qpNTcLjo2+MPiV
-        pv09sFYuGwGAR2tqPLcu1qW3d/TUSewZB8GH
-X-Google-Smtp-Source: APXvYqwOL+7hGg/9DZvz68/aGVpu4WHBV0NUHL7I2aAqSRumwmP1GizygDVm7L+Hu1lxuokKNUUh6A==
-X-Received: by 2002:a17:906:bb11:: with SMTP id jz17mr29449461ejb.185.1560810049489;
-        Mon, 17 Jun 2019 15:20:49 -0700 (PDT)
+        bh=vRpZZ4IfQKGytYHR1q3gyvtG2oFgpC+iBYxFZ9TdPI4=;
+        b=HjPEYJuXoDpok6wDK327xNAjIOxmHm16W+KTSLsrGCPyMm3pCJoqoLXgB8XQ9riBV2
+         qf1gr2kAT87qOs+KQjmeI98D/OpCoAtVZBcS9uoMw66/e28rQydER/ZZ6c+6wfSgl7M7
+         JEH7+gYyqmjYhUayBFEshWvaAkGkUBRrnG+SuhoaMBiYokDTqXXsONlTP6Nsu0yFcayi
+         pV2fQaVZo4HraW1B5yGMjNQbk6atA3TP96ALLeXpERsxAHtC7rcXEJPqKy8RvbD6WW7Q
+         lowChejMAQx+c98JLctL7gVlJbOtjARSi+U2wI8RviURfZk/HKbEMVqqifP6J5x7NTRj
+         hfew==
+X-Gm-Message-State: APjAAAUOrnyZQjI60nRDejopnxY+sxsaHM5R4glm6EI3n6F7Q4K1TEAV
+        ek/Ry+AqjACRV0aHKmSv4YJj2A==
+X-Google-Smtp-Source: APXvYqxB/HM4ILYgTyys6tHTEuR80fT28nBcYxtuuvetjHW+pjg0SeWF0rJbAVf0pEZpNGa1F7agCg==
+X-Received: by 2002:a17:906:e204:: with SMTP id gf4mr55594798ejb.302.1560810047454;
+        Mon, 17 Jun 2019 15:20:47 -0700 (PDT)
 Received: from prevas-ravi.prevas.se (ip-5-186-113-204.cgn.fibianet.dk. [5.186.113.204])
-        by smtp.gmail.com with ESMTPSA id 9sm1034852ejg.49.2019.06.17.15.20.48
+        by smtp.gmail.com with ESMTPSA id 9sm1034852ejg.49.2019.06.17.15.20.46
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 15:20:49 -0700 (PDT)
+        Mon, 17 Jun 2019 15:20:46 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
@@ -61,9 +61,9 @@ Cc:     Jason Baron <jbaron@akamai.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-kernel@vger.kernel.org,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 6/8] dynamic_debug: introduce CONFIG_DYNAMIC_DEBUG_RELATIVE_POINTERS
-Date:   Tue, 18 Jun 2019 00:20:32 +0200
-Message-Id: <20190617222034.10799-7-linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 4/8] dynamic_debug: introduce accessors for string members of struct _ddebug
+Date:   Tue, 18 Jun 2019 00:20:30 +0200
+Message-Id: <20190617222034.10799-5-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
 References: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
@@ -74,130 +74,136 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Based on the same idea for struct bug_entry, one can use relative
-pointers in struct _ddebug. It only makes sense for 64 bit
-architectures, where one saves 16 bytes per entry (out of 40 or 56,
-depending on CONFIG_JUMP_LABEL).
+When we introduce compact versions of these pointers (a la
+CONFIG_GENERIC_BUG_RELATIVE_POINTERS), all access to these members must
+go via appropriate accessors. This just mass-converts dynamic_debug.c to
+use the new accessors.
 
-Unlike the bug_entry case, this turns out not to work with some older
-toolchains, so the actual config option must be set by the user and
-not just selected by the various architectures. Still, the
-architecture must select HAVE_DYNAMIC_DEBUG_RELATIVE_POINTERS and is
-then responsible for providing a suitable
-DEFINE_DYNAMIC_DEBUG_METADATA macro in <asm/dynamic_debug.h>.
-
+Acked-by: Jason Baron <jbaron@akamai.com>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- include/linux/dynamic_debug.h | 14 ++++++++++++++
- lib/Kconfig.debug             | 13 +++++++++++++
- lib/dynamic_debug.c           | 20 ++++++++++++++++++++
- 3 files changed, 47 insertions(+)
+ lib/dynamic_debug.c | 51 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 34 insertions(+), 17 deletions(-)
 
-diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
-index 7d6d0153096e..572921e880ec 100644
---- a/include/linux/dynamic_debug.h
-+++ b/include/linux/dynamic_debug.h
-@@ -16,10 +16,17 @@ struct _ddebug {
- 	 * These fields are used to drive the user interface
- 	 * for selecting and displaying debug callsites.
- 	 */
-+#ifdef CONFIG_DYNAMIC_DEBUG_RELATIVE_POINTERS
-+	signed int modname_disp;
-+	signed int function_disp;
-+	signed int filename_disp;
-+	signed int format_disp;
-+#else
- 	const char *modname;
- 	const char *function;
- 	const char *filename;
- 	const char *format;
-+#endif
- 	/*
- 	 * The flags field controls the behaviour at the callsite.
- 	 * The bits here are changed dynamically when the user
-@@ -77,6 +84,12 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 			 const struct ib_device *ibdev,
- 			 const char *fmt, ...);
- 
-+#ifdef CONFIG_DYNAMIC_DEBUG_RELATIVE_POINTERS
-+#include <asm/dynamic_debug.h>
-+#ifndef DEFINE_DYNAMIC_DEBUG_METADATA
-+# error "asm/dynamic_debug.h must provide definition of DEFINE_DYNAMIC_DEBUG_METADATA"
-+#endif
-+#else
- #define DEFINE_DYNAMIC_DEBUG_METADATA(name, fmt)		\
- 	static struct _ddebug  __aligned(8)			\
- 	__attribute__((section("__verbose"))) name = {		\
-@@ -87,6 +100,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
- 		.flags_lineno = _DPRINTK_FLAGS_LINENO_INIT,	\
- 		_DPRINTK_KEY_INIT				\
- 	}
-+#endif
- 
- #ifdef CONFIG_JUMP_LABEL
- 
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index cbdfae379896..f3d2e234c15f 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -164,6 +164,19 @@ config DYNAMIC_DEBUG
- 	  See Documentation/admin-guide/dynamic-debug-howto.rst for additional
- 	  information.
- 
-+config HAVE_DYNAMIC_DEBUG_RELATIVE_POINTERS
-+	bool
-+
-+config DYNAMIC_DEBUG_RELATIVE_POINTERS
-+	bool "Reduce size of dynamic debug metadata"
-+	depends on DYNAMIC_DEBUG
-+	depends on HAVE_DYNAMIC_DEBUG_RELATIVE_POINTERS
-+	help
-+	  If you say Y here, the static memory footprint of the kernel
-+	  image will be reduced somewhat (about 40K for a typical
-+	  distro kernel). There is no performance difference either
-+	  way.
-+
- endmenu # "printk and dmesg options"
- 
- menu "Compile-time checks and compiler options"
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 3a1a80041cd6..f1646795692c 100644
+index 8a16c2d498e9..3599c4c0361a 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -39,6 +39,24 @@
+@@ -39,6 +39,23 @@
  
  #include <rdma/ib_verbs.h>
  
-+#ifdef CONFIG_DYNAMIC_DEBUG_RELATIVE_POINTERS
 +static inline const char *dd_modname(const struct _ddebug *dd)
 +{
-+	return (const char *)dd + dd->modname_disp;
++	return dd->modname;
 +}
 +static inline const char *dd_function(const struct _ddebug *dd)
 +{
-+	return (const char *)dd + dd->function_disp;
++	return dd->function;
 +}
 +static inline const char *dd_filename(const struct _ddebug *dd)
 +{
-+	return (const char *)dd + dd->filename_disp;
++	return dd->filename;
 +}
 +static inline const char *dd_format(const struct _ddebug *dd)
 +{
-+	return (const char *)dd + dd->format_disp;
++	return dd->format;
 +}
-+#else
- static inline const char *dd_modname(const struct _ddebug *dd)
- {
- 	return dd->modname;
-@@ -55,6 +73,8 @@ static inline const char *dd_format(const struct _ddebug *dd)
- {
- 	return dd->format;
- }
-+#endif
 +
- static inline unsigned dd_lineno(const struct _ddebug *dd)
- {
- 	return dd->flags_lineno >> 8;
+ extern struct _ddebug __start___verbose[];
+ extern struct _ddebug __stop___verbose[];
+ 
+@@ -160,21 +177,21 @@ static int ddebug_change(const struct ddebug_query *query,
+ 
+ 			/* match against the source filename */
+ 			if (query->filename &&
+-			    !match_wildcard(query->filename, dp->filename) &&
++			    !match_wildcard(query->filename, dd_filename(dp)) &&
+ 			    !match_wildcard(query->filename,
+-					   kbasename(dp->filename)) &&
++					   kbasename(dd_filename(dp))) &&
+ 			    !match_wildcard(query->filename,
+-					   trim_prefix(dp->filename)))
++					   trim_prefix(dd_filename(dp))))
+ 				continue;
+ 
+ 			/* match against the function */
+ 			if (query->function &&
+-			    !match_wildcard(query->function, dp->function))
++			    !match_wildcard(query->function, dd_function(dp)))
+ 				continue;
+ 
+ 			/* match against the format */
+ 			if (query->format &&
+-			    !strstr(dp->format, query->format))
++			    !strstr(dd_format(dp), query->format))
+ 				continue;
+ 
+ 			/* match against the line number range */
+@@ -199,8 +216,8 @@ static int ddebug_change(const struct ddebug_query *query,
+ #endif
+ 			dp->flags = newflags;
+ 			vpr_info("changed %s:%d [%s]%s =%s\n",
+-				 trim_prefix(dp->filename), dp->lineno,
+-				 dt->mod_name, dp->function,
++				 trim_prefix(dd_filename(dp)), dp->lineno,
++				 dt->mod_name, dd_function(dp),
+ 				 ddebug_describe_flags(dp, flagbuf,
+ 						       sizeof(flagbuf)));
+ 		}
+@@ -535,10 +552,10 @@ static char *dynamic_emit_prefix(const struct _ddebug *desc, char *buf)
+ 	pos_after_tid = pos;
+ 	if (desc->flags & _DPRINTK_FLAGS_INCL_MODNAME)
+ 		pos += snprintf(buf + pos, remaining(pos), "%s:",
+-				desc->modname);
++				dd_modname(desc));
+ 	if (desc->flags & _DPRINTK_FLAGS_INCL_FUNCNAME)
+ 		pos += snprintf(buf + pos, remaining(pos), "%s:",
+-				desc->function);
++				dd_function(desc));
+ 	if (desc->flags & _DPRINTK_FLAGS_INCL_LINENO)
+ 		pos += snprintf(buf + pos, remaining(pos), "%d:",
+ 				desc->lineno);
+@@ -827,10 +844,10 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+ 	}
+ 
+ 	seq_printf(m, "%s:%u [%s]%s =%s \"",
+-		   trim_prefix(dp->filename), dp->lineno,
+-		   iter->table->mod_name, dp->function,
++		   trim_prefix(dd_filename(dp)), dp->lineno,
++		   iter->table->mod_name, dd_function(dp),
+ 		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
+-	seq_escape(m, dp->format, "\t\r\n\"");
++	seq_escape(m, dd_format(dp), "\t\r\n\"");
+ 	seq_puts(m, "\"\n");
+ 
+ 	return 0;
+@@ -1024,20 +1041,20 @@ static int __init dynamic_debug_init(void)
+ 		return 1;
+ 	}
+ 	iter = __start___verbose;
+-	modname = iter->modname;
++	modname = dd_modname(iter);
+ 	iter_start = iter;
+ 	for (; iter < __stop___verbose; iter++) {
+ 		entries++;
+-		verbose_bytes += strlen(iter->modname) + strlen(iter->function)
+-			+ strlen(iter->filename) + strlen(iter->format);
++		verbose_bytes += strlen(dd_modname(iter)) + strlen(dd_function(iter))
++			+ strlen(dd_filename(iter)) + strlen(dd_format(iter));
+ 
+-		if (strcmp(modname, iter->modname)) {
++		if (strcmp(modname, dd_modname(iter))) {
+ 			modct++;
+ 			ret = ddebug_add_module(iter_start, n, modname);
+ 			if (ret)
+ 				goto out_err;
+ 			n = 0;
+-			modname = iter->modname;
++			modname = dd_modname(iter);
+ 			iter_start = iter;
+ 		}
+ 		n++;
 -- 
 2.20.1
 
