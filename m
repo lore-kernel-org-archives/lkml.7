@@ -2,181 +2,130 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43886C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:11:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5980C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:12:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BFAF2080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:11:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B52CE2080C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:12:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560762720;
+	bh=9P8pW1b9k1oVbqt3EOEL1v25BiBzgnw9YfF+EKJGeoY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=ZVuTAS/4pWhJ7OWVD7ZAxvzxiUuqzaRDhwD4Tb3UjW85oWglrC9otSmm06mlvMmEK
+	 WMOvYPYQGKQbt5sQp7DPlK2N/NzaZhYxD3EC+sEfplP6HKmkQhA5ecZo6E6Jh/KBr+
+	 0zOm/f4SfDB42LpBPTczysznk/GKxLttaRPLtUYI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727983AbfFQJLe (ORCPT
+        id S1728005AbfFQJL7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:11:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56562 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726753AbfFQJLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:11:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 92A13307D86F;
-        Mon, 17 Jun 2019 09:11:33 +0000 (UTC)
-Received: from xz-x1 (ovpn-12-34.pek2.redhat.com [10.72.12.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12FDE7E5B1;
-        Mon, 17 Jun 2019 09:11:26 +0000 (UTC)
-Date:   Mon, 17 Jun 2019 17:11:22 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: Re: [PATCH] timers: Fix up get_target_base() to use old base properly
-Message-ID: <20190617091122.GC12456@xz-x1>
-References: <20190603132944.9726-1-peterx@redhat.com>
- <alpine.DEB.2.21.1906170732410.1760@nanos.tec.linutronix.de>
+        Mon, 17 Jun 2019 05:11:59 -0400
+Received: from casper.infradead.org ([85.118.1.10]:54208 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfFQJL6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:11:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WKDHPuqmk7aGpvs0dQcDhq3t2LeY5Da3Poe4nEoqjOs=; b=BTvmnwI/e5DfYlzQy5najumy0A
+        R+0T9W0Onos9CA3zxDpp8p7TbkUpYAXa7a8AIHv9rhltqLLRr3ckaORXF0ZjwMb19HrAmpZcMTEcF
+        qsGUyjYro1Z3rfocqhyvNcKgjF8sOEeybxxvn9HR4pSfGjiGjuN+zD1HUEgyZsDzKIuFBRwFifRIK
+        QanmVoQx6D4F76RwDF75i6JQ6t1yIDb3T+lKTKycddAD4P5LntUmPn9zYNvqtNvAurSb3DuTJpSvm
+        vzh/NPMFsnjtr+32G6icNMfXGqmJFf1Hfy2Re80hnI9G2xhZ5d9hPcE79J+/lzNIhNGU6X61IDEYj
+        DcKW/vOw==;
+Received: from 179.186.105.91.dynamic.adsl.gvt.net.br ([179.186.105.91] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcng9-0006tV-Il; Mon, 17 Jun 2019 09:11:54 +0000
+Date:   Mon, 17 Jun 2019 06:11:46 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Markus Heiser <markus.heiser@darmarit.de>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide
+ book
+Message-ID: <20190617061146.06975213@coco.lan>
+In-Reply-To: <327067f6-2609-41e6-c987-e37620e7154e@darmarit.de>
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+        <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org>
+        <87o930uvur.fsf@intel.com>
+        <2955920a-3d6a-8e41-e8fe-b7db3cefed8b@darmarit.de>
+        <20190614081546.64101411@lwn.net>
+        <327067f6-2609-41e6-c987-e37620e7154e@darmarit.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906170732410.1760@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 17 Jun 2019 09:11:33 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 08:09:20AM +0200, Thomas Gleixner wrote:
-> Peter,
+Em Sun, 16 Jun 2019 18:04:01 +0200
+Markus Heiser <markus.heiser@darmarit.de> escreveu:
 
-Hi, Thomas,
-
-Thanks for replying.
-
-> 
-> On Mon, 3 Jun 2019, Peter Xu wrote:
-> 
-> > get_target_base() in the timer code is not using the "base" parameter
-> > at all.  My gut feeling is that instead of removing that extra
-> > parameter, what we really want to do is "return the old base if it
-> > does not suite for a new one".
-> 
-> Gut feelings are not really useful for technical decisions.
-> 
-> >  kernel/time/timer.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> Am 14.06.19 um 16:15 schrieb Jonathan Corbet:
+> > On Fri, 14 Jun 2019 16:10:31 +0200
+> > Markus Heiser <markus.heiser@darmarit.de> wrote:
+> >   
+> >> I agree with Jani. No matter how the decision ends, since I can't help here, I'd
+> >> rather not show up in the copyright.  
 > > 
-> > diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-> > index 343c7ba33b1c..6ff6ffd2c719 100644
-> > --- a/kernel/time/timer.c
-> > +++ b/kernel/time/timer.c
-> > @@ -868,7 +868,7 @@ get_target_base(struct timer_base *base, unsigned tflags)
-> >  	    !(tflags & TIMER_PINNED))
-> >  		return get_timer_cpu_base(tflags, get_nohz_timer_target());
-> >  #endif
-> > -	return get_timer_this_cpu_base(tflags);
-> > +	return base;
-> >  }
+> > Is there something specific you are asking us to do here?
+> >   
 > 
-> Timers are supposed to be queued on the local CPU except for the following
-> cases:
 > 
->  1) timer migration is enabled and the timer is not pinned
+> I have lost the overview, but there was a patch Mauro added a
+> kernel_abi.py.  There was my name (Markus Heiser) listed with a
+> copyright notation.
 > 
->     In this case the get_nohz_timer_target() crystal ball logic tries to
->     find a useful base for the timer, which is doomed but its that way
->     until we reach the point where the pull model actually works.
-> 
->  2) add_timer_on() is invoked which puts a timer on an explicit target
->     CPU. That's not using the above.
-> 
-> That has been that way forever and the base parameter is stale as older
-> code used the base to check whether migration is enabled or not. When this
-> was converted to a static branch the parameter stayed and got unused.
-> 
-> So your change would prevent moving the timer to the current CPU.
-> 
-> You might argue that in case of an explicit pinned timer, the above logic
-> is wrong when the timer is modified as it might move to a different
-> CPU. But from day one when the pinned logic was introduced, pinned just
-> prevents it from being queued on a remote CPU. If you need a timer to stay
-> on a particular CPU even if modified from a remote CPU, then the only way
-> right now is to dequeue and requeue it with add_timer_on(). 
+> I guess Mauro picked up some old RFC or an other old patch of
+> mine from 2016 and made some C&P .. whatever .. ATM I do not have
+> time to give any support on parsing ABI and I'am not interested
+> in holding copyrights on a C&P of a old source  ;)
 
-Indeed.  If add_timer_on() should always be used when with pinned
-timers, IMHO it would be good to comment probably above TIMER_PINNED
-about the fact so people will never misuse the interfaces (it seems to
-be mis-used somehow but I cannot be 100% sure, please see below).
+Well, the code was basically written by you :-)
 
-> 
-> If we really want to change that, then we need to audit all usage sites of
-> pinned timers and figure out whether this would break anything.
-> 
-> The proper change would be in that case:
-> 
->       return pinned ? base : get_timer_this_cpu_base(tflags);
+It was written to be a script capable of running a generic
+script. On that time, my contribution to it was basically
+to hardcode it to run "get_abi.pl".
 
-Purely for curiousity - why would we like to use current cpu base even
-if it's unpinned?  My humble opinion is that if we use base directly
-at least we can avoid potential migration of the timer.  But I can be
-missing some real reason here...
+This came from an old branch where the last change was back in 2017. 
+It was resurrected due to a discussion at KS ML.
 
-> 
-> But unless you can come up with a use case where the current logic is truly
-> broken, I don't see a reason to do that.
+There, the discussion was related to what's left to be converted
+to ReST.
 
-It's not a lot of places that used TIMER_PINNED so I gave a quick look
-on it.  Two conditions are always correct:
+While I can't simply remove your copyright, would you be happy
+with something like that?
 
-- when add_timer_on is used as explained, or,
-
-- when timer_setup(..., TIMER_PINNED) is used in the same context as
-  timer_mod() (e.g., mod_timer is called right after timer_setup).
-
-For above two cases, the timer will always be running with expected
-CPU that was pinned.
-
-Though, I see two outliers:
-
-======================
-
-*** drivers/cpufreq/powernv-cpufreq.c:
-powernv_cpufreq_cpu_init[867]  TIMER_PINNED | TIMER_DEFERRABLE);
-
-*** net/ipv4/inet_timewait_sock.c:
-inet_twsk_alloc[189]           timer_setup(&tw->tw_timer, tw_timer_handler, TIMER_PINNED);
-
-======================
-
-For the first one I can't say it's problematic since even if it's not
-pinned correctly it has the logic to re-pin the timer so it'll finally
-be fine:
-
-void gpstate_timer_handler(struct timer_list *t)
-{
-        ...
-	/*
-	 * If the timer has migrated to the different cpu then bring
-	 * it back to one of the policy->cpus
-	 */
-	if (!cpumask_test_cpu(raw_smp_processor_id(), policy->cpus)) {
-		gpstates->timer.expires = jiffies + msecs_to_jiffies(1);
-		add_timer_on(&gpstates->timer, cpumask_first(policy->cpus));
-		spin_unlock(&gpstates->gpstate_lock);
-		return;
-	}
-        ...
-}
-
-For the other one, the timer is setup during inet_twsk_alloc(), but
-the mod_timer() is in __inet_twsk_schedule() which seems to be
-problematic.
 
 Thanks,
+Mauro
 
--- 
-Peter Xu
+diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
+index 2d5d582207f7..ef91b1e1ff4b 100644
+--- a/Documentation/sphinx/kernel_abi.py
++++ b/Documentation/sphinx/kernel_abi.py
+@@ -7,7 +7,8 @@ u"""
+     Implementation of the ``kernel-abi`` reST-directive.
+ 
+     :copyright:  Copyright (C) 2016  Markus Heiser
+-    :copyright:  Copyright (C) 2016  Mauro Carvalho Chehab
++    :copyright:  Copyright (C) 2016-2019  Mauro Carvalho Chehab
++    :maintained-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+     :license:    GPL Version 2, June 1991 see Linux/COPYING for details.
+ 
+     The ``kernel-abi`` (:py:class:`KernelCmd`) directive calls the
+
+
