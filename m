@@ -2,93 +2,75 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67C08C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:29:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E095C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 412D320657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:29:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560774581;
-	bh=GQDRGwoRvDgb9k8fcJXG1H6YeBPxC+mGMOIW4WjU3FQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nl5yDkAJL+oVgcnewZGpa0QLMQD+2S7pgrhTuCXCP/LnH1nHi5uL4VZS0XT8e1QS6
-	 B5aphWbXBVzEDCs9xC0ZGTUlaG5aOooshgsXHuW/4cubMvH+1NyA/XQBcZCoPg/26i
-	 YGvc2nRHNapUXa90fBfsjg0DzN552dqxosDK/yfU=
+	by mail.kernel.org (Postfix) with ESMTP id 10A0920657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:31:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfFQM3j (ORCPT
+        id S1727619AbfFQMbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:29:39 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:39612 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725971AbfFQM3j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:29:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Si8xIwmDMrAT8HXNiwXvhIHU0hreznP4YCiiLf9PZho=; b=m0dfZJr2CkMDRBJCgmiqfO17q
-        dK1d5TQRmkt9QT/kcvPkrhHKHmJHQgFPTp7sYviIo8guDXGQCjgbN9SyPAR3SwwKTPzmpWsNzl1kO
-        cXQPKY6b90IdQCOlG8kEHuyR3guRkbWnwQE+ADaYTVPG5ToBmaLIn2WtRP2T/Hv5KNSLU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hcqlS-0001at-LD; Mon, 17 Jun 2019 12:29:34 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 33A7B440046; Mon, 17 Jun 2019 13:29:34 +0100 (BST)
-Date:   Mon, 17 Jun 2019 13:29:34 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v1] driver core: regmap: Switch to bitmap_zalloc()
-Message-ID: <20190617122934.GQ5316@sirena.org.uk>
-References: <20190617115403.33241-1-andriy.shevchenko@linux.intel.com>
+        Mon, 17 Jun 2019 08:31:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34136 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726121AbfFQMbP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:31:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1A2A2AF8E;
+        Mon, 17 Jun 2019 12:31:14 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 80A1DDA8D1; Mon, 17 Jun 2019 14:32:02 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 14:32:02 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Filipe Manana <FdManana@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] btrfs: shut up bogus -Wmaybe-uninitialized warning
+Message-ID: <20190617123202.GD19057@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Arnd Bergmann <arnd@arndb.de>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        Filipe Manana <FdManana@suse.com>,
+        Nikolay Borisov <nborisov@suse.com>, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190617110738.2085060-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="2VmY8g3XFtK+hx8d"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617115403.33241-1-andriy.shevchenko@linux.intel.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190617110738.2085060-1-arnd@arndb.de>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 01:07:28PM +0200, Arnd Bergmann wrote:
+> gcc sometimes can't determine whether a variable has been initialized
+> when both the initialization and the use are conditional:
+> 
+> fs/btrfs/props.c: In function 'inherit_props':
+> fs/btrfs/props.c:389:4: error: 'num_bytes' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>     btrfs_block_rsv_release(fs_info, trans->block_rsv,
+> 
+> This code is fine. Unfortunately, I cannot think of a good way to
+> rephrase it in a way that makes gcc understand this, so I add
+> a bogus initialization the way one should not.
 
---2VmY8g3XFtK+hx8d
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Looks ok, patch added to devel queue, thanks.
+> 
+> Fixes: d7400ee1b476 ("btrfs: use the existing reserved items for our first prop for inheritance")
 
-On Mon, Jun 17, 2019 at 02:54:03PM +0300, Andy Shevchenko wrote:
-> Switch to bitmap_zalloc() to show clearly what we are allocating.
-> Besides that it returns pointer of bitmap type instead of opaque void *.
-
-Please use subject lines matching the style for the subsystem.  This
-makes it easier for people to identify relevant patches.
-
---2VmY8g3XFtK+hx8d
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0Hh60ACgkQJNaLcl1U
-h9A3+gf/dhDyB0ENXPq2rau8Fw+LxFWczxrWyFPda+bkb/AgAIAZm6CQOic08heH
-KYlmngkyFnmCihwkZMKa3yAfGh6qa191tZ9jqRoS8K6CjPYacXjh2YoLTS1kHtlL
-LuY0i6ZbHlEUGkaH/vn5zoo1upXo+PQmmfZ8kwWcd90UVLd/LhBGwBGL3me92ZUm
-gauVvmsqRq64b9sbJiEFynXAKQqjXvjTGnOdCTP8USoNr9k3c+bpJne1xzLBmlVs
-yady6unZioC+JkHMINeTEbZc/c5WdAJb1GsnYW57k7rZpTMQBPgDi77T2qqfWo+I
-prfhvTFX9kxPz6wKe10xxLIvj1ubIg==
-=biwi
------END PGP SIGNATURE-----
-
---2VmY8g3XFtK+hx8d--
+I'd rather not add the Fixes tag here as it's just a compilation warning
+for some old unknown version of gcc. I've checked that 8.3.1 and 9.1.1
+don't print the warning and I consider any other version to be up to the
+user of such environment to apply fixups as needed, but not to let the
+stable machinery pick it up.
