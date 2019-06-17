@@ -2,80 +2,88 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E1CC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:18:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5650C31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:18:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 776DB2087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:18:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4C512084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:18:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728194AbfFQLSA convert rfc822-to-8bit (ORCPT
+        id S1728204AbfFQLS3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:18:00 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:41411 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727599AbfFQLR7 (ORCPT
+        Mon, 17 Jun 2019 07:18:29 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:52571 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727831AbfFQLS3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:17:59 -0400
-Received: by mail-ed1-f67.google.com with SMTP id p15so15590796eds.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:17:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version:content-transfer-encoding;
-        bh=V6M79Bvlfn3Y/3r6Oi9ctX8EPoRwXSGOlJOMMHDPmWM=;
-        b=UC7X7sENrmKdswVCZGKAll6+p4UULLTQvmfFZ8yW00cmue+idcY7qwKR72G49XFDqc
-         n1Nj6huWCdCh7o58NBdMvOCPgP/pQ6geJ/EB3icgSepWjzL7YPB6se5LimzQUbVCwydP
-         VCs4nvNMy5MHr9Si3REwglZYTJLEIssSJNzdE03QM7Eh5wBJ912LetqNo8av68ZX2pG6
-         1GfHZNEvg+8nyPtPTpoKyFUtA2qhXK26lfs6IOnVJPNZJ/I/euPfw0bWS6bKOH3Yxl5q
-         FPM9jiHqH759pqHoVwSL+wr6760g69lREA8CPMQxHZ+ReWjqu8McagjxTm+02HunQ6h6
-         fdQg==
-X-Gm-Message-State: APjAAAXbn2CoB2qEuV/u6i8g4akccWnm3hUWpSP3FHmkHMj+KGzo0+fo
-        TNMkSc2N+C+2vWd+RajjhrZKIg==
-X-Google-Smtp-Source: APXvYqybOnw23k91/01uyTY1erdQuXnt4RumEV5SJQxuntvKl1Idy+2CKVinXUELC+WWGYW2kTgDhg==
-X-Received: by 2002:a17:906:6a45:: with SMTP id n5mr42843163ejs.61.1560770277849;
-        Mon, 17 Jun 2019 04:17:57 -0700 (PDT)
-Received: from alrua-x1.borgediget.toke.dk ([2a00:7660:6da:443::2])
-        by smtp.gmail.com with ESMTPSA id f3sm2149878ejo.90.2019.06.17.04.17.57
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 04:17:57 -0700 (PDT)
-Received: by alrua-x1.borgediget.toke.dk (Postfix, from userid 1000)
-        id BEA4C1804AF; Mon, 17 Jun 2019 13:17:56 +0200 (CEST)
-From:   Toke =?utf-8?Q?H=C3=B8iland-J=C3=B8rgensen?= <toke@redhat.com>
-To:     Anton Protopopov <a.s.protopopov@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Anton Protopopov <a.s.protopopov@gmail.com>
-Subject: Re: [PATCH bpf] bpf: fix the check that forwarding is enabled in bpf_ipv6_fib_lookup
-In-Reply-To: <20190615225348.2539-1-a.s.protopopov@gmail.com>
-References: <20190615225348.2539-1-a.s.protopopov@gmail.com>
-X-Clacks-Overhead: GNU Terry Pratchett
-Date:   Mon, 17 Jun 2019 13:17:56 +0200
-Message-ID: <877e9ka2aj.fsf@toke.dk>
+        Mon, 17 Jun 2019 07:18:29 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue108 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MvJwN-1iTQEy0IQj-00rD7A; Mon, 17 Jun 2019 13:18:25 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 3/3] media: ttpci: add RC_CORE dependency
+Date:   Mon, 17 Jun 2019 13:16:53 +0200
+Message-Id: <20190617111718.2277220-3-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190617111718.2277220-1-arnd@arndb.de>
+References: <20190617111718.2277220-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:jRxuqDqYInydq+mFQ7vU6M2j8TIBGPA36Ci/8tRJAJtPkw1oek7
+ gd5oG/veApoWmXb6IQ2wtbYKZ+aKf8Q0H9+2Jer6ORlHU5BX7K0DiZhWnrusMwi+fw8YnfZ
+ sAuaH9KeKh+8Min4BZ9bN2TVqMnfWGEyyAEdXVY0/xaHHKVbDBHc4MhMlwRad1rJ//xcq2a
+ dWOfpMuWWYT5SAuSa1hKg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:+d2WlyjE6Qg=:suzsE7HbIN0vVUzhIAoKl/
+ NnebyOq4NMDjq1nx/h3mthYsO2DDJUuyydAMzVkicdOfz08QGd+1iS2s2M10So3YkTmjHuM3y
+ r69SS80U+IEX0Sc9HeA1iCq1xPMVPcIaoLBO6o8uQcDkXxbLBIyGkwHNpjM0FdyC4gemGO9Ax
+ cfHoHPajVFNlvAaWzEnEkvfhAfwO8XaFo8xkm22s9UAGt1L83m9tBv5qeRh2uQ3pkYVlbp3pg
+ TaPj/6ladWz+5++PO1Sl+TrFZwDbNKdlOjdrqO077G3wBMeKexH1p2HdhnNFYs7AnHKyRU/wj
+ x+VQquWNwLD1PQeLris8ceS5r80enyt1WzNgX2x9XF/vHRKSd6BKOotG7Bae8uT7UmwfEU9Ti
+ PRDluiej/qpRhp4lg6E47HO2GmvVoS8mnd1wuao70EfDWf4F1cnttEAaH7WkXdjgUtYPxhQ95
+ k9Y75qrIuM2QnkfbhjyMMGWZOI5OBJh9AhX/Ba3baBAmSqRCklNqwxiiigNJhFW/id34bLsIh
+ oTOLN4L4qMGMe8xjhftjARQcKD2u98z7gtn0KcnZXsUCbP6IjfE1D03Js4MWAeJBOvhxhkqlo
+ P7n2gpuhw0cnEPDtnxGJZ5ItrJJntfQhZzL/i8NTC0Wuoff3NgY8noprpydBIMyPwTGj0Cltw
+ mnyr66Yr9zC2mu9M4A2TgKvnU2wSIkaAwSZ/ELMpzBMHQNUZ+bfSg3AATtQbNro+9Qeyx6jNN
+ g5lbyylzMEhpCNVDi6fvg1Kfm5hUxgBbGkI4Ow==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Anton Protopopov <a.s.protopopov@gmail.com> writes:
+The ttpci driver now uses the rc-core, so we need to ensure it
+is enabled:
 
-> The bpf_ipv6_fib_lookup function should return BPF_FIB_LKUP_RET_FWD_DISABLED
-> when forwarding is disabled for the input device.  However instead of checking
-> if forwarding is enabled on the input device, it checked the global
-> net->ipv6.devconf_all->forwarding flag.  Change it to behave as expected.
->
-> Signed-off-by: Anton Protopopov <a.s.protopopov@gmail.com>
+ERROR: "rc_unregister_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+ERROR: "rc_allocate_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+ERROR: "rc_free_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+ERROR: "rc_keydown" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
+ERROR: "rc_register_device" [drivers/media/pci/ttpci/dvb-ttpci.ko] undefined!
 
-Thanks!
+Fixes: 71f49a8bf5c5 ("media: ttpci: use rc-core for the IR receiver")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/media/pci/ttpci/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-Acked-by: Toke Høiland-Jørgensen <toke@redhat.com>
+diff --git a/drivers/media/pci/ttpci/Kconfig b/drivers/media/pci/ttpci/Kconfig
+index d96d4fa20457..70bc25fb0a6f 100644
+--- a/drivers/media/pci/ttpci/Kconfig
++++ b/drivers/media/pci/ttpci/Kconfig
+@@ -9,6 +9,7 @@ config DVB_AV7110
+ 	select VIDEO_SAA7146_VV
+ 	select DVB_AV7110_IR if INPUT_EVDEV=y || INPUT_EVDEV=DVB_AV7110
+ 	depends on VIDEO_DEV	# dependencies of VIDEO_SAA7146_VV
++	depends on RC_CORE
+ 	select DVB_VES1820 if MEDIA_SUBDRV_AUTOSELECT
+ 	select DVB_VES1X93 if MEDIA_SUBDRV_AUTOSELECT
+ 	select DVB_STV0299 if MEDIA_SUBDRV_AUTOSELECT
+-- 
+2.20.0
+
