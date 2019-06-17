@@ -2,100 +2,107 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9647EC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F662C31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78EF02084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:12:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 221A9208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:13:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727898AbfFQLMM (ORCPT
+        id S1727944AbfFQLNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:12:12 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:40901 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726622AbfFQLML (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:12:11 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N32y5-1idHyv43rh-013RP4; Mon, 17 Jun 2019 13:12:01 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Abel Vesa <abel.vesa@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Anson Huang <anson.huang@nxp.com>,
-        Dong Aisheng <aisheng.dong@nxp.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] clk: imx6q: fix section mismatch warning
-Date:   Mon, 17 Jun 2019 13:11:35 +0200
-Message-Id: <20190617111159.2124152-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 17 Jun 2019 07:13:19 -0400
+Received: from mga04.intel.com ([192.55.52.120]:11707 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726622AbfFQLNS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:13:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 04:13:18 -0700
+X-ExtLoop1: 1
+Received: from pgsmsx101.gar.corp.intel.com ([10.221.44.78])
+  by orsmga003.jf.intel.com with ESMTP; 17 Jun 2019 04:13:13 -0700
+Received: from pgsmsx109.gar.corp.intel.com (10.221.44.109) by
+ PGSMSX101.gar.corp.intel.com (10.221.44.78) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 17 Jun 2019 19:13:12 +0800
+Received: from pgsmsx112.gar.corp.intel.com ([169.254.3.172]) by
+ PGSMSX109.gar.corp.intel.com ([169.254.14.14]) with mapi id 14.03.0439.000;
+ Mon, 17 Jun 2019 19:13:12 +0800
+From:   "Huang, Kai" <kai.huang@intel.com>
+To:     "kirill@shutemov.name" <kirill@shutemov.name>,
+        "peterz@infradead.org" <peterz@infradead.org>
+CC:     "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "hpa@zytor.com" <hpa@zytor.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "Hansen, Dave" <dave.hansen@intel.com>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "Schofield, Alison" <alison.schofield@intel.com>
+Subject: Re: [PATCH, RFC 20/62] mm/page_ext: Export lookup_page_ext() symbol
+Thread-Topic: [PATCH, RFC 20/62] mm/page_ext: Export lookup_page_ext() symbol
+Thread-Index: AQHVBa0N2X60Ah6/l0yBtZ+vNYh62KaassmAgADBRICAA9k1AIAAGVkAgAADNwA=
+Date:   Mon, 17 Jun 2019 11:13:11 +0000
+Message-ID: <1560769988.5187.20.camel@intel.com>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+         <20190508144422.13171-21-kirill.shutemov@linux.intel.com>
+         <20190614111259.GA3436@hirez.programming.kicks-ass.net>
+         <20190614224443.qmqolaigu5wnf75p@box>
+         <20190617093054.GB3419@hirez.programming.kicks-ass.net>
+         <1560769298.5187.16.camel@linux.intel.com>
+In-Reply-To: <1560769298.5187.16.camel@linux.intel.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.91.82]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D614CA96D4DFB74A978CBD3CA2D29412@intel.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:luZvn4Kw4EBR3RZaXipNa456cw8n9WOMC2IEWpCkVsAMKIG9gyf
- Th7DcL93IXtSxW5GN6oGVvRO4qNociCYcoTyC6k9h91t+wCGdSDVEnnK99TtMYieeczzjce
- TtDhTLgMfYl53zOD+f9PVhF6IwrEPIgWIxTCcOP4Zf5dIvjTSMHxmkpBZda2gbOuYSf2paE
- RKvO5Om4GSzeijIMxk+HQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:M3B5Knar0Ik=:A+6jFaGJ6IonTlxDIyFvi7
- gEa4cgrbowRmLVoa0iMQU1P1GYnSiU2VRShQMF1ULKS4MZtmzGY7IBMo1dJd9Y1M8qxsaYjrQ
- wVyx/F2362nHnaj3rKglLoq+Prt92d5dd/D4Nqur0Sz1+s/gVrRN8hz0jYOxGOKWhMkmC9jNv
- ZZ9lS7KTgc8/wdABoPeaTI+7eVeA2+VvqJJQsrTZOMm2cDhB7BgvwItmUsAAZy6jWI/XHFaZE
- VJ7FABvEEU9hwK9AKqUOGA0QpSjJ1WlF53J+7B3x1u2ZoNdsbwqouAAQJqljGIiuTIVlvBipk
- ZNir5dVDGvprYRQVzLlyinh78mFDamwd4fOnyKniEmhKAjfonrt/6RQFPXF6oaHOMsp0DMlv1
- 21z12ITap2G/izeQTekeLukhqf64x4w65h0jz8Ry3Cc0SceHMDOO9TYgtH39WqroVrY/3eo0p
- 3xHZ7CGdjNtqoPS0WK/ibk13QYv6iKX/cK7Hx/ywGB2OoUHDC9ivgXAxf8WI7dGwpEfhaccgO
- i91HiWGI9UQvTD5MFAt1nNt/VBSsgc1j0zW6E2wVRXup1iLl8hbUpzu+s4/+4I+e5GacGAOI7
- R8W+FofVhOq/qOAuX1BfoSGgytorucDElYDjEZQOyQB2y832ZANXRJNiuIqCzktWVv8Udzk3v
- CkREuhO7uCqcdV8yXdfkI5yYj1iBg+qu4Dc1mGc6aW+vBD/eM/CEwATLznPECjp3Gy83CPe4p
- qQnrLatlgY5nAhzrlKagqWXzTjU/xlpv4pbriw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The imx6q_obtain_fixed_clk_hw lacks an __init marker, which
-leads to this otherwise harmless warning:
-
-WARNING: vmlinux.o(.text+0x495358): Section mismatch in reference from the function imx6q_obtain_fixed_clk_hw() to the function .init.text:imx_obtain_fixed_clock_hw()
-The function imx6q_obtain_fixed_clk_hw() references
-the function __init imx_obtain_fixed_clock_hw().
-This is often because imx6q_obtain_fixed_clk_hw lacks a __init
-annotation or the annotation of imx_obtain_fixed_clock_hw is wrong.
-
-Fixes: 992b703b5b38 ("clk: imx6q: Switch to clk_hw based API")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/clk/imx/clk-imx6q.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
-index 2caa71e91119..a875d0bc12ee 100644
---- a/drivers/clk/imx/clk-imx6q.c
-+++ b/drivers/clk/imx/clk-imx6q.c
-@@ -418,8 +418,9 @@ static void disable_anatop_clocks(void __iomem *anatop_base)
- 	writel_relaxed(reg, anatop_base + CCM_ANALOG_PLL_VIDEO);
- }
- 
--static struct clk_hw *imx6q_obtain_fixed_clk_hw(struct device_node *np,
--						const char *name, unsigned long rate)
-+static struct clk_hw * __init imx6q_obtain_fixed_clk_hw(struct device_node *np,
-+							const char *name,
-+							unsigned long rate)
- {
- 	struct clk *clk = of_clk_get_by_name(np, name);
- 	struct clk_hw *hw;
--- 
-2.20.0
-
+T24gTW9uLCAyMDE5LTA2LTE3IGF0IDIzOjAxICsxMjAwLCBLYWkgSHVhbmcgd3JvdGU6DQo+IE9u
+IE1vbiwgMjAxOS0wNi0xNyBhdCAxMTozMCArMDIwMCwgUGV0ZXIgWmlqbHN0cmEgd3JvdGU6DQo+
+ID4gT24gU2F0LCBKdW4gMTUsIDIwMTkgYXQgMDE6NDQ6NDNBTSArMDMwMCwgS2lyaWxsIEEuIFNo
+dXRlbW92IHdyb3RlOg0KPiA+ID4gT24gRnJpLCBKdW4gMTQsIDIwMTkgYXQgMDE6MTI6NTlQTSAr
+MDIwMCwgUGV0ZXIgWmlqbHN0cmEgd3JvdGU6DQo+ID4gPiA+IE9uIFdlZCwgTWF5IDA4LCAyMDE5
+IGF0IDA1OjQzOjQwUE0gKzAzMDAsIEtpcmlsbCBBLiBTaHV0ZW1vdiB3cm90ZToNCj4gPiA+ID4g
+PiBwYWdlX2tleWlkKCkgaXMgaW5saW5lIGZ1bmNhdGlvbiB0aGF0IHVzZXMgbG9va3VwX3BhZ2Vf
+ZXh0KCkuIEtWTSBpcw0KPiA+ID4gPiA+IGdvaW5nIHRvIHVzZSBwYWdlX2tleWlkKCkgYW5kIHNp
+bmNlIEtWTSBjYW4gYmUgYnVpbHQgYXMgYSBtb2R1bGUNCj4gPiA+ID4gPiBsb29rdXBfcGFnZV9l
+eHQoKSBoYXMgdG8gYmUgZXhwb3J0ZWQuDQo+ID4gPiA+IA0KPiA+ID4gPiBJIF9yZWFsbHlfIGhh
+dGUgaGF2aW5nIHRvIGV4cG9ydCB3b3JsZCtkb2cgZm9yIEtWTS4gVGhpcyBvbmUgbWlnaHQgbm90
+DQo+ID4gPiA+IGJlIGEgcmVhbCBpc3N1ZSwgYnV0IEkgaXRjaCBldmVyeSB0aW1lIEkgc2VlIGFu
+IGV4cG9ydCBmb3IgS1ZNIHRoZXNlDQo+ID4gPiA+IGRheXMuDQo+ID4gPiANCj4gPiA+IElzIHRo
+ZXJlIGFueSBiZXR0ZXIgd2F5PyBEbyB3ZSBuZWVkIHRvIGludmVudCBFWFBPUlRfU1lNQk9MX0tW
+TSgpPyA6UA0KPiA+IA0KPiA+IE9yIGRpc2FsbG93IEtWTSAob3IgcGFydHMgdGhlcmVvZikgZnJv
+bSBiZWluZyBhIG1vZHVsZSBhbnltb3JlLg0KPiANCj4gRm9yIHRoaXMgcGFydGljdWxhciBzeW1i
+b2wgZXhwb3NlLCBJIGRvbid0IHRoaW5rIGl0cyBmYWlyIHRvIGJsYW1lIEtWTSBzaW5jZSB0aGUg
+ZnVuZGFtZW50YWwNCj4gcmVhc29uDQo+IGlzIGJlY2F1c2UgcGFnZV9rZXlpZCgpICh3aGljaCBj
+YWxscyBsb29rdXBfcGFnZV9leHQoKSkgYmVpbmcgaW1wbGVtZW50ZWQgYXMgc3RhdGljIGlubGlu
+ZQ0KPiBmdW5jdGlvbg0KPiBpbiBoZWFkZXIgZmlsZSwgc28gZXNzZW50aWFsbHkgaGF2aW5nIGFu
+eSBvdGhlciBtb2R1bGUgd2hvIGNhbGxzIHBhZ2Vfa2V5aWQoKSB3aWxsIHRyaWdnZXIgdGhpcw0K
+PiBwcm9ibGVtIC0tIGluIGZhY3QgSU9NTVUgZHJpdmVyIGNhbGxzIHBhZ2Vfa2V5aWQoKSB0b28g
+c28gZXZlbiB3L28gS1ZNIGxvb2t1cF9wYWdlX2V4dCgpIG5lZWRzIHRvDQo+IGJlDQo+IGV4cG9z
+ZWQuDQoNCk9vcHMgaXQgc2VlbXMgSW50ZWwgSU9NTVUgZHJpdmVyIGlzIG5vdCBhIG1vZHVsZSBi
+dXQgYnVpbGRpbiBzbyB5ZXMgS1ZNIGlzIHRoZSBvbmx5IG1vZHVsZSB3aG8gY2FsbHMNCnBhZ2Vf
+a2V5aWQoKSBub3cuIFNvcnJ5IG15IGJhZC4gQnV0IGlmIHRoZXJlJ3MgYW55IG90aGVyIG1vZHVs
+ZSBjYWxscyBwYWdlX2tleWlkKCksIHRoaXMgcGF0Y2ggaXMNCnJlcXVpcmVkLg0KDQpUaGFua3Ms
+DQotS2FpDQo+IA0KPiBUaGFua3MsDQo+IC1LYWkNCj4g
