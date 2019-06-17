@@ -7,52 +7,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 454B5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4A2EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E6F920833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:21:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6C320833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Y92dmsqb"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="Mjb0oXI2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729036AbfFQWVH (ORCPT
+        id S1729001AbfFQWVH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 17 Jun 2019 18:21:07 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:34167 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727349AbfFQWUt (ORCPT
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44507 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728840AbfFQWUv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:20:49 -0400
-Received: by mail-ed1-f68.google.com with SMTP id s49so18483354edb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:20:48 -0700 (PDT)
+        Mon, 17 Jun 2019 18:20:51 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k8so18390363edr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:20:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vRpZZ4IfQKGytYHR1q3gyvtG2oFgpC+iBYxFZ9TdPI4=;
-        b=Y92dmsqb2535eP39fja8Utwp0VjKIJ0UA79NymZgTkcN/lARsGyVCh60FZTZdZi8h7
-         Ct2XkOxATdDYCl2HC8jD7r9DBhcQ30mKLNPOetHYQYK393Pq2LQXECnt/JUVXIpKi55i
-         5FZwxX9EPUyqGfmN2+CwBdgS0BFeZJGVVvknc=
+        bh=117Icy7B/1xeFyWHl4lkihw6HeMCgd3HauhM0ZhcRsE=;
+        b=Mjb0oXI2dWnjqbNJnIGlywLOfLaKthgHtMTcgWzcAaYc830Wgp159wPWSkrLgphjgD
+         wh6gHAEW6amhNAUFv3Y+HjhExUl3gzyTqUqnbLkQhnPuz2APq8pr8Fz7sFS9BTod/a7j
+         Nh/3406rsN62zCL1WCUyFaj2aywXM6q2zwZSI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vRpZZ4IfQKGytYHR1q3gyvtG2oFgpC+iBYxFZ9TdPI4=;
-        b=HjPEYJuXoDpok6wDK327xNAjIOxmHm16W+KTSLsrGCPyMm3pCJoqoLXgB8XQ9riBV2
-         qf1gr2kAT87qOs+KQjmeI98D/OpCoAtVZBcS9uoMw66/e28rQydER/ZZ6c+6wfSgl7M7
-         JEH7+gYyqmjYhUayBFEshWvaAkGkUBRrnG+SuhoaMBiYokDTqXXsONlTP6Nsu0yFcayi
-         pV2fQaVZo4HraW1B5yGMjNQbk6atA3TP96ALLeXpERsxAHtC7rcXEJPqKy8RvbD6WW7Q
-         lowChejMAQx+c98JLctL7gVlJbOtjARSi+U2wI8RviURfZk/HKbEMVqqifP6J5x7NTRj
-         hfew==
-X-Gm-Message-State: APjAAAUOrnyZQjI60nRDejopnxY+sxsaHM5R4glm6EI3n6F7Q4K1TEAV
-        ek/Ry+AqjACRV0aHKmSv4YJj2A==
-X-Google-Smtp-Source: APXvYqxB/HM4ILYgTyys6tHTEuR80fT28nBcYxtuuvetjHW+pjg0SeWF0rJbAVf0pEZpNGa1F7agCg==
-X-Received: by 2002:a17:906:e204:: with SMTP id gf4mr55594798ejb.302.1560810047454;
-        Mon, 17 Jun 2019 15:20:47 -0700 (PDT)
+        bh=117Icy7B/1xeFyWHl4lkihw6HeMCgd3HauhM0ZhcRsE=;
+        b=d+s5QRSbEhPlnyZ/BnorIw3LBtJxZqWuDvKu44Sf0M++3bOppSoy5lCHal9YhmAyaN
+         erBpyl0rOrPb0I1yP9/2+Dpd/YPuY421SDZCJZVgR9GM0klSohhQUK2yy9bHlGzSpHYF
+         5c/Phhf8DW/QmW7HlwQWo3JTzlF4LUjw4AQb0RqTzexvaAkzfNgWwH8AiSaGINZKqRyp
+         LTpAE0l5zooWWvICgHKswqQJF4oDkT7VUVDfT9nibyYw+rOw0lRdQHIV0TcEh6Ik9eRb
+         fBZOSxykikQNVbEXLGjpURc+Opf2ih7IfKv1ozHJKlw/UneD8QtxAP9G8gMsPjSEB3OF
+         dEcA==
+X-Gm-Message-State: APjAAAWtHRZjy/l84UTT2gM9C4cQIr0uQwpNX4058dQgcjoZbm6Eaijr
+        +LiXCboHI4h5kccTmZSw+Dw8RQ==
+X-Google-Smtp-Source: APXvYqy6V0awRjDH5fj69pS3YenOwm0VtqUACzgq1mn2/dn7WtzY0FzhcuyJ29Gk4iurlmxZf6GYig==
+X-Received: by 2002:a05:6402:712:: with SMTP id w18mr33340133edx.201.1560810048577;
+        Mon, 17 Jun 2019 15:20:48 -0700 (PDT)
 Received: from prevas-ravi.prevas.se (ip-5-186-113-204.cgn.fibianet.dk. [5.186.113.204])
-        by smtp.gmail.com with ESMTPSA id 9sm1034852ejg.49.2019.06.17.15.20.46
+        by smtp.gmail.com with ESMTPSA id 9sm1034852ejg.49.2019.06.17.15.20.47
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 15:20:46 -0700 (PDT)
+        Mon, 17 Jun 2019 15:20:48 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
@@ -61,9 +61,9 @@ Cc:     Jason Baron <jbaron@akamai.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-kernel@vger.kernel.org,
         Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 4/8] dynamic_debug: introduce accessors for string members of struct _ddebug
-Date:   Tue, 18 Jun 2019 00:20:30 +0200
-Message-Id: <20190617222034.10799-5-linux@rasmusvillemoes.dk>
+Subject: [PATCH v6 5/8] dynamic_debug: drop use of bitfields in struct _ddebug
+Date:   Tue, 18 Jun 2019 00:20:31 +0200
+Message-Id: <20190617222034.10799-6-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
 References: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
@@ -74,136 +74,194 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we introduce compact versions of these pointers (a la
-CONFIG_GENERIC_BUG_RELATIVE_POINTERS), all access to these members must
-go via appropriate accessors. This just mass-converts dynamic_debug.c to
-use the new accessors.
+Properly initializing a struct containing bitfields in assembly is
+hard. Instead, merge lineno and flags to a single unsigned int, which we
+mask manually. This should not cause any worse code than what gcc would
+need to generate for accessing the bitfields anyway.
+
+Actually, on 64 bit, there is a four byte hole after these fields, so we
+could just give flags and lineno each their own u32. But I don't think
+that's worth the ifdeffery.
 
 Acked-by: Jason Baron <jbaron@akamai.com>
 Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
 ---
- lib/dynamic_debug.c | 51 ++++++++++++++++++++++++++++++---------------
- 1 file changed, 34 insertions(+), 17 deletions(-)
+ include/linux/dynamic_debug.h | 12 ++++------
+ lib/dynamic_debug.c           | 44 +++++++++++++++++++++++------------
+ 2 files changed, 34 insertions(+), 22 deletions(-)
 
+diff --git a/include/linux/dynamic_debug.h b/include/linux/dynamic_debug.h
+index 6c809440f319..7d6d0153096e 100644
+--- a/include/linux/dynamic_debug.h
++++ b/include/linux/dynamic_debug.h
+@@ -20,7 +20,6 @@ struct _ddebug {
+ 	const char *function;
+ 	const char *filename;
+ 	const char *format;
+-	unsigned int lineno:18;
+ 	/*
+ 	 * The flags field controls the behaviour at the callsite.
+ 	 * The bits here are changed dynamically when the user
+@@ -37,7 +36,7 @@ struct _ddebug {
+ #else
+ #define _DPRINTK_FLAGS_DEFAULT 0
+ #endif
+-	unsigned int flags:8;
++	unsigned int flags_lineno; /* flags in lower 8 bits, lineno in upper 24 */
+ #ifdef CONFIG_JUMP_LABEL
+ 	union {
+ 		struct static_key_true dd_key_true;
+@@ -46,7 +45,7 @@ struct _ddebug {
+ #endif
+ } __attribute__((aligned(8)));
+ 
+-
++#define _DPRINTK_FLAGS_LINENO_INIT (((unsigned)__LINE__ << 8) | _DPRINTK_FLAGS_DEFAULT)
+ 
+ #if defined(CONFIG_DYNAMIC_DEBUG)
+ int ddebug_add_module(struct _ddebug *tab, unsigned int n,
+@@ -85,8 +84,7 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
+ 		.function = __func__,				\
+ 		.filename = __FILE__,				\
+ 		.format = (fmt),				\
+-		.lineno = __LINE__,				\
+-		.flags = _DPRINTK_FLAGS_DEFAULT,		\
++		.flags_lineno = _DPRINTK_FLAGS_LINENO_INIT,	\
+ 		_DPRINTK_KEY_INIT				\
+ 	}
+ 
+@@ -111,10 +109,10 @@ void __dynamic_ibdev_dbg(struct _ddebug *descriptor,
+ 
+ #ifdef DEBUG
+ #define DYNAMIC_DEBUG_BRANCH(descriptor) \
+-	likely(descriptor.flags & _DPRINTK_FLAGS_PRINT)
++	likely(descriptor.flags_lineno & _DPRINTK_FLAGS_PRINT)
+ #else
+ #define DYNAMIC_DEBUG_BRANCH(descriptor) \
+-	unlikely(descriptor.flags & _DPRINTK_FLAGS_PRINT)
++	unlikely(descriptor.flags_lineno & _DPRINTK_FLAGS_PRINT)
+ #endif
+ 
+ #endif
 diff --git a/lib/dynamic_debug.c b/lib/dynamic_debug.c
-index 8a16c2d498e9..3599c4c0361a 100644
+index 3599c4c0361a..3a1a80041cd6 100644
 --- a/lib/dynamic_debug.c
 +++ b/lib/dynamic_debug.c
-@@ -39,6 +39,23 @@
+@@ -55,6 +55,18 @@ static inline const char *dd_format(const struct _ddebug *dd)
+ {
+ 	return dd->format;
+ }
++static inline unsigned dd_lineno(const struct _ddebug *dd)
++{
++	return dd->flags_lineno >> 8;
++}
++static inline unsigned dd_flags(const struct _ddebug *dd)
++{
++	return dd->flags_lineno & 0xff;
++}
++static inline void dd_set_flags(struct _ddebug *dd, unsigned newflags)
++{
++	dd->flags_lineno = (dd_lineno(dd) << 8) | newflags;
++}
  
- #include <rdma/ib_verbs.h>
- 
-+static inline const char *dd_modname(const struct _ddebug *dd)
-+{
-+	return dd->modname;
-+}
-+static inline const char *dd_function(const struct _ddebug *dd)
-+{
-+	return dd->function;
-+}
-+static inline const char *dd_filename(const struct _ddebug *dd)
-+{
-+	return dd->filename;
-+}
-+static inline const char *dd_format(const struct _ddebug *dd)
-+{
-+	return dd->format;
-+}
-+
  extern struct _ddebug __start___verbose[];
  extern struct _ddebug __stop___verbose[];
+@@ -113,7 +125,7 @@ static char *ddebug_describe_flags(struct _ddebug *dp, char *buf,
  
-@@ -160,21 +177,21 @@ static int ddebug_change(const struct ddebug_query *query,
+ 	BUG_ON(maxlen < 6);
+ 	for (i = 0; i < ARRAY_SIZE(opt_array); ++i)
+-		if (dp->flags & opt_array[i].flag)
++		if (dd_flags(dp) & opt_array[i].flag)
+ 			*p++ = opt_array[i].opt_char;
+ 	if (p == buf)
+ 		*p++ = '_';
+@@ -159,7 +171,7 @@ static int ddebug_change(const struct ddebug_query *query,
+ {
+ 	int i;
+ 	struct ddebug_table *dt;
+-	unsigned int newflags;
++	unsigned int newflags, oldflags;
+ 	unsigned int nfound = 0;
+ 	char flagbuf[10];
  
- 			/* match against the source filename */
- 			if (query->filename &&
--			    !match_wildcard(query->filename, dp->filename) &&
-+			    !match_wildcard(query->filename, dd_filename(dp)) &&
- 			    !match_wildcard(query->filename,
--					   kbasename(dp->filename)) &&
-+					   kbasename(dd_filename(dp))) &&
- 			    !match_wildcard(query->filename,
--					   trim_prefix(dp->filename)))
-+					   trim_prefix(dd_filename(dp))))
- 				continue;
- 
- 			/* match against the function */
- 			if (query->function &&
--			    !match_wildcard(query->function, dp->function))
-+			    !match_wildcard(query->function, dd_function(dp)))
- 				continue;
- 
- 			/* match against the format */
- 			if (query->format &&
--			    !strstr(dp->format, query->format))
-+			    !strstr(dd_format(dp), query->format))
- 				continue;
+@@ -196,27 +208,28 @@ static int ddebug_change(const struct ddebug_query *query,
  
  			/* match against the line number range */
-@@ -199,8 +216,8 @@ static int ddebug_change(const struct ddebug_query *query,
+ 			if (query->first_lineno &&
+-			    dp->lineno < query->first_lineno)
++			    dd_lineno(dp) < query->first_lineno)
+ 				continue;
+ 			if (query->last_lineno &&
+-			    dp->lineno > query->last_lineno)
++			    dd_lineno(dp) > query->last_lineno)
+ 				continue;
+ 
+ 			nfound++;
+ 
+-			newflags = (dp->flags & mask) | flags;
+-			if (newflags == dp->flags)
++			oldflags = dd_flags(dp);
++			newflags = (oldflags & mask) | flags;
++			if (newflags == oldflags)
+ 				continue;
+ #ifdef CONFIG_JUMP_LABEL
+-			if (dp->flags & _DPRINTK_FLAGS_PRINT) {
++			if (oldflags & _DPRINTK_FLAGS_PRINT) {
+ 				if (!(flags & _DPRINTK_FLAGS_PRINT))
+ 					static_branch_disable(&dp->key.dd_key_true);
+ 			} else if (flags & _DPRINTK_FLAGS_PRINT)
+ 				static_branch_enable(&dp->key.dd_key_true);
  #endif
- 			dp->flags = newflags;
+-			dp->flags = newflags;
++			dd_set_flags(dp, newflags);
  			vpr_info("changed %s:%d [%s]%s =%s\n",
--				 trim_prefix(dp->filename), dp->lineno,
--				 dt->mod_name, dp->function,
-+				 trim_prefix(dd_filename(dp)), dp->lineno,
-+				 dt->mod_name, dd_function(dp),
+-				 trim_prefix(dd_filename(dp)), dp->lineno,
++				 trim_prefix(dd_filename(dp)), dd_lineno(dp),
+ 				 dt->mod_name, dd_function(dp),
  				 ddebug_describe_flags(dp, flagbuf,
  						       sizeof(flagbuf)));
- 		}
-@@ -535,10 +552,10 @@ static char *dynamic_emit_prefix(const struct _ddebug *desc, char *buf)
+@@ -539,10 +552,11 @@ static char *dynamic_emit_prefix(const struct _ddebug *desc, char *buf)
+ {
+ 	int pos_after_tid;
+ 	int pos = 0;
++	unsigned flags = dd_flags(desc);
+ 
+ 	*buf = '\0';
+ 
+-	if (desc->flags & _DPRINTK_FLAGS_INCL_TID) {
++	if (flags & _DPRINTK_FLAGS_INCL_TID) {
+ 		if (in_interrupt())
+ 			pos += snprintf(buf + pos, remaining(pos), "<intr> ");
+ 		else
+@@ -550,15 +564,15 @@ static char *dynamic_emit_prefix(const struct _ddebug *desc, char *buf)
+ 					task_pid_vnr(current));
+ 	}
  	pos_after_tid = pos;
- 	if (desc->flags & _DPRINTK_FLAGS_INCL_MODNAME)
+-	if (desc->flags & _DPRINTK_FLAGS_INCL_MODNAME)
++	if (flags & _DPRINTK_FLAGS_INCL_MODNAME)
  		pos += snprintf(buf + pos, remaining(pos), "%s:",
--				desc->modname);
-+				dd_modname(desc));
- 	if (desc->flags & _DPRINTK_FLAGS_INCL_FUNCNAME)
+ 				dd_modname(desc));
+-	if (desc->flags & _DPRINTK_FLAGS_INCL_FUNCNAME)
++	if (flags & _DPRINTK_FLAGS_INCL_FUNCNAME)
  		pos += snprintf(buf + pos, remaining(pos), "%s:",
--				desc->function);
-+				dd_function(desc));
- 	if (desc->flags & _DPRINTK_FLAGS_INCL_LINENO)
+ 				dd_function(desc));
+-	if (desc->flags & _DPRINTK_FLAGS_INCL_LINENO)
++	if (flags & _DPRINTK_FLAGS_INCL_LINENO)
  		pos += snprintf(buf + pos, remaining(pos), "%d:",
- 				desc->lineno);
-@@ -827,10 +844,10 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
+-				desc->lineno);
++				dd_lineno(desc));
+ 	if (pos - pos_after_tid)
+ 		pos += snprintf(buf + pos, remaining(pos), " ");
+ 	if (pos >= PREFIX_SIZE)
+@@ -844,7 +858,7 @@ static int ddebug_proc_show(struct seq_file *m, void *p)
  	}
  
  	seq_printf(m, "%s:%u [%s]%s =%s \"",
--		   trim_prefix(dp->filename), dp->lineno,
--		   iter->table->mod_name, dp->function,
-+		   trim_prefix(dd_filename(dp)), dp->lineno,
-+		   iter->table->mod_name, dd_function(dp),
+-		   trim_prefix(dd_filename(dp)), dp->lineno,
++		   trim_prefix(dd_filename(dp)), dd_lineno(dp),
+ 		   iter->table->mod_name, dd_function(dp),
  		   ddebug_describe_flags(dp, flagsbuf, sizeof(flagsbuf)));
--	seq_escape(m, dp->format, "\t\r\n\"");
-+	seq_escape(m, dd_format(dp), "\t\r\n\"");
- 	seq_puts(m, "\"\n");
- 
- 	return 0;
-@@ -1024,20 +1041,20 @@ static int __init dynamic_debug_init(void)
- 		return 1;
- 	}
- 	iter = __start___verbose;
--	modname = iter->modname;
-+	modname = dd_modname(iter);
- 	iter_start = iter;
- 	for (; iter < __stop___verbose; iter++) {
- 		entries++;
--		verbose_bytes += strlen(iter->modname) + strlen(iter->function)
--			+ strlen(iter->filename) + strlen(iter->format);
-+		verbose_bytes += strlen(dd_modname(iter)) + strlen(dd_function(iter))
-+			+ strlen(dd_filename(iter)) + strlen(dd_format(iter));
- 
--		if (strcmp(modname, iter->modname)) {
-+		if (strcmp(modname, dd_modname(iter))) {
- 			modct++;
- 			ret = ddebug_add_module(iter_start, n, modname);
- 			if (ret)
- 				goto out_err;
- 			n = 0;
--			modname = iter->modname;
-+			modname = dd_modname(iter);
- 			iter_start = iter;
- 		}
- 		n++;
+ 	seq_escape(m, dd_format(dp), "\t\r\n\"");
 -- 
 2.20.1
 
