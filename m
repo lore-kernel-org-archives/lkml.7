@@ -2,250 +2,125 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D80C0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13C49C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CD032085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:32:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D97442085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:32:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O2BkvZ4a"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="ilOL9vYg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729019AbfFQTcU (ORCPT
+        id S1729133AbfFQTcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:32:20 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38798 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727795AbfFQTcT (ORCPT
+        Mon, 17 Jun 2019 15:32:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56847 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728946AbfFQTcU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:32:19 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d18so11282236wrs.5;
-        Mon, 17 Jun 2019 12:32:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dpXSPuWpIMPnZbn0YA08V2hRW5djBjq/4Coqd/XvlZ8=;
-        b=O2BkvZ4aIrzqi3WsiJ/rU/Lv30O3FLgMpFrt+I7pKe3LHs4/Qkem+iYfMbG6xzqO9u
-         XLpbXxHJxBrHqJQr0rJE+EcM1CLtU7I/S8KRKg/fxuSVm2crx849MAANSPj+Dfy7Gwen
-         wOf3fM+NQydLpkbvH8mTJ+RROfOnwMrcgTauAGCDgQz1QM90Icv0E2WJ3h1QyLA0kPWj
-         SVnjKqhEjf9wSoqkqMBsCJtbSwkV6xTCYRuva8r5KBvw5no/TcqmYJjLrarVVhaRSty0
-         7t13891W6TsC/f/wWAJJAysgkWkP8v7pz8F+2HFdU1sTG25mBtRPt+wIeHDffMTaY+mV
-         +IcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dpXSPuWpIMPnZbn0YA08V2hRW5djBjq/4Coqd/XvlZ8=;
-        b=tR5Ese+hY3i2bU3XmpTNLa438RPR1rYsH7ihWllSA6X8IxY1dLK1ZcHKm8seRYJKJi
-         34iHT8hWuUBh0JOZjQcdOLWWmBnSON066x3oScyemep+LpJWi7I+/tlRRUEHl9AFqFHR
-         yosCY3avKDhaWO88iDsQOO8ks7A5OC3UOsc/FXDr9VGi4OOjWdExr1WougkSaxjAj98u
-         fGuGJPBSihHgG8HqzpueO87nlJzM+CcRu91QOop3z/Fh+UiNksc8VOXCi25ORTcv9YG2
-         K2HkLdY8yKrUmoZSVEXOZoHpVDj+GGjgV0vWIf9gQ9z0zUrl8UHU05tXSjZJTcsT3TDN
-         AVTg==
-X-Gm-Message-State: APjAAAVQAWtPMN2xq4QjIyLCgv7HlBwM0k/1pZg5P4vK+6tEn8ZXGXWb
-        7DssI4sALYlr3ZXcpItXSZQ=
-X-Google-Smtp-Source: APXvYqzmsinawMQIxqHIyYLJqzsjKmExMDxH3ru1lgHn5Z3kuqsb847XhlLzhPkKZGIO2b7KgSLjLg==
-X-Received: by 2002:adf:ce03:: with SMTP id p3mr52969392wrn.94.1560799936441;
-        Mon, 17 Jun 2019 12:32:16 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id g2sm229244wmh.0.2019.06.17.12.32.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 12:32:15 -0700 (PDT)
-Subject: Re: [PATCH V6] i2c: tegra: remove BUG, BUG_ON
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560527438-30150-1-git-send-email-bbiswas@nvidia.com>
- <504e19d0-05dd-dc80-3aaf-cdab8f88002d@gmail.com>
- <fee98b4f-630e-1685-05e3-e8dae0f412bd@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <cadd6687-7b1b-ccce-b34b-a175adafa675@gmail.com>
-Date:   Mon, 17 Jun 2019 22:32:14 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 17 Jun 2019 15:32:20 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJW2Xw3564783
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 17 Jun 2019 12:32:02 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJW2Xw3564783
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560799922;
+        bh=wxL7jpLY4uI94mdWoZ/mpY2o15arvjmRjp0NPR1C5sY=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=ilOL9vYg8xC5u4cqvq2FxBSp7aN4lOG7GZWH85qhLZ1K12g1IYQ/+/G0H35VEZXPI
+         N6+nXaHkuNReq1FT9iPEQxBh5pya4Ir0mbjNSw3GMOblNl0ZAEaXu7VUl/BD+aRUXD
+         KRVlCGHk+GXUlNu9o8IE9gt7MSCF5JpSzjnQV1RqhVnLIGACArI/nokrjsAeVv/N/h
+         Flk1eQTQPvpvDI4w2GPPOiv75wuo/rjmKdRF0VeZmGOPH2ZkRfw/Uwe48oMLJadiB9
+         Y7qWuHMihiMXPT4z+2y6GMuVOihau19Rv+5k39tZkqYuiHZMDc0hqRUVkKuzxQZfqg
+         4hpqZ26Z7026g==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJW2BI3564780;
+        Mon, 17 Jun 2019 12:32:02 -0700
+Date:   Mon, 17 Jun 2019 12:32:02 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Kan Liang <tipbot@zytor.com>
+Message-ID: <tip-b74d8686a18b36adecc710597198d5ef2dd5ef14@git.kernel.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        tglx@linutronix.de, jolsa@kernel.org, acme@redhat.com,
+        peterz@infradead.org, ak@linux.intel.com, kan.liang@linux.intel.com
+Reply-To: peterz@infradead.org, kan.liang@linux.intel.com,
+          ak@linux.intel.com, acme@redhat.com, hpa@zytor.com,
+          jolsa@kernel.org, tglx@linutronix.de, mingo@kernel.org,
+          linux-kernel@vger.kernel.org
+In-Reply-To: <1559688644-106558-1-git-send-email-kan.liang@linux.intel.com>
+References: <1559688644-106558-1-git-send-email-kan.liang@linux.intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf cpumap: Retrieve die id information
+Git-Commit-ID: b74d8686a18b36adecc710597198d5ef2dd5ef14
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <fee98b4f-630e-1685-05e3-e8dae0f412bd@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.06.2019 22:08, Bitan Biswas пишет:
-> 
-> 
-> On 6/14/19 10:51 AM, Dmitry Osipenko wrote:
->> 14.06.2019 18:50, Bitan Biswas пишет:
->>> Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
->>> as needed. Remove BUG() and mask Rx interrupt similar as Tx
->>> for message fully sent case. Add WARN_ON_ONCE check
->>> for non-zero rx_fifo_avail in tegra_i2c_empty_rx_fifo()
->>> after all processing. Error handling in tegra_i2c_empty_rx_fifo
->>> caller is also added.
->>>
->>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->>> ---
->>>   drivers/i2c/busses/i2c-tegra.c | 46 ++++++++++++++++++++++++++++++++++--------
->>>   1 file changed, 38 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
->>> index 4dfb4c1..26a7c8c 100644
->>> --- a/drivers/i2c/busses/i2c-tegra.c
->>> +++ b/drivers/i2c/busses/i2c-tegra.c
->>> @@ -73,6 +73,7 @@
->>>   #define I2C_ERR_NO_ACK                BIT(0)
->>>   #define I2C_ERR_ARBITRATION_LOST        BIT(1)
->>>   #define I2C_ERR_UNKNOWN_INTERRUPT        BIT(2)
->>> +#define I2C_ERR_UNEXPECTED_STATUS        BIT(3)
->>
->> What about I2C_ERR_RX_BUFFER_OVERFLOW?
-> OK.
-> 
->>
->>>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT    28
->>>   #define PACKET_HEADER0_PACKET_ID_SHIFT        16
->>> @@ -515,15 +516,23 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev
->>> *i2c_dev)
->>>        * prevent overwriting past the end of buf
->>>        */
->>>       if (rx_fifo_avail > 0 && buf_remaining > 0) {
->>> -        BUG_ON(buf_remaining > 3);
->>> +        /* buf_remaining > 3 check not needed as rx_fifo_avail == 0
->>> +         * when (words_to_transfer was > rx_fifo_avail) earlier
->>> +         * in this function
->>> +         */
->>
->> Please start all multiline comments with an empty "/*", it should be the correct
->> style. There are some places in the kernel where style like yours is used, but I
->> assume they are not very correct. Besides, yours variant is not consistent with the
->> style of the rest of comments in this source file. And put a dot in the end for
->> completeness. Same for the other comments in this patch.
->>
-> OK
-> 
->>>           val = i2c_readl(i2c_dev, I2C_RX_FIFO);
->>>           val = cpu_to_le32(val);
->>>           memcpy(buf, &val, buf_remaining);
->>>           buf_remaining = 0;
->>>           rx_fifo_avail--;
->>>       }
->>
->> Please add a newline here. All logical parts of the code should be separated to ease
->> reading and following.
-> OK
-> 
->>
->>> +    if (WARN_ON_ONCE(rx_fifo_avail))
->>> +        return -EINVAL;
->>>   -    BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
->>> +    /* buf_remaining > 0 at this point can only have rx_fifo_avail == 0
->>> +     * as this corresponds to (words_to_transfer was > rx_fifo_avail)
->>> +     * case earlier in this function
->>> +     */
->>>       i2c_dev->msg_buf_remaining = buf_remaining;
->>>       i2c_dev->msg_buf = buf;
->>>   @@ -581,7 +590,10 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev
->>> *i2c_dev)
->>>        * boundary and fault.
->>>        */
->>>       if (tx_fifo_avail > 0 && buf_remaining > 0) {
->>> -        BUG_ON(buf_remaining > 3);
->>> +        /* buf_remaining > 3 check not needed as tx_fifo_avail == 0
->>> +         * when (words_to_transfer was > tx_fifo_avail) earlier
->>> +         * in this function for non-zero words_to_transfer
->>> +         */
->>>           memcpy(&val, buf, buf_remaining);
->>>           val = le32_to_cpu(val);
->>>   @@ -811,6 +823,7 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->>>       u32 status;
->>>       const u32 status_err = I2C_INT_NO_ACK | I2C_INT_ARBITRATION_LOST;
->>>       struct tegra_i2c_dev *i2c_dev = dev_id;
->>> +    int err_val;
->>>         status = i2c_readl(i2c_dev, I2C_INT_STATUS);
->>>   @@ -847,10 +860,21 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->>>         if (!i2c_dev->is_curr_dma_xfer) {
->>>           if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
->>> -            if (i2c_dev->msg_buf_remaining)
->>> -                tegra_i2c_empty_rx_fifo(i2c_dev);
->>> -            else
->>> -                BUG();
->>> +            err_val = tegra_i2c_empty_rx_fifo(i2c_dev);
->>> +            if ((!(i2c_dev->msg_buf_remaining)) &&
->>
->> Let's move this check into tegra_i2c_empty_rx_fifo() and return -EINVAL for that case.
->> This will make code to look cleaner.
-> OK.
-> 
-> 
->>
->>> +                (!(status & I2C_INT_PACKET_XFER_COMPLETE)) &&
->>
->> It shouldn't matter that XFER_COMPLETE is set if RX FIFO isn't fully emptied because
->> it always shall be emptied. Hence this check is not needed and we should error out
->> regardless.
-> OK
-> 
->>
->>> +                err_val) {
->>> +                /*
->>> +                 * Overflow error condition: message fully sent,
->>> +                 * with no XFER_COMPLETE interrupt but hardware
->>> +                 * asks to transfer more.
->>> +                 */
->>> +                tegra_i2c_mask_irq(i2c_dev,
->>> +                           I2C_INT_RX_FIFO_DATA_REQ);
->>
->> No need to mask RX_FIFO_DATA_REQ here because all interrupts are masked on "goto
->> err:", hence just remove the tegra_i2c_mask_irq().
->>
->>> +                i2c_dev->msg_err |=
->>> +                    I2C_ERR_UNEXPECTED_STATUS;
->>
->> No need to split this into two lines because it's less than 80 chars, write this in a
->> single line.
-> OK
-> 
->>
->>> +                goto err;
->>> +            }
->>>           }
->>>             if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
->>> @@ -876,7 +900,13 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->>>       if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->>>           if (i2c_dev->is_curr_dma_xfer)
->>>               i2c_dev->msg_buf_remaining = 0;
->>> -        BUG_ON(i2c_dev->msg_buf_remaining);
->>> +        /* Underflow error condition: XFER_COMPLETE before message
->>> +         * fully sent.
->>> +         */
->>> +        if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
->>> +            i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
->>> +            goto err;
->>> +        }
->>>           complete(&i2c_dev->msg_complete);
->>>       }
->>>       goto done;
->>>
->>
->> Please address comments in the next revision.
->>
-> 
-> Sorry for the delayed reply. I shared Patch V7 with above changes earlier today.
+Commit-ID:  b74d8686a18b36adecc710597198d5ef2dd5ef14
+Gitweb:     https://git.kernel.org/tip/b74d8686a18b36adecc710597198d5ef2dd5ef14
+Author:     Kan Liang <kan.liang@linux.intel.com>
+AuthorDate: Tue, 4 Jun 2019 15:50:40 -0700
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 10 Jun 2019 15:50:02 -0300
 
-No problems, please take your time. The V7 is almost good, looking forward to v8!
+perf cpumap: Retrieve die id information
+
+There is no function to retrieve die id information of a given CPU.
+
+Add cpu_map__get_die_id() to retrieve die id information.
+
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Reviewed-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/1559688644-106558-1-git-send-email-kan.liang@linux.intel.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/cpumap.c | 7 +++++++
+ tools/perf/util/cpumap.h | 1 +
+ 2 files changed, 8 insertions(+)
+
+diff --git a/tools/perf/util/cpumap.c b/tools/perf/util/cpumap.c
+index 0b599229bc7e..7db1365c667e 100644
+--- a/tools/perf/util/cpumap.c
++++ b/tools/perf/util/cpumap.c
+@@ -373,6 +373,13 @@ int cpu_map__build_map(struct cpu_map *cpus, struct cpu_map **res,
+ 	return 0;
+ }
+ 
++int cpu_map__get_die_id(int cpu)
++{
++	int value, ret = cpu__get_topology_int(cpu, "die_id", &value);
++
++	return ret ?: value;
++}
++
+ int cpu_map__get_core_id(int cpu)
+ {
+ 	int value, ret = cpu__get_topology_int(cpu, "core_id", &value);
+diff --git a/tools/perf/util/cpumap.h b/tools/perf/util/cpumap.h
+index f00ce624b9f7..6762ff9e7ad5 100644
+--- a/tools/perf/util/cpumap.h
++++ b/tools/perf/util/cpumap.h
+@@ -25,6 +25,7 @@ size_t cpu_map__snprint_mask(struct cpu_map *map, char *buf, size_t size);
+ size_t cpu_map__fprintf(struct cpu_map *map, FILE *fp);
+ int cpu_map__get_socket_id(int cpu);
+ int cpu_map__get_socket(struct cpu_map *map, int idx, void *data);
++int cpu_map__get_die_id(int cpu);
+ int cpu_map__get_core_id(int cpu);
+ int cpu_map__get_core(struct cpu_map *map, int idx, void *data);
+ int cpu_map__build_socket_map(struct cpu_map *cpus, struct cpu_map **sockp);
