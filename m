@@ -2,53 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B20EBC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0177C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 867132063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 944A921019
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806959;
-	bh=Bmdn9oN9NKPf/wrXR/XbJcKXbBhjMEeNLft29cLv7pY=;
+	s=default; t=1560806963;
+	bh=F/5YopCuNRb4BRWc18ZBCtqau+J9v363jyHKhUDFiKM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qePisaIo2wZdfreJCsShjAzX7a6Xwn6cKMuOuvGexhnm/1QCICXZC0vrEWNdTkgIL
-	 /uQG3w8HLXpZfZTFW49C+kzDvNZifMt8HflJrWTmYT5DKiGNMrkHyIOWLGleptW/qD
-	 BWz6H47GQWoGH9ad6Z/u1mSZ34kjivsyukvH8/z0=
+	b=qdGSueDYd3OLGye5V+ijR4ieYtE0f92WVkE203haBJlAjt7ZA2VZ1txfm8k0hXIu6
+	 P3UeTBta+WhlMXDmhe0Ogtpa4Hhh/Mot9nuakI4lKMkg1WrxAEPzvkG3JGMyFnplP2
+	 xdHiTQAEajT1bIjgsaRoK2IrLzyMpltHvXFIsmX8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730682AbfFQV3S (ORCPT
+        id S1730689AbfFQV3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:29:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56478 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730674AbfFQV3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:15 -0400
+        id S1729863AbfFQV3S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F7F4204FD;
-        Mon, 17 Jun 2019 21:29:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EBED62070B;
+        Mon, 17 Jun 2019 21:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806954;
-        bh=Bmdn9oN9NKPf/wrXR/XbJcKXbBhjMEeNLft29cLv7pY=;
+        s=default; t=1560806957;
+        bh=F/5YopCuNRb4BRWc18ZBCtqau+J9v363jyHKhUDFiKM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gVcPOAriLX+iO1c1sIKQuwmuF0LQhAiempkFHhmB10oIkRSgOx1GAbzxKTkkO7XRA
-         YlDTHMN0L0znn/CdBQ/UxEkUSa1e0tp49oN0UqB+3SUcKrASAoAwmnyZQLIwcWqR9n
-         JzjNGMSBmZdhUXSJ+HVLqkwaEQRP14edJtzPsmbs=
+        b=RFxVzqQ1Lt3j4TwuoWFPeUbuZeFTEALTDs/qbC21spHWOvDAbRFw9kUoW6iVL8ot3
+         DD7rmyTpYwSrg8Utb1fbOijKp3X+KCHM6TI/rBCWNE2QRW8cLh7ZYYWJ2wPchFHx3F
+         FgD9ZfBvULehFFNKRUUrmeAc/itYMWmrsyPYBc6o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 40/53] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
-Date:   Mon, 17 Jun 2019 23:10:23 +0200
-Message-Id: <20190617210751.933336955@linuxfoundation.org>
+        Murray McAllister <murray.mcallister@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 4.14 41/53] drm/vmwgfx: integer underflow in vmw_cmd_dx_set_shader() leading to an invalid read
+Date:   Mon, 17 Jun 2019 23:10:24 +0200
+Message-Id: <20190617210752.019874935@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -61,69 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
+From: Murray McAllister <murray.mcallister@gmail.com>
 
-kselftests exposed a problem in the s390 handling for memory slots.
-Right now we only do proper memory slot handling for creation of new
-memory slots. Neither MOVE, nor DELETION are handled properly. Let us
-implement those.
+commit 5ed7f4b5eca11c3c69e7c8b53e4321812bc1ee1e upstream.
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If SVGA_3D_CMD_DX_SET_SHADER is called with a shader ID
+of SVGA3D_INVALID_ID, and a shader type of
+SVGA3D_SHADERTYPE_INVALID, the calculated binding.shader_slot
+will be 4294967295, leading to an out-of-bounds read in vmw_binding_loc()
+when the offset is calculated.
+
+Cc: <stable@vger.kernel.org>
+Fixes: d80efd5cb3de ("drm/vmwgfx: Initial DX support")
+Signed-off-by: Murray McAllister <murray.mcallister@gmail.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index d6fe229ac20e..70a446ec347d 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -3913,21 +3913,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change)
- {
--	int rc;
--
--	/* If the basics of the memslot do not change, we do not want
--	 * to update the gmap. Every update causes several unnecessary
--	 * segment translation exceptions. This is usually handled just
--	 * fine by the normal fault handler + gmap, but it will also
--	 * cause faults on the prefix page of running guest CPUs.
--	 */
--	if (old->userspace_addr == mem->userspace_addr &&
--	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
--	    old->npages * PAGE_SIZE == mem->memory_size)
--		return;
-+	int rc = 0;
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+@@ -2495,7 +2495,8 @@ static int vmw_cmd_dx_set_shader(struct
  
--	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
--		mem->guest_phys_addr, mem->memory_size);
-+	switch (change) {
-+	case KVM_MR_DELETE:
-+		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-+					old->npages * PAGE_SIZE);
-+		break;
-+	case KVM_MR_MOVE:
-+		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-+					old->npages * PAGE_SIZE);
-+		if (rc)
-+			break;
-+		/* FALLTHROUGH */
-+	case KVM_MR_CREATE:
-+		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
-+				      mem->guest_phys_addr, mem->memory_size);
-+		break;
-+	case KVM_MR_FLAGS_ONLY:
-+		break;
-+	default:
-+		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
-+	}
- 	if (rc)
- 		pr_warn("failed to commit memory region\n");
- 	return;
--- 
-2.20.1
-
+ 	cmd = container_of(header, typeof(*cmd), header);
+ 
+-	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX) {
++	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX ||
++	    cmd->body.type < SVGA3D_SHADERTYPE_MIN) {
+ 		DRM_ERROR("Illegal shader type %u.\n",
+ 			  (unsigned) cmd->body.type);
+ 		return -EINVAL;
 
 
