@@ -2,128 +2,117 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC87AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:57:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E950C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:58:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92936208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:57:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B552206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oIw06plI"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="e4XFp9v0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728384AbfFQS5i (ORCPT
+        id S1728466AbfFQS6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:57:38 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:41014 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725839AbfFQS5i (ORCPT
+        Mon, 17 Jun 2019 14:58:12 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56001 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfFQS6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:57:38 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5HIvPLJ005706;
-        Mon, 17 Jun 2019 13:57:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560797845;
-        bh=eXKVDlqZzqdlgcUJUU+jPPZepnuhi3ZTqQo/hbODeEM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=oIw06plIitBYLiJdchxsmU0MSki7Rlx0JhmUTmr2teR4u91wdDsjNpjwIYjoeLg1n
-         Z+J4I5d3HwJ5wVpymWg0Ry7rhcxKNViibyTroUMRqLATNP9Du2Gqmccpq0tlg9E9tP
-         M1STJHAzAB8aN53HvWsfWtEqGZIA/bgLzLAMoRT4=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5HIvPdS082788
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Jun 2019 13:57:25 -0500
-Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
- Jun 2019 13:57:24 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 17 Jun 2019 13:57:24 -0500
-Received: from [10.250.96.121] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5HIvKQp019312;
-        Mon, 17 Jun 2019 13:57:21 -0500
-Subject: Re: [PATCH-next 20/20] gpio: gpio-omap: clean up register access in
- omap2_set_gpio_debounce()
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Russell King <rmk@arm.linux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-References: <20190610171103.30903-1-grygorii.strashko@ti.com>
- <20190610171103.30903-21-grygorii.strashko@ti.com>
- <CACRpkda2FhYNYA2TkVANOF5GWd3hE9cqM7N_pFDFj9nh-fh=iA@mail.gmail.com>
-From:   grygorii <grygorii.strashko@ti.com>
-Message-ID: <0ab98094-f8b2-69a3-e73c-1dfdf812d627@ti.com>
-Date:   Mon, 17 Jun 2019 21:57:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 14:58:12 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HIvmZA3553858
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 17 Jun 2019 11:57:48 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HIvmZA3553858
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560797869;
+        bh=2FgM6ClHpz1bdgPSC+oQQCglJgLIa1A4ZpLRyZZv8n8=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=e4XFp9v0Jb01TkWFbO48nt5oo+i/oAWq4Y/LAI7Mncordi9L9dzrmwp9Xm3vgXGtu
+         1Z7pJCtpumYRXpKELo6rnNhzbPLGqlPTlHNlVYKPjbh/vixoMa2hzXxZYTlcXrXcbq
+         EoRpC9mHP2IrYUJM3i5UwT53sqZGIt+RBf84+RD3Q8wjS6pCyqgq2d3QUQvuSP+cuR
+         ZvWRpUdGdUYNM6RZ1c8BLmzcnkt54tz3xyWrgT0BWXY4rEZtLh8aerSmgL0a7+XXl1
+         grS6gk2zC+ayDTVMsrJ4oNMFen5wBzgHQ2xqbVYFF0usKnSJ5GmRGRhE5OwwR4Mgsm
+         /g1AdiwN53d7Q==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HIvmMD3553855;
+        Mon, 17 Jun 2019 11:57:48 -0700
+Date:   Mon, 17 Jun 2019 11:57:48 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Leo Yan <tipbot@zytor.com>
+Message-ID: <tip-e5f177a578edf4501d0758bfa922cd0b0f9d0e9d@git.kernel.org>
+Cc:     namhyung@kernel.org, leo.yan@linaro.org,
+        linux-kernel@vger.kernel.org, acme@redhat.com,
+        alexander.shishkin@linux.intel.com, tglx@linutronix.de,
+        mingo@kernel.org, hpa@zytor.com, peterz@infradead.org,
+        jolsa@redhat.com
+Reply-To: tglx@linutronix.de, alexander.shishkin@linux.intel.com,
+          mingo@kernel.org, hpa@zytor.com, jolsa@redhat.com,
+          peterz@infradead.org, namhyung@kernel.org, leo.yan@linaro.org,
+          linux-kernel@vger.kernel.org, acme@redhat.com
+In-Reply-To: <20190530093801.20510-1-leo.yan@linaro.org>
+References: <20190530093801.20510-1-leo.yan@linaro.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf symbols: Remove unused variable 'err'
+Git-Commit-ID: e5f177a578edf4501d0758bfa922cd0b0f9d0e9d
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <CACRpkda2FhYNYA2TkVANOF5GWd3hE9cqM7N_pFDFj9nh-fh=iA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Commit-ID:  e5f177a578edf4501d0758bfa922cd0b0f9d0e9d
+Gitweb:     https://git.kernel.org/tip/e5f177a578edf4501d0758bfa922cd0b0f9d0e9d
+Author:     Leo Yan <leo.yan@linaro.org>
+AuthorDate: Thu, 30 May 2019 17:38:01 +0800
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Wed, 5 Jun 2019 09:47:54 -0300
 
+perf symbols: Remove unused variable 'err'
 
-On 12/06/2019 12:11, Linus Walleij wrote:
-> On Mon, Jun 10, 2019 at 7:13 PM Grygorii Strashko
-> <grygorii.strashko@ti.com> wrote:
-> 
->> From: Russell King <rmk+kernel@armlinux.org.uk>
->>
->> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> 
-> Patch applied.
+Variable 'err' is defined but never used in function symsrc__init(),
+remove it and directly return -1 at the end of the function.
 
-Thanks Linus.
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/20190530093801.20510-1-leo.yan@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/symbol-elf.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> 
-> At your convenience please look at the debounce function a bit
-> closer because I think there is a bug/unpredictable behavior:
-> 
-> IIUC the whole bank/block of GPIOs share the same debounce
-> timer setting, and it is currently handled in a "last caller wins"
-> manner, so if the different GPIOs in the bank has different
-> debounce settings, the call order decides what debounce time
-> is used across all of them.
-
-Yeah. this is a "known" problem :(
-
-> 
-> In drivers/gpio/gpio-ftgpio.c function ftgpio_gpio_set_config()
-> I simply reject a dounce time setting
-> different from the currently configured if any GPIOs are
-> currently using the deounce feature.
-> 
-> (It's the semantic I came up with but maybe there are other
-> ideas here.)
-
-
-There is one more patch in int. queue for debounce, but I've
-decided to send it after this series as OMAP debounce changes are
-usually debatable.
-
-I'll look at gpio-ftgpio also.
-
-By the way, there seems no ABI for debounce cfg in gpio_dev interface.
-(or i'm missing smth?)
-
--- 
-Best regards,
-grygorii
+diff --git a/tools/perf/util/symbol-elf.c b/tools/perf/util/symbol-elf.c
+index 4ad106a5f2c0..fdc5bd7dbb90 100644
+--- a/tools/perf/util/symbol-elf.c
++++ b/tools/perf/util/symbol-elf.c
+@@ -699,7 +699,6 @@ bool __weak elf__needs_adjust_symbols(GElf_Ehdr ehdr)
+ int symsrc__init(struct symsrc *ss, struct dso *dso, const char *name,
+ 		 enum dso_binary_type type)
+ {
+-	int err = -1;
+ 	GElf_Ehdr ehdr;
+ 	Elf *elf;
+ 	int fd;
+@@ -793,7 +792,7 @@ out_elf_end:
+ 	elf_end(elf);
+ out_close:
+ 	close(fd);
+-	return err;
++	return -1;
+ }
+ 
+ /**
