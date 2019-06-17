@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC023C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16280C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D5132063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3F7B2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807006;
-	bh=P0LIOFq/wF6tmB19nDw5NC14GjcgOnPUKzgCtfUQLYg=;
+	s=default; t=1560807009;
+	bh=oHZ+D+qqoj/Fy19Nk7YNcsjpllGzO0Ch48+MNTt6MOY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=imSKemlsc0X/hbUQRhuLUJGQGOyu3JN9lcvZO+TsBpv2prHLyJOgcDUa+xlX9oVv1
-	 OjlL2vLO0+e1MAKKBH/24tYsjEKRI9X9TvX5poBpkYkuj0RUkOKUT2QshnBPQaoJtf
-	 K3mFk2QZstdLqVBlz2/LbocAFFkSNz0JkhzABrMc=
+	b=koKOg+vBSCfTqphatDShBBWYF4lmTd3yCj+x5NXHGgoY351sE952OaFhLR9ofas+w
+	 1iBgZ9g2hFmd9lSy6fV7HhqIbhLeAYvH2Wsa9DJjI3Q1MpaoIDSMwrLIxzPNHexJ/C
+	 +76tvpRnWN6k34Efp61d52hBpACo7Ew83bBq3+R8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbfFQVaE (ORCPT
+        id S1730793AbfFQVaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:30:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57232 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:30:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57322 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730328AbfFQVaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:30:01 -0400
+        id S1730324AbfFQVaE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:30:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8746D20673;
-        Mon, 17 Jun 2019 21:30:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F7FC204FD;
+        Mon, 17 Jun 2019 21:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560807001;
-        bh=P0LIOFq/wF6tmB19nDw5NC14GjcgOnPUKzgCtfUQLYg=;
+        s=default; t=1560807003;
+        bh=oHZ+D+qqoj/Fy19Nk7YNcsjpllGzO0Ch48+MNTt6MOY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qxx8uq2uouU31M/2hYbC24Lxf9YmGjzwvJofvL6WnIyLnDwsbUV69qNcIZzksjhB2
-         9TXwNxxLo5IG6nMsudONvilFx/bBuw7mzaaUlwX5JA/4eXA50LrtQ6PQpdFJjaPqDO
-         ApI1Yk9IkjrvRM5ZFNKiz5f8NF0j9Cdm1TE8BO+c=
+        b=CdhaBVkMoPz7p0Ki7Fc3VZSpTKh0YRMlDLp9vv2cQlxptDi0KA9m8aYYQmIvI/YQb
+         ElW+AOwDkKc6eYzSzwEumk1lU+SMvscApbQJBkk1rYEJZZzN4GmxUIoDUeBDzun2gH
+         5dyfY2rA40WTXbjFpk0qfQlk4RkzzXFkvAqiTkko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 26/53] s390/kasan: fix strncpy_from_user kasan checks
-Date:   Mon, 17 Jun 2019 23:10:09 +0200
-Message-Id: <20190617210750.342730819@linuxfoundation.org>
+Subject: [PATCH 4.14 27/53] Drivers: misc: fix out-of-bounds access in function param_set_kgdbts_var
+Date:   Mon, 17 Jun 2019 23:10:10 +0200
+Message-Id: <20190617210750.416667064@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -60,39 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 01eb42afb45719cb41bb32c278e068073738899d ]
+[ Upstream commit b281218ad4311a0342a40cb02fb17a363df08b48 ]
 
-arch/s390/lib/uaccess.c is built without kasan instrumentation. Kasan
-checks are performed explicitly in copy_from_user/copy_to_user
-functions. But since those functions could be inlined, calls from
-files like uaccess.c with instrumentation disabled won't generate
-kasan reports. This is currently the case with strncpy_from_user
-function which was revealed by newly added kasan test. Avoid inlining of
-copy_from_user/copy_to_user when the kernel is built with kasan support
-to make sure kasan checks are fully functional.
+There is an out-of-bounds access to "config[len - 1]" array when the
+variable "len" is zero.
 
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+See commit dada6a43b040 ("kgdboc: fix KASAN global-out-of-bounds bug
+in param_set_kgdboc_var()") for details.
+
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/uaccess.h | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/misc/kgdbts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index cdd0f0d999e2..689eae8d3859 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -67,8 +67,10 @@ raw_copy_from_user(void *to, const void __user *from, unsigned long n);
- unsigned long __must_check
- raw_copy_to_user(void __user *to, const void *from, unsigned long n);
+diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+index fc7efedbc4be..94cbc5c98cae 100644
+--- a/drivers/misc/kgdbts.c
++++ b/drivers/misc/kgdbts.c
+@@ -1134,7 +1134,7 @@ static void kgdbts_put_char(u8 chr)
  
-+#ifndef CONFIG_KASAN
- #define INLINE_COPY_FROM_USER
- #define INLINE_COPY_TO_USER
-+#endif
+ static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
+ {
+-	int len = strlen(kmessage);
++	size_t len = strlen(kmessage);
  
- #ifdef CONFIG_HAVE_MARCH_Z10_FEATURES
+ 	if (len >= MAX_CONFIG_LEN) {
+ 		printk(KERN_ERR "kgdbts: config string too long\n");
+@@ -1154,7 +1154,7 @@ static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
  
+ 	strcpy(config, kmessage);
+ 	/* Chop out \n char as a result of echo */
+-	if (config[len - 1] == '\n')
++	if (len && config[len - 1] == '\n')
+ 		config[len - 1] = '\0';
+ 
+ 	/* Go and configure with the new params. */
 -- 
 2.20.1
 
