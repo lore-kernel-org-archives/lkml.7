@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D938C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD053C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 216F020B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C1F920B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806384;
-	bh=zUIkRL2+2N6TejLuqB/35gmEd3f/CWpfpIxNm+H4+/s=;
+	s=default; t=1560806386;
+	bh=XbH14dwzEOGD/utq9Pe7jfloTnsYnbypF2eZJ6RCK5g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XI+sOr6q61Nma17Pip2WysRlsMG+XVWDx3Yll0+DAR44ho/CESun8gstUr6Ud8qVw
-	 qImICmIXYTqlDfp6iti70dZ01D7OYJeSTUv3hfXWRk4z9CI0JgrbC2jnS0nOCM5JlE
-	 o16hoIpyfdjD6I/ex0VvSTATL//IiPVk1+mMEFpc=
+	b=y0Ub27BFGjqhjlUTNo8eCCfknIOwr6mgl5S9zcgb8S1sJdtsrWW8V0PLWflaSTlgN
+	 keFYGaJNS2+iwABdk1fhxggcdA8BmMMhEy2jvt7pJKY+XTabv8SNLK1UhgtXTJK8JT
+	 ZHaeUT/pwJmRK/HgGYjlzz0WNsRwsr1sJ2ypc/vQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbfFQVTm (ORCPT
+        id S1728914AbfFQVTp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:19:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43464 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:19:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43636 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728872AbfFQVTi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:19:38 -0400
+        id S1728446AbfFQVTo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:19:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6623520B1F;
-        Mon, 17 Jun 2019 21:19:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 95F142089E;
+        Mon, 17 Jun 2019 21:19:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806377;
-        bh=zUIkRL2+2N6TejLuqB/35gmEd3f/CWpfpIxNm+H4+/s=;
+        s=default; t=1560806384;
+        bh=XbH14dwzEOGD/utq9Pe7jfloTnsYnbypF2eZJ6RCK5g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wuvjMgRTc9kZACIdBe+2iQDjEGNNGL0Fuz57h3q4bCPt/3n7YZRnBYWyNrwxGK8Kr
-         22bxiAaOeiWrg5gj6kErcruxQjstpk4uA58EMPgtPi2W8rK/YTFmFNcdpltjuArTmC
-         6WznH9GYCZujOh/FI0WEjtWJ4DJn7qrKkcCDFIEU=
+        b=EvE+AYnruAt0z0wl98vjyXA4G5VO1IGTGBSN9CtRjMEol86l9k0NLGPH6sJ965hq+
+         ClovUb1Fd04oAsH6qwKrzvYYz/DpuEz/Y6N7BzYpKklfgzq23IKIviXeY5DuDnXl6o
+         fYzpel9w9elTGFaIxLQUSbubbiR69aKG+VTqAzi4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
-        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
-Subject: [PATCH 5.1 030/115] i2c: acorn: fix i2c warning
-Date:   Mon, 17 Jun 2019 23:08:50 +0200
-Message-Id: <20190617210801.522416261@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bj=C3=B8rn=20Forsman?= <bjorn.forsman@gmail.com>,
+        Coly Li <colyli@suse.de>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.1 032/115] bcache: only set BCACHE_DEV_WB_RUNNING when cached device attached
+Date:   Mon, 17 Jun 2019 23:08:52 +0200
+Message-Id: <20190617210801.614134712@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -59,33 +60,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Russell King <rmk+kernel@armlinux.org.uk>
+From: Coly Li <colyli@suse.de>
 
-commit ca21f851cc9643af049226d57fabc3c883ea648e upstream.
+commit 1f0ffa67349c56ea54c03ccfd1e073c990e7411e upstream.
 
-The Acorn i2c driver (for RiscPC) triggers the "i2c adapter has no name"
-warning in the I2C core driver, resulting in the RTC being inaccessible.
-Fix this.
+When people set a writeback percent via sysfs file,
+  /sys/block/bcache<N>/bcache/writeback_percent
+current code directly sets BCACHE_DEV_WB_RUNNING to dc->disk.flags
+and schedules kworker dc->writeback_rate_update.
 
-Fixes: 2236baa75f70 ("i2c: Sanity checks on adapter registration")
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
-Cc: stable@kernel.org
+If there is no cache set attached to, the writeback kernel thread is
+not running indeed, running dc->writeback_rate_update does not make
+sense and may cause NULL pointer deference when reference cache set
+pointer inside update_writeback_rate().
+
+This patch checks whether the cache set point (dc->disk.c) is NULL in
+sysfs interface handler, and only set BCACHE_DEV_WB_RUNNING and
+schedule dc->writeback_rate_update when dc->disk.c is not NULL (it
+means the cache device is attached to a cache set).
+
+This problem might be introduced from initial bcache commit, but
+commit 3fd47bfe55b0 ("bcache: stop dc->writeback_rate_update properly")
+changes part of the original code piece, so I add 'Fixes: 3fd47bfe55b0'
+to indicate from which commit this patch can be applied.
+
+Fixes: 3fd47bfe55b0 ("bcache: stop dc->writeback_rate_update properly")
+Reported-by: Bjørn Forsman <bjorn.forsman@gmail.com>
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Bjørn Forsman <bjorn.forsman@gmail.com>
+Cc: stable@vger.kernel.org
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/i2c/busses/i2c-acorn.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/md/bcache/sysfs.c |    7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
---- a/drivers/i2c/busses/i2c-acorn.c
-+++ b/drivers/i2c/busses/i2c-acorn.c
-@@ -81,6 +81,7 @@ static struct i2c_algo_bit_data ioc_data
+--- a/drivers/md/bcache/sysfs.c
++++ b/drivers/md/bcache/sysfs.c
+@@ -431,8 +431,13 @@ STORE(bch_cached_dev)
+ 			bch_writeback_queue(dc);
+ 	}
  
- static struct i2c_adapter ioc_ops = {
- 	.nr			= 0,
-+	.name			= "ioc",
- 	.algo_data		= &ioc_data,
- };
++	/*
++	 * Only set BCACHE_DEV_WB_RUNNING when cached device attached to
++	 * a cache set, otherwise it doesn't make sense.
++	 */
+ 	if (attr == &sysfs_writeback_percent)
+-		if (!test_and_set_bit(BCACHE_DEV_WB_RUNNING, &dc->disk.flags))
++		if ((dc->disk.c != NULL) &&
++		    (!test_and_set_bit(BCACHE_DEV_WB_RUNNING, &dc->disk.flags)))
+ 			schedule_delayed_work(&dc->writeback_rate_update,
+ 				      dc->writeback_rate_update_seconds * HZ);
  
 
 
