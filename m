@@ -2,137 +2,92 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64A71C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BF0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3925D2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807128;
-	bh=sQNVE6RHEotGyfdePzut0/p7rwfGAcTEDQqpQHblAUE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=N7D9ZQWf4kZH5xFsDCDktJWS7kCucUbZgQ7AulzDUDMu0b/jjQCS/xW6dLP4zqHxL
-	 qgWXlgxFKlimL5bMs01LfJGgyPNRlIFOa1jniNV7fWJ9hrRcZbRtayI+AXpf5opu+f
-	 1eQJfGMDCHf9tiE8EeBfaQC3mNwDsYigwBv+ENCE=
+	by mail.kernel.org (Postfix) with ESMTP id DB63B2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbfFQVcG (ORCPT
+        id S1729905AbfFQVcJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:32:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54968 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:32:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47264 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729460AbfFQV1y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:27:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728478AbfFQVcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:32:04 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92DBD2063F;
-        Mon, 17 Jun 2019 21:27:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806874;
-        bh=sQNVE6RHEotGyfdePzut0/p7rwfGAcTEDQqpQHblAUE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z2skfVA349we0sA9PlVQtz2/F2sHxzR+eypDp+0WceOngkfKbox9onduKGXZAbv/l
-         pbPd3YNbOynXhYHcwupchcTksZtrlFLwTDcpoTs2LG2Uo+Fc5ZmXkMPawJpAlaXZsS
-         a9p1DGTam5Ol7SvropTS7SMCz6zXm5J1nYl5pWt0=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 12/53] [PATCH] signal/ptrace: Dont leak unitialized kernel memory with PTRACE_PEEK_SIGINFO
-Date:   Mon, 17 Jun 2019 23:09:55 +0200
-Message-Id: <20190617210747.812259426@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
-References: <20190617210745.104187490@linuxfoundation.org>
-User-Agent: quilt/0.66
+        by mx1.redhat.com (Postfix) with ESMTPS id 6778333BCD;
+        Mon, 17 Jun 2019 21:32:04 +0000 (UTC)
+Received: from flask (unknown [10.43.2.199])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 481D178401;
+        Mon, 17 Jun 2019 21:32:02 +0000 (UTC)
+Received: by flask (sSMTP sendmail emulation); Mon, 17 Jun 2019 23:32:01 +0200
+Date:   Mon, 17 Jun 2019 23:32:01 +0200
+From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: Re: [PATCH v4 5/5] KVM: LAPIC: add advance timer support to
+ pi_inject_timer
+Message-ID: <20190617213201.GA26346@flask>
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-6-git-send-email-wanpengli@tencent.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560770687-23227-6-git-send-email-wanpengli@tencent.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 17 Jun 2019 21:32:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f6e2aa91a46d2bc79fce9b93a988dbe7655c90c0 ]
+2019-06-17 19:24+0800, Wanpeng Li:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Wait before calling posted-interrupt deliver function directly to add 
+> advance timer support to pi_inject_timer.
+> 
+> Cc: Paolo Bonzini <pbonzini@redhat.com>
+> Cc: Radim Krčmář <rkrcmar@redhat.com>
+> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> ---
 
-Recently syzbot in conjunction with KMSAN reported that
-ptrace_peek_siginfo can copy an uninitialized siginfo to userspace.
-Inspecting ptrace_peek_siginfo confirms this.
+Please merge this patch with [2/5], so bisection doesn't break.
 
-The problem is that off when initialized from args.off can be
-initialized to a negaive value.  At which point the "if (off >= 0)"
-test to see if off became negative fails because off started off
-negative.
+>  arch/x86/kvm/lapic.c   | 6 ++++--
+>  arch/x86/kvm/lapic.h   | 2 +-
+>  arch/x86/kvm/svm.c     | 2 +-
+>  arch/x86/kvm/vmx/vmx.c | 2 +-
+>  4 files changed, 7 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> index 1a31389..1a31ba5 100644
+> --- a/arch/x86/kvm/lapic.c
+> +++ b/arch/x86/kvm/lapic.c
+> @@ -1462,6 +1462,8 @@ static void apic_timer_expired(struct kvm_lapic *apic, bool can_pi_inject)
+>  		return;
+>  
+>  	if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu)) {
+> +		if (apic->lapic_timer.timer_advance_ns)
+> +			kvm_wait_lapic_expire(vcpu, true);
 
-Prevent the core problem by adding a variable found that is only true
-if a siginfo is found and copied to a temporary in preparation for
-being copied to userspace.
+From where does kvm_wait_lapic_expire() take
+apic->lapic_timer.expired_tscdeadline?
 
-Prevent args.off from being truncated when being assigned to off by
-testing that off is <= the maximum possible value of off.  Convert off
-to an unsigned long so that we should not have to truncate args.off,
-we have well defined overflow behavior so if we add another check we
-won't risk fighting undefined compiler behavior, and so that we have a
-type whose maximum value is easy to test for.
+(I think it would be best to take the functional core of
+ kvm_wait_lapic_expire() and make it into a function that takes the
+ expired_tscdeadline as an argument.)
 
-Cc: Andrei Vagin <avagin@gmail.com>
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com
-Fixes: 84c751bd4aeb ("ptrace: add ability to retrieve signals without removing from a queue (v4)")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/ptrace.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/ptrace.c b/kernel/ptrace.c
-index f1c85b6c39ae..f6b452e3c204 100644
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -704,6 +704,10 @@ static int ptrace_peek_siginfo(struct task_struct *child,
- 	if (arg.nr < 0)
- 		return -EINVAL;
- 
-+	/* Ensure arg.off fits in an unsigned long */
-+	if (arg.off > ULONG_MAX)
-+		return 0;
-+
- 	if (arg.flags & PTRACE_PEEKSIGINFO_SHARED)
- 		pending = &child->signal->shared_pending;
- 	else
-@@ -711,18 +715,20 @@ static int ptrace_peek_siginfo(struct task_struct *child,
- 
- 	for (i = 0; i < arg.nr; ) {
- 		siginfo_t info;
--		s32 off = arg.off + i;
-+		unsigned long off = arg.off + i;
-+		bool found = false;
- 
- 		spin_lock_irq(&child->sighand->siglock);
- 		list_for_each_entry(q, &pending->list, list) {
- 			if (!off--) {
-+				found = true;
- 				copy_siginfo(&info, &q->info);
- 				break;
- 			}
- 		}
- 		spin_unlock_irq(&child->sighand->siglock);
- 
--		if (off >= 0) /* beyond the end of the list */
-+		if (!found) /* beyond the end of the list */
- 			break;
- 
- #ifdef CONFIG_COMPAT
--- 
-2.20.1
-
-
-
+Thanks.
