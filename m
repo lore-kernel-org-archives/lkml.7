@@ -2,135 +2,159 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4431BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC985C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 109F120657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:15:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2C2420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:15:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aY49b7Wk"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="t+fWdAO+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728126AbfFQWP2 (ORCPT
+        id S1728621AbfFQWPd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 18:15:28 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40488 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfFQWP2 (ORCPT
+        Mon, 17 Jun 2019 18:15:33 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46260 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726116AbfFQWPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:15:28 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p11so11707490wre.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:15:26 -0700 (PDT)
+        Mon, 17 Jun 2019 18:15:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z15so7688635lfh.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:15:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aOxrv4Z+duhzHk+Vvgki6wKRY9I+T3teV7bGXJE2hg4=;
-        b=aY49b7WkuTfBi9s+q3YkqPFoksMYySMOhjBU6L7c9cc3C7zQp4p2+UV4mY95F/0+JH
-         tL2UKDIzzhClKL9WqK/0Xcgf5BKsw0fpZTFv4wGWckmU7Bj/9XiimGYc94tZJV6KoFnl
-         beS12Vz7LfpA7sRaj1tu2a0eGRfqM+Vka0dXZ83xvafIRlOdvEhQIXWECXaxI/fR6zaA
-         hwTrx3seR9v6J6808XBpeexTzC0DeRJO3yWEKo945ztZeW0s/8p43ED0XsQdd7h3kqk5
-         acZlzLfwvorsKhYzrGPaUSAchILthJH/N4thVd/F5xGt6QCD91vonSWuuI5keLuP7Dab
-         6okw==
+        bh=c5UIf+bhX+TscweExnBplZZa2iUS4eVkN91TUCyDIjc=;
+        b=t+fWdAO+kDytO6Qe2BvENv40nSMghSAZkq/QjTqjeur22v/BBMKMR2T2iwMdgFuCK/
+         wL4fe2VCXZMM9bnyZ6OGwplg3xS0ff5gcj3IsH/BpmxTyAJIlE4GVMGvFgeBH0WC6h8B
+         4kIv18eoGH+jcMa2iKr08PaRi3yYeLj32DUAdKpPzKLrHKPpTdX9F30IORcnvkGkmHnq
+         CTb3nYcsO3Rja53nkvmFYBBsi67iNt1EapUWX5nVD7RPNrV6p/7IFNz3cP1v4DoICSSg
+         tAtsAqm78XQx9N/+QnXmtpeDQwOMmd9jJulg0P5RVzzXQFu7wHyys0WZ5jhwSga67MW4
+         L8fQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aOxrv4Z+duhzHk+Vvgki6wKRY9I+T3teV7bGXJE2hg4=;
-        b=n6dAvSt9M3XpaqQgYtfLkihjNUGz36wqp8yZQZ5IyRaIlQDvAQ3hUS/DHoVB8O+GPm
-         qxffCzIsFJc9f9jGxj4IeHUUUMS0UgoRb7c0uAL1H1S8daAkcNNsSXrT7nYeaGKaA5l9
-         SEPUPvcRpZcli3qPkFJtAH96b+G4CSkBulvB6JTgWb4rbEoZ+5Ea4ZSzvFdfLiU55wYC
-         wQi1odk6m34GCYvDWPGKwNJurcGTLAqHe/zCl0La85lR1mN09Vw9zinXnJHUIMdBiwfp
-         qpOclgrI6TJvs6NhcAGnzunUUI8jZR/YT55fEgNcKoeVwrLwE1QpxDDGlyfYVeIHpSFO
-         nx0g==
-X-Gm-Message-State: APjAAAXkklEHwLsJs8xuDm10tea7EU6pYMsHXLVSC4f/Zu/uuHTP6RRa
-        e+GvE1ceK3HklLlIUqnFfFpNiJtpXByfCnZo0D8=
-X-Google-Smtp-Source: APXvYqzIRENvbCsYIcq6eR/PMaPMcy9DkvAWKBfar8wlTlCUFzrbGjxFQHJKL/sWdXUH34woXRKOQ0zdzM7JxnWZL1U=
-X-Received: by 2002:adf:ea8b:: with SMTP id s11mr33675436wrm.100.1560809726001;
- Mon, 17 Jun 2019 15:15:26 -0700 (PDT)
+        bh=c5UIf+bhX+TscweExnBplZZa2iUS4eVkN91TUCyDIjc=;
+        b=DnxRBEOl00lO6qXSFqb84Cca7gMRgAk23nGrzbGLfEEVrjTLZXU2f4vtaGPc/L9w75
+         Uv2P/qQu9eeT6S+AbqTxRTMdN68ahHLyt8SqMxmmctIAclhuFvsnEMHsFGLwvY+wleKH
+         ykosrYIWT70zeHdT//FT15l4uK39COOM1TTH57Y3R4RDCw6hMJ8F72CZmy0uiqhRC12/
+         yXtqk5dVSMO/35feiVIzRK094Wh9aZ/Lc2xSrPkTHrzCMe4yDPkUBtcypG6mKXMlhrP/
+         BbzeP46lsIhqUNEIOJYfBxhw6o7ifH9K7024gtXVqURsXRWDtKDTP6W1lHAjwJIPJg3l
+         9mfg==
+X-Gm-Message-State: APjAAAU7NMqSdvbbAP9YQK11QlcUtPsuiWZIyIGaktLsMljLAOncSZO2
+        /IkhJJ1ppSOMOSynxEiSJBSFNW5NezsNmzlMeCEk
+X-Google-Smtp-Source: APXvYqzJk1+r3WEYAvcSc4G69gUJrY/Lj0o95tRZ6iNfY9UKCSo0STH+khxu8QVrnuz2PewmDfXmvQA2r6UC6596xrU=
+X-Received: by 2002:ac2:410a:: with SMTP id b10mr6357850lfi.175.1560809730743;
+ Mon, 17 Jun 2019 15:15:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <1558024913-26502-1-git-send-email-kdasu.kdev@gmail.com> <CAFLxGvwjqo27VQ092WV9=6N5RJr-M7aL0HYVWkeaCYbY3XWa1w@mail.gmail.com>
-In-Reply-To: <CAFLxGvwjqo27VQ092WV9=6N5RJr-M7aL0HYVWkeaCYbY3XWa1w@mail.gmail.com>
-From:   Richard Weinberger <richard.weinberger@gmail.com>
-Date:   Tue, 18 Jun 2019 00:15:14 +0200
-Message-ID: <CAFLxGvyGFtacE3mgZ03zrOeF2S24KdtGj+Qy-3kmA2wbRhNJYQ@mail.gmail.com>
-Subject: Re: [PATCH v3 1/2] mtd: Add flag to indicate panic_write
-To:     Kamal Dasu <kdasu.kdev@gmail.com>
-Cc:     linux-mtd@lists.infradead.org,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Richard Weinberger <richard@nod.at>,
+References: <53af233d05da5e07d75d122878387288a10276df.1560447640.git.rgb@redhat.com>
+ <CAFqZXNvTAj_MhgbUB0kbQwF+gDQTTO5jXPagQfW9qwfHEzc1iQ@mail.gmail.com>
+In-Reply-To: <CAFqZXNvTAj_MhgbUB0kbQwF+gDQTTO5jXPagQfW9qwfHEzc1iQ@mail.gmail.com>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Mon, 17 Jun 2019 18:15:19 -0400
+Message-ID: <CAHC9VhRnwnzPikvBg1GaJU30zhj009zN7N8HmM_kt6v8o+8HBg@mail.gmail.com>
+Subject: Re: [PATCH ghak57 V1] selinux: format all invalid context as untrusted
+To:     Ondrej Mosnacek <omosnace@redhat.com>,
+        Richard Guy Briggs <rgb@redhat.com>
+Cc:     Linux-Audit Mailing List <linux-audit@redhat.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>
+        SElinux list <selinux@vger.kernel.org>,
+        Eric Paris <eparis@redhat.com>, Steve Grubb <sgrubb@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 17, 2019 at 10:08 AM Richard Weinberger
-<richard.weinberger@gmail.com> wrote:
->
-> On Thu, May 16, 2019 at 6:42 PM Kamal Dasu <kdasu.kdev@gmail.com> wrote:
-> >
-> > Added a flag to indicate a panic_write so that low level drivers can
-> > use it to take required action where applicable, to ensure oops data
-> > gets written to assigned mtd device.
-> >
-> > Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
-> > ---
-> >  drivers/mtd/mtdcore.c   | 3 +++
-> >  include/linux/mtd/mtd.h | 6 ++++++
-> >  2 files changed, 9 insertions(+)
-> >
-> > diff --git a/drivers/mtd/mtdcore.c b/drivers/mtd/mtdcore.c
-> > index 76b4264..a83decd 100644
-> > --- a/drivers/mtd/mtdcore.c
-> > +++ b/drivers/mtd/mtdcore.c
-> > @@ -1138,6 +1138,9 @@ int mtd_panic_write(struct mtd_info *mtd, loff_t to, size_t len, size_t *retlen,
-> >                 return -EROFS;
-> >         if (!len)
-> >                 return 0;
-> > +       if (!mtd->oops_panic_write)
-> > +               mtd->oops_panic_write = true;
-> > +
->
-> You can set the flag unconditionally.
-> If it is set, it will stay so, and setting it again, won't hurt.
->
-> >         return mtd->_panic_write(mtd, to, len, retlen, buf);
-> >  }
-> >  EXPORT_SYMBOL_GPL(mtd_panic_write);
-> > diff --git a/include/linux/mtd/mtd.h b/include/linux/mtd/mtd.h
-> > index 677768b..791c34d 100644
-> > --- a/include/linux/mtd/mtd.h
-> > +++ b/include/linux/mtd/mtd.h
-> > @@ -330,6 +330,12 @@ struct mtd_info {
-> >         int (*_get_device) (struct mtd_info *mtd);
-> >         void (*_put_device) (struct mtd_info *mtd);
-> >
-> > +       /*
-> > +        * flag indicates a panic write, low level drivers can take appropriate
-> > +        * action if required to ensure writes go through
-> > +        */
-> > +       bool oops_panic_write;
-> > +
->
-> Maybe we find a better name for it.
-> panic_write_triggered?
+On Fri, Jun 14, 2019 at 4:05 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+> On Thu, Jun 13, 2019 at 8:43 PM Richard Guy Briggs <rgb@redhat.com> wrote:
 
-ping?
-I'm happy with the overall approach.
-So let's target the upcoming merge window.
-Can you please sort my two comments out? :-)
+...
+
+> > diff --git a/security/selinux/ss/services.c b/security/selinux/ss/services.c
+> > index cc043bc8fd4c..817576802f7d 100644
+> > --- a/security/selinux/ss/services.c
+> > +++ b/security/selinux/ss/services.c
+> > @@ -1588,6 +1588,8 @@ static int compute_sid_handle_invalid_context(
+> >         struct policydb *policydb = &state->ss->policydb;
+> >         char *s = NULL, *t = NULL, *n = NULL;
+> >         u32 slen, tlen, nlen;
+> > +       struct audit_buffer *ab;
+> > +       size_t audit_size;
+> >
+> >         if (context_struct_to_string(policydb, scontext, &s, &slen))
+> >                 goto out;
+> > @@ -1595,12 +1597,22 @@ static int compute_sid_handle_invalid_context(
+> >                 goto out;
+> >         if (context_struct_to_string(policydb, newcontext, &n, &nlen))
+> >                 goto out;
+> > -       audit_log(audit_context(), GFP_ATOMIC, AUDIT_SELINUX_ERR,
+> > -                 "op=security_compute_sid invalid_context=%s"
+> > -                 " scontext=%s"
+> > -                 " tcontext=%s"
+> > -                 " tclass=%s",
+> > -                 n, s, t, sym_name(policydb, SYM_CLASSES, tclass-1));
+> > +       /* We strip a nul only if it is at the end, otherwise the
+> > +        * context contains a nul and we should audit that */
+> > +       if (n) {
+> > +               if (n[nlen - 1] == '\0')
+> > +                       audit_size = nlen - 1;
+> > +               else
+> > +                       audit_size = nlen;
+> > +       } else {
+> > +               audit_size = 0;
+> > +       }
+>
+> If you reasonably assume that (n == NULL) implies (nlen == 0), then
+> you can simplify this down to:
+>
+>     audit_size = nlen;
+>     if (nlen && n[nlen - 1] == '\0')
+>         audit_size--;
+>
+> (or similar), see my recent patch to log *rawcon as untrusted [2].
+> That is IMHO faster to parse. But I see you copied it from
+> selinux_inode_setxattr(), where it is like this...
+
+You could likely simplify this even further by getting rid of
+audit_size and just using nlen; there is no reason why we need to
+preserve the original nlen value in this function.  Also, keep in mind
+that if you are hitting that chunk of code, and not jumping to "out"
+due to a context_struct_to_string() error, then you should have a
+properly formatted SELinux label, it just happens to be invalid for
+the currently loaded policy.  Something like the following should be
+safe:
+
+  if (n[nlen - 1] == '\0')
+    nlen--;
+  audit_log_start(...);
+  audit_log_format("... invalid_context=");
+  audit_log_n_untrustedstring(n, nlen);
+  audit_log_format(...);
+  audit_log_end(...);
+
+Also, to be honest, the string you get back from
+context_struct_to_string() is always going to be NUL-terminated so you
+could simplify this further:
+
+  audit_log_start(...);
+  audit_log_format("... invalid_context=");
+  /* no need to record the NUL with untrusted strings */
+  audit_log_n_untrustedstring(n, nlen - 1);
+  audit_log_format(...);
+  audit_log_end(...);
+
+> I'm not sure if it
+> is worth changing this patch / consolidating the style across all
+> places that do this / creating a helper function...
+
+If anyone is going to look into that, it should be done in a separate patch.
 
 -- 
-Thanks,
-//richard
+paul moore
+www.paul-moore.com
