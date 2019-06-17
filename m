@@ -2,154 +2,112 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C367FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88279C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:45:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92820208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:44:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="z7RBZ6J3"
+	by mail.kernel.org (Postfix) with ESMTP id 5BC682084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:45:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560786302;
+	bh=W2ApH5dPv1yN0+v2tlxAMEjXqIOkZyz/SmmL6jpSBOo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lR8KCOEOznjfIZHC0vqNozW2+neFylqYdva69r+CHt06r8aUGODA+v6cr88BneedD
+	 NB/UriPORxVeQGnC+J/JBnmxIgA4n8kxrGMT/MBLwM8CiVedXVgPsacpl40CZW3MKN
+	 ntcwt9cpA9kJVLdgsGVPmHPz4g4WjfY9dUoPYNX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728340AbfFQPoC (ORCPT
+        id S1728334AbfFQPpA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:44:02 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:45362 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728145AbfFQPoB (ORCPT
+        Mon, 17 Jun 2019 11:45:00 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:57644 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfFQPpA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:44:01 -0400
-Received: by mail-lj1-f195.google.com with SMTP id m23so9738574lje.12
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:43:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=L9pexUx8v40cn3RT1WuAop7eXvaLnA6ED/N54cOLZwY=;
-        b=z7RBZ6J3n9S8zlm4ObgIEKRIsbBkblxeG9PWthCEz6DdyWSidka8qI1//XXCQ7QFEi
-         xI01BloQu3oDqWE1GnbOQkl8H1SycNIPKjRtMB7ymOF1jxprMawdvh1rLF9hUXF+AVDI
-         QIrRglTMcNPcQizZKPQdH4hvnZK89VA8il1O5nYD2Yon1MN5Osdw1wSE/mPEdcSQ6Uru
-         uQEkMDmYv7Rd2DwAxIKawRNDg17s4IiUT/WR1XaG2/+wJlzMxv87Y6NqdSb0JbFqGLFG
-         1MNPWxVmVfOH3S5jagRoO0SgJoBQnx/gsm1ImKVoDjrFUT+bsNR+16d49m89fHJqmGNH
-         w6qg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=L9pexUx8v40cn3RT1WuAop7eXvaLnA6ED/N54cOLZwY=;
-        b=SaBp8+J8L0h0A9cTuh3lZarvUwdvNcXo8aSMYC4UVIz50MN/3VtHNPNiQJdetHAe1s
-         LqnJ1bwXogZOyQBqvuNDA8dVcVrIGQZWJYWubwlsScTJwZheLnF4aEfj8b1E+36+bkI4
-         aZ3r9Gm/zBkl86kgVtupgg9CQF1nck3AdrN47Pe1ZmyYslhbrys3TW+hld5SiHt821YF
-         V/cM0m24vDKgDtXTDCDxpDDZ5Oq5DYzZ7Sx4dlFk0nKkgPfqmc/ZWvXmhymTa/9SLnqp
-         7HbEd5CO3HhdIOKmo5Yf1JUCEcSvfV6uYyuhEpz990SVQix8fvxKotC2mc6D53bIibMv
-         rgyg==
-X-Gm-Message-State: APjAAAXekTQ4kAHv0lngspXJac1xzr9MHr636UFHPBjLseIzCEAitTzn
-        n45fK0d2mCa+MWWQ0WoOtdMAyMQkxJc=
-X-Google-Smtp-Source: APXvYqwKI3nFIfpvWvYQEq7R49poqDmbq05vS950sLEwhy1xcJ8odcCqz078n+n0cpor24UmTvef1A==
-X-Received: by 2002:a2e:4b12:: with SMTP id y18mr12672169lja.238.1560786237241;
-        Mon, 17 Jun 2019 08:43:57 -0700 (PDT)
-Received: from [10.44.66.8] ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id y6sm2155991ljj.20.2019.06.17.08.43.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 08:43:56 -0700 (PDT)
-Subject: Re: [PATCH v2 11/11] interconnect: Add devfreq support
-To:     Saravana Kannan <saravanak@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Jordan Crouse <jcrouse@codeaurora.org>,
-        vincent.guittot@linaro.org, bjorn.andersson@linaro.org,
-        amit.kucheria@linaro.org, seansw@qti.qualcomm.com,
-        daidavid1@codeaurora.org, evgreen@chromium.org,
-        sibis@codeaurora.org, kernel-team@android.com,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190614041733.120807-1-saravanak@google.com>
- <20190614041733.120807-12-saravanak@google.com>
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-Openpgp: preference=signencrypt
-Autocrypt: addr=georgi.djakov@linaro.org; prefer-encrypt=mutual; keydata=
- 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
- KEmKjLDvB0pePJkdTw==
-Message-ID: <5dc6c820-ead8-d0dc-44de-4d13f86df042@linaro.org>
-Date:   Mon, 17 Jun 2019 18:43:53 +0300
+        Mon, 17 Jun 2019 11:45:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=abiEFLdLM5bKoC/xwI6l9zjIRnj1imHHSsabySegASw=; b=i//avOnePiyWK6TuEr3iyKH7N
+        Vyr9zfFf7bxM/t3PagBBpsFQIpDOrzQvlSXRhGZUhbEP9w7CPDf1E+zoKd+oVh2kCDz0MerBHg/Hq
+        dQ91xgIWxzdc0b2nOjUqQUm5+WKtYFXE6i6CwzLb+ORBGLn6/pw54lLIn3rNPIKVW+Z3U=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hctoV-00023a-SV; Mon, 17 Jun 2019 15:44:56 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 3E942440046; Mon, 17 Jun 2019 16:44:55 +0100 (BST)
+Date:   Mon, 17 Jun 2019 16:44:55 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Dmitry Osipenko <digetx@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 6/8] regulator: core: Don't attach generic coupler to
+ Tegra SoC regulators
+Message-ID: <20190617154455.GA5316@sirena.org.uk>
+References: <20190603235904.19097-1-digetx@gmail.com>
+ <20190603235904.19097-7-digetx@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190614041733.120807-12-saravanak@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="27E2kr7c9faIxYHh"
+Content-Disposition: inline
+In-Reply-To: <20190603235904.19097-7-digetx@gmail.com>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Saravana,
 
-On 6/14/19 07:17, Saravana Kannan wrote:
-> Add a icc_create_devfreq() and icc_remove_devfreq() to create and remove
-> devfreq devices for interconnect paths. A driver can create/remove devfreq
-> devices for the interconnects needed for its device by calling these APIs.
-> This would allow various devfreq governors to work with interconnect paths
-> and the device driver itself doesn't have to actively manage the bandwidth
-> votes for the interconnects.
+--27E2kr7c9faIxYHh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for the patches, but creating devfreq devices for each interconnect path
-seems odd to me - at least for consumers that already use a governor. So for DDR
-scaling for example, are you suggesting that we add a devfreq device from the
-cpufreq driver in order to scale the interconnect between CPU<->DDR? Also if the
-GPU is already using devfreq, should we add a devfreq per each interconnect
-path? What would be the benefit in this case - using different governors for
-bandwidth scaling maybe?
+On Tue, Jun 04, 2019 at 02:59:02AM +0300, Dmitry Osipenko wrote:
 
-Thanks,
-Georgi
+>  static int generic_coupler_attach(struct regulator_coupler *coupler,
+>  				  struct regulator_dev *rdev)
+>  {
+> +	/*
+> +	 * Generic coupler isn't suitable for NVIVIA Tegra SoC's, at least
+> +	 * for now. Hence filter out the unwanted regulators as they shall be
+> +	 * managed by a platform-specific coupler.
+> +	 */
+> +	if (of_property_read_bool(rdev->dev.of_node, "tegra-core-regulator") ||
+> +	    of_property_read_bool(rdev->dev.of_node, "tegra-rtc-regulator") ||
+> +	    of_property_read_bool(rdev->dev.of_node, "tegra-cpu-regulator"))
+> +		return -EPERM;
+> +
+
+I'm having a hard time loving this as it requires explicit DT changes
+for implementation.  I'm thinking that since the couplers are going to
+need to be built in it'd be better to make sure that any custom ones get
+registered first and then only bind the generic coupler to anything they
+reject.
+
+--27E2kr7c9faIxYHh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HtXYACgkQJNaLcl1U
+h9Cs2gf/S5a8DWJTtoEHbG3ws7VHQpSeAm4iqr2UgbzOBEkdCHLdjK0r2Iu3LU2l
+KpNbc46t5ZXSQjLIuQ3apaG1mBvinvL5AAX93z4uxez5NAnREGp6NbbP2Ph0bfBe
+BMNr3a8K1FBZdaqi2lUjFJS1ZWaUB2Npz32XrgD4Cmhlw+y1Rrl7NPT9HztYaCa5
+Jc7shPryXFXmczy12EARskXg2bcLlQ/Ne92dHRXKZEn2hMwW/1ehTNHadMHHBLjT
+bikjaqGSNIvd9LlxcbzpBvukrgCaaT8ENLHPCVmeB3gag3n55alTU5ZnUIhpAXyp
+eaXOfvK5Zmo08r+D59q1tU61z1s0JA==
+=ZHI+
+-----END PGP SIGNATURE-----
+
+--27E2kr7c9faIxYHh--
