@@ -4,61 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD02CC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3352C31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:21:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B23152084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:21:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5AC72084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:21:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KRx6FU+U"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="qU3VPpgN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728187AbfFQOVD (ORCPT
+        id S1727987AbfFQOVk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:21:03 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59599 "EHLO
+        Mon, 17 Jun 2019 10:21:40 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:43399 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQOVD (ORCPT
+        with ESMTP id S1726215AbfFQOVk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:21:03 -0400
+        Mon, 17 Jun 2019 10:21:40 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HEKleY3453336
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HELUfB3453635
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:20:48 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HEKleY3453336
+        Mon, 17 Jun 2019 07:21:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HELUfB3453635
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560781248;
-        bh=Kon8YY8C2gXkI/lKg/2EcMLOnFpvs8glImKpDZ/3SF4=;
+        s=2019051801; t=1560781290;
+        bh=F8IsWyt3EteXIZmOWeWiBQayXeMA865ruphPYM3yGvI=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=KRx6FU+UWqwuTfPZbJdbdgbvvQeeAaYUYi0ITfrr4CrqZeSXNkA5eGG8OVxlsjDIn
-         mpwO7ZICEmLySrEG78LpNIJjLzvNmjI5HisuI2gB82w+YmVC2c5IcMK6kq3UFf4MEQ
-         M9HkZXP3XtjoGtZhnteVBrMVDtVAP+k/DlF4Ows6MHnQRwmeuspohu/7IixPJ3kQsM
-         2bnCedTdeRvJVUeTF5NBTYjzpZ1v+NSjqFN5nR5ViusmrDUr9Db68H5X3xkksSxEfr
-         ppuqfLmCpxyHCIsMDFfleutbbLivLRIkJl21SHSkHfm3thag7QRyVvMp/OWHx4Baq8
-         15tZ+H7fzZHQQ==
+        b=qU3VPpgN5LnRUPx9XjnUz8nbcWlck7UPuzO1Cbf6+btwIM9HY5bfIwC4hy85EHgtA
+         YUgqMGkqwEBqbiCAib81l3DX+FX0jpSwUQYUbHbMEUmGTISeHcvNX7IlGZrhsSgUZ6
+         5pMGZFYANkEK4c+4AT0L/K9/0QiFFUVTz2G9JkZ8TW3iTY0mt8sezM1qbE/ymGWVOC
+         2vcJQATaibNBplWxAOegN4NJz9eaUY4lJHnEKckbf8bFupt+SeavJ9AcQ2uX1QlJeK
+         Rceps4dUM0Hcx1kBc5smWnQ0P+n4IIG8AxUivs6BkZgeO1wZQvs+L8wq4sidDGeF+8
+         NXPupClr2WbeQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HEKlPV3453333;
-        Mon, 17 Jun 2019 07:20:47 -0700
-Date:   Mon, 17 Jun 2019 07:20:47 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HELTpf3453632;
+        Mon, 17 Jun 2019 07:21:29 -0700
+Date:   Mon, 17 Jun 2019 07:21:29 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Valentin Schneider <tipbot@zytor.com>
-Message-ID: <tip-b0c792244138d3ef099e7fce978675dc4acae570@git.kernel.org>
-Cc:     hpa@zytor.com, valentin.schneider@arm.com, cai@lca.pw,
-        tglx@linutronix.de, torvalds@linux-foundation.org,
-        peterz@infradead.org, mingo@kernel.org, vincent.guittot@linaro.org,
-        linux-kernel@vger.kernel.org
-Reply-To: linux-kernel@vger.kernel.org, peterz@infradead.org,
-          mingo@kernel.org, vincent.guittot@linaro.org, tglx@linutronix.de,
-          cai@lca.pw, valentin.schneider@arm.com,
-          torvalds@linux-foundation.org, hpa@zytor.com
-In-Reply-To: <20190603115424.7951-1-valentin.schneider@arm.com>
-References: <20190603115424.7951-1-valentin.schneider@arm.com>
+From:   tip-bot for Qian Cai <tipbot@zytor.com>
+Message-ID: <tip-509466b7d480bc5d22e90b9fbe6122ae0e2fbe39@git.kernel.org>
+Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
+        tglx@linutronix.de, peterz@infradead.org,
+        torvalds@linux-foundation.org, cai@lca.pw
+Reply-To: peterz@infradead.org, cai@lca.pw, torvalds@linux-foundation.org,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          tglx@linutronix.de, hpa@zytor.com
+In-Reply-To: <1559596304-31581-1-git-send-email-cai@lca.pw>
+References: <1559596304-31581-1-git-send-email-cai@lca.pw>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/fair: Clean up definition of NOHZ blocked
- load functions
-Git-Commit-ID: b0c792244138d3ef099e7fce978675dc4acae570
+Subject: [tip:sched/core] sched/fair: Fix "runnable_avg_yN_inv" not used
+ warnings
+Git-Commit-ID: 509466b7d480bc5d22e90b9fbe6122ae0e2fbe39
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -72,113 +70,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  b0c792244138d3ef099e7fce978675dc4acae570
-Gitweb:     https://git.kernel.org/tip/b0c792244138d3ef099e7fce978675dc4acae570
-Author:     Valentin Schneider <valentin.schneider@arm.com>
-AuthorDate: Mon, 3 Jun 2019 12:54:24 +0100
+Commit-ID:  509466b7d480bc5d22e90b9fbe6122ae0e2fbe39
+Gitweb:     https://git.kernel.org/tip/509466b7d480bc5d22e90b9fbe6122ae0e2fbe39
+Author:     Qian Cai <cai@lca.pw>
+AuthorDate: Mon, 3 Jun 2019 17:11:44 -0400
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:15:57 +0200
+CommitDate: Mon, 17 Jun 2019 12:15:58 +0200
 
-sched/fair: Clean up definition of NOHZ blocked load functions
+sched/fair: Fix "runnable_avg_yN_inv" not used warnings
 
-cfs_rq_has_blocked() and others_have_blocked() are only used within
-update_blocked_averages(). The !CONFIG_FAIR_GROUP_SCHED version of the
-latter calls them within a #define CONFIG_NO_HZ_COMMON block, whereas
-the CONFIG_FAIR_GROUP_SCHED one calls them unconditionnally.
+runnable_avg_yN_inv[] is only used in kernel/sched/pelt.c but was
+included in several other places because they need other macros all
+came from kernel/sched/sched-pelt.h which was generated by
+Documentation/scheduler/sched-pelt. As the result, it causes compilation
+a lot of warnings,
 
-As reported by Qian, the above leads to this warning in
-!CONFIG_NO_HZ_COMMON configs:
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  kernel/sched/sched-pelt.h:4:18: warning: 'runnable_avg_yN_inv' defined but not used [-Wunused-const-variable=]
+  ...
 
-  kernel/sched/fair.c: In function 'update_blocked_averages':
-  kernel/sched/fair.c:7750:7: warning: variable 'done' set but not used [-Wunused-but-set-variable]
+Silence it by appending the __maybe_unused attribute for it, so all
+generated variables and macros can still be kept in the same file.
 
-It wouldn't be wrong to keep cfs_rq_has_blocked() and
-others_have_blocked() as they are, but since their only current use is
-to figure out when we can stop calling update_blocked_averages() on
-fully decayed NOHZ idle CPUs, we can give them a new definition for
-!CONFIG_NO_HZ_COMMON.
-
-Change the definition of cfs_rq_has_blocked() and
-others_have_blocked() for !CONFIG_NO_HZ_COMMON so that the
-NOHZ-specific blocks of update_blocked_averages() become no-ops and
-the 'done' variable gets optimised out.
-
-While at it, remove the CONFIG_NO_HZ_COMMON block from the
-!CONFIG_FAIR_GROUP_SCHED definition of update_blocked_averages() by
-using the newly-introduced update_blocked_load_status() helper.
-
-No change in functionality intended.
-
-[ Additions by Peter Zijlstra. ]
-
-Reported-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Qian Cai <cai@lca.pw>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Vincent Guittot <vincent.guittot@linaro.org>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20190603115424.7951-1-valentin.schneider@arm.com
+Link: https://lkml.kernel.org/r/1559596304-31581-1-git-send-email-cai@lca.pw
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/sched/fair.c | 26 ++++++++++++++++----------
- 1 file changed, 16 insertions(+), 10 deletions(-)
+ Documentation/scheduler/sched-pelt.c | 3 ++-
+ kernel/sched/sched-pelt.h            | 2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 7f8d477f90fe..4c8f45ed093c 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -7393,6 +7393,7 @@ static void attach_tasks(struct lb_env *env)
- 	rq_unlock(env->dst_rq, &rf);
- }
+diff --git a/Documentation/scheduler/sched-pelt.c b/Documentation/scheduler/sched-pelt.c
+index e4219139386a..7238b355919c 100644
+--- a/Documentation/scheduler/sched-pelt.c
++++ b/Documentation/scheduler/sched-pelt.c
+@@ -20,7 +20,8 @@ void calc_runnable_avg_yN_inv(void)
+ 	int i;
+ 	unsigned int x;
  
-+#ifdef CONFIG_NO_HZ_COMMON
- static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq)
- {
- 	if (cfs_rq->avg.load_avg)
-@@ -7420,6 +7421,19 @@ static inline bool others_have_blocked(struct rq *rq)
- 	return false;
- }
+-	printf("static const u32 runnable_avg_yN_inv[] = {");
++	/* To silence -Wunused-but-set-variable warnings. */
++	printf("static const u32 runnable_avg_yN_inv[] __maybe_unused = {");
+ 	for (i = 0; i < HALFLIFE; i++) {
+ 		x = ((1UL<<32)-1)*pow(y, i);
  
-+static inline void update_blocked_load_status(struct rq *rq, bool has_blocked)
-+{
-+	rq->last_blocked_load_update_tick = jiffies;
-+
-+	if (!has_blocked)
-+		rq->has_blocked_load = 0;
-+}
-+#else
-+static inline bool cfs_rq_has_blocked(struct cfs_rq *cfs_rq) { return false; }
-+static inline bool others_have_blocked(struct rq *rq) { return false; }
-+static inline void update_blocked_load_status(struct rq *rq, bool has_blocked) {}
-+#endif
-+
- #ifdef CONFIG_FAIR_GROUP_SCHED
+diff --git a/kernel/sched/sched-pelt.h b/kernel/sched/sched-pelt.h
+index a26473674fb7..c529706bed11 100644
+--- a/kernel/sched/sched-pelt.h
++++ b/kernel/sched/sched-pelt.h
+@@ -1,7 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ /* Generated by Documentation/scheduler/sched-pelt; do not modify. */
  
- static inline bool cfs_rq_is_decayed(struct cfs_rq *cfs_rq)
-@@ -7485,11 +7499,7 @@ static void update_blocked_averages(int cpu)
- 	if (others_have_blocked(rq))
- 		done = false;
- 
--#ifdef CONFIG_NO_HZ_COMMON
--	rq->last_blocked_load_update_tick = jiffies;
--	if (done)
--		rq->has_blocked_load = 0;
--#endif
-+	update_blocked_load_status(rq, !done);
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
-@@ -7555,11 +7565,7 @@ static inline void update_blocked_averages(int cpu)
- 	update_rt_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &rt_sched_class);
- 	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
- 	update_irq_load_avg(rq, 0);
--#ifdef CONFIG_NO_HZ_COMMON
--	rq->last_blocked_load_update_tick = jiffies;
--	if (!cfs_rq_has_blocked(cfs_rq) && !others_have_blocked(rq))
--		rq->has_blocked_load = 0;
--#endif
-+	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
+-static const u32 runnable_avg_yN_inv[] = {
++static const u32 runnable_avg_yN_inv[] __maybe_unused = {
+ 	0xffffffff, 0xfa83b2da, 0xf5257d14, 0xefe4b99a, 0xeac0c6e6, 0xe5b906e6,
+ 	0xe0ccdeeb, 0xdbfbb796, 0xd744fcc9, 0xd2a81d91, 0xce248c14, 0xc9b9bd85,
+ 	0xc5672a10, 0xc12c4cc9, 0xbd08a39e, 0xb8fbaf46, 0xb504f333, 0xb123f581,
