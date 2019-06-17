@@ -2,42 +2,42 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5257DC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE3CC46477
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:27:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B2002084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:27:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AECC2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:27:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nRxanBbF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="nUM3O0j+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727092AbfFQM1s (ORCPT
+        id S1727432AbfFQM1u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:27:48 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42416 "EHLO
+        Mon, 17 Jun 2019 08:27:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42418 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726669AbfFQM1p (ORCPT
+        with ESMTP id S1725906AbfFQM1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:27:45 -0400
+        Mon, 17 Jun 2019 08:27:46 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=IiaLcJALEKaB7Li7OAHwGVaUV7J5HHtfGyRFzVhVT5I=; b=nRxanBbFaXKRrfonPCdCK8x8a
-        H13NLWpT/FYGEMhPawtjpKXuuFd5AsVGls0FU/bFblMxeQyfmVpGkj8pGsbrVCCWMJWTllTMnGpqR
-        lLvHY6XYJAnUlu8naiV+ey/kfflUSIzdOe46iLEfPoDAcpWQgUXfY+Hmls32zlkAUygawRFXkMCHP
-        wYZFnLlYcqST58xEgFnwklfAMQdGemLG8MCW+sf8MPt5vq44TqtytxlspPlDutukXjQTeeXjgmomc
-        DBnAvx70XsOhTxq4s1gUZqpsTkLMt1yioXaF7KDQUOS+v7Psp7YyIakjW17TKDyANImlYyLvulA8s
-        Kdy4HvCiw==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=GMyD4ZeUwEyX4TLbYH+teiOZCsmaS5so5bsDBHXs5VU=; b=nUM3O0j+v0YkuO+grtlLfHPwaH
+        cV0WhQAmaitlmE6ROwsIKJCV/PlKqUn+0O2EWB1Hs1nEpKWW8txqk2fddXoiLre+dVvw9bHopOPj/
+        gxJDRUoHl+//i7XrIMZT3FKhCTu/PdfOYJCLGgo7rTAcjPqy99/URAGv7WeM7qn8F0aLO8QPfe2cq
+        07WYX982utWhvOtWHTzi5gbbLN1LvS1/WFqavQ6hw3qVrjla8/wu9w23XyHgB/5OiA5nsWfl2v27L
+        xDnS8fKvcYcw4DwESFtDIxH0HLpADpbP4XBoQFGVGvrc38bZlNIwtghm8E94lATBAXFDfzbvWHgJL
+        wMPWcrTA==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqjZ-0008K6-5z; Mon, 17 Jun 2019 12:27:37 +0000
+        id 1hcqjd-0008Kg-IT; Mon, 17 Jun 2019 12:27:41 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -45,13 +45,15 @@ To:     Dan Williams <dan.j.williams@intel.com>,
         Ben Skeggs <bskeggs@redhat.com>
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: dev_pagemap related cleanups v2
-Date:   Mon, 17 Jun 2019 14:27:08 +0200
-Message-Id: <20190617122733.22432-1-hch@lst.de>
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH 02/25] mm: remove the struct hmm_device infrastructure
+Date:   Mon, 17 Jun 2019 14:27:10 +0200
+Message-Id: <20190617122733.22432-3-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190617122733.22432-1-hch@lst.de>
+References: <20190617122733.22432-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -59,27 +61,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan, Jérôme and Jason,
+This code is a trivial wrapper around device model helpers, which
+should have been integrated into the driver device model usage from
+the start.  Assuming it actually had users, which it never had since
+the code was added more than 1 1/2 years ago.
 
-below is a series that cleans up the dev_pagemap interface so that
-it is more easily usable, which removes the need to wrap it in hmm
-and thus allowing to kill a lot of code
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
+Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+---
+ include/linux/hmm.h | 20 ------------
+ mm/hmm.c            | 80 ---------------------------------------------
+ 2 files changed, 100 deletions(-)
 
-Note: this series is on top of the rdma/hmm branch + the dev_pagemap
-releas fix series from Dan that went into 5.2-rc5.
+diff --git a/include/linux/hmm.h b/include/linux/hmm.h
+index 7007123842ba..c92f353d701a 100644
+--- a/include/linux/hmm.h
++++ b/include/linux/hmm.h
+@@ -753,26 +753,6 @@ static inline unsigned long hmm_devmem_page_get_drvdata(const struct page *page)
+ {
+ 	return page->hmm_data;
+ }
+-
+-
+-/*
+- * struct hmm_device - fake device to hang device memory onto
+- *
+- * @device: device struct
+- * @minor: device minor number
+- */
+-struct hmm_device {
+-	struct device		device;
+-	unsigned int		minor;
+-};
+-
+-/*
+- * A device driver that wants to handle multiple devices memory through a
+- * single fake device can use hmm_device to do so. This is purely a helper and
+- * it is not strictly needed, in order to make use of any HMM functionality.
+- */
+-struct hmm_device *hmm_device_new(void *drvdata);
+-void hmm_device_put(struct hmm_device *hmm_device);
+ #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
+ #else /* IS_ENABLED(CONFIG_HMM) */
+ static inline void hmm_mm_destroy(struct mm_struct *mm) {}
+diff --git a/mm/hmm.c b/mm/hmm.c
+index 4c770a734c0d..f3350fc567ab 100644
+--- a/mm/hmm.c
++++ b/mm/hmm.c
+@@ -1525,84 +1525,4 @@ struct hmm_devmem *hmm_devmem_add_resource(const struct hmm_devmem_ops *ops,
+ 	return devmem;
+ }
+ EXPORT_SYMBOL_GPL(hmm_devmem_add_resource);
+-
+-/*
+- * A device driver that wants to handle multiple devices memory through a
+- * single fake device can use hmm_device to do so. This is purely a helper
+- * and it is not needed to make use of any HMM functionality.
+- */
+-#define HMM_DEVICE_MAX 256
+-
+-static DECLARE_BITMAP(hmm_device_mask, HMM_DEVICE_MAX);
+-static DEFINE_SPINLOCK(hmm_device_lock);
+-static struct class *hmm_device_class;
+-static dev_t hmm_device_devt;
+-
+-static void hmm_device_release(struct device *device)
+-{
+-	struct hmm_device *hmm_device;
+-
+-	hmm_device = container_of(device, struct hmm_device, device);
+-	spin_lock(&hmm_device_lock);
+-	clear_bit(hmm_device->minor, hmm_device_mask);
+-	spin_unlock(&hmm_device_lock);
+-
+-	kfree(hmm_device);
+-}
+-
+-struct hmm_device *hmm_device_new(void *drvdata)
+-{
+-	struct hmm_device *hmm_device;
+-
+-	hmm_device = kzalloc(sizeof(*hmm_device), GFP_KERNEL);
+-	if (!hmm_device)
+-		return ERR_PTR(-ENOMEM);
+-
+-	spin_lock(&hmm_device_lock);
+-	hmm_device->minor = find_first_zero_bit(hmm_device_mask, HMM_DEVICE_MAX);
+-	if (hmm_device->minor >= HMM_DEVICE_MAX) {
+-		spin_unlock(&hmm_device_lock);
+-		kfree(hmm_device);
+-		return ERR_PTR(-EBUSY);
+-	}
+-	set_bit(hmm_device->minor, hmm_device_mask);
+-	spin_unlock(&hmm_device_lock);
+-
+-	dev_set_name(&hmm_device->device, "hmm_device%d", hmm_device->minor);
+-	hmm_device->device.devt = MKDEV(MAJOR(hmm_device_devt),
+-					hmm_device->minor);
+-	hmm_device->device.release = hmm_device_release;
+-	dev_set_drvdata(&hmm_device->device, drvdata);
+-	hmm_device->device.class = hmm_device_class;
+-	device_initialize(&hmm_device->device);
+-
+-	return hmm_device;
+-}
+-EXPORT_SYMBOL(hmm_device_new);
+-
+-void hmm_device_put(struct hmm_device *hmm_device)
+-{
+-	put_device(&hmm_device->device);
+-}
+-EXPORT_SYMBOL(hmm_device_put);
+-
+-static int __init hmm_init(void)
+-{
+-	int ret;
+-
+-	ret = alloc_chrdev_region(&hmm_device_devt, 0,
+-				  HMM_DEVICE_MAX,
+-				  "hmm_device");
+-	if (ret)
+-		return ret;
+-
+-	hmm_device_class = class_create(THIS_MODULE, "hmm_device");
+-	if (IS_ERR(hmm_device_class)) {
+-		unregister_chrdev_region(hmm_device_devt, HMM_DEVICE_MAX);
+-		return PTR_ERR(hmm_device_class);
+-	}
+-	return 0;
+-}
+-
+-device_initcall(hmm_init);
+ #endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
+-- 
+2.20.1
 
-Git tree:
-
-    git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup.2
-
-Gitweb:
-
-    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-devmem-cleanup.2
-
-Changes since v1:
- - rebase
- - also switch p2pdma to the internal refcount
- - add type checking for pgmap->type
- - rename the migrate method to migrate_to_ram
- - cleanup the altmap_valid flag
- - various tidbits from the reviews
