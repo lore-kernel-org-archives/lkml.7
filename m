@@ -2,112 +2,65 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B530DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E84C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 941F7208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AFA4B2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uzePms7N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbfFQPEs (ORCPT
+        id S1728475AbfFQPE5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:04:48 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:18594 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726215AbfFQPEr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:04:47 -0400
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id C92BC1D85F75F7B0EB3E;
-        Mon, 17 Jun 2019 23:04:42 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS401-HUB.china.huawei.com
- (10.3.19.201) with Microsoft SMTP Server id 14.3.439.0; Mon, 17 Jun 2019
- 23:04:36 +0800
-Subject: Re: [PATCH v3] bus: hisi_lpc: Avoid use-after-free from probe failure
-To:     <xuwei5@huawei.com>
-References: <1560770148-57960-1-git-send-email-john.garry@huawei.com>
-CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
-        <linux-kernel@vger.kernel.org>, <joe@perches.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <bda4130a-411e-cb51-5736-a51226c3a99f@huawei.com>
-Date:   Mon, 17 Jun 2019 16:04:31 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Mon, 17 Jun 2019 11:04:57 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33392 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726215AbfFQPE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:04:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=N+nXDWqrqihqw6MNyCyPhz3odKcZAF6q0IHy8eM5AP8=; b=uzePms7NJchIgkuCaNZY10Sd5V
+        CxYE+7R4WzfoZHHoOfOLGnU8lk5TPGmDfBF+A6HoXN8H2mKZy3rom6VQx12KyOnmIEIKamaIJv+M9
+        Dt1Uz/DE4ZFQc9ewYCWZuHZxYHVL7m3Rybx06nCwYC77K1wG1MJ1dy5/D3iSbsBZencw=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hctBj-0008IL-DR; Mon, 17 Jun 2019 17:04:51 +0200
+Date:   Mon, 17 Jun 2019 17:04:51 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     nicolas.ferre@microchip.com, davem@davemloft.net,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, rafalc@cadence.com,
+        aniljoy@cadence.com, piotrs@cadence.com
+Subject: Re: [PATCH 0/6] net: macb patch set cover letter
+Message-ID: <20190617150451.GG25211@lunn.ch>
+References: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <1560770148-57960-1-git-send-email-john.garry@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2019 12:15, John Garry wrote:
-> If, after registering a logical PIO range, the driver probe later fails,
-> the logical PIO range memory will be released automatically.
->
-> This causes an issue, in that the logical PIO range is not unregistered
-> and the released range memory may be later referenced.
->
-> As an interim fix, allocate the logical PIO range with kzalloc() to avoid
-> this memory being freed.
->
-> Further memory will not be leaked from later attempts to probe the
-> driver, as any attempts to allocate logical PIO ranges will fail, and we
-> would release the 'range' memory.
->
-> The correct fix for this problem would be to tear down what had been setup
-> during the probe, i.e. unregister the logical PIO range, but this is not
-> supported.
->
-> Support for unregistering logical PIO ranges will need be to added in
-> future.
->
-> Fixes: adf38bb0b5956 ("HISI LPC: Support the LPC host on Hip06/Hip07 with DT bindings")
-> Signed-off-by: John Garry <john.garry@huawei.com>
-> ---
->
+> 3. 003-net-macb-add-PHY-configuration-in-MACB-PCI-wrapper.patch
+>    This patch is to configure TI PHY DP83867 in SGMII mode from
+>    our MAC PCI wrapper driver. 
+>    With this change there is no need of PHY driver and dp83867
+>    module must be disabled. Users wanting to setup DP83867 PHY	
+>    in SGMII mode can disable dp83867.ko driver, else dp83867.ko
+>    overwrite this configuration and PHY is setup as per dp83867.ko.
 
-I just realized that there is another bug in this driver, regarding 
-unbinding the driver from the device.
+This sounds very wrong. Why not make the dp83867 driver support SGMII?
 
-@xuwei, please ignore this patch. I need to fix this all properly, 
-including adding the logical PIO unregister method.
-
-John
-
-> Change in v2:
-> - update commit message
->
-> Change to v1:
-> - add comment, as advised by Joe Perches
->
-> diff --git a/drivers/bus/hisi_lpc.c b/drivers/bus/hisi_lpc.c
-> index 19d7b6ff2f17..5f0130a693fe 100644
-> --- a/drivers/bus/hisi_lpc.c
-> +++ b/drivers/bus/hisi_lpc.c
-> @@ -599,7 +599,8 @@ static int hisi_lpc_probe(struct platform_device *pdev)
->  	if (IS_ERR(lpcdev->membase))
->  		return PTR_ERR(lpcdev->membase);
->
-> -	range = devm_kzalloc(dev, sizeof(*range), GFP_KERNEL);
-> +	/* Logical PIO may reference 'range' memory even if the probe fails */
-> +	range = kzalloc(sizeof(*range), GFP_KERNEL);
->  	if (!range)
->  		return -ENOMEM;
->
-> @@ -610,6 +611,7 @@ static int hisi_lpc_probe(struct platform_device *pdev)
->  	ret = logic_pio_register_range(range);
->  	if (ret) {
->  		dev_err(dev, "register IO range failed (%d)!\n", ret);
-> +		kfree(range);
->  		return ret;
->  	}
->  	lpcdev->io_host = range;
->
-
-
+     Andrew
