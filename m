@@ -2,201 +2,176 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9874AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 486D0C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC7A2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E89B2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:30:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560781803;
+	bh=qDifSuqcxzKT2mPFaeywjNnbb7wpS1XjMQUY4VjP95s=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=QW/yD3t0aDjHkRDufRH0v7ZDR+2cjGqFV/O7/HLZzQchLMb9T6Tfjgubl3r9ry1Bp
+	 jiX1aSAy4GQxNFl/N3fhP5n42b4r5sg89AOz0vsrH/8szxi2e4lSc11gpFwM00y4ch
+	 83RpGQgxxTpgN+3IO0Ve7oJG/pwdRcPAUP5f/KBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728297AbfFQO3x (ORCPT
+        id S1728345AbfFQOaC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:29:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51904 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727738AbfFQO3x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:29:53 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HEHZ3I139885
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 10:29:52 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t6brv3490-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 10:29:51 -0400
-Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Mon, 17 Jun 2019 15:29:51 +0100
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Jun 2019 15:29:48 +0100
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5HETimJ32702860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 14:29:44 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 193DC6E052;
-        Mon, 17 Jun 2019 14:29:44 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04BE56E054;
-        Mon, 17 Jun 2019 14:29:42 +0000 (GMT)
-Received: from [9.60.84.60] (unknown [9.60.84.60])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Jun 2019 14:29:42 +0000 (GMT)
-Subject: Re: [PATCH v4 2/7] s390: vfio-ap: wait for queue empty on queue reset
-To:     Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, cohuck@redhat.com, frankja@linux.ibm.com,
-        david@redhat.com, mjrosato@linux.ibm.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
-        pasic@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com
-References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
- <1560454780-20359-3-git-send-email-akrowiak@linux.ibm.com>
- <b7f2d9df-26d8-9915-5345-f17e6cd0ef93@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Mon, 17 Jun 2019 10:29:42 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 17 Jun 2019 10:30:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726028AbfFQOaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 10:30:01 -0400
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A025821670;
+        Mon, 17 Jun 2019 14:30:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560781800;
+        bh=qDifSuqcxzKT2mPFaeywjNnbb7wpS1XjMQUY4VjP95s=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ftWeEUcZLQyXIz69qGsxcV2k+8X5HWs0TvIl0HUP/iGfydDi7z72q5tq23j5gcIMU
+         gBI4ri54fv5RFQCp50ZhqEflChHkcPdy3qDEZtZrLVD59ElSh6jFwgHv9QKP6e8Cbs
+         g7a2mHo9VpiDU/ajh1Oe0Bhtk9F5EGJffhgeVVNY=
+Received: by mail-qt1-f173.google.com with SMTP id p15so10932235qtl.3;
+        Mon, 17 Jun 2019 07:30:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAVSOH3haT4LP6KGGmspmjCBbxAhttpMNF8G8JXnxBrE7g7j3JiW
+        GCRaRfMTHSkX8WPaT9iC6x2rbaqCn+yhxOlnrw==
+X-Google-Smtp-Source: APXvYqyASK26LQzwRomt6iiD2y9sCFeTHLV/m8OIpqVyW9ojtFBBNp5iBGmT/mAjUDht+/goKLmPF8B9/cU/9xrQDis=
+X-Received: by 2002:a0c:acef:: with SMTP id n44mr22338717qvc.39.1560781799779;
+ Mon, 17 Jun 2019 07:29:59 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <b7f2d9df-26d8-9915-5345-f17e6cd0ef93@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061714-8235-0000-0000-00000EA93D47
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011278; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01219293; UDB=6.00641330; IPR=6.01000435;
- MB=3.00027344; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-17 14:29:50
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061714-8236-0000-0000-0000460CCBCC
-Message-Id: <1feb3cab-94cf-6923-96c4-866545ee7798@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906170130
+References: <20190616132930.6942-1-masneyb@onstation.org> <20190616132930.6942-2-masneyb@onstation.org>
+In-Reply-To: <20190616132930.6942-2-masneyb@onstation.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 17 Jun 2019 08:29:48 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ0y7_RPs-qK4thVen6nUVdFbikcwsmmun9tHsVSccQag@mail.gmail.com>
+Message-ID: <CAL_JsqJ0y7_RPs-qK4thVen6nUVdFbikcwsmmun9tHsVSccQag@mail.gmail.com>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 4:47 AM, Harald Freudenberger wrote:
-> On 13.06.19 21:39, Tony Krowiak wrote:
->> Refactors the AP queue reset function to wait until the queue is empty
->> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
->> required by the AP architecture.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_ops.c | 49 +++++++++++++++++++++++++++------------
->>   1 file changed, 34 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
->> index bf2ab02b9a0b..60efd3d7896d 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -1128,23 +1128,46 @@ static void vfio_ap_irq_disable_apqn(int apqn)
->>   	}
->>   }
->>   
->> -int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
->> -			     unsigned int retry)
->> +static void vfio_ap_mdev_wait_for_qempty(ap_qid_t qid)
->> +{
->> +	struct ap_queue_status status;
->> +	int retry = 5;
->> +
->> +	do {
->> +		status = ap_tapq(qid, NULL);
->> +		switch (status.response_code) {
->> +		case AP_RESPONSE_NORMAL:
->> +			if (status.queue_empty)
->> +				return;
->> +		case AP_RESPONSE_RESET_IN_PROGRESS:
->> +		case AP_RESPONSE_BUSY:
->> +			msleep(20);
->> +			break;
->> +		default:
->> +			pr_warn("%s: tapq response %02x waiting for queue %04x.%02x empty\n",
->> +				__func__, status.response_code,
->> +				AP_QID_CARD(qid), AP_QID_QUEUE(qid));
-> The ap and zcrypt code uses %02x.%04x for displaying an APQN.
+On Sun, Jun 16, 2019 at 7:29 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Add device tree bindings for the On Chip Memory (OCMEM) that is present
+> on some Qualcomm Snapdragon SoCs.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  .../bindings/soc/qcom/qcom,ocmem.yaml         | 66 +++++++++++++++++++
 
-Oops, of course it does. My synapses must have been reversed.
+.../bindings/sram/
 
-> I would also recommend to handle 0x01 (AP_RESPONSE_Q_NOT_AVAIL) and
-> 0x03 (AP_RESPONSE_DECONFIGURED) as this code may run when a APQN
-> is removed from the configuration of the LPAR. However, it's up to you if you
-> want to handle these with the default statement and issue an sysfs warning.
+>  1 file changed, 66 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
+> new file mode 100644
+> index 000000000000..5e3ae6311a16
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
+> @@ -0,0 +1,66 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/qcom/qcom,ocmem.yaml#
 
-How would you handle them differently? If the queue is not in the
-configuration, then there is nothing to wait for.
+schemas/sram/
 
->> +			return;
->> +		}
->> +	} while (--retry);
->> +
->> +	WARN_ON_ONCE(retry <= 0);
->> +}
->> +
->> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
->>   {
->>   	struct ap_queue_status status;
->> -	int retry2 = 2;
->>   	int apqn = AP_MKQID(apid, apqi);
->> +	int retry = 5;
->>   
->>   	do {
->>   		status = ap_zapq(apqn);
->>   		switch (status.response_code) {
->>   		case AP_RESPONSE_NORMAL:
->> -			while (!status.queue_empty && retry2--) {
->> -				msleep(20);
->> -				status = ap_tapq(apqn, NULL);
->> -			}
->> -			WARN_ON_ONCE(retry <= 0);
->> +			vfio_ap_mdev_wait_for_qempty(AP_MKQID(apid, apqi));
->>   			return 0;
->> +		case AP_RESPONSE_DECONFIGURED:
->> +			return -ENODEV;
->>   		case AP_RESPONSE_RESET_IN_PROGRESS:
->>   		case AP_RESPONSE_BUSY:
->>   			msleep(20);
->> @@ -1169,14 +1192,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
->>   			     matrix_mdev->matrix.apm_max + 1) {
->>   		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
->>   				     matrix_mdev->matrix.aqm_max + 1) {
->> -			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
->> -			/*
->> -			 * Regardless whether a queue turns out to be busy, or
->> -			 * is not operational, we need to continue resetting
->> -			 * the remaining queues.
->> -			 */
->> +			ret = vfio_ap_mdev_reset_queue(apid, apqi);
->>   			if (ret)
->>   				rc = ret;
->> +
->>   			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
->>   		}
->>   	}
->> @@ -1326,7 +1345,7 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
->>   	dev_set_drvdata(&queue->ap_dev.device, NULL);
->>   	apid = AP_QID_CARD(q->apqn);
->>   	apqi = AP_QID_QUEUE(q->apqn);
->> -	vfio_ap_mdev_reset_queue(apid, apqi, 1);
->> +	vfio_ap_mdev_reset_queue(apid, apqi);
->>   	vfio_ap_irq_disable(q);
->>   	kfree(q);
->>   }
-> 
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
+> +
+> +maintainers:
+> +  - Brian Masney <masneyb@onstation.org>
+> +
+> +description: |
+> +  The On Chip Memory (OCMEM) allocator allows various clients to allocate memory
 
+Is there something in the h/w that's an allocator? That's typically a
+s/w thing that has nothing to do with h/w description.
+
+> +  from OCMEM based on performance, latency and power requirements. This is
+> +  typically used by the GPU, camera/video, and audio components on some
+> +  Snapdragon SoCs.
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ocmem-msm8974
+
+What Bjorn said...
+
+> +
+> +  reg:
+> +    items:
+> +      - description: Control registers
+> +      - description: OCMEM address range
+> +
+> +  reg-names:
+> +    items:
+> +      - const: ocmem_ctrl_physical
+> +      - const: ocmem_physical
+
+'ctrl' and 'mem' would be sufficient.
+
+> +
+> +  clocks:
+> +    items:
+> +      - description: Core clock
+> +      - description: Interface clock
+> +
+> +  clock-names:
+> +    items:
+> +      - const: core
+> +      - const: iface
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reg-names
+> +  - clocks
+> +  - clock-names
+> +
+> +examples:
+> +  - |
+> +      #include <dt-bindings/clock/qcom,rpmcc.h>
+> +      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
+> +
+> +      ocmem: ocmem@fdd00000 {
+> +        compatible = "qcom,ocmem-msm8974";
+> +
+> +        reg = <0xfdd00000 0x2000>,
+> +               <0xfec00000 0x180000>;
+> +        reg-names = "ocmem_ctrl_physical",
+> +                    "ocmem_physical";
+> +
+> +        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
+> +                  <&mmcc OCMEMCX_OCMEMNOC_CLK>;
+> +        clock-names = "core",
+> +                      "iface";
+> +      };
+> --
+> 2.20.1
+>
