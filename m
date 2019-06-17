@@ -2,123 +2,138 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12488C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:50:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 758D2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA448208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:50:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E5E3208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:50:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ISCeUeI6"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q9HxfQrq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfFQPua (ORCPT
+        id S1728431AbfFQPud (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:50:30 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36758 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728248AbfFQPu3 (ORCPT
+        Mon, 17 Jun 2019 11:50:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39196 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728248AbfFQPub (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:50:29 -0400
-Received: by mail-pg1-f193.google.com with SMTP id f21so6058967pgi.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:50:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=+OUu5AC1XwEziNl7f2ObgXI6EJ5Z9lyfvlo4eWVagcU=;
-        b=ISCeUeI6xBkfCbqRsJ5hWj2ky7KLyS5Hxv+dAGBv9LfG6T8joklmRkz/DGgZ8Wr6pU
-         nV1z0yejTv+d7GgQL49ysUJX5AyfcfGY/UlEnA7vxXUAQgrgUA7ojdmn0cwgZREC3xql
-         fIN0GXBxoAY03Fdw5i2ZrYNPowSKBDHD74DaCUwpv/lbVKD1ai0n/LqaDpetWr7RjdPx
-         UvShSP1Ih3+GkTviWGhyjIJsYKOZMu6Wf2n5MRHa/mibVbnckXOKfGUhxLbl7kYz+pLd
-         Tx3SLkVSWTEkyC6GkpKsKjCOr4FciJsM8B5cJ4pJmN2AhfQ+Exf8C58jXIBGsXEvfy9T
-         iLQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=+OUu5AC1XwEziNl7f2ObgXI6EJ5Z9lyfvlo4eWVagcU=;
-        b=ZVhjZdmFJ5z91GNk8Ds4h5qcc/5UpKg6kiU/UZJNEpBHI7/qdqX6k8bob27MoEDKJl
-         Hmk/izQe56SZXxQIm4rlskgUZ5MOSb+BWTKqAcKTX6frlhmcBxX3w4TLzgvjw2zIpUeL
-         UnBjz/ch7OOViCFsb9xV5209FbBvFNhqpdtB1a6AsjJu2XoQQPdTfjxsxjDqmJhpjCUK
-         b/UcVrrpqNEv7JMhQdzBukzoQJlEW/DOlc5dNEPBXp7jvwxab4s2l+J83IsGXK1X9UTx
-         xcDFF/vrf2RrWEuex2Hx/yHldWjnezyLpolSm5Ch3bxDw5zHBgAwr+vZgnzJVbWTEie5
-         hiig==
-X-Gm-Message-State: APjAAAWgNxNtjFzotNK1GH7zJnwQF2BdCNbE12XAuNgJydVS+1+4nivF
-        6vZ02Xq3Hy5ily0CsT6nOEHcRxxClg==
-X-Google-Smtp-Source: APXvYqxhRVxSfwiE75iq8WYRByIXfkCZs+a89yfUsZH1N0GqbnvIBgo9g3IOMi9CcY/kejjNVhUwIQ==
-X-Received: by 2002:a65:5a42:: with SMTP id z2mr50893750pgs.421.1560786629007;
-        Mon, 17 Jun 2019 08:50:29 -0700 (PDT)
-Received: from localhost.localdomain ([2409:4072:629b:c246:9431:2a24:7932:6dba])
-        by smtp.gmail.com with ESMTPSA id n2sm11023603pff.104.2019.06.17.08.50.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 08:50:28 -0700 (PDT)
-From:   Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-To:     lee.jones@linaro.org, lgirdwood@gmail.com, broonie@kernel.org,
-        robh+dt@kernel.org
-Cc:     afaerber@suse.de, linux-actions@lists.infradead.org,
-        linux-kernel@vger.kernel.org, thomas.liau@actions-semi.com,
-        devicetree@vger.kernel.org, linus.walleij@linaro.org,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/4] Add MFD/Regulator support for ATC260x PMICs
-Date:   Mon, 17 Jun 2019 21:20:07 +0530
-Message-Id: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Jun 2019 11:50:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BR2md6n6Q18on79dMFcaXNz3srYx6Sfx4K07iFPAszA=; b=Q9HxfQrqVz+qo4SCuT0oYOUGY
+        s2zAOLRSQbww5wegoEzCwYdsqD7jW6FS56wDaXTzTFCAOd+Hi0z3HWWssf+Gn2Ilf3bfFHLug2JP7
+        +4LTrS5GXNNupL0/8f8fqBt3TYUmoICe5y64Vgbmg9h6WXWsp6eQb/+4/hj1B33TR8czRrK8vvlLZ
+        COXJJN+qpkiM5eEhvQqoIeardkUme6LKIOgjCvEma1iklypdDJverql/CC+FYraT0j/Gb7osmIpnK
+        Sb+miWQ6wXmNPCTaqqK9ykDY+KkFid/Skbutgsu7KAprjgGp7sweQWo5p7xt8fRgIM83+Fg1MR1Bs
+        UyDwHJF3w==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcttc-0007YJ-4V; Mon, 17 Jun 2019 15:50:12 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7D6CE201F4619; Mon, 17 Jun 2019 17:50:10 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 17:50:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Qais Yousef <qais.yousef@arm.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH v3 5/6] sched: Add sched_overutilized tracepoint
+Message-ID: <20190617155010.GH3436@hirez.programming.kicks-ass.net>
+References: <20190604111459.2862-1-qais.yousef@arm.com>
+ <20190604111459.2862-6-qais.yousef@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604111459.2862-6-qais.yousef@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, Jun 04, 2019 at 12:14:58PM +0100, Qais Yousef wrote:
+> The new tracepoint allows us to track the changes in overutilized
+> status.
+> 
+> Overutilized status is associated with EAS. It indicates that the system
+> is in high performance state. EAS is disabled when the system is in this
+> state since there's not much energy savings while high performance tasks
+> are pushing the system to the limit and it's better to default to the
+> spreading behavior of the scheduler.
+> 
+> This tracepoint helps understanding and debugging the conditions under
+> which this happens.
+> 
+> Signed-off-by: Qais Yousef <qais.yousef@arm.com>
+> ---
+>  include/trace/events/sched.h |  4 ++++
+>  kernel/sched/fair.c          | 11 +++++++++--
+>  2 files changed, 13 insertions(+), 2 deletions(-)
+> 
+> diff --git a/include/trace/events/sched.h b/include/trace/events/sched.h
+> index c7dd9bc7f001..edd96e04049f 100644
+> --- a/include/trace/events/sched.h
+> +++ b/include/trace/events/sched.h
+> @@ -621,6 +621,10 @@ DECLARE_TRACE(pelt_se_tp,
+>  	TP_PROTO(struct sched_entity *se),
+>  	TP_ARGS(se));
+>  
+> +DECLARE_TRACE(sched_overutilized_tp,
+> +	TP_PROTO(int overutilized, struct root_domain *rd),
+> +	TP_ARGS(overutilized, rd));
+> +
 
-This patchset adds MFD core and Regulator support for Actions Semi ATC260x
-PMICs. ATC260x series PMICs integrates Audio Codec, Power management,
-Clock generation, and GPIO controller blocks. There are 3 variants of this
-PMIC series exist today:
+strictly speaking you only need @rd :-)
 
-ATC2603A
-ATC2603C
-ATC2609A
+>  #endif /* _TRACE_SCHED_H */
+>  
+>  /* This part must be outside protection */
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 8e0015ebf109..e2418741608e 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -5179,8 +5179,10 @@ static inline bool cpu_overutilized(int cpu)
+>  
+>  static inline void update_overutilized_status(struct rq *rq)
+>  {
+> -	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu))
+> +	if (!READ_ONCE(rq->rd->overutilized) && cpu_overutilized(rq->cpu)) {
+>  		WRITE_ONCE(rq->rd->overutilized, SG_OVERUTILIZED);
+> +		trace_sched_overutilized_tp(1, rq->rd);
+> +	}
+>  }
+>  #else
+>  static inline void update_overutilized_status(struct rq *rq) { }
+> @@ -8542,8 +8544,13 @@ static inline void update_sd_lb_stats(struct lb_env *env, struct sd_lb_stats *sd
+>  
+>  		/* Update over-utilization (tipping point, U >= 0) indicator */
+>  		WRITE_ONCE(rd->overutilized, sg_status & SG_OVERUTILIZED);
+> +
+> +		trace_sched_overutilized_tp(!!(sg_status & SG_OVERUTILIZED), rd);
+>  	} else if (sg_status & SG_OVERUTILIZED) {
+> -		WRITE_ONCE(env->dst_rq->rd->overutilized, SG_OVERUTILIZED);
+> +		struct root_domain *rd = env->dst_rq->rd;
+> +
+> +		WRITE_ONCE(rd->overutilized, SG_OVERUTILIZED);
+> +		trace_sched_overutilized_tp(1, rd);
+>  	}
+>  }
 
-This patchset adds only ATC2609A PMIC support with regulator functionality.
-Regulator driver supports 4 DC-DC converters and 10 LDO regulators.
+But I figure since we need both values anyway, this isn't too much of a
+bother.
 
-This series has been tested on 96Boards Bubblegum96 board integrating
-ATC2609A. Since the board support depends on the SIRQ driver (being reviewed),
-I haven't added any dts changes for now!
-
-Thanks,
-Mani
-
-Manivannan Sadhasivam (4):
-  dt-bindings: mfd: Add Actions Semi ATC260x PMIC binding
-  mfd: Add initial MFD driver for ATC260x PMICs
-  regulator: Add regulator driver for ATC260x PMICs
-  MAINTAINERS: Add entry for ATC260x PMIC
-
- .../devicetree/bindings/mfd/atc260x.txt       | 162 ++++++++
- MAINTAINERS                                   |   9 +
- drivers/mfd/Kconfig                           |  22 +
- drivers/mfd/Makefile                          |   7 +
- drivers/mfd/atc2609a-helpers.c                |  91 ++++
- drivers/mfd/atc260x-core.c                    |  85 ++++
- drivers/mfd/atc260x-i2c.c                     |  98 +++++
- drivers/mfd/atc260x.h                         |  22 +
- drivers/regulator/Kconfig                     |   8 +
- drivers/regulator/Makefile                    |   1 +
- drivers/regulator/atc260x-regulator.c         | 389 ++++++++++++++++++
- include/linux/mfd/atc260x/atc2609a_regs.h     | 228 ++++++++++
- include/linux/mfd/atc260x/core.h              |  64 +++
- 13 files changed, 1186 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/atc260x.txt
- create mode 100644 drivers/mfd/atc2609a-helpers.c
- create mode 100644 drivers/mfd/atc260x-core.c
- create mode 100644 drivers/mfd/atc260x-i2c.c
- create mode 100644 drivers/mfd/atc260x.h
- create mode 100644 drivers/regulator/atc260x-regulator.c
- create mode 100644 include/linux/mfd/atc260x/atc2609a_regs.h
- create mode 100644 include/linux/mfd/atc260x/core.h
-
--- 
-2.17.1
-
+I'm going to flip the argument order though.
