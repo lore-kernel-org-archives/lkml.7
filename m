@@ -2,112 +2,88 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 660F7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:49:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B8C5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46B85208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:49:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CE1208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728620AbfFQQtp (ORCPT
+        id S1726509AbfFQQxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:49:45 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:47831 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728284AbfFQQtX (ORCPT
+        Mon, 17 Jun 2019 12:53:55 -0400
+Received: from mail-out.m-online.net ([212.18.0.10]:58227 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfFQQxz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:49:23 -0400
-Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MzyAy-1iWGpD2UYo-00wzKU; Mon, 17 Jun 2019 18:49:21 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
-        linux-gpio@vger.kernel.org
-Subject: [PATCH 2/7] drivers: gpio: amdpt: drop unneeded deref of &pdev->dev
-Date:   Mon, 17 Jun 2019 18:49:15 +0200
-Message-Id: <1560790160-3372-2-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560790160-3372-1-git-send-email-info@metux.net>
-References: <1560790160-3372-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:Z3KuajUAaUUjLvsAg7Xpv8G/DgShgCtjBl3js4zSDDS61jfGx7s
- oEnwoORX3CnJNmya8kV5iANt4JSd0WRVdObYZpsWOXzhH1YK0yEMOBplGvAjU3evG7V+YoN
- Ixtw9mhS72bQhophVMdXVaratm3ZvZsn85Pc02/hujh2R7w2oZayxA2n6eyhBBCZb3KNidy
- VvgkLsJ3myN4KLJ5uhYvg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4cTBDo7hRso=:7XE4qgatN8cKIgZKws7cr3
- NwboWBqYLTMyLaahGrLMVKZZhyosrvEcwZBQWgH7Nj1XGL+VlciRg1WTEtJ2xDGTACtr5k+E9
- 4JO7vLwZtA+Ujj9dBYMid6zf0DDGH75ZPPIJwevXwzsB31WjcB2UU2b1hEmPqLZfqRBcO2Pag
- d50Lus0c67juIVtzIRRFVYxcDZ0GJ4+6KPtxIr7+r4izufR+ds4KDDKQ2BKAgZ0Z16w9JgN0F
- wRdEbrVKiWtWoLydh2CzcwqY6EvA5cAwlSXKuaY+RiP/j4aZ7Hkla9U1e8tYrkQhd6EBeylHy
- Ai1lO46PatkMXjXOyeC8YZTQRKWs4MuNyLik0Z5vHtjCdlA+ksXEV1LFBxouOomwbeH86gxIS
- iFRRFZrrR9Nliw7Z2HrUfWsEzTsWAQVFafoTDNFdrbvevecP17RQPRWUL91XhrHk2vksTabM3
- vcMEAl2sHj9NuKx4MzcV6kVWMD7o/C/SFsrBxXM1kxTO+GUpAA08SkFhVo1U77AkZ+d2xvijO
- p9ATiShzT1bIM08MCfh2rhXAHBP9aT4DYFb/6FZ9DbNeziHpN6ndjUG5+35KwElkC3PmAOwxS
- vRkr2ObrmY8gU9nBdqMC7fu3KaneMm+gXwclOT7q3/fmcpHMHdrr5iTpmET50GQ3sodV+0Rrx
- LBTtNu/6jQ3Gwm/8fu/uzDvKan0/QhcZ6++Fdu1XSA1PZ+IfMh1UMrtDwStS3iDmJuuQN0NC2
- sn5VRvLf/afi5CjVk9tRgTHXjtSmChlsOh5uTg==
+        Mon, 17 Jun 2019 12:53:55 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 45SHNb67bfz1rXhF;
+        Mon, 17 Jun 2019 18:53:51 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 45SHNb4mhtz1qqkL;
+        Mon, 17 Jun 2019 18:53:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id EduzkY92MSM3; Mon, 17 Jun 2019 18:53:50 +0200 (CEST)
+X-Auth-Info: YMFv82YrYRNRm64KwnvzFGkYeEExd5AQ+BFIz1DoP27GE4T0WOvh/3I1eDuV+NJX
+Received: from igel.home (ppp-46-244-166-202.dynamic.mnet-online.de [46.244.166.202])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Mon, 17 Jun 2019 18:53:50 +0200 (CEST)
+Received: by igel.home (Postfix, from userid 1000)
+        id 260DA2C1101; Mon, 17 Jun 2019 18:53:47 +0200 (CEST)
+From:   Andreas Schwab <schwab@linux-m68k.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH] powerpc/32s: fix suspend/resume when IBATs 4-7 are used
+References: <4291e0dd36aafff58bec429ac5355d10206c72d6.1560751738.git.christophe.leroy@c-s.fr>
+X-Yow:  Okay..  I'm going home to write the ``I HATE RUBIK's CUBE
+ HANDBOOK FOR DEAD CAT LOVERS''..
+Date:   Mon, 17 Jun 2019 18:53:47 +0200
+In-Reply-To: <4291e0dd36aafff58bec429ac5355d10206c72d6.1560751738.git.christophe.leroy@c-s.fr>
+        (Christophe Leroy's message of "Mon, 17 Jun 2019 06:10:22 +0000
+        (UTC)")
+Message-ID: <87y32040h0.fsf@igel.home>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We already have the struct device* pointer in a local variable,
-so we can write this a bit shorter.
+  AS      arch/powerpc/kernel/swsusp_32.o
+arch/powerpc/kernel/swsusp_32.S: Assembler messages:
+arch/powerpc/kernel/swsusp_32.S:109: Error: invalid bat number
+arch/powerpc/kernel/swsusp_32.S:111: Error: invalid bat number
+arch/powerpc/kernel/swsusp_32.S:113: Error: invalid bat number
+arch/powerpc/kernel/swsusp_32.S:115: Error: invalid bat number
+arch/powerpc/kernel/swsusp_32.S:117: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:119: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:121: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:123: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:143: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:145: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:147: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:149: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:151: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:153: Error: invalid bat number                  
+arch/powerpc/kernel/swsusp_32.S:155: Error: invalid bat number
+arch/powerpc/kernel/swsusp_32.S:157: Error: invalid bat number
+make[3]: *** [arch/powerpc/kernel/swsusp_32.o] Error 1
 
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/gpio/gpio-amdpt.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Andreas.
 
-diff --git a/drivers/gpio/gpio-amdpt.c b/drivers/gpio/gpio-amdpt.c
-index 1ffd7c2..2ec9d1f 100644
---- a/drivers/gpio/gpio-amdpt.c
-+++ b/drivers/gpio/gpio-amdpt.c
-@@ -91,7 +91,7 @@ static int pt_gpio_probe(struct platform_device *pdev)
- 
- 	pt_gpio->reg_base = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(pt_gpio->reg_base)) {
--		dev_err(&pdev->dev, "Failed to map MMIO resource for PT GPIO.\n");
-+		dev_err(dev, "Failed to map MMIO resource for PT GPIO.\n");
- 		return PTR_ERR(pt_gpio->reg_base);
- 	}
- 
-@@ -101,7 +101,7 @@ static int pt_gpio_probe(struct platform_device *pdev)
- 			 pt_gpio->reg_base + PT_DIRECTION_REG, NULL,
- 			 BGPIOF_READ_OUTPUT_REG_SET);
- 	if (ret) {
--		dev_err(&pdev->dev, "bgpio_init failed\n");
-+		dev_err(dev, "bgpio_init failed\n");
- 		return ret;
- 	}
- 
-@@ -110,11 +110,11 @@ static int pt_gpio_probe(struct platform_device *pdev)
- 	pt_gpio->gc.free             = pt_gpio_free;
- 	pt_gpio->gc.ngpio            = PT_TOTAL_GPIO;
- #if defined(CONFIG_OF_GPIO)
--	pt_gpio->gc.of_node          = pdev->dev.of_node;
-+	pt_gpio->gc.of_node          = dev->of_node;
- #endif
- 	ret = gpiochip_add_data(&pt_gpio->gc, pt_gpio);
- 	if (ret) {
--		dev_err(&pdev->dev, "Failed to register GPIO lib\n");
-+		dev_err(dev, "Failed to register GPIO lib\n");
- 		return ret;
- 	}
- 
-@@ -124,7 +124,7 @@ static int pt_gpio_probe(struct platform_device *pdev)
- 	writel(0, pt_gpio->reg_base + PT_SYNC_REG);
- 	writel(0, pt_gpio->reg_base + PT_CLOCKRATE_REG);
- 
--	dev_dbg(&pdev->dev, "PT GPIO driver loaded\n");
-+	dev_dbg(dev, "PT GPIO driver loaded\n");
- 	return ret;
- }
- 
 -- 
-1.9.1
-
+Andreas Schwab, schwab@linux-m68k.org
+GPG Key fingerprint = 7578 EB47 D4E5 4D69 2510  2552 DF73 E780 A9DA AEC1
+"And now for something completely different."
