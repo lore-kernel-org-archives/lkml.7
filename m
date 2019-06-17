@@ -7,60 +7,57 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0560C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:38:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1741C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28AC2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:38:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 908522084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:38:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Htc5Ic7p"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Nm078SuT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728899AbfFQTiQ (ORCPT
+        id S1728940AbfFQTie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:38:16 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35653 "EHLO
+        Mon, 17 Jun 2019 15:38:34 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51555 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfFQTiO (ORCPT
+        with ESMTP id S1726151AbfFQTid (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:38:14 -0400
+        Mon, 17 Jun 2019 15:38:33 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJaq3I3566030
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJcE2b3566165
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:36:52 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJaq3I3566030
+        Mon, 17 Jun 2019 12:38:14 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJcE2b3566165
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560800212;
-        bh=U1yJ00rIq5XqPzJNUb+uYzl0ZZKpw07LOWVl8i+YHwI=;
+        s=2019051801; t=1560800295;
+        bh=bOhbHlo2vur31Mm/JjujfWnoWh5XC/2O3FWi+yFo3tc=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Htc5Ic7pH2/5y9Fsn2VM5JTGnkKIvkiusT2xN7Cz6TbjXibglJWNeXX7wR4pVk6Qb
-         QBhTLbX3tGiAXATl6x8NKchQOcqxbMSpF1dgAc5xhi6pwzPRog5AaNjiivExtputf/
-         RJXHgX+BLThkgq6lhZMqLUwPOev1do5uHNn3WLcY9rYGjn0cps9OaMm1PlPw5OoBhf
-         sigiK6JLJOxkd5t0W2EXeu23W8ZF0eVFQDuxnacSl03QHZz3/Ii85o7LfFQtvTWaUW
-         rOz/Gyf5CAx67C/P1biVvA7Ph8XjOOEjqnae3VHyISLfJxQxdR1dGcpSerR9eiV7Yc
-         eMBKWvp1rITiw==
+        b=Nm078SuTX79L036HvyY/UNC75+0G5Av0fOVxGcEtI0wmPrKdirOmgToB8cXysJnhc
+         H+3WUWuk/cpKpPY8Dp8w8/aysbQH5cF05VGRfJi6hS1kqra8PmdPmI3TrIH+gW4kV9
+         tsEqbfd56Qv0Fi4uInbNvHC+NIHUCgiX8XElO1CyzXrTQ3Goi5yxj/7Xr3M+A9Cltb
+         FhxVt/w8VgVKx+z1N4z8/gTV9chYi7DsI/kk5gMV1qb1ltVO7Mz1MZACuY+VqFq1Kc
+         lofAA6wF2Ex09BQ96/EyuRaGRon2WCX5OihqXV1gtxcsEl3QqJTEqq3Xwb1hvDQtpf
+         DVXa5QNcrSbJg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJaqit3566027;
-        Mon, 17 Jun 2019 12:36:52 -0700
-Date:   Mon, 17 Jun 2019 12:36:52 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJcE4i3566162;
+        Mon, 17 Jun 2019 12:38:14 -0700
+Date:   Mon, 17 Jun 2019 12:38:14 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-69pd3mqvxdlh2shddsc7yhyv@git.kernel.org>
-Cc:     alexander.shishkin@linux.intel.com, namhyung@kernel.org,
-        jolsa@redhat.com, suzuki.poulose@arm.com, tglx@linutronix.de,
-        peterz@infradead.org, leo.yan@linaro.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org,
-        mathieu.poirier@linaro.org, hpa@zytor.com, acme@redhat.com
-Reply-To: suzuki.poulose@arm.com, peterz@infradead.org, tglx@linutronix.de,
-          jolsa@redhat.com, mathieu.poirier@linaro.org, hpa@zytor.com,
-          acme@redhat.com, linux-kernel@vger.kernel.org,
-          leo.yan@linaro.org, mingo@kernel.org,
-          alexander.shishkin@linux.intel.com, namhyung@kernel.org
-In-Reply-To: <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
-References: <68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com>
+From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
+Message-ID: <tip-33526f362b019f0a17c6b522eb3b07017dba98a7@git.kernel.org>
+Cc:     jolsa@redhat.com, hpa@zytor.com, tglx@linutronix.de,
+        acme@redhat.com, linux-kernel@vger.kernel.org,
+        adrian.hunter@intel.com, mingo@kernel.org, yao.jin@linux.intel.com
+Reply-To: acme@redhat.com, tglx@linutronix.de, hpa@zytor.com,
+          jolsa@redhat.com, adrian.hunter@intel.com,
+          linux-kernel@vger.kernel.org, yao.jin@linux.intel.com,
+          mingo@kernel.org
+In-Reply-To: <20190604130017.31207-2-adrian.hunter@intel.com>
+References: <20190604130017.31207-2-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf cs-etm: Remove duplicate GENMASK() define, use
- linux/bits.h instead
-Git-Commit-ID: 965e176f3c4ae260f21606e19dc3a58d66d8f605
+Subject: [tip:perf/core] perf auxtrace: Add perf time interval to
+ itrace_synth_ops
+Git-Commit-ID: 33526f362b019f0a17c6b522eb3b07017dba98a7
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,66 +71,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  965e176f3c4ae260f21606e19dc3a58d66d8f605
-Gitweb:     https://git.kernel.org/tip/965e176f3c4ae260f21606e19dc3a58d66d8f605
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Fri, 7 Jun 2019 15:14:27 -0300
+Commit-ID:  33526f362b019f0a17c6b522eb3b07017dba98a7
+Gitweb:     https://git.kernel.org/tip/33526f362b019f0a17c6b522eb3b07017dba98a7
+Author:     Adrian Hunter <adrian.hunter@intel.com>
+AuthorDate: Tue, 4 Jun 2019 15:59:59 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 10 Jun 2019 16:20:11 -0300
 
-perf cs-etm: Remove duplicate GENMASK() define, use linux/bits.h instead
+perf auxtrace: Add perf time interval to itrace_synth_ops
 
-Suzuki noticed that this should be more useful in a generic header, and
-after looking I noticed we have it already in our copy of
-include/linux/bits.h in tools/include, so just use it, test built on
-x86-64 and ubuntu 19.04 with:
+Instruction trace decoders can optimize output based on what time
+intervals will be filtered, so pass that information in
+itrace_synth_ops.
 
-  perfbuilder@46646c9e848e:/$ aarch64-linux-gnu-gcc --version |& head -1
-  aarch64-linux-gnu-gcc (Ubuntu/Linaro 8.3.0-6ubuntu1) 8.3.0
-  perfbuilder@46646c9e848e:/$
-
-Suggested-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-Link: https://lkml.kernel.org/r/68c1c548-33cd-31e8-100d-7ffad008c7b2@arm.com
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Leo Yan <leo.yan@linaro.org>
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org,
-Link: https://lkml.kernel.org/n/tip-69pd3mqvxdlh2shddsc7yhyv@git.kernel.org
+Link: http://lkml.kernel.org/r/20190604130017.31207-2-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/cs-etm.h | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ tools/perf/util/auxtrace.h | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/tools/perf/util/cs-etm.h b/tools/perf/util/cs-etm.h
-index 33b57e748c3d..bc848fd095f4 100644
---- a/tools/perf/util/cs-etm.h
-+++ b/tools/perf/util/cs-etm.h
-@@ -9,6 +9,7 @@
+diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
+index c69bcd9a3091..c80c58eb7f4d 100644
+--- a/tools/perf/util/auxtrace.h
++++ b/tools/perf/util/auxtrace.h
+@@ -83,6 +83,8 @@ enum itrace_period_type {
+  * @period_type: 'instructions' events period type
+  * @initial_skip: skip N events at the beginning.
+  * @cpu_bitmap: CPUs for which to synthesize events, or NULL for all
++ * @ptime_range: time intervals to trace or NULL
++ * @range_num: number of time intervals to trace
+  */
+ struct itrace_synth_opts {
+ 	bool			set;
+@@ -107,6 +109,8 @@ struct itrace_synth_opts {
+ 	enum itrace_period_type	period_type;
+ 	unsigned long		initial_skip;
+ 	unsigned long		*cpu_bitmap;
++	struct perf_time_interval *ptime_range;
++	int			range_num;
+ };
  
- #include "util/event.h"
- #include "util/session.h"
-+#include <linux/bits.h>
+ /**
+@@ -599,6 +603,21 @@ static inline void auxtrace__free(struct perf_session *session)
+ "				PERIOD[ns|us|ms|i|t]:   specify period to sample stream\n" \
+ "				concatenate multiple options. Default is ibxwpe or cewp\n"
  
- /* Versionning header in case things need tro change in the future.  That way
-  * decoding of old snapshot is still possible.
-@@ -161,16 +162,6 @@ struct cs_etm_packet_queue {
++static inline
++void itrace_synth_opts__set_time_range(struct itrace_synth_opts *opts,
++				       struct perf_time_interval *ptime_range,
++				       int range_num)
++{
++	opts->ptime_range = ptime_range;
++	opts->range_num = range_num;
++}
++
++static inline
++void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts)
++{
++	opts->ptime_range = NULL;
++	opts->range_num = 0;
++}
  
- #define CS_ETM_INVAL_ADDR 0xdeadbeefdeadbeefUL
+ #else
  
--/*
-- * Create a contiguous bitmask starting at bit position @l and ending at
-- * position @h. For example
-- * GENMASK_ULL(39, 21) gives us the 64bit vector 0x000000ffffe00000.
-- *
-- * Carbon copy of implementation found in $KERNEL/include/linux/bitops.h
-- */
--#define GENMASK(h, l) \
--	(((~0UL) - (1UL << (l)) + 1) & (~0UL >> (BITS_PER_LONG - 1 - (h))))
--
- #define BMVAL(val, lsb, msb)	((val & GENMASK(msb, lsb)) >> lsb)
+@@ -742,6 +761,21 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
  
- #define CS_ETM_HEADER_SIZE (CS_HEADER_VERSION_0_MAX * sizeof(u64))
+ #define ITRACE_HELP ""
+ 
++static inline
++void itrace_synth_opts__set_time_range(struct itrace_synth_opts *opts
++				       __maybe_unused,
++				       struct perf_time_interval *ptime_range
++				       __maybe_unused,
++				       int range_num __maybe_unused)
++{
++}
++
++static inline
++void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts
++					 __maybe_unused)
++{
++}
++
+ #endif
+ 
+ #endif
