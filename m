@@ -2,123 +2,97 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4C71C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:32:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39AA4C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DCB9206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:32:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19A822089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfFQNcQ (ORCPT
+        id S1727554AbfFQNdL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:32:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:50142 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725884AbfFQNcP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:32:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C3CC8344;
-        Mon, 17 Jun 2019 06:32:14 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A43BE3F246;
-        Mon, 17 Jun 2019 06:32:14 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 67DD5682413; Mon, 17 Jun 2019 14:32:13 +0100 (BST)
-Date:   Mon, 17 Jun 2019 14:32:13 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "James (Qian) Wang" <james.qian.wang@arm.com>,
-        Brian Starkey <brian.starkey@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] drm/komeda: fix size_t format string
-Message-ID: <20190617133213.GY4173@e110455-lin.cambridge.arm.com>
-References: <20190617125002.1312331-1-arnd@arndb.de>
+        Mon, 17 Jun 2019 09:33:11 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:54188 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfFQNdL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:33:11 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: tonyk)
+        with ESMTPSA id BE267260D66
+From:   =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+To:     linux-media@vger.kernel.org
+Cc:     mchehab@kernel.org, hverkuil@xs4all.nl, helen.koike@collabora.com,
+        kernel@collabora.com, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Andr=C3=A9=20Almeida?= <andrealmeid@collabora.com>
+Subject: [PATCH v3 1/2] media: vimc: stream: add missing function documentation
+Date:   Mon, 17 Jun 2019 10:32:20 -0300
+Message-Id: <20190617133221.21246-1-andrealmeid@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190617125002.1312331-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Add comments at vimc_streamer_s_stream and vimc_streamer_thread, making
+the vimc-stream totally documented.
 
-On Mon, Jun 17, 2019 at 02:49:18PM +0200, Arnd Bergmann wrote:
-> The debug output uses the wrong format string for printing a size_t:
-> 
-> In file included from include/drm/drm_mm.h:49,
->                  from include/drm/drm_vma_manager.h:26,
->                  from include/drm/drm_gem.h:40,
->                  from drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c:9:
-> drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c: In function 'komeda_fb_afbc_size_check':
-> drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c:96:17: error: format '%lx' expects argument of type 'long unsigned int', but argument 3 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
->    DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%lx. min_size 0x%x.\n",
-> 
-> This is harmless in the kernel as size_t and long are always the same
-> width, but it's always better to use the correct format string
-> to shut up the warning.
-> 
-> Fixes: 9ccf536e53cb ("drm/komeda: Added AFBC support for komeda driver")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: André Almeida <andrealmeid@collabora.com>
+---
+Changes in v3: replace "streaming" by "stream" at vimc_streamer_thread().
 
-Thank you for the patch! I did see the warning email sent by the build bots and
-I've had the same fix in my stash, but then I've looked at the code using
-min_size and I'm not happy with it, so I've asked James to come up with a patch
-to fix things in a better way.
+Changes in v2: fix typos
 
-So, if you don't mind, I will delay this patch until James comes up with a fix
-in the next couple of days. If he is not, then I'll pull the patch into mali-dp
-tree (shared with komeda).
+ drivers/media/platform/vimc/vimc-streamer.c | 22 +++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Best regards,
-Liviu
-
-
-> ---
->  drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> index abc8c0ccc053..58ff34e718d0 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> @@ -93,7 +93,7 @@ komeda_fb_afbc_size_check(struct komeda_fb *kfb, struct drm_file *file,
->  			       AFBC_SUPERBLK_ALIGNMENT);
->  	min_size = kfb->afbc_size + fb->offsets[0];
->  	if (min_size > obj->size) {
-> -		DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%lx. min_size 0x%x.\n",
-> +		DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%zx. min_size 0x%x.\n",
->  			      obj->size, min_size);
->  		goto check_failed;
->  	}
-> @@ -137,7 +137,7 @@ komeda_fb_none_afbc_size_check(struct komeda_dev *mdev, struct komeda_fb *kfb,
->  		min_size = komeda_fb_get_pixel_addr(kfb, 0, fb->height, i)
->  			 - to_drm_gem_cma_obj(obj)->paddr;
->  		if (obj->size < min_size) {
-> -			DRM_DEBUG_KMS("The fb->obj[%d] size: %ld lower than the minimum requirement: %d.\n",
-> +			DRM_DEBUG_KMS("The fb->obj[%d] size: %zd lower than the minimum requirement: %d.\n",
->  				      i, obj->size, min_size);
->  			return -EINVAL;
->  		}
-> -- 
-> 2.20.0
-> 
-
+diff --git a/drivers/media/platform/vimc/vimc-streamer.c b/drivers/media/platform/vimc/vimc-streamer.c
+index 236ade38f1da..1fea6d666c2e 100644
+--- a/drivers/media/platform/vimc/vimc-streamer.c
++++ b/drivers/media/platform/vimc/vimc-streamer.c
+@@ -122,6 +122,14 @@ static int vimc_streamer_pipeline_init(struct vimc_stream *stream,
+ 	return -EINVAL;
+ }
+ 
++/*
++ * vimc_streamer_thread - process frames through the pipeline
++ *
++ * @data:	vimc_stream struct of the current stream
++ *
++ * From the source to the sink, gets a frame from each subdevice and send to
++ * the next one of the pipeline in a fixed framerate.
++ */
+ static int vimc_streamer_thread(void *data)
+ {
+ 	struct vimc_stream *stream = data;
+@@ -149,6 +157,20 @@ static int vimc_streamer_thread(void *data)
+ 	return 0;
+ }
+ 
++/*
++ * vimc_streamer_s_stream - start/stop the streaming on the media pipeline
++ *
++ * @stream:	the pointer to the stream structure of the current stream
++ * @ved:	pointer to the vimc entity of the entity of the stream
++ * @enable:	flag to determine if stream should start/stop
++ *
++ * When starting, check if there is no stream->kthread allocated. This should
++ * indicate that a streaming is already running. Then, it initializes
++ * the pipeline, creates and runs a kthread to consume buffers through the
++ * pipeline.
++ * When stopping, analogously check if there is a stream running, stops
++ * the thread and terminates the pipeline.
++ */
+ int vimc_streamer_s_stream(struct vimc_stream *stream,
+ 			   struct vimc_ent_device *ved,
+ 			   int enable)
 -- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+2.22.0
+
