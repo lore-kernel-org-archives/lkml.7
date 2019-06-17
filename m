@@ -2,54 +2,53 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4DB6C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDA0EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F11920673
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1BB120861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807032;
-	bh=qN6gGB5PPIYLr4+HleaWZ2ZOh4g15wqvVBggz4g76xw=;
+	s=default; t=1560807038;
+	bh=uFoyq3kvcDsAZmt6jvzusQXoikeYE3A01lol6c2UdoY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AUe7TXrx1V2DSdJ694GNuuPfQAUA28KZ8CwmpuzhXEofPcuNS2RU9kNq05HaGbyWu
-	 8/XnUWL8/g0ecWV66M1A5OBVa1S00ZwvznZH13lCSioihrZN7kC+S7YjWlsZNCEIkq
-	 DQNOT9Bg12b3dCVe3vmoS/sTsJCzhPPCHVmAuWHI=
+	b=U3Acn1Nfnr6WjHl/GB+MIB3lS4WbRM16K05zcIoWIknLyUV3rkHjjj89h8ysQ5wtq
+	 1DlVAkHBlEz+6/TWYFmTG6JzTure3r9tcCE3TYvDw2jUrGretYksDbAQ3yMfFL9Rs+
+	 Ef8mRtpqN3YxeL9VHp+SJ29wGWAdHIKz1TC9jp3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730251AbfFQVaa (ORCPT
+        id S1729350AbfFQV35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:30:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57378 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:29:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728934AbfFQVaI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:30:08 -0400
+        id S1729730AbfFQV3v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54882204FD;
-        Mon, 17 Jun 2019 21:30:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9096F2070B;
+        Mon, 17 Jun 2019 21:29:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560807006;
-        bh=qN6gGB5PPIYLr4+HleaWZ2ZOh4g15wqvVBggz4g76xw=;
+        s=default; t=1560806990;
+        bh=uFoyq3kvcDsAZmt6jvzusQXoikeYE3A01lol6c2UdoY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SgRHavmPxWa5hELCNU0li29yx8p1ri0ULe2FrPX2n91wPHjYW30zJEsppg39JzUt0
-         YLWbD5d5EKSzcTDH4H/XAdxU/SiTAr3ZoHsgQWjED4D76XNJqA8hD89yupzqenGUlQ
-         /7Z5ZsQuC2bMXMuvsyOjTnDUiIBO8XDfHYS4S0rs=
+        b=SbBrJcGBJzBalNyAkFBb9hQA8uZ/pd8M2GWcrO3V62HBaA/rW2CDGHFC6VWE9KKLG
+         6w8CcPlexEGfOFjknF7XLLp8dk3JgKfyn1sryrIEPW+F6x6rFCrsbpLw9j9kypn5Jz
+         N8vOlM+4EJJcJ4HcQw7UZgjqKfeVzU2SYPI4FObU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 28/53] scsi: qedi: remove memset/memcpy to nfunc and use func instead
-Date:   Mon, 17 Jun 2019 23:10:11 +0200
-Message-Id: <20190617210750.509290138@linuxfoundation.org>
+        stable@vger.kernel.org, Adric Blake <promarbler14@gmail.com>,
+        Borislav Petkov <bp@suse.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
+Subject: [PATCH 4.14 51/53] x86/microcode, cpuhotplug: Add a microcode loader CPU hotplug callback
+Date:   Mon, 17 Jun 2019 23:10:34 +0200
+Message-Id: <20190617210752.600204681@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -62,167 +61,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c09581a52765a85f19fc35340127396d5e3379cc ]
+From: Borislav Petkov <bp@suse.de>
 
-KASAN reports this:
+commit 78f4e932f7760d965fb1569025d1576ab77557c5 upstream.
 
-BUG: KASAN: global-out-of-bounds in qedi_dbg_err+0xda/0x330 [qedi]
-Read of size 31 at addr ffffffffc12b0ae0 by task syz-executor.0/2429
+Adric Blake reported the following warning during suspend-resume:
 
-CPU: 0 PID: 2429 Comm: syz-executor.0 Not tainted 5.0.0-rc7+ #45
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xfa/0x1ce lib/dump_stack.c:113
- print_address_description+0x1c4/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- memcpy+0x1f/0x50 mm/kasan/common.c:130
- qedi_dbg_err+0xda/0x330 [qedi]
- ? 0xffffffffc12d0000
- qedi_init+0x118/0x1000 [qedi]
- ? 0xffffffffc12d0000
- ? 0xffffffffc12d0000
- ? 0xffffffffc12d0000
- do_one_initcall+0xfa/0x5ca init/main.c:887
- do_init_module+0x204/0x5f6 kernel/module.c:3460
- load_module+0x66b2/0x8570 kernel/module.c:3808
- __do_sys_finit_module+0x238/0x2a0 kernel/module.c:3902
- do_syscall_64+0x147/0x600 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f2d57e55c58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bfa0 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 00000000200003c0 RDI: 0000000000000003
-RBP: 00007f2d57e55c70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2d57e566bc
-R13: 00000000004bcefb R14: 00000000006f7030 R15: 0000000000000004
+  Enabling non-boot CPUs ...
+  x86: Booting SMP configuration:
+  smpboot: Booting Node 0 Processor 1 APIC 0x2
+  unchecked MSR access error: WRMSR to 0x10f (tried to write 0x0000000000000000) \
+   at rIP: 0xffffffff8d267924 (native_write_msr+0x4/0x20)
+  Call Trace:
+   intel_set_tfa
+   intel_pmu_cpu_starting
+   ? x86_pmu_dead_cpu
+   x86_pmu_starting_cpu
+   cpuhp_invoke_callback
+   ? _raw_spin_lock_irqsave
+   notify_cpu_starting
+   start_secondary
+   secondary_startup_64
+  microcode: sig=0x806ea, pf=0x80, revision=0x96
+  microcode: updated to revision 0xb4, date = 2019-04-01
+  CPU1 is up
 
-The buggy address belongs to the variable:
- __func__.67584+0x0/0xffffffffffffd520 [qedi]
+The MSR in question is MSR_TFA_RTM_FORCE_ABORT and that MSR is emulated
+by microcode. The log above shows that the microcode loader callback
+happens after the PMU restoration, leading to the conjecture that
+because the microcode hasn't been updated yet, that MSR is not present
+yet, leading to the #GP.
 
-Memory state around the buggy address:
- ffffffffc12b0980: fa fa fa fa 00 04 fa fa fa fa fa fa 00 00 05 fa
- ffffffffc12b0a00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 05 fa fa
-> ffffffffc12b0a80: fa fa fa fa 00 06 fa fa fa fa fa fa 00 02 fa fa
-                                                          ^
- ffffffffc12b0b00: fa fa fa fa 00 00 04 fa fa fa fa fa 00 00 03 fa
- ffffffffc12b0b80: fa fa fa fa 00 00 02 fa fa fa fa fa 00 00 04 fa
+Add a microcode loader-specific hotplug vector which comes before
+the PERF vectors and thus executes earlier and makes sure the MSR is
+present.
 
-Currently the qedi_dbg_* family of functions can overrun the end of the
-source string if it is less than the destination buffer length because of
-the use of a fixed sized memcpy. Remove the memset/memcpy calls to nfunc
-and just use func instead as it is always a null terminated string.
+Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
+Reported-by: Adric Blake <promarbler14@gmail.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: <stable@vger.kernel.org>
+Cc: x86@kernel.org
+Link: https://bugzilla.kernel.org/show_bug.cgi?id=203637
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: ace7f46ba5fd ("scsi: qedi: Add QLogic FastLinQ offload iSCSI driver framework.")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_dbg.c | 32 ++++++++------------------------
- 1 file changed, 8 insertions(+), 24 deletions(-)
+ arch/x86/kernel/cpu/microcode/core.c |    2 +-
+ include/linux/cpuhotplug.h           |    1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qedi/qedi_dbg.c b/drivers/scsi/qedi/qedi_dbg.c
-index 8fd28b056f73..3383314a3882 100644
---- a/drivers/scsi/qedi/qedi_dbg.c
-+++ b/drivers/scsi/qedi/qedi_dbg.c
-@@ -16,10 +16,6 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- {
- 	va_list va;
- 	struct va_format vaf;
--	char nfunc[32];
--
--	memset(nfunc, 0, sizeof(nfunc));
--	memcpy(nfunc, func, sizeof(nfunc) - 1);
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -873,7 +873,7 @@ int __init microcode_init(void)
+ 		goto out_ucode_group;
  
- 	va_start(va, fmt);
+ 	register_syscore_ops(&mc_syscore_ops);
+-	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/microcode:online",
++	cpuhp_setup_state_nocalls(CPUHP_AP_MICROCODE_LOADER, "x86/microcode:online",
+ 				  mc_cpu_online, mc_cpu_down_prep);
  
-@@ -28,9 +24,9 @@ qedi_dbg_err(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- 
- 	if (likely(qedi) && likely(qedi->pdev))
- 		pr_err("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
--		       nfunc, line, qedi->host_no, &vaf);
-+		       func, line, qedi->host_no, &vaf);
- 	else
--		pr_err("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-+		pr_err("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
- 
- 	va_end(va);
- }
-@@ -41,10 +37,6 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- {
- 	va_list va;
- 	struct va_format vaf;
--	char nfunc[32];
--
--	memset(nfunc, 0, sizeof(nfunc));
--	memcpy(nfunc, func, sizeof(nfunc) - 1);
- 
- 	va_start(va, fmt);
- 
-@@ -56,9 +48,9 @@ qedi_dbg_warn(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- 
- 	if (likely(qedi) && likely(qedi->pdev))
- 		pr_warn("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
--			nfunc, line, qedi->host_no, &vaf);
-+			func, line, qedi->host_no, &vaf);
- 	else
--		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-+		pr_warn("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
- 
- ret:
- 	va_end(va);
-@@ -70,10 +62,6 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- {
- 	va_list va;
- 	struct va_format vaf;
--	char nfunc[32];
--
--	memset(nfunc, 0, sizeof(nfunc));
--	memcpy(nfunc, func, sizeof(nfunc) - 1);
- 
- 	va_start(va, fmt);
- 
-@@ -85,10 +73,10 @@ qedi_dbg_notice(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- 
- 	if (likely(qedi) && likely(qedi->pdev))
- 		pr_notice("[%s]:[%s:%d]:%d: %pV",
--			  dev_name(&qedi->pdev->dev), nfunc, line,
-+			  dev_name(&qedi->pdev->dev), func, line,
- 			  qedi->host_no, &vaf);
- 	else
--		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-+		pr_notice("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
- 
- ret:
- 	va_end(va);
-@@ -100,10 +88,6 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- {
- 	va_list va;
- 	struct va_format vaf;
--	char nfunc[32];
--
--	memset(nfunc, 0, sizeof(nfunc));
--	memcpy(nfunc, func, sizeof(nfunc) - 1);
- 
- 	va_start(va, fmt);
- 
-@@ -115,9 +99,9 @@ qedi_dbg_info(struct qedi_dbg_ctx *qedi, const char *func, u32 line,
- 
- 	if (likely(qedi) && likely(qedi->pdev))
- 		pr_info("[%s]:[%s:%d]:%d: %pV", dev_name(&qedi->pdev->dev),
--			nfunc, line, qedi->host_no, &vaf);
-+			func, line, qedi->host_no, &vaf);
- 	else
--		pr_info("[0000:00:00.0]:[%s:%d]: %pV", nfunc, line, &vaf);
-+		pr_info("[0000:00:00.0]:[%s:%d]: %pV", func, line, &vaf);
- 
- ret:
- 	va_end(va);
--- 
-2.20.1
-
+ 	pr_info("Microcode Update Driver: v%s.", DRIVER_VERSION);
+--- a/include/linux/cpuhotplug.h
++++ b/include/linux/cpuhotplug.h
+@@ -100,6 +100,7 @@ enum cpuhp_state {
+ 	CPUHP_AP_IRQ_ARMADA_XP_STARTING,
+ 	CPUHP_AP_IRQ_BCM2836_STARTING,
+ 	CPUHP_AP_ARM_MVEBU_COHERENCY,
++	CPUHP_AP_MICROCODE_LOADER,
+ 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
+ 	CPUHP_AP_PERF_X86_STARTING,
+ 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
 
 
