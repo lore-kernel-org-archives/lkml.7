@@ -2,312 +2,130 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BCF24C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:09:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94952C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:10:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84FC2208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560794997;
-	bh=oMYDQUXKSwPcLkBmI9wP3NaGmS+6lBlRr2hYTuc/Bwo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TkXT5GkjeezUl/UEZaU8CgvCZJSKODasNsrkLusAdqb8xktK7ACiOt56g3J7OWsU/
-	 5HeiJYHKfkz7va0p06x0v0vZqeVGqSA2fxIZCcYTSl+tpUlO1HvWxZuD06jMqKS4gG
-	 WkqWBzcASiyrMfZ4Cx4+nOKKGhZwUXNKQV47EBMg=
+	by mail.kernel.org (Postfix) with ESMTP id 794C3208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:10:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728666AbfFQSJ4 (ORCPT
+        id S1728681AbfFQSKA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:09:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44704 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 14:10:00 -0400
+Received: from mga18.intel.com ([134.134.136.126]:62757 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727580AbfFQSJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:09:54 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E7FA208C4;
-        Mon, 17 Jun 2019 18:09:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560794994;
-        bh=oMYDQUXKSwPcLkBmI9wP3NaGmS+6lBlRr2hYTuc/Bwo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UXGs3mALRyEzzWf3kzgD76Fj4N+m51teyPFBy4f9WAmMAHFPG/n5kQ1ipQz6n5dQd
-         eLvnqYj/5+JYzfre4bMtgw+fRbOoHej1CQ7jT68THpE9gyAAVac83btTtvLD/4uLpB
-         /KwUF151X4LdVj6tcqK0fICvln1K3vOdSsBXKLig=
-Date:   Mon, 17 Jun 2019 20:09:51 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Re: Linux 5.1.11
-Message-ID: <20190617180951.GB16975@kroah.com>
-References: <20190617180944.GA16975@kroah.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617180944.GA16975@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1728547AbfFQSJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 14:09:53 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 11:09:52 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Jun 2019 11:09:51 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "Christopherson Sean J" <sean.j.christopherson@intel.com>,
+        "Paolo Bonzini" <pbonzini@redhat.com>,
+        "Radim Krcmar" <rkrcmar@redhat.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v2 2/2] x86/cpufeatures: Enumerate new AVX512 BFLOAT16 instructions
+Date:   Mon, 17 Jun 2019 11:00:16 -0700
+Message-Id: <1560794416-217638-3-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1560794416-217638-1-git-send-email-fenghua.yu@intel.com>
+References: <1560794416-217638-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-diff --git a/Documentation/networking/ip-sysctl.txt b/Documentation/networking/ip-sysctl.txt
-index c4ac35234f05..f0d09162c7a3 100644
---- a/Documentation/networking/ip-sysctl.txt
-+++ b/Documentation/networking/ip-sysctl.txt
-@@ -250,6 +250,14 @@ tcp_base_mss - INTEGER
- 	Path MTU discovery (MTU probing).  If MTU probing is enabled,
- 	this is the initial MSS used by the connection.
+AVX512 Vector Neural Network Instructions (VNNI) in Intel Deep Learning
+Boost support BFLOAT16 format (BF16). BF16 is a short version of FP32 and
+has several advantages over FP16. BF16 offers more than enough range for
+deep learning training tasks and doesn't need to handle hardware exception
+as this is a performance optimization. FP32 accumulation after the
+multiply is essential to achieve sufficient numerical behavior on an
+application level.
+
+AVX512 BFLOAT16 instructions can be enumerated by:
+	CPUID.7.1:EAX[bit 5] AVX512_BF16
+
+Use word 12, which is empty now, to hold features in CPUID.7.1:EAX
+including AVX512_BF16. Leaf CPUID_DUMMY is renamed as CPUID_7_1_EAX.
+
+Detailed information of the CPUID bit and AVX512 BFLOAT16 instructions
+can be found in the latest Intel Architecture Instruction Set Extensions
+and Future Features Programming Reference.
+
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+---
+ arch/x86/include/asm/cpufeature.h  | 2 +-
+ arch/x86/include/asm/cpufeatures.h | 3 +++
+ arch/x86/kernel/cpu/common.c       | 3 +++
+ arch/x86/kernel/cpu/cpuid-deps.c   | 1 +
+ 4 files changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 403f70c2e431..58acda503817 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -23,7 +23,7 @@ enum cpuid_leafs
+ 	CPUID_7_0_EBX,
+ 	CPUID_D_1_EAX,
+ 	CPUID_LNX_4,
+-	CPUID_DUMMY,
++	CPUID_7_1_EAX,
+ 	CPUID_8000_0008_EBX,
+ 	CPUID_6_EAX,
+ 	CPUID_8000_000A_EDX,
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 4f0a3d093794..625191ceb214 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -280,6 +280,9 @@
+ #define X86_FEATURE_CQM_MBM_TOTAL	(11*32+ 2) /* LLC Total MBM monitoring */
+ #define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
  
-+tcp_min_snd_mss - INTEGER
-+	TCP SYN and SYNACK messages usually advertise an ADVMSS option,
-+	as described in RFC 1122 and RFC 6691.
-+	If this ADVMSS option is smaller than tcp_min_snd_mss,
-+	it is silently capped to tcp_min_snd_mss.
++/* Intel-defined CPU features, CPUID level 0x00000007:1 (EAX), word 12 */
++#define X86_FEATURE_AVX512_BF16		(12*32+ 5) /* AVX512 BFLOAT16 instructions */
 +
-+	Default : 48 (at least 8 bytes of payload per segment)
+ /* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
+ #define X86_FEATURE_CLZERO		(13*32+ 0) /* CLZERO instruction */
+ #define X86_FEATURE_IRPERF		(13*32+ 1) /* Instructions Retired Count */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index f080be35da41..645a6c52d925 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -848,6 +848,9 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 		c->x86_capability[CPUID_7_0_EBX] = ebx;
+ 		c->x86_capability[CPUID_7_ECX] = ecx;
+ 		c->x86_capability[CPUID_7_EDX] = edx;
 +
- tcp_congestion_control - STRING
- 	Set the congestion control algorithm to be used for new
- 	connections. The algorithm "reno" is always available, but
-diff --git a/Makefile b/Makefile
-index e7d1973d9c26..5171900e5c93 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1,7 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- VERSION = 5
- PATCHLEVEL = 1
--SUBLEVEL = 10
-+SUBLEVEL = 11
- EXTRAVERSION =
- NAME = Shy Crocodile
++		cpuid_count(0x00000007, 1, &eax, &ebx, &ecx, &edx);
++		c->x86_capability[CPUID_7_1_EAX] = eax;
+ 	}
  
-diff --git a/include/linux/tcp.h b/include/linux/tcp.h
-index a9b0280687d5..2ba676469f98 100644
---- a/include/linux/tcp.h
-+++ b/include/linux/tcp.h
-@@ -488,4 +488,8 @@ static inline u16 tcp_mss_clamp(const struct tcp_sock *tp, u16 mss)
- 
- 	return (user_mss && user_mss < mss) ? user_mss : mss;
- }
-+
-+int tcp_skb_shift(struct sk_buff *to, struct sk_buff *from, int pcount,
-+		  int shiftlen);
-+
- #endif	/* _LINUX_TCP_H */
-diff --git a/include/net/netns/ipv4.h b/include/net/netns/ipv4.h
-index 7698460a3dd1..623cfbb7b8dc 100644
---- a/include/net/netns/ipv4.h
-+++ b/include/net/netns/ipv4.h
-@@ -117,6 +117,7 @@ struct netns_ipv4 {
- #endif
- 	int sysctl_tcp_mtu_probing;
- 	int sysctl_tcp_base_mss;
-+	int sysctl_tcp_min_snd_mss;
- 	int sysctl_tcp_probe_threshold;
- 	u32 sysctl_tcp_probe_interval;
- 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index 68ee02523b87..36fcd0ad0515 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -55,6 +55,8 @@ void tcp_time_wait(struct sock *sk, int state, int timeo);
- 
- #define MAX_TCP_HEADER	(128 + MAX_HEADER)
- #define MAX_TCP_OPTION_SPACE 40
-+#define TCP_MIN_SND_MSS		48
-+#define TCP_MIN_GSO_SIZE	(TCP_MIN_SND_MSS - MAX_TCP_OPTION_SPACE)
- 
- /*
-  * Never offer a window over 32767 without using window scaling. Some
-diff --git a/include/uapi/linux/snmp.h b/include/uapi/linux/snmp.h
-index 86dc24a96c90..fd42c1316d3d 100644
---- a/include/uapi/linux/snmp.h
-+++ b/include/uapi/linux/snmp.h
-@@ -283,6 +283,7 @@ enum
- 	LINUX_MIB_TCPACKCOMPRESSED,		/* TCPAckCompressed */
- 	LINUX_MIB_TCPZEROWINDOWDROP,		/* TCPZeroWindowDrop */
- 	LINUX_MIB_TCPRCVQDROP,			/* TCPRcvQDrop */
-+	LINUX_MIB_TCPWQUEUETOOBIG,		/* TCPWqueueTooBig */
- 	__LINUX_MIB_MAX
+ 	/* Extended state features: level 0x0000000d */
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index fa07a224e7b9..a444028d8145 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -62,6 +62,7 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_CQM_OCCUP_LLC,	X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_TOTAL,	X86_FEATURE_CQM_LLC   },
+ 	{ X86_FEATURE_CQM_MBM_LOCAL,	X86_FEATURE_CQM_LLC   },
++	{ X86_FEATURE_AVX512_BF16,	X86_FEATURE_AVX512VL  },
+ 	{}
  };
  
-diff --git a/net/ipv4/proc.c b/net/ipv4/proc.c
-index c3610b37bb4c..dff6755dc1a7 100644
---- a/net/ipv4/proc.c
-+++ b/net/ipv4/proc.c
-@@ -291,6 +291,7 @@ static const struct snmp_mib snmp4_net_list[] = {
- 	SNMP_MIB_ITEM("TCPAckCompressed", LINUX_MIB_TCPACKCOMPRESSED),
- 	SNMP_MIB_ITEM("TCPZeroWindowDrop", LINUX_MIB_TCPZEROWINDOWDROP),
- 	SNMP_MIB_ITEM("TCPRcvQDrop", LINUX_MIB_TCPRCVQDROP),
-+	SNMP_MIB_ITEM("TCPWqueueTooBig", LINUX_MIB_TCPWQUEUETOOBIG),
- 	SNMP_MIB_SENTINEL
- };
- 
-diff --git a/net/ipv4/sysctl_net_ipv4.c b/net/ipv4/sysctl_net_ipv4.c
-index eeb4041fa5f9..4f1fa744d3c8 100644
---- a/net/ipv4/sysctl_net_ipv4.c
-+++ b/net/ipv4/sysctl_net_ipv4.c
-@@ -39,6 +39,8 @@ static int ip_local_port_range_min[] = { 1, 1 };
- static int ip_local_port_range_max[] = { 65535, 65535 };
- static int tcp_adv_win_scale_min = -31;
- static int tcp_adv_win_scale_max = 31;
-+static int tcp_min_snd_mss_min = TCP_MIN_SND_MSS;
-+static int tcp_min_snd_mss_max = 65535;
- static int ip_privileged_port_min;
- static int ip_privileged_port_max = 65535;
- static int ip_ttl_min = 1;
-@@ -748,6 +750,15 @@ static struct ctl_table ipv4_net_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec,
- 	},
-+	{
-+		.procname	= "tcp_min_snd_mss",
-+		.data		= &init_net.ipv4.sysctl_tcp_min_snd_mss,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= &tcp_min_snd_mss_min,
-+		.extra2		= &tcp_min_snd_mss_max,
-+	},
- 	{
- 		.procname	= "tcp_probe_threshold",
- 		.data		= &init_net.ipv4.sysctl_tcp_probe_threshold,
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 6baa6dc1b13b..365c8490b34b 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -3889,6 +3889,7 @@ void __init tcp_init(void)
- 	unsigned long limit;
- 	unsigned int i;
- 
-+	BUILD_BUG_ON(TCP_MIN_SND_MSS <= MAX_TCP_OPTION_SPACE);
- 	BUILD_BUG_ON(sizeof(struct tcp_skb_cb) >
- 		     FIELD_SIZEOF(struct sk_buff, cb));
- 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index 731d3045b50a..d48f935c8e28 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -1296,7 +1296,7 @@ static bool tcp_shifted_skb(struct sock *sk, struct sk_buff *prev,
- 	TCP_SKB_CB(skb)->seq += shifted;
- 
- 	tcp_skb_pcount_add(prev, pcount);
--	BUG_ON(tcp_skb_pcount(skb) < pcount);
-+	WARN_ON_ONCE(tcp_skb_pcount(skb) < pcount);
- 	tcp_skb_pcount_add(skb, -pcount);
- 
- 	/* When we're adding to gso_segs == 1, gso_size will be zero,
-@@ -1362,6 +1362,21 @@ static int skb_can_shift(const struct sk_buff *skb)
- 	return !skb_headlen(skb) && skb_is_nonlinear(skb);
- }
- 
-+int tcp_skb_shift(struct sk_buff *to, struct sk_buff *from,
-+		  int pcount, int shiftlen)
-+{
-+	/* TCP min gso_size is 8 bytes (TCP_MIN_GSO_SIZE)
-+	 * Since TCP_SKB_CB(skb)->tcp_gso_segs is 16 bits, we need
-+	 * to make sure not storing more than 65535 * 8 bytes per skb,
-+	 * even if current MSS is bigger.
-+	 */
-+	if (unlikely(to->len + shiftlen >= 65535 * TCP_MIN_GSO_SIZE))
-+		return 0;
-+	if (unlikely(tcp_skb_pcount(to) + pcount > 65535))
-+		return 0;
-+	return skb_shift(to, from, shiftlen);
-+}
-+
- /* Try collapsing SACK blocks spanning across multiple skbs to a single
-  * skb.
-  */
-@@ -1467,7 +1482,7 @@ static struct sk_buff *tcp_shift_skb_data(struct sock *sk, struct sk_buff *skb,
- 	if (!after(TCP_SKB_CB(skb)->seq + len, tp->snd_una))
- 		goto fallback;
- 
--	if (!skb_shift(prev, skb, len))
-+	if (!tcp_skb_shift(prev, skb, pcount, len))
- 		goto fallback;
- 	if (!tcp_shifted_skb(sk, prev, skb, state, pcount, len, mss, dup_sack))
- 		goto out;
-@@ -1485,11 +1500,10 @@ static struct sk_buff *tcp_shift_skb_data(struct sock *sk, struct sk_buff *skb,
- 		goto out;
- 
- 	len = skb->len;
--	if (skb_shift(prev, skb, len)) {
--		pcount += tcp_skb_pcount(skb);
--		tcp_shifted_skb(sk, prev, skb, state, tcp_skb_pcount(skb),
-+	pcount = tcp_skb_pcount(skb);
-+	if (tcp_skb_shift(prev, skb, pcount, len))
-+		tcp_shifted_skb(sk, prev, skb, state, pcount,
- 				len, mss, 0);
--	}
- 
- out:
- 	return prev;
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index a2896944aa37..72cb13cf41e7 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -2626,6 +2626,7 @@ static int __net_init tcp_sk_init(struct net *net)
- 	net->ipv4.sysctl_tcp_ecn_fallback = 1;
- 
- 	net->ipv4.sysctl_tcp_base_mss = TCP_BASE_MSS;
-+	net->ipv4.sysctl_tcp_min_snd_mss = TCP_MIN_SND_MSS;
- 	net->ipv4.sysctl_tcp_probe_threshold = TCP_PROBE_THRESHOLD;
- 	net->ipv4.sysctl_tcp_probe_interval = TCP_PROBE_INTERVAL;
- 
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 4522579aaca2..2d86e1bc483c 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -1299,6 +1299,11 @@ int tcp_fragment(struct sock *sk, enum tcp_queue tcp_queue,
- 	if (nsize < 0)
- 		nsize = 0;
- 
-+	if (unlikely((sk->sk_wmem_queued >> 1) > sk->sk_sndbuf)) {
-+		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPWQUEUETOOBIG);
-+		return -ENOMEM;
-+	}
-+
- 	if (skb_unclone(skb, gfp))
- 		return -ENOMEM;
- 
-@@ -1457,8 +1462,7 @@ static inline int __tcp_mtu_to_mss(struct sock *sk, int pmtu)
- 	mss_now -= icsk->icsk_ext_hdr_len;
- 
- 	/* Then reserve room for full set of TCP options and 8 bytes of data */
--	if (mss_now < 48)
--		mss_now = 48;
-+	mss_now = max(mss_now, sock_net(sk)->ipv4.sysctl_tcp_min_snd_mss);
- 	return mss_now;
- }
- 
-@@ -2750,7 +2754,7 @@ static bool tcp_collapse_retrans(struct sock *sk, struct sk_buff *skb)
- 		if (next_skb_size <= skb_availroom(skb))
- 			skb_copy_bits(next_skb, 0, skb_put(skb, next_skb_size),
- 				      next_skb_size);
--		else if (!skb_shift(skb, next_skb, next_skb_size))
-+		else if (!tcp_skb_shift(skb, next_skb, 1, next_skb_size))
- 			return false;
- 	}
- 	tcp_highest_sack_replace(sk, next_skb, skb);
-diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
-index f0c86398e6a7..cec6c542ca39 100644
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -154,6 +154,7 @@ static void tcp_mtu_probing(struct inet_connection_sock *icsk, struct sock *sk)
- 		mss = tcp_mtu_to_mss(sk, icsk->icsk_mtup.search_low) >> 1;
- 		mss = min(net->ipv4.sysctl_tcp_base_mss, mss);
- 		mss = max(mss, 68 - tcp_sk(sk)->tcp_header_len);
-+		mss = max(mss, net->ipv4.sysctl_tcp_min_snd_mss);
- 		icsk->icsk_mtup.search_low = tcp_mss_to_mtu(sk, mss);
- 	}
- 	tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
+-- 
+2.19.1
+
