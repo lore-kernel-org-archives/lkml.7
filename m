@@ -2,197 +2,201 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 637FAC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CDF4C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D45120652
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0737D21E6B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZYRGE1HF"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="btSh5wd9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727086AbfFQHrr (ORCPT
+        id S1726981AbfFQHtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:47:47 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:37049 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfFQHrr (ORCPT
+        Mon, 17 Jun 2019 03:49:07 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50536 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbfFQHtH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:47:47 -0400
-Received: by mail-vs1-f68.google.com with SMTP id v6so5532783vsq.4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 00:47:46 -0700 (PDT)
+        Mon, 17 Jun 2019 03:49:07 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c66so8113533wmf.0;
+        Mon, 17 Jun 2019 00:49:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MY3tGGLQYLdVpFw8r18hUsv6GICSapuyFtcuKuaoUEA=;
-        b=ZYRGE1HFozqJdEnhT1Aq/4xm+obkmNZrwpLYS6CqA8W4IsHsooLzuhUj9jUSZ1pXMC
-         IsXK1DN3/8Mq5xMzyHVJMekFzoPBD2onXipXv6T6czln5mJD7VqZU06BrnLXZaJQIYuY
-         GelMtbVdclV+tc4E1i8u6QZ0XUsBjyZoLoHKm5nJHdI/KqH6iijuAZ5gJJhFzUbF9/Se
-         +d0PwpL9FYuscR3eumeYjxhDhQBzbuINEQC+U6SZeB3RRxCEfIHtq7tM5fHj8IBH+IVM
-         LVPADPXiZyM/rBVAiiOgU2IkNKSgrteIJ3daMDxF7Jks6qjq+ry/Fluln+qx7YV2FdPP
-         QVsQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=ecxsfTM1O8CKKdw9Vc/9zWwPWgptCwlbrFnJVkz7unQ=;
+        b=btSh5wd9OLKwytZGLnP5yTUJ1BmMecFoTjQVt2rq0ZAkKcNSfBKxX1PVvxRxcqaPd6
+         7Ev+aq6hiJUIejkfcMtXEDIt3ISJSRm30hCpt8mA+CM5US1flrmPESSwPit8Qjhz5VTq
+         VlZrQTkC4sFEgTTtDYkVJk9OHpC7cOFvO+OA3EkSeQlhXolZV4qiXTFFbuvkaVHH4a/f
+         zVUyNul3zTfGafCiSvCkSNJTjWsh35furXGBljnLg50mpod1zIf7JaIuivEUsN7njwAR
+         snilYB5tr6YOm3BDUVlJzCyRlCdampINOrOlHaQQNbt4/GIC160my5dg4G4XqMbofMc6
+         GbxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MY3tGGLQYLdVpFw8r18hUsv6GICSapuyFtcuKuaoUEA=;
-        b=O3WB1onr6VxBR0uIJ9WhhV3eHybBObIok3ePK53xPRXERKOS+fuwfGiIIqpZl3fY71
-         fca2CW/lo/UNWVlCILsnd1Z+FWR6yEp3QfFwczQNvG2Wuj3gxOYl+9aeIbrTTAcubeOh
-         JOTFwhnEpg3boE/9p1FDoKa3R2q0r6kp4p8qm3gjyFzAiX3ZuEbJ6C9utt29DlyTamHd
-         Z3r2l6RpiBEw/JjHjLteH6KgPoJgTzik3Xd3/d19VV+vu/W6IlVA1ExoerX1CiWV3H4m
-         t4fZzO8W5F6RAHdFczNrN1n1ZOxASsg9+m1BGIHTpA5IXkT+C2hRsQn6kGFHiDjZgzEl
-         RdfA==
-X-Gm-Message-State: APjAAAWd45y9LACm2041xl6W5y9XFGWmQoS5pK1ZPw9vVC7FfpvelLiw
-        7Ilgg6qB9wUKhAAtZm+Re0CnoSqpOHt0KeYtlqsB7g==
-X-Google-Smtp-Source: APXvYqyiVUylNuTkYLjx9KI91CAaUXCepGMea+Uy268M4YUvBMxIeXwcC02Sm1UIK2FsXcJpIkuX3opSJ31nZGo10h8=
-X-Received: by 2002:a67:7a90:: with SMTP id v138mr11089584vsc.200.1560757665797;
- Mon, 17 Jun 2019 00:47:45 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ecxsfTM1O8CKKdw9Vc/9zWwPWgptCwlbrFnJVkz7unQ=;
+        b=F1GWqvSU4yPtV4zih/FPl7Guck7Pe9GTPxSszCyEtOJ8qZsLY+qlCDAGgxmHyDi0pq
+         sQu9HtnxkUL6XnBsdjU4VmLnomvP8od4eXRD+1MJrcnGJNUv5G4Na7cT9Tszvb3PMh3Y
+         6+0fUKTMllvmDNl2iIYxJBYQBE4NjAt8ARQOl8yUVXUIZF8SeMDqsHJxGo7X1sM19Bsa
+         dl5R8/3kDTjYoWD5LEwZJMhdjuN8nz+YtnKwaJ25+HkZgDWkrzK9gbdXa10LYQ/DF9AX
+         Qy30VCyq+LA/SKhveFM3JEoWWCG37vWKCfCVvchIrmH+KENb8blAjv/92UBOehgm2Apf
+         +x8A==
+X-Gm-Message-State: APjAAAX6nVc3Y24Txs9CrzWg/tANJRlRcsrzC6ZUioTinl3PBk5AJfN3
+        jwmvkb2i0eKkVMxLePUz12U=
+X-Google-Smtp-Source: APXvYqxp+9fVi2kmA6l3EmTTS/vSHxl3h9W1CE68l+UmYKcQ3Qiz3NZib+9nDDTADVoIcSPA2zFMGg==
+X-Received: by 2002:a1c:a783:: with SMTP id q125mr18170543wme.94.1560757744396;
+        Mon, 17 Jun 2019 00:49:04 -0700 (PDT)
+Received: from pali ([2a02:2b88:2:1::5cc6:2f])
+        by smtp.gmail.com with ESMTPSA id q20sm26811438wra.36.2019.06.17.00.49.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 00:49:03 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 09:49:02 +0200
+From:   Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>
+To:     Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
+Cc:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
+        Hui Wang <hui.wang@canonical.com>,
+        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
+        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
+        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
+        Naoki Saito <naoki.saito@alpsalpine.com>,
+        Hideo Kawase <hideo.kawase@alpsalpine.com>
+Subject: Re: =?utf-8?B?562U5aSNOiDnrZTlpI06IOetlA==?=
+ =?utf-8?B?5aSNOiDnrZTlpI06IFtQQVRDSA==?= =?utf-8?Q?=5D?= input: alps-fix the
+ issue alps cs19 trackstick do not work.
+Message-ID: <20190617074902.bg2emodbmjkkfldd@pali>
+References: <20190610104310.qa5snt7jpcljodfv@pali>
+ <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+ <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
+ <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
+ <20190611072333.nd4va4q2m5epmukc@pali>
+ <20190611170707.GA143729@dtor-ws>
+ <20190611171707.tydk7rsmtzmjohky@pali>
+ <20190611173228.GD143729@dtor-ws>
+ <20190611173856.jjwoagud6doxvpy3@pali>
+ <OSBPR01MB4855BD8471A591BD75BDECA0DAEB0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-References: <1560489970-30467-1-git-send-email-jjian.zhou@mediatek.com>
- <CAPDyKFrXU4bpKeB7Aa15j2nHqUCn-bk+YKn9_vkznmi+PS8H7A@mail.gmail.com> <1560751020.3103.25.camel@mhfsdcap03>
-In-Reply-To: <1560751020.3103.25.camel@mhfsdcap03>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 17 Jun 2019 09:47:07 +0200
-Message-ID: <CAPDyKFqs2ngPfR_SM2MEssFVDDw=S7G_Oy7V7x-bP9_aFm5XDQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] mmc: mediatek: fix SDIO IRQ interrupt handle flow
-To:     jjian zhou <jjian.zhou@mediatek.com>
-Cc:     =?UTF-8?B?Q2hhb3RpYW4gSmluZyAo5LqV5pyd5aSpKQ==?= 
-        <Chaotian.Jing@mediatek.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?WW9uZyBNYW8gKOavm+WLhyk=?= <yong.mao@mediatek.com>,
-        srv_heupstream <srv_heupstream@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <OSBPR01MB4855BD8471A591BD75BDECA0DAEB0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019 at 07:57, jjian zhou <jjian.zhou@mediatek.com> wrote:
->
-> On Fri, 2019-06-14 at 17:46 +0800, Ulf Hansson wrote:
-> > On Fri, 14 Jun 2019 at 07:26, Jjian Zhou <jjian.zhou@mediatek.com> wrote:
-> > >
-> > > From: jjian zhou <jjian.zhou@mediatek.com>
-> > >
-> > > SDIO IRQ is triggered by low level. It need disable SDIO IRQ
-> > > detected function. Otherwise the interrupt register can't be cleared.
-> > > It will process the interrupt more.
-> > >
-> > > Signed-off-by: Jjian Zhou <jjian.zhou@mediatek.com>
-> > > Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
-> > > Signed-off-by: Yong Mao <yong.mao@mediatek.com>
-> > > ---
-> > >  drivers/mmc/host/mtk-sd.c | 13 +++++++------
-> > >  1 file changed, 7 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-> > > index c518cc2..29992ae 100644
-> > > --- a/drivers/mmc/host/mtk-sd.c
-> > > +++ b/drivers/mmc/host/mtk-sd.c
-> > > @@ -1389,10 +1389,12 @@ static void __msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
-> > >         struct msdc_host *host = mmc_priv(mmc);
-> > >
-> > >         spin_lock_irqsave(&host->lock, flags);
-> > > -       if (enb)
-> > > +       if (enb) {
-> > >                 sdr_set_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
-> > > -       else
-> > > +               sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
-> > > +       } else {
-> > >                 sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
-> >
-> > Rather than clearing SDC_CFG_SDIOIDE in the irq handler, you need to
-> > do it here. As otherwise when the mmc core calls
-> > host->ops->enable_sdio_irq() to disable the SDIO IRQ, it may stay
-> > enabled.
-> >
->
-> Thank you for your review.
->
-> I remove the spin lock in "__msdc_enable_sdio_irq" and add
-> spin lock in "msdc_enable_sdio_irq". The modification of
-> "__msdc_enable_sdio_irq" and "msdc_enable_sdio_irq" is as following.
->
-> static void __msdc_enable_sdio_irq(struct msdc_host *host, int enb)
-> {
->         if (enb) {
->                 sdr_set_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
->                 sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
->         } else {
->                 sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
->                 sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
->         }
-> }
->
-> static void msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
-> {
->         unsigned long flags;
->         struct msdc_host *host = mmc_priv(mmc);
->         spin_lock_irqsave(&host->lock, flags);;
->         __msdc_enable_sdio_irq(host, enb);
->         spin_unlock_irqrestore(&host->lock, flags);
->
->         if (enb)
->                 pm_runtime_get_noresume(host->dev);
->         else
->                 pm_runtime_get_noidle(host->dev);
-> }
->
-> > > +       }
-> > >         spin_unlock_irqrestore(&host->lock, flags);
-> > >  }
-> > >
-> > > @@ -1422,6 +1424,8 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
-> > >                 spin_lock_irqsave(&host->lock, flags);
-> > >                 events = readl(host->base + MSDC_INT);
-> > >                 event_mask = readl(host->base + MSDC_INTEN);
-> > > +               if ((events & event_mask) & MSDC_INT_SDIOIRQ)
-> > > +                       sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
-> >
-> > As stated above, I suggest you move this into __msdc_enable_sdio_irq()
-> > and thus call that function from here instead. Well, that doesn't work
-> > as is, because of the spin lock, so you rather need to make a
-> > sub-function of __msdc_enable_sdio_irq, that don't take/releases the
-> > lock.
-> >
-> > I hope that was clear. If not, I can post a patch to show you what I mean.
-> >
->
-> I also modify this part handler in msdc_irq.
->
->         spin_lock_irqsave(&host->lock, flags);
->         events = readl(host->base + MSDC_INT);
->         event_mask = readl(host->base + MSDC_INTEN);
->         if ((events & event_mask) & MSDC_INT_SDIOIRQ)
->                 __msdc_enable_sdio_irq(host, 0);
->         /* clear interrupts */
->         writel(events & event_mask, host->base + MSDC_INT);
->
->         mrq = host->mrq;
->         cmd = host->cmd;
->         data = host->data;
->         spin_unlock_irqrestore(&host->lock, flags);
->
->         if ((events & event_mask) & MSDC_INT_SDIOIRQ)
->                 sdio_signal_irq(host->mmc);
->
-> I also will add spin lock in the "msdc_ack_sdio_irq".
->
-> Looking forward to your suggestions.
+On Monday 17 June 2019 01:29:17 Xiaoxiao Liu wrote:
+> Hi Pali,
+> 
+> Since design architecture change of CS19, input device connection has been changed to below architecture, 
+> Touchpad has been moved to I2C connection.
+> 
+>   kernel/host  <--PS/2-->  EC  <--PS/2-->  external PS/2 mouse
+>            |                 |
+>            |                <--PS/2-->  trackstick
+>                |
+>                 <--I2C-->  Touchpad
 
-Seems reasonable, please post a new version, then I will review again.
+Hi, thank you for explanation!
 
-[...]
+So in our case, ALPS device should not be put into passthrough mode as
+there is no device after it.
 
-Kind regards
-Uffe
+> In the past TrackPoint does not show in the device list because of TrackPoint was hidden device of Touchpad.
+> But from CS19, TrackPoint is directly connecting with PS2 port, 
+> 3 bytes packet does not need to take affect by other vendors Touchpad format. 
+> So alps.c is no need for CS19 device.
+
+So if trackpoint.c driver is working fine with this configuration, it is
+just needed to instruct alps.c to not take this device.
+
+> Best Regards
+> Shona
+> -----邮件原件-----
+> 发件人: Pali Rohár <pali.rohar@gmail.com> 
+> 发送时间: Wednesday, June 12, 2019 1:39 AM
+> 收件人: dmitry.torokhov@gmail.com
+> 抄送: Hui Wang <hui.wang@canonical.com>; 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>; XiaoXiao Liu <sliuuxiaonxiao@gmail.com>; peter.hutterer@who-t.net; linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 斉藤 直樹 Naoki Saito <naoki.saito@alpsalpine.com>; 川瀬 英夫 Hideo Kawase <hideo.kawase@alpsalpine.com>
+> 主题: Re: 答复: 答复: 答复: [PATCH] input: alps-fix the issue alps cs19 trackstick do not work.
+> 
+> On Tuesday 11 June 2019 10:32:28 dmitry.torokhov@gmail.com wrote:
+> > On Tue, Jun 11, 2019 at 07:17:07PM +0200, Pali Rohár wrote:
+> > > On Tuesday 11 June 2019 10:07:07 dmitry.torokhov@gmail.com wrote:
+> > > > On Tue, Jun 11, 2019 at 09:23:33AM +0200, Pali Rohár wrote:
+> > > > > On Tuesday 11 June 2019 12:32:33 Hui Wang wrote:
+> > > > > > On 2019/6/11 上午11:23, Hui Wang wrote:
+> > > > > > > On 2019/6/11 上午11:05, Xiaoxiao Liu wrote:
+> > > > > > > > Hi Pali,
+> > > > > > > > 
+> > > > > > > > I discussed with our FW team about this problem.
+> > > > > > > > We think the V8 method means a touchpad feature  and does 
+> > > > > > > > not fit the CS19 trackpoint device.
+> > > > > > > > CS19 TrackPoint needn't  use any Absolute (Raw) mode and 
+> > > > > > > > is usually use standard mouse data.
+> > > > > > > > CS19 TrackPoint device is a completely different device 
+> > > > > > > > with DualPoint device of Dell/HP.
+> > > > > > > > CS19 TrackPoint device is independent  of Touchpad. 
+> > > > > > > > (Touchpad is connecting by I2C, TrackPoint is directly 
+> > > > > > > > connecting with PS2 port.) And it has completely another FW.
+> > > > > > > > 
+> > > > > > > > So we think it is better to use the mouse mode for CS19 trackpoint.
+> > > > > > > 
+> > > > > > > Maybe here is some mis-understanding,  the mouse mode here 
+> > > > > > > doesn't mean we use psmouse-base.c for cs19 (bare ps/2 
+> > > > > > > mouse), we plan to use trackpoint.c to drive this HW, so 
+> > > > > > > this trackpoint has all features a trackpoint should have.
+> > > > > > > 
+> > > > > > And I sent a patch one month ago to let the the trackpoint.c 
+> > > > > > to drive this
+> > > > > > HW: https://www.spinics.net/lists/linux-input/msg61341.html, 
+> > > > > > maybe that patch is reference.
+> > > > > 
+> > > > > So instead of creating blacklist, you should check for 
+> > > > > TP_VARIANT_ALPS in alps.c and disallow its usage.
+> > > > > 
+> > > > > Or maybe better, move trackpoint.c detect code before alsp.c 
+> > > > > detect code in psmouse-base. And no changes in alps.c are needed.
+> > > > 
+> > > > I'd be very cautions of moving around the protocol detection. It 
+> > > > is very fragile, so if we can detect trackpoint-only case in 
+> > > > alps.c and skip on to trackpoint I would prefer it.
+> > > 
+> > > The main problem is that proposed trackpoint-only check in alps.c is 
+> > > basically what trackpoint.c is doing for checking if device is 
+> > > trackpoint (via function trackpoint_start_protocol()).
+> > > 
+> > > So I'm not sure now what is the best solution...
+> > 
+> > Unfortunately currently trackpoint is being probed only after we tried 
+> > Elan, Genius, and Logitech PS2++ protocols, and I am not sure if 
+> > moving trackpoint around will disturb them or not.
+> > 
+> > I do not think there is much code duplication by pulling limited 
+> > version of trackpoint detection code into alps.c and then have it bail 
+> > out when it sees trackpoint-only device so trackpoint.c can handle it properly.
+> 
+> Ok. Seems that it is the best solution.
+> 
+> The last question is, should be use ALPS or Trackpoint protocol? Because it looks like that device can be configured to one or other.
+> 
+> What are pros and cons of these two protocols?
+> 
+> --
+> Pali Rohár
+> pali.rohar@gmail.com
+
+-- 
+Pali Rohár
+pali.rohar@gmail.com
