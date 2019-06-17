@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6750BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E3BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:33:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B312063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF572063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:33:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807179;
-	bh=+FYusu5/eFXxLRd5OJh1iqwMUgWT71Qh9VJzk466pU4=;
+	s=default; t=1560807185;
+	bh=5FKgHiwaps52oURHQqc1RE4Wu7mEfpAXnwncpeXbwZI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HKb/vX11pshczk/tXYe64rG452WPzqXFBIuCKVJeCPLKT90H4HFyQBjr1xsaDZOc3
-	 leoNiZGuD6/OHvhtrdBTsLN32HAYsXAgfno/MosD4zRqy+kLafj3amMJ0vt1nwBwi+
-	 eqpQiVEbFPcP1fbZ8n/dbVt9yJAxVOwLmDrW5TIA=
+	b=iwJtgoTgevWZXBUOt0JW+FqmovgzR6UOe23OOKbBov9rhLf9RV2gg8Ou7L5W0Z4xR
+	 9oRBALhREkl8qqQpZQ7jX/NMzziVvhv4Nh5X1UFPeHDVER8VOYJPeEwT1MbcyM5O0S
+	 KsVzh10zIM1WxoKYynGi3FH66Qd027wCJ3r/JONs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbfFQV0n (ORCPT
+        id S1730238AbfFQV0f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:26:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53354 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:26:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729690AbfFQV0m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:26:42 -0400
+        id S1729266AbfFQV0b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:26:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F23320673;
-        Mon, 17 Jun 2019 21:26:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5671D20657;
+        Mon, 17 Jun 2019 21:26:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806801;
-        bh=+FYusu5/eFXxLRd5OJh1iqwMUgWT71Qh9VJzk466pU4=;
+        s=default; t=1560806790;
+        bh=5FKgHiwaps52oURHQqc1RE4Wu7mEfpAXnwncpeXbwZI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=A4ywauAdDOcnvqGdmMRbUirSobbrGcsYJhTES4PjYqrrHX2LrScHLsvCukn/WUQwG
-         B8qyO0i+IVbJdesuNwhnvajsD0Pd/+TNYEKY8VHUyv2nXLWdhZ+srgFGJBDywnyCgl
-         ZmVrjwD0G+EQax3QguwnRYcde3g9yy9uUfaH0N/E=
+        b=vHPbjfVM43XASP3zaaInNWR4/Rc/mZylqtAaNk0FIT8DgCZqN3dWLlAYUgxJm0KHI
+         YXAysyIxhyMn9H6S9anJr6JX6WpC9sr8a+LnmIB2ey7i5mT0V8QYGlAN67JXe87hHC
+         1Q8hWb7lSonrmdebvvPNRQTYSBYs5KPtMZb+5bBM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Zatta <marco@zatta.me>
-Subject: [PATCH 4.19 61/75] USB: Fix chipmunk-like voice when using Logitech C270 for recording audio.
-Date:   Mon, 17 Jun 2019 23:10:12 +0200
-Message-Id: <20190617210755.313460703@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Murray McAllister <murray.mcallister@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 4.19 57/75] drm/vmwgfx: integer underflow in vmw_cmd_dx_set_shader() leading to an invalid read
+Date:   Mon, 17 Jun 2019 23:10:08 +0200
+Message-Id: <20190617210755.036336191@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -58,37 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Zatta <marco@zatta.me>
+From: Murray McAllister <murray.mcallister@gmail.com>
 
-commit bd21f0222adab64974b7d1b4b8c7ce6b23e9ea4d upstream.
+commit 5ed7f4b5eca11c3c69e7c8b53e4321812bc1ee1e upstream.
 
-This patch fixes the chipmunk-like voice that manifets randomly when
-using the integrated mic of the Logitech Webcam HD C270.
+If SVGA_3D_CMD_DX_SET_SHADER is called with a shader ID
+of SVGA3D_INVALID_ID, and a shader type of
+SVGA3D_SHADERTYPE_INVALID, the calculated binding.shader_slot
+will be 4294967295, leading to an out-of-bounds read in vmw_binding_loc()
+when the offset is calculated.
 
-The issue was solved initially for this device by commit 2394d67e446b
-("USB: add RESET_RESUME for webcams shown to be quirky") but it was then
-reintroduced by e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all
-Logitech UVC webcams"). This patch is to have the fix back.
-
-Signed-off-by: Marco Zatta <marco@zatta.me>
-Cc: stable <stable@vger.kernel.org>
+Cc: <stable@vger.kernel.org>
+Fixes: d80efd5cb3de ("drm/vmwgfx: Initial DX support")
+Signed-off-by: Murray McAllister <murray.mcallister@gmail.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -215,6 +215,9 @@ static const struct usb_device_id usb_qu
- 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
- 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
+---
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+@@ -2493,7 +2493,8 @@ static int vmw_cmd_dx_set_shader(struct
  
-+	/* Logitech HD Webcam C270 */
-+	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
-+
- 	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
- 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
- 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	cmd = container_of(header, typeof(*cmd), header);
+ 
+-	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX) {
++	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX ||
++	    cmd->body.type < SVGA3D_SHADERTYPE_MIN) {
+ 		DRM_ERROR("Illegal shader type %u.\n",
+ 			  (unsigned) cmd->body.type);
+ 		return -EINVAL;
 
 
