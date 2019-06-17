@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1741C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:38:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BECB2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 908522084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:38:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 818C02084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:39:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Nm078SuT"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="LQN4/bxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728940AbfFQTie (ORCPT
+        id S1728966AbfFQTjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:38:34 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51555 "EHLO
+        Mon, 17 Jun 2019 15:39:14 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:60693 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726151AbfFQTid (ORCPT
+        with ESMTP id S1726151AbfFQTjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:38:33 -0400
+        Mon, 17 Jun 2019 15:39:13 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJcE2b3566165
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJctOp3566290
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:38:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJcE2b3566165
+        Mon, 17 Jun 2019 12:38:55 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJctOp3566290
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560800295;
-        bh=bOhbHlo2vur31Mm/JjujfWnoWh5XC/2O3FWi+yFo3tc=;
+        s=2019051801; t=1560800336;
+        bh=lNkg6DZ8FgQwgxahgiDoQJ0tnV0E0qNHLp/ST+rL6MQ=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=Nm078SuTX79L036HvyY/UNC75+0G5Av0fOVxGcEtI0wmPrKdirOmgToB8cXysJnhc
-         H+3WUWuk/cpKpPY8Dp8w8/aysbQH5cF05VGRfJi6hS1kqra8PmdPmI3TrIH+gW4kV9
-         tsEqbfd56Qv0Fi4uInbNvHC+NIHUCgiX8XElO1CyzXrTQ3Goi5yxj/7Xr3M+A9Cltb
-         FhxVt/w8VgVKx+z1N4z8/gTV9chYi7DsI/kk5gMV1qb1ltVO7Mz1MZACuY+VqFq1Kc
-         lofAA6wF2Ex09BQ96/EyuRaGRon2WCX5OihqXV1gtxcsEl3QqJTEqq3Xwb1hvDQtpf
-         DVXa5QNcrSbJg==
+        b=LQN4/bxPbBc1eO9H6urSp9aXzcJgxjNpokeehbGPBiQWOBWXBHHKIyhke+YHqpm2/
+         7Em1kYN7CnY1gDdnmuDcH/u8HTEyBpqM+yWL1TBTikdjQ5hIIiPYkxdUKjuSF1usLR
+         am3AXK26c4XEBsXXBWbUuQzXurHKCY8DIT5cuMPyvdwS6O9P0qW8Z0ykXvq0WkkJfH
+         KNH2bQvRkRXALUkR1Ifu671hsz2j0I8mr6pnBFKXBkZbwbHGAY3qao9dbdbhaaxcSU
+         Y7m1saUcMMmFf7hs41Not3xd/bS6mj70tKIM4u5RAwQtWFTcYWlv2tFnffx7XY7Ati
+         trhjV2HQjAHqw==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJcE4i3566162;
-        Mon, 17 Jun 2019 12:38:14 -0700
-Date:   Mon, 17 Jun 2019 12:38:14 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJctTu3566287;
+        Mon, 17 Jun 2019 12:38:55 -0700
+Date:   Mon, 17 Jun 2019 12:38:55 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Adrian Hunter <tipbot@zytor.com>
-Message-ID: <tip-33526f362b019f0a17c6b522eb3b07017dba98a7@git.kernel.org>
-Cc:     jolsa@redhat.com, hpa@zytor.com, tglx@linutronix.de,
-        acme@redhat.com, linux-kernel@vger.kernel.org,
-        adrian.hunter@intel.com, mingo@kernel.org, yao.jin@linux.intel.com
-Reply-To: acme@redhat.com, tglx@linutronix.de, hpa@zytor.com,
-          jolsa@redhat.com, adrian.hunter@intel.com,
-          linux-kernel@vger.kernel.org, yao.jin@linux.intel.com,
-          mingo@kernel.org
-In-Reply-To: <20190604130017.31207-2-adrian.hunter@intel.com>
-References: <20190604130017.31207-2-adrian.hunter@intel.com>
+Message-ID: <tip-400ae9818fe64899cea921a89c7078e0df9e41ea@git.kernel.org>
+Cc:     adrian.hunter@intel.com, jolsa@redhat.com,
+        linux-kernel@vger.kernel.org, hpa@zytor.com,
+        yao.jin@linux.intel.com, tglx@linutronix.de, acme@redhat.com,
+        mingo@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, jolsa@redhat.com,
+          adrian.hunter@intel.com, mingo@kernel.org, acme@redhat.com,
+          tglx@linutronix.de, yao.jin@linux.intel.com, hpa@zytor.com
+In-Reply-To: <20190604130017.31207-3-adrian.hunter@intel.com>
+References: <20190604130017.31207-3-adrian.hunter@intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf auxtrace: Add perf time interval to
+Subject: [tip:perf/core] perf script: Set perf time interval in
  itrace_synth_ops
-Git-Commit-ID: 33526f362b019f0a17c6b522eb3b07017dba98a7
+Git-Commit-ID: 400ae9818fe64899cea921a89c7078e0df9e41ea
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,14 +71,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  33526f362b019f0a17c6b522eb3b07017dba98a7
-Gitweb:     https://git.kernel.org/tip/33526f362b019f0a17c6b522eb3b07017dba98a7
+Commit-ID:  400ae9818fe64899cea921a89c7078e0df9e41ea
+Gitweb:     https://git.kernel.org/tip/400ae9818fe64899cea921a89c7078e0df9e41ea
 Author:     Adrian Hunter <adrian.hunter@intel.com>
-AuthorDate: Tue, 4 Jun 2019 15:59:59 +0300
+AuthorDate: Tue, 4 Jun 2019 16:00:00 +0300
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 10 Jun 2019 16:20:11 -0300
 
-perf auxtrace: Add perf time interval to itrace_synth_ops
+perf script: Set perf time interval in itrace_synth_ops
 
 Instruction trace decoders can optimize output based on what time
 intervals will be filtered, so pass that information in
@@ -87,75 +87,36 @@ itrace_synth_ops.
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Jin Yao <yao.jin@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Link: http://lkml.kernel.org/r/20190604130017.31207-2-adrian.hunter@intel.com
+Link: http://lkml.kernel.org/r/20190604130017.31207-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/auxtrace.h | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ tools/perf/builtin-script.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/auxtrace.h b/tools/perf/util/auxtrace.h
-index c69bcd9a3091..c80c58eb7f4d 100644
---- a/tools/perf/util/auxtrace.h
-+++ b/tools/perf/util/auxtrace.h
-@@ -83,6 +83,8 @@ enum itrace_period_type {
-  * @period_type: 'instructions' events period type
-  * @initial_skip: skip N events at the beginning.
-  * @cpu_bitmap: CPUs for which to synthesize events, or NULL for all
-+ * @ptime_range: time intervals to trace or NULL
-+ * @range_num: number of time intervals to trace
-  */
- struct itrace_synth_opts {
- 	bool			set;
-@@ -107,6 +109,8 @@ struct itrace_synth_opts {
- 	enum itrace_period_type	period_type;
- 	unsigned long		initial_skip;
- 	unsigned long		*cpu_bitmap;
-+	struct perf_time_interval *ptime_range;
-+	int			range_num;
- };
- 
- /**
-@@ -599,6 +603,21 @@ static inline void auxtrace__free(struct perf_session *session)
- "				PERIOD[ns|us|ms|i|t]:   specify period to sample stream\n" \
- "				concatenate multiple options. Default is ibxwpe or cewp\n"
- 
-+static inline
-+void itrace_synth_opts__set_time_range(struct itrace_synth_opts *opts,
-+				       struct perf_time_interval *ptime_range,
-+				       int range_num)
-+{
-+	opts->ptime_range = ptime_range;
-+	opts->range_num = range_num;
-+}
+diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
+index 80c722ade852..61f00055476a 100644
+--- a/tools/perf/builtin-script.c
++++ b/tools/perf/builtin-script.c
+@@ -3829,6 +3829,10 @@ int cmd_script(int argc, const char **argv)
+ 						  &script.range_num);
+ 		if (err < 0)
+ 			goto out_delete;
 +
-+static inline
-+void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts)
-+{
-+	opts->ptime_range = NULL;
-+	opts->range_num = 0;
-+}
++		itrace_synth_opts__set_time_range(&itrace_synth_opts,
++						  script.ptime_range,
++						  script.range_num);
+ 	}
  
- #else
+ 	err = __cmd_script(&script);
+@@ -3836,8 +3840,10 @@ int cmd_script(int argc, const char **argv)
+ 	flush_scripting();
  
-@@ -742,6 +761,21 @@ void auxtrace_mmap_params__set_idx(struct auxtrace_mmap_params *mp,
+ out_delete:
+-	if (script.ptime_range)
++	if (script.ptime_range) {
++		itrace_synth_opts__clear_time_range(&itrace_synth_opts);
+ 		zfree(&script.ptime_range);
++	}
  
- #define ITRACE_HELP ""
- 
-+static inline
-+void itrace_synth_opts__set_time_range(struct itrace_synth_opts *opts
-+				       __maybe_unused,
-+				       struct perf_time_interval *ptime_range
-+				       __maybe_unused,
-+				       int range_num __maybe_unused)
-+{
-+}
-+
-+static inline
-+void itrace_synth_opts__clear_time_range(struct itrace_synth_opts *opts
-+					 __maybe_unused)
-+{
-+}
-+
- #endif
- 
- #endif
+ 	perf_evlist__free_stats(session->evlist);
+ 	perf_session__delete(session);
