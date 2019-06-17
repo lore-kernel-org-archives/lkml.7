@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6C0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42059C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A2BE2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2175220863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728682AbfFQSlh (ORCPT
+        id S1728712AbfFQSlj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:41:37 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:35253 "EHLO
+        Mon, 17 Jun 2019 14:41:39 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:60101 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbfFQSlh (ORCPT
+        with ESMTP id S1726535AbfFQSli (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:41:37 -0400
+        Mon, 17 Jun 2019 14:41:38 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MhUDl-1iFYm80Vff-00eexp; Mon, 17 Jun 2019 20:41:15 +0200
+ 1MAORp-1hn8v92BXH-00Bvr3; Mon, 17 Jun 2019 20:41:24 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -33,26 +33,28 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 01/30] include: linux: platform_device: more helpers for declaring platform drivers
-Date:   Mon, 17 Jun 2019 20:40:42 +0200
-Message-Id: <1560796871-18560-1-git-send-email-info@metux.net>
+Subject: [PATCH 05/30] drivers: gpio: lynxpoint: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:40:46 +0200
+Message-Id: <1560796871-18560-5-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:vh3WgaKAfp/7utsDwGStG8lhMEJOLPpqeqqOIPZUy69iRDhMgUT
- YLO0VVH9+WSHOOP9Z9lTkwLZQut5VFowC3UxPBimZV2gDZsASGuddTCo4Ns+x279im1k6P6
- DvVmuitj/sUJGSikRzupru9N53/CfW5itFY6p4aDEVz9PvxnW7pBVq3Fmi/cVgqMjBnVHGa
- GhxJ055QzOASmoYXb/xGw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pncoYwVZfPU=:I4jSkF7FQyUU1Sq0ZMKvoJ
- hrJzfvo2len4wsFtN0hwymlMcBge1MDGz+loqbRkJ8CW/uRDselgl9z8OUHkvxhAJwTUPCoK2
- 5LRdxHWKDEVzf+MuRQjoI+ISMzc40B9oTOcQXNJn3uxLp24Zf0lG++O4eNVoKQJk32AVy3b6T
- 7z80l+YlX2u6QXjMp2DzSlFJ5FwvWeJ2nTmoWP8EpQeg8OoAf/ecvdpSWa7ZjRgf3udyWH7Fm
- YTcg2Rho7x7lehyZlIG+aFWHsQqBlWWsAa2cKA0/W8Nlk4QHva+ZiPenQ4qo+tavkhrew/M1J
- 99WAeRqb8RxlmqjxXqIVewncVfPRIbnHN4lm53x1O4kYrdlRETFiqL3wsiLhsU6pb7OhSpcke
- H01Gpa7OSgdd+7tbdwfSE2dnCuhFHgxdI9iP2KiBrO08v6ihVnsWKvCjCdsBr0wd0c/vmqaaD
- cOC+hxmoLR4uO7790+Uwko4cRo813Uc1adwb/A7nrMNIWc3D1yWASdCxy0X14MJ5ewLUt3EMS
- 04MllSWdEijwsXKnH9zr+YctR/GxkORREQwZab5xab0l6k+QY4bGbB1FH1I6l1cMBHHJ0EYMf
- xUbRGtlHTBwRBpR7kHDfTij/AkHg00n1c4hTwOWu7/YHW1ud65SgcWkdAVvYU8Mr1ylUhXiUU
- 1LeCBRSQvuBLsKgKGHNygUZdlvOtR7m3hQ+MhrZslo8e24+3/0fbPcwoAc1RtbmIk3gFaYxiZ
- TlsWX1yXNmkScOxTVP7Gxd5Jxz50lkfGbbRVwQ==
+In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
+References: <1560796871-18560-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:/j4c3FyWT7iNyjBM83hS+oirnyGOSBHrDy4mSedO3eOWbp294SX
+ A+Ed8X11Ylq2mC41dad6tu9XDE3eB5sIetcv6lTw7L2rRsguhB5Jv0gBiufWxHdLJnH470I
+ Jbxi+YCChbbgscoDecbvtrwBc3W9XqAiePBIZ6VDHC5IJbH6bwas7iwrFDGTyzN0/G5FpUk
+ iCinY4J8YA07zTMcIQzpg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:I69TDSvAHEk=:354x7iU3r/TnN7yyD7caOR
+ mtV7+NWSZ7xIG6yHHD7tPPe8iOz/YzBVTvve28kblCC+rX63X8HuAc5LMzsF9O7MOmLdSo30j
+ YZYISl3GofEDNbdLqYRbUFFiv49/pw3pqaGALJdwRZ2+l7w54/OSkDXFIPl3I02lUDmIzzMcB
+ S4r7og5ohxiOuFoQfNuB307tS3Eis6r5zA3sjx0tmyBUIPqkG4nl0IMklORHolIsCIzJzdi6L
+ i+Q9R5WRZpqcK7h4O/UtBtZe36mw54h5QBgkkGVnctk1G/JP740CwQOfmY7a1jup80EikYmgu
+ F1nmXuwiabkAcVq2WAGmoKJdB9rNjsM133FYxz6P3fsdS+7z2WqKmM/PRwhKHZj6CEKLULvLM
+ /10hl0Iz97n1N1zWWGCKiF2vkLbtZExF8rxIqqlhvcki40haTE8u0ICCvV9GXgjT8wCfeSLCP
+ 1zNfMNKOPiML6rJFU6dSj/gpg2bh7/xcTgviQwV1by96jtLbvfdHo3kkCwjXytiYDqAz/u3dM
+ kADOAt2BLFQiM9758631Fu/ml12cXkJqfyftZYWHNwyRLSDo7tsndy5wtZ2l5Iovg1dEgtc5V
+ pl8hKEHhmVg8ciQGM2xgT/6W0dmU0I5Qs98JyvpNAOLp8bAF0w3JtKNFiaeh4Z+gJJZKZeHvl
+ BhICMKtCnmu2MmvEZuT+UiouopvbByt4OX8hdd+M2ISTKsaA7ORP0+WHmqW094b8E7z+tv9z9
+ 5TXBh76124MvoTFW6wLqAPAIZAzp1lPVLhJjLA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,81 +62,39 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Enrico Weigelt <info@metux.net>
 
-Add more helper macros for trivial driver init cases, similar to the
-already existing module_platform_driver()+friends - now for those which
-are initialized at other stages. Lots of drivers couldn't use the existing
-macros, as they need to be called at different init stages, eg. subsys,
-postcore, arch.
-
-This helps to further reduce driver init boilerplate.
+Reduce driver init boilerplate by using the new
+subsys_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- include/linux/platform_device.h | 51 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ drivers/gpio/gpio-lynxpoint.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
-diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
-index beb25f2..5f3a967 100644
---- a/include/linux/platform_device.h
-+++ b/include/linux/platform_device.h
-@@ -259,6 +259,57 @@ static inline void platform_set_drvdata(struct platform_device *pdev,
- } \
- module_exit(__platform_driver##_exit);
+diff --git a/drivers/gpio/gpio-lynxpoint.c b/drivers/gpio/gpio-lynxpoint.c
+index 31b4a09..8e6b998 100644
+--- a/drivers/gpio/gpio-lynxpoint.c
++++ b/drivers/gpio/gpio-lynxpoint.c
+@@ -438,19 +438,7 @@ static int lp_gpio_remove(struct platform_device *pdev)
+ 		.acpi_match_table = ACPI_PTR(lynxpoint_gpio_acpi_match),
+ 	},
+ };
+-
+-static int __init lp_gpio_init(void)
+-{
+-	return platform_driver_register(&lp_gpio_driver);
+-}
+-
+-static void __exit lp_gpio_exit(void)
+-{
+-	platform_driver_unregister(&lp_gpio_driver);
+-}
+-
+-subsys_initcall(lp_gpio_init);
+-module_exit(lp_gpio_exit);
++subsys_platform_driver(lp_gpio_driver);
  
-+/* postcore_platform_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces postcore_initcall() and module_exit()
-+ */
-+#define postcore_platform_driver(__platform_driver) \
-+static int __init __platform_driver##_init(void) \
-+{ \
-+	return platform_driver_register(&(__platform_driver)); \
-+} \
-+postcore_initcall(__platform_driver##_init); \
-+static void __exit __platform_driver##_exit(void) \
-+{ \
-+	platform_driver_unregister(&(__platform_driver)); \
-+} \
-+module_exit(__platform_driver##_exit);
-+
-+/* subsys_platform_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces subsys_initcall() and module_exit()
-+ */
-+#define subsys_platform_driver(__platform_driver) \
-+static int __init __platform_driver##_init(void) \
-+{ \
-+	return platform_driver_register(&(__platform_driver)); \
-+} \
-+subsys_initcall(__platform_driver##_init); \
-+static void __exit __platform_driver##_exit(void) \
-+{ \
-+	platform_driver_unregister(&(__platform_driver)); \
-+} \
-+module_exit(__platform_driver##_exit);
-+
-+/* arch_platform_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces arch_initcall() and module_exit()
-+ */
-+#define arch_platform_driver(__platform_driver) \
-+static int __init __platform_driver##_init(void) \
-+{ \
-+	return platform_driver_register(&(__platform_driver)); \
-+} \
-+arch_initcall(__platform_driver##_init); \
-+static void __exit __platform_driver##_exit(void) \
-+{ \
-+	platform_driver_unregister(&(__platform_driver)); \
-+} \
-+module_exit(__platform_driver##_exit);
-+
- /* builtin_platform_driver_probe() - Helper macro for drivers that don't do
-  * anything special in device init.  This eliminates some boilerplate.  Each
-  * driver may only use this macro once, and using it replaces device_initcall.
+ MODULE_AUTHOR("Mathias Nyman (Intel)");
+ MODULE_DESCRIPTION("GPIO interface for Intel Lynxpoint");
 -- 
 1.9.1
 
