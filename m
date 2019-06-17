@@ -2,137 +2,106 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B27CC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:47:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D21DC31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DFCC2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:47:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11D6C2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:47:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VGDMPQ8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727561AbfFQNrp (ORCPT
+        id S1727822AbfFQNr4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:47:45 -0400
-Received: from mga17.intel.com ([192.55.52.151]:6282 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726286AbfFQNrp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:47:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 06:47:44 -0700
-X-ExtLoop1: 1
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2019 06:47:42 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide book
-In-Reply-To: <20190617125438.GA18554@kroah.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1560477540.git.mchehab+samsung@kernel.org> <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org> <87o930uvur.fsf@intel.com> <20190614140603.GB7234@kroah.com> <20190614122755.1c7b4898@coco.lan> <874l4ov16m.fsf@intel.com> <20190617125438.GA18554@kroah.com>
-Date:   Mon, 17 Jun 2019 16:50:38 +0300
-Message-ID: <87y320tj69.fsf@intel.com>
+        Mon, 17 Jun 2019 09:47:56 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:42566 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727594AbfFQNr4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:47:56 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5HDllBo011598;
+        Mon, 17 Jun 2019 08:47:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560779267;
+        bh=t1KAotzGb16F2+YW609QwX/IexDUFZIor3j/XUDLU9I=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=VGDMPQ8T1wa25BRTfbCxoFN1bT3M8KVCDBobeTCnxdm6jOtXHYvWWrGNPaZYbAjnM
+         T/SytxkHNOfp1LIKO4nvrxU6oqoP5XGQju4DIWxfEgjaKM4oPBDruG38fki7tQfwdg
+         yE9UDoE3X/cnS5STAM2GrWfgecgTbbGAtrAVakHw=
+Received: from DLEE102.ent.ti.com (dlee102.ent.ti.com [157.170.170.32])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5HDllQj110909
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Jun 2019 08:47:47 -0500
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE102.ent.ti.com
+ (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
+ Jun 2019 08:47:46 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 17 Jun 2019 08:47:46 -0500
+Received: from [10.250.65.13] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5HDlkFV106459;
+        Mon, 17 Jun 2019 08:47:46 -0500
+Subject: Re: [PATCH v3 0/9] Multicolor Framework update
+To:     Pavel Machek <pavel@ucw.cz>, Alexander Dahl <ada@thorsis.com>
+CC:     <linux-leds@vger.kernel.org>, <jacek.anaszewski@gmail.com>,
+        <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190523190820.29375-1-dmurphy@ti.com> <55737098.K72IVJ5cDM@ada>
+ <20190616154934.GC24837@xo-6d-61-c0.localdomain>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <2a540277-01e3-abb6-f19f-6d52671ae4ce@ti.com>
+Date:   Mon, 17 Jun 2019 08:47:46 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20190616154934.GC24837@xo-6d-61-c0.localdomain>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
-> On Mon, Jun 17, 2019 at 03:36:17PM +0300, Jani Nikula wrote:
->> On Fri, 14 Jun 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
->> > Em Fri, 14 Jun 2019 16:06:03 +0200
->> > Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
->> >
->> >> On Fri, Jun 14, 2019 at 04:42:20PM +0300, Jani Nikula wrote:
->> >> > 2) Have the python extension read the ABI files directly, without an
->> >> >    extra pipeline.  
->> >> 
->> >> He who writes the script, get's to dictate the language of the script :)
->> 
->> The point is, it's an extension to a python based tool, written in perl,
->> using pipes for communication, and losing any advantages of integrating
->> with the tool it's extending.
->> 
->> I doubt you'd want to see system() to be used to subsequently extend the
->> perl tool.
->> 
->> I think it's just sad to see the documentation system slowly drift
->> further away from the ideals we had, and towards the old ways we worked
->> so hard to fix.
+Hello
+
+On 6/16/19 10:49 AM, Pavel Machek wrote:
+> Hi!
 >
-> What are those ideals?
+>> Am Donnerstag, 23. Mai 2019, 14:08:11 CEST schrieb Dan Murphy:
+>>>    leds: multicolor: Add sysfs interface definition
+>>>    dt: bindings: Add multicolor class dt bindings documention
+>>>    documention: leds: Add multicolor class documentation
+>>>    dt-bindings: leds: Add multicolor ID to the color ID  list
+>>>    leds: Add multicolor ID to the color ID list
+>>>    leds: multicolor: Introduce a multicolor class definition
+>>>    dt: bindings: lp50xx: Introduce the lp50xx family of RGB drivers
+>>>    leds: lp50xx: Add the LP50XX family of the RGB LED driver
+>>>    leds: Update the lp55xx to use the multi color framework
+>> While not having much experience with the implementation of the LED subsystem,
+>> I've had a short look at those. Curious question: would it be possible to take
+>> three gpio-leds and group those together to one multicolor-led? I know at
+>> least one board, where things are wired up like this, see e.g.
+>> at91-sama5d27_som1_ek.dts
+> Probably could be done, but is not really a good match. Multicolor was meant for
+> LEDs with many brightness levels.
 
-For example, have a single coherent system, instead of a fragile pipe
-with each stage written in a different language, each having its own
-idiosynchracies, each step losing something in translation.
+Well that is one aspect of the MC FW.  The other aspect was to collate 
+cluster RGB modules into a single
 
-Have a system that a normal developer can actually look at and
-understand. It didn't use to be that way.
+LED node as that RGB cluster would inherently display a functional color 
+(ie RGB battery LED, multi-color
 
-> I thought the goal was to be able to write documentation in a as much
-> as a normal text file as possible and have automation turn those files
-> into "pretty" documentation that we can all use.
->
-> And I think that fits with the way this patch set goes, right?  We are
-> not on a quest for purity of scripts to generate the documentation at
-> the expense of having to force hundreds, or thousands, of developers to
-> change their ways, or to force a "flag day" conversion of existing
-> documentation resulting in a huge merge mess.
+notification LEDs, Multicolor LED keyboards...)
 
-Fair enough, let's dismiss the thought of changing the ABI files. But I
-never meant that would somehow be for the "purity of scripts", or that
-those two would somehow be at odds here.
-
-> So, we are stuck with the current structure that I totally made up for
-> Documentation/ABI/.  Turns out it is almost parsable, as Mauro's tool
-> shows.  His tool also validates the existing text, which is great, and
-> has caused fixes for it.
->
-> If someone wants to write that tool in some other language, like python,
-> wonderful, I have no objection, but as it is, this is a useful tool
-> already, allowing us to validate, and search, existing documentation
-> entries that we have never been able to do before.  It also provides an
-> output that can be turned into pretty html/pdf/whatever files by other
-> tools in the pipeline, a totally bonus benefit.
->
-> So what is going backwards here?
->
-> Maybe the processing pipeline isn't as nice as you would like, but
-> remember to view this from a normal developer's point of view, not a
-> documentation pipeline developer's point of view please.
->
-> So, in short, my requirements are:
-> 	- keep Documentation/ABI/ file formats as close as possible to
-> 	  what we have today, preventing any flag-day issues or merge
-> 	  problems
-> 	- be able to query and validate Documentation/ABI/
-> 	- be able to turn Documentation/ABI into pretty documentation.
->
-> If you object to the mechanics of the last requirement here, I don't
-> object either, provide something else that works better.  But don't
-> throw away the whole thing just because you don't like how things are
-> hooked up here.
->
-> I'm going to go apply most of the rest of these patches to my
-> driver-core tree, stopping at the "hook it up to the kernel
-> documentation" point.  Is that ok?
-
-I'll leave it all up to Jon's discretion; I trust he'll understand my
-concerns. I have no authority beyond the opinion I've voiced here
-anyway.
+Dan
 
 
-BR,
-Jani.
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+> 									Pavel
