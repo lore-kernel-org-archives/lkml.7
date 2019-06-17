@@ -2,163 +2,102 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DE7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A61C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A5C4208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C67E20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560788106;
+	bh=JVZ01VQ9q2BY9LSCSpDeGenC0gNyM0CCxXIGe7cpTRk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ZsOxbIjJYDie5B6HUP/L57z4zmZIzUqBs6qUQpXKXXpLKMHJyJxWG5qOY0r9v4bNQ
+	 y3UYXcCzSDWs38eGSQqL2hPGWKFwz2si37mXcHtTiewg93XEzHLfCmKVAgfyonAtyc
+	 zx59bELd+bAbCvLoA0nssCEXvYBJA1fyLri3RpME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728128AbfFQQPA (ORCPT
+        id S1728279AbfFQQPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:15:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:55192 "EHLO foss.arm.com"
+        Mon, 17 Jun 2019 12:15:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfFQQPA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:15:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 92C4B28;
-        Mon, 17 Jun 2019 09:14:59 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2F353F718;
-        Mon, 17 Jun 2019 09:14:56 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 17:14:54 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     Michael Kelley <mikelley@microsoft.com>,
-        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>,
-        "robert.moore@intel.com" <robert.moore@intel.com>,
-        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        Russ Dill <Russ.Dill@ti.com>,
-        Sebastian Capella <sebastian.capella@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        KY Srinivasan <kys@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>,
-        vkuznets <vkuznets@redhat.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
-Subject: Re: [PATCH] ACPI: PM: Export the function
- acpi_sleep_state_supported()
-Message-ID: <20190617161454.GB27113@e121166-lin.cambridge.arm.com>
-References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
- <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
- <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        id S1728193AbfFQQPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:15:04 -0400
+Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58F4C2182B
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 16:15:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560788103;
+        bh=JVZ01VQ9q2BY9LSCSpDeGenC0gNyM0CCxXIGe7cpTRk=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=u0yPsNKYjsVDPjixo7eGt49hpgnj9Qzul0OjSRqTnkpQP/9jPpaQD4omedpzMB2lr
+         9051sf80GG3JB8m+1Z2RCtEy/6xh2uXK0IsU7wtiqF8+FXMLdRKWfssLvW2hnqbCzC
+         6R4kLuNGpy6jCcaZPdNYXNItJBk70On/mmPqEBsE=
+Received: by mail-wr1-f41.google.com with SMTP id p11so10634206wre.7
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 09:15:03 -0700 (PDT)
+X-Gm-Message-State: APjAAAWpACEn3Gvq9T5EkLVVh2od68uyQBUUjkGcOAaJM/FZURaBA+FK
+        lzedXZVpN/kRSMfAewordas5vJEM0urtIfcgzXrbVw==
+X-Google-Smtp-Source: APXvYqw+aKjGo1oOpxFBQkSUulEn15Px0suva6OwH4jzhCqa52shTOhsLX33dxRlw1A3thzjVwlJh2/YrXPs9J0TKOY=
+X-Received: by 2002:adf:cc85:: with SMTP id p5mr16200961wrj.47.1560788101765;
+ Mon, 17 Jun 2019 09:15:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
+ <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net> <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
+ <58788f05-04c3-e71c-12c3-0123be55012c@amazon.com> <63b1b249-6bc7-ffd9-99db-d36dd3f1a962@intel.com>
+ <CALCETrXph3Zg907kWTn6gAsZVsPbCB3A2XuNf0hy5Ez2jm2aNQ@mail.gmail.com> <698ca264-123d-46ae-c165-ed62ea149896@intel.com>
+In-Reply-To: <698ca264-123d-46ae-c165-ed62ea149896@intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 17 Jun 2019 09:14:50 -0700
+X-Gmail-Original-Message-ID: <CALCETrVt=X+FB2cM5hMN9okvbcROFfT4_KMwaKaN2YVvc7UQTw@mail.gmail.com>
+Message-ID: <CALCETrVt=X+FB2cM5hMN9okvbcROFfT4_KMwaKaN2YVvc7UQTw@mail.gmail.com>
+Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM secrets
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Alexander Graf <graf@amazon.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Marius Hillenbrand <mhillenb@amazon.de>,
+        kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 10:19:02PM +0000, Dexuan Cui wrote:
-> > -----Original Message-----
-> > From: Michael Kelley <mikelley@microsoft.com>
-> > Sent: Friday, June 14, 2019 1:48 PM
-> > To: Dexuan Cui <decui@microsoft.com>; linux-acpi@vger.kernel.org;
-> > rjw@rjwysocki.net; lenb@kernel.org; robert.moore@intel.com;
-> > erik.schmauss@intel.com
-> > Cc: linux-hyperv@vger.kernel.org; linux-kernel@vger.kernel.org; KY Srinivasan
-> > <kys@microsoft.com>; Stephen Hemminger <sthemmin@microsoft.com>;
-> > Haiyang Zhang <haiyangz@microsoft.com>; Sasha Levin
-> > <Alexander.Levin@microsoft.com>; olaf@aepfle.de; apw@canonical.com;
-> > jasowang@redhat.com; vkuznets <vkuznets@redhat.com>;
-> > marcelo.cerri@canonical.com
-> > Subject: RE: [PATCH] ACPI: PM: Export the function
-> > acpi_sleep_state_supported()
-> > 
-> > From: Dexuan Cui <decui@microsoft.com>  Sent: Friday, June 14, 2019 11:19
-> > AM
-> > >
-> > > In a Linux VM running on Hyper-V, when ACPI S4 is enabled, the balloon
-> > > driver (drivers/hv/hv_balloon.c) needs to ask the host not to do memory
-> > > hot-add/remove.
-> > >
-> > > So let's export acpi_sleep_state_supported() for the hv_balloon driver.
-> > > This might also be useful to the other drivers in the future.
-> > >
-> > > Signed-off-by: Dexuan Cui <decui@microsoft.com>
-> > > ---
-> > >  drivers/acpi/sleep.c    | 3 ++-
-> > >  include/acpi/acpi_bus.h | 2 ++
-> > >  2 files changed, 4 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/acpi/sleep.c b/drivers/acpi/sleep.c
-> > > index a34deccd7317..69755411e008 100644
-> > > --- a/drivers/acpi/sleep.c
-> > > +++ b/drivers/acpi/sleep.c
-> > > @@ -79,7 +79,7 @@ static int acpi_sleep_prepare(u32 acpi_state)
-> > >  	return 0;
-> > >  }
-> > >
-> > > -static bool acpi_sleep_state_supported(u8 sleep_state)
-> > > +bool acpi_sleep_state_supported(u8 sleep_state)
-> > >  {
-> > >  	acpi_status status;
-> > >  	u8 type_a, type_b;
-> > > @@ -89,6 +89,7 @@ static bool acpi_sleep_state_supported(u8 sleep_state)
-> > >  		|| (acpi_gbl_FADT.sleep_control.address
-> > >  			&& acpi_gbl_FADT.sleep_status.address));
-> > >  }
-> > > +EXPORT_SYMBOL_GPL(acpi_sleep_state_supported);
-> > >
-> > >  #ifdef CONFIG_ACPI_SLEEP
-> > >  static u32 acpi_target_sleep_state = ACPI_STATE_S0;
-> > > diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-> > > index 31b6c87d6240..5b102e7bbf25 100644
-> > > --- a/include/acpi/acpi_bus.h
-> > > +++ b/include/acpi/acpi_bus.h
-> > > @@ -651,6 +651,8 @@ static inline int acpi_pm_set_bridge_wakeup(struct
-> > device *dev,
-> > > bool enable)
-> > >  }
-> > >  #endif
-> > >
-> > > +bool acpi_sleep_state_supported(u8 sleep_state);
-> > > +
-> > >  #ifdef CONFIG_ACPI_SLEEP
-> > >  u32 acpi_target_system_state(void);
-> > >  #else
-> > > --
-> > > 2.19.1
-> > 
-> > It seems that sleep.c isn't built when on the ARM64 architecture.  Using
-> > acpi_sleep_state_supported() directly in hv_balloon.c will be problematic
-> > since hv_balloon.c needs to be architecture independent when the
-> > Hyper-V ARM64 support is added.  If that doesn't change, a per-architecture
-> > wrapper will be needed to give hv_balloon.c the correct information.  This
-> > may affect whether acpi_sleep_state_supported() needs to be exported vs.
-> > just removing the "static".   I'm not sure what the best approach is.
-> > 
-> > Michael
-> 
-> + some ARM experts who worked on arch/arm/kernel/hibernate.c.
-> 
-> drivers/acpi/sleep.c is only built if ACPI_SYSTEM_POWER_STATES_SUPPORT
-> is defined, but it looks this option is not defined on ARM.
-> 
-> It looks ARM does not support the ACPI S4 state, then how do we know 
-> if an ARM host supports hibernation or not?
+On Mon, Jun 17, 2019 at 9:09 AM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> On 6/17/19 8:54 AM, Andy Lutomirski wrote:
+> >>> Would that mean that with Meltdown affected CPUs we open speculation
+> >>> attacks against the mmlocal memory from KVM user space?
+> >> Not necessarily.  There would likely be a _set_ of local PGDs.  We could
+> >> still have pair of PTI PGDs just like we do know, they'd just be a local
+> >> PGD pair.
+> >>
+> > Unfortunately, this would mean that we need to sync twice as many
+> > top-level entries when we context switch.
+>
+> Yeah, PTI sucks. :)
+>
+> For anyone following along at home, I'm going to go off into crazy
+> per-cpu-pgds speculation mode now...  Feel free to stop reading now. :)
+>
+> But, I was thinking we could get away with not doing this on _every_
+> context switch at least.  For instance, couldn't 'struct tlb_context'
+> have PGD pointer (or two with PTI) in addition to the TLB info?  That
+> way we only do the copying when we change the context.  Or does that tie
+> the implementation up too much with PCIDs?
 
-Maybe we should start from understanding why you need to know whether
-Hibernate is possible to answer your question ?
-
-On ARM64 platforms system states are entered through PSCI firmware
-interface that works for ACPI and device tree alike.
-
-Lorenzo
+Hmm, that seems entirely reasonable.  I think the nasty bit would be
+figuring out all the interactions with PV TLB flushing.  PV TLB
+flushes already don't play so well with PCID tracking, and this will
+make it worse.  We probably need to rewrite all that code regardless.
