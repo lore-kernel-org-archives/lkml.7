@@ -2,105 +2,120 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D50C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E000EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C83D208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:23:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91472085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bLYB71So"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727832AbfFQNXU (ORCPT
+        id S1727556AbfFQNXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:23:20 -0400
-Received: from smtp3-g21.free.fr ([212.27.42.3]:12941 "EHLO smtp3-g21.free.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727765AbfFQNXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:23:20 -0400
-Received: from anisse-station.iliad.local (unknown [213.36.7.13])
-        by smtp3-g21.free.fr (Postfix) with ESMTPS id CDE8713F85F;
-        Mon, 17 Jun 2019 15:22:49 +0200 (CEST)
-From:   Anisse Astier <aastier@freebox.fr>
-To:     Will Deacon <will.deacon@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        Richard Henderson <richard.henderson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org, Rich Felker <dalias@aerifal.cx>,
-        "Dmitry V . Levin" <ldv@altlinux.org>,
-        Ricardo Salveti <ricardo@foundries.io>,
-        Sasha Levin <sashal@kernel.org>,
-        Anisse Astier <aastier@freebox.fr>
-Subject: [PATCH v3 2/2] arm64/sve: <uapi/asm/ptrace.h> should not depend on <uapi/linux/prctl.h>
-Date:   Mon, 17 Jun 2019 15:22:22 +0200
-Message-Id: <20190617132222.32182-2-aastier@freebox.fr>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190617132222.32182-1-aastier@freebox.fr>
-References: <20190617084545.GA38959@anisse-station>
- <20190617132222.32182-1-aastier@freebox.fr>
+        Mon, 17 Jun 2019 09:23:54 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:34844 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726336AbfFQNXy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:23:54 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c6so9109121wml.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 06:23:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=MCk0UOttsjHTOmjWH/1wGCIVEMWTEE7JSr9eSJt8E6U=;
+        b=bLYB71SoakdZWD0bbECjOZJpTdloiPafIY+LfUEJDGwY71oMCbzPqrfRdvuCruNWE2
+         Z+qz9f9vsaeBGq/9asrdH8Mbm5YhHQgJTCIuHyw354P4+ZrZ/6dFrkwbFECyXZxQ1Qlz
+         gth04rJNMbeXq3hzKkApLHYFKVjT6rW7WUaHWECkpti41bOC/FFL2Ce0zBEd5+qFBQaE
+         DkxDjumSNL1g1YJWqj5O+dUQ0d/aheJuKd6dTCgdgqZopQzAKfh+mkYcY9tdItS8wXiA
+         +KXAT4cV1mdqlwVJqq0b7RBPDVpQOtorkV1Wq/5Rw++d3HSWAaDPaUlkG8eOHiMz3G7m
+         rmeQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=MCk0UOttsjHTOmjWH/1wGCIVEMWTEE7JSr9eSJt8E6U=;
+        b=KB9iQH6IVhKlgI0F4qA8kSpKOuU73V04tdzcnG8Akb1hLQtZUHFJ49VwaotqJ/lXl/
+         k8kWdv0K87R/Ehl8KT65SWEE7oCUIzG5kSk+/awX1dChrtMHETMTAuCPfrVvkovDNaEX
+         v+nUO4JAuRRxHWgbzBqCN7+bAbAIqSBMXktLppAWnNnKSDBWY0lgxvQBR+nG+pDalOrx
+         xLAj8GHo1HjxPi+hopqKQ1yIOjmi+CMATlJN/cM2Xyl8lA7++vcdj0I5M51dnaEPdk1L
+         GGaHcyLUxML+TEVFuSBcDR9EuZLwHbnvtVkuGTkmLs66QMg444wyF41Gpok3KdUa2Y5+
+         GL/A==
+X-Gm-Message-State: APjAAAXJd8GVdES4IjLobf7b+mlG8KokXfdGfHr49UDAukmv+2xmFYH3
+        Xz1/N0k9GKIpkgogYYedg4sgtQ==
+X-Google-Smtp-Source: APXvYqyrzflhrnZXLI/k9VPq8CsskPBB/8KzjstR9LOm9dfd2dHTNp7j6C7TFEfXsWqkUzxuqmhaQA==
+X-Received: by 2002:a1c:be12:: with SMTP id o18mr443929wmf.21.1560777831804;
+        Mon, 17 Jun 2019 06:23:51 -0700 (PDT)
+Received: from dell ([2.27.35.243])
+        by smtp.gmail.com with ESMTPSA id u25sm9662835wmc.3.2019.06.17.06.23.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 06:23:51 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 14:23:49 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v4 0/4] I2C: DWC3 USB: Add support for ACPI based
+ AArch64 Laptops
+Message-ID: <20190617132349.GI16364@dell>
+References: <20190617125105.6186-1-lee.jones@linaro.org>
+ <87lfy0gym0.fsf@linux.intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <87lfy0gym0.fsf@linux.intel.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Otherwise this will create userspace build issues for any program
-(strace, qemu) that includes both <sys/prctl.h> (with musl libc) and
-<linux/ptrace.h> (which then includes <asm/ptrace.h>), like this:
+On Mon, 17 Jun 2019, Felipe Balbi wrote:
 
-	error: redefinition of 'struct prctl_mm_map'
-	 struct prctl_mm_map {
+> Lee Jones <lee.jones@linaro.org> writes:
+> 
+> > This patch-set ensures the kernel is bootable on the newly released
+> > AArch64 based Laptops using ACPI configuration tables.  The Pinctrl
+> > changes have been accepted, leaving only I2C (keyboard, touchpad,
+> > touchscreen, fingerprint, etc, HID device) and USB (root filesystem,
+> > camera, networking, etc) enablement.
+> >
+> > RESEND: Stripped I2C patches as they have also been merged into
+> >         their respective subsystem.
+> >
+> > v4:
+> >  * Collecting Acks
+> >  * Adding Andy Gross' new email
+> >  * Removing applied Pinctrl patches
+> >
+> > Lee Jones (4):
+> >   soc: qcom: geni: Add support for ACPI
+> >   usb: dwc3: qcom: Add support for booting with ACPI
+> >   usb: dwc3: qcom: Start USB in 'host mode' on the SDM845
+> >   usb: dwc3: qcom: Improve error handling
+> 
+> pushed to testing/next
 
-See https://github.com/foundriesio/meta-lmp/commit/6d4a106e191b5d79c41b9ac78fd321316d3013c0
-for a public example of people working around this issue.
+Sounds promising, thanks Felipe.
 
-Copying the defines is a bit imperfect here, but better than creating a
-whole other header for just two defines that would never change, as part
-of the kernel ABI.
+OOI, what is your process?
 
-This patch depends on patch "arm64: ssbd: explicitly depend on
-<linux/prctl.h>" for kernel >= 4.18
+How does do the patches typically sit in there?
 
-Fixes: 43d4da2c45b2 ("arm64/sve: ptrace and ELF coredump support")
-Cc: stable@vger.kernel.org
-Signed-off-by: Anisse Astier <aastier@freebox.fr>
----
- arch/arm64/include/uapi/asm/ptrace.h | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
-index 97c53203150b..e932284993d4 100644
---- a/arch/arm64/include/uapi/asm/ptrace.h
-+++ b/arch/arm64/include/uapi/asm/ptrace.h
-@@ -65,8 +65,6 @@
- 
- #ifndef __ASSEMBLY__
- 
--#include <linux/prctl.h>
--
- /*
-  * User structures for general purpose, floating point and debug registers.
-  */
-@@ -113,10 +111,10 @@ struct user_sve_header {
- 
- /*
-  * Common SVE_PT_* flags:
-- * These must be kept in sync with prctl interface in <linux/ptrace.h>
-+ * These must be kept in sync with prctl interface in <linux/prctl.h>
-  */
--#define SVE_PT_VL_INHERIT		(PR_SVE_VL_INHERIT >> 16)
--#define SVE_PT_VL_ONEXEC		(PR_SVE_SET_VL_ONEXEC >> 16)
-+#define SVE_PT_VL_INHERIT		((1 << 17) /* PR_SVE_VL_INHERIT */ >> 16)
-+#define SVE_PT_VL_ONEXEC		((1 << 18) /* PR_SVE_SET_VL_ONEXEC */ >> 16)
- 
- 
- /*
 -- 
-2.19.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
