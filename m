@@ -2,94 +2,120 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 684E5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0379C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0DF2085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:15:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F1082085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:20:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DJU/AxKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727470AbfFQUPE (ORCPT
+        id S1727678AbfFQUUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:15:04 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:32941 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfFQUPE (ORCPT
+        Mon, 17 Jun 2019 16:20:51 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36672 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726834AbfFQUUu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:15:04 -0400
-Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MiJhQ-1iEl1c20F4-00fSZo; Mon, 17 Jun 2019 22:15:02 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] lib: devres: devm_ioremap_resource() make res parameter const
-Date:   Mon, 17 Jun 2019 22:15:01 +0200
-Message-Id: <1560802501-26956-1-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:YhnmhRqTRDS4Imrf/9UQ5zF6995Hzn41OF7sKC4+b6bM+zx3bBn
- zZ2cosTlwkUFatCnEl91fBtB82S8oIgXvoymBQVWTH+vb2a0aUrtY0vDyjyTYbchsvURquM
- +Vg+l2FqrGi/nmzpY7+fZHSfDPJhxEkeu1OLaR79bLfoff5Hyel7VQb4XeDfxLPWn2rOEmJ
- cCW6lbpCGARf0kA9RREsw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:c+C4ZPlINKM=:P1uf8g7FqxdU75QuXNxLxa
- +ovI4iBKbFThrwp5tiRD8YEVbFP+jegnrnTsJpuYPea+s2VDxGqdXfm4Oh0aHbIR9L/2MwhSO
- 9byh0pTxWkNtO0Od1w1Lgr+5FG5izZJPj2muwwdXujEtqQp1mYqKvPkHSoGS5qKjBxRrGPYzM
- 2vcYbOWbMHTuvTi/tw44T8k/p9glITIoZ//rMIFX62KARk1OmYVYulUk9e1R3lrS0PYu4sML3
- 4EMSEgoPW9pdH9x78BUpOF8uFxmb0++8Six+LAVdsHnlGBq8kIqpj/ps8yfII//WWIhkMMDpc
- JZQQAo+mzbVvjjqXZT+fOfuepKJWSGkbBdGzW6jOrVVnIyehEnUUpYxXd9CxnLgJrGVDcGjUZ
- sDNA7YMLPuo4I2wr660gDPzWmUpUWHMTxPa7hC++XebNtfInc4B8We4pvQnS6dvq6o66Eq1FU
- pCTiOqpi1T1xtthXL8QnyD933VFSdZxcNqDLToymzUoGEHS1E5B+hFEqNjsNo6qLb4++r6f4Y
- BTQ5UevUj5EeyZM69g1dQGYyiIuDCA4TCkJhRC3tyfcm19rN6hOqnYMxj+piHwyvb7cMsqPQY
- MSesvKMBhrEOtziveG7gzxLTwNlcsN50MzoGDXdB2MG+lO7+eVeuCPFVRaQZdypF8CWQHZnls
- A6e2l6UepIxbCnSjgCXnVAqXI/hJEUhBEv4YiSB+S1Y6Juzwiyq+x6h27k79Cqc5H21TzEZvn
- mVE1j5xx79PQnnBN4cufp0vY4oyM3J/jZi5+vA==
+        Mon, 17 Jun 2019 16:20:50 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k21so18015730edq.3;
+        Mon, 17 Jun 2019 13:20:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q266JJLz9ryqY/0+UZPE9Zx3GwNDeNz9U54dOM54ABo=;
+        b=DJU/AxKh1gkT+BwYaOUm45TFhmBocQ+BYriarZHUpE5xGoefIfXr5NbNgWaomMJs3E
+         IsJj0TXe8WmIkbSlc2Xgg3sDpS/bvXCv478/F49tv8MQqJLLOc+Y7g8eHrbyMTL6ZmgX
+         JyylsfstvA45mQOzoE+MK3ewU9nHPZ4r7J8VeYmzxxAk08VPJs8Zx/OuFX2a9KQe6CBL
+         2eYaFp/lhbSswMv3LDdnIsjRoyAzmK0Rjfa/9Q7dveHCx1lpQYRmrhrROgK8AKPEeabN
+         qM068o5tJyRGaZvTlm0FDIVvpiyMUCWNQcKtGLsasQrLD+YbGuMzSoanumKs60Mx3EcI
+         j29w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q266JJLz9ryqY/0+UZPE9Zx3GwNDeNz9U54dOM54ABo=;
+        b=hNrvJBdYAhJ9AaYuXGdlJO+orDa2JoKOcVXM3zhjGkjmTgdo+eUXcMIx2rnpFAl5Vq
+         kF8I7hmZG646FM9ooK3+N9x4nHogGiAUVgv7PCoBifPaYP74BBbLUHXPkQPm39wZ0hW9
+         X3GNCwQvkqKEht/BRO/196F2R+vWOjtoiaZBppnVHQrhpkE35cnUJUN7+gea4Fr+Rx+i
+         ifM6Al5JCBOHz6H1EVCUdapkEPt66P5faxTsoBVbPT5dnmMKbY85PikE8NJUo0M4hSK2
+         pxqpEFnxR91gKkt/lwXhNLYJBiHPTXYKXX4dspWQc6OiOrmCc9Be1724xUl2QxhJ80iF
+         8xDQ==
+X-Gm-Message-State: APjAAAV2V11cEeAjk9qcYstrKxi4Oc+HMTaZI9/E/vFU4BKumsMbh8am
+        Rl4oprP88Of/G/ULoSLz88bSZPjksOe6ixB8Vux2og==
+X-Google-Smtp-Source: APXvYqwYyze36Ba6mvrpY0VMn5Nb1Ipj791THppaVjCXkkZZXPLGdKOHvIBTyOzWsUS302zZQUDbjIUijIvuMpuai7o=
+X-Received: by 2002:a17:906:cd1f:: with SMTP id oz31mr11019140ejb.226.1560802848743;
+ Mon, 17 Jun 2019 13:20:48 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190617190507.12730-1-fklassen@appneta.com>
+In-Reply-To: <20190617190507.12730-1-fklassen@appneta.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Mon, 17 Jun 2019 16:20:12 -0400
+Message-ID: <CAF=yD-JuSE_Pvy9QR-m=YqrVQoBverzKW+saMLC=HFgDzTPdOA@mail.gmail.com>
+Subject: Re: [PATCH net v4] net/udp_gso: Allow TX timestamp with UDP GSO
+To:     Fred Klassen <fklassen@appneta.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Willem de Bruijn <willemb@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-devm_ioremap_resource() doesn't change the passed struct resource,
-so it can be a const pointer.
+On Mon, Jun 17, 2019 at 3:05 PM Fred Klassen <fklassen@appneta.com> wrote:
+>
+> Fixes an issue where TX Timestamps are not arriving on the error queue
+> when UDP_SEGMENT CMSG type is combined with CMSG type SO_TIMESTAMPING.
+> This can be illustrated with an updated updgso_bench_tx program which
+> includes the '-T' option to test for this condition. It also introduces
+> the '-P' option which will call poll() before reading the error queue.
+>
+>     ./udpgso_bench_tx -4ucTPv -S 1472 -l2 -D 172.16.120.18
+>     poll timeout
+>     udp tx:      0 MB/s        1 calls/s      1 msg/s
+>
+> The "poll timeout" message above indicates that TX timestamp never
+> arrived.
+>
+> This patch preserves tx_flags for the first UDP GSO segment. Only the
+> first segment is timestamped, even though in some cases there may be
+> benefital in timestamping both the first and last segment.
+>
+> Factors in deciding on first segment timestamp only:
+>
+> - Timestamping both first and last segmented is not feasible. Hardware
+> can only have one outstanding TS request at a time.
+>
+> - Timestamping last segment may under report network latency of the
+> previous segments. Even though the doorbell is suppressed, the ring
+> producer counter has been incremented.
+>
+> - Timestamping the first segment has the upside in that it reports
+> timestamps from the application's view, e.g. RTT.
+>
+> - Timestamping the first segment has the downside that it may
+> underreport tx host network latency. It appears that we have to pick
+> one or the other. And possibly follow-up with a config flag to choose
+> behavior.
+>
+> v2: Remove tests as noted by Willem de Bruijn <willemb@google.com>
+>     Moving tests from net to net-next
+>
+> v3: Update only relevant tx_flag bits as per
+>     Willem de Bruijn <willemb@google.com>
+>
+> v4: Update comments and commit message as per
+>     Willem de Bruijn <willemb@google.com>
+>
+> Fixes: ee80d1ebe5ba ("udp: add udp gso")
+> Signed-off-by: Fred Klassen <fklassen@appneta.com>
 
-Now, calls sites w/ fixed resources can declare them static.
-(in some cases possibly even __initconst)
-
-Signed-off-by: Enrico Weigelt <info@metux.net>
----
- include/linux/device.h | 3 ++-
- lib/devres.c           | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 848fc71..4a295e3 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -704,7 +704,8 @@ extern unsigned long devm_get_free_pages(struct device *dev,
- 					 gfp_t gfp_mask, unsigned int order);
- extern void devm_free_pages(struct device *dev, unsigned long addr);
- 
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res);
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res);
- 
- void __iomem *devm_of_iomap(struct device *dev,
- 			    struct device_node *node, int index,
-diff --git a/lib/devres.c b/lib/devres.c
-index 69bed2f..6a0e9bd 100644
---- a/lib/devres.c
-+++ b/lib/devres.c
-@@ -131,7 +131,8 @@ void devm_iounmap(struct device *dev, void __iomem *addr)
-  *	if (IS_ERR(base))
-  *		return PTR_ERR(base);
-  */
--void __iomem *devm_ioremap_resource(struct device *dev, struct resource *res)
-+void __iomem *devm_ioremap_resource(struct device *dev,
-+				    const struct resource *res)
- {
- 	resource_size_t size;
- 	void __iomem *dest_ptr;
--- 
-1.9.1
-
+Acked-by: Willem de Bruijn <willemb@google.com>
