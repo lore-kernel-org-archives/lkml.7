@@ -2,52 +2,53 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC14C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFBB3C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33E4720673
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C332D2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807000;
-	bh=59veLdSvEe9BEys5yRYaEXKgybkj5rzWLSkW2eYQ+4I=;
+	s=default; t=1560807001;
+	bh=i9Ko+0/eQ4ec+hUVmpS3MjI3uwmIUDUjQmFTmcYNk1s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sq6CHIjM9SLYfkSn9mhDSXLaZHdqM1tdt3f/aUFGyH/C+x+clPmYeWT0R98Iun3o3
-	 BiMGwhiQ+/gyXqE+zGAqRwawwyS9jAmlC6e/XB5BRfzO+Zsb/1eELDea8lNhUvXOGR
-	 UjoXVOgjVybyrMgyqapw1wnX9OygXJdNg3B3tMV4=
+	b=HKACI/Pm3C5NMNEO2SSTUXiW6qfU4ZO4PGOmsgu7pVMpsAQ9EAJnH/A49/kJgu1CV
+	 neFLfkrkaOWc2zYeE7OeGOn3pWsxLpzrjvj3O+pvY2itiQEzCXIEzLUgEPY1IATqXO
+	 e4lQU1OQkQCpStPJPUSDILAiOvsDaLdGQsTYtQ8A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730770AbfFQV37 (ORCPT
+        id S1730779AbfFQVaA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57074 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:30:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57172 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730296AbfFQV3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:53 -0400
+        id S1730763AbfFQV36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 56CE521734;
-        Mon, 17 Jun 2019 21:29:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9CB882063F;
+        Mon, 17 Jun 2019 21:29:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806992;
-        bh=59veLdSvEe9BEys5yRYaEXKgybkj5rzWLSkW2eYQ+4I=;
+        s=default; t=1560806998;
+        bh=i9Ko+0/eQ4ec+hUVmpS3MjI3uwmIUDUjQmFTmcYNk1s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sGbTDEqYNSfMAdgi/D/8uVua4G5+fcveFPWO7SibrrWnfh6ADByxeKbgNf8lADNWR
-         dkH4sN7dbj0SqzKJlgy32ZZfuitgrkQsXPrHEPe+Ns1I8EwHnnVGLzn4gRRB3LD8t8
-         w1R+YbALwi3UpmbqT075uFdlYtrusGoOxszWp1R4=
+        b=J4FuHOyq/LcCOPsvzeVcD9GCx9c1k+kb4wtRuoQqkjEP8RhKolEm66DRGM8QAvJpJ
+         GZeRD02GCp/TSNSmPtE2xvJRXFuH0OUVlVZMfnz23givu6ztumKnfRIbXHV7av9Hpr
+         JMO6ogiiAHDXbNLak6jnS8jypOGrWbcimLPErfTs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 25/53] Revert "ALSA: seq: Protect in-kernel ioctl calls with mutex"
-Date:   Mon, 17 Jun 2019 23:10:08 +0200
-Message-Id: <20190617210750.276520329@linuxfoundation.org>
+        =?UTF-8?q?Erik=20=C4=8Cuk?= <erik.cuk@domel.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.14 53/53] rtc: pcf8523: dont return invalid date when battery is low
+Date:   Mon, 17 Jun 2019 23:10:36 +0200
+Message-Id: <20190617210752.684594543@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -60,50 +61,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f0654ba94e33699b295ce4f3dc73094db6209035 ]
+From: Baruch Siach <baruch@tkos.co.il>
 
-This reverts commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32.
+commit ecb4a353d3afd45b9bb30c85d03ee113a0589079 upstream.
 
-The fix attempt was incorrect, leading to the mutex deadlock through
-the close of OSS sequencer client.  The proper fix needs more
-consideration, so let's revert it now.
+The RTC_VL_READ ioctl reports the low battery condition. Still,
+pcf8523_rtc_read_time() happily returns invalid dates in this case.
+Check the battery health on pcf8523_rtc_read_time() to avoid that.
 
-Fixes: feb689025fbb ("ALSA: seq: Protect in-kernel ioctl calls with mutex")
-Reported-by: syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Erik Čuk <erik.cuk@domel.com>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/core/seq/seq_clientmgr.c | 9 ++-------
- 1 file changed, 2 insertions(+), 7 deletions(-)
+ drivers/rtc/rtc-pcf8523.c |   32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index 068880ac47b5..7d2c07c1237c 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -2342,19 +2342,14 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
+--- a/drivers/rtc/rtc-pcf8523.c
++++ b/drivers/rtc/rtc-pcf8523.c
+@@ -82,6 +82,18 @@ static int pcf8523_write(struct i2c_clie
+ 	return 0;
+ }
+ 
++static int pcf8523_voltage_low(struct i2c_client *client)
++{
++	u8 value;
++	int err;
++
++	err = pcf8523_read(client, REG_CONTROL3, &value);
++	if (err < 0)
++		return err;
++
++	return !!(value & REG_CONTROL3_BLF);
++}
++
+ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
  {
- 	const struct ioctl_handler *handler;
- 	struct snd_seq_client *client;
--	int err;
+ 	u8 value;
+@@ -164,6 +176,14 @@ static int pcf8523_rtc_read_time(struct
+ 	struct i2c_msg msgs[2];
+ 	int err;
  
- 	client = clientptr(clientid);
- 	if (client == NULL)
- 		return -ENXIO;
++	err = pcf8523_voltage_low(client);
++	if (err < 0) {
++		return err;
++	} else if (err > 0) {
++		dev_err(dev, "low voltage detected, time is unreliable\n");
++		return -EINVAL;
++	}
++
+ 	msgs[0].addr = client->addr;
+ 	msgs[0].flags = 0;
+ 	msgs[0].len = 1;
+@@ -248,17 +268,13 @@ static int pcf8523_rtc_ioctl(struct devi
+ 			     unsigned long arg)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+-	u8 value;
+-	int ret = 0, err;
++	int ret;
  
- 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
--		if (handler->cmd == cmd) {
--			mutex_lock(&client->ioctl_mutex);
--			err = handler->func(client, arg);
--			mutex_unlock(&client->ioctl_mutex);
+ 	switch (cmd) {
+ 	case RTC_VL_READ:
+-		err = pcf8523_read(client, REG_CONTROL3, &value);
+-		if (err < 0)
 -			return err;
--		}
-+		if (handler->cmd == cmd)
-+			return handler->func(client, arg);
- 	}
+-
+-		if (value & REG_CONTROL3_BLF)
+-			ret = 1;
++		ret = pcf8523_voltage_low(client);
++		if (ret < 0)
++			return ret;
  
- 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
--- 
-2.20.1
-
+ 		if (copy_to_user((void __user *)arg, &ret, sizeof(int)))
+ 			return -EFAULT;
 
 
