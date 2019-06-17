@@ -2,76 +2,103 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D92A2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:26:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89326C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B62482084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:26:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6350A2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:27:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="KAmzeS4j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727910AbfFQQ0B (ORCPT
+        id S1727557AbfFQQ1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:26:01 -0400
-Received: from smtprelay0173.hostedemail.com ([216.40.44.173]:37422 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725863AbfFQQ0B (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:26:01 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8EF30180A8120;
-        Mon, 17 Jun 2019 16:25:59 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: sugar91_6e38cc9854f4f
-X-Filterd-Recvd-Size: 1749
-Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf19.hostedemail.com (Postfix) with ESMTPA;
-        Mon, 17 Jun 2019 16:25:57 +0000 (UTC)
-Message-ID: <45e070039e66b1cb1490a78d4805bc73cc09f571.camel@perches.com>
-Subject: Re: [PATCH] Use fall-through attribute rather than magic comments
-From:   Joe Perches <joe@perches.com>
-To:     Pavel Machek <pavel@ucw.cz>, Shawn Landden <shawn@git.icu>
-Cc:     linux-kernel@vger.kernel.org,
-        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
-        Andy Whitcroft <apw@canonical.com>
-Date:   Mon, 17 Jun 2019 09:25:56 -0700
-In-Reply-To: <20190617155643.GA32544@amd>
-References: <20190316033841.7659-1-shawn@git.icu>
-         <20190617155643.GA32544@amd>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Mon, 17 Jun 2019 12:27:48 -0400
+Received: from mail.andi.de1.cc ([85.214.239.24]:58722 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725863AbfFQQ1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:27:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=V1J5KcSxrmH6kMxoNhKSoFAdQCQGIWo+tRQvbszLDJM=; b=KAmzeS4j/v69f/vQoCyWhWlPgL
+        mGRwjrgL+MK7xaGU9oj98xKnUYud42p/Yy2Y3GnpQfOtwckJZD+F2LP5uD5BYNXSlG8lW3IQ9KcWa
+        BQty8OMnl+zEnFxexcXLU5ilJQPZRj6h2JpaUakEhNf8S9Ruo5gj03cgzelBhpMSD5EY=;
+Received: from p5dcc3c96.dip0.t-ipconnect.de ([93.204.60.150] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hcuTw-0003bY-3i; Mon, 17 Jun 2019 18:27:44 +0200
+Date:   Mon, 17 Jun 2019 18:27:43 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
+Message-ID: <20190617182743.7f40f2ee@aktux>
+In-Reply-To: <20190617114048.GN5316@sirena.org.uk>
+References: <20190615163314.28173-1-andreas@kemnade.info>
+        <20190617103111.GM5316@sirena.org.uk>
+        <20190617130357.41204ff7@kemnade.info>
+        <20190617114048.GN5316@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 17:56 +0200, Pavel Machek wrote:
-> Hi!
-> 
-> > +/*
-> > + *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wimplicit-fallthrough
-> > + *   gcc: https://developers.redhat.com/blog/2017/03/10/wimplicit-fallthrough-in-gcc-7/
-> > + */
-> > +#if __has_attribute(__fallthrough__)
-> > +# define __fallthrough                    __attribute__((__fallthrough__))
-> > +#else
-> > +# define __fallthrough
-> > +#endif
-> 
-> Is it good idea to add the __'s ? They look kind of ugly. 
+On Mon, 17 Jun 2019 12:40:48 +0100
+Mark Brown <broonie@kernel.org> wrote:
 
-Dunno.
+> On Mon, Jun 17, 2019 at 01:03:57PM +0200, Andreas Kemnade wrote:
+> > Mark Brown <broonie@kernel.org> wrote: =20
+> > > On Sat, Jun 15, 2019 at 06:33:14PM +0200, Andreas Kemnade wrote: =20
+>=20
+> > > Why is this a good fix and not defining the supported voltages?  These
+> > > look like fairly standard linear range regulators. =20
+>=20
+> > I am fixing the definition of the two regulators in the patch.
+> > I am defining them as continuous.=20
+> > Voltage ranges are defined in
+> > arch/arm/boot/dts/twl4030.dtsi
+> > Only the continuous flag is missing. =20
+>=20
+> > Is there anything else do you want to be defined? =20
+>=20
+> These regulators are not continuous regulators as far as I can see, they
+> are normal linear range regulators and so should have their voltages
+> enumerable like any other linear range regulator.
 
-I agree it's kind of ugly, but it should always work.
+Citing tps65950 trm page 55:
 
-I think the generic problem is introducing a new unprefixed
-reserved identifier.  Underscored identifiers are reserved.
+The device contains three switch-mode power supplies (SMPS):
+=E2=80=A2 VDD1: 1.2-A, buck DC/DC converter (VOUT =3D 0.6 V to 1.45 V, in s=
+teps of 12.5 mV)
+=E2=80=A2 VDD2: 600-mA buck DC/DC converter (VOUT =3D 0.6 V to 1.45 V, in s=
+teps of 12.5 mV, and 1.5 V as a
+   single programmable value)
 
-There is already a fallthrough: label used in kernel sources
-in net/sctp/sm_make_chunk.c that should probably be changed.
+you are right, they are not really continuous. So should I add these
+68 steps they have as a voltage list?
 
+I think they are nearly continuous, so we should IMHO rather take that
+not that strict. I guess there are no really continuous regulators, all
+have steps as voltage is specified in a limited resolution. So what is
+the exact meaning of that flag here?
+
+I think it is common sense to specify these regulators as continuous.
+Max and min values are already in arch/arm/boot/dts/twl4030.dtsi.
+
+Regards,
+Andreas
