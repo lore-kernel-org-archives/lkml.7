@@ -2,118 +2,111 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61990C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92129C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435EB208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A43C208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:51:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="IxEUZuMd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728798AbfFQWsT (ORCPT
+        id S1727844AbfFQWvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 18:48:19 -0400
-Received: from mail106.syd.optusnet.com.au ([211.29.132.42]:42742 "EHLO
-        mail106.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725839AbfFQWsT (ORCPT
+        Mon, 17 Jun 2019 18:51:37 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:40069 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfFQWvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:48:19 -0400
-Received: from dread.disaster.area (pa49-195-189-25.pa.nsw.optusnet.com.au [49.195.189.25])
-        by mail106.syd.optusnet.com.au (Postfix) with ESMTPS id 769BE3DC8C8;
-        Tue, 18 Jun 2019 08:48:12 +1000 (AEST)
-Received: from dave by dread.disaster.area with local (Exim 4.92)
-        (envelope-from <david@fromorbit.com>)
-        id 1hd0PC-0005cY-Ew; Tue, 18 Jun 2019 08:47:14 +1000
-Date:   Tue, 18 Jun 2019 08:47:14 +1000
-From:   Dave Chinner <david@fromorbit.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-Message-ID: <20190617224714.GR14363@dread.disaster.area>
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel>
- <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel>
- <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
+        Mon, 17 Jun 2019 18:51:36 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c70so7306558qkg.7
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:51:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=R7JAr7nez95dVg1/6wJIkqeDIU+F0cp9vja/vFPRJFw=;
+        b=IxEUZuMdQJp34/Puwy1PzMsfF+CNvMhDuDiizsH2lbDiry4fHprm28hX3Wlf60KF9a
+         0IL4HMp0Fh9iml2DATXl+qbJ9eaK4tvMzrdvohheJ+kxkmGB5VSfsHnJ6eSC1KIhZiY0
+         ivCZ1eFuKHMXPuLRc5yBNoXCPnZJqoZaMxLTGsKrrnkRSsfAgi3ngCNpNhtadAde/rJw
+         3UqY+6EBG6FhPZtmgjsc8PIrJXiakc57yrnafAOzM/mWtr6r3YAqmaVduUSrGrqqAXDw
+         P0qrF11SLGwankHnhduH87S6h2xyJbfn8+PeUUUSXxdp5fda36YJY9Xf3w7PtrYEaSKb
+         f0gg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=R7JAr7nez95dVg1/6wJIkqeDIU+F0cp9vja/vFPRJFw=;
+        b=GRGAfLTi/H1I9fHw46pQpxIer4sSibsGABhqOXB1l+grOO6/0WdU9tQ28zKXb/drwx
+         3eEapROjEuS408kKkyln2jYboRhBgJZzdKHV/v8IihQMnzcUpz0AkpqR1Cn06D170H74
+         6+UzWJeY55WBkAOVvqoH9ufd1Uz0Wavbnce7DO74u9bLFJwCh7zBFpa4giZstuA4hzmG
+         slRI0WDZI4JBy+mtOHpeAS5/a5u8YnCWgLhEGak0AwpiYruolINQS1Sv7G94dpJlOtRT
+         bn096xziNKjvwR7rx0CnYw6/xxAZ+wMlQBg1bheENlcSoGCditPmeffw4FsuI+VuvH/d
+         0FxA==
+X-Gm-Message-State: APjAAAWH49ZGkB3s2OQAxUZ3xYi0IhRTsiCb3g4ZzUJKZHE1ur3+JSuH
+        m68Ld6ogMw5th33bJdC9qbu6kw==
+X-Google-Smtp-Source: APXvYqz94JsNDcpcmRkN70+HkHIcd6+Mz1HWtd4o8rGjA5RUlEsXqOEPsarqlnBZr+tByk/gRvP3gA==
+X-Received: by 2002:a37:68ca:: with SMTP id d193mr81764803qkc.240.1560811895507;
+        Mon, 17 Jun 2019 15:51:35 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id d141sm7926869qke.3.2019.06.17.15.51.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 15:51:34 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hd0TO-00083X-B6; Mon, 17 Jun 2019 19:51:34 -0300
+Date:   Mon, 17 Jun 2019 19:51:34 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Peter Huewe <peterhuewe@gmx.de>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Andrey Pronin <apronin@chromium.org>,
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-integrity@vger.kernel.org, devicetree@vger.kernel.org,
+        Duncan Laurie <dlaurie@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>
+Subject: Re: [PATCH 1/8] tpm: block messages while suspended
+Message-ID: <20190617225134.GA30762@ziepe.ca>
+References: <20190613180931.65445-1-swboyd@chromium.org>
+ <20190613180931.65445-2-swboyd@chromium.org>
+ <20190613232613.GH22901@ziepe.ca>
+ <5d03e394.1c69fb81.f028c.bffb@mx.google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Optus-CM-Score: 0
-X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0 cx=a_idp_d
-        a=K5LJ/TdJMXINHCwnwvH1bQ==:117 a=K5LJ/TdJMXINHCwnwvH1bQ==:17
-        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=dq6fvYVFJ5YA:10
-        a=Z4Rwk6OoAAAA:8 a=7-415B0cAAAA:8 a=yB7Y4sE8DmJNDpec8TgA:9
-        a=CjuIK1q_8ugA:10 a=HkZW87K1Qel5hWWM3VKY:22 a=biEYGPWJfzWAr4FL6Ov7:22
+In-Reply-To: <5d03e394.1c69fb81.f028c.bffb@mx.google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 06:01:07PM -1000, Linus Torvalds wrote:
-> On Thu, Jun 13, 2019 at 5:08 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > I do not believe that posix itself actually requires that at all,
-> > although extended standards may.
+On Fri, Jun 14, 2019 at 11:12:36AM -0700, Stephen Boyd wrote:
+> Quoting Jason Gunthorpe (2019-06-13 16:26:13)
+> > On Thu, Jun 13, 2019 at 11:09:24AM -0700, Stephen Boyd wrote:
+> > > From: Andrey Pronin <apronin@chromium.org>
+> > > 
+> > > Other drivers or userspace may initiate sending a message to the tpm
+> > > while the device itself and the controller of the bus it is on are
+> > > suspended. That may break the bus driver logic.
+> > > Block sending messages while the device is suspended.
+> > > 
+> > > Signed-off-by: Andrey Pronin <apronin@chromium.org>
+> > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > > 
+> > > I don't think this was ever posted before.
+> > 
+> > Use a real lock.
+> > 
 > 
-> So I tried to see if I could find what this perhaps alludes to.
-> 
-> And I suspect it's not in the read/write thing, but the pthreads side
-> talks about atomicity.
->
-> Interesting, but I doubt if that's actually really intentional, since
-> the non-thread read/write behavior specifically seems to avoid the
-> whole concurrency issue.
+> To make sure the bit is tested under a lock so that suspend/resume can't
+> update the bit in parallel?
 
-The wording of posix changes every time they release a new version
-of the standard, and it's _never_ obvious what behaviour the
-standard is actually meant to define. They are always written with
-sufficient ambiguity and wiggle room that they could mean
-_anything_. The POSIX 2017.1 standard you quoted is quite different
-to older versions, but it's no less ambiguous...
+No, just use a real lock, don't make locks out of test bit/set bit
 
-> The pthreads atomicity thing seems to be about not splitting up IO and
-> doing it in chunks when you have m:n threading models, but can be
-> (mis-)construed to have threads given higher atomicity guarantees than
-> processes.
-
-Right, but regardless of the spec we have to consider that the
-behaviour of XFS comes from it's Irix heritage (actually from EFS,
-the predecessor of XFS from the late 1980s). i.e. the IO exclusion
-model dates to long before POSIX had anything to say about pthreads,
-and it's wording about atomicity could only refer to to
-multi-process interactions.
-
-These days, however, is the unfortunate reality of a long tail of
-applications developed on other Unix systems under older POSIX
-specifications that are still being ported to and deployed on Linux.
-Hence the completely ambiguous behaviours defined in the older specs
-are still just as important these days as the completely ambiguous
-behaviours defined in the new specifications. :/
-
-Cheers,
-
-Dave.
--- 
-Dave Chinner
-david@fromorbit.com
+Jason
