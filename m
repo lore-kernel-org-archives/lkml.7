@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C90AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDADEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FDDE2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EA592070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806952;
-	bh=yv8DkqJKU8fMiKq+QS+HdTSIP2OK3r2/FzT0dXNjYZI=;
+	s=default; t=1560806956;
+	bh=dNlhZXcSxapq/pBxruiZXHFae5wUZKQT88NMHvsonGU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u6FS+llDT03VAg6ybwGKp/2OqzTzlaohtZRW02NU7vSn7KqzH7nMXkQS5qoN5apLh
-	 uJamLyO462MGH58F/OyyX+jOZn5K0n+r/eV/tpUZcMce5grMzG2IZ+XVJjndGGnpAP
-	 lq/VBTwKQEkMB19MutWy7FFkgUt/YduZvATZEHio=
+	b=sV9yckR6H2+jcynl3Fi+IG2k9KJTtQKLmFcaTWlr0SpU/lzSoovsgHJjB8QcCs0GJ
+	 qoxYJAu/IMFIe2uxEJXgivQ+S9lKM0rLgsbK3UtIzRIKOLORcBGROD/szYzhBX1lLf
+	 9h/ZLRSbFuWZWJ6gWnszGT88Ye+7UUF1Y/hB0uU4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730216AbfFQV3L (ORCPT
+        id S1730673AbfFQV3O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56230 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:29:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730368AbfFQV3E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:04 -0400
+        id S1729043AbfFQV3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E1CC9204FD;
-        Mon, 17 Jun 2019 21:29:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1D7A62063F;
+        Mon, 17 Jun 2019 21:29:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806943;
-        bh=yv8DkqJKU8fMiKq+QS+HdTSIP2OK3r2/FzT0dXNjYZI=;
+        s=default; t=1560806951;
+        bh=dNlhZXcSxapq/pBxruiZXHFae5wUZKQT88NMHvsonGU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qZIa19YS/shfdaqDH7A2sVuMhYZmaG8+m3NNGHpPWnHEsb4+hgqE5yNogylcEgNiZ
-         sja/Kf9h8/PcBkSMrwgm/Jw43yI4bWWyODsXjj0MqFv000ap0c2uwk/h79oXYRYr2V
-         Gi33AahHeQsiV0XLiW7pNmVjKOAzGLdzewaEi3jQ=
+        b=FbXQlrD/OMMpu+qjTqG31fkB8zpZGFepKoa6r3eM5p2iM04GTe/Dd+dZjb7FO/Ysm
+         P0P7lpAHw7OA2hC3q8yP6t5sUSVhhouM7OCV19oxNY6tUdiQRehbet78IC1Pg92jDl
+         NDxS/i1xLItEfKmakVgxP+O9Mq+UqKq/w/j5UJoY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vishal Verma <vishal.l.verma@intel.com>,
-        Qian Cai <cai@lca.pw>, Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 36/53] libnvdimm: Fix compilation warnings with W=1
-Date:   Mon, 17 Jun 2019 23:10:19 +0200
-Message-Id: <20190617210751.496808847@linuxfoundation.org>
+Subject: [PATCH 4.14 39/53] KVM: x86/pmu: do not mask the value that is written to fixed PMUs
+Date:   Mon, 17 Jun 2019 23:10:22 +0200
+Message-Id: <20190617210751.866366227@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -60,84 +60,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c01dafad77fea8d64c4fdca0a6031c980842ad65 ]
+[ Upstream commit 2924b52117b2812e9633d5ea337333299166d373 ]
 
-Several places (dimm_devs.c, core.c etc) include label.h but only
-label.c uses NSINDEX_SIGNATURE, so move its definition to label.c
-instead.
+According to the SDM, for MSR_IA32_PERFCTR0/1 "the lower-order 32 bits of
+each MSR may be written with any value, and the high-order 8 bits are
+sign-extended according to the value of bit 31", but the fixed counters
+in real hardware are limited to the width of the fixed counters ("bits
+beyond the width of the fixed-function counter are reserved and must be
+written as zeros").  Fix KVM to do the same.
 
-In file included from drivers/nvdimm/dimm_devs.c:23:
-drivers/nvdimm/label.h:41:19: warning: 'NSINDEX_SIGNATURE' defined but
-not used [-Wunused-const-variable=]
-
-Also, some places abuse "/**" which is only reserved for the kernel-doc.
-
-drivers/nvdimm/bus.c:648: warning: cannot understand function prototype:
-'struct attribute_group nd_device_attribute_group = '
-drivers/nvdimm/bus.c:677: warning: cannot understand function prototype:
-'struct attribute_group nd_numa_attribute_group = '
-
-Those are just some member assignments for the "struct attribute_group"
-instances and it can't be expressed in the kernel-doc.
-
-Reviewed-by: Vishal Verma <vishal.l.verma@intel.com>
-Signed-off-by: Qian Cai <cai@lca.pw>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+Reported-by: Nadav Amit <nadav.amit@gmail.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvdimm/bus.c   | 4 ++--
- drivers/nvdimm/label.c | 2 ++
- drivers/nvdimm/label.h | 2 --
- 3 files changed, 4 insertions(+), 4 deletions(-)
+ arch/x86/kvm/pmu_intel.c | 13 ++++++++-----
+ 1 file changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/nvdimm/bus.c b/drivers/nvdimm/bus.c
-index a6746a1f20ae..2f1b54fab399 100644
---- a/drivers/nvdimm/bus.c
-+++ b/drivers/nvdimm/bus.c
-@@ -608,7 +608,7 @@ static struct attribute *nd_device_attributes[] = {
- 	NULL,
- };
- 
--/**
-+/*
-  * nd_device_attribute_group - generic attributes for all devices on an nd bus
-  */
- struct attribute_group nd_device_attribute_group = {
-@@ -637,7 +637,7 @@ static umode_t nd_numa_attr_visible(struct kobject *kobj, struct attribute *a,
- 	return a->mode;
- }
- 
--/**
-+/*
-  * nd_numa_attribute_group - NUMA attributes for all devices on an nd bus
-  */
- struct attribute_group nd_numa_attribute_group = {
-diff --git a/drivers/nvdimm/label.c b/drivers/nvdimm/label.c
-index 6a16017cc0d9..1fb3a2491131 100644
---- a/drivers/nvdimm/label.c
-+++ b/drivers/nvdimm/label.c
-@@ -25,6 +25,8 @@ static guid_t nvdimm_btt2_guid;
- static guid_t nvdimm_pfn_guid;
- static guid_t nvdimm_dax_guid;
- 
-+static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
-+
- static u32 best_seq(u32 a, u32 b)
- {
- 	a &= NSINDEX_SEQ_MASK;
-diff --git a/drivers/nvdimm/label.h b/drivers/nvdimm/label.h
-index 1ebf4d3d01ba..9ed772db6900 100644
---- a/drivers/nvdimm/label.h
-+++ b/drivers/nvdimm/label.h
-@@ -38,8 +38,6 @@ enum {
- 	ND_NSINDEX_INIT = 0x1,
- };
- 
--static const char NSINDEX_SIGNATURE[] = "NAMESPACE_INDEX\0";
--
- /**
-  * struct nd_namespace_index - label set superblock
-  * @sig: NAMESPACE_INDEX\0
+diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
+index 5ab4a364348e..2729131fe9bf 100644
+--- a/arch/x86/kvm/pmu_intel.c
++++ b/arch/x86/kvm/pmu_intel.c
+@@ -235,11 +235,14 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
+ 		}
+ 		break;
+ 	default:
+-		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
+-		    (pmc = get_fixed_pmc(pmu, msr))) {
+-			if (!msr_info->host_initiated)
+-				data = (s64)(s32)data;
+-			pmc->counter += data - pmc_read_counter(pmc);
++		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
++			if (msr_info->host_initiated)
++				pmc->counter = data;
++			else
++				pmc->counter = (s32)data;
++			return 0;
++		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
++			pmc->counter = data;
+ 			return 0;
+ 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
+ 			if (data == pmc->eventsel)
 -- 
 2.20.1
 
