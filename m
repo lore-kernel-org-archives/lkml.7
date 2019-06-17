@@ -4,52 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12DEAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3526DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F142063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEF0F2063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807448;
-	bh=6n+foonixuc31PF4ZuMbKS89R8pdNFk0aCM+W91tW0U=;
+	s=default; t=1560807461;
+	bh=5/2JiO3y3S7WEs1kSBMXafw4iEBz3HJ6ihd/kswEY7A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jJ989mVRHgk90j12a5HvQN/K7P4McVE58t9zMxFKdcx+URDlzAyofYqtlCdieFVHO
-	 B+vhPSAICxslAA2JRKeK7QQh9YON/ez6qrxXykR7LGTVXrqsGHQf3THjcJ8BWt/1sA
-	 SztQO8CqOb8mdgznYfqbu57V4rkVYEe6tJphLTfI=
+	b=wMVmpPU2RpAoVS2TtyKBn35JqDIEXFVsC/nHriIMfctH7ZQ9PPASmEZpKGYuneOJl
+	 KIccYuxhXaUTv3ijhJiUJJRe3xSERyoP97hWR+LfzlmXFlJx/wyIh033BS5lWdFxx0
+	 O578pxDDSxNrKhYG4U7r3dD+kF85Lpi4ic8xo2H4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729224AbfFQVh1 (ORCPT
+        id S1729376AbfFQVhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:37:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44138 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:37:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfFQVUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:20:05 -0400
+        id S1727159AbfFQVTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:19:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A4F620861;
-        Mon, 17 Jun 2019 21:20:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F2908208CB;
+        Mon, 17 Jun 2019 21:19:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806403;
-        bh=6n+foonixuc31PF4ZuMbKS89R8pdNFk0aCM+W91tW0U=;
+        s=default; t=1560806381;
+        bh=5/2JiO3y3S7WEs1kSBMXafw4iEBz3HJ6ihd/kswEY7A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dD/KEKgKln2W6R1wwhfIS+Ly5K7JCqjI+hEI8yu7yOH9HhwjX7nn5kleBnvLcB4/+
-         atCjuNGoxzVSuOyjw1NDBz1CAS8OiyPr3058I4Rntb3dhiV8zJD4l41johQ8ZfD8pc
-         v3/uOH2yDGmO7IEZABudCaXy6EE8QC5kcGOWi7HU=
+        b=rKkfyNDLz4fm81Rn5S0J5rxOGe9hWvRroWaTmqs2hgmat+YhQXgJPITK0rsSdSPui
+         GOh57TTSus3QNOIPkEp79muY/TrK5VCrYJKHsHZMvw2eSWy74zUztpDhHmfAdyM2Nd
+         DF/P4cx/xVhdgxGU/RAlMkC2Rx+4ty9BMgaL70dA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jani Nikula <jani.nikula@intel.com>
-Subject: [PATCH 5.1 039/115] drm/i915/dsi: Use a fuzzy check for burst mode clock check
-Date:   Mon, 17 Jun 2019 23:08:59 +0200
-Message-Id: <20190617210802.013103791@linuxfoundation.org>
+        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
+        Rolf Fokkens <rolf@rolffokkens.nl>,
+        Pierre JUHEN <pierre.juhen@orange.fr>,
+        Shenghui Wang <shhuiw@foxmail.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Nix <nix@esperi.org.uk>, Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.1 031/115] bcache: fix stack corruption by PRECEDING_KEY()
+Date:   Mon, 17 Jun 2019 23:08:51 +0200
+Message-Id: <20190617210801.562856521@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -62,78 +63,127 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Coly Li <colyli@suse.de>
 
-commit f9a99131ce18d9dddcaa14ec2c436e42f0bbee5e upstream.
+commit 31b90956b124240aa8c63250243ae1a53585c5e2 upstream.
 
-Prior to this commit we fail to init the DSI panel on the GPD MicroPC:
-https://www.indiegogo.com/projects/gpd-micropc-6-inch-handheld-industry-laptop#/
+Recently people report bcache code compiled with gcc9 is broken, one of
+the buggy behavior I observe is that two adjacent 4KB I/Os should merge
+into one but they don't. Finally it turns out to be a stack corruption
+caused by macro PRECEDING_KEY().
 
-The problem is intel_dsi_vbt_init() failing with the following error:
-*ERROR* Burst mode freq is less than computed
+See how PRECEDING_KEY() is defined in bset.h,
+437 #define PRECEDING_KEY(_k)                                       \
+438 ({                                                              \
+439         struct bkey *_ret = NULL;                               \
+440                                                                 \
+441         if (KEY_INODE(_k) || KEY_OFFSET(_k)) {                  \
+442                 _ret = &KEY(KEY_INODE(_k), KEY_OFFSET(_k), 0);  \
+443                                                                 \
+444                 if (!_ret->low)                                 \
+445                         _ret->high--;                           \
+446                 _ret->low--;                                    \
+447         }                                                       \
+448                                                                 \
+449         _ret;                                                   \
+450 })
 
-The pclk in the VBT panel modeline is 70000, together with 24 bpp and
-4 lines this results in a bitrate value of 70000 * 24 / 4 = 420000.
-But the target_burst_mode_freq in the VBT is 418000.
+At line 442, _ret points to address of a on-stack variable combined by
+KEY(), the life range of this on-stack variable is in line 442-446,
+once _ret is returned to bch_btree_insert_key(), the returned address
+points to an invalid stack address and this address is overwritten in
+the following called bch_btree_iter_init(). Then argument 'search' of
+bch_btree_iter_init() points to some address inside stackframe of
+bch_btree_iter_init(), exact address depends on how the compiler
+allocates stack space. Now the stack is corrupted.
 
-This commit works around this problem by adding an intel_fuzzy_clock_check
-when target_burst_mode_freq < bitrate and setting target_burst_mode_freq to
-bitrate when that checks succeeds, fixing the panel not working.
-
+Fixes: 0eacac22034c ("bcache: PRECEDING_KEY()")
+Signed-off-by: Coly Li <colyli@suse.de>
+Reviewed-by: Rolf Fokkens <rolf@rolffokkens.nl>
+Reviewed-by: Pierre JUHEN <pierre.juhen@orange.fr>
+Tested-by: Shenghui Wang <shhuiw@foxmail.com>
+Tested-by: Pierre JUHEN <pierre.juhen@orange.fr>
+Cc: Kent Overstreet <kent.overstreet@gmail.com>
+Cc: Nix <nix@esperi.org.uk>
 Cc: stable@vger.kernel.org
-Reviewed-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190524174028.21659-2-hdegoede@redhat.com
-(cherry picked from commit 2c1c55252647abd989b94f725b190c700312d053)
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/i915/intel_display.c |    2 +-
- drivers/gpu/drm/i915/intel_drv.h     |    1 +
- drivers/gpu/drm/i915/intel_dsi_vbt.c |   11 +++++++++++
- 3 files changed, 13 insertions(+), 1 deletion(-)
+ drivers/md/bcache/bset.c |   16 +++++++++++++---
+ drivers/md/bcache/bset.h |   34 ++++++++++++++++++++--------------
+ 2 files changed, 33 insertions(+), 17 deletions(-)
 
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -11757,7 +11757,7 @@ encoder_retry:
- 	return 0;
+--- a/drivers/md/bcache/bset.c
++++ b/drivers/md/bcache/bset.c
+@@ -887,12 +887,22 @@ unsigned int bch_btree_insert_key(struct
+ 	struct bset *i = bset_tree_last(b)->data;
+ 	struct bkey *m, *prev = NULL;
+ 	struct btree_iter iter;
++	struct bkey preceding_key_on_stack = ZERO_KEY;
++	struct bkey *preceding_key_p = &preceding_key_on_stack;
+ 
+ 	BUG_ON(b->ops->is_extents && !KEY_SIZE(k));
+ 
+-	m = bch_btree_iter_init(b, &iter, b->ops->is_extents
+-				? PRECEDING_KEY(&START_KEY(k))
+-				: PRECEDING_KEY(k));
++	/*
++	 * If k has preceding key, preceding_key_p will be set to address
++	 *  of k's preceding key; otherwise preceding_key_p will be set
++	 * to NULL inside preceding_key().
++	 */
++	if (b->ops->is_extents)
++		preceding_key(&START_KEY(k), &preceding_key_p);
++	else
++		preceding_key(k, &preceding_key_p);
++
++	m = bch_btree_iter_init(b, &iter, preceding_key_p);
+ 
+ 	if (b->ops->insert_fixup(b, k, &iter, replace_key))
+ 		return status;
+--- a/drivers/md/bcache/bset.h
++++ b/drivers/md/bcache/bset.h
+@@ -434,20 +434,26 @@ static inline bool bch_cut_back(const st
+ 	return __bch_cut_back(where, k);
  }
  
--static bool intel_fuzzy_clock_check(int clock1, int clock2)
-+bool intel_fuzzy_clock_check(int clock1, int clock2)
+-#define PRECEDING_KEY(_k)					\
+-({								\
+-	struct bkey *_ret = NULL;				\
+-								\
+-	if (KEY_INODE(_k) || KEY_OFFSET(_k)) {			\
+-		_ret = &KEY(KEY_INODE(_k), KEY_OFFSET(_k), 0);	\
+-								\
+-		if (!_ret->low)					\
+-			_ret->high--;				\
+-		_ret->low--;					\
+-	}							\
+-								\
+-	_ret;							\
+-})
++/*
++ * Pointer '*preceding_key_p' points to a memory object to store preceding
++ * key of k. If the preceding key does not exist, set '*preceding_key_p' to
++ * NULL. So the caller of preceding_key() needs to take care of memory
++ * which '*preceding_key_p' pointed to before calling preceding_key().
++ * Currently the only caller of preceding_key() is bch_btree_insert_key(),
++ * and it points to an on-stack variable, so the memory release is handled
++ * by stackframe itself.
++ */
++static inline void preceding_key(struct bkey *k, struct bkey **preceding_key_p)
++{
++	if (KEY_INODE(k) || KEY_OFFSET(k)) {
++		(**preceding_key_p) = KEY(KEY_INODE(k), KEY_OFFSET(k), 0);
++		if (!(*preceding_key_p)->low)
++			(*preceding_key_p)->high--;
++		(*preceding_key_p)->low--;
++	} else {
++		(*preceding_key_p) = NULL;
++	}
++}
+ 
+ static inline bool bch_ptr_invalid(struct btree_keys *b, const struct bkey *k)
  {
- 	int diff;
- 
---- a/drivers/gpu/drm/i915/intel_drv.h
-+++ b/drivers/gpu/drm/i915/intel_drv.h
-@@ -1707,6 +1707,7 @@ int vlv_force_pll_on(struct drm_i915_pri
- 		     const struct dpll *dpll);
- void vlv_force_pll_off(struct drm_i915_private *dev_priv, enum pipe pipe);
- int lpt_get_iclkip(struct drm_i915_private *dev_priv);
-+bool intel_fuzzy_clock_check(int clock1, int clock2);
- 
- /* modesetting asserts */
- void assert_panel_unlocked(struct drm_i915_private *dev_priv,
---- a/drivers/gpu/drm/i915/intel_dsi_vbt.c
-+++ b/drivers/gpu/drm/i915/intel_dsi_vbt.c
-@@ -871,6 +871,17 @@ bool intel_dsi_vbt_init(struct intel_dsi
- 		if (mipi_config->target_burst_mode_freq) {
- 			u32 bitrate = intel_dsi_bitrate(intel_dsi);
- 
-+			/*
-+			 * Sometimes the VBT contains a slightly lower clock,
-+			 * then the bitrate we have calculated, in this case
-+			 * just replace it with the calculated bitrate.
-+			 */
-+			if (mipi_config->target_burst_mode_freq < bitrate &&
-+			    intel_fuzzy_clock_check(
-+					mipi_config->target_burst_mode_freq,
-+					bitrate))
-+				mipi_config->target_burst_mode_freq = bitrate;
-+
- 			if (mipi_config->target_burst_mode_freq < bitrate) {
- 				DRM_ERROR("Burst mode freq is less than computed\n");
- 				return false;
 
 
