@@ -6,111 +6,178 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E7FC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D436C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:26:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37D8920657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70B982085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:26:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727152AbfFQNZH (ORCPT
+        id S1727477AbfFQN0K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:25:07 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:49635 "EHLO
+        Mon, 17 Jun 2019 09:26:10 -0400
+Received: from mout.kundenserver.de ([212.227.17.10]:41463 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725884AbfFQNZH (ORCPT
+        with ESMTP id S1725884AbfFQN0K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:25:07 -0400
+        Mon, 17 Jun 2019 09:26:10 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MXXZf-1i81xr1oqd-00YxKf; Mon, 17 Jun 2019 15:24:44 +0200
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MX0TX-1i9gNF0AcT-00XJq8; Mon, 17 Jun 2019 15:25:44 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Eric Biggers <ebiggers@google.com>,
+To:     Corentin Labbe <clabbe.montjoie@gmail.com>,
         Herbert Xu <herbert@gondor.apana.org.au>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>, drbd-dev@lists.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] drbd: dynamically allocate shash descriptor
-Date:   Mon, 17 Jun 2019 15:24:13 +0200
-Message-Id: <20190617132440.2721536-1-arnd@arndb.de>
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Eric Biggers <ebiggers@google.com>,
+        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: sun4i-ss - reduce stack usage
+Date:   Mon, 17 Jun 2019 15:25:17 +0200
+Message-Id: <20190617132538.2759714-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:yiXEMLOB97u6ow4J7zGkKBjm/BFhumDE+NdcmaYm9WjfiCT/Cmn
- V/NLe0vmPNWXTdWF+BBYfUAJvJWRlM85gl+YQSPREoTkGVG39VyhcFa9g3lyJluG+07I775
- AXtdbkBvHkHTTl1uCy+pvzXhZzO6TmBcczsVNfxvFbO6tNJbIYOMsjyNsSRKdCTx99cap6Z
- ltLjUJek80sb/m+Ef1nZA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:EWEazgR7ph8=:/k+pVgzJoirHCvy+vku4GX
- U/pNEc+vgXaititlF5OBFvcboG67NR/1vD51ZrAxITevLt1CauK5gWVjqa+k8OpAS3/cA31QR
- h6LUzbIe4ZQgWUut73QRxyaownsijzM9ZRSIuh8sg3RXYgXmw5fTp6dUU91c1H/vHL03Bdcia
- G8j7M/5CuDcz0JSYRZ15tq0d0y63oOlPJKxWZ0XXkGdazN02xx2CgaF817+Dodb8CGKkENs1v
- 3QMQL4n3tJNuNcb+94Nn1b5Q9FM7WAMS0dJ+CGHf+z4b9Z7wowoAR42sG/w7e7ykf26BMK1zw
- QWZ9uUWHzrXC+JJQKnWTNE13fkCjEK66aLl8pI7uJVZ3e44fW2Leig/7QnWzmSPoo7yWjbeCJ
- RLgOD/aBM5KZSM8ICvwgT3+7QzLPNjAEsHZu9itNaw32zC7wvBgqVKycY9gIkX7oQ4QputL6A
- FHOFtuox0HfQ6aPffkTc5tt6Ktl85//G5nugsQ0tXLdR5G4ogyEGVkVhxRuLi/apfdSC+RHaL
- IfsVmBzxOFDSduUK6ALIX7DtPYkCjAVaIVrkOWrg6+QU9qaEBYfwkJPUdpjyhPgPRcNOqCyjs
- S8wo+bJ7Gnv/JenkujJOyd9k3LI4kL2Tlw6KJFnsWWHo2QjF5+uHfMZiSZMUhby2dWlU7xDND
- RPkdtKAnd+tOxd8kDLeg50Xwxh8xRAS0T4HILVPT4dcjvF6l+WGmceFW6Br7H+PFBw0oPzqoq
- BB4pvfjgpbOiolEk4nYfpVFLgrGV0LAflSvSwA==
+X-Provags-ID: V03:K1:dFwYisfe6d2an5iBSpuKsBUEx+RF3JE6zy3kMwlMfCg7C2kZf0c
+ PJikbpLoKWB73dg8OZ7imWqut7mlrzfXDcXPVF7ZaYE0RbSUY+R7X/cUixMA94QK8XjJd21
+ WZuqEXE7u2uV7j45rFWcWnO0Jk87FpZ1a7nxkWWLEk7FQH7/KbYMNlo+/IEFTtNltB6+9/S
+ yJWrQw+tofrEr5PREnDfg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:exdzb5w2Xvg=:CR0sH9nRwYSNSihZH7/ieP
+ PqFOiHTJoHbbDqjQ4h4U4kp9gYCvssxRdDXHNk73s+boKIHlXHfX1VxeTCfAQ1KMxvk4obJbc
+ 8DvnpBdS67DPeTimuip5YhBQHQSUFWO+y+hI4daiVknrVFSbSZOnMqbsc9jKoYRUJBMB5J/Jz
+ iRLQIml9Y1ukfycCtY6x4Bf8eB7CyGJOe01JAtJZ0RMryNtNJlEBNyMh4YlUSO2OE+5IcJzqR
+ B7EX8efA8KNgB2kCXXCbOAjrH+eebd9bHHBwMB908emBwSSW0pelmwQUZntZNbibogvJnIedQ
+ wiAlAYa4RXc8eLAc7PUrDuO+QVHxugAnlEo+7f5OriGvDNP6d4Dafb6Q3BFZ0j+aPsmalwSI5
+ m/7ZhXzZeN/q0lMp5QuffDXm1ggDDI3lJNvXwyCFwJxVzA9Q7Z8tEHoU9uwyIl6j6YmLtIEF8
+ 2i4KeOl4UIhwApvdupvgnElE2J/0Gpd5WAnG4fUhsNQuj3FLeGTioPsNk7U361BNXEAzwgi0h
+ JdtidaMv0V+WGpjTYgVG6duYDv1Ajo17MBMkjdSX5CuCMZO6pelE66pBr8luJyCvHsQbhC315
+ Ggt3vpGPPepYDU26se02fp4WUTcILALRo4Hp4sn1aVzmO2tQNA/EKHxnDbd95H3WoAA6u6IVC
+ Nzi+lXiJJNgp8D6PTYGrh/b4XbTUV0XZ5Ws4+Dw/O75R3OT25AJA6stsiyIuTXTtopOV/IyQR
+ SaBO9W4HYbEj3e8+BSysPB5eyxlF2kB56t2dEw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Building with clang and KASAN, we get a warning about an overly large
-stack frame on 32-bit architectures:
+After the latest addition, the stack usage of sun4i_ss_cipher_poll
+grew beyond the warning limit when KASAN is enabled:
 
-drivers/block/drbd/drbd_receiver.c:921:31: error: stack frame size of 1280 bytes in function 'conn_connect'
-      [-Werror,-Wframe-larger-than=]
+drivers/crypto/sunxi-ss/sun4i-ss-cipher.c:118:12: error: stack frame size of 1152 bytes in function 'sun4i_ss_cipher_poll' [-Werror,-Wframe-larger-than=]
+static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
 
-We already allocate other data dynamically in this function, so
-just do the same for the shash descriptor, which makes up most of
-this memory.
+Reduce it in three ways:
 
+- split out the new code into a separate function so its stack
+  usage can overlap that of the sun4i_ss_opti_poll() code path
+- mark both special cases as noinline_for_stack, which should
+  ideally result in a tail call that frees the rest of the
+  stack
+- move the buf and obuf variables into the code blocks in
+  which they are used.
+
+The three separate functions now use 144, 640 and 304 bytes of kernel
+stack, respectively.
+
+Fixes: 0ae1f46c55f8 ("crypto: sun4i-ss - fallback when length is not multiple of blocksize")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/block/drbd/drbd_receiver.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/crypto/sunxi-ss/sun4i-ss-cipher.c | 47 +++++++++++++++--------
+ 1 file changed, 30 insertions(+), 17 deletions(-)
 
-diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
-index 90ebfcae0ce6..10fb26e862d7 100644
---- a/drivers/block/drbd/drbd_receiver.c
-+++ b/drivers/block/drbd/drbd_receiver.c
-@@ -5417,7 +5417,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	unsigned int key_len;
- 	char secret[SHARED_SECRET_MAX]; /* 64 byte */
- 	unsigned int resp_size;
--	SHASH_DESC_ON_STACK(desc, connection->cram_hmac_tfm);
-+	struct shash_desc *desc;
- 	struct packet_info pi;
- 	struct net_conf *nc;
- 	int err, rv;
-@@ -5430,6 +5430,13 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	memcpy(secret, nc->shared_secret, key_len);
- 	rcu_read_unlock();
+diff --git a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+index 7b0c42882830..4ab14d58e85b 100644
+--- a/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
++++ b/drivers/crypto/sunxi-ss/sun4i-ss-cipher.c
+@@ -12,7 +12,7 @@
+  */
+ #include "sun4i-ss.h"
  
-+	desc = kmalloc(sizeof(struct shash_desc) +
-+			crypto_shash_descsize(connection->cram_hmac_tfm),
-+		       GFP_KERNEL);
-+	if (!desc) {
-+		rv = -1;
-+		goto fail;
-+	}
- 	desc->tfm = connection->cram_hmac_tfm;
- 
- 	rv = crypto_shash_setkey(connection->cram_hmac_tfm, (u8 *)secret, key_len);
-@@ -5572,6 +5579,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
- 	kfree(response);
- 	kfree(right_response);
- 	shash_desc_zero(desc);
-+	kfree(desc);
- 
- 	return rv;
+-static int sun4i_ss_opti_poll(struct skcipher_request *areq)
++static int noinline_for_stack sun4i_ss_opti_poll(struct skcipher_request *areq)
+ {
+ 	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(areq);
+ 	struct sun4i_tfm_ctx *op = crypto_skcipher_ctx(tfm);
+@@ -114,6 +114,29 @@ static int sun4i_ss_opti_poll(struct skcipher_request *areq)
+ 	return err;
  }
+ 
++
++static int noinline_for_stack sun4i_ss_cipher_poll_fallback(struct skcipher_request *areq)
++{
++	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(areq);
++	struct sun4i_tfm_ctx *op = crypto_skcipher_ctx(tfm);
++	struct sun4i_cipher_req_ctx *ctx = skcipher_request_ctx(areq);
++	SYNC_SKCIPHER_REQUEST_ON_STACK(subreq, op->fallback_tfm);
++	int err;
++
++	skcipher_request_set_sync_tfm(subreq, op->fallback_tfm);
++	skcipher_request_set_callback(subreq, areq->base.flags, NULL,
++				      NULL);
++	skcipher_request_set_crypt(subreq, areq->src, areq->dst,
++				   areq->cryptlen, areq->iv);
++	if (ctx->mode & SS_DECRYPTION)
++		err = crypto_skcipher_decrypt(subreq);
++	else
++		err = crypto_skcipher_encrypt(subreq);
++	skcipher_request_zero(subreq);
++
++	return err;
++}
++
+ /* Generic function that support SG with size not multiple of 4 */
+ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ {
+@@ -140,8 +163,6 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 	unsigned int todo;
+ 	struct sg_mapping_iter mi, mo;
+ 	unsigned int oi, oo;	/* offset for in and out */
+-	char buf[4 * SS_RX_MAX];/* buffer for linearize SG src */
+-	char bufo[4 * SS_TX_MAX]; /* buffer for linearize SG dst */
+ 	unsigned int ob = 0;	/* offset in buf */
+ 	unsigned int obo = 0;	/* offset in bufo*/
+ 	unsigned int obl = 0;	/* length of data in bufo */
+@@ -178,20 +199,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 	if (no_chunk == 1 && !need_fallback)
+ 		return sun4i_ss_opti_poll(areq);
+ 
+-	if (need_fallback) {
+-		SYNC_SKCIPHER_REQUEST_ON_STACK(subreq, op->fallback_tfm);
+-		skcipher_request_set_sync_tfm(subreq, op->fallback_tfm);
+-		skcipher_request_set_callback(subreq, areq->base.flags, NULL,
+-					      NULL);
+-		skcipher_request_set_crypt(subreq, areq->src, areq->dst,
+-					   areq->cryptlen, areq->iv);
+-		if (ctx->mode & SS_DECRYPTION)
+-			err = crypto_skcipher_decrypt(subreq);
+-		else
+-			err = crypto_skcipher_encrypt(subreq);
+-		skcipher_request_zero(subreq);
+-		return err;
+-	}
++	if (need_fallback)
++		return sun4i_ss_cipher_poll_fallback(areq);
+ 
+ 	spin_lock_irqsave(&ss->slock, flags);
+ 
+@@ -224,6 +233,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 
+ 	while (oleft) {
+ 		if (ileft) {
++			char buf[4 * SS_RX_MAX];/* buffer for linearize SG src */
++
+ 			/*
+ 			 * todo is the number of consecutive 4byte word that we
+ 			 * can read from current SG
+@@ -281,6 +292,8 @@ static int sun4i_ss_cipher_poll(struct skcipher_request *areq)
+ 				oo = 0;
+ 			}
+ 		} else {
++			char bufo[4 * SS_TX_MAX]; /* buffer for linearize SG dst */
++
+ 			/*
+ 			 * read obl bytes in bufo, we read at maximum for
+ 			 * emptying the device
 -- 
 2.20.0
 
