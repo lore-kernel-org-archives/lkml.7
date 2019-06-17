@@ -2,99 +2,321 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916F2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5B60C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1B0208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:30:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D4D208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:30:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="DnkiSLYs"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="SxGB0v8e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfFQTaH (ORCPT
+        id S1729092AbfFQTaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:30:07 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51550 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728990AbfFQT36 (ORCPT
+        Mon, 17 Jun 2019 15:30:06 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57469 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728993AbfFQT37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:29:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 207so635775wma.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 12:29:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pLDKBn/rLn9JtAy1R8FKXFV1pHYiHH80xHdW2AHq76o=;
-        b=DnkiSLYsEq+K6UwHvuKcniGNMtC1VAAJVH4kaIlIK99n01SJqwxnXECrKm5rOyiBk9
-         bkZUXZ8Mg+JGribMc6w1tilz4fe/n/lgi+P11r6Mprc0IQJDyhK0oTNjShwkIcCBxwM7
-         TNVYXcWi50BYWcMPwXChvRnGZlOqi8pJvR5uk8WE3p8vRL1JXzk0BLKWQ9zLQohZDb2t
-         ZAkRlxwj+prGx5/jOC0nOe8cxiiK5Bbl/LWGa4X9pw9JSWMdSveYfzJqI0zm64winfbc
-         NqlGBlsdKQv/ABACo38l3rvGDQxtX+6X2ETn+94nbPJx7xxASEAGzZSKgoVofjMFOlfU
-         yg6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pLDKBn/rLn9JtAy1R8FKXFV1pHYiHH80xHdW2AHq76o=;
-        b=YOiiC/ZblgNdYlfYz/oYUPAOigyDtEosJ1HdZbF4caINzxObnoolpSS1spBBpWz3lv
-         Mt9qVfi8zosQJcfIeL6V+Wr4ej/oOP4RE4MLoQ51aqVXRZSFXCZcusl/YDIl0LF6dUUP
-         JbEdyFxMG4LzO6CH6+XK7WvWPUteaAr9dq8xF/eWalj98STR+bUGjdwmgXJZll48psA+
-         8LEywvCmPh1lIIm3clJ/pwOrDb9KAnahe5nHXgrhOFlEGaK9D8ED1tKRVwysc89x1CcA
-         LZBZgISClLRwZ9nyjYcLgMwxAjQTIzV0CLBSkZb2RiQAouyJv8k4kUFKB+wUa6sxaKOn
-         zUyg==
-X-Gm-Message-State: APjAAAXYXJKgVe1NnTCDQEQhbqSc9AMJK4GSWBew07hH8Esgln15C23V
-        10MWZMZHK9N+ipDt8dHOpOyv3Q==
-X-Google-Smtp-Source: APXvYqwzSn6QF6/tx1P4ONWL+aQ1cDMzNSHZ+vQ7fVHmaZUy1tTyC2v6scoAFh5dLZLMBXMhszyC2Q==
-X-Received: by 2002:a7b:ca43:: with SMTP id m3mr158418wml.45.1560799796773;
-        Mon, 17 Jun 2019 12:29:56 -0700 (PDT)
-Received: from loys-ubuntu-BY1835A49200471.thefacebook.com (cust-west-pareq2-46-193-13-130.wb.wifirst.net. [46.193.13.130])
-        by smtp.googlemail.com with ESMTPSA id u18sm9412034wrr.11.2019.06.17.12.29.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 17 Jun 2019 12:29:56 -0700 (PDT)
-From:   Loys Ollivier <lollivier@baylibre.com>
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Loys Ollivier <lollivier@baylibre.com>,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 2/3] riscv: select SiFive platform drivers with SOC_SIFIVE
-Date:   Mon, 17 Jun 2019 21:29:49 +0200
-Message-Id: <1560799790-20287-3-git-send-email-lollivier@baylibre.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560799790-20287-1-git-send-email-lollivier@baylibre.com>
-References: <1560799790-20287-1-git-send-email-lollivier@baylibre.com>
+        Mon, 17 Jun 2019 15:29:59 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJSXcF3564014
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 17 Jun 2019 12:28:33 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJSXcF3564014
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560799713;
+        bh=SjZNQd+s30ZqQQS1LKtuk70XdajQxYcfTYZa71Mhr5A=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=SxGB0v8en/BeG+DCiQaGU3GPIsrHL7i8zW//2WRdCEffMTPwYr0d2hLARvOS1yFYF
+         W5UDLT1AS54X4onz2/ozshr8Mkx/ph/uCfSIhAkB5MAeurHoiz8UWSSMshCoo3+Ns9
+         upvoAF4hZQ2vHP6Ad6D9TfVPsYsJAJ2PnBiG2BV5nRqBpVL1Ic+9u1t2sDWm8e3Y46
+         p26nqRPOp+78/iWk+8LAOwHmxHdfiqH+jKpWEdvphb36Ff7L4WVvbHrn36k7UdVdFT
+         7cjd9P4owXhmqXvAvNUQbD0aEMSRbzhBsDfG11FsgXx7doYiYM4c8/MPcstIX5bha3
+         DWftS8re1vRiQ==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJSWbZ3564006;
+        Mon, 17 Jun 2019 12:28:32 -0700
+Date:   Mon, 17 Jun 2019 12:28:32 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Mathieu Poirier <tipbot@zytor.com>
+Message-ID: <tip-af21577c05a746579c4c084d51d7f0661def128c@git.kernel.org>
+Cc:     alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        acme@redhat.com, mingo@kernel.org, suzuki.poulose@arm.com,
+        leo.yan@linaro.org, hpa@zytor.com, mathieu.poirier@linaro.org,
+        linux-kernel@vger.kernel.org, namhyung@kernel.org,
+        jolsa@redhat.com, tglx@linutronix.de
+Reply-To: leo.yan@linaro.org, suzuki.poulose@arm.com,
+          alexander.shishkin@linux.intel.com, peterz@infradead.org,
+          acme@redhat.com, mingo@kernel.org, jolsa@redhat.com,
+          tglx@linutronix.de, mathieu.poirier@linaro.org, hpa@zytor.com,
+          linux-kernel@vger.kernel.org, namhyung@kernel.org
+In-Reply-To: <20190524173508.29044-14-mathieu.poirier@linaro.org>
+References: <20190524173508.29044-14-mathieu.poirier@linaro.org>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf cs-etm: Use traceID aware memory callback API
+Git-Commit-ID: af21577c05a746579c4c084d51d7f0661def128c
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On selection of SOC_SIFIVE select the corresponding platform drivers.
+Commit-ID:  af21577c05a746579c4c084d51d7f0661def128c
+Gitweb:     https://git.kernel.org/tip/af21577c05a746579c4c084d51d7f0661def128c
+Author:     Mathieu Poirier <mathieu.poirier@linaro.org>
+AuthorDate: Fri, 24 May 2019 11:35:04 -0600
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Mon, 10 Jun 2019 15:50:02 -0300
 
-Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+perf cs-etm: Use traceID aware memory callback API
+
+When working with CPU-wide traces different traceID may be found in the
+same stream.  As such we need to use the decoder callback that provides
+the traceID in order to know the thread context being decoded.
+
+Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
+Tested-by: Leo Yan <leo.yan@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: coresight@lists.linaro.org
+Cc: linux-arm-kernel@lists.infradead.org
+Link: http://lkml.kernel.org/r/20190524173508.29044-14-mathieu.poirier@linaro.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- arch/riscv/Kconfig.socs | 5 +++++
- 1 file changed, 5 insertions(+)
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.c | 14 ++++-----
+ tools/perf/util/cs-etm-decoder/cs-etm-decoder.h |  3 +-
+ tools/perf/util/cs-etm.c                        | 41 +++++++++++++++++--------
+ 3 files changed, 36 insertions(+), 22 deletions(-)
 
-diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
-index 60dae1b5f276..536c0ef4aee8 100644
---- a/arch/riscv/Kconfig.socs
-+++ b/arch/riscv/Kconfig.socs
-@@ -2,6 +2,11 @@ menu "SoC selection"
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+index 4303d2d00d31..87264b79de0e 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.c
+@@ -41,15 +41,14 @@ static u32
+ cs_etm_decoder__mem_access(const void *context,
+ 			   const ocsd_vaddr_t address,
+ 			   const ocsd_mem_space_acc_t mem_space __maybe_unused,
++			   const u8 trace_chan_id,
+ 			   const u32 req_size,
+ 			   u8 *buffer)
+ {
+ 	struct cs_etm_decoder *decoder = (struct cs_etm_decoder *) context;
  
- config SOC_SIFIVE
-        bool "SiFive SoCs"
-+       select SERIAL_SIFIVE
-+       select SERIAL_SIFIVE_CONSOLE
-+       select CLK_SIFIVE
-+       select CLK_SIFIVE_FU540_PRCI
-+       select SIFIVE_PLIC
-        help
-          This enables support for SiFive SoC platform hardware.
+-	return decoder->mem_access(decoder->data,
+-				   address,
+-				   req_size,
+-				   buffer);
++	return decoder->mem_access(decoder->data, trace_chan_id,
++				   address, req_size, buffer);
+ }
  
--- 
-2.7.4
-
+ int cs_etm_decoder__add_mem_access_cb(struct cs_etm_decoder *decoder,
+@@ -58,9 +57,10 @@ int cs_etm_decoder__add_mem_access_cb(struct cs_etm_decoder *decoder,
+ {
+ 	decoder->mem_access = cb_func;
+ 
+-	if (ocsd_dt_add_callback_mem_acc(decoder->dcd_tree, start, end,
+-					 OCSD_MEM_SPACE_ANY,
+-					 cs_etm_decoder__mem_access, decoder))
++	if (ocsd_dt_add_callback_trcid_mem_acc(decoder->dcd_tree, start, end,
++					       OCSD_MEM_SPACE_ANY,
++					       cs_etm_decoder__mem_access,
++					       decoder))
+ 		return -1;
+ 
+ 	return 0;
+diff --git a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
+index 6ae7ab4cf5fe..11f3391d06f2 100644
+--- a/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
++++ b/tools/perf/util/cs-etm-decoder/cs-etm-decoder.h
+@@ -19,8 +19,7 @@ struct cs_etm_packet_queue;
+ 
+ struct cs_etm_queue;
+ 
+-typedef u32 (*cs_etm_mem_cb_type)(struct cs_etm_queue *, u64,
+-				  size_t, u8 *);
++typedef u32 (*cs_etm_mem_cb_type)(struct cs_etm_queue *, u8, u64, size_t, u8 *);
+ 
+ struct cs_etmv3_trace_params {
+ 	u32 reg_ctrl;
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 7e3b4d10f5c4..2483293266d8 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -491,8 +491,8 @@ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+ 	}
+ }
+ 
+-static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
+-			      size_t size, u8 *buffer)
++static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u8 trace_chan_id,
++			      u64 address, size_t size, u8 *buffer)
+ {
+ 	u8  cpumode;
+ 	u64 offset;
+@@ -501,6 +501,8 @@ static u32 cs_etm__mem_access(struct cs_etm_queue *etmq, u64 address,
+ 	struct	 machine *machine;
+ 	struct	 addr_location al;
+ 
++	(void)trace_chan_id;
++
+ 	if (!etmq)
+ 		return 0;
+ 
+@@ -687,10 +689,12 @@ void cs_etm__reset_last_branch_rb(struct cs_etm_traceid_queue *tidq)
+ }
+ 
+ static inline int cs_etm__t32_instr_size(struct cs_etm_queue *etmq,
+-					 u64 addr) {
++					 u8 trace_chan_id, u64 addr)
++{
+ 	u8 instrBytes[2];
+ 
+-	cs_etm__mem_access(etmq, addr, ARRAY_SIZE(instrBytes), instrBytes);
++	cs_etm__mem_access(etmq, trace_chan_id, addr,
++			   ARRAY_SIZE(instrBytes), instrBytes);
+ 	/*
+ 	 * T32 instruction size is indicated by bits[15:11] of the first
+ 	 * 16-bit word of the instruction: 0b11101, 0b11110 and 0b11111
+@@ -719,6 +723,7 @@ u64 cs_etm__last_executed_instr(const struct cs_etm_packet *packet)
+ }
+ 
+ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
++				     u64 trace_chan_id,
+ 				     const struct cs_etm_packet *packet,
+ 				     u64 offset)
+ {
+@@ -726,7 +731,8 @@ static inline u64 cs_etm__instr_addr(struct cs_etm_queue *etmq,
+ 		u64 addr = packet->start_addr;
+ 
+ 		while (offset > 0) {
+-			addr += cs_etm__t32_instr_size(etmq, addr);
++			addr += cs_etm__t32_instr_size(etmq,
++						       trace_chan_id, addr);
+ 			offset--;
+ 		}
+ 		return addr;
+@@ -1063,6 +1069,7 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 	struct cs_etm_auxtrace *etm = etmq->etm;
+ 	struct cs_etm_packet *tmp;
+ 	int ret;
++	u8 trace_chan_id = tidq->trace_chan_id;
+ 	u64 instrs_executed = tidq->packet->instr_count;
+ 
+ 	tidq->period_instructions += instrs_executed;
+@@ -1093,7 +1100,8 @@ static int cs_etm__sample(struct cs_etm_queue *etmq,
+ 		 * executed, but PC has not advanced to next instruction)
+ 		 */
+ 		u64 offset = (instrs_executed - instrs_over - 1);
+-		u64 addr = cs_etm__instr_addr(etmq, tidq->packet, offset);
++		u64 addr = cs_etm__instr_addr(etmq, trace_chan_id,
++					      tidq->packet, offset);
+ 
+ 		ret = cs_etm__synth_instruction_sample(
+ 			etmq, tidq, addr, etm->instructions_sample_period);
+@@ -1268,7 +1276,7 @@ static int cs_etm__get_data_block(struct cs_etm_queue *etmq)
+ 	return etmq->buf_len;
+ }
+ 
+-static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq,
++static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq, u8 trace_chan_id,
+ 				 struct cs_etm_packet *packet,
+ 				 u64 end_addr)
+ {
+@@ -1291,7 +1299,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq,
+ 		 * so below only read 2 bytes as instruction size for T32.
+ 		 */
+ 		addr = end_addr - 2;
+-		cs_etm__mem_access(etmq, addr, sizeof(instr16), (u8 *)&instr16);
++		cs_etm__mem_access(etmq, trace_chan_id, addr,
++				   sizeof(instr16), (u8 *)&instr16);
+ 		if ((instr16 & 0xFF00) == 0xDF00)
+ 			return true;
+ 
+@@ -1306,7 +1315,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq,
+ 		 * +---------+---------+-------------------------+
+ 		 */
+ 		addr = end_addr - 4;
+-		cs_etm__mem_access(etmq, addr, sizeof(instr32), (u8 *)&instr32);
++		cs_etm__mem_access(etmq, trace_chan_id, addr,
++				   sizeof(instr32), (u8 *)&instr32);
+ 		if ((instr32 & 0x0F000000) == 0x0F000000 &&
+ 		    (instr32 & 0xF0000000) != 0xF0000000)
+ 			return true;
+@@ -1322,7 +1332,8 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq,
+ 		 * +-----------------------+---------+-----------+
+ 		 */
+ 		addr = end_addr - 4;
+-		cs_etm__mem_access(etmq, addr, sizeof(instr32), (u8 *)&instr32);
++		cs_etm__mem_access(etmq, trace_chan_id, addr,
++				   sizeof(instr32), (u8 *)&instr32);
+ 		if ((instr32 & 0xFFE0001F) == 0xd4000001)
+ 			return true;
+ 
+@@ -1338,6 +1349,7 @@ static bool cs_etm__is_svc_instr(struct cs_etm_queue *etmq,
+ static bool cs_etm__is_syscall(struct cs_etm_queue *etmq,
+ 			       struct cs_etm_traceid_queue *tidq, u64 magic)
+ {
++	u8 trace_chan_id = tidq->trace_chan_id;
+ 	struct cs_etm_packet *packet = tidq->packet;
+ 	struct cs_etm_packet *prev_packet = tidq->prev_packet;
+ 
+@@ -1352,7 +1364,7 @@ static bool cs_etm__is_syscall(struct cs_etm_queue *etmq,
+ 	 */
+ 	if (magic == __perf_cs_etmv4_magic) {
+ 		if (packet->exception_number == CS_ETMV4_EXC_CALL &&
+-		    cs_etm__is_svc_instr(etmq, prev_packet,
++		    cs_etm__is_svc_instr(etmq, trace_chan_id, prev_packet,
+ 					 prev_packet->end_addr))
+ 			return true;
+ 	}
+@@ -1390,6 +1402,7 @@ static bool cs_etm__is_sync_exception(struct cs_etm_queue *etmq,
+ 				      struct cs_etm_traceid_queue *tidq,
+ 				      u64 magic)
+ {
++	u8 trace_chan_id = tidq->trace_chan_id;
+ 	struct cs_etm_packet *packet = tidq->packet;
+ 	struct cs_etm_packet *prev_packet = tidq->prev_packet;
+ 
+@@ -1415,7 +1428,7 @@ static bool cs_etm__is_sync_exception(struct cs_etm_queue *etmq,
+ 		 * (SMC, HVC) are taken as sync exceptions.
+ 		 */
+ 		if (packet->exception_number == CS_ETMV4_EXC_CALL &&
+-		    !cs_etm__is_svc_instr(etmq, prev_packet,
++		    !cs_etm__is_svc_instr(etmq, trace_chan_id, prev_packet,
+ 					  prev_packet->end_addr))
+ 			return true;
+ 
+@@ -1439,6 +1452,7 @@ static int cs_etm__set_sample_flags(struct cs_etm_queue *etmq,
+ {
+ 	struct cs_etm_packet *packet = tidq->packet;
+ 	struct cs_etm_packet *prev_packet = tidq->prev_packet;
++	u8 trace_chan_id = tidq->trace_chan_id;
+ 	u64 magic;
+ 	int ret;
+ 
+@@ -1519,7 +1533,8 @@ static int cs_etm__set_sample_flags(struct cs_etm_queue *etmq,
+ 		if (prev_packet->flags == (PERF_IP_FLAG_BRANCH |
+ 					   PERF_IP_FLAG_RETURN |
+ 					   PERF_IP_FLAG_INTERRUPT) &&
+-		    cs_etm__is_svc_instr(etmq, packet, packet->start_addr))
++		    cs_etm__is_svc_instr(etmq, trace_chan_id,
++					 packet, packet->start_addr))
+ 			prev_packet->flags = PERF_IP_FLAG_BRANCH |
+ 					     PERF_IP_FLAG_RETURN |
+ 					     PERF_IP_FLAG_SYSCALLRET;
