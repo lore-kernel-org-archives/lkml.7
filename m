@@ -2,87 +2,89 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B1C2C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:36:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D42C31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3982E2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:36:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707592086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560764325;
+	bh=1MmPNbYWZDKNu+tc8X2hB5HstMq/o4InRnTu+0NxeX4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=x5Lk5kMkxNPTJtj6mNqgzY1UVFOMavpzRxbQZDHoHrn3J/kaw//SUq9RKW6daA5Su
+	 WU2hpu2tiEU5SqFyDh1vJtqV08qbH8Buck+1qrORquDBrJymezU9jG1ECIdnLvEVcd
+	 a1UNhhDHSUEQ2g81NNDTLpR9e5o3KeSWJoDBbnIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfFQJgR (ORCPT
+        id S1726864AbfFQJio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:36:17 -0400
-Received: from mx2.suse.de ([195.135.220.15]:44788 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725837AbfFQJgP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:36:15 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 96A65AF30;
-        Mon, 17 Jun 2019 09:36:14 +0000 (UTC)
-Subject: Re: [RFC PATCH 11/16] xen/grant-table: make grant-table xenhost aware
-To:     Ankur Arora <ankur.a.arora@oracle.com>,
-        linux-kernel@vger.kernel.org, xen-devel@lists.xenproject.org
-Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org,
-        joao.m.martins@oracle.com
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-12-ankur.a.arora@oracle.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <71d3131a-cd14-6bf6-391a-6e4b0533fb23@suse.com>
-Date:   Mon, 17 Jun 2019 11:36:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 17 Jun 2019 05:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725837AbfFQJin (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:38:43 -0400
+Received: from localhost (unknown [122.178.208.218])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81B682085A;
+        Mon, 17 Jun 2019 09:38:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560764323;
+        bh=1MmPNbYWZDKNu+tc8X2hB5HstMq/o4InRnTu+0NxeX4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=l5ZQs+Ws1wpbolkQeLk4pmztF464THsCz5/kU6dg08HqAvIizOfA+uPBdYpwm43Q2
+         0SptEJfjZu+aic1Q/cGFLXFZQlKAn/9YDKWXYuXjluyoFLjcr/6Ims+5W+jEuC8zg2
+         sflA3O5D/6NJEcsd/GIvI25Mm7v4yIo2oSr7mHmk=
+Date:   Mon, 17 Jun 2019 15:05:34 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Prasad Sodagudi <psodagud@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Isaac J . Manjarres" <isaacm@codeaurora.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: Add SM8150 pinctrl
+ binding
+Message-ID: <20190617093534.GI2962@vkoul-mobl>
+References: <20190614053032.24208-1-vkoul@kernel.org>
+ <20190617063732.GA18010@mani>
 MIME-Version: 1.0
-In-Reply-To: <20190509172540.12398-12-ankur.a.arora@oracle.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617063732.GA18010@mani>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 09.05.19 19:25, Ankur Arora wrote:
-> Largely mechanical changes: the exported grant table symbols now take
-> xenhost_t * as a parameter. Also, move the grant table global state
-> inside xenhost_t.
+On 17-06-19, 12:07, Manivannan Sadhasivam wrote:
+> Hey Vinod,
 > 
-> If there's more than one xenhost, then initialize both.
+> On Fri, Jun 14, 2019 at 11:00:31AM +0530, Vinod Koul wrote:
+> > From: Prasad Sodagudi <psodagud@codeaurora.org>
+> > 
+> > Add the binding for the TLMM pinctrl block found in the SM8150 platform.
+> > 
+> > Signed-off-by: Prasad Sodagudi <psodagud@codeaurora.org>
+> > Signed-off-by: Isaac J. Manjarres <isaacm@codeaurora.org>
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  .../bindings/pinctrl/qcom,sm8150-pinctrl      | 200 ++++++++++++++++++
 > 
-> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
-> ---
->   arch/x86/xen/grant-table.c |  71 +++--
->   drivers/xen/grant-table.c  | 611 +++++++++++++++++++++----------------
->   include/xen/grant_table.h  |  72 ++---
->   include/xen/xenhost.h      |  11 +
->   4 files changed, 443 insertions(+), 322 deletions(-)
-> 
-> diff --git a/include/xen/xenhost.h b/include/xen/xenhost.h
-> index 9e08627a9e3e..acee0c7872b6 100644
-> --- a/include/xen/xenhost.h
-> +++ b/include/xen/xenhost.h
-> @@ -129,6 +129,17 @@ typedef struct {
->   		const struct evtchn_ops *evtchn_ops;
->   		int **evtchn_to_irq;
->   	};
-> +
-> +	/* grant table private state */
-> +	struct {
-> +		/* private to drivers/xen/grant-table.c */
-> +		void *gnttab_private;
-> +
-> +		/* x86/xen/grant-table.c */
-> +		void *gnttab_shared_vm_area;
-> +		void *gnttab_status_vm_area;
-> +		void *auto_xlat_grant_frames;
+> Looks like you missed the .txt extension for binding :-)
 
-Please use proper types here instead of void *. This avoids lots of
-casts. It is okay to just add anonymous struct definitions and keep the
-real struct layout local to grant table code.
+Looks like I did :( Thanks for pointing Mani!
 
-
-Juergen
+-- 
+~Vinod
