@@ -4,59 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F1A5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F536C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:36:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 384C52085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:34:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 094B62084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:36:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="o+LW5uIK"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="bfe8BfzD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729054AbfFQTeU (ORCPT
+        id S1728103AbfFQTgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:34:20 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:60737 "EHLO
+        Mon, 17 Jun 2019 15:36:02 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:42575 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726182AbfFQTeT (ORCPT
+        with ESMTP id S1726747AbfFQTgC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:34:19 -0400
+        Mon, 17 Jun 2019 15:36:02 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJY6rI3565327
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJYla33565434
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:34:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJY6rI3565327
+        Mon, 17 Jun 2019 12:34:47 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJYla33565434
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560800047;
-        bh=ELboHO34IS0O41Bx6cIOz9GvPicPpEJPyVrBieo5ddo=;
+        s=2019051801; t=1560800088;
+        bh=zGzpSGjgF9H8nvJX5wum+QqIj+GeL325ZaPw2tf7Nhs=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=o+LW5uIKDBlYZBT5Kqy7sjIWdY9N6ISHd1ritU4EQYm9dk7zl5hWjVA2MHAvgY5o2
-         ToP0pv/VAki9LwBqy+Dc41p1Akv7xSi4uENgc5x3pWFdFzf0r5BhxgYh4S8l62Fx+R
-         sf0y3NrWmtTf1jDo9zKv/cHLO1II+FP7rUK0aKoNyYChrdn3yQ9ikZ7qIh5/hDHfCV
-         W/bSp1vhQmP3DI7BJE90gaWJvzTMtcK9HzCFayaWCojquvIvXuJWcWLypL60BnNe+e
-         lcJekbW02SilwBFxjMQtZe2H8XAPw8193Zsp6Jht6Y9ki819YAyPBfYJPgLMHMwIBy
-         m9y1xAVXi6WIg==
+        b=bfe8BfzDXsNP2YJ+fxZ5Zw1xclERoR8vJRhzTSLZTnczWYzbYmCsKSbpQBAN9Oqpz
+         E1eUPT3KcXAXCFIjG3vv5RzKYUG4FvW0Nd4wSALWLEE0iSOsWunq5pM1GVFeCIquQZ
+         iU7YWvfz3ZpmmFnCslFEuiJwXVO1/YPz+/O+hw8yJs719WFz/dvb4zD7rc8XvpTfb7
+         uTWPwmOCB19sBhJNUVeeKBz0FjHhM0Hk2Vv8TLfvjK1cIyTGj4lyZlIj7nT+gBq7Ff
+         MYsCLDhOYdt1d0aSWBd/TdW+TGYKDHhRwFNLcV0X6PoowfhUlJ9K1vJRZBXCP/XQzk
+         BkgNuUUgy7jZA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJY6WC3565324;
-        Mon, 17 Jun 2019 12:34:06 -0700
-Date:   Mon, 17 Jun 2019 12:34:06 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJYlS73565430;
+        Mon, 17 Jun 2019 12:34:47 -0700
+Date:   Mon, 17 Jun 2019 12:34:47 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-e05a899718f094e2c87d99115c5b1191405a9fd0@git.kernel.org>
-Cc:     mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-        ak@linux.intel.com, acme@redhat.com, peterz@infradead.org,
-        tglx@linutronix.de, jolsa@kernel.org, kan.liang@linux.intel.com
-Reply-To: mingo@kernel.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-          ak@linux.intel.com, acme@redhat.com, peterz@infradead.org,
-          tglx@linutronix.de, jolsa@kernel.org, kan.liang@linux.intel.com
-In-Reply-To: <1559688644-106558-4-git-send-email-kan.liang@linux.intel.com>
-References: <1559688644-106558-4-git-send-email-kan.liang@linux.intel.com>
+Message-ID: <tip-0ccdb8407a4660f6dbc5977bc060917d2c3e7986@git.kernel.org>
+Cc:     ak@linux.intel.com, mingo@kernel.org, jolsa@kernel.org,
+        tglx@linutronix.de, kan.liang@linux.intel.com,
+        linux-kernel@vger.kernel.org, acme@redhat.com,
+        peterz@infradead.org, hpa@zytor.com
+Reply-To: mingo@kernel.org, ak@linux.intel.com, jolsa@kernel.org,
+          tglx@linutronix.de, kan.liang@linux.intel.com,
+          linux-kernel@vger.kernel.org, acme@redhat.com,
+          peterz@infradead.org, hpa@zytor.com
+In-Reply-To: <1559688644-106558-5-git-send-email-kan.liang@linux.intel.com>
+References: <1559688644-106558-5-git-send-email-kan.liang@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf header: Rename "sibling cores" to "sibling
- sockets"
-Git-Commit-ID: e05a899718f094e2c87d99115c5b1191405a9fd0
+Subject: [tip:perf/core] perf tools: Apply new CPU topology sysfs attributes
+Git-Commit-ID: 0ccdb8407a4660f6dbc5977bc060917d2c3e7986
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -70,54 +71,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e05a899718f094e2c87d99115c5b1191405a9fd0
-Gitweb:     https://git.kernel.org/tip/e05a899718f094e2c87d99115c5b1191405a9fd0
+Commit-ID:  0ccdb8407a4660f6dbc5977bc060917d2c3e7986
+Gitweb:     https://git.kernel.org/tip/0ccdb8407a4660f6dbc5977bc060917d2c3e7986
 Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Tue, 4 Jun 2019 15:50:43 -0700
+AuthorDate: Tue, 4 Jun 2019 15:50:44 -0700
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
 CommitDate: Mon, 10 Jun 2019 16:20:11 -0300
 
-perf header: Rename "sibling cores" to "sibling sockets"
+perf tools: Apply new CPU topology sysfs attributes
 
-The "sibling cores" actually shows the sibling CPUs of a socket.  The
-name "sibling cores" is very misleading.
+The existing "thread_siblings" and "thread_siblings_list" attribute will
+be deprecated.
 
-Rename "sibling cores" to "sibling sockets"
+Use the new CPU topology sysfs attributes, "core_cpus" and
+"core_cpus_list", which are synonymous with the deprecated attributes.
+
+Check the new name first. If not available, use the deprecated name to
+be compatible with old kernel.
 
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/1559688644-106558-4-git-send-email-kan.liang@linux.intel.com
+Link: http://lkml.kernel.org/r/1559688644-106558-5-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/Documentation/perf.data-file-format.txt | 2 +-
- tools/perf/util/header.c                           | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ tools/perf/util/cputopo.c | 8 +++++++-
+ tools/perf/util/smt.c     | 8 ++++++--
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index 0165e92e717e..de78183f6881 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -168,7 +168,7 @@ struct {
- };
+diff --git a/tools/perf/util/cputopo.c b/tools/perf/util/cputopo.c
+index 85fa87fc30cf..26e73a4bd4fe 100644
+--- a/tools/perf/util/cputopo.c
++++ b/tools/perf/util/cputopo.c
+@@ -15,6 +15,8 @@
+ 	"%s/devices/system/cpu/cpu%d/topology/die_cpus_list"
+ #define THRD_SIB_FMT \
+ 	"%s/devices/system/cpu/cpu%d/topology/thread_siblings_list"
++#define THRD_SIB_FMT_NEW \
++	"%s/devices/system/cpu/cpu%d/topology/core_cpus_list"
+ #define NODE_ONLINE_FMT \
+ 	"%s/devices/system/node/online"
+ #define NODE_MEMINFO_FMT \
+@@ -91,8 +93,12 @@ try_dies:
+ 	ret = 0;
  
- Example:
--	sibling cores   : 0-8
-+	sibling sockets : 0-8
- 	sibling dies	: 0-3
- 	sibling dies	: 4-7
- 	sibling threads : 0-1
-diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
-index 64976254431c..06ddb6618ef3 100644
---- a/tools/perf/util/header.c
-+++ b/tools/perf/util/header.c
-@@ -1460,7 +1460,7 @@ static void print_cpu_topology(struct feat_fd *ff, FILE *fp)
- 	str = ph->env.sibling_cores;
+ try_threads:
+-	scnprintf(filename, MAXPATHLEN, THRD_SIB_FMT,
++	scnprintf(filename, MAXPATHLEN, THRD_SIB_FMT_NEW,
+ 		  sysfs__mountpoint(), cpu);
++	if (access(filename, F_OK) == -1) {
++		scnprintf(filename, MAXPATHLEN, THRD_SIB_FMT,
++			  sysfs__mountpoint(), cpu);
++	}
+ 	fp = fopen(filename, "r");
+ 	if (!fp)
+ 		goto done;
+diff --git a/tools/perf/util/smt.c b/tools/perf/util/smt.c
+index 453f6f6f29f3..3b791ef2cd50 100644
+--- a/tools/perf/util/smt.c
++++ b/tools/perf/util/smt.c
+@@ -23,8 +23,12 @@ int smt_on(void)
+ 		char fn[256];
  
- 	for (i = 0; i < nr; i++) {
--		fprintf(fp, "# sibling cores   : %s\n", str);
-+		fprintf(fp, "# sibling sockets : %s\n", str);
- 		str += strlen(str) + 1;
- 	}
- 
+ 		snprintf(fn, sizeof fn,
+-			"devices/system/cpu/cpu%d/topology/thread_siblings",
+-			cpu);
++			"devices/system/cpu/cpu%d/topology/core_cpus", cpu);
++		if (access(fn, F_OK) == -1) {
++			snprintf(fn, sizeof fn,
++				"devices/system/cpu/cpu%d/topology/thread_siblings",
++				cpu);
++		}
+ 		if (sysfs__read_str(fn, &str, &strlen) < 0)
+ 			continue;
+ 		/* Entry is hex, but does not have 0x, so need custom parser */
