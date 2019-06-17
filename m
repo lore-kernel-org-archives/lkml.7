@@ -2,72 +2,58 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77910C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 089DCC31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:39:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A60B2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:36:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="iJnOfDSp"
+	by mail.kernel.org (Postfix) with ESMTP id D021020644
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:39:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728706AbfFQUg5 (ORCPT
+        id S1728674AbfFQUjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:36:57 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35501 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726808AbfFQUg5 (ORCPT
+        Mon, 17 Jun 2019 16:39:08 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:46126 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726614AbfFQUjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:36:57 -0400
-Received: by mail-oi1-f193.google.com with SMTP id a127so7044498oii.2
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 13:36:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WUuONrlgmwtIZdvsw0S0/4Mq9T1WyA1gy6J4VLXnacI=;
-        b=iJnOfDSpsfcRrkO7Z3UmtsU/3SdEZ7eTfjySEwglR4kCk3eP1rlaXEv8n0WSdyQhgA
-         KaWNKrnvNbK3Ivdrsdf3WrCRENxklnMUOfkYt77DH4iUmhsBJjRM+eotXHjLnTJ0fpft
-         IRATZl7xjDYDdLodZoW7pDj5e/et1XUyWXubUfGW4vRD1RKoqQhNZy2/KBjKy8cusMgh
-         2woSBHrnLGC1xQF+N5ZRLi9uSQi5GRNsM2OXCHe8Pv4k1LMuUVnyUieU8WnCi9CQp/zd
-         XBqL0kuZ9/hoegyaGxXD87pJJNEmxb5JL0BejjNLkP1oeIbdjPfVsh40yBVMT2gDQuUx
-         ng8g==
+        Mon, 17 Jun 2019 16:39:08 -0400
+Received: by mail-qk1-f193.google.com with SMTP id x18so7072161qkn.13;
+        Mon, 17 Jun 2019 13:39:07 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=WUuONrlgmwtIZdvsw0S0/4Mq9T1WyA1gy6J4VLXnacI=;
-        b=AnchfdmodhJ6dZ+RYGibjWDOPUrFSNYLIJLfdWaa378JRRMLwaX+HEnyoDvx+B276u
-         DuGvjT1AR1iaRzQRYOlIXIEgcfTxbNm+RxHvD2oQnzT1Cfcc5oRjTWVbCsw/GEr592zb
-         Cn4oHOnPTpnu5URhne43YwafBB74JlfsyP5CG6uOSv48hXOj3wP0idj3sRWU2gC66CK8
-         oyQEg0RD40hpdCzDQEdUcDSYAgCyGApxsEozqbNZwsmrnOg5qMT5BKh1Ny59Qb1dmzJn
-         Qxt1V8fQr1FuThzB1XzCIJX0h3V25SjKuXjruWH3oMzl5WBVa2FcLT3Fh5vWfed2Kk+R
-         z2Bw==
-X-Gm-Message-State: APjAAAWehLnwgP+t3g88lH/JKW+rQL4asBpcTVjftIuRG/6DaiLuu5dh
-        Twp9QE0ZAea1XZpnfFGdB5zyx2Zxl6mRxLgHVGtwRQ==
-X-Google-Smtp-Source: APXvYqyP6F9zlBzZPah8lr14kIAj+Xnb/4HPIraAg3Phba4tJ1HESSkAprhGKci8EGOWV3IPPT/MSOptYr7l5lvozUE=
-X-Received: by 2002:aca:3006:: with SMTP id w6mr9263oiw.5.1560803816566; Mon,
- 17 Jun 2019 13:36:56 -0700 (PDT)
+        bh=LpZTAf50o7/PLh9CIzhk7vHJ2cGCWuaTKNqQ1cWqNqU=;
+        b=oOkYTJhy9twBIPx4+t93Kg0Kl/qS/3jcbrKRUQHXUOi2pl22YsJ3dZ79A7f9pXmwe2
+         kg8NtJ0eUG96LCT0UzEu8TmrSXzReFajx0er9Fazg6Phe2CdMzGWFQDMPCO9J66HSMDv
+         N/tFCl/FMkJjCFXSOVPDeu3HY/rpYZlGFEmjxaMqsSshjBGwqs2HiX3C1eIekrCUjAFk
+         Hs8/w9CGOwcNnNxpfe+ZjQeKD+Mx27CF7u4ydGG4zZoB8G7r7KVBsawBwuVHN7Qz4gS0
+         yIgi7VYLBSFJwnEC6iI8g0CL+nGP7DkZKb/iiZygzCtbXrw+UQbvKJO8sZfTi8HW5tH3
+         Evrg==
+X-Gm-Message-State: APjAAAXtpyASEEdj7YWOqpbEpd7tKPuKzVIaGQdfHDZFucD72x95e66W
+        caK4WkMkw1dKyfTek+vYF0z3VdEH3y6vDzQNtQkZiMmX
+X-Google-Smtp-Source: APXvYqxvkiU7uT50Vvb6ohuGYInfRfCjQ5Yqch5RcVO9LxFG+MQCn35pmZdu8YSFm96BJGPKBdyUGG9NgPKKxkQBSKU=
+X-Received: by 2002:a37:a4d3:: with SMTP id n202mr2958065qke.84.1560803946661;
+ Mon, 17 Jun 2019 13:39:06 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617122733.22432-1-hch@lst.de> <20190617122733.22432-8-hch@lst.de>
- <CAPcyv4hbGfOawfafqQ-L1CMr6OMFGmnDtdgLTXrgQuPxYNHA2w@mail.gmail.com> <20190617195404.GA20275@lst.de>
-In-Reply-To: <20190617195404.GA20275@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 17 Jun 2019 13:36:44 -0700
-Message-ID: <CAPcyv4jhhEbLDi82gVw7GLASEtqU=U7Ty67AGwTijmzMqw8X8Q@mail.gmail.com>
-Subject: Re: [PATCH 07/25] memremap: validate the pagemap type passed to devm_memremap_pages
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
+References: <20190617132440.2721536-1-arnd@arndb.de> <20190617143635.xkbmoug5swqoi5em@rck.sh>
+In-Reply-To: <20190617143635.xkbmoug5swqoi5em@rck.sh>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 17 Jun 2019 22:38:49 +0200
+Message-ID: <CAK8P3a3PDznLXbaQNtFpgtJyP29mh2gGSm8DeSk0NfZCgZQ_kA@mail.gmail.com>
+Subject: Re: [PATCH] drbd: dynamically allocate shash descriptor
+To:     Roland Kammerer <roland.kammerer@linbit.com>
+Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
+        Lars Ellenberg <lars.ellenberg@linbit.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Eric Biggers <ebiggers@google.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>, drbd-dev@lists.linbit.com,
+        linux-block <linux-block@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
@@ -75,12 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:59 PM Christoph Hellwig <hch@lst.de> wrote:
+On Mon, Jun 17, 2019 at 4:36 PM Roland Kammerer
+<roland.kammerer@linbit.com> wrote:
+> > @@ -5572,6 +5579,7 @@ static int drbd_do_auth(struct drbd_connection *connection)
+> >       kfree(response);
+> >       kfree(right_response);
+> >       shash_desc_zero(desc);
+> > +     kfree(desc);
+> >
+> >       return rv;
+> >  }
 >
-> On Mon, Jun 17, 2019 at 12:02:09PM -0700, Dan Williams wrote:
-> > Need a lead in patch that introduces MEMORY_DEVICE_DEVDAX, otherwise:
+> Hi Arnd,
 >
-> Or maybe a MEMORY_DEVICE_DEFAULT = 0 shared by fsdax and p2pdma?
+> are you sure your cleanup is okay?
+>
+> >       shash_desc_zero(desc);
+> > +     kfree(desc);
+>
+> You shash_desc_zero() a potential NULL pointer. memzero_expicit() in the
+> function then dereferences it:
+>
+> memzero_explicit(desc,
+>         sizeof(*desc) + crypto_shash_descsize(desc->tfm));
+>
+> Maybe some if (desc) guard?
 
-I thought about that, but it seems is_pci_p2pdma_page() needs the
-distinction between the 2 types.
+Good catch. I guess kzfree() would have been the right thing to call.
+
+        Arnd
