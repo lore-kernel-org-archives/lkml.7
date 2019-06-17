@@ -2,172 +2,186 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E94CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:07:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CE6C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D969F20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:07:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055EF2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tF6fsaJR"
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="EKdsGnYe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728538AbfFQRHj (ORCPT
+        id S1728553AbfFQRI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 13:07:39 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:42422 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726822AbfFQRHj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:07:39 -0400
-Received: by mail-io1-f68.google.com with SMTP id u19so22750794ior.9;
-        Mon, 17 Jun 2019 10:07:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=rdqUlGrEYD86Fq867n4owt7Wkc9SZCicB3eNXu7fGMk=;
-        b=tF6fsaJR87ht7IzZwwSC8c88/y0R77LtePPjIOyUAnN0hDXHQ//VfGLZFw3QSVlK53
-         nChEbNxTtrljnaC4bzzGhT/NEbzoK8ewydMfLkGdJoeE7I4XtZcZfDa9wtWBsmyyZyJk
-         KtsClCuByzWPxtGg22rsypS65c9Jrn19ZAeCwQ/0cizoXU59JA2fAbW9kI2DIDJxxTiK
-         wFvBEpP442ZqNmuuU8jF5tE31F2D4Q+PArcIO1ofOPSgOJ3bYZD32KFE+N20KqeytRCf
-         K48Exk7Ef4bOocun0FUjh63zDt7jmicUOgvj2NxbfV23fPIn39ESiXNt2jKioidz3uF/
-         sHnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=rdqUlGrEYD86Fq867n4owt7Wkc9SZCicB3eNXu7fGMk=;
-        b=pb0B46vfZwv0+1Tmxif+fcUainu9BXAAz1E8+HY5MxiG5fbMKN2sg5Q0O+cmTM/iB5
-         3R90IJSCGDrf3vUd15BDB2b5uOvV9blLt0VQ6S4JVmiH36dBdD4ZEhcA62gUK3Rjzif/
-         itwXnEUK0QhYi8T8H86x6kj3DxT9fvhtXOyxhhnaqPBpPmklPy8Z7VbcVY5/AAIO0o7j
-         iKQ/3aCm7QFk9yp4S9JycIGTY0RM/lEcxyasrBC5e3oVzpZxy5kUDNz58H+q0laMio3B
-         rR0AEFTKtsGUzF7Ccjifq9ZtVXgfo5Le2T2dgs1y9Ia7sBNjeJckp5ByT/PHD2synQGI
-         KWvw==
-X-Gm-Message-State: APjAAAUIIy+P2h9RJ/lTlIa6VgXRI2Ddd9/ZOQwloMjVX58g/nFRb3af
-        PCq5E9cnlg/x/yA79XR5cu35t47NHhA1JzYJBC4=
-X-Google-Smtp-Source: APXvYqzl4RiKWCnwfj4UX30/hJVWGbPqdCVJBVBlNMZsLLbP/NBIGigkCWb0IC/mzvYb22HsNuPmZJx7LiUmyai28SU=
-X-Received: by 2002:a02:1384:: with SMTP id 126mr79262437jaz.72.1560791248451;
- Mon, 17 Jun 2019 10:07:28 -0700 (PDT)
+        Mon, 17 Jun 2019 13:08:28 -0400
+Received: from mail-eopbgr810122.outbound.protection.outlook.com ([40.107.81.122]:17216
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726424AbfFQRI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:08:27 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=testarcselector01; d=microsoft.com; cv=none;
+ b=Qjn0Tsd3/eQalMpZ3Cc9FBispg3UGcDvdVhlEQII8AXmnEaolcupyNrX/MeXxR96nnLxkzQxLjsP91NuNRxoCxoUnrjpQ4d34NaetRT6dTPQyCiST3lHsvAxEr/bIcLchXiLutUKbzkVi2lOrHACqNkAaOVjbp/IjcdHSH1EYZk=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=testarcselector01;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ECqpL1vMw/xCRHC3nO/9XApAjPvVdUkpqcTzWtaSvpk=;
+ b=v3uA8jovt18z/K7ZcCiZWA8ZUYN7SMzEFnSRlWZbpruPq2PrrOIl3C+6MVhC7VK4EuYBHYUENnLSTA6y4AIMv7VGciSs5/Ew7YWmcU3I2EQpHzY88sL6I1uohrDTKrXLOFPZ5WomYuMaEXs47/KMAtz9UsQN2PwE9zD75cXg/rY=
+ARC-Authentication-Results: i=1; test.office365.com
+ 1;spf=none;dmarc=none;dkim=none;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ECqpL1vMw/xCRHC3nO/9XApAjPvVdUkpqcTzWtaSvpk=;
+ b=EKdsGnYeLOgDiTrj9e4bzjmLLAFMNMVLgahrueTUmCTLBBS9jkRfjhZgyOEQxUQOPovr55O05NTVGW2q/k2EQzOMO5lSGv2ZEQp529FvbgffvoG1NjhvwVWaEVlbHADFY47xe8s0aUCd8WyWYIR8jWBzXul7zCnzXF7kfXjy6KE=
+Received: from DM5PR2101MB1061.namprd21.prod.outlook.com (2603:10b6:4:9e::18)
+ by DM5PR2101MB1064.namprd21.prod.outlook.com (2603:10b6:4:a2::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2008.2; Mon, 17 Jun
+ 2019 17:08:21 +0000
+Received: from DM5PR2101MB1061.namprd21.prod.outlook.com
+ ([fe80::85a5:e14e:9fad:2617]) by DM5PR2101MB1061.namprd21.prod.outlook.com
+ ([fe80::85a5:e14e:9fad:2617%6]) with mapi id 15.20.2008.007; Mon, 17 Jun 2019
+ 17:08:21 +0000
+From:   KY Srinivasan <kys@microsoft.com>
+To:     Michael Kelley <mikelley@microsoft.com>,
+        brandonbonaby94 <brandonbonaby94@gmail.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        "sashal@kernel.org" <sashal@kernel.org>,
+        "jejb@linux.ibm.com" <jejb@linux.ibm.com>,
+        "martin.petersen@oracle.com" <martin.petersen@oracle.com>
+CC:     brandonbonaby94 <brandonbonaby94@gmail.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] scsi: storvsc: Add ability to change scsi queue depth
+Thread-Topic: [PATCH] scsi: storvsc: Add ability to change scsi queue depth
+Thread-Index: AQHVIwu0Rz6pHWObQkSrYAlRiuqjWqadB4QAgAMQSlA=
+Date:   Mon, 17 Jun 2019 17:08:21 +0000
+Message-ID: <DM5PR2101MB1061E9107B0B71FC26433BA8A0EB0@DM5PR2101MB1061.namprd21.prod.outlook.com>
+References: <20190614234822.5193-1-brandonbonaby94@gmail.com>
+ <BL0PR2101MB13482F73342F77866D6A6AABD7E90@BL0PR2101MB1348.namprd21.prod.outlook.com>
+In-Reply-To: <BL0PR2101MB13482F73342F77866D6A6AABD7E90@BL0PR2101MB1348.namprd21.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=mikelley@ntdev.microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-06-15T18:18:58.2507928Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=45d65e2e-9da9-4357-aa96-bb219a120e27;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=kys@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:f:f567:9f6:48c1:a117]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: eba2fcff-e89b-4bee-f51d-08d6f34666bb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM5PR2101MB1064;
+x-ms-traffictypediagnostic: DM5PR2101MB1064:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <DM5PR2101MB1064E1090541D96EEADBDC86A0EB0@DM5PR2101MB1064.namprd21.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:800;
+x-forefront-prvs: 0071BFA85B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(39860400002)(136003)(376002)(366004)(13464003)(199004)(189003)(73956011)(74316002)(102836004)(66946007)(53936002)(9686003)(71200400001)(71190400001)(316002)(46003)(6116002)(14454004)(54906003)(6436002)(52396003)(7736002)(486006)(186003)(55016002)(7696005)(4326008)(6246003)(33656002)(81166006)(8676002)(68736007)(110136005)(446003)(2906002)(10090500001)(81156014)(2501003)(8990500004)(76176011)(99286004)(305945005)(476003)(11346002)(2201001)(86362001)(478600001)(1511001)(25786009)(6506007)(14444005)(66446008)(256004)(229853002)(64756008)(66556008)(66476007)(53546011)(76116006)(8936002)(52536014)(10290500003)(5660300002)(22452003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM5PR2101MB1064;H:DM5PR2101MB1061.namprd21.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: f5U/xIrtJvUfcbDrEL5MMFqW1LgWO5sxn0Jy6p63O9feTmUbmuE8gV4yxzW5y3HetHro8JprBeMUikHA2ZgtylSIXiTL3MC+MePcJ5gUpkY4arn0sfKQ0XrpAyX0CSPRWARkf7gMo463Jv1c3XelArZHxSNAY7uKzidbdE8EAHr1cceYGNnnd/LcZ+FODInBN3u34BkJw66W5pUwUrkgjyARD4tPMmnj6kDzPwQ/L5rrIPVHhM6TuiWAFesbckm+tkBwEAcOFBqIG/RD+YNVTFz/Z2egbrRGnf5294716cJgUKrafxz4UMFHitOh9IagzNW8dMpHBdMFj7dcSWagjB6bVo/zWTrp6caJU6onWR/NG8qMROV/OrQFdeCDpGsjahnWvhKpWiTpbMDgeYj5QJOxFxPkWBzlvvqaAd+GJoY=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212553.10541-1-jeffrey.l.hugo@gmail.com> <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
- <20190617150502.GU5316@sirena.org.uk> <CAOCk7NrwYezbVyLKOZdxgGRVemKtBmHKP+fSO0a2p3bCPNdW3w@mail.gmail.com>
- <20190617160358.GC5316@sirena.org.uk>
-In-Reply-To: <20190617160358.GC5316@sirena.org.uk>
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Date:   Mon, 17 Jun 2019 11:07:18 -0600
-Message-ID: <CAOCk7Nrnd7yJQ=0pO64iT+RfmsKfJW0x0RhrmSLkO_brFqZ2+Q@mail.gmail.com>
-Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
-To:     Mark Brown <broonie@kernel.org>
-Cc:     lgirdwood@gmail.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: eba2fcff-e89b-4bee-f51d-08d6f34666bb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2019 17:08:21.5768
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kys@microsoft.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR2101MB1064
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:04 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Mon, Jun 17, 2019 at 09:17:21AM -0600, Jeffrey Hugo wrote:
-> > On Mon, Jun 17, 2019 at 9:05 AM Mark Brown <broonie@kernel.org> wrote:
->
-> > > > +static int spmi_regulator_ftsmps426_set_voltage(struct regulator_dev *rdev,
-> > > > +                                           unsigned selector)
-> > > > +{
->
-> > > > +     mV = spmi_regulator_common_list_voltage(rdev, selector) / 1000;
->
-> > > This could just be a set_voltage_sel(), no need for it to be a
-> > > set_voltage() operation....
->
-> > This is a set_voltage_sel() in spmi_ftsmps426_ops.  Is the issue because this
-> > function is "spmi_regulator_ftsmps426_set_voltage" and not
-> > "spmi_regulator_ftsmps426_set_voltage_sel"?
->
-> Well, that's certainly confusing naming and there's some confusion in
-> the code about what a selector is - it's supposed to be a raw register
-> value so if you're having to convert it into a voltage something is
-> going wrong.  Just implement a set_voltage() operation?
 
-No.
 
-Is what a selector is documented anywhere?  I just looked again and I
-haven't found
-documentation explaining that a selector is the raw register value.
+> -----Original Message-----
+> From: Michael Kelley <mikelley@microsoft.com>
+> Sent: Saturday, June 15, 2019 11:19 AM
+> To: brandonbonaby94 <brandonbonaby94@gmail.com>; KY Srinivasan
+> <kys@microsoft.com>; Haiyang Zhang <haiyangz@microsoft.com>; Stephen
+> Hemminger <sthemmin@microsoft.com>; sashal@kernel.org;
+> jejb@linux.ibm.com; martin.petersen@oracle.com
+> Cc: brandonbonaby94 <brandonbonaby94@gmail.com>; linux-
+> hyperv@vger.kernel.org; linux-scsi@vger.kernel.org; linux-
+> kernel@vger.kernel.org
+> Subject: RE: [PATCH] scsi: storvsc: Add ability to change scsi queue dept=
+h
+>=20
+> From: Branden Bonaby <brandonbonaby94@gmail.com> Sent: Friday, June
+> 14, 2019 4:48 PM
+> >
+> > Adding functionality to allow the SCSI queue depth to be changed,
+> > by utilizing the "scsi_change_queue_depth" function.
+> >
+> > Signed-off-by: Branden Bonaby <brandonbonaby94@gmail.com>
+> > ---
+> >  drivers/scsi/storvsc_drv.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >
+> > diff --git a/drivers/scsi/storvsc_drv.c b/drivers/scsi/storvsc_drv.c
+> > index 8472de1007ff..719ca9906fc2 100644
+> > --- a/drivers/scsi/storvsc_drv.c
+> > +++ b/drivers/scsi/storvsc_drv.c
+> > @@ -387,6 +387,7 @@ enum storvsc_request_type {
+> >
+> >  static int storvsc_ringbuffer_size =3D (128 * 1024);
+> >  static u32 max_outstanding_req_per_channel;
+> > +static int storvsc_change_queue_depth(struct scsi_device *sdev, int
+> queue_depth);
+> >
+> >  static int storvsc_vcpus_per_sub_channel =3D 4;
+> >
+> > @@ -1711,6 +1712,7 @@ static struct scsi_host_template scsi_driver =3D =
+{
+> >  	.dma_boundary =3D		PAGE_SIZE-1,
+> >  	.no_write_same =3D	1,
+> >  	.track_queue_depth =3D	1,
+> > +	.change_queue_depth =3D	storvsc_change_queue_depth,
+> >  };
+> >
+> >  enum {
+> > @@ -1917,6 +1919,15 @@ static int storvsc_probe(struct hv_device
+> *device,
+> >  	return ret;
+> >  }
+> >
+> > +/* Change a scsi target's queue depth */
+> > +static int storvsc_change_queue_depth(struct scsi_device *sdev, int
+> queue_depth)
+> > +{
+> > +	if (queue_depth > scsi_driver.can_queue){
+> > +		queue_depth =3D scsi_driver.can_queue;
+> > +	}
+> > +	return scsi_change_queue_depth(sdev, queue_depth);
+> > +}
+> > +
+> >  static int storvsc_remove(struct hv_device *dev)
+> >  {
+> >  	struct storvsc_device *stor_device =3D hv_get_drvdata(dev);
+> > --
+> > 2.17.1
+>=20
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: K. Y. Srinivasan <kys@microsoft.com>
 
-Now I understand why this driver has the hardware to software selector
-translation.
-The selector being the raw register value seems to be a very limited
-assumption that
-I don't see working for more than very basic implementations.
-
-We've already figured out a virtualized selector mapping, I don't want
-to reimplement
-the complicated math to correctly map a requested voltage range to
-what the regulator
-can provide, and possibly get it wrong, or at the very least have two duplicate
-implementations.
-
-The naming is consistent with the rest of the driver, and the name
-seems long enough
-already.  Lets just keep this.
-
->
-> > We already have code in the driver to convert a selector to the
-> > voltage.  Why duplicate
-> > that inline in spmi_regulator_ftsmps426_set_voltage?
->
-> Either work with selectors or work with voltages, don't mix and match
-> the two.
-
-Fine.  I'll fix up the get() to return the selector, and not the
-voltage since that works better
-with everything else that is implemented.
-
-Again, it would be nice if the documentation for regulator_ops
-indicated that a driver
-should only implement the voltage operations or the selector
-operations, not mix and
-match if that is your expectation.
-
->
-> > > > +     switch (mode) {
-> > > > +     case REGULATOR_MODE_NORMAL:
-> > > > +             val = SPMI_FTSMPS426_MODE_HPM_MASK;
-> > > > +             break;
-> > > > +     case REGULATOR_MODE_FAST:
-> > > > +             val = SPMI_FTSMPS426_MODE_AUTO_MASK;
-> > > > +             break;
-> > > > +     default:
-> > > > +             val = SPMI_FTSMPS426_MODE_LPM_MASK;
-> > > > +             break;
-> > > > +     }
->
-> > > This should validate, it shouldn't just translate invalid values into
-> > > valid ones.
->
-> > Validate what?  The other defines are REGULATOR_MODE_IDLE
-> > and REGULATOR_MODE_STANDBY which correspond to the LPM
-> > mode.  Or are you suggesting that regulator framework is going to pass
-> > REGULATOR_MODE_INVALID to this operation?
->
-> You should be validating that the argument passed in is one that the
-> driver understands, your assumption will break if we add any new modes
-> and in any case there should be a 1:1 mapping between hardware and API
-> modes so you shouldn't be translating two different API modes into the
-> same hardware mode.
-
-Fine.  I'll fix this per what you've stated.
-
-Again, would be nice if the documentation for the API modes clearly indicated
-they should match to one specific HW setting incases where the HW doesn't
-match the API 1:1.
