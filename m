@@ -2,68 +2,87 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D46E0C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11581C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E4D21E6D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:19:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D922621E6D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:21:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KreEZ6td"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="lns8r5gP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfFQITp (ORCPT
+        id S1726106AbfFQIVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:19:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60368 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfFQITp (ORCPT
+        Mon, 17 Jun 2019 04:21:47 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:1403 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfFQIVq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:19:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=bLNZQEWf0s5ffYRlcrJ5UoBdA2dcz1yaQRq0y4hSYAM=; b=KreEZ6td8sbW6SE+GYNkgb+Qd
-        cPIEcHl43SZ0CM3LaBPR7qX25BRogbOTkzKYWLh4+kDlnv3Jpv3kdoLlU+7cRj1UZFUcPNHMglW6s
-        u5Ir3XOVg21zmYlz+8Kq1WnvOjhZ+ahKtFrvgSRJKwrQrA4Zs6A9WdH+UGnrYMUy4MDaDVueakg4m
-        twYAiOHb1AhsNzpH6Gj3ScfWuM4GHom1v2wAHruOddlpJ9T3ACizq4HI8f6uwifGxCm2nmLT1Knnb
-        G2EdWjWlFN1C2B6rdIoOX7wSQLdM3/qMA19tiW1E1fhwetykM/J2GafHTNSc2E7prNCY6queI9BPC
-        nDHN9mylA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcmrf-000341-Uk; Mon, 17 Jun 2019 08:19:43 +0000
-Date:   Mon, 17 Jun 2019 01:19:43 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Oded Gabbay <oded.gabbay@gmail.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 8/8] habanalabs: enable 64-bit DMA mask in POWER9
-Message-ID: <20190617081943.GA11274@infradead.org>
-References: <20190611092144.11194-1-oded.gabbay@gmail.com>
- <20190611095857.GB24058@kroah.com>
- <20190611151753.GA11404@infradead.org>
- <20190611152655.GA3972@kroah.com>
- <CAFCwf11DKi+pfvvGR2zN4jvwTQZ9-Lm=OXBs+ZU=E-eFfJOi7A@mail.gmail.com>
- <20190616095554.GA5156@infradead.org>
- <CAFCwf11XU1JydbS-wswXBzm4t-fxLjGyXuHCqrNxTsWzLraSZQ@mail.gmail.com>
+        Mon, 17 Jun 2019 04:21:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d074d9a0000>; Mon, 17 Jun 2019 01:21:46 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 01:21:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 01:21:45 -0700
+Received: from tbergstrom-lnx.Nvidia.com (172.20.13.39) by
+ HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
+ 15.0.1473.3; Mon, 17 Jun 2019 08:21:45 +0000
+Received: by tbergstrom-lnx.Nvidia.com (Postfix, from userid 1000)
+        id 3EE624290D; Mon, 17 Jun 2019 11:21:43 +0300 (EEST)
+Date:   Mon, 17 Jun 2019 11:21:43 +0300
+From:   Peter De Schrijver <pdeschrijver@nvidia.com>
+To:     Dmitry Osipenko <digetx@gmail.com>
+CC:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        "Prashant Gaikwad" <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-clk@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 00/10] memory: tegra: Introduce Tegra30 EMC driver
+Message-ID: <20190617082143.GM29894@pdeschrijver-desktop.Nvidia.com>
+References: <20190616233551.6838-1-digetx@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <CAFCwf11XU1JydbS-wswXBzm4t-fxLjGyXuHCqrNxTsWzLraSZQ@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190616233551.6838-1-digetx@gmail.com>
+X-NVConfidentiality: public
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560759706; bh=q1GTVxxG4wQEkdmVxEanQhrDdAHn88DSedSSw0xO7FM=;
+        h=X-PGP-Universal:Date:From:To:CC:Subject:Message-ID:References:
+         MIME-Version:Content-Type:Content-Disposition:In-Reply-To:
+         X-NVConfidentiality:User-Agent:X-Originating-IP:X-ClientProxiedBy;
+        b=lns8r5gP5HFIRZUZ/RBQXPL7CD7SAWsEnS7ivj9HeLMiyfe30AZUYVdWXhPGMdeSJ
+         EiYAC9g28wEZJBKkxj2RJaEON1xB3vtovK3tzeRmUkDyg24tUSxcJLSD/K9uLV3quy
+         IKPBBScmpoClrfkX3yhbmbf2CVEImL4f0WnluwHZ+KbzICLJ3Qm49wmer0UULrPgEx
+         Le9CZwUxP6ham7pXHCZEh9tFg8BWn7HEsoKVncFhDHNy80jX310EfJ8vQJVOYHYdQu
+         FAiN86Oz9713BlTakFjtZ83ESdmw5HWzTCyYYuClmHFleDApinrzlW2N6VSyvhwlYU
+         ycDx4Su27hTcg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 02:24:08PM +0300, Oded Gabbay wrote:
-> So the alternative is that my device won't work on POWER9.
+On Mon, Jun 17, 2019 at 02:35:41AM +0300, Dmitry Osipenko wrote:
+> Hello,
+> 
+> This series introduces driver for the External Memory Controller (EMC)
+> found on Tegra30 chips, it controls the external DRAM on the board. The
+> purpose of this driver is to program memory timing for external memory on
+> the EMC clock rate change. The driver was tested using the ACTMON devfreq
+> driver that performs memory frequency scaling based on memory-usage load.
 
-The alternative is that we fix the powerpc code to do the right
-thing, which already is in progress.
+Acked-By: Peter De Schrijver <pdeschrijver@nvidia.com>
+
