@@ -2,148 +2,91 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA1EC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92BFFC31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AADB12084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B21F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:27:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sb1bPHYS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727673AbfFQM0E (ORCPT
+        id S1726651AbfFQM1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:26:04 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:36747 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbfFQM0C (ORCPT
+        Mon, 17 Jun 2019 08:27:45 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42412 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFQM1p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:26:02 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MhDIw-1iFm1T14Ik-00eILm; Mon, 17 Jun 2019 14:25:53 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     arm@kernel.org, Linus Walleij <linusw@kernel.org>,
-        Imre Kaloz <kaloz@openwrt.org>,
-        Krzysztof Halasa <khalasa@piap.pl>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] ARM: ixp4xx: include irqs.h where needed
-Date:   Mon, 17 Jun 2019 14:24:32 +0200
-Message-Id: <20190617122449.457744-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190617122449.457744-1-arnd@arndb.de>
-References: <20190617122449.457744-1-arnd@arndb.de>
+        Mon, 17 Jun 2019 08:27:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=PvDb2Ox1k4dZazYGdHDZANbuB1HI2/N93WOg6eXhjAQ=; b=sb1bPHYSDLwe702WgBPwsLs+J0
+        vhPm0vc39IREraw5fNiKWwVi9b2XYJL8w6l2OeJY6AgdG8fPQh63r1aibZKvGoX4P777qmADQIXze
+        OYKNAjycAzImv4MUUNJ1Sv6fOnX95UP0Tu509ppILxE5n4d614sDWPMcRXsHXnhq1gEXEUCA1AvUq
+        OqgqDRRmXt/AFAdHkWOVd0/MMaDaR60es8wSgvkI32aP283KFFhUOZkJ79kLqoS/P/7e6eF2EVA7o
+        0cDAzMOCQw8d61JCfYZgkqA5mYDhyXUXH6xL/G5qSJueB/oc/v0KwCGT+woKWUhfY5a9eI/qAtVq6
+        jjs4LpNQ==;
+Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcqjb-0008KG-Cp; Mon, 17 Jun 2019 12:27:39 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>
+Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 01/25] mm: remove the unused ARCH_HAS_HMM_DEVICE Kconfig option
+Date:   Mon, 17 Jun 2019 14:27:09 +0200
+Message-Id: <20190617122733.22432-2-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190617122733.22432-1-hch@lst.de>
+References: <20190617122733.22432-1-hch@lst.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:ogxG53xxYtKSunk3MRNQJAEkPnjE5pExadqIw1wtkbMkNmusoj9
- aZO36fRS80Wu/8c4ipcqJ+zvnYjQNIkJR4SCcFvTYhva+3LV3IEq749pLMtw8R/r2KrLwWa
- FagBXt9Ly5NshVz8XjZe/q/y+qht9OjYIz8VcckwU498AqLWgRsBAQ2qnmu16n/lhR7Hx0E
- Yb0tA8yzzPP6mO9cbbGOw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:DfHKUbhazqM=:YDY2/2Alqmy6ferl84BsB7
- aTPywctrbekMzh8cdM3EsbjDQAS4kYQ6x40t3G+jSNk1GCteQrQ9qaT8fJp2mp/2OCVzA8qsW
- kkSILkIdM8OVdMpuPg8+25kNURFM8JYrTL+TcbbHIx7k3Lq9R/vD0y+hU64s2LyqPPPh0slyn
- N3LnzMVWa4B1kQza2oz4IWYFWIhGuw4yPD4JOPm/ad6tagM9LxxM/TnaoBACJTKMLgQb8TpUb
- ZwuBcdk8NzAq9MYq3o0lou2x2/4ai9kFW+slBUVpBA6xGQkKz8+3xtq/OAkrBgrNlqdK++Djz
- tg4ZlQK6DbriSz0wargKxCiKpLafM6pwO28XW7V7aXdrBbcRivhAsohFrX7MqVhdlx9H3uiHN
- /8qILCdsv37YqYuxeFLHlcxdZoOmYpObWiDn3oe28Q0ks48ioZIstBoi6TW34Tk7Yh7LzBDuA
- QIJOBYHK2ybQccAFTmStPaVWx7bCXh44ts0sPkbzmDG/D8T2sq29iHcmy2biGDCeagMYL9H3A
- UI17s4Xo4o/GpKfGrVvHJCMRdchId8Zp79M0FLgG7WmremXejp11NuqPIPOKMgGK7xdmZi0Vq
- orq/NVKHc1ccDZL/aCh5You0KvzNWInt+AIj2ePLJNfiMNWt5Z8Pt7nvlCkDMIrGdKGE4paH8
- xMcxineZ/BYiWyGNDO77IJ5ZD6vqhh/8I54dPAAPmhlaFlGwH/D2bUmg8qz6U0Y9uGF+5CmY3
- gMlxUwAqfuMJLxF4+45prNpvpPB2L/RelpYWQw==
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multiple ixp4xx specific files require macros from irqs.h that
-were moved out from mach/irqs.h, e.g.:
-
-arch/arm/mach-ixp4xx/vulcan-pci.c:41:19: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
-arch/arm/mach-ixp4xx/vulcan-pci.c:49:10: error: implicit declaration of function 'IXP4XX_GPIO_IRQ' [-Werror,-Wimplicit-function-declaration]
-                return IXP4XX_GPIO_IRQ(INTA);
-
-Include this header in all files that failed to build because of
-that.
-
-Fixes: dc8ef8cd3a05 ("ARM: ixp4xx: Convert to SPARSE_IRQ")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
 ---
- arch/arm/mach-ixp4xx/goramo_mlr.c   | 2 ++
- arch/arm/mach-ixp4xx/miccpt-pci.c   | 2 ++
- arch/arm/mach-ixp4xx/omixp-setup.c  | 2 ++
- arch/arm/mach-ixp4xx/vulcan-pci.c   | 2 ++
- arch/arm/mach-ixp4xx/vulcan-setup.c | 2 ++
- 5 files changed, 10 insertions(+)
+ mm/Kconfig | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/arm/mach-ixp4xx/goramo_mlr.c b/arch/arm/mach-ixp4xx/goramo_mlr.c
-index 4d805080020e..a0e0b6b7dc5c 100644
---- a/arch/arm/mach-ixp4xx/goramo_mlr.c
-+++ b/arch/arm/mach-ixp4xx/goramo_mlr.c
-@@ -18,6 +18,8 @@
- #include <asm/mach/pci.h>
- #include <asm/system_info.h>
+diff --git a/mm/Kconfig b/mm/Kconfig
+index f0c76ba47695..0d2ba7e1f43e 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -675,16 +675,6 @@ config ARCH_HAS_HMM_MIRROR
+ 	depends on (X86_64 || PPC64)
+ 	depends on MMU && 64BIT
  
-+#include "irqs.h"
-+
- #define SLOT_ETHA		0x0B	/* IDSEL = AD21 */
- #define SLOT_ETHB		0x0C	/* IDSEL = AD20 */
- #define SLOT_MPCI		0x0D	/* IDSEL = AD19 */
-diff --git a/arch/arm/mach-ixp4xx/miccpt-pci.c b/arch/arm/mach-ixp4xx/miccpt-pci.c
-index d114ccd2017c..ca889ef068a5 100644
---- a/arch/arm/mach-ixp4xx/miccpt-pci.c
-+++ b/arch/arm/mach-ixp4xx/miccpt-pci.c
-@@ -25,6 +25,8 @@
- #include <mach/hardware.h>
- #include <asm/mach-types.h>
- 
-+#include "irqs.h"
-+
- #define MAX_DEV		4
- #define IRQ_LINES	4
- 
-diff --git a/arch/arm/mach-ixp4xx/omixp-setup.c b/arch/arm/mach-ixp4xx/omixp-setup.c
-index 2d494b454376..c02fa6f48382 100644
---- a/arch/arm/mach-ixp4xx/omixp-setup.c
-+++ b/arch/arm/mach-ixp4xx/omixp-setup.c
-@@ -27,6 +27,8 @@
- 
- #include <mach/hardware.h>
- 
-+#include "irqs.h"
-+
- static struct resource omixp_flash_resources[] = {
- 	{
- 		.flags	= IORESOURCE_MEM,
-diff --git a/arch/arm/mach-ixp4xx/vulcan-pci.c b/arch/arm/mach-ixp4xx/vulcan-pci.c
-index a4220fa5e0c3..6e41e5ece4e1 100644
---- a/arch/arm/mach-ixp4xx/vulcan-pci.c
-+++ b/arch/arm/mach-ixp4xx/vulcan-pci.c
-@@ -21,6 +21,8 @@
- #include <asm/mach/pci.h>
- #include <asm/mach-types.h>
- 
-+#include "irqs.h"
-+
- /* PCI controller GPIO to IRQ pin mappings */
- #define INTA	2
- #define INTB	3
-diff --git a/arch/arm/mach-ixp4xx/vulcan-setup.c b/arch/arm/mach-ixp4xx/vulcan-setup.c
-index 2c03d2f6b647..d2ebb7c675a8 100644
---- a/arch/arm/mach-ixp4xx/vulcan-setup.c
-+++ b/arch/arm/mach-ixp4xx/vulcan-setup.c
-@@ -22,6 +22,8 @@
- #include <asm/mach/arch.h>
- #include <asm/mach/flash.h>
- 
-+#include "irqs.h"
-+
- static struct flash_platform_data vulcan_flash_data = {
- 	.map_name	= "cfi_probe",
- 	.width		= 2,
+-config ARCH_HAS_HMM_DEVICE
+-	bool
+-	default y
+-	depends on (X86_64 || PPC64)
+-	depends on MEMORY_HOTPLUG
+-	depends on MEMORY_HOTREMOVE
+-	depends on SPARSEMEM_VMEMMAP
+-	depends on ARCH_HAS_ZONE_DEVICE
+-	select XARRAY_MULTI
+-
+ config ARCH_HAS_HMM
+ 	bool
+ 	default y
 -- 
-2.20.0
+2.20.1
 
