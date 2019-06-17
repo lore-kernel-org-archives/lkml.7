@@ -2,176 +2,83 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 486D0C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:30:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AFA1C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E89B2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560781803;
-	bh=qDifSuqcxzKT2mPFaeywjNnbb7wpS1XjMQUY4VjP95s=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=QW/yD3t0aDjHkRDufRH0v7ZDR+2cjGqFV/O7/HLZzQchLMb9T6Tfjgubl3r9ry1Bp
-	 jiX1aSAy4GQxNFl/N3fhP5n42b4r5sg89AOz0vsrH/8szxi2e4lSc11gpFwM00y4ch
-	 83RpGQgxxTpgN+3IO0Ve7oJG/pwdRcPAUP5f/KBM=
+	by mail.kernel.org (Postfix) with ESMTP id 6D97B2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbfFQOaC (ORCPT
+        id S1727950AbfFQObC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:30:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55038 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726028AbfFQOaB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:30:01 -0400
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A025821670;
-        Mon, 17 Jun 2019 14:30:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560781800;
-        bh=qDifSuqcxzKT2mPFaeywjNnbb7wpS1XjMQUY4VjP95s=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ftWeEUcZLQyXIz69qGsxcV2k+8X5HWs0TvIl0HUP/iGfydDi7z72q5tq23j5gcIMU
-         gBI4ri54fv5RFQCp50ZhqEflChHkcPdy3qDEZtZrLVD59ElSh6jFwgHv9QKP6e8Cbs
-         g7a2mHo9VpiDU/ajh1Oe0Bhtk9F5EGJffhgeVVNY=
-Received: by mail-qt1-f173.google.com with SMTP id p15so10932235qtl.3;
-        Mon, 17 Jun 2019 07:30:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAVSOH3haT4LP6KGGmspmjCBbxAhttpMNF8G8JXnxBrE7g7j3JiW
-        GCRaRfMTHSkX8WPaT9iC6x2rbaqCn+yhxOlnrw==
-X-Google-Smtp-Source: APXvYqyASK26LQzwRomt6iiD2y9sCFeTHLV/m8OIpqVyW9ojtFBBNp5iBGmT/mAjUDht+/goKLmPF8B9/cU/9xrQDis=
-X-Received: by 2002:a0c:acef:: with SMTP id n44mr22338717qvc.39.1560781799779;
- Mon, 17 Jun 2019 07:29:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190616132930.6942-1-masneyb@onstation.org> <20190616132930.6942-2-masneyb@onstation.org>
-In-Reply-To: <20190616132930.6942-2-masneyb@onstation.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Mon, 17 Jun 2019 08:29:48 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJ0y7_RPs-qK4thVen6nUVdFbikcwsmmun9tHsVSccQag@mail.gmail.com>
-Message-ID: <CAL_JsqJ0y7_RPs-qK4thVen6nUVdFbikcwsmmun9tHsVSccQag@mail.gmail.com>
-Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: add On Chip MEMory (OCMEM) bindings
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 17 Jun 2019 10:31:02 -0400
+Received: from andre.telenet-ops.be ([195.130.132.53]:54304 "EHLO
+        andre.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQObB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 10:31:01 -0400
+Received: from ramsan ([84.194.111.163])
+        by andre.telenet-ops.be with bizsmtp
+        id RqWz200013XaVaC01qWzED; Mon, 17 Jun 2019 16:30:59 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hcsew-0002HQ-VP; Mon, 17 Jun 2019 16:30:58 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hcsew-00014s-TH; Mon, 17 Jun 2019 16:30:58 +0200
+From:   Geert Uytterhoeven <geert+renesas@glider.be>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     linux-iio@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] Documentation: ABI: Add missing newline at end of file
+Date:   Mon, 17 Jun 2019 16:30:57 +0200
+Message-Id: <20190617143057.4096-1-geert+renesas@glider.be>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 7:29 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> Add device tree bindings for the On Chip Memory (OCMEM) that is present
-> on some Qualcomm Snapdragon SoCs.
->
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  .../bindings/soc/qcom/qcom,ocmem.yaml         | 66 +++++++++++++++++++
+"git diff" says:
 
-.../bindings/sram/
+    \ No newline at end of file
 
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
->
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-> new file mode 100644
-> index 000000000000..5e3ae6311a16
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/qcom/qcom,ocmem.yaml#
+after modifying the files.
 
-schemas/sram/
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32 | 2 +-
+ Documentation/ABI/testing/sysfs-power                   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: On Chip Memory (OCMEM) that is present on some Qualcomm Snapdragon SoCs.
-> +
-> +maintainers:
-> +  - Brian Masney <masneyb@onstation.org>
-> +
-> +description: |
-> +  The On Chip Memory (OCMEM) allocator allows various clients to allocate memory
+diff --git a/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32 b/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
+index da9822309f0757bd..0e66ae9b0071e80b 100644
+--- a/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
++++ b/Documentation/ABI/testing/sysfs-bus-iio-dfsdm-adc-stm32
+@@ -13,4 +13,4 @@ Description:
+ 			error on writing
+ 		If DFSDM input is SPI Slave:
+ 			Reading returns value previously set.
+-			Writing value before starting conversions.
+\ No newline at end of file
++			Writing value before starting conversions.
+diff --git a/Documentation/ABI/testing/sysfs-power b/Documentation/ABI/testing/sysfs-power
+index 18b7dc929234f625..3c51303550118474 100644
+--- a/Documentation/ABI/testing/sysfs-power
++++ b/Documentation/ABI/testing/sysfs-power
+@@ -300,4 +300,4 @@ Description:
+ 		attempt.
+ 
+ 		Using this sysfs file will override any values that were
+-		set using the kernel command line for disk offset.
+\ No newline at end of file
++		set using the kernel command line for disk offset.
+-- 
+2.17.1
 
-Is there something in the h/w that's an allocator? That's typically a
-s/w thing that has nothing to do with h/w description.
-
-> +  from OCMEM based on performance, latency and power requirements. This is
-> +  typically used by the GPU, camera/video, and audio components on some
-> +  Snapdragon SoCs.
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,ocmem-msm8974
-
-What Bjorn said...
-
-> +
-> +  reg:
-> +    items:
-> +      - description: Control registers
-> +      - description: OCMEM address range
-> +
-> +  reg-names:
-> +    items:
-> +      - const: ocmem_ctrl_physical
-> +      - const: ocmem_physical
-
-'ctrl' and 'mem' would be sufficient.
-
-> +
-> +  clocks:
-> +    items:
-> +      - description: Core clock
-> +      - description: Interface clock
-> +
-> +  clock-names:
-> +    items:
-> +      - const: core
-> +      - const: iface
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reg-names
-> +  - clocks
-> +  - clock-names
-> +
-> +examples:
-> +  - |
-> +      #include <dt-bindings/clock/qcom,rpmcc.h>
-> +      #include <dt-bindings/clock/qcom,mmcc-msm8974.h>
-> +
-> +      ocmem: ocmem@fdd00000 {
-> +        compatible = "qcom,ocmem-msm8974";
-> +
-> +        reg = <0xfdd00000 0x2000>,
-> +               <0xfec00000 0x180000>;
-> +        reg-names = "ocmem_ctrl_physical",
-> +                    "ocmem_physical";
-> +
-> +        clocks = <&rpmcc RPM_SMD_OCMEMGX_CLK>,
-> +                  <&mmcc OCMEMCX_OCMEMNOC_CLK>;
-> +        clock-names = "core",
-> +                      "iface";
-> +      };
-> --
-> 2.20.1
->
