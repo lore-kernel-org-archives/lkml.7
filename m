@@ -2,74 +2,146 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFD10C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:52:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04FCFC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F8F2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:52:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEE2E2086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:52:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HhwqhNrM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfFQOwJ (ORCPT
+        id S1728465AbfFQOwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:52:09 -0400
-Received: from laurent.telenet-ops.be ([195.130.137.89]:41778 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfFQOwI (ORCPT
+        Mon, 17 Jun 2019 10:52:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34934 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfFQOwK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:52:08 -0400
-Received: from ramsan ([84.194.111.163])
-        by laurent.telenet-ops.be with bizsmtp
-        id Rqs52000E3XaVaC01qs5gl; Mon, 17 Jun 2019 16:52:06 +0200
-Received: from rox.of.borg ([192.168.97.57])
-        by ramsan with esmtp (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hcszN-0002MC-Px; Mon, 17 Jun 2019 16:52:05 +0200
-Received: from geert by rox.of.borg with local (Exim 4.90_1)
-        (envelope-from <geert@linux-m68k.org>)
-        id 1hcszN-0001mb-Ol; Mon, 17 Jun 2019 16:52:05 +0200
-From:   Geert Uytterhoeven <geert+renesas@glider.be>
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Shuah Khan <shuah@kernel.org>
-Cc:     linuxppc-dev@lists.ozlabs.org, linux-kselftest@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] selftests/powerpc: Add missing newline at end of file
-Date:   Mon, 17 Jun 2019 16:52:04 +0200
-Message-Id: <20190617145204.6810-1-geert+renesas@glider.be>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Jun 2019 10:52:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=CC6TusG/xvd2NrKEqztW6Q0eLvQHpCSqZ9asqvSUbGQ=; b=HhwqhNrM9xrAQOq0eNTILgTfj
+        R+0T3K6DbjbIQyqcNTefACa3jRYLYfmFr4O2DTtDoavuT0bYMdlrxcS92IvJtv2UUGOO3dBzTihLB
+        UNtKyWn6YD230yNinCi6buZ5Y1cFQrcsU3Yf0AKOWWsUOio12DIiRYw0JHoJhAFyg7pDgL7qkcSr0
+        9B1owcTUHT3GZq77EKPQ2Be6tSOdWLwu/5DQDTsaA+kc+xdgkxwwbDZqVqeemMIuiKx2sI21XYSkj
+        VNQrWUbfXOqlIDfhkhAkwTWqWnsFdYX9pzSdlvpXOVDMOmtOUK0OoVu6wc12rWnWOkLladzvUZa8S
+        /gsHPagpw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcszI-0004sz-1Q; Mon, 17 Jun 2019 14:52:00 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 68240201F4619; Mon, 17 Jun 2019 16:51:58 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 16:51:58 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Kai Huang <kai.huang@linux.intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH, RFC 18/62] x86/mm: Implement syncing per-KeyID direct
+ mappings
+Message-ID: <20190617145158.GF3436@hirez.programming.kicks-ass.net>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+ <20190508144422.13171-19-kirill.shutemov@linux.intel.com>
+ <20190614095131.GY3436@hirez.programming.kicks-ass.net>
+ <20190614224309.t4ce7lpx577qh2gu@box>
+ <20190617092755.GA3419@hirez.programming.kicks-ass.net>
+ <20190617144328.oqwx5rb5yfm2ziws@box>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617144328.oqwx5rb5yfm2ziws@box>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"git diff" says:
+On Mon, Jun 17, 2019 at 05:43:28PM +0300, Kirill A. Shutemov wrote:
+> On Mon, Jun 17, 2019 at 11:27:55AM +0200, Peter Zijlstra wrote:
 
-    \ No newline at end of file
+> > > > And yet I don't see anything in pageattr.c.
+> > > 
+> > > You're right. I've hooked up the sync in the wrong place.
 
-after modifying the file.
+> I think something like this should do (I'll fold it in after testing):
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- tools/testing/selftests/powerpc/mm/.gitignore | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> @@ -643,7 +641,7 @@ static int sync_direct_mapping_keyid(unsigned long keyid)
+>   *
+>   * The function is nop until MKTME is enabled.
+>   */
+> -int sync_direct_mapping(void)
+> +int sync_direct_mapping(unsigned long start, unsigned long end)
+>  {
+>  	int i, ret = 0;
+>  
+> @@ -651,7 +649,7 @@ int sync_direct_mapping(void)
+>  		return 0;
+>  
+>  	for (i = 1; !ret && i <= mktme_nr_keyids; i++)
+> -		ret = sync_direct_mapping_keyid(i);
+> +		ret = sync_direct_mapping_keyid(i, start, end);
+>  
+>  	flush_tlb_all();
+>  
+> diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
+> index 6a9a77a403c9..eafbe0d8c44f 100644
+> --- a/arch/x86/mm/pageattr.c
+> +++ b/arch/x86/mm/pageattr.c
+> @@ -347,6 +347,28 @@ static void cpa_flush(struct cpa_data *data, int cache)
+>  
+>  	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
+>  
+> +	if (mktme_enabled()) {
+> +		unsigned long start, end;
+> +
+> +		start = *cpa->vaddr;
+> +		end = *cpa->vaddr + cpa->numpages * PAGE_SIZE;
+> +
+> +		/* Sync all direct mapping for an array */
+> +		if (cpa->flags & CPA_ARRAY) {
+> +			start = PAGE_OFFSET;
+> +			end = PAGE_OFFSET + direct_mapping_size;
+> +		}
 
-diff --git a/tools/testing/selftests/powerpc/mm/.gitignore b/tools/testing/selftests/powerpc/mm/.gitignore
-index ba919308fe3052f3..16861ab840f57e90 100644
---- a/tools/testing/selftests/powerpc/mm/.gitignore
-+++ b/tools/testing/selftests/powerpc/mm/.gitignore
-@@ -3,4 +3,4 @@ subpage_prot
- tempfile
- prot_sao
- segv_errors
--wild_bctr
-\ No newline at end of file
-+wild_bctr
--- 
-2.17.1
+Understandable but sad, IIRC that's the most used interface (at least,
+its the one the graphics people use).
 
+> +
+> +		/*
+> +		 * Sync per-KeyID direct mappings with the canonical one
+> +		 * (KeyID-0).
+> +		 *
+> +		 * sync_direct_mapping() does full TLB flush.
+> +		 */
+> +		sync_direct_mapping(start, end);
+> +		return;
+
+But it doesn't flush cache. So you can't return here.
+
+> +	}
+> +
+>  	if (cache && !static_cpu_has(X86_FEATURE_CLFLUSH)) {
+>  		cpa_flush_all(cache);
+>  		return;
+> -- 
+>  Kirill A. Shutemov
