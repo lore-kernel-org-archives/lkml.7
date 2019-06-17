@@ -2,109 +2,151 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CADCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:02:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2994BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E61820863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:02:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED7DB20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:03:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tZ5OnQaj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HAUdFKJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729071AbfFQUC1 (ORCPT
+        id S1729090AbfFQUDS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:02:27 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:34038 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726568AbfFQUCZ (ORCPT
+        Mon, 17 Jun 2019 16:03:18 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35250 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726554AbfFQUDS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:02:25 -0400
-Received: by mail-lj1-f195.google.com with SMTP id p17so10611061ljg.1;
-        Mon, 17 Jun 2019 13:02:24 -0700 (PDT)
+        Mon, 17 Jun 2019 16:03:18 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p1so4580364plo.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 13:03:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=el/lmx3URjPIgcoee+SzjF2RP1q5hM7+uu7Bj9EF3vk=;
-        b=tZ5OnQajpIZ9SBlSH6SWDGOMWySXm6XR9I7pogLt4tUnlyVOoBR1TPYGl6VdN9GsnH
-         +yhxHl1pAjCN3NO1qyVh9p65Q9oyiWJzkiQDlUJ8bHkYT2dE5rGB6/Po4IK9zp+Gdm4w
-         gHoahmZFLuAndWzPYtY6ovrhldh7xTwjMmtmLkjzJq1N0vAG8Q7/XIsJUuO/QwDDybFC
-         LCS5dhLZJ1KgbN5a29e/6JJyk65JfzbskDJc23CsxVVyo6c5/qRwsff4acnhMBXzZ/t7
-         CpoklaFA3H4577VW265ZeIdm0DTxR8i2FhnbCyPOeK3IFNz1+jYrJhvET6pUUk6l5IQK
-         qiXg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+6f59ZFOs1PSocx1cXbKIlzxOSpO4grS25QzNht0IBo=;
+        b=HAUdFKJJhiMKymZJQB2BDPSJoE/iyuSm4Zoz28SB10+kykqiY9fWV8m3ZhHifNYLQ0
+         gianVGa6NRSwnraiQxQPnn47Y8vu2BUM9Ii2feCs9YyJI3a1/UdASYpWOtlBtcDsOoCE
+         4wNhyON7emBZtf6bZmyiPF2newLP+1pJGDKwE=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=el/lmx3URjPIgcoee+SzjF2RP1q5hM7+uu7Bj9EF3vk=;
-        b=PHI30DWZhRc8Ac/rdHstDITBuTEHAmBbNNOJjxovIPGm/fBT/WhSmZwlcBNH4xEWTR
-         68lSGTHwCEHFcvJzf49TpwXO4RITe5eIBbhc2fBTV0acHHt6wRvngbsyLBuNxqIDxi+U
-         iOey3Mqvr0y9DJuMZv8vUdJR3JwbHNkTzUH8EMzCDU1dwOEBTqBLab9Al53VZwc1aT9W
-         btIOQtA5SjR2zPLduITFkb9Zlu5Ojjy2+SwXGLqc77yEl+xuUFaeMUMCng+/NhkUautE
-         XiLDsk7AfCFgaUHOoFzzvfORPAZTS7sVtpGJqk3h9ncRcYK4z8ZRDweJLTu9tYB39zOy
-         qskA==
-X-Gm-Message-State: APjAAAXclNp9hEgP3eqZ+wOiKc8MLw/Lur2avFo1itYCTuEK+dUAW4tw
-        Miq61OC1g1TFtSD77Ml6epg=
-X-Google-Smtp-Source: APXvYqytxTqltTU/5ZwjjxHJxPCf68q2+FZPL9kg5tufSXQY1XiNTsj5qLJJNsms3tadjNQ6qNKUfQ==
-X-Received: by 2002:a2e:6313:: with SMTP id x19mr52311170ljb.25.1560801743538;
-        Mon, 17 Jun 2019 13:02:23 -0700 (PDT)
-Received: from localhost.localdomain (81-233-89-221-no75.tbcn.telia.com. [81.233.89.221])
-        by smtp.gmail.com with ESMTPSA id j90sm2245780ljb.29.2019.06.17.13.02.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 13:02:23 -0700 (PDT)
-From:   Erik Stromdahl <erik.stromdahl@gmail.com>
-To:     johannes@sipsolutions.net, kvalo@codeaurora.org,
-        davem@davemloft.net, linux-wireless@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Erik Stromdahl <erik.stromdahl@gmail.com>
-Subject: [PATCH 2/2] ath10k: switch to ieee80211_tx_dequeue_ni
-Date:   Mon, 17 Jun 2019 22:01:40 +0200
-Message-Id: <20190617200140.6189-2-erik.stromdahl@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617200140.6189-1-erik.stromdahl@gmail.com>
-References: <20190617200140.6189-1-erik.stromdahl@gmail.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+6f59ZFOs1PSocx1cXbKIlzxOSpO4grS25QzNht0IBo=;
+        b=SVdJpMvkPm1ssmKKP0tE/f3myTnZBNdZ7syPdVt4XnxWpkMXtXKCxqWE028ZoslMgU
+         WrRTtAy/9iXSL5v12pyJZe0K60qaWFRHncEUisJ3UYSMDnbUfNfmmiDOu1rVpZCemrFt
+         accU64QfXNzLTSo3enOvm9sbyG6uIMllvE+mU8LA6rRR3zG01M/coQMHmpe/3UVuOuI3
+         iLiC3liYfLwC5GDTgA/nlW+e1zDct7Tp9+64rXQBsgnkKZnK3YZ3oPrH6Da3QgarZXp5
+         7RsmvgEVWrMvXmId5UA/k4URCxyAojatH29Mf7v/14DD7LlrCZ+WLeKoYDwXhvZMF700
+         H6UQ==
+X-Gm-Message-State: APjAAAXNh7/h7Eh+TtRyWRltCsJN9kTzRS7oRIcKrjqrmq9qxwdebIY0
+        Oo8BSI+LneH5PHcrnV1FfudH6g==
+X-Google-Smtp-Source: APXvYqwHSEuRqTDvpMokDsWAY4XbioaGwEV5S7azKc4M2N6fF8IpbDcv8EnRsu1EG2Q/oxRkJNkzXw==
+X-Received: by 2002:a17:902:8c83:: with SMTP id t3mr82969184plo.93.1560801797840;
+        Mon, 17 Jun 2019 13:03:17 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id a3sm13221952pfo.49.2019.06.17.13.03.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 13:03:16 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 13:03:14 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Daniel Thompson <daniel.thompson@linaro.org>,
+        Brian Norris <briannorris@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Doug Anderson <dianders@google.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Guenter Roeck <groeck@google.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexandru Stan <amstan@google.com>, linux-leds@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        kernel@collabora.com
+Subject: Re: [PATCH v3 3/4] backlight: pwm_bl: compute brightness of LED
+ linearly to human eye.
+Message-ID: <20190617200314.GT137143@google.com>
+References: <20180208113032.27810-4-enric.balletbo@collabora.com>
+ <20190607220947.GR40515@google.com>
+ <20190608210226.GB2359@xo-6d-61-c0.localdomain>
+ <20190610205233.GB137143@google.com>
+ <20190611104913.egsbwcedshjdy3m5@holly.lan>
+ <CA+ASDXOq7KQ+f4KMh0gaC9hvXaxBDdsbiJxiTbeOJ9ZVaeNJag@mail.gmail.com>
+ <20190611223019.GH137143@google.com>
+ <20190612110325.xdn3q2aod52oalge@holly.lan>
+ <20190612192642.GK137143@google.com>
+ <20190617130150.GA21113@amd>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190617130150.GA21113@amd>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since ath10k_mac_tx_push_txq() can be called from process context, we
-must explicitly disable softirqs before the call into mac80211.
+Hi Pavel,
 
-By calling ieee80211_tx_dequeue_ni() instead of ieee80211_tx_dequeue()
-we make sure softirqs are always disabled even in the case when
-ath10k_mac_tx_push_txq() is called from process context.
+On Mon, Jun 17, 2019 at 03:01:51PM +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > > Certainly "linear" (this device will work more or less correctly if the
+> > > userspace applies perceptual curves). Not sure about logarithmic since
+> > > what is actually useful is something that is "perceptually linear"
+> > > (logarithmic is merely a way to approximate that).
+> > > 
+> > > I do wonder about a compatible string like most-detailed to
+> > > least-detailed description. This for a PWM with the auto-generated
+> > > tables we'd see something like:
+> > > 
+> > > cie-1991,perceptual,non-linear
+> > > 
+> > > For something that is non-linear but we are not sure what its tables are
+> > > we can offer just "non-linear".
+> > 
+> > Thanks for the feedback!
+> > 
+> > It seems clear that we want a string for the added flexibility. I can
+> > work on a patch with the compatible string like description you
+> > suggested and we can discuss in the review if we want to go with that
+> > or prefer something else.
+> 
+> Compatible-like string seems overly complicated.
 
-Calling ieee80211_tx_dequeue_ni() with softirq's already disabled
-(e.g., from softirq context) should be safe as the local_bh_disable()
-and local_bh_enable() functions (called from ieee80211_tx_dequeue_ni)
-are fully reentrant.
+I see the merit in the sense that it allows to provide more precision
+for if userspace wants/needs it, without requiring userspace to know all
+possible (future) options. If userspace wants to keep things simple it
+can just check for check for "s == 'non-linear'" and
+"s.ends_with(',non-linear')"
 
-Signed-off-by: Erik Stromdahl <erik.stromdahl@gmail.com>
----
- drivers/net/wireless/ath/ath10k/mac.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In any case, I posted a first version of the patch:
 
-diff --git a/drivers/net/wireless/ath/ath10k/mac.c b/drivers/net/wireless/ath/ath10k/mac.c
-index 2d503d6cdcd2..bbed9f1b1778 100644
---- a/drivers/net/wireless/ath/ath10k/mac.c
-+++ b/drivers/net/wireless/ath/ath10k/mac.c
-@@ -4033,7 +4033,7 @@ int ath10k_mac_tx_push_txq(struct ieee80211_hw *hw,
- 	if (ret)
- 		return ret;
- 
--	skb = ieee80211_tx_dequeue(hw, txq);
-+	skb = ieee80211_tx_dequeue_ni(hw, txq);
- 	if (!skb) {
- 		spin_lock_bh(&ar->htt.tx_lock);
- 		ath10k_htt_tx_dec_pending(htt);
--- 
-2.22.0
+https://lore.kernel.org/patchwork/patch/1088760/
 
+Maybe best to center the discussion there?
+
+> > > Instead one valid value for the sysfs should be "unknown" and this be
+> > > the default for drivers we have not analysed (this also makes it easy to
+> > > introduce change here).
+> > 
+> > An "unknown" value sounds good, it allows userspace to just do what it
+> > did/would hace done before this attribute existed.
+> 
+> What about simply not presenting the attribute when we don't have the
+> information?
+
+I'm open to either, I mentioned it earlier and Daniel seemed to prefer
+the 'unknown' value so I went with it in the first version (it's also
+slightly less code).
+
+Cheers
+
+Matthias
