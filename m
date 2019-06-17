@@ -2,121 +2,109 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00CF2C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09814C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:47:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B92205ED
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:43:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="MMXvlchV"
+	by mail.kernel.org (Postfix) with ESMTP id D209520862
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:47:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfFQEnn (ORCPT
+        id S1726145AbfFQErm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 00:43:43 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:43113 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfFQEnn (ORCPT
+        Mon, 17 Jun 2019 00:47:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60300 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725778AbfFQErm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 00:43:43 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j29so5442863lfk.10
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 21:43:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=QZYnY2hIUSm+INHACfGV3NJI8hXeyeTw8tvqjhCF464=;
-        b=MMXvlchVs2Zgrzft62CDXTNlgYLYUhsdEmF5yBBfIzjcxXwgu+TFNl4ZoIwXwi/Cp5
-         GZyWocmV8KqP7vfrpu1KZsUdWgrLDSd0gdy43lJi+LlqepOvPg3LRwzIW8VKsHP3Zyex
-         nUl+DAZfb/HRyNan1Ndv+uAdskNAK0QOUFJS1qq8hxxYXWax7O1+84TlV70C14ekBJq6
-         2Ld/EPFBUYKfF5DBrHjTwoqqpQ8o2NWQU/A8PIF+9etcSJjrhDveAIUKfa2rAObbsj+p
-         xspUXSK+ZWwcak0Pe7L+Kb0TaWtpxbwnsJoIEHGhu7U1B34r930XYyfs5qAAq3I80GEW
-         ESfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=QZYnY2hIUSm+INHACfGV3NJI8hXeyeTw8tvqjhCF464=;
-        b=AaraeUYhkRTKNQP2ByLualjDNgY39KVQh0H4ghwLVEQtdVRRdIZxo20Bm8xmd7U5E2
-         GIB+VaWIzEft+qFppEnK7Iyo5UqIy4M70lKdbsSPnCLPZzjXxy1mnG3nwP4gFoGfrnlu
-         ESv9Ex8BQLeeGDga7XbjRooLmaUGiY70lX0Y6+AoZPGBDKK95IwHWeTcr3z8MhwKlCkp
-         tHuVkjBihpFJyG8dVsk5fz0CbjfWkN7LKRxMQBWXUhGhcoIoXIixEJIAtnALUnfi70oo
-         +3oubJrIczRLR1mAUM6/FnTAOtIGlh8UhXNfX6tWQZWgfl7rkdj6GKAUCrFOp/JVnW0h
-         znkQ==
-X-Gm-Message-State: APjAAAUoNm2afF1ppOjKkP9GBcoNqDqIlMusgYn8wg935JyocxP2eg96
-        3a/DifQ5L2JUgOE5hO30oLqAKq+VTDf2CxEmTlrMBw==
-X-Google-Smtp-Source: APXvYqx5atfcvuI00s9Z4mXLRo48akZO/SgAq0T1wCjD9YxY4YsnaLJCxKSL3H3msuEwih+R7uGarFUy+Wtgrp1SkuE=
-X-Received: by 2002:a19:5046:: with SMTP id z6mr6335117lfj.185.1560746621318;
- Sun, 16 Jun 2019 21:43:41 -0700 (PDT)
+        Mon, 17 Jun 2019 00:47:42 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5H4lM5r054060
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 00:47:41 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t63gvh21q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 00:47:40 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
+        Mon, 17 Jun 2019 05:47:37 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 17 Jun 2019 05:47:34 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5H4lXw332243758
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 04:47:33 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 90A5552054;
+        Mon, 17 Jun 2019 04:47:33 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 40CE952057;
+        Mon, 17 Jun 2019 04:47:33 +0000 (GMT)
+Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 36718A0208;
+        Mon, 17 Jun 2019 14:47:32 +1000 (AEST)
+From:   "Alastair D'Silva" <alastair@au1.ibm.com>
+To:     alastair@d-silva.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] nvdimm: remove prototypes for nonexistent functions
+Date:   Mon, 17 Jun 2019 14:47:12 +1000
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
-From:   Yash Shah <yash.shah@sifive.com>
-Date:   Mon, 17 Jun 2019 10:13:05 +0530
-Message-ID: <CAJ2_jOH2X6+CcNCruxX0aeCzPnjcGuv-X1Q4eESsY6PyW1LViA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-To:     David Miller <davem@davemloft.net>, devicetree@vger.kernel.org,
-        netdev <netdev@vger.kernel.org>, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        =?UTF-8?Q?Petr_=C5=A0tetiar?= <ynezz@true.cz>,
-        Sachin Ghadi <sachin.ghadi@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061704-0012-0000-0000-00000329B2E6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061704-0013-0000-0000-00002162C893
+Message-Id: <20190617044712.14231-1-alastair@au1.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=638 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906170043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 9:49 AM Yash Shah <yash.shah@sifive.com> wrote:
->
-> On FU540, the management IP block is tightly coupled with the Cadence
-> MACB IP block. It manages many of the boundary signals from the MACB IP
-> This patchset controls the tx_clk input signal to the MACB IP. It
-> switches between the local TX clock (125MHz) and PHY TX clocks. This
-> is necessary to toggle between 1Gb and 100/10Mb speeds.
->
-> Future patches may add support for monitoring or controlling other IP
-> boundary signals.
->
-> This patchset is mostly based on work done by
-> Wesley Terpstra <wesley@sifive.com>
->
-> This patchset is based on Linux v5.2-rc1 and tested on HiFive Unleashed
-> board with additional board related patches needed for testing can be
-> found at dev/yashs/ethernet branch of:
+From: Alastair D'Silva <alastair@d-silva.org>
 
-Correction in branch name: dev/yashs/ethernet_v2
+These functions don't exist, so remove the prototypes for them.
 
-> https://github.com/yashshah7/riscv-linux.git
->
-> Change History:
-> V2:
-> - Change compatible string from "cdns,fu540-macb" to "sifive,fu540-macb"
-> - Add "MACB_SIFIVE_FU540" in Kconfig to support SiFive FU540 in macb
->   driver. This is needed because on FU540, the macb driver depends on
->   SiFive GPIO driver.
-> - Avoid writing the result of a comparison to a register.
-> - Fix the issue of probe fail on reloading the module reported by:
->   Andreas Schwab <schwab@suse.de>
->
-> Yash Shah (2):
->   macb: bindings doc: add sifive fu540-c000 binding
->   macb: Add support for SiFive FU540-C000
->
->  Documentation/devicetree/bindings/net/macb.txt |   3 +
->  drivers/net/ethernet/cadence/Kconfig           |   6 ++
->  drivers/net/ethernet/cadence/macb_main.c       | 129 +++++++++++++++++++++++++
->  3 files changed, 138 insertions(+)
->
-> --
-> 1.9.1
->
+Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+---
+ drivers/nvdimm/nd-core.h | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/drivers/nvdimm/nd-core.h b/drivers/nvdimm/nd-core.h
+index 391e88de3a29..57d162dbefaa 100644
+--- a/drivers/nvdimm/nd-core.h
++++ b/drivers/nvdimm/nd-core.h
+@@ -136,11 +136,7 @@ void nd_region_disable(struct nvdimm_bus *nvdimm_bus, struct device *dev);
+ int nvdimm_bus_create_ndctl(struct nvdimm_bus *nvdimm_bus);
+ void nvdimm_bus_destroy_ndctl(struct nvdimm_bus *nvdimm_bus);
+ void nd_synchronize(void);
+-int nvdimm_bus_register_dimms(struct nvdimm_bus *nvdimm_bus);
+-int nvdimm_bus_register_regions(struct nvdimm_bus *nvdimm_bus);
+-int nvdimm_bus_init_interleave_sets(struct nvdimm_bus *nvdimm_bus);
+ void __nd_device_register(struct device *dev);
+-int nd_match_dimm(struct device *dev, void *data);
+ struct nd_label_id;
+ char *nd_label_gen_id(struct nd_label_id *label_id, u8 *uuid, u32 flags);
+ bool nd_is_uuid_unique(struct device *dev, u8 *uuid);
+-- 
+2.21.0
+
