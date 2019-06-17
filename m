@@ -2,212 +2,201 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E8CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:29:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9874AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:29:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D88C32086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:29:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JaXjbNBF"
+	by mail.kernel.org (Postfix) with ESMTP id 6DC7A2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:29:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbfFQO3k (ORCPT
+        id S1728297AbfFQO3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:29:40 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59027 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQO3j (ORCPT
+        Mon, 17 Jun 2019 10:29:53 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51904 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727738AbfFQO3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:29:39 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HETBPD3456800
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:29:11 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HETBPD3456800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560781751;
-        bh=K/pbXir+r+SMZavmfFxMSg6MArz2c8CL6TAuKWY1A5Q=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=JaXjbNBFwxWb1jPLE1MpHY4ELfJ6oiDO6zhwE9qAfkBXQmrenMrmRrGfFa0rU0ERR
-         d7eoRzdEHCJXpZFZG60zHiv1GcRirzrkz1osegOm37MnRzIPsTuPv8CfxD1Kcijdiu
-         PLydFmln0LDb0UoIDCymTJHAY6pVzLLdqNQC80wY3USjpbYfwWB58IvAWfTo3zJBkX
-         t6rd/S38WNp1uSuOn5gSZ7TZev5F2Cwie3LegHRY3pVaLEXKWcQNN9W8c3V2qqg9Dd
-         joYWXkpazf+c+y0Oimi+oVCFOf4ocXjca0s+FBnVu6rEAC7z/YGjn2uq/8c2vd8pQl
-         zljf+ZWuxD0bg==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HETAxi3456797;
-        Mon, 17 Jun 2019 07:29:10 -0700
-Date:   Mon, 17 Jun 2019 07:29:10 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Waiman Long <tipbot@zytor.com>
-Message-ID: <tip-990fa7384a3057a3298bcf493651c6e14416c47c@git.kernel.org>
-Cc:     peterz@infradead.org, longman@redhat.com,
-        huang.ying.caritas@gmail.com, bp@alien8.de,
-        tim.c.chen@linux.intel.com, hpa@zytor.com,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        will.deacon@arm.com, dave@stgolabs.net, tglx@linutronix.de,
-        mingo@kernel.org
-Reply-To: huang.ying.caritas@gmail.com, longman@redhat.com,
-          peterz@infradead.org, bp@alien8.de, hpa@zytor.com,
-          tim.c.chen@linux.intel.com, linux-kernel@vger.kernel.org,
-          torvalds@linux-foundation.org, dave@stgolabs.net,
-          tglx@linutronix.de, will.deacon@arm.com, mingo@kernel.org
-In-Reply-To: <20190520205918.22251-10-longman@redhat.com>
-References: <20190520205918.22251-10-longman@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/rwsem: More optimal RT task handling of
- null owner
-Git-Commit-ID: 990fa7384a3057a3298bcf493651c6e14416c47c
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 10:29:53 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HEHZ3I139885
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 10:29:52 -0400
+Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t6brv3490-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 10:29:51 -0400
+Received: from localhost
+        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Mon, 17 Jun 2019 15:29:51 +0100
+Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
+        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 17 Jun 2019 15:29:48 +0100
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5HETimJ32702860
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 14:29:44 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 193DC6E052;
+        Mon, 17 Jun 2019 14:29:44 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 04BE56E054;
+        Mon, 17 Jun 2019 14:29:42 +0000 (GMT)
+Received: from [9.60.84.60] (unknown [9.60.84.60])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Jun 2019 14:29:42 +0000 (GMT)
+Subject: Re: [PATCH v4 2/7] s390: vfio-ap: wait for queue empty on queue reset
+To:     Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, cohuck@redhat.com, frankja@linux.ibm.com,
+        david@redhat.com, mjrosato@linux.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com
+References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
+ <1560454780-20359-3-git-send-email-akrowiak@linux.ibm.com>
+ <b7f2d9df-26d8-9915-5345-f17e6cd0ef93@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Mon, 17 Jun 2019 10:29:42 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <b7f2d9df-26d8-9915-5345-f17e6cd0ef93@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061714-8235-0000-0000-00000EA93D47
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011278; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01219293; UDB=6.00641330; IPR=6.01000435;
+ MB=3.00027344; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-17 14:29:50
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061714-8236-0000-0000-0000460CCBCC
+Message-Id: <1feb3cab-94cf-6923-96c4-866545ee7798@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906170130
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  990fa7384a3057a3298bcf493651c6e14416c47c
-Gitweb:     https://git.kernel.org/tip/990fa7384a3057a3298bcf493651c6e14416c47c
-Author:     Waiman Long <longman@redhat.com>
-AuthorDate: Mon, 20 May 2019 16:59:08 -0400
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:28:01 +0200
+On 6/17/19 4:47 AM, Harald Freudenberger wrote:
+> On 13.06.19 21:39, Tony Krowiak wrote:
+>> Refactors the AP queue reset function to wait until the queue is empty
+>> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
+>> required by the AP architecture.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c | 49 +++++++++++++++++++++++++++------------
+>>   1 file changed, 34 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index bf2ab02b9a0b..60efd3d7896d 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -1128,23 +1128,46 @@ static void vfio_ap_irq_disable_apqn(int apqn)
+>>   	}
+>>   }
+>>   
+>> -int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+>> -			     unsigned int retry)
+>> +static void vfio_ap_mdev_wait_for_qempty(ap_qid_t qid)
+>> +{
+>> +	struct ap_queue_status status;
+>> +	int retry = 5;
+>> +
+>> +	do {
+>> +		status = ap_tapq(qid, NULL);
+>> +		switch (status.response_code) {
+>> +		case AP_RESPONSE_NORMAL:
+>> +			if (status.queue_empty)
+>> +				return;
+>> +		case AP_RESPONSE_RESET_IN_PROGRESS:
+>> +		case AP_RESPONSE_BUSY:
+>> +			msleep(20);
+>> +			break;
+>> +		default:
+>> +			pr_warn("%s: tapq response %02x waiting for queue %04x.%02x empty\n",
+>> +				__func__, status.response_code,
+>> +				AP_QID_CARD(qid), AP_QID_QUEUE(qid));
+> The ap and zcrypt code uses %02x.%04x for displaying an APQN.
 
-locking/rwsem: More optimal RT task handling of null owner
+Oops, of course it does. My synapses must have been reversed.
 
-An RT task can do optimistic spinning only if the lock holder is
-actually running. If the state of the lock holder isn't known, there
-is a possibility that high priority of the RT task may block forward
-progress of the lock holder if it happens to reside on the same CPU.
-This will lead to deadlock. So we have to make sure that an RT task
-will not spin on a reader-owned rwsem.
+> I would also recommend to handle 0x01 (AP_RESPONSE_Q_NOT_AVAIL) and
+> 0x03 (AP_RESPONSE_DECONFIGURED) as this code may run when a APQN
+> is removed from the configuration of the LPAR. However, it's up to you if you
+> want to handle these with the default statement and issue an sysfs warning.
 
-When the owner is temporarily set to NULL, there are two cases
-where we may want to continue spinning:
+How would you handle them differently? If the queue is not in the
+configuration, then there is nothing to wait for.
 
- 1) The lock owner is in the process of releasing the lock, sem->owner
-    is cleared but the lock has not been released yet.
+>> +			return;
+>> +		}
+>> +	} while (--retry);
+>> +
+>> +	WARN_ON_ONCE(retry <= 0);
+>> +}
+>> +
+>> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+>>   {
+>>   	struct ap_queue_status status;
+>> -	int retry2 = 2;
+>>   	int apqn = AP_MKQID(apid, apqi);
+>> +	int retry = 5;
+>>   
+>>   	do {
+>>   		status = ap_zapq(apqn);
+>>   		switch (status.response_code) {
+>>   		case AP_RESPONSE_NORMAL:
+>> -			while (!status.queue_empty && retry2--) {
+>> -				msleep(20);
+>> -				status = ap_tapq(apqn, NULL);
+>> -			}
+>> -			WARN_ON_ONCE(retry <= 0);
+>> +			vfio_ap_mdev_wait_for_qempty(AP_MKQID(apid, apqi));
+>>   			return 0;
+>> +		case AP_RESPONSE_DECONFIGURED:
+>> +			return -ENODEV;
+>>   		case AP_RESPONSE_RESET_IN_PROGRESS:
+>>   		case AP_RESPONSE_BUSY:
+>>   			msleep(20);
+>> @@ -1169,14 +1192,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>>   			     matrix_mdev->matrix.apm_max + 1) {
+>>   		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>>   				     matrix_mdev->matrix.aqm_max + 1) {
+>> -			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>> -			/*
+>> -			 * Regardless whether a queue turns out to be busy, or
+>> -			 * is not operational, we need to continue resetting
+>> -			 * the remaining queues.
+>> -			 */
+>> +			ret = vfio_ap_mdev_reset_queue(apid, apqi);
+>>   			if (ret)
+>>   				rc = ret;
+>> +
+>>   			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+>>   		}
+>>   	}
+>> @@ -1326,7 +1345,7 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
+>>   	dev_set_drvdata(&queue->ap_dev.device, NULL);
+>>   	apid = AP_QID_CARD(q->apqn);
+>>   	apqi = AP_QID_QUEUE(q->apqn);
+>> -	vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>> +	vfio_ap_mdev_reset_queue(apid, apqi);
+>>   	vfio_ap_irq_disable(q);
+>>   	kfree(q);
+>>   }
+> 
 
- 2) The lock was free and owner cleared, but another task just comes
-    in and acquire the lock before we try to get it. The new owner may
-    be a spinnable writer.
-
-So an RT task is now made to retry one more time to see if it can
-acquire the lock or continue spinning on the new owning writer.
-
-When testing on a 8-socket IvyBridge-EX system, the one additional retry
-seems to improve locking performance of RT write locking threads under
-heavy contentions. The table below shows the locking rates (in kops/s)
-with various write locking threads before and after the patch.
-
-    Locking threads     Pre-patch     Post-patch
-    ---------------     ---------     -----------
-            4             2,753          2,608
-            8             2,529          2,520
-           16             1,727          1,918
-           32             1,263          1,956
-           64               889          1,343
-
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: huang ying <huang.ying.caritas@gmail.com>
-Link: https://lkml.kernel.org/r/20190520205918.22251-10-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/rwsem.c | 51 +++++++++++++++++++++++++++++++++++++++++++-------
- 1 file changed, 44 insertions(+), 7 deletions(-)
-
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index 5532304406f7..e1840b7c5310 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -566,6 +566,7 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
- static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- {
- 	bool taken = false;
-+	int prev_owner_state = OWNER_NULL;
- 
- 	preempt_disable();
- 
-@@ -583,7 +584,12 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- 	 *  2) readers own the lock as we can't determine if they are
- 	 *     actively running or not.
- 	 */
--	while (rwsem_spin_on_owner(sem) & OWNER_SPINNABLE) {
-+	for (;;) {
-+		enum owner_state owner_state = rwsem_spin_on_owner(sem);
-+
-+		if (!(owner_state & OWNER_SPINNABLE))
-+			break;
-+
- 		/*
- 		 * Try to acquire the lock
- 		 */
-@@ -593,13 +599,44 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
- 		}
- 
- 		/*
--		 * When there's no owner, we might have preempted between the
--		 * owner acquiring the lock and setting the owner field. If
--		 * we're an RT task that will live-lock because we won't let
--		 * the owner complete.
-+		 * An RT task cannot do optimistic spinning if it cannot
-+		 * be sure the lock holder is running or live-lock may
-+		 * happen if the current task and the lock holder happen
-+		 * to run in the same CPU. However, aborting optimistic
-+		 * spinning while a NULL owner is detected may miss some
-+		 * opportunity where spinning can continue without causing
-+		 * problem.
-+		 *
-+		 * There are 2 possible cases where an RT task may be able
-+		 * to continue spinning.
-+		 *
-+		 * 1) The lock owner is in the process of releasing the
-+		 *    lock, sem->owner is cleared but the lock has not
-+		 *    been released yet.
-+		 * 2) The lock was free and owner cleared, but another
-+		 *    task just comes in and acquire the lock before
-+		 *    we try to get it. The new owner may be a spinnable
-+		 *    writer.
-+		 *
-+		 * To take advantage of two scenarios listed agove, the RT
-+		 * task is made to retry one more time to see if it can
-+		 * acquire the lock or continue spinning on the new owning
-+		 * writer. Of course, if the time lag is long enough or the
-+		 * new owner is not a writer or spinnable, the RT task will
-+		 * quit spinning.
-+		 *
-+		 * If the owner is a writer, the need_resched() check is
-+		 * done inside rwsem_spin_on_owner(). If the owner is not
-+		 * a writer, need_resched() check needs to be done here.
- 		 */
--		if (!sem->owner && (need_resched() || rt_task(current)))
--			break;
-+		if (owner_state != OWNER_WRITER) {
-+			if (need_resched())
-+				break;
-+			if (rt_task(current) &&
-+			   (prev_owner_state != OWNER_WRITER))
-+				break;
-+		}
-+		prev_owner_state = owner_state;
- 
- 		/*
- 		 * The cpu_relax() call is a compiler barrier which forces
