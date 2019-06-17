@@ -2,164 +2,126 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3289DC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3D89C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 143ED20652
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B8521E70
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HoOGFZ6I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727429AbfFQIWU (ORCPT
+        id S1727567AbfFQIWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:22:20 -0400
-Received: from aclms3.advantech.com.tw ([125.252.70.86]:40383 "EHLO
-        ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726834AbfFQIWS (ORCPT
+        Mon, 17 Jun 2019 04:22:55 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:52336 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725862AbfFQIWy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:22:18 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td872a74337ac1401c810b8@ACLMS3.advantech.com.tw>;
- Mon, 17 Jun 2019 16:21:40 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v2 8/9] hwmon: (nct7904) Fix wrong attribute names for temperature.
-Date:   Mon, 17 Jun 2019 08:20:38 +0000
-Message-ID:
- <f499d63b7a62447fedf466399f1f924eea6f016a.1560756733.git.amy.shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
-References: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
+        Mon, 17 Jun 2019 04:22:54 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5H8EDPq036975;
+        Mon, 17 Jun 2019 08:22:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=FGXkU7eOmJXcfpTdOS3rFhVnp4//dWioBuU5JvbAozk=;
+ b=HoOGFZ6IDRsf/WaCfXo2ZTPgY5pwDJWXjo1xX+qTvLOMlZocWpKu1Sf00Bmkx3VFzyma
+ 10WCt0cIJkIFz7mHW+wD9GUOEQ0ivHG8jDJ0t4TRvpEWC+TsmSyquhiRY045QRVvKMqd
+ BIDabSi8xq4vX0L9MhRibAwTnUvf3DfPIk//8VY7MahBLoeLEZ2KraHUQ39ijiOHMNDT
+ 8ndBBvPX7iRqpB2l3z33gYX+RiPyyzfIf8yD1/MNNifpDFIZvAldxXl3FHTYVYXdGTMe
+ /6jx2aoi8UlUxIMQRg+jUh/JipGQ+5QpEWrsTOM8x9vyDm7cYa5WG5PQ0L40CVIPJPpn iA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2t4r3td2pj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 08:22:24 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5H8LV8W126648;
+        Mon, 17 Jun 2019 08:22:24 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2t59gd3q66-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 08:22:24 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5H8M5I4026605;
+        Mon, 17 Jun 2019 08:22:05 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 01:22:05 -0700
+Date:   Mon, 17 Jun 2019 11:21:48 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: use exact allocation for dma coherent memory
+Message-ID: <20190617082148.GF28859@kadam>
+References: <20190614134726.3827-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-X-Originating-IP: [172.17.10.58]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614134726.3827-1-hch@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9290 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=782
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906170078
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9290 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=820 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906170078
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20190617082038.hDJwG0Jjp0H78yJEYyzKvuHGk4fPeof3crAuCiiXrXQ@z>
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
+I once wrote a Smatch check based on a commit message that said we can't
+pass dma_alloc_coherent() pointers to virt_to_phys().  But then I never
+felt like I understood the rules enough to actually report the warnings
+as bugs.
 
-Emergency attributes without crit attributes are not acceptable.
-In datasheet there are registers labeled "critical", and there is
-no mention of "emergency". Thus, set the attribute names from
-"temp[1-*]_emergency" and "temp[1-*]_emergency_hyst" to
-"temp[1-*]_crit" and "temp[1-*]_crit_hyst".
+drivers/platform/x86/dcdbas.c:108 smi_data_buf_realloc() error: 'buf' came from dma_alloc_coherent() so we can't do virt_to_phys()
+drivers/net/caif/caif_virtio.c:414 cfv_create_genpool() error: 'cfv->alloc_addr' came from dma_alloc_coherent() so we can't do virt_to_phys()
+drivers/infiniband/hw/cxgb4/qp.c:135 alloc_host_sq() error: 'sq->queue' came from dma_alloc_coherent() so we can't do virt_to_phys()
+drivers/infiniband/hw/cxgb4/qp.c:272 create_qp() error: 'wq->rq.queue' came from dma_alloc_coherent() so we can't do virt_to_phys()
+drivers/infiniband/hw/cxgb4/qp.c:2628 alloc_srq_queue() error: 'wq->queue' came from dma_alloc_coherent() so we can't do virt_to_phys()
+drivers/infiniband/hw/ocrdma/ocrdma_verbs.c:494 ocrdma_alloc_ucontext() error: 'ctx->ah_tbl.va' came from dma_alloc_coherent() so we can't do virt_to_phys()
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
----
-Changes in v2:
-- Fix wrong attribute names for temperature.
+drivers/infiniband/hw/cxgb4/qp.c
+   129  static int alloc_host_sq(struct c4iw_rdev *rdev, struct t4_sq *sq)
+   130  {
+   131          sq->queue = dma_alloc_coherent(&(rdev->lldi.pdev->dev), sq->memsize,
+   132                                         &(sq->dma_addr), GFP_KERNEL);
+   133          if (!sq->queue)
+   134                  return -ENOMEM;
+   135          sq->phys_addr = virt_to_phys(sq->queue);
+   136          dma_unmap_addr_set(sq, mapping, sq->dma_addr);
+   137          return 0;
+   138  }
 
- drivers/hwmon/nct7904.c | 48 ++++++++++++++++++++---------------------
- 1 file changed, 24 insertions(+), 24 deletions(-)
+Is this a bug?
 
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index c74f919c0181..fc145c73a4e7 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -407,12 +407,12 @@ static int nct7904_read_temp(struct device *dev, u32 attr, int channel,
- 		reg2 = TEMP_CH1_CH_REG;
- 		reg3 = DTS_T_CPU1_CH_REG;
- 		break;
--	case hwmon_temp_emergency:
-+	case hwmon_temp_crit:
- 		reg1 = LTD_HV_LL_REG;
- 		reg2 = TEMP_CH1_W_REG;
- 		reg3 = DTS_T_CPU1_W_REG;
- 		break;
--	case hwmon_temp_emergency_hyst:
-+	case hwmon_temp_crit_hyst:
- 		reg1 = LTD_LV_LL_REG;
- 		reg2 = TEMP_CH1_WH_REG;
- 		reg3 = DTS_T_CPU1_WH_REG;
-@@ -454,8 +454,8 @@ static umode_t nct7904_temp_is_visible(const void *_data, u32 attr, int channel)
- 		break;
- 	case hwmon_temp_max:
- 	case hwmon_temp_max_hyst:
--	case hwmon_temp_emergency:
--	case hwmon_temp_emergency_hyst:
-+	case hwmon_temp_crit:
-+	case hwmon_temp_crit_hyst:
- 		if (channel < 5) {
- 			if (data->tcpu_mask & BIT(channel))
- 				return 0644;
-@@ -516,12 +516,12 @@ static int nct7904_write_temp(struct device *dev, u32 attr, int channel,
- 		reg2 = TEMP_CH1_CH_REG;
- 		reg3 = DTS_T_CPU1_CH_REG;
- 		break;
--	case hwmon_temp_emergency:
-+	case hwmon_temp_crit:
- 		reg1 = LTD_HV_LL_REG;
- 		reg2 = TEMP_CH1_W_REG;
- 		reg3 = DTS_T_CPU1_W_REG;
- 		break;
--	case hwmon_temp_emergency_hyst:
-+	case hwmon_temp_crit_hyst:
- 		reg1 = LTD_LV_LL_REG;
- 		reg2 = TEMP_CH1_WH_REG;
- 		reg3 = DTS_T_CPU1_WH_REG;
-@@ -799,32 +799,32 @@ static const struct hwmon_channel_info *nct7904_info[] = {
- 			   HWMON_PWM_INPUT | HWMON_PWM_ENABLE),
- 	HWMON_CHANNEL_INFO(temp,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST,
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST,
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST,
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST,
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST,
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST,
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST,
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST,
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST,
- 			   HWMON_T_INPUT | HWMON_T_ALARM | HWMON_T_MAX |
--			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_EMERGENCY |
--			   HWMON_T_EMERGENCY_HYST),
-+			   HWMON_T_MAX_HYST | HWMON_T_TYPE | HWMON_T_CRIT |
-+			   HWMON_T_CRIT_HYST),
- 	NULL
- };
- 
--- 
-2.17.1
+regards,
+dan carpenter
 
