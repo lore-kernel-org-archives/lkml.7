@@ -2,75 +2,91 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF524C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9287C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCFB204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD92320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560807152;
+	bh=goB30XYJSdJ3iZ8ZaMJq7F0qL9XgA4A141PfIb707tA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YKnZmmW0UNNubpOMRC6lDgqPL/7UW2d0bh5s8mmAueAgnA6XE+xPNFMdYcBuwiyqJ
+	 P2LLea+HiDy+xWPP4L5xR6WrY9wSlKHETSaBBMXElWymkctzAkOsWNRuhm8GuoHG3Z
+	 d5t18iPF7QZme/jiv3ng+5Ts4dnZxVuweLIn/uZI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbfFQVcW (ORCPT
+        id S1730407AbfFQV1c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:32:22 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:33662 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729121AbfFQVcT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:32:19 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hczEZ-0008Fy-L0; Mon, 17 Jun 2019 21:32:11 +0000
-Date:   Mon, 17 Jun 2019 22:32:11 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     torvalds@linux-foundation.org, ebiederm@xmission.com,
-        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v1] fs/namespace: fix unprivileged mount propagation
-Message-ID: <20190617213211.GV17978@ZenIV.linux.org.uk>
-References: <20190617212214.29868-1-christian@brauner.io>
+        Mon, 17 Jun 2019 17:27:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54466 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729086AbfFQV12 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:27:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 86C1D2070B;
+        Mon, 17 Jun 2019 21:27:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560806848;
+        bh=goB30XYJSdJ3iZ8ZaMJq7F0qL9XgA4A141PfIb707tA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wzHjCit7gRdr6FTPDkRE7aPj2XQLJOVvmQlvbiVrdYE1YaWgc6pwHOO1pftivnana
+         bAWBAwjnOLuEDEXxUo6G5i6siQLCz8I2KZiJOT5vMN9iswrZWfqlGOHuMf1z2eLnab
+         mdOlOucELTyy5k4xA0i8B9YfJ+zgz0abtWsrUkQ0=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 24/75] ASoC: cs42xx8: Add regcache mask dirty
+Date:   Mon, 17 Jun 2019 23:09:35 +0200
+Message-Id: <20190617210753.772705445@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
+References: <20190617210752.799453599@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617212214.29868-1-christian@brauner.io>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:22:14PM +0200, Christian Brauner wrote:
-> When propagating mounts across mount namespaces owned by different user
-> namespaces it is not possible anymore to move or umount the mount in the
-> less privileged mount namespace.
-> 
-> Here is a reproducer:
-> 
->   sudo mount -t tmpfs tmpfs /mnt
->   sudo --make-rshared /mnt
-> 
->   # create unprivileged user + mount namespace and preserve propagation
->   unshare -U -m --map-root --propagation=unchanged
-> 
->   # now change back to the original mount namespace in another terminal:
->   sudo mkdir /mnt/aaa
->   sudo mount -t tmpfs tmpfs /mnt/aaa
-> 
->   # now in the unprivileged user + mount namespace
->   mount --move /mnt/aaa /opt
-> 
-> Unfortunately, this is a pretty big deal for userspace since this is
-> e.g. used to inject mounts into running unprivileged containers.
-> So this regression really needs to go away rather quickly.
-> 
-> The problem is that a recent change falsely locked the root of the newly
-> added mounts by setting MNT_LOCKED. Fix this by only locking the mounts
-> on copy_mnt_ns() and not when adding a new mount.
+From: S.j. Wang <shengjiu.wang@nxp.com>
 
-Applied.  Linus, if you want to apply it directly, feel free to add my
-Acked-by.  Alternatively, wait until tonight and I'll send a pull request
-with that (as well as missing mntget() in fsmount(2) fix, at least).
+commit ad6eecbfc01c987e0253371f274c3872042e4350 upstream.
 
-Al, down to ~3Kmail in the pile...
+Add regcache_mark_dirty before regcache_sync for power
+of codec may be lost at suspend, then all the register
+need to be reconfigured.
+
+Fixes: 0c516b4ff85c ("ASoC: cs42xx8: Add codec driver
+support for CS42448/CS42888")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ sound/soc/codecs/cs42xx8.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/sound/soc/codecs/cs42xx8.c
++++ b/sound/soc/codecs/cs42xx8.c
+@@ -558,6 +558,7 @@ static int cs42xx8_runtime_resume(struct
+ 	msleep(5);
+ 
+ 	regcache_cache_only(cs42xx8->regmap, false);
++	regcache_mark_dirty(cs42xx8->regmap);
+ 
+ 	ret = regcache_sync(cs42xx8->regmap);
+ 	if (ret) {
+
+
