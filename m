@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDADEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B20EBC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA592070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 867132063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806956;
-	bh=dNlhZXcSxapq/pBxruiZXHFae5wUZKQT88NMHvsonGU=;
+	s=default; t=1560806959;
+	bh=Bmdn9oN9NKPf/wrXR/XbJcKXbBhjMEeNLft29cLv7pY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sV9yckR6H2+jcynl3Fi+IG2k9KJTtQKLmFcaTWlr0SpU/lzSoovsgHJjB8QcCs0GJ
-	 qoxYJAu/IMFIe2uxEJXgivQ+S9lKM0rLgsbK3UtIzRIKOLORcBGROD/szYzhBX1lLf
-	 9h/ZLRSbFuWZWJ6gWnszGT88Ye+7UUF1Y/hB0uU4=
+	b=qePisaIo2wZdfreJCsShjAzX7a6Xwn6cKMuOuvGexhnm/1QCICXZC0vrEWNdTkgIL
+	 /uQG3w8HLXpZfZTFW49C+kzDvNZifMt8HflJrWTmYT5DKiGNMrkHyIOWLGleptW/qD
+	 BWz6H47GQWoGH9ad6Z/u1mSZ34kjivsyukvH8/z0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730673AbfFQV3O (ORCPT
+        id S1730682AbfFQV3S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56376 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:29:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729043AbfFQV3M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:12 -0400
+        id S1730674AbfFQV3P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D7A62063F;
-        Mon, 17 Jun 2019 21:29:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F7F4204FD;
+        Mon, 17 Jun 2019 21:29:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806951;
-        bh=dNlhZXcSxapq/pBxruiZXHFae5wUZKQT88NMHvsonGU=;
+        s=default; t=1560806954;
+        bh=Bmdn9oN9NKPf/wrXR/XbJcKXbBhjMEeNLft29cLv7pY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FbXQlrD/OMMpu+qjTqG31fkB8zpZGFepKoa6r3eM5p2iM04GTe/Dd+dZjb7FO/Ysm
-         P0P7lpAHw7OA2hC3q8yP6t5sUSVhhouM7OCV19oxNY6tUdiQRehbet78IC1Pg92jDl
-         NDxS/i1xLItEfKmakVgxP+O9Mq+UqKq/w/j5UJoY=
+        b=gVcPOAriLX+iO1c1sIKQuwmuF0LQhAiempkFHhmB10oIkRSgOx1GAbzxKTkkO7XRA
+         YlDTHMN0L0znn/CdBQ/UxEkUSa1e0tp49oN0UqB+3SUcKrASAoAwmnyZQLIwcWqR9n
+         JzjNGMSBmZdhUXSJ+HVLqkwaEQRP14edJtzPsmbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 39/53] KVM: x86/pmu: do not mask the value that is written to fixed PMUs
-Date:   Mon, 17 Jun 2019 23:10:22 +0200
-Message-Id: <20190617210751.866366227@linuxfoundation.org>
+Subject: [PATCH 4.14 40/53] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
+Date:   Mon, 17 Jun 2019 23:10:23 +0200
+Message-Id: <20190617210751.933336955@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -60,46 +61,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2924b52117b2812e9633d5ea337333299166d373 ]
+[ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
 
-According to the SDM, for MSR_IA32_PERFCTR0/1 "the lower-order 32 bits of
-each MSR may be written with any value, and the high-order 8 bits are
-sign-extended according to the value of bit 31", but the fixed counters
-in real hardware are limited to the width of the fixed counters ("bits
-beyond the width of the fixed-function counter are reserved and must be
-written as zeros").  Fix KVM to do the same.
+kselftests exposed a problem in the s390 handling for memory slots.
+Right now we only do proper memory slot handling for creation of new
+memory slots. Neither MOVE, nor DELETION are handled properly. Let us
+implement those.
 
-Reported-by: Nadav Amit <nadav.amit@gmail.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kvm/pmu_intel.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
-index 5ab4a364348e..2729131fe9bf 100644
---- a/arch/x86/kvm/pmu_intel.c
-+++ b/arch/x86/kvm/pmu_intel.c
-@@ -235,11 +235,14 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		}
- 		break;
- 	default:
--		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
--		    (pmc = get_fixed_pmc(pmu, msr))) {
--			if (!msr_info->host_initiated)
--				data = (s64)(s32)data;
--			pmc->counter += data - pmc_read_counter(pmc);
-+		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-+			if (msr_info->host_initiated)
-+				pmc->counter = data;
-+			else
-+				pmc->counter = (s32)data;
-+			return 0;
-+		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
-+			pmc->counter = data;
- 			return 0;
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			if (data == pmc->eventsel)
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index d6fe229ac20e..70a446ec347d 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -3913,21 +3913,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				const struct kvm_memory_slot *new,
+ 				enum kvm_mr_change change)
+ {
+-	int rc;
+-
+-	/* If the basics of the memslot do not change, we do not want
+-	 * to update the gmap. Every update causes several unnecessary
+-	 * segment translation exceptions. This is usually handled just
+-	 * fine by the normal fault handler + gmap, but it will also
+-	 * cause faults on the prefix page of running guest CPUs.
+-	 */
+-	if (old->userspace_addr == mem->userspace_addr &&
+-	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
+-	    old->npages * PAGE_SIZE == mem->memory_size)
+-		return;
++	int rc = 0;
+ 
+-	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
+-		mem->guest_phys_addr, mem->memory_size);
++	switch (change) {
++	case KVM_MR_DELETE:
++		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
++					old->npages * PAGE_SIZE);
++		break;
++	case KVM_MR_MOVE:
++		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
++					old->npages * PAGE_SIZE);
++		if (rc)
++			break;
++		/* FALLTHROUGH */
++	case KVM_MR_CREATE:
++		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
++				      mem->guest_phys_addr, mem->memory_size);
++		break;
++	case KVM_MR_FLAGS_ONLY:
++		break;
++	default:
++		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
++	}
+ 	if (rc)
+ 		pr_warn("failed to commit memory region\n");
+ 	return;
 -- 
 2.20.1
 
