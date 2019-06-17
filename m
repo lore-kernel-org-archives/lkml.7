@@ -2,133 +2,139 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A186C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:51:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C560C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDC32089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:51:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="Q7kHBLmk"
+	by mail.kernel.org (Postfix) with ESMTP id 6AF172086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728142AbfFQMvm (ORCPT
+        id S1727376AbfFQMw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:51:42 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:41809 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFQMvl (ORCPT
+        Mon, 17 Jun 2019 08:52:29 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:53645 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQMw3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:51:41 -0400
-Received: by mail-vs1-f65.google.com with SMTP id 2so2864413vso.8;
-        Mon, 17 Jun 2019 05:51:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=klPdjqqlVoeDREb75kQqStjinhVsI/mU0etQ6QnCaVA=;
-        b=Q7kHBLmkk8yeIcrJfSdKv0eDe8c6TIcykYfxeE+gtyxDGM7jTmWBX8X8LqO0Vz8wmh
-         l2H7Gj3rNds4mi0waYFOmJF58IVTdd8njCA3nt2QMsVA/in322QCir6CzFI8M8Jq+RI6
-         YLDvBk2D9gE6D8rmyfWqroIaIJxgFycHSyS4NRF7Zo2BY2Qag9JEILtsxLXUpFsVF9op
-         U3TVunfWmIcq5z0r1zZ3UousfHv+Y5FC10uYHhcLW+z/qmYV+1TCAl9OkJKcvx/K/+O1
-         zIAQ70uPMhRJ/QLvnR1n8XirV8I5X8DuBiVQLw5/I5wrY9+jsNdRYprh+F8aPtaKk29P
-         LX6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=klPdjqqlVoeDREb75kQqStjinhVsI/mU0etQ6QnCaVA=;
-        b=SWKhRB0NKz7Nz4os0WwEMufS3VRQ9nsvGuvM9dFiBCl7fhEtSff/DmWEBTgDCTB4+d
-         411tYMqXTLAXDKkyHgYFgpzlCxmFOxPxrhOpRDgNM6czejboJAwjcXOWH9fCX3DPr1EU
-         F4IAz1YN6guhNNxhB3OsiK5kbZ3hJNG48Du19k/eHjZUwlWfgRZlQ06luhw5D8ltKUJy
-         DSc6fFl99g54hhuQZTRvmDGQ+knYP79siKibnMO5Qrnk7eeaAE7KK5n3+ie3RV9mvXFy
-         Jd4PRJ/Ln6ZvW2kK6nXpXUCMndAndrWKIMVS72uo+e1QZ3t7uU5tml+Gm40FeLpRsykj
-         xm+g==
-X-Gm-Message-State: APjAAAUmIyGv6ILaDhOEArTk2Sc6cpANJbTZhb2AuYjGFGz1t3conkzg
-        DrhBfoKdEkyM8/NdxFIL+Ihfvd87B3Rjk1/vv/I=
-X-Google-Smtp-Source: APXvYqwFeWgFnNJblZqkjL2ae02IOcVqxIIBQrv40Ft1GMFRwdqN43eWUISS8RdMVxsuA8gLkKAFkvwqWO2Ghp/c13c=
-X-Received: by 2002:a67:de0b:: with SMTP id q11mr4656005vsk.134.1560775900716;
- Mon, 17 Jun 2019 05:51:40 -0700 (PDT)
+        Mon, 17 Jun 2019 08:52:29 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MGQax-1hquxU2lVF-00GtQn; Mon, 17 Jun 2019 14:52:21 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Jonathan Kim <jonathan.kim@amd.com>,
+        Evan Quan <evan.quan@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] drm/amdgpu: fix error handling in df_v3_6_pmc_start
+Date:   Mon, 17 Jun 2019 14:51:45 +0200
+Message-Id: <20190617125216.1439481-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-References: <20190613154542.32438-1-sr@denx.de> <20190613154542.32438-3-sr@denx.de>
- <CAGm1_kuyt5ue_3CuvryXw8L0=z0Bti5BeQMA50yRYhFmffcJuQ@mail.gmail.com>
- <CAGm1_ksdQ5CNLGGNzHKBNKeLE3ByHvPyOkjYNoWWM+rw0q214Q@mail.gmail.com> <d62c1a2b-3e24-c109-a7fb-57190388d75f@denx.de>
-In-Reply-To: <d62c1a2b-3e24-c109-a7fb-57190388d75f@denx.de>
-From:   Yegor Yefremov <yegorslists@googlemail.com>
-Date:   Mon, 17 Jun 2019 14:51:15 +0200
-Message-ID: <CAGm1_ks0TWAkKGQ+k060hmwZi-i1jD2-KMqxex1QqrbujS00WQ@mail.gmail.com>
-Subject: Re: [PATCH 3/3 v6] tty/serial/8250: use mctrl_gpio helpers
-To:     Stefan Roese <sr@denx.de>
-Cc:     linux-serial@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:4mjJ8DAUrqD7K3ik9JFh1A+imhzojGmM2U9nkMvmJroglwtNgbR
+ uxEfBJoTHVzu13ZhwrwgrM6e38j8pBnDFOSIiI6NVnDb1AKXjj0XsHb5SZ/o7weXZmpJGRK
+ b4RW1+baqU8jtxvfNE0f+7TvDXfTL6sFCl743HK4GE7P7xPMc6wEvBvoJ20HXf3fpOmJcaw
+ UGpQSQaK/Das93ZAx0ETg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:N+5vhAAztk0=:EqgY/a1W3We1mNJ7HsNbw7
+ ObwMB7mvH6RsXLFuDzawvG5JZi5AuU8NuAGK3Rmil62H4EsECaCGif/ICTp8MJYRqw03PMyAX
+ eKWNsYhlxh7HfrVJV4cClKv6IVzcA/0iE2mo+JgJjgq9ZOjgV9MK9gTePjqAYCO9YR1nZAnSE
+ PGi8y+fXyWCenl9YdNfXOVgxTHAbXFdzO+gWUCPm3QH3BBbRNFQleu/WSG7CNluU9KCx7ibZB
+ flECQ/y2I8ioCuuHYPfDQ63nxmfhGvvAekoKwr/6+olGsovn5UMZ0ijWaDBvU3eZxLpSrZTIf
+ 6N7mXV0y0Qm5vF8ACYmtrpJMyhzT5AyvAdYUucZXieLw9rnQn+vADSFx885qw+FN6AJ4mkV5e
+ yGbjugRKQlXtmwUbMbvsHTmSv6bzzMlGL0ty9HKbDONkK4x847fJJm4O7lP/N1JhR7Ct0453C
+ 5+5rRtXF3qIHvKAxuWrVQ7A77PrvPnz0VG6It8yrffditgUtIx+/If124thp1KV3eZwr9ditm
+ JmPnIZRkdpvbeiKKdMbkTeAHc96tYpoxsiqlSh446keWSRoLzxQPsIBRALFOq4C23Un/5xJTV
+ 3LpsuwiXZ9DHGPF2WOV1DKudFv0onLyeGNBzKXdBAq0w5V8JBH9waUT/uB87VyfduhPTcq66E
+ EQNimNTjDgI2cNVqUEPzY3xCrU1jDIYf5o/wSgFysfFX66C+dYhcmTYi5QnQzcOSAIrKt8T0F
+ AKbeOt4MzlIvqi+oTmuAa1BkeKAwpYTo3CgRlg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 2:42 PM Stefan Roese <sr@denx.de> wrote:
->
-> On 17.06.19 11:51, Yegor Yefremov wrote:
->
-> <snip>
->
-> >>> @@ -1944,11 +1948,15 @@ unsigned int serial8250_do_get_mctrl(struct uart_port *port)
-> >>>   {
-> >>>          struct uart_8250_port *up = up_to_u8250p(port);
-> >>>          unsigned int status;
-> >>> +       unsigned int val = 0;
-> >>>
-> >>>          serial8250_rpm_get(up);
-> >>>          status = serial8250_modem_status(up);
-> >>>          serial8250_rpm_put(up);
-> >>>
-> >>> +       if (up->gpios)
-> >>> +               return mctrl_gpio_get(up->gpios, &val);
-> >>> +
-> >>
-> >> What happens when you have a mixed setup i.e. CTS controlled by UART
-> >> but other status pins controlled by GPIO? In this case CTS status
-> >> won't be returned. Do I see it right?
->
-> Yes, your analysis does seem to be correct. Please note that I did
-> not intentionally did change it this way. I was not thinking about
-> such a "mixed design".
->
-> > What about something like this:
-> >
-> > unsigned int serial8250_do_get_mctrl(struct uart_port *port)
-> >    {
-> >            struct uart_8250_port *up = up_to_u8250p(port);
-> >            unsigned int status;
-> >            unsigned int val;
-> >
-> >            serial8250_rpm_get(up);
-> >            status = serial8250_modem_status(up);
-> >            serial8250_rpm_put(up);
-> >
-> >            val = serial8250_MSR_to_TIOCM(status);
-> >            if (up->gpios)
-> >                    mctrl_gpio_get(up->gpios, &val);
-> >
-> >            return val;
-> >    }
->
-> Looks good to me, thanks. Do you have such a setup with some modem
-> control signal handled via GPIO and some via the UART? Could you
-> test such a change?
+When df_v3_6_pmc_get_ctrl_settings() fails for some reason, we
+store uninitialized data in a register, as gcc points out:
 
-I already have :-)
+drivers/gpu/drm/amd/amdgpu/df_v3_6.c: In function 'df_v3_6_pmc_start':
+drivers/gpu/drm/amd/amdgpu/amdgpu.h:1012:29: error: 'lo_val' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+ #define WREG32_PCIE(reg, v) adev->pcie_wreg(adev, (reg), (v))
+                             ^~~~
+drivers/gpu/drm/amd/amdgpu/df_v3_6.c:334:39: note: 'lo_val' was declared here
+  uint32_t lo_base_addr, hi_base_addr, lo_val, hi_val;
+                                       ^~~~~~
 
-This my DTS file:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/arch/arm/boot/dts/am335x-baltos-ir5221.dts#n38
+Make it return a proper error code that we can catch in the caller.
 
-Yegor
+Fixes: 992af942a6cf ("drm/amdgpu: add df perfmon regs and funcs for xgmi")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/gpu/drm/amd/amdgpu/df_v3_6.c | 13 +++++++++----
+ 1 file changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/gpu/drm/amd/amdgpu/df_v3_6.c b/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
+index 8c09bf994acd..e079ee066d87 100644
+--- a/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
++++ b/drivers/gpu/drm/amd/amdgpu/df_v3_6.c
+@@ -177,7 +177,7 @@ static void df_v3_6_pmc_get_read_settings(struct amdgpu_device *adev,
+ }
+ 
+ /* get control counter settings i.e. address and values to set */
+-static void df_v3_6_pmc_get_ctrl_settings(struct amdgpu_device *adev,
++static int df_v3_6_pmc_get_ctrl_settings(struct amdgpu_device *adev,
+ 					  uint64_t config,
+ 					  uint32_t *lo_base_addr,
+ 					  uint32_t *hi_base_addr,
+@@ -191,12 +191,12 @@ static void df_v3_6_pmc_get_ctrl_settings(struct amdgpu_device *adev,
+ 	df_v3_6_pmc_get_addr(adev, config, 1, lo_base_addr, hi_base_addr);
+ 
+ 	if (lo_val == NULL || hi_val == NULL)
+-		return;
++		return -EINVAL;
+ 
+ 	if ((*lo_base_addr == 0) || (*hi_base_addr == 0)) {
+ 		DRM_ERROR("DF PMC addressing not retrieved! Lo: %x, Hi: %x",
+ 				*lo_base_addr, *hi_base_addr);
+-		return;
++		return -ENXIO;
+ 	}
+ 
+ 	eventsel = GET_EVENT(config);
+@@ -211,6 +211,8 @@ static void df_v3_6_pmc_get_ctrl_settings(struct amdgpu_device *adev,
+ 	es_7_0 = es_13_0 & 0x0FFUL;
+ 	*lo_val = (es_7_0 & 0xFFUL) | ((unitmask & 0x0FUL) << 8);
+ 	*hi_val = (es_11_8 | ((es_13_12)<<(29)));
++
++	return 0;
+ }
+ 
+ /* assign df performance counters for read */
+@@ -345,13 +347,16 @@ static int df_v3_6_add_xgmi_link_cntr(struct amdgpu_device *adev,
+ 	if (ret || is_assigned)
+ 		return ret;
+ 
+-	df_v3_6_pmc_get_ctrl_settings(adev,
++	ret = df_v3_6_pmc_get_ctrl_settings(adev,
+ 			config,
+ 			&lo_base_addr,
+ 			&hi_base_addr,
+ 			&lo_val,
+ 			&hi_val);
+ 
++	if (ret)
++		return ret;
++
+ 	WREG32_PCIE(lo_base_addr, lo_val);
+ 	WREG32_PCIE(hi_base_addr, hi_val);
+ 
+-- 
+2.20.0
+
