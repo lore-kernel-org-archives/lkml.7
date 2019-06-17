@@ -2,170 +2,143 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B9FAC31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:31:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D946C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:33:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DEE52084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:31:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D31FD2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:33:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YlBxHyck"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728159AbfFQLbt (ORCPT
+        id S1727961AbfFQLdc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:31:49 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:59468 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfFQLbt (ORCPT
+        Mon, 17 Jun 2019 07:33:32 -0400
+Received: from mail-io1-f54.google.com ([209.85.166.54]:43566 "EHLO
+        mail-io1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfFQLdc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:31:49 -0400
-Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 4c77d97a5198814f; Mon, 17 Jun 2019 13:31:46 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux ACPI <linux-acpi@vger.kernel.org>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Furquan Shaikh <furquan@google.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        Bob Moore <robert.moore@intel.com>
-Subject: [PATCH] ACPICA: Clear status of GPEs on first direct enable
-Date:   Mon, 17 Jun 2019 13:31:45 +0200
-Message-ID: <3650147.WZ2HLy2X9i@kreacher>
+        Mon, 17 Jun 2019 07:33:32 -0400
+Received: by mail-io1-f54.google.com with SMTP id k20so20256527ios.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:33:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uTaQurjF4DAEz2YA58sq1itwNB0DAFLlJ/DDxkRjQXs=;
+        b=YlBxHyckiHCNw4pcv1L+3aipakmvWHdfu1oxzwefcQcVWnyNIn5NGlNqYIN/7QC0ey
+         ioGaBXAv5AJACbpMWAaAsdLvLID96zO5uFRnyIa/tNH4W41NImVSVkxrQ0LVv/5lBHZz
+         iEw6edvCS3C/y6wdXkjdsW3dJBbRBA4SU1vFKgiJzgFxZZEW6e1ELjhVW+MpsfItpE7h
+         ZcLT9Ml5vwbXxOJ18xbKM2fo2/VHFZmbasZ2ki93QAjNEpwdH9E6TdwQqBrr5CEXoFeL
+         rxMZ9NE4l66LJ1eS2LKTv6F9j1x+5ianNQxSP60RRxrfI+gX25JRg2p+ejEoCSKNrw9Y
+         sWuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uTaQurjF4DAEz2YA58sq1itwNB0DAFLlJ/DDxkRjQXs=;
+        b=pY8dOOseAWtCf8nAEldZoRCIGFlcVZ1j+kM9ejd4ME7irUI+z9IUoc/imHxSUqnK99
+         MZHC7I6A0U915ohDzGa3X6PAsZM8gmav0htYF1+1iyN3BOpRT1KiybCa2EIQQvRuqSCI
+         UKkzIB/Nxt6CZqxN+M0txlfsOBrD7Zq+NMNzN4rqWv0IF15RCmUB2mSH/AIPJ3RbN/7P
+         XlzOLgXMK04bMHoRbuCMeiea7igaJlHWeZOf52uiQX8YZCYCxFBZSekEbW4NAidP2JC/
+         Ml+jRk0KLGFJlFlV2w2PrW1JNCIv5ShA0HW0ibvtS042nuvSG11lJUfk8AMVdSo0879d
+         mZsw==
+X-Gm-Message-State: APjAAAWGPMihrrM1/5/TfNF0t8NBaK40gfU2NdcpOsatCvOxYbaySSRn
+        1qN9ypqHrO+KujldJZgEGYhQQVhWDE4AXcTz6uMjEA==
+X-Google-Smtp-Source: APXvYqzOD8mZdWMW5nl/G9kBu3RjbewHkgd/pSd8u227vGW4RBm64bgLB0Ejnt8SWGd0xJ5w7k3raGX9tSnxFEfpahY=
+X-Received: by 2002:a02:3308:: with SMTP id c8mr15420974jae.103.1560771211244;
+ Mon, 17 Jun 2019 04:33:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190612040933.GA18848@dc5-eodlnx05.marvell.com>
+ <20190612093151.GA11554@brain-police> <20190614070914.GA21961@dc5-eodlnx05.marvell.com>
+ <20190614095846.GC10506@fuggles.cambridge.arm.com> <CAKv+Gu_Kdq=UPijjA84FpmO=ZsdEO9EyyF7GeOQ+WmfqtO_hMg@mail.gmail.com>
+ <20190614103850.GG10659@fuggles.cambridge.arm.com> <201906142026.1BC27EDB1E@keescook>
+ <CAKv+Gu_XuhgUCYOeykrbaxJz-wL1HFrc_O+HeZHqaGkMHd2J9Q@mail.gmail.com>
+ <201906150654.FF4400F7C8@keescook> <CAKv+Gu9-rZ16Nb9t3=knzW0BHu0eNxQoPwWS4c8UMMm=2iqiuw@mail.gmail.com>
+ <201906161429.BCE1083@keescook>
+In-Reply-To: <201906161429.BCE1083@keescook>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 17 Jun 2019 13:33:19 +0200
+Message-ID: <CAKv+Gu_8ibO4D01DZv6KjL2GnvKuVBVnt=doxkN0w=4utJ7NvQ@mail.gmail.com>
+Subject: Re: [RFC] Disable lockref on arm64
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Sun, 16 Jun 2019 at 23:31, Kees Cook <keescook@chromium.org> wrote:
+>
+> On Sat, Jun 15, 2019 at 04:18:21PM +0200, Ard Biesheuvel wrote:
+> > Yes, I am using the same saturation point as x86. In this example, I
+> > am not entirely sure I understand why it matters, though: the atomics
+> > guarantee that the write by CPU2 fails if CPU1 changed the value in
+> > the mean time, regardless of which value it wrote.
+> >
+> > I think the concern is more related to the likelihood of another CPU
+> > doing something nasty between the moment that the refcount overflows
+> > and the moment that the handler pins it at INT_MIN/2, e.g.,
+> >
+> > > CPU 1                   CPU 2
+> > > inc()
+> > >   load INT_MAX
+> > >   about to overflow?
+> > >   yes
+> > >
+> > >   set to 0
+> > >                          <insert exploit here>
+> > >   set to INT_MIN/2
+>
+> Ah, gotcha, but the "set to 0" is really "set to INT_MAX+1" (not zero)
+> if you're using the same saturation.
+>
 
-ACPI GPEs (other than the EC one) can be enabled in two situations.
-First, the GPEs with existing _Lxx and _Exx methods are enabled
-implicitly by ACPICA during system initialization.  Second, the
-GPEs without these methods (like GPEs listed by _PRW objects for
-wakeup devices) need to be enabled directly by the code that is
-going to use them (e.g. ACPI power management or device drivers).
+Of course. So there is no issue here: whatever manipulations are
+racing with the overflow handler can never result in the counter to
+unsaturate.
 
-In the former case, if the status of a given GPE is set to start
-with, its handler method (either _Lxx or _Exx) needs to be invoked
-to take care of the events (possibly) signaled before the GPE was
-enabled.  In the latter case, however, the first caller of
-acpi_enable_gpe() for a given GPE should not be expected to care
-about any events that might be signaled through it earlier.  In
-that case, it is better to clear the status of the GPE before
-enabling it, to prevent stale events from triggering unwanted
-actions (like spurious system resume, for example).
+And actually, moving the checks before the stores is not as trivial as
+I thought, E.g., for the LSE refcount_add case, we have
 
-For this reason, modify acpi_ev_add_gpe_reference() to take an
-additional boolean argument indicating whether or not the GPE
-status needs to be cleared when its reference counter changes from
-zero to one and make acpi_enable_gpe() pass TRUE to it through
-that new argument.
+        "       ldadd           %w[i], w30, %[cval]\n"                  \
+        "       adds            %w[i], %w[i], w30\n"                    \
+        REFCOUNT_PRE_CHECK_ ## pre (w30))                               \
+        REFCOUNT_POST_CHECK_ ## post                                    \
 
-Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
-Reported-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Furquan Shaikh <furquan@google.com>
-Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/acpi/acpica/acevents.h |    3 ++-
- drivers/acpi/acpica/evgpe.c    |    8 +++++++-
- drivers/acpi/acpica/evgpeblk.c |    2 +-
- drivers/acpi/acpica/evxface.c  |    2 +-
- drivers/acpi/acpica/evxfgpe.c  |    2 +-
- 5 files changed, 12 insertions(+), 5 deletions(-)
+and changing this into load/test/store defeats the purpose of using
+the LSE atomics in the first place.
 
-Index: linux-pm/drivers/acpi/acpica/acevents.h
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/acevents.h
-+++ linux-pm/drivers/acpi/acpica/acevents.h
-@@ -69,7 +69,8 @@ acpi_status
- acpi_ev_mask_gpe(struct acpi_gpe_event_info *gpe_event_info, u8 is_masked);
- 
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable);
- 
- acpi_status
- acpi_ev_remove_gpe_reference(struct acpi_gpe_event_info *gpe_event_info);
-Index: linux-pm/drivers/acpi/acpica/evgpe.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evgpe.c
-+++ linux-pm/drivers/acpi/acpica/evgpe.c
-@@ -146,6 +146,7 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_i
-  * FUNCTION:    acpi_ev_add_gpe_reference
-  *
-  * PARAMETERS:  gpe_event_info          - Add a reference to this GPE
-+ *              clear_on_enable         - Clear GPE status before enabling it
-  *
-  * RETURN:      Status
-  *
-@@ -155,7 +156,8 @@ acpi_ev_mask_gpe(struct acpi_gpe_event_i
-  ******************************************************************************/
- 
- acpi_status
--acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info)
-+acpi_ev_add_gpe_reference(struct acpi_gpe_event_info *gpe_event_info,
-+			  u8 clear_on_enable)
- {
- 	acpi_status status = AE_OK;
- 
-@@ -170,6 +172,10 @@ acpi_ev_add_gpe_reference(struct acpi_gp
- 
- 		/* Enable on first reference */
- 
-+		if (clear_on_enable) {
-+			(void)acpi_hw_clear_gpe(gpe_event_info);
-+		}
-+
- 		status = acpi_ev_update_gpe_enable_mask(gpe_event_info);
- 		if (ACPI_SUCCESS(status)) {
- 			status = acpi_ev_enable_gpe(gpe_event_info);
-Index: linux-pm/drivers/acpi/acpica/evgpeblk.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evgpeblk.c
-+++ linux-pm/drivers/acpi/acpica/evgpeblk.c
-@@ -453,7 +453,7 @@ acpi_ev_initialize_gpe_block(struct acpi
- 				continue;
- 			}
- 
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 			if (ACPI_FAILURE(status)) {
- 				ACPI_EXCEPTION((AE_INFO, status,
- 					"Could not enable GPE 0x%02X",
-Index: linux-pm/drivers/acpi/acpica/evxface.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evxface.c
-+++ linux-pm/drivers/acpi/acpica/evxface.c
-@@ -971,7 +971,7 @@ acpi_remove_gpe_handler(acpi_handle gpe_
- 	      ACPI_GPE_DISPATCH_METHOD) ||
- 	     (ACPI_GPE_DISPATCH_TYPE(handler->original_flags) ==
- 	      ACPI_GPE_DISPATCH_NOTIFY)) && handler->originally_enabled) {
--		(void)acpi_ev_add_gpe_reference(gpe_event_info);
-+		(void)acpi_ev_add_gpe_reference(gpe_event_info, FALSE);
- 		if (ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
- 
- 			/* Poll edge triggered GPEs to handle existing events */
-Index: linux-pm/drivers/acpi/acpica/evxfgpe.c
-===================================================================
---- linux-pm.orig/drivers/acpi/acpica/evxfgpe.c
-+++ linux-pm/drivers/acpi/acpica/evxfgpe.c
-@@ -108,7 +108,7 @@ acpi_status acpi_enable_gpe(acpi_handle
- 	if (gpe_event_info) {
- 		if (ACPI_GPE_DISPATCH_TYPE(gpe_event_info->flags) !=
- 		    ACPI_GPE_DISPATCH_NONE) {
--			status = acpi_ev_add_gpe_reference(gpe_event_info);
-+			status = acpi_ev_add_gpe_reference(gpe_event_info, TRUE);
- 			if (ACPI_SUCCESS(status) &&
- 			    ACPI_GPE_IS_POLLING_NEEDED(gpe_event_info)) {
- 
+On my single core TX2, the comparative performance is as follows
 
+Baseline: REFCOUNT_TIMING test using REFCOUNT_FULL (LSE cmpxchg)
+      191057942484      cycles                    #    2.207 GHz
+      148447589402      instructions              #    0.78  insn per
+cycle
 
+      86.568269904 seconds time elapsed
 
+Upper bound: ATOMIC_TIMING
+      116252672661      cycles                    #    2.207 GHz
+       28089216452      instructions              #    0.24  insn per
+cycle
+
+      52.689793525 seconds time elapsed
+
+REFCOUNT_TIMING test using LSE atomics
+      127060259162      cycles                    #    2.207 GHz
+                 0      instructions              #    0.00  insn per
+cycle
+
+      57.243690077 seconds time elapsed
