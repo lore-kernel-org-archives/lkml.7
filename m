@@ -2,201 +2,92 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4382C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:45:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B1F7C31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A8D20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:45:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E85B20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfFQLp1 (ORCPT
+        id S1726434AbfFQLrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:45:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48672 "EHLO mx1.redhat.com"
+        Mon, 17 Jun 2019 07:47:37 -0400
+Received: from foss.arm.com ([217.140.110.172]:46772 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbfFQLp1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:45:27 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1932C8E224;
-        Mon, 17 Jun 2019 11:45:26 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 12FE361369;
-        Mon, 17 Jun 2019 11:45:21 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Joseph Myers <joseph@codesourcery.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Paul Burton <pburton@wavecomp.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] uapi: avoid namespace conflict in linux/posix_types.h
-References: <20190319165123.3967889-1-arnd@arndb.de>
-        <alpine.DEB.2.21.1905072249570.19308@digraph.polyomino.org.uk>
-        <87tvd2j9ye.fsf@oldenburg2.str.redhat.com>
-        <CAHk-=wio1e4=WUUwmo-Ph55BEgH_X3oXzBpvPyLQg2TxzfGYuw@mail.gmail.com>
-        <871s05fd8o.fsf@oldenburg2.str.redhat.com>
-        <CAHk-=wg4ijSoPq-w7ct_VuZvgHx+tUv_QX-We-62dEwK+AOf2w@mail.gmail.com>
-Date:   Mon, 17 Jun 2019 13:45:20 +0200
-In-Reply-To: <CAHk-=wg4ijSoPq-w7ct_VuZvgHx+tUv_QX-We-62dEwK+AOf2w@mail.gmail.com>
-        (Linus Torvalds's message of "Fri, 7 Jun 2019 11:56:16 -0700")
-Message-ID: <87sgs8igfj.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        id S1725971AbfFQLrh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:47:37 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B5F51344;
+        Mon, 17 Jun 2019 04:47:36 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 831763F246;
+        Mon, 17 Jun 2019 04:49:21 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 12:47:34 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH] clocksource/arm_arch_timer: remove unused return type
+Message-ID: <20190617114734.GK20984@e119886-lin.cambridge.arm.com>
+References: <20190617093601.34511-1-andrew.murray@arm.com>
+ <eb9532ff-8365-4287-ff43-045834dacdce@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 17 Jun 2019 11:45:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <eb9532ff-8365-4287-ff43-045834dacdce@arm.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Linus Torvalds:
+On Mon, Jun 17, 2019 at 10:45:24AM +0100, Marc Zyngier wrote:
+> On 17/06/2019 10:36, Andrew Murray wrote:
+> > The function 'arch_timer_set_evtstrm_feature' has no return statement
+> > despite its prototype - let's change the function prototype to return
+> > void. This matches the equivalent arm64 implementation.
+> > 
+> > fixes: 11e34eca5d0a ("clocksource/arm_arch_timer: Extract elf_hwcap use to arch-helper")
+> 
+> nit: tags start with a capital letter.
 
-> On Fri, Jun 7, 2019 at 11:43 AM Florian Weimer <fweimer@redhat.com> wrote:
->>
->> On the glibc side, we nowadays deal with this by splitting headers
->> further.  (We used to suppress definitions with macros, but that tended
->> to become convoluted.)  In this case, moving the definition of
->> __kernel_long_t to its own header, so that
->> include/uapi/asm-generic/socket.h can include that should fix it.
->
-> I think we should strive to do that on the kernel side too, since
-> clearly we shouldn't expose that "val[]" thing in the core posix types
-> due to namespace rules, but at the same time I think the patch to
-> rename val[] is fundamentally broken too.
->
-> Can you describe how you split things (perhaps even with a patch ;)?
-> Is this literally the only issue you currently have? Because I'd
-> expect similar issues to show up elsewhere too, but who knows.. You
-> presumably do.
+Thanks - I'll remember next time.
 
-I wanted to introduce a new header, <asm/kernel_long_t.h>, and include
-it where the definition of __kernel_long_t is needed, something like
-this (incomplete, untested):
+Andrew Murray
 
-diff --git a/arch/sparc/include/uapi/asm/posix_types.h b/arch/sparc/include/uapi/asm/posix_types.h
-index f139e0048628..6510d7538605 100644
---- a/arch/sparc/include/uapi/asm/posix_types.h
-+++ b/arch/sparc/include/uapi/asm/posix_types.h
-@@ -8,6 +8,8 @@
- #ifndef __SPARC_POSIX_TYPES_H
- #define __SPARC_POSIX_TYPES_H
- 
-+#include <asm/kernel_long_t.h>
-+
- #if defined(__sparc__) && defined(__arch64__)
- /* sparc 64 bit */
- 
-@@ -19,10 +21,6 @@ typedef unsigned short         __kernel_old_gid_t;
- typedef int		       __kernel_suseconds_t;
- #define __kernel_suseconds_t __kernel_suseconds_t
- 
--typedef long		__kernel_long_t;
--typedef unsigned long	__kernel_ulong_t;
--#define __kernel_long_t __kernel_long_t
--
- struct __kernel_old_timeval {
- 	__kernel_long_t tv_sec;
- 	__kernel_suseconds_t tv_usec;
-diff --git a/arch/x86/include/uapi/asm/kernel_long_t.h b/arch/x86/include/uapi/asm/kernel_long_t.h
-new file mode 100644
-index 000000000000..ed3bff40e1e8
---- /dev/null
-+++ b/arch/x86/include/uapi/asm/kernel_long_t.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef __KERNEL__
-+# ifdef defined(__x86_64__) && defined(__ILP32__)
-+#  include <asm/kernel_long_t_x32.h>
-+# else
-+#  include <asm-generic/kernel_long_t.h>
-+# endif
-+#endif
-diff --git a/arch/x86/include/uapi/asm/kernel_long_t_x32.h b/arch/x86/include/uapi/asm/kernel_long_t_x32.h
-new file mode 100644
-index 000000000000..a71cbce7e966
---- /dev/null
-+++ b/arch/x86/include/uapi/asm/kernel_long_t_x32.h
-@@ -0,0 +1,6 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef _ASM_X86_KERNEL_LONG_T_X32_H
-+#define _ASM_X86_KERNEL_LONG_T_X32_H
-+typedef long long __kernel_long_t;
-+typedef unsigned long long __kernel_ulong_t;
-+#endif /* _ASM_X86_KERNEL_LONG_T_X32_H */
-diff --git a/arch/x86/include/uapi/asm/posix_types_x32.h b/arch/x86/include/uapi/asm/posix_types_x32.h
-index f60479b07fc8..92c7af21da9e 100644
---- a/arch/x86/include/uapi/asm/posix_types_x32.h
-+++ b/arch/x86/include/uapi/asm/posix_types_x32.h
-@@ -11,10 +11,6 @@
-  *
-  */
- 
--typedef long long __kernel_long_t;
--typedef unsigned long long __kernel_ulong_t;
--#define __kernel_long_t __kernel_long_t
--
- #include <asm/posix_types_64.h>
- 
- #endif /* _ASM_X86_POSIX_TYPES_X32_H */
-diff --git a/include/uapi/asm-generic/kernel_long_t.h b/include/uapi/asm-generic/kernel_long_t.h
-new file mode 100644
-index 000000000000..649a97a8c304
---- /dev/null
-+++ b/include/uapi/asm-generic/kernel_long_t.h
-@@ -0,0 +1,8 @@
-+/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-+#ifndef __ASM_GENERIC_KERNEL_LONG_T_H
-+#define __ASM_GENERIC_KERNEL_LONG_T_H
-+
-+typedef long		__kernel_long_t;
-+typedef unsigned long	__kernel_ulong_t;
-+
-+#endif /* __ASM_GENERIC_POSIX_TYPES_H */
-diff --git a/include/uapi/asm-generic/posix_types.h b/include/uapi/asm-generic/posix_types.h
-index f0733a26ebfc..2715ba4599bd 100644
---- a/include/uapi/asm-generic/posix_types.h
-+++ b/include/uapi/asm-generic/posix_types.h
-@@ -11,10 +11,7 @@
-  * architectures, so that you can override them.
-  */
- 
--#ifndef __kernel_long_t
--typedef long		__kernel_long_t;
--typedef unsigned long	__kernel_ulong_t;
--#endif
-+#include <asm/kernel_long_t.h>
- 
- #ifndef __kernel_ino_t
- typedef __kernel_ulong_t __kernel_ino_t;
-
-Additional architectures need conversion as well, but I think this
-suggests where this is going.  Would that be acceptable?
-
-A different approach would rename <asm/posix_types.h> to something more
-basic, exclude the two structs, and move all internal #includes which do
-need the structs to the new header.  A new <asm/posix_types.h> would
-include the renamed header and add back the two structs, for
-compatibility.
-
-For a less strict definition of compatibility, it would also be possible
-to introduce <asm/fsid_t.h> (for __kernel_fsid_t) and <linux/fd_set.h>
-(for __kernel_fd_set), and remove the definition of those from
-<asm/posix_types.h>.
-
-The other question is whether this __kernel_long_t dependency in
-<asm/socket.h> is even valid because it makes the constants SO_RCVTIMEO
-etc. unusable in a preprocessor expression (although POSIX does not make
-such a requirement as far as I can see).
-
-Thanks,
-Florian
+> 
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Signed-off-by: Andrew Murray <andrew.murray@arm.com>
+> > ---
+> >  arch/arm/include/asm/arch_timer.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/include/asm/arch_timer.h b/arch/arm/include/asm/arch_timer.h
+> > index ae533caec1e9..99175812d903 100644
+> > --- a/arch/arm/include/asm/arch_timer.h
+> > +++ b/arch/arm/include/asm/arch_timer.h
+> > @@ -125,7 +125,7 @@ static inline void arch_timer_set_cntkctl(u32 cntkctl)
+> >  	isb();
+> >  }
+> >  
+> > -static inline bool arch_timer_set_evtstrm_feature(void)
+> > +static inline void arch_timer_set_evtstrm_feature(void)
+> >  {
+> >  	elf_hwcap |= HWCAP_EVTSTRM;
+> >  }
+> > 
+> 
+> Acked-by: Marc Zyngier <marc.zyngier@arm.com>
+> 
+> 	M.
+> -- 
+> Jazz is not dead. It just smells funny...
