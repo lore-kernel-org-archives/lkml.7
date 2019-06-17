@@ -2,92 +2,153 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08BF0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B35CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB63B2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F8D22063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560807141;
+	bh=aH+v0/h2mKA1dFIi4orLVli+u2QNbOUpNKANA2fgTu4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=k5Keo0+OLq/Pyqp7bmAzpm0aK5M0Ydmle+xO5wYGzqunWkxdinWuJolti9TzB3fuv
+	 fk5LsXCz23T/DNDWSaFxNWs2eLCGaDQqCm3LemRmF4Qh1886uKmCeQz9SYtWbYL/wT
+	 Cea5YPfGxgneyaX3Y//Um6SOeJkqznJf1IYLrFaI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729905AbfFQVcJ (ORCPT
+        id S1730084AbfFQVcT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:32:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47264 "EHLO mx1.redhat.com"
+        Mon, 17 Jun 2019 17:32:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728478AbfFQVcE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:32:04 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730434AbfFQV1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:27:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6778333BCD;
-        Mon, 17 Jun 2019 21:32:04 +0000 (UTC)
-Received: from flask (unknown [10.43.2.199])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 481D178401;
-        Mon, 17 Jun 2019 21:32:02 +0000 (UTC)
-Received: by flask (sSMTP sendmail emulation); Mon, 17 Jun 2019 23:32:01 +0200
-Date:   Mon, 17 Jun 2019 23:32:01 +0200
-From:   Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: Re: [PATCH v4 5/5] KVM: LAPIC: add advance timer support to
- pi_inject_timer
-Message-ID: <20190617213201.GA26346@flask>
-References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
- <1560770687-23227-6-git-send-email-wanpengli@tencent.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 2100E20673;
+        Mon, 17 Jun 2019 21:27:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560806862;
+        bh=aH+v0/h2mKA1dFIi4orLVli+u2QNbOUpNKANA2fgTu4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CseZQbs2T2vL6v1dFLkTVZb3FZhVIsYF4LZJ94PDxa5mfWM+uVBEuIFD3d6hT6vdF
+         Joy+lCFL+coBX2yxpnqbTu0nJm7MWDfbcpoN7DsXh4JpdJQtEjVxQYi/lzlIVmt9ng
+         LCAEmIjurNZJ185V4YU3FrDLSorEL/VOFSK2vvvg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Baoquan He <bhe@redhat.com>,
+        Borislav Petkov <bp@suse.de>,
+        Kees Cook <keescook@chromium.org>,
+        "Kirill A. Shutemov" <kirill@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
+        kirill.shutemov@linux.intel.com,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
+Subject: [PATCH 4.19 71/75] x86/mm/KASLR: Compute the size of the vmemmap section properly
+Date:   Mon, 17 Jun 2019 23:10:22 +0200
+Message-Id: <20190617210755.997314413@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
+References: <20190617210752.799453599@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560770687-23227-6-git-send-email-wanpengli@tencent.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 17 Jun 2019 21:32:04 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-2019-06-17 19:24+0800, Wanpeng Li:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Wait before calling posted-interrupt deliver function directly to add 
-> advance timer support to pi_inject_timer.
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
+From: Baoquan He <bhe@redhat.com>
 
-Please merge this patch with [2/5], so bisection doesn't break.
+commit 00e5a2bbcc31d5fea853f8daeba0f06c1c88c3ff upstream.
 
->  arch/x86/kvm/lapic.c   | 6 ++++--
->  arch/x86/kvm/lapic.h   | 2 +-
->  arch/x86/kvm/svm.c     | 2 +-
->  arch/x86/kvm/vmx/vmx.c | 2 +-
->  4 files changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 1a31389..1a31ba5 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1462,6 +1462,8 @@ static void apic_timer_expired(struct kvm_lapic *apic, bool can_pi_inject)
->  		return;
->  
->  	if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu)) {
-> +		if (apic->lapic_timer.timer_advance_ns)
-> +			kvm_wait_lapic_expire(vcpu, true);
+The size of the vmemmap section is hardcoded to 1 TB to support the
+maximum amount of system RAM in 4-level paging mode - 64 TB.
 
-From where does kvm_wait_lapic_expire() take
-apic->lapic_timer.expired_tscdeadline?
+However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
+the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
+64 TB of vmemmap area is needed:
 
-(I think it would be best to take the functional core of
- kvm_wait_lapic_expire() and make it into a function that takes the
- expired_tscdeadline as an argument.)
+  4 * 1000^5 PB / 4096 bytes page size * 64 bytes per page struct / 1000^4 TB = 62.5 TB.
 
-Thanks.
+This hardcoding may cause vmemmap to corrupt the following
+cpu_entry_area section, if KASLR puts vmemmap very close to it and the
+actual vmemmap size is bigger than 1 TB.
+
+So calculate the actual size of the vmemmap region needed and then align
+it up to 1 TB boundary.
+
+In 4-level paging mode it is always 1 TB. In 5-level it's adjusted on
+demand. The current code reserves 0.5 PB for vmemmap on 5-level. With
+this change, the space can be saved and thus used to increase entropy
+for the randomization.
+
+ [ bp: Spell out how the 64 TB needed for vmemmap is computed and massage commit
+   message. ]
+
+Fixes: eedb92abb9bb ("x86/mm: Make virtual memory layout dynamic for CONFIG_X86_5LEVEL=y")
+Signed-off-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Kees Cook <keescook@chromium.org>
+Acked-by: Kirill A. Shutemov <kirill@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: kirill.shutemov@linux.intel.com
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable <stable@vger.kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190523025744.3756-1-bhe@redhat.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ arch/x86/mm/kaslr.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+--- a/arch/x86/mm/kaslr.c
++++ b/arch/x86/mm/kaslr.c
+@@ -51,7 +51,7 @@ static __initdata struct kaslr_memory_re
+ } kaslr_regions[] = {
+ 	{ &page_offset_base, 0 },
+ 	{ &vmalloc_base, 0 },
+-	{ &vmemmap_base, 1 },
++	{ &vmemmap_base, 0 },
+ };
+ 
+ /* Get size in bytes used by the memory region */
+@@ -77,6 +77,7 @@ void __init kernel_randomize_memory(void
+ 	unsigned long rand, memory_tb;
+ 	struct rnd_state rand_state;
+ 	unsigned long remain_entropy;
++	unsigned long vmemmap_size;
+ 
+ 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
+ 	vaddr = vaddr_start;
+@@ -108,6 +109,14 @@ void __init kernel_randomize_memory(void
+ 	if (memory_tb < kaslr_regions[0].size_tb)
+ 		kaslr_regions[0].size_tb = memory_tb;
+ 
++	/*
++	 * Calculate the vmemmap region size in TBs, aligned to a TB
++	 * boundary.
++	 */
++	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
++			sizeof(struct page);
++	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
++
+ 	/* Calculate entropy available between regions */
+ 	remain_entropy = vaddr_end - vaddr_start;
+ 	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
+
+
