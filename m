@@ -2,160 +2,179 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EF9EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:49:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E51C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:52:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638D92063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:49:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E08E020673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vrs1M6PV"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gqp+ypfD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728278AbfFQVtg (ORCPT
+        id S1727810AbfFQVwu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:49:36 -0400
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:42436 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726001AbfFQVtf (ORCPT
+        Mon, 17 Jun 2019 17:52:50 -0400
+Received: from mail-pg1-f179.google.com ([209.85.215.179]:33296 "EHLO
+        mail-pg1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726001AbfFQVwu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:49:35 -0400
-Received: by mail-pl1-f170.google.com with SMTP id ay6so2495003plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 14:49:35 -0700 (PDT)
+        Mon, 17 Jun 2019 17:52:50 -0400
+Received: by mail-pg1-f179.google.com with SMTP id k187so6511565pga.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 14:52:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=H3Fszt1Y3AdZpnj+WeH9b+vUaOMqgjk8732ory9O+K0=;
-        b=vrs1M6PVEXsz5PXr9KQC1LoqGXYZtiab2IXzFvTgr5PXWbkPlSebojHfZXmUvWKY2z
-         zC2gGqt+JVArV9H0h5Ea+8Y6pKHmDMZeNZ5fdGxvVaF+Qw+pYlEfmNisDUdP60jWQTv/
-         Vmk8MeP3NpSubvbIvWVyzORaBXVZ8FzaF/FNDfD3YtH7jcRw+mrQ1zQeQWKarCCfWbTQ
-         6x56iYpwX+sl7PBjyUzAST/xCjzJ+8QkbLAR4oRCAqyt0rAysDbRl+WAFe1thY2zIKGh
-         sVPlbmwSe3o4lexCJ8ysWruS6Z3eoWN8qOBtZNGXdyG5u/wtxhqd3aa+gsrkuQSZ/93Y
-         UKQQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1xcZsDnFJerp/M5+7w3KuITigLfvTiYHjxaMnqovFnc=;
+        b=gqp+ypfDJvASzGRx5oJFX+iqTEx4//7RUpoeMF0vxhp+6NNfjnCgSFycqewM34vSxS
+         XQPL6g0t5fW+I2axHfyL9SI4l9hvJ1vE6/kSzZ+lI1EuKOsNTra0hHPXcHwjHuH9QTdN
+         pPBaSINBP2SeFiESwIhr3905usYVGNhS+9KmA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=H3Fszt1Y3AdZpnj+WeH9b+vUaOMqgjk8732ory9O+K0=;
-        b=CGk23YSZK3yazV1YnfSoLVWLkiyhXkA6c5jNAD8PzJSp2Rx3QVadDtM611KV9RVNub
-         ai/in86AXwmEUZueEZgFroewJNBAE9Tf+kJbaZFd7xdz0KTE8WfEmiYNDrC7RijI1hKb
-         ac18c6/e36WlL1vWbhQlmICdiRsFE6Z2/YJkk3YIT2ubSL/UWEnGVEXIi/weV0ZkvkAy
-         vC4GghM0FS6zoITK7Wbksyi2tKL49UFdd3/6esMpyJrgSWEwdyD8OBZGsEJN9wrMj8I7
-         PssaZPtKhURF5o/oOzK+oZmXJ4T69fykT1EEDIb/NVmw0UsiDRASduNOQ76WAcLkoMpD
-         1JmQ==
-X-Gm-Message-State: APjAAAW7zbZWgDNTw6pjH7RLPAz8zrx72UOSWDg0FLth1wOE3yd2KI9S
-        sZ2IWGsEOFJfACdLLPd32XEy/Q==
-X-Google-Smtp-Source: APXvYqzqOG8fr9aMqSVtoSub025NpBTqrwdZo5nVujwuZepuTyZ6FcTQBRkNyY0aIW/l3qsLSfE+Sg==
-X-Received: by 2002:a17:902:e6:: with SMTP id a93mr67857206pla.175.1560808173712;
-        Mon, 17 Jun 2019 14:49:33 -0700 (PDT)
-Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
-        by smtp.gmail.com with ESMTPSA id b15sm12350703pfi.141.2019.06.17.14.49.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 14:49:32 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 14:49:27 -0700
-From:   Benson Leung <bleung@google.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Guenter Roeck <groeck@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Gwendal Grignou <gwendal@chromium.org>,
-        Lee Jones <lee.jones@linaro.org>, bleung@google.com
-Subject: Re: linux-next: Signed-off-by missing for commits in the
- chrome-platform tree
-Message-ID: <20190617214927.GA68491@google.com>
-References: <20190618074607.09dfcdbd@canb.auug.org.au>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1xcZsDnFJerp/M5+7w3KuITigLfvTiYHjxaMnqovFnc=;
+        b=Co1mN1qn45MhKxDfpKVDciNAlp4dFqcIRGPfuWA7CNJkKyEGCPu5qeXp8WH19nek+j
+         /N7uNIz+ed4jOpsUyHGQjTJSt5ciC49P2OMqq8mXlbiGj+qBhydHI9PqZogFQUue2k9b
+         pYYUopei83rWCtm+6Mo+h0Nplr0Vw2yJLNRRxINvU2E2M5pPiO8tbd/LHk2hzCvMJcgm
+         Wf7ZRpFU89Bob1ntyyloZifrHCJ9jar5WAghcQPTtbid3et88zFxgQxlf0qib69HPD1F
+         6PVTgt9/agf2HcwKJiUjrvftNL7YNLmk4p28rYCl+oO1Zs8ANEYgoNtyQzH8DefyoYla
+         n/Hg==
+X-Gm-Message-State: APjAAAUCrQ46OcMiXa/DvclJymeOargivbj1twx4opjdu9NaInfRT7cy
+        FMuQe1sI+EsjKjmIZli2Bcod+A==
+X-Google-Smtp-Source: APXvYqysAsJcrGHv+ZIF21sw3uSMMfr2WsNoXiatBdoPHN+8eKXQ64ceV5ChmXT/f9A8gZ3gGeerWw==
+X-Received: by 2002:a17:90a:be0d:: with SMTP id a13mr1244815pjs.84.1560808369562;
+        Mon, 17 Jun 2019 14:52:49 -0700 (PDT)
+Received: from evgreen2.mtv.corp.google.com ([2620:15c:202:201:ffda:7716:9afc:1301])
+        by smtp.gmail.com with ESMTPSA id f17sm13319629pgv.16.2019.06.17.14.52.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 17 Jun 2019 14:52:49 -0700 (PDT)
+From:   Evan Green <evgreen@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Lee Jones <lee.jones@linaro.org>
+Cc:     Ravi Chandra Sadineni <ravisadineni@chromium.org>,
+        Rajat Jain <rajatja@chromium.org>,
+        Evan Green <evgreen@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>,
+        Tim Wawrzynczak <twawrzynczak@chromium.org>
+Subject: [PATCH v2] platform/chrome: Expose resume result via debugfs
+Date:   Mon, 17 Jun 2019 14:52:34 -0700
+Message-Id: <20190617215234.260982-1-evgreen@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
-Content-Disposition: inline
-In-Reply-To: <20190618074607.09dfcdbd@canb.auug.org.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+For ECs that support it, the EC returns the number of slp_s0
+transitions and whether or not there was a timeout in the resume
+response. Expose the last resume result to usermode via debugfs so
+that usermode can detect and report S0ix timeouts.
 
---/04w6evG8XlLl3ft
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Evan Green <evgreen@chromium.org>
+---
 
-Hi Stephen,
+Changes in v2:
+ - Moved from sysfs to debugfs (Enric)
+ - Added documentation (Enric)
 
-On Tue, Jun 18, 2019 at 07:46:07AM +1000, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Commits
->=20
->   0ac39915c00e ("mfd: cros_ec: Update I2S API")
->   273e4a83784f ("mfd: cros_ec: Add Management API entry points")
->   5fb684b28ddf ("mfd: cros_ec: Add SKU ID and Secure storage API")
->   fa1edb8224c9 ("mfd: cros_ec: Add API for rwsig")
->   a5a60125c987 ("mfd: cros_ec: Add API for Fingerprint support")
->   ff5599529a19 ("mfd: cros_ec: Add API for Touchpad support")
->   a97c5892c8cf ("mfd: cros_ec: Add API for EC-EC communication")
->   381041521d3a ("mfd: cros_ec: Add I2C passthru protection API")
->   d18e0cde8705 ("mfd: cros_ec: Add Smart Battery Firmware update API")
->   e4de049a3892 ("mfd: cros_ec: Add Hibernate API")
->   44f251dc6e69 ("mfd: cros_ec: Add API for keyboard testing")
->   03dc9f7cdc8a ("mfd: cros_ec: Complete Power and USB PD API")
->   a704e1450f07 ("mfd: cros_ec: Fix temperature API")
->   fa5a714e9d54 ("mfd: cros_ec: Add fingerprint API")
->   cbc1d3b7c5a4 ("mfd: cros_ec: Fix event processing API")
->   b841c3496d0d ("mfd: cros_ec: Complete MEMS sensor API")
->   b4e686e9eecd ("mfd: cros_ec: Add EC transport protocol v4")
->   743875b6af81 ("mfd: cros_ec: Expand hash API")
->   051cf1f83491 ("mfd: cros_ec: Add lightbar v2 API")
->   b1bd73c9e90f ("mfd: cros_ec: Add PWM_SET_DUTY API")
->   998b37cad349 ("mfd: cros_ec: Add Flash V2 commands API")
->   d8064663d3c4 ("mfd: cros_ec: Remove zero-size structs")
->   036957c19978 ("mfd: cros_ec: move HDMI CEC API definition")
->   0ee2b17ec310 ("mfd: cros_ec: Update ACPI interface definition")
->   6f6db199e544 ("mfd: cros_ec: use BIT macro")
->   a5f0ac50978b ("mfd: cros_ec: Define commands as 4-digit UPPER CASE hex =
-values")
->   de18e8beadcc ("mfd: cros_ec: add ec_align macros")
->   bf96c5f1276c ("mfd: cros_ec: set comments properly")
->   6b854d5fbda9 ("mfd: cros_ec: Zero BUILD_ macro")
->   5a0d32c91830 ("mfd: cros_ec: Update license term")
->=20
-> are missing a Signed-off-by from their committer.
->=20
-> These were all rebased.
->=20
 
-Yup, Enric and I caught this this morning. You're right, this was an inadve=
-rtent
-rebase. We'll fix the for-next branch for tomorrow.
+---
+ Documentation/ABI/testing/debugfs-cros-ec | 22 ++++++++++++++++++++++
+ drivers/mfd/cros_ec.c                     |  6 +++++-
+ drivers/platform/chrome/cros_ec_debugfs.c |  7 +++++++
+ include/linux/mfd/cros_ec.h               |  1 +
+ 4 files changed, 35 insertions(+), 1 deletion(-)
 
-Thanks,
-Benson
+diff --git a/Documentation/ABI/testing/debugfs-cros-ec b/Documentation/ABI/testing/debugfs-cros-ec
+index 573a82d23c89..008b31422079 100644
+--- a/Documentation/ABI/testing/debugfs-cros-ec
++++ b/Documentation/ABI/testing/debugfs-cros-ec
+@@ -32,3 +32,25 @@ Description:
+ 		is used for synchronizing the AP host time with the EC
+ 		log. An error is returned if the command is not supported
+ 		by the EC or there is a communication problem.
++
++What:		/sys/kernel/debug/cros_ec/last_resume_result
++Date:		June 2019
++KernelVersion:	5.3
++Description:
++		Some ECs have a feature where they will track transitions to
++		the (Intel) processor's SLP_S0 line, in order to detect cases
++		where a system failed to go into S0ix. When the system resumes,
++		an EC with this feature will return a summary of SLP_S0
++		transitions that occurred. The last_resume_result file returns
++		the most recent response from the AP's resume message to the EC.
++
++		The bottom 31 bits contain a count of the number of SLP_S0
++		transitions that occurred since the suspend message was
++		received. Bit 31 is set if the EC attempted to wake the
++		system due to a timeout when watching for SLP_S0 transitions.
++		Callers can use this to detect a wake from the EC due to
++		S0ix timeouts. The result will be zero if no suspend
++		transitions have been attempted, or the EC does not support
++		this feature.
++
++		Output will be in the format: "0x%08x\n".
+diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
+index 5d5c41ac3845..2a9ac5213893 100644
+--- a/drivers/mfd/cros_ec.c
++++ b/drivers/mfd/cros_ec.c
+@@ -102,12 +102,16 @@ static int cros_ec_sleep_event(struct cros_ec_device *ec_dev, u8 sleep_event)
+ 
+ 	/* For now, report failure to transition to S0ix with a warning. */
+ 	if (ret >= 0 && ec_dev->host_sleep_v1 &&
+-	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME))
++	    (sleep_event == HOST_SLEEP_EVENT_S0IX_RESUME)) {
++		ec_dev->last_resume_result =
++			buf.u.resp1.resume_response.sleep_transitions;
++
+ 		WARN_ONCE(buf.u.resp1.resume_response.sleep_transitions &
+ 			  EC_HOST_RESUME_SLEEP_TIMEOUT,
+ 			  "EC detected sleep transition timeout. Total slp_s0 transitions: %d",
+ 			  buf.u.resp1.resume_response.sleep_transitions &
+ 			  EC_HOST_RESUME_SLEEP_TRANSITIONS_MASK);
++	}
+ 
+ 	return ret;
+ }
+diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
+index cd3fb9c22a44..663bebf699bf 100644
+--- a/drivers/platform/chrome/cros_ec_debugfs.c
++++ b/drivers/platform/chrome/cros_ec_debugfs.c
+@@ -447,6 +447,13 @@ static int cros_ec_debugfs_probe(struct platform_device *pd)
+ 	debugfs_create_file("uptime", 0444, debug_info->dir, debug_info,
+ 			    &cros_ec_uptime_fops);
+ 
++	if (!strcmp(ec->class_dev.kobj.name, CROS_EC_DEV_NAME)) {
++		debugfs_create_x32("last_resume_result",
++				   0444,
++				   debug_info->dir,
++				   &ec->ec_dev->last_resume_result);
++	}
++
+ 	ec->debug_info = debug_info;
+ 
+ 	dev_set_drvdata(&pd->dev, ec);
+diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
+index 5ddca44be06d..45aba26db964 100644
+--- a/include/linux/mfd/cros_ec.h
++++ b/include/linux/mfd/cros_ec.h
+@@ -155,6 +155,7 @@ struct cros_ec_device {
+ 	struct ec_response_get_next_event_v1 event_data;
+ 	int event_size;
+ 	u32 host_event_wake_mask;
++	u32 last_resume_result;
+ };
+ 
+ /**
+-- 
+2.20.1
 
---=20
-Benson Leung
-Staff Software Engineer
-Chrome OS Kernel
-Google Inc.
-bleung@google.com
-Chromium OS Project
-bleung@chromium.org
-
---/04w6evG8XlLl3ft
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXQgK5wAKCRBzbaomhzOw
-wkObAQD7eW5bRJ4Ak1XaVa/kycxF5ihB2pyEY6COzEZIueyJxAD/VwiNMIajYfsF
-G2gEpF3zaWdQ7JiRR89Ln9/xcTXKSAg=
-=NHpQ
------END PGP SIGNATURE-----
-
---/04w6evG8XlLl3ft--
