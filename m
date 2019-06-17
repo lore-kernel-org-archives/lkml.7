@@ -2,117 +2,127 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEFD4C31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49238C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EF022084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 176EE2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:35:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fxfACKVN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727733AbfFQMez (ORCPT
+        id S1727842AbfFQMfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:34:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:48278 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725962AbfFQMey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:34:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 048E92B;
-        Mon, 17 Jun 2019 05:34:54 -0700 (PDT)
-Received: from [10.1.194.37] (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D76BD3F246;
-        Mon, 17 Jun 2019 05:34:52 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] ACPI/PPTT: Add support for ACPI 6.3 thread flag
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, lenb@kernel.org
-References: <20190614223158.49575-1-jeremy.linton@arm.com>
- <20190614223158.49575-2-jeremy.linton@arm.com>
-From:   Valentin Schneider <valentin.schneider@arm.com>
-Message-ID: <667f95c0-5aa9-f460-a49a-e6dfefc027d8@arm.com>
-Date:   Mon, 17 Jun 2019 13:34:51 +0100
+        Mon, 17 Jun 2019 08:35:05 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:36460 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725962AbfFQMfF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:35:05 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HCVDen016387;
+        Mon, 17 Jun 2019 14:34:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=Bf2mCAHJCk8x6Ixnh6dSc1NHiHAHnvfKgorvDCTAyto=;
+ b=fxfACKVNj9ccB9QXV/rSwNlnRBZyRuirF8gZAmOWFdFkcnq/QNamAG9mKqjxUkRygFJl
+ eMmtdQLPH+8oEhDel/Onx9vbwaJx2o1EQsx0Pe6fgP0nbCHpQ4PfJzmFHGJZ1kdpo80a
+ A7S7/wYgYt/BFcgUl7t7Hxg8kZ4ZIfR5WWgZZoln7Qs86Su6Yu4cT9GG8zx9BKeVrC5w
+ rzsGAqNSbL4Srh7uM94Dzb3sq7sti9Kox5HCfi0kxNN4QX4IwXZphIa3p1cFIRsd0tzf
+ VHT184Cw3OkzKtp3NtnbqURzo2mUDKpfcz2p1qWBBbKSZozQFJtoi6QoUZKwsqAaXc1H mg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2t4qjhtf0b-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 17 Jun 2019 14:34:51 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 916DE34;
+        Mon, 17 Jun 2019 12:34:50 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 673C029CD;
+        Mon, 17 Jun 2019 12:34:50 +0000 (GMT)
+Received: from [10.48.0.204] (10.75.127.48) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 17 Jun
+ 2019 14:34:49 +0200
+Subject: Re: [PATCH 1/1] ARM: dts: stm32: replace rgmii mode with rgmii-id on
+ stm32mp15 boards
+To:     Christophe Roullier <christophe.roullier@st.com>,
+        <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <peppe.cavallaro@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <andrew@lunn.ch>
+References: <20190617085018.20352-1-christophe.roullier@st.com>
+ <20190617085018.20352-2-christophe.roullier@st.com>
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+Message-ID: <c53808dd-f1d2-2865-7d45-fa2ca875b95a@st.com>
+Date:   Mon, 17 Jun 2019 14:34:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190614223158.49575-2-jeremy.linton@arm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190617085018.20352-2-christophe.roullier@st.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.48]
+X-ClientProxiedBy: SFHDAG2NODE3.st.com (10.75.127.6) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_06:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jeremy,
+Hi Christophe
 
-Few nits below.
+On 6/17/19 10:50 AM, Christophe Roullier wrote:
+> On disco and eval board, Tx and Rx delay are applied (pull-up of 4.7k
+> put on VDD) so which correspond to RGMII-ID mode with internal RX and TX
+> delays provided by the PHY, the MAC should not add the RX or TX delays
+> in this case
+> 
+> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+> ---
+>   arch/arm/boot/dts/stm32mp157a-dk1.dts | 2 +-
+>   arch/arm/boot/dts/stm32mp157c-ev1.dts | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+> index 098dbfb06b61..2c105740dfad 100644
+> --- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
+> +++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
+> @@ -51,7 +51,7 @@
+>   	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
+>   	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
+>   	pinctrl-names = "default", "sleep";
+> -	phy-mode = "rgmii";
+> +	phy-mode = "rgmii-id";
+>   	max-speed = <1000>;
+>   	phy-handle = <&phy0>;
+>   
+> diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+> index b6aca40b9b90..ab1393caf799 100644
+> --- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
+> +++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
+> @@ -79,7 +79,7 @@
+>   	pinctrl-0 = <&ethernet0_rgmii_pins_a>;
+>   	pinctrl-1 = <&ethernet0_rgmii_pins_sleep_a>;
+>   	pinctrl-names = "default", "sleep";
+> -	phy-mode = "rgmii";
+> +	phy-mode = "rgmii-id";
+>   	max-speed = <1000>;
+>   	phy-handle = <&phy0>;
+>   
+> 
 
-Also, I had a look at the other PPTT processor flags that were introduced
-in 6.3, and the only other one being used is ACPI_LEAF_NODE in
-acpi_pptt_leaf_node(). However that one already has a handle on the table
-header, so the check_acpi_cpu_flag() isn't of much help there.
+Applied on stm32-next.
 
-I don't believe the other existing flags will benefit from the helper since
-they are more about describing the PPTT tree, but I think it doesn't hurt
-to keep it around for potential future flags.
-
-On 14/06/2019 23:31, Jeremy Linton wrote:
-[...]
-> @@ -517,6 +517,43 @@ static int find_acpi_cpu_topology_tag(unsigned int cpu, int level, int flag)
->  	return retval;
->  }
->  
-> +/**
-> + * check_acpi_cpu_flag() - Determine if CPU node has a flag set
-> + * @cpu: Kernel logical CPU number
-> + * @rev: The PPTT revision defining the flag
-> + * @flag: The flag itself
-> + *
-> + * Check the node representing a CPU for a given flag.
-> + *
-> + * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be found or
-> + *	   the table revision isn't new enough.
-> + * Otherwise returns flag value
-> + */
-
-Nit: strictly speaking we're not returning the flag value but its mask
-applied to the flags field. I don't think anyone will care about getting
-the actual flag value, but it should be made obvious in the doc:
-
--ENOENT if ...
-0 if the flag isn't set
-> 0 if it is set.
-
-[...]
-> @@ -581,6 +618,21 @@ int cache_setup_acpi(unsigned int cpu)
->  	return status;
->  }
->  
-> +/**
-> + * acpi_pptt_cpu_is_thread() - Determine if CPU is a thread
-> + * @cpu: Kernel logical CPU number
-> + *
-> + *
-
-Nit: extra newline
-
-> + * Return: 1, a thread
-> + *         0, not a thread
-> + *         -ENOENT ,if the PPTT doesn't exist, the CPU cannot be found or
-> + *         the table revision isn't new enough.
-> + */
-> +int acpi_pptt_cpu_is_thread(unsigned int cpu)
-> +{
-> +	return check_acpi_cpu_flag(cpu, 2, ACPI_PPTT_ACPI_PROCESSOR_IS_THREAD);
-> +}
-> +
->  /**
->   * find_acpi_cpu_topology() - Determine a unique topology value for a given CPU
->   * @cpu: Kernel logical CPU number
-> @@ -641,7 +693,6 @@ int find_acpi_cpu_cache_topology(unsigned int cpu, int level)
-[...]
+Thanks.
+Alex
