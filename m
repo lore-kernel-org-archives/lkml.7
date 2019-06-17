@@ -2,63 +2,92 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80F34C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89C2AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:04:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3BC20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:01:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 580B921670
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:04:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="Q4w3DyMp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728144AbfFQKBq (ORCPT
+        id S1728136AbfFQKEr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 06:01:46 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49196 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726708AbfFQKBq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 06:01:46 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 63B89AC11;
-        Mon, 17 Jun 2019 10:01:44 +0000 (UTC)
-From:   Andreas Schwab <schwab@suse.de>
-To:     Paul Walmsley <paul.walmsley@sifive.com>
-Cc:     Yash Shah <yash.shah@sifive.com>, davem@davemloft.net,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, palmer@sifive.com,
-        aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
-        <mvmtvco62k9.fsf@suse.de>
-        <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
-X-Yow:  Hey, waiter!  I want a NEW SHIRT and a PONY TAIL with lemon sauce!
-Date:   Mon, 17 Jun 2019 12:01:42 +0200
-In-Reply-To: <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com> (Paul
-        Walmsley's message of "Mon, 17 Jun 2019 02:58:20 -0700 (PDT)")
-Message-ID: <mvmpnnc5y49.fsf@suse.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2.90 (gnu/linux)
+        Mon, 17 Jun 2019 06:04:47 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:50923 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727961AbfFQKEq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 06:04:46 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A630E891A9;
+        Mon, 17 Jun 2019 22:04:44 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1560765884;
+        bh=4b/x7I8aVyzsurIMFQ0LkU0sx+0wbtevSohKT1oCTNk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=Q4w3DyMpFyN4fgkK6aAGhdxc8LIEI9NzWSVZI0qj/zExIpxvRDhUeeSwwgdnwU3LZ
+         b91LOHT/IVlF6UWsXgLCVEvDFU6YJYeyHP4sTmnwcdhPimcpYX936ylvaR5LRrKt9X
+         eJn4g6i5nSR+skXJduqHefC0SKZW1MjGqBalm1kxHEQ0o6PLlqFNlK6In41/oeJBCt
+         hY2Q08zRPoAHzOFXF2HLsllJb2/0arZYIeD2XZRuzJGZFJ1/pFFicMhbg4JyRyVfl1
+         ZoihyL0muyI1CrWzuB63FZ415wp/UlJ8RH9gqPFgL+znzBhw9eEX47hwcElk30CNMB
+         bfZhVyRT0PGJw==
+Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d0765bc0002>; Mon, 17 Jun 2019 22:04:44 +1200
+Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.30])
+        by smtp (Postfix) with ESMTP id 7C70313EED3;
+        Mon, 17 Jun 2019 22:04:45 +1200 (NZST)
+Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
+        id 536631E04F0; Mon, 17 Jun 2019 22:04:44 +1200 (NZST)
+From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
+To:     mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linus.walleij@linaro.org,
+        jason@lakedaemon.net, andrew@lunn.ch, gregory.clement@bootlin.com,
+        sebastian.hesselbarth@gmail.com, linux-gpio@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Subject: [PATCH 2/4] dt-bindings: clock: mvebu: Add compatible string for 98dx1135 core clock
+Date:   Mon, 17 Jun 2019 22:04:30 +1200
+Message-Id: <20190617100432.13037-3-chris.packham@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
+References: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
+x-atlnz-ls: pat
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+Add compatible string for the core clock on the 98dx1135 switch with
+integrated CPU.
 
-> Looks to me that it shouldn't have an impact unless the DT string is 
-> present, and even then, the impact might simply be that the MACB driver 
-> may not work?
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+---
+ Documentation/devicetree/bindings/clock/mvebu-core-clock.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-If the macb driver doesn't work you have an unusable system, of course.
+diff --git a/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt=
+ b/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+index 796c260c183d..76f0952cfc64 100644
+--- a/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
++++ b/Documentation/devicetree/bindings/clock/mvebu-core-clock.txt
+@@ -59,6 +59,7 @@ Required properties:
+ 	"marvell,dove-core-clock" - for Dove SoC core clocks
+ 	"marvell,kirkwood-core-clock" - for Kirkwood SoC (except mv88f6180)
+ 	"marvell,mv88f6180-core-clock" - for Kirkwood MV88f6180 SoC
++	"marvell,mv98dx1135-core-clock" - for 98dx1135 SoC core clocks
+ 	"marvell,mv88f5181-core-clock" - for Orion MV88F5181 SoC
+ 	"marvell,mv88f5182-core-clock" - for Orion MV88F5182 SoC
+ 	"marvell,mv88f5281-core-clock" - for Orion MV88F5281 SoC
+--=20
+2.21.0
 
-Andreas.
-
--- 
-Andreas Schwab, SUSE Labs, schwab@suse.de
-GPG Key fingerprint = 0196 BAD8 1CE9 1970 F4BE  1748 E4D4 88E3 0EEA B9D7
-"And now for something completely different."
