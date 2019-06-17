@@ -2,175 +2,138 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CFFC31E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 02:51:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D68EBC31E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 02:55:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C752085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 02:51:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTvM1OeF"
+	by mail.kernel.org (Postfix) with ESMTP id B5A9B20862
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 02:55:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727593AbfFQCvl (ORCPT
+        id S1727604AbfFQCzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 22:51:41 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:34819 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727441AbfFQCvl (ORCPT
+        Sun, 16 Jun 2019 22:55:06 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:42326 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727547AbfFQCzF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 22:51:41 -0400
-Received: by mail-lf1-f66.google.com with SMTP id a25so5337862lfg.2
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 19:51:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NP+H5g/b+Wzp5HDVodVIMObUSQnlwY7qTP5h/jM808A=;
-        b=KTvM1OeFzJ0IQh2AZPn/iaoJKK/BFA/gSPbnw+dpHa1ZDMMLF9E9PlJJKgTOHsrYnm
-         pIssE8Xpuasa+fx6cgM/Y0TvyOrngvWp3bWFBxOabommOPRLhwGBuW74QSXG+QhV03q8
-         H8OYGyItfYW27WbCks04vsdNnmYH0JdmUb24CHg79pVqWDbRMfiLryki6Pbp1kmVyXqS
-         gXzv+5l456YuyrUevO71mCqfFPa+VeD+Uo+3FvGWWaYtFlaIeCqOXNo6fjseLpUTYOUU
-         hgE0rTuiAlcUZhnqY98BqbI1HTY6m878x4DpPIOCsOKRdJc4zvi2aBud23QAJmSGbsGH
-         S3tA==
+        Sun, 16 Jun 2019 22:55:05 -0400
+Received: by mail-io1-f72.google.com with SMTP id f22so10599095ioj.9
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 19:55:05 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NP+H5g/b+Wzp5HDVodVIMObUSQnlwY7qTP5h/jM808A=;
-        b=FgLGj9HYDV081FZ+ABCuCx2vIAc92EZySL/TV2+SBFMsdPZ4atfav0VSD8Q0MHy78n
-         HtA7jJC5DxaoaxZYO18t1edhkf35vK8fldDDb/ynGFtVqAWl9XJYE1hLRYGPcLxMTrsN
-         79LCxn6cg3T6pE5MFLNkdAmy+IUSnI4dXDrrnEZZUJlowVRRD+eEtUgdeLYY4RQCMo+g
-         nTeq0RdOw3aeNVcuVpV5YNPuT06FfrlJBc2oN7y3UugFMbSC86V2iUlfOdklnhen0ZpJ
-         IdhtqUVfbhZ55ggmGBKYFYy4m3VMVRPw74wYVgW6LiMMJe8fACYucJF5w6rN0RPUXKvU
-         wD/g==
-X-Gm-Message-State: APjAAAUhDEgKPt/J/L1KXXLeL5CoLhZFPH0VPv/PSo0DXZan0L+XNRGO
-        h+XQJNvOrYrAsJrdldb5WWzLKLHR7LKUdzZGUnU=
-X-Google-Smtp-Source: APXvYqwqK5ONwlk02w74B7A40VrZYsHrYlrGyfM8oL8nn/x1ErvZmHIli0U18nqg0dfABCYJv4vnXvdbqQUjlsfLmyU=
-X-Received: by 2002:ac2:5636:: with SMTP id b22mr24697722lff.2.1560739898713;
- Sun, 16 Jun 2019 19:51:38 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=euDDqb7rxlNkibCfMmfIJi1MEBtdDr5Z4oTu8ZibbCc=;
+        b=TMCnx99qnPBaas8Hhnb+urwLSP62wpUJo4LE4TYfNwzNBYzjnybmgwmUx62MmlRdk7
+         i1c+eTh/V0Jc7YfnFdcCoEDtam5Tv9u4aHlXVaWMpczldqWX9lT9jyBCLTAOsKDUCQXd
+         rbgfvAMTkkt+Uwc0jIj1PAumMmUnsJ4BfFrmGc8+LZ4C9K+aeEUb/hA0UG3JyjLZInS7
+         X5u3oLvlHuxbcraNJampfeeyicaW7rgKbZzvEoZk8lGTdTuqCSYAH55sLtBr261vbJzH
+         WLLC+VusgzJ/S05DUC7z4U7TFpW3lTrFgP9jxXha51GaF+mnY5kOOdfmv8J0g2JR6Pdb
+         tU4w==
+X-Gm-Message-State: APjAAAUNATKxwsil7+Bm3hyDpEF91C3AVaQvnTN+XmdtxWdld1oYQyEF
+        oo+1Gk/yH8vUq75vxaPyM/w0QBJdkQK43YU/qmo9WOMYmjZ6
+X-Google-Smtp-Source: APXvYqy4wJ6t+52hlj4WAfJFDQi5RDlvW0Y1G+WY5Eqrd7k7jJqkzkeU3EqY4gkDNispYi3kjzXmcK3HkKNjP1abrY6ceTHOd4Rj
 MIME-Version: 1.0
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
- <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com> <20190531210816.GA24027@sinkpad>
- <20190606152637.GA5703@sinkpad> <20190612163345.GB26997@sinkpad>
- <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com> <20190613032246.GA17752@sinkpad>
-In-Reply-To: <20190613032246.GA17752@sinkpad>
-From:   Aubrey Li <aubrey.intel@gmail.com>
-Date:   Mon, 17 Jun 2019 10:51:27 +0800
-Message-ID: <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-To:     Julien Desfossez <jdesfossez@digitalocean.com>
-Cc:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?UTF-8?B?RnLDqWTDqXJpYyBXZWlzYmVja2Vy?= <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Received: by 2002:a6b:7909:: with SMTP id i9mr44048580iop.8.1560740104829;
+ Sun, 16 Jun 2019 19:55:04 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 19:55:04 -0700
+In-Reply-To: <000000000000d05a78056873bc47@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000089165c058b7c1f44@google.com>
+Subject: Re: WARNING in kvm_arch_vcpu_ioctl_run (3)
+From:   syzbot <syzbot+760a73552f47a8cd0fd9@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, bp@alien8.de, gleb@kernel.org,
+        hpa@zytor.com, kernellwp@gmail.com, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, mingo@redhat.com,
+        paulmck@linux.vnet.ibm.com, pbonzini@redhat.com,
+        peterz@infradead.org, rkrcmar@redhat.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, x86@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:22 AM Julien Desfossez
-<jdesfossez@digitalocean.com> wrote:
->
-> On 12-Jun-2019 05:03:08 PM, Subhra Mazumdar wrote:
-> >
-> > On 6/12/19 9:33 AM, Julien Desfossez wrote:
-> > >After reading more traces and trying to understand why only untagged
-> > >tasks are starving when there are cpu-intensive tasks running on the
-> > >same set of CPUs, we noticed a difference in behavior in =E2=80=98pick=
-_task=E2=80=99. In
-> > >the case where =E2=80=98core_cookie=E2=80=99 is 0, we are supposed to =
-only prefer the
-> > >tagged task if it=E2=80=99s priority is higher, but when the prioritie=
-s are
-> > >equal we prefer it as well which causes the starving. =E2=80=98pick_ta=
-sk=E2=80=99 is
-> > >biased toward selecting its first parameter in case of equality which =
-in
-> > >this case was the =E2=80=98class_pick=E2=80=99 instead of =E2=80=98max=
-=E2=80=99. Reversing the order of
-> > >the parameter solves this issue and matches the expected behavior.
-> > >
-> > >So we can get rid of this vruntime_boost concept.
-> > >
-> > >We have tested the fix below and it seems to work well with
-> > >tagged/untagged tasks.
-> > >
-> > My 2 DB instance runs with this patch are better with CORESCHED_STALL_F=
-IX
-> > than NO_CORESCHED_STALL_FIX in terms of performance, std deviation and
-> > idleness. May be enable it by default?
->
-> Yes if the fix is approved, we will just remove the option and it will
-> always be enabled.
->
+syzbot has found a reproducer for the following crash on:
 
-sysbench --report-interval option unveiled something.
+HEAD commit:    963172d9 Merge branch 'x86-urgent-for-linus' of git://git...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11422276a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
+dashboard link: https://syzkaller.appspot.com/bug?extid=760a73552f47a8cd0fd9
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=103d3e21a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1645f956a00000
 
-benchmark setup
--------------------------
-two cgroups, cpuset.cpus =3D 1, 53(one core, two siblings)
-sysbench cpu mode, one thread in cgroup1
-sysbench memory mode, one thread in cgroup2
+The bug was bisected to:
 
-no core scheduling
---------------------------
-cpu throughput eps: 405.8, std: 0.14%
-mem bandwidth MB/s: 5785.7, std: 0.11%
+commit 706249c222f68471b6f8e9e8e9b77665c404b226
+Author: Peter Zijlstra <peterz@infradead.org>
+Date:   Fri Jul 24 13:06:37 2015 +0000
 
-cgroup1 enable core scheduling(cpu mode)
-cgroup2 disable core scheduling(memory mode)
------------------------------------------------------------------
-cpu throughput eps: 8.7, std: 519.2%
-mem bandwidth MB/s: 6263.2, std: 9.3%
+     locking/static_keys: Rework update logic
 
-cgroup1 disable core scheduling(cpu mode)
-cgroup2 enable core scheduling(memory mode)
------------------------------------------------------------------
-cpu throughput eps: 468.0 , std: 8.7%
-mem bandwidth MB/S: 311.6 , std: 169.1%
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=175cc587200000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14dcc587200000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10dcc587200000
 
-cgroup1 enable core scheduling(cpu mode)
-cgroup2 enable core scheduling(memory mode)
-----------------------------------------------------------------
-cpu throughput eps: 76.4 , std: 168.0%
-mem bandwidth MB/S: 5388.3 , std: 30.9%
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+760a73552f47a8cd0fd9@syzkaller.appspotmail.com
+Fixes: 706249c222f6 ("locking/static_keys: Rework update logic")
 
-The result looks still unfair, and particularly, the variance is too high,
-----sysbench cpu log ----
-----snip----
-[ 10s ] thds: 1 eps: 296.00 lat (ms,95%): 2.03
-[ 11s ] thds: 1 eps: 0.00 lat (ms,95%): 1170.65
-[ 12s ] thds: 1 eps: 1.00 lat (ms,95%): 0.00
-[ 13s ] thds: 1 eps: 0.00 lat (ms,95%): 0.00
-[ 14s ] thds: 1 eps: 295.91 lat (ms,95%): 2.03
-[ 15s ] thds: 1 eps: 1.00 lat (ms,95%): 170.48
-[ 16s ] thds: 1 eps: 0.00 lat (ms,95%): 2009.23
-[ 17s ] thds: 1 eps: 1.00 lat (ms,95%): 995.51
-[ 18s ] thds: 1 eps: 296.00 lat (ms,95%): 2.03
-[ 19s ] thds: 1 eps: 1.00 lat (ms,95%): 170.48
-[ 20s ] thds: 1 eps: 0.00 lat (ms,95%): 2009.23
-----snip----
+WARNING: CPU: 1 PID: 9153 at arch/x86/kvm/x86.c:8302  
+kvm_arch_vcpu_ioctl_run+0x1d8/0x1740 arch/x86/kvm/x86.c:8302
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9153 Comm: syz-executor142 Not tainted 5.2.0-rc4+ #53
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  panic+0x2cb/0x744 kernel/panic.c:219
+  __warn.cold+0x20/0x4d kernel/panic.c:576
+  report_bug+0x263/0x2b0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:kvm_arch_vcpu_ioctl_run+0x1d8/0x1740 arch/x86/kvm/x86.c:8302
+Code: 80 3c 02 00 0f 85 09 14 00 00 49 8b 9c 24 18 0d 00 00 31 ff 48 89 de  
+e8 56 93 62 00 48 85 db 0f 84 77 0c 00 00 e8 a8 91 62 00 <0f> 0b e8 a1 91  
+62 00 49 8d 7e 01 48 b8 00 00 00 00 00 fc ff df 48
+RSP: 0018:ffff8880a0a6fb30 EFLAGS: 00010293
+RAX: ffff8880863945c0 RBX: 0000000000000001 RCX: ffffffff810e3c69
+RDX: 0000000000000000 RSI: ffffffff810e2fb8 RDI: 0000000000000005
+RBP: ffff8880a0a6fb98 R08: ffff8880863945c0 R09: ffffed1015d26be0
+R10: ffffed1015d26bdf R11: ffff8880ae935efb R12: ffff8880a4048040
+R13: 0000000000000000 R14: ffff8880937c8000 R15: ffff8880a38d2680
+  kvm_vcpu_ioctl+0x4dc/0xf90 arch/x86/kvm/../../../virt/kvm/kvm_main.c:2755
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x448cb9
+Code: e8 8c b0 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 4b 0a fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ff6ad8dcce8 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00000000006ddc58 RCX: 0000000000448cb9
+RDX: 0000000000000000 RSI: 000000000000ae80 RDI: 0000000000000005
+RBP: 00000000006ddc50 R08: 00007ff6ad8dd700 R09: 0000000000000000
+R10: 00007ff6ad8dd700 R11: 0000000000000246 R12: 00000000006ddc5c
+R13: 00007ffdd645a21f R14: 00007ff6ad8dd9c0 R15: 20c49ba5e353f7cf
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
-Thanks,
--Aubrey
