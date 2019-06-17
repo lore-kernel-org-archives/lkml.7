@@ -2,106 +2,122 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288F1C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 448BBC31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB5F2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:34:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C94F2087F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:34:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="YaXNNhpE"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bieRDgFe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfFQLec (ORCPT
+        id S1727403AbfFQLeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:34:32 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33423 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725681AbfFQLeb (ORCPT
+        Mon, 17 Jun 2019 07:34:50 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:4018 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfFQLeu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:34:31 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i11so15730279edq.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=9vPSLa5+XLyQJw19zpdaml7fRJQhxguAtOgI7YT73oo=;
-        b=YaXNNhpEEHuGAVVYKiFjcIjtnlRn+SX4KK6cHn4Pg7lywkMBTaTfMWwp9ZftE10ZTr
-         nuJ/UU47huRRPPSztqkz4DT7OKeZiKaT3eRLIl1roljXdiZqjxVtFlg3kLPfsMBLX4Un
-         7ceatCqEab2IpD+LDjdjSxFc3CPR7yAI7ByqoRuTM6zTdeKEHebGRoQcAkX8h/0DLvtx
-         mU1LmYOU6smRlrahMdW/qJObnQsEC/dU3qrlVLLrj1wviK4LfngoI/syjUqsbWjuk/se
-         mN/ZqzvXU79WwIu8OvQHKDBC0nfBXRps1lnFQdEllgWHSwdSXd1mJ+KOqrNNWMbWO75W
-         khiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=9vPSLa5+XLyQJw19zpdaml7fRJQhxguAtOgI7YT73oo=;
-        b=pf2KEokoYzt9CUnhYG4lF/rXNr58WpcCY8011Ps/6sP2xR45u0A8eaG8+SUcDWXqQe
-         dHumKglCiGpi7aat61+0B9enztnuoFzeNyQTwewFMf4KXHeIJVWfrK3BaEfViJnhvOJ0
-         pUFaKpqn3fIwjhy3ML/aIyMygVwLYhrlAdgD8lc0L+LA7ryfEIujwlq+w33R38M9GESu
-         hmbNy3yMaYajrJyyaGopRt8QB1gjytLeImAwbR+9Kufdn7HA+ohpEQaf9J2SwpLW8J+1
-         UdihVd3ocJOQM83H5fOicsqpJrPsa8m/sOnVObdoeI5xKC7gPuJPCUYUgl9BwYHvcTka
-         vLcw==
-X-Gm-Message-State: APjAAAX6Cx+EYa3riVmllCqC2FZfhUx/gYfxyMmbQngjQl0Ws/cpy9Hd
-        JurP19GAN4OrnWCr7ILHF2OMkw==
-X-Google-Smtp-Source: APXvYqw1q+5ssz4QySIjZc498AMwl614ceV96qiEMFWPDNSLJ7oh7ctcvwS8zNJc5j4OHthaIvZI/Q==
-X-Received: by 2002:a50:d0d6:: with SMTP id g22mr46189168edf.250.1560771269879;
-        Mon, 17 Jun 2019 04:34:29 -0700 (PDT)
-Received: from localhost ([81.92.102.43])
-        by smtp.gmail.com with ESMTPSA id s5sm3434216edh.3.2019.06.17.04.34.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 04:34:29 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 04:34:28 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Andreas Schwab <schwab@suse.de>
-cc:     Yash Shah <yash.shah@sifive.com>, davem@davemloft.net,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        nicolas.ferre@microchip.com, palmer@sifive.com,
-        aou@eecs.berkeley.edu, ynezz@true.cz, sachin.ghadi@sifive.com
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-In-Reply-To: <mvmh88o5xi5.fsf@suse.de>
-Message-ID: <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com> <mvmtvco62k9.fsf@suse.de> <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com> <mvmpnnc5y49.fsf@suse.de> <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
- <mvmh88o5xi5.fsf@suse.de>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Mon, 17 Jun 2019 07:34:50 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d077ad90000>; Mon, 17 Jun 2019 04:34:49 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 04:34:49 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 04:34:49 -0700
+Received: from [10.24.247.153] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
+ 2019 11:34:47 +0000
+Subject: Re: [PATCH v2 0/2] PCI: device link quirk for NVIDIA GPU
+To:     Bjorn Helgaas <helgaas@kernel.org>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <lukas@wunner.de>
+References: <20190606092225.17960-1-abhsahu@nvidia.com>
+ <20190613205720.GK13533@google.com>
+X-Nvconfidentiality: public
+From:   Abhishek Sahu <abhsahu@nvidia.com>
+Message-ID: <ec2226e8-ccce-488f-20eb-0dd22dc9bed1@nvidia.com>
+Date:   Mon, 17 Jun 2019 17:04:43 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190613205720.GK13533@google.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560771289; bh=Hk/6KBGqJg6eibtneR2WtGviyInDD/OJ7+WqSEyVYRc=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=bieRDgFeWAkiTRJzUdd4ELyDZRMADAoqyCE90ifyaN/QNX4qV7WRSuW+zpDQdVBpH
+         iDhxm8A09dE/2J1ceOTaoQpvXVrwF9b8KIX9OQSN7NdpniNwOBVmtM3MNxtMrrCK4O
+         oQ3ECSTaM9mN5k39Smjq3UQseOaBRSuhdP0EBn+FHWC4/TyRClbaZNBOAmXE/MjFG0
+         qsUZvBKSbAlxX9eJwm+JXyHErDFO4ATEKM+ikjX1AV0JawFOjvzYNERL/phM31pmoX
+         7a5buzhrPg9Hy2tdb1b7XBqTzu+nGBo4bvEebzUUjQrrEYP//SEKgX2Ky6hxv6PDyV
+         G/3ysW/Dp1ghg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Andreas Schwab wrote:
-
-> On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
+On 6/14/2019 2:27 AM, Bjorn Helgaas wrote:
+> On Thu, Jun 06, 2019 at 02:52:23PM +0530, Abhishek Sahu wrote:
+>> * v2:
+>>
+>> 1. Make the pci device link helper function generic which can be
+>>    used for other multi-function PCI devices also.
+>> 2. Minor changes in comments and commit logs.
+>>
+>> * v1:
+>>
+>> NVIDIA Turing GPU [1] has hardware support for USB Type-C and
+>> VirtualLink [2]. The Turing GPU is a multi-function PCI device
+>> which has the following four functions:
+>>
+>> 	- VGA display controller (Function 0)
+>> 	- Audio controller (Function 1)
+>> 	- USB xHCI Host controller (Function 2)
+>> 	- USB Type-C USCI controller (Function 3)
+>>
+>> Currently NVIDIA and Nouveau GPU drivers only manage function 0.
+>> Rest of the functions are managed by other drivers. These functions
+>> internally in the hardware are tightly coupled. When function 0 goes
+>> in runtime suspended state, then it will do power gating for most of
+>> the hardware blocks. Some of these hardware blocks are used by
+>> the other PCI functions, which leads to functional failure. In the
+>> mainline kernel, the device link is present between
+>> function 0 and function 1.  This patch series deals with creating
+>> a similar kind of device link between function 0 and
+>> functions 2 and 3.
+>>
+>> [1] https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/technologies/turing-architecture/NVIDIA-Turing-Architecture-Whitepaper.pdf
+>> [2] https://en.wikipedia.org/wiki/VirtualLink
+>>
+>> Abhishek Sahu (2):
+>>   PCI: Code reorganization for creating device link
+>>   PCI: Create device link for NVIDIA GPU
 > 
-> > On Mon, 17 Jun 2019, Andreas Schwab wrote:
-> >
-> >> On Jun 17 2019, Paul Walmsley <paul.walmsley@sifive.com> wrote:
-> >> 
-> >> > Looks to me that it shouldn't have an impact unless the DT string is 
-> >> > present, and even then, the impact might simply be that the MACB driver 
-> >> > may not work?
-> >> 
-> >> If the macb driver doesn't work you have an unusable system, of course.
-> >
-> > Why?
-> 
-> Because a system is useless without network.
+> Applied to pci/misc for v5.3, thanks!
 
-From an upstream Linux point of view, Yash's patches should be an 
-improvement over the current mainline kernel situation, since there's 
-currently no upstream support for the (SiFive-specific) TX clock switch 
-register.  With the right DT data, and a bootloader that handles the PHY 
-reset, I think networking should work after his patches are upstream -- 
-although I myself haven't tried this yet.
+ Thanks Bjorn for your review and support!
 
+ The runtime PM changes in USB Type-C USCI driver is also
+ applied for v5.3
 
-- Paul
+ https://marc.info/?l=linux-usb&m=155994544705901&w=2
+
+ It will help in achieving run-time PM for Turing GPUs
+ in v5.3.
+
+ Regards,
+ Abhishek
