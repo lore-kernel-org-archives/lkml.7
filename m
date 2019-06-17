@@ -2,113 +2,122 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7015C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:09:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 991DFC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E638218A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:09:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C92E218A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r55Olug4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725905AbfFQGJZ (ORCPT
+        id S1726015AbfFQGKD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 02:09:25 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:42461 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725372AbfFQGJZ (ORCPT
+        Mon, 17 Jun 2019 02:10:03 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:43462 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725914AbfFQGKD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 02:09:25 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hckpV-0006Rj-IE; Mon, 17 Jun 2019 08:09:21 +0200
-Date:   Mon, 17 Jun 2019 08:09:20 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Peter Xu <peterx@redhat.com>
-cc:     linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: Re: [PATCH] timers: Fix up get_target_base() to use old base
- properly
-In-Reply-To: <20190603132944.9726-1-peterx@redhat.com>
-Message-ID: <alpine.DEB.2.21.1906170732410.1760@nanos.tec.linutronix.de>
-References: <20190603132944.9726-1-peterx@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 17 Jun 2019 02:10:03 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5H64Lsi130933;
+        Mon, 17 Jun 2019 06:09:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=grdh29BU5yPRUROUC1gK19xRI+enCyZKgEFK2tTBSUk=;
+ b=r55Olug45CBi7UUK63b+i0uGwVL2OZxoTNQDJNqyv5qxve3Nv3Sjvv8XFA1+ev5CFjym
+ 8/iFWQtWiDQEWGZ9HVExOIZhW4Di9BT4MXx4Wr3e0zMZ8qskkatJgRIdZwQPgwfe3WAf
+ dkRVSdtEF17G38I35GrioUvENz9ewK19+O3gQiNAaTfZFayOw6hvsCrQ2tsc64E3jz0e
+ /OYhraHsoetNaAhLf7xpIJiW3nMHgmvWYVfXrTQfZZjibIMbVapybEP623SR2G1oPB+k
+ zGP6twlX1njC0FciqjV+u3dy9gPQswM1W/aatT2j8ujVE2zEM7psbNFDXZoABXnOYsqj Zg== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t4r3tcgv9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 06:09:28 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5H695oe117917;
+        Mon, 17 Jun 2019 06:09:28 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2t5h5sybe6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 06:09:27 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5H69QdH022783;
+        Mon, 17 Jun 2019 06:09:26 GMT
+Received: from [192.168.0.110] (/70.36.60.91)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Sun, 16 Jun 2019 23:09:26 -0700
+Subject: Re: [RFC PATCH 09/16] xen/evtchn: support evtchn in xenhost_t
+To:     Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
+        xen-devel@lists.xenproject.org
+Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
+        konrad.wilk@oracle.com, sstabellini@kernel.org,
+        joao.m.martins@oracle.com
+References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
+ <20190509172540.12398-10-ankur.a.arora@oracle.com>
+ <c91abc40-03e3-2ebd-a878-b251a97869db@suse.com>
+From:   Ankur Arora <ankur.a.arora@oracle.com>
+Message-ID: <be7c4638-6677-9ed1-7d68-539898b90b2a@oracle.com>
+Date:   Sun, 16 Jun 2019 23:09:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <c91abc40-03e3-2ebd-a878-b251a97869db@suse.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9290 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906170057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9290 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906170057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter,
-
-On Mon, 3 Jun 2019, Peter Xu wrote:
-
-> get_target_base() in the timer code is not using the "base" parameter
-> at all.  My gut feeling is that instead of removing that extra
-> parameter, what we really want to do is "return the old base if it
-> does not suite for a new one".
-
-Gut feelings are not really useful for technical decisions.
-
->  kernel/time/timer.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+On 2019-06-14 5:04 a.m., Juergen Gross wrote:
+> On 09.05.19 19:25, Ankur Arora wrote:
+>> Largely mechanical patch that adds a new param, xenhost_t * to the
+>> evtchn interfaces. The evtchn port instead of being domain unique, is
+>> now scoped to xenhost_t.
+>>
+>> As part of upcall handling we now look at all the xenhosts and, for
+>> evtchn_2l, the xenhost's shared_info and vcpu_info. Other than this
+>> event handling is largley unchanged.
+>>
+>> Note that the IPI, timer, VIRQ, FUNCTION, PMU etc vectors remain
+>> attached to xh_default. Only interdomain evtchns are allowable as
+>> xh_remote.
 > 
-> diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-> index 343c7ba33b1c..6ff6ffd2c719 100644
-> --- a/kernel/time/timer.c
-> +++ b/kernel/time/timer.c
-> @@ -868,7 +868,7 @@ get_target_base(struct timer_base *base, unsigned tflags)
->  	    !(tflags & TIMER_PINNED))
->  		return get_timer_cpu_base(tflags, get_nohz_timer_target());
->  #endif
-> -	return get_timer_this_cpu_base(tflags);
-> +	return base;
->  }
+> I'd do only the interface changes for now (including evtchn FIFO).
+Looking at this patch again, it seems to me that it would be best to
+limit the interface change (to take the xenhost_t * parameter) only to
+bind_interdomain_*. That also happily limits the change to the drivers/
+subtree.
 
-Timers are supposed to be queued on the local CPU except for the following
-cases:
+> 
+> The main difference will be how to call the hypervisor for sending an
+> event (either direct or via a passthrough-hypercall).
+Yeah, though, this would depend on how the evtchns are mapped (if it's
+the L1-Xen which is responsible for mapping the evtchn on behalf of the 
+L0-Xen, then notify_remote_via_evtchn() could just stay the same.)
+Still, I'll add a send interface (perhaps just an inline function) to
+the xenhost interface for this.
 
- 1) timer migration is enabled and the timer is not pinned
+Ankur
 
-    In this case the get_nohz_timer_target() crystal ball logic tries to
-    find a useful base for the timer, which is doomed but its that way
-    until we reach the point where the pull model actually works.
+> 
+> 
+> Juergen
 
- 2) add_timer_on() is invoked which puts a timer on an explicit target
-    CPU. That's not using the above.
-
-That has been that way forever and the base parameter is stale as older
-code used the base to check whether migration is enabled or not. When this
-was converted to a static branch the parameter stayed and got unused.
-
-So your change would prevent moving the timer to the current CPU.
-
-You might argue that in case of an explicit pinned timer, the above logic
-is wrong when the timer is modified as it might move to a different
-CPU. But from day one when the pinned logic was introduced, pinned just
-prevents it from being queued on a remote CPU. If you need a timer to stay
-on a particular CPU even if modified from a remote CPU, then the only way
-right now is to dequeue and requeue it with add_timer_on(). 
-
-If we really want to change that, then we need to audit all usage sites of
-pinned timers and figure out whether this would break anything.
-
-The proper change would be in that case:
-
-      return pinned ? base : get_timer_this_cpu_base(tflags);
-
-But unless you can come up with a use case where the current logic is truly
-broken, I don't see a reason to do that.
-
-Thanks,
-
-	tglx
