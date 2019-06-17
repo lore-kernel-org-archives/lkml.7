@@ -2,92 +2,89 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 885EEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FA4C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F68A208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:05:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560798358;
-	bh=gwzKMKnkmpb67LuXLZlwngatPFxjDRv5Gfxfrd5eRt0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P7ZWQNvxzjQeeEwF1MJUQoFn524cKxk13M619QOvmSTyamjNQxysJyq1AVmBgi/GY
-	 3VNazLe4kB1M1LWpNu9qD75zs3dowBYeIoZ7+Yizpx2AwYNo+SbLnCMMoUtcowsFOL
-	 VPERtwf7AHpguhMnfaPBQe2mJ+/a+2/sMNibiAqs=
+	by mail.kernel.org (Postfix) with ESMTP id 6AB8D208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xKn6GvqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728718AbfFQTF5 (ORCPT
+        id S1726682AbfFQTGD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:05:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54732 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfFQTF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:05:56 -0400
-Received: from localhost (lfbn-1-18355-218.w90-101.abo.wanadoo.fr [90.101.143.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE28D208C0;
-        Mon, 17 Jun 2019 19:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560798356;
-        bh=gwzKMKnkmpb67LuXLZlwngatPFxjDRv5Gfxfrd5eRt0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JN8AQdeqXwbZLY0TGP1Dn54Mw3jGKe3Db5jPGYTh1Ui3UoHhoNMeybWRQnEqir62z
-         GZspIYxrYFO6ED600iqleEgHADxoH12TxLn+uksww4mdqXBj4er0ZCRIPW+gShMHBQ
-         8tPEGvva7imgFptxqpivsZJiaYS413/0gqWYXUtg=
-Date:   Mon, 17 Jun 2019 21:05:53 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH] kernel/isolation: Asset that a housekeeping CPU comes up
- at boot time
-Message-ID: <20190617190552.GA10264@lerouge>
-References: <20190601113919.2678-1-npiggin@gmail.com>
- <1560151344.y4aukciain.astroid@bobo.none>
- <20190617155931.GK3436@hirez.programming.kicks-ass.net>
+        Mon, 17 Jun 2019 15:06:03 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:39124 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfFQTGC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:06:02 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HJ3kTC109174;
+        Mon, 17 Jun 2019 19:05:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=ws5Oz7lWc6UyIPNTo46edvG5iO98Fd3iWSFkEtJcGmE=;
+ b=xKn6GvqYkiT5wbo8pgSYOLRYfXliVt+b+xhEuaOc3E03O/zXLgbqhxlulkjJdOmuXzQE
+ jCO480TFhZgyVvfX5nYiNH+MKPybXPBnNmj0c4kXuSlVr41hewK8UbNWD7AeK2r9Dgxg
+ r3vKnu40S8adUU0jtbaU75PbaTuWcSJ2uFVWHkz5LqaKM9tUsHiDh6hLf/X21VGKvp8X
+ i18kGJbMA0TiQs7LuAcq0QakM0d4eMpPpF7nXb6YdffyUUtYbSc0SUyXSmhAKgteAXeK
+ 6H6D/ogblVNegqmKwJEcO5Z9r+QlBlHZcp4nSyk0UFK5myuM0gkgzVjwww2u1Exxj4SX Qw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2t4rmp07wq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 19:05:58 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HJ4PPx117997;
+        Mon, 17 Jun 2019 19:05:58 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2t5mgbh6dh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Jun 2019 19:05:58 +0000
+Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5HJ5uFi029702;
+        Mon, 17 Jun 2019 19:05:56 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 12:05:56 -0700
+Date:   Mon, 17 Jun 2019 22:05:49 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] MFD fixes for v5.2
+Message-ID: <20190617190549.GW1893@kadam>
+References: <20190617100054.GE16364@dell>
+ <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617155931.GK3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=829
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906170169
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=886 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906170169
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 05:59:31PM +0200, Peter Zijlstra wrote:
-> On Mon, Jun 10, 2019 at 05:24:32PM +1000, Nicholas Piggin wrote:
-> > Nicholas Piggin's on June 1, 2019 9:39 pm:
-> > > With the change to allow the boot CPU0 to be isolated, it is possible
-> > > to specify command line options that result in no housekeeping CPU
-> > > online at boot.
-> > > 
-> > > An 8 CPU system booted with "nohz_full=0-6 maxcpus=4", for example.
-> > > 
-> > > It is not easily possible at housekeeping init time to know all the
-> > > various SMP options that will result in an invalid configuration, so
-> > > this patch adds a sanity check after SMP init, to ensure that a
-> > > housekeeping CPU has been onlined.
-> > > 
-> > > The panic is undesirable, but it's better than the alternative of an
-> > > obscure non deterministic failure. The panic will reliably happen
-> > > when advanced parameters are used incorrectly.
-> > 
-> > Ping on this one? This should resolve Frederic's remaining objection
-> > to the series (at least until he solves it more generally).
-> > 
-> > As the series has already been merged, should we get this upstream
-> > before release?
-> 
-> I was hoping for feedback from Frederic, lacking that, I've queued it
-> now.
-> 
+Ah...  Sorry.  There are a couple similar bugs in other places and I'll
+take a look at those tomorrow as well.
 
-Sorry I just came back from vacation. Any chance we can use a WARN() instead?
-I prefer to use panic() only when data is really threatened or such.
+regards,
+dan carpenter
 
-Thanks.
