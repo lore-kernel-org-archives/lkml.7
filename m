@@ -2,121 +2,76 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28402C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D92A2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:26:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02489208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:25:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NrVMIU4F"
+	by mail.kernel.org (Postfix) with ESMTP id B62482084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:26:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfFQQZQ (ORCPT
+        id S1727910AbfFQQ0B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:25:16 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35502 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725863AbfFQQZQ (ORCPT
+        Mon, 17 Jun 2019 12:26:01 -0400
+Received: from smtprelay0173.hostedemail.com ([216.40.44.173]:37422 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725863AbfFQQ0B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:25:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=PXluhcTCTbRu7MWWqjlNoU2J2WlclfBp1+lbYvichwE=; b=NrVMIU4FjkXaOiq8EBdBsisYX
-        RPTIEzflV5zzQh/U2sftmMWhHn06EA8gVxhHQI09wAKbG1YY/aylBwEQE3x3HBwdn0p4zMqAk5Mo8
-        Mvga3SN32GaMtRhAnUBUhndqL+MxsHwNGkAS3M0CB357M+Invewv0tSVMt+X2l3KOM45BTbbhqnDt
-        1+++Y1sYLNcIANFQDfBUusVnW+IoqYMTzumlNSNAxUdtCv1NiresC8d9lLN1vOGTCgavANJXprh0g
-        Ycsi9s+FlfSM4Wn38hFtg0KP3TV8Cxgna/sKWsWO2eGeM2ZxuvI/tX2zz3ee6gP63a/gt8MV8ySJJ
-        snbxbH0mw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcuRE-0000rQ-MP; Mon, 17 Jun 2019 16:24:56 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 366F52076F712; Mon, 17 Jun 2019 18:24:55 +0200 (CEST)
-Date:   Mon, 17 Jun 2019 18:24:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jann Horn <jannh@google.com>, Greg KH <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>, raven@themaw.net,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-block@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>
-Subject: Re: [PATCH 1/7] General notification queue with user mmap()'able
- ring buffer
-Message-ID: <20190617162455.GL3436@hirez.programming.kicks-ass.net>
-References: <20190528162603.GA24097@kroah.com>
- <155905930702.7587.7100265859075976147.stgit@warthog.procyon.org.uk>
- <155905931502.7587.11705449537368497489.stgit@warthog.procyon.org.uk>
- <4031.1559064620@warthog.procyon.org.uk>
- <20190528231218.GA28384@kroah.com>
- <31936.1559146000@warthog.procyon.org.uk>
- <16193.1559163763@warthog.procyon.org.uk>
- <21942.1559304135@warthog.procyon.org.uk>
- <606.1559312412@warthog.procyon.org.uk>
- <15401.1559322762@warthog.procyon.org.uk>
+        Mon, 17 Jun 2019 12:26:01 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8EF30180A8120;
+        Mon, 17 Jun 2019 16:25:59 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: sugar91_6e38cc9854f4f
+X-Filterd-Recvd-Size: 1749
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf19.hostedemail.com (Postfix) with ESMTPA;
+        Mon, 17 Jun 2019 16:25:57 +0000 (UTC)
+Message-ID: <45e070039e66b1cb1490a78d4805bc73cc09f571.camel@perches.com>
+Subject: Re: [PATCH] Use fall-through attribute rather than magic comments
+From:   Joe Perches <joe@perches.com>
+To:     Pavel Machek <pavel@ucw.cz>, Shawn Landden <shawn@git.icu>
+Cc:     linux-kernel@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Andy Whitcroft <apw@canonical.com>
+Date:   Mon, 17 Jun 2019 09:25:56 -0700
+In-Reply-To: <20190617155643.GA32544@amd>
+References: <20190316033841.7659-1-shawn@git.icu>
+         <20190617155643.GA32544@amd>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <15401.1559322762@warthog.procyon.org.uk>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, May 31, 2019 at 06:12:42PM +0100, David Howells wrote:
-> Peter Zijlstra <peterz@infradead.org> wrote:
+On Mon, 2019-06-17 at 17:56 +0200, Pavel Machek wrote:
+> Hi!
 > 
-> > > > (and it has already been established that refcount_t doesn't work for
-> > > > usage count scenarios)
-> > > 
-> > > ?
-> > > 
-> > > Does that mean struct kref doesn't either?
-> > 
-> > Indeed, since kref is just a pointless wrapper around refcount_t it does
-> > not either.
-> > 
-> > The main distinction between a reference count and a usage count is that
-> > 0 means different things. For a refcount 0 means dead. For a usage count
-> > 0 is merely unused but valid.
+> > +/*
+> > + *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wimplicit-fallthrough
+> > + *   gcc: https://developers.redhat.com/blog/2017/03/10/wimplicit-fallthrough-in-gcc-7/
+> > + */
+> > +#if __has_attribute(__fallthrough__)
+> > +# define __fallthrough                    __attribute__((__fallthrough__))
+> > +#else
+> > +# define __fallthrough
+> > +#endif
 > 
-> Ah - I consider the terms interchangeable.
-> 
-> Take Documentation/filesystems/vfs.txt for instance:
-> 
->   dget: open a new handle for an existing dentry (this just increments
-> 	the usage count)
-> 
->   dput: close a handle for a dentry (decrements the usage count). ...
-> 
->   ...
-> 
->   d_lookup: look up a dentry given its parent and path name component
-> 	It looks up the child of that given name from the dcache
-> 	hash table. If it is found, the reference count is incremented
-> 	and the dentry is returned. The caller must use dput()
-> 	to free the dentry when it finishes using it.
-> 
-> Here we interchange the terms.
-> 
-> Or https://www.kernel.org/doc/gorman/html/understand/understand013.html
-> which seems to interchange the terms in reference to struct page.
+> Is it good idea to add the __'s ? They look kind of ugly. 
 
-Right, but we have two distinct set of semantics, I figured it makes
-sense to have two different names for them. Do you have an alternative
-naming scheme we could use?
+Dunno.
 
-Or should we better document our distinction between reference and usage
-count?
+I agree it's kind of ugly, but it should always work.
+
+I think the generic problem is introducing a new unprefixed
+reserved identifier.  Underscored identifiers are reserved.
+
+There is already a fallthrough: label used in kernel sources
+in net/sctp/sm_make_chunk.c that should probably be changed.
+
