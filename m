@@ -2,110 +2,91 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10529C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B0D0C46477
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D727E2086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:03:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 241F82084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o2gr9d3F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AVdsXp5/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfFQPD2 (ORCPT
+        id S1728379AbfFQPEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:03:28 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53446 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQPD1 (ORCPT
+        Mon, 17 Jun 2019 11:04:35 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44034 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfFQPEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:03:27 -0400
-Received: by mail-wm1-f66.google.com with SMTP id x15so9664214wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:03:26 -0700 (PDT)
+        Mon, 17 Jun 2019 11:04:34 -0400
+Received: by mail-io1-f66.google.com with SMTP id s7so21808277iob.11;
+        Mon, 17 Jun 2019 08:04:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=OzFdi5FA53sk7r/J78O4Hf8Scc6tKC9H8PAY8JmuySc=;
-        b=o2gr9d3FYl6FromvO4dGq2q7MDqhh1JM36ApiWaU6Qz6TJk8IfWXhLnmmzeCZvjdZl
-         oFa9mbDnKPJ7ggAFEDejpk6IfR/7+cyXn1TyKAgAq0U6WTyT2zi1YWHsVDRyokCRjebR
-         nVpIw3+4qV+gojidQYF4VY9CUIZquD1BgnnITrIHOEThgex+csiGylIgXdNeJ2CrI0r8
-         sqiUd/XFV6HCPtSWOOOyk/5Ivsod1rqPDI3kAokoZhpNXa9GiABfSxpno+JrbMrRM4Z1
-         CfLaYPa4r6twmoPvIgiCXO1g9mmjXcob9AU6Ogtkf0GcMMooJjMuVDGD40nAOh54RxKM
-         PUkw==
+        bh=OTD1u2qNrb/0/7aEjHb4eOnJekVh9jkQY4qQ+7iNk2U=;
+        b=AVdsXp5/9GFfwzExr0pUZOVDtunnFEYvPOMPfLBxUeDtlVYqUVcIUGRINBBKYj0jMz
+         n1CGyzri5StuE2A3ImnDJmyduzxp/w5qGp7UjAubUKf9gTtoTi+qcK2NzjBfqDi72yg8
+         r/4+V1bcJma7sNsRbVtyYNZQXybIPuKScQVrVZsO0UEFC+UzPllVqN4yZktMSQbhJvKc
+         QMoby1OdZDUtbXb6K8bDBAq/n9tX7VNIi5k9ZRGD4DL1yq94SIOmpkxRBWihzpEBer4A
+         6brBXcRe8K0jFNz+Cb/7QlG28VzvrBpk/zgvAezoPF9WahN+CUIvDEB0Yv59vMlwOjQz
+         joaQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=OzFdi5FA53sk7r/J78O4Hf8Scc6tKC9H8PAY8JmuySc=;
-        b=A3idDgWkFwDlM7B78Kwj+mS7OJLPoUazjjjpo2HPVfKyZsJ1RSJSyXvT0f+OFtnDXL
-         YfspGRTqeLIH/BuVblr+7667ZlhSefoqukPB8aMZ3s6MYYKFt2yiPH14h0zqjR8rfo0y
-         tTOxaG/CJVern/cguqLiXQ/Kn6V+hsGB7HOtOwr6A+Wx2f1zddzPZKzlEPQoRlQwhTF8
-         2oujOGBriD5CTFJsGommLdtRudFp4LgspsEQNupL9m/4sUhC7KNa9tyZ7RInIo+jbiam
-         T+ENmk9MPcavgt7sxTyU6orddIvr8vFwnoL7t8BPjl5AJmG2YgmQy75XY//TpIH4G4So
-         JKxA==
-X-Gm-Message-State: APjAAAUgF6dBuwXodUJZXPb4m18MAESxCMrl1fcEzv1a5sIDWGBs3mk7
-        xg9WQk0BTr5OdiSDFLVvy14jHt1C0IZ7YxqhW8fWopAS
-X-Google-Smtp-Source: APXvYqwkQD3IHYB235QRVnPLSDc0R5AJFY+mAE0Y4N+QbgGWm4paBPug7aCAkNhEoTeVtrcHmrV718BAPonSYrdKKzo=
-X-Received: by 2002:a7b:c751:: with SMTP id w17mr20353364wmk.127.1560783806243;
- Mon, 17 Jun 2019 08:03:26 -0700 (PDT)
+        bh=OTD1u2qNrb/0/7aEjHb4eOnJekVh9jkQY4qQ+7iNk2U=;
+        b=UaNI48AVvJFN9sD0xhZFQrAKIyuU75p5WDq/ke/WJEXe+AKvIoPgUW5tn8jJJ8lJAv
+         VxzRyFtqZg+LKMeg01AZwWwWcstw6Z4G6YZjRrO5IgyYq4fxGA/oXFu+Gy0tc0fLxpeN
+         HHv+/kMJxqp5deH7AiH0g6T3HdpZhyyGL2ybvITAXsqkSHyXmTv024Guff5nqlDa56xd
+         C4zV73RKrSgNoe3P2C1dWLwNZnBTD8WK+TuEBwS06o/cvumyHNpy5CxsFET6MBT3AZ3v
+         hxtiOhV2lLOSICo6C+2GpN7iP37A426Nxwt0ID96MmEtSYxYBNC360wF8eZZWHyIG4II
+         TliQ==
+X-Gm-Message-State: APjAAAXA2N60PHL9vTR5M/SI6w0WIXOYl5OiaTlT0okOeoOP2YylXibF
+        6I0FpbIerIMNa61000IXFX6XRt239DNbFC6L2LPCPQ==
+X-Google-Smtp-Source: APXvYqzJOUOditiAVeURtLpNoIA2f2xjXKzFaadRj+FHCpzqHhDXq/Ren1Xv/Tc1KCFpN37LcghdUAE+7q4iELERadU=
+X-Received: by 2002:a5d:8049:: with SMTP id b9mr171243ior.199.1560783873997;
+ Mon, 17 Jun 2019 08:04:33 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617143728.4949-1-geert+renesas@glider.be>
-In-Reply-To: <20190617143728.4949-1-geert+renesas@glider.be>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Mon, 17 Jun 2019 11:03:14 -0400
-Message-ID: <CADnq5_PaTnL-_kzbGquQbomy+31ArFcvBke+R_yZyXn39cCQyQ@mail.gmail.com>
-Subject: Re: [PATCH] drm/amd/display: Add missing newline at end of file
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com> <20190617145853.GT5316@sirena.org.uk>
+In-Reply-To: <20190617145853.GT5316@sirena.org.uk>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Mon, 17 Jun 2019 09:04:23 -0600
+Message-ID: <CAOCk7NrSBjbyJ3YJoF22i9ysxVTw38SvsaSi9JwVrj7W8er24A@mail.gmail.com>
+Subject: Re: [PATCH v4 0/7] PM8005 and PMS405 regulator support
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        lgirdwood@gmail.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:45 AM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Mon, Jun 17, 2019 at 8:58 AM Mark Brown <broonie@kernel.org> wrote:
 >
-> "git diff" says:
+> On Thu, Jun 13, 2019 at 02:24:36PM -0700, Jeffrey Hugo wrote:
+> > The MSM8998 MTP reference platform supplies VDD_GFX from s1 of the
+> > pm8005 PMIC.  VDD_GFX is needed to turn on the GPU.  As we are looking
+> > to bring up the GPU, add the support for pm8005 and wire up s1 in a
+> > basic manner so that we have this dependency out of the way and can
+> > focus on enabling the GPU driver.
 >
->     \ No newline at end of file
->
-> after modifying the file.
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> There's something really weird with the threading in how you posted
+> these, a few of the patches are in reply to the prior patch so indented
+> a level down.
 
-Applied.  thanks!
+Sorry about that.  Bjorn pointed it out to me, and I think I figured
+out the glitch on
+my end.
 
-Alex
-
-> ---
->  drivers/gpu/drm/amd/display/modules/power/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/amd/display/modules/power/Makefile b/drivers/gpu/drm/amd/display/modules/power/Makefile
-> index 87851f892a52d372..9d1b22d35ece9136 100644
-> --- a/drivers/gpu/drm/amd/display/modules/power/Makefile
-> +++ b/drivers/gpu/drm/amd/display/modules/power/Makefile
-> @@ -28,4 +28,4 @@ MOD_POWER = power_helpers.o
->  AMD_DAL_MOD_POWER = $(addprefix $(AMDDALPATH)/modules/power/,$(MOD_POWER))
->  #$(info ************  DAL POWER MODULE MAKEFILE ************)
->
-> -AMD_DISPLAY_FILES += $(AMD_DAL_MOD_POWER)
-> \ No newline at end of file
-> +AMD_DISPLAY_FILES += $(AMD_DAL_MOD_POWER)
-> --
-> 2.17.1
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+Are you ok to proceed in the review, or do you want a repost?
