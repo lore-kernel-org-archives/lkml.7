@@ -2,73 +2,85 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA7E5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:26:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40EBC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:26:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964BF208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:26:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD57E20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:26:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VpHprEV3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727802AbfFQP01 (ORCPT
+        id S1728220AbfFQP0o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:26:27 -0400
-Received: from mga11.intel.com ([192.55.52.93]:31572 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725863AbfFQP00 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:26:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 08:26:26 -0700
-X-ExtLoop1: 1
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2019 08:26:24 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hctWZ-0003M0-UI; Mon, 17 Jun 2019 23:26:23 +0800
-Date:   Mon, 17 Jun 2019 23:25:23 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Detlev Casanova <detlev.casanova@gmail.com>
-Cc:     kbuild-all@01.org, Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Detlev Casanova <detlev.casanova@gmail.com>
-Subject: [RFC PATCH] e1000e: e1000_workqueue can be static
-Message-ID: <20190617152523.GA18852@lkp-kbuild08>
-References: <20190616145445.9637-1-detlev.casanova@gmail.com>
+        Mon, 17 Jun 2019 11:26:44 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42820 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725863AbfFQP0n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:26:43 -0400
+Received: by mail-lf1-f66.google.com with SMTP id y13so6808565lfh.9;
+        Mon, 17 Jun 2019 08:26:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RODdXc2ZD5wyJFcFeho8WC0XDsY2lZXJRt8XMboVzP8=;
+        b=VpHprEV3MRqB+ioJ94x+V1DngSDAAKRmXpwiKCJYLKkHh2ryBJOXyzmgxkekOAVhS3
+         0DlRHF2Kr2D4rWWnerxmLuXg52Kg6NbadquKJOLB2lCKyqdH1iAbICRugQXDfsUnW+t6
+         /3w0t2eTstaqQfAGbQx0rBiWxRFN7SGc0LTtAP3Ys7KoLkgjxhIfawf1j0mSmnqXkwT8
+         dewp9gBbqYED6dr6JbWZwKU9/lGsPCDor30tZOcQC/COQKMzE10q1aZkRRxEzQug817s
+         pp+lG9VjGrJ8N8+HlEZ55NlxuYLhBkQQoSflIi5BZ9j8prslboCA9ITnRaMSaaesXmAF
+         8mug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RODdXc2ZD5wyJFcFeho8WC0XDsY2lZXJRt8XMboVzP8=;
+        b=o+IAtWGhcbKhlFuMzLnmXXqNsWh/HCWx5lKP6V/djZji+yUPiRLV0RX8HFBgjfHdxf
+         B/IlAVqwIcf1+DpEe3mDLZquTV72GgCOCoGgdKgdt65Lf/RV37DTIuJ2VUTlJUsaOWLn
+         /Wh318RlYFW0GESvF3B+tmZCUazsHhEHymgkyXlUqpisGbgAPdyKaJ2Oxde8RHR8EiqA
+         X8d4EdIdvsiGEFPfS13nqQ44/rCobyB4yrJ+ShRlvHn/p+wUIltKtuTvs7os9D9tmSb4
+         WG818o9EN+KQj9berjACYdsLO0NIAWU47PyVBXfw7nNhohKWtYvZegZXlQnDNA1u/cer
+         phkg==
+X-Gm-Message-State: APjAAAVU6LD1heOm8FLEFSWPfpxRtJySL4MKuFKOb/uEyMCOerzHzXVL
+        meIMFuAoLB+waUX0NhOifxLKgEvc5PMvoclFjRYJYA==
+X-Google-Smtp-Source: APXvYqxMDyI7/A0JHlYJNU0PnpEQfcBsEndnVvrovk/NsiqZpqGf2nxvTYdD3oPKQKwK0tE39WfEn6+/7XFqAvC91WA=
+X-Received: by 2002:ac2:4c29:: with SMTP id u9mr2469510lfq.100.1560785201357;
+ Mon, 17 Jun 2019 08:26:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190616145445.9637-1-detlev.casanova@gmail.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190617125724.1616165-1-arnd@arndb.de>
+In-Reply-To: <20190617125724.1616165-1-arnd@arndb.de>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 17 Jun 2019 08:26:29 -0700
+Message-ID: <CAADnVQ+LzuNHFyLae0vUAudZpOFQ4cA02OC0zu3ypis+gqnjew@mail.gmail.com>
+Subject: Re: [PATCH] bpf: hide do_bpf_send_signal when unused
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Andrii Nakryiko <andriin@fb.com>, Yonghong Song <yhs@fb.com>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Matt Mullins <mmullins@fb.com>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 5:59 AM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> When CONFIG_MODULES is disabled, this function is never called:
+>
+> kernel/trace/bpf_trace.c:581:13: error: 'do_bpf_send_signal' defined but not used [-Werror=unused-function]
 
-Fixes: ef431cc0a6a5 ("e1000e: Make watchdog use delayed work")
-Signed-off-by: kbuild test robot <lkp@intel.com>
----
- netdev.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 0fc95fb..a1526e7 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -39,7 +39,7 @@ static int debug = -1;
- module_param(debug, int, 0);
- MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
- 
--struct workqueue_struct *e1000_workqueue;
-+static struct workqueue_struct *e1000_workqueue;
- 
- static const struct e1000_info *e1000_info_tbl[] = {
- 	[board_82571]		= &e1000_82571_info,
+hmm. it should work just fine without modules.
+the bug is somewhere else.
