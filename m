@@ -2,275 +2,185 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E1A0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:43:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D70C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DC820833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:43:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A48B208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:43:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="BMa1YbBS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edDnf1za"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728419AbfFQOnf (ORCPT
+        id S1728509AbfFQOni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:43:35 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44988 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727467AbfFQOnd (ORCPT
+        Mon, 17 Jun 2019 10:43:38 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:44611 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727467AbfFQOng (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:43:33 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so16491579edr.11
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:43:31 -0700 (PDT)
+        Mon, 17 Jun 2019 10:43:36 -0400
+Received: by mail-qk1-f194.google.com with SMTP id p144so6275882qke.11;
+        Mon, 17 Jun 2019 07:43:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=K85gf5017j1tod/NYZbJo+vfUHgdDY1HeypQxTi9sYA=;
-        b=BMa1YbBSgDZIXM5VGNMMjaLcVRuBd8nmxVtuGrW7IqhgsklnG1j7LQIofiTnvktb5X
-         NfacqHNulzNxnHiigGO2r01I9bO9Uw07KjzXrcHmcKHnVLBHWVz12qK03OEKgPETFtM/
-         qZeh3zfnJMXvL8TpzJvYPvrq6+bNQaDFr5GaSNAady+k36GCwP9s9umv3rESfFaRrXSs
-         AZHUKUXsPACxV/PSWo1l0bnvbycO362YFdBmOOajjcyRkvJnnCUNnkMMFLh+LUfUT3X4
-         HS4496cjbAsJQlEe5ptZSg5GVUyzRjqxA8H3c66kzLMQvXVIAyCbknPu5pOyIccVONrA
-         MLXw==
+        bh=tM4hoxeAgaP+/Vpct6XZW9tfikLT2DbVn921Xun18eY=;
+        b=edDnf1zaHfpFOXrOPGVhqVe/oTUWzIpiJ3aDd/odd1yU9H6hDy1E7LQqs5znG9Bnhf
+         rGlbyBnzC+pLOSHPXkUToRoL62nINSOjKmJhyHYqGr5IIlJX0OH4AQJ0UJbb+/bmvKam
+         SNu7Jnt0SEL2a6U0h4oePiv5yoRwVCcEHS6Lt41Z38F5xm0GxsizToeap8p0hUIhdqHC
+         b22iPrlDPUyAPPoB7pn2wnwxkFDsjQRDb6PqR/qJ6KuL/8jaIr5b6aCeLHQIcXJcrwG5
+         VWNk00hg7D98dsr2HHfoy3I5KhFjL8l9aNJMnf+5r3McvY545Tso0hbTQccwbyMf7D4O
+         Yq5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=K85gf5017j1tod/NYZbJo+vfUHgdDY1HeypQxTi9sYA=;
-        b=qEVm2eB2NffM8wlttvDCCaoUjgunX1eaqugDuRT/HQ8AplCZDgalMi5tVlQenV/MWE
-         yPkvJfbdxgbZP/eN6WfRdlFSPcXivylIaQMFy+F4yJyJVKhJpWJSADt+LmDg9XjC4ThJ
-         AyIQAGvddtP+3PVUsO3H7YBUgKFP2fa0M8ww++engOl5EQ8u7JXvcdsKkhPFDzNm/Gha
-         P3MYlG+5Q/LwCIYtJVwEZvGT9EjkNAVFlepqebNUO6YPxWGfPUrTE6Z7o4pi+qINie3B
-         sbou8Xoqtbo9GuiD2vbDCxPI/56WKGIx2/+oO9KVFCg5BRd45TABPECmro23mKiW4otv
-         DWgA==
-X-Gm-Message-State: APjAAAXnS03Pvat7Z+Z1hPGtIMTRM/2gn49rzfkr4tF/NAPzb6tx86ir
-        OJ7RAQJbxio3tHcPsht+4FM3xA==
-X-Google-Smtp-Source: APXvYqxKksVboAoCrUSwzJFmTrTy7WjsO2JcHGzrcG9LgKGyqYG50hlU16X0Z1afSPy61Siww01umA==
-X-Received: by 2002:aa7:c99a:: with SMTP id c26mr25584741edt.118.1560782610573;
-        Mon, 17 Jun 2019 07:43:30 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id q56sm3786536eda.28.2019.06.17.07.43.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 07:43:29 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 043CC100F6D; Mon, 17 Jun 2019 17:43:29 +0300 (+03)
-Date:   Mon, 17 Jun 2019 17:43:28 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        linux-mm@kvack.org, kvm@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH, RFC 18/62] x86/mm: Implement syncing per-KeyID direct
- mappings
-Message-ID: <20190617144328.oqwx5rb5yfm2ziws@box>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-19-kirill.shutemov@linux.intel.com>
- <20190614095131.GY3436@hirez.programming.kicks-ass.net>
- <20190614224309.t4ce7lpx577qh2gu@box>
- <20190617092755.GA3419@hirez.programming.kicks-ass.net>
+        bh=tM4hoxeAgaP+/Vpct6XZW9tfikLT2DbVn921Xun18eY=;
+        b=b/uYeveWqpzh7aNnbv9Hx77Wh8rDyuqY6dYEoaceqYNMoMNkXhHMU1z63lhOF8peU8
+         EV9e8SPBALxmDuMoAHFOftYa3VEGnGDhjGJn6arEIOfcUy3YEdO5HmwlFcCN0Fk3IgmB
+         3nztf9WI4SMghxaOu+E4ZlY0BCJsm05LP6+uI79xrnQMrq3OgNNt5NlJfl9ZWUpvXx4U
+         +Y02VNBIeW7IlqjLgcbxVwuxCsIUKd360dWIi+gkGrYzl3WdglLBWzU4AmiQODCMVxXf
+         zNVD6zBFbPfP6uFhGcHZyK424J6CEgJ+Nblt50U3WQZH+E3xODPN2GbTRhBEHt+5tZhk
+         NfSA==
+X-Gm-Message-State: APjAAAVyG/lHypQCimKLNz0SSOFIHoBLhm9bLH0czGMhZ4a79uxzye/A
+        /FIgemA3p6bOmKpysRrtwjQ=
+X-Google-Smtp-Source: APXvYqyaPXsO66e1Ln+iRy56I/iqNuPfEpXABoQu52+wf2UaSaBrFOrritp8w7dHTuCgikaoBrxqqQ==
+X-Received: by 2002:a37:7786:: with SMTP id s128mr3297499qkc.345.1560782614987;
+        Mon, 17 Jun 2019 07:43:34 -0700 (PDT)
+Received: from localhost.localdomain ([2001:1284:f013:ed8b:101b:c686:4add:18ab])
+        by smtp.gmail.com with ESMTPSA id g5sm8298955qta.77.2019.06.17.07.43.33
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 07:43:34 -0700 (PDT)
+Received: by localhost.localdomain (Postfix, from userid 1000)
+        id E0D95C1BD6; Mon, 17 Jun 2019 11:43:31 -0300 (-03)
+Date:   Mon, 17 Jun 2019 11:43:31 -0300
+From:   Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     syzbot <syzbot+c1a380d42b190ad1e559@syzkaller.appspotmail.com>,
+        davem@davemloft.net, linux-kernel@vger.kernel.org,
+        linux-sctp@vger.kernel.org, lucien.xin@gmail.com,
+        netdev@vger.kernel.org, nhorman@tuxdriver.com,
+        syzkaller-bugs@googlegroups.com, vyasevich@gmail.com
+Subject: Re: general protection fault in sctp_sched_prio_sched
+Message-ID: <20190617144331.GE3500@localhost.localdomain>
+References: <20190616153804.3604-1-hdanton@sina.com>
+ <20190617134913.GL3436@localhost.localdomain>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617092755.GA3419@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190617134913.GL3436@localhost.localdomain>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:27:55AM +0200, Peter Zijlstra wrote:
-> On Sat, Jun 15, 2019 at 01:43:09AM +0300, Kirill A. Shutemov wrote:
-> > On Fri, Jun 14, 2019 at 11:51:32AM +0200, Peter Zijlstra wrote:
-> > > On Wed, May 08, 2019 at 05:43:38PM +0300, Kirill A. Shutemov wrote:
-> > > > For MKTME we use per-KeyID direct mappings. This allows kernel to have
-> > > > access to encrypted memory.
-> > > > 
-> > > > sync_direct_mapping() sync per-KeyID direct mappings with a canonical
-> > > > one -- KeyID-0.
-> > > > 
-> > > > The function tracks changes in the canonical mapping:
-> > > >  - creating or removing chunks of the translation tree;
-> > > >  - changes in mapping flags (i.e. protection bits);
-> > > >  - splitting huge page mapping into a page table;
-> > > >  - replacing page table with a huge page mapping;
-> > > > 
-> > > > The function need to be called on every change to the direct mapping:
-> > > > hotplug, hotremove, changes in permissions bits, etc.
-> > > 
-> > > And yet I don't see anything in pageattr.c.
-> > 
-> > You're right. I've hooked up the sync in the wrong place.
-> > > 
-> > > Also, this seems like an expensive scheme; if you know where the changes
-> > > where, a more fine-grained update would be faster.
-> > 
-> > Do we have any hot enough pageattr users that makes it crucial?
-> > 
-> > I'll look into this anyway.
+On Mon, Jun 17, 2019 at 10:49:13AM -0300, Marcelo Ricardo Leitner wrote:
+> Hi,
 > 
-> The graphics people would be the most agressive users of this I'd think.
-> They're the ones that yelled when I broke it last ;-)
+> On Sun, Jun 16, 2019 at 11:38:03PM +0800, Hillf Danton wrote:
+> > 
+> > Hello Syzbot
+> > 
+> > On Sat, 15 Jun 2019 16:36:06 -0700 (PDT) syzbot wrote:
+> > > Hello,
+> > > 
+> > > syzbot found the following crash on:
+> > > 
+> ...
+> > Check prio_head and bail out if it is not valid.
+> > 
+> > Thanks
+> > Hillf
+> > ----->8---
+> > ---
+> > net/sctp/stream_sched_prio.c | 2 ++
+> > 1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/net/sctp/stream_sched_prio.c b/net/sctp/stream_sched_prio.c
+> > index 2245083..db25a43 100644
+> > --- a/net/sctp/stream_sched_prio.c
+> > +++ b/net/sctp/stream_sched_prio.c
+> > @@ -135,6 +135,8 @@ static void sctp_sched_prio_sched(struct sctp_stream *stream,
+> > 	struct sctp_stream_priorities *prio, *prio_head;
+> > 
+> > 	prio_head = soute->prio_head;
+> > +	if (!prio_head)
+> > +		return;
+> > 
+> > 	/* Nothing to do if already scheduled */
+> > 	if (!list_empty(&soute->prio_list))
+> > --
+> 
+> Thanks but this is not a good fix for this. It will cause the stream
+> to never be scheduled.
+> 
+> The problem happens because of the fault injection that happened a bit
+> before the crash, in here:
+> 
+> int sctp_stream_init_ext(struct sctp_stream *stream, __u16 sid)
+> {
+>         struct sctp_stream_out_ext *soute;
+> 
+>         soute = kzalloc(sizeof(*soute), GFP_KERNEL);
+>         if (!soute)
+>                 return -ENOMEM;
+>         SCTP_SO(stream, sid)->ext = soute;  <---- [A]
+> 
+>         return sctp_sched_init_sid(stream, sid, GFP_KERNEL);
+>                       ^^^^^^^^^^^^---- [B] failed
+> }
+> 
+> This causes the 1st sendmsg to bail out with the error. When the 2nd
+> one gets in, it will:
+> 
+> sctp_sendmsg_to_asoc()
+> {
+> ...
+>         if (unlikely(!SCTP_SO(&asoc->stream, sinfo->sinfo_stream)->ext)) {
+>                                                                  ^^^^^--- [C]
+>                 err = sctp_stream_init_ext(&asoc->stream, sinfo->sinfo_stream);
+>                 if (err)
+>                         goto err;
+>         }
+> 
+> [A] leaves ext initialized, despite the failed in [B]. Then in [C], it
+> will not try to initialize again.
+> 
+> We need to either uninitialize ->ext as error handling for [B], or
+> improve the check on [C].
 
-I think something like this should do (I'll fold it in after testing):
+The former one, please. This should be enough (untested):
 
-diff --git a/arch/x86/include/asm/mktme.h b/arch/x86/include/asm/mktme.h
-index 6c973cb1e64c..b30386d84281 100644
---- a/arch/x86/include/asm/mktme.h
-+++ b/arch/x86/include/asm/mktme.h
-@@ -68,7 +68,7 @@ static inline void arch_free_page(struct page *page, int order)
- 		free_encrypted_page(page, order);
- }
- 
--int sync_direct_mapping(void);
-+int sync_direct_mapping(unsigned long start, unsigned long end);
- 
- int mktme_get_alg(int keyid);
- 
-@@ -86,7 +86,7 @@ static inline bool mktme_enabled(void)
- 
- static inline void mktme_disable(void) {}
- 
--static inline int sync_direct_mapping(void)
-+static inline int sync_direct_mapping(unsigned long start, unsigned long end)
+diff --git a/net/sctp/stream.c b/net/sctp/stream.c
+index 93ed07877337..25946604af85 100644
+--- a/net/sctp/stream.c
++++ b/net/sctp/stream.c
+@@ -153,13 +153,20 @@ int sctp_stream_init(struct sctp_stream *stream, __u16 outcnt, __u16 incnt,
+ int sctp_stream_init_ext(struct sctp_stream *stream, __u16 sid)
  {
- 	return 0;
- }
-diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index f50a38d86cc4..f8123aeb24a6 100644
---- a/arch/x86/mm/init_64.c
-+++ b/arch/x86/mm/init_64.c
-@@ -761,7 +761,7 @@ __kernel_physical_mapping_init(unsigned long paddr_start,
- 		pgd_changed = true;
- 	}
+ 	struct sctp_stream_out_ext *soute;
++	int ret;
  
--	ret = sync_direct_mapping();
-+	ret = sync_direct_mapping(vaddr_start, vaddr_end);
- 	WARN_ON(ret);
+ 	soute = kzalloc(sizeof(*soute), GFP_KERNEL);
+ 	if (!soute)
+ 		return -ENOMEM;
+ 	SCTP_SO(stream, sid)->ext = soute;
  
- 	if (pgd_changed)
-@@ -1209,7 +1209,7 @@ kernel_physical_mapping_remove(unsigned long start, unsigned long end)
- 	end = (unsigned long)__va(end);
- 
- 	remove_pagetable(start, end, true, NULL);
--	ret = sync_direct_mapping();
-+	ret = sync_direct_mapping(start, end);
- 	WARN_ON(ret);
- }
- 
-@@ -1315,7 +1315,6 @@ void mark_rodata_ro(void)
- 	unsigned long text_end = PFN_ALIGN(&__stop___ex_table);
- 	unsigned long rodata_end = PFN_ALIGN(&__end_rodata);
- 	unsigned long all_end;
--	int ret;
- 
- 	printk(KERN_INFO "Write protecting the kernel read-only data: %luk\n",
- 	       (end - start) >> 10);
-@@ -1349,8 +1348,6 @@ void mark_rodata_ro(void)
- 	free_kernel_image_pages((void *)text_end, (void *)rodata_start);
- 	free_kernel_image_pages((void *)rodata_end, (void *)_sdata);
- 
--	ret = sync_direct_mapping();
--	WARN_ON(ret);
- 	debug_checkwx();
- }
- 
-diff --git a/arch/x86/mm/mktme.c b/arch/x86/mm/mktme.c
-index 9d2bb534f2ba..c099e1da055b 100644
---- a/arch/x86/mm/mktme.c
-+++ b/arch/x86/mm/mktme.c
-@@ -76,7 +76,7 @@ static void init_page_mktme(void)
- {
- 	static_branch_enable(&mktme_enabled_key);
- 
--	sync_direct_mapping();
-+	sync_direct_mapping(PAGE_OFFSET, PAGE_OFFSET + direct_mapping_size);
- }
- 
- struct page_ext_operations page_mktme_ops = {
-@@ -596,15 +596,13 @@ static int sync_direct_mapping_p4d(unsigned long keyid,
- 	return ret;
- }
- 
--static int sync_direct_mapping_keyid(unsigned long keyid)
-+static int sync_direct_mapping_keyid(unsigned long keyid,
-+		unsigned long addr, unsigned long end)
- {
- 	pgd_t *src_pgd, *dst_pgd;
--	unsigned long addr, end, next;
-+	unsigned long next;
- 	int ret = 0;
- 
--	addr = PAGE_OFFSET;
--	end = PAGE_OFFSET + direct_mapping_size;
--
- 	dst_pgd = pgd_offset_k(addr + keyid * direct_mapping_size);
- 	src_pgd = pgd_offset_k(addr);
- 
-@@ -643,7 +641,7 @@ static int sync_direct_mapping_keyid(unsigned long keyid)
-  *
-  * The function is nop until MKTME is enabled.
-  */
--int sync_direct_mapping(void)
-+int sync_direct_mapping(unsigned long start, unsigned long end)
- {
- 	int i, ret = 0;
- 
-@@ -651,7 +649,7 @@ int sync_direct_mapping(void)
- 		return 0;
- 
- 	for (i = 1; !ret && i <= mktme_nr_keyids; i++)
--		ret = sync_direct_mapping_keyid(i);
-+		ret = sync_direct_mapping_keyid(i, start, end);
- 
- 	flush_tlb_all();
- 
-diff --git a/arch/x86/mm/pageattr.c b/arch/x86/mm/pageattr.c
-index 6a9a77a403c9..eafbe0d8c44f 100644
---- a/arch/x86/mm/pageattr.c
-+++ b/arch/x86/mm/pageattr.c
-@@ -347,6 +347,28 @@ static void cpa_flush(struct cpa_data *data, int cache)
- 
- 	BUG_ON(irqs_disabled() && !early_boot_irqs_disabled);
- 
-+	if (mktme_enabled()) {
-+		unsigned long start, end;
-+
-+		start = *cpa->vaddr;
-+		end = *cpa->vaddr + cpa->numpages * PAGE_SIZE;
-+
-+		/* Sync all direct mapping for an array */
-+		if (cpa->flags & CPA_ARRAY) {
-+			start = PAGE_OFFSET;
-+			end = PAGE_OFFSET + direct_mapping_size;
-+		}
-+
-+		/*
-+		 * Sync per-KeyID direct mappings with the canonical one
-+		 * (KeyID-0).
-+		 *
-+		 * sync_direct_mapping() does full TLB flush.
-+		 */
-+		sync_direct_mapping(start, end);
-+		return;
+-	return sctp_sched_init_sid(stream, sid, GFP_KERNEL);
++	ret = sctp_sched_init_sid(stream, sid, GFP_KERNEL);
++	if (ret) {
++		kfree(SCTP_SO(stream, sid)->ext);
++		SCTP_SO(stream, sid)->ext = NULL;
 +	}
 +
- 	if (cache && !static_cpu_has(X86_FEATURE_CLFLUSH)) {
- 		cpa_flush_all(cache);
- 		return;
--- 
- Kirill A. Shutemov
++	return ret;
+ }
+ 
+ void sctp_stream_free(struct sctp_stream *stream)
+
