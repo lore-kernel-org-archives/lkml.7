@@ -4,66 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6C65C31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EDADC31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A28642085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33CE0206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="seL5bmME"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="h2PwEzBh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfFQOOl (ORCPT
+        id S1728223AbfFQOPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:14:41 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34849 "EHLO
+        Mon, 17 Jun 2019 10:15:03 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:45795 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727690AbfFQOOk (ORCPT
+        with ESMTP id S1726215AbfFQOPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:14:40 -0400
+        Mon, 17 Jun 2019 10:15:03 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HED7Ge3451756
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HEDnR03451839
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:13:07 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HED7Ge3451756
+        Mon, 17 Jun 2019 07:13:49 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HEDnR03451839
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560780788;
-        bh=IVAF3u9sBf7OaHnuDR5O/sVczWfFLKJNP+gAO/yxOdI=;
+        s=2019051801; t=1560780830;
+        bh=9kEpiJU1GVRuUn8KvakClI4dfNrwEcKlYDdWcxUyBUI=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=seL5bmMEU5P3kFEoEc2McT0ac42Mfri48ZE7bcIckmZO4EAjlFTTDmZ971VrTePox
-         1UwzKfvdVU5z6IBEvtR1N6t4Iudrhbq2toRoGoHOGREdIYuWCHhGOzemoLOUGXATnz
-         f8k26ri8NBSrQk9WNmYQXLZyqvFyDxV6K7xR5YlWnLWepHzaIqZCdqgTPWCbuBK3So
-         U6V4JDEYbJRrZV90NDgDp8gn0JZOWMuuOWNsY08GHzVq9Bgg4rpdMl5bHQBFguHEge
-         D7trbDVCvFIm2dtyNaiX/i2xTFQrz/Sbj5H96zJuSvwXfsmUukYKML5MAL/ZbfUeJo
-         Um0bIb2/78hpw==
+        b=h2PwEzBh+ilaQQGcsZCuNCfrADM6grkUSDbdn0Y/DYHlT6QzUmEH+6KcbYoTOQd4V
+         wZ3NtxWhbIH8JU60zkbsIL5KWzm04Q3Va3syHVuToKAWVin+q5aE7Q8csnNj5768nm
+         b4SSYpEuFvONEcXOdSEwX7oUZwo+uQSRUM3lp0bG4DjWg1J0CMQoAeQSCa68NNkBU2
+         U8N2gohyqcYupyJ+HGAxyIgkSHUyoo31CvinBaTg6Qt6CmPoM6FyTEKyCJVitGYc49
+         RrFWGqDAg78sa1SPNvJ0qjHZIbni913sLD99p9iDgQ6D40vvSJ9PD3lLmA+V99f4PP
+         4iBgNL+wsNUiA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HED6nZ3451753;
-        Mon, 17 Jun 2019 07:13:06 -0700
-Date:   Mon, 17 Jun 2019 07:13:06 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HEDnbN3451833;
+        Mon, 17 Jun 2019 07:13:49 -0700
+Date:   Mon, 17 Jun 2019 07:13:49 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Daniel Bristot de Oliveira <tipbot@zytor.com>
-Message-ID: <tip-e1aacb3f4adc1bcd4273a1d538a2dc3e50f1cbb5@git.kernel.org>
-Cc:     peterz@infradead.org, rostedt@goodmis.org, williams@redhat.com,
-        jkosina@suse.cz, jbaron@akamai.com, swood@redhat.com,
-        crecklin@redhat.com, bristot@redhat.com, mhiramat@kernel.org,
-        hpa@zytor.com, tglx@linutronix.de, gregkh@linuxfoundation.org,
-        mtosatti@redhat.com, torvalds@linux-foundation.org,
-        mingo@kernel.org, bp@alien8.de, jpoimboe@redhat.com,
-        linux-kernel@vger.kernel.org
-Reply-To: hpa@zytor.com, tglx@linutronix.de, mtosatti@redhat.com,
-          gregkh@linuxfoundation.org, bp@alien8.de, mingo@kernel.org,
-          torvalds@linux-foundation.org, jpoimboe@redhat.com,
-          linux-kernel@vger.kernel.org, rostedt@goodmis.org,
-          peterz@infradead.org, jkosina@suse.cz, williams@redhat.com,
-          swood@redhat.com, jbaron@akamai.com, crecklin@redhat.com,
-          bristot@redhat.com, mhiramat@kernel.org
-In-Reply-To: <56b69bd3f8e644ed64f2dbde7c088030b8cbe76b.1560325897.git.bristot@redhat.com>
-References: <56b69bd3f8e644ed64f2dbde7c088030b8cbe76b.1560325897.git.bristot@redhat.com>
+Message-ID: <tip-4cc6620b5e4c8953c725bcfab86a57df01e83a7c@git.kernel.org>
+Cc:     swood@redhat.com, rostedt@goodmis.org, tglx@linutronix.de,
+        hpa@zytor.com, crecklin@redhat.com, bristot@redhat.com,
+        linux-kernel@vger.kernel.org, mtosatti@redhat.com,
+        torvalds@linux-foundation.org, jkosina@suse.cz,
+        jpoimboe@redhat.com, mhiramat@kernel.org, peterz@infradead.org,
+        williams@redhat.com, jbaron@akamai.com, bp@alien8.de,
+        gregkh@linuxfoundation.org, mingo@kernel.org
+Reply-To: mingo@kernel.org, gregkh@linuxfoundation.org, bp@alien8.de,
+          jbaron@akamai.com, williams@redhat.com, peterz@infradead.org,
+          mhiramat@kernel.org, jpoimboe@redhat.com, jkosina@suse.cz,
+          torvalds@linux-foundation.org, mtosatti@redhat.com,
+          linux-kernel@vger.kernel.org, bristot@redhat.com,
+          crecklin@redhat.com, hpa@zytor.com, tglx@linutronix.de,
+          rostedt@goodmis.org, swood@redhat.com
+In-Reply-To: <d2f52a0010ecd399cf9b02a65bcf5836571b9e52.1560325897.git.bristot@redhat.com>
+References: <d2f52a0010ecd399cf9b02a65bcf5836571b9e52.1560325897.git.bristot@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] jump_label: Add a jump_label_can_update() helper
-Git-Commit-ID: e1aacb3f4adc1bcd4273a1d538a2dc3e50f1cbb5
+Subject: [tip:locking/core] x86/jump_label: Add a
+ __jump_label_set_jump_code() helper
+Git-Commit-ID: 4cc6620b5e4c8953c725bcfab86a57df01e83a7c
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -77,16 +78,17 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e1aacb3f4adc1bcd4273a1d538a2dc3e50f1cbb5
-Gitweb:     https://git.kernel.org/tip/e1aacb3f4adc1bcd4273a1d538a2dc3e50f1cbb5
+Commit-ID:  4cc6620b5e4c8953c725bcfab86a57df01e83a7c
+Gitweb:     https://git.kernel.org/tip/4cc6620b5e4c8953c725bcfab86a57df01e83a7c
 Author:     Daniel Bristot de Oliveira <bristot@redhat.com>
-AuthorDate: Wed, 12 Jun 2019 11:57:26 +0200
+AuthorDate: Wed, 12 Jun 2019 11:57:27 +0200
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:09:19 +0200
+CommitDate: Mon, 17 Jun 2019 12:09:20 +0200
 
-jump_label: Add a jump_label_can_update() helper
+x86/jump_label: Add a __jump_label_set_jump_code() helper
 
-Move the check if a jump_entry is valid to a function. No functional
+Move the definition of the code to be written from
+__jump_label_transform() to a specialized function. No functional
 change.
 
 Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
@@ -106,55 +108,95 @@ Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Scott Wood <swood@redhat.com>
 Cc: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/56b69bd3f8e644ed64f2dbde7c088030b8cbe76b.1560325897.git.bristot@redhat.com
+Link: https://lkml.kernel.org/r/d2f52a0010ecd399cf9b02a65bcf5836571b9e52.1560325897.git.bristot@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/jump_label.c | 29 ++++++++++++++++++-----------
- 1 file changed, 18 insertions(+), 11 deletions(-)
+ arch/x86/kernel/jump_label.c | 52 +++++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
-diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-index 0bfa10f4410c..24f0d3b1526b 100644
---- a/kernel/jump_label.c
-+++ b/kernel/jump_label.c
-@@ -384,23 +384,30 @@ static enum jump_label_type jump_label_type(struct jump_entry *entry)
- 	return enabled ^ branch;
+diff --git a/arch/x86/kernel/jump_label.c b/arch/x86/kernel/jump_label.c
+index e631c358f7f4..f33408f1c3f6 100644
+--- a/arch/x86/kernel/jump_label.c
++++ b/arch/x86/kernel/jump_label.c
+@@ -35,41 +35,43 @@ static void bug_at(unsigned char *ip, int line)
+ 	BUG();
  }
  
-+static bool jump_label_can_update(struct jump_entry *entry, bool init)
-+{
-+	/*
-+	 * Cannot update code that was in an init text area.
-+	 */
-+	if (!init && jump_entry_is_init(entry))
-+		return false;
-+
-+	if (!kernel_text_address(jump_entry_code(entry))) {
-+		WARN_ONCE(1, "can't patch jump_label at %pS", (void *)jump_entry_code(entry));
-+		return false;
-+	}
-+
-+	return true;
+-static void __ref __jump_label_transform(struct jump_entry *entry,
+-					 enum jump_label_type type,
+-					 int init)
++static void __jump_label_set_jump_code(struct jump_entry *entry,
++				       enum jump_label_type type,
++				       union jump_code_union *code,
++				       int init)
+ {
+-	union jump_code_union jmp;
+ 	const unsigned char default_nop[] = { STATIC_KEY_INIT_NOP };
+ 	const unsigned char *ideal_nop = ideal_nops[NOP_ATOMIC5];
+-	const void *expect, *code;
++	const void *expect;
+ 	int line;
+ 
+-	jmp.jump = 0xe9;
+-	jmp.offset = jump_entry_target(entry) -
+-		     (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
+-
+-	if (type == JUMP_LABEL_JMP) {
+-		if (init) {
+-			expect = default_nop; line = __LINE__;
+-		} else {
+-			expect = ideal_nop; line = __LINE__;
+-		}
++	code->jump = 0xe9;
++	code->offset = jump_entry_target(entry) -
++		       (jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
+ 
+-		code = &jmp.code;
++	if (init) {
++		expect = default_nop; line = __LINE__;
++	} else if (type == JUMP_LABEL_JMP) {
++		expect = ideal_nop; line = __LINE__;
+ 	} else {
+-		if (init) {
+-			expect = default_nop; line = __LINE__;
+-		} else {
+-			expect = &jmp.code; line = __LINE__;
+-		}
+-
+-		code = ideal_nop;
++		expect = code->code; line = __LINE__;
+ 	}
+ 
+ 	if (memcmp((void *)jump_entry_code(entry), expect, JUMP_LABEL_NOP_SIZE))
+ 		bug_at((void *)jump_entry_code(entry), line);
+ 
++	if (type == JUMP_LABEL_NOP)
++		memcpy(code, ideal_nop, JUMP_LABEL_NOP_SIZE);
 +}
 +
- static void __jump_label_update(struct static_key *key,
- 				struct jump_entry *entry,
- 				struct jump_entry *stop,
- 				bool init)
- {
- 	for (; (entry < stop) && (jump_entry_key(entry) == key); entry++) {
--		/*
--		 * An entry->code of 0 indicates an entry which has been
--		 * disabled because it was in an init text area.
--		 */
--		if (init || !jump_entry_is_init(entry)) {
--			if (kernel_text_address(jump_entry_code(entry)))
--				arch_jump_label_transform(entry, jump_label_type(entry));
--			else
--				WARN_ONCE(1, "can't patch jump_label at %pS",
--					  (void *)jump_entry_code(entry));
--		}
-+		if (jump_label_can_update(entry, init))
-+			arch_jump_label_transform(entry, jump_label_type(entry));
++static void __ref __jump_label_transform(struct jump_entry *entry,
++					 enum jump_label_type type,
++					 int init)
++{
++	union jump_code_union code;
++
++	__jump_label_set_jump_code(entry, type, &code, init);
++
+ 	/*
+ 	 * As long as only a single processor is running and the code is still
+ 	 * not marked as RO, text_poke_early() can be used; Checking that
+@@ -82,12 +84,12 @@ static void __ref __jump_label_transform(struct jump_entry *entry,
+ 	 * always nop being the 'currently valid' instruction
+ 	 */
+ 	if (init || system_state == SYSTEM_BOOTING) {
+-		text_poke_early((void *)jump_entry_code(entry), code,
++		text_poke_early((void *)jump_entry_code(entry), &code,
+ 				JUMP_LABEL_NOP_SIZE);
+ 		return;
  	}
+ 
+-	text_poke_bp((void *)jump_entry_code(entry), code, JUMP_LABEL_NOP_SIZE,
++	text_poke_bp((void *)jump_entry_code(entry), &code, JUMP_LABEL_NOP_SIZE,
+ 		     (void *)jump_entry_code(entry) + JUMP_LABEL_NOP_SIZE);
  }
  
