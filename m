@@ -2,107 +2,153 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD17DC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:57:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05876C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:57:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E692084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560783424;
-	bh=Rf1D9RgSNh2lJ7SpvuSCZd+Q6UTn19dO2CBz443jnfY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=M+MhQCJ8LUZR3xxT/pVYR0iHcfTZ3Yby3B0Rch26vyl2TalABLZZ7kZYEYtA3VGGW
-	 nKeJ5SAYi2uhbS4nvuYq8DNQZlRYOxJHADQkuRsHqGSBHdugJ68p77o03UJjDwXCN4
-	 07WVJDDnoy5x6T6PYoIsXJjcsS6c9daoIkSAJ0Ko=
+	by mail.kernel.org (Postfix) with ESMTP id DCC08208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:57:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728217AbfFQO5D (ORCPT
+        id S1728249AbfFQO5b convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:57:03 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:33414 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQO5D (ORCPT
+        Mon, 17 Jun 2019 10:57:31 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:23657 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726028AbfFQO5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:57:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wSZVFoXXA9VznjmlzJhQDN4bJXX4kPrS+kisWxProTE=; b=p0siBZN6TTz9U9trmfZ8+2XP5
-        ZtHi1jd5JKXGAR8xDa6Ajo07mFiYaHqv99wSFqknauJlVtCuiXqL/rM0mZaWsgpkZJbOuzFRjkYS6
-        i5bwsXmkwRne1bT++Ecvh0XxMIna9AgjKGXU2BJctIWm+azw1H9q3Ft4c7lmcEZFbQ8V4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hct3y-0001rr-N4; Mon, 17 Jun 2019 14:56:50 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 2C1A8440046; Mon, 17 Jun 2019 15:56:50 +0100 (BST)
-Date:   Mon, 17 Jun 2019 15:56:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Yu-Hsuan Hsu <yuhsuan@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        dgreid@chromium.org, cychiang@chromium.org
-Subject: Re: [PATCH v5] ASoC: max98090: remove 24-bit format support if RJ is
- 0
-Message-ID: <20190617145650.GS5316@sirena.org.uk>
-References: <20190617035526.85310-1-yuhsuan@chromium.org>
+        Mon, 17 Jun 2019 10:57:31 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-190-hVB7mw-INdG5k3bducDmrQ-1; Mon, 17 Jun 2019 15:57:27 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon,
+ 17 Jun 2019 15:57:26 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 17 Jun 2019 15:57:26 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Alexei Starovoitov' <alexei.starovoitov@gmail.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+CC:     "x86@kernel.org" <x86@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        "Kairui Song" <kasong@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>
+Subject: RE: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF
+ generated code
+Thread-Topic: [PATCH v2 2/5] objtool: Fix ORC unwinding in non-JIT BPF
+ generated code
+Thread-Index: AQHVIvP1MMjmbNr75kSp44+RDLqGVaaf832A
+Date:   Mon, 17 Jun 2019 14:57:26 +0000
+Message-ID: <28948180f13343b3b7b1f58878cebe3e@AcuMS.aculab.com>
+References: <cover.1560534694.git.jpoimboe@redhat.com>
+ <c0add777a2e0207c1474ce99baa492a7ce3502d6.1560534694.git.jpoimboe@redhat.com>
+ <20190614205841.s4utbpurntpr6aiq@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20190614205841.s4utbpurntpr6aiq@ast-mbp.dhcp.thefacebook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EDQ/wMYGX5nr2pOQ"
-Content-Disposition: inline
-In-Reply-To: <20190617035526.85310-1-yuhsuan@chromium.org>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: hVB7mw-INdG5k3bducDmrQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Alexei Starovoitov
+> Sent: 14 June 2019 21:59
+> 
+> On Fri, Jun 14, 2019 at 12:56:41PM -0500, Josh Poimboeuf wrote:
+> > Objtool currently ignores ___bpf_prog_run() because it doesn't
+> > understand the jump table.  This results in the ORC unwinder not being
+> > able to unwind through non-JIT BPF code.
+> >
+> > Luckily, the BPF jump table resembles a GCC switch jump table, which
+> > objtool already knows how to read.
+> >
+> > Add generic support for reading any static local jump table array named
+> > "jump_table", and rename the BPF variable accordingly, so objtool can
+> > generate ORC data for ___bpf_prog_run().
+> >
+> > Fixes: d15d356887e7 ("perf/x86: Make perf callchains work without CONFIG_FRAME_POINTER")
+> > Reported-by: Song Liu <songliubraving@fb.com>
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> > ---
+> >  kernel/bpf/core.c     |  5 ++---
+> >  tools/objtool/check.c | 16 ++++++++++++++--
+> >  2 files changed, 16 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/kernel/bpf/core.c b/kernel/bpf/core.c
+> > index 7c473f208a10..aa546ef7dbdc 100644
+> > --- a/kernel/bpf/core.c
+> > +++ b/kernel/bpf/core.c
+> > @@ -1299,7 +1299,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> >  {
+> >  #define BPF_INSN_2_LBL(x, y)    [BPF_##x | BPF_##y] = &&x##_##y
+> >  #define BPF_INSN_3_LBL(x, y, z) [BPF_##x | BPF_##y | BPF_##z] = &&x##_##y##_##z
+> > -	static const void *jumptable[256] = {
+> > +	static const void *jump_table[256] = {
+> >  		[0 ... 255] = &&default_label,
+> >  		/* Now overwrite non-defaults ... */
+> >  		BPF_INSN_MAP(BPF_INSN_2_LBL, BPF_INSN_3_LBL),
+> > @@ -1315,7 +1315,7 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> >  #define CONT_JMP ({ insn++; goto select_insn; })
+> >
+> >  select_insn:
+> > -	goto *jumptable[insn->code];
+> > +	goto *jump_table[insn->code];
+> >
+> >  	/* ALU */
+> >  #define ALU(OPCODE, OP)			\
+> > @@ -1558,7 +1558,6 @@ static u64 ___bpf_prog_run(u64 *regs, const struct bpf_insn *insn, u64 *stack)
+> >  		BUG_ON(1);
+> >  		return 0;
+> >  }
+> > -STACK_FRAME_NON_STANDARD(___bpf_prog_run); /* jump table */
+> >
+> >  #define PROG_NAME(stack_size) __bpf_prog_run##stack_size
+> >  #define DEFINE_BPF_PROG_RUN(stack_size) \
+> > diff --git a/tools/objtool/check.c b/tools/objtool/check.c
+> > index 172f99195726..8341c2fff14f 100644
+> > --- a/tools/objtool/check.c
+> > +++ b/tools/objtool/check.c
+> > @@ -18,6 +18,8 @@
+> >
+> >  #define FAKE_JUMP_OFFSET -1
+> >
+> > +#define JUMP_TABLE_SYM_PREFIX "jump_table."
+> 
+> since external tool will be looking at it should it be named
+> "bpf_jump_table." to avoid potential name conflicts?
+> Or even more unique name?
+> Like "bpf_interpreter_jump_table." ?
 
---EDQ/wMYGX5nr2pOQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If external code might need to process such symbols then
+jump_table_bpf_interpreter would (probably) make the symbols
+easier to locate.
 
-On Mon, Jun 17, 2019 at 11:55:26AM +0800, Yu-Hsuan Hsu wrote:
+Oh, and blue is a good colour :-)
 
-> +	/*
-> +	 * When TDM = 0, remove 24-bit format support if it is not in right
-> +	 * justified mode.
-> +	 */
-> +	if (!max98090->tdm_slots &&
-> +		(fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
-> +		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-> +		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
-> +	}
+	David
 
-Do you need both the addition of constraints and the one way
-modification of the formats here?  Also the indentation is messed up
-which makes things hard to read, the second line of the conditional is
-aligned with the contents of the if block.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
---EDQ/wMYGX5nr2pOQ
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HqjEACgkQJNaLcl1U
-h9DdJgf/bo+F60U/71HCEMfPhkQogg7oTTvWn/LCTQqrC6hilrPo9g/nkRR62SXa
-weDewr+wLKzBnuF89pNEzWkLXzSjVfaNZTb33kHwufVmHasqM+6czV2N92xaPdyM
-0rI39R0ruvqol6My31Xtwb/KwUfcKDD4RS7dyYnEfLsy1btrFiNXNJPYui3KjTvp
-rEUskwmv8gJSyZc/BPWwkSUZJ11bm2Bge8y/0887UddrwvQDC3jNIVCIygnph8hz
-INIaDDlVTiMPBJtkL8gustEiXstjZXANwnR36bTe1zWYH94tBuI76FsoXwR+n/F0
-kOn+Gs+TTzzzT8YM42fIkGS4a4hQsw==
-=yS7N
------END PGP SIGNATURE-----
-
---EDQ/wMYGX5nr2pOQ--
