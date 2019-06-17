@@ -2,174 +2,125 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8DEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78A0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:38:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E1B2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:38:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560796692;
-	bh=cbYBu2NCDWBDWwokTeDzJzql2PdknIZ9SiYPxMP8Mog=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=iFwnm1d4jrcxppamFueMLhFXeeCZ/2LeunXt2/r1/Xruvirkk/CFEI772ZPpbiQgo
-	 feUXouUe/H1WnyrAQohW8qE2YnRpRrlR6cq/6dxNVumk7KTSdJwgCUTyGofcyYvwVS
-	 Rq+QiaBv8D/qabABS1jwAV4mXFEOTSGrHHVFMy7E=
+	by mail.kernel.org (Postfix) with ESMTP id BBF32208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:38:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qC2QDWKh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbfFQSiL (ORCPT
+        id S1726200AbfFQSiV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:38:11 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37526 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfFQSiC (ORCPT
+        Mon, 17 Jun 2019 14:38:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:37767 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725844AbfFQSiU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:38:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Ue45Jh3jB+F+8LKaH/3guNwSXLn//WCmTR/5Xx59M20=; b=DOtTACEVDXoBuH0Ot00BWaedE
-        Ctv2zAN9epvv0Ad3AWsINgva6EuHxEtxuNmb60kMnT30oJK9ujpjzbvQQptwsMb80QrsKsccBLi0c
-        XkzfhZOBjBP2K60BTwP8xNP0w6NipHJTgz7RlEH8Rk79zz45KcBCAckj9uH8m6tTQunu0=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hcwVy-0002QK-D9; Mon, 17 Jun 2019 18:37:58 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id BA282440046; Mon, 17 Jun 2019 19:37:57 +0100 (BST)
-Date:   Mon, 17 Jun 2019 19:37:57 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     lgirdwood@gmail.com, Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
-Message-ID: <20190617183757.GH5316@sirena.org.uk>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212553.10541-1-jeffrey.l.hugo@gmail.com>
- <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
- <20190617150502.GU5316@sirena.org.uk>
- <CAOCk7NrwYezbVyLKOZdxgGRVemKtBmHKP+fSO0a2p3bCPNdW3w@mail.gmail.com>
- <20190617160358.GC5316@sirena.org.uk>
- <CAOCk7Nrnd7yJQ=0pO64iT+RfmsKfJW0x0RhrmSLkO_brFqZ2+Q@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="qZLFzaLf2KECwqmh"
-Content-Disposition: inline
-In-Reply-To: <CAOCk7Nrnd7yJQ=0pO64iT+RfmsKfJW0x0RhrmSLkO_brFqZ2+Q@mail.gmail.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 17 Jun 2019 14:38:20 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so6152831pfa.4;
+        Mon, 17 Jun 2019 11:38:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Ypy1jYMMxHq//sxPDAaM1q7oa3FUUDRh/MaSzsTk114=;
+        b=qC2QDWKhELhh0AsGIxnHawjI73Ycq5E6RSIesESuhIL0ozLxErKto9rlbqwV6K7yC2
+         9ou+jgPL6YJjCjCCw8C9K6rgRPHHrX/4rykDHM5uxT4Mgbk7CVjrXQX3hIIoWWQIx3Wr
+         EKTdfzPBQMl90lMoWo/4NsBfHkgzh44iqgNNGSAEMg4ybRIqszoUAPfpQlpTGNimcx5i
+         AIg89PYZ2kCkXTosmYZnx8PC3N4BDdo4aAI/9qHLD0BZQFI+b5mcsdCOZ5KomZFTrYBY
+         i3EI9yAAy6rjjyJZC//KuuJmFzUjQrfkO9IimnT4ihqSDoO4pkh2IQEDPDyy3EIWFckG
+         2mkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Ypy1jYMMxHq//sxPDAaM1q7oa3FUUDRh/MaSzsTk114=;
+        b=CL34fySvkq73ujPgbrT1/SnImz8J1U8VFTojptq6ACkYQ7vCPp8BUd01RNsGCmuHYg
+         qi4N0BKABiLLNqIW2tDfX2ZOD1WQ6Nc1BggOGIs1PNwXwyInUA+CxHje1bIaUBXQhAnr
+         JGj+5Tbqc6B3tgwvMqfKIWdH9pqT5qq0+BEX1phCZ+odph9ZbjBM/kxY3NGtq5sayl/e
+         xVEbk1MX5zcBFllGigvw9+q8/1RSir5KMo4IEO7+PIVCYdX0mLQrlffXeE6YHMat7/tu
+         J6G+inYr2ciml7JP4RLEBBrjNzAj6wkvL0cdZoFtxQaKfVcJlUR5+GaSvOmXo9BUUeT4
+         d74w==
+X-Gm-Message-State: APjAAAW9ykWv3ByB1ObA5A87jg8Dm6QPS/1PgO+dh3SJ1f4CiK2DnEDj
+        m3Zs97MZa72M1K/KDKcPZ6M=
+X-Google-Smtp-Source: APXvYqwmjm9XTI8o8K+v8RQpMdVWRNBeF0RTGANIJAhdHeXtpf8iR4ZoczjRKhs1tKxJitDimAfYZA==
+X-Received: by 2002:a62:e710:: with SMTP id s16mr82057504pfh.183.1560796699385;
+        Mon, 17 Jun 2019 11:38:19 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id x7sm11759028pfa.125.2019.06.17.11.38.17
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 11:38:18 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     lgirdwood@gmail.com, broonie@kernel.org
+Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v5 4/5] dt-bindings: qcom_spmi: Document pms405 support
+Date:   Mon, 17 Jun 2019 11:38:15 -0700
+Message-Id: <20190617183815.13659-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190617183643.13449-1-jeffrey.l.hugo@gmail.com>
+References: <20190617183643.13449-1-jeffrey.l.hugo@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
 
---qZLFzaLf2KECwqmh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The PMS405 supports 5 SMPS and 13 LDO regulators.
 
-On Mon, Jun 17, 2019 at 11:07:18AM -0600, Jeffrey Hugo wrote:
-> On Mon, Jun 17, 2019 at 10:04 AM Mark Brown <broonie@kernel.org> wrote:
-> > On Mon, Jun 17, 2019 at 09:17:21AM -0600, Jeffrey Hugo wrote:
+Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ .../bindings/regulator/qcom,spmi-regulator.txt | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-Something really weird is going on with the word wrapping in your mail,
-it looks like you're writing lines longer than 80 characters (120?) and
-they're getting a newline added in the middle of the line to wrap them
-without reflowing the paragraph.
+diff --git a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
+index ba94bc2d407a..430b8622bda1 100644
+--- a/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/qcom,spmi-regulator.txt
+@@ -10,6 +10,7 @@ Qualcomm SPMI Regulators
+ 			"qcom,pm8941-regulators"
+ 			"qcom,pm8994-regulators"
+ 			"qcom,pmi8994-regulators"
++			"qcom,pms405-regulators"
+ 
+ - interrupts:
+ 	Usage: optional
+@@ -111,6 +112,23 @@ Qualcomm SPMI Regulators
+ 	Definition: Reference to regulator supplying the input pin, as
+ 		    described in the data sheet.
+ 
++- vdd_l1_l2-supply:
++- vdd_l3_l8-supply:
++- vdd_l4-supply:
++- vdd_l5_l6-supply:
++- vdd_l10_l11_l12_l13-supply:
++- vdd_l7-supply:
++- vdd_l9-supply:
++- vdd_s1-supply:
++- vdd_s2-supply:
++- vdd_s3-supply:
++- vdd_s4-supply:
++- vdd_s5-supply
++	Usage: optional (pms405 only)
++	Value type: <phandle>
++	Definition: Reference to regulator supplying the input pin, as
++		    described in the data sheet.
++
+ - qcom,saw-reg:
+ 	Usage: optional
+ 	Value type: <phandle>
+-- 
+2.17.1
 
-> > > This is a set_voltage_sel() in spmi_ftsmps426_ops.  Is the issue beca=
-use this
-> > > function is "spmi_regulator_ftsmps426_set_voltage" and not
-> > > "spmi_regulator_ftsmps426_set_voltage_sel"?
-
-> > Well, that's certainly confusing naming and there's some confusion in
-> > the code about what a selector is - it's supposed to be a raw register
-> > value so if you're having to convert it into a voltage something is
-> > going wrong.  Just implement a set_voltage() operation?
-
-> No.
-
-> Is what a selector is documented anywhere?  I just looked again and I
-> haven't found
-> documentation explaining that a selector is the raw register value.
-
-Well, it doesn't *have* to be the raw register value, more accurately
-it's some token which is useful for passing to and from the hardware;=20
-The documentation such as it
-is is in the documentation of the list_voltage() operation (which is
-what defines the selector values for a given driver). =20
-
-> Now I understand why this driver has the hardware to software selector
-> translation.
-> The selector being the raw register value seems to be a very limited
-> assumption that
-> I don't see working for more than very basic implementations.
-
-Your idea of very basic implementations is how the overwhelming majority
-of hardware is implemented.  Regulators with register maps will tend to
-just have a bitfield where you set the voltage with each valid value in
-that bitfield mapped to a single voltage, the exceptions tend to use
-direct voltage values instead (and not support enumeration at all).
-
-Looking at the driver I think it's got what the helpers are terming
-pickable linear ranges (naming is hard) and could use those helpers.
-
-> We've already figured out a virtualized selector mapping, I don't want
-> to reimplement
-> the complicated math to correctly map a requested voltage range to
-> what the regulator
-> can provide, and possibly get it wrong, or at the very least have two dup=
-licate
-> implementations.
-
-I don't know what a "virtualized selector mapping" is...  We do have an
-extensive range of helper implementations which cover the majority of
-cases, are you sure that none of these cover what the hardware is doing?
-
-> The naming is consistent with the rest of the driver, and the name
-> seems long enough
-> already.  Lets just keep this.
-
-I appreciate that the existing code is a bit of a mess but as you can
-see it's making it difficult to maintain so I'd rather push towards
-making it cleaner, it looks like we're getting more and more devices
-added to the driver so it's actually an issue. =20
-
-> Again, it would be nice if the documentation for regulator_ops
-> indicated that a driver
-> should only implement the voltage operations or the selector
-> operations, not mix and
-> match if that is your expectation.
-
-Please add whatever documentation you're looking for here.  I genuinely
-don't know where people would look for that and TBH I'm having a hard
-time figuring out why you'd implement the operations asymmetrically.
-It's not an issue that ever comes up.
-
---qZLFzaLf2KECwqmh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0H3gQACgkQJNaLcl1U
-h9BJnQf8CXT/E6Fx677cC/jcClq6MlGwaUxZji61Mf3yxWImQeQ2YuY5pCmTd/LH
-naNqj4LoVKP8WB2P1hmL/b19JPuKVzq39mDG9B2zSpFWFUr8i9S1IABNss45hzeg
-UABKzHTCY1wmQISzs+h1TsAzaANi9EzsfwF/wFuT8LREqyCTg7CoXw3KSFiDR3jx
-AJdvbuCDOl54UAFWNvPcHSdFXQJb9eYJ1ZmDTS2bckShoviUemoSBTQ/vmO93iPY
-yS3ExNWGMSNzq1wCAVZgBln7fVEms0NMPiRcIDF1hRO6GFa7fU4ceql5ZjrV2xDc
-JJ3fpo+faqKg7fDGbWJZ5GwafClP5A==
-=a6W+
------END PGP SIGNATURE-----
-
---qZLFzaLf2KECwqmh--
