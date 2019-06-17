@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4A5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EFA8C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15F8A20673
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA24120861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806682;
-	bh=oywjT/WGxmlXWiGqewKHuaN1H1kBYOm+AcDn/SJIaZw=;
+	s=default; t=1560806686;
+	bh=zUIkRL2+2N6TejLuqB/35gmEd3f/CWpfpIxNm+H4+/s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SWbqwK4jTMzP6TPbSP2xiwtJjCkWRFGXCuo/BD2Tkh+T6NC0A8vCxMNyHerJBtcen
-	 OO5epji2bSt3Wzf5TfpEZ5SyY/Xt4VF8hnnNJ5YBuxL8bKiC8ljcWcqWh7FiIo/qrN
-	 qkCxOSdbCJjs9Nh54VKmRIYBaYxTZo+zRm47PFxg=
+	b=1tp3ofX0+Q7swwoOx2xF/KVDxoBkE4bGRok1k164zyAxs6SnuexeWCpKuX/4hl01d
+	 rVpvxmaTcuichxuNIDwdZWE7PeehHdDSeJp1gm86Aq023k2u++eH6Mv1CwDW/evs0F
+	 xTzUJa0q7PFIwjkKcQcI532ACNUBivROQcQfNFdI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbfFQVYk (ORCPT
+        id S1729344AbfFQVYp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:24:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50380 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:24:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50454 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728841AbfFQVYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:24:38 -0400
+        id S1728841AbfFQVYl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:24:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CB8E220673;
-        Mon, 17 Jun 2019 21:24:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65C8A21019;
+        Mon, 17 Jun 2019 21:24:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806678;
-        bh=oywjT/WGxmlXWiGqewKHuaN1H1kBYOm+AcDn/SJIaZw=;
+        s=default; t=1560806680;
+        bh=zUIkRL2+2N6TejLuqB/35gmEd3f/CWpfpIxNm+H4+/s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hRXh6VRCwD2QyCnf9EVICg14gc7I0+fUit8MT8uIt3aZ8btGneFfBXy0T7qQ+rvq+
-         j4EPmq4Wm9PwyT628jd5UyyVAs60het3zowWG6sDO5NGWSK/gU4SqT1pYDofc647iP
-         LsNInAoomS2x/Ni83g6R+NdC1WwNeP7V7EzBTG/s=
+        b=HSkhgjuY0fiuqif8x/kzcbDE+OSvU/BkEvRsYUsaIwIcAonBcWL4W4KKHSTf0wfkO
+         urf7bKsBoLy68sA9LeIZxb6H5i6k3TiRis6jB4PNhlhiwDfxaw+19+OjZadJCAipHA
+         Fyig9y0Vx5H7f5yIUR4v6LIxO8rRWaqMbk0buCPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Backlund <tmb@mageia.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sven Joachim <svenjoac@gmx.de>
-Subject: [PATCH 4.19 02/75] nouveau: Fix build with CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT disabled
-Date:   Mon, 17 Jun 2019 23:09:13 +0200
-Message-Id: <20190617210752.904005380@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
+Subject: [PATCH 4.19 20/75] i2c: acorn: fix i2c warning
+Date:   Mon, 17 Jun 2019 23:09:31 +0200
+Message-Id: <20190617210753.632805954@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -60,54 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Backlund <tmb@mageia.org>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-Not-entirely-upstream-sha1-but-equivalent: bed2dd8421
-("drm/ttm: Quick-test mmap offset in ttm_bo_mmap()")
+commit ca21f851cc9643af049226d57fabc3c883ea648e upstream.
 
-Setting CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n (added by commit: b30a43ac7132)
-causes the build to fail with:
+The Acorn i2c driver (for RiscPC) triggers the "i2c adapter has no name"
+warning in the I2C core driver, resulting in the RTC being inaccessible.
+Fix this.
 
-ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-
-This does not happend upstream as the offending code got removed in:
-bed2dd8421 ("drm/ttm: Quick-test mmap offset in ttm_bo_mmap()")
-
-Fix that by adding check for CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT around
-the drm_legacy_mmap() call.
-
-Also, as Sven Joachim pointed out, we need to make the check in
-CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n case return -EINVAL as its done
-for basically all other gpu drivers, especially in upstream kernels
-drivers/gpu/drm/ttm/ttm_bo_vm.c as of the upstream commit bed2dd8421.
-
-NOTE. This is a minimal stable-only fix for trees where b30a43ac7132 is
-backported as the build error affects nouveau only.
-
-Fixes: b30a43ac7132 ("drm/nouveau: add kconfig option to turn off nouveau
-       legacy contexts. (v3)")
-Signed-off-by: Thomas Backlund <tmb@mageia.org>
-Cc: stable@vger.kernel.org
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sven Joachim <svenjoac@gmx.de>
+Fixes: 2236baa75f70 ("i2c: Sanity checks on adapter registration")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/gpu/drm/nouveau/nouveau_ttm.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-@@ -169,7 +169,11 @@ nouveau_ttm_mmap(struct file *filp, stru
- 	struct nouveau_drm *drm = nouveau_drm(file_priv->minor->dev);
+---
+ drivers/i2c/busses/i2c-acorn.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+--- a/drivers/i2c/busses/i2c-acorn.c
++++ b/drivers/i2c/busses/i2c-acorn.c
+@@ -81,6 +81,7 @@ static struct i2c_algo_bit_data ioc_data
  
- 	if (unlikely(vma->vm_pgoff < DRM_FILE_PAGE_OFFSET))
-+#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
- 		return drm_legacy_mmap(filp, vma);
-+#else
-+		return -EINVAL;
-+#endif
+ static struct i2c_adapter ioc_ops = {
+ 	.nr			= 0,
++	.name			= "ioc",
+ 	.algo_data		= &ioc_data,
+ };
  
- 	return ttm_bo_mmap(filp, vma, &drm->ttm.bdev);
- }
 
 
