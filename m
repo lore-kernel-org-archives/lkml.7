@@ -2,412 +2,152 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FB2C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5889AC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E99920848
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:52:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="sKEfzptq"
+	by mail.kernel.org (Postfix) with ESMTP id 2E00220848
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560765342;
+	bh=keB/qNTaNxI25yvhvXe+Z5KA0lG2EkqbJoYKrsvLfQQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X20POev4go8vxipJ7LAl8fm1YztxJ6OX2eqOUId91wcdbEyPwoys71LXB2D0KDisi
+	 d3+gJ8w2e4+nKpPoZFicZKGxm2y3wM2sc6OkTXsTdJMgZImQfi+jNyJeE0TF4HOCv/
+	 76nDUs07gc8bc75K28f440bvtQK2aRPPZR3+HMJM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727692AbfFQJwJ (ORCPT
+        id S1727737AbfFQJzl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:52:09 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:39013 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbfFQJwJ (ORCPT
+        Mon, 17 Jun 2019 05:55:41 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:41074 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfFQJzk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:52:09 -0400
-Received: by mail-vk1-f196.google.com with SMTP id o19so1931318vkb.6;
-        Mon, 17 Jun 2019 02:52:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KfCjFS8g5aKz/YED7T9fomFFhrr2nd+WCpPCFLnXc7M=;
-        b=sKEfzptqScnRWnzo/iu5jMqRohB1VnEwlC9LYiuzPJDkGsHHrEXZ9AMeuyVwpHXpXI
-         BjSatgHBtWaTjD2AkZ5asP5fRie6/8ndn5peV63ySsD/jmqQQmGs5VXVxTXW0RABOivJ
-         yCP8UuWBCcRpFzul9x64AFB/hXm5QByo0NJShVwuGb6dK2geuj0GyFvurOkKBJyV/Ysx
-         +Kny/t2tL1iyN4dW4M/DJAsMVTWFoc3FGobKwFTLZmAvArPPDSaHKfGZ5Qq6+eFN+Vay
-         cA7J4dns6N3P6upf7Kp81A57DbLzfliCGjQz3wWN92lcbc6gT6oc9nRz0A151+QHv/ri
-         Ayhw==
+        Mon, 17 Jun 2019 05:55:40 -0400
+Received: by mail-ot1-f66.google.com with SMTP id 107so8666298otj.8;
+        Mon, 17 Jun 2019 02:55:40 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KfCjFS8g5aKz/YED7T9fomFFhrr2nd+WCpPCFLnXc7M=;
-        b=Evho2IYwpJnmY9I6T1Q5MAQqBl7UEM9fPS8VYCkM24UCKGLyrKkp8FrY9gKs/LXvGk
-         3r7YPsFPqVirCN2FY8PBquwczpjwH2wO/uujHtMs0nhlDYCEi3MJGt5V+R+4F8e/159y
-         v1O0EOx++xMKVX8nEJiNh462NoPkxu3Ms33eqIgLkW10BNOoh7BdhNP49okdfKro8+fJ
-         EvsP/k7h6v1XuvntzgFGWC2LgRXatVx2CJFUwpOO8IYmEoW17tUijGKORdVrRJAlJOTk
-         sfR4zwpYNxhIVtL4yHI3uy1d2yFL5QKoCM8/tsIXTRaXdJPTKmb/KRYmVOm/LORm20jv
-         DIdg==
-X-Gm-Message-State: APjAAAUr/DEYNGftNZw35s/whmm8fMQBlFfFM1dNgezal7pOiByQl5k3
-        8elp2K2gWdT9FHoGNhIyQCVyraA8Ev9FwjKBn0E=
-X-Google-Smtp-Source: APXvYqwlHIRYhggeURozyPXFx3HlWbTf71JGhfOYZ4VnufcMN8VxvZeIwkcFkdWG/YsyaqZqi3bmaB6bFYSwmf8cqE0=
-X-Received: by 2002:a1f:9916:: with SMTP id b22mr1598711vke.59.1560765128003;
- Mon, 17 Jun 2019 02:52:08 -0700 (PDT)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=J7SuI9vLUAwXvgnaQIuYQGNgcBOBLIEw7OPkq5rLb6s=;
+        b=pLJnrx8fXWIt6w654Ry6SXdJUWrdxmaaA5t/T8HlOW0vZOxdcM9IYY71DD0kRpt86+
+         ZxcM7055p2F7Wr953yYT1LVMGevexZasDUXXceTXxBD4JD9AXSWdPhvoRH9a6e1/v1/P
+         MHdIuaXMO0fIVKToe+muUWJwYKCWQocLEvb6qtpICPngmZYuk8iPguOXipFQHrujTCG3
+         sVFOb6Suz7M5aaqmcPqK1mZbSECVJIkcZOU74PDXob50lJwlP+B7KlF3qYDQJqbs4bCa
+         bsvD5Dq8xQeId7es/Va09qkgE6IZ+PE//F95M79sjQnxEadb3O9H7dRVQBXG8SOOf9CC
+         /rMw==
+X-Gm-Message-State: APjAAAWR5gEEWu3/SyWJZThMV2Z1pwtE4E8WRHLsYV6BI6to6gUdODZD
+        EtJMjm9lnapCt+C/ueiu474ok3a6pAZj1BHpGR4=
+X-Google-Smtp-Source: APXvYqzYcmzAzTrAIa6DT3XwBZdcJvm+cBivzLoRjMlWNgT2YPWkNLDO9ajhN4pNKdGLrNGl5CyR9/haPnJE33JN5ZE=
+X-Received: by 2002:a9d:5e99:: with SMTP id f25mr29823354otl.262.1560765339826;
+ Mon, 17 Jun 2019 02:55:39 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613154542.32438-1-sr@denx.de> <20190613154542.32438-3-sr@denx.de>
- <CAGm1_kuyt5ue_3CuvryXw8L0=z0Bti5BeQMA50yRYhFmffcJuQ@mail.gmail.com>
-In-Reply-To: <CAGm1_kuyt5ue_3CuvryXw8L0=z0Bti5BeQMA50yRYhFmffcJuQ@mail.gmail.com>
-From:   Yegor Yefremov <yegorslists@googlemail.com>
-Date:   Mon, 17 Jun 2019 11:51:43 +0200
-Message-ID: <CAGm1_ksdQ5CNLGGNzHKBNKeLE3ByHvPyOkjYNoWWM+rw0q214Q@mail.gmail.com>
-Subject: Re: [PATCH 3/3 v6] tty/serial/8250: use mctrl_gpio helpers
-To:     Stefan Roese <sr@denx.de>
-Cc:     linux-serial@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+References: <39e46643-d799-94b7-4aa5-d6d99d738f99@web.de> <20190614133840.GN9224@smile.fi.intel.com>
+ <20190614141004.GC7234@kroah.com>
+In-Reply-To: <20190614141004.GC7234@kroah.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Mon, 17 Jun 2019 11:55:28 +0200
+Message-ID: <CAJZ5v0iBSq+DHqkevbLS0kYbaKGM0zYjg0KAzNhqYjCXvrQ-RQ@mail.gmail.com>
+Subject: Re: [PATCH] drivers: Provide devm_platform_ioremap_resource_byname()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Jack Ping CHNG <jack.ping.chng@linux.intel.com>,
+        kernel-janitors@vger.kernel.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Enrico Weigelt <lkml@metux.net>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:40 AM Yegor Yefremov
-<yegorslists@googlemail.com> wrote:
+On Fri, Jun 14, 2019 at 4:10 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Thu, Jun 13, 2019 at 5:45 PM Stefan Roese <sr@denx.de> wrote:
+> On Fri, Jun 14, 2019 at 04:38:40PM +0300, Andy Shevchenko wrote:
+> > +Cc: Jack Ping, who did internally the same
 > >
-> > From: Yegor Yefremov <yegorslists@googlemail.com>
+> > On Fri, Jun 14, 2019 at 03:26:25PM +0200, Markus Elfring wrote:
+> > > From: Markus Elfring <elfring@users.sourceforge.net>
+> > > Date: Fri, 14 Jun 2019 15:15:14 +0200
+> > >
+> > > The functions “platform_get_resource_byname” and “devm_ioremap_resource”
+> > > are called together in 181 source files.
+> > > This implementation detail can be determined also with the help
+> > > of the semantic patch language (Coccinelle software).
+> > >
+> > > Wrap these two calls into another helper function.
+> > > Thus a local variable does not need to be declared for a resource
+> > > structure pointer before and a redundant argument can be omitted
+> > > for the resource type.
 > >
-> > This patch permits the usage for GPIOs to control
-> > the CTS/RTS/DTR/DSR/DCD/RI signals.
-> >
-> > Changed by Stefan:
-> > Only call mctrl_gpio_init(), if the device has no ACPI companion device
-> > to not break existing ACPI based systems. Also only use the mctrl_gpio_
-> > functions when "gpios" is available.
-> >
-> > Use MSR / MCR <-> TIOCM wrapper functions.
-> >
-> > Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
-> > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Stefan Roese <sr@denx.de>
-> > Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
-> > Cc: Yegor Yefremov <yegorslists@googlemail.com>
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > ---
-> > v6:
-> > - Use newly introduced TIOCM <-> MCR/MSR wrapper functions
-> > - serial8250_in_MCR(): Don't save the already read MCR bits in TIOCM
-> >   format but "or" them later to the GPIO MCR value
-> > - Correctly use "!up->gpios" (Andy)
-> > - Removed Mika's reviewed by tag (because of changes)
-> >
-> > v5:
-> > - Dropped a few "if (up->gpios)" checks, as the mctrl_gpio_foo() API
-> >   handles gpios == NULL (return)
-> > - 8250_omap: Changed "IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(up->gpios, ...))"
-> >   to "up->gpios == NULL", as mctrl_gpio_to_gpiod() does not handle
-> >   gpios == NULL correctly.
-> >
-> > v4:
-> > - Added Mika's reviewed by tag
-> > - Added Johan to Cc
-> >
-> > v3:
-> > - Only call mctrl_gpio_init(), if the device has no ACPI companion device
-> >   to not break existing ACPI based systems, as suggested by Andy
-> >
-> > v2:
-> > - No change
-> >
-> > Please note that this patch was already applied before [1]. And later
-> > reverted [2] because it introduced problems on some x86 based boards
-> > (ACPI GPIO related). Here a detailed description of the issue at that
-> > time:
-> >
-> > https://lkml.org/lkml/2016/8/9/357
-> > http://www.spinics.net/lists/linux-serial/msg23071.html
-> >
-> > This is a re-send of the original patch that was applied at that time.
-> > With patch 1/2 from this series this issue should be fixed now (please
-> > note that I can't test it on such an x86 platform causing these
-> > problems).
-> >
-> > Andy (or Mika), perhaps it would be possible for you to test this
-> > patch again, now with patch 1/2 of this series applied as well?
-> > That would be really helpful.
-> >
-> > Thanks,
-> > Stefan
-> >
-> > [1] 4ef03d328769 ("tty/serial/8250: use mctrl_gpio helpers")
-> > [2] 5db4f7f80d16 ("Revert "tty/serial/8250: use mctrl_gpio helpers"")
-> >
-> >  .../devicetree/bindings/serial/8250.txt       | 19 ++++++++++++
-> >  drivers/tty/serial/8250/8250.h                | 18 +++++++++++-
-> >  drivers/tty/serial/8250/8250_core.c           | 17 +++++++++++
-> >  drivers/tty/serial/8250/8250_omap.c           | 29 ++++++++++---------
-> >  drivers/tty/serial/8250/8250_port.c           |  8 +++++
-> >  drivers/tty/serial/8250/Kconfig               |  1 +
-> >  include/linux/serial_8250.h                   |  1 +
-> >  7 files changed, 79 insertions(+), 14 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-> > index 3cba12f855b7..20d351f268ef 100644
-> > --- a/Documentation/devicetree/bindings/serial/8250.txt
-> > +++ b/Documentation/devicetree/bindings/serial/8250.txt
-> > @@ -53,6 +53,9 @@ Optional properties:
-> >    programmable TX FIFO thresholds.
-> >  - resets : phandle + reset specifier pairs
-> >  - overrun-throttle-ms : how long to pause uart rx when input overrun is encountered.
-> > +- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
-> > +  line respectively. It will use specified GPIO instead of the peripheral
-> > +  function pin for the UART feature. If unsure, don't specify this property.
-> >
-> >  Note:
-> >  * fsl,ns16550:
-> > @@ -74,3 +77,19 @@ Example:
-> >                 interrupts = <10>;
-> >                 reg-shift = <2>;
-> >         };
-> > +
-> > +Example for OMAP UART using GPIO-based modem control signals:
-> > +
-> > +       uart4: serial@49042000 {
-> > +               compatible = "ti,omap3-uart";
-> > +               reg = <0x49042000 0x400>;
-> > +               interrupts = <80>;
-> > +               ti,hwmods = "uart4";
-> > +               clock-frequency = <48000000>;
-> > +               cts-gpios = <&gpio3 5 GPIO_ACTIVE_LOW>;
-> > +               rts-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
-> > +               dtr-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-> > +               dsr-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-> > +               dcd-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-> > +               rng-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-> > +       };
-> > diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-> > index 793da2e510e0..75c7c5449461 100644
-> > --- a/drivers/tty/serial/8250/8250.h
-> > +++ b/drivers/tty/serial/8250/8250.h
-> > @@ -11,6 +11,8 @@
-> >  #include <linux/serial_reg.h>
-> >  #include <linux/dmaengine.h>
-> >
-> > +#include "../serial_mctrl_gpio.h"
-> > +
-> >  struct uart_8250_dma {
-> >         int (*tx_dma)(struct uart_8250_port *p);
-> >         int (*rx_dma)(struct uart_8250_port *p);
-> > @@ -196,11 +198,25 @@ static inline int serial8250_MSR_to_TIOCM(int msr)
-> >  static inline void serial8250_out_MCR(struct uart_8250_port *up, int value)
-> >  {
-> >         serial_out(up, UART_MCR, value);
-> > +
-> > +       if (up->gpios)
-> > +               mctrl_gpio_set(up->gpios, serial8250_MCR_to_TIOCM(value));
-> >  }
-> >
-> >  static inline int serial8250_in_MCR(struct uart_8250_port *up)
-> >  {
-> > -       return serial_in(up, UART_MCR);
-> > +       int mctrl;
-> > +
-> > +       mctrl = serial_in(up, UART_MCR);
-> > +
-> > +       if (up->gpios) {
-> > +               unsigned int mctrl_gpio = 0;
-> > +
-> > +               mctrl_gpio = mctrl_gpio_get_outputs(up->gpios, &mctrl_gpio);
-> > +               mctrl |= serial8250_TIOCM_to_MCR(mctrl_gpio);
-> > +       }
-> > +
-> > +       return mctrl;
-> >  }
-> >
-> >  #if defined(__alpha__) && !defined(CONFIG_PCI)
-> > diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-> > index e441221e04b9..a4470771005f 100644
-> > --- a/drivers/tty/serial/8250/8250_core.c
-> > +++ b/drivers/tty/serial/8250/8250_core.c
-> > @@ -14,6 +14,7 @@
-> >   *           serial8250_register_8250_port() ports
-> >   */
-> >
-> > +#include <linux/acpi.h>
-> >  #include <linux/module.h>
-> >  #include <linux/moduleparam.h>
-> >  #include <linux/ioport.h>
-> > @@ -982,6 +983,8 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
-> >
-> >         uart = serial8250_find_match_or_unused(&up->port);
-> >         if (uart && uart->port.type != PORT_8250_CIR) {
-> > +               struct mctrl_gpios *gpios;
-> > +
-> >                 if (uart->port.dev)
-> >                         uart_remove_one_port(&serial8250_reg, &uart->port);
-> >
-> > @@ -1016,6 +1019,20 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
-> >                 if (up->port.flags & UPF_FIXED_TYPE)
-> >                         uart->port.type = up->port.type;
-> >
-> > +               /*
-> > +                * Only call mctrl_gpio_init(), if the device has no ACPI
-> > +                * companion device
-> > +                */
-> > +               if (!has_acpi_companion(uart->port.dev)) {
-> > +                       gpios = mctrl_gpio_init(&uart->port, 0);
-> > +                       if (IS_ERR(gpios)) {
-> > +                               if (PTR_ERR(gpios) != -ENOSYS)
-> > +                                       return PTR_ERR(gpios);
-> > +                       } else {
-> > +                               uart->gpios = gpios;
-> > +                       }
-> > +               }
-> > +
-> >                 serial8250_set_defaults(uart);
-> >
-> >                 /* Possibly override default I/O functions.  */
-> > diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-> > index 0a8316632d75..d5bbfc8f2284 100644
-> > --- a/drivers/tty/serial/8250/8250_omap.c
-> > +++ b/drivers/tty/serial/8250/8250_omap.c
-> > @@ -141,18 +141,20 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
-> >
-> >         serial8250_do_set_mctrl(port, mctrl);
-> >
-> > -       /*
-> > -        * Turn off autoRTS if RTS is lowered and restore autoRTS setting
-> > -        * if RTS is raised
-> > -        */
-> > -       lcr = serial_in(up, UART_LCR);
-> > -       serial_out(up, UART_LCR, UART_LCR_CONF_MODE_B);
-> > -       if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
-> > -               priv->efr |= UART_EFR_RTS;
-> > -       else
-> > -               priv->efr &= ~UART_EFR_RTS;
-> > -       serial_out(up, UART_EFR, priv->efr);
-> > -       serial_out(up, UART_LCR, lcr);
-> > +       if (!up->gpios) {
-> > +               /*
-> > +                * Turn off autoRTS if RTS is lowered and restore autoRTS
-> > +                * setting if RTS is raised
-> > +                */
-> > +               lcr = serial_in(up, UART_LCR);
-> > +               serial_out(up, UART_LCR, UART_LCR_CONF_MODE_B);
-> > +               if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
-> > +                       priv->efr |= UART_EFR_RTS;
-> > +               else
-> > +                       priv->efr &= ~UART_EFR_RTS;
-> > +               serial_out(up, UART_EFR, priv->efr);
-> > +               serial_out(up, UART_LCR, lcr);
-> > +       }
-> >  }
-> >
-> >  /*
-> > @@ -453,7 +455,8 @@ static void omap_8250_set_termios(struct uart_port *port,
-> >         priv->efr = 0;
-> >         up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
-> >
-> > -       if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW) {
-> > +       if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
-> > +           !up->gpios) {
-> >                 /* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
-> >                 up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
-> >                 priv->efr |= UART_EFR_CTS;
-> > diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-> > index 47f0a8d01a57..bc4a5e7f7f63 100644
-> > --- a/drivers/tty/serial/8250/8250_port.c
-> > +++ b/drivers/tty/serial/8250/8250_port.c
-> > @@ -1662,6 +1662,8 @@ static void serial8250_disable_ms(struct uart_port *port)
-> >         if (up->bugs & UART_BUG_NOMSR)
-> >                 return;
-> >
-> > +       mctrl_gpio_disable_ms(up->gpios);
-> > +
-> >         up->ier &= ~UART_IER_MSI;
-> >         serial_port_out(port, UART_IER, up->ier);
-> >  }
-> > @@ -1674,6 +1676,8 @@ static void serial8250_enable_ms(struct uart_port *port)
-> >         if (up->bugs & UART_BUG_NOMSR)
-> >                 return;
-> >
-> > +       mctrl_gpio_enable_ms(up->gpios);
-> > +
-> >         up->ier |= UART_IER_MSI;
-> >
-> >         serial8250_rpm_get(up);
-> > @@ -1944,11 +1948,15 @@ unsigned int serial8250_do_get_mctrl(struct uart_port *port)
-> >  {
-> >         struct uart_8250_port *up = up_to_u8250p(port);
-> >         unsigned int status;
-> > +       unsigned int val = 0;
-> >
-> >         serial8250_rpm_get(up);
-> >         status = serial8250_modem_status(up);
-> >         serial8250_rpm_put(up);
-> >
-> > +       if (up->gpios)
-> > +               return mctrl_gpio_get(up->gpios, &val);
-> > +
+> > This one makes sense.
+> > Though I'm not sure Greg will see your message.
 >
-> What happens when you have a mixed setup i.e. CTS controlled by UART
-> but other status pins controlled by GPIO? In this case CTS status
-> won't be returned. Do I see it right?
-
-What about something like this:
-
-unsigned int serial8250_do_get_mctrl(struct uart_port *port)
-  {
-          struct uart_8250_port *up = up_to_u8250p(port);
-          unsigned int status;
-          unsigned int val;
-
-          serial8250_rpm_get(up);
-          status = serial8250_modem_status(up);
-          serial8250_rpm_put(up);
-
-          val = serial8250_MSR_to_TIOCM(status);
-          if (up->gpios)
-                  mctrl_gpio_get(up->gpios, &val);
-
-          return val;
-  }
-
-> Yegor
+> Nope, didn't see it, don't want to see it, it will only cause more work
+> in the longrun...
 >
-> >         return serial8250_MSR_to_TIOCM(status);
-> >  }
-> >  EXPORT_SYMBOL_GPL(serial8250_do_get_mctrl);
-> > diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-> > index 296115f6a4d8..509f6a3bb9ff 100644
-> > --- a/drivers/tty/serial/8250/Kconfig
-> > +++ b/drivers/tty/serial/8250/Kconfig
-> > @@ -8,6 +8,7 @@ config SERIAL_8250
-> >         tristate "8250/16550 and compatible serial support"
-> >         depends on !S390
-> >         select SERIAL_CORE
-> > +       select SERIAL_MCTRL_GPIO if GPIOLIB
-> >         ---help---
-> >           This selects whether you want to include the driver for the standard
-> >           serial ports.  The standard answer is Y.  People who might say N
-> > diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
-> > index 5e0b59422a68..bb2bc99388ca 100644
-> > --- a/include/linux/serial_8250.h
-> > +++ b/include/linux/serial_8250.h
-> > @@ -110,6 +110,7 @@ struct uart_8250_port {
-> >                                                  *   if no_console_suspend
-> >                                                  */
-> >         unsigned char           probe;
-> > +       struct mctrl_gpios      *gpios;
-> >  #define UART_PROBE_RSA (1 << 0)
+> > Rafael, maybe you can apply this one?
+>
+> Um, don't go around maintainers please, that's rude.
+
+Totally agreed.
+
+And there would be no reason for me to even consider applying it, really.
+
+> There is a reason this specific developer is in my blacklist, and perhaps they should be
+> in yours as well :)
+>
+> > FWIW,
+> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > >
-> >         /*
-> > --
-> > 2.22.0
-> >
+> > >
+> > > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> > > ---
+> > >  drivers/base/platform.c | 18 ++++++++++++++++++
+> > >  1 file changed, 18 insertions(+)
+> > >
+> > > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> > > index 4d1729853d1a..c1f19a479dd7 100644
+> > > --- a/drivers/base/platform.c
+> > > +++ b/drivers/base/platform.c
+> > > @@ -97,6 +97,24 @@ void __iomem *devm_platform_ioremap_resource(struct platform_device *pdev,
+> > >     return devm_ioremap_resource(&pdev->dev, res);
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource);
+> > > +
+> > > +/**
+> > > + * devm_platform_ioremap_resource_byname
+> > > + * Call devm_ioremap_resource() for a platform device
+> > > + *
+> > > + * @pdev: platform device to use both for memory resource lookup as well as
+> > > + *        resource management
+> > > + * @name: resource name
+> > > + */
+> > > +void __iomem *devm_platform_ioremap_resource_byname(struct platform_device *pdev,
+> > > +                                               const char *name)
+> > > +{
+> > > +   struct resource *res;
+> > > +
+> > > +   res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> > > +   return devm_ioremap_resource(&pdev->dev, res);
+> > > +}
+> > > +EXPORT_SYMBOL_GPL(devm_platform_ioremap_resource_byname);
+> > >  #endif /* CONFIG_HAS_IOMEM */
+>
+> I don't like adding new apis with no user.
+
+I agree with that too.
+
+Cheers!
