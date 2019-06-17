@@ -2,52 +2,54 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EC5CC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7595EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 270B72084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 534B62084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727946AbfFQSjn (ORCPT
+        id S1728695AbfFQSjq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:39:43 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:35755 "EHLO
+        Mon, 17 Jun 2019 14:39:46 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:49895 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725844AbfFQSjm (ORCPT
+        with ESMTP id S1725839AbfFQSjn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:39:42 -0400
+        Mon, 17 Jun 2019 14:39:43 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MKc0o-1hvYmm1ROO-00KvUQ; Mon, 17 Jun 2019 20:39:40 +0200
+ 1M9nAB-1hfwoi06b7-005qYN; Mon, 17 Jun 2019 20:39:41 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
         wsa@the-dreams.de, linux-gpio@vger.kernel.org,
         linux-i2c@vger.kernel.org
-Subject: [PATCH 1/3] include: linux: i2c: more helpers for declaring i2c drivers
-Date:   Mon, 17 Jun 2019 20:39:37 +0200
-Message-Id: <1560796779-17117-1-git-send-email-info@metux.net>
+Subject: [PATCH 3/3] drivers: gpio: pcf857x: use subsys_i2c_driver()
+Date:   Mon, 17 Jun 2019 20:39:39 +0200
+Message-Id: <1560796779-17117-3-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-X-Provags-ID: V03:K1:LNAGFFDSSGhrBJAVfAfdpZS3/d/gWgechh97rUsMMlo81oJiI31
- H8SwkPnBK7lasHLpmX5/y50mEYh2o3n88GGUs0p+KHb3FmzIIeh3nSQZR7oqXRR6fFo2D80
- mpyqat861/1S8USST1EKfXo0dsawOE0tgNb50Hlwy8Cw2r7b7XobktyLtfALDv4INcg1A/2
- /PITBQ5p9pCcIC/tJ/vXA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xFB658LfSTA=:PoXhzmZr4oPSj16nxtRPl5
- mUycdTT0pK945VaN81pKG6dLJu7IRYlgAkG5rMk4hkAXp/RVPXpS38JUztiE2OFzMRGYJhx0G
- FdYP3NgSBfxCxM9CH2mYR7EoUqNyGeLNWCGcs9FmYh3IWzNBTQ3cj/3SwO79NOdoqJp3e9ir2
- hIf8quAyjb6YHzCtVq5fhaQ2XA9nI6hVQOiVtp67geW/UMfBm1urLCiqLZXwHFuc5HqvjuADB
- iQUqGl9lSXyRQ/N/sFJGPitT9vXekGa7zCrGmiB8bXPhtFQqBZKe1v+LxNANTPccTsL/IzuqT
- 1WjxiOpN1yge1GACfsBm6dIL3euNqNYroF6+wmweRmZ1w8w5Au0BhVN0VYOWRMc4Yz/L4ERnI
- jczN6rjB+WQWa0EdAefmxmkSULkCDKvIFXfbRIMi5E8u/r28i0gSlI+B6qhnHi8OCQ5JbHacm
- l1qh8LWCNa4iu54sVARCmJbBCUVcOZU1KVN3JTSvcoGiWRibPC6/chr6m6WEuhn8N8bkBVwz7
- YXcGJCdFG/cM6kzU063GILKduwgX6WuYC0U10+cJVGVYWo+8NQfxXkGNf266OWPrm6eteowyC
- 32El8moHv+gHxzE8Ou4707JfCoW/YyHzn1JDekB8HKqmV7+6ya2WYpp8lGnPQN2rFxm6bVxc6
- WF/KeCkUp5iLk13rEXfnZv0F3X67+3LTc+nf4NtYuNG41JXWZVlrhFMtcGZB4ByiPJNDEQKOr
- lp1v2PQqHum5Ll80u+DZVx7WlQtxwVM8HQLkdA==
+In-Reply-To: <1560796779-17117-1-git-send-email-info@metux.net>
+References: <1560796779-17117-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:llSAjebDYGluuZiize11hDPpsvBQMhYG4De6irWqXpmrHFW04Ly
+ 16HNNFKFZTlcAGOEjM3VXOjZFxqfKNcvtKacdROJ+cGjp+KyQoKZp6RRM1f992D8AajRfTH
+ ubwHArQwNvStp54tgaocGmyvbXapqAM7qNDKhz2QRgL5qwPbQisxsuiE/XJdECl2+ebOz6T
+ ITlmQqYFAR6uLzV5MrTEg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/EmVtBUJHQk=:0Lk+obK6sn9wuxf6NJ5WYU
+ 2N3vh3G4xIS8Xv+4baEazkT2iJ/MRCrxQ7OZmSxMHMAWO6QteAWJKgC3RxmmisIcTTZpIOVN2
+ nh6dkNWRBqEeWmeDfROuDTAKmaONjVk6C9Er9AwQ8i/+N0bEYuPYll6uJ+fXsWjs0KoYgg3cP
+ 5O/Dpjr1Dwy454jQMZbzsyOE6TzVk1a5SRtVzwfjQnCs9QAnA+IpCTY0db46924mrs3RkpsOQ
+ D9X9q9Iirffy+tKcFKSQVtmW7Sv1eZJhWgWUWfLjw3Z1FXf73SUTQbbWJ4tZTTRbe2pQ35XVU
+ Svx0UoMsSyyRcDDK6YQ6VUlhynhaLPTO75ZEoggsV35m7DGyvwFHkR+jP5gu6Yo1A7cJ8M8bv
+ AJaGBg8sfpC6vwk41zOP43SMEP57MOxWPrMGeB+GMCkdyU/NuPH2q28lVzpUu8SWuK/QOjYgr
+ bisZIoETFYa7JDOxGz0zN3FIORGMaAzZHdjiyNCgb9Jrmc/HFLBmYjaIE3/PTnLnvj77CrdYT
+ SqLs15lZq95H8vwmn4tH7JU/k1lr0/x4ilJjmxfHJvn41s47IbiChy0N+d/S7ztgez1Q2HxGL
+ 0eg/2N9r8ImIMJmq2FGw+q0INVhrRKchX7VCA0HM7Nv5jclWscVg/qPOR5i1jKLbQgxAUmLlt
+ oTDMOSo/yj6OT1bEEJmrAHtIpA9MXn4ygPpBQc3hHYGKRWywNvbpNTbPqC7gZnX7iH3pC3rB4
+ A91VyeQi0T8SRG+3uSxJa6mekFpQWtCobrD+CA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -55,45 +57,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Enrico Weigelt <info@metux.net>
 
-Add more helper macros for trivial driver init cases, similar to the
-already existing module_i2c_driver()+friends - now for those which
-are initialized at other stages (eg. by subsys_initcall()).
-
-This helps to further reduce driver init boilerplate.
+Reduce driver init boilerplate by using the new
+subsys_i2c_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- include/linux/i2c.h | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ drivers/gpio/gpio-pcf857x.c | 12 +-----------
+ 1 file changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index 1308126..fee59bd 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -920,6 +920,23 @@ static inline u8 i2c_8bit_addr_from_msg(const struct i2c_msg *msg)
- #define builtin_i2c_driver(__i2c_driver) \
- 	builtin_driver(__i2c_driver, i2c_add_driver)
+diff --git a/drivers/gpio/gpio-pcf857x.c b/drivers/gpio/gpio-pcf857x.c
+index 14fb8f6..554663e 100644
+--- a/drivers/gpio/gpio-pcf857x.c
++++ b/drivers/gpio/gpio-pcf857x.c
+@@ -430,20 +430,10 @@ static void pcf857x_shutdown(struct i2c_client *client)
+ 	.id_table = pcf857x_id,
+ };
  
-+/* subsys_i2c_driver() - Helper macro for drivers that don't do
-+ * anything special in module init/exit.  This eliminates a lot of
-+ * boilerplate.  Each module may only use this macro once, and
-+ * calling it replaces subsys_initcall() and module_exit()
-+ */
-+#define subsys_i2c_driver(__i2c_driver) \
-+static int __init __i2c_driver##_init(void) \
-+{ \
-+       return i2c_add_driver(&(__i2c_driver)); \
-+} \
-+subsys_initcall(__i2c_driver##_init); \
-+static void __exit __i2c_driver##_exit(void) \
-+{ \
-+       i2c_del_driver(&(__i2c_driver)); \
-+} \
-+module_exit(__i2c_driver##_exit);
-+
- #endif /* I2C */
+-static int __init pcf857x_init(void)
+-{
+-	return i2c_add_driver(&pcf857x_driver);
+-}
+ /* register after i2c postcore initcall and before
+  * subsys initcalls that may rely on these GPIOs
+  */
+-subsys_initcall(pcf857x_init);
+-
+-static void __exit pcf857x_exit(void)
+-{
+-	i2c_del_driver(&pcf857x_driver);
+-}
+-module_exit(pcf857x_exit);
++subsys_i2c_driver(pcf857x_driver);
  
- #if IS_ENABLED(CONFIG_OF)
+ MODULE_LICENSE("GPL");
+ MODULE_AUTHOR("David Brownell");
 -- 
 1.9.1
 
