@@ -2,230 +2,104 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AD4EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:00:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54634C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:00:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D79CE2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:00:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26A34208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:00:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="AoT2VV+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfFQVAb (ORCPT
+        id S1727683AbfFQVAn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:00:31 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:45686 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFQVAb (ORCPT
+        Mon, 17 Jun 2019 17:00:43 -0400
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:51325 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727241AbfFQVAn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:00:31 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hcyjs-0005CJ-2H; Mon, 17 Jun 2019 23:00:28 +0200
-Date:   Mon, 17 Jun 2019 23:00:27 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-cc:     linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 7/7] rslib: Fix remaining decoder flaws
-In-Reply-To: <20190330182947.8823-8-ferdinand.blomqvist@gmail.com>
-Message-ID: <alpine.DEB.2.21.1906172249580.1963@nanos.tec.linutronix.de>
-References: <20190330182947.8823-1-ferdinand.blomqvist@gmail.com> <20190330182947.8823-8-ferdinand.blomqvist@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 17 Jun 2019 17:00:43 -0400
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id A3317886BF;
+        Tue, 18 Jun 2019 09:00:41 +1200 (NZST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1560805241;
+        bh=GTADMuzdK/ZS3g8VOZ9XtxpUP/TjXPNtpzO+owLF9lQ=;
+        h=From:To:CC:Subject:Date:References;
+        b=AoT2VV+BGgHwvP21C9mhXWKBNIbQBsSXM4ydqI8gyQCpqxkmnhCjnAz4pBa51NqN3
+         wtlT06hKqcbWp6OB0rUuxzRpwmhWh0bPkU0TekxSeuW7EguafGtkrte1rmv7Rmq7ob
+         qldqNwTpwLZhHTCNzRC0SRLw9rNDYiCmts9bJ+il+BnRfMr8BkAwMcgamggj6mFXwt
+         5wdOFZL58X5Zv+mmMm0/x3zaXiIPraiXdBv7sRGgDLYFk1PEyr2Vik30iGqjkZqQoA
+         8T0bjITcmOA2Y2frdhW/PTuJD9EonKYzdd0PItWNHaiHpecYYZTYh6rCjcgEyZnmBQ
+         MzcL6LG61HF3w==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5d07ff7a0000>; Tue, 18 Jun 2019 09:00:42 +1200
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 18 Jun 2019 09:00:41 +1200
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Tue, 18 Jun 2019 09:00:41 +1200
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "jason@lakedaemon.net" <jason@lakedaemon.net>,
+        "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>,
+        "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: Re: [PATCH 2/4] dt-bindings: clock: mvebu: Add compatible string for
+ 98dx1135 core clock
+Thread-Topic: [PATCH 2/4] dt-bindings: clock: mvebu: Add compatible string for
+ 98dx1135 core clock
+Thread-Index: AQHVJPQWO1K5IrBk6023sLSGAZWOmQ==
+Date:   Mon, 17 Jun 2019 21:00:41 +0000
+Message-ID: <52f0fe4f276e4088ac7ad47bc761722e@svr-chch-ex1.atlnz.lc>
+References: <20190617100432.13037-1-chris.packham@alliedtelesis.co.nz>
+ <20190617100432.13037-3-chris.packham@alliedtelesis.co.nz>
+ <20190617170931.GG17551@lunn.ch>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:3a2c:4aff:fe70:2b02]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 30 Mar 2019, Ferdinand Blomqvist wrote:
-> The decoder is flawed in the following ways:
-
-...
-
-> - Also fix errors in parity when correcting in-place. Another option
->   would be to completely disregard errors in the parity, but then the
->   interface makes it impossible to write tests that test for silent
->   failures.
-> 
-> Other changes:
-> 
-> - Only fill the correction buffer and error position buffer if both of
->   them are provided. Otherwise correct in place. Previously the error
->   position buffer was always populated with the positions of the
->   corrected errors, irrespective of whether a correction buffer was
->   supplied or not. The rationale for this change is that there seems to
->   be two use cases for the decoder; correct in-place or use the
->   correction buffers. The caller does not need the positions of the
->   corrected errors when in-place correction is used. If in-place
->   correction is not used, then both the correction buffer and error
->   position buffer need to be populated.
-
-Again. A perfect changelog! Very nice to read, informative and technically
-on the point.
-
-> diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-> index 7ecc449e57e9..33621ea67f67 100644
-> --- a/lib/reed_solomon/decode_rs.c
-> +++ b/lib/reed_solomon/decode_rs.c
-> @@ -22,6 +22,7 @@
->  	uint16_t *index_of = rs->index_of;
->  	uint16_t u, q, tmp, num1, num2, den, discr_r, syn_error;
->  	int count = 0;
-> +	int num_corrected;
->  	uint16_t msk = (uint16_t) rs->nn;
->  
->  	/*
-> @@ -182,6 +183,15 @@
->  		if (lambda[i] != nn)
->  			deg_lambda = i;
->  	}
-> +
-> +	if (deg_lambda == 0) {
-> +		/*
-> +		 * deg(lambda) is zero even though the syndrome is non-zero
-> +		 * => uncorrectable error detected
-> +		 */
-> +		return -EBADMSG;
-
-Good catch. Now that I paged all that stuff back in it's obvious.
-
-> +	}
-> +
->  	/* Find roots of error+erasure locator polynomial by Chien search */
->  	memcpy(&reg[1], &lambda[1], nroots * sizeof(reg[0]));
->  	count = 0;		/* Number of roots of lambda(x) */
-> @@ -195,6 +205,12 @@
->  		}
->  		if (q != 0)
->  			continue;	/* Not a root */
-> +
-> +		if (k < pad) {
-> +			/* Impossible error location. Uncorrectable error. */
-> +			return -EBADMSG;
-
-True.
-
-> +		}
-> +
->  		/* store root (index-form) and error location number */
->  		root[count] = i;
->  		loc[count] = k;
-> @@ -229,7 +245,9 @@
->  	/*
->  	 * Compute error values in poly-form. num1 = omega(inv(X(l))), num2 =
->  	 * inv(X(l))**(fcr-1) and den = lambda_pr(inv(X(l))) all in poly-form
-> +	 * Note: we reuse the buffer for b to store the correction pattern
->  	 */
-> +	num_corrected = 0;
->  	for (j = count - 1; j >= 0; j--) {
->  		num1 = 0;
->  		for (i = deg_omega; i >= 0; i--) {
-> @@ -237,6 +255,12 @@
->  				num1 ^= alpha_to[rs_modnn(rs, omega[i] +
->  							i * root[j])];
->  		}
-> +
-> +		if (num1 == 0) {
-> +			b[j] = 0;
-> +			continue;
-
-A comment for this would be appreciated.
-
-> +		}
-> +
->  		num2 = alpha_to[rs_modnn(rs, root[j] * (fcr - 1) + nn)];
->  		den = 0;
->  
-> @@ -248,29 +272,52 @@
->  						       i * root[j])];
->  			}
->  		}
-> -		/* Apply error to data */
-> -		if (num1 != 0 && loc[j] >= pad) {
-> -			uint16_t cor = alpha_to[rs_modnn(rs,index_of[num1] +
-> -						       index_of[num2] +
-> -						       nn - index_of[den])];
-> -			/* Store the error correction pattern, if a
-> -			 * correction buffer is available */
-> -			if (corr) {
-> -				corr[j] = cor;
-> -			} else {
-> -				/* If a data buffer is given and the
-> -				 * error is inside the message,
-> -				 * correct it */
-> -				if (data && (loc[j] < (nn - nroots)))
-> -					data[loc[j] - pad] ^= cor;
-> -			}
-> +
-> +		b[j] = alpha_to[rs_modnn(rs, index_of[num1] +
-> +					       index_of[num2] +
-> +					       nn - index_of[den])];
-
-Way simpler indeed.
-
-> +		num_corrected++;
-> +	}
-> +
-> +	/*
-> +	 * We compute the syndrome of the 'error' to and check that it matches
-
-s/to// or s/to/too ?
-
-> +	 * the syndrome of the received word
-> +	 */
-> +	for (i = 0; i < nroots; i++) {
-> +		tmp = 0;
-> +		for (j = 0; j < count; j++) {
-> +			if (b[j] == 0)
-> +				continue;
-> +
-> +			k = (fcr + i) * prim * (nn-loc[j]-1);
-> +			tmp ^= alpha_to[rs_modnn(rs, index_of[b[j]] + k)];
->  		}
-> +
-> +		if (tmp != alpha_to[s[i]])
-> +			return -EBADMSG;
-
-Interesting it never occured to me that this can actually happen.
-
->  	}
->  
-> -	if (eras_pos != NULL) {
-> -		for (i = 0; i < count; i++)
-> -			eras_pos[i] = loc[i] - pad;
-> +	/*
-> +	 * Store the error correction pattern, if a
-> +	 * correction buffer is available
-> +	 */
-> +	if (corr && eras_pos) {
-> +		j = 0;
-> +		for (i = 0; i < count; i++) {
-> +			if (b[i]) {
-> +				corr[j] = b[i];
-> +				eras_pos[j++] = loc[i] - pad;
-> +			}
-> +		}
-> +	} else if (data && par) {
-> +		/* Apply error to data and parity */
-> +		for (i = 0; i < count; i++) {
-> +			if (loc[i] < (nn - nroots))
-> +				data[loc[i] - pad] ^= b[i];
-> +			else
-> +				par[loc[i] - pad - len] ^= b[i];
-> +		}
-
-Aside of the fact that I had to wrap my brain around this crime I committed
-more than a decade ago, all of this was really a pleasure to review.
-
-Thanks a lot for putting that effort in! I'm looking forward to V2 of that.
-
-Thanks,
-
-	tglx
+Hi Andrew,=0A=
+=0A=
+On 18/06/19 5:09 AM, Andrew Lunn wrote:=0A=
+> On Mon, Jun 17, 2019 at 10:04:30PM +1200, Chris Packham wrote:=0A=
+>> Add compatible string for the core clock on the 98dx1135 switch with=0A=
+>> integrated CPU.=0A=
+> =0A=
+> Hi Chris=0A=
+> =0A=
+> Should there be a list of provider IDs and clock names?=0A=
+> =0A=
+=0A=
+That list would be the same as the Kirkwood/Dove. I thought about adding =
+=0A=
+it but decided not to to avoid unnecessary duplication. One compromise =0A=
+would be to change "for 98dx1135 SoC core clocks" to "for Kirkwood =0A=
+98dx1135 SoC" which would fit with the MV88f6180 line above and make it =0A=
+clear that it falls into the kirkwood bucket.=0A=
