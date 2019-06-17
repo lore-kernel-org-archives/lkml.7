@@ -2,95 +2,257 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DF4C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911F3C31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:58:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91B8D2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:56:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DD7820644
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:58:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="lAOFLfNp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pP2hnCpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727786AbfFQI4y (ORCPT
+        id S1726726AbfFQI6X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:56:54 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:40035 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFQI4x (ORCPT
+        Mon, 17 Jun 2019 04:58:23 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44233 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726292AbfFQI6W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:56:53 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so15025045eds.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 01:56:52 -0700 (PDT)
+        Mon, 17 Jun 2019 04:58:22 -0400
+Received: by mail-lf1-f65.google.com with SMTP id r15so5891951lfm.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 01:58:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=nYP7nwkWft+3uUp9e25ZuOw9THhDw1ggRk0lkiQT8jk=;
-        b=lAOFLfNpOvUuTJG1ReESb/ZnQ/2/zpkokfGcQ2pm7U3B/ryQAyyBLNSwP+NaSwRoqS
-         U9lIIWVsfLkHWjYKJNX9okgatDFpPrHcqGu5rwGnoQigsqMslV09MLZojcrsVT7jgDyX
-         nrXyhqJ9ZHGZRUS7ihpHWC4mZHqlD9wRoW57gXBHyhQhSYKH6mkGgHi9aXZFwCbmvxKs
-         JVPkRYWJ6lr3YwDp2RVZWtnfBrbdFjWztay7Az2zA/5ZG15yTbT8JyJVWMbNm0djowcr
-         so84g4+chJssDRGKjlNSz5ubvVvDAAEsGAN4CXgcqf8mslLPgg9lphass99teg01v2X9
-         nGXA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=/kfB3EQM4cTIQNVbeoHSHizf5Tj4LK22gsgty3+LXc4=;
+        b=pP2hnCpmuzmpUuxLP4KXKlNOeVTx1TBwhIPclOpxEGCjl9Sn4/ckg1hPVnKleZ2xox
+         F3w4hqV+atBA6b7c0syRJzgWA2wAf+jrfHPro3azRbvZPT9i0onlmBkMqkMfXZH6Ul4A
+         gX61NkB3VHxK2rBK7ZAq/0M8bPEUknYdnwZbtnFbQfJ16mVsk+QTEJ0VZBEoZMU+WGH0
+         SXzzbfIA2vwxdZQyGMiKFGGwDl+1Q281FEQx8ppVf84X3tDfPYjGw5jYMKmKkmbBW/AL
+         4he0CbiRp8s+Vk3F6A5nQ4FeqPJ1SJvhMQPM7BU+BLVpTQv17D4ovGeyMVln5ZzmuZX6
+         zTSg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=nYP7nwkWft+3uUp9e25ZuOw9THhDw1ggRk0lkiQT8jk=;
-        b=X9KLvDsiY9JP84WBregupGDYvpl5ms30wljxzaIH67zAhwnGbZTztykKMjWL+ZyCyi
-         JAyfWHKTXNXPxGiJVYPEKKBxri4YMn5180fbsxpeXIeBTdJ8YbLMPQhZSmfoKRDMISd1
-         A9brglVKAPeB5Z7k8gPtBP469JGFneF/5Lr4s4a1trNq3toHvcbE60EVOv1BQSPkkao5
-         c62RFQj62Ot7t0CKjBZ2DyibIkJfQ1hGnatRIBZ+1J1XfOREG0diWSe1nGXAjutkFGR9
-         J/CHyScrBLRsqlGUJMEYzLNqdh7JuuQqMMgEqrxIT2uvEwdPZqj1UeAxH34vNyyOD+IV
-         rkPQ==
-X-Gm-Message-State: APjAAAVVXg+0kBYrNj2sQkaXUCCzBM1MFwjMNHcg8LFu3bs2l2o+VpwL
-        vhvq2N996UEtyF/Nx25QIGFvSg==
-X-Google-Smtp-Source: APXvYqwylTBcYALz6DItF8lNeiu/bxiKZNfUEzJ2MwvfkvNg59Cyc/65bONS/5J26iZtM3yzFUyF6w==
-X-Received: by 2002:a17:906:1181:: with SMTP id n1mr63614604eja.177.1560761812064;
-        Mon, 17 Jun 2019 01:56:52 -0700 (PDT)
-Received: from localhost ([81.92.102.43])
-        by smtp.gmail.com with ESMTPSA id a3sm3394908edr.48.2019.06.17.01.56.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 01:56:51 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 01:56:50 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Yash Shah <yash.shah@sifive.com>
-cc:     davem@davemloft.net, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org, robh+dt@kernel.org,
-        mark.rutland@arm.com, nicolas.ferre@microchip.com,
-        palmer@sifive.com, aou@eecs.berkeley.edu, ynezz@true.cz,
-        sachin.ghadi@sifive.com
-Subject: Re: [PATCH v2 1/2] macb: bindings doc: add sifive fu540-c000
- binding
-In-Reply-To: <1560745167-9866-2-git-send-email-yash.shah@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1906170154280.19994@viisi.sifive.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com> <1560745167-9866-2-git-send-email-yash.shah@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=/kfB3EQM4cTIQNVbeoHSHizf5Tj4LK22gsgty3+LXc4=;
+        b=n413liKxdgSpd+pZ+kuJXWglKDgwMxfaPLN0qUzvQT9EEOCfXngbOBghTNxyAGO1Ql
+         De/Kyo8YSd7SefdfBPbYAgYNItOmUn+FcK/92eK09ldVwepSTo8wdIGZZyK8VTHdm8tE
+         NcFqxBt4qZPLgfVyGfdzOPVaoDiLzJT/n3UOebaIOLr0nrNe1+HZzPBxMlPRxayvLWJZ
+         JFJng4heFDsE6aZ8viZqm35mjT7FnBLUei0+UkVMAdXNC53Xu1MZT/PmCN14nHNi7/5z
+         LRMFEdZlC0YiKV+UFkmQSXu2WbOK/bmkN7isCzYwYLRC4/jmn/7UHIttWAo3HexEtD+V
+         o3Sw==
+X-Gm-Message-State: APjAAAXkNEjB12aLNJ1JPPJzKNCzWRCJ8jNBQ82FKwFaWIRsLn2PBcvA
+        CpVzzSdM5N2yURsWJP6wyFL5Sw==
+X-Google-Smtp-Source: APXvYqwlnDVF7Z/0mknFU8I//ZPr5mqf2hC+deutIqJDZ2d69y+F4BMkBDMwtOzmpEyemzbUsNdBcg==
+X-Received: by 2002:ac2:52ac:: with SMTP id r12mr34554695lfm.126.1560761899947;
+        Mon, 17 Jun 2019 01:58:19 -0700 (PDT)
+Received: from [192.168.27.209] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id y2sm1667139lfc.35.2019.06.17.01.58.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 01:58:18 -0700 (PDT)
+Subject: Re: [PATCH 3/5] media: venus: Update clock scaling
+To:     Aniket Masule <amasule@codeaurora.org>,
+        linux-media@vger.kernel.org, stanimir.varbanov@linaro.org
+Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        vgarodia@codeaurora.org
+References: <1560233130-27264-1-git-send-email-amasule@codeaurora.org>
+ <1560233130-27264-4-git-send-email-amasule@codeaurora.org>
+From:   Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Message-ID: <e1903711-b8c1-d528-2da8-ffd511a2da72@linaro.org>
+Date:   Mon, 17 Jun 2019 11:58:17 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1560233130-27264-4-git-send-email-amasule@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Yash Shah wrote:
+Hi Aniket,
 
-> Add the compatibility string documentation for SiFive FU540-C0000
-> interface.
-> On the FU540, this driver also needs to read and write registers in a
-> management IP block that monitors or drives boundary signals for the
-> GEMGXL IP block that are not directly mapped to GEMGXL registers.
-> Therefore, add additional range to "reg" property for SiFive GEMGXL
-> management IP registers.
+On 6/11/19 9:05 AM, Aniket Masule wrote:
+> Current clock scaling calculations are same for vpu4 and
+> previous versions. For vpu4, Clock scaling calculations
+> are updated with cycles/mb. This helps in getting precise
+> clock required.
 > 
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+> ---
+>  drivers/media/platform/qcom/venus/helpers.c | 88 +++++++++++++++++++++++++++--
+>  1 file changed, 84 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/media/platform/qcom/venus/helpers.c b/drivers/media/platform/qcom/venus/helpers.c
+> index f7f724b..7bcc1e6 100644
+> --- a/drivers/media/platform/qcom/venus/helpers.c
+> +++ b/drivers/media/platform/qcom/venus/helpers.c
+> @@ -348,8 +348,9 @@ static u32 load_per_type(struct venus_core *core, u32 session_type)
+>  	return mbs_per_sec;
+>  }
+>  
+> -static int load_scale_clocks(struct venus_core *core)
+> +static int scale_clocks(struct venus_inst *inst)
+>  {
+> +	struct venus_core *core = inst->core;
+>  	const struct freq_tbl *table = core->res->freq_tbl;
+>  	unsigned int num_rows = core->res->freq_tbl_size;
+>  	unsigned long freq = table[0].freq;
+> @@ -398,6 +399,86 @@ static int load_scale_clocks(struct venus_core *core)
+>  	return ret;
+>  }
+>  
+> +static unsigned long calculate_inst_freq(struct venus_inst *inst)
+> +{
+> +	unsigned long vpp_cycles = 0;
+> +	u32 mbs_per_sec;
+> +
+> +	mbs_per_sec = load_per_instance(inst);
+> +	vpp_cycles = mbs_per_sec * inst->clk_data.codec_data->vpp_cycles;
+> +	/* 21 / 20 is overhead factor */
+> +	vpp_cycles += vpp_cycles / 20;
 
-Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+shouldn't you multiply by 21?
 
+> +
+> +	return vpp_cycles;
 
-- Paul
+It is not clear to me is that vpp_cycles or frequency (rate)? I just
+lost in dimensions used here.
+
+If you return vpp_cycles could you rename the function name?
+
+> +}
+> +
+> +static int scale_clocks_vpu4(struct venus_inst *inst)
+
+does vpu4 equivalent to HFI_VERSION_4XX? If so could you rename function
+to scale_clocks_v4.
+
+> +{
+> +	struct venus_core *core = inst->core;
+> +	const struct freq_tbl *table = core->res->freq_tbl;
+> +	unsigned int num_rows = core->res->freq_tbl_size;
+> +
+> +	struct clk *clk = core->clks[0];
+> +	struct device *dev = core->dev;
+> +	unsigned int i;
+> +	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
+> +	int ret;
+> +
+> +	freq = calculate_inst_freq(inst);
+> +
+> +	if (freq > table[0].freq)
+> +		goto err;
+> +
+> +	for (i = 0; i < num_rows; i++) {
+> +		if (freq > table[i].freq)
+> +			break;
+> +		freq = table[i].freq;
+> +	}
+> +
+> +	inst->clk_data.freq = freq;
+> +
+> +	mutex_lock(&core->lock);
+> +	list_for_each_entry(inst, &core->instances, list) {
+> +		if (inst->clk_data.core_id == VIDC_CORE_ID_1) {
+> +			freq_core0 += inst->clk_data.freq;
+> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_2) {
+> +			freq_core1 += inst->clk_data.freq;
+> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_3) {
+> +			freq_core0 += inst->clk_data.freq;
+> +			freq_core1 += inst->clk_data.freq;
+> +		}
+> +	}
+> +	mutex_unlock(&core->lock);
+> +
+> +	freq = max(freq_core0, freq_core1);
+
+hmm, this doesn't look right. core0 and core1 frequencies can be
+different why you get the bigger and set it on both?
+
+> +
+> +	ret = clk_set_rate(clk, freq);
+> +	if (ret)
+> +		goto err;
+> +
+> +	ret = clk_set_rate(core->core0_clk, freq);
+
+IMO this should set freq_core0
+
+> +	if (ret)
+> +		goto err;
+> +
+> +	ret = clk_set_rate(core->core1_clk, freq);
+
+set freq_core1
+
+> +	if (ret)
+> +		goto err;
+> +
+> +	return 0;
+> +
+> +err:
+> +	dev_err(dev, "failed to set clock rate %lu (%d)\n", freq, ret);
+> +	return ret;
+> +}
+> +
+> +static int load_scale_clocks(struct venus_inst *inst)
+> +{
+> +	if (IS_V3(inst->core) || IS_V1(inst->core))
+> +		return scale_clocks(inst);
+> +	else
+> +		return scale_clocks_vpu4(inst);
+
+could you reorder this to:
+
+	if (IS_V4())
+		return scale_clocks_v4(inst);
+
+	return scale_clocks(inst);
+
+> +}
+> +
+>  static void fill_buffer_desc(const struct venus_buffer *buf,
+>  			     struct hfi_buffer_desc *bd, bool response)
+>  {
+> @@ -1053,7 +1134,7 @@ void venus_helper_vb2_stop_streaming(struct vb2_queue *q)
+>  
+>  		venus_helper_free_dpb_bufs(inst);
+>  
+> -		load_scale_clocks(core);
+> +		load_scale_clocks(inst);
+>  		INIT_LIST_HEAD(&inst->registeredbufs);
+>  	}
+>  
+> @@ -1070,7 +1151,6 @@ void venus_helper_vb2_stop_streaming(struct vb2_queue *q)
+>  
+>  int venus_helper_vb2_start_streaming(struct venus_inst *inst)
+>  {
+> -	struct venus_core *core = inst->core;
+>  	int ret;
+>  
+>  	ret = intbufs_alloc(inst);
+> @@ -1081,7 +1161,7 @@ int venus_helper_vb2_start_streaming(struct venus_inst *inst)
+>  	if (ret)
+>  		goto err_bufs_free;
+>  
+> -	load_scale_clocks(core);
+> +	load_scale_clocks(inst);
+>  
+>  	ret = hfi_session_load_res(inst);
+>  	if (ret)
+> 
+
+-- 
+regards,
+Stan
