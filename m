@@ -2,123 +2,89 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D6CC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:26:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BB29C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:27:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C41A208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:26:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4666420657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:27:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hmbtH/If"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfFQX0O (ORCPT
+        id S1728714AbfFQX1r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 19:26:14 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:51083 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFQX0O (ORCPT
+        Mon, 17 Jun 2019 19:27:47 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41804 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726121AbfFQX1r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 19:26:14 -0400
-Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 4799003df4c07b9e; Tue, 18 Jun 2019 01:26:12 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Qais.Yousef@arm.com, mka@chromium.org, juri.lelli@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 4/5] cpufreq: Register notifiers with the PM QoS framework
-Date:   Tue, 18 Jun 2019 01:26:11 +0200
-Message-ID: <3504053.Rmt1Mul0J4@kreacher>
-In-Reply-To: <a275fdd9325f1b2cba046c79930ad59653674455.1560163748.git.viresh.kumar@linaro.org>
-References: <cover.1560163748.git.viresh.kumar@linaro.org> <a275fdd9325f1b2cba046c79930ad59653674455.1560163748.git.viresh.kumar@linaro.org>
+        Mon, 17 Jun 2019 19:27:47 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 136so7804972lfa.8;
+        Mon, 17 Jun 2019 16:27:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QisCyCC54c07CEBGHobCKmvjRF6o16SJc0jsMHiIM7g=;
+        b=hmbtH/IfkTu93XQQwhf9/9RUweB6+Pdartk6RdwC3ujCAXPsDneN73WM2Hw6zzgplF
+         o7wbH2U1mFiDhflep7nxzQPruUf5LPsv1/RDuoED2C8iJvORZO4Q51hE6PKj8zf+XT02
+         Go0FvHXeUdMEpyVozJjoKBAyX2WRsD4U+qFegmfvZ8Jwx7UwzrKxAPa0yoFSQ7zUau31
+         XQXra2NH249uB7f7y613KX2GA/CcwKWiWN1LskOTdoGLzdz02gH8qjeCBd7+qce9BEhL
+         1ElRkaIGUbi1djaHAQcyLVgeVmwIr6aHK7sOBZ7Ri9a/YNNQuWACWWDv/RxnMqH8vCZY
+         am6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QisCyCC54c07CEBGHobCKmvjRF6o16SJc0jsMHiIM7g=;
+        b=ETGC6yW2fBM0f+4ah5TeN63ufmwnP/ITh4x0fOEFU2EjkBGPHG7W0ZmiM4cXBHzbo2
+         lve5L4i0VDFUvd57gHzzkiioQuSBXzt7xrVODC8vTCeSIXzO7ItDBo6KYz7MHb1T3t9k
+         QVeOPkD7Md1nNooLxlwiES7grqNNMGTxPFLufhAtHW0ZaIzp1TtPmKWIlow3ipvcownf
+         I4gE2aBLoCc2Gi3mUZgoP1Ms3kNEr0vxP3dJfCif7GQX/QCAr++HsZAB85OAc7DFedLJ
+         Qd/8eQTrG9nEcMaouSXDnimKoEbVXLjBj228xJ9TL/1tkDiyvDN141drEKLLuS3lGP4O
+         Gr9A==
+X-Gm-Message-State: APjAAAVKcpG+RLvJvqrq0HIKMtRG14KT9+XZ/aH/L5AKe5etnym/mdHI
+        JlBRsa6OwfnN3BYvaLAuPz6hU/KdNOxfhCvzCXc=
+X-Google-Smtp-Source: APXvYqyfOPEJkS/5em0MecrHc0LkqJOWEx/G9vo7GL/zaM1yWRKjGDG3BHUevUEtJb9/Oph3JOElDJ6u3YctS6Eiq58=
+X-Received: by 2002:ac2:46f9:: with SMTP id q25mr4317288lfo.181.1560814065032;
+ Mon, 17 Jun 2019 16:27:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <20190617125724.1616165-1-arnd@arndb.de> <CAADnVQ+LzuNHFyLae0vUAudZpOFQ4cA02OC0zu3ypis+gqnjew@mail.gmail.com>
+ <20190617190920.71c21a6c@gandalf.local.home> <75e9ff40e1002ad9c82716dfd77966a3721022b6.camel@fb.com>
+In-Reply-To: <75e9ff40e1002ad9c82716dfd77966a3721022b6.camel@fb.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 17 Jun 2019 16:27:33 -0700
+Message-ID: <CAADnVQKCeHrq+bf4DceH7+ihpq+q-V+bFOiF-TpYjekH7dPA0w@mail.gmail.com>
+Subject: Re: [PATCH] bpf: hide do_bpf_send_signal when unused
+To:     Matt Mullins <mmullins@fb.com>
+Cc:     "rostedt@goodmis.org" <rostedt@goodmis.org>,
+        Song Liu <songliubraving@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, Andrii Nakryiko <andriin@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, June 10, 2019 12:51:35 PM CEST Viresh Kumar wrote:
-> This registers the notifiers for min/max frequency constraints with the
-> PM QoS framework. The constraints are also taken into consideration in
-> cpufreq_set_policy().
-> 
-> This also relocates cpufreq_policy_put_kobj() as it is required to be
-> called from cpufreq_policy_alloc() now.
-> 
-> No constraints are added until now though.
-> 
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
->  drivers/cpufreq/cpufreq.c | 139 +++++++++++++++++++++++++++++++-------
->  include/linux/cpufreq.h   |   4 ++
->  2 files changed, 120 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index 85ff958e01f1..547d221b2ff2 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -26,6 +26,7 @@
->  #include <linux/kernel_stat.h>
->  #include <linux/module.h>
->  #include <linux/mutex.h>
-> +#include <linux/pm_qos.h>
->  #include <linux/slab.h>
->  #include <linux/suspend.h>
->  #include <linux/syscore_ops.h>
-> @@ -1126,11 +1127,77 @@ static void handle_update(struct work_struct *work)
->  	cpufreq_update_policy(cpu);
->  }
->  
-> +static void cpufreq_update_freq_work(struct work_struct *work)
-> +{
-> +	struct cpufreq_policy *policy =
-> +		container_of(work, struct cpufreq_policy, req_work);
-> +	struct cpufreq_policy new_policy = *policy;
-> +
-> +	/* We should read constraint values from QoS layer */
-> +	new_policy.min = 0;
-> +	new_policy.max = UINT_MAX;
-> +
-> +	down_write(&policy->rwsem);
-> +
-> +	if (!policy_is_inactive(policy))
-> +		cpufreq_set_policy(policy, &new_policy);
-> +
-> +	up_write(&policy->rwsem);
-> +}
-> +
-> +static int cpufreq_update_freq(struct cpufreq_policy *policy)
-> +{
-> +	schedule_work(&policy->req_work);
-> +	return 0;
-> +}
-> +
-> +static int cpufreq_notifier_min(struct notifier_block *nb, unsigned long freq,
-> +				void *data)
-> +{
-> +	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_min);
-> +
-> +	return cpufreq_update_freq(policy);
-> +}
-> +
-> +static int cpufreq_notifier_max(struct notifier_block *nb, unsigned long freq,
-> +				void *data)
-> +{
-> +	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_max);
-> +
-> +	return cpufreq_update_freq(policy);
-> +}
+On Mon, Jun 17, 2019 at 4:13 PM Matt Mullins <mmullins@fb.com> wrote:
+> >
+> > The bug (really just a warning) reported is exactly here.
+>
+> I don't think bpf_send_signal is tied to modules at all;
+> send_signal_irq_work_init and the corresponding initcall should be
+> moved outside that #ifdef.
 
-This is a bit convoluted.
-
-Two different notifiers are registered basically for the same thing.
-
-Any chance to use just one?
-
-
-
+right. I guess send_signal_irq_work_init was accidentally placed
+after bpf_event_init and happened to be within that ifdef.
+Should definitely be outside.
