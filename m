@@ -2,126 +2,92 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECCAC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:14:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27893C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:15:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D1BA2082C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:14:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCBB82085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:15:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Xt2zW3Cs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728017AbfFQNOj (ORCPT
+        id S1728044AbfFQNPW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:14:39 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:59811 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfFQNOi (ORCPT
+        Mon, 17 Jun 2019 09:15:22 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37124 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725884AbfFQNPW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:14:38 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MSLlu-1i5ZU81MPA-00Sf0J; Mon, 17 Jun 2019 15:14:32 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Vladimir Oltean <olteanv@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Vivien Didelot <vivien.didelot@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Georg Waibel <georg.waibel@sensor-technik.de>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH net-next] net: dsa: sja1105: fix ptp link error
-Date:   Mon, 17 Jun 2019 15:14:10 +0200
-Message-Id: <20190617131430.2263299-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 17 Jun 2019 09:15:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=g2RSyr1LswKR5yVaExwwUghHr8GGOtj1VRSVsfBu1GQ=; b=Xt2zW3CsTdU+5dL1qgV7m+ZXj
+        9YyYU2Wk6Tm8jGRvrjoLS1or4I9L8Nqw0mQ0LRGN+KocsYE/05sPoA1/cTAa3zfdt8zIsocYAYBlg
+        FgUkxfwPxd0lS5E5WSJY35W31PExqnu6CzwadtRyYO9xC9msAFx2RSs+tbpZQ6XgdZAH0kfP2ulXj
+        nOcKt7dpG5G3pI6AqfqWoqte8gIMa4B6F0bH8LWDBzSBZ4CjeVlm38WCclwKZBMGauNqijnSWoqIs
+        Lpk4LxEgpQUm/LviWC5Z98ShD4yCngQetj2o1PDPpTuhHsae5J9s4IXxMJyukLQ+kdkej905zEcu5
+        MC33MfY3g==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcrTP-00014F-MJ; Mon, 17 Jun 2019 13:14:59 +0000
+Date:   Mon, 17 Jun 2019 06:14:59 -0700
+From:   'Christoph Hellwig' <hch@infradead.org>
+To:     Alastair D'Silva <alastair@d-silva.org>
+Cc:     'Christoph Hellwig' <hch@infradead.org>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        'David Hildenbrand' <david@redhat.com>,
+        'Oscar Salvador' <osalvador@suse.com>,
+        'Michal Hocko' <mhocko@suse.com>,
+        'Pavel Tatashin' <pasha.tatashin@soleen.com>,
+        'Wei Yang' <richard.weiyang@gmail.com>,
+        'Arun KS' <arunks@codeaurora.org>, 'Qian Cai' <cai@lca.pw>,
+        'Thomas Gleixner' <tglx@linutronix.de>,
+        'Ingo Molnar' <mingo@kernel.org>,
+        'Josh Poimboeuf' <jpoimboe@redhat.com>,
+        'Jiri Kosina' <jkosina@suse.cz>,
+        'Mukesh Ojha' <mojha@codeaurora.org>,
+        'Mike Rapoport' <rppt@linux.vnet.ibm.com>,
+        'Baoquan He' <bhe@redhat.com>,
+        'Logan Gunthorpe' <logang@deltatee.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH 5/5] mm/hotplug: export try_online_node
+Message-ID: <20190617131459.GA639@infradead.org>
+References: <20190617043635.13201-1-alastair@au1.ibm.com>
+ <20190617043635.13201-6-alastair@au1.ibm.com>
+ <20190617065921.GV3436@hirez.programming.kicks-ass.net>
+ <f1bad6f784efdd26508b858db46f0192a349c7a1.camel@d-silva.org>
+ <20190617071527.GA14003@infradead.org>
+ <068d01d524e2$aa6f3000$ff4d9000$@d-silva.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Cbo0bDy1UH8bqER4Qp7aRiwrEJ20S2OwFY8IWvJF7xUMxR3jm1w
- szu8rCAuFQtfvBZL5XF5sLfoHGHkW4Ii6XZKAec959gp5syty+2/3cAorV6R0W8GW/MXBu4
- dJa+kWhW+CvfqhLyZmSIb2sQXA5OpZIt7X9bQxzXaGSz/ZQjULBO1T2rQkQYtl+am2mJpon
- T6JrFpttgxViy+tbdYwKA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Te+YLwwLAkk=:uS+K7S69nn6ArdXVOMIXLx
- 3pyNFJavGZxkXmRgVGCrRg05nta2FAl/OaAwu9yP54IR+J7f1j9hwmPvJzGSq46UHKvoeFArK
- j3s5xchTwxJPyBnPzw+fitud0I9n74lBPyPP16/xJ3JW4/xY7UkZor/HUk2UBuxqgeeS9icpC
- UP2+9TKr6vCFEqJwNvG/Bt0lua4dbFe3CN6dFQXXMMIrPemqSqaY0clIy5VoWZNcxRTjXrfUB
- +8ZXPhc0KQPdl4zUk2hpxe6PdhHa184HYwrCY4vUx7vGgmrXyjmzYE5zlSsFIdBYsXB0o7Msx
- NP8+l0vQz1qEBfwj35yGwfLN6lGc3t0O2oHL7gMwkTC3n2YewJsAeZBXE2ni9rGiau8SxEmCm
- tvA92xr4XUMei3a5AT5M3aHCLhOyhqyvRsvRR1qPDxpnHkz5vCFRQTCCv9qe9rAKY9ThJjbNv
- k31rg0iiPj5Pd7OV849pFdw0ZjywupN1t3iQZ8OPs6M8zlAgjPePEhLPxFh7wzbuQv+Sx51X8
- xv149mR5gFTyJ5rKprMmoM99sof8ePTiy2FFp1TRkqgkcQ/jyqJmJmXz8dQrZMmvZjKwjCpD4
- vK7Ua2t0MgI80zqnt/WrtUD/8iaVNnpHl/caEZD4bA0wobB6hVnaqDFG0TfkXokNxHyEDmyT8
- 4pDpJrmecrz7ryY5wnQ1kb4oJ+ISQV5fyxWrnxL5P7hCa6gyhmckOVmD2Hctw5ZaO80Kg/574
- nKw5S60/zfTAvzPYdn+PxiA2cn/CjYsS55zvBw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <068d01d524e2$aa6f3000$ff4d9000$@d-silva.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to a reversed dependency, it is possible to build
-the lower ptp driver as a loadable module and the actual
-driver using it as built-in, causing a link error:
+On Mon, Jun 17, 2019 at 06:00:00PM +1000, Alastair D'Silva wrote:
+> > And all that should go through our pmem APIs, not not directly poke into
+> mm
+> > internals.  And if you still need core patches send them along with the
+> actual
+> > driver.
+> 
+> I tried that, but I was getting crashes as the NUMA data structures for that
+> node were not initialised.
+> 
+> Calling this was required to prevent uninitialized accesses in the pmem
+> library.
 
-drivers/net/dsa/sja1105/sja1105_spi.o: In function `sja1105_static_config_upload':
-sja1105_spi.c:(.text+0x6f0): undefined reference to `sja1105_ptp_reset'
-drivers/net/dsa/sja1105/sja1105_spi.o:(.data+0x2d4): undefined reference to `sja1105et_ptp_cmd'
-drivers/net/dsa/sja1105/sja1105_spi.o:(.data+0x604): undefined reference to `sja1105pqrs_ptp_cmd'
-drivers/net/dsa/sja1105/sja1105_main.o: In function `sja1105_remove':
-sja1105_main.c:(.text+0x8d4): undefined reference to `sja1105_ptp_clock_unregister'
-drivers/net/dsa/sja1105/sja1105_main.o: In function `sja1105_rxtstamp_work':
-sja1105_main.c:(.text+0x964): undefined reference to `sja1105_tstamp_reconstruct'
-drivers/net/dsa/sja1105/sja1105_main.o: In function `sja1105_setup':
-sja1105_main.c:(.text+0xb7c): undefined reference to `sja1105_ptp_clock_register'
-drivers/net/dsa/sja1105/sja1105_main.o: In function `sja1105_port_deferred_xmit':
-sja1105_main.c:(.text+0x1fa0): undefined reference to `sja1105_ptpegr_ts_poll'
-sja1105_main.c:(.text+0x1fc4): undefined reference to `sja1105_tstamp_reconstruct'
-drivers/net/dsa/sja1105/sja1105_main.o:(.rodata+0x5b0): undefined reference to `sja1105_get_ts_info'
-
-Change the Makefile logic to always build the ptp module
-the same way as the rest. Another option would be to
-just add it to the same module and remove the exports,
-but I don't know if there was a good reason to keep them
-separate.
-
-Fixes: bb77f36ac21d ("net: dsa: sja1105: Add support for the PTP clock")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/net/dsa/sja1105/Kconfig  | 2 +-
- drivers/net/dsa/sja1105/Makefile | 5 ++++-
- 2 files changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/dsa/sja1105/Kconfig b/drivers/net/dsa/sja1105/Kconfig
-index 105e8d3e380e..770134a66e48 100644
---- a/drivers/net/dsa/sja1105/Kconfig
-+++ b/drivers/net/dsa/sja1105/Kconfig
-@@ -18,7 +18,7 @@ tristate "NXP SJA1105 Ethernet switch family support"
- 	    - SJA1105S (Gen. 2, SGMII, TT-Ethernet)
- 
- config NET_DSA_SJA1105_PTP
--tristate "Support for the PTP clock on the NXP SJA1105 Ethernet switch"
-+	bool "Support for the PTP clock on the NXP SJA1105 Ethernet switch"
- 	depends on NET_DSA_SJA1105
- 	help
- 	  This enables support for timestamping and PTP clock manipulations in
-diff --git a/drivers/net/dsa/sja1105/Makefile b/drivers/net/dsa/sja1105/Makefile
-index 946eea7d8480..9a22f68b39e9 100644
---- a/drivers/net/dsa/sja1105/Makefile
-+++ b/drivers/net/dsa/sja1105/Makefile
-@@ -1,6 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0-only
- obj-$(CONFIG_NET_DSA_SJA1105) += sja1105.o
--obj-$(CONFIG_NET_DSA_SJA1105_PTP) += sja1105_ptp.o
- 
- sja1105-objs := \
-     sja1105_spi.o \
-@@ -9,3 +8,7 @@ sja1105-objs := \
-     sja1105_clocking.o \
-     sja1105_static_config.o \
-     sja1105_dynamic_config.o \
-+
-+ifdef CONFIG_NET_DSA_SJA1105_PTP
-+obj-$(CONFIG_NET_DSA_SJA1105) += sja1105_ptp.o
-+endif
--- 
-2.20.0
-
+Please send your driver to the linux-nvdimm and linux-mm lists so that
+it can be carefully reviewed.
