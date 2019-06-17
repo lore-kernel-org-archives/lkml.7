@@ -2,89 +2,111 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99FA4C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFB1C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB8D208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="xKn6GvqY"
+	by mail.kernel.org (Postfix) with ESMTP id 0637B208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:06:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726682AbfFQTGD (ORCPT
+        id S1728788AbfFQTGN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:06:03 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:39124 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfFQTGC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:06:02 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HJ3kTC109174;
-        Mon, 17 Jun 2019 19:05:58 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=ws5Oz7lWc6UyIPNTo46edvG5iO98Fd3iWSFkEtJcGmE=;
- b=xKn6GvqYkiT5wbo8pgSYOLRYfXliVt+b+xhEuaOc3E03O/zXLgbqhxlulkjJdOmuXzQE
- jCO480TFhZgyVvfX5nYiNH+MKPybXPBnNmj0c4kXuSlVr41hewK8UbNWD7AeK2r9Dgxg
- r3vKnu40S8adUU0jtbaU75PbaTuWcSJ2uFVWHkz5LqaKM9tUsHiDh6hLf/X21VGKvp8X
- i18kGJbMA0TiQs7LuAcq0QakM0d4eMpPpF7nXb6YdffyUUtYbSc0SUyXSmhAKgteAXeK
- 6H6D/ogblVNegqmKwJEcO5Z9r+QlBlHZcp4nSyk0UFK5myuM0gkgzVjwww2u1Exxj4SX Qw== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2t4rmp07wq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 19:05:58 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5HJ4PPx117997;
-        Mon, 17 Jun 2019 19:05:58 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2t5mgbh6dh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 19:05:58 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5HJ5uFi029702;
-        Mon, 17 Jun 2019 19:05:56 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Jun 2019 12:05:56 -0700
-Date:   Mon, 17 Jun 2019 22:05:49 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Lee Jones <lee.jones@linaro.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [GIT PULL] MFD fixes for v5.2
-Message-ID: <20190617190549.GW1893@kadam>
-References: <20190617100054.GE16364@dell>
- <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
+        Mon, 17 Jun 2019 15:06:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54774 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727097AbfFQTGN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:06:13 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 991556EBA2;
+        Mon, 17 Jun 2019 19:06:12 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-63.rdu2.redhat.com [10.10.112.63])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D1DF7DF66;
+        Mon, 17 Jun 2019 19:06:11 +0000 (UTC)
+Message-ID: <b8a3714af85a4a798bd205bd152a2098b4124820.camel@redhat.com>
+Subject: Re: [PATCH trivial] IB/hfi1: Spelling s/statisfied/satisfied/
+From:   Doug Ledford <dledford@redhat.com>
+To:     Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>,
+        Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Jiri Kosina <trivial@kernel.org>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 17 Jun 2019 15:06:08 -0400
+In-Reply-To: <20190617140138.734-1-geert+renesas@glider.be>
+References: <20190617140138.734-1-geert+renesas@glider.be>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-uV6aTJ3m0eystd3cMwoh"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=829
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906170169
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=886 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906170169
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 17 Jun 2019 19:06:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ah...  Sorry.  There are a couple similar bugs in other places and I'll
-take a look at those tomorrow as well.
 
-regards,
-dan carpenter
+--=-uV6aTJ3m0eystd3cMwoh
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, 2019-06-17 at 16:01 +0200, Geert Uytterhoeven wrote:
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/infiniband/hw/hfi1/tid_rdma.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/infiniband/hw/hfi1/tid_rdma.c
+> b/drivers/infiniband/hw/hfi1/tid_rdma.c
+> index 6fb93032fbefcb7e..24f30ff6b5fbc868 100644
+> --- a/drivers/infiniband/hw/hfi1/tid_rdma.c
+> +++ b/drivers/infiniband/hw/hfi1/tid_rdma.c
+> @@ -477,7 +477,7 @@ static struct rvt_qp *first_qp(struct
+> hfi1_ctxtdata *rcd,
+>   * Must hold the qp s_lock and the exp_lock.
+>   *
+>   * Return:
+> - * false if either of the conditions below are statisfied:
+> + * false if either of the conditions below are satisfied:
+>   * 1. The list is empty or
+>   * 2. The indicated qp is at the head of the list and the
+>   *    HFI1_S_WAIT_TID_SPACE bit is set in qp->s_flags.
+
+Thanks, applied to for-next.
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Key fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57
+2FDD
+
+--=-uV6aTJ3m0eystd3cMwoh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0H5KAACgkQuCajMw5X
+L93CIw/+IhiUDg8ipstsI788cxfhZ0Fzg3YRv/bOAkc5Mpyle0jyr2UVJiuUwlC6
+X2imbQx3GIDS0Q+widP4HmB2USrYen9B7waoQ8Y0HBiw01xG1479+1thRG2ujiDd
+iJTUtRE7JhkLVQ3+GQSbdxXtgdnkqHH0/52w/EX5jtEXwaDZUaEMfb5gkgze/89F
+pniweNJU+I1y0sRqoSrK8CrcQ++fGAHQbYHrOqeccujB0PsC2v8kHoA2LsLWJxkm
+lX1oyaIK+KbSoue3q6meH9iSmW4KSB4vnCYDeitMqSzr0+vSvGESXKrDvwaV4PDr
+6dZsq5vnJGQ1LpzePZ/ky/xCXdBFvh0YgUiSC3O0VD42rVhC3UlCjqJhSotAgaac
+PXG6AAB/upnVeiLtAi6FdQab0Gc/og+p1pH7+1Z6S2h9ZKTFBs20PKuTZZBj2cLm
+j7Zoa4KF1VOH3sP01ysCB488QMbY1oXW5QslWPTCbDJg6bppHEFSrQTxNUtxMEKD
+ttHUPati9V7QQkNBPDbUFr1NjqLhAdLx9WGHgyII1DpV5EBObNfh6OyjqC/MOKG+
+69pf+LuhoxyhoFQzYFtPTEtzp4808qfxW76fmDYtun9gypyrZVxl+jpoAPSYSIzj
+ZEzaMHBsY2ybwDrPbFI+P/AoNmfbIfveZuwtC3aVWrP0ZDp8VXo=
+=QIBC
+-----END PGP SIGNATURE-----
+
+--=-uV6aTJ3m0eystd3cMwoh--
 
