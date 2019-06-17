@@ -2,147 +2,191 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2ECAC31E59
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:22:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6107EC31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:22:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 827802084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFBB2084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:22:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVXa/qhC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfFQOW1 (ORCPT
+        id S1728230AbfFQOWe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:22:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51706 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726173AbfFQOW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:22:26 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6FB8A30C31B7;
-        Mon, 17 Jun 2019 14:22:15 +0000 (UTC)
-Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DFB457E5CA;
-        Mon, 17 Jun 2019 14:22:02 +0000 (UTC)
-From:   Waiman Long <longman@redhat.com>
-To:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Waiman Long <longman@redhat.com>
-Subject: [PATCH] mm, memcg: Report number of memcg caches in slabinfo
-Date:   Mon, 17 Jun 2019 10:21:49 -0400
-Message-Id: <20190617142149.5245-1-longman@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Mon, 17 Jun 2019 14:22:25 +0000 (UTC)
+        Mon, 17 Jun 2019 10:22:34 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:46493 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfFQOWd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 10:22:33 -0400
+Received: by mail-ua1-f65.google.com with SMTP id o19so3486251uap.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:22:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=5j/jTwc8VDaf93BqO7lj+/1q92uGDgZVHM2UqM4CWlY=;
+        b=JVXa/qhCRuxxyrm3QYu61qbsldvBE3wQwlEaG4aJ6KmZZDqxSxVBoxL7X+Bfv9s19n
+         FqGqP132gRRKgT62AQVOONEtf/SJt2ghJilvkSa4JQHGsqaApo0oov0Mj0vMGUPmt7+t
+         yoZlxe0qub725pKU1JvcLpMxnffbI5MgBWlmfiEzk456/K+nmEH3WzGdJQ+Le9MuYxQX
+         Iu4qlnCRlsg7mSwQXDV0wqAnqSVcJCSK4d8VXNUNun2+GkmNlu+eLeKha0NgAmZFm4VP
+         7nygtt75mRK0j8B3LpWPUPRUJxtHpgPflQN89IGbLkITY35PkAdF36l05THa1gfaEOYA
+         iODw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=5j/jTwc8VDaf93BqO7lj+/1q92uGDgZVHM2UqM4CWlY=;
+        b=m2yY+qJ8TTK/Ji+JtPOyfphgBeXug646xFDLrbmkKJ9wIUQZKaG4TkcP2HgkxvG6pX
+         V5fmjzWoWTUG8zzeg8Ik3FccG2KR1PT9BSntzUpI5MmOd5nSPwXa1vN7eXBp3ZtK08eL
+         2nJZ6hdgOYfgs+tWN8kaTrNR3N1deguIcBEcX8cypeIf235G5m8QAoRFDltnqH8GxdPM
+         zUFZ/huCQ1Uf9ZmLqlcPc9Le7XLTf/zlhLRQjxlr/C/fNQriH9lTu+4/Xk0qPAP+cT+w
+         rzVev3w7lcc2JAfyAEcp/gyQTEibGbKcXzosyCkEOnBx6iJ2UyoLqTK0ApM/n5kprSWk
+         1lxQ==
+X-Gm-Message-State: APjAAAV8CN5sc3rt5GT7pwfKm1R5qNZduI5f5vwQqD/mN2Gwvk+sDCLn
+        PvzUzUAw8EfTkR4+dacq1+3mvHHiBYFah2P9cD79Yw==
+X-Google-Smtp-Source: APXvYqxN42nQzWjNqxAIxqNrhLzMhyco1SgYAX2dsRX7qzXsS6prUagFHZjHtXUnxXqZcSLlFDHKJ4+Nb1MwHkJHkf8=
+X-Received: by 2002:ab0:30a3:: with SMTP id b3mr14495305uam.3.1560781351980;
+ Mon, 17 Jun 2019 07:22:31 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190617131210.2190280-1-arnd@arndb.de>
+In-Reply-To: <20190617131210.2190280-1-arnd@arndb.de>
+From:   Alexander Potapenko <glider@google.com>
+Date:   Mon, 17 Jun 2019 16:22:19 +0200
+Message-ID: <CAG_fn=XigLrxy6Uz+NrnHQocb=ZseR6cPC3PyoLXCLU9gukHXg@mail.gmail.com>
+Subject: Re: [PATCH] lib: test_meminit: fix -Wmaybe-uninitialized false positive
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Christoph Lameter <cl@linux.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Jann Horn <jannh@google.com>, Marco Elver <elver@google.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are concerns about memory leaks from extensive use of memory
-cgroups as each memory cgroup creates its own set of kmem caches. There
-is a possiblity that the memcg kmem caches may remain even after the
-memory cgroup removal.
+On Mon, Jun 17, 2019 at 3:12 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The conditional logic is too complicated for the compiler to
+> fully comprehend:
+>
+> lib/test_meminit.c: In function 'test_meminit_init':
+> lib/test_meminit.c:236:5: error: 'buf_copy' may be used uninitialized in =
+this function [-Werror=3Dmaybe-uninitialized]
+>      kfree(buf_copy);
+>      ^~~~~~~~~~~~~~~
+> lib/test_meminit.c:201:14: note: 'buf_copy' was declared here
+>
+> Simplify it by splitting out the non-rcu section.
+>
+> Fixes: af734ee6ec85 ("lib: introduce test_meminit module")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Alexander Potapenko <glider@google.com>
+> ---
+>  lib/test_meminit.c | 50 ++++++++++++++++++++++++----------------------
+>  1 file changed, 26 insertions(+), 24 deletions(-)
+>
+> diff --git a/lib/test_meminit.c b/lib/test_meminit.c
+> index ed7efec1387b..7ae2183ff1f4 100644
+> --- a/lib/test_meminit.c
+> +++ b/lib/test_meminit.c
+> @@ -208,35 +208,37 @@ static int __init do_kmem_cache_size(size_t size, b=
+ool want_ctor,
+>                 /* Check that buf is zeroed, if it must be. */
+>                 fail =3D check_buf(buf, size, want_ctor, want_rcu, want_z=
+ero);
+>                 fill_with_garbage_skip(buf, size, want_ctor ? CTOR_BYTES =
+: 0);
+> +
+> +               if (!want_rcu) {
+> +                       kmem_cache_free(c, buf);
+> +                       continue;
+> +               }
+> +
+>                 /*
+>                  * If this is an RCU cache, use a critical section to ens=
+ure we
+>                  * can touch objects after they're freed.
+>                  */
+> -               if (want_rcu) {
+> -                       rcu_read_lock();
+> -                       /*
+> -                        * Copy the buffer to check that it's not wiped o=
+n
+> -                        * free().
+> -                        */
+> -                       buf_copy =3D kmalloc(size, GFP_KERNEL);
+> -                       if (buf_copy)
+> -                               memcpy(buf_copy, buf, size);
+> -               }
+> -               kmem_cache_free(c, buf);
+> -               if (want_rcu) {
+> -                       /*
+> -                        * Check that |buf| is intact after kmem_cache_fr=
+ee().
+> -                        * |want_zero| is false, because we wrote garbage=
+ to
+> -                        * the buffer already.
+> -                        */
+> -                       fail |=3D check_buf(buf, size, want_ctor, want_rc=
+u,
+> -                                         false);
+> -                       if (buf_copy) {
+> -                               fail |=3D (bool)memcmp(buf, buf_copy, siz=
+e);
+> -                               kfree(buf_copy);
+> -                       }
+> -                       rcu_read_unlock();
+> +               rcu_read_lock();
+> +               /*
+> +                * Copy the buffer to check that it's not wiped on
+> +                * free().
+> +                */
+> +               buf_copy =3D kmalloc(size, GFP_KERNEL);
+> +               if (buf_copy)
+> +                       memcpy(buf_copy, buf, size);
+> +
+> +               /*
+> +                * Check that |buf| is intact after kmem_cache_free().
+> +                * |want_zero| is false, because we wrote garbage to
+> +                * the buffer already.
+> +                */
+> +               fail |=3D check_buf(buf, size, want_ctor, want_rcu,
+> +                                 false);
+> +               if (buf_copy) {
+> +                       fail |=3D (bool)memcmp(buf, buf_copy, size);
+> +                       kfree(buf_copy);
+>                 }
+> +               rcu_read_unlock();
+>         }
+>         kmem_cache_destroy(c);
+>
+> --
+> 2.20.0
+>
 
-Therefore, it will be useful to show how many memcg caches are present
-for each of the kmem caches. As slabinfo reporting code has to iterate
-through all the memcg caches to get the final numbers anyway, there is
-no additional cost in reporting the number of memcg caches available.
 
-The slabinfo version is bumped up to 2.2 as a new "<num_caches>" column
-is added at the end.
+--=20
+Alexander Potapenko
+Software Engineer
 
-Signed-off-by: Waiman Long <longman@redhat.com>
----
- mm/slab_common.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+Google Germany GmbH
+Erika-Mann-Stra=C3=9Fe, 33
+80636 M=C3=BCnchen
 
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 58251ba63e4a..c7aa47a99b2b 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -1308,13 +1308,13 @@ static void print_slabinfo_header(struct seq_file *m)
- 	 * without _too_ many complaints.
- 	 */
- #ifdef CONFIG_DEBUG_SLAB
--	seq_puts(m, "slabinfo - version: 2.1 (statistics)\n");
-+	seq_puts(m, "slabinfo - version: 2.2 (statistics)\n");
- #else
--	seq_puts(m, "slabinfo - version: 2.1\n");
-+	seq_puts(m, "slabinfo - version: 2.2\n");
- #endif
- 	seq_puts(m, "# name            <active_objs> <num_objs> <objsize> <objperslab> <pagesperslab>");
- 	seq_puts(m, " : tunables <limit> <batchcount> <sharedfactor>");
--	seq_puts(m, " : slabdata <active_slabs> <num_slabs> <sharedavail>");
-+	seq_puts(m, " : slabdata <active_slabs> <num_slabs> <sharedavail> <num_caches>");
- #ifdef CONFIG_DEBUG_SLAB
- 	seq_puts(m, " : globalstat <listallocs> <maxobjs> <grown> <reaped> <error> <maxfreeable> <nodeallocs> <remotefrees> <alienoverflow>");
- 	seq_puts(m, " : cpustat <allochit> <allocmiss> <freehit> <freemiss>");
-@@ -1338,14 +1338,18 @@ void slab_stop(struct seq_file *m, void *p)
- 	mutex_unlock(&slab_mutex);
- }
- 
--static void
-+/*
-+ * Return number of memcg caches.
-+ */
-+static unsigned int
- memcg_accumulate_slabinfo(struct kmem_cache *s, struct slabinfo *info)
- {
- 	struct kmem_cache *c;
- 	struct slabinfo sinfo;
-+	unsigned int cnt = 0;
- 
- 	if (!is_root_cache(s))
--		return;
-+		return 0;
- 
- 	for_each_memcg_cache(c, s) {
- 		memset(&sinfo, 0, sizeof(sinfo));
-@@ -1356,17 +1360,20 @@ memcg_accumulate_slabinfo(struct kmem_cache *s, struct slabinfo *info)
- 		info->shared_avail += sinfo.shared_avail;
- 		info->active_objs += sinfo.active_objs;
- 		info->num_objs += sinfo.num_objs;
-+		cnt++;
- 	}
-+	return cnt;
- }
- 
- static void cache_show(struct kmem_cache *s, struct seq_file *m)
- {
- 	struct slabinfo sinfo;
-+	unsigned int nr_memcg_caches;
- 
- 	memset(&sinfo, 0, sizeof(sinfo));
- 	get_slabinfo(s, &sinfo);
- 
--	memcg_accumulate_slabinfo(s, &sinfo);
-+	nr_memcg_caches = memcg_accumulate_slabinfo(s, &sinfo);
- 
- 	seq_printf(m, "%-17s %6lu %6lu %6u %4u %4d",
- 		   cache_name(s), sinfo.active_objs, sinfo.num_objs, s->size,
-@@ -1374,8 +1381,9 @@ static void cache_show(struct kmem_cache *s, struct seq_file *m)
- 
- 	seq_printf(m, " : tunables %4u %4u %4u",
- 		   sinfo.limit, sinfo.batchcount, sinfo.shared);
--	seq_printf(m, " : slabdata %6lu %6lu %6lu",
--		   sinfo.active_slabs, sinfo.num_slabs, sinfo.shared_avail);
-+	seq_printf(m, " : slabdata %6lu %6lu %6lu %3u",
-+		   sinfo.active_slabs, sinfo.num_slabs, sinfo.shared_avail,
-+		   nr_memcg_caches);
- 	slabinfo_show_stats(m, s);
- 	seq_putc(m, '\n');
- }
--- 
-2.18.1
-
+Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
+Registergericht und -nummer: Hamburg, HRB 86891
+Sitz der Gesellschaft: Hamburg
