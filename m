@@ -4,26 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73565C31E53
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3289DC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564E820652
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 143ED20652
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:22:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfFQIWR (ORCPT
+        id S1727429AbfFQIWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:22:17 -0400
+        Mon, 17 Jun 2019 04:22:20 -0400
 Received: from aclms3.advantech.com.tw ([125.252.70.86]:40383 "EHLO
         ACLMS3.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725791AbfFQIWR (ORCPT
+        with ESMTP id S1726834AbfFQIWS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:22:17 -0400
+        Mon, 17 Jun 2019 04:22:18 -0400
 Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS3.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td872a26ee3ac1401c810b8@ACLMS3.advantech.com.tw>;
- Mon, 17 Jun 2019 16:16:23 +0800
+ (Clearswift SMTPRS 5.6.0) with ESMTP id <Td872a74337ac1401c810b8@ACLMS3.advantech.com.tw>;
+ Mon, 17 Jun 2019 16:21:40 +0800
 From:   <Amy.Shih@advantech.com.tw>
 To:     <she90122@gmail.com>
 CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
@@ -31,13 +30,14 @@ CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
         Guenter Roeck <linux@roeck-us.net>,
         <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
 Subject: [v2 8/9] hwmon: (nct7904) Fix wrong attribute names for temperature.
-Date:   Mon, 17 Jun 2019 08:16:09 +0000
-Message-ID: <f499d63b7a62447fedf466399f1f924eea6f016a.1560756733.git.amy.shih@advantech.com.tw>
+Date:   Mon, 17 Jun 2019 08:20:38 +0000
+Message-ID:
+ <f499d63b7a62447fedf466399f1f924eea6f016a.1560756733.git.amy.shih@advantech.com.tw>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
 References: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 X-Originating-IP: [172.17.10.58]
 X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
  taipei08.ADVANTECH.CORP (172.20.0.235)
@@ -46,6 +46,7 @@ Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20190617082038.hDJwG0Jjp0H78yJEYyzKvuHGk4fPeof3crAuCiiXrXQ@z>
 
 From: "amy.shih" <amy.shih@advantech.com.tw>
 
