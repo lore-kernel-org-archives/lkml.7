@@ -2,198 +2,121 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB92C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF77DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:31:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7D9F2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1B622084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:31:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YISaOXk2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="WVPiV4Ro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfFQOb2 (ORCPT
+        id S1728310AbfFQObm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:31:28 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57563 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfFQOb2 (ORCPT
+        Mon, 17 Jun 2019 10:31:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48316 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQObm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:31:28 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HETrRn3456868
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:29:53 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HETrRn3456868
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560781793;
-        bh=CfR4iv4TseLBAwQEyZUpCik5itcY5PgiYqyjNjlDrnU=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=YISaOXk2HBB1y5MPtqHdncdsX9DEJH0easAo4BTqObTPPOQRVsncJygQllv0fclp/
-         lTQ5r+N7Oa6+cO7NQRmZMkrtwCoKpwY3oehX+tdlLMtl1VhEYxeXcj1CAaFLsUL2j1
-         BYZibzZAh4baCPkzejuyQo0SoTFRMwartcy9x/4akQEzc0mxJaE8uAz74UFQjd66OI
-         fvsJYGwx6jGsco/RtHo1Vk6FCvZXGIN4yOhrPP4e3oMpnMbEg3hJClUhFky2J0F+cy
-         K48YHxjZuNPiVjEB8WysHNuHtABGwOtWg6RWS0itzwDorXGnKy3cmumRKSYRqGCeMr
-         k+BLVyngM2ZhQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HETrAv3456865;
-        Mon, 17 Jun 2019 07:29:53 -0700
-Date:   Mon, 17 Jun 2019 07:29:53 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Waiman Long <tipbot@zytor.com>
-Message-ID: <tip-d3681e269fff84048c94012342c3434b227c4706@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, will.deacon@arm.com,
-        dave@stgolabs.net, bp@alien8.de, tglx@linutronix.de,
-        peterz@infradead.org, longman@redhat.com,
-        huang.ying.caritas@gmail.com, mingo@kernel.org,
-        torvalds@linux-foundation.org, tim.c.chen@linux.intel.com
-Reply-To: hpa@zytor.com, will.deacon@arm.com, tglx@linutronix.de,
-          peterz@infradead.org, dave@stgolabs.net, bp@alien8.de,
-          torvalds@linux-foundation.org, tim.c.chen@linux.intel.com,
-          huang.ying.caritas@gmail.com, mingo@kernel.org,
-          longman@redhat.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20190520205918.22251-11-longman@redhat.com>
-References: <20190520205918.22251-11-longman@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/rwsem: Wake up almost all readers in
- wait queue
-Git-Commit-ID: d3681e269fff84048c94012342c3434b227c4706
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 10:31:42 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NFJYXlUzdjtOs435zT2VUCTTaFwwk1bDij2QZYtv7Eo=; b=WVPiV4RoKw5OElXExsulkvelC
+        I9ISaJTiqb4jKOqgu2cPZ9SOftWInZsm0TejjW7YtdMwZ4Z83MigsmuNETW25QvlGfnLIaNFMDJas
+        ffWnXGYj/G52wdxf4iHhlPu1CQJykfjcsiOutiHslh17VubxroBb+mIyunb5gt4fT1Aw10uQmjqIX
+        k6vANgk5iXa8iwlpMOvJ6ma6LAB5+6pS7QenrYP4LVqshx5SVSYj46P1VTvQcyTaosPv2dPCAiPIQ
+        oT+P4fF432GZPBnIBibhQRWpZ/zJQRZQNj/WJOHsgfG4r8OW/r32Os6vJUdITZGI0xrtRb9eC9p1V
+        yOaQ9d+AA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcsf9-0003Wb-LN; Mon, 17 Jun 2019 14:31:12 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 29EA4201F45FA; Mon, 17 Jun 2019 16:31:10 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 16:31:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Andy Lutomirski <luto@amacapital.net>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jason Baron <jbaron@akamai.com>, Jiri Kosina <jkosina@suse.cz>,
+        David Laight <David.Laight@aculab.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Julia Cartwright <julia@ni.com>, Jessica Yu <jeyu@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, Nadav Amit <namit@vmware.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Edward Cree <ecree@solarflare.com>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>
+Subject: Re: [PATCH 08/15] x86/alternatives: Teach text_poke_bp() to emulate
+ instructions
+Message-ID: <20190617143110.GD3436@hirez.programming.kicks-ass.net>
+References: <20190605130753.327195108@infradead.org>
+ <20190605131945.005681046@infradead.org>
+ <20190608004708.7646b287151cf613838ce05f@kernel.org>
+ <20190607173427.GK3436@hirez.programming.kicks-ass.net>
+ <3DA961AB-950B-4886-9656-C0D268D521F1@amacapital.net>
+ <20190611080307.GN3436@hirez.programming.kicks-ass.net>
+ <435093E5-6FE3-4DAA-9ABE-EB9D372F8CF8@amacapital.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <435093E5-6FE3-4DAA-9ABE-EB9D372F8CF8@amacapital.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  d3681e269fff84048c94012342c3434b227c4706
-Gitweb:     https://git.kernel.org/tip/d3681e269fff84048c94012342c3434b227c4706
-Author:     Waiman Long <longman@redhat.com>
-AuthorDate: Mon, 20 May 2019 16:59:09 -0400
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:28:02 +0200
+On Tue, Jun 11, 2019 at 08:54:23AM -0700, Andy Lutomirski wrote:
+> > On Jun 11, 2019, at 1:03 AM, Peter Zijlstra <peterz@infradead.org> wrote:
 
-locking/rwsem: Wake up almost all readers in wait queue
+> > arch_optimize_kprobe() then does the text_poke_bp() that replaces the
+> > instruction @addr with int3, copies the rel jump address and overwrites
+> > the int3 with jmp.
+> > 
+> > And I'm thinking the problem is with something like:
+> > 
+> > @addr: nop nop nop nop nop
+> > 
+> > We copy out the nops into the trampoline, overwrite the first nop with
+> > an INT3, overwrite the remaining nops with the rel addr, but oops,
+> > another CPU can still be executing one of those NOPs, right?
+> > 
+> > I'm thinking we could fix this by first writing INT3 into all relevant
+> > instructions, which is going to be messy, given the current code base.
+> 
+> How does that help?  If RIP == x+2 and you want to put a 5-byte jump
+> at address x, no amount of 0xcc is going to change the fact that RIP
+> is in the middle of the jump.
 
-When the front of the wait queue is a reader, other readers
-immediately following the first reader will also be woken up at the
-same time. However, if there is a writer in between. Those readers
-behind the writer will not be woken up.
+What I proposed was doing 0xCC on every instruction that's inside of
+[x,x+5). After that we do machine wide IPI+SYNC.
 
-Because of optimistic spinning, the lock acquisition order is not FIFO
-anyway. The lock handoff mechanism will ensure that lock starvation
-will not happen.
+So if RIP is at x+2, then it will observe 0xCC and trigger the exception
+there.
 
-Assuming that the lock hold times of the other readers still in the
-queue will be about the same as the readers that are being woken up,
-there is really not much additional cost other than the additional
-latency due to the wakeup of additional tasks by the waker. Therefore
-all the readers up to a maximum of 256 in the queue are woken up when
-the first waiter is a reader to improve reader throughput. This is
-somewhat similar in concept to a phase-fair R/W lock.
+Now, the problem is that my exception cannot recover from anything
+except NOPs, so while it could work for some corner cases, it doesn't
+work for the optkprobe case in general.
 
-With a locking microbenchmark running on 5.1 based kernel, the total
-locking rates (in kops/s) on a 8-socket IvyBridge-EX system with
-equal numbers of readers and writers before and after this patch were
-as follows:
+Only then do we write the JMP offset and again to IPI+SYNC; then we
+write the 0xE8 and again IPI-SYNC.
 
-   # of Threads  Pre-Patch   Post-patch
-   ------------  ---------   ----------
-        4          1,641        1,674
-        8            731        1,062
-       16            564          924
-       32             78          300
-       64             38          195
-      240             50          149
+But at that point we already have the guarantee nobody is inside
+[x,x+5). That is, except if we can get to x+2 without first going
+through x, IOW if x+2 is a branch target we're screwed any which way
+around and the poke is never valid.
 
-There is no performance gain at low contention level. At high contention
-level, however, this patch gives a pretty decent performance boost.
+Is that something optkprobes checks? If so, where and how?
 
-Signed-off-by: Waiman Long <longman@redhat.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Davidlohr Bueso <dave@stgolabs.net>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: huang ying <huang.ying.caritas@gmail.com>
-Link: https://lkml.kernel.org/r/20190520205918.22251-11-longman@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/locking/rwsem.c | 31 ++++++++++++++++++++++++++-----
- 1 file changed, 26 insertions(+), 5 deletions(-)
-
-diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index e1840b7c5310..ded96023f4dc 100644
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -254,6 +254,14 @@ enum writer_wait_state {
-  */
- #define RWSEM_WAIT_TIMEOUT	DIV_ROUND_UP(HZ, 250)
- 
-+/*
-+ * Magic number to batch-wakeup waiting readers, even when writers are
-+ * also present in the queue. This both limits the amount of work the
-+ * waking thread must do and also prevents any potential counter overflow,
-+ * however unlikely.
-+ */
-+#define MAX_READERS_WAKEUP	0x100
-+
- /*
-  * handle the lock release when processes blocked on it that can now run
-  * - if we come here from up_xxxx(), then the RWSEM_FLAG_WAITERS bit must
-@@ -329,11 +337,17 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
- 	}
- 
- 	/*
--	 * Grant an infinite number of read locks to the readers at the front
--	 * of the queue. We know that woken will be at least 1 as we accounted
-+	 * Grant up to MAX_READERS_WAKEUP read locks to all the readers in the
-+	 * queue. We know that the woken will be at least 1 as we accounted
- 	 * for above. Note we increment the 'active part' of the count by the
- 	 * number of readers before waking any processes up.
- 	 *
-+	 * This is an adaptation of the phase-fair R/W locks where at the
-+	 * reader phase (first waiter is a reader), all readers are eligible
-+	 * to acquire the lock at the same time irrespective of their order
-+	 * in the queue. The writers acquire the lock according to their
-+	 * order in the queue.
-+	 *
- 	 * We have to do wakeup in 2 passes to prevent the possibility that
- 	 * the reader count may be decremented before it is incremented. It
- 	 * is because the to-be-woken waiter may not have slept yet. So it
-@@ -345,13 +359,20 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
- 	 * 2) For each waiters in the new list, clear waiter->task and
- 	 *    put them into wake_q to be woken up later.
- 	 */
--	list_for_each_entry(waiter, &sem->wait_list, list) {
-+	INIT_LIST_HEAD(&wlist);
-+	list_for_each_entry_safe(waiter, tmp, &sem->wait_list, list) {
- 		if (waiter->type == RWSEM_WAITING_FOR_WRITE)
--			break;
-+			continue;
- 
- 		woken++;
-+		list_move_tail(&waiter->list, &wlist);
-+
-+		/*
-+		 * Limit # of readers that can be woken up per wakeup call.
-+		 */
-+		if (woken >= MAX_READERS_WAKEUP)
-+			break;
- 	}
--	list_cut_before(&wlist, &sem->wait_list, &waiter->list);
- 
- 	adjustment = woken * RWSEM_READER_BIAS - adjustment;
- 	lockevent_cond_inc(rwsem_wake_reader, woken);
