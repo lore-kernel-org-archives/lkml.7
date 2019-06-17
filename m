@@ -4,91 +4,195 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04B22C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:37:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C12C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDDF4208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:37:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA818208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:37:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728722AbfFQXhC (ORCPT
+        id S1728829AbfFQXhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 19:37:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39184 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726808AbfFQXhC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 19:37:02 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7454208C0;
-        Mon, 17 Jun 2019 23:37:00 +0000 (UTC)
-Date:   Mon, 17 Jun 2019 19:36:59 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Divya Indi <divya.indi@oracle.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Srinivas Eeda <srinivas.eeda@oracle.com>,
-        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
-Subject: Re: [PATCH 2/3] tracing: Adding additional NULL checks.
-Message-ID: <20190617193659.59b28700@gandalf.local.home>
-In-Reply-To: <1560357259-3497-3-git-send-email-divya.indi@oracle.com>
-References: <1560357259-3497-1-git-send-email-divya.indi@oracle.com>
-        <1560357259-3497-2-git-send-email-divya.indi@oracle.com>
-        <1560357259-3497-3-git-send-email-divya.indi@oracle.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 17 Jun 2019 19:37:09 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63973 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728773AbfFQXhI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 19:37:08 -0400
+Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id dadcab13fd6a5801; Tue, 18 Jun 2019 01:37:06 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Qais.Yousef@arm.com, mka@chromium.org, juri.lelli@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V3 4/5] cpufreq: Register notifiers with the PM QoS framework
+Date:   Tue, 18 Jun 2019 01:37:06 +0200
+Message-ID: <1794396.RVx65QvVqq@kreacher>
+In-Reply-To: <a275fdd9325f1b2cba046c79930ad59653674455.1560163748.git.viresh.kumar@linaro.org>
+References: <cover.1560163748.git.viresh.kumar@linaro.org> <a275fdd9325f1b2cba046c79930ad59653674455.1560163748.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 09:34:18 -0700
-Divya Indi <divya.indi@oracle.com> wrote:
-
-> commit f45d1225adb0 ("tracing: Kernel access to Ftrace instances")
-> exported certain functions providing access to Ftrace instances from
-> other kernel components.
-
-I'm fine with the patch, the above statement is hard to understand.
-
--- Steve
-
-> Adding some additional NULL checks to ensure safe usage by the users.
+On Monday, June 10, 2019 12:51:35 PM CEST Viresh Kumar wrote:
+> This registers the notifiers for min/max frequency constraints with the
+> PM QoS framework. The constraints are also taken into consideration in
+> cpufreq_set_policy().
 > 
-> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> This also relocates cpufreq_policy_put_kobj() as it is required to be
+> called from cpufreq_policy_alloc() now.
+> 
+> No constraints are added until now though.
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 > ---
->  kernel/trace/trace.c        | 3 +++
->  kernel/trace/trace_events.c | 2 ++
->  2 files changed, 5 insertions(+)
+>  drivers/cpufreq/cpufreq.c | 139 +++++++++++++++++++++++++++++++-------
+>  include/linux/cpufreq.h   |   4 ++
+>  2 files changed, 120 insertions(+), 23 deletions(-)
 > 
-> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-> index 1c80521..a60dc13 100644
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -3205,6 +3205,9 @@ int trace_array_printk(struct trace_array *tr,
->  	if (!(global_trace.trace_flags & TRACE_ITER_PRINTK))
->  		return 0;
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index 85ff958e01f1..547d221b2ff2 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/kernel_stat.h>
+>  #include <linux/module.h>
+>  #include <linux/mutex.h>
+> +#include <linux/pm_qos.h>
+>  #include <linux/slab.h>
+>  #include <linux/suspend.h>
+>  #include <linux/syscore_ops.h>
+> @@ -1126,11 +1127,77 @@ static void handle_update(struct work_struct *work)
+>  	cpufreq_update_policy(cpu);
+>  }
 >  
-> +	if (!tr)
-> +		return -EINVAL;
+> +static void cpufreq_update_freq_work(struct work_struct *work)
+> +{
+> +	struct cpufreq_policy *policy =
+> +		container_of(work, struct cpufreq_policy, req_work);
+> +	struct cpufreq_policy new_policy = *policy;
 > +
->  	va_start(ap, fmt);
->  	ret = trace_array_vprintk(tr, ip, fmt, ap);
->  	va_end(ap);
-> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
-> index b6b4618..445b059 100644
-> --- a/kernel/trace/trace_events.c
-> +++ b/kernel/trace/trace_events.c
-> @@ -800,6 +800,8 @@ int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set)
->  	char *event = NULL, *sub = NULL, *match;
+> +	/* We should read constraint values from QoS layer */
+> +	new_policy.min = 0;
+> +	new_policy.max = UINT_MAX;
+> +
+> +	down_write(&policy->rwsem);
+> +
+> +	if (!policy_is_inactive(policy))
+> +		cpufreq_set_policy(policy, &new_policy);
+> +
+> +	up_write(&policy->rwsem);
+> +}
+> +
+> +static int cpufreq_update_freq(struct cpufreq_policy *policy)
+> +{
+> +	schedule_work(&policy->req_work);
+> +	return 0;
+> +}
+> +
+> +static int cpufreq_notifier_min(struct notifier_block *nb, unsigned long freq,
+> +				void *data)
+> +{
+> +	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_min);
+> +
+> +	return cpufreq_update_freq(policy);
+> +}
+> +
+> +static int cpufreq_notifier_max(struct notifier_block *nb, unsigned long freq,
+> +				void *data)
+> +{
+> +	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_max);
+> +
+> +	return cpufreq_update_freq(policy);
+> +}
+> +
+> +static void cpufreq_policy_put_kobj(struct cpufreq_policy *policy)
+> +{
+> +	struct kobject *kobj;
+> +	struct completion *cmp;
+> +
+> +	down_write(&policy->rwsem);
+> +	cpufreq_stats_free_table(policy);
+> +	kobj = &policy->kobj;
+> +	cmp = &policy->kobj_unregister;
+> +	up_write(&policy->rwsem);
+> +	kobject_put(kobj);
+> +
+> +	/*
+> +	 * We need to make sure that the underlying kobj is
+> +	 * actually not referenced anymore by anybody before we
+> +	 * proceed with unloading.
+> +	 */
+> +	pr_debug("waiting for dropping of refcount\n");
+> +	wait_for_completion(cmp);
+> +	pr_debug("wait complete\n");
+> +}
+> +
+>  static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+>  {
+>  	struct cpufreq_policy *policy;
+> +	struct device *dev = get_cpu_device(cpu);
 >  	int ret;
 >  
-> +	if (!tr)
-> +		return -ENODEV;
->  	/*
->  	 * The buf format can be <subsystem>:<event-name>
->  	 *  *:<event-name> means any event by that name.
+> +	if (!dev)
+> +		return NULL;
+> +
+>  	policy = kzalloc(sizeof(*policy), GFP_KERNEL);
+>  	if (!policy)
+>  		return NULL;
+> @@ -1147,7 +1214,7 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+>  	ret = kobject_init_and_add(&policy->kobj, &ktype_cpufreq,
+>  				   cpufreq_global_kobject, "policy%u", cpu);
+>  	if (ret) {
+> -		pr_err("%s: failed to init policy->kobj: %d\n", __func__, ret);
+> +		dev_err(dev, "%s: failed to init policy->kobj: %d\n", __func__, ret);
+>  		/*
+>  		 * The entire policy object will be freed below, but the extra
+>  		 * memory allocated for the kobject name needs to be freed by
+> @@ -1157,16 +1224,41 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
+>  		goto err_free_real_cpus;
+>  	}
+>  
+> +	policy->nb_min.notifier_call = cpufreq_notifier_min;
+> +	policy->nb_max.notifier_call = cpufreq_notifier_max;
+> +
+> +	ret = dev_pm_qos_add_notifier(dev, &policy->nb_min,
+> +				      DEV_PM_QOS_MIN_FREQUENCY);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register MIN QoS notifier: %d (%*pbl)\n",
+> +			ret, cpumask_pr_args(policy->cpus));
+> +		goto err_kobj_remove;
+> +	}
+> +
+> +	ret = dev_pm_qos_add_notifier(dev, &policy->nb_max,
+> +				      DEV_PM_QOS_MAX_FREQUENCY);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to register MAX QoS notifier: %d (%*pbl)\n",
+> +			ret, cpumask_pr_args(policy->cpus));
+> +		goto err_min_qos_notifier;
+> +	}
+> +
+>  	INIT_LIST_HEAD(&policy->policy_list);
+>  	init_rwsem(&policy->rwsem);
+>  	spin_lock_init(&policy->transition_lock);
+>  	init_waitqueue_head(&policy->transition_wait);
+>  	init_completion(&policy->kobj_unregister);
+>  	INIT_WORK(&policy->update, handle_update);
+> +	INIT_WORK(&policy->req_work, cpufreq_update_freq_work);
+
+One more thing.
+
+handle_update() is very similar to cpufreq_update_freq_work().
+
+Why are both of them needed?
+
+
 
