@@ -2,204 +2,117 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7F73C31E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 02:07:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6AEC31E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 02:08:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90D2D2089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 02:07:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF8442089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 02:08:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727724AbfFQCHf (ORCPT
+        id S1727623AbfFQCIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 22:07:35 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35836 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727537AbfFQCG6 (ORCPT
+        Sun, 16 Jun 2019 22:08:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52616 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727322AbfFQCIm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 22:06:58 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5H26tbq078629
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 22:06:57 -0400
+        Sun, 16 Jun 2019 22:08:42 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5H26rGk135235
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 22:08:40 -0400
 Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t5vdufg59-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t5vdn7fpb-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 22:06:57 -0400
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 22:08:40 -0400
 Received: from localhost
         by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Mon, 17 Jun 2019 03:06:54 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        for <linux-kernel@vger.kernel.org> from <alistair@popple.id.au>;
+        Mon, 17 Jun 2019 03:08:38 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
         by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Jun 2019 03:06:44 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5H26hYh40763590
+        Mon, 17 Jun 2019 03:08:36 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5H28Z2436897230
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 02:06:43 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 153D14C040;
-        Mon, 17 Jun 2019 02:06:43 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65CF74C04A;
-        Mon, 17 Jun 2019 02:06:42 +0000 (GMT)
+        Mon, 17 Jun 2019 02:08:35 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A3CCF42047;
+        Mon, 17 Jun 2019 02:08:35 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 548FB42045;
+        Mon, 17 Jun 2019 02:08:35 +0000 (GMT)
 Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Jun 2019 02:06:42 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 17 Jun 2019 02:08:35 +0000 (GMT)
+Received: from townsend.localnet (haven.au.ibm.com [9.192.254.114])
         (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 4D149A0225;
-        Mon, 17 Jun 2019 12:06:41 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Subject: [PATCH v3 1/7] lib/hexdump.c: Fix selftests
-Date:   Mon, 17 Jun 2019 12:04:24 +1000
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190617020430.8708-1-alastair@au1.ibm.com>
-References: <20190617020430.8708-1-alastair@au1.ibm.com>
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id F31BBA0208;
+        Mon, 17 Jun 2019 12:08:33 +1000 (AEST)
+From:   Alistair Popple <alistair@popple.id.au>
+To:     openbmc@lists.ozlabs.org
+Cc:     Eddie James <eajames@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        andrew@aj.id.au
+Subject: Re: [PATCH] fsi: sbefifo: Don't fail operations when in SBE IPL state
+Date:   Mon, 17 Jun 2019 12:08:33 +1000
+User-Agent: KMail/5.2.3 (Linux/4.18.0-0.bpo.1-amd64; KDE/5.28.0; x86_64; ; )
+In-Reply-To: <1548090958-25908-1-git-send-email-eajames@linux.ibm.com>
+References: <1548090958-25908-1-git-send-email-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 X-TM-AS-GCONF: 00
-x-cbid: 19061702-0008-0000-0000-000002F449E2
+x-cbid: 19061702-0008-0000-0000-000002F449EE
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061702-0009-0000-0000-000022615944
-Message-Id: <20190617020430.8708-2-alastair@au1.ibm.com>
+x-cbparentid: 19061702-0009-0000-0000-000022615954
+Message-Id: <1780173.icGFXHrAMq@townsend>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=923 adultscore=0 classifier=spam adjust=0 reason=mlx
+ malwarescore=0 suspectscore=4 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1034 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1906170019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+This fixed the problem I was having trying to issue istep operations to the 
+SBE.
 
-The overflow tests did not account for the situation where no
-overflow occurs and len < rowsize.
+Tested-by: Alistair Popple <alistair@popple.id.au>
 
-This patch renames the cryptic variables and accounts for the
-above case.
+On Monday, 21 January 2019 11:15:58 AM AEST Eddie James wrote:
+> SBE fifo operations should be allowed while the SBE is in any of the
+> "IPL" states. Operations should succeed in this state.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> ---
+>  drivers/fsi/fsi-sbefifo.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/fsi/fsi-sbefifo.c b/drivers/fsi/fsi-sbefifo.c
+> index c7d13ac..f7665b3 100644
+> --- a/drivers/fsi/fsi-sbefifo.c
+> +++ b/drivers/fsi/fsi-sbefifo.c
+> @@ -290,11 +290,11 @@ static int sbefifo_check_sbe_state(struct sbefifo
+> *sbefifo) switch ((sbm & CFAM_SBM_SBE_STATE_MASK) >>
+> CFAM_SBM_SBE_STATE_SHIFT) { case SBE_STATE_UNKNOWN:
+>  		return -ESHUTDOWN;
+> +	case SBE_STATE_DMT:
+> +		return -EBUSY;
+>  	case SBE_STATE_IPLING:
+>  	case SBE_STATE_ISTEP:
+>  	case SBE_STATE_MPIPL:
+> -	case SBE_STATE_DMT:
+> -		return -EBUSY;
+>  	case SBE_STATE_RUNTIME:
+>  	case SBE_STATE_DUMP: /* Not sure about that one */
+>  		break;
 
-The selftests now pass.
-
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- lib/test_hexdump.c | 47 ++++++++++++++++++++++++++--------------------
- 1 file changed, 27 insertions(+), 20 deletions(-)
-
-diff --git a/lib/test_hexdump.c b/lib/test_hexdump.c
-index 5144899d3c6b..d78ddd62ffd0 100644
---- a/lib/test_hexdump.c
-+++ b/lib/test_hexdump.c
-@@ -163,45 +163,52 @@ static void __init test_hexdump_overflow(size_t buflen, size_t len,
- {
- 	char test[TEST_HEXDUMP_BUF_SIZE];
- 	char buf[TEST_HEXDUMP_BUF_SIZE];
--	int rs = rowsize, gs = groupsize;
--	int ae, he, e, f, r;
--	bool a;
-+	int ascii_len, hex_len, expected_len, fill_point, ngroups, rc;
-+	bool match;
- 
- 	total_tests++;
- 
- 	memset(buf, FILL_CHAR, sizeof(buf));
- 
--	r = hex_dump_to_buffer(data_b, len, rs, gs, buf, buflen, ascii);
-+	rc = hex_dump_to_buffer(data_b, len, rowsize, groupsize, buf, buflen, ascii);
- 
- 	/*
- 	 * Caller must provide the data length multiple of groupsize. The
- 	 * calculations below are made with that assumption in mind.
- 	 */
--	ae = rs * 2 /* hex */ + rs / gs /* spaces */ + 1 /* space */ + len /* ascii */;
--	he = (gs * 2 /* hex */ + 1 /* space */) * len / gs - 1 /* no trailing space */;
-+	ngroups = rowsize / groupsize;
-+	hex_len = (groupsize * 2 /* hex */ + 1 /* spaces */) * ngroups
-+		  - 1 /* no trailing space */;
-+	ascii_len = hex_len + 2 /* space */ + len /* ascii */;
-+
-+	if (len < rowsize) {
-+		ngroups = len / groupsize;
-+		hex_len = (groupsize * 2 /* hex */ + 1 /* spaces */) * ngroups
-+		  - 1 /* no trailing space */;
-+	}
- 
--	if (ascii)
--		e = ae;
--	else
--		e = he;
-+	expected_len = (ascii) ? ascii_len : hex_len;
- 
--	f = min_t(int, e + 1, buflen);
-+	fill_point = min_t(int, expected_len + 1, buflen);
- 	if (buflen) {
--		test_hexdump_prepare_test(len, rs, gs, test, sizeof(test), ascii);
--		test[f - 1] = '\0';
-+		test_hexdump_prepare_test(len, rowsize, groupsize, test,
-+					  sizeof(test), ascii);
-+		test[fill_point - 1] = '\0';
- 	}
--	memset(test + f, FILL_CHAR, sizeof(test) - f);
-+	memset(test + fill_point, FILL_CHAR, sizeof(test) - fill_point);
- 
--	a = r == e && !memcmp(test, buf, TEST_HEXDUMP_BUF_SIZE);
-+	match = rc == expected_len && !memcmp(test, buf, TEST_HEXDUMP_BUF_SIZE);
- 
- 	buf[sizeof(buf) - 1] = '\0';
- 
--	if (!a) {
--		pr_err("Len: %zu buflen: %zu strlen: %zu\n",
--			len, buflen, strnlen(buf, sizeof(buf)));
--		pr_err("Result: %d '%s'\n", r, buf);
--		pr_err("Expect: %d '%s'\n", e, test);
-+	if (!match) {
-+		pr_err("rowsize: %u groupsize: %u ascii: %d Len: %zu buflen: %zu strlen: %zu\n",
-+			rowsize, groupsize, ascii, len, buflen,
-+			strnlen(buf, sizeof(buf)));
-+		pr_err("Result: %d '%-.*s'\n", rc, (int)buflen, buf);
-+		pr_err("Expect: %d '%-.*s'\n", expected_len, (int)buflen, test);
- 		failed_tests++;
-+
- 	}
- }
- 
--- 
-2.21.0
 
