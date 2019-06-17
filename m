@@ -2,78 +2,132 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09A12C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F581C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE060208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED11E208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:13:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560788001;
+	bh=WA5c9iulOrWKZC8nW/LSFI3RRwdwSMrmm9TPJb30RtA=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=iVRkYXGgLJcWfEZ1B6xXwI53wPU4xugpvl6Q8YmLT9mvBHhExJFmvBNHsvNEXvVKi
+	 ED6jfBhJuQZuMaT6pkdOWx99xx0Ljr6W8gRrvytvJ0bhj8s69ZBbftf+PJQb0+S4w+
+	 suygl8Ct7BwTxXXppdJNEPfpfWnZ1onpuTVgAYu4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726961AbfFQQMx (ORCPT
+        id S1727485AbfFQQNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:12:53 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:53547 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726005AbfFQQMx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:12:53 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hcuFV-0004fE-Hb; Mon, 17 Jun 2019 16:12:49 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Derek Chickles <dchickles@marvell.com>,
-        Satanand Burla <sburla@marvell.com>,
-        Felix Manlunas <fmanlunas@marvell.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][V2] net: lio_core: fix potential sign-extension overflow on large shift
-Date:   Mon, 17 Jun 2019 17:12:49 +0100
-Message-Id: <20190617161249.28846-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 17 Jun 2019 12:13:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52950 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726005AbfFQQNT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:13:19 -0400
+Received: from localhost (c-67-164-102-47.hsd1.ca.comcast.net [67.164.102.47])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A8C43208C0;
+        Mon, 17 Jun 2019 16:13:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560787998;
+        bh=WA5c9iulOrWKZC8nW/LSFI3RRwdwSMrmm9TPJb30RtA=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=esXlFkxzVe8OeQHrYcltCZb0SHCfcXUzCjMFDK71KIBrBw3fcKKyw2awU7xkaBWXi
+         P5Cb/zukHo9q+8f0j6PjgLmzy+ue2MPDNoYGSY07b+AfBWMs3q8jtU1/STDRzL1f9Q
+         s1Ucv1S7DZW1BS21uQS90ptCfj9qWOGZzb5QSKLE=
+Date:   Mon, 17 Jun 2019 09:13:16 -0700 (PDT)
+From:   Stefano Stabellini <sstabellini@kernel.org>
+X-X-Sender: sstabellini@sstabellini-ThinkPad-T480s
+To:     Arnd Bergmann <arnd@arndb.de>
+cc:     Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Jesper Dangaard Brouer <brouer@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Joerg Roedel <jroedel@suse.de>, xen-devel@lists.xenproject.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] swiotlb: fix phys_addr_t overflow warning
+In-Reply-To: <20190617132946.2817440-1-arnd@arndb.de>
+Message-ID: <alpine.DEB.2.21.1906170913080.2072@sstabellini-ThinkPad-T480s>
+References: <20190617132946.2817440-1-arnd@arndb.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, 17 Jun 2019, Arnd Bergmann wrote:
+> On architectures that have a larger dma_addr_t than phys_addr_t,
+> the swiotlb_tbl_map_single() function truncates its return code
+> in the failure path, making it impossible to identify the error
+> later, as we compare to the original value:
+> 
+> kernel/dma/swiotlb.c:551:9: error: implicit conversion from 'dma_addr_t' (aka 'unsigned long long') to 'phys_addr_t' (aka 'unsigned int') changes value from 18446744073709551615 to 4294967295 [-Werror,-Wconstant-conversion]
+>         return DMA_MAPPING_ERROR;
+> 
+> Use an explicit typecast here to convert it to the narrower type,
+> and use the same expression in the error handling later.
+> 
+> Fixes: b907e20508d0 ("swiotlb: remove SWIOTLB_MAP_ERROR")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Left shifting the signed int value 1 by 31 bits has undefined behaviour
-and the shift amount oq_no can be as much as 63.  Fix this by using
-BIT_ULL(oq_no) instead.
+Acked-by: Stefano Stabellini <sstabellini@kernel.org>
 
-Addresses-Coverity: ("Bad shift operation")
-Fixes: f21fb3ed364b ("Add support of Cavium Liquidio ethernet adapters")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
 
-V2: Use BIT_ULL(oq_no) instead of 1ULL << oq_no. Thanks to Dan Carpenter for
-    noting this is more appropriate.
-
----
- drivers/net/ethernet/cavium/liquidio/lio_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/cavium/liquidio/lio_core.c b/drivers/net/ethernet/cavium/liquidio/lio_core.c
-index 1c50c10b5a16..d7e805749a5b 100644
---- a/drivers/net/ethernet/cavium/liquidio/lio_core.c
-+++ b/drivers/net/ethernet/cavium/liquidio/lio_core.c
-@@ -964,7 +964,7 @@ static void liquidio_schedule_droq_pkt_handlers(struct octeon_device *oct)
- 
- 			if (droq->ops.poll_mode) {
- 				droq->ops.napi_fn(droq);
--				oct_priv->napi_mask |= (1 << oq_no);
-+				oct_priv->napi_mask |= BIT_ULL(oq_no);
- 			} else {
- 				tasklet_schedule(&oct_priv->droq_tasklet);
- 			}
--- 
-2.20.1
-
+> ---
+> I still think that reverting the original commit would have
+> provided clearer semantics for this corner case, but at least
+> this patch restores the correct behavior.
+> ---
+>  drivers/xen/swiotlb-xen.c | 2 +-
+>  kernel/dma/swiotlb.c      | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
+> index d53f3493a6b9..cfbe46785a3b 100644
+> --- a/drivers/xen/swiotlb-xen.c
+> +++ b/drivers/xen/swiotlb-xen.c
+> @@ -402,7 +402,7 @@ static dma_addr_t xen_swiotlb_map_page(struct device *dev, struct page *page,
+>  
+>  	map = swiotlb_tbl_map_single(dev, start_dma_addr, phys, size, dir,
+>  				     attrs);
+> -	if (map == DMA_MAPPING_ERROR)
+> +	if (map == (phys_addr_t)DMA_MAPPING_ERROR)
+>  		return DMA_MAPPING_ERROR;
+>  
+>  	dev_addr = xen_phys_to_bus(map);
+> diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
+> index e906ef2e6315..a3be651973ad 100644
+> --- a/kernel/dma/swiotlb.c
+> +++ b/kernel/dma/swiotlb.c
+> @@ -548,7 +548,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+>  	if (!(attrs & DMA_ATTR_NO_WARN) && printk_ratelimit())
+>  		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes), total %lu (slots), used %lu (slots)\n",
+>  			 size, io_tlb_nslabs, tmp_io_tlb_used);
+> -	return DMA_MAPPING_ERROR;
+> +	return (phys_addr_t)DMA_MAPPING_ERROR;
+>  found:
+>  	io_tlb_used += nslots;
+>  	spin_unlock_irqrestore(&io_tlb_lock, flags);
+> @@ -666,7 +666,7 @@ bool swiotlb_map(struct device *dev, phys_addr_t *phys, dma_addr_t *dma_addr,
+>  	/* Oh well, have to allocate and map a bounce buffer. */
+>  	*phys = swiotlb_tbl_map_single(dev, __phys_to_dma(dev, io_tlb_start),
+>  			*phys, size, dir, attrs);
+> -	if (*phys == DMA_MAPPING_ERROR)
+> +	if (*phys == (phys_addr_t)DMA_MAPPING_ERROR)
+>  		return false;
+>  
+>  	/* Ensure that the address returned is DMA'ble */
+> -- 
+> 2.20.0
+> 
