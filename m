@@ -2,247 +2,88 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E26B5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C76BBC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4D8D2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTzDSwZ1"
+	by mail.kernel.org (Postfix) with ESMTP id 9A8D82084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:54:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfFQTyb (ORCPT
+        id S1729130AbfFQTyf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:54:31 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:40146 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725878AbfFQTyb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:54:31 -0400
-Received: by mail-qk1-f196.google.com with SMTP id c70so6993132qkg.7;
-        Mon, 17 Jun 2019 12:54:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xtD34BI+vrOR7JucDAJ9tu3vs6a298a0lx7kQQSa3yc=;
-        b=KTzDSwZ1yy1nJQOYBucAoW72auHwAOIEY5sMRGzgr2WKEQSgOUuh7LHOqgkgwruSo0
-         PmttiIWDpJqtIHZOabWmb5YfLWMt5cdWfRPWqcYOwbI7ItiGBdt6+6v490EnqToT5Gge
-         mb04RJdWpQiAF9dpWjirMZ609LArpoZ2a5BvRjfc8x6eqgWque5LndFse42MKT+Q33s1
-         feHdUD/WND5P2qk7r+J1fAqQ+L+pJjgnAByB8hBB9kRd+mpl4TAPni8/5IBnfjBQYc2X
-         hwraQ0Kes3uFo8yzLC9bRzl/nUaZVTviqfSPMb7+0pP8AGzCeSjnYiXLcWUIAOho628g
-         jZ7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xtD34BI+vrOR7JucDAJ9tu3vs6a298a0lx7kQQSa3yc=;
-        b=N+gWRCTys37uPQE/30Wh231OqZ6Gjfu7XgLnCTcYHSz0XegxguyX3lp6Py76uOU2Uj
-         OU//hQrr6A2LDLNIseppHn5ZLGNHRTXdoluBUAikf0eAIC06eEiRTbCm6PmaesRe2tlR
-         fnJRHTdJqmKrV/LSl6rocGdNhiP/tdn8UHN90sShRNYiYabQ4jMFAgrfO9xik7TFuQKI
-         JE4fNSsEiDULerUnCurxqOhS2+fTz5YzoFeMFaiQZfBXfHVulOfX6c/p3XOjRqJSJhWG
-         jgvx9F0odUhAaq2XV9HD8nTyvpX4dKIAQz5VEPCwNkw4me1wJlSbYYRv4fdWNdOALX99
-         pNKA==
-X-Gm-Message-State: APjAAAUwv33KQcNGto7PArDibLUyz7D8mZj6CYVnBcFs+/o/os6oYVjd
-        Mjz4G1ZpZOOqUpIsnyRfc1k=
-X-Google-Smtp-Source: APXvYqxC+QVDUdcmTZ129xnM091bQ2vjaS8JVt0YpWL93xXEY+lsGPJxYoOW2ZzsqtQm/CYdS2IuHA==
-X-Received: by 2002:ae9:c30e:: with SMTP id n14mr85350845qkg.220.1560801269520;
-        Mon, 17 Jun 2019 12:54:29 -0700 (PDT)
-Received: from localhost.localdomain (mtrlpq02hsy-lp140-01-174-93-144-21.dsl.bell.ca. [174.93.144.21])
-        by smtp.gmail.com with ESMTPSA id z18sm8522078qka.12.2019.06.17.12.54.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 12:54:28 -0700 (PDT)
-From:   Detlev Casanova <detlev.casanova@gmail.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org,
+        Mon, 17 Jun 2019 15:54:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51380 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725878AbfFQTye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:54:34 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 76A8B30872E1;
+        Mon, 17 Jun 2019 19:54:28 +0000 (UTC)
+Received: from redhat.com (ovpn-125-143.rdu2.redhat.com [10.10.125.143])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 522804146;
+        Mon, 17 Jun 2019 19:54:27 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 15:54:25 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     bskeggs@redhat.com, airlied@linux.ie,
+        Daniel Vetter <daniel@ffwll.ch>, jasojgg@ziepe.ca,
+        dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org,
         linux-kernel@vger.kernel.org
-Cc:     Detlev Casanova <detlev.casanova@gmail.com>
-Subject: [PATCH] e1000e: Make watchdog use delayed work
-Date:   Mon, 17 Jun 2019 15:54:18 -0400
-Message-Id: <20190617195418.3499-1-detlev.casanova@gmail.com>
-X-Mailer: git-send-email 2.22.0
+Subject: Re: [PATCH] drm/nouveau/svm: Convert to use hmm_range_fault()
+Message-ID: <20190617195425.GA4085@redhat.com>
+References: <1558378918-25279-1-git-send-email-jrdr.linux@gmail.com>
+ <CAFqt6zYmL2P9w0Z4yfPtB=ftiy-H6-_beYsXJq-nD9T5OAw6Dg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFqt6zYmL2P9w0Z4yfPtB=ftiy-H6-_beYsXJq-nD9T5OAw6Dg@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 17 Jun 2019 19:54:33 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use delayed work instead of timers to run the watchdog of the e1000e
-driver.
+On Sat, Jun 08, 2019 at 12:14:50AM +0530, Souptick Joarder wrote:
+> Hi Jason,
+> 
+> On Tue, May 21, 2019 at 12:27 AM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+> >
+> > Convert to use hmm_range_fault().
+> >
+> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> 
+> Would you like to take it through your new hmm tree or do I
+> need to resend it ?
 
-Simplify the code with one less middle function.
+This patch is wrong as the API is different between the two see what
+is in hmm.h to see the differences between hmm_vma_fault() hmm_range_fault()
+a simple rename break things.
 
-Signed-off-by: Detlev Casanova <detlev.casanova@gmail.com>
----
- drivers/net/ethernet/intel/e1000e/e1000.h  |  3 +-
- drivers/net/ethernet/intel/e1000e/netdev.c | 52 +++++++++++-----------
- 2 files changed, 28 insertions(+), 27 deletions(-)
-
-diff --git a/drivers/net/ethernet/intel/e1000e/e1000.h b/drivers/net/ethernet/intel/e1000e/e1000.h
-index be13227f1697..942ab74030ca 100644
---- a/drivers/net/ethernet/intel/e1000e/e1000.h
-+++ b/drivers/net/ethernet/intel/e1000e/e1000.h
-@@ -186,12 +186,11 @@ struct e1000_phy_regs {
- 
- /* board specific private data structure */
- struct e1000_adapter {
--	struct timer_list watchdog_timer;
- 	struct timer_list phy_info_timer;
- 	struct timer_list blink_timer;
- 
- 	struct work_struct reset_task;
--	struct work_struct watchdog_task;
-+	struct delayed_work watchdog_task;
- 
- 	const struct e1000_info *ei;
- 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index 0e09bede42a2..f62434aa24ad 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -39,6 +39,8 @@ static int debug = -1;
- module_param(debug, int, 0);
- MODULE_PARM_DESC(debug, "Debug level (0=none,...,16=all)");
- 
-+static struct workqueue_struct *e1000_workqueue;
-+
- static const struct e1000_info *e1000_info_tbl[] = {
- 	[board_82571]		= &e1000_82571_info,
- 	[board_82572]		= &e1000_82572_info,
-@@ -1780,7 +1782,7 @@ static irqreturn_t e1000_intr_msi(int __always_unused irq, void *data)
- 		}
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			mod_timer(&adapter->watchdog_timer, jiffies + 1);
-+			queue_delayed_work(e1000_workqueue, &adapter->watchdog_task, 1);
- 	}
- 
- 	/* Reset on uncorrectable ECC error */
-@@ -1860,7 +1862,7 @@ static irqreturn_t e1000_intr(int __always_unused irq, void *data)
- 		}
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			mod_timer(&adapter->watchdog_timer, jiffies + 1);
-+			queue_delayed_work(e1000_workqueue, &adapter->watchdog_task, 1);
- 	}
- 
- 	/* Reset on uncorrectable ECC error */
-@@ -1905,7 +1907,7 @@ static irqreturn_t e1000_msix_other(int __always_unused irq, void *data)
- 		hw->mac.get_link_status = true;
- 		/* guard against interrupt when we're going down */
- 		if (!test_bit(__E1000_DOWN, &adapter->state))
--			mod_timer(&adapter->watchdog_timer, jiffies + 1);
-+			queue_delayed_work(e1000_workqueue, &adapter->watchdog_task, 0);
- 	}
- 
- 	if (!test_bit(__E1000_DOWN, &adapter->state))
-@@ -4278,7 +4280,6 @@ void e1000e_down(struct e1000_adapter *adapter, bool reset)
- 
- 	napi_synchronize(&adapter->napi);
- 
--	del_timer_sync(&adapter->watchdog_timer);
- 	del_timer_sync(&adapter->phy_info_timer);
- 
- 	spin_lock(&adapter->stats64_lock);
-@@ -5150,25 +5151,11 @@ static void e1000e_check_82574_phy_workaround(struct e1000_adapter *adapter)
- 	}
- }
- 
--/**
-- * e1000_watchdog - Timer Call-back
-- * @data: pointer to adapter cast into an unsigned long
-- **/
--static void e1000_watchdog(struct timer_list *t)
--{
--	struct e1000_adapter *adapter = from_timer(adapter, t, watchdog_timer);
--
--	/* Do the rest outside of interrupt context */
--	schedule_work(&adapter->watchdog_task);
--
--	/* TODO: make this use queue_delayed_work() */
--}
--
- static void e1000_watchdog_task(struct work_struct *work)
- {
- 	struct e1000_adapter *adapter = container_of(work,
- 						     struct e1000_adapter,
--						     watchdog_task);
-+						     watchdog_task.work);
- 	struct net_device *netdev = adapter->netdev;
- 	struct e1000_mac_info *mac = &adapter->hw.mac;
- 	struct e1000_phy_info *phy = &adapter->hw.phy;
-@@ -5395,8 +5382,8 @@ static void e1000_watchdog_task(struct work_struct *work)
- 
- 	/* Reset the timer */
- 	if (!test_bit(__E1000_DOWN, &adapter->state))
--		mod_timer(&adapter->watchdog_timer,
--			  round_jiffies(jiffies + 2 * HZ));
-+		queue_delayed_work(e1000_workqueue, &adapter->watchdog_task,
-+				   round_jiffies(2 * HZ));
- }
- 
- #define E1000_TX_FLAGS_CSUM		0x00000001
-@@ -7251,11 +7238,21 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto err_eeprom;
- 	}
- 
--	timer_setup(&adapter->watchdog_timer, e1000_watchdog, 0);
-+	e1000_workqueue = alloc_workqueue("%s", WQ_MEM_RECLAIM, 0,
-+			                  e1000e_driver_name);
-+
-+	if (!e1000_workqueue)
-+	{
-+		err = -ENOMEM;
-+		goto err_workqueue;
-+	}
-+
-+	INIT_DELAYED_WORK(&adapter->watchdog_task, e1000_watchdog_task);
-+	queue_delayed_work(e1000_workqueue, &adapter->watchdog_task, 0);
-+
- 	timer_setup(&adapter->phy_info_timer, e1000_update_phy_info, 0);
- 
- 	INIT_WORK(&adapter->reset_task, e1000_reset_task);
--	INIT_WORK(&adapter->watchdog_task, e1000_watchdog_task);
- 	INIT_WORK(&adapter->downshift_task, e1000e_downshift_workaround);
- 	INIT_WORK(&adapter->update_phy_task, e1000e_update_phy_task);
- 	INIT_WORK(&adapter->print_hang_task, e1000_print_hw_hang);
-@@ -7349,6 +7346,9 @@ static int e1000_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	return 0;
- 
- err_register:
-+	flush_workqueue(e1000_workqueue);
-+	destroy_workqueue(e1000_workqueue);
-+err_workqueue:
- 	if (!(adapter->flags & FLAG_HAS_AMT))
- 		e1000e_release_hw_control(adapter);
- err_eeprom:
-@@ -7395,15 +7395,17 @@ static void e1000_remove(struct pci_dev *pdev)
- 	 */
- 	if (!down)
- 		set_bit(__E1000_DOWN, &adapter->state);
--	del_timer_sync(&adapter->watchdog_timer);
- 	del_timer_sync(&adapter->phy_info_timer);
- 
- 	cancel_work_sync(&adapter->reset_task);
--	cancel_work_sync(&adapter->watchdog_task);
- 	cancel_work_sync(&adapter->downshift_task);
- 	cancel_work_sync(&adapter->update_phy_task);
- 	cancel_work_sync(&adapter->print_hang_task);
- 
-+	cancel_delayed_work(&adapter->watchdog_task);
-+	flush_workqueue(e1000_workqueue);
-+	destroy_workqueue(e1000_workqueue);
-+
- 	if (adapter->flags & FLAG_HAS_HW_TIMESTAMP) {
- 		cancel_work_sync(&adapter->tx_hwtstamp_work);
- 		if (adapter->tx_hwtstamp_skb) {
--- 
-2.22.0
-
+> 
+> > ---
+> >  drivers/gpu/drm/nouveau/nouveau_svm.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/gpu/drm/nouveau/nouveau_svm.c b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> > index 93ed43c..8d56bd6 100644
+> > --- a/drivers/gpu/drm/nouveau/nouveau_svm.c
+> > +++ b/drivers/gpu/drm/nouveau/nouveau_svm.c
+> > @@ -649,7 +649,7 @@ struct nouveau_svmm {
+> >                 range.values = nouveau_svm_pfn_values;
+> >                 range.pfn_shift = NVIF_VMM_PFNMAP_V0_ADDR_SHIFT;
+> >  again:
+> > -               ret = hmm_vma_fault(&range, true);
+> > +               ret = hmm_range_fault(&range, true);
+> >                 if (ret == 0) {
+> >                         mutex_lock(&svmm->mutex);
+> >                         if (!hmm_vma_range_done(&range)) {
+> > --
+> > 1.9.1
+> >
