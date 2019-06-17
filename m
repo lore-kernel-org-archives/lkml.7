@@ -2,95 +2,124 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5855C31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:31:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E164AC31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:32:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7DB82084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:31:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA49D20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:32:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560774739;
+	bh=qBSBAULMCiLqb3om+WlEZJbnQF42E4a35DytJRXh3d0=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=ywUs7ORLi2WtaFayjkdl/of3j9NY4pnHjorOo7xqil0uaDHpudVe2Y7jiVFq0lEZu
+	 hZ6q1eRIUS0o91RJSHmHepRwTHZXZ8RkgJdlksSbbw4MrJSWnEveRAatGmAPuJ2M6L
+	 OrXyoyVioHrVZiYQqoiwxFmbSWldfyzRw1qwVlgM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727599AbfFQMbo (ORCPT
+        id S1727702AbfFQMcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:31:44 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53495 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFQMbo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:31:44 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MhlbM-1iGKPA0jWS-00djt7; Mon, 17 Jun 2019 14:31:20 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        akpm@linux-foundation.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        stable@vger.kernel.org
-Subject: [PATCH] ubsan: mark ubsan_type_mismatch_common inline
-Date:   Mon, 17 Jun 2019 14:31:09 +0200
-Message-Id: <20190617123109.667090-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 17 Jun 2019 08:32:18 -0400
+Received: from mga12.intel.com ([192.55.52.136]:57562 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726005AbfFQMcS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:32:18 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 05:32:17 -0700
+X-ExtLoop1: 1
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2019 05:32:13 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>, alokc@codeaurora.org,
+        agross@kernel.org, david.brown@linaro.org,
+        wsa+renesas@sang-engineering.com, bjorn.andersson@linaro.org,
+        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
+        jlhugo@gmail.com
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v4 4/6] usb: dwc3: qcom: Add support for booting with ACPI
+In-Reply-To: <20190617102146.GG16364@dell>
+References: <20190612142654.9639-1-lee.jones@linaro.org> <20190612142654.9639-5-lee.jones@linaro.org> <20190617102146.GG16364@dell>
+Date:   Mon, 17 Jun 2019 15:32:07 +0300
+Message-ID: <87y320gzp4.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:RdrPG7YYozPOO4moFcrupalm1fFjUIeD1Q8rHF6IwUGNo79JcXH
- miKAhPNzei6GuU9U1bsgDZ8kG1jVk32osA4MHetoIE5ZsIYqMyTgCvnG+vMgAlYviqXB8aN
- a9wfzrI6f8gpze1TZWcSRXEgaozaMk4T3JwjusG3CMr7ZP2P8xxhrSDPn+Hjdzc0nXiljhb
- gAQj1zphITg1lfCVb1zlw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:OtOLG0VadSQ=:XsrhptSTyA02Et1uaEtCuI
- BLtI2n1fQrB7hHBYUluxjNkET7dy8P1RWzr6u8ltKIroe8fL3tMp5BOhzyD6oWF5sC62a1IKp
- NVnjSaTn/KQN1TCXTF04NJBMGUzH2E1KS9tapWvGMgEsL+Xn5kSFBI6uQrkp9Em2V4Kt5Mczd
- 8121xcgyrMya6GNS+xexw6fU2mfymI6X47yQefgyFsH64DN2ugUfEs2gyu/nYBYWt2C56Kp2o
- rhhsZo5VIwK2Bug5WrzOWLr8ZNLkn27J55n0Hycluj6h5UNogfQv3rQDPd8aE5oMn6Lry/Nqs
- SIDyZUuv3doxaFGfEY+xwB3ekAFtU/ZXk1biWw6OgvwZhj+CIbrZ09+1/9R1YoJLexrOM6ihz
- ZauPN9BevksogYmUc5whKUqg4hLSolBCEZereObQRocrz6deopDGt7xJtcetvv91eYIRAXXLS
- oUmmPVdFOgH2tuE7kjqOTO8gqrK34qrv7+40BwbH74izvdaKiM01Xs+p5t8KEQZFyvFgoscJY
- E3KLyEzZkKU65G25+4A0G46Hx6m+zr1afShcfYNo5jsNIv1Oom057fImFi8zbm8z+hLAUj7nA
- bV1uI8nRN4yZf9/KQuusEdi7XHXmLXnbcp1i8COCDZkIeNRLl9EKbADF6MFtcLqeC08RG85Hs
- ekBZKOpRFi5YTyTKqTX7PCFsIyYHX1AdIfPQ8qpCz0cUxDNdsu1ni5GzxKHrXXzvIpa0q9WKj
- Bhp8Ec+4/uFOookVQleHJ4RTlsMu3Nz/ieF8RQ==
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-objtool points out a condition that it does not like:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+Hi,
 
-I guess this is related to the call ubsan_type_mismatch_common()
-not being inline before it calls user_access_restore(), though
-I don't fully understand why that is a problem.
+Lee Jones <lee.jones@linaro.org> writes:
+>> In Linux, the DWC3 core exists as its own independent platform device.
+>> Thus when describing relationships in Device Tree, the current default
+>> boot configuration table option, the DWC3 core often resides as a child
+>> of the platform specific node.  Both of which are given their own
+>> address space descriptions and the drivers can be mostly agnostic to
+>> each other.
+>>=20
+>> However, other Operating Systems have taken a more monolithic approach,
+>> which is evident in the configuration ACPI tables for the Qualcomm
+>> Snapdragon SDM850, where all DWC3 (core and platform) components are
+>> described under a single IO memory region.
+>>=20
+>> To ensure successful booting using the supplied ACPI tables, we need to
+>> devise a way to chop up the address regions provided and subsequently
+>> register the DWC3 core with the resultant information, which is
+>> precisely what this patch aims to achieve.
+>>=20
+>> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>> ---
+>>  drivers/usb/dwc3/Kconfig     |   2 +-
+>>  drivers/usb/dwc3/dwc3-qcom.c | 206 ++++++++++++++++++++++++++++++-----
+>>  2 files changed, 179 insertions(+), 29 deletions(-)
+>
+> I'm starting to get a little twitchy about these patches now.  Due to
+> the release cadence of the larger Linux distros, it's pretty important
+> that these changes land in v5.3.  Without them, it is impossible to
+> install Linux on some pretty high profile emerging platforms.
+>
+> It's already -rc5 and I'm concerned that we're going to miss the
+> merge-window.  Would you be kind enough to review these patches
+> please?  The Pinctrl and I2C parts of the set have already been
+> merged.
 
-Marking the function inline shuts up the warning and might be
-the right thing to do. The patch that caused this is marked
-for stable backports, so this one should probably be backported
-as well.
+I don't seem to have this series in my inbox. This is the only email I
+have in this series.
 
-Fixes: 42440c1f9911 ("lib/ubsan: add type mismatch handler for new GCC/Clang")
-Cc: stable@vger.kernel.org
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- lib/ubsan.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+=2D-=20
+balbi
 
-diff --git a/lib/ubsan.c b/lib/ubsan.c
-index ecc179338094..3d8836f0fc5c 100644
---- a/lib/ubsan.c
-+++ b/lib/ubsan.c
-@@ -309,7 +309,7 @@ static void handle_object_size_mismatch(struct type_mismatch_data_common *data,
- 	ubsan_epilogue(&flags);
- }
- 
--static void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
-+static __always_inline void ubsan_type_mismatch_common(struct type_mismatch_data_common *data,
- 				unsigned long ptr)
- {
- 	unsigned long flags = user_access_save();
--- 
-2.20.0
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0HiEkACgkQzL64meEa
+mQZgTg/+MvWLo+0fVFNR04KSqTX6nZcqLk/4KwBc7uy1RsD4WMFa3zcKE/jB8scd
+KN48Szwr6TxXj6/nboP7PeKF+u2ftbYw8L1Ggtd1Okq/Fn8mUcM+vY1xGotjgrao
+ZXbOLcI393gCADUuEgHbOZDXPeLtgF2K/RQ06CPJ+wPunpx3pDwJVaMumW5Inocu
+Yz/eMkd5XP2QXDfL8F+27ZfnZQ6oNbEa+RV0cakbyvjHWDbkeiCW2DN5YFM3gJpC
+T9RXeqzKIUkfWd3mLcBq54Z3wCh51nw2UfThE1bQK2XlPKPXnU9P/Oi7ZIJYn5X4
+hF9PoBRoYWoaS5v9TJxL+78F+salna/FVsr6jKtbmVQjr4t3H+2i3SKXUmcMtaP9
+/jXg8jRCni44640ri7F4xN52TdkE/K7eAShOTp2izyRydKkZRxCOgW0xPh1Yi6Yx
+DGFxy4TQPUc6uAchzWfB/DIQywLYMDChFGMc525vTiw3ATnWf5dK7c/G0FufNs+g
+YcXsD9HyhYs9puAp4DBUZmXZGiuPHT8Se78aTfYqAvY7oFH5puh2Mg8UDLeeiatr
+A67I1jpWh9RvTGFPpBABobbaItB4lMcitFy2MqxByxNmJt9l5bbExTRmdXLFzbZK
+db8+BiVaO0xw70s0j9BuGwO/YolXOiX2i4lP4Qzhc7WjniL3FPw=
+=l8qE
+-----END PGP SIGNATURE-----
+--=-=-=--
