@@ -7,60 +7,61 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9DDC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17E8CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A712084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D88C32086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="pjy0KxoA"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JaXjbNBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728318AbfFQO25 (ORCPT
+        id S1726759AbfFQO3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:28:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35153 "EHLO
+        Mon, 17 Jun 2019 10:29:40 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59027 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726427AbfFQO24 (ORCPT
+        with ESMTP id S1726005AbfFQO3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:28:56 -0400
+        Mon, 17 Jun 2019 10:29:39 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HESTTA3456732
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HETBPD3456800
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 07:28:29 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HESTTA3456732
+        Mon, 17 Jun 2019 07:29:11 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HETBPD3456800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560781710;
-        bh=iurL0Ms4B3HOItAzsIajRwpl1/RChfVo6Hnf3PN5SrE=;
+        s=2019051801; t=1560781751;
+        bh=K/pbXir+r+SMZavmfFxMSg6MArz2c8CL6TAuKWY1A5Q=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=pjy0KxoAx9+Sf4d2jYDN+mLZ6c3Wzkvj+JPLwxqN7iAYbRrxoVqXeSbIczKrnoZUH
-         h9k9WHIjrVaza0/A7s5nvJ+osJOehGE4VUhN52SM4FEoU6zyuUrbCZfp4OPql52+1j
-         CGcnjDeE1qpr2NvmGEXE2+FjMfqWnLG1zUExyDatLmE8gTJgR3IMIXVSKOM9z26Q1C
-         xWg+gsI0wW9JhFiSG1Sa4IRiuaW6VUzLBkPGoAuZMDKmB/JA5nwPjieOIBmf+GN6fU
-         zvINasZ5G4vyDt29lsyd0fhc66KzyMhhFLmsByF6PM2Q/TgtdaCYxApm5/W7XZvC3f
-         C14oDciIOMuIA==
+        b=JaXjbNBFwxWb1jPLE1MpHY4ELfJ6oiDO6zhwE9qAfkBXQmrenMrmRrGfFa0rU0ERR
+         d7eoRzdEHCJXpZFZG60zHiv1GcRirzrkz1osegOm37MnRzIPsTuPv8CfxD1Kcijdiu
+         PLydFmln0LDb0UoIDCymTJHAY6pVzLLdqNQC80wY3USjpbYfwWB58IvAWfTo3zJBkX
+         t6rd/S38WNp1uSuOn5gSZ7TZev5F2Cwie3LegHRY3pVaLEXKWcQNN9W8c3V2qqg9Dd
+         joYWXkpazf+c+y0Oimi+oVCFOf4ocXjca0s+FBnVu6rEAC7z/YGjn2uq/8c2vd8pQl
+         zljf+ZWuxD0bg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HESTZp3456729;
-        Mon, 17 Jun 2019 07:28:29 -0700
-Date:   Mon, 17 Jun 2019 07:28:29 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HETAxi3456797;
+        Mon, 17 Jun 2019 07:29:10 -0700
+Date:   Mon, 17 Jun 2019 07:29:10 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Waiman Long <tipbot@zytor.com>
-Message-ID: <tip-00f3c5a3df2c1e3dab14d0dd2b71f852d46be97f@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, huang.ying.caritas@gmail.com,
-        longman@redhat.com, peterz@infradead.org, will.deacon@arm.com,
-        mingo@kernel.org, hpa@zytor.com, tglx@linutronix.de,
-        tim.c.chen@linux.intel.com, dave@stgolabs.net, bp@alien8.de,
-        torvalds@linux-foundation.org
-Reply-To: torvalds@linux-foundation.org, dave@stgolabs.net,
-          tim.c.chen@linux.intel.com, bp@alien8.de, tglx@linutronix.de,
-          hpa@zytor.com, mingo@kernel.org, will.deacon@arm.com,
-          peterz@infradead.org, longman@redhat.com,
-          huang.ying.caritas@gmail.com, linux-kernel@vger.kernel.org
-In-Reply-To: <20190520205918.22251-9-longman@redhat.com>
-References: <20190520205918.22251-9-longman@redhat.com>
+Message-ID: <tip-990fa7384a3057a3298bcf493651c6e14416c47c@git.kernel.org>
+Cc:     peterz@infradead.org, longman@redhat.com,
+        huang.ying.caritas@gmail.com, bp@alien8.de,
+        tim.c.chen@linux.intel.com, hpa@zytor.com,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        will.deacon@arm.com, dave@stgolabs.net, tglx@linutronix.de,
+        mingo@kernel.org
+Reply-To: huang.ying.caritas@gmail.com, longman@redhat.com,
+          peterz@infradead.org, bp@alien8.de, hpa@zytor.com,
+          tim.c.chen@linux.intel.com, linux-kernel@vger.kernel.org,
+          torvalds@linux-foundation.org, dave@stgolabs.net,
+          tglx@linutronix.de, will.deacon@arm.com, mingo@kernel.org
+In-Reply-To: <20190520205918.22251-10-longman@redhat.com>
+References: <20190520205918.22251-10-longman@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/rwsem: Always release wait_lock before
- waking up tasks
-Git-Commit-ID: 00f3c5a3df2c1e3dab14d0dd2b71f852d46be97f
+Subject: [tip:locking/core] locking/rwsem: More optimal RT task handling of
+ null owner
+Git-Commit-ID: 990fa7384a3057a3298bcf493651c6e14416c47c
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -74,125 +75,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  00f3c5a3df2c1e3dab14d0dd2b71f852d46be97f
-Gitweb:     https://git.kernel.org/tip/00f3c5a3df2c1e3dab14d0dd2b71f852d46be97f
+Commit-ID:  990fa7384a3057a3298bcf493651c6e14416c47c
+Gitweb:     https://git.kernel.org/tip/990fa7384a3057a3298bcf493651c6e14416c47c
 Author:     Waiman Long <longman@redhat.com>
-AuthorDate: Mon, 20 May 2019 16:59:07 -0400
+AuthorDate: Mon, 20 May 2019 16:59:08 -0400
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Mon, 17 Jun 2019 12:28:00 +0200
+CommitDate: Mon, 17 Jun 2019 12:28:01 +0200
 
-locking/rwsem: Always release wait_lock before waking up tasks
+locking/rwsem: More optimal RT task handling of null owner
 
-With the use of wake_q, we can do task wakeups without holding the
-wait_lock. There is one exception in the rwsem code, though. It is
-when the writer in the slowpath detects that there are waiters ahead
-but the rwsem is not held by a writer. This can lead to a long wait_lock
-hold time especially when a large number of readers are to be woken up.
+An RT task can do optimistic spinning only if the lock holder is
+actually running. If the state of the lock holder isn't known, there
+is a possibility that high priority of the RT task may block forward
+progress of the lock holder if it happens to reside on the same CPU.
+This will lead to deadlock. So we have to make sure that an RT task
+will not spin on a reader-owned rwsem.
 
-Remediate this situation by releasing the wait_lock before waking
-up tasks and re-acquiring it afterward. The rwsem_try_write_lock()
-function is also modified to read the rwsem count directly to avoid
-stale count value.
+When the owner is temporarily set to NULL, there are two cases
+where we may want to continue spinning:
 
-Suggested-by: Peter Zijlstra <peterz@infradead.org>
+ 1) The lock owner is in the process of releasing the lock, sem->owner
+    is cleared but the lock has not been released yet.
+
+ 2) The lock was free and owner cleared, but another task just comes
+    in and acquire the lock before we try to get it. The new owner may
+    be a spinnable writer.
+
+So an RT task is now made to retry one more time to see if it can
+acquire the lock or continue spinning on the new owning writer.
+
+When testing on a 8-socket IvyBridge-EX system, the one additional retry
+seems to improve locking performance of RT write locking threads under
+heavy contentions. The table below shows the locking rates (in kops/s)
+with various write locking threads before and after the patch.
+
+    Locking threads     Pre-patch     Post-patch
+    ---------------     ---------     -----------
+            4             2,753          2,608
+            8             2,529          2,520
+           16             1,727          1,918
+           32             1,263          1,956
+           64               889          1,343
+
 Signed-off-by: Waiman Long <longman@redhat.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Borislav Petkov <bp@alien8.de>
 Cc: Davidlohr Bueso <dave@stgolabs.net>
 Cc: H. Peter Anvin <hpa@zytor.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Tim Chen <tim.c.chen@linux.intel.com>
 Cc: Will Deacon <will.deacon@arm.com>
 Cc: huang ying <huang.ying.caritas@gmail.com>
-Link: https://lkml.kernel.org/r/20190520205918.22251-9-longman@redhat.com
+Link: https://lkml.kernel.org/r/20190520205918.22251-10-longman@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/sched/wake_q.h |  5 +++++
- kernel/locking/rwsem.c       | 31 +++++++++++++++----------------
- 2 files changed, 20 insertions(+), 16 deletions(-)
+ kernel/locking/rwsem.c | 51 +++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 44 insertions(+), 7 deletions(-)
 
-diff --git a/include/linux/sched/wake_q.h b/include/linux/sched/wake_q.h
-index ad826d2a4557..26a2013ac39c 100644
---- a/include/linux/sched/wake_q.h
-+++ b/include/linux/sched/wake_q.h
-@@ -51,6 +51,11 @@ static inline void wake_q_init(struct wake_q_head *head)
- 	head->lastp = &head->first;
- }
- 
-+static inline bool wake_q_empty(struct wake_q_head *head)
-+{
-+	return head->first == WAKE_Q_TAIL;
-+}
-+
- extern void wake_q_add(struct wake_q_head *head, struct task_struct *task);
- extern void wake_q_add_safe(struct wake_q_head *head, struct task_struct *task);
- extern void wake_up_q(struct wake_q_head *head);
 diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
-index decda9fb8c6d..5532304406f7 100644
+index 5532304406f7..e1840b7c5310 100644
 --- a/kernel/locking/rwsem.c
 +++ b/kernel/locking/rwsem.c
-@@ -400,13 +400,14 @@ static void rwsem_mark_wake(struct rw_semaphore *sem,
-  * If wstate is WRITER_HANDOFF, it will make sure that either the handoff
-  * bit is set or the lock is acquired with handoff bit cleared.
-  */
--static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem,
-+static inline bool rwsem_try_write_lock(struct rw_semaphore *sem,
- 					enum writer_wait_state wstate)
+@@ -566,6 +566,7 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
  {
--	long new;
-+	long count, new;
+ 	bool taken = false;
++	int prev_owner_state = OWNER_NULL;
  
- 	lockdep_assert_held(&sem->wait_lock);
+ 	preempt_disable();
  
-+	count = atomic_long_read(&sem->count);
- 	do {
- 		bool has_handoff = !!(count & RWSEM_FLAG_HANDOFF);
- 
-@@ -751,26 +752,25 @@ rwsem_down_write_slowpath(struct rw_semaphore *sem, int state)
- 					? RWSEM_WAKE_READERS
- 					: RWSEM_WAKE_ANY, &wake_q);
- 
--		/*
--		 * The wakeup is normally called _after_ the wait_lock
--		 * is released, but given that we are proactively waking
--		 * readers we can deal with the wake_q overhead as it is
--		 * similar to releasing and taking the wait_lock again
--		 * for attempting rwsem_try_write_lock().
--		 */
--		wake_up_q(&wake_q);
--
--		/* We need wake_q again below, reinitialize */
--		wake_q_init(&wake_q);
-+		if (!wake_q_empty(&wake_q)) {
-+			/*
-+			 * We want to minimize wait_lock hold time especially
-+			 * when a large number of readers are to be woken up.
-+			 */
-+			raw_spin_unlock_irq(&sem->wait_lock);
-+			wake_up_q(&wake_q);
-+			wake_q_init(&wake_q);	/* Used again, reinit */
-+			raw_spin_lock_irq(&sem->wait_lock);
-+		}
- 	} else {
--		count = atomic_long_add_return(RWSEM_FLAG_WAITERS, &sem->count);
-+		atomic_long_or(RWSEM_FLAG_WAITERS, &sem->count);
- 	}
- 
- wait:
- 	/* wait until we successfully acquire the lock */
- 	set_current_state(state);
- 	while (true) {
--		if (rwsem_try_write_lock(count, sem, wstate))
-+		if (rwsem_try_write_lock(sem, wstate))
- 			break;
- 
- 		raw_spin_unlock_irq(&sem->wait_lock);
-@@ -811,7 +811,6 @@ wait:
+@@ -583,7 +584,12 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+ 	 *  2) readers own the lock as we can't determine if they are
+ 	 *     actively running or not.
+ 	 */
+-	while (rwsem_spin_on_owner(sem) & OWNER_SPINNABLE) {
++	for (;;) {
++		enum owner_state owner_state = rwsem_spin_on_owner(sem);
++
++		if (!(owner_state & OWNER_SPINNABLE))
++			break;
++
+ 		/*
+ 		 * Try to acquire the lock
+ 		 */
+@@ -593,13 +599,44 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
  		}
  
- 		raw_spin_lock_irq(&sem->wait_lock);
--		count = atomic_long_read(&sem->count);
- 	}
- 	__set_current_state(TASK_RUNNING);
- 	list_del(&waiter.list);
+ 		/*
+-		 * When there's no owner, we might have preempted between the
+-		 * owner acquiring the lock and setting the owner field. If
+-		 * we're an RT task that will live-lock because we won't let
+-		 * the owner complete.
++		 * An RT task cannot do optimistic spinning if it cannot
++		 * be sure the lock holder is running or live-lock may
++		 * happen if the current task and the lock holder happen
++		 * to run in the same CPU. However, aborting optimistic
++		 * spinning while a NULL owner is detected may miss some
++		 * opportunity where spinning can continue without causing
++		 * problem.
++		 *
++		 * There are 2 possible cases where an RT task may be able
++		 * to continue spinning.
++		 *
++		 * 1) The lock owner is in the process of releasing the
++		 *    lock, sem->owner is cleared but the lock has not
++		 *    been released yet.
++		 * 2) The lock was free and owner cleared, but another
++		 *    task just comes in and acquire the lock before
++		 *    we try to get it. The new owner may be a spinnable
++		 *    writer.
++		 *
++		 * To take advantage of two scenarios listed agove, the RT
++		 * task is made to retry one more time to see if it can
++		 * acquire the lock or continue spinning on the new owning
++		 * writer. Of course, if the time lag is long enough or the
++		 * new owner is not a writer or spinnable, the RT task will
++		 * quit spinning.
++		 *
++		 * If the owner is a writer, the need_resched() check is
++		 * done inside rwsem_spin_on_owner(). If the owner is not
++		 * a writer, need_resched() check needs to be done here.
+ 		 */
+-		if (!sem->owner && (need_resched() || rt_task(current)))
+-			break;
++		if (owner_state != OWNER_WRITER) {
++			if (need_resched())
++				break;
++			if (rt_task(current) &&
++			   (prev_owner_state != OWNER_WRITER))
++				break;
++		}
++		prev_owner_state = owner_state;
+ 
+ 		/*
+ 		 * The cpu_relax() call is a compiler barrier which forces
