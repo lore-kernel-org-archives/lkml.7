@@ -2,137 +2,148 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D98ABC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:11:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DAFC31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:12:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADE1C206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:11:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2B802084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:12:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="E1lV/u7o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ais7vmnl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727586AbfFQOLy (ORCPT
+        id S1727627AbfFQOM4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:11:54 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43459 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFQOLx (ORCPT
+        Mon, 17 Jun 2019 10:12:56 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45374 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFQOMz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:11:53 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e3so16324386edr.10
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:11:53 -0700 (PDT)
+        Mon, 17 Jun 2019 10:12:55 -0400
+Received: by mail-lj1-f195.google.com with SMTP id m23so9420791lje.12
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:12:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:subject:message-id:mail-followup-to:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zlCo9TC98c5FZkjUzIf1KLkN5UgmU6J99oGWDzFXHpI=;
-        b=E1lV/u7o1nMu/5qcTlwV2LMql4XhweKWVE452oSFGI9R9SjCnpHHJnbxQXIKoXvsmz
-         MjEC7OHqO9/kJOeec+mu0Z8koL5fprasZn58JKAQBBN+0wxWXoJYVbr7u+ap7ulflBy9
-         qPQrTUudwz+GPCINTlkK6HQ+6xSffoDX3Zgzg=
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=UR02dBMpLO2IwgmJl+zzqfvWxW4b3uNT3A/fq8b3Xl8=;
+        b=ais7vmnlp64PLs4/yXLarwLc3vWBtVrRpvk2YVRLCu5vOynXF/ETKfQV3kRZdWVNd4
+         AHp8ZVFVSXxWboDrThV6ewKEIoHbd9p0HhILdPz/MdACLBMShrwayFTu7p68fLujVUpA
+         7QgSAMEcPGG8pk5jzEBlYJaUZxq5mjlgKzrocXpZfIuC+o7svmRuMipiT8lk1mPzseBJ
+         3B6aL30SNmWb5x3EbValwnSyXeV0QGAIs5ZXgxIw1CAP1Ewia2ASPyhh1EyVWVPkLgBW
+         iZUdOfLWIzgYGZgHNgxHtDyaqaplfikrHJgT3afxiLgYycfJpZk/SyQVnLvwV2i0xldT
+         dNhA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=zlCo9TC98c5FZkjUzIf1KLkN5UgmU6J99oGWDzFXHpI=;
-        b=mhINOp05CvZDU/21Y/hezB9OpBPNDLI++QFOuYYNgMjzmaeiA9h+SHmEmYKS20DvP3
-         JuB+tMKXlE3weHVw7PI/ydFvYovDWiHOijK5O0hWgqNHZinZwIIaT4+q0pUXGlE/iLNP
-         lu8psUcRagox6VO+mWi5VjTguVqA0c3B7Lme7JIRWFtqKhPvFyL6BBbsy+Y60NqdTLpq
-         RoQ/27eKHX2cVM9kevRbQ1vkgxC/QDglK1C+COXsrMgXeUVhmNsCYYsBzHpP2/BR9Eu8
-         pt+m5bMl2Odc7YIfq74EAloF3eVnnWK2oVjXeGiTJNFc49+uFL2xzx/Tnmz4eVqDvCZq
-         H46Q==
-X-Gm-Message-State: APjAAAVURUAyIZx1LRgBPsRIMpJZ7+4S73gCM6b40x4mWeu/A5JBd/iP
-        Y9FNzCRDIKYPrcmaDR80jNwqYw==
-X-Google-Smtp-Source: APXvYqyFOj7EMYy9qivyoZv6/j9iQIWwU8H2myH8qg8E6iBR3g1ZdPTuAJd2zbKKIw0TxP9ixHftTQ==
-X-Received: by 2002:aa7:c486:: with SMTP id m6mr54266304edq.298.1560780712473;
-        Mon, 17 Jun 2019 07:11:52 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id m19sm2186424eje.30.2019.06.17.07.11.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 07:11:50 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 16:11:48 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/4] drm/virtio: pass gem reservation object to ttm init
-Message-ID: <20190617141148.GE12905@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190617111406.14765-1-kraxel@redhat.com>
- <20190617111406.14765-2-kraxel@redhat.com>
- <20190617140825.GD12905@phenom.ffwll.local>
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UR02dBMpLO2IwgmJl+zzqfvWxW4b3uNT3A/fq8b3Xl8=;
+        b=scRRewJJXhViLN0mawYNza5JR8VcS7DjloTZSKSzlfZ+XrnIUFCeU7Irb89Rb/8Cgz
+         cCGiyaKQdLcNwwOTjjm/5NrkknrMmldTt4wNZeSF9DU5ShPg4cLBQFIPO2zKe0yRm2GO
+         0T2UO+HMsqA62FQI4pmGbqydF5IyRwmR3FAGcncAq5st0Uh7RQBZrY7X1GGdtwsmRVv2
+         Jeyf/3j9Z3YQeOGuvCYcpczjpMowgkMnO3+L41AuCloKsiSK+0SJ5srvO0Nz9KmC1SE/
+         6F/ozifqSNeHnwcIv6ZWfWy72U9z23Irni4auOkH5yIrUh9ZHkBb1fEyWgc//ZFosADJ
+         4gmA==
+X-Gm-Message-State: APjAAAUkDS0EyBEhqAV2sA/qh+Bb/Rh7JUaRGzAskCORzylWIjHZCJDa
+        qaQBbrmgYacCxkZMy44lb5s=
+X-Google-Smtp-Source: APXvYqz67dES8orYwdSlSUe3JHIspV1NctOeVCA4RYfKHZHj2HcSoZQBqbf24JEc9RSK1DCSvpM3ZA==
+X-Received: by 2002:a2e:988b:: with SMTP id b11mr17763540ljj.110.1560780773866;
+        Mon, 17 Jun 2019 07:12:53 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id n3sm1784184lfh.3.2019.06.17.07.12.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 07:12:53 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Mon, 17 Jun 2019 16:12:44 +0200
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     "Uladzislau Rezki (Sony)" <urezki@gmail.com>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Joel Fernandes <joelaf@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.ibm.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUG]: mm/vmalloc: uninitialized variable access in
+ pcpu_get_vm_areas
+Message-ID: <20190617141244.5x22nrylw7hodafp@pc636>
+References: <20190617121427.77565-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617140825.GD12905@phenom.ffwll.local>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190617121427.77565-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 04:08:25PM +0200, Daniel Vetter wrote:
-> On Mon, Jun 17, 2019 at 01:14:03PM +0200, Gerd Hoffmann wrote:
-> > With this gem and ttm will use the same reservation object,
-> > so mixing and matching ttm / gem reservation helpers should
-> > work fine.
-> > 
-> > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+On Mon, Jun 17, 2019 at 02:14:11PM +0200, Arnd Bergmann wrote:
+> gcc points out some obviously broken code in linux-next
 > 
-> While doing my prime doc+cleanup series I wondered whether we should do
-> this for everyone, and perhaps even remove ttm_bo.ttm_resv. Only driver
-> which doesn't yet have a gem_bo embedded in the same allocation is vmwgfx,
-> and that would be easy to fix by adding a vmwgfx_resv somehwere.
+> mm/vmalloc.c: In function 'pcpu_get_vm_areas':
+> mm/vmalloc.c:991:4: error: 'lva' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>     insert_vmap_area_augment(lva, &va->rb_node,
+>     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>      &free_vmap_area_root, &free_vmap_area_list);
+>      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> mm/vmalloc.c:916:20: note: 'lva' was declared here
+>   struct vmap_area *lva;
+>                     ^~~
 > 
-> Anyway, looks like a solid start into the convergence story.
+> Remove the obviously broken code. This is almost certainly
+> not the correct solution, but it's what I have applied locally
+> to get a clean build again.
 > 
-> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-Aside: if virtio ever allows dma-buf sharing with something else (or
-multiple virtio-gpu instances), then together with my patch series this
-will fix dma-buf import. Atm virtio ignores the reservation object of the
-imported dma-buf, which for foreing objects really isn't correct.
--Daniel
-
+> Please fix this properly.
 > 
-> > ---
-> >  drivers/gpu/drm/virtio/virtgpu_object.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/virtio/virtgpu_object.c b/drivers/gpu/drm/virtio/virtgpu_object.c
-> > index b2da31310d24..242766d644a7 100644
-> > --- a/drivers/gpu/drm/virtio/virtgpu_object.c
-> > +++ b/drivers/gpu/drm/virtio/virtgpu_object.c
-> > @@ -132,7 +132,8 @@ int virtio_gpu_object_create(struct virtio_gpu_device *vgdev,
-> >  	virtio_gpu_init_ttm_placement(bo);
-> >  	ret = ttm_bo_init(&vgdev->mman.bdev, &bo->tbo, params->size,
-> >  			  ttm_bo_type_device, &bo->placement, 0,
-> > -			  true, acc_size, NULL, NULL,
-> > +			  true, acc_size, NULL,
-> > +			  bo->gem_base.resv,
-> >  			  &virtio_gpu_ttm_bo_destroy);
-> >  	/* ttm_bo_init failure will call the destroy */
-> >  	if (ret != 0)
-> > -- 
-> > 2.18.1
-> > 
+> Fixes: 68ad4a330433 ("mm/vmalloc.c: keep track of free blocks for vmap allocation")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  mm/vmalloc.c | 7 +------
+>  1 file changed, 1 insertion(+), 6 deletions(-)
 > 
+> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> index a9213fc3802d..bfcf0124a773 100644
+> --- a/mm/vmalloc.c
+> +++ b/mm/vmalloc.c
+> @@ -984,14 +984,9 @@ adjust_va_to_fit_type(struct vmap_area *va,
+>  		return -1;
+>  	}
+>  
+> -	if (type != FL_FIT_TYPE) {
+> +	if (type == FL_FIT_TYPE)
+>  		augment_tree_propagate_from(va);
+>  
+> -		if (type == NE_FIT_TYPE)
+> -			insert_vmap_area_augment(lva, &va->rb_node,
+> -				&free_vmap_area_root, &free_vmap_area_list);
+> -	}
+> -
+>  	return 0;
+>  }
+>  
 > -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+> 2.20.0
+> 
+Please do not apply this. It will just break everything. As Roman
+pointed we can just set lva = NULL; in the beginning to make GCC happy. 
+For some reason GCC decides that it can be used uninitialized, but that
+is not true.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+--
+Vlad Rezki
