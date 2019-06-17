@@ -2,54 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86AC8C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10C63C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:40:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59F202084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:39:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D63412084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:40:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728416AbfFQSjp (ORCPT
+        id S1727580AbfFQSkr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:39:45 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:37641 "EHLO
+        Mon, 17 Jun 2019 14:40:47 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:40089 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726797AbfFQSjn (ORCPT
+        with ESMTP id S1725839AbfFQSkq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:39:43 -0400
+        Mon, 17 Jun 2019 14:40:46 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MZk1p-1i5l7r2t2l-00Wl3Z; Mon, 17 Jun 2019 20:39:40 +0200
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MsI4Q-1iVAln3msE-00tltd; Mon, 17 Jun 2019 20:40:42 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
-        wsa@the-dreams.de, linux-gpio@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH 2/3] drivers: gpio: pca953x: use subsys_i2c_driver()
-Date:   Mon, 17 Jun 2019 20:39:38 +0200
-Message-Id: <1560796779-17117-2-git-send-email-info@metux.net>
+        broonie@kernel.org, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: [PATCH 1/3] include: linux: spi: more helpers for declaring spi drivers
+Date:   Mon, 17 Jun 2019 20:40:38 +0200
+Message-Id: <1560796840-18207-1-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560796779-17117-1-git-send-email-info@metux.net>
-References: <1560796779-17117-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:y/OLPt8jWGxBdQc5g2OSfdKXZL4KwALMlRKEmmbL/xl4LEmPK9X
- dqH+Uj77VBvCwLBmi4HtUwoSroGEToLQ3xMQ7WPwMrx0THYZ+9f8CELH8L3hoh/+0Ofd9ml
- 8nbM7uXxARYP0UDiAGCfS7tdm2WxHqQOFIAl6vc9++H+XzzgjjIAW9vQTxHO4Zrye+kci6h
- YV168eOxGY6k5RIuQgagQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n9ZFQGog3wE=:OyEj5HFmdTkSqbmWBi2hgn
- oprlKpQbpKIJzslBvavsf6B7gVZ3ltUmlRFgFb0O6l+ArCvx9x14bjTFnKTAmza9fMVpK5zp5
- WH0/Rwig2ERdtRusXJQyVNl8cBvNufA9wsoND9OVrbtpyPvMnP7w9pF5YIJ6TqwhzmOyruBaW
- OvRK/xM6PlC2gzZOywkPgRtdWIIyX+XFD9m/CweFAS69QhN9D/gvjenJDtzx81JXyt9CiRZb+
- a3PQVsAcwG0ONRhaNPaTilk3hG1dJtcKIobM70c4triu1bmvIvrX4xUDmetPeHxBCRblnB4u+
- c0/IsuehtmdhMknDE2WlHmNCZYZL+RnMoH/G1PQS5U9/hQNJyyd1CgTdBKGwZ7cVntcEJZkY5
- QHS6t+uHVFESc8op3pbMwPPjh878j6JMorekVfX7brLZAPGuhAL7FsXNBgE8FtgqhwMQxdTsE
- sp3Km9/SYIDkEcmYfXIYegAQN7fQtXfE1Pg9fGABd19OV1G1Bi2LOLZ5WDncMvSkMWVVhhgTR
- Mh1galLA70gi6WQQPNG7vVSDu/dWD9P7/Ani2MJSpqwzBPOi7rybSMUbM/xN8K/DLLnS9e6s3
- YDRgD/rdImxXfzGIF0Il94o5KVNEcLPpXGtgcFWcZK/i/LD+5mOyj7s0a1aONPx6HaO7FKTS1
- DSXPEOc7Eu6XqPpw3RPDF/6UnwMJis/poE+ZwAu9n1ZTH2ofzyorGrLCi2n/hx59d67Xv4VEs
- dehaH1Np7hSB5O4Vx5d1indM4UGjGOymDJhVJw==
+X-Provags-ID: V03:K1:05rIirEOuVh/P2GdhGgoALTibWMKzcYIYDli8Uu//ZC/3VBGI2w
+ +JIY4qGMr/KjTh0Ppz2vrXxXy41cx263AHETMbkXWAcydFrR/jKTiozF+AkwFY4RA6qyQ1K
+ LI3uMpGHuBiSXZ0GeZqOZ/65Qg9BNa1sGxKroYGElKDyvZvERJiKF/NWASU/ArGsW5bqcaJ
+ 4uNZhph5J1wMf9p1vjweg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:DbZzcJp0H/g=:W4xpeF7mD2ihzuY4mz4zvV
+ Mz9o6ivmAQFHsM/1tyfdeMxNAZDi7t+3LNqty4ZeuajIz+U2oSfAPH2P0ZS4XyCV2Xayhl31P
+ egaXRNkJpZlROWmx+b2taN/QMksYOmTDkjBNp/Yw1Tbm5el1UPFkWE0L4U/aqC3OQ6R3g4osR
+ kX+uYV849Jxe41HHoyaxJxHZtxO92vr8or61zWPuKf/cYYDuZk/ZzuzVF5jkluL5j3y5X/awS
+ iJBRfTKIUlzevJGA4pvD9ICWW1wQ5dKX/t5pepqsDqn2uVBRVpTsroc/nanzrXrxWtzZM189d
+ 6TR8r0F0HvzALAn16IENWRDnjQdQDNKgO2/QNnbP4Eg3yBQxUFlByLdO/EO25OjWY0BmTskRQ
+ ndtfnOEJChtozu9D1u3U+ONHCDXHaLNVVFkKOz/bDjQSHfjFFBnouZAQkcI7gyDzxsV0ffeif
+ i82sCtCrJsDekSwAMumFmgjOlAiDQM/6simcBGLXqQEQeS4hmRiCMasPv3GiFcTOQWq66GMJA
+ V1DYoOg9Q/mRlqcfHbDU66g34t9YR/aIp19WF+LZQeW0soIzZr6RAfmehGTDlcmmlaQuwdNeY
+ ZWSmfhPPJWLvlzbFXmWETCP3qPn9DrnfQm7dUtH4cDIi9/5/aeHqbu4RTrCw32T83dvNFXmmc
+ W78gciRdLng6agaEH4nGGwrzAwZTAczz+hhHzWOl9L918q8I6AAhgEMq5GbKlNCRZPDB5zrE6
+ Lyk9Ofw7cVoGsQ7HgYVW7ElpIwzCBAMkzA3pew==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -57,40 +55,45 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Enrico Weigelt <info@metux.net>
 
-Reduce driver init boilerplate by using the new
-subsys_i2c_driver() macro.
+Add more helper macros for trivial driver init cases, similar to the
+already existing module_spi_driver()+friends - now for those which
+are initialized at other stages (eg. by subsys_initcall()).
+
+This helps to further reduce driver init boilerplate.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-pca953x.c | 12 +-----------
- 1 file changed, 1 insertion(+), 11 deletions(-)
+ include/linux/spi/spi.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index cfe827c..532762d 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -1202,20 +1202,10 @@ static int pca953x_resume(struct device *dev)
- 	.id_table	= pca953x_id,
- };
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index 053abd2..f55ba34 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -296,6 +296,23 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
+ 	module_driver(__spi_driver, spi_register_driver, \
+ 			spi_unregister_driver)
  
--static int __init pca953x_init(void)
--{
--	return i2c_add_driver(&pca953x_driver);
--}
- /* register after i2c postcore initcall and before
-  * subsys initcalls that may rely on these GPIOs
-  */
--subsys_initcall(pca953x_init);
--
--static void __exit pca953x_exit(void)
--{
--	i2c_del_driver(&pca953x_driver);
--}
--module_exit(pca953x_exit);
-+subsys_i2c_driver(pca953x_driver);
- 
- MODULE_AUTHOR("eric miao <eric.miao@marvell.com>");
- MODULE_DESCRIPTION("GPIO expander driver for PCA953x");
++/* subsys_spi_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces subsys_initcall() and module_exit()
++ */
++#define subsys_spi_driver(__spi_driver) \
++static int __init __spi_driver##_init(void) \
++{ \
++	return spi_register_driver(&(__spi_driver)); \
++} \
++subsys_initcall(__spi_driver##_init); \
++static void __exit __spi_driver##_exit(void) \
++{ \
++	spi_unregister_driver(&(__spi_driver)); \
++} \
++module_exit(__spi_driver##_exit);
++
+ /**
+  * struct spi_controller - interface to SPI master or slave controller
+  * @dev: device interface to this driver
 -- 
 1.9.1
 
