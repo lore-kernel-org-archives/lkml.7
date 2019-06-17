@@ -2,189 +2,612 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0A7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1F79C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:17:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECF19208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:17:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bZcgC51b"
+	by mail.kernel.org (Postfix) with ESMTP id 83CB8208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:17:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfFQSRE (ORCPT
+        id S1728091AbfFQSRk convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:17:04 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:34835 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726121AbfFQSRE (ORCPT
+        Mon, 17 Jun 2019 14:17:40 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:35990 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfFQSRj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:17:04 -0400
-Received: by mail-wm1-f67.google.com with SMTP id c6so418343wml.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 11:17:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HuJFcmsyNowSj7shgSaNHidPdm9Km/mTYLWEB2juwtg=;
-        b=bZcgC51bcrK/acaAs5g8ExM6R5vPigm0q4M7B8CEzD7fJx3KGWyztC+98TfT553O+v
-         FnRE7457cm7nRsSItCShFtk3mz4zPpyCHfbWZCbN2v6uwTSb0g/zm9DTSmRn6Fg/7Xqa
-         2uD3fmG6hLgnqsL/drTVXp+yP+eurfdI1gD7piqHsOSPSjTKeN+tGfDObDSk4PJ8bFWA
-         YoXEa+rvq/p5rs2L09g3hDQsXzKWsahzFe88Uu3vfX8H7xK1d+bRhtysiRUNhoaMT3CK
-         1kyKk4Yb/i0I1uz1xvAuRCvyFdxpjq171sgPpqU/ySYh9XMbBkA8r38TSk4PjAE6jci3
-         Ynvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=HuJFcmsyNowSj7shgSaNHidPdm9Km/mTYLWEB2juwtg=;
-        b=rwgG4IFMDNB0ysnf+mc4kffxyBM4WqRpwNQx4mjtOFGPZ4bwm+g3lxIFSCshIlOWTY
-         9uI8cVOTdbrtsnitsh//U1ZPtAIWU72zxXnePE3BrAgpzldIJU0hVeB0RfPLD+8vQrRC
-         51qlHNOCfVb0LQPEtrJNhFIXojyVpvRwYJ5rrIXMcRONRrQjaXzUFDD/PNXjW9K26xDB
-         2kvjaE1ZJgGcUxKk9f2mAF18yyeUt0qTwAirb6EUTciVSwnx8YYNgQlLXMaOUZJwHjC/
-         FXpFYd2yaBvwo9tbaYwxajBSnQ9bx95nTA+uJIqzRnL1uoZqbQbYbFTCLBBeDUBiB4D1
-         QBVg==
-X-Gm-Message-State: APjAAAXKg2BWmq7EL9+jWW1xs3NHPbSaiUgb/WITisnOwV2GJb38KjWM
-        zuD1viSBeyEKmkuEZ2lIhtY=
-X-Google-Smtp-Source: APXvYqy4Hn59t0ekI17MVt+Y8qWWBAiJNPqZFt0pnpZnTV6JsCNM2BYdcPgdWJxS0u9P2NfTOgwjVg==
-X-Received: by 2002:a1c:6585:: with SMTP id z127mr21526065wmb.25.1560795421338;
-        Mon, 17 Jun 2019 11:17:01 -0700 (PDT)
-Received: from [10.67.49.123] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id n14sm4406475wra.75.2019.06.17.11.16.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 11:17:00 -0700 (PDT)
-Subject: Re: [PATCH] perf: Don't hardcode host include path for libslang
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Jiri Olsa <jolsa@redhat.com>
-Cc:     linux-kernel@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Quentin Monnet <quentin.monnet@netronome.com>,
-        Stanislav Fomichev <sdf@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-References: <20190614183949.5588-1-f.fainelli@gmail.com>
- <20190616094605.GB2500@krava> <20190617181115.GC3927@kernel.org>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <fc31608b-768c-80b2-dae8-98b43e62b1b0@gmail.com>
-Date:   Mon, 17 Jun 2019 11:16:50 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190617181115.GC3927@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 14:17:39 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 80AD0150B74C8;
+        Mon, 17 Jun 2019 11:17:38 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 11:17:38 -0700 (PDT)
+Message-Id: <20190617.111738.2016163932115402710.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8BIT
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 17 Jun 2019 11:17:38 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 11:11 AM, Arnaldo Carvalho de Melo wrote:
-> Em Sun, Jun 16, 2019 at 11:46:05AM +0200, Jiri Olsa escreveu:
->> On Fri, Jun 14, 2019 at 11:39:47AM -0700, Florian Fainelli wrote:
->>> Hardcoding /usr/include/slang is fundamentally incompatible with cross
->>> compilation and will lead to the inability for a cross-compiled
->>> environment to properly detect whether slang is available or not.
->>>
->>> If /usr/include/slang is necessary that is a distribution specific
->>> knowledge that could be solved with either a standard pkg-config .pc
->>> file (which slang has) or simply overriding CFLAGS accordingly, but the
->>> default perf Makefile should be clean of all of that.
->>
->> fedora 30 is ok with this, I guess acme's distro test will
->> tell us about the rest ;-)
-> 
-> Seems to be just needless old cruft:
-> 
-> [perfbuilder@7143ebde35eb /]$ cat /etc/redhat-release
-> Fedora release 20 (Heisenbug)
-> [perfbuilder@7143ebde35eb /]$
-> [perfbuilder@7143ebde35eb /]$ ls -la /usr/include/slang.h 
-> -rw-r--r--. 1 root root 87562 Apr 11  2011 /usr/include/slang.h
-> [perfbuilder@7143ebde35eb /]$ ls -la /usr/include/slang/slang.h 
-> lrwxrwxrwx. 1 root root 10 Jun 17 16:41 /usr/include/slang/slang.h -> ../slang.h
-> [perfbuilder@7143ebde35eb /]$ 
-> 
-> So I'm removing that comment:
-> 
->>>      # Fedora has /usr/include/slang/slang.h, but ubuntu /usr/include/slang.h
-> 
-> And adding a:
-> 
-> Fixes: ef7b93a11904 ("perf report: Librarize the annotation code and use it in the newt browser")
 
-OK, I was not sure if you would consider that a worthy fix or not, but
-that works for me.
+Lots of bug fixes here:
 
-> 
-> Will do a build with all the containers and check that the output for
-> all the ones with the slang devel package installed have slang
-> successfully detected.
+1) Out of bounds access in __bpf_skc_lookup, from Lorenz Bauer.
 
-Thanks, let me know if that does not work somehow.
--- 
-Florian
+2) Fix rate reporting in cfg80211_calculate_bitrate_he(), from
+   John Crispin.
+
+3) Use after free in psock backlog workqueue, from John Fastabend.
+
+4) Fix source port matching in fdb peer flow rule of mlx5, from
+   Raed Salem.
+
+5) Use atomic_inc_not_zero() in fl6_sock_lookup(), from Eric Dumazet.
+
+6) Network header needs to be set for packet redirect in nfp, from
+   John Hurley.
+
+7) Fix udp zerocopy refcnt, from Willem de Bruijn.
+
+8) Don't assume linear buffers in vxlan and geneve error handlers,
+   from Stefano Brivio.
+
+9) Fix TOS matching in mlxsw, from Jiri Pirko.
+
+10) More SCTP cookie memory leak fixes, from Neil Horman.
+
+11) Fix VLAN filtering in rtl8366, from Linus Walluij.
+
+12) Various TCP SACK payload size and fragmentation memory limit fixes
+    from Eric Dumazet.
+
+13) Use after free in pneigh_get_next(), also from Eric Dumazet.
+
+14) LAPB control block leak fix from Jeremy Sowden.
+
+Please pull, thanks a lot!
+
+The following changes since commit 1e1d926369545ea09c98c6c7f5d109aa4ee0cd0b:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net (2019-06-07 09:29:14 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/davem/net.git 
+
+for you to fetch changes up to 4fddbf8a99ee5a65bdd31b3ebbf5a84b9395d496:
+
+  Merge branch 'tcp-fixes' (2019-06-17 10:39:56 -0700)
+
+----------------------------------------------------------------
+Alaa Hleihel (2):
+      net/mlx5: Avoid reloading already removed devices
+      net/mlx5e: Avoid detaching non-existing netdev under switchdev mode
+
+Alakesh Haloi (1):
+      selftests: bpf: fix compiler warning in flow_dissector test
+
+Alexander Dahl (1):
+      can: usb: Kconfig: Remove duplicate menu entry
+
+Alexei Starovoitov (3):
+      Merge branch 'reuseport-fixes'
+      Merge branch 'fix-unconnected-udp'
+      bpf, x64: fix stack layout of JITed bpf code
+
+Anders Roxell (1):
+      net: dsa: fix warning same module names
+
+Andy Strohman (1):
+      nl80211: fix station_info pertid memory leak
+
+Anssi Hannula (1):
+      can: xilinx_can: use correct bittiming_const for CAN FD core
+
+Arthur Fabre (1):
+      bpf: Fix out of bounds memory access in bpf_sk_storage
+
+Avraham Stern (1):
+      cfg80211: report measurement start TSF correctly
+
+Björn Töpel (2):
+      bpf, riscv: clear target register high 32-bits for and/or/xor on ALU32
+      selftests: bpf: add zero extend checks for ALU32 and/or/xor
+
+Chang-Hsien Tsai (1):
+      samples, bpf: fix to change the buffer size for read()
+
+Chris Mi (1):
+      net/mlx5e: Add ndo_set_feature for uplink representor
+
+Daniel Borkmann (8):
+      Merge branch 'bpf-subreg-tests'
+      bpf: fix unconnected udp hooks
+      bpf: sync tooling uapi header
+      bpf, libbpf: enable recvmsg attach types
+      bpf, bpftool: enable recvmsg attach types
+      bpf: more msg_name rewrite tests to test_sock_addr
+      bpf: expand section tests for test_section_names
+      Merge branch 'bpf-ppc-div-fix'
+
+David S. Miller (14):
+      Merge tag 'wireless-drivers-for-davem-2019-06-07' of git://git.kernel.org/.../kvalo/wireless-drivers
+      Merge git://git.kernel.org/.../bpf/bpf
+      Merge tag 'linux-can-fixes-for-5.2-20190607' of git://git.kernel.org/.../mkl/linux-can
+      Merge tag 'mlx5-fixes-2019-06-07' of git://git.kernel.org/.../saeed/linux
+      Merge branch 'ibmvnic-Fixes-for-device-reset-handling'
+      Merge branch 'vxlan-geneve-linear'
+      Merge branch 'mlxsw-Various-fixes'
+      Merge branch 'net-mvpp2-prs-Fixes-for-VID-filtering'
+      Merge tag 'mac80211-for-davem-2019-06-14' of git://git.kernel.org/.../jberg/mac80211
+      Merge branch 'qmi_wwan-fix-QMAP-handling'
+      Merge branch 'tcp-add-three-static-keys'
+      Revert "net: phylink: set the autoneg state in phylink_phy_change"
+      Merge git://git.kernel.org/.../bpf/bpf
+      Merge branch 'tcp-fixes'
+
+Dexuan Cui (1):
+      hv_sock: Suppress bogus "may be used uninitialized" warnings
+
+Edward Srouji (1):
+      net/mlx5: Update pci error handler entries and command translation
+
+Eli Britstein (1):
+      net/mlx5e: Support tagged tunnel over bond
+
+Emmanuel Grumbach (1):
+      iwlwifi: fix load in rfkill flow for unified firmware
+
+Enrico Weigelt (1):
+      net: ipv4: fib_semantics: fix uninitialized variable
+
+Eric Biggers (1):
+      cfg80211: fix memory leak of wiphy device name
+
+Eric Dumazet (12):
+      ipv6: flowlabel: fl6_sock_lookup() must use atomic_inc_not_zero
+      sysctl: define proc_do_static_key()
+      tcp: add tcp_rx_skb_cache sysctl
+      tcp: add tcp_tx_skb_cache sysctl
+      net: add high_order_alloc_disable sysctl/static key
+      tcp: limit payload size of sacked skbs
+      tcp: tcp_fragment() should apply sane memory limits
+      tcp: add tcp_min_snd_mss sysctl
+      tcp: enforce tcp_min_snd_mss in tcp_mtu_probing()
+      tcp: fix compile error if !CONFIG_SYSCTL
+      neigh: fix use-after-free read in pneigh_get_next
+      ax25: fix inconsistent lock state in ax25_destroy_timer
+
+Eugen Hristev (1):
+      can: m_can: implement errata "Needless activation of MRAF irq"
+
+Fabio Estevam (1):
+      can: flexcan: Remove unneeded registration message
+
+George Wilkie (1):
+      mpls: fix warning with multi-label encap
+
+Govindarajulu Varadarajan (1):
+      net: handle 802.1P vlan 0 packets properly
+
+Gustavo A. R. Silva (1):
+      mac80211_hwsim: mark expected switch fall-through
+
+Haiyang Zhang (1):
+      hv_netvsc: Set probe mode to sync
+
+Hangbin Liu (1):
+      selftests/bpf: move test_lirc_mode2_user to TEST_GEN_PROGS_EXTENDED
+
+Ido Schimmel (4):
+      mlxsw: spectrum: Use different seeds for ECMP and LAG hash
+      mlxsw: spectrum_router: Refresh nexthop neighbour when it becomes dead
+      selftests: mlxsw: Test nexthop offload indication
+      mlxsw: spectrum: Disallow prio-tagged packets when PVID is removed
+
+Ilya Maximets (1):
+      xdp: check device pointer before clearing
+
+Ioana Ciornei (1):
+      net: phylink: set the autoneg state in phylink_phy_change
+
+Ivan Vecera (1):
+      be2net: Fix number of Rx queues used for flow hashing
+
+Jakub Sitnicki (1):
+      bpf: sockmap, restore sk_write_space when psock gets dropped
+
+Jeremy Sowden (1):
+      lapb: fixed leak of control-blocks.
+
+Jia-Ju Bai (1):
+      iwlwifi: Fix double-free problems in iwl_req_fw_callback()
+
+Jiong Wang (2):
+      selftests: bpf: move sub-register zero extension checks into subreg.c
+      selftests: bpf: complete sub-register zero extension checks
+
+Jiri Pirko (2):
+      mlxsw: spectrum_flower: Fix TOS matching
+      selftests: tc_flower: Add TOS matching test
+
+Joakim Zhang (1):
+      can: flexcan: fix timeout when set small bitrate
+
+Johannes Berg (3):
+      nl80211: fill all policy .type entries
+      iwlwifi: mvm: remove d3_sram debugfs file
+      mac80211: drop robust management frames from unknown TA
+
+John Crispin (1):
+      mac80211: fix rate reporting inside cfg80211_calculate_bitrate_he()
+
+John Fastabend (2):
+      bpf: sockmap, fix use after free from sleep in psock backlog workqueue
+      net: tls, correctly account for copied bytes with multiple sk_msgs
+
+John Hurley (1):
+      nfp: ensure skb network header is set for packet redirect
+
+Jonathan Lemon (1):
+      bpf: lpm_trie: check left child of last leftmost node for NULL
+
+Jouni Malinen (1):
+      mac80211: Do not use stack memory with scatterlist for GMAC
+
+Krzesimir Nowak (1):
+      tools: bpftool: Fix JSON output when lookup fails
+
+Linus Walleij (1):
+      net: dsa: rtl8366: Fix up VLAN filtering
+
+Lior Cohen (1):
+      iwlwifi: mvm: change TLC config cmd sent by rs to be async
+
+Lorenz Bauer (1):
+      bpf: fix out-of-bounds read in __bpf_skc_lookup
+
+Luca Coelho (1):
+      cfg80211: use BIT_ULL in cfg80211_parse_mbssid_data()
+
+Luke Nelson (1):
+      bpf, riscv: clear high 32 bits for ALU32 add/sub/neg/lsh/rsh/arsh
+
+Manikanta Pubbisetty (1):
+      {nl,mac}80211: allow 4addr AP operation on crypto controlled devices
+
+Martin KaFai Lau (4):
+      bpf: Check sk_fullsock() before returning from bpf_sk_lookup()
+      bpf: udp: ipv6: Avoid running reuseport's bpf_prog from __udp6_lib_err
+      bpf: udp: Avoid calling reuseport's bpf_prog from udp_gro
+      bpf: net: Set sk_bpf_storage back to NULL for cloned sk
+
+Martynas Pumputis (2):
+      bpf: simplify definition of BPF_FIB_LOOKUP related flags
+      bpf: sync BPF_FIB_LOOKUP flag changes with BPF uapi
+
+Masanari Iida (1):
+      linux-next: DOC: RDS: Fix a typo in rds.txt
+
+Matt Chen (1):
+      iwlwifi: fix AX201 killer sku loading firmware issue
+
+Matt Mullins (1):
+      bpf: fix nested bpf tracepoints with per-cpu data
+
+Matteo Croce (3):
+      samples, bpf: suppress compiler warning
+      mpls: fix af_mpls dependencies
+      mpls: fix af_mpls dependencies for real
+
+Maxim Mikityanskiy (1):
+      wireless: Skip directory when generating certificates
+
+Maxime Chevallier (3):
+      net: ethtool: Allow matching on vlan DEI bit
+      net: mvpp2: prs: Fix parser range for VID filtering
+      net: mvpp2: prs: Use the correct helpers when removing all VID filters
+
+Michael Schmitz (1):
+      net: phy: rename Asix Electronics PHY driver
+
+Michal Rostecki (1):
+      libbpf: Return btf_fd for load_sk_storage_btf
+
+Mordechay Goodstein (1):
+      cfg80211: util: fix bit count off by one
+
+Naftali Goldstein (1):
+      mac80211: do not start any work during reconfigure flow
+
+Nathan Chancellor (1):
+      rsi: Properly initialize data in rsi_sdio_ta_reset
+
+Naveen N. Rao (2):
+      bpf: fix div64 overflow tests to properly detect errors
+      powerpc/bpf: use unsigned division instruction for 64-bit operations
+
+Neil Horman (1):
+      sctp: Free cookie before we memdup a new one
+
+Petr Machata (1):
+      mlxsw: spectrum_buffers: Reduce pool size on Spectrum-2
+
+Pradeep Kumar Chitrapu (1):
+      mac80211: free peer keys before vif down in mesh
+
+Raed Salem (1):
+      net/mlx5e: Fix source port matching in fdb peer flow rule
+
+Randy Dunlap (1):
+      Documentation/networking: fix af_xdp.rst Sphinx warnings
+
+Reinhard Speyerer (4):
+      qmi_wwan: add support for QMAP padding in the RX path
+      qmi_wwan: add network device usage statistics for qmimux devices
+      qmi_wwan: avoid RCU stalls on device disconnect when in QMAP mode
+      qmi_wwan: extend permitted QMAP mux_id value range
+
+Robert Hancock (1):
+      net: dsa: microchip: Don't try to read stats for unused ports
+
+Russell King - ARM Linux admin (1):
+      net: phylink: further mac_config documentation improvements
+
+Sean Nyekjaer (2):
+      dt-bindings: can: mcp251x: add mcp25625 support
+      can: mcp251x: add support for mcp25625
+
+Shahar S Matityahu (2):
+      iwlwifi: clear persistence bit according to device family
+      iwlwifi: print fseq info upon fw assert
+
+Shay Agroskin (1):
+      net/mlx5e: Replace reciprocal_scale in TX select queue function
+
+Stanislaw Gruszka (2):
+      rtw88: fix subscript above array bounds compiler warning
+      rtw88: avoid circular locking between local->iflist_mtx and rtwdev->mutex
+
+Stefano Brivio (2):
+      vxlan: Don't assume linear buffers in error handler
+      geneve: Don't assume linear buffers in error handler
+
+Stephen Barber (1):
+      vsock/virtio: set SOCK_DONE on peer shutdown
+
+Stephen Suryaputra (1):
+      vrf: Increment Icmp6InMsgs on the original netdev
+
+Taehee Yoo (1):
+      net: openvswitch: do not free vport if register_netdevice() is failed.
+
+Takashi Iwai (3):
+      mwifiex: Fix possible buffer overflows at parsing bss descriptor
+      mwifiex: Abort at too short BSS descriptor element
+      mwifiex: Fix heap overflow in mwifiex_uap_parse_tail_ies()
+
+Thomas Falcon (3):
+      ibmvnic: Do not close unopened driver during reset
+      ibmvnic: Refresh device multicast list after reset
+      ibmvnic: Fix unchecked return codes of memory allocations
+
+Thomas Pedersen (1):
+      mac80211: mesh: fix RCU warning
+
+Toshiaki Makita (3):
+      bpf, devmap: Fix premature entry free on destroying map
+      bpf, devmap: Add missing bulk queue free
+      bpf, devmap: Add missing RCU read lock on flush
+
+Vlad Buslov (1):
+      net: sched: flower: don't call synchronize_rcu() on mask creation
+
+Willem de Bruijn (2):
+      can: purge socket error queue on sock destruct
+      net: correct udp zerocopy refcnt also when zerocopy only on append
+
+Xin Long (1):
+      tipc: purge deferredq list for each grp member in tipc_group_delete
+
+Yan-Hsuan Chuang (1):
+      rtw88: fix unassigned rssi_level in rtw_sta_info
+
+Yibo Zhao (1):
+      mac80211: only warn once on chanctx_conf being NULL
+
+Young Xiao (1):
+      nfc: Ensure presence of required attributes in the deactivate_target handler
+
+Yu Wang (1):
+      mac80211: handle deauthentication/disassociation from TDLS peer
+
+Yuchung Cheng (1):
+      tcp: fix undo spurious SYNACK in passive Fast Open
+
+YueHaibing (3):
+      mac80211: remove set but not used variable 'old'
+      rtw88: Make some symbols static
+      can: af_can: Fix error path of can_init()
+
+ Documentation/ABI/testing/sysfs-class-net-qmi      |   4 +-
+ .../bindings/net/can/microchip,mcp251x.txt         |   1 +
+ Documentation/networking/af_xdp.rst                |   8 +-
+ Documentation/networking/ip-sysctl.txt             |  16 +
+ Documentation/networking/rds.txt                   |   2 +-
+ arch/powerpc/include/asm/ppc-opcode.h              |   1 +
+ arch/powerpc/net/bpf_jit.h                         |   2 +-
+ arch/powerpc/net/bpf_jit_comp64.c                  |   8 +-
+ arch/riscv/net/bpf_jit_comp.c                      |  24 +
+ arch/x86/net/bpf_jit_comp.c                        |  74 +--
+ drivers/net/can/flexcan.c                          |   5 +-
+ drivers/net/can/m_can/m_can.c                      |  21 +
+ drivers/net/can/spi/Kconfig                        |   5 +-
+ drivers/net/can/spi/mcp251x.c                      |  25 +-
+ drivers/net/can/usb/Kconfig                        |   6 -
+ drivers/net/can/xilinx_can.c                       |   2 +-
+ drivers/net/dsa/Makefile                           |   4 +-
+ drivers/net/dsa/microchip/ksz_common.c             |   3 +
+ .../net/dsa/{realtek-smi.c => realtek-smi-core.c}  |   2 +-
+ .../net/dsa/{realtek-smi.h => realtek-smi-core.h}  |   0
+ drivers/net/dsa/rtl8366.c                          |   9 +-
+ drivers/net/dsa/rtl8366rb.c                        |   2 +-
+ drivers/net/ethernet/8390/Kconfig                  |   2 +-
+ drivers/net/ethernet/emulex/benet/be_ethtool.c     |   2 +-
+ drivers/net/ethernet/ibm/ibmvnic.c                 |  19 +-
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c     |  23 +-
+ drivers/net/ethernet/mellanox/mlx5/core/cmd.c      |   8 +
+ drivers/net/ethernet/mellanox/mlx5/core/dev.c      |  25 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en.h       |   2 +
+ .../net/ethernet/mellanox/mlx5/core/en/tc_tun.c    |  11 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c  |   9 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_rep.c   |  10 +-
+ drivers/net/ethernet/mellanox/mlx5/core/en_tc.c    |   3 -
+ drivers/net/ethernet/mellanox/mlx5/core/en_tx.c    |  12 +-
+ drivers/net/ethernet/mellanox/mlxsw/reg.h          |   2 +-
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c     |   5 +-
+ .../net/ethernet/mellanox/mlxsw/spectrum_buffers.c |   4 +-
+ .../net/ethernet/mellanox/mlxsw/spectrum_flower.c  |   4 +-
+ .../net/ethernet/mellanox/mlxsw/spectrum_router.c  |  73 ++-
+ .../net/ethernet/netronome/nfp/nfp_net_common.c    |   1 +
+ drivers/net/geneve.c                               |   2 +-
+ drivers/net/hyperv/netvsc_drv.c                    |   2 +-
+ drivers/net/phy/Kconfig                            |   2 +-
+ drivers/net/phy/Makefile                           |   2 +-
+ drivers/net/phy/{asix.c => ax88796b.c}             |   0
+ drivers/net/usb/qmi_wwan.c                         | 103 +++-
+ drivers/net/vxlan.c                                |   2 +-
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c        |  39 ++
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.h        |   2 +
+ drivers/net/wireless/intel/iwlwifi/iwl-drv.c       |   1 -
+ drivers/net/wireless/intel/iwlwifi/iwl-prph.h      |  22 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/d3.c        |  22 -
+ drivers/net/wireless/intel/iwlwifi/mvm/debugfs.c   |  57 ---
+ drivers/net/wireless/intel/iwlwifi/mvm/fw.c        |  23 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c  |   2 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/mvm.h       |   4 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/ops.c       |  20 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/rs-fw.c     |   3 +-
+ drivers/net/wireless/intel/iwlwifi/mvm/utils.c     |   2 +
+ drivers/net/wireless/intel/iwlwifi/pcie/internal.h |   2 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c    |  53 +-
+ drivers/net/wireless/mac80211_hwsim.c              |   1 +
+ drivers/net/wireless/marvell/mwifiex/ie.c          |  47 +-
+ drivers/net/wireless/marvell/mwifiex/scan.c        |  19 +
+ drivers/net/wireless/realtek/rtw88/fw.c            |   6 +-
+ drivers/net/wireless/realtek/rtw88/main.c          |   3 +-
+ drivers/net/wireless/realtek/rtw88/phy.c           |  22 +-
+ drivers/net/wireless/rsi/rsi_91x_sdio.c            |  21 +-
+ include/linux/bpf-cgroup.h                         |   8 +
+ include/linux/bpf.h                                |   1 -
+ include/linux/phylink.h                            |  13 +-
+ include/linux/skmsg.h                              |   2 +
+ include/linux/sysctl.h                             |   3 +
+ include/linux/tcp.h                                |   4 +
+ include/net/addrconf.h                             |  16 +
+ include/net/cfg80211.h                             |   3 +-
+ include/net/flow_dissector.h                       |   1 +
+ include/net/netns/ipv4.h                           |   1 +
+ include/net/sock.h                                 |  12 +-
+ include/net/tcp.h                                  |   2 +
+ include/uapi/linux/bpf.h                           |   6 +-
+ include/uapi/linux/snmp.h                          |   1 +
+ kernel/bpf/core.c                                  |   1 -
+ kernel/bpf/devmap.c                                |   9 +-
+ kernel/bpf/lpm_trie.c                              |   9 +-
+ kernel/bpf/syscall.c                               |   8 +
+ kernel/bpf/verifier.c                              |  12 +-
+ kernel/sysctl.c                                    |  44 +-
+ kernel/trace/bpf_trace.c                           | 100 +++-
+ net/ax25/ax25_route.c                              |   2 +
+ net/can/af_can.c                                   |  25 +-
+ net/core/bpf_sk_storage.c                          |   3 +-
+ net/core/dev.c                                     |  30 +-
+ net/core/ethtool.c                                 |   5 +
+ net/core/filter.c                                  |  26 +-
+ net/core/neighbour.c                               |   7 +
+ net/core/skbuff.c                                  |   1 +
+ net/core/sock.c                                    |   7 +-
+ net/core/sysctl_net_core.c                         |   7 +
+ net/ipv4/fib_semantics.c                           |   2 +-
+ net/ipv4/ip_output.c                               |   2 +-
+ net/ipv4/proc.c                                    |   1 +
+ net/ipv4/sysctl_net_ipv4.c                         |  23 +
+ net/ipv4/tcp.c                                     |   6 +
+ net/ipv4/tcp_input.c                               |  28 +-
+ net/ipv4/tcp_ipv4.c                                |   1 +
+ net/ipv4/tcp_output.c                              |  10 +-
+ net/ipv4/tcp_timer.c                               |   1 +
+ net/ipv4/udp.c                                     |  10 +-
+ net/ipv6/icmp.c                                    |  17 +-
+ net/ipv6/ip6_flowlabel.c                           |   7 +-
+ net/ipv6/ip6_output.c                              |   2 +-
+ net/ipv6/reassembly.c                              |   4 +-
+ net/ipv6/udp.c                                     |   8 +-
+ net/lapb/lapb_iface.c                              |   1 +
+ net/mac80211/ieee80211_i.h                         |  12 +-
+ net/mac80211/key.c                                 |   2 -
+ net/mac80211/mesh.c                                |   6 +-
+ net/mac80211/mlme.c                                |  12 +-
+ net/mac80211/rx.c                                  |   2 +
+ net/mac80211/tdls.c                                |  23 +
+ net/mac80211/util.c                                |   8 +-
+ net/mac80211/wpa.c                                 |   7 +-
+ net/mpls/Kconfig                                   |   1 +
+ net/mpls/mpls_iptunnel.c                           |   2 +-
+ net/nfc/netlink.c                                  |   3 +-
+ net/openvswitch/vport-internal_dev.c               |  18 +-
+ net/sched/cls_flower.c                             |  34 +-
+ net/sctp/sm_make_chunk.c                           |   8 +
+ net/tipc/group.c                                   |   1 +
+ net/tls/tls_sw.c                                   |   1 -
+ net/vmw_vsock/hyperv_transport.c                   |   4 +-
+ net/vmw_vsock/virtio_transport_common.c            |   4 +-
+ net/wireless/Makefile                              |   1 +
+ net/wireless/core.c                                |   8 +-
+ net/wireless/nl80211.c                             |  99 +++-
+ net/wireless/pmsr.c                                |   4 +-
+ net/wireless/scan.c                                |   4 +-
+ net/wireless/util.c                                |   4 +-
+ net/xdp/xdp_umem.c                                 |  11 +-
+ samples/bpf/bpf_load.c                             |   2 +-
+ samples/bpf/task_fd_query_user.c                   |   2 +-
+ tools/bpf/bpftool/Documentation/bpftool-cgroup.rst |   6 +-
+ tools/bpf/bpftool/Documentation/bpftool-prog.rst   |   2 +-
+ tools/bpf/bpftool/bash-completion/bpftool          |   5 +-
+ tools/bpf/bpftool/cgroup.c                         |   5 +-
+ tools/bpf/bpftool/map.c                            |   2 +
+ tools/bpf/bpftool/prog.c                           |   3 +-
+ tools/include/uapi/linux/bpf.h                     |   6 +-
+ tools/lib/bpf/libbpf.c                             |  32 +-
+ tools/lib/bpf/libbpf_internal.h                    |   4 +-
+ tools/lib/bpf/libbpf_probes.c                      |  13 +-
+ tools/testing/selftests/bpf/Makefile               |   7 +-
+ .../selftests/bpf/prog_tests/flow_dissector.c      |   1 +
+ tools/testing/selftests/bpf/test_lpm_map.c         |  41 +-
+ tools/testing/selftests/bpf/test_section_names.c   |  10 +
+ tools/testing/selftests/bpf/test_sock_addr.c       | 213 +++++++-
+ .../testing/selftests/bpf/verifier/div_overflow.c  |  14 +-
+ tools/testing/selftests/bpf/verifier/subreg.c      | 533 +++++++++++++++++++++
+ .../selftests/drivers/net/mlxsw/rtnetlink.sh       |  47 ++
+ .../testing/selftests/net/forwarding/tc_flower.sh  |  36 +-
+ 161 files changed, 2139 insertions(+), 539 deletions(-)
+ rename drivers/net/dsa/{realtek-smi.c => realtek-smi-core.c} (99%)
+ rename drivers/net/dsa/{realtek-smi.h => realtek-smi-core.h} (100%)
+ rename drivers/net/phy/{asix.c => ax88796b.c} (100%)
+ create mode 100644 tools/testing/selftests/bpf/verifier/subreg.c
