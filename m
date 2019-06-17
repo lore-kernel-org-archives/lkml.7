@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CDEC31E58
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7D14C46477
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBBDC2084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBA9A20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:28:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="oLig9/TE"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lr8ynP2g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728200AbfFQM21 (ORCPT
+        id S1728263AbfFQM2c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:28:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43506 "EHLO
+        Mon, 17 Jun 2019 08:28:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44184 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbfFQM2Z (ORCPT
+        with ESMTP id S1728233AbfFQM2a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:28:25 -0400
+        Mon, 17 Jun 2019 08:28:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=rfiOsXsxRAZCFDVo21abTS19/9zGASI6nRdrjMvZ5Iw=; b=oLig9/TEaZEXPR+t7+dEa5tPGZ
-        RpcPa/hgJAoKo4WO6XIcMV1sCs82yI/lf9OjzRWEj+XFibg0CgidALCirzn9I/Ux8nEqBtGYl0Qhp
-        UjkLcxgYpbFIOCt2hu8a+nzyW05x/LYTS/62NJNSg1oHibCDD2QPN0COJRNN2zrq9SkAjfzaA6Lr+
-        zYAG9oM+7PFTegy2bOQY0pdWVMTOTKk33rjMgeztaj1iyS1JvSCd/oKCL5f0rojkYJR/4cRDYuLKc
-        J4VWWF9tGqI6teBCMBGayYjyd6VOGU6+ryOE8y398cTseQsF6pbV13QaK/gGJKuNaKx6HgHODXtXL
-        AcMMPXXQ==;
+        bh=0yZBn1Jd+ueRQDmZpJ4SByMI24Y/dLErXZNb3pgx5jo=; b=Lr8ynP2g3Y92KKaQ59/yF3NTjZ
+        TWvdMWe/bvOmY4QOoQsr0PAX4STArOCo7mEUi5ObiE2nDvaD0ED1Se4EHb9iG6anywYQJKqI/EoND
+        3Stjx5oQyNFSGChcyE3FdbOUC6Vh4H22DHJFnNSOXAxsQPCXYPLk2oa3qawqsH6SF17xDKXt4gqT7
+        xRfQ6shEPBOeiXVoxuRIxQWgpjUzdiE4obV9yA0SFl92XkHvzIBK7uHvv5zVWETiOks0YpUrBkFuD
+        ihfRs3rPAff7QWBnfqpn0u3FoUBDU7IvFBozznUeNQiQHB9Bu2g0gCk43wHfVG6TxCN6mY5jxGVfX
+        r67td82A==;
 Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcqkF-0000KX-9f; Mon, 17 Jun 2019 12:28:19 +0000
+        id 1hcqkM-0000Td-4M; Mon, 17 Jun 2019 12:28:26 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     Dan Williams <dan.j.williams@intel.com>,
         =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
@@ -46,9 +46,9 @@ To:     Dan Williams <dan.j.williams@intel.com>,
 Cc:     linux-mm@kvack.org, nouveau@lists.freedesktop.org,
         dri-devel@lists.freedesktop.org, linux-nvdimm@lists.01.org,
         linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 19/25] mm: remove hmm_vma_alloc_locked_page
-Date:   Mon, 17 Jun 2019 14:27:27 +0200
-Message-Id: <20190617122733.22432-20-hch@lst.de>
+Subject: [PATCH 22/25] mm: simplify ZONE_DEVICE page private data
+Date:   Mon, 17 Jun 2019 14:27:30 +0200
+Message-Id: <20190617122733.22432-23-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190617122733.22432-1-hch@lst.de>
 References: <20190617122733.22432-1-hch@lst.de>
@@ -60,54 +60,147 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only user of it has just been removed, and there wasn't really any need
-to wrap a basic memory allocator to start with.
+Remove the clumsy hmm_devmem_page_{get,set}_drvdata helpers, and
+instead just access the page directly.  Also make the page data
+a void pointer, and thus much easier to use.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 ---
- include/linux/hmm.h |  3 ---
- mm/hmm.c            | 14 --------------
- 2 files changed, 17 deletions(-)
+ drivers/gpu/drm/nouveau/nouveau_dmem.c | 18 +++++++----------
+ include/linux/hmm.h                    | 27 --------------------------
+ include/linux/mm_types.h               |  2 +-
+ mm/page_alloc.c                        |  8 ++++----
+ 4 files changed, 12 insertions(+), 43 deletions(-)
 
+diff --git a/drivers/gpu/drm/nouveau/nouveau_dmem.c b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+index 0fb7a44b8bc4..42c026010938 100644
+--- a/drivers/gpu/drm/nouveau/nouveau_dmem.c
++++ b/drivers/gpu/drm/nouveau/nouveau_dmem.c
+@@ -104,11 +104,8 @@ struct nouveau_migrate {
+ 
+ static void nouveau_dmem_page_free(struct page *page)
+ {
+-	struct nouveau_dmem_chunk *chunk;
+-	unsigned long idx;
+-
+-	chunk = (void *)hmm_devmem_page_get_drvdata(page);
+-	idx = page_to_pfn(page) - chunk->pfn_first;
++	struct nouveau_dmem_chunk *chunk = page->zone_device_data;
++	unsigned long idx = page_to_pfn(page) - chunk->pfn_first;
+ 
+ 	/*
+ 	 * FIXME:
+@@ -200,7 +197,7 @@ nouveau_dmem_fault_alloc_and_copy(struct vm_area_struct *vma,
+ 
+ 		dst_addr = fault->dma[fault->npages++];
+ 
+-		chunk = (void *)hmm_devmem_page_get_drvdata(spage);
++		chunk = spage->zone_device_data;
+ 		src_addr = page_to_pfn(spage) - chunk->pfn_first;
+ 		src_addr = (src_addr << PAGE_SHIFT) + chunk->bo->bo.offset;
+ 
+@@ -633,9 +630,8 @@ nouveau_dmem_init(struct nouveau_drm *drm)
+ 		list_add_tail(&chunk->list, &drm->dmem->chunk_empty);
+ 
+ 		page = pfn_to_page(chunk->pfn_first);
+-		for (j = 0; j < DMEM_CHUNK_NPAGES; ++j, ++page) {
+-			hmm_devmem_page_set_drvdata(page, (long)chunk);
+-		}
++		for (j = 0; j < DMEM_CHUNK_NPAGES; ++j, ++page)
++			page->zone_device_data = chunk;
+ 	}
+ 
+ 	NV_INFO(drm, "DMEM: registered %ldMB of device memory\n", size >> 20);
+@@ -698,7 +694,7 @@ nouveau_dmem_migrate_alloc_and_copy(struct vm_area_struct *vma,
+ 		if (!dpage || dst_pfns[i] == MIGRATE_PFN_ERROR)
+ 			continue;
+ 
+-		chunk = (void *)hmm_devmem_page_get_drvdata(dpage);
++		chunk = dpage->zone_device_data;
+ 		dst_addr = page_to_pfn(dpage) - chunk->pfn_first;
+ 		dst_addr = (dst_addr << PAGE_SHIFT) + chunk->bo->bo.offset;
+ 
+@@ -862,7 +858,7 @@ nouveau_dmem_convert_pfn(struct nouveau_drm *drm,
+ 			continue;
+ 		}
+ 
+-		chunk = (void *)hmm_devmem_page_get_drvdata(page);
++		chunk = page->zone_device_data;
+ 		addr = page_to_pfn(page) - chunk->pfn_first;
+ 		addr = (addr + chunk->bo->bo.mem.start) << PAGE_SHIFT;
+ 
 diff --git a/include/linux/hmm.h b/include/linux/hmm.h
-index e64824334b85..89571e8d9c63 100644
+index 50ef29958604..454be41f2eaf 100644
 --- a/include/linux/hmm.h
 +++ b/include/linux/hmm.h
-@@ -589,9 +589,6 @@ static inline void hmm_mm_init(struct mm_struct *mm) {}
- #if IS_ENABLED(CONFIG_DEVICE_PRIVATE) ||  IS_ENABLED(CONFIG_DEVICE_PUBLIC)
- struct hmm_devmem;
+@@ -586,33 +586,6 @@ static inline void hmm_mm_destroy(struct mm_struct *mm) {}
+ static inline void hmm_mm_init(struct mm_struct *mm) {}
+ #endif /* IS_ENABLED(CONFIG_HMM_MIRROR) */
  
--struct page *hmm_vma_alloc_locked_page(struct vm_area_struct *vma,
--				       unsigned long addr);
--
- /*
-  * struct hmm_devmem_ops - callback for ZONE_DEVICE memory events
-  *
-diff --git a/mm/hmm.c b/mm/hmm.c
-index 307c12d7531c..0ef1a1921afb 100644
---- a/mm/hmm.c
-+++ b/mm/hmm.c
-@@ -1327,20 +1327,6 @@ EXPORT_SYMBOL(hmm_range_dma_unmap);
- 
- 
- #if IS_ENABLED(CONFIG_DEVICE_PRIVATE) ||  IS_ENABLED(CONFIG_DEVICE_PUBLIC)
--struct page *hmm_vma_alloc_locked_page(struct vm_area_struct *vma,
--				       unsigned long addr)
+-#if IS_ENABLED(CONFIG_DEVICE_PRIVATE) ||  IS_ENABLED(CONFIG_DEVICE_PUBLIC)
+-/*
+- * hmm_devmem_page_set_drvdata - set per-page driver data field
+- *
+- * @page: pointer to struct page
+- * @data: driver data value to set
+- *
+- * Because page can not be on lru we have an unsigned long that driver can use
+- * to store a per page field. This just a simple helper to do that.
+- */
+-static inline void hmm_devmem_page_set_drvdata(struct page *page,
+-					       unsigned long data)
 -{
--	struct page *page;
--
--	page = alloc_page_vma(GFP_HIGHUSER, vma, addr);
--	if (!page)
--		return NULL;
--	lock_page(page);
--	return page;
+-	page->hmm_data = data;
 -}
--EXPORT_SYMBOL(hmm_vma_alloc_locked_page);
 -
--
- static void hmm_devmem_ref_release(struct percpu_ref *ref)
- {
- 	struct hmm_devmem *devmem;
+-/*
+- * hmm_devmem_page_get_drvdata - get per page driver data field
+- *
+- * @page: pointer to struct page
+- * Return: driver data value
+- */
+-static inline unsigned long hmm_devmem_page_get_drvdata(const struct page *page)
+-{
+-	return page->hmm_data;
+-}
+-#endif /* CONFIG_DEVICE_PRIVATE || CONFIG_DEVICE_PUBLIC */
+ #else /* IS_ENABLED(CONFIG_HMM) */
+ static inline void hmm_mm_destroy(struct mm_struct *mm) {}
+ static inline void hmm_mm_init(struct mm_struct *mm) {}
+diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
+index 8ec38b11b361..f33a1289c101 100644
+--- a/include/linux/mm_types.h
++++ b/include/linux/mm_types.h
+@@ -158,7 +158,7 @@ struct page {
+ 		struct {	/* ZONE_DEVICE pages */
+ 			/** @pgmap: Points to the hosting device page map. */
+ 			struct dev_pagemap *pgmap;
+-			unsigned long hmm_data;
++			void *zone_device_data;
+ 			unsigned long _zd_pad_1;	/* uses mapping */
+ 		};
+ 
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 17a39d40a556..c0e031c52db5 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5886,12 +5886,12 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ 		__SetPageReserved(page);
+ 
+ 		/*
+-		 * ZONE_DEVICE pages union ->lru with a ->pgmap back
+-		 * pointer and hmm_data.  It is a bug if a ZONE_DEVICE
+-		 * page is ever freed or placed on a driver-private list.
++		 * ZONE_DEVICE pages union ->lru with a ->pgmap back pointer
++		 * and zone_device_data.  It is a bug if a ZONE_DEVICE page is
++		 * ever freed or placed on a driver-private list.
+ 		 */
+ 		page->pgmap = pgmap;
+-		page->hmm_data = 0;
++		page->zone_device_data = NULL;
+ 
+ 		/*
+ 		 * Mark the block movable so that blocks are reserved for
 -- 
 2.20.1
 
