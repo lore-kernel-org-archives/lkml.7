@@ -2,113 +2,85 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E3BBC31E54
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:44:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47035C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6065E21995
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:44:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aPPH25yI";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="aPPH25yI"
+	by mail.kernel.org (Postfix) with ESMTP id 29EE321995
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfFQHoY (ORCPT
+        id S1727151AbfFQHpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:44:24 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:34880 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfFQHoX (ORCPT
+        Mon, 17 Jun 2019 03:45:06 -0400
+Received: from albert.telenet-ops.be ([195.130.137.90]:48536 "EHLO
+        albert.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726183AbfFQHpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:44:23 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E3E6460A44; Mon, 17 Jun 2019 07:44:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560757462;
-        bh=Aenf+RXfbj5RyVkcFJ9IyGNg4Qewwd+uSbm54mHar40=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=aPPH25yIRrzE1LFahKN8Lh5dxfRHYl+Y7UyF9Qm6o92zBPiSrNw6zj1DBg32PDrfa
-         +bpio/2cwWakTG2A/aQpsZwRGKI8ZTVJb5lH7KUJvtNiskh4UTpOxNdJlP/g1KbtSB
-         BToLNB+1clr0ByeaN2sdcGys3VY92ZSpMA0QkU+4=
-Received: from x230.qca.qualcomm.com (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2A50A602DD;
-        Mon, 17 Jun 2019 07:44:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560757462;
-        bh=Aenf+RXfbj5RyVkcFJ9IyGNg4Qewwd+uSbm54mHar40=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=aPPH25yIRrzE1LFahKN8Lh5dxfRHYl+Y7UyF9Qm6o92zBPiSrNw6zj1DBg32PDrfa
-         +bpio/2cwWakTG2A/aQpsZwRGKI8ZTVJb5lH7KUJvtNiskh4UTpOxNdJlP/g1KbtSB
-         BToLNB+1clr0ByeaN2sdcGys3VY92ZSpMA0QkU+4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2A50A602DD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Nathan Huckleberry <nhuck@google.com>, eliad@wizery.com,
-        arik@wizery.com, "David S. Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] wl18xx: Fix Wunused-const-variable
-References: <20190614171713.89262-1-nhuck@google.com>
-        <CAKwvOd=jFYn=7NGPD8UDx3_g30qD+40bCjzmWJJSzmb6pNUusQ@mail.gmail.com>
-Date:   Mon, 17 Jun 2019 10:44:18 +0300
-In-Reply-To: <CAKwvOd=jFYn=7NGPD8UDx3_g30qD+40bCjzmWJJSzmb6pNUusQ@mail.gmail.com>
-        (Nick Desaulniers's message of "Fri, 14 Jun 2019 13:54:16 -0700")
-Message-ID: <87h88ofygd.fsf@codeaurora.org>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
-MIME-Version: 1.0
-Content-Type: text/plain
+        Mon, 17 Jun 2019 03:45:05 -0400
+Received: from ramsan ([84.194.111.163])
+        by albert.telenet-ops.be with bizsmtp
+        id Rjkv2000S3XaVaC06jkvPh; Mon, 17 Jun 2019 09:45:03 +0200
+Received: from rox.of.borg ([192.168.97.57])
+        by ramsan with esmtp (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hcmJy-0000To-Bl; Mon, 17 Jun 2019 09:44:54 +0200
+Received: from geert by rox.of.borg with local (Exim 4.90_1)
+        (envelope-from <geert@linux-m68k.org>)
+        id 1hcmJy-0003Ms-AA; Mon, 17 Jun 2019 09:44:54 +0200
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+To:     Nayna Jain <nayna@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>
+Cc:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] integrity: Fix __integrity_init_keyring() section mismatch
+Date:   Mon, 17 Jun 2019 09:44:52 +0200
+Message-Id: <20190617074452.12901-1-geert@linux-m68k.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nick Desaulniers <ndesaulniers@google.com> writes:
+With gcc-4.6.3:
 
-> On Fri, Jun 14, 2019 at 10:17 AM 'Nathan Huckleberry' via Clang Built
-> Linux <clang-built-linux@googlegroups.com> wrote:
->>
->> Clang produces the following warning
->>
->> drivers/net/wireless/ti/wl18xx/main.c:1850:43: warning: unused variable
->> 'wl18xx_iface_ap_cl_limits' [-Wunused-const-variable] static const struct
->> ieee80211_iface_limit wl18xx_iface_ap_cl_limits[] = { ^
->> drivers/net/wireless/ti/wl18xx/main.c:1869:43: warning: unused variable
->> 'wl18xx_iface_ap_go_limits' [-Wunused-const-variable] static const struct
->> ieee80211_iface_limit wl18xx_iface_ap_go_limits[] = { ^
->>
->> The commit that added these variables never used them. Removing them.
->
-> Previous thread, for context:
-> https://groups.google.com/forum/#!topic/clang-built-linux/1Lu1GT9ic94
->
-> Looking at drivers/net/wireless/ti/wl18xx/main.c, there 4 globally
-> declared `struct ieee80211_iface_limit` but as your patch notes, only
-> 2 are used.  The thing is, their uses are in a `struct
-> ieee80211_iface_limit []`.
->
-> Looking at
-> $ git blame drivers/net/wireless/ti/wl18xx/main.c -L 1850
-> points to
-> commit 7845af35e0de ("wlcore: add p2p device support")
-> Adding Eliad and Arik to the thread; it's not clear to me what the
-> these variables were supposed to do, but seeing as the code in
-> question was already dead, this is no functional change from a user's
-> perspective.  With that in mind:
-> Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
->
-> So I'd at least add the tag.
-> Fixes: 7845af35e0de ("wlcore: add p2p device support")
+    WARNING: vmlinux.o(.text.unlikely+0x24c64): Section mismatch in reference from the function __integrity_init_keyring() to the function .init.text:set_platform_trusted_keys()
+    The function __integrity_init_keyring() references
+    the function __init set_platform_trusted_keys().
+    This is often because __integrity_init_keyring lacks a __init
+    annotation or the annotation of set_platform_trusted_keys is wrong.
 
-I can't see any functional changes when applying this patch so I don't
-think a fixes line is needed, it's just cleanup.
+Indeed, if the compiler decides not to inline __integrity_init_keyring(),
+a warning is issued.
 
+Fix this by adding the missing __init annotation.
+
+Fixes: 9dc92c45177ab70e ("integrity: Define a trusted platform keyring")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+---
+ security/integrity/digsig.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
+index 4582bc26770a34a7..868ade3e89702ba7 100644
+--- a/security/integrity/digsig.c
++++ b/security/integrity/digsig.c
+@@ -69,8 +69,9 @@ int integrity_digsig_verify(const unsigned int id, const char *sig, int siglen,
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static int __integrity_init_keyring(const unsigned int id, key_perm_t perm,
+-				    struct key_restriction *restriction)
++static int __init __integrity_init_keyring(const unsigned int id,
++					   key_perm_t perm,
++					   struct key_restriction *restriction)
+ {
+ 	const struct cred *cred = current_cred();
+ 	int err = 0;
 -- 
-Kalle Valo
+2.17.1
+
