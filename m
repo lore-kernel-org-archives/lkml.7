@@ -2,90 +2,187 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F7B9C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:42:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9A3DC31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DDD6920861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:42:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="gPDVRhlC"
+	by mail.kernel.org (Postfix) with ESMTP id 88FE220861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:42:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726412AbfFQLmv (ORCPT
+        id S1726622AbfFQLm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:42:51 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60286 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfFQLmv (ORCPT
+        Mon, 17 Jun 2019 07:42:56 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:40640 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfFQLmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:42:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4uszJW00MODBjLK3L9wrcqUIoc45r8Ir10eLVpVl2Kk=; b=gPDVRhlClpc6vL5KHnB5+THL+
-        dcvJSR3h1g6Xr1fwzhbaEHSG6u0i7bjNgmdjzykCcbWELfBs1OD78S/rzgEMplbIbyu42cAps1nyR
-        oi9JzKNaWAA0ZfoTAT+UTq4ReQ1V2asfihQFgcsnyMaE96jpgRIToKBBOJ04jseQ+WXlBrc1X2U0c
-        Ld5YBRbJ+F+VrBcCki0pBjCCbKqVIejMEpGNGnykLHJ/+ifilpov8Ud4BG4ryRZqlnNEqFQcfqBsu
-        5HulMMsZJu7LJnWviuSAp24Lq5Fqm+BC9WAkzbaG8kFsQoBeYm4JbC7vVWZXAjdVt5t9yI3nCZ2Km
-        90K56tu4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hcq28-0006yv-1r; Mon, 17 Jun 2019 11:42:44 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 49F5C201D1C97; Mon, 17 Jun 2019 13:42:41 +0200 (CEST)
-Date:   Mon, 17 Jun 2019 13:42:41 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     "Liang, Kan" <kan.liang@linux.intel.com>,
-        Stephane Eranian <eranian@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 6/8] perf/x86/rapl: Get msr values from new probe
- framework
-Message-ID: <20190617114241.GC3419@hirez.programming.kicks-ass.net>
-References: <20190616140358.27799-1-jolsa@kernel.org>
- <20190616140358.27799-7-jolsa@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190616140358.27799-7-jolsa@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 17 Jun 2019 07:42:55 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hcq22-0003pC-6x; Mon, 17 Jun 2019 13:42:38 +0200
+Message-ID: <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Arnd Bergmann <arnd@arndb.de>, Dan Williams <dcbw@redhat.com>
+Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
+        Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        syadagir@codeaurora.org
+Date:   Mon, 17 Jun 2019 13:42:36 +0200
+In-Reply-To: <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com> (sfid-20190612_170637_190349_3B0027EE)
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+         (sfid-20190612_170637_190349_3B0027EE)
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 04:03:56PM +0200, Jiri Olsa wrote:
+On Wed, 2019-06-12 at 17:06 +0200, Arnd Bergmann wrote:
+> On Wed, Jun 12, 2019 at 4:28 PM Dan Williams <dcbw@redhat.com> wrote:
+> > On Wed, 2019-06-12 at 10:31 +0200, Arnd Bergmann wrote:
+> > > On Tue, Jun 11, 2019 at 7:23 PM Dan Williams <dcbw@redhat.com> wrote:
+> > 
+> > I was trying to make the point that rmnet doesn't need to care about
+> > how the QMAP packets get to the device itself; it can be pretty generic
+> > so that it can be used by IPA/qmi_wwan/rmnet_smd/etc.
+> 
+> rmnet at the moment is completely generic in that regard already,
+> however it is implemented as a tunnel driver talking to another
+> device rather than an abstraction layer below that driver.
 
-> +	cfg = array_index_nospec(cfg, NR_RAPL_DOMAINS + 1);
+It doesn't really actually *do* much other than muck with the headers a
+small amount, but even that isn't really much.
 
-This one fails to build on i386. Istr we had issues like that before.
-This makes it build.
+You can probably implement that far more efficiently on some devices
+where you have a semi-decent DMA engine that at least supports S/G.
 
-diff --git a/arch/x86/events/intel/rapl.c b/arch/x86/events/intel/rapl.c
-index ddad45ef8757..64ab51ffdf06 100644
---- a/arch/x86/events/intel/rapl.c
-+++ b/arch/x86/events/intel/rapl.c
-@@ -349,7 +349,7 @@ static int rapl_pmu_event_init(struct perf_event *event)
- 	if (!cfg || cfg >= NR_RAPL_DOMAINS + 1)
- 		return -EINVAL;
- 
--	cfg = array_index_nospec(cfg, NR_RAPL_DOMAINS + 1);
-+	cfg = array_index_nospec((long)cfg, NR_RAPL_DOMAINS + 1);
- 	bit = cfg - 1;
- 
- 	/* check event supported */
+> > > I understand that the rmnet model was intended to provide a cleaner
+> > > abstraction, but it's not how we normally structure subsystems in
+> > > Linux, and moving to a model more like how wireless_dev works
+> > > would improve both readability and performance, as you describe
+> > > it, it would be more like (ignoring for now the need for multiple
+> > > connections):
+> > > 
+> > >    ipa_dev
+> > >         rmnet_dev
+> > >                wwan_dev
+> > >                       net_device
+> > 
+> > Perhaps I'm assuming too much from this diagram but this shows a 1:1
+> > between wwan_dev and "lower" devices.
+
+I guess the fuller picture would be something like
+
+ipa_dev
+	rmnet_dev
+		wwan_dev
+			net_device*
+
+(i.e. with multiple net_devices)
+
+> > What Johannes is proposing (IIRC) is something a bit looser where a
+> > wwan_dev does not necessarily provide netdev itself, but is instead the
+> > central point that various channels (control, data, gps, sim card, etc)
+> > register with. That way the wwan_dev can provide an overall view of the
+> > WWAN device to userspace, and userspace can talk to the wwan_dev to ask
+> > the lower drivers (ipa, rmnet, etc) to create new channels (netdev,
+> > tty, otherwise) when the control channel has told the modem firmware to
+> > expect one.
+
+Yeah, that's more what I had in mind after all our discussions (will
+continue this below).
+
+> Right, as I noted above, I simplified it a bit. We probably want to
+> have multiple net_device instances for an ipa_dev, so there has
+> to be a 1:n relationship instead of 1:1 at one of the intermediate
+> levels, but it's not obvious which level that should be.
+> 
+> In theory we could even have a single net_device instance correspond
+> to the ipa_dev, but then have multiple IP addresses bound to it,
+> so each IP address corresponds to a channel/queue/napi_struct,
+> but the user visible object remains a single device.
+
+I don't think this latter (multiple IP addresses) works well - you want
+a hardware specific header ("ETH_P_MAP") to carry the channel ID,
+without looking up the IP address and all that.
+
+
+But anyway, as I alluded to above, I had something like this in mind:
+
+driver_dev
+  struct device *dev (USB, PCI, ...)
+  net_device NA
+  net_device NB
+  tty TA
+ ...
+
+(I'm cutting out the rmnet layer here for now)
+
+while having a separate that just links all the pieces together:
+
+wwan_device W
+  ---> dev
+  ---> NA
+  ---> NB
+  ---> TA
+
+So the driver is still responsible for creating the netdevs (or can of
+course delegate that to an "rmnet" library), but then all it also does
+is register the netdevs with the WWAN core like
+
+	wwan_add_netdev(dev, NA)
+
+and the WWAN core would allocate the wwan_device W for this.
+
+That way, the drivers can concentrate on providing all the necessary
+bits, and - crucially - even *different* drivers can end up linking to
+the same wwan_device. For example, if you have a modem that has a multi-
+function USB device, then an ethernet driver might create the netdev and
+a tty driver might create the control channel, but if they both agree on
+using the right "struct device" instance, you can still get the correct
+wwan_device out of it all.
+
+And, in fact, some should then be
+
+	wwan_maybe_add_netdev(dev, N)
+
+because the ethernet driver may not know if it attached to a modem or
+not, but if the control channel also attaches it's a modem for sure,
+with that ethernet channel attached to it.
+
+Additionally, I'm thinking API such as
+
+	wwan_add(dev, &ops, opsdata)
+
+that doesn't automatically attach any channels, but provides "ops" to
+the core to create appropriate channels. I think this latter would be
+something for IPA/rmnet to use, perhaps for rmnet to offer the right ops
+structure.
+
+johannes
+
