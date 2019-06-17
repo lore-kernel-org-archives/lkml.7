@@ -2,130 +2,146 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4736FC31E54
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 983A8C31E54
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F73B20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C1DC21873
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:07:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="N5zPEPhq";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k4ofmJu8"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="WCFaSA53"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726253AbfFQEHK (ORCPT
+        id S1726498AbfFQEHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 00:07:10 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47868 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725440AbfFQEHJ (ORCPT
+        Mon, 17 Jun 2019 00:07:45 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:44232 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725440AbfFQEHo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 00:07:09 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id CFBD260779; Mon, 17 Jun 2019 04:07:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560744427;
-        bh=fnXV3qMdXMwHiyNp+B4dIgHawcwKCfrjYzO+/aW82ms=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=N5zPEPhqz4s76LUp4qXdOb5ZhO7paU+yiHqIfbsXW1WLdYhdMbuKoLkv0wUwMKQXy
-         lmHQsEo0utTl1a6oRB6bBUelYXlw4Zl0Sga05zYCKET/ouXcZwQtL+H/LPH9Sv7Opq
-         1cwE2vnWm4pHKg8DVSMss1ueRo3N7pPFDtivHDe0=
-Received: from [10.131.117.43] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 89D7360779;
-        Mon, 17 Jun 2019 04:07:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560744426;
-        bh=fnXV3qMdXMwHiyNp+B4dIgHawcwKCfrjYzO+/aW82ms=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=k4ofmJu8qI7RpsRw+XS/AbEB5+R2R7P9AchQpn/sccKrjcFY2l5PYEmLLiTG4Hy9V
-         XlIODHSfkxOoIXZv0OUmwI/pkEgP3TOKjBPQpX4YugWF5bd17aNlT04aJsIYCy6hl3
-         8OqHQ7sdht6t3V+/X9QjXm3FI4HtAvc86U7spKtE=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 89D7360779
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [RFC v2 01/11] OPP: Don't overwrite rounded clk rate
-To:     Viresh Kumar <viresh.kumar@linaro.org>, swboyd@chromium.org,
-        vincent.guittot@linaro.org, mturquette@baylibre.com
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-scsi@vger.kernel.org, ulf.hansson@linaro.org,
-        dianders@chromium.org, rafael@kernel.org
-References: <20190320094918.20234-1-rnayak@codeaurora.org>
- <20190320094918.20234-2-rnayak@codeaurora.org>
- <20190611105432.x3nzqiib35t6mvyg@vireshk-i7>
- <c173a57d-a4de-99f7-e8d8-28a7612f4ca3@codeaurora.org>
- <20190612082506.m735bsk7bjijf2yg@vireshk-i7>
- <20190613095419.lfjeko7nmxtix2n4@vireshk-i7>
- <20190614052732.4w6vvwwich2h4cgu@vireshk-i7>
- <20190617035058.veo7uwqjrpa6kykt@vireshk-i7>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <a912c8b2-080d-7ab7-670b-b687ec3a2c92@codeaurora.org>
-Date:   Mon, 17 Jun 2019 09:37:02 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 00:07:44 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id E75102DC007F;
+        Mon, 17 Jun 2019 00:07:39 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1560744460;
+        bh=fcIJWb9zFrSz2UB8a7mxef1I4k9iDutEwQyvrCEDLlQ=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=WCFaSA53OEIg+og8L/naQbQPlaTsOoXPKsvTwtmXP2Vk09oVK0XuS5AD3x5/CqLrM
+         G0GIng39m1v0lZ4sKpUf3T99/+YBxM9RX44WLALuhESqgh+r5BAShy10176lEQBE3q
+         DQvd2fgD6zwuDb2r3HtAMEKvNfyGEklzY4KUQ+U+VxMilUgRO+yfLfvjALw1DuedIj
+         U07cuyKZx46E0NJINEB5+8FVHhYvvSWxSY7sKWAoGvSBG/TJ18P0TuXGu+r+H6bH0e
+         aXUQ8ilJHofP52ff/zDalxsvFnS/I19R0WtGSyZHeql8nV+rZAy3ckW9tGr7DubBUl
+         qpbsJvQK16Hb/jOSoEHhPkG1VKXuLKMb1qy/wzkUplRpkQy3lck+ggy2ukzRhUgkqh
+         N1Q6mMJi30A9PGd1HWpWuLWkLg4LedcJItJ961IWPw6XnamogZOK4OajearEtq6Wug
+         Q7fZpUvUrqSKSyRRBPeipKEoLRw/YY+95nWqf7l5GKHjuTC0GylNVU3e6c29Aa3j+X
+         5pRuwG5Xw/zIJlIzmObseyKrpDD4TC7M/3O2j/4ernSmXnXxPfSq1dRv9DqHM2oKIk
+         cA8ovQOzGfvEiJha5fCrgByfWUnR6D8Ngp3/azplb/9QJOs0SiH1pg9yh8F/C3rFek
+         9RkRnoy0sArwZ3E9Df8kzHf0=
+Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5H47CvI055927
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 17 Jun 2019 14:07:28 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+Message-ID: <da2ff58290c4b6f08eb5ac25c288bdd03b5688f7.camel@d-silva.org>
+Subject: Re: [PATCH v3 3/7] lib/hexdump.c: Optionally suppress lines of
+ repeated bytes
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Date:   Mon, 17 Jun 2019 14:07:12 +1000
+In-Reply-To: <20190617020430.8708-4-alastair@au1.ibm.com>
+References: <20190617020430.8708-1-alastair@au1.ibm.com>
+         <20190617020430.8708-4-alastair@au1.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-In-Reply-To: <20190617035058.veo7uwqjrpa6kykt@vireshk-i7>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 17 Jun 2019 14:07:35 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 6/17/2019 9:20 AM, Viresh Kumar wrote:
-> On 14-06-19, 10:57, Viresh Kumar wrote:
->> Hmm, so this patch won't break anything and I am inclined to apply it again :)
->>
->> Does anyone see any other issues with it, which I might be missing ?
+On Mon, 2019-06-17 at 12:04 +1000, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
 > 
-> I have updated the commit log a bit more to clarify on things, please let me
-> know if it looks okay.
+> Some buffers may only be partially filled with useful data, while the
+> rest
+> is padded (typically with 0x00 or 0xff).
 > 
->      opp: Don't overwrite rounded clk rate
->      
->      The OPP table normally contains 'fmax' values corresponding to the
->      voltage or performance levels of each OPP, but we don't necessarily want
->      all the devices to run at fmax all the time. Running at fmax makes sense
->      for devices like CPU/GPU, which have a finite amount of work to do and
->      since a specific amount of energy is consumed at an OPP, its better to
->      run at the highest possible frequency for that voltage value.
->      
->      On the other hand, we have IO devices which need to run at specific
->      frequencies only for their proper functioning, instead of maximum
->      possible frequency.
->      
->      The OPP core currently roundup to the next possible OPP for a frequency
->      and select the fmax value. To support the IO devices by the OPP core,
->      lets do the roundup to fetch the voltage or performance state values,
->      but not use the OPP frequency value. Rather use the value returned by
->      clk_round_rate().
->      
->      The current user, cpufreq, of dev_pm_opp_set_rate() already does the
->      rounding to the next OPP before calling this routine and it won't
->      have any side affects because of this change.
+> This patch introduces a flag to allow the supression of lines of
+> repeated
+> bytes, which are replaced with '** Skipped %u bytes of value 0x%x **'
+> 
+> An inline wrapper function is provided for backwards compatibility
+> with
+> existing code, which maintains the original behaviour.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+>  include/linux/printk.h | 25 +++++++++---
+>  lib/hexdump.c          | 91 ++++++++++++++++++++++++++++++++++++--
+> ----
+>  2 files changed, 99 insertions(+), 17 deletions(-)
+> 
+> diff --git a/include/linux/printk.h b/include/linux/printk.h
+> index cefd374c47b1..d7754799cfe0 100644
+> --- a/include/linux/printk.h
+> +++ b/include/linux/printk.h
+> @@ -481,13 +481,18 @@ enum {
+>  	DUMP_PREFIX_ADDRESS,
+>  	DUMP_PREFIX_OFFSET
+>  };
+> +
+>  extern int hex_dump_to_buffer(const void *buf, size_t len, int
+> rowsize,
+>  			      int groupsize, char *linebuf, size_t
+> linebuflen,
+>  			      bool ascii);
+> +
+> +#define HEXDUMP_ASCII			BIT(0)
+> +#define HEXDUMP_SUPPRESS_REPEATED	BIT(1)
+> +
 
-Looks good to me. Should this also be documented someplace that dev_pm_opp_set_rate()
-would not be able to distinguish between its users trying to scale CPU/GPU's vs IO
-devices, so its the callers responsibility to round it accordingly before calling the
-API?
-
->      
->      Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->      Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->      [ Viresh: Massaged changelog and use temp_opp variable instead ]
->      Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> 
-> 
+This is missing the include of linux/bits.h, I'll fix this in the next
+version.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva    
+Twitter: @EvilDeece
+blog: http://alastair.d-silva.org
+
+
