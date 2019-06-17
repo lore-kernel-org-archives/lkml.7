@@ -2,56 +2,57 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 220FCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:20:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30362C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2F2F2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03E4B2080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:20:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="KCGmXITr"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="QTmcXq1w"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728598AbfFQWUo (ORCPT
+        id S1728822AbfFQWUr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 18:20:44 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:46824 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726116AbfFQWUo (ORCPT
+        Mon, 17 Jun 2019 18:20:47 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44501 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfFQWUp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:20:44 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d4so18401363edr.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:20:43 -0700 (PDT)
+        Mon, 17 Jun 2019 18:20:45 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k8so18390072edr.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 15:20:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rPaTHIG8PkSubWJGVxLqZFaKiEXOLQ/LPpN9HdlOEuc=;
-        b=KCGmXITreUIcanl7I4reXTJ1OQzDNx3xJ0h3iz+R2HazNzwGtuUumbO9iyo1TZrrSU
-         rdhHXeaJi8wC0RYkAg8Hc++SNaoWjj4zEKSejT9EJk5/mlJIM9OgyAUOkoPgYBiYWiop
-         JmLMKjvRQNfkNQv1eiLjAK6zAyXhANzQP7Dtk=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=keIi3BaqC0xYU7aMFSSUotIwruTj0L0tQgh/AopoR1I=;
+        b=QTmcXq1wOn+lNqaytoo/jSuig7HGGTT8//0AfavQRn/g3Ls3f71azmFYjOMeFygxlc
+         ih122LJ0Q9/+xVl8ZYmxO2MeoqllfLSph7wfiaQOJXibAF1Lrjq+L1nCYIinl3HCq9mO
+         P5BOOQJ8j6RHN7dzGNVd+JzaMOEZq3ixOPjHA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rPaTHIG8PkSubWJGVxLqZFaKiEXOLQ/LPpN9HdlOEuc=;
-        b=B79/xmxTeNEtaQ12ahA7DP/hhRuWctaudwJC1e49811arYWgZ12e5QE3g7UqbBLFt/
-         VEeDT/XEFbdKP4/qy4endvJTABNegMew7vKbyHy0pRSs/gA337MxCAwvCCx2Mog/Ulj2
-         rzyknRrdQR/z65FFlkksMHkzMAIzv8iD87ixOAhIv7En5PgerJyQHCNcTafp8jGLPo8k
-         Z/dAp7gvNfWZnFIKXWciCb6S7EJvLR97eaBNgDQSU/TqB/BW4WiYtCtYuvND4hNJG01q
-         eYFWfBSZ2P3CBDG7Pr/t15e0rMWNna+ahkN1XKebxv0SrImhOVsogYYzT8Yg2UlYay5/
-         uauA==
-X-Gm-Message-State: APjAAAWSdKlByTU6dYNz2owhS3eJBFeWQmKVHC9eeT7WcfseSbnrJqeX
-        sz+cpk7mEFpO8O2to6cvnNOaow==
-X-Google-Smtp-Source: APXvYqz9DMdenjgbZOikQRPpmT9dG+4mcy9LuJw6iyCraF1Ina01pcBN1qCZ/narwamBwFGQ5eWN6A==
-X-Received: by 2002:a17:907:2091:: with SMTP id pv17mr54765292ejb.152.1560810042533;
-        Mon, 17 Jun 2019 15:20:42 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=keIi3BaqC0xYU7aMFSSUotIwruTj0L0tQgh/AopoR1I=;
+        b=msZ9ue6xWlgVThG3JgLKMC+w2JYyd+bIHOxklSqIoBr81/2IXWPdfqajTZR6SfFENW
+         AtVjrQPphswFN016dLtS1a/6RCB+CZ5TZmWvOq9lxMgR1gWjWXQLVJevIJXlm8nC7914
+         UF5aV3d9xxBmOyr2ONIc9SUvRJtO485KsCBvGzm+p4w6s83t6eXHSQgMuLQPLjkwK47V
+         YpK884U9gQpA38yOlfcspwcuZOZhvIqsTu8JW0EDkEnw9eU3rWd5UcLI2lnz6xlabVB+
+         PLvDW1aNFTz9tg7ziYM4Tiw7PC/3l0AerUFOX+2THhhZJx+3nXcnBLqAQyogXI3QJewj
+         uIFg==
+X-Gm-Message-State: APjAAAV1c+CGJmLvPa2Kpc/7xxT5J2Kerm8kPfCuGDa3jfCzHrJ+gXjE
+        JHo/6br72Plj7CFWZo2aqTHniw==
+X-Google-Smtp-Source: APXvYqxWO/6swOglZ6QtjM51EtbNpra6XHo68OmBbZ4d/COdwq0W06Duzydtph061WNgch9yymiydg==
+X-Received: by 2002:a50:92c4:: with SMTP id l4mr18071273eda.34.1560810043605;
+        Mon, 17 Jun 2019 15:20:43 -0700 (PDT)
 Received: from prevas-ravi.prevas.se (ip-5-186-113-204.cgn.fibianet.dk. [5.186.113.204])
-        by smtp.gmail.com with ESMTPSA id 9sm1034852ejg.49.2019.06.17.15.20.41
+        by smtp.gmail.com with ESMTPSA id 9sm1034852ejg.49.2019.06.17.15.20.42
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 15:20:41 -0700 (PDT)
+        Mon, 17 Jun 2019 15:20:43 -0700 (PDT)
 From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
 To:     Ingo Molnar <mingo@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>
@@ -59,11 +60,14 @@ Cc:     Jason Baron <jbaron@akamai.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
         Nick Desaulniers <ndesaulniers@google.com>,
         linux-kernel@vger.kernel.org,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Subject: [PATCH v6 0/8] implement DYNAMIC_DEBUG_RELATIVE_POINTERS
-Date:   Tue, 18 Jun 2019 00:20:26 +0200
-Message-Id: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH v6 1/8] linux/device.h: use unique identifier for each struct _ddebug
+Date:   Tue, 18 Jun 2019 00:20:27 +0200
+Message-Id: <20190617222034.10799-2-linux@rasmusvillemoes.dk>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
+References: <20190617222034.10799-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,65 +75,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Similar to CONFIG_GENERIC_BUG_RELATIVE_POINTERS that replaces (8 byte)
-const char* members by (4 byte) signed offsets from the bug_entry,
-this implements the similar thing for struct _ddebug, the descriptors
-underlying pr_debug() and friends in a CONFIG_DYNAMIC_DEBUG kernel.
+Changes on x86-64 later in this series require that all struct _ddebug
+descriptors in a translation unit uses distinct identifiers. Realize
+that for dev_dbg_ratelimited by generating such an identifier via
+__UNIQUE_ID and pass that to an extra level of macros.
 
-Since struct _ddebug has four string members, we save 16 byte per
-instance. The total savings seem to be comparable to what is saved by
-an architecture selecting GENERIC_BUG_RELATIVE_POINTERS (see patch 8
-for some numbers for a common distro config).
+No functional change.
 
-While refreshing these patches, which were orignally just targeted at
-x86-64, it occured to me that despite the implementation relying on
-inline asm, there's nothing x86 specific about it, and indeed it seems
-to work out-of-the-box for ppc64 and arm64 as well, but those have
-only been compile-tested.
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Acked-by: Jason Baron <jbaron@akamai.com>
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ include/linux/device.h | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-The first 6 patches are rather pedestrian preparations. The fun stuff
-is in patch 7, and the last patch is just the minimal boilerplate to
-hook up the asm-generic header and selecting
-HAVE_DYNAMIC_DEBUG_RELATIVE_POINTERS on x86-64. Doing arm64 and ppc64
-would be similar 2-line patches.
-
-Unfortunately, the "fun stuff" includes some magic that breaks the
-build in some corner cases with older gcc (and some not-so-magic that
-clang only supports since version 9 for non-x86 targets). So in this
-v6, the config option DYNAMIC_DEBUG_RELATIVE_POINTERS has been made
-opt-in, depending on the arch-selected
-HAVE_DYNAMIC_DEBUG_RELATIVE_POINTERS, instead of the arch selecting it
-directly. Also, I've set a lower bound for the gcc and clang versions,
-so that hopefully nobody should be able to select the option and have
-the build break.
-
-
-Rasmus Villemoes (8):
-  linux/device.h: use unique identifier for each struct _ddebug
-  linux/net.h: use unique identifier for each struct _ddebug
-  linux/printk.h: use unique identifier for each struct _ddebug
-  dynamic_debug: introduce accessors for string members of struct
-    _ddebug
-  dynamic_debug: drop use of bitfields in struct _ddebug
-  dynamic_debug: introduce CONFIG_DYNAMIC_DEBUG_RELATIVE_POINTERS
-  dynamic_debug: add asm-generic implementation for
-    DYNAMIC_DEBUG_RELATIVE_POINTERS
-  x86-64: select HAVE_DYNAMIC_DEBUG_RELATIVE_POINTERS
-
- arch/x86/Kconfig                            |   1 +
- arch/x86/entry/vdso/vdso32/vclock_gettime.c |   1 +
- arch/x86/include/asm/Kbuild                 |   1 +
- include/asm-generic/dynamic_debug.h         | 116 ++++++++++++++++++++
- include/linux/device.h                      |   4 +-
- include/linux/dynamic_debug.h               |  26 +++--
- include/linux/jump_label.h                  |   2 +
- include/linux/net.h                         |   4 +-
- include/linux/printk.h                      |   4 +-
- lib/Kconfig.debug                           |  16 +++
- lib/dynamic_debug.c                         | 111 ++++++++++++++-----
- 11 files changed, 246 insertions(+), 40 deletions(-)
- create mode 100644 include/asm-generic/dynamic_debug.h
-
+diff --git a/include/linux/device.h b/include/linux/device.h
+index 848fc71c6ba6..eaba6952c2b3 100644
+--- a/include/linux/device.h
++++ b/include/linux/device.h
+@@ -1563,7 +1563,7 @@ do {									\
+ 	dev_level_ratelimited(dev_info, dev, fmt, ##__VA_ARGS__)
+ #if defined(CONFIG_DYNAMIC_DEBUG)
+ /* descriptor check is first to prevent flooding with "callbacks suppressed" */
+-#define dev_dbg_ratelimited(dev, fmt, ...)				\
++#define _dev_dbg_ratelimited(descriptor, dev, fmt, ...)			\
+ do {									\
+ 	static DEFINE_RATELIMIT_STATE(_rs,				\
+ 				      DEFAULT_RATELIMIT_INTERVAL,	\
+@@ -1574,6 +1574,8 @@ do {									\
+ 		__dynamic_dev_dbg(&descriptor, dev, dev_fmt(fmt),	\
+ 				  ##__VA_ARGS__);			\
+ } while (0)
++#define dev_dbg_ratelimited(dev, fmt, ...)				\
++	_dev_dbg_ratelimited(__UNIQUE_ID(ddebug), dev, fmt, ##__VA_ARGS__)
+ #elif defined(DEBUG)
+ #define dev_dbg_ratelimited(dev, fmt, ...)				\
+ do {									\
 -- 
 2.20.1
 
