@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5386C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF64C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EDDC21019
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 733BF208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806348;
-	bh=oywjT/WGxmlXWiGqewKHuaN1H1kBYOm+AcDn/SJIaZw=;
+	s=default; t=1560806352;
+	bh=7Zh1OOww7Q92VDGSJE6zUFD1zJtvz2cSNRgLKcbty7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JJ4gpJS43R4noJhANjSjr1IiwUE9MmmIsv9N0ObcLbn7wzwvHWAK8C4tr1O/7C1j1
-	 fNXFJoM9YEd3Nt6HCuZap3zHzxN32ObBfgn7A2iDitI8TTjdgeDQtLKqepGjdBVOUN
-	 SSPnmZ/H3R/B/Byyoq3CWoyuNXNvVe6lV0zpmlm8=
+	b=f+atiAHWvOtVtCYtpHCmqkIqHtT7WyIFMD/UMHboY1y+NQibtcTY473AEeeEVZyco
+	 Se2bMMxzTCRnRYxcj5c/h4StoINvZSLPI8Kqo5m1lj4MTtpfnWTO8k8Jyx1XLNSW68
+	 MIV9PuALmRW7tqpaBX7+T7m5vGklCkycRgUh4Tls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728661AbfFQVTH (ORCPT
+        id S1728725AbfFQVTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:19:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42706 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42774 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728602AbfFQVTE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:19:04 -0400
+        id S1728625AbfFQVTH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:19:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E607F2166E;
-        Mon, 17 Jun 2019 21:19:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8F9D42089E;
+        Mon, 17 Jun 2019 21:19:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806343;
-        bh=oywjT/WGxmlXWiGqewKHuaN1H1kBYOm+AcDn/SJIaZw=;
+        s=default; t=1560806346;
+        bh=7Zh1OOww7Q92VDGSJE6zUFD1zJtvz2cSNRgLKcbty7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s/8LrDpx1/Mg/uJV0RYvyY00XRJQCqAzQOoHrMaa5CvogWA/eS5N2rExqThrykAWC
-         G7rmvbm0fstb/u4uX7q2RumuRZy0Qli4EC97oTCi/+OMZIBpJ+V8MtJVTIG/43Glws
-         vaLYgRZA+2MOiGDNjepgF1dMpkmLF5/NvlnelnWE=
+        b=UgdpJGgH2SJN5Un1er1z0yFvZhoNqYdO+dq159XeLy42dX7qZHXwhGolyufXvcrrc
+         8gLmMAdAWLZdMRax8LLgZKZMcArCNesSzIdxD6DjahXlNY6CCmLmhOAhtq0+DWF2Kl
+         vj8mCnYoXnWcEGQTW41jCHNZg9SaNKOlycSvm/LU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Thomas Backlund <tmb@mageia.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sven Joachim <svenjoac@gmx.de>
-Subject: [PATCH 5.1 002/115] nouveau: Fix build with CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT disabled
-Date:   Mon, 17 Jun 2019 23:08:22 +0200
-Message-Id: <20190617210800.045460997@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.1 020/115] libata: Extend quirks for the ST1000LM024 drives with NOLPM quirk
+Date:   Mon, 17 Jun 2019 23:08:40 +0200
+Message-Id: <20190617210800.945450710@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -60,54 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Thomas Backlund <tmb@mageia.org>
+From: Hans de Goede <hdegoede@redhat.com>
 
-Not-entirely-upstream-sha1-but-equivalent: bed2dd8421
-("drm/ttm: Quick-test mmap offset in ttm_bo_mmap()")
+commit 31f6264e225fb92cf6f4b63031424f20797c297d upstream.
 
-Setting CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n (added by commit: b30a43ac7132)
-causes the build to fail with:
+We've received a bugreport that using LPM with ST1000LM024 drives leads
+to system lockups. So it seems that these models are buggy in more then
+1 way. Add NOLPM quirk to the existing quirks entry for BROKEN_FPDMA_AA.
 
-ERROR: "drm_legacy_mmap" [drivers/gpu/drm/nouveau/nouveau.ko] undefined!
-
-This does not happend upstream as the offending code got removed in:
-bed2dd8421 ("drm/ttm: Quick-test mmap offset in ttm_bo_mmap()")
-
-Fix that by adding check for CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT around
-the drm_legacy_mmap() call.
-
-Also, as Sven Joachim pointed out, we need to make the check in
-CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT=n case return -EINVAL as its done
-for basically all other gpu drivers, especially in upstream kernels
-drivers/gpu/drm/ttm/ttm_bo_vm.c as of the upstream commit bed2dd8421.
-
-NOTE. This is a minimal stable-only fix for trees where b30a43ac7132 is
-backported as the build error affects nouveau only.
-
-Fixes: b30a43ac7132 ("drm/nouveau: add kconfig option to turn off nouveau
-       legacy contexts. (v3)")
-Signed-off-by: Thomas Backlund <tmb@mageia.org>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1571330
 Cc: stable@vger.kernel.org
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Sven Joachim <svenjoac@gmx.de>
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/gpu/drm/nouveau/nouveau_ttm.c |    4 ++++
- 1 file changed, 4 insertions(+)
 
---- a/drivers/gpu/drm/nouveau/nouveau_ttm.c
-+++ b/drivers/gpu/drm/nouveau/nouveau_ttm.c
-@@ -169,7 +169,11 @@ nouveau_ttm_mmap(struct file *filp, stru
- 	struct nouveau_drm *drm = nouveau_drm(file_priv->minor->dev);
+---
+ drivers/ata/libata-core.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -4476,9 +4476,12 @@ static const struct ata_blacklist_entry
+ 	{ "ST3320[68]13AS",	"SD1[5-9]",	ATA_HORKAGE_NONCQ |
+ 						ATA_HORKAGE_FIRMWARE_WARN },
  
- 	if (unlikely(vma->vm_pgoff < DRM_FILE_PAGE_OFFSET))
-+#if defined(CONFIG_NOUVEAU_LEGACY_CTX_SUPPORT)
- 		return drm_legacy_mmap(filp, vma);
-+#else
-+		return -EINVAL;
-+#endif
+-	/* drives which fail FPDMA_AA activation (some may freeze afterwards) */
+-	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
+-	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
++	/* drives which fail FPDMA_AA activation (some may freeze afterwards)
++	   the ST disks also have LPM issues */
++	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
++						ATA_HORKAGE_NOLPM, },
++	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
++						ATA_HORKAGE_NOLPM, },
+ 	{ "VB0250EAVER",	"HPG7",		ATA_HORKAGE_BROKEN_FPDMA_AA },
  
- 	return ttm_bo_mmap(filp, vma, &drm->ttm.bdev);
- }
+ 	/* Blacklist entries taken from Silicon Image 3124/3132
 
 
