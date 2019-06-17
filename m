@@ -2,92 +2,134 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 949B5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B56CC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 678BB2089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j+LfTk1c"
+	by mail.kernel.org (Postfix) with ESMTP id 5823020861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:31:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728467AbfFQUaQ (ORCPT
+        id S1728623AbfFQUbC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:30:16 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38601 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfFQUaP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:30:15 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so15841927edo.5;
-        Mon, 17 Jun 2019 13:30:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/6miJAsvlKZ+NTF37mtgfecOjC+L4l+FZ/tO8y72hcY=;
-        b=j+LfTk1cJSVWMXglHnydK2FvbU2cs3ZZ8ZDSuyEvKqfv3CBK3TyXIRfwe5Fykwtsd0
-         1iNdJXf52TqlRtAgjvFI+LuNFTOzl4LT2O2iiBi43TMbJdZSDZtYzcUl6raTSPJeqHIK
-         tA1aI9ApRivKBRg+oEwNAuAwRj3ndD45f1WYGRNOUvJslo6Soh6AwR0PZtLMBvuvT2F0
-         mqmkjF/01cEshq+ANLhA2uR3pjGrXpHzKDrY6tORIN8C8NfN/2mtq1R6JMMmVCevKhlK
-         bxvae19fagM9rFMRvnPaNuK3GCQT8j7rFeaaXrstfLiCsTt7Bs8wx24d7ygEBCSB9JtH
-         8gFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/6miJAsvlKZ+NTF37mtgfecOjC+L4l+FZ/tO8y72hcY=;
-        b=qll6wtRxCxEz8wkFaJXFv9Lpxx4v9lDAWl/lEHsifzHPgPOmTU/zt7095/bjMYLPVi
-         /huPyZlpTtw9XdjcwKHHQ82sZ9LvZ41yhQPyfjrKpukco0KUGyGGzQNXZ+izkoEyKucZ
-         gmPnoJTnvmAEBbtFNcpEfQkdwVFF8+X83MfYN3T3KAo/x32JUJUhhKJWQVDKAJqFVKH9
-         AkzPWUf57TCc6dsTT5tpYakv34rOgx8lNqnBcy3fIN8CTj2yS9+W38/HT6wZbpDa73XD
-         D/UR47xVYUsLgX+2WuPCdff8EEUZkuX+SH9XDgb8lYVgxY2QXklrjYmpDcD6zJKqNMs3
-         JdEQ==
-X-Gm-Message-State: APjAAAUO/pZ3M1bgGNk/VPlPstznxov4b3RaI+r9ucdWpKmF8kTkuKUS
-        w2HiZOt9Fj/abbbwYZbyO2MIvzaaRKO516iOhgE=
-X-Google-Smtp-Source: APXvYqww7nWizr0FGtjHx8XNgx3Yo2U7sZtEVkvbXpDZvrVllwR5sexNhXcxX8QvfYgLauxPY9yAkyRBDwpJMkOzvIk=
-X-Received: by 2002:a50:b3fd:: with SMTP id t58mr68393204edd.31.1560803413120;
- Mon, 17 Jun 2019 13:30:13 -0700 (PDT)
+        Mon, 17 Jun 2019 16:31:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42550 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726023AbfFQUbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 16:31:01 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 173CE30872E5;
+        Mon, 17 Jun 2019 20:30:43 +0000 (UTC)
+Received: from tonnant.bos.jonmasters.org (ovpn-122-52.rdu2.redhat.com [10.10.122.52])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E7B087D952;
+        Mon, 17 Jun 2019 20:30:27 +0000 (UTC)
+Subject: Re: [PATCH v3] Documentation: Add section about CPU vulnerabilities
+ for Spectre
+From:   Jon Masters <jcm@redhat.com>
+To:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Greear <greearb@candelatech.com>, stable@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mark Gross <mgross@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
+References: <c63945d34bfc9df2412f813d0b9b3a321a65de5d.1560795378.git.tim.c.chen@linux.intel.com>
+ <5ff842bb-e0b8-c4aa-134d-32c9d838a162@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jcm@redhat.com; keydata=
+ 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
+ yrXvw9qg2waGcnb8WuoS+g==
+Message-ID: <526833c7-b9b4-1847-9f9b-52dd248548ad@redhat.com>
+Date:   Mon, 17 Jun 2019 16:30:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190617190837.13186-1-fklassen@appneta.com>
-In-Reply-To: <20190617190837.13186-1-fklassen@appneta.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Mon, 17 Jun 2019 16:29:37 -0400
-Message-ID: <CAF=yD-KQ1dxmNbR8-xoiNTfwHXzO-wQRpz+0ZFN9o36+UE_e6A@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 0/3] UDP GSO audit tests
-To:     Fred Klassen <fklassen@appneta.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        linux-kselftest@vger.kernel.org,
-        Willem de Bruijn <willemb@google.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5ff842bb-e0b8-c4aa-134d-32c9d838a162@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 17 Jun 2019 20:31:01 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 3:09 PM Fred Klassen <fklassen@appneta.com> wrote:
->
-> Updates to UDP GSO selftests ot optionally stress test CMSG
-> subsytem, and report the reliability and performance of both
-> TX Timestamping and ZEROCOPY messages.
->
-> Fred Klassen (3):
->   net/udpgso_bench_tx: options to exercise TX CMSG
->   net/udpgso_bench.sh add UDP GSO audit tests
->   net/udpgso_bench.sh test fails on error
->
->  tools/testing/selftests/net/udpgso_bench.sh   |  52 ++++-
->  tools/testing/selftests/net/udpgso_bench_tx.c | 291 ++++++++++++++++++++++++--
->  2 files changed, 327 insertions(+), 16 deletions(-)
->
-> --
+On 6/17/19 4:22 PM, Jon Masters wrote:
 
-For the series:
+>> +   For kernel code that has been identified where data pointers could
+>> +   potentially be influenced for Spectre attacks, new "nospec" accessor
+>> +   macros are used to prevent speculative loading of data.
+> 
+> Maybe explain that nospec (speculative clamping) relies on the absence
+> of value prediction in the masking (in current hardware). It may NOT
+> always be a safe approach in future hardware, where Spectre-v1 attacks
+> are likely to persist but hardware may speculate about the mask value.
 
-Acked-by: Willem de Bruijn <willemb@google.com>
+Something like the Arm CSDB barrier would seem to be potentially useful
+for $FUTURE_X86 as a fence with lighter-weight semantics than an *fence.
+
+Jon.
+
+-- 
+Computer Architect | Sent with my Fedora powered laptop
