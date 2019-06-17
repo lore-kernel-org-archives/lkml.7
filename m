@@ -4,53 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3526DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD5E2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF0F2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C4C020657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807461;
-	bh=5/2JiO3y3S7WEs1kSBMXafw4iEBz3HJ6ihd/kswEY7A=;
+	s=default; t=1560807467;
+	bh=jqenDNII4IoZDFoDx7mrOY3SY6QUqRovuDdceGkE0zo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wMVmpPU2RpAoVS2TtyKBn35JqDIEXFVsC/nHriIMfctH7ZQ9PPASmEZpKGYuneOJl
-	 KIccYuxhXaUTv3ijhJiUJJRe3xSERyoP97hWR+LfzlmXFlJx/wyIh033BS5lWdFxx0
-	 O578pxDDSxNrKhYG4U7r3dD+kF85Lpi4ic8xo2H4=
+	b=WKlv8L9T1BHmrB51varTHnj/b99dorqP1k4tvWegoB0TJcwsBtBr3yaeRs/OLzwip
+	 7rIeHD56KfxeU3jFB+w3SHkkLkR59Qpk3MwuD97WDzhBQfWZmvO6exaburx6km3N3a
+	 NikPrvfvOM9vyb9/JoyrvXhgti0zGv/7WpcfLFCc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729376AbfFQVhj (ORCPT
+        id S1729360AbfFQVhq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:37:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43548 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:37:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43352 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727159AbfFQVTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:19:42 -0400
+        id S1728808AbfFQVTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:19:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F2908208CB;
-        Mon, 17 Jun 2019 21:19:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2C42208CB;
+        Mon, 17 Jun 2019 21:19:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806381;
-        bh=5/2JiO3y3S7WEs1kSBMXafw4iEBz3HJ6ihd/kswEY7A=;
+        s=default; t=1560806372;
+        bh=jqenDNII4IoZDFoDx7mrOY3SY6QUqRovuDdceGkE0zo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rKkfyNDLz4fm81Rn5S0J5rxOGe9hWvRroWaTmqs2hgmat+YhQXgJPITK0rsSdSPui
-         GOh57TTSus3QNOIPkEp79muY/TrK5VCrYJKHsHZMvw2eSWy74zUztpDhHmfAdyM2Nd
-         DF/P4cx/xVhdgxGU/RAlMkC2Rx+4ty9BMgaL70dA=
+        b=fYpHR+BbBJ/WkQUvHB6WeAL5Wd/yEsTqE4nAewBoYA0/1aCt51j1rUVGVNVWLrRE6
+         PGHjJ3j5Kss9zz6PFpq7D/YOaU/ZSlyjlnOUAuNHbIGcY4pwV66I7r90cPdZoY5OD4
+         fAoJU1lCi2iGdStnQQW8VtIBI+/1LSz37Rehj0S4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Coly Li <colyli@suse.de>,
-        Rolf Fokkens <rolf@rolffokkens.nl>,
-        Pierre JUHEN <pierre.juhen@orange.fr>,
-        Shenghui Wang <shhuiw@foxmail.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Nix <nix@esperi.org.uk>, Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 5.1 031/115] bcache: fix stack corruption by PRECEDING_KEY()
-Date:   Mon, 17 Jun 2019 23:08:51 +0200
-Message-Id: <20190617210801.562856521@linuxfoundation.org>
+        stable@vger.kernel.org, Jose Bollo <jose.bollo@iot.bzh>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        David Howells <dhowells@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 029/115] Smack: Restore the smackfsdef mount option and add missing prefixes
+Date:   Mon, 17 Jun 2019 23:08:49 +0200
+Message-Id: <20190617210801.421402542@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -63,127 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Coly Li <colyli@suse.de>
+From: Casey Schaufler <casey@schaufler-ca.com>
 
-commit 31b90956b124240aa8c63250243ae1a53585c5e2 upstream.
+commit 6e7739fc938c1ec58d321f70ea41d9548a4cca0f upstream.
 
-Recently people report bcache code compiled with gcc9 is broken, one of
-the buggy behavior I observe is that two adjacent 4KB I/Os should merge
-into one but they don't. Finally it turns out to be a stack corruption
-caused by macro PRECEDING_KEY().
+The 5.1 mount system rework changed the smackfsdef mount option to
+smackfsdefault.  This fixes the regression by making smackfsdef treated
+the same way as smackfsdefault.
 
-See how PRECEDING_KEY() is defined in bset.h,
-437 #define PRECEDING_KEY(_k)                                       \
-438 ({                                                              \
-439         struct bkey *_ret = NULL;                               \
-440                                                                 \
-441         if (KEY_INODE(_k) || KEY_OFFSET(_k)) {                  \
-442                 _ret = &KEY(KEY_INODE(_k), KEY_OFFSET(_k), 0);  \
-443                                                                 \
-444                 if (!_ret->low)                                 \
-445                         _ret->high--;                           \
-446                 _ret->low--;                                    \
-447         }                                                       \
-448                                                                 \
-449         _ret;                                                   \
-450 })
+Also fix the smack_param_specs[] to have "smack" prefixes on all the
+names.  This isn't visible to a user unless they either:
 
-At line 442, _ret points to address of a on-stack variable combined by
-KEY(), the life range of this on-stack variable is in line 442-446,
-once _ret is returned to bch_btree_insert_key(), the returned address
-points to an invalid stack address and this address is overwritten in
-the following called bch_btree_iter_init(). Then argument 'search' of
-bch_btree_iter_init() points to some address inside stackframe of
-bch_btree_iter_init(), exact address depends on how the compiler
-allocates stack space. Now the stack is corrupted.
+ (a) Try to mount a filesystem that's converted to the internal mount API
+     and that implements the ->parse_monolithic() context operation - and
+     only then if they call security_fs_context_parse_param() rather than
+     security_sb_eat_lsm_opts().
 
-Fixes: 0eacac22034c ("bcache: PRECEDING_KEY()")
-Signed-off-by: Coly Li <colyli@suse.de>
-Reviewed-by: Rolf Fokkens <rolf@rolffokkens.nl>
-Reviewed-by: Pierre JUHEN <pierre.juhen@orange.fr>
-Tested-by: Shenghui Wang <shhuiw@foxmail.com>
-Tested-by: Pierre JUHEN <pierre.juhen@orange.fr>
-Cc: Kent Overstreet <kent.overstreet@gmail.com>
-Cc: Nix <nix@esperi.org.uk>
+     There are no examples of this upstream yet, but nfs will probably want
+     to do this for nfs2 or nfs3.
+
+ (b) Use fsconfig() to configure the filesystem - in which case
+     security_fs_context_parse_param() will be called.
+
+This issue is that smack_sb_eat_lsm_opts() checks for the "smack" prefix
+on the options, but smack_fs_context_parse_param() does not.
+
+Fixes: c3300aaf95fb ("smack: get rid of match_token()")
+Fixes: 2febd254adc4 ("smack: Implement filesystem context security hooks")
 Cc: stable@vger.kernel.org
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Reported-by: Jose Bollo <jose.bollo@iot.bzh>
+Signed-off-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: David Howells <dhowells@redhat.com>
+Tested-by: Casey Schaufler <casey@schaufler-ca.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/bcache/bset.c |   16 +++++++++++++---
- drivers/md/bcache/bset.h |   34 ++++++++++++++++++++--------------
- 2 files changed, 33 insertions(+), 17 deletions(-)
+ security/smack/smack_lsm.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/drivers/md/bcache/bset.c
-+++ b/drivers/md/bcache/bset.c
-@@ -887,12 +887,22 @@ unsigned int bch_btree_insert_key(struct
- 	struct bset *i = bset_tree_last(b)->data;
- 	struct bkey *m, *prev = NULL;
- 	struct btree_iter iter;
-+	struct bkey preceding_key_on_stack = ZERO_KEY;
-+	struct bkey *preceding_key_p = &preceding_key_on_stack;
- 
- 	BUG_ON(b->ops->is_extents && !KEY_SIZE(k));
- 
--	m = bch_btree_iter_init(b, &iter, b->ops->is_extents
--				? PRECEDING_KEY(&START_KEY(k))
--				: PRECEDING_KEY(k));
-+	/*
-+	 * If k has preceding key, preceding_key_p will be set to address
-+	 *  of k's preceding key; otherwise preceding_key_p will be set
-+	 * to NULL inside preceding_key().
-+	 */
-+	if (b->ops->is_extents)
-+		preceding_key(&START_KEY(k), &preceding_key_p);
-+	else
-+		preceding_key(k, &preceding_key_p);
-+
-+	m = bch_btree_iter_init(b, &iter, preceding_key_p);
- 
- 	if (b->ops->insert_fixup(b, k, &iter, replace_key))
- 		return status;
---- a/drivers/md/bcache/bset.h
-+++ b/drivers/md/bcache/bset.h
-@@ -434,20 +434,26 @@ static inline bool bch_cut_back(const st
- 	return __bch_cut_back(where, k);
+--- a/security/smack/smack_lsm.c
++++ b/security/smack/smack_lsm.c
+@@ -67,6 +67,7 @@ static struct {
+ 	int len;
+ 	int opt;
+ } smk_mount_opts[] = {
++	{"smackfsdef", sizeof("smackfsdef") - 1, Opt_fsdefault},
+ 	A(fsdefault), A(fsfloor), A(fshat), A(fsroot), A(fstransmute)
+ };
+ #undef A
+@@ -681,11 +682,12 @@ static int smack_fs_context_dup(struct f
  }
  
--#define PRECEDING_KEY(_k)					\
--({								\
--	struct bkey *_ret = NULL;				\
--								\
--	if (KEY_INODE(_k) || KEY_OFFSET(_k)) {			\
--		_ret = &KEY(KEY_INODE(_k), KEY_OFFSET(_k), 0);	\
--								\
--		if (!_ret->low)					\
--			_ret->high--;				\
--		_ret->low--;					\
--	}							\
--								\
--	_ret;							\
--})
-+/*
-+ * Pointer '*preceding_key_p' points to a memory object to store preceding
-+ * key of k. If the preceding key does not exist, set '*preceding_key_p' to
-+ * NULL. So the caller of preceding_key() needs to take care of memory
-+ * which '*preceding_key_p' pointed to before calling preceding_key().
-+ * Currently the only caller of preceding_key() is bch_btree_insert_key(),
-+ * and it points to an on-stack variable, so the memory release is handled
-+ * by stackframe itself.
-+ */
-+static inline void preceding_key(struct bkey *k, struct bkey **preceding_key_p)
-+{
-+	if (KEY_INODE(k) || KEY_OFFSET(k)) {
-+		(**preceding_key_p) = KEY(KEY_INODE(k), KEY_OFFSET(k), 0);
-+		if (!(*preceding_key_p)->low)
-+			(*preceding_key_p)->high--;
-+		(*preceding_key_p)->low--;
-+	} else {
-+		(*preceding_key_p) = NULL;
-+	}
-+}
+ static const struct fs_parameter_spec smack_param_specs[] = {
+-	fsparam_string("fsdefault",	Opt_fsdefault),
+-	fsparam_string("fsfloor",	Opt_fsfloor),
+-	fsparam_string("fshat",		Opt_fshat),
+-	fsparam_string("fsroot",	Opt_fsroot),
+-	fsparam_string("fstransmute",	Opt_fstransmute),
++	fsparam_string("smackfsdef",		Opt_fsdefault),
++	fsparam_string("smackfsdefault",	Opt_fsdefault),
++	fsparam_string("smackfsfloor",		Opt_fsfloor),
++	fsparam_string("smackfshat",		Opt_fshat),
++	fsparam_string("smackfsroot",		Opt_fsroot),
++	fsparam_string("smackfstransmute",	Opt_fstransmute),
+ 	{}
+ };
  
- static inline bool bch_ptr_invalid(struct btree_keys *b, const struct bkey *k)
- {
 
 
