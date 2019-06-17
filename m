@@ -2,125 +2,121 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E804C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13BFBC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D48621C38
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E073221C38
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:10:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726487AbfFQIJO (ORCPT
+        id S1726653AbfFQIKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 04:09:14 -0400
-Received: from aclms1.advantech.com.tw ([61.58.41.199]:52260 "EHLO
-        ACLMS1.advantech.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725995AbfFQIJO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 04:09:14 -0400
-Received: from taipei08.ADVANTECH.CORP (unverified [172.20.0.235]) by ACLMS1.advantech.com.tw
- (Clearswift SMTPRS 5.6.0) with ESMTP id <Td8729bcfeeac14014b1070@ACLMS1.advantech.com.tw>;
- Mon, 17 Jun 2019 16:09:09 +0800
-From:   <Amy.Shih@advantech.com.tw>
-To:     <she90122@gmail.com>
-CC:     <amy.shih@advantech.com.tw>, <oakley.ding@advantech.com.tw>,
-        <jia.sui@advantech.com.cn>, Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        <linux-hwmon@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [v2 1/9] hwmon: (nct7904) Add error handling in probe function.
-Date:   Mon, 17 Jun 2019 08:08:50 +0000
-Message-ID: <928e46508bbe1ebc0763c3d2403a5aebe95af552.1560756733.git.amy.shih@advantech.com.tw>
-X-Mailer: git-send-email 2.17.1
+        Mon, 17 Jun 2019 04:10:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:63603 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725995AbfFQIKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 04:10:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2546258E42;
+        Mon, 17 Jun 2019 08:10:17 +0000 (UTC)
+Received: from [10.72.12.67] (ovpn-12-67.pek2.redhat.com [10.72.12.67])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F357B7E65F;
+        Mon, 17 Jun 2019 08:10:14 +0000 (UTC)
+Subject: Re: [PATCH] Fix tun: wake up waitqueues after IFF_UP is set
+To:     Fei Li <lifei.shirley@bytedance.com>, davem@davemloft.net,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     zhengfeiran@bytedance.com, duanxiongchun@bytedance.com
+References: <20190617073320.69015-1-lifei.shirley@bytedance.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <28bef625-ce70-20a1-7d8b-296cd43015c4@redhat.com>
+Date:   Mon, 17 Jun 2019 16:10:12 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.17.10.58]
-X-ClientProxiedBy: ACLDAG.ADVANTECH.CORP (172.20.2.88) To
- taipei08.ADVANTECH.CORP (172.20.0.235)
-X-StopIT: No
+In-Reply-To: <20190617073320.69015-1-lifei.shirley@bytedance.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 17 Jun 2019 08:10:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "amy.shih" <amy.shih@advantech.com.tw>
 
-When register read and write operations return errors, needs to add
-error handling.
+On 2019/6/17 下午3:33, Fei Li wrote:
+> Currently after setting tap0 link up, the tun code wakes tx/rx waited
+> queues up in tun_net_open() when .ndo_open() is called, however the
+> IFF_UP flag has not been set yet. If there's already a wait queue, it
+> would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
+> Then the saving vhost_poll_start() will add the wq into wqh until it
+> is waken up again. Although this works when IFF_UP flag has been set
+> when tun_chr_poll detects; this is not true if IFF_UP flag has not
+> been set at that time. Sadly the latter case is a fatal error, as
+> the wq will never be waken up in future unless later manually
+> setting link up on purpose.
+>
+> Fix this by moving the wakeup process into the NETDEV_UP event
+> notifying process, this makes sure IFF_UP has been set before all
+> waited queues been waken up.
+>
+> Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
+> ---
+>   drivers/net/tun.c | 17 +++++++++--------
+>   1 file changed, 9 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+> index c452d6d831dd..a3c9cab5a4d0 100644
+> --- a/drivers/net/tun.c
+> +++ b/drivers/net/tun.c
+> @@ -1015,17 +1015,9 @@ static void tun_net_uninit(struct net_device *dev)
+>   static int tun_net_open(struct net_device *dev)
+>   {
+>   	struct tun_struct *tun = netdev_priv(dev);
+> -	int i;
+>   
+>   	netif_tx_start_all_queues(dev);
+>   
+> -	for (i = 0; i < tun->numqueues; i++) {
+> -		struct tun_file *tfile;
+> -
+> -		tfile = rtnl_dereference(tun->tfiles[i]);
+> -		tfile->socket.sk->sk_write_space(tfile->socket.sk);
+> -	}
+> -
+>   	return 0;
+>   }
+>   
+> @@ -3634,6 +3626,7 @@ static int tun_device_event(struct notifier_block *unused,
+>   {
+>   	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+>   	struct tun_struct *tun = netdev_priv(dev);
+> +	int i;
+>   
+>   	if (dev->rtnl_link_ops != &tun_link_ops)
+>   		return NOTIFY_DONE;
+> @@ -3643,6 +3636,14 @@ static int tun_device_event(struct notifier_block *unused,
+>   		if (tun_queue_resize(tun))
+>   			return NOTIFY_BAD;
+>   		break;
+> +	case NETDEV_UP:
+> +		for (i = 0; i < tun->numqueues; i++) {
+> +			struct tun_file *tfile;
+> +
+> +			tfile = rtnl_dereference(tun->tfiles[i]);
+> +			tfile->socket.sk->sk_write_space(tfile->socket.sk);
+> +		}
+> +		break;
+>   	default:
+>   		break;
+>   	}
 
-Signed-off-by: amy.shih <amy.shih@advantech.com.tw>
----
-Changes in v2:
-- Check for errors on register read and write operations.
 
- drivers/hwmon/nct7904.c | 23 ++++++++++++++++++-----
- 1 file changed, 18 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/hwmon/nct7904.c b/drivers/hwmon/nct7904.c
-index 5708171197e7..401ed4a4a576 100644
---- a/drivers/hwmon/nct7904.c
-+++ b/drivers/hwmon/nct7904.c
-@@ -506,6 +506,8 @@ static int nct7904_probe(struct i2c_client *client,
- 
- 	/* CPU_TEMP attributes */
- 	ret = nct7904_read_reg(data, BANK_0, VT_ADC_CTRL0_REG);
-+	if (ret < 0)
-+		return ret;
- 
- 	if ((ret & 0x6) == 0x6)
- 		data->tcpu_mask |= 1; /* TR1 */
-@@ -518,11 +520,15 @@ static int nct7904_probe(struct i2c_client *client,
- 
- 	/* LTD */
- 	ret = nct7904_read_reg(data, BANK_0, VT_ADC_CTRL2_REG);
-+	if (ret < 0)
-+		return ret;
- 	if ((ret & 0x02) == 0x02)
- 		data->tcpu_mask |= 0x10;
- 
- 	/* Multi-Function detecting for Volt and TR/TD */
- 	ret = nct7904_read_reg(data, BANK_0, VT_ADC_MD_REG);
-+	if (ret < 0)
-+		return ret;
- 
- 	for (i = 0; i < 4; i++) {
- 		val = (ret & (0x03 << i)) >> (i * 2);
-@@ -533,22 +539,29 @@ static int nct7904_probe(struct i2c_client *client,
- 
- 	/* PECI */
- 	ret = nct7904_read_reg(data, BANK_2, PFE_REG);
-+	if (ret < 0)
-+		return ret;
- 	if (ret & 0x80) {
- 		data->enable_dts = 1; //Enable DTS & PECI
- 	} else {
- 		ret = nct7904_read_reg(data, BANK_2, TSI_CTRL_REG);
-+		if (ret < 0)
-+			return ret;
- 		if (ret & 0x80)
- 			data->enable_dts = 0x3; //Enable DTS & TSI
- 	}
- 
- 	/* Check DTS enable status */
- 	if (data->enable_dts) {
--		data->has_dts =
--			nct7904_read_reg(data, BANK_0, DTS_T_CTRL0_REG) & 0xF;
-+		ret = nct7904_read_reg(data, BANK_0, DTS_T_CTRL0_REG);
-+		if (ret < 0)
-+			return ret;
-+		data->has_dts = ret & 0xF;
- 		if (data->enable_dts & 0x2) {
--			data->has_dts |=
--			(nct7904_read_reg(data, BANK_0, DTS_T_CTRL1_REG) & 0xF)
--								<< 4;
-+			ret = nct7904_read_reg(data, BANK_0, DTS_T_CTRL1_REG);
-+			if (ret < 0)
-+				return ret;
-+			data->has_dts |= (ret & 0xF) << 4;
- 		}
- 	}
- 
--- 
-2.17.1
+Acked-by: Jason Wang <jasowang@redhat.com)
 
