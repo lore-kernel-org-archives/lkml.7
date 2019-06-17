@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E0FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E38FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB9C12147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1F70208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806448;
-	bh=K9YiwPPDxB8mOZ09FRBTU6I4dFJtBg+bcPCXOeZ3GEo=;
+	s=default; t=1560806453;
+	bh=BCLkODJ+aSwGIkn7ppuHeKg7gK35rnViuAkJkiWf9z8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oGQyQw2/jA22nQGyAaLgzpCrQmvKAWhJBD+jga3y8d7Qe7Q0OURZYPZONHwV8Cjrq
-	 L2usR1qPr/T58X0evdnbJnPleLIyXvLUrDDPTBQERhhX9t/CDyVwhcWqacXXVg23BD
-	 iUy5qiSufFgpcnfxYuvlZ05AWI4x4+AqJZIBuf4o=
+	b=FHdMQaXWUCqg3vdUnnyA3j2eN2gSNqDhSv/JsRKECYG0ciEP+zzKt+rxhMzbyNIfd
+	 L3FoB8E5bi7fre/u7IYxGwvh1baf88Bl1/pAQYXCOjqsQxyM53Txpy/PRvhKZUx2iA
+	 K0uV+A9rblMgoAKSA6dAJ2g0BBdROrJpVSYuUwNw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729186AbfFQVUq (ORCPT
+        id S1729221AbfFQVUw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:20:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45034 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:20:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45226 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728572AbfFQVUm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:20:42 -0400
+        id S1726568AbfFQVUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:20:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4878D2166E;
-        Mon, 17 Jun 2019 21:20:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5A36208E4;
+        Mon, 17 Jun 2019 21:20:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806441;
-        bh=K9YiwPPDxB8mOZ09FRBTU6I4dFJtBg+bcPCXOeZ3GEo=;
+        s=default; t=1560806450;
+        bh=BCLkODJ+aSwGIkn7ppuHeKg7gK35rnViuAkJkiWf9z8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KX78MgMRAf/an1RQ6Tna14bjsU4p6kt6XnmtRowajylKLUmVsECBbsmaYlduHqWeu
-         AR645l7oRjaqTcErG627Oy5NRo/u9gmuCKsdjxuEoVF98Hz4Mk5LpQZiwHV0vDUAmk
-         GaORpOBAXKJaTUKK/jA3ejy4E2FFHcTbtgFOCjRo=
+        b=PdSwE6kbdpnIPlq/frV9B+FIOuM2comfkHkLzC/BkIwSPOZQmHUDsDP7y1c/OyOuw
+         dlKa8vk+20ErGz9iyGT6lWx3vN52iTky2gUOlIswm++aR7iG7cD1su8AOKpcIKoLIz
+         EpSo/encK1q1jFE2zpuD0GjYpV9WEvaM6DoawF5I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
-        Manish Rangankar <mrangankar@marvell.com>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 054/115] scsi: qedi: remove set but not used variables cdev and udev
-Date:   Mon, 17 Jun 2019 23:09:14 +0200
-Message-Id: <20190617210803.161309467@linuxfoundation.org>
+Subject: [PATCH 5.1 057/115] scsi: lpfc: add check for loss of ndlp when sending RRQ
+Date:   Mon, 17 Jun 2019 23:09:17 +0200
+Message-Id: <20190617210803.250833232@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -61,46 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d0adee5d12752256ff0c87ad7f002f21fe49d618 ]
+[ Upstream commit c8cb261a072c88ca1aff0e804a30db4c7606521b ]
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+There was a missing qualification of a valid ndlp structure when calling to
+send an RRQ for an abort.  Add the check.
 
-drivers/scsi/qedi/qedi_iscsi.c: In function 'qedi_ep_connect':
-drivers/scsi/qedi/qedi_iscsi.c:813:23: warning: variable 'udev' set but not used [-Wunused-but-set-variable]
-drivers/scsi/qedi/qedi_iscsi.c:812:18: warning: variable 'cdev' set but not used [-Wunused-but-set-variable]
-
-These have never been used since introduction.
-
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-Acked-by: Manish Rangankar <mrangankar@marvell.com>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Tested-by: Bart Van Assche <bvanassche@acm.org>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/qedi/qedi_iscsi.c | 4 ----
- 1 file changed, 4 deletions(-)
+ drivers/scsi/lpfc/lpfc_els.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
-index bf371e7b957d..c3d0d246df14 100644
---- a/drivers/scsi/qedi/qedi_iscsi.c
-+++ b/drivers/scsi/qedi/qedi_iscsi.c
-@@ -809,8 +809,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
- 	struct qedi_endpoint *qedi_ep;
- 	struct sockaddr_in *addr;
- 	struct sockaddr_in6 *addr6;
--	struct qed_dev *cdev  =  NULL;
--	struct qedi_uio_dev *udev = NULL;
- 	struct iscsi_path path_req;
- 	u32 msg_type = ISCSI_KEVENT_IF_DOWN;
- 	u32 iscsi_cid = QEDI_CID_RESERVED;
-@@ -830,8 +828,6 @@ qedi_ep_connect(struct Scsi_Host *shost, struct sockaddr *dst_addr,
- 	}
- 
- 	qedi = iscsi_host_priv(shost);
--	cdev = qedi->cdev;
--	udev = qedi->udev;
- 
- 	if (test_bit(QEDI_IN_OFFLINE, &qedi->flags) ||
- 	    test_bit(QEDI_IN_RECOVERY, &qedi->flags)) {
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index fc077cb87900..965f8a1a8f67 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -7338,7 +7338,10 @@ int
+ lpfc_send_rrq(struct lpfc_hba *phba, struct lpfc_node_rrq *rrq)
+ {
+ 	struct lpfc_nodelist *ndlp = lpfc_findnode_did(rrq->vport,
+-							rrq->nlp_DID);
++						       rrq->nlp_DID);
++	if (!ndlp)
++		return 1;
++
+ 	if (lpfc_test_rrq_active(phba, ndlp, rrq->xritag))
+ 		return lpfc_issue_els_rrq(rrq->vport, ndlp,
+ 					 rrq->nlp_DID, rrq);
 -- 
 2.20.1
 
