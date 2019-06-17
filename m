@@ -2,143 +2,113 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 451CEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:13:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A41C468B0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:14:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14EA6208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:13:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="P8Dv0StE"
+	by mail.kernel.org (Postfix) with ESMTP id 04A12208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560798840;
+	bh=bxdIj4oZhzXoAyPDV43bDSTTIrA2bAYTv/gI2O7GXU0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=u9rkv225ChV1dhQA54Y1p8VnaQp5q+/2Bo+bEC8jrBZ8Xf2YvJJRsgvnIb697D3Dw
+	 XXUEx11xJffc+kSLHSYHYkwAz00ur7dZNtQS4F0QFD0oYudT6kFLrL0jf/10Be84Ax
+	 RwdrF5+l9a6c3Ec2ubAd5UCZ653GHIHMOmstDjKw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728774AbfFQTNd (ORCPT
+        id S1728664AbfFQTN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:13:33 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:42051 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfFQTNd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:13:33 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HJDFfB3558898
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 12:13:16 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HJDFfB3558898
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560798796;
-        bh=r1CfY9rcPUnd2q3fr1GZGCcyq9Ge3lFOzXVa0yuK7LM=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=P8Dv0StErRf+u3wX/m6nT5hkAj0JmVaQIvuzWIMmaznsCB6GtAtoczMI6Dmuc7j48
-         Af4f4kbmz/PWdDz5xgy/fz3HESkJJk8G33k1Mro8MbQeRRAu6JFBjV2R8rHcr1diC6
-         J462NakcSGvqXeO2829ZzLCMnIQ97Gv8IWi2BkTfTnDIZ1W3Dn2QOE7Q91pI+6O3oW
-         d7lX8RfhfjOWWEk1kwSZnqXj/4bkMXa59sQCSU8C58v3WdOOUA83CzIcxV692HErPX
-         Ikx4+uhs/6TlJQjSzeJGCTa34h1kCaOdFvoVLyx+Kgh8HM0ecNy9nwVGm360Ib34XK
-         Bnggw3LAOBWow==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HJDFD13558895;
-        Mon, 17 Jun 2019 12:13:15 -0700
-Date:   Mon, 17 Jun 2019 12:13:15 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-xdqtjexdyp81oomm1rkzeifl@git.kernel.org>
-Cc:     acme@redhat.com, brendan.d.gregg@gmail.com, namhyung@kernel.org,
-        lclaudio@redhat.com, jolsa@kernel.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, tglx@linutronix.de,
-        adrian.hunter@intel.com, mingo@kernel.org
-Reply-To: adrian.hunter@intel.com, mingo@kernel.org, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, hpa@zytor.com, jolsa@kernel.org,
-          lclaudio@redhat.com, namhyung@kernel.org,
-          brendan.d.gregg@gmail.com, acme@redhat.com
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf augmented_raw_syscalls: Move the
- probe_read_str to a separate function
-Git-Commit-ID: 0c95a7ff76fb1c5bb614e6ee438fce06d1b957c8
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 15:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33578 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725938AbfFQTN5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:13:57 -0400
+Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2637B20863;
+        Mon, 17 Jun 2019 19:13:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560798837;
+        bh=bxdIj4oZhzXoAyPDV43bDSTTIrA2bAYTv/gI2O7GXU0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=oKh//xU+4f7KGn6jEAMPhNRHWPWFLkX1le2j4IEJZtEu5H3wEaGvmxT445aLftyjN
+         0Q/ZnyR3N/Wu8avi87z2rzfHn1dv1C/cDK1uaotjsOGwWWBbIvCrYrw46N7xAnh5w+
+         HdFtKuUeN+UGAs3aKHiO8kcLQonVLAlIa7x0wl3s=
+Date:   Mon, 17 Jun 2019 20:13:51 +0100
+From:   Jonathan Cameron <jic23@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shreeya Patel <shreeya.patel23498@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Jeremy Fertic <jeremyfertic@gmail.com>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] Staging: iio: adt7316: use correct headers for gpio
+Message-ID: <20190617201351.46537983@archlinux>
+In-Reply-To: <20190617110951.2085648-1-arnd@arndb.de>
+References: <20190617110951.2085648-1-arnd@arndb.de>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0c95a7ff76fb1c5bb614e6ee438fce06d1b957c8
-Gitweb:     https://git.kernel.org/tip/0c95a7ff76fb1c5bb614e6ee438fce06d1b957c8
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Tue, 4 Jun 2019 15:31:28 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 5 Jun 2019 09:47:58 -0300
+On Mon, 17 Jun 2019 13:09:20 +0200
+Arnd Bergmann <arnd@arndb.de> wrote:
 
-perf augmented_raw_syscalls: Move the probe_read_str to a separate function
+> When building without CONFIG_GPIOLIB, we get a compile-time failure:
+> 
+> drivers/staging/iio/addac/adt7316.c:947:3: error: implicit declaration of function 'gpiod_set_value' [-Werror,-Wimplicit-function-declaration]
+>                 gpiod_set_value(chip->ldac_pin, 0);
+>                 ^
+> drivers/staging/iio/addac/adt7316.c:947:3: note: did you mean 'gpio_set_value'?
+> include/linux/gpio.h:169:20: note: 'gpio_set_value' declared here
+> static inline void gpio_set_value(unsigned gpio, int value)
+>                    ^
+> drivers/staging/iio/addac/adt7316.c:947:3: error: this function declaration is not a prototype [-Werror,-Wstrict-prototypes]
+>                 gpiod_set_value(chip->ldac_pin, 0);
+>                 ^
+> drivers/staging/iio/addac/adt7316.c:1805:13: error: implicit declaration of function 'irqd_get_trigger_type' [-Werror,-Wimplicit-function-declaration]
+>         irq_type = irqd_get_trigger_type(irq_get_irq_data(chip->bus.irq));
+> 
+> Include the correct headers that contain the declarations for these
+> functions.
+> 
+> Fixes: c63460c4298f ("Staging: iio: adt7316: Use device tree data to set ldac_pin")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Sorry, this is me being exceedingly slow on getting the fix upstream.
 
-One more step into copying multiple filenames to support syscalls like
-rename*.
+I've just sent a pull request for the fix I've had queued up for a few weeks.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Brendan Gregg <brendan.d.gregg@gmail.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Luis Cláudio Gonçalves <lclaudio@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-xdqtjexdyp81oomm1rkzeifl@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/examples/bpf/augmented_raw_syscalls.c | 27 ++++++++++++++++--------
- 1 file changed, 18 insertions(+), 9 deletions(-)
+Jonathan
+> ---
+>  drivers/staging/iio/addac/adt7316.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/iio/addac/adt7316.c b/drivers/staging/iio/addac/adt7316.c
+> index 37ce563cb0e1..9cb3d0e42c38 100644
+> --- a/drivers/staging/iio/addac/adt7316.c
+> +++ b/drivers/staging/iio/addac/adt7316.c
+> @@ -6,7 +6,8 @@
+>   */
+>  
+>  #include <linux/interrupt.h>
+> -#include <linux/gpio.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/irq.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/device.h>
+>  #include <linux/kernel.h>
 
-diff --git a/tools/perf/examples/bpf/augmented_raw_syscalls.c b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-index c9fd3b4d8e55..356513e81ec1 100644
---- a/tools/perf/examples/bpf/augmented_raw_syscalls.c
-+++ b/tools/perf/examples/bpf/augmented_raw_syscalls.c
-@@ -60,11 +60,27 @@ struct augmented_args_filename {
- 
- bpf_map(augmented_filename_map, PERCPU_ARRAY, int, struct augmented_args_filename, 1);
- 
-+static inline
-+unsigned int augmented_args__read_filename(struct augmented_args_filename *augmented_args,
-+					   const void *filename_arg, unsigned int filename_len)
-+{
-+	unsigned int len = sizeof(*augmented_args);
-+
-+	augmented_args->filename.reserved = 0;
-+	augmented_args->filename.size = probe_read_str(&augmented_args->filename.value, filename_len, filename_arg);
-+	if (augmented_args->filename.size < sizeof(augmented_args->filename.value)) {
-+		len -= sizeof(augmented_args->filename.value) - augmented_args->filename.size;
-+		len &= sizeof(augmented_args->filename.value) - 1;
-+	}
-+
-+	return len;
-+}
-+
- SEC("raw_syscalls:sys_enter")
- int sys_enter(struct syscall_enter_args *args)
- {
- 	struct augmented_args_filename *augmented_args;
--	unsigned int len = sizeof(*augmented_args), filename_len;
-+	unsigned int len, filename_len;
- 	const void *filename_arg = NULL;
- 	struct syscall *syscall;
- 	int key = 0;
-@@ -182,14 +198,7 @@ processed 46 insns (limit 1000000) max_states_per_insn 0 total_states 12 peak_st
- 	loop_iter_last(5)
- 
- 	if (filename_arg != NULL && filename_len <= sizeof(augmented_args->filename.value)) {
--		augmented_args->filename.reserved = 0;
--		augmented_args->filename.size = probe_read_str(&augmented_args->filename.value,
--							      filename_len,
--							      filename_arg);
--		if (augmented_args->filename.size < sizeof(augmented_args->filename.value)) {
--			len -= sizeof(augmented_args->filename.value) - augmented_args->filename.size;
--			len &= sizeof(augmented_args->filename.value) - 1;
--		}
-+		len = augmented_args__read_filename(augmented_args, filename_arg, filename_len);
- 	} else {
- 		len = sizeof(augmented_args->args);
- 	}
