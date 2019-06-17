@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 881EAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 725C0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3AB204FD
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4213F204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807055;
-	bh=HJaYIRQbEsz5NDstb/O2VfR5UOkNscug82Nvcx9Puqw=;
+	s=default; t=1560807059;
+	bh=vWnPCsZ87I0CouLrj3SdwsKQeAWq2u/qyQTlho+tctc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LebPnjFeMiV4T494OZQELpGFDdx8UCQVMHpWN2jUDkF8ewC1QG9V9QuImY6ob5wHW
-	 BIifEIRJKS4B/Bb4st3msQYzJxJHY9y5NQUHuwzzxlovHHGE0nGWwuEj6gbvlnyQeh
-	 5EQfx9pdpAIz99kW6Cp6xeYRhbbx5jpFd43vBTXM=
+	b=gQx1CAHknPwLuOSCs9HCVINeWb/vHTElz2GJYR/6PRW1wa0z3nCpaqk0CfpAaZxXp
+	 upLvmEUO+Dax/xqXoz4apgS3oTWLqZK/FetPVhMyypfM1sZSBZLvSfN2bMqwBISOBg
+	 4EypOjTWX74ja27rJaeTekHUHjQTel3WeTH9VWfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbfFQV3m (ORCPT
+        id S1730732AbfFQV3l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56782 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:29:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56840 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730217AbfFQV3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:35 -0400
+        id S1729964AbfFQV3i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D4182070B;
-        Mon, 17 Jun 2019 21:29:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0694204FD;
+        Mon, 17 Jun 2019 21:29:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806974;
-        bh=HJaYIRQbEsz5NDstb/O2VfR5UOkNscug82Nvcx9Puqw=;
+        s=default; t=1560806978;
+        bh=vWnPCsZ87I0CouLrj3SdwsKQeAWq2u/qyQTlho+tctc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x6oEuOgocZCRsuhsPEwmVLtwsLlJiWj1rV4MXnu73sJTORvB2kwkKFRazVw5LJoYg
-         wj6B5Za9vr6EY9XjgNAw5M3HFLBczaeaPzqBemh3WZUEv4h/16/izD/l+4TB1P/fUc
-         sujse0FLglg7o+NhOUymM1uCAs5RLADf/NitzVvQ=
+        b=RFjwzktZU4ggPUDCVF8sTMqvbqvyG0w+Fpt4sex/MCWVqv25lCYXLDkDPe0jGfo0+
+         LB0dkWWiLBrwz/1T0AgeHm+B5ohCfQAA2ftThgh8njN4n8oohMEYnKYL9kHyf0SY9+
+         H6/w3mDfFjs9l15X6O+jqABHBUF4aj3Ko2y/RL/g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH 4.14 46/53] USB: usb-storage: Add new ID to ums-realtek
-Date:   Mon, 17 Jun 2019 23:10:29 +0200
-Message-Id: <20190617210752.387411325@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 47/53] USB: serial: pl2303: add Allied Telesis VT-Kit3
+Date:   Mon, 17 Jun 2019 23:10:30 +0200
+Message-Id: <20190617210752.421265176@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -58,36 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Chris Packham <chris.packham@alliedtelesis.co.nz>
 
-commit 1a6dd3fea131276a4fc44ae77b0f471b0b473577 upstream.
+commit c5f81656a18b271976a86724dadd8344e54de74e upstream.
 
-There is one more Realtek card reader requires ums-realtek to work
-correctly.
+This is adds the vendor and device id for the AT-VT-Kit3 which is a
+pl2303-based device.
 
-Add the device ID to support it.
-
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
 Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/unusual_realtek.h |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/serial/pl2303.c |    1 +
+ drivers/usb/serial/pl2303.h |    3 +++
+ 2 files changed, 4 insertions(+)
 
---- a/drivers/usb/storage/unusual_realtek.h
-+++ b/drivers/usb/storage/unusual_realtek.h
-@@ -29,6 +29,11 @@ UNUSUAL_DEV(0x0bda, 0x0138, 0x0000, 0x99
- 		"USB Card Reader",
- 		USB_SC_DEVICE, USB_PR_DEVICE, init_realtek_cr, 0),
+--- a/drivers/usb/serial/pl2303.c
++++ b/drivers/usb/serial/pl2303.c
+@@ -109,6 +109,7 @@ static const struct usb_device_id id_tab
+ 	{ USB_DEVICE(SANWA_VENDOR_ID, SANWA_PRODUCT_ID) },
+ 	{ USB_DEVICE(ADLINK_VENDOR_ID, ADLINK_ND6530_PRODUCT_ID) },
+ 	{ USB_DEVICE(SMART_VENDOR_ID, SMART_PRODUCT_ID) },
++	{ USB_DEVICE(AT_VENDOR_ID, AT_VTKIT3_PRODUCT_ID) },
+ 	{ }					/* Terminating entry */
+ };
  
-+UNUSUAL_DEV(0x0bda, 0x0153, 0x0000, 0x9999,
-+		"Realtek",
-+		"USB Card Reader",
-+		USB_SC_DEVICE, USB_PR_DEVICE, init_realtek_cr, 0),
-+
- UNUSUAL_DEV(0x0bda, 0x0158, 0x0000, 0x9999,
- 		"Realtek",
- 		"USB Card Reader",
+--- a/drivers/usb/serial/pl2303.h
++++ b/drivers/usb/serial/pl2303.h
+@@ -160,3 +160,6 @@
+ #define SMART_VENDOR_ID	0x0b8c
+ #define SMART_PRODUCT_ID	0x2303
+ 
++/* Allied Telesis VT-Kit3 */
++#define AT_VENDOR_ID		0x0caa
++#define AT_VTKIT3_PRODUCT_ID	0x3001
 
 
