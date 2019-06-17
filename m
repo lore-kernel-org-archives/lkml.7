@@ -2,52 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F2AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A61D9C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 854BB2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75CCF20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:26:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806811;
-	bh=dFEDfaVOXr8xrEKzzjhSMrHtue7lma0PXPH0Q/4AO0k=;
+	s=default; t=1560806815;
+	bh=gwdxi5AAuoYgp387IoGFEKVh/fyMbDmAvT1oM3iYpVg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=O5/C42d76D1BtiqSJfqzvXSpJ7kEiTvQU8HK+NTrr2pffal6k45fpXqWJtTMNWpOY
-	 zBZrT+loTqi6axYCTK8AjMAGvq6Uij1XAG9f2dro2cuHzrGKkdypqhnOeh9W4uNl7w
-	 rCUxoKuSZex39XdAP9GZdM54zXOOnQ3oJp6NMIbc=
+	b=FDZb9ExdLOuAuG731/33DeqXTxWpSQrwpJ74eevtXNeTO5Gk7/W+t4QZjP1pmk+qu
+	 oMa7vfeG6q0ngkc5vEUFFtezQG1jAAKGcf4rTMFYSoG1tLPVqOv00Xy31WTgQji7FB
+	 RU3bsi47jSlozlL+XNNcu23jN7ct1X+KmOZU9wmk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730292AbfFQV0u (ORCPT
+        id S1730305AbfFQV0y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:26:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53500 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:26:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730279AbfFQV0s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:26:48 -0400
+        id S1730279AbfFQV0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:26:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E05B20657;
-        Mon, 17 Jun 2019 21:26:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FBAA20673;
+        Mon, 17 Jun 2019 21:26:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806807;
-        bh=dFEDfaVOXr8xrEKzzjhSMrHtue7lma0PXPH0Q/4AO0k=;
+        s=default; t=1560806810;
+        bh=gwdxi5AAuoYgp387IoGFEKVh/fyMbDmAvT1oM3iYpVg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PGnmwWvnyzlxz/dSwUPRkDbg+9RCM9SsXKEdPt4gIAx+fNgBVFFFto3Q1fVISIU87
-         Mhu4QUdJlDg89Z9v0FqG6tWIV5+YZk7h8MT9DqnNrFCxzXDeQPU8UtbhG0uXqQIVrq
-         aH2p4zWxQ1ZMT7FNeFupcia1Q9q2XSA6ZcHc4HQI=
+        b=px31JVjqlYRBkNLL3Fv5O+gpg65f5TVg7pKTYQyY1b6sKaeSYAbgjafgPZz9WbF24
+         w5JqZ9xkZsBQLrPcxiP5ZxQ4oCLAu3foVUXTYIfzRiVZNFTP7UJm23Om4SRsCPQCvk
+         3CyRLvNtz06y+6ug835Zqtpk06YixvQIMpdyPApM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 63/75] USB: serial: pl2303: add Allied Telesis VT-Kit3
-Date:   Mon, 17 Jun 2019 23:10:14 +0200
-Message-Id: <20190617210755.465974328@linuxfoundation.org>
+        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 28/75] ALSA: seq: Protect in-kernel ioctl calls with mutex
+Date:   Mon, 17 Jun 2019 23:09:39 +0200
+Message-Id: <20190617210753.921547314@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -60,41 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+[ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
 
-commit c5f81656a18b271976a86724dadd8344e54de74e upstream.
+ALSA OSS sequencer calls the ioctl function indirectly via
+snd_seq_kernel_client_ctl().  While we already applied the protection
+against races between the normal ioctls and writes via the client's
+ioctl_mutex, this code path was left untouched.  And this seems to be
+the cause of still remaining some rare UAF as spontaneously triggered
+by syzkaller.
 
-This is adds the vendor and device id for the AT-VT-Kit3 which is a
-pl2303-based device.
+For the sake of robustness, wrap the ioctl_mutex also for the call via
+snd_seq_kernel_client_ctl(), too.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/pl2303.c |    1 +
- drivers/usb/serial/pl2303.h |    3 +++
- 2 files changed, 4 insertions(+)
+ sound/core/seq/seq_clientmgr.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/serial/pl2303.c
-+++ b/drivers/usb/serial/pl2303.c
-@@ -106,6 +106,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(SANWA_VENDOR_ID, SANWA_PRODUCT_ID) },
- 	{ USB_DEVICE(ADLINK_VENDOR_ID, ADLINK_ND6530_PRODUCT_ID) },
- 	{ USB_DEVICE(SMART_VENDOR_ID, SMART_PRODUCT_ID) },
-+	{ USB_DEVICE(AT_VENDOR_ID, AT_VTKIT3_PRODUCT_ID) },
- 	{ }					/* Terminating entry */
- };
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index b55cb96d1fed..40ae8f67efde 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -2343,14 +2343,19 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
+ {
+ 	const struct ioctl_handler *handler;
+ 	struct snd_seq_client *client;
++	int err;
  
---- a/drivers/usb/serial/pl2303.h
-+++ b/drivers/usb/serial/pl2303.h
-@@ -155,3 +155,6 @@
- #define SMART_VENDOR_ID	0x0b8c
- #define SMART_PRODUCT_ID	0x2303
+ 	client = clientptr(clientid);
+ 	if (client == NULL)
+ 		return -ENXIO;
  
-+/* Allied Telesis VT-Kit3 */
-+#define AT_VENDOR_ID		0x0caa
-+#define AT_VTKIT3_PRODUCT_ID	0x3001
+ 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
+-		if (handler->cmd == cmd)
+-			return handler->func(client, arg);
++		if (handler->cmd == cmd) {
++			mutex_lock(&client->ioctl_mutex);
++			err = handler->func(client, arg);
++			mutex_unlock(&client->ioctl_mutex);
++			return err;
++		}
+ 	}
+ 
+ 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
+-- 
+2.20.1
+
 
 
