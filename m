@@ -2,196 +2,111 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 436D3C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:33:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F0BC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:35:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 192CF214AF
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:33:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12E3214AF
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:35:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560742519;
+	bh=qDpwxXZ6wcKktOYrsZtW3/esPTzlbJgkV+2pnuZsEHc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=T27+hp/UBu5oOxxFRZhQbSj4FKriloli5VXD6MwfsbZ4KHCV7wZO6KyYp6pTXevQX
+	 ukKxNRdoiIJGYM0PTsSaxVggROq7DPV66uleLm2ewgW5l4dyAVoEef0E07T+yVcvgl
+	 le1DU03DA0o1yffQiO0DIVjcC6phCo7rVUiYFKUE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfFQDdA (ORCPT
+        id S1727654AbfFQDfS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 23:33:00 -0400
-Received: from mga11.intel.com ([192.55.52.93]:12378 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727518AbfFQDc7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 23:32:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jun 2019 20:32:58 -0700
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 16 Jun 2019 20:32:56 -0700
-Subject: Re: [PATCH RESEND v3 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-To:     Tao Xu <tao3.xu@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com, fenghua.yu@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jingqi.liu@intel.com
-References: <20190616095555.20978-1-tao3.xu@intel.com>
- <20190616095555.20978-3-tao3.xu@intel.com>
-From:   Xiaoyao Li <xiaoyao.li@intel.com>
-Message-ID: <d99b2ae1-38fc-0b71-2613-8131decc923a@intel.com>
-Date:   Mon, 17 Jun 2019 11:32:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Sun, 16 Jun 2019 23:35:18 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34946 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfFQDfS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 23:35:18 -0400
+Received: by mail-pf1-f193.google.com with SMTP id d126so4872562pfd.2;
+        Sun, 16 Jun 2019 20:35:18 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Xf6/Wi7UEc9C3ULu2Qu1mtNXUj05B6UiEsqAT1yhjsE=;
+        b=eKK+89zK9GntlqsnW1izR8XsLJ9kzRaT2h5PCvWF7E2JOd1dm06kdjsv8WYnlHST5c
+         kwbSD/9r1WnmkzldQN/EpfkMTiu1FkMzUzeR9VWcmTf8aM0ATL0jIavX158lFWaZiz3f
+         iQF53mhkClYRuB3UkO2tFYAgRVLxtGU2CpI7tElwL0y7rEZFKQHiCs9iQc/yz7eDkp0t
+         g4BP6Hu95zdFxdULAai/U8Ze3F2umcE3UWckPBqvTjk6Ecu+1iDiLVweeWZeCoNWwwjj
+         q5BTPTABUPMzuKzfWIvc0dz6AJLWXtDH9JHhCoQd0ymiujGY4vI93HVE9wnaSFg4BHdo
+         630Q==
+X-Gm-Message-State: APjAAAWSRieeXOim/mHXGJlflQ1ope9mLiR3zncfp+a56wqCN994hFE1
+        KVu0n/SKY/M4cW7QK+BNBETr4O9ysfk=
+X-Google-Smtp-Source: APXvYqyLg6Z68lBlkLWn4CSUJfU9qya4CjBwsXJ62+xMHkqBhPTw8vhxd/nbSyzdI4bbbkRvG1HfCw==
+X-Received: by 2002:a62:1597:: with SMTP id 145mr3752630pfv.180.1560742517391;
+        Sun, 16 Jun 2019 20:35:17 -0700 (PDT)
+Received: from localhost ([2601:647:4700:b8cd:7726:b947:9a25:6e35])
+        by smtp.gmail.com with ESMTPSA id m12sm6754149pgj.80.2019.06.16.20.35.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 16 Jun 2019 20:35:16 -0700 (PDT)
+Date:   Sun, 16 Jun 2019 20:35:10 -0700
+From:   Moritz Fischer <mdf@kernel.org>
+To:     Alan Tull <atull@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Moritz Fischer <mdf@kernel.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Thor Thayer <thor.thayer@linux.intel.com>,
+        Richard Gong <richard.gong@linux.intel.com>,
+        linux-kernel@vger.kernel.org, linux-fpga@vger.kernel.org
+Subject: Re: [PATCH] MAINTAINERS: fpga: hand off maintainership to Moritz
+Message-ID: <20190617033510.GA25342@archbook>
+References: <20190617031113.4506-1-atull@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190616095555.20978-3-tao3.xu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617031113.4506-1-atull@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Alan,
 
+On Sun, Jun 16, 2019 at 10:11:13PM -0500, Alan Tull wrote:
+> I'm moving on to a new position and stepping down as FPGA subsystem
+> maintainer.  Moritz has graciously agreed to take over the
+> maintainership.
 
-On 6/16/2019 5:55 PM, Tao Xu wrote:
-> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
-> to determines the maximum time in TSC-quanta that the processor can reside
-> in either C0.1 or C0.2.
-> 
-> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
-> IA32_UMWAIT_CONTROL between host and guest. The variable
-> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
-> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
-> 
-> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
-> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
-> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+Thanks a lot for all the work you put into this, it was good fun working
+with you, and I hope you'll be back someday, or at least you'll keep
+working on the Linux Kernel in other areas.
+
+All: It'll take me a bit to get everything sorted, since I just switched
+jobs and am still getting set up there, too, so please be patient :)
+
+> Signed-off-by: Alan Tull <atull@kernel.org>
+Acked-by: Moritz Fischer <mdf@kernel.org>
 > ---
->   arch/x86/kvm/vmx/vmx.c  | 36 ++++++++++++++++++++++++++++++++++++
->   arch/x86/kvm/vmx/vmx.h  |  3 +++
->   arch/x86/power/umwait.c |  3 ++-
->   3 files changed, 41 insertions(+), 1 deletion(-)
+>  MAINTAINERS | 1 -
+>  1 file changed, 1 deletion(-)
 > 
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index b35bfac30a34..f33a25e82cb8 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1679,6 +1679,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   #endif
->   	case MSR_EFER:
->   		return kvm_get_msr_common(vcpu, msr_info);
-> +	case MSR_IA32_UMWAIT_CONTROL:
-> +		if (!vmx_waitpkg_supported())
-> +			return 1;
-> +
-> +		msr_info->data = vmx->msr_ia32_umwait_control;
-> +		break;
->   	case MSR_IA32_SPEC_CTRL:
->   		if (!msr_info->host_initiated &&
->   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> @@ -1841,6 +1847,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->   			return 1;
->   		vmcs_write64(GUEST_BNDCFGS, data);
->   		break;
-> +	case MSR_IA32_UMWAIT_CONTROL:
-> +		if (!vmx_waitpkg_supported())
-> +			return 1;
-> +
-> +		if (!data)
-> +			break;
-> +
-
-Why cannot clear it to zero?
-
-> +		vmx->msr_ia32_umwait_control = data;
-> +		break;
->   	case MSR_IA32_SPEC_CTRL:
->   		if (!msr_info->host_initiated &&
->   		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> @@ -4126,6 +4141,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool init_event)
->   	vmx->rmode.vm86_active = 0;
->   	vmx->spec_ctrl = 0;
->   
-> +	vmx->msr_ia32_umwait_control = 0;
-> +
->   	vcpu->arch.microcode_version = 0x100000000ULL;
->   	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->   	kvm_set_cr8(vcpu, 0);
-> @@ -6339,6 +6356,23 @@ static void atomic_switch_perf_msrs(struct vcpu_vmx *vmx)
->   					msrs[i].host, false);
->   }
->   
-> +static void atomic_switch_ia32_umwait_control(struct vcpu_vmx *vmx)
-> +{
-> +	u64 host_umwait_control;
-> +
-> +	if (!vmx_waitpkg_supported())
-> +		return;
-> +
-> +	host_umwait_control = umwait_control_cached;
-> +
-
-It's redundant to define host_umwait_control and this line, we can just 
-use umwait_control_cached.
-
-> +	if (vmx->msr_ia32_umwait_control != host_umwait_control)
-> +		add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
-> +				      vmx->msr_ia32_umwait_control,
-> +				      host_umwait_control, false);
-
-The bit 1 is reserved, at least, we need to do below to ensure not 
-modifying the reserved bit:
-
-	guest_val = (vmx->msr_ia32_umwait_control & ~BIT_ULL(1)) |
-		    (host_val & BIT_ULL(1))
-
-> +	else
-> +		clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
-> +}
-> +
->   static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->   {
->   	vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
-> @@ -6447,6 +6481,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->   
->   	atomic_switch_perf_msrs(vmx);
->   
-> +	atomic_switch_ia32_umwait_control(vmx);
-> +
->   	vmx_update_hv_timer(vcpu);
->   
->   	/*
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 61128b48c503..8485bec7c38a 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -14,6 +14,8 @@
->   extern const u32 vmx_msr_index[];
->   extern u64 host_efer;
->   
-> +extern u32 umwait_control_cached;
-> +
->   #define MSR_TYPE_R	1
->   #define MSR_TYPE_W	2
->   #define MSR_TYPE_RW	3
-> @@ -194,6 +196,7 @@ struct vcpu_vmx {
->   #endif
->   
->   	u64		      spec_ctrl;
-> +	u64		      msr_ia32_umwait_control;
->   
->   	u32 vm_entry_controls_shadow;
->   	u32 vm_exit_controls_shadow;
-> diff --git a/arch/x86/power/umwait.c b/arch/x86/power/umwait.c
-> index 7fa381e3fd4e..2e6ce4cbccb3 100644
-> --- a/arch/x86/power/umwait.c
-> +++ b/arch/x86/power/umwait.c
-> @@ -9,7 +9,8 @@
->    * MSR value. By default, umwait max time is 100000 in TSC-quanta and C0.2
->    * is enabled
->    */
-> -static u32 umwait_control_cached = 100000;
-> +u32 umwait_control_cached = 100000;
-> +EXPORT_SYMBOL_GPL(umwait_control_cached);
->   
->   /*
->    * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 80e2bfa049d7..448730982545 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -6266,7 +6266,6 @@ F:	include/linux/ipmi-fru.h
+>  K:	fmc_d.*register
+>  
+>  FPGA MANAGER FRAMEWORK
+> -M:	Alan Tull <atull@kernel.org>
+>  M:	Moritz Fischer <mdf@kernel.org>
+>  L:	linux-fpga@vger.kernel.org
+>  S:	Maintained
+> -- 
+> 2.21.0
 > 
+
+Cheers,
+Moritz
