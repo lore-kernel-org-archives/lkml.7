@@ -2,131 +2,78 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F12BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A764DC31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:49:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 135DA20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87CE2208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:49:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfFQQtS (ORCPT
+        id S1728415AbfFQQtY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:49:18 -0400
-Received: from mga09.intel.com ([134.134.136.24]:41735 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfFQQtS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:49:18 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 09:49:17 -0700
-X-ExtLoop1: 1
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.36])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Jun 2019 09:49:15 -0700
-Date:   Mon, 17 Jun 2019 09:49:15 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Stephen Smalley <sds@tycho.nsa.gov>,
-        Cedric Xing <cedric.xing@intel.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        selinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        pmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in
- SELinux
-Message-ID: <20190617164915.GA25085@linux.intel.com>
-References: <cover.1560131039.git.cedric.xing@intel.com>
- <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com>
- <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov>
- <20190611220243.GB3416@linux.intel.com>
- <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov>
- <20190614004600.GF18385@linux.intel.com>
- <20190614153840.GC12191@linux.intel.com>
- <CALCETrXcOQkvMHdh5DgdQ6JAgzsZCNFVEtnQz-5RbNr4vsadDQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrXcOQkvMHdh5DgdQ6JAgzsZCNFVEtnQz-5RbNr4vsadDQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Mon, 17 Jun 2019 12:49:24 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:35495 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQQtX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:49:23 -0400
+Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MPGiR-1hzh1w0jJF-00PaW9; Mon, 17 Jun 2019 18:49:21 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     linus.walleij@linaro.org, bgolaszewski@baylibre.com,
+        orsonzhai@gmail.com, baolin.wang@linaro.org, zhang.lyra@gmail.com,
+        linux-gpio@vger.kernel.org
+Subject: [PATCH 1/7] drivers: gpio: rcar: pedantic formatting
+Date:   Mon, 17 Jun 2019 18:49:14 +0200
+Message-Id: <1560790160-3372-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:SnjedU/ByefI/v0vNbinpChc6ZVtZNlZXKpElIxqUSAyHtl9+px
+ 07HnozTKE3SX9mBPjHneNa/sjo5Q7zEGb1/X8kGbR4FM6uEhfj5EHfg40sURf3U4DoFPB3p
+ 70L82paEJ6zUlXe5g70WkgJgg+3/KDbGXAPuslLcKR0pTBuYtagMMGkDZRch5Fe7ZEYW9Zx
+ udjHnVPs6o8AnzJKZkhIg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yFkVa1pZbcs=:NNJ0AO5YnYEUvwuMScIjYC
+ zHUH+52tXowPfQmcQSjHODmvaCxdiVAHDYOBBk5rPBIoxeqXTxVO1tyZtb/93N/sIo8K2yuzk
+ 2TZSCVhniXOZY0Q5xhEadiYtUh4FHKhiFcB+0/UcfdyY49oPDyFSvwsu1wV1Zhoqo8SAInyRz
+ 7Mr57nqdcE8AkVlPa6awQlPgAU+lMFcrUOuezntcJVPtI+2WeHPbeJ6b2wpDuqE5k5SgDLHkC
+ 77L3TUQ2pUxIizJJz0Ti3nrFk3v9tgUcftaRX4hJtfI4sH/ztOi0oHh8cgEOkwpcK25IDuivt
+ VV5hRxlIuhAO8iEUnBRCMbZCzqf6bOGdJo5kNuSXeHcRH4AiwDafOtyiboSpoD5d2rP4u94Jt
+ SAlRbpTyw3EJ1qaeUtPHk3035LT9seVRI2OQDEfGKyvpE/Kg7IYIRux7hccDwZ1DileJ5l7vg
+ NaNM6md1zafVefA+4rmXrF8NRUkups9+AlgCVLRucaxPBwmLL8BNWekwh9qARvhSccQsPVT8H
+ 2rnjLXbZdI/cW1KHCUKxIJiTjLWSTf20vmcG5944jSgu8N8ZC8X+eiHwcdERbt6ejihbpFw3T
+ 4qO6XYAQJoZ52WpxmYOT+UoJZkO6RjfOcIYdibYnq6LWCF231ll0Ca+cEuQS04+qQC1cExs3A
+ sIe82nKmobjJo/TOunyHfYNIYzwi8VJnsw4pcsDWQ0JJbLJgt3v/EGubcTJ01upiz72zFKDEG
+ /NrXlxLr9rE1fHp83pD5+Yg8IXpHLEJUYV8zjg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 03:14:51PM -0700, Andy Lutomirski wrote:
-> On Fri, Jun 14, 2019 at 8:38 AM Sean Christopherson
-> <sean.j.christopherson@intel.com> wrote:
-> > > Andy and/or Cedric, can you please weigh in with a concrete (and practical)
-> > > use case that will break if we go with #1?  The auditing issues for #2/#3
-> > > are complex to say the least...
-> 
-> The most significant issue I see is the following.  Consider two
-> cases. First, an SGX2 enclave that dynamically allocates memory but
-> doesn't execute code from dynamic memory.  Second, an SGX2 enclave
-> that *does* execute code from dynamic memory.  In #1, the untrusted
-> stack needs to decide whether to ALLOW_EXEC when the memory is
-> allocated, which means that it either needs to assume the worst or it
-> needs to know at allocation time whether the enclave ever intends to
-> change the permission to X.
+A tab sneaked in, where it shouldn't be.
 
-I'm just not convinced that folks running enclaves that can't communicate
-their basic functionality will care one whit about SELinux restrictions,
-i.e. will happily give EXECMOD even if it's not strictly necessary.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
+---
+ drivers/gpio/gpio-rcar.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-rcar.c b/drivers/gpio/gpio-rcar.c
+index 70e95fc..187984d 100644
+--- a/drivers/gpio/gpio-rcar.c
++++ b/drivers/gpio/gpio-rcar.c
+@@ -489,7 +489,7 @@ static int gpio_rcar_probe(struct platform_device *pdev)
+ 	irq_chip->irq_unmask = gpio_rcar_irq_enable;
+ 	irq_chip->irq_set_type = gpio_rcar_irq_set_type;
+ 	irq_chip->irq_set_wake = gpio_rcar_irq_set_wake;
+-	irq_chip->flags	= IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
++	irq_chip->flags = IRQCHIP_SET_TYPE_MASKED | IRQCHIP_MASK_ON_SUSPEND;
  
-> I suppose there's a middle ground.  The driver could use model #1 for
-> driver-filled pages and model #2 for dynamic pages.  I haven't tried
-> to fully work it out, but I think there would be the ALLOW_READ /
-> ALLOW_WRITE / ALLOW_EXEC flag for EADD-ed pages but, for EAUG-ed
-> pages, there would be a different policy.  This might be as simple as
-> internally having four flags instead of three:
-> 
-> ALLOW_READ, ALLOW_WRITE, ALLOW_EXEC: as before
-> 
-> ALLOW_EXEC_COND: set implicitly by the driver for EAUG.
-> 
-> As in #1, if you try to mmap or protect a page with neither ALLOW_EXEC
-> variant, it fails (-EACCES, perhaps).  But, if you try to mmap or
-> mprotect an ALLOW_EXEC_COND page with PROT_EXEC, you ask LSM for
-> permission.  There is no fancy DIRTY tracking here, since it's
-> reasonable to just act as though *every* ALLOW_EXEC_COND page is
-> dirty.  There is no real auditing issue here, since LSM can just log
-> what permission is missing.
-> 
-> Does this seem sensible?  It might give us the best of #1 and #2.
+ 	ret = gpiochip_add_data(gpio_chip, p);
+ 	if (ret) {
+-- 
+1.9.1
 
-It would work and is easy to implement *if* SELinux ties permissions to
-the process, as the SIGSTRUCT vma/file won't be available at
-EAUG+mprotect().  I already have a set of patches to that effect, I'll
-send 'em out in a bit.
-
-FWIW, we still need to differentiate W->X from WX on SGX1, i.e. declaring
-ALLOW_WRITE + ALLOW_EXEC shouldn't imply WX.  This is also addressed in
-the forthcoming updated RFC.
-
-> > Follow-up question, is #1 any more palatable if SELinux adds SGX specific
-> > permissions and ties them to the process (instead of the vma or sigstruct)?
-> 
-> I'm not sure this makes a difference.  It simplifies SIGSTRUCT
-> handling, which is handy.
