@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A3B6C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61955C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E24382133F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3585621019
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806677;
-	bh=cFx4VBLzAal3G0rBA32RUb0yH6Y2uo0QIMRMn9lE+cY=;
+	s=default; t=1560806679;
+	bh=/OoeYX4BnKXFt36txqAKdXO7B9CybLfnPWdIEhSqQ3k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GvOs4oZ/iY26TedKn/KOVvUPK4UNKtkF8f7ICre/zl6jRRaRzomuG3rqjnm3rAmok
-	 YJWLyv4Pq+wKSqmGjRYKhISZ0xfmeuSWGT26/9/jV+pFTde1m0xqamiSmMorJQQNNy
-	 P704YHcDLTw4HUMudhZeAWmq/dnk+n79qIviEt4I=
+	b=TbgqYLcmiVwa/4dqfQY030b7svbSzsmzPTRG2avt5eghYwjT2LlCrbFbGcdl1Dlmx
+	 OS79+E9Xa6V48Q6hH6+BlIyWiGuy4c9FnNKYMMG7ncY3jPpH0qZVcFcbwcNNklWW1l
+	 iXjip0dmhpjXrvhGIT/o/00be2bAcsMzeKMJuHtc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729956AbfFQVYf (ORCPT
+        id S1729966AbfFQVYh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:24:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50212 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:24:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729949AbfFQVYd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:24:33 -0400
+        id S1729954AbfFQVYf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:24:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09A9D20657;
-        Mon, 17 Jun 2019 21:24:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9FED821019;
+        Mon, 17 Jun 2019 21:24:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806672;
-        bh=cFx4VBLzAal3G0rBA32RUb0yH6Y2uo0QIMRMn9lE+cY=;
+        s=default; t=1560806675;
+        bh=/OoeYX4BnKXFt36txqAKdXO7B9CybLfnPWdIEhSqQ3k=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WzZVlJfa8yw1+1jPkHBct/30AzCquTebUeUEy/kUQ1GW67Z8vfs3wtig3keo+XukM
-         9E/yfS6Dyt5jvqUlat0L4KT7ZjBFQOUH33lCTD4a37aLtFyzf8L764cNvmO71bqWCQ
-         6AuUmtNnOHEBYpjD5F9bOKuVXFM6FnXdet47OAF0=
+        b=prcKMK3elRc2KsKld1yTl5s6fV0O5p9EmK2ZmtdoeGeDElnl+cVK3nU+6hqEyLu0S
+         opaFxA83CIT9vyer1Wf9OWxUEuSlAVzr0w9dAvBFciQS40czfJtwkrK3VkQ7DJTSlt
+         nauE05FssOnZ93ft9eql1fWokgatNNoNBmW432TA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 4.19 18/75] ptrace: restore smp_rmb() in __ptrace_may_access()
-Date:   Mon, 17 Jun 2019 23:09:29 +0200
-Message-Id: <20190617210753.565627666@linuxfoundation.org>
+        stable@vger.kernel.org,
+        AngeloGioacchino Del Regno <kholk11@gmail.com>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <jroedel@suse.de>
+Subject: [PATCH 4.19 19/75] iommu/arm-smmu: Avoid constant zero in TLBI writes
+Date:   Mon, 17 Jun 2019 23:09:30 +0200
+Message-Id: <20190617210753.598203710@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -60,63 +63,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jann Horn <jannh@google.com>
+From: Robin Murphy <robin.murphy@arm.com>
 
-commit f6581f5b55141a95657ef5742cf6a6bfa20a109f upstream.
+commit 4e4abae311e4b44aaf61f18a826fd7136037f199 upstream.
 
-Restore the read memory barrier in __ptrace_may_access() that was deleted
-a couple years ago. Also add comments on this barrier and the one it pairs
-with to explain why they're there (as far as I understand).
+Apparently, some Qualcomm arm64 platforms which appear to expose their
+SMMU global register space are still, in fact, using a hypervisor to
+mediate it by trapping and emulating register accesses. Sadly, some
+deployed versions of said trapping code have bugs wherein they go
+horribly wrong for stores using r31 (i.e. XZR/WZR) as the source
+register.
 
-Fixes: bfedb589252c ("mm: Add a user_ns owner to mm_struct and fix ptrace permission checks")
+While this can be mitigated for GCC today by tweaking the constraints
+for the implementation of writel_relaxed(), to avoid any potential
+arms race with future compilers more aggressively optimising register
+allocation, the simple way is to just remove all the problematic
+constant zeros. For the write-only TLB operations, the actual value is
+irrelevant anyway and any old nearby variable will provide a suitable
+GPR to encode. The one point at which we really do need a zero to clear
+a context bank happens before any of the TLB maintenance where crashes
+have been reported, so is apparently not a problem... :/
+
+Reported-by: AngeloGioacchino Del Regno <kholk11@gmail.com>
+Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+Acked-by: Will Deacon <will.deacon@arm.com>
 Cc: stable@vger.kernel.org
-Acked-by: Kees Cook <keescook@chromium.org>
-Acked-by: Oleg Nesterov <oleg@redhat.com>
-Signed-off-by: Jann Horn <jannh@google.com>
-Signed-off-by: Eric W. Biederman <ebiederm@xmission.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/cred.c   |    9 +++++++++
- kernel/ptrace.c |   10 ++++++++++
- 2 files changed, 19 insertions(+)
+ drivers/iommu/arm-smmu.c |   15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
---- a/kernel/cred.c
-+++ b/kernel/cred.c
-@@ -448,6 +448,15 @@ int commit_creds(struct cred *new)
- 		if (task->mm)
- 			set_dumpable(task->mm, suid_dumpable);
- 		task->pdeath_signal = 0;
-+		/*
-+		 * If a task drops privileges and becomes nondumpable,
-+		 * the dumpability change must become visible before
-+		 * the credential change; otherwise, a __ptrace_may_access()
-+		 * racing with this change may be able to attach to a task it
-+		 * shouldn't be able to attach to (as if the task had dropped
-+		 * privileges without becoming nondumpable).
-+		 * Pairs with a read barrier in __ptrace_may_access().
-+		 */
- 		smp_wmb();
+--- a/drivers/iommu/arm-smmu.c
++++ b/drivers/iommu/arm-smmu.c
+@@ -56,6 +56,15 @@
+ #include "io-pgtable.h"
+ #include "arm-smmu-regs.h"
+ 
++/*
++ * Apparently, some Qualcomm arm64 platforms which appear to expose their SMMU
++ * global register space are still, in fact, using a hypervisor to mediate it
++ * by trapping and emulating register accesses. Sadly, some deployed versions
++ * of said trapping code have bugs wherein they go horribly wrong for stores
++ * using r31 (i.e. XZR/WZR) as the source register.
++ */
++#define QCOM_DUMMY_VAL -1
++
+ #define ARM_MMU500_ACTLR_CPRE		(1 << 1)
+ 
+ #define ARM_MMU500_ACR_CACHE_LOCK	(1 << 26)
+@@ -398,7 +407,7 @@ static void __arm_smmu_tlb_sync(struct a
+ {
+ 	unsigned int spin_cnt, delay;
+ 
+-	writel_relaxed(0, sync);
++	writel_relaxed(QCOM_DUMMY_VAL, sync);
+ 	for (delay = 1; delay < TLB_LOOP_TIMEOUT; delay *= 2) {
+ 		for (spin_cnt = TLB_SPIN_COUNT; spin_cnt > 0; spin_cnt--) {
+ 			if (!(readl_relaxed(status) & sTLBGSTATUS_GSACTIVE))
+@@ -1637,8 +1646,8 @@ static void arm_smmu_device_reset(struct
  	}
  
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -323,6 +323,16 @@ static int __ptrace_may_access(struct ta
- 	return -EPERM;
- ok:
- 	rcu_read_unlock();
-+	/*
-+	 * If a task drops privileges and becomes nondumpable (through a syscall
-+	 * like setresuid()) while we are trying to access it, we must ensure
-+	 * that the dumpability is read after the credentials; otherwise,
-+	 * we may be able to attach to a task that we shouldn't be able to
-+	 * attach to (as if the task had dropped privileges without becoming
-+	 * nondumpable).
-+	 * Pairs with a write barrier in commit_creds().
-+	 */
-+	smp_rmb();
- 	mm = task->mm;
- 	if (mm &&
- 	    ((get_dumpable(mm) != SUID_DUMP_USER) &&
+ 	/* Invalidate the TLB, just in case */
+-	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLH);
+-	writel_relaxed(0, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
++	writel_relaxed(QCOM_DUMMY_VAL, gr0_base + ARM_SMMU_GR0_TLBIALLH);
++	writel_relaxed(QCOM_DUMMY_VAL, gr0_base + ARM_SMMU_GR0_TLBIALLNSNH);
+ 
+ 	reg = readl_relaxed(ARM_SMMU_GR0_NS(smmu) + ARM_SMMU_GR0_sCR0);
+ 
 
 
