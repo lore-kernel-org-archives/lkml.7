@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2969AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADB0FC31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E821421019
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76A102063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:28:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806915;
-	bh=W0nEJ2HcSn5ppc2AopiwdJYBkCjGNiQP/SC3t8g1ZkA=;
+	s=default; t=1560806918;
+	bh=8XSvJ2TFsgwWkkcGwIZ6kDllatsH/sIS52RzuLD3X50=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FpCLzTz7dO0o+BWS9+F5+vzYoCZpMS6hDmDued9A3iktm1zeB6Ap9Yo7TCdwvfMgM
-	 /tLTU8z1zoOpL8k2j0UFTAvEL+K0ZN8QeGcdu219KKrPWyLvSpHboOODRRmiQMIHiw
-	 ASbrxFXh6IkJ1fcTF1j1gD0z8H5dx4kZh+HBk2c0=
+	b=pYIi72E+6b9XmqonNaABkuNhXDkHo/7KxwrdTaxhlIMF8qnK8ADDZRApO0pfH1jzE
+	 HuZPt1PPFDHJMjA4e/0z4QRMerzE5ehSf3EYS2prP6RjHPCIeGgu7BoXvacgq4KpEB
+	 tTpdax7UByCEys4rpnaNdsfKPN8gUCUUZLC6noxs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbfFQV2e (ORCPT
+        id S1730270AbfFQV2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:28:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55556 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:28:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729095AbfFQV23 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:28:29 -0400
+        id S1728930AbfFQV2c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:28:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 27BC3204FD;
-        Mon, 17 Jun 2019 21:28:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5F782070B;
+        Mon, 17 Jun 2019 21:28:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806908;
-        bh=W0nEJ2HcSn5ppc2AopiwdJYBkCjGNiQP/SC3t8g1ZkA=;
+        s=default; t=1560806911;
+        bh=8XSvJ2TFsgwWkkcGwIZ6kDllatsH/sIS52RzuLD3X50=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Q3t6bHRiT+HKyCOg3aKbeIUpIW+rwxv2LGidZhyXbExZSiufZvnoqpq5AENLQV6gz
-         UVWfO9ucJJTP/VkEtxJAaCcMRSloWEAqQ6kdrwGY6+QYeZ2DLEg+GjzKyV+T8zzXA3
-         CFnhCVAtU043+tMClMGiMdo1QY7sSnkq5XedEwhM=
+        b=gBMlIVmJkuaKk/K4X1BiRb+lYbWQF3vBrThwfk9cO7FZjvHYAUdlN2KFlu67AkMfv
+         S8zKde/A+T103RPWncwFMYwBBzlPYS1ej7J41Qb3qrlEKkLdeKH+2cxJHpUuOwhBT5
+         FaN5ZK+gybwP6cltKLUMcWTIXFAf2RJsrYXuwj1I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 4.14 04/53] HID: wacom: Sync INTUOSP2_BT touch state after each frame if necessary
-Date:   Mon, 17 Jun 2019 23:09:47 +0200
-Message-Id: <20190617210746.039489860@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.14 05/53] ALSA: oxfw: allow PCM capture for Stanton SCS.1m
+Date:   Mon, 17 Jun 2019 23:09:48 +0200
+Message-Id: <20190617210746.182179497@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -59,51 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <jason.gerecke@wacom.com>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 69dbdfffef20c715df9f381b2cee4e9e0a4efd93 upstream.
+commit d8fa87c368f5b4096c4746894fdcc195da285df1 upstream.
 
-The Bluetooth interface of the 2nd-gen Intuos Pro batches together four
-independent "frames" of finger data into a single report. Each frame
-is essentially equivalent to a single USB report, with the up-to-10
-fingers worth of information being spread across two frames. At the
-moment the driver only calls `input_sync` after processing all four
-frames have been processed, which can result in the driver sending
-multiple updates for a single slot within the same SYN_REPORT. This
-can confuse userspace, so modify the driver to sync more often if
-necessary (i.e., after reporting the state of all fingers).
+Stanton SCS.1m can transfer isochronous packet with Multi Bit Linear
+Audio data channels, therefore it allows software to capture PCM
+substream. However, ALSA oxfw driver doesn't.
 
-Fixes: 4922cd26f03c ("HID: wacom: Support 2nd-gen Intuos Pro's Bluetooth classic interface")
-Cc: <stable@vger.kernel.org> # 4.11+
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+This commit changes the driver to add one PCM substream for capture
+direction.
+
+Fixes: de5126cc3c0b ("ALSA: oxfw: add stream format quirk for SCS.1 models")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_wac.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ sound/firewire/oxfw/oxfw.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -1328,11 +1328,17 @@ static void wacom_intuos_pro2_bt_touch(s
- 		if (wacom->num_contacts_left <= 0) {
- 			wacom->num_contacts_left = 0;
- 			wacom->shared->touch_down = wacom_wac_finger_count_touches(wacom);
-+			input_sync(touch_input);
- 		}
+--- a/sound/firewire/oxfw/oxfw.c
++++ b/sound/firewire/oxfw/oxfw.c
+@@ -176,9 +176,6 @@ static int detect_quirks(struct snd_oxfw
+ 		oxfw->midi_input_ports = 0;
+ 		oxfw->midi_output_ports = 0;
+ 
+-		/* Output stream exists but no data channels are useful. */
+-		oxfw->has_output = false;
+-
+ 		return snd_oxfw_scs1x_add(oxfw);
  	}
  
--	input_report_switch(touch_input, SW_MUTE_DEVICE, !(data[281] >> 7));
--	input_sync(touch_input);
-+	if (wacom->num_contacts_left == 0) {
-+		// Be careful that we don't accidentally call input_sync with
-+		// only a partial set of fingers of processed
-+		input_report_switch(touch_input, SW_MUTE_DEVICE, !(data[281] >> 7));
-+		input_sync(touch_input);
-+	}
-+
- }
- 
- static void wacom_intuos_pro2_bt_pad(struct wacom_wac *wacom)
 
 
