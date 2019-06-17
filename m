@@ -2,133 +2,107 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58A10C46477
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:36:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F481C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30D0E20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:36:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ntPi1qAn"
+	by mail.kernel.org (Postfix) with ESMTP id 70922217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:37:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727686AbfFQDgf (ORCPT
+        id S1727684AbfFQDh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 23:36:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:46449 "EHLO ozlabs.org"
+        Sun, 16 Jun 2019 23:37:57 -0400
+Received: from mga07.intel.com ([134.134.136.100]:59456 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727652AbfFQDge (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 23:36:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Rxhb0gc9z9sBp;
-        Mon, 17 Jun 2019 13:36:30 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560742592;
-        bh=LowPzVDsxLqs/C3kR5JDANavRyAIxtOAT539ZcPPyZQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ntPi1qAnPvfrzZtNQRv/UNA55KCjBeBmVKeh4C5HSJNbl7WWVJtNu0zdII8na+3sS
-         rnIL++ATvJo0e+D7N6bQq/jsEX1K/3EMnOynYXZgeMBVutpl9/akwE84/N0yx6tBYv
-         91mCy+2YfHn3oqF829XYDp86SrzGD1XW2CqBgliOBbLhvcUf6i0SnvQ1ntTCN60TT0
-         UuJNKn60j/3IcCJwUDpbBTK/CsEqLO+huLHT1HBQ0k0JGj/+oBzMmYcSRSukojrRdd
-         Ws2KxW4lyhnn0psloZ3xiPt9ZBMsGZ33Fpe3mIh7L1g8H/JnlMDjrlF+GK+7afMPms
-         tduBur6RHbDIg==
-Date:   Mon, 17 Jun 2019 13:36:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Lucas Stach <l.stach@pengutronix.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Steve Longerbeam <slongerbeam@gmail.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Subject: linux-next: manual merge of the imx-drm tree with the v4l-vdb tree
-Message-ID: <20190617133629.7c276a67@canb.auug.org.au>
+        id S1727625AbfFQDh4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 23:37:56 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Jun 2019 20:37:56 -0700
+X-ExtLoop1: 1
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by FMSMGA003.fm.intel.com with ESMTP; 16 Jun 2019 20:37:56 -0700
+Date:   Sun, 16 Jun 2019 20:28:26 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH 1/3] x86/resctrl: Get max rmid and occupancy scale
+ directly from CPUID instead of cpuinfo_x86
+Message-ID: <20190617032826.GB214090@romley-ivt3.sc.intel.com>
+References: <1560705250-211820-1-git-send-email-fenghua.yu@intel.com>
+ <1560705250-211820-2-git-send-email-fenghua.yu@intel.com>
+ <20190616175233.GA10821@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/gdQjnfksCTf=EUManH2KJQC"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190616175233.GA10821@zn.tnic>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/gdQjnfksCTf=EUManH2KJQC
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jun 16, 2019 at 07:52:33PM +0200, Borislav Petkov wrote:
+> On Sun, Jun 16, 2019 at 10:14:08AM -0700, Fenghua Yu wrote:
+> > @@ -617,13 +617,20 @@ static void l3_mon_evt_init(struct rdt_resource *r)
+> >  		list_add_tail(&mbm_local_event.list, &r->evt_list);
+> >  }
+> >  
+> > -int rdt_get_mon_l3_config(struct rdt_resource *r)
+> > +int __init rdt_get_mon_l3_config(struct rdt_resource *r)
+> >  {
+> >  	unsigned int cl_size = boot_cpu_data.x86_cache_size;
+> > +	u32 eax, ebx, ecx, edx;
+> >  	int ret;
+> >  
+> > -	r->mon_scale = boot_cpu_data.x86_cache_occ_scale;
+> > -	r->num_rmid = boot_cpu_data.x86_cache_max_rmid + 1;
+> > +	/*
+> > +	 * At this point, CQM LLC and one of L3 occupancy, MBM total, and
+> > +	 * MBM local monitoring features must be supported. So sub-leaf
+> > +	 * (EAX=0xf, ECX=1) contains needed information for this resource.
+> > +	 */
+> > +	cpuid_count(0xf, 1, &eax, &ebx, &ecx, &edx);
+> > +	r->num_rmid = ecx + 1;
+> > +	r->mon_scale = ebx;
+> >  
+> >  	/*
+> >  	 * A reasonable upper limit on the max threshold is the number
+> 
+> This is simpler than that:
+> 
+> https://lkml.kernel.org/r/20190614174959.GF198207@romley-ivt3.sc.intel.com
+> 
+> Why?
 
-Hi all,
+After think this code again, ecx and ebx in sub-leaf CPUID.f.1 actually
+contains the number of rmid and monitoring scale. The two variables are
+always valid if any of L3 occupancy, MBM total, and MBM local monitoring
+features is supported. So there is no need to check the features to get
+the info.
 
-Today's linux-next merge of the imx-drm tree got a conflict in:
+But seems this patch is not needed according to Thomas?
 
-  drivers/staging/media/imx/imx-ic-prpencvf.c
+Should I do the following changes in the next version of patch set?
 
-between commits:
+1. Remove patch #1
+2. Change patch #2 to the patch in https://lkml.org/lkml/2019/6/16/274
+3. Keep patch #3
 
-  6d01b7ff5233 ("media: staging/imx: Switch to sync registration for IPU su=
-bdevs")
-  34ff38745b16 ("media: staging/imx: Pass device to alloc/free_dma_buf")
+Please advice.
 
-from the v4l-vdb tree and commit:
+Thanks.
 
-  f208b26e61df ("gpu: ipu-v3: ipu-ic: Fully describe colorspace conversions=
-")
+-Fenghua
 
-from the imx-drm tree.
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/staging/media/imx/imx-ic-prpencvf.c
-index 82bba68c554e,f2fe3c11c70e..000000000000
---- a/drivers/staging/media/imx/imx-ic-prpencvf.c
-+++ b/drivers/staging/media/imx/imx-ic-prpencvf.c
-@@@ -460,7 -465,18 +461,18 @@@ static int prp_setup_rotation(struct pr
-  	incc =3D priv->cc[PRPENCVF_SINK_PAD];
-  	outcc =3D vdev->cc;
- =20
-+ 	ret =3D ipu_ic_calc_csc(&csc,
-+ 			      infmt->ycbcr_enc, infmt->quantization,
-+ 			      incc->cs,
-+ 			      outfmt->ycbcr_enc, outfmt->quantization,
-+ 			      outcc->cs);
-+ 	if (ret) {
-+ 		v4l2_err(&ic_priv->sd, "ipu_ic_calc_csc failed, %d\n",
-+ 			 ret);
-+ 		return ret;
-+ 	}
-+=20
- -	ret =3D imx_media_alloc_dma_buf(priv->md, &priv->rot_buf[0],
- +	ret =3D imx_media_alloc_dma_buf(ic_priv->ipu_dev, &priv->rot_buf[0],
-  				      outfmt->sizeimage);
-  	if (ret) {
-  		v4l2_err(&ic_priv->sd, "failed to alloc rot_buf[0], %d\n", ret);
-
---Sig_/gdQjnfksCTf=EUManH2KJQC
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0HCr0ACgkQAVBC80lX
-0GwE1wf/c+7+zpXahMO3i71+2SqwJ0Tqo+/OyPG/cNDOcCsPTP4k7KLp4J3KD//r
-6kfJ1StR2g22xkBwILN7Kj5yiirCa+/CQ2hgolTzILd2ai9GgCRYpPiNEOglc0oA
-FG71QZC5xMVxbAdbiJE82P5ffC0xrzhUP4YUWMiAgac4uIV0bDQbY3WzRw+g/ffC
-I7Usx+vYEwrbZmKV3NU5cCFCP6WgNZbBIZuTY9kU8d0A5AjYNQaIrQlgxn7WQDcE
-mAUHxMrBWfvmy4ijYgYjp8lI6AgDy2hpgld9cN6EzgvYYGOh0114ZOUP7s8CUiWF
-zsGgKjV39aEhzZ3TC7c4OFif93UVaA==
-=QW6x
------END PGP SIGNATURE-----
-
---Sig_/gdQjnfksCTf=EUManH2KJQC--
