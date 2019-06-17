@@ -6,23 +6,23 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB70FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:43:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9077C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:43:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997012084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:43:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA2B42084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:43:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729085AbfFQSnc (ORCPT
+        id S1729074AbfFQSnb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:43:32 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:56949 "EHLO
+        Mon, 17 Jun 2019 14:43:31 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:45443 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728691AbfFQSl5 (ORCPT
+        with ESMTP id S1728823AbfFQSl6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:41:57 -0400
+        Mon, 17 Jun 2019 14:41:58 -0400
 Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
  (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MnJdC-1iJjV53YXs-00jLfG; Mon, 17 Jun 2019 20:41:43 +0200
+ 1MHX3X-1hpt0735LV-00Dbt1; Mon, 17 Jun 2019 20:41:46 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     thloh@altera.com, linus.walleij@linaro.org,
@@ -33,28 +33,31 @@ Cc:     thloh@altera.com, linus.walleij@linaro.org,
         alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
         linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
         patches@opensource.cirrus.com
-Subject: [PATCH 15/30] drivers: gpio: tps6586x: use subsys_platform_driver()
-Date:   Mon, 17 Jun 2019 20:40:56 +0200
-Message-Id: <1560796871-18560-15-git-send-email-info@metux.net>
+Subject: [PATCH 18/30] drivers: gpio: wm831x: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:40:59 +0200
+Message-Id: <1560796871-18560-18-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
 References: <1560796871-18560-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:qKwzpuqgoNiBk70+PbpO/q0x0KY+ySxWp9cR8SnTejgI5QoqMFa
- oLeLwb1gqAmg4mU3A7BWnd9S6/IFmKSCJm/Ozd4/97DFdS9iJw8lCN44gl2f2aZTID2KN3x
- YV9q5hFSfUkRdVQyPBJ5IKvaUei3ah8ksa36aCwx4M6tzhIi1VNeK1/mxKQOFLi3+vL8XWb
- L5Td7lDeu6Sy5PS+Oavjg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9omeeGzECNA=:ra+/juBGEHcZ37DeNlQ49G
- rSbMDrnWJ0rPQpqpJ3tFdAAH/CulVNRYeHFQ9/SEa3BaNur9BPHUkeuaoFWwINkD2c/GV8xNU
- a86BJXIH2rTbCjCsOWcck1mLhD4yOeqOzxGU1HMCxwIOvT6r5oJ+xdDSmCM7PeI8tHywRWxiy
- GKneMAhOmeDmmFZeSLX1dGqFnyloM2zFvEPgP0ueoKjyQJszlnxIZ/bahIMoAfUVnOkYqEDhK
- 7jtXW3rVhvr20Eq1zq98mgrdY2SouJvSssnYiItlqmXIQON8x/OGfp+icpmAarWtz5QMhCsnJ
- MLq+qGYYZ0M0CgQ5Ufn/AfkhzkNdyOu4j+g+RyCCEwqC39YOqVz5RFbvAcUMXy5JvNexJZQ+6
- VqmtoJNmfNC6n5+JaBiSrF6ssltxsZ1ZcZOrfh2CsCK4UPMwAZ/9DAppLtcLuBBpwzva9uUBe
- NHr4E4ZmD/pgaTQmFjqkMwaLRnMGMVnj/aEvoyTv4z1b4H/Kowra08gzkNvAXnkTB7dtWryaq
- cXAmMYR4tmbMPDaYGLpZIH8tYaJEn1rpIuuLxA9OeFvDnw74vvVj8ecjNnT9juY/dGs8G5z4e
- A3VVllS3k3J9G/CaiZYHzXGkRDrgZ1UiNl40q7j087MuUebOeDI31JuHPIgYasiIVkFqqZes5
- l7+r0CSd/eMDRTczl7aYWyYH7BMzIOliDC//M4jC/1b+YQPnHEeKDS3XY+ZcTAhpXejQZUMBK
- AqwnLneVu8XwP7hEuAR72gUiulwMyLn53ccfJg==
+X-Provags-ID: V03:K1:cIJmwh8Fqe5ge2cqLl0OEcm2AfuQvFOuJuC40AopX2Uy5NlZcOV
+ ptF0Qp/nFJoffsibMdw9bHInU+1RjsT/UxHVrHzXnOh+3jKr2pBdEJjzN1AsyIaqVaO9kO2
+ +jl3P2klcyI0sl8xMAvANrxLfZAnUI1ZkH+VVRLh+6kLKL/0Ac4lVb8Iu0Mcwu1ZQ6mVLRY
+ KWE31PMGaiLk8Kv+Q0q/w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:nxqJ6QeYYzM=:D3p8zJGFDUnlY/kO1UXwlb
+ 10uZqbve6l74U9+uzb+B6rhLGhF2Vf9ObOwvU7x5m9HlQf5W28teHMsm262GgjMa+yN3IziRg
+ vHkHFyeSo0C3yUFe8TE2F7VtLU8TIsrcOZgUT2/5JKCNnTf4xaZndgvDG0+b7olMqt8MReFrl
+ /iaFz7rgMkDHA4Ay//B/W6GrjRfC6/C1SKgHp6vMJlN3dwET93Zu+Zxkb0v4OBmf+wb+P2OkR
+ pO9qlzfEjGiZyL+UQZbah1Dmxox8jRhwrs/bhfqNSePydIJy8LBaNjYqGlcc2nDcXyCaDq8PG
+ QdiyTXQo1WuZC69Bcd4c6rG8IsORYkGmk1MBSe/5cdB68dHN9qZpWN4shXLDGP1pEty1tKYeq
+ SOu8bEuZsRdvBsFEe5QsgECxgfRP4SVCXHGbBzv9xMj2XvOhg/NG+6D20a/VsPebAmntQo0LY
+ xAyT6PNHRPGZw38gGaxfwdXkKzKEXpI3O9q+o5dIZE7rw+p0qsw6Vq3HEQETiRS926/atKdOA
+ Exnf91c2pcbmemkln5799w4piR3K9Gz2sfzeTSEc9pcLuwUOae5DAApUSuWDq4H1xGalivBmv
+ yKwZdCru6ZDqvW8Vwp5ye+Q7xXGEQoFysx7s2UhwMjN+v2KvQrFgdBmqAkZ10BopUn/R1aNvy
+ 97poPvr160S9g+d3Kj5XSgBq/lLXoR1o1XgFUvLIcG1guclpK1m0hIYFxYiMU7lPqdfl70+3m
+ kH0Sw/lU7YJSROo84gUJQ8VZGcXcHo0MjC4O+NLesCzHc0lKY8QBRSN2h++xbvMEGg2Si1CMm
+ ruSpI+hhTuYCKEOntz5HauQoBpRiVVCO4sEXUHp3yWmVoKQA8N52+VsaKQr0fyuZYB7EPSAAF
+ sUUrl+MDWCk7Lh2xFQLJ2gTYaAgrWk1N411mK2NH+gILRk3YWYjVTcF0nQm0l2KKFPOERcBPO
+ 2fgJZmq+13w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,24 +70,33 @@ subsys_platform_driver() macro.
 
 Signed-off-by: Enrico Weigelt <info@metux.net>
 ---
- drivers/gpio/gpio-tps6586x.c | 7 +------
- 1 file changed, 1 insertion(+), 6 deletions(-)
+ drivers/gpio/gpio-wm831x.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tps6586x.c b/drivers/gpio/gpio-tps6586x.c
-index 9b6cc74..8f75718 100644
---- a/drivers/gpio/gpio-tps6586x.c
-+++ b/drivers/gpio/gpio-tps6586x.c
-@@ -122,9 +122,4 @@ static int tps6586x_gpio_probe(struct platform_device *pdev)
- 	.driver.name	= "tps6586x-gpio",
- 	.probe		= tps6586x_gpio_probe,
+diff --git a/drivers/gpio/gpio-wm831x.c b/drivers/gpio/gpio-wm831x.c
+index a3a32a7..324f811 100644
+--- a/drivers/gpio/gpio-wm831x.c
++++ b/drivers/gpio/gpio-wm831x.c
+@@ -296,18 +296,7 @@ static int wm831x_gpio_probe(struct platform_device *pdev)
+ 	.driver.name	= "wm831x-gpio",
+ 	.probe		= wm831x_gpio_probe,
  };
 -
--static int __init tps6586x_gpio_init(void)
+-static int __init wm831x_gpio_init(void)
 -{
--	return platform_driver_register(&tps6586x_gpio_driver);
+-	return platform_driver_register(&wm831x_gpio_driver);
 -}
--subsys_initcall(tps6586x_gpio_init);
-+subsys_platform_driver(tps6586x_gpio_driver);
+-subsys_initcall(wm831x_gpio_init);
+-
+-static void __exit wm831x_gpio_exit(void)
+-{
+-	platform_driver_unregister(&wm831x_gpio_driver);
+-}
+-module_exit(wm831x_gpio_exit);
++subsys_platform_driver(wm831x_gpio_driver);
+ 
+ MODULE_AUTHOR("Mark Brown <broonie@opensource.wolfsonmicro.com>");
+ MODULE_DESCRIPTION("GPIO interface for WM831x PMICs");
 -- 
 1.9.1
 
