@@ -2,142 +2,126 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8985FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE43C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C0292084D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:05:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560783909;
-	bh=IH1XbiWghqPigFA4FSA4nHeq4Cc1dPUtDmix6UHfOvI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=VIjmGeJSk3E6aBipegV1tI9Fgkk6YGIYc7HdmqyDFwT9AWya6UZfRS3fzBts3W5nc
-	 GrwMo31zHcgk1ZPpe7bXLJQ63Bh5R4/zxeBdj/qwl5MZR0n8XZLA+8DWP77t72SuEu
-	 e8NgLfKa1IYQWQoJoTDbrtHnr/SyBxTja7zT70fc=
+	by mail.kernel.org (Postfix) with ESMTP id 15CFC2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:06:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AhnkPzcZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728493AbfFQPFI (ORCPT
+        id S1728134AbfFQPG3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:05:08 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47014 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQPFH (ORCPT
+        Mon, 17 Jun 2019 11:06:29 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39912 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726669AbfFQPG3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:05:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=gTKlpQWOKMdvBizylMdVUX6tkK8otEUiw4iXsxTBGyI=; b=r1DA3A36l1XskVNbLdokb8dOe
-        vb1sMUcPghIIeig26uHm4pz7UXXZYKREKoIdPoLOpqXT2Vr/aRzBuuFVCwQXZN/ZwQvmMrvNiltVj
-        wt+u6FJFsW1n8YFaGiytRURJMV2k99PQwM98Sum5Wyf7mQrmUL3ejXLGdZhlSsLVUvp9k=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hctBv-0001tQ-6B; Mon, 17 Jun 2019 15:05:03 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 9286B440046; Mon, 17 Jun 2019 16:05:02 +0100 (BST)
-Date:   Mon, 17 Jun 2019 16:05:02 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     lgirdwood@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org,
-        robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
-Message-ID: <20190617150502.GU5316@sirena.org.uk>
-References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
- <20190613212553.10541-1-jeffrey.l.hugo@gmail.com>
- <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
+        Mon, 17 Jun 2019 11:06:29 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z23so9496698wma.4;
+        Mon, 17 Jun 2019 08:06:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=oh4VL4iPNDaGaWS9B+IslavMbhg8v2O15rFQqtXr3DA=;
+        b=AhnkPzcZlgpKjDEw3+xRxeOFXIR4rBRfDc37XV2fRn72EJMb4qZ8fbe4wJKA+CuT+D
+         OLPOGYXVQcZPKfdya2ZqCLSSALJAxqIDWYRoQ1W93f5ujh5ji5/VxPnw8sUtRrx5/OUE
+         Z2OE9rk24ODOJTwUVfqhAMNtFPIJ8floCpl/JgraI+yw+lntSaVl/G6A5Np8mXKpr5Cs
+         Yz86ZLrNQdAJ7auSv5dsL0Hg7w8ndlxykvHk+PAa+IfsoDxUvYQPG+GFStswDfgOhu1V
+         7oB6x9fs4FWi7kkSTMQrtr4vEDy7f6L81XpLC0Knnd1fteIdwHyKAkxZ/rn5BITnmGzt
+         yHWQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oh4VL4iPNDaGaWS9B+IslavMbhg8v2O15rFQqtXr3DA=;
+        b=TCNVYGXiFwCoyNmgJojEszyZUcz/TSo4Dexl4bwPk0E5QSLq+c5wqsOkavqYQ+3sy9
+         MFXS4bdXgHXY2fYd/EBXy1HICArqw7a7TiQrkSHDa+oHJ05VJTY4cx3du5lZXCjhsWCL
+         /vlFOVDeccv0Z84nYcOmD8CKkqDKQOvm9piXULA9UV2Fdr74fpbXj2SIuo60fPT5AS0U
+         4ERTMv6CwP6hLyAJimSTAFmz590v0XlVSxADjN1RjjGLNxdWbEL7wbN5PXhijljTV6fO
+         Tgp0K+sJ4F/OR7icc8ILHkDx7AkV6V/3LRDKgXZpsLEeMSJ/y+mec104edGrDrRxGWKN
+         rRRQ==
+X-Gm-Message-State: APjAAAWbCydFpyZ8E0+hTGX/Rv8XGYexUzIy1E7B5mCdes+i82vTVu6g
+        wuOq4SMC3AhBf31BDQUhX2NWGRhJzTCIVxfxXfI=
+X-Google-Smtp-Source: APXvYqzwnLdmhx4erTT42qjFTICvOKBGEP2f7RWvXDepAPvjY+Gfzf/lBcnfGne43PNShj8tK4VXq9LKd4uItxBeWRE=
+X-Received: by 2002:a1c:67c3:: with SMTP id b186mr18196950wmc.34.1560783986617;
+ Mon, 17 Jun 2019 08:06:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="XUmrTyVHrg2/ImRG"
-Content-Disposition: inline
-In-Reply-To: <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <de3f6a5e-8ac4-bc8e-0d0c-3a4a5db283e9@web.de>
+In-Reply-To: <de3f6a5e-8ac4-bc8e-0d0c-3a4a5db283e9@web.de>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Mon, 17 Jun 2019 11:06:14 -0400
+Message-ID: <CADnq5_MKRU6-iCJZWwpR8z+mmdkgVh_STJtVJCiSTec21e+oqA@mail.gmail.com>
+Subject: Re: [PATCH] drm/amd/powerplay: Delete a redundant memory setting in vega20_set_default_od8_setttings()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     Maling list - DRI developers <dri-devel@lists.freedesktop.org>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Rex Zhu <rex.zhu@amd.com>,
+        kernel-janitors@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Applied this and the dc patch.
 
---XUmrTyVHrg2/ImRG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks!
 
-On Thu, Jun 13, 2019 at 02:25:53PM -0700, Jeffrey Hugo wrote:
+Alex
 
-> +static int spmi_regulator_ftsmps426_set_voltage(struct regulator_dev *rdev,
-> +					      unsigned selector)
-> +{
-> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> +	u8 buf[2];
-> +	int mV;
-> +
-> +	mV = spmi_regulator_common_list_voltage(rdev, selector) / 1000;
-> +
-> +	buf[0] = mV & 0xff;
-> +	buf[1] = mV >> 8;
-> +	return spmi_vreg_write(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
-> +}
-
-This could just be a set_voltage_sel(), no need for it to be a
-set_voltage() operation....
-
-> +static int spmi_regulator_ftsmps426_get_voltage(struct regulator_dev *rdev)
-> +{
-> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> +	u8 buf[2];
-> +
-> +	spmi_vreg_read(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
-> +
-> +	return (((unsigned int)buf[1] << 8) | (unsigned int)buf[0]) * 1000;
-> +}
-
-...or if the conversion is this trivial why do the list_voltage() lookup
-above?
-
-> +spmi_regulator_ftsmps426_set_mode(struct regulator_dev *rdev, unsigned int mode)
-> +{
-> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
-> +	u8 mask = SPMI_FTSMPS426_MODE_MASK;
-> +	u8 val;
-> +
-> +	switch (mode) {
-> +	case REGULATOR_MODE_NORMAL:
-> +		val = SPMI_FTSMPS426_MODE_HPM_MASK;
-> +		break;
-> +	case REGULATOR_MODE_FAST:
-> +		val = SPMI_FTSMPS426_MODE_AUTO_MASK;
-> +		break;
-> +	default:
-> +		val = SPMI_FTSMPS426_MODE_LPM_MASK;
-> +		break;
-> +	}
-
-This should validate, it shouldn't just translate invalid values into
-valid ones.
-
---XUmrTyVHrg2/ImRG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HrB0ACgkQJNaLcl1U
-h9B0uAf/cYrB30Ayjn0Man4vuddPN/hR/NlbKN1B86AvFrFe6mrHPSuIJUdydTG+
-MtukGFvwCTrnDhnBMxcXeCGsgNrpFpPMcmvk6+5+PZH08FVYBBS6TzPOwTZewmjn
-WVDr6XBug+yYu5+2KMTskQgnfykO+iqMYHx6UyqaDuia/pYCUMoVz+5TVG0KUOYJ
-knWxItKJ3NGD1DlALPCk0K7+P8krq+e09mJME8OSi5HqywdmqxTtPlNbwRr5/YKR
-2ZXAyo4eDjJTE5MowrnA2yEl1d3eKFH6oYBy7btNQF7U8669XprdWTdsTLa+yj0x
-FC/y90cEdM7bE2QMxfyOs5aaBDGroA==
-=xcfk
------END PGP SIGNATURE-----
-
---XUmrTyVHrg2/ImRG--
+On Mon, Jun 17, 2019 at 10:07 AM Markus Elfring <Markus.Elfring@web.de> wro=
+te:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Mon, 17 Jun 2019 14:24:14 +0200
+>
+> The memory was set to zero already by a call of the function =E2=80=9Ckza=
+lloc=E2=80=9D.
+> Thus remove an extra call of the function =E2=80=9Cmemset=E2=80=9D for th=
+is purpose.
+>
+> This issue was detected by using the Coccinelle software.
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  drivers/gpu/drm/amd/powerplay/vega20_ppt.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c b/drivers/gpu/drm=
+/amd/powerplay/vega20_ppt.c
+> index 4aa8f5a69c4c..62497ad66a39 100644
+> --- a/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+> +++ b/drivers/gpu/drm/amd/powerplay/vega20_ppt.c
+> @@ -1295,7 +1295,6 @@ static int vega20_set_default_od8_setttings(struct =
+smu_context *smu)
+>         if (!table_context->od8_settings)
+>                 return -ENOMEM;
+>
+> -       memset(table_context->od8_settings, 0, sizeof(struct vega20_od8_s=
+ettings));
+>         od8_settings =3D (struct vega20_od8_settings *)table_context->od8=
+_settings;
+>
+>         if (smu_feature_is_enabled(smu, FEATURE_DPM_SOCCLK_BIT)) {
+> --
+> 2.22.0
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
