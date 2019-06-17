@@ -2,96 +2,99 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89228C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB4E7C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65DCE2089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A1D472089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:51:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726614AbfFQUvG (ORCPT
+        id S1726671AbfFQUvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:51:06 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45446 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725497AbfFQUvF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:51:05 -0400
-Received: by mail-pl1-f193.google.com with SMTP id bi6so4626491plb.12;
-        Mon, 17 Jun 2019 13:51:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=HLt4Zs39F8lYdKe/G8SBQLXzRRzi8LIVUs93jft3djA=;
-        b=rp8NaVPiwZXvwCFwIm0d/wfkdQThdHujF+xou+5jQBnU5lO9T8ulJQxLDXLv98VAQE
-         9yYqLy+9VIRRqm+Sxw7SD6oHxzjzC05ftH4zFAM5Sot2cbrQFz0ZACzLaYxGDqrTnDU1
-         fRVSTyUvaUmz6QBTh4wMgK2Bud0q5y9wjeO67FYrw6T3slUYOnGn4Cjwv0yHEBQ6Kwtt
-         3sX7MMK4N3hMES0nogwciaYevGcj60hvRgVIq8XovTo9iHtebIrkKQU0jrjx2xDXiSHU
-         EVKsdIZGdHgtfCOTe91je1c1fbEY/BSOyOktJMRvud1fo8Bj0+aN2kEBivv1u1L8ULf6
-         Z4kQ==
-X-Gm-Message-State: APjAAAU3GDuJN0xvv2UbjqCdp1XvFqks47SZAuvi9GHM5QfVjUit7geE
-        /wtFLM5Ys8owkrjfHvNsZX9Es5XK3JM=
-X-Google-Smtp-Source: APXvYqxfD65LF5xW1tkyOSFFjVxBCQV0jCvC6DyiWqbQxQWcmGeL83TJb5rc62nhY/4o7dFairs0qw==
-X-Received: by 2002:a17:902:4481:: with SMTP id l1mr111969435pld.121.1560804664671;
-        Mon, 17 Jun 2019 13:51:04 -0700 (PDT)
-Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
-        by smtp.gmail.com with ESMTPSA id f88sm226851pjg.5.2019.06.17.13.51.03
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 13:51:03 -0700 (PDT)
-Subject: Re: [PATCH 1/8] scsi: add a host / host template field for the virt
- boundary
-To:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
-        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
-        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
-        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190617122000.22181-1-hch@lst.de>
- <20190617122000.22181-2-hch@lst.de>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <ea0f90cd-6263-6a9e-9c88-ed8a8017317e@acm.org>
-Date:   Mon, 17 Jun 2019 13:51:02 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190617122000.22181-2-hch@lst.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 16:51:44 -0400
+Received: from mga01.intel.com ([192.55.52.88]:38897 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725497AbfFQUvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 16:51:44 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 13:51:43 -0700
+X-ExtLoop1: 1
+Received: from rmbutler-mobl.amr.corp.intel.com ([10.255.231.126])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Jun 2019 13:51:42 -0700
+Message-ID: <75be86354032f4886cbaf7d430de2aa89eaab573.camel@linux.intel.com>
+Subject: Re: [alsa-devel] [PATCH v2 09/11] ASoC: Intel: hdac_hdmi: Set ops
+ to NULL on remove
+From:   Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+To:     Amadeusz =?UTF-8?Q?S=C5=82awi=C5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>, alsa-devel@alsa-project.org
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Date:   Mon, 17 Jun 2019 13:51:42 -0700
+In-Reply-To: <20190617113644.25621-10-amadeuszx.slawinski@linux.intel.com>
+References: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
+         <20190617113644.25621-10-amadeuszx.slawinski@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 5:19 AM, Christoph Hellwig wrote:
-> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> index 65d0a10c76ad..d333bb6b1c59 100644
-> --- a/drivers/scsi/scsi_lib.c
-> +++ b/drivers/scsi/scsi_lib.c
-> @@ -1775,7 +1775,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
->   	dma_set_seg_boundary(dev, shost->dma_boundary);
->   
->   	blk_queue_max_segment_size(q, shost->max_segment_size);
-> -	dma_set_max_seg_size(dev, shost->max_segment_size);
-> +	blk_queue_virt_boundary(q, shost->virt_boundary_mask);
-> +	dma_set_max_seg_size(dev, queue_max_segment_size(q));
+On Mon, 2019-06-17 at 13:36 +0200, Amadeusz Sławiński wrote:
+> When we unload Skylake driver we may end up calling
+> hdac_component_master_unbind(), it uses acomp->audio_ops, which we
+> set
+> in hdmi_codec_probe(), so we need to set it to NULL in
+> hdmi_codec_remove(),
+> otherwise we will dereference no longer existing pointer.
 
-Although this looks fine to me for LLDs that own a PCIe device, I doubt 
-this is correct for SCSI LLDs that share a PCIe device with other ULP 
-drivers. From the RDMA core:
+Hi Amadeusz,
 
-	/* Setup default max segment size for all IB devices */
-	dma_set_max_seg_size(device->dma_device, SZ_2G);
-
-Will instantiating a SCSI host (iSER or SRP) for an RDMA adapter cause 
-the maximum segment size to be modified for all ULP drivers associated 
-with that HCA?
+It looks like the audio_ops should be deleted snd_hdac_acomp_exit().
+Also, this doesnt seem to be the case with when the SOF driver is
+removed.
+Could you please give a bit more context on what error you see when
+this happens?
 
 Thanks,
+Ranjani
+> 
+> Signed-off-by: Amadeusz Sławiński <
+> amadeuszx.slawinski@linux.intel.com>
+> ---
+>  sound/soc/codecs/hdac_hdmi.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/sound/soc/codecs/hdac_hdmi.c
+> b/sound/soc/codecs/hdac_hdmi.c
+> index 911bb6e2a1ac..9ee1bff548d8 100644
+> --- a/sound/soc/codecs/hdac_hdmi.c
+> +++ b/sound/soc/codecs/hdac_hdmi.c
+> @@ -1890,6 +1890,12 @@ static void hdmi_codec_remove(struct
+> snd_soc_component *component)
+>  {
+>  	struct hdac_hdmi_priv *hdmi =
+> snd_soc_component_get_drvdata(component);
+>  	struct hdac_device *hdev = hdmi->hdev;
+> +	int ret;
+> +
+> +	ret = snd_hdac_acomp_register_notifier(hdev->bus, NULL);
+> +	if (ret < 0)
+> +		dev_err(&hdev->dev, "notifier unregister failed: err:
+> %d\n",
+> +				ret);
+>  
+>  	pm_runtime_disable(&hdev->dev);
+>  }
 
-Bart.
