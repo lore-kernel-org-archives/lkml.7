@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20CA0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66FDFC31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D912F208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 313AB208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806505;
-	bh=RWS4ypcpewR1dccRFjGV9Y/7aVml2BDNYi2XHtLitoo=;
+	s=default; t=1560806509;
+	bh=7Avpruq10B8PjRBA3qo8Siwkz9o5NVv9sRuRjaB5YiE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uCpwwvZQ5hHNuk79p3t2Z/LhzgW0NlKCLu4gHmY1UtK6mtCZ9wT7f4apZmd4WR+Ii
-	 MDZVc4z9rErWB7yg42KuQ7KxEIkqVpMOZMhIiJAHYHUH+4xTBJEscJX1otaYvHZQBI
-	 k9Ey+iU5XNzGog/Gs0bmXV5dCmXU9hqwOziwv8WI=
+	b=yhV0LW+Qyt38YxalzkjMgFThm/Fy+iBxT5l7CS4Wa5g6Du+k5WO5/3VtLZHvFu8EM
+	 /1aEh+bYKDy5JuO14/Kmr21Kbf42r+vklWFAV7Qg/jx6cv9VPTHXncSIEAKT7mZ5i4
+	 MxMrLu6tgDnCMZS3v0BG7x9v3GiSpmlINxS7eh9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbfFQVVn (ORCPT
+        id S1729418AbfFQVVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:21:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46200 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:21:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46260 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728943AbfFQVVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:21:41 -0400
+        id S1729409AbfFQVVn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:21:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8BD7B21655;
-        Mon, 17 Jun 2019 21:21:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 442E6208E4;
+        Mon, 17 Jun 2019 21:21:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806500;
-        bh=RWS4ypcpewR1dccRFjGV9Y/7aVml2BDNYi2XHtLitoo=;
+        s=default; t=1560806502;
+        bh=7Avpruq10B8PjRBA3qo8Siwkz9o5NVv9sRuRjaB5YiE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MVpQyb3LXMT62IF/UqhscIqRvqGV9NIq8yJVIFUcilNABnTyg6RrquwuHaeYJRt7Q
-         NSSYw95KcDzVSLCaQIqbdk0Zw/JddZs8RpxMdCGL0Sejb6kcTb14jqGTfBsjGBkmT/
-         7GbKhfGuiTHEqKZ/hxzEE0rRgbpAH4S0C/1mNU2o=
+        b=LPqj1eOCHLZkomXCQ7kRgoZGEonnTdg3BH6dhitmRNWRR+ceMuFFNk7LrNAzZiJAs
+         4wJFmlm4eBMsljJm4q/evVr10DniEPC6bVeG2GT/lzlZ8KH26eWHJb6IABGzU6CcFR
+         rYcYTi9GDXbfdEoRKAtsFHxBHBGE/VKFanD1jWbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, YueHaibing <yuehaibing@huawei.com>,
+        Hannes Reinecke <hare@suse.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 072/115] platform/x86: pmc_atom: Add several Beckhoff Automation boards to critclk_systems DMI table
-Date:   Mon, 17 Jun 2019 23:09:32 +0200
-Message-Id: <20190617210803.729611238@linuxfoundation.org>
+Subject: [PATCH 5.1 073/115] scsi: myrs: Fix uninitialized variable
+Date:   Mon, 17 Jun 2019 23:09:33 +0200
+Message-Id: <20190617210803.771553605@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -61,55 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6423bd03031c020121da26c41a26bd5cc6d0da3 ]
+[ Upstream commit 41552199b5518fe26bee0829a28dd1880441b430 ]
 
-There are several Beckhoff Automation industrial PC boards which use
-pmc_plt_clk* clocks for ethernet controllers. This adds affected boards
-to critclk_systems DMI table so the clocks are marked as CLK_CRITICAL and
-not turned off.
+drivers/scsi/myrs.c: In function 'myrs_log_event':
+drivers/scsi/myrs.c:821:24: warning: 'sshdr.sense_key' may be used uninitialized in this function [-Wmaybe-uninitialized]
+  struct scsi_sense_hdr sshdr;
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+If ev->ev_code is not 0x1C, sshdr.sense_key may be used uninitialized. Fix
+this by initializing variable 'sshdr' to 0.
+
+Fixes: 77266186397c ("scsi: myrs: Add Mylex RAID controller (SCSI interface)")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Reviewed-by: Hannes Reinecke <hare@suse.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/x86/pmc_atom.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/scsi/myrs.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index a311f48ce7c9..b1d804376237 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -413,6 +413,30 @@ static const struct dmi_system_id critclk_systems[] = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "3I380D"),
- 		},
- 	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB3163",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB6263",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB6263"),
-+		},
-+	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB6363",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB6363"),
-+		},
-+	},
- 	{ /*sentinel*/ }
- };
+diff --git a/drivers/scsi/myrs.c b/drivers/scsi/myrs.c
+index b8d54ef8cf6d..eb0dd566330a 100644
+--- a/drivers/scsi/myrs.c
++++ b/drivers/scsi/myrs.c
+@@ -818,7 +818,7 @@ static void myrs_log_event(struct myrs_hba *cs, struct myrs_event *ev)
+ 	unsigned char ev_type, *ev_msg;
+ 	struct Scsi_Host *shost = cs->host;
+ 	struct scsi_device *sdev;
+-	struct scsi_sense_hdr sshdr;
++	struct scsi_sense_hdr sshdr = {0};
+ 	unsigned char sense_info[4];
+ 	unsigned char cmd_specific[4];
  
 -- 
 2.20.1
