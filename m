@@ -2,321 +2,179 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FF8C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:00:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B920C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4BE82084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:00:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 471A22084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:00:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uwbCGrWO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hfkYfsJX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728481AbfFQPAq (ORCPT
+        id S1728500AbfFQPAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:00:46 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42094 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfFQPAp (ORCPT
+        Mon, 17 Jun 2019 11:00:49 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:55358 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728449AbfFQPAq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:00:45 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s184so7207656oie.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:00:44 -0700 (PDT)
+        Mon, 17 Jun 2019 11:00:46 -0400
+Received: by mail-wm1-f68.google.com with SMTP id a15so9638815wmj.5;
+        Mon, 17 Jun 2019 08:00:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=HCTvu4IsRueSfr/ouOzLpKJTPljveQ9bZrKF+dWlcZM=;
-        b=uwbCGrWOJj7uHb8U9chaQV92+35YbEsQHRfs0EIj3zQonSjkigUmgSJ+yB0QlglLDg
-         J5upp3iV4K3Yo8E9hkQgeKqmXM8IkJy8NJil+xqiojw+JNkv+miJRtSjnx6x4Ew++/fK
-         oVoR7PKV7oDdUioPLoyf3iYLFong7g8bm7xAKrXUsywCth2hlynXxpsNsoNDXbufDUCS
-         ulGntEJqx3iNu1kvqV0So8fKjob0Oq5tbIkVkezvQcE6W3QgyTGIqdMQR8LE+1zCcSyD
-         H4v7Vp2rd2jLQo+inVrU89jcAf+cEMqkCHy5fgSn/9tmsa4M2H1nUlF4otdZkAzd+saS
-         Sl0w==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ymEXm01lQbZ5JsOJLEyNUJ2oidzFEFtqzRRB3b8GyvI=;
+        b=hfkYfsJX5SFaiJ58VyVBXlCQV7k150u9NSGLP8qmAGhNoT7pnx/Ay5GDcSJvUlssqC
+         14f8ziBEcsNiXKpR6VZwFn1D52ZUCllxuplqU1E/zR+TT2TwyCUIzzkpJ39heL8JTLJU
+         q8WTbphSR4+oqyGZe7rEls2QP/YKqrRZQ3KxRNgzW1ppF4CPIssBd1qo/NLid7Inx0Jq
+         w+kc9bS7Is1p2RS/Mci53zy5O59H41Y1XP0HaTGGuQJoAsGbmbmweLVmg98n888Ouch1
+         mNzJvak2JCGp3tAXuBWVdLlqvaUGb1vpAKeLmSC8MDNgBHKphTHEdJW5ZqSilu76ntgu
+         q3Gw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=HCTvu4IsRueSfr/ouOzLpKJTPljveQ9bZrKF+dWlcZM=;
-        b=V8W97f83NxhaiQUsTb9sWWMkgPGYCQ9YbYkb+xhV5ADMTvNpP1qgN4qjbKbm2wnOd+
-         EkUsdRxn5moXtS42M6n1c+9J2BV+uTwZ/lFcIYOzVMH+YGDPsB7XJtSiZ05FKLjLcO97
-         Ve6mMVbMPA4yLcvouUTAEJ8cFIlycjVoc9V8nEXqx9qpFfd3/wzrWUpdoCyz9nPkBq4b
-         zp8sWJFCqueaxcwGkcUB7HuRYwXp9waOecVG1s8pDRyBQHyY6PO2YhvDPZh1Ik46+fMb
-         pTl0549QujhOkLfsJxG3/9W1cnb62nBs2KbYQWp1yM3xvGiw5hC+W9UlMpswVtVK6s3T
-         wuZg==
-X-Gm-Message-State: APjAAAUx51yuLz3vFAeIT276Crm0z5KtoHr7jB27vc1L39x0V3LSFP70
-        Mcw1AbnedfVnua3kfgTjp+p2mA==
-X-Google-Smtp-Source: APXvYqxB6hbQ4qmXvYCvcf2gLNsvmhgnO3wKEIll6B3DjpTtJQjVe5P+sAtyL5095jrfNPXh+6fxvw==
-X-Received: by 2002:aca:5403:: with SMTP id i3mr9314748oib.132.1560783643964;
-        Mon, 17 Jun 2019 08:00:43 -0700 (PDT)
-Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id q3sm4835969oig.7.2019.06.17.08.00.36
+        bh=ymEXm01lQbZ5JsOJLEyNUJ2oidzFEFtqzRRB3b8GyvI=;
+        b=hJ5BBddERAQMoPBe/C7VuLABYWuCyr30CAhy/BL592ErIlB0c83zL+zL+Xnow87SSA
+         dz1DXiYh/7FhFJd0z0zT2KFIGbC0Zoo/xjcAvvDIX3LrjBEZZIMb2H/CqnX2jKVy/EmC
+         ItS+5MzkWPweGYBU4oSvUJsiZG1oeLpJYtzusu98FbYvGbF4Vz/FTW6vU2uZPaS1atNt
+         Ap00dVhGu5TCVgHrfC5K2HWCoD0IWdSf0lVPFGmt2dL7OLQ+ZLDlxlcuNo7CX8mkSeOL
+         fU7H1M9AF+uUsaka2ZelN23RYo6coiEipYfKu44na4Qwm9Eum2ZclydGCFYdqe+2XZF8
+         MZVg==
+X-Gm-Message-State: APjAAAXcUuCz1En0pbHiTSn9q5R2RMBu9/p8WTNqmGC9aT9+JeZS3l80
+        7iCHn6BmNr7/ulE9fTu3TCXIEmsC
+X-Google-Smtp-Source: APXvYqwJyWZZq7dWw9wPc2GM/qpPpTih7lBmjvkoujngYX5TSub1leBer4k1StC1ijZSFNPpBWhy+Q==
+X-Received: by 2002:a1c:9dc5:: with SMTP id g188mr19836239wme.93.1560783644169;
+        Mon, 17 Jun 2019 08:00:44 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id x6sm13697447wru.0.2019.06.17.08.00.42
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
         Mon, 17 Jun 2019 08:00:43 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suzuki Poulouse <suzuki.poulose@arm.com>,
-        coresight@lists.linaro.org
-Subject: [PATCH] perf cs-etm: Improve completeness for kernel address space
-Date:   Mon, 17 Jun 2019 23:00:24 +0800
-Message-Id: <20190617150024.11787-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+Subject: Re: [PATCH v4 01/10] clk: tegra20/30: Add custom EMC clock
+ implementation
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Joseph Lo <josephl@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190616233551.6838-1-digetx@gmail.com>
+ <20190616233551.6838-2-digetx@gmail.com> <20190617093555.GB508@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <596703d3-ce13-ff69-e685-7eb8cf7eb0d4@gmail.com>
+Date:   Mon, 17 Jun 2019 18:00:42 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190617093555.GB508@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arm and arm64 architecture reserve some memory regions prior to the
-symbol '_stext' and these memory regions later will be used by device
-module and BPF jit.  The current code misses to consider these memory
-regions thus any address in the regions will be taken as user space
-mode, but perf cannot find the corresponding dso with the wrong CPU
-mode so we misses to generate samples for device module and BPF
-related trace data.
+17.06.2019 12:35, Thierry Reding пишет:
+> On Mon, Jun 17, 2019 at 02:35:42AM +0300, Dmitry Osipenko wrote:
+>> A proper External Memory Controller clock rounding and parent selection
+>> functionality is required by the EMC drivers. It is not available using
+>> the generic clock implementation, hence add a custom one. The clock rate
+>> rounding shall be done by the EMC drivers because they have information
+>> about available memory timings, so the drivers will have to register a
+>> callback that will round the requested rate. EMC clock users won't be able
+>> to request EMC clock by getting -EPROBE_DEFER until EMC driver is probed
+>> and the callback is set up. The functionality is somewhat similar to the
+>> clk-emc.c which serves Tegra124+ SoC's, the later HW generations support
+>> more parent clock sources and the HW configuration and integration with
+>> the EMC drivers differs a tad from the older gens, hence it's not really
+>> worth to try to squash everything into a single source file.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/clk/tegra/Makefile          |   2 +
+>>  drivers/clk/tegra/clk-tegra20-emc.c | 305 ++++++++++++++++++++++++++++
+>>  drivers/clk/tegra/clk-tegra20.c     |  55 ++---
+>>  drivers/clk/tegra/clk-tegra30.c     |  38 +++-
+>>  drivers/clk/tegra/clk.h             |   6 +
+>>  include/linux/clk/tegra.h           |  14 ++
+>>  6 files changed, 368 insertions(+), 52 deletions(-)
+>>  create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
+>>
+>> diff --git a/drivers/clk/tegra/Makefile b/drivers/clk/tegra/Makefile
+>> index 4812e45c2214..df966ca06788 100644
+>> --- a/drivers/clk/tegra/Makefile
+>> +++ b/drivers/clk/tegra/Makefile
+>> @@ -17,7 +17,9 @@ obj-y					+= clk-tegra-fixed.o
+>>  obj-y					+= clk-tegra-super-gen4.o
+>>  obj-$(CONFIG_TEGRA_CLK_EMC)		+= clk-emc.o
+>>  obj-$(CONFIG_ARCH_TEGRA_2x_SOC)         += clk-tegra20.o
+>> +obj-$(CONFIG_ARCH_TEGRA_2x_SOC)		+= clk-tegra20-emc.o
+>>  obj-$(CONFIG_ARCH_TEGRA_3x_SOC)         += clk-tegra30.o
+>> +obj-$(CONFIG_ARCH_TEGRA_3x_SOC)		+= clk-tegra20-emc.o
+>>  obj-$(CONFIG_ARCH_TEGRA_114_SOC)	+= clk-tegra114.o
+>>  obj-$(CONFIG_ARCH_TEGRA_124_SOC)	+= clk-tegra124.o
+>>  obj-$(CONFIG_TEGRA_CLK_DFLL)		+= clk-tegra124-dfll-fcpu.o
+>> diff --git a/drivers/clk/tegra/clk-tegra20-emc.c b/drivers/clk/tegra/clk-tegra20-emc.c
+>> new file mode 100644
+>> index 000000000000..b7f64ad5c04c
+>> --- /dev/null
+>> +++ b/drivers/clk/tegra/clk-tegra20-emc.c
+>> @@ -0,0 +1,305 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+> 
+> Perhaps you want to add copyright information here? Part of this is
+> copied from other drivers, so keep that copyright intact. But there's
+> also quite a bit of new code here, so also make sure to add yourself.
 
-This patch parse the link scripts to get the memory size prior to start
-address and reduce this size from 'etmq->etm->kernel_start', then can
-get a fixed up kernel start address which contain memory regions for
-device module and BPF.  Finally, cs_etm__cpu_mode() can return right
-mode for these memory regions and perf can successfully generate
-samples.
+Okay! And it's true that I initially used clk-emc as a template.
 
-The reason for parsing the link scripts is Arm architecture changes text
-offset dependent on different platforms, which define multiple text
-offsets in $kernel/arch/arm/Makefile.  This offset is decided when build
-kernel and the final value is extended in the link script, so we can
-extract the used value from the link script.  We use the same way to
-parse arm64 link script as well.  If fail to find the link script, the
-pre start memory size is assumed as zero, in this case it has no any
-change caused with this patch.
+[snip]
 
-Below is detailed info for testing this patch:
+>> +void tegra30_clk_set_emc_round_callback(tegra30_clk_emc_round_cb *round_cb,
+>> +					void *cb_arg)
+>> +{
+>> +	tegra20_clk_set_emc_round_callback(round_cb, cb_arg);
+>> +}
+>> +
+>> +bool tegra30_clk_emc_driver_available(struct clk_hw *emc_hw)
+>> +{
+>> +	return tegra20_clk_emc_driver_available(emc_hw);
+>> +}
+> 
+> Do we really need to make this distinction? Do you have any work in
+> progress patches that would need to override these Tegra30 specific bits
+> by code that's not the same as the Tegra20 variant? I don't see why you
+> would want to duplicate this if there's no use to it. Or perhaps I'm
+> missing something?
 
-- Build LLVM/Clang 8.0 or later version;
+There are no other patches planned for this code. The primary reason for the
+distinction is that I don't like to have T20 functions mixed with T30 because this
+leads to inconsistency and confusion.
 
-- Configure perf with ~/.perfconfig:
+[snip]
 
-  root@debian:~# cat ~/.perfconfig
-  # this file is auto-generated.
-  [llvm]
-          clang-path = /mnt/build/llvm-build/build/install/bin/clang
-          kbuild-dir = /mnt/linux-kernel/linux-cs-dev/
-          clang-opt = "-DLINUX_VERSION_CODE=0x50200 -g"
-          dump-obj = true
+> Again, I don't see any advantage in quirky things like this. It seems to
+> me like the only reason why this exists is so that Tegra30 code doesn't
+> have to call functions that start with a tegra20_ prefix. However, we
+> already have code that does similar things elsewhere, so I think this
+> can be considered "common" practice. No need for this duplication.
 
-  [trace]
-          show_zeros = yes
-          show_duration = no
-          no_inherit = yes
-          show_timestamp = no
-          show_arg_names = no
-          args_alignment = 40
-          show_prefix = yes
+Oh, well. But this is not a very good practice in my opinion. I'll adhere to yours
+comment in v5.
 
-- Run 'perf trace' command with eBPF event:
+> Again, if I'm missing something please let me know. Might be worth
+> noting why this is done in a code comment or the commit message.
 
-  root@debian:~# perf trace -e string \
-      -e $kernel/tools/perf/examples/bpf/augmented_raw_syscalls.c
-
-- Read eBPF program memory mapping in kernel:
-
-  root@debian:~# echo 1 > /proc/sys/net/core/bpf_jit_kallsyms
-  root@debian:~# cat /proc/kallsyms | grep -E "bpf_prog_.+_sys_[enter|exit]"
-  ffff000000086a84 t bpf_prog_f173133dc38ccf87_sys_enter  [bpf]
-  ffff000000088618 t bpf_prog_c1bd85c092d6e4aa_sys_exit   [bpf]
-
-- Launch any program which accesses file system frequently so can hit
-  the system calls trace flow with eBPF event;
-
-- Capture CoreSight trace data with filtering eBPF program:
-
-  root@debian:~# perf record -e cs_etm/@20070000.etr/ \
-	  --filter 'filter 0xffff000000086a84/0x800' -a sleep 5s
-
-- Annotate for symbol 'bpf_prog_f173133dc38ccf87_sys_enter':
-
-  root@debian:~# perf report
-  Then select 'branches' samples and press 'a' to annotate symbol
-  'bpf_prog_f173133dc38ccf87_sys_enter', press 'P' to print to the
-  bpf_prog_f173133dc38ccf87_sys_enter.annotation file:
-
-  root@debian:~# cat bpf_prog_f173133dc38ccf87_sys_enter.annotation
-
-  bpf_prog_f173133dc38ccf87_sys_enter() bpf_prog_f173133dc38ccf87_sys_enter
-  Event: branches
-
-  Percent      int sys_enter(struct syscall_enter_args *args)
-                 stp  x29, x30, [sp, #-16]!
-
-               	int key = 0;
-                 mov  x29, sp
-
-                       augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-                 stp  x19, x20, [sp, #-16]!
-
-                       augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-                 stp  x21, x22, [sp, #-16]!
-
-                 stp  x25, x26, [sp, #-16]!
-
-               	return bpf_get_current_pid_tgid();
-                 mov  x25, sp
-
-               	return bpf_get_current_pid_tgid();
-                 mov  x26, #0x0                   	// #0
-
-                 sub  sp, sp, #0x10
-
-               	return bpf_map_lookup_elem(pids, &pid) != NULL;
-                 add  x19, x0, #0x0
-
-                 mov  x0, #0x0                   	// #0
-
-                 mov  x10, #0xfffffffffffffff8    	// #-8
-
-               	if (pid_filter__has(&pids_filtered, getpid()))
-                 str  w0, [x25, x10]
-
-               	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
-                 add  x1, x25, #0x0
-
-               	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
-                 mov  x10, #0xfffffffffffffff8    	// #-8
-
-               	syscall = bpf_map_lookup_elem(&syscalls, &augmented_args->args.syscall_nr);
-                 add  x1, x1, x10
-
-               	syscall = bpf_map_lookup_elem(&syscalls, &augmented_args->args.syscall_nr);
-                 mov  x0, #0xffff8009ffffffff    	// #-140694538682369
-
-                 movk x0, #0x6698, lsl #16
-
-                 movk x0, #0x3e00
-
-                 mov  x10, #0xffffffffffff1040    	// #-61376
-
-               	if (syscall == NULL || !syscall->enabled)
-                 movk x10, #0x1023, lsl #16
-
-               	if (syscall == NULL || !syscall->enabled)
-                 movk x10, #0x0, lsl #32
-
-               	loop_iter_first()
-    3.69       → blr  bpf_prog_f173133dc38ccf87_sys_enter
-               	loop_iter_first()
-                 add  x7, x0, #0x0
-
-               	loop_iter_first()
-                 add  x20, x7, #0x0
-
-               	int size = probe_read_str(&augmented_filename->value, filename_len, filename_arg);
-                 mov  x0, #0x1                   	// #1
-
-  [...]
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/Makefile.config | 24 ++++++++++++++++++++++++
- tools/perf/util/cs-etm.c   | 26 +++++++++++++++++++++++++-
- 2 files changed, 49 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 51dd00f65709..4776c2c1fb6d 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -418,6 +418,30 @@ ifdef CORESIGHT
-     endif
-     LDFLAGS += $(LIBOPENCSD_LDFLAGS)
-     EXTLIBS += $(OPENCSDLIBS)
-+    ifneq ($(wildcard $(srctree)/arch/arm64/kernel/vmlinux.lds),)
-+      # Extract info from lds:
-+      #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
-+      # ARM64_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000)
-+      ARM64_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
-+        $(srctree)/arch/arm64/kernel/vmlinux.lds | \
-+        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
-+        awk -F' ' '{print "("$$6 "+"  $$7 "+" $$8")"}' 2>/dev/null)
-+    else
-+      ARM64_PRE_START_SIZE := 0
-+    endif
-+    CFLAGS += -DARM64_PRE_START_SIZE="$(ARM64_PRE_START_SIZE)"
-+    ifneq ($(wildcard $(srctree)/arch/arm/kernel/vmlinux.lds),)
-+      # Extract info from lds:
-+      #   . = ((0xC0000000)) + 0x00208000;
-+      # ARM_PRE_START_SIZE := 0x00208000
-+      ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
-+        $(srctree)/arch/arm/kernel/vmlinux.lds | \
-+        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
-+        awk -F' ' '{print "("$$2")"}' 2>/dev/null)
-+    else
-+      ARM_PRE_START_SIZE := 0
-+    endif
-+    CFLAGS += -DARM_PRE_START_SIZE="$(ARM_PRE_START_SIZE)"
-     $(call detected,CONFIG_LIBOPENCSD)
-     ifdef CSTRACE_RAW
-       CFLAGS += -DCS_DEBUG_RAW
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 0c7776b51045..ae831f836c70 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -613,10 +613,34 @@ static void cs_etm__free(struct perf_session *session)
- static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
- {
- 	struct machine *machine;
-+	u64 fixup_kernel_start = 0;
-+	const char *arch;
- 
- 	machine = etmq->etm->machine;
-+	arch = perf_env__arch(machine->env);
- 
--	if (address >= etmq->etm->kernel_start) {
-+	/*
-+	 * Since arm and arm64 specify some memory regions prior to
-+	 * 'kernel_start', kernel addresses can be less than 'kernel_start'.
-+	 *
-+	 * For arm architecture, the 16MB virtual memory space prior to
-+	 * 'kernel_start' is allocated to device modules, a PMD table if
-+	 * CONFIG_HIGHMEM is enabled and a PGD table.
-+	 *
-+	 * For arm64 architecture, the root PGD table, device module memory
-+	 * region and BPF jit region are prior to 'kernel_start'.
-+	 *
-+	 * To reflect the complete kernel address space, compensate these
-+	 * pre-defined regions for kernel start address.
-+	 */
-+	if (!strcmp(arch, "arm64"))
-+		fixup_kernel_start = etmq->etm->kernel_start -
-+				     ARM64_PRE_START_SIZE;
-+	else if (!strcmp(arch, "arm"))
-+		fixup_kernel_start = etmq->etm->kernel_start -
-+				     ARM_PRE_START_SIZE;
-+
-+	if (address >= fixup_kernel_start) {
- 		if (machine__is_host(machine))
- 			return PERF_RECORD_MISC_KERNEL;
- 		else
--- 
-2.17.1
-
+You got everything right.
