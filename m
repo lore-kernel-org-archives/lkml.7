@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80069C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C969DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:27:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A22F2070B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D8EF20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806855;
-	bh=FSFXtZJkL9X7zdl8EW5+2gIrlqAmjxup/ATjnuMEnyo=;
+	s=default; t=1560806858;
+	bh=ZZUzArcMjzp1ZUoNgnxq5kYOqQFnQ8BS0bQB27xlweo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1onFogtZMIR0hM1lCcufyxjpwi+Kn2cRrZlPAnkKFORloC+zPcUi40wAoR02mo9rR
-	 bK8d8+JrlCAQb0LRD86vTaA8uNpGvePlQCC9Lt433YVdf82Jw4+96i8QcM2fQPYH4p
-	 LPYlINxdR4K+IOV1lLp566/vAk/ymXDfbsXrLtDU=
+	b=iJk+GdGxOulJju+G1kp8/quyeu1Dkz7xSXxp2RTK/5+jNNccM/b8ppaIlLVbIZvPg
+	 8Ztm4BzZ3pmmpWl6WnN1gQCaXufO5LceHJFmq17w6XPqYZP8k2gCdKBlkCD7loV5OH
+	 rjEjO7viUsFHd9mCpeeG8LLYYAAovr/boWuPRfnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730417AbfFQV1d (ORCPT
+        id S1730425AbfFQV1h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:27:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54562 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:27:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54592 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728967AbfFQV1c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:27:32 -0400
+        id S1730419AbfFQV1e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:27:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 955E2208E4;
-        Mon, 17 Jun 2019 21:27:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 496E3204FD;
+        Mon, 17 Jun 2019 21:27:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806851;
-        bh=FSFXtZJkL9X7zdl8EW5+2gIrlqAmjxup/ATjnuMEnyo=;
+        s=default; t=1560806853;
+        bh=ZZUzArcMjzp1ZUoNgnxq5kYOqQFnQ8BS0bQB27xlweo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tEjzN2LrCXkfVCHwyTgniEHXoKU+d4nQHH8Nnjzlo/FyhP0RrRxApEfVCVUXin6NL
-         pGNFrp+waxchbl2ezaGCYVW9h5gDvD0C/KCq6nitKGaT9JJ+sAMVx41tgHuBpe/KTv
-         d1vy6kn7ll2EskRcUEMReDdQXIDDEhNjqHX/OnNA=
+        b=rJjqJt909S+T0HSY7yQmU/1446Vn4r2vtMrGi8VKKumv6HxvNSsPRl3hj+sHBCFIq
+         +EqUJmj4TMT9NIieZbZqVd8382UbgmgKgXkrRUDeq5rl9kO3HM+7VwC65Qnu5utDv8
+         OA+BdEHnnT0H2sHKrYWwsgqSiAtsrE8mDi5rTk/M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Prarit Bhargava <prarit@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: [PATCH 4.19 72/75] x86/resctrl: Prevent NULL pointer dereference when local MBM is disabled
-Date:   Mon, 17 Jun 2019 23:10:23 +0200
-Message-Id: <20190617210756.057833262@linuxfoundation.org>
+        stable@vger.kernel.org, Daniel Vetter <daniel@ffwll.ch>,
+        Harish Chegondi <harish.chegondi@intel.com>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        "Tested-by: Paul Wise" <pabs3@bonedaddy.net>,
+        Jani Nikula <jani.nikula@intel.com>
+Subject: [PATCH 4.19 73/75] drm/edid: abstract override/firmware EDID retrieval
+Date:   Mon, 17 Jun 2019 23:10:24 +0200
+Message-Id: <20190617210756.112474347@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -63,50 +62,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Prarit Bhargava <prarit@redhat.com>
+From: Jani Nikula <jani.nikula@intel.com>
 
-commit c7563e62a6d720aa3b068e26ddffab5f0df29263 upstream.
+commit 56a2b7f2a39a8d4b16a628e113decde3d7400879 upstream.
 
-Booting with kernel parameter "rdt=cmt,mbmtotal,memlocal,l3cat,mba" and
-executing "mount -t resctrl resctrl -o mba_MBps /sys/fs/resctrl" results in
-a NULL pointer dereference on systems which do not have local MBM support
-enabled..
+Abstract the debugfs override and the firmware EDID retrieval
+function. We'll be needing it in the follow-up. No functional changes.
 
-BUG: kernel NULL pointer dereference, address: 0000000000000020
-PGD 0 P4D 0
-Oops: 0000 [#1] SMP PTI
-CPU: 0 PID: 722 Comm: kworker/0:3 Not tainted 5.2.0-0.rc3.git0.1.el7_UNSUPPORTED.x86_64 #2
-Workqueue: events mbm_handle_overflow
-RIP: 0010:mbm_handle_overflow+0x150/0x2b0
-
-Only enter the bandwith update loop if the system has local MBM enabled.
-
-Fixes: de73f38f7680 ("x86/intel_rdt/mba_sc: Feedback loop to dynamically update mem bandwidth")
-Signed-off-by: Prarit Bhargava <prarit@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Reinette Chatre <reinette.chatre@intel.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190610171544.13474-1-prarit@redhat.com
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Harish Chegondi <harish.chegondi@intel.com>
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Tested-by: Tested-by: Paul Wise <pabs3@bonedaddy.net>
+Signed-off-by: Jani Nikula <jani.nikula@intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20190607110513.12072-1-jani.nikula@intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/kernel/cpu/intel_rdt_monitor.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/gpu/drm/drm_edid.c |   25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
---- a/arch/x86/kernel/cpu/intel_rdt_monitor.c
-+++ b/arch/x86/kernel/cpu/intel_rdt_monitor.c
-@@ -371,6 +371,9 @@ static void update_mba_bw(struct rdtgrou
- 	struct list_head *head;
- 	struct rdtgroup *entry;
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -1580,6 +1580,20 @@ static void connector_bad_edid(struct dr
+ 	}
+ }
  
-+	if (!is_mbm_local_enabled())
-+		return;
++/* Get override or firmware EDID */
++static struct edid *drm_get_override_edid(struct drm_connector *connector)
++{
++	struct edid *override = NULL;
 +
- 	r_mba = &rdt_resources_all[RDT_RESOURCE_MBA];
- 	closid = rgrp->closid;
- 	rmid = rgrp->mon.rmid;
++	if (connector->override_edid)
++		override = drm_edid_duplicate(connector->edid_blob_ptr->data);
++
++	if (!override)
++		override = drm_load_edid_firmware(connector);
++
++	return IS_ERR(override) ? NULL : override;
++}
++
+ /**
+  * drm_do_get_edid - get EDID data using a custom EDID block read function
+  * @connector: connector we're probing
+@@ -1607,15 +1621,10 @@ struct edid *drm_do_get_edid(struct drm_
+ {
+ 	int i, j = 0, valid_extensions = 0;
+ 	u8 *edid, *new;
+-	struct edid *override = NULL;
+-
+-	if (connector->override_edid)
+-		override = drm_edid_duplicate(connector->edid_blob_ptr->data);
+-
+-	if (!override)
+-		override = drm_load_edid_firmware(connector);
++	struct edid *override;
+ 
+-	if (!IS_ERR_OR_NULL(override))
++	override = drm_get_override_edid(connector);
++	if (override)
+ 		return override;
+ 
+ 	if ((edid = kmalloc(EDID_LENGTH, GFP_KERNEL)) == NULL)
 
 
