@@ -2,178 +2,136 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9160AC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:59:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 195ECC31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 316C221E6B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:59:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E330121E6C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 08:00:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=avm.de header.i=@avm.de header.b="mDtU0ENR"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="fpSn1Xtk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726417AbfFQH7b (ORCPT
+        id S1727221AbfFQIAF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:59:31 -0400
-Received: from mail.avm.de ([212.42.244.120]:58506 "EHLO mail.avm.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725791AbfFQH7b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:59:31 -0400
-X-Greylist: delayed 864 seconds by postgrey-1.27 at vger.kernel.org; Mon, 17 Jun 2019 03:59:30 EDT
-Received: from mail-notes.avm.de (mail-notes.avm.de [172.16.0.1])
-        by mail.avm.de (8.15.2/8.15.2/Debian-3) with ESMTP id x5H7d19f012959;
-        Mon, 17 Jun 2019 09:39:01 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=avm.de; s=mail;
-        t=1560757141; bh=r/FcQUb3N2qSBatg63oxiav4UmylcSo1Y1G1sfJoF/Y=;
-        h=From:To:Cc:Subject:Date;
-        b=mDtU0ENR4vOBU+YhcvRRKTauQrbQf5TTRUlQjfl9fQXQR803PIhrz3TjGJv1G7AiQ
-         nws9UibPIhdoZPGDITS0wUj6sUBObH8j4cNBBO85LvAgvQQbpLf91Dv7dhgio+EAav
-         Q+gdGd+NuiEAIYuKk0PRl5WBpbY0hAB7zYZRcw3o=
-Received: from buildd.avm.de. ([172.16.0.225])
-          by mail-notes.avm.de (IBM Domino Release 10.0.1FP2)
-          with ESMTP id 2019061709390082-2087 ;
-          Mon, 17 Jun 2019 09:39:00 +0200 
-From:   "Nicolas Schier" <n.schier@avm.de>
-To:     "Miklos Szeredi" <miklos@szeredi.hu>
-Cc:     "Nicolas Schier" <nicolas@fjasle.eu>,
-        linux-unionfs@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ovl: fix typo in MODULE_PARM_DESC
-Date:   Mon, 17 Jun 2019 09:39:00 +0200
-Message-Id: <20190617073900.31948-1-n.schier@avm.de>
-X-Mailer: git-send-email 2.11.0
-X-MIMETrack: Itemize by SMTP Server on ANIS1/AVM(Release 10.0.1FP2|May 24, 2019) at
- 17.06.2019 09:39:00,
-        Serialize by Router on ANIS1/AVM(Release 10.0.1FP2|May 24, 2019) at
- 17.06.2019 09:39:01,
-        Serialize complete at 17.06.2019 09:39:01
-X-TNEFEvaluated: 1
+        Mon, 17 Jun 2019 04:00:05 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:47010 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725791AbfFQIAF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 04:00:05 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 7DD8E2DC0032;
+        Mon, 17 Jun 2019 04:00:04 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1560758404;
+        bh=5QkXNKOOo0s2HTA34p3+KiFaxnv3E6XBHbEwuPKBFG0=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
+        b=fpSn1XtkYo6WrcCUGmOHOdZNywi1QvmzZY4+xl5VCZcWBCS6cuFJZ4Bg2jHTm2zY8
+         aYj0YNe/GRufQBNqq5+D7BZJoH7Dn8clBz8eWh+9DhApm6D2taMEl1kfnO2F6+Wwzb
+         W/+P5ndUYX5vLbVjdyP/q4c9p8ZDU/KgUYY2gWgVt67XpYFuY/1smVdKIiqeVeDgUY
+         IMScq2G8iC8m3NQohxE0YI6tBs4TWuMudkSBjYzWLTSC87fTJvMfpwG+q9IMGNH5mD
+         RnVpWZi4IaX8NK6tE9+QSrU4P/kSXip/FRVYnW1+AJI3BwkbUp/NcXjaPLwWhKHsol
+         FxRQytR6bvv3iqTI+YFo7MYLtaJKh+WxmAU8njIhyNQx79yOWxYve4SwKeNQp50dHu
+         RxEim3BmKhIKnR2H4sLXR0ViD6QCTWOZdbrCXzx4MUJj28vB90o6g68qZ+X5iBAMpR
+         mfAG+vFEnT6PnOIFxsOcp0U29z01riqSThlWBY5r9dZ8PSrP/9EBD5QuVH7KTn7am6
+         bkB1UUJzPncn528VAjWChGL3S00VbOCyChWhvdfQYd9EvR2H1LSd3hJS2fhgjPjAel
+         GGjg9VwpTKbymgxG0K3NPax7j8K+tzKTYxHeuow6IFIG1vVdoXuMbECzFWtF7/Juz8
+         uTnUA0b1u27vtiMZkiQy2/TY=
+Received: from Hawking (ntp.lan [10.0.1.1])
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5H800Al057250
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 17 Jun 2019 18:00:00 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     "'Christoph Hellwig'" <hch@infradead.org>
+Cc:     "'Peter Zijlstra'" <peterz@infradead.org>,
+        "'Andrew Morton'" <akpm@linux-foundation.org>,
+        "'David Hildenbrand'" <david@redhat.com>,
+        "'Oscar Salvador'" <osalvador@suse.com>,
+        "'Michal Hocko'" <mhocko@suse.com>,
+        "'Pavel Tatashin'" <pasha.tatashin@soleen.com>,
+        "'Wei Yang'" <richard.weiyang@gmail.com>,
+        "'Arun KS'" <arunks@codeaurora.org>, "'Qian Cai'" <cai@lca.pw>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Ingo Molnar'" <mingo@kernel.org>,
+        "'Josh Poimboeuf'" <jpoimboe@redhat.com>,
+        "'Jiri Kosina'" <jkosina@suse.cz>,
+        "'Mukesh Ojha'" <mojha@codeaurora.org>,
+        "'Mike Rapoport'" <rppt@linux.vnet.ibm.com>,
+        "'Baoquan He'" <bhe@redhat.com>,
+        "'Logan Gunthorpe'" <logang@deltatee.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-nvdimm@lists.01.org>
+References: <20190617043635.13201-1-alastair@au1.ibm.com> <20190617043635.13201-6-alastair@au1.ibm.com> <20190617065921.GV3436@hirez.programming.kicks-ass.net> <f1bad6f784efdd26508b858db46f0192a349c7a1.camel@d-silva.org> <20190617071527.GA14003@infradead.org>
+In-Reply-To: <20190617071527.GA14003@infradead.org>
+Subject: RE: [PATCH 5/5] mm/hotplug: export try_online_node
+Date:   Mon, 17 Jun 2019 18:00:00 +1000
+Message-ID: <068d01d524e2$aa6f3000$ff4d9000$@d-silva.org>
 MIME-Version: 1.0
-X-purgate-type: clean
-X-purgate-Ad: Categorized by eleven eXpurgate (R) http://www.eleven.de
-X-purgate: clean
-X-purgate: This mail is considered clean (visit http://www.eleven.de for further information)
-X-purgate-size: 4938
-X-purgate-ID: 149429::1560757141-00001AFB-070550C8/0/0
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQKozGZqZYmaEl7M6DfiQR95qivs4QHbD3aSAzdXr9kBRRd62QEU+eDhpLzIGCA=
+Content-Language: en-au
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 17 Jun 2019 18:00:00 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change first argument to MODULE_PARM_DESC() calls, that each of them
-matched the actual module parameter name.  The matching results in
-changing (the 'parm' section from) the output of `modinfo overlay` from:
+> -----Original Message-----
+> From: Christoph Hellwig <hch@infradead.org>
+> Sent: Monday, 17 June 2019 5:15 PM
+> To: Alastair D'Silva <alastair@d-silva.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>; Andrew Morton <akpm@linux-
+> foundation.org>; David Hildenbrand <david@redhat.com>; Oscar Salvador
+> <osalvador@suse.com>; Michal Hocko <mhocko@suse.com>; Pavel Tatashin
+> <pasha.tatashin@soleen.com>; Wei Yang <richard.weiyang@gmail.com>;
+> Arun KS <arunks@codeaurora.org>; Qian Cai <cai@lca.pw>; Thomas Gleixner
+> <tglx@linutronix.de>; Ingo Molnar <mingo@kernel.org>; Josh Poimboeuf
+> <jpoimboe@redhat.com>; Jiri Kosina <jkosina@suse.cz>; Mukesh Ojha
+> <mojha@codeaurora.org>; Mike Rapoport <rppt@linux.vnet.ibm.com>;
+> Baoquan He <bhe@redhat.com>; Logan Gunthorpe
+> <logang@deltatee.com>; linux-mm@kvack.org; linux-
+> kernel@vger.kernel.org; linux-nvdimm@lists.01.org
+> Subject: Re: [PATCH 5/5] mm/hotplug: export try_online_node
+> 
+> On Mon, Jun 17, 2019 at 05:05:30PM +1000, Alastair D'Silva wrote:
+> > On Mon, 2019-06-17 at 08:59 +0200, Peter Zijlstra wrote:
+> > > On Mon, Jun 17, 2019 at 02:36:31PM +1000, Alastair D'Silva wrote:
+> > > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > >
+> > > > If an external driver module supplies physical memory and needs to
+> > > > expose
+> > >
+> > > Why would you ever want to allow a module to do such a thing?
+> > >
+> >
+> > I'm working on a driver for Storage Class Memory, connected via an
+> > OpenCAPI link.
+> >
+> > The memory is only usable once the card says it's OK to access it.
+> 
+> And all that should go through our pmem APIs, not not directly poke into
+mm
+> internals.  And if you still need core patches send them along with the
+actual
+> driver.
 
-    parm: ovl_check_copy_up:Obsolete; does nothing
-    parm: redirect_max:ushort
-    parm: ovl_redirect_max:Maximum length of absolute redirect xattr value
-    parm: redirect_dir:bool
-    parm: ovl_redirect_dir_def:Default to on or off for the redirect_dir feature
-    parm: redirect_always_follow:bool
-    parm: ovl_redirect_always_follow:Follow redirects even if redirect_dir feature is turned off
-    parm: index:bool
-    parm: ovl_index_def:Default to on or off for the inodes index feature
-    parm: nfs_export:bool
-    parm: ovl_nfs_export_def:Default to on or off for the NFS export feature
-    parm: xino_auto:bool
-    parm: ovl_xino_auto_def:Auto enable xino feature
-    parm: metacopy:bool
-    parm: ovl_metacopy_def:Default to on or off for the metadata only copy up feature
+I tried that, but I was getting crashes as the NUMA data structures for that
+node were not initialised.
 
-into:
+Calling this was required to prevent uninitialized accesses in the pmem
+library.
 
-    parm: check_copy_up:Obsolete; does nothing
-    parm: redirect_max:Maximum length of absolute redirect xattr value (ushort)
-    parm: redirect_dir:Default to on or off for the redirect_dir feature (bool)
-    parm: redirect_always_follow:Follow redirects even if redirect_dir feature is turned off (bool)
-    parm: index:Default to on or off for the inodes index feature (bool)
-    parm: nfs_export:Default to on or off for the NFS export feature (bool)
-    parm: xino_auto:Auto enable xino feature (bool)
-    parm: metacopy:Default to on or off for the metadata only copy up feature (bool)
-
-Signed-off-by: Nicolas Schier <n.schier@avm.de>
----
- fs/overlayfs/copy_up.c |  2 +-
- fs/overlayfs/dir.c     |  2 +-
- fs/overlayfs/super.c   | 12 ++++++------
- 3 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-index 9e62dcf06fc4..e9cdc453f247 100644
---- a/fs/overlayfs/copy_up.c
-+++ b/fs/overlayfs/copy_up.c
-@@ -37,7 +37,7 @@ static int ovl_ccup_get(char *buf, const struct kernel_param *param)
- }
- 
- module_param_call(check_copy_up, ovl_ccup_set, ovl_ccup_get, NULL, 0644);
--MODULE_PARM_DESC(ovl_check_copy_up, "Obsolete; does nothing");
-+MODULE_PARM_DESC(check_copy_up, "Obsolete; does nothing");
- 
- int ovl_copy_xattr(struct dentry *old, struct dentry *new)
- {
-diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
-index 82c129bfe58d..dbcb3ff588aa 100644
---- a/fs/overlayfs/dir.c
-+++ b/fs/overlayfs/dir.c
-@@ -21,7 +21,7 @@
- 
- static unsigned short ovl_redirect_max = 256;
- module_param_named(redirect_max, ovl_redirect_max, ushort, 0644);
--MODULE_PARM_DESC(ovl_redirect_max,
-+MODULE_PARM_DESC(redirect_max,
- 		 "Maximum length of absolute redirect xattr value");
- 
- static int ovl_set_redirect(struct dentry *dentry, bool samedir);
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index 0116735cc321..eb32e68f1a83 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -31,29 +31,29 @@ struct ovl_dir_cache;
- 
- static bool ovl_redirect_dir_def = IS_ENABLED(CONFIG_OVERLAY_FS_REDIRECT_DIR);
- module_param_named(redirect_dir, ovl_redirect_dir_def, bool, 0644);
--MODULE_PARM_DESC(ovl_redirect_dir_def,
-+MODULE_PARM_DESC(redirect_dir,
- 		 "Default to on or off for the redirect_dir feature");
- 
- static bool ovl_redirect_always_follow =
- 	IS_ENABLED(CONFIG_OVERLAY_FS_REDIRECT_ALWAYS_FOLLOW);
- module_param_named(redirect_always_follow, ovl_redirect_always_follow,
- 		   bool, 0644);
--MODULE_PARM_DESC(ovl_redirect_always_follow,
-+MODULE_PARM_DESC(redirect_always_follow,
- 		 "Follow redirects even if redirect_dir feature is turned off");
- 
- static bool ovl_index_def = IS_ENABLED(CONFIG_OVERLAY_FS_INDEX);
- module_param_named(index, ovl_index_def, bool, 0644);
--MODULE_PARM_DESC(ovl_index_def,
-+MODULE_PARM_DESC(index,
- 		 "Default to on or off for the inodes index feature");
- 
- static bool ovl_nfs_export_def = IS_ENABLED(CONFIG_OVERLAY_FS_NFS_EXPORT);
- module_param_named(nfs_export, ovl_nfs_export_def, bool, 0644);
--MODULE_PARM_DESC(ovl_nfs_export_def,
-+MODULE_PARM_DESC(nfs_export,
- 		 "Default to on or off for the NFS export feature");
- 
- static bool ovl_xino_auto_def = IS_ENABLED(CONFIG_OVERLAY_FS_XINO_AUTO);
- module_param_named(xino_auto, ovl_xino_auto_def, bool, 0644);
--MODULE_PARM_DESC(ovl_xino_auto_def,
-+MODULE_PARM_DESC(xino_auto,
- 		 "Auto enable xino feature");
- 
- static void ovl_entry_stack_free(struct ovl_entry *oe)
-@@ -66,7 +66,7 @@ static void ovl_entry_stack_free(struct ovl_entry *oe)
- 
- static bool ovl_metacopy_def = IS_ENABLED(CONFIG_OVERLAY_FS_METACOPY);
- module_param_named(metacopy, ovl_metacopy_def, bool, 0644);
--MODULE_PARM_DESC(ovl_metacopy_def,
-+MODULE_PARM_DESC(metacopy,
- 		 "Default to on or off for the metadata only copy up feature");
- 
- static void ovl_dentry_release(struct dentry *dentry)
 -- 
-2.20.1
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva     msn: alastair@d-silva.org
+blog: http://alastair.d-silva.org    Twitter: @EvilDeece
+
+
 
