@@ -2,97 +2,73 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11A3C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:34:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED10C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 960CB20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:34:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807295;
-	bh=Opv/mSurQ8nj6sHht/tUxAYzrYb+iP1/XHfMYCvjMQU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ScPl2j/MH8MWxL9FlL2QVn4e88UJj6dsXyC6RyPBOxclpmJe8huN8H5rdN7uOOq1v
-	 OizM0N1NqpivJoklYMwpL0DzWDxcMMoyFSL1JL49ZskpobGmrvkpjOmikMrV9ar+pV
-	 vho0zGsusu6wMK20S+BBKia3pfBbHN1+ZdhET4KM=
+	by mail.kernel.org (Postfix) with ESMTP id 6312320657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:35:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbfFQVX4 (ORCPT
+        id S1729154AbfFQVe7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:23:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729805AbfFQVXw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:23:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A188120861;
-        Mon, 17 Jun 2019 21:23:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806632;
-        bh=Opv/mSurQ8nj6sHht/tUxAYzrYb+iP1/XHfMYCvjMQU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lj+pPv/gLGlckLr6KddC8qEpQV9U1FPhHbSor+QUmflQlgbL7cdHZsWYVdW/L8SDz
-         FOw1tz+3iYE9zUMopMI5cNBiDiK9wNOyKCws7tlnDBYyb/ugdMY1AfmWVTBJ6wZpzV
-         A3JnRyWN7KKFaIlvtghsMvKBh2mHHY+O06Cljx6s=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Murray McAllister <murray.mcallister@gmail.com>,
-        Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [PATCH 5.1 095/115] drm/vmwgfx: integer underflow in vmw_cmd_dx_set_shader() leading to an invalid read
-Date:   Mon, 17 Jun 2019 23:09:55 +0200
-Message-Id: <20190617210804.767858738@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-References: <20190617210759.929316339@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 17 Jun 2019 17:34:59 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:33698 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfFQVez (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:34:55 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hczH8-0008LW-Jk; Mon, 17 Jun 2019 21:34:50 +0000
+Date:   Mon, 17 Jun 2019 22:34:50 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>, linux-fsdevel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfs: fsmount: add missing mntget()
+Message-ID: <20190617213450.GW17978@ZenIV.linux.org.uk>
+References: <20190610183031.GE63833@gmail.com>
+ <20190612184313.143456-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612184313.143456-1-ebiggers@kernel.org>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Murray McAllister <murray.mcallister@gmail.com>
+On Wed, Jun 12, 2019 at 11:43:13AM -0700, Eric Biggers wrote:
+> From: Eric Biggers <ebiggers@google.com>
+> 
+> sys_fsmount() needs to take a reference to the new mount when adding it
+> to the anonymous mount namespace.  Otherwise the filesystem can be
+> unmounted while it's still in use, as found by syzkaller.
+> 
+> Reported-by: Mark Rutland <mark.rutland@arm.com>
+> Reported-by: syzbot+99de05d099a170867f22@syzkaller.appspotmail.com
+> Reported-by: syzbot+7008b8b8ba7df475fdc8@syzkaller.appspotmail.com
+> Fixes: 93766fbd2696 ("vfs: syscall: Add fsmount() to create a mount for a superblock")
+> Signed-off-by: Eric Biggers <ebiggers@google.com>
+> ---
+>  fs/namespace.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index b26778bdc236e..5dc137a22d406 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -3445,6 +3445,7 @@ SYSCALL_DEFINE3(fsmount, int, fs_fd, unsigned int, flags,
+>  	ns->root = mnt;
+>  	ns->mounts = 1;
+>  	list_add(&mnt->mnt_list, &ns->list);
+> +	mntget(newmount.mnt);
+>  
+>  	/* Attach to an apparent O_PATH fd with a note that we need to unmount
+>  	 * it, not just simply put it.
 
-commit 5ed7f4b5eca11c3c69e7c8b53e4321812bc1ee1e upstream.
-
-If SVGA_3D_CMD_DX_SET_SHADER is called with a shader ID
-of SVGA3D_INVALID_ID, and a shader type of
-SVGA3D_SHADERTYPE_INVALID, the calculated binding.shader_slot
-will be 4294967295, leading to an out-of-bounds read in vmw_binding_loc()
-when the offset is calculated.
-
-Cc: <stable@vger.kernel.org>
-Fixes: d80efd5cb3de ("drm/vmwgfx: Initial DX support")
-Signed-off-by: Murray McAllister <murray.mcallister@gmail.com>
-Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
-
----
- drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-@@ -2351,7 +2351,8 @@ static int vmw_cmd_dx_set_shader(struct
- 
- 	cmd = container_of(header, typeof(*cmd), header);
- 
--	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX) {
-+	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX ||
-+	    cmd->body.type < SVGA3D_SHADERTYPE_MIN) {
- 		DRM_ERROR("Illegal shader type %u.\n",
- 			  (unsigned) cmd->body.type);
- 		return -EINVAL;
-
-
+Nice catch...  Applied, with apologies for having been MIA lately.
