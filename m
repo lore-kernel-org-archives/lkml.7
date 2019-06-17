@@ -2,157 +2,82 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FROM_EXCESS_BASE64,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 813BFC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59196C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B85E208E3
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:58:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="a0kldUnv"
+	by mail.kernel.org (Postfix) with ESMTP id 3B77820848
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:59:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728020AbfFQJ6v (ORCPT
+        id S1728081AbfFQJ7L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:58:51 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:41908 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727483AbfFQJ6v (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:58:51 -0400
-Received: by mail-lj1-f193.google.com with SMTP id s21so8658127lji.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 02:58:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:cc
-         :content-transfer-encoding;
-        bh=iKqfthJLs1khkBsV+9UVzZvxk7yU7AKPa89YLxvDkt8=;
-        b=a0kldUnvCzKXA0fC7dVwmGOliSB+fCQqJBomISMdL+7z7eXfU/C6p7XF6xdLk7EPX0
-         H7tNMTneARolfMaUFdZscMu9rEbV+6psTYYJox+ZkcF5sFgo8+TASmCB9RrwXhw7+QGg
-         /4hWtWE22KHRVq1BQ0XW00zQniaOnOO2Kn83pdpoCmgmhvlOsVwSAKPGUrIQxjQs75rm
-         3BAqjxkxHlQUg7AnIu1p/Us3tvhat1nRcYBzHjhK8tJ5Yy+Xjvby3DHd9WoS95Bo6RgD
-         6T5wNIyWCV+C9u7zfbKL8Zc0zmHZxf46Xeg93K4AlDHUh7iMYnx/xR+pF0MGLsEnda9F
-         BYWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:cc:content-transfer-encoding;
-        bh=iKqfthJLs1khkBsV+9UVzZvxk7yU7AKPa89YLxvDkt8=;
-        b=Z4AXFVqw3MFZLNaYq0u80LewraTtOdYnHjQ8hDgdhSZ5psQf9bRZ03IYEQRRx09XEB
-         j35Lo01igkqkt6SVMf6KDJdaOSqBmRcfE041+gs0IhNQjWM0nrAxZjW9C4qV0QvfFN7q
-         umj7EOYgQwFuoFfzs2A/1M5XWwI1peJ6SLBJjFzSbBhNMBwIj0aadkctG4WZAll5LMqw
-         xC+YUgU3wWxzhm1NDSYatsZ7vIGkmc9SnGqNtyCSS5uSzh7B/7Jtwv11bjvICTn60iJ9
-         7xQ5HWGdjnp0ZOQQj4XG1nWF8CEvhK8vjxV8uQeEaeDrWEe3t3+lzVFDUdzmHPUD5wOa
-         Uzng==
-X-Gm-Message-State: APjAAAXuvDEu79166n0c/8werWwzBD3s/0JJOJbwqh3HMkqPxOtedKFe
-        BzUP1Xh487haArZ8pCSv93qmMiKPERRHh2VJGi1wD+dNmtpu1w==
-X-Received: by 2002:a2e:8847:: with SMTP id z7mt10098339ljj.51.1560765529616;
- Mon, 17 Jun 2019 02:58:49 -0700 (PDT)
+        Mon, 17 Jun 2019 05:59:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:43798 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727693AbfFQJ7K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:59:10 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B6CDE344;
+        Mon, 17 Jun 2019 02:59:09 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 015A23F246;
+        Mon, 17 Jun 2019 03:00:50 -0700 (PDT)
+Subject: Re: [PATCH v2 06/28] drivers: Add generic helper to match by of_node
+To:     wsa@the-dreams.de
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        rafael@kernel.org, atull@kernel.org, andrew@lunn.ch,
+        daniel@ffwll.ch, airlied@linux.ie, davem@davemloft.net,
+        devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        f.fainelli@gmail.com, frowand.list@gmail.com, hkallweit1@gmail.com,
+        jslaby@suse.com, jonathanh@nvidia.com, lee.jones@linaro.org,
+        lgirdwood@gmail.com, linux-fpga@vger.kernel.org,
+        linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, broonie@kernel.org,
+        mathieu.poirier@linaro.org, maxime.ripard@bootlin.com,
+        mdf@kernel.org, peda@axentia.se, robh+dt@kernel.org,
+        srinivas.kandagatla@linaro.org, thierry.reding@gmail.com,
+        thor.thayer@linux.intel.com, ulf.hansson@linaro.org,
+        joe@perches.com
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-7-git-send-email-suzuki.poulose@arm.com>
+ <20190614203144.GB7991@kunai>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <d050ae69-52ee-b32d-2bc0-708b408f3bd4@arm.com>
+Date:   Mon, 17 Jun 2019 10:59:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190617073320.69015-1-lifei.shirley@bytedance.com>
- <28bef625-ce70-20a1-7d8b-296cd43015c4@redhat.com> <2d05dce3-e19a-2f0f-8b74-8defae38640d@redhat.com>
-In-Reply-To: <2d05dce3-e19a-2f0f-8b74-8defae38640d@redhat.com>
-From:   =?UTF-8?B?5p2O6I+y?= <lifei.shirley@bytedance.com>
-Date:   Mon, 17 Jun 2019 17:58:38 +0800
-Message-ID: <CA+=e4K6G0apU2psFYDtFDbpE14nfBB_sD_Y2rK-v3=nYPO8B3Q@mail.gmail.com>
-Subject: Re: [External Email] Re: [PATCH] Fix tun: wake up waitqueues after
- IFF_UP is set
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20190614203144.GB7991@kunai>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ok, thanks for the detail suggestion! :)
+Hi
 
+On 14/06/2019 21:31, Wolfram Sang wrote:
+>> +
+>> +int device_match_of_node(struct device *dev, const void *np)
+>> +{
+>> +	return dev->of_node == np;
+>> +}
+>> +EXPORT_SYMBOL_GPL(device_match_of_node);
+> 
+> Is it an option to 'static inline' this simple function in the header,
+> saving the EXPORT?
+> 
 
-On Mon, Jun 17, 2019 at 4:16 PM Jason Wang <jasowang@redhat.com> wrote:
->
->
-> On 2019/6/17 =E4=B8=8B=E5=8D=884:10, Jason Wang wrote:
-> >
-> > On 2019/6/17 =E4=B8=8B=E5=8D=883:33, Fei Li wrote:
-> >> Currently after setting tap0 link up, the tun code wakes tx/rx waited
-> >> queues up in tun_net_open() when .ndo_open() is called, however the
-> >> IFF_UP flag has not been set yet. If there's already a wait queue, it
-> >> would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
-> >> Then the saving vhost_poll_start() will add the wq into wqh until it
-> >> is waken up again. Although this works when IFF_UP flag has been set
-> >> when tun_chr_poll detects; this is not true if IFF_UP flag has not
-> >> been set at that time. Sadly the latter case is a fatal error, as
-> >> the wq will never be waken up in future unless later manually
-> >> setting link up on purpose.
-> >>
-> >> Fix this by moving the wakeup process into the NETDEV_UP event
-> >> notifying process, this makes sure IFF_UP has been set before all
-> >> waited queues been waken up.
->
->
-> Btw, the title needs some tweak. E.g you need use "net" as prefix since
-> it's a fix for net.git and "Fix" could be removed like:
->
-> [PATCH net] tun: wake up waitqueues after IFF_UP is set.
->
-> Thanks
->
->
-> >>
-> >> Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
-> >> ---
-> >>   drivers/net/tun.c | 17 +++++++++--------
-> >>   1 file changed, 9 insertions(+), 8 deletions(-)
-> >>
-> >> diff --git a/drivers/net/tun.c b/drivers/net/tun.c
-> >> index c452d6d831dd..a3c9cab5a4d0 100644
-> >> --- a/drivers/net/tun.c
-> >> +++ b/drivers/net/tun.c
-> >> @@ -1015,17 +1015,9 @@ static void tun_net_uninit(struct net_device
-> >> *dev)
-> >>   static int tun_net_open(struct net_device *dev)
-> >>   {
-> >>       struct tun_struct *tun =3D netdev_priv(dev);
-> >> -    int i;
-> >>         netif_tx_start_all_queues(dev);
-> >>   -    for (i =3D 0; i < tun->numqueues; i++) {
-> >> -        struct tun_file *tfile;
-> >> -
-> >> -        tfile =3D rtnl_dereference(tun->tfiles[i]);
-> >> - tfile->socket.sk->sk_write_space(tfile->socket.sk);
-> >> -    }
-> >> -
-> >>       return 0;
-> >>   }
-> >>   @@ -3634,6 +3626,7 @@ static int tun_device_event(struct
-> >> notifier_block *unused,
-> >>   {
-> >>       struct net_device *dev =3D netdev_notifier_info_to_dev(ptr);
-> >>       struct tun_struct *tun =3D netdev_priv(dev);
-> >> +    int i;
-> >>         if (dev->rtnl_link_ops !=3D &tun_link_ops)
-> >>           return NOTIFY_DONE;
-> >> @@ -3643,6 +3636,14 @@ static int tun_device_event(struct
-> >> notifier_block *unused,
-> >>           if (tun_queue_resize(tun))
-> >>               return NOTIFY_BAD;
-> >>           break;
-> >> +    case NETDEV_UP:
-> >> +        for (i =3D 0; i < tun->numqueues; i++) {
-> >> +            struct tun_file *tfile;
-> >> +
-> >> +            tfile =3D rtnl_dereference(tun->tfiles[i]);
-> >> + tfile->socket.sk->sk_write_space(tfile->socket.sk);
-> >> +        }
-> >> +        break;
-> >>       default:
-> >>           break;
-> >>       }
-> >
-> >
-> > Acked-by: Jason Wang <jasowang@redhat.com)
-> >
+No. This is supposed to be passed on as a call back function pointer
+for the APIs. Having it as a static inline, would simply replicate
+the same function through the driver subsystems, which is one of the
+issues that series is trying to solve. Also, by having them exported,
+we can convert the new specialized device lookup functions,
+*_find_device_by_<property> to be static inlines.
+
+Suzuki
