@@ -2,248 +2,563 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCD9DC31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:12:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB92C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:13:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A53DF208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:12:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6297F20863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 19:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560798757;
-	bh=iB5y5Zu4qbKrjb1l9NPFwndfY9Hlf8H4ea1wBhUkzvQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=l7sgkdcQt6L8FJ2owIsT7O3VC/AJEEwE9bWILcWq59zTkuNoCvzy6F+Rmn/JhRVqh
-	 GcptUSRwIcapXyCDVA1YDLKyaNLBQKd+3AbGQtX5FAy4e0n49IE7LZHcqgWbMAOPpc
-	 2pYvLjjZymOfoR058hy6E8oFk9tGj5yAtY2Y1Zgo=
+	s=default; t=1560798796;
+	bh=pPdwJ3GnFnyO5Hq/BuiViCRoBB/e+KG4OtyofDzPXeU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=hmgt++XZkRwWH3mBLxkXX0Iaouq6dAsHvHRBhFeY8tj31NH55SocUtAt0gVPUh+9S
+	 TYqu6UkuhIKt0HdXLORjSSeCXCaEFEMJ9krWnfdXIusamTDu+o7fmuDWl9TYBF3GNO
+	 6belfyiC0UZzp/ax1R4a+U7WE6ZrP2lPEoW1K1qs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfFQTMg (ORCPT
+        id S1727666AbfFQTNP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 15:12:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60760 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726048AbfFQTMf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 15:12:35 -0400
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9C4C6208E4
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 19:12:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560798753;
-        bh=iB5y5Zu4qbKrjb1l9NPFwndfY9Hlf8H4ea1wBhUkzvQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=u2YwFMQnEuL95VJAF+xSJUrvjviELW8LACJiuxyOGnB4nqjGjmbFz5bNyr7x5P7xV
-         6rFQ9e6hEpHCA2tL7HXXlNnqJ0jvdS8Izy9PArs+dAvG2vjQjE4kbWFoAFP85zGiek
-         ps/XWaUVgsS58Hy8dBSgrjfFCLx8bGQTqnxb2I7o=
-Received: by mail-wr1-f44.google.com with SMTP id r16so11189351wrl.11
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 12:12:33 -0700 (PDT)
-X-Gm-Message-State: APjAAAXa6A+daSSP4XFinzKYJINi2PWnHxnPx8Y5QzgQTzqTuZ+1Ad15
-        Gdt90I4cJwmeMnq7C4I4Ytqp53pwyVhk1IkhGe55Ew==
-X-Google-Smtp-Source: APXvYqyVfJ2JNvfBU2L4DTO4h4dbmpc/CBe+DfWNCfmOVKfQ0k0I5D871RcoCkUh0GY4/Ab3rJAppaMpeN+9mjrcBLU=
-X-Received: by 2002:adf:cc85:: with SMTP id p5mr16716016wrj.47.1560798752177;
- Mon, 17 Jun 2019 12:12:32 -0700 (PDT)
+        Mon, 17 Jun 2019 15:13:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51560 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726331AbfFQTNP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 15:13:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=0lowo67jUcjW6gtI8vv9NQmn3mxBn6HmDf49u8xK9FM=; b=OVxbgG1r3hBiNzsFtFxDvPZ0T
+        ICVJWOmvr+Hz1OrnRigAz2EA805pc65QgbnpJX9msTT7EZrNMVEuNyLLBhYllLU/dcCLA6tXPtuxK
+        EA27IUEKV1WgHc6UwgiQQRq2u+KrkpmYypOr1vCoxEhuErL3L6EcmupqzBZd3s6PrxxLFXIvXFfe2
+        NA4dA2wSZ6sC5urYuwpRv238TYObAByUlWUt+JrZNZfqbRO4w/gWH8qe/bYU/ash9GS6+N640mmrm
+        f50JPSl5lWQo+Uo6lDBKW120lhgpA5qzw0STiDpFTbBWn36Pj/W6+31NwZtsbKGwsxd2n1k5Y0Dnp
+        uhM1XAnzA==;
+Received: from 179.186.105.91.dynamic.adsl.gvt.net.br ([179.186.105.91] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcx46-0003eK-Kn; Mon, 17 Jun 2019 19:13:14 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hcx44-0001Ez-Fw; Mon, 17 Jun 2019 16:13:12 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] scripts: add a script to handle Documentation/features
+Date:   Mon, 17 Jun 2019 16:13:10 -0300
+Message-Id: <02e7a3eb6ec8b86cda74b4b12355c50d746fc6f6.1560798774.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-46-kirill.shutemov@linux.intel.com> <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
- <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com> <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
- <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
-In-Reply-To: <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 17 Jun 2019 12:12:20 -0700
-X-Gmail-Original-Message-ID: <CALCETrWFXSndmPH0OH4DVVrAyPEeKUUfNwo_9CxO-3xy9awq0g@mail.gmail.com>
-Message-ID: <CALCETrWFXSndmPH0OH4DVVrAyPEeKUUfNwo_9CxO-3xy9awq0g@mail.gmail.com>
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for MKTME
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:37 AM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> Tom Lendacky, could you take a look down in the message to the talk of
-> SEV?  I want to make sure I'm not misrepresenting what it does today.
-> ...
->
->
-> >> I actually don't care all that much which one we end up with.  It's not
-> >> like the extra syscall in the second options means much.
-> >
-> > The benefit of the second one is that, if sys_encrypt is absent, it
-> > just works.  In the first model, programs need a fallback because
-> > they'll segfault of mprotect_encrypt() gets ENOSYS.
->
-> Well, by the time they get here, they would have already had to allocate
-> and set up the encryption key.  I don't think this would really be the
-> "normal" malloc() path, for instance.
->
-> >>  How do we
-> >> eventually stack it on top of persistent memory filesystems or Device
-> >> DAX?
-> >
-> > How do we stack anonymous memory on top of persistent memory or Device
-> > DAX?  I'm confused.
->
-> If our interface to MKTME is:
->
->         fd = open("/dev/mktme");
->         ptr = mmap(fd);
->
-> Then it's hard to combine with an interface which is:
->
->         fd = open("/dev/dax123");
->         ptr = mmap(fd);
->
-> Where if we have something like mprotect() (or madvise() or something
-> else taking pointer), we can just do:
->
->         fd = open("/dev/anything987");
->         ptr = mmap(fd);
->         sys_encrypt(ptr);
+The Documentation/features contains a set of parseable files.
+It is not worth converting them to ReST format, as they're
+useful the way it is. It is, however, interesting to parse
+them and produce output on different formats:
 
-I'm having a hard time imagining that ever working -- wouldn't it blow
-up if someone did:
+1) Output the contents of a feature in ReST format;
 
-fd = open("/dev/anything987");
-ptr1 = mmap(fd);
-ptr2 = mmap(fd);
-sys_encrypt(ptr1);
+2) Output what features a given architecture supports;
 
-So I think it really has to be:
-fd = open("/dev/anything987");
-ioctl(fd, ENCRYPT_ME);
-mmap(fd);
+3) Output a matrix with features x architectures.
 
-But I really expect that the encryption of a DAX device will actually
-be a block device setting and won't look like this at all.  It'll be
-more like dm-crypt except without device mapper.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ scripts/get_feat.pl | 472 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 472 insertions(+)
+ create mode 100755 scripts/get_feat.pl
 
->
-> Now, we might not *do* it that way for dax, for instance, but I'm just
-> saying that if we go the /dev/mktme route, we never get a choice.
->
-> > I think that, in the long run, we're going to have to either expand
-> > the core mm's concept of what "memory" is or just have a whole
-> > parallel set of mechanisms for memory that doesn't work like memory.
-> ...
-> > I expect that some day normal memory will  be able to be repurposed as
-> > SGX pages on the fly, and that will also look a lot more like SEV or
-> > XPFO than like the this model of MKTME.
->
-> I think you're drawing the line at pages where the kernel can manage
-> contents vs. not manage contents.  I'm not sure that's the right
-> distinction to make, though.  The thing that is important is whether the
-> kernel can manage the lifetime and location of the data in the page.
+diff --git a/scripts/get_feat.pl b/scripts/get_feat.pl
+new file mode 100755
+index 000000000000..401cbc820caa
+--- /dev/null
++++ b/scripts/get_feat.pl
+@@ -0,0 +1,472 @@
++#!/usr/bin/perl
++# SPDX-License-Identifier: GPL-2.0
++
++use strict;
++use Pod::Usage;
++use Getopt::Long;
++use File::Find;
++use Fcntl ':mode';
++
++my $help;
++my $man;
++my $debug;
++my $arch;
++my $feat;
++my $prefix="Documentation/features";
++
++GetOptions(
++	"debug|d+" => \$debug,
++	"dir=s" => \$prefix,
++	'help|?' => \$help,
++	'arch=s' => \$arch,
++	'feat=s' => \$feat,
++	man => \$man
++) or pod2usage(2);
++
++pod2usage(1) if $help;
++pod2usage(-exitstatus => 0, -verbose => 2) if $man;
++
++pod2usage(2) if (scalar @ARGV < 1 || @ARGV > 2);
++
++my ($cmd, $arg) = @ARGV;
++
++pod2usage(2) if ($cmd ne "current" && $cmd ne "rest" && $cmd ne "validate");
++
++require Data::Dumper if ($debug);
++
++my %data;
++my %archs;
++
++#
++# Displays an error message, printing file name and line
++#
++sub parse_error($$$$) {
++	my ($file, $ln, $msg, $data) = @_;
++
++	$data =~ s/\s+$/\n/;
++
++	print STDERR "Warning: file $file#$ln:\n\t$msg";
++
++	if ($data ne "") {
++		print STDERR ". Line\n\t\t$data";
++	} else {
++	    print STDERR "\n";
++	}
++}
++
++#
++# Parse a features file, storing its contents at %data
++#
++
++my $h_name = "Feature";
++my $h_kconfig = "Kconfig";
++my $h_description = "Description";
++my $h_subsys = "Subsystem";
++my $h_status = "Status";
++my $h_arch = "Architecture";
++
++my $max_size_name = length($h_name);
++my $max_size_kconfig = length($h_kconfig);
++my $max_size_description = length($h_description);
++my $max_size_subsys = length($h_subsys);
++my $max_size_status = length($h_status);
++my $max_size_arch = length($h_arch);
++
++sub parse_feat {
++	my $file = $File::Find::name;
++
++	my $mode = (stat($file))[2];
++	return if ($mode & S_IFDIR);
++	return if ($file =~ m,($prefix)/arch-support.txt,);
++	return if (!($file =~ m,arch-support.txt$,));
++
++	my $subsys = "";
++	$subsys = $2 if ( m,.*($prefix)/([^/]+).*,);
++
++	if (length($subsys) > $max_size_subsys) {
++		$max_size_subsys = length($subsys);
++	}
++
++	my $name;
++	my $kconfig;
++	my $description;
++	my $comments = "";
++	my $last_status;
++	my $ln;
++	my %arch_table;
++
++	print STDERR "Opening $file\n" if ($debug > 1);
++	open IN, $file;
++
++	while(<IN>) {
++		$ln++;
++
++		if (m/^\#\s+Feature\s+name:\s*(.*\S)/) {
++			$name = $1;
++			if (length($name) > $max_size_name) {
++				$max_size_name = length($name);
++			}
++			next;
++		}
++		if (m/^\#\s+Kconfig:\s*(.*\S)/) {
++			$kconfig = $1;
++			if (length($kconfig) > $max_size_kconfig) {
++				$max_size_kconfig = length($kconfig);
++			}
++			next;
++		}
++		if (m/^\#\s+description:\s*(.*\S)/) {
++			$description = $1;
++			if (length($description) > $max_size_description) {
++				$max_size_description = length($description);
++			}
++			next;
++		}
++		next if (m/^\\s*$/);
++		next if (m/^\s*\-+\s*$/);
++		next if (m/^\s*\|\s*arch\s*\|\s*status\s*\|\s*$/);
++
++		if (m/^\#\s*(.*)/) {
++			$comments .= "$1\n";
++			next;
++		}
++		if (m/^\s*\|\s*(\S+):\s*\|\s*(\S+)\s*\|\s*$/) {
++			my $a = $1;
++			my $status = $2;
++
++			if (length($status) > $max_size_status) {
++				$max_size_status = length($status);
++			}
++			if (length($a) > $max_size_arch) {
++				$max_size_arch = length($a);
++			}
++
++			$archs{$a} = 1;
++			$arch_table{$a} = $status;
++			next;
++		}
++
++		#Everything else is an error
++		parse_error($file, $ln, "line is invalid", $_);
++	}
++	close IN;
++
++	if (!$name) {
++		parse_error($file, $ln, "Feature name not found", "");
++		return;
++	}
++
++	parse_error($file, $ln, "Subsystem not found", "") if (!$subsys);
++	parse_error($file, $ln, "Kconfig not found", "") if (!$kconfig);
++	parse_error($file, $ln, "Description not found", "") if (!$description);
++
++	if (!%arch_table) {
++		parse_error($file, $ln, "Architecture table not found", "");
++		return;
++	}
++
++	$data{$name}->{where} = $file;
++	$data{$name}->{subsys} = $subsys;
++	$data{$name}->{kconfig} = $kconfig;
++	$data{$name}->{description} = $description;
++	$data{$name}->{comments} = $comments;
++	$data{$name}->{table} = \%arch_table;
++}
++
++#
++# Output feature(s) for a given architecture
++#
++sub output_arch_table {
++	my $title = "Feature status on $arch architecture";
++
++	print "=" x length($title) . "\n";
++	print "$title\n";
++	print "=" x length($title) . "\n\n";
++
++	print "=" x $max_size_subsys;
++	print "  ";
++	print "=" x $max_size_name;
++	print "  ";
++	print "=" x $max_size_kconfig;
++	print "  ";
++	print "=" x $max_size_status;
++	print "  ";
++	print "=" x $max_size_description;
++	print "\n";
++	printf "%-${max_size_subsys}s  ", $h_subsys;
++	printf "%-${max_size_name}s  ", $h_name;
++	printf "%-${max_size_kconfig}s  ", $h_kconfig;
++	printf "%-${max_size_status}s  ", $h_status;
++	printf "%-${max_size_description}s\n", $h_description;
++	print "=" x $max_size_subsys;
++	print "  ";
++	print "=" x $max_size_name;
++	print "  ";
++	print "=" x $max_size_kconfig;
++	print "  ";
++	print "=" x $max_size_status;
++	print "  ";
++	print "=" x $max_size_description;
++	print "\n";
++
++	foreach my $name (sort {
++				($data{$a}->{subsys} cmp $data{$b}->{subsys}) ||
++				($data{$a}->{name} cmp $data{$b}->{name})
++			       } keys %data) {
++		next if ($feat && $name ne $feat);
++
++		my %arch_table = %{$data{$name}->{table}};
++		printf "%-${max_size_subsys}s  ", $data{$name}->{subsys};
++		printf "%-${max_size_name}s  ", $name;
++		printf "%-${max_size_kconfig}s  ", $data{$name}->{kconfig};
++		printf "%-${max_size_status}s  ", $arch_table{$arch};
++		printf "%-${max_size_description}s\n", $data{$name}->{description};
++	}
++
++	print "=" x $max_size_subsys;
++	print "  ";
++	print "=" x $max_size_name;
++	print "  ";
++	print "=" x $max_size_kconfig;
++	print "  ";
++	print "=" x $max_size_status;
++	print "  ";
++	print "=" x $max_size_description;
++	print "\n";
++}
++
++#
++# Output a feature on all architectures
++#
++sub output_feature {
++	my $title = "Feature $feat";
++
++	print "=" x length($title) . "\n";
++	print "$title\n";
++	print "=" x length($title) . "\n\n";
++
++	print ":Subsystem: $data{$feat}->{subsys} \n" if ($data{$feat}->{subsys});
++	print ":Kconfig: $data{$feat}->{kconfig} \n" if ($data{$feat}->{kconfig});
++
++	my $desc = $data{$feat}->{description};
++	$desc =~ s/^([a-z])/\U$1/;
++	$desc =~ s/\.?\s*//;
++	print "\n$desc.\n\n";
++
++	my $com = $data{$feat}->{comments};
++	$com =~ s/^\s+//;
++	$com =~ s/\s+$//;
++	if ($com) {
++		print "Comments\n";
++		print "--------\n\n";
++		print "$com\n\n";
++	}
++
++	print "=" x $max_size_arch;
++	print "  ";
++	print "=" x $max_size_status;
++	print "\n";
++
++	printf "%-${max_size_arch}s  ", $h_arch;
++	printf "%-${max_size_status}s", $h_status . "\n";
++
++	print "=" x $max_size_arch;
++	print "  ";
++	print "=" x $max_size_status;
++	print "\n";
++
++	my %arch_table = %{$data{$feat}->{table}};
++	foreach my $arch (sort keys %arch_table) {
++		printf "%-${max_size_arch}s  ", $arch;
++		printf "%-${max_size_status}s\n", $arch_table{$arch};
++	}
++
++	print "=" x $max_size_arch;
++	print "  ";
++	print "=" x $max_size_status;
++	print "\n";
++}
++
++#
++# Output all features for all architectures
++#
++
++sub matrix_lines {
++	print "=" x $max_size_subsys;
++	print "  ";
++	print "=" x $max_size_name;
++	print "  ";
++
++	foreach my $arch (sort keys %archs) {
++		my $len = $max_size_status;
++
++		$len = length($arch) if ($len < length($arch));
++
++		print "=" x $len;
++		print "  ";
++	}
++	print "=" x $max_size_kconfig;
++	print "  ";
++	print "=" x $max_size_description;
++	print "\n";
++}
++
++sub output_matrix {
++
++	my $title = "Feature List (feature x architecture)";
++
++	print "=" x length($title) . "\n";
++	print "$title\n";
++	print "=" x length($title) . "\n\n";
++
++	matrix_lines;
++
++	printf "%-${max_size_subsys}s  ", $h_subsys;
++	printf "%-${max_size_name}s  ", $h_name;
++
++	foreach my $arch (sort keys %archs) {
++		printf "%-${max_size_status}s  ", $arch;
++	}
++	printf "%-${max_size_kconfig}s  ", $h_kconfig;
++	printf "%-${max_size_description}s\n", $h_description;
++
++	matrix_lines;
++
++	foreach my $name (sort {
++				($data{$a}->{subsys} cmp $data{$b}->{subsys}) ||
++				($data{$a}->{name} cmp $data{$b}->{name})
++			       } keys %data) {
++		printf "%-${max_size_subsys}s  ", $data{$name}->{subsys};
++		printf "%-${max_size_name}s  ", $name;
++
++		my %arch_table = %{$data{$name}->{table}};
++
++		foreach my $arch (sort keys %arch_table) {
++			my $len = $max_size_status;
++
++			$len = length($arch) if ($len < length($arch));
++
++			printf "%-${len}s  ", $arch_table{$arch};
++		}
++		printf "%-${max_size_kconfig}s  ", $data{$name}->{kconfig};
++		printf "%-${max_size_description}s\n", $data{$name}->{description};
++	}
++
++	matrix_lines;
++}
++
++
++#
++# Parses all feature files located at $prefix dir
++#
++find({wanted =>\&parse_feat, no_chdir => 1}, $prefix);
++
++print STDERR Data::Dumper->Dump([\%data], [qw(*data)]) if ($debug);
++
++#
++# Handles the command
++#
++if ($cmd eq "current") {
++	$arch = qx(uname -m | sed 's/x86_64/x86/' | sed 's/i386/x86/');
++	$arch =~s/\s+$//;
++}
++
++if ($cmd ne "validate") {
++	if ($arch) {
++		output_arch_table;
++	} elsif ($feat) {
++		output_feature;
++	} else {
++		output_matrix;
++	}
++}
++
++__END__
++
++=head1 NAME
++
++get_feat.pl - parse the Linux Feature files and produce a ReST book.
++
++=head1 SYNOPSIS
++
++B<get_feat.pl> [--debug] [--man] [--help] [--dir=<dir>]
++	       [--arch=<arch>] [--feat=<feature>] <COMAND> [<ARGUMENT>]
++
++Where <COMMAND> can be:
++
++=over 8
++
++B<current>               - output features for this machine's architecture
++
++B<rest>                  - output features in ReST markup language
++
++B<validate>              - validate the feature contents
++
++=back
++
++=head1 OPTIONS
++
++=over 8
++
++=item B<--arch>
++
++Output features for an specific architecture, optionally filtering for
++a single specific feature.
++
++=item B<--feat>
++
++Output features for a single specific architecture.
++
++=item B<--dir>
++
++Changes the location of the Feature files. By default, it uses
++the Documentation/features directory.
++
++=item B<--debug>
++
++Put the script in verbose mode, useful for debugging. Can be called multiple
++times, to increase verbosity.
++
++=item B<--help>
++
++Prints a brief help message and exits.
++
++=item B<--man>
++
++Prints the manual page and exits.
++
++=back
++
++=head1 DESCRIPTION
++
++Parse the Linux feature files from Documentation/features (by default),
++optionally producing results at ReST format.
++
++It supports output data per architecture, per feature or a
++feature x arch matrix.
++
++When used with B<rest> command, it will use either one of the tree formats:
++
++If neither B<--arch> or B<--feature> arguments are used, it will output a
++matrix with features per architecture.
++
++If B<--arch> argument is used, it will output the features availability for
++a given architecture.
++
++If B<--feat> argument is used, it will output the content of the feature
++file using ReStructured Text markup.
++
++=head1 BUGS
++
++Report bugs to Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
++
++=head1 COPYRIGHT
++
++Copyright (c) 2019 by Mauro Carvalho Chehab <mchehab+samsung@kernel.org>.
++
++License GPLv2: GNU GPL version 2 <http://gnu.org/licenses/gpl.html>.
++
++This is free software: you are free to change and redistribute it.
++There is NO WARRANTY, to the extent permitted by law.
++
++=cut
+-- 
+2.21.0
 
-The kernel can manage the location of EPC pages, for example, but only
-under extreme constraints right now.  The draft SGX driver can and
-does swap them out and swap them back in, potentially at a different
-address.
-
->
-> Basically: Can the kernel choose where the page comes from and get the
-> page back when it wants?
->
-> I really don't like the current state of things like with SEV or with
-> KVM direct device assignment where the physical location is quite locked
-> down and the kernel really can't manage the memory.  I'm trying really
-> hard to make sure future hardware is more permissive about such things.
->  My hope is that these are a temporary blip and not the new normal.
->
-> > So, if we upstream MKTME as anonymous memory with a magic config
-> > syscall, I predict that, in a few years, it will be end up inheriting
-> > all downsides of both approaches with few of the upsides.  Programs
-> > like QEMU will need to learn to manipulate pages that can't be
-> > accessed outside the VM without special VM buy-in, so the fact that
-> > MKTME pages are fully functional and can be GUP-ed won't be very
-> > useful.  And the VM will learn about all these things, but MKTME won't
-> > really fit in.
->
-> Kai Huang (who is on cc) has been doing the QEMU enabling and might want
-> to weigh in.  I'd also love to hear from the AMD folks in case I'm not
-> grokking some aspect of SEV.
->
-> But, my understanding is that, even today, neither QEMU nor the kernel
-> can see SEV-encrypted guest memory.  So QEMU should already understand
-> how to not interact with guest memory.  I _assume_ it's also already
-> doing this with anonymous memory, without needing /dev/sme or something.
-
-Let's find out!
-
-If it's using anonymous memory, it must be very strange, since it
-would more or less have to be mmapped PROT_NONE.  The thing that makes
-anonymous memory in particular seem so awkward to me is that it's
-fundamentally identified by it's *address*, which means it makes no
-sense if it's not mapped.
-
->
-> > And, one of these days, someone will come up with a version of XPFO
-> > that could actually be upstreamed, and it seems entirely plausible
-> > that it will be totally incompatible with MKTME-as-anonymous-memory
-> > and that users of MKTME will actually get *worse* security.
->
-> I'm not following here.  XPFO just means that we don't keep the direct
-> map around all the time for all memory.  If XPFO and
-> MKTME-as-anonymous-memory were both in play, I think we'd just be
-> creating/destroying the MKTME-enlightened direct map instead of a
-> vanilla one.
-
-What I'm saying is that I can imagine XPFO also wanting to be
-something other than anonymous memory.  I don't think we'll ever want
-regular MAP_ANONYMOUS to enable XPFO by default because the
-performance will suck.  Doing this seems odd:
-
-ptr = mmap(MAP_ANONYMOUS);
-sys_xpfo_a_pointer(ptr);
-
-So I could imagine:
-
-ptr = mmap(MAP_ANONYMOUS | MAP_XPFO);
-
-or
-
-fd = open("/dev/xpfo"); (or fd = memfd_create(..., XPFO);
-ptr = mmap(fd);
-
-I'm thinking that XPFO is a *lot* simpler under the hood if we just
-straight-up don't support GUP on it.  Maybe we should call this
-"strong XPFO".  Similarly, the kinds of things that want MKTME may
-also want the memory to be entirely absent from the direct map.  And
-the things that use SEV (as I understand it) *can't* usefully use the
-memory for normal IO via GUP or copy_to/from_user(), so these things
-all have a decent amount in common.
-
-Another down side of anonymous memory (in my head, anyway -- QEMU
-people should chime in) is that it seems awkward to use it for IO
-techniques in which the back-end isn't in the QEMU process.  If
-there's an fd involved, you can pass it around, feed it to things like
-vfio, etc.  If there's no fd, it's stuck in the creating process.
-
-And another silly argument: if we had /dev/mktme, then we could
-possibly get away with avoiding all the keyring stuff entirely.
-Instead, you open /dev/mktme and you get your own key under the hook.
-If you want two keys, you open /dev/mktme twice.  If you want some
-other program to be able to see your memory, you pass it the fd.
-
-I hope this email isn't too rambling :)
-
---Andy
