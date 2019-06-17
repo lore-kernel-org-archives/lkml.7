@@ -2,154 +2,70 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61966C31E59
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:29:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0C97C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4494A2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:29:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF65F2084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:31:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728146AbfFQL3n (ORCPT
+        id S1728046AbfFQLbM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:29:43 -0400
-Received: from foss.arm.com ([217.140.110.172]:46288 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725681AbfFQL3n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:29:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7936B344;
-        Mon, 17 Jun 2019 04:29:42 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 030E33F246;
-        Mon, 17 Jun 2019 04:31:26 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 12:29:39 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Ley Foon Tan <ley.foon.tan@intel.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, lftan.linux@gmail.com
-Subject: Re: [PATCH v2] PCI: altera: Fix configuration type based on
- secondary number
-Message-ID: <20190617112939.GB24968@e121166-lin.cambridge.arm.com>
-References: <1560321720-4083-1-git-send-email-ley.foon.tan@intel.com>
+        Mon, 17 Jun 2019 07:31:12 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45645 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725681AbfFQLbM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:31:12 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hcpqv-0008OW-Ou; Mon, 17 Jun 2019 11:31:09 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] clocksource: davinci-timer: fix memory leak of clockevent on error return
+Date:   Mon, 17 Jun 2019 12:31:09 +0100
+Message-Id: <20190617113109.24689-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560321720-4083-1-git-send-email-ley.foon.tan@intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 02:42:00PM +0800, Ley Foon Tan wrote:
-> This fix issue when access config from PCIe switch.
-> 
-> Stratix 10 PCIe controller does not support Type 1 to Type 0 conversion
-> as previous version (V1) does.
-> 
-> The PCIe controller need to send Type 0 config TLP if the targeting bus
-> matches with the secondary bus number, which is when the TLP is targeting
-> the immediate device on the link.
-> 
-> The PCIe controller send Type 1 config TLP if the targeting bus is
-> larger than the secondary bus, which is when the TLP is targeting the
-> device not immediate on the link.
-> 
-> Signed-off-by: Ley Foon Tan <ley.foon.tan@intel.com>
-> 
-> ---
-> v2:
-> - Add get_tlp_header() function.
-> ---
->  drivers/pci/controller/pcie-altera.c | 41 ++++++++++++++++++----------
->  1 file changed, 27 insertions(+), 14 deletions(-)
+From: Colin Ian King <colin.king@canonical.com>
 
-Applied to pci/altera for v5.3, thanks.
+Currently when the call to request_irq falls there is a memory leak of
+clockevent on the error return path. Fix this by kfree'ing clockevent.
 
-Lorenzo
+Addresses-Coverity: ("Resource leak")
+Fixes: fe3b8194f274 ("clocksource: davinci-timer: add support for clockevents")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/clocksource/timer-davinci.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-> diff --git a/drivers/pci/controller/pcie-altera.c b/drivers/pci/controller/pcie-altera.c
-> index 27222071ace7..d2497ca43828 100644
-> --- a/drivers/pci/controller/pcie-altera.c
-> +++ b/drivers/pci/controller/pcie-altera.c
-> @@ -44,6 +44,8 @@
->  #define S10_RP_RXCPL_STATUS		0x200C
->  #define S10_RP_CFG_ADDR(pcie, reg)	\
->  	(((pcie)->hip_base) + (reg) + (1 << 20))
-> +#define S10_RP_SECONDARY(pcie)		\
-> +	readb(S10_RP_CFG_ADDR(pcie, PCI_SECONDARY_BUS))
->  
->  /* TLP configuration type 0 and 1 */
->  #define TLP_FMTTYPE_CFGRD0		0x04	/* Configuration Read Type 0 */
-> @@ -55,14 +57,9 @@
->  #define TLP_WRITE_TAG			0x10
->  #define RP_DEVFN			0
->  #define TLP_REQ_ID(bus, devfn)		(((bus) << 8) | (devfn))
-> -#define TLP_CFGRD_DW0(pcie, bus)					\
-> -	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgrd0		\
-> -				: pcie->pcie_data->cfgrd1) << 24) |	\
-> -				TLP_PAYLOAD_SIZE)
-> -#define TLP_CFGWR_DW0(pcie, bus)					\
-> -	((((bus == pcie->root_bus_nr) ? pcie->pcie_data->cfgwr0		\
-> -				: pcie->pcie_data->cfgwr1) << 24) |	\
-> -				TLP_PAYLOAD_SIZE)
-> +#define TLP_CFG_DW0(pcie, cfg)		\
-> +		(((cfg) << 24) |	\
-> +		  TLP_PAYLOAD_SIZE)
->  #define TLP_CFG_DW1(pcie, tag, be)	\
->  	(((TLP_REQ_ID(pcie->root_bus_nr,  RP_DEVFN)) << 16) | (tag << 8) | (be))
->  #define TLP_CFG_DW2(bus, devfn, offset)	\
-> @@ -322,14 +319,31 @@ static void s10_tlp_write_packet(struct altera_pcie *pcie, u32 *headers,
->  	s10_tlp_write_tx(pcie, data, RP_TX_EOP);
->  }
->  
-> +static void get_tlp_header(struct altera_pcie *pcie, u8 bus, u32 devfn,
-> +			   int where, u8 byte_en, bool read, u32 *headers)
-> +{
-> +	u8 cfg;
-> +	u8 cfg0 = read ? pcie->pcie_data->cfgrd0 : pcie->pcie_data->cfgwr0;
-> +	u8 cfg1 = read ? pcie->pcie_data->cfgrd1 : pcie->pcie_data->cfgwr1;
-> +	u8 tag = read ? TLP_READ_TAG : TLP_WRITE_TAG;
-> +
-> +	if (pcie->pcie_data->version == ALTERA_PCIE_V1)
-> +		cfg = (bus == pcie->root_bus_nr) ? cfg0 : cfg1;
-> +	else
-> +		cfg = (bus > S10_RP_SECONDARY(pcie)) ? cfg0 : cfg1;
-> +
-> +	headers[0] = TLP_CFG_DW0(pcie, cfg);
-> +	headers[1] = TLP_CFG_DW1(pcie, tag, byte_en);
-> +	headers[2] = TLP_CFG_DW2(bus, devfn, where);
-> +}
-> +
->  static int tlp_cfg_dword_read(struct altera_pcie *pcie, u8 bus, u32 devfn,
->  			      int where, u8 byte_en, u32 *value)
->  {
->  	u32 headers[TLP_HDR_SIZE];
->  
-> -	headers[0] = TLP_CFGRD_DW0(pcie, bus);
-> -	headers[1] = TLP_CFG_DW1(pcie, TLP_READ_TAG, byte_en);
-> -	headers[2] = TLP_CFG_DW2(bus, devfn, where);
-> +	get_tlp_header(pcie, bus, devfn, where, byte_en, true,
-> +		       headers);
->  
->  	pcie->pcie_data->ops->tlp_write_pkt(pcie, headers, 0, false);
->  
-> @@ -342,9 +356,8 @@ static int tlp_cfg_dword_write(struct altera_pcie *pcie, u8 bus, u32 devfn,
->  	u32 headers[TLP_HDR_SIZE];
->  	int ret;
->  
-> -	headers[0] = TLP_CFGWR_DW0(pcie, bus);
-> -	headers[1] = TLP_CFG_DW1(pcie, TLP_WRITE_TAG, byte_en);
-> -	headers[2] = TLP_CFG_DW2(bus, devfn, where);
-> +	get_tlp_header(pcie, bus, devfn, where, byte_en, false,
-> +		       headers);
->  
->  	/* check alignment to Qword */
->  	if ((where & 0x7) == 0)
-> -- 
-> 2.19.0
-> 
+diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
+index a9ca02390b66..8512f12e250a 100644
+--- a/drivers/clocksource/timer-davinci.c
++++ b/drivers/clocksource/timer-davinci.c
+@@ -300,6 +300,7 @@ int __init davinci_timer_register(struct clk *clk,
+ 			 "clockevent/tim12", clockevent);
+ 	if (rv) {
+ 		pr_err("Unable to request the clockevent interrupt");
++		kfree(clockevent);
+ 		return rv;
+ 	}
+ 
+-- 
+2.20.1
+
