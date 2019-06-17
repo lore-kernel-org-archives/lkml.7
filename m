@@ -2,94 +2,103 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8269BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C81C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CE7F2080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:55:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90A782080A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:56:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfFQUzu (ORCPT
+        id S1726735AbfFQU4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:55:50 -0400
-Received: from mga06.intel.com ([134.134.136.31]:16366 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfFQUzu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:55:50 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 13:55:50 -0700
-X-ExtLoop1: 1
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2019 13:55:49 -0700
-Date:   Mon, 17 Jun 2019 13:46:19 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v4 2/5] x86/umwait: Initialize umwait control values
-Message-ID: <20190617204619.GC217081@romley-ivt3.sc.intel.com>
-References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
- <1559944837-149589-3-git-send-email-fenghua.yu@intel.com>
- <CALCETrWtmrwqjThkMKU9YpTDK4o95V4HBb2_yQF2tvx5JZ9Ukw@mail.gmail.com>
- <20190610041343.GC162238@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906112242410.2214@nanos.tec.linutronix.de>
+        Mon, 17 Jun 2019 16:56:37 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43406 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725497AbfFQU4g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 16:56:36 -0400
+Received: by mail-pl1-f195.google.com with SMTP id cl9so4638398plb.10;
+        Mon, 17 Jun 2019 13:56:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oaUF+IVfxLkFEOX3EdWdqY0MW6ieO175zRASbw5HHZM=;
+        b=In45RciiYycSqmGUdJVle6PXKgp27Jun83jcfNaFIWxUh+nu6S7hGEwwIyxJocZJWT
+         mGlVFcevrfTBcxOXw6X2qvuIfTNXez1swbd03ntboTL0nem4WZrx31X4pjJoP84AKVFi
+         L+eU+ocYLl2Pe1qZ5fnOTe3E0DcC8zXsZVBXwB2Ia7EiEyTvkvN0SBnGM1OJanw1gcjt
+         gnbH6CCtegHpz+1xeU4F84+YmRqccWdXELzmRCC0iBnIl6FtWwwgM0a1hZevfmCcY+1b
+         7EefNT9Nm4Z6LbhWq7o8I+0WNkpcFfqD5jRPBKISAGXGFBPwESwFRXQlBl1rMMNr4q6H
+         UDjA==
+X-Gm-Message-State: APjAAAUTYWWzYCdpFb0vIbIXNS+5KK8cfm63DuzxCzC/U+utgDZMWRsB
+        lcoXQEJNarAhpKJpZFg2H4oe09jTYuI=
+X-Google-Smtp-Source: APXvYqyW1uX5YVD0oJTXzOf/KTeNCXdXhtPN2mMaP3rKDVGtTCu0tZAI6kQEifd7AGUdvUb3udfRmg==
+X-Received: by 2002:a17:902:760a:: with SMTP id k10mr89887792pll.83.1560804995269;
+        Mon, 17 Jun 2019 13:56:35 -0700 (PDT)
+Received: from desktop-bart.svl.corp.google.com ([2620:15c:2cd:202:4308:52a3:24b6:2c60])
+        by smtp.gmail.com with ESMTPSA id r9sm12006074pgv.24.2019.06.17.13.56.33
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 13:56:34 -0700 (PDT)
+Subject: Re: [PATCH 2/8] scsi: take the DMA max mapping size into account
+To:     Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
+        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190617122000.22181-1-hch@lst.de>
+ <20190617122000.22181-3-hch@lst.de>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <5d143a03-edd5-5878-780b-45d87313a813@acm.org>
+Date:   Mon, 17 Jun 2019 13:56:32 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906112242410.2214@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190617122000.22181-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 10:46:55PM +0200, Thomas Gleixner wrote:
-> On Sun, 9 Jun 2019, Fenghua Yu wrote:
+On 6/17/19 5:19 AM, Christoph Hellwig wrote:
+> We need to limit the devices max_sectors to what the DMA mapping
+> implementation can support.  If not we risk running out of swiotlb
+> buffers easily.
 > 
-> > On Sat, Jun 08, 2019 at 03:52:42PM -0700, Andy Lutomirski wrote:
-> > > On Fri, Jun 7, 2019 at 3:10 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > > >
-> > > > umwait or tpause allows processor to enter a light-weight
-> > > > power/performance optimized state (C0.1 state) or an improved
-> > > > power/performance optimized state (C0.2 state) for a period
-> > > > specified by the instruction or until the system time limit or until
-> > > > a store to the monitored address range in umwait.
-> > > >
-> > > > IA32_UMWAIT_CONTROL MSR register allows kernel to enable/disable C0.2
-> > > > on the processor and set maximum time the processor can reside in
-> > > > C0.1 or C0.2.
-> > > >
-> > > > By default C0.2 is enabled so the user wait instructions can enter the
-> > > > C0.2 state to save more power with slower wakeup time.
-> > > 
-> > > Sounds good, but:
-> > > 
-> > > > +#define MSR_IA32_UMWAIT_CONTROL_C02            BIT(0)
-> > > 
-> > > > +static u32 umwait_control_cached = 100000;
-> > > 
-> > > The code seems to disagree.
-> > 
-> > The definition of bit[0] is: C0.2 is disabled when bit[0]=1. So
-> > 100000 means C0.2 is enabled (and max time is 100000).
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>   drivers/scsi/scsi_lib.c | 2 ++
+>   1 file changed, 2 insertions(+)
 > 
-> which is totally non obvious. If you have to encode the control bit, then
-> please make it explicit, i.e. mask out the disable bit in the initializer.
+> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+> index d333bb6b1c59..f233bfd84cd7 100644
+> --- a/drivers/scsi/scsi_lib.c
+> +++ b/drivers/scsi/scsi_lib.c
+> @@ -1768,6 +1768,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
+>   		blk_queue_max_integrity_segments(q, shost->sg_prot_tablesize);
+>   	}
+>   
+> +	shost->max_sectors = min_t(unsigned int, shost->max_sectors,
+> +			dma_max_mapping_size(dev) << SECTOR_SHIFT);
+>   	blk_queue_max_hw_sectors(q, shost->max_sectors);
+>   	if (shost->unchecked_isa_dma)
+>   		blk_queue_bounce_limit(q, BLK_BOUNCE_ISA);
 
-Is this right?
+Does dma_max_mapping_size() return a value in bytes? Is 
+shost->max_sectors a number of sectors? If so, are you sure that "<< 
+SECTOR_SHIFT" is the proper conversion? Shouldn't that be ">> 
+SECTOR_SHIFT" instead?
 
-static u32 umwait_control_cached = 100000 & ~MSR_IA32_UMWAIT_CONTROL_C02_DISABLED;
+Additionally, how about adding a comment above dma_max_mapping_size() 
+that documents the unit of the returned number?
 
-Thanks.
+Thanks,
 
--Fenghua
-
+Bart.
