@@ -2,193 +2,139 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1E4C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC6C0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 727DF20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FpO1R5vf"
+	by mail.kernel.org (Postfix) with ESMTP id 9A2BE2084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfFQSlJ (ORCPT
+        id S1728682AbfFQSlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:41:09 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15176 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbfFQSlI (ORCPT
+        Mon, 17 Jun 2019 14:41:37 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:35253 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725764AbfFQSlh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:41:08 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d07dec20001>; Mon, 17 Jun 2019 11:41:06 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 17 Jun 2019 11:41:06 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 11:41:06 -0700
-Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
- 2019 18:41:03 +0000
-Subject: Re: [PATCH V7] i2c: tegra: remove BUG, BUG_ON
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560748152-6575-1-git-send-email-bbiswas@nvidia.com>
- <5a8ad23f-33c8-5140-cef8-f9cef70764b1@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <43a3fae8-dd3e-c7d3-42a7-493210e601e2@nvidia.com>
-Date:   Mon, 17 Jun 2019 11:41:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <5a8ad23f-33c8-5140-cef8-f9cef70764b1@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560796866; bh=NS+EykB/fDCq1eHfod8gUDIK5K1DLkej1/yjn/VU47w=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FpO1R5vfGDr+ZFPUGeb0zS2Z7NcDA878Teg+7Lzrn22iDNVT4ByzNPr5aeI63c+21
-         Ux7FGyaIzS6TdpU0mFUBdcrxNb9fxaSjcMA1c++dBk6tNbL3b57mqsedHvP+/BNeM/
-         WGpUA3zwLsWpyQGBN+omZACjz5xKH43yjILRnVTlqxHXcaWx7o9qgfAJi7ZdkFJKiR
-         n40FwztUE/plMJ0/4JsbRlAvYlYOFjuBx1GhNjN+zOwb9TaFwbnktxVgOxVYQ0C0w+
-         oU90KpqrS9xSh17CyJ0CPq6b/y1ESZLYLlDg6PTcJlFBB33FaI/ERNk/xATaFe5Gei
-         WzcO0HiHDIqag==
+        Mon, 17 Jun 2019 14:41:37 -0400
+Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1MhUDl-1iFYm80Vff-00eexp; Mon, 17 Jun 2019 20:41:15 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     thloh@altera.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, andriy.shevchenko@linux.intel.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: [PATCH 01/30] include: linux: platform_device: more helpers for declaring platform drivers
+Date:   Mon, 17 Jun 2019 20:40:42 +0200
+Message-Id: <1560796871-18560-1-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+X-Provags-ID: V03:K1:vh3WgaKAfp/7utsDwGStG8lhMEJOLPpqeqqOIPZUy69iRDhMgUT
+ YLO0VVH9+WSHOOP9Z9lTkwLZQut5VFowC3UxPBimZV2gDZsASGuddTCo4Ns+x279im1k6P6
+ DvVmuitj/sUJGSikRzupru9N53/CfW5itFY6p4aDEVz9PvxnW7pBVq3Fmi/cVgqMjBnVHGa
+ GhxJ055QzOASmoYXb/xGw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:pncoYwVZfPU=:I4jSkF7FQyUU1Sq0ZMKvoJ
+ hrJzfvo2len4wsFtN0hwymlMcBge1MDGz+loqbRkJ8CW/uRDselgl9z8OUHkvxhAJwTUPCoK2
+ 5LRdxHWKDEVzf+MuRQjoI+ISMzc40B9oTOcQXNJn3uxLp24Zf0lG++O4eNVoKQJk32AVy3b6T
+ 7z80l+YlX2u6QXjMp2DzSlFJ5FwvWeJ2nTmoWP8EpQeg8OoAf/ecvdpSWa7ZjRgf3udyWH7Fm
+ YTcg2Rho7x7lehyZlIG+aFWHsQqBlWWsAa2cKA0/W8Nlk4QHva+ZiPenQ4qo+tavkhrew/M1J
+ 99WAeRqb8RxlmqjxXqIVewncVfPRIbnHN4lm53x1O4kYrdlRETFiqL3wsiLhsU6pb7OhSpcke
+ H01Gpa7OSgdd+7tbdwfSE2dnCuhFHgxdI9iP2KiBrO08v6ihVnsWKvCjCdsBr0wd0c/vmqaaD
+ cOC+hxmoLR4uO7790+Uwko4cRo813Uc1adwb/A7nrMNIWc3D1yWASdCxy0X14MJ5ewLUt3EMS
+ 04MllSWdEijwsXKnH9zr+YctR/GxkORREQwZab5xab0l6k+QY4bGbB1FH1I6l1cMBHHJ0EYMf
+ xUbRGtlHTBwRBpR7kHDfTij/AkHg00n1c4hTwOWu7/YHW1ud65SgcWkdAVvYU8Mr1ylUhXiUU
+ 1LeCBRSQvuBLsKgKGHNygUZdlvOtR7m3hQ+MhrZslo8e24+3/0fbPcwoAc1RtbmIk3gFaYxiZ
+ TlsWX1yXNmkScOxTVP7Gxd5Jxz50lkfGbbRVwQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Enrico Weigelt <info@metux.net>
 
+Add more helper macros for trivial driver init cases, similar to the
+already existing module_platform_driver()+friends - now for those which
+are initialized at other stages. Lots of drivers couldn't use the existing
+macros, as they need to be called at different init stages, eg. subsys,
+postcore, arch.
 
-On 6/17/19 5:13 AM, Dmitry Osipenko wrote:
-> 17.06.2019 8:09, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> Remove BUG, BUG_ON as it makes system usable:
->>   - Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
->>     as needed.
->>   - Remove BUG() and mask Rx interrupt similar as Tx
->>     for message fully sent case.
->>   - Add caller error handling and WARN_ON_ONCE check for non-zero
->>     rx_fifo_avail in tegra_i2c_empty_rx_fifo() after all processing.
->=20
-> The commit message should describe motivation of the change and not the c=
-hange itself,
-> unless it's some additional information which is required for better unde=
-rstanding of
-> the code.
->=20
-> In yours case it could be something like that:
->=20
->      The usage of BUG() macro is generally discouraged in kernel, unless
->      it's a problem that results in a physical damage or loss of data.
->      This patch removes unnecessary BUG() macros and replaces the rest
->      with a warnings.
-I shall update as per above comments.
+This helps to further reduce driver init boilerplate.
 
->=20
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
->>   drivers/i2c/busses/i2c-tegra.c | 45 ++++++++++++++++++++++++++++++++++=
---------
->>   1 file changed, 37 insertions(+), 8 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-teg=
-ra.c
->> index 4dfb4c1..b155b61 100644
->> --- a/drivers/i2c/busses/i2c-tegra.c
->> +++ b/drivers/i2c/busses/i2c-tegra.c
->> @@ -73,6 +73,7 @@
->>   #define I2C_ERR_NO_ACK				BIT(0)
->>   #define I2C_ERR_ARBITRATION_LOST		BIT(1)
->>   #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
->> +#define I2C_ERR_RX_BUFFER_OVERFLOW		BIT(3)
->>  =20
->>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->>   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
->> @@ -515,7 +516,11 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c=
-_dev *i2c_dev)
->>   	 * prevent overwriting past the end of buf
->>   	 */
->>   	if (rx_fifo_avail > 0 && buf_remaining > 0) {
->> -		BUG_ON(buf_remaining > 3);
->> +		/*
->> +		 * buf_remaining > 3 check not needed as rx_fifo_avail =3D=3D 0
->> +		 * when (words_to_transfer was > rx_fifo_avail) earlier
->> +		 * in this function.
->> +		 */
->>   		val =3D i2c_readl(i2c_dev, I2C_RX_FIFO);
->>   		val =3D cpu_to_le32(val);
->>   		memcpy(buf, &val, buf_remaining);
->> @@ -523,7 +528,15 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c=
-_dev *i2c_dev)
->>   		rx_fifo_avail--;
->>   	}
->>  =20
->> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
->> +	if ((!(i2c_dev->msg_buf_remaining)) &&
->=20
-> The RX FIFO shall be drained completely no matter what.
->=20
-> Hence why the "i2c_dev->msg_buf_remaining" checking is needed here?
-I moved the part of below condition in Patch V6 to function=20
-tegra_i2c_empty_rx_fifo:
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ include/linux/platform_device.h | 51 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
 
- >> +			err_val =3D tegra_i2c_empty_rx_fifo(i2c_dev);
- >> +			if ((!(i2c_dev->msg_buf_remaining)) &&
+diff --git a/include/linux/platform_device.h b/include/linux/platform_device.h
+index beb25f2..5f3a967 100644
+--- a/include/linux/platform_device.h
++++ b/include/linux/platform_device.h
+@@ -259,6 +259,57 @@ static inline void platform_set_drvdata(struct platform_device *pdev,
+ } \
+ module_exit(__platform_driver##_exit);
+ 
++/* postcore_platform_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces postcore_initcall() and module_exit()
++ */
++#define postcore_platform_driver(__platform_driver) \
++static int __init __platform_driver##_init(void) \
++{ \
++	return platform_driver_register(&(__platform_driver)); \
++} \
++postcore_initcall(__platform_driver##_init); \
++static void __exit __platform_driver##_exit(void) \
++{ \
++	platform_driver_unregister(&(__platform_driver)); \
++} \
++module_exit(__platform_driver##_exit);
++
++/* subsys_platform_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces subsys_initcall() and module_exit()
++ */
++#define subsys_platform_driver(__platform_driver) \
++static int __init __platform_driver##_init(void) \
++{ \
++	return platform_driver_register(&(__platform_driver)); \
++} \
++subsys_initcall(__platform_driver##_init); \
++static void __exit __platform_driver##_exit(void) \
++{ \
++	platform_driver_unregister(&(__platform_driver)); \
++} \
++module_exit(__platform_driver##_exit);
++
++/* arch_platform_driver() - Helper macro for drivers that don't do
++ * anything special in module init/exit.  This eliminates a lot of
++ * boilerplate.  Each module may only use this macro once, and
++ * calling it replaces arch_initcall() and module_exit()
++ */
++#define arch_platform_driver(__platform_driver) \
++static int __init __platform_driver##_init(void) \
++{ \
++	return platform_driver_register(&(__platform_driver)); \
++} \
++arch_initcall(__platform_driver##_init); \
++static void __exit __platform_driver##_exit(void) \
++{ \
++	platform_driver_unregister(&(__platform_driver)); \
++} \
++module_exit(__platform_driver##_exit);
++
+ /* builtin_platform_driver_probe() - Helper macro for drivers that don't do
+  * anything special in device init.  This eliminates some boilerplate.  Each
+  * driver may only use this macro once, and using it replaces device_initcall.
+-- 
+1.9.1
 
- > Let's move this check into tegra_i2c_empty_rx_fifo() and return=20
--EINVAL for that case.
- > This will make code to look cleaner.
-
-Is above condition not needed?
-
-
->=20
-> Secondly, in the future please don't add parens where they are not needed=
-. In this
-> case parens around !i2c_dev->msg_buf_remaining are not needed at all.
->=20
-I shall look out for similar unnecessary parentheses and update the patch.
-
->> +	    WARN_ON_ONCE(rx_fifo_avail))
->> +		return -EINVAL;
->> +
->> +	/*
->> +	 * buf_remaining > 0 at this point can only have rx_fifo_avail =3D=3D =
-0
->=20
-> The rx_fifo_avail is always 0 at this point, including the case of buf_re=
-maining =3D=3D 0.
-> It will be better if you'll add a comment for the WARN_ON_ONCE(rx_fifo_av=
-ail) above,
-> saying that RX FIFO must be fully drained, and then just drop this commen=
-t.
->=20
-
-OK.
-
->> +	 * as this corresponds to (words_to_transfer was > rx_fifo_avail)
->> +	 * case earlier in this function.
->> +	 */
->>   	i2c_dev->msg_buf_remaining =3D buf_remaining;
->>   	i2c_dev->msg_buf =3D buf;
->=20
-> [snip]
->=20
