@@ -2,172 +2,105 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817CEC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:00:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CBF9C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5965920833
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:00:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB42120833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 10:00:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kDNsJSEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727978AbfFQKAt (ORCPT
+        id S1728130AbfFQKA6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 06:00:49 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51310 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727518AbfFQKAs (ORCPT
+        Mon, 17 Jun 2019 06:00:58 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35256 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727518AbfFQKA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 06:00:48 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HA05NF187082
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 06:00:47 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t6708vbd3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 06:00:46 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Mon, 17 Jun 2019 11:00:45 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Jun 2019 11:00:40 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5HA0dQj54853752
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 10:00:39 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AE041A406B;
-        Mon, 17 Jun 2019 10:00:39 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3EABBA4051;
-        Mon, 17 Jun 2019 10:00:38 +0000 (GMT)
-Received: from boston16h.aus.stglabs.ibm.com (unknown [9.3.23.78])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Jun 2019 10:00:38 +0000 (GMT)
-From:   Abhishek Goel <huntbag@linux.vnet.ibm.com>
-To:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-pm@vger.kernel.org
-Cc:     rjw@rjwysocki.net, daniel.lezcano@linaro.org, mpe@ellerman.id.au,
-        dja@axtens.net, npiggin@gmail.com, ego@linux.vnet.ibm.com,
-        Abhishek Goel <huntbag@linux.vnet.ibm.com>
-Subject: [PATCH v2 1/1] cpuidle-powernv : forced wakeup for stop states
-Date:   Mon, 17 Jun 2019 04:56:48 -0500
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190617095648.18847-1-huntbag@linux.vnet.ibm.com>
-References: <20190617095648.18847-1-huntbag@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19061710-4275-0000-0000-00000342FDA9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061710-4276-0000-0000-000038531FEB
-Message-Id: <20190617095648.18847-2-huntbag@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906170093
+        Mon, 17 Jun 2019 06:00:58 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m3so9260888wrv.2
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 03:00:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :content-transfer-encoding:user-agent;
+        bh=kgNrzQ82w525RSgH0vUvYbpvSwP6OY398m1IW4hr0QQ=;
+        b=kDNsJSEGyKe0mDOgYYB07hzWUlQE/myjjIQlUsLLhJZZ+Q+Z6irrLvT2Jgzu2Gra8F
+         WWUamNroRFCRJdDW4X31dTfYtZyPn+2Pq/7c7B4GTSZKAVog88U+ZUBSO2c9EdYNg04m
+         IjElE/kV+rdjtZKfaQqQYxdJRpJjQtO5z6rN4J0tfGqiltxuGGsrflUSPimO0zrtWnLW
+         UYUsu8P4JtXberzsyLPow1dLRLn1kbXaytGv50Xcp2clGvDuPPXvHUw0QKJ0o3bGghbe
+         +sRW+IP6Wuhl6nKComv/ks8N35oS52QybG8u/ourrmZkoB/W1Ouy3xYZtyRP2jPBFVq/
+         bkbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:content-transfer-encoding:user-agent;
+        bh=kgNrzQ82w525RSgH0vUvYbpvSwP6OY398m1IW4hr0QQ=;
+        b=LxRGSvUfiayL5yed1B6opvMVpdG9laslMmhFgHGrAfR3P1fqaNoWRS3sCvJkOVSeX7
+         cWd5NYBEK1aekAAuteCfnmlftcKtOpnfZ9Uh7YURxpkTx9PmUzXVf7mHzTN4BbyL9SiI
+         pqilQkgNCDr14sdYtRoi8hwdUNTospk7mbYMjegzdpK1lFWtjiyVZvg3N2AfmgN4Qe0a
+         0QWRCfPKR0l4CW/98PCBwDKpscJk1bhTsn6hiSMneewxhBh1nerozGGDs0Kq/ZQv8huB
+         RZCvS4Q53ANrjyn8xoeydyuELAW5CyoJA1HZhY5uHhn8ecHkvJJV3oA4iqyRCdPF3fNE
+         +L4g==
+X-Gm-Message-State: APjAAAX+gUCTdTWNDYy0b1yd8GofxyVxeupisJ6apCBIkF2c5IfYo22j
+        UGx/HRU7Pnh5oOUMFeZC0bWBefLFLlM=
+X-Google-Smtp-Source: APXvYqxww1/+GwtMMKqiKbloUKGySFC1ygJ9W8+49/FJiAgHheDh/5t+CKqw2A9W39Q/CZcXv/GB8w==
+X-Received: by 2002:adf:e843:: with SMTP id d3mr31753919wrn.249.1560765656441;
+        Mon, 17 Jun 2019 03:00:56 -0700 (PDT)
+Received: from dell ([2.27.35.243])
+        by smtp.gmail.com with ESMTPSA id 72sm3290275wrk.22.2019.06.17.03.00.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 03:00:55 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 11:00:54 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [GIT PULL] MFD fixes for v5.2
+Message-ID: <20190617100054.GE16364@dell>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the cpuidle governors determine what idle state a idling CPU
-should enter into based on heuristics that depend on the idle history on
-that CPU. Given that no predictive heuristic is perfect, there are cases
-where the governor predicts a shallow idle state, hoping that the CPU will
-be busy soon. However, if no new workload is scheduled on that CPU in the
-near future, the CPU may end up in the shallow state.
+Linus,
 
-This is problematic, when the predicted state in the aforementioned
-scenario is a shallow stop state on a tickless system. As we might get
-stuck into shallow states for hours, in absence of ticks or interrupts.
+Enjoy!
 
-To address this, We forcefully wakeup the cpu by setting the
-decrementer. The decrementer is set to a value that corresponds with the
-residency of the next available state. Thus firing up a timer that will
-forcefully wakeup the cpu. Few such iterations will essentially train the
-governor to select a deeper state for that cpu, as the timer here
-corresponds to the next available cpuidle state residency. Thus, cpu will
-eventually end up in the deepest possible state.
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
----
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-Auto-promotion
- v1 : started as auto promotion logic for cpuidle states in generic
-driver
- v2 : Removed timeout_needed and rebased the code to upstream kernel
-Forced-wakeup
- v1 : New patch with name of forced wakeup started
- v2 : Extending the forced wakeup logic for all states. Setting the
-decrementer instead of queuing up a hrtimer to implement the logic.
+are available in the Git repository at:
 
- drivers/cpuidle/cpuidle-powernv.c | 38 +++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-fixes-5.2
 
-diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
-index 84b1ebe212b3..bc9ca18ae7e3 100644
---- a/drivers/cpuidle/cpuidle-powernv.c
-+++ b/drivers/cpuidle/cpuidle-powernv.c
-@@ -46,6 +46,26 @@ static struct stop_psscr_table stop_psscr_table[CPUIDLE_STATE_MAX] __read_mostly
- static u64 default_snooze_timeout __read_mostly;
- static bool snooze_timeout_en __read_mostly;
- 
-+static u64 forced_wakeup_timeout(struct cpuidle_device *dev,
-+				 struct cpuidle_driver *drv,
-+				 int index)
-+{
-+	int i;
-+
-+	for (i = index + 1; i < drv->state_count; i++) {
-+		struct cpuidle_state *s = &drv->states[i];
-+		struct cpuidle_state_usage *su = &dev->states_usage[i];
-+
-+		if (s->disabled || su->disable)
-+			continue;
-+
-+		return (s->target_residency + 2 * s->exit_latency) *
-+			tb_ticks_per_usec;
-+	}
-+
-+	return 0;
-+}
-+
- static u64 get_snooze_timeout(struct cpuidle_device *dev,
- 			      struct cpuidle_driver *drv,
- 			      int index)
-@@ -144,8 +164,26 @@ static int stop_loop(struct cpuidle_device *dev,
- 		     struct cpuidle_driver *drv,
- 		     int index)
- {
-+	u64 dec_expiry_tb, dec, timeout_tb, forced_wakeup;
-+
-+	dec = mfspr(SPRN_DEC);
-+	timeout_tb = forced_wakeup_timeout(dev, drv, index);
-+	forced_wakeup = 0;
-+
-+	if (timeout_tb && timeout_tb < dec) {
-+		forced_wakeup = 1;
-+		dec_expiry_tb = mftb() + dec;
-+	}
-+
-+	if (forced_wakeup)
-+		mtspr(SPRN_DEC, timeout_tb);
-+
- 	power9_idle_type(stop_psscr_table[index].val,
- 			 stop_psscr_table[index].mask);
-+
-+	if (forced_wakeup)
-+		mtspr(SPRN_DEC, dec_expiry_tb - mftb());
-+
- 	return index;
- }
- 
+for you to fetch changes up to cd49b84d61b2dfc0360c76d9e6be49f5116ba1a5:
+
+  mfd: stmfx: Uninitialized variable in stmfx_irq_handler() (2019-06-17 10:51:15 +0100)
+
+----------------------------------------------------------------
+ - Bug Fixes
+   - Resize variable to avoid uninitialised (MSB) data
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      mfd: stmfx: Uninitialized variable in stmfx_irq_handler()
+
+ drivers/mfd/stmfx.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
 -- 
-2.17.1
-
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
