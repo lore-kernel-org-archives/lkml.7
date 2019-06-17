@@ -2,101 +2,147 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB1AFC31E49
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:39:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAD1C31E49
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:40:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8687120861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:39:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E91E420861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:40:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DclmCGjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727544AbfFQBjw convert rfc822-to-8bit (ORCPT
+        id S1727569AbfFQBkk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 21:39:52 -0400
-Received: from ZXSHCAS2.zhaoxin.com ([203.148.12.82]:34605 "EHLO
-        ZXSHCAS2.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727389AbfFQBjv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 21:39:51 -0400
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by ZXSHCAS2.zhaoxin.com
- (10.28.252.162) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 17 Jun
- 2019 09:39:49 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx1.zhaoxin.com
- (10.29.252.163) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Mon, 17 Jun
- 2019 09:39:49 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
- zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
- 15.01.1261.035; Mon, 17 Jun 2019 09:39:49 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>
-CC:     David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: [PATCH v2 3/3] x86/acpi/cstate: add Zhaoxin processors support for
- cache flush policy in C3
-Thread-Topic: [PATCH v2 3/3] x86/acpi/cstate: add Zhaoxin processors support
- for cache flush policy in C3
-Thread-Index: AdUkrXhnHd9IGiblThumHNDQwkBrAQ==
-Date:   Mon, 17 Jun 2019 01:39:49 +0000
-Message-ID: <1ee81e03f6fd4f989151d02fcf95d35b@zhaoxin.com>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.32.64.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Sun, 16 Jun 2019 21:40:40 -0400
+Received: from ozlabs.org ([203.11.71.1]:40139 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727389AbfFQBkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 21:40:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Rv6r0kXyz9s3l;
+        Mon, 17 Jun 2019 11:40:35 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560735636;
+        bh=z075AqzJURu3z3H6UUHOCRHATUz4KC/gLfVxkTIRjBU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=DclmCGjOA0UjHaDIWM83phtIIVllMOUAZ4niwCugLE6K7F/lDdA2JHhnN5NmgL8GH
+         rOfHBy2umdX18I7zy7nDPTaxep0/yzEuCyQaXmzKmDDtPlBAPuO5+HhVAHzo006yHD
+         DftP7Bs8pkzc3hYY4gIp3hi2SbihxfgvbtE4r6KPm2rs7iSI7YnjEDTYn/z7OOBOc9
+         bpKtczyy9ksTQshy0m7rnUKMkChWW0ZorDjrundZNq71gRIGRvGI4G1h3ogjh1QXMr
+         sX4yp2ZjoikTb/6Q1vn1BctXSIP1L88DaHJ86OHIOj9cSSlm/wpfSk3uS3EgH55ZQZ
+         6sEw5USQZqjlg==
+Date:   Mon, 17 Jun 2019 11:40:11 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jiri Pirko <jiri@mellanox.com>
+Subject: linux-next: manual merge of the net-next tree with the sh tree
+Message-ID: <20190617114011.4159295e@canb.auug.org.au>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/W_Stg192fWHnW6s/5Aj.VWh"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same as Intel, Zhaoxin MP CPUs support C3 share cache and on all
-recent Zhaoxin platforms ARB_DISABLE is a nop. So set related
-flags correctly in the same way as Intel does.
+--Sig_/W_Stg192fWHnW6s/5Aj.VWh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
----
- arch/x86/kernel/acpi/cstate.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+Hi all,
 
-diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-index a5e5484..caf2edc 100644
---- a/arch/x86/kernel/acpi/cstate.c
-+++ b/arch/x86/kernel/acpi/cstate.c
-@@ -64,6 +64,21 @@ void acpi_processor_power_init_bm_check(struct acpi_processor_flags *flags,
- 		    c->x86_stepping >= 0x0e))
- 			flags->bm_check = 1;
- 	}
-+
-+	if (c->x86_vendor == X86_VENDOR_ZHAOXIN) {
-+		/*
-+		 * All Zhaoxin CPUs that support C3 share cache.
-+		 * And caches should not be flushed by software while
-+		 * entering C3 type state.
-+		 */
-+		flags->bm_check = 1;
-+		/*
-+		 * On all recent Zhaoxin platforms, ARB_DISABLE is a nop.
-+		 * So, set bm_control to zero to indicate that ARB_DISABLE
-+		 * is not required while entering C3 type state.
-+		 */
-+		flags->bm_control = 0;
-+	}
- }
- EXPORT_SYMBOL(acpi_processor_power_init_bm_check);
- 
--- 
-2.7.4
+Today's linux-next merge of the net-next tree got conflicts in:
+
+  arch/sh/configs/se7712_defconfig
+  arch/sh/configs/se7721_defconfig
+  arch/sh/configs/titan_defconfig
+
+between commit:
+
+  7c04efc8d2ef ("sh: configs: Remove useless UEVENT_HELPER_PATH")
+
+from the sh tree and commit:
+
+  a51486266c3b ("net: sched: remove NET_CLS_IND config option")
+
+from the net-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/sh/configs/se7712_defconfig
+index 6ac7d362e106,1e116529735f..000000000000
+--- a/arch/sh/configs/se7712_defconfig
++++ b/arch/sh/configs/se7712_defconfig
+@@@ -63,7 -63,7 +63,6 @@@ CONFIG_NET_SCH_NETEM=3D
+  CONFIG_NET_CLS_TCINDEX=3Dy
+  CONFIG_NET_CLS_ROUTE4=3Dy
+  CONFIG_NET_CLS_FW=3Dy
+- CONFIG_NET_CLS_IND=3Dy
+ -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+  CONFIG_MTD=3Dy
+  CONFIG_MTD_BLOCK=3Dy
+  CONFIG_MTD_CFI=3Dy
+diff --cc arch/sh/configs/se7721_defconfig
+index ffd15acc2a04,c66e512719ab..000000000000
+--- a/arch/sh/configs/se7721_defconfig
++++ b/arch/sh/configs/se7721_defconfig
+@@@ -62,7 -62,7 +62,6 @@@ CONFIG_NET_SCH_NETEM=3D
+  CONFIG_NET_CLS_TCINDEX=3Dy
+  CONFIG_NET_CLS_ROUTE4=3Dy
+  CONFIG_NET_CLS_FW=3Dy
+- CONFIG_NET_CLS_IND=3Dy
+ -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+  CONFIG_MTD=3Dy
+  CONFIG_MTD_BLOCK=3Dy
+  CONFIG_MTD_CFI=3Dy
+diff --cc arch/sh/configs/titan_defconfig
+index 1c1c78e74fbb,171ab05ce4fc..000000000000
+--- a/arch/sh/configs/titan_defconfig
++++ b/arch/sh/configs/titan_defconfig
+@@@ -142,7 -142,7 +142,6 @@@ CONFIG_GACT_PROB=3D
+  CONFIG_NET_ACT_MIRRED=3Dm
+  CONFIG_NET_ACT_IPT=3Dm
+  CONFIG_NET_ACT_PEDIT=3Dm
+- CONFIG_NET_CLS_IND=3Dy
+ -CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+  CONFIG_FW_LOADER=3Dm
+  CONFIG_CONNECTOR=3Dm
+  CONFIG_MTD=3Dm
+
+--Sig_/W_Stg192fWHnW6s/5Aj.VWh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0G73sACgkQAVBC80lX
+0GxtgAf/WqE5lK//POEnbrqY5dg2m+0Vwr9YXdQn699cclXJj2ZBhVwI1SllC/h5
+y1u1MWiPNPIKnRHf2GO5Y0tVbm9wdErMwsk1CGetoSHA+6SJ7kwzPyst/k+jON5p
+qKbyx3PpM+fTl6kCpKc7pq/Lrmd/uw3Stqi30/NcXW0nBx2snM7HNPsj/iwsvsgv
+VUdb3EN9H9daXNXXMaZ+MK3AURgvuFDvERpbPHVRvGUwLpMDIx6IQ+VK4hEuaKIB
+eBqIT6N4DB1V8PIJcoViE6wyr1EGYrlKB2pOxwo6N416hzCklK9YPZu/ysfONl4c
+q3QaSIUtRWToXJR7WCqVhUWEsN3kWA==
+=HrYQ
+-----END PGP SIGNATURE-----
+
+--Sig_/W_Stg192fWHnW6s/5Aj.VWh--
