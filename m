@@ -2,127 +2,146 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51184C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C33BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:19:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21BF7208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:18:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32788208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:19:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ed4ihMNW"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="Qx9QZU8G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728429AbfFQPSp (ORCPT
+        id S1728471AbfFQPTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:18:45 -0400
-Received: from mail-vk1-f196.google.com ([209.85.221.196]:43102 "EHLO
-        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726731AbfFQPSp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:18:45 -0400
-Received: by mail-vk1-f196.google.com with SMTP id m193so2131315vke.10
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 08:18:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=avGzyCxZclKT79pADY4DKIxqTozcBYUh0WnJ9dBhi1E=;
-        b=ed4ihMNWHG89e7Xaq5+FGLxCCA+5JtfbgMQTrutcVtIUFc/8Xc5p7ERp90dJ5a/5lF
-         I3MGOvl69DQXjZF3l5qryq0cR5T9YK/n7VaKJIq8hQYccky5s/xwoqen9GCkilKTSuxr
-         AOWz1z+0Y+6fxqgfwix4gWIl+ilS5v/XR8eTCycB790d93Cc9++z4t8IOSbvO5teSBI5
-         lEEHEiIwabUNKwbt+MXom5V9VOXoBLX2Rxtf3aW4eo8I5FnOBSAc3SW5aWluQArodm2k
-         qtImm0+eKkSivZ+3lgV2Y7j+JamcqthViHOiZj8EcoF25bQFpsL5ypPvdyqcBHiLMus1
-         Ut0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=avGzyCxZclKT79pADY4DKIxqTozcBYUh0WnJ9dBhi1E=;
-        b=C0bE/smpVKJghCgos+T4TrRtSGGHYPkJsrqDTI3aTtoAcwwcet+TKo6Fw4LREKpFnF
-         zomUbratNwPXCmuNfv4qJDIoEF+g4O52QN3zBGc0STTINBKsLmXlSGxCdPu3+kJ9oeJk
-         GXs49z2vLSX9N8KqKlo9K1Gxk5u2LBwaKkLmd9Nl+B2S/CjdKx/+Qew6OVI3Qngc/kv+
-         qiiXwrHb28yAKml7p3dC06m10+1gsQsjeByNRWuD6BNK+xdx+8qT1PJvVuwzlScjsE47
-         kjtyTDabsHLCRqq+sO9wN3XCyJ6UIIsS02YAwt75nhZ4euMXcKrFgCUO3XulM5/NMoRU
-         /Ydw==
-X-Gm-Message-State: APjAAAUdh6vVtD+U79FvcxOOYSVZt/jhnO4du0IADtgj+O2Z0QMOGhXi
-        8vt+VymxYjwXwj3yDozHnPUaEQvxv0N2sjPVkY4Rjw==
-X-Google-Smtp-Source: APXvYqybEt7W3M5qE6N0FBs9dBKJrhuavtDPLL4WFwFs7pHHWurEb3V/bgCHCADGQFV/vQ+BSWlb509dkOgV0n8YRMo=
-X-Received: by 2002:a1f:2909:: with SMTP id p9mr27668514vkp.23.1560784724394;
- Mon, 17 Jun 2019 08:18:44 -0700 (PDT)
+        Mon, 17 Jun 2019 11:19:34 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:33436 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726215AbfFQPTd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:19:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=u8BXVhx3Xt01zURMOtWv/YAU6w23gGORQqBBwLmef78=; b=Qx9QZU8GMiQRkSX4qAsLLCrF2T
+        L7fei+oqujqTKEXqX2N1Q+5IBeHIcWxsS9VWnN+9PpEglnq2dO++xEFqo6h0yCJIuJ1fY09/rLVw8
+        dHG3Kt+QCP4ktvrLPOFBtooJhgwPUO6O4xUGcvRzUB778wBWCTSPsQua3PYLZ/ZgiirM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hctPr-0008W0-T1; Mon, 17 Jun 2019 17:19:27 +0200
+Date:   Mon, 17 Jun 2019 17:19:27 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     nicolas.ferre@microchip.com, davem@davemloft.net,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, rafalc@cadence.com,
+        aniljoy@cadence.com, piotrs@cadence.com
+Subject: Re: [PATCH 5/6] net: macb: add support for high speed interface
+Message-ID: <20190617151927.GI25211@lunn.ch>
+References: <1560642481-28297-1-git-send-email-pthombar@cadence.com>
+ <1560642512-28765-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
-References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
- <1560336476-31763-2-git-send-email-sagar.kadam@sifive.com> <325855d0-00f9-df8a-ea57-c140d39dd6ef@ti.com>
-In-Reply-To: <325855d0-00f9-df8a-ea57-c140d39dd6ef@ti.com>
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-Date:   Mon, 17 Jun 2019 20:48:33 +0530
-Message-ID: <CAARK3H=O=h1VDgOMxs_0ThcisrH=2tzpW5pQqt0O9oYs=MFFVw@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] mtd: spi-nor: add support for is25wp256
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Wesley Terpstra <wesley@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560642512-28765-1-git-send-email-pthombar@cadence.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Vignesh,
+>  	switch (state->interface) {
+> +	case PHY_INTERFACE_MODE_NA:
 
-Thanks for your review comments.
+I would not list PHY_INTERFACE_MODE_NA here.
 
-On Sun, Jun 16, 2019 at 6:14 PM Vignesh Raghavendra <vigneshr@ti.com> wrote:
->
-> Hi,
->
-> On 12-Jun-19 4:17 PM, Sagar Shrikant Kadam wrote:
-> [...]
->
-> > @@ -4129,7 +4137,7 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
-> >       if (ret)
-> >               return ret;
-> >
-> > -     if (nor->addr_width) {
-> > +     if (nor->addr_width && JEDEC_MFR(info) != SNOR_MFR_ISSI) {
-> >               /* already configured from SFDP */
->
-> Hmm, why would you want to ignore addr_width that's read from SFDP table?
+> +	case PHY_INTERFACE_MODE_USXGMII:
+> +	case PHY_INTERFACE_MODE_10GKR:
+> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
+> +			phylink_set(mask, 10000baseCR_Full);
+> +			phylink_set(mask, 10000baseER_Full);
+> +			phylink_set(mask, 10000baseKR_Full);
+> +			phylink_set(mask, 10000baseLR_Full);
+> +			phylink_set(mask, 10000baseLRM_Full);
+> +			phylink_set(mask, 10000baseSR_Full);
+> +			phylink_set(mask, 10000baseT_Full);
+> +			phylink_set(mask, 5000baseT_Full);
+> +			phylink_set(mask, 2500baseX_Full);
+> +			phylink_set(mask, 1000baseX_Full);
+> +		}
+> +		/* Fall-through */
+>  	case PHY_INTERFACE_MODE_SGMII:
+>  		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
+>  			phylink_set(mask, 2500baseT_Full);
+> @@ -594,17 +639,55 @@ static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
+>  			reg |= MACB_BIT(FD);
+>  		macb_or_gem_writel(bp, NCFGR, reg);
+>  
+> -		if (state->speed == SPEED_2500) {
+> -			gem_writel(bp, NCFGR, GEM_BIT(GBE) |
+> -				   gem_readl(bp, NCFGR));
+> -			gem_writel(bp, NCR, GEM_BIT(TWO_PT_FIVE_GIG) |
+> -				   gem_readl(bp, NCR));
+> -		} else if (state->speed == SPEED_1000) {
+> -			gem_writel(bp, NCFGR, GEM_BIT(GBE) |
+> -				   gem_readl(bp, NCFGR));
+> -		} else if (state->speed == SPEED_100) {
+> -			macb_writel(bp, NCFGR, MACB_BIT(SPD) |
+> -				    macb_readl(bp, NCFGR));
+> +		if (bp->phy_interface == PHY_INTERFACE_MODE_USXGMII) {
+> +			u32 speed;
+> +
+> +			switch (state->speed) {
+> +			case SPEED_10000:
+> +				if (bp->serdes_rate ==
+> +				    MACB_SERDES_RATE_10_PT_3125Gbps) {
+> +					speed = HS_MAC_SPEED_10000M;
+> +				} else {
+> +					netdev_warn(netdev,
+> +						    "10G not supported by HW");
+> +					netdev_warn(netdev, "Setting speed to 1G");
+> +					speed = HS_MAC_SPEED_1000M;
+> +				}
+> +				break;
+> +			case SPEED_5000:
+> +				speed = HS_MAC_SPEED_5000M;
+> +				break;
+> +			case SPEED_2500:
+> +				speed = HS_MAC_SPEED_2500M;
+> +				break;
+> +			case SPEED_1000:
+> +				speed = HS_MAC_SPEED_1000M;
+> +				break;
+> +			default:
+> +			case SPEED_100:
+> +				speed = HS_MAC_SPEED_100M;
+> +				break;
+> +			}
+> +
+> +			gem_writel(bp, HS_MAC_CONFIG,
+> +				   GEM_BFINS(HS_MAC_SPEED, speed,
+> +					     gem_readl(bp, HS_MAC_CONFIG)));
+> +			gem_writel(bp, USX_CONTROL,
+> +				   GEM_BFINS(USX_CTRL_SPEED, speed,
+> +					     gem_readl(bp, USX_CONTROL)));
+> +		} else {
+> +			if (state->speed == SPEED_2500) {
+> +				gem_writel(bp, NCFGR, GEM_BIT(GBE) |
+> +					   gem_readl(bp, NCFGR));
+> +				gem_writel(bp, NCR, GEM_BIT(TWO_PT_FIVE_GIG) |
+> +					   gem_readl(bp, NCR));
+> +			} else if (state->speed == SPEED_1000) {
+> +				gem_writel(bp, NCFGR, GEM_BIT(GBE) |
+> +					   gem_readl(bp, NCFGR));
+> +			} else if (state->speed == SPEED_100) {
+> +				macb_writel(bp, NCFGR, MACB_BIT(SPD) |
+> +					    macb_readl(bp, NCFGR));
+> +			}
 
-The SFDP table for ISSI device considered here, has addr_width set to
-3 byte, and the flash considered
-here is 32MB. With 3 byte address width we won't be able to access
-flash memories higher address range.
-Hence I have ignored the addr width from SFDP.  I have verified that
-with 3 byte address width, the
-flascp util fails while verifying the written data.  Please let me
-know your views on this?
+Maybe split this up into two helper functions?
 
-BR,
-Sagar Kadam
-
-> Regards
-> Vignesh
->
->
-> >       } else if (info->addr_width) {
-> >               nor->addr_width = info->addr_width;
-> > diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> > index b3d360b..ff13297 100644
-> > --- a/include/linux/mtd/spi-nor.h
-> > +++ b/include/linux/mtd/spi-nor.h
-> > @@ -19,6 +19,7 @@
-> >  #define SNOR_MFR_ATMEL               CFI_MFR_ATMEL
-> >  #define SNOR_MFR_GIGADEVICE  0xc8
-> >  #define SNOR_MFR_INTEL               CFI_MFR_INTEL
-> > +#define SNOR_MFR_ISSI                0x9d            /* ISSI */
-> >  #define SNOR_MFR_ST          CFI_MFR_ST      /* ST Micro */
-> >  #define SNOR_MFR_MICRON              CFI_MFR_MICRON  /* Micron */
-> >  #define SNOR_MFR_MACRONIX    CFI_MFR_MACRONIX
-> >
+      Andrew
