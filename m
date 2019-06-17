@@ -2,58 +2,89 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CECAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:52:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A2E3C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:53:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 611E1208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:52:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 777362084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 22:53:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728111AbfFQWwj (ORCPT
+        id S1728368AbfFQWxL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 18:52:39 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:49515 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfFQWwj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 18:52:39 -0400
-Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id 8f85b65f7d4e573e; Tue, 18 Jun 2019 00:52:37 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
-        Kevin Hilman <khilman@kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Qais.Yousef@arm.com, mka@chromium.org, juri.lelli@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 1/5] PM / QOS: Pass request type to dev_pm_qos_{add|remove}_notifier()
-Date:   Tue, 18 Jun 2019 00:52:36 +0200
-Message-ID: <1577870.9p1GPmOpaG@kreacher>
-In-Reply-To: <c263629a53dba33f9e7190b82172a88cc79654d1.1560163748.git.viresh.kumar@linaro.org>
-References: <cover.1560163748.git.viresh.kumar@linaro.org> <c263629a53dba33f9e7190b82172a88cc79654d1.1560163748.git.viresh.kumar@linaro.org>
+        Mon, 17 Jun 2019 18:53:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41158 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726095AbfFQWxK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 18:53:10 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 32419ADD9;
+        Mon, 17 Jun 2019 22:53:09 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 4B72FDA832; Tue, 18 Jun 2019 00:53:57 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 00:53:57 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Naohiro Aota <naohiro.aota@wdc.com>
+Cc:     linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 09/19] btrfs: limit super block locations in HMZONED mode
+Message-ID: <20190617225356.GJ19057@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Naohiro Aota <naohiro.aota@wdc.com>,
+        linux-btrfs@vger.kernel.org, David Sterba <dsterba@suse.com>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        linux-kernel@vger.kernel.org, Hannes Reinecke <hare@suse.com>,
+        linux-fsdevel@vger.kernel.org,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-10-naohiro.aota@wdc.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607131025.31996-10-naohiro.aota@wdc.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Monday, June 10, 2019 12:51:32 PM CEST Viresh Kumar wrote:
-> In order to use the same set of routines to register notifiers for
-> different request types, update the existing
-> dev_pm_qos_{add|remove}_notifier() routines with an additional
-> parameter: request-type.
-> 
-> For now, it only supports resume-latency request type.
+On Fri, Jun 07, 2019 at 10:10:15PM +0900, Naohiro Aota wrote:
+> When in HMZONED mode, make sure that device super blocks are located in
+> randomly writable zones of zoned block devices. That is, do not write super
+> blocks in sequential write required zones of host-managed zoned block
+> devices as update would not be possible.
 
-It would be good to mention the broader rationale of this change in its changelog
-(that is, the frequency limits use case).
+This could be explained in more detail. My understanding is that the 1st
+and 2nd copy superblocks is skipped at write time but the zone
+containing the superblocks is not excluded from allocations. Ie. regular
+data can appear in place where the superblocks would exist on
+non-hmzoned filesystem. Is that correct?
 
+The other option is to completely exclude the zone that contains the
+superblock copies.
 
+primary sb			 64K
+1st copy			 64M
+2nd copy			256G
 
+Depends on the drives, but I think the size of the random write zone
+will very often cover primary and 1st copy. So there's at least some
+backup copy.
+
+The 2nd copy will be in the sequential-only zone, so the whole zone
+needs to be excluded in exclude_super_stripes. But it's not, so this
+means data can go there.  I think the zone should be left empty.
