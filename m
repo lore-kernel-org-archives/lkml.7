@@ -2,186 +2,137 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA9DAC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:07:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E915C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93EB121882
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:07:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE7D2218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="j2NCynJo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jCFUn1F9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726127AbfFQHHq (ORCPT
+        id S1726178AbfFQHJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:07:46 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:16748 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfFQHHp (ORCPT
+        Mon, 17 Jun 2019 03:09:40 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46084 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfFQHJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:07:45 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d073c400000>; Mon, 17 Jun 2019 00:07:44 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 17 Jun 2019 00:07:43 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 17 Jun 2019 00:07:43 -0700
-Received: from [10.24.47.23] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 17 Jun
- 2019 07:07:40 +0000
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <dan.j.williams@intel.com>, <tiwai@suse.com>,
-        <jonathanh@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <sharadg@nvidia.com>,
-        <rlokhande@nvidia.com>, <dramesh@nvidia.com>, <mkumard@nvidia.com>
-References: <1556623828-21577-1-git-send-email-spujar@nvidia.com>
- <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
-From:   Sameer Pujar <spujar@nvidia.com>
-Message-ID: <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
-Date:   Mon, 17 Jun 2019 12:37:37 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 17 Jun 2019 03:09:39 -0400
+Received: by mail-wr1-f67.google.com with SMTP id n4so8610766wrw.13;
+        Mon, 17 Jun 2019 00:09:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zc43v5OXvBodortEpoBgk30Fo78ZOXUbz9MiDIgCHI8=;
+        b=jCFUn1F97HkQbPngeYTE4/eBBPutGYfsqLOd78UIxq9RouKOzpgRpqERNS7Xlxqish
+         BM61imiY2+admADx7Sehze8C0yBf9yUt1/vGJ5GZu1v+JaKSqdB+9scJRsOL565VOFEL
+         ktNQRBkbwT21Xnd5AUezDBBtavsCV3pCg3ize8/aaT2xy63z20cpWQS6nrrL6uXD+sU1
+         BsuXmYCaEsRsEgzmoF1M4mrA7aCLnBH99lcLfKItKSV72GdEyOOrDY1KTe+nVtAZo9m6
+         OgotGOmOJJu8LKAsHzrUXoj26SVVjJwL08ZwgWPy8rYNserhJI1eO7O1Egk6MduFTYar
+         FwIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zc43v5OXvBodortEpoBgk30Fo78ZOXUbz9MiDIgCHI8=;
+        b=s+qdUuvI5pD86UUWgpmiSS3pso/yojMljd5q7/hpoSHt3xwoWluueO6fUbw8rIGHUS
+         BdLHg8W366rGaLXGnjUVpNO8Aj9W473oUl2iFL9VbBaywZUrBDnn35kRAiYiGvakAsO0
+         j+cPTrq4kqVn2rSFZBglkWS6NPYyqh/4RKFEIcQE8sgAu5q3o5bKWOSKQRpL7KKacj4a
+         r+LTE/8qgM2Lvvs4nZaCfDWt0zUA+m/PNq1JVMMUSKm1uDW5wZiKSn6+6vlDs4RDCKCw
+         Fg7NIrwuh6a6Z2HvTqJVkVrDRkoPXcD8HKbY2BaIE0p05LdEQY3AgVbH3ttrgZBeEugH
+         S+BQ==
+X-Gm-Message-State: APjAAAXm47koNgmYLUsF6Q+3SDjjBU0nmHsc+GeLTO73jyccgzuxNgqv
+        aGcB9Kl6YC7A84cEe0JCM9s=
+X-Google-Smtp-Source: APXvYqwY3noebc3h+fhryUhAYjxed8EgOCK3RkQT+brQik4yFxPPgD14tIOlpFTkXC4QUAlFlfRFKA==
+X-Received: by 2002:adf:ef8d:: with SMTP id d13mr58425865wro.60.1560755377638;
+        Mon, 17 Jun 2019 00:09:37 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id x3sm12563246wrp.78.2019.06.17.00.09.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 00:09:36 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 09:09:35 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Wolfram Sang <wsa@the-dreams.de>, Bitan Biswas <bbiswas@nvidia.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+Subject: Re: [PATCH V3] i2c: busses: tegra: Add suspend-resume support
+Message-ID: <20190617070935.GB30126@ulmo>
+References: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
+ <20190614211129.GG17899@ninjato>
+ <758d6dc2-f044-6be3-6896-196ef477d393@nvidia.com>
+ <20190615045405.GA1023@kunai>
 MIME-Version: 1.0
-In-Reply-To: <20190613044352.GC9160@vkoul-mobl.Dlink>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-GB
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560755264; bh=fQ5zngc9DCaICNEHs2kdSF0gET/YTvZczUqPlLXKJYA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=j2NCynJopuXWCINkBGiy6gqLsgk3tZH3iRTvSzFQ5rAaoVXiF2zkvipMjtZQWIYXZ
-         dWSBEj8aGA2YMmTaRrCnhIkaB02LeWub16eCD11RoLLQ+uxIgzS48oX8Fd0+4aAysQ
-         uw1W2EKrvztVDrP5FWU1JuZF9z7r6oPVqzht/jyQbuAmff57wjpuR5yqzexSAL6n6B
-         FMW5+M+zac+K7BL5EkE0khippUr/GqLlLuHC+CbAfMuRaek4hex76B2m+QN8vUcc85
-         EYGPvsoLi/hmtp92XjXZHSTjR7pMdIZgqYPTKuHGM8lGiLVoeb7ktNRe+FUq38w+Lr
-         HIKBYwaIp/cnQ==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
+Content-Disposition: inline
+In-Reply-To: <20190615045405.GA1023@kunai>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 6/13/2019 10:13 AM, Vinod Koul wrote:
-> On 06-06-19, 09:19, Sameer Pujar wrote:
->
->>> you are really going other way around about the whole picture. FWIW tha=
-t
->>> is how *other* folks do audio with dmaengine!
->> I discussed this internally with HW folks and below is the reason why DM=
-A
->> needs
->> to know FIFO size.
->>
->> - FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface=
- to
->> the audio sub-system.
->> - ADMAIF has multiple channels and share FIFO buffer for individual
->> operations. There is a provision
->>  =C2=A0 to allocate specific fifo size for each individual ADMAIF channe=
-l from the
->> shared buffer.
->> - Tegra Audio DMA(ADMA) architecture is different from the usual DMA
->> engines, which you described earlier.
->> - The flow control logic is placed inside ADMA. Slave peripheral
->> device(ADMAIF) signals ADMA whenever a
->>  =C2=A0 read or write happens on the FIFO(per WORD basis). Please note t=
-hat the
->> signaling is per channel. There is
->>  =C2=A0 no other signaling present from ADMAIF to ADMA.
->> - ADMA keeps a counter related to above signaling. Whenever a sufficient
-> when is signal triggered? When there is space available or some
-> threshold of space is reached?
-Signal is triggered when FIFO read/write happens on the peripheral side.=20
-In other words
-this happens when data is pushed/popped out of ADMAIF from/to one of the=20
-AHUB modules (I2S
-for example) This is on peripheral side and ADMAIF signals ADMA per WORD=20
-basis.
-ADMA <---(1. DMA transfers)---> ADMAIF <------ (2. FIFO read/write)=20
-------> I2S
-To be more clear ADMAIF signals ADMA when [2] happens.
+--cmJC7u66zC7hs+87
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-FIFO_THRESHOLD field in ADMAIF is just to indicate when can ADMAIF do=20
-operation [2].
-Also please note FIFO_THRESHOLD field is present only for=20
-memory---->AHUB path (playback path)
-and there is no such threshold concept for AHUB----> memory path=20
-(capture path)
->> space is available, it initiates a transfer.
->>  =C2=A0 But the question is, how does it know when to transfer. This is =
-the
->> reason, why ADMA has to be aware of FIFO
->>  =C2=A0 depth of ADMAIF channel. Depending on the counters and FIFO dept=
-h, it
->> knows exactly when a free space is available
->>  =C2=A0 in the context of a specific channel. On ADMA, FIFO_SIZE is just=
- a value
->> which should match to actual FIFO_DEPTH/SIZE
->>  =C2=A0 of ADMAIF channel.
-> That doesn't sound too different from typical dmaengine. To give an
-> example of a platform (and general DMAengine principles as well) I worked
-> on the FIFO was 16 word deep. DMA didn't knew!
->
-> Peripheral driver would signal to DMA when a threshold is reached and
-No, In our case ADMAIF does not do any threshold based signalling to ADMA.
-> DMA would send a burst controlled by src/dst_burst_size. For example if
-> you have a FIFO with 16 words depth, typical burst_size would be 8 words
-> and peripheral will configure signalling for FIFO having 8 words, so
-> signal from peripheral will make dma transfer 8 words.
-The scenario is different in ADMA case, as ADMAIF cannot configure the
-signalling based on FIFO_THRESHOLD settings.
->
-> Here the peripheral driver FIFO is important, but the driver
-> configures it and sets burst_size accordingly.
->
-> So can you explain me what is the difference here that the peripheral
-> cannot configure and use burst size with passing fifo depth?
-Say for example FIFO_THRESHOLD is programmed as 16 WORDS, BURST_SIZE as=20
-8 WORDS.
-ADMAIF does not push data to AHUB(operation [2]) till threshold of 16=20
-WORDS is
-reached in ADMAIF FIFO. Hence 2 burst transfers are needed to reach the=20
-threshold.
-As mentioned earlier, threshold here is to just indicate when data=20
-transfer can happen
-to AHUB modules.
+On Sat, Jun 15, 2019 at 06:54:05AM +0200, Wolfram Sang wrote:
+>=20
+> > > Without a maintainer ack, this is an exception this time. Should we a=
+dd
+> > > Dmitry as another maintainer or reviewer at least?
+> > >=20
+> > I shall followup with Maintainer for ACK in future I2C tegra patches.
+>=20
+> This comment was not directed at you, sorry if that was not clear. It
+> was more for Laxman, Thierry, Jonathan, and Dmitry (if he is
+> interested).
 
-Once the data is popped from ADMAIF FIFO, ADMAIF signals ADMA. ADMA is=20
-the master
-and it keeps track of the buffer occupancy by knowing the FIFO_DEPTH and=20
-the signalling.
-Then finally it decides when to do next burst transfer depending on the=20
-free space
-available in ADMAIF.
->> - Now consider two cases based on above logic,
->>  =C2=A0 * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
->>  =C2=A0=C2=A0=C2=A0 In this case, ADMA thinks that there is enough space=
- available for
->> transfer, when actually the FIFO data
->>  =C2=A0=C2=A0=C2=A0 on slave is not consumed yet. It would result in OVE=
-RRUN.
->>  =C2=A0 * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
->>  =C2=A0=C2=A0=C2=A0 This is case where ADMA won=E2=80=99t transfer, even=
- though sufficient space is
->> available, resulting in UNDERRUN.
->> - The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =3D
->> SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
->>  =C2=A0 way to communicate fifo size info to ADMA.
+I thought I had already acked this. I've certainly been testing this
+since I carry it in a local tree. So for what it's worth:
+
+Tested-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+Bitan, I don't mind getting the patches to the corporate email address,
+but please make sure to also always include the gmail address when
+sending patches to the public mailing lists. My workflow is somewhat
+quirky that way because I work remotely and for historical reasons.
+
+Thierry
+
+--cmJC7u66zC7hs+87
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0HPK8ACgkQ3SOs138+
+s6FohhAAueqXXOLMZn3+hgH+DaEpPrk9LFMEZiSlIPZ7H/nQ7UBUFlw5RL+eMCi8
+VdtLa4T3PVlHCWkQB525d+e2Zz59rpsAiLaFpbjnH6rg/1USybHGmXiZonu1q65N
+mfia5/uyCp/zOjFI59IUSCWUtDNukWa4Ypy1OIjt/l+kBmPjFALVRNzfdTBDoxli
+45IaxfFz0zV/F+1kGSHlcrgPFU14KsFYOdiXsKe2+LS4+dKPmhXf4MALat2f9RRM
+QyoniVVfd3a8wMAPuQ7K0KAU4KtnjHglpgxd0WlJ0TN95aTjqi+9cCxIEsshw3T7
+FYKWyQqHcZ7j5GPk8UBt9jKHnmsg4z8r2ZMO2+F2+xmMnUvW67vZzFsSNti0KJc7
+8IeyHVbhTOQya2fR5pj6pyPDfW7k+kKQ9iQYl98XvaCDrND7k0SdtkB+ctbi/qva
+ZqFErPJFPWZggjz2CICICaH98ueKpvKODf/wCDM57ManU7iXO6zx34f4eR758O54
+SPvblD8XW6L0RPMq9hnlTmn7mJKw4XhVvGXkABxvwErfKeew+GIcCyJsgz/BsIAZ
+SRwKl7WC1FECPHtWQfwN1oWuu33T2eg5Z/nKsJcFQ/mcyk6Kq41Bi0A3NohkJvsp
+AkLVEx8ivhD68wLQ/RZQyFcVbiPiUBmxT9OM1BKzZ5utoIsldts=
+=e940
+-----END PGP SIGNATURE-----
+
+--cmJC7u66zC7hs+87--
