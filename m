@@ -7,51 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E42C4C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1533C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2EFE208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B7AA208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806434;
-	bh=iMJZBU2UkJd2A7Q2CPPqhoaU8qote8ye4jNhz0Q8s3E=;
+	s=default; t=1560806436;
+	bh=7ZbpBeuw0/PJSwmrd6GiDblX1MVXsc6Yng5kAfWeLn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NQbZSdwlKMS2W8JxXCu1jlN8SYbgWh45PG/XBA3nrT/U2wxI4XxYPJXk/NINy/Vmo
-	 FDDEBWBvvsX045+ErqSa/UxM0ti49spdENBOfKDbJ/VxzKbO6dsFF7VuNLaQLrPbGp
-	 MbsyjdOcrim2SQj0DkZ3QMoehV6Hpdtr2FiuebyU=
+	b=Un4KlZJnl+xfYMPVRUyXZ/dpAbwJthiYqiCuOKg3/NjJvqYZ/oq62eeO1AiyA1icV
+	 L+1f5OC3yza8Ws+gua9jgTCOw5WaaJm+rWMAxGMOIyYpqp1qHDPPIaZtAnsVlFga0C
+	 ukxW7rRbxWFpojJVoqDBBte3uOlxjTFFXV4N5vRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729144AbfFQVUd (ORCPT
+        id S1729155AbfFQVUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44732 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:20:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44794 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728339AbfFQVUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:20:30 -0400
+        id S1729141AbfFQVUd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:20:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 40B6120B1F;
-        Mon, 17 Jun 2019 21:20:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E04252089E;
+        Mon, 17 Jun 2019 21:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806429;
-        bh=iMJZBU2UkJd2A7Q2CPPqhoaU8qote8ye4jNhz0Q8s3E=;
+        s=default; t=1560806432;
+        bh=7ZbpBeuw0/PJSwmrd6GiDblX1MVXsc6Yng5kAfWeLn0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fdyYkEWbVqJXDEqtsUKwgzbs4CQsaAkIDYwNODqDElsoa4zYUuviA6hHfLdIPEB82
-         jlPGid9aD7L6SVK3RpGOg735fhTjlXBqLehPOy3mAr1hPDq61IbXUGUkSPq5lvmv2a
-         aYNHrxis0fBh2fcmw1Auuku3hLm1CG+shTTX7v8Y=
+        b=yzfzBiEDVpnjqfU10BMdPn7pFYic2vwVt/saJ/UcTbWseC/xlbl8NEAL9rA9jEpGT
+         STiWLwM8zSqOdPFdmnYl4qcf0b09q7bZKx9MVHKafSVhsYlMcpdLnNlCRq00zke1nz
+         Zu4few/efmjPZMvpPdw2cPQ5VKfaZyFNo08fb1Cc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 042/115] x86/uaccess, kcov: Disable stack protector
-Date:   Mon, 17 Jun 2019 23:09:02 +0200
-Message-Id: <20190617210802.173135786@linuxfoundation.org>
+        stable@vger.kernel.org, John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 051/115] bpf: sockmap fix msg->sg.size account on ingress skb
+Date:   Mon, 17 Jun 2019 23:09:11 +0200
+Message-Id: <20190617210803.071458219@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -64,40 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 40ea97290b08be2e038b31cbb33097d1145e8169 ]
+[ Upstream commit cabede8b4f2b746232aa25730a0b752de1cb82ca ]
 
-New tooling noticed this mishap:
+When converting a skb to msg->sg we forget to set the size after the
+latest ktls/tls code conversion. This patch can be reached by doing
+a redir into ingress path from BPF skb sock recv hook. Then trying to
+read the size fails.
 
-  kernel/kcov.o: warning: objtool: write_comp_data()+0x138: call to __stack_chk_fail() with UACCESS enabled
-  kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0xd9: call to __stack_chk_fail() with UACCESS enabled
+Fix this by setting the size.
 
-All the other instrumentation (KASAN,UBSAN) also have stack protector
-disabled.
-
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/Makefile | 1 +
+ net/core/skmsg.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 6c57e78817da..62471e75a2b0 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -30,6 +30,7 @@ KCOV_INSTRUMENT_extable.o := n
- # Don't self-instrument.
- KCOV_INSTRUMENT_kcov.o := n
- KASAN_SANITIZE_kcov.o := n
-+CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index 49d1efa329d7..93bffaad2135 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -411,6 +411,7 @@ static int sk_psock_skb_ingress(struct sk_psock *psock, struct sk_buff *skb)
+ 	sk_mem_charge(sk, skb->len);
+ 	copied = skb->len;
+ 	msg->sg.start = 0;
++	msg->sg.size = copied;
+ 	msg->sg.end = num_sge == MAX_MSG_FRAGS ? 0 : num_sge;
+ 	msg->skb = skb;
  
- # cond_syscall is currently not LTO compatible
- CFLAGS_sys_ni.o = $(DISABLE_LTO)
 -- 
 2.20.1
 
