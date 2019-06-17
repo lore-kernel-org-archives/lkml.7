@@ -6,167 +6,64 @@ X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6D0CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:01:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D528C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86E462086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA9F22084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:02:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="jO/jsL10"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="iVA+9que"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728569AbfFQPBx (ORCPT
+        id S1728211AbfFQPCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:01:53 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33360 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727783AbfFQPBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:01:52 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=oV13KY0pVdhVds9kzmA59RghDN5FrYy7qszIRRB2LYE=; b=jO/jsL101dgdLMOF0mqexLGJ94
-        1FphbBZ2pY1ctskVFxD44XZ/5+L9p2bKi6ZYsHvUrJDI+Oc329gLG8GclVZ8BO8OKasU2eBit/zBO
-        0CTvo2CLmYdIUq9dLHf5D2aA02UJM5dSVoz4xL7BlB7Uas840r6yrL0yU57e+Oph94ec=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hct8j-0008FO-3u; Mon, 17 Jun 2019 17:01:45 +0200
-Date:   Mon, 17 Jun 2019 17:01:45 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     nicolas.ferre@microchip.com, davem@davemloft.net,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-Subject: Re: [PATCH 2/6] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190617150145.GF25211@lunn.ch>
-References: <1560642367-26425-1-git-send-email-pthombar@cadence.com>
- <1560642409-27074-1-git-send-email-pthombar@cadence.com>
+        Mon, 17 Jun 2019 11:02:10 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34486 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfFQPCK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:02:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=S5pVOB4c4fiNCFp54tYeGVbsp9g3Tk2lvHqGm8VZbDo=; b=iVA+9queB4EV+Vd0NG75wCFSY
+        WN/kq3wmpLS43bgirk1AA8Zaqk/8XmZ86wYT8zPgD//m3+agmdVP6gt7X1i+5Xq8kps1I6PczzK2/
+        BkI9oF8USVzgyRk2cuc08c+TMEvZFf1fqnXOdP9ICCrxnIvFJ/Si0naGISTIi9wgpgGfG7mPYBpjv
+        H3/+9GyktjKlZ5Hp/VJK43Aq1lZ2af19Su7wYGM+//OEQkCb/THz7GBnpDGK3x96Pw6GZ+CxS4K2M
+        mQsM/SOF5j9k3aoMArZNiTyvOTN9FSSlXFW7ciI14ayK681cFHKgYpQ3/dqKnNOaMOpt25y3dUGf7
+        e8Da44XtA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hct94-00005L-1C; Mon, 17 Jun 2019 15:02:06 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 819EF201D1C98; Mon, 17 Jun 2019 17:02:04 +0200 (CEST)
+Date:   Mon, 17 Jun 2019 17:02:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Quentin Perret <quentin.perret@arm.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH] sched/fair: Introduce fits_capacity()
+Message-ID: <20190617150204.GG3436@hirez.programming.kicks-ass.net>
+References: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
+ <20190605091644.w3g7hc7r3eiscz4f@queper01-lin>
+ <20190606025204.qe5v7j6fysjkgxc6@vireshk-i7>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560642409-27074-1-git-send-email-pthombar@cadence.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190606025204.qe5v7j6fysjkgxc6@vireshk-i7>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -159,6 +160,9 @@
->  #define GEM_PEFTN		0x01f4 /* PTP Peer Event Frame Tx Ns */
->  #define GEM_PEFRSL		0x01f8 /* PTP Peer Event Frame Rx Sec Low */
->  #define GEM_PEFRN		0x01fc /* PTP Peer Event Frame Rx Ns */
-> +#define GEM_PCS_CTRL		0x0200 /* PCS Control */
-> +#define GEM_PCS_STATUS          0x0204 /* PCS Status */
-> +#define GEM_PCS_AN_LP_BASE      0x0214 /* PCS AN LP BASE*/
+On Thu, Jun 06, 2019 at 08:22:04AM +0530, Viresh Kumar wrote:
+> Hmm, even if the values are same currently I am not sure if we want
+> the same for ever. I will write a patch for it though, if Peter/Rafael
+> feel the same as you.
 
-It looks like there are some space vs tab issues here and else where.
-
->  static int gem_phylink_mac_link_state(struct phylink_config *pl_config,
->  				      struct phylink_link_state *state)
->  {
-> +	u32 status;
->  	struct net_device *netdev = to_net_dev(pl_config->dev);
->  	struct macb *bp = netdev_priv(netdev);
-
-Reverse christmas tree please, here and everywhere you add new
-variables.
-
->  
-> -	state->speed = bp->speed;
-> -	state->duplex = bp->duplex;
-> -	state->link = bp->link;
-> +	if (bp->phy_interface == PHY_INTERFACE_MODE_SGMII) {
-> +		status = gem_readl(bp, PCS_STATUS);
-> +		state->an_complete = GEM_BFEXT(PCS_STATUS_AN_DONE, status);
-> +		status = gem_readl(bp, PCS_AN_LP_BASE);
-> +		switch (GEM_BFEXT(PCS_AN_LP_BASE_SPEED, status)) {
-> +		case 0:
-> +			state->speed = 10;
-> +			break;
-> +		case 1:
-> +			state->speed = 100;
-> +			break;
-> +		case 2:
-> +			state->speed = 1000;
-> +			break;
-> +		default:
-> +			break;
-
-It would be nice to use SPEED_10, SPEED_100, etc.
-
-> @@ -494,17 +551,23 @@ static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
->  		reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
->  		if (macb_is_gem(bp))
->  			reg &= ~GEM_BIT(GBE);
-> -
->  		if (state->duplex)
->  			reg |= MACB_BIT(FD);
-> -		if (state->speed == SPEED_100)
-> -			reg |= MACB_BIT(SPD);
-> -		if (state->speed == SPEED_1000 &&
-> -		    bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
-> -			reg |= GEM_BIT(GBE);
-> -
->  		macb_or_gem_writel(bp, NCFGR, reg);
->  
-> +		if (state->speed == SPEED_2500) {
-> +			gem_writel(bp, NCFGR, GEM_BIT(GBE) |
-> +				   gem_readl(bp, NCFGR));
-> +			gem_writel(bp, NCR, GEM_BIT(TWO_PT_FIVE_GIG) |
-> +				   gem_readl(bp, NCR));
-> +		} else if (state->speed == SPEED_1000) {
-> +			gem_writel(bp, NCFGR, GEM_BIT(GBE) |
-> +				   gem_readl(bp, NCFGR));
-> +		} else if (state->speed == SPEED_100) {
-> +			macb_writel(bp, NCFGR, MACB_BIT(SPD) |
-> +				    macb_readl(bp, NCFGR));
-> +		}
-
-Maybe a switch statement?
-
-> @@ -4232,11 +4327,37 @@ static int macb_probe(struct platform_device *pdev)
->  	}
->  
->  	err = of_get_phy_mode(np);
-
-The following code would be more readable if you replaced err with
-phy_mode, or interface.
-
-> -	if (err < 0)
-> +	if (err < 0) {
->  		/* not found in DT, MII by default */
->  		bp->phy_interface = PHY_INTERFACE_MODE_MII;
-> -	else
-> +	} else if (bp->caps & MACB_CAPS_MACB_IS_GEM_GXL) {
-> +		u32 interface_supported = 1;
-> +
-> +		if (err == PHY_INTERFACE_MODE_SGMII ||
-> +		    err == PHY_INTERFACE_MODE_1000BASEX ||
-> +		    err == PHY_INTERFACE_MODE_2500BASEX) {
-> +			if (!(bp->caps & MACB_CAPS_PCS))
-> +				interface_supported = 0;
-> +		} else if (err == PHY_INTERFACE_MODE_GMII ||
-> +			   err == PHY_INTERFACE_MODE_RGMII) {
-> +			if (!macb_is_gem(bp))
-> +				interface_supported = 0;
-> +		} else if (err != PHY_INTERFACE_MODE_RMII &&
-> +			   err != PHY_INTERFACE_MODE_MII) {
-> +			/* Add new mode before this */
-> +			interface_supported = 0;
-> +		}
-> +
-> +		if (!interface_supported) {
-> +			netdev_err(dev, "Phy mode %s not supported",
-> +				   phy_modes(err));
-> +			goto err_out_free_netdev;
-> +		}
-> +
->  		bp->phy_interface = err;
-> +	} else {
-> +		bp->phy_interface = err;
-> +	}
-
-  Andrew
+Is it really the same variable or just two numbers that happen to be the
+same?
