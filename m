@@ -2,191 +2,166 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6107EC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91351C31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:23:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BFBB2084B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574622086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 14:23:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JVXa/qhC"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="kh9NuNXl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfFQOWe (ORCPT
+        id S1727690AbfFQOX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 10:22:34 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:46493 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726173AbfFQOWd (ORCPT
+        Mon, 17 Jun 2019 10:23:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:39945 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfFQOX1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 10:22:33 -0400
-Received: by mail-ua1-f65.google.com with SMTP id o19so3486251uap.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 07:22:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=5j/jTwc8VDaf93BqO7lj+/1q92uGDgZVHM2UqM4CWlY=;
-        b=JVXa/qhCRuxxyrm3QYu61qbsldvBE3wQwlEaG4aJ6KmZZDqxSxVBoxL7X+Bfv9s19n
-         FqGqP132gRRKgT62AQVOONEtf/SJt2ghJilvkSa4JQHGsqaApo0oov0Mj0vMGUPmt7+t
-         yoZlxe0qub725pKU1JvcLpMxnffbI5MgBWlmfiEzk456/K+nmEH3WzGdJQ+Le9MuYxQX
-         Iu4qlnCRlsg7mSwQXDV0wqAnqSVcJCSK4d8VXNUNun2+GkmNlu+eLeKha0NgAmZFm4VP
-         7nygtt75mRK0j8B3LpWPUPRUJxtHpgPflQN89IGbLkITY35PkAdF36l05THa1gfaEOYA
-         iODw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=5j/jTwc8VDaf93BqO7lj+/1q92uGDgZVHM2UqM4CWlY=;
-        b=m2yY+qJ8TTK/Ji+JtPOyfphgBeXug646xFDLrbmkKJ9wIUQZKaG4TkcP2HgkxvG6pX
-         V5fmjzWoWTUG8zzeg8Ik3FccG2KR1PT9BSntzUpI5MmOd5nSPwXa1vN7eXBp3ZtK08eL
-         2nJZ6hdgOYfgs+tWN8kaTrNR3N1deguIcBEcX8cypeIf235G5m8QAoRFDltnqH8GxdPM
-         zUFZ/huCQ1Uf9ZmLqlcPc9Le7XLTf/zlhLRQjxlr/C/fNQriH9lTu+4/Xk0qPAP+cT+w
-         rzVev3w7lcc2JAfyAEcp/gyQTEibGbKcXzosyCkEOnBx6iJ2UyoLqTK0ApM/n5kprSWk
-         1lxQ==
-X-Gm-Message-State: APjAAAV8CN5sc3rt5GT7pwfKm1R5qNZduI5f5vwQqD/mN2Gwvk+sDCLn
-        PvzUzUAw8EfTkR4+dacq1+3mvHHiBYFah2P9cD79Yw==
-X-Google-Smtp-Source: APXvYqxN42nQzWjNqxAIxqNrhLzMhyco1SgYAX2dsRX7qzXsS6prUagFHZjHtXUnxXqZcSLlFDHKJ4+Nb1MwHkJHkf8=
-X-Received: by 2002:ab0:30a3:: with SMTP id b3mr14495305uam.3.1560781351980;
- Mon, 17 Jun 2019 07:22:31 -0700 (PDT)
+        Mon, 17 Jun 2019 10:23:27 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HEMsP63453866
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Mon, 17 Jun 2019 07:22:54 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HEMsP63453866
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019051801; t=1560781375;
+        bh=JEJJ7kn/hwQkXY4f5Y/l4PcTf9/Ev4XdiNAqxTjQ8Vc=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=kh9NuNXlCZAO7vOmNAFOXQD1c9OrH5x48nnKvuK8T+AEw3FOry/ZoWLJO/hOcYWax
+         he7Wav6UVAkCdBm1rM4pMYJ8QSIBG6hpMJjenrDJpSxzkDPJnJx5/CtGvUX//xVMi0
+         p9aXWtZgpmSD7W6kBljOhi4QZwfnmU0+GofjDpDAhfs+FGf9AE/R0iMryCsOPRw53H
+         VdOG/amkvsC4rGCPm62gybilF34gtBbIQAu7n68iGHhzTB5UMLcpQYm34Y/YMSDJXw
+         glUCzGA3qMaOLW/KrxTQQBP1p9jyrs/p+k0pBE8EpSk5gMX1mhjcir0gTGtu4Wsc7l
+         Q6NuAJL2sALzg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HEMsKW3453863;
+        Mon, 17 Jun 2019 07:22:54 -0700
+Date:   Mon, 17 Jun 2019 07:22:54 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   "tip-bot for bsegall@google.com" <tipbot@zytor.com>
+Message-ID: <tip-66567fcbaecac455caa1b13643155d686b51ce63@git.kernel.org>
+Cc:     peterz@infradead.org, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
+        mingo@kernel.org, bsegall@google.com, pauld@redhat.com,
+        xlpang@linux.alibaba.com
+Reply-To: bsegall@google.com, xlpang@linux.alibaba.com, pauld@redhat.com,
+          tglx@linutronix.de, hpa@zytor.com, torvalds@linux-foundation.org,
+          mingo@kernel.org, linux-kernel@vger.kernel.org,
+          peterz@infradead.org
+In-Reply-To: <xm26a7euy6iq.fsf_-_@bsegall-linux.svl.corp.google.com>
+References: <xm26a7euy6iq.fsf_-_@bsegall-linux.svl.corp.google.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/fair: Don't push cfs_bandwith slack timers
+ forward
+Git-Commit-ID: 66567fcbaecac455caa1b13643155d686b51ce63
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190617131210.2190280-1-arnd@arndb.de>
-In-Reply-To: <20190617131210.2190280-1-arnd@arndb.de>
-From:   Alexander Potapenko <glider@google.com>
-Date:   Mon, 17 Jun 2019 16:22:19 +0200
-Message-ID: <CAG_fn=XigLrxy6Uz+NrnHQocb=ZseR6cPC3PyoLXCLU9gukHXg@mail.gmail.com>
-Subject: Re: [PATCH] lib: test_meminit: fix -Wmaybe-uninitialized false positive
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Christoph Lameter <cl@linux.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Jann Horn <jannh@google.com>, Marco Elver <elver@google.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 3:12 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The conditional logic is too complicated for the compiler to
-> fully comprehend:
->
-> lib/test_meminit.c: In function 'test_meminit_init':
-> lib/test_meminit.c:236:5: error: 'buf_copy' may be used uninitialized in =
-this function [-Werror=3Dmaybe-uninitialized]
->      kfree(buf_copy);
->      ^~~~~~~~~~~~~~~
-> lib/test_meminit.c:201:14: note: 'buf_copy' was declared here
->
-> Simplify it by splitting out the non-rcu section.
->
-> Fixes: af734ee6ec85 ("lib: introduce test_meminit module")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Alexander Potapenko <glider@google.com>
-> ---
->  lib/test_meminit.c | 50 ++++++++++++++++++++++++----------------------
->  1 file changed, 26 insertions(+), 24 deletions(-)
->
-> diff --git a/lib/test_meminit.c b/lib/test_meminit.c
-> index ed7efec1387b..7ae2183ff1f4 100644
-> --- a/lib/test_meminit.c
-> +++ b/lib/test_meminit.c
-> @@ -208,35 +208,37 @@ static int __init do_kmem_cache_size(size_t size, b=
-ool want_ctor,
->                 /* Check that buf is zeroed, if it must be. */
->                 fail =3D check_buf(buf, size, want_ctor, want_rcu, want_z=
-ero);
->                 fill_with_garbage_skip(buf, size, want_ctor ? CTOR_BYTES =
-: 0);
-> +
-> +               if (!want_rcu) {
-> +                       kmem_cache_free(c, buf);
-> +                       continue;
-> +               }
-> +
->                 /*
->                  * If this is an RCU cache, use a critical section to ens=
-ure we
->                  * can touch objects after they're freed.
->                  */
-> -               if (want_rcu) {
-> -                       rcu_read_lock();
-> -                       /*
-> -                        * Copy the buffer to check that it's not wiped o=
-n
-> -                        * free().
-> -                        */
-> -                       buf_copy =3D kmalloc(size, GFP_KERNEL);
-> -                       if (buf_copy)
-> -                               memcpy(buf_copy, buf, size);
-> -               }
-> -               kmem_cache_free(c, buf);
-> -               if (want_rcu) {
-> -                       /*
-> -                        * Check that |buf| is intact after kmem_cache_fr=
-ee().
-> -                        * |want_zero| is false, because we wrote garbage=
- to
-> -                        * the buffer already.
-> -                        */
-> -                       fail |=3D check_buf(buf, size, want_ctor, want_rc=
-u,
-> -                                         false);
-> -                       if (buf_copy) {
-> -                               fail |=3D (bool)memcmp(buf, buf_copy, siz=
-e);
-> -                               kfree(buf_copy);
-> -                       }
-> -                       rcu_read_unlock();
-> +               rcu_read_lock();
-> +               /*
-> +                * Copy the buffer to check that it's not wiped on
-> +                * free().
-> +                */
-> +               buf_copy =3D kmalloc(size, GFP_KERNEL);
-> +               if (buf_copy)
-> +                       memcpy(buf_copy, buf, size);
-> +
-> +               /*
-> +                * Check that |buf| is intact after kmem_cache_free().
-> +                * |want_zero| is false, because we wrote garbage to
-> +                * the buffer already.
-> +                */
-> +               fail |=3D check_buf(buf, size, want_ctor, want_rcu,
-> +                                 false);
-> +               if (buf_copy) {
-> +                       fail |=3D (bool)memcmp(buf, buf_copy, size);
-> +                       kfree(buf_copy);
->                 }
-> +               rcu_read_unlock();
->         }
->         kmem_cache_destroy(c);
->
-> --
-> 2.20.0
->
+Commit-ID:  66567fcbaecac455caa1b13643155d686b51ce63
+Gitweb:     https://git.kernel.org/tip/66567fcbaecac455caa1b13643155d686b51ce63
+Author:     bsegall@google.com <bsegall@google.com>
+AuthorDate: Thu, 6 Jun 2019 10:21:01 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Mon, 17 Jun 2019 12:16:01 +0200
 
+sched/fair: Don't push cfs_bandwith slack timers forward
 
---=20
-Alexander Potapenko
-Software Engineer
+When a cfs_rq sleeps and returns its quota, we delay for 5ms before
+waking any throttled cfs_rqs to coalesce with other cfs_rqs going to
+sleep, as this has to be done outside of the rq lock we hold.
 
-Google Germany GmbH
-Erika-Mann-Stra=C3=9Fe, 33
-80636 M=C3=BCnchen
+The current code waits for 5ms without any sleeps, instead of waiting
+for 5ms from the first sleep, which can delay the unthrottle more than
+we want. Switch this around so that we can't push this forward forever.
 
-Gesch=C3=A4ftsf=C3=BChrer: Paul Manicle, Halimah DeLaine Prado
-Registergericht und -nummer: Hamburg, HRB 86891
-Sitz der Gesellschaft: Hamburg
+This requires an extra flag rather than using hrtimer_active, since we
+need to start a new timer if the current one is in the process of
+finishing.
+
+Signed-off-by: Ben Segall <bsegall@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Reviewed-by: Xunlei Pang <xlpang@linux.alibaba.com>
+Acked-by: Phil Auld <pauld@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/xm26a7euy6iq.fsf_-_@bsegall-linux.svl.corp.google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/fair.c  | 7 +++++++
+ kernel/sched/sched.h | 8 ++++----
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 4c8f45ed093c..3c11dcdedcbc 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4729,6 +4729,11 @@ static void start_cfs_slack_bandwidth(struct cfs_bandwidth *cfs_b)
+ 	if (runtime_refresh_within(cfs_b, min_left))
+ 		return;
+ 
++	/* don't push forwards an existing deferred unthrottle */
++	if (cfs_b->slack_started)
++		return;
++	cfs_b->slack_started = true;
++
+ 	hrtimer_start(&cfs_b->slack_timer,
+ 			ns_to_ktime(cfs_bandwidth_slack_period),
+ 			HRTIMER_MODE_REL);
+@@ -4782,6 +4787,7 @@ static void do_sched_cfs_slack_timer(struct cfs_bandwidth *cfs_b)
+ 
+ 	/* confirm we're still not at a refresh boundary */
+ 	raw_spin_lock_irqsave(&cfs_b->lock, flags);
++	cfs_b->slack_started = false;
+ 	if (cfs_b->distribute_running) {
+ 		raw_spin_unlock_irqrestore(&cfs_b->lock, flags);
+ 		return;
+@@ -4945,6 +4951,7 @@ void init_cfs_bandwidth(struct cfs_bandwidth *cfs_b)
+ 	hrtimer_init(&cfs_b->slack_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
+ 	cfs_b->slack_timer.function = sched_cfs_slack_timer;
+ 	cfs_b->distribute_running = 0;
++	cfs_b->slack_started = false;
+ }
+ 
+ static void init_cfs_rq_runtime(struct cfs_rq *cfs_rq)
+diff --git a/kernel/sched/sched.h b/kernel/sched/sched.h
+index 607859a18b2a..b08dee29ef5e 100644
+--- a/kernel/sched/sched.h
++++ b/kernel/sched/sched.h
+@@ -338,8 +338,10 @@ struct cfs_bandwidth {
+ 	u64			runtime_expires;
+ 	int			expires_seq;
+ 
+-	short			idle;
+-	short			period_active;
++	u8			idle;
++	u8			period_active;
++	u8			distribute_running;
++	u8			slack_started;
+ 	struct hrtimer		period_timer;
+ 	struct hrtimer		slack_timer;
+ 	struct list_head	throttled_cfs_rq;
+@@ -348,8 +350,6 @@ struct cfs_bandwidth {
+ 	int			nr_periods;
+ 	int			nr_throttled;
+ 	u64			throttled_time;
+-
+-	bool                    distribute_running;
+ #endif
+ };
+ 
