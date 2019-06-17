@@ -2,52 +2,51 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8203FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61A9C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DCA220861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B710120861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:25:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806710;
-	bh=np4gHvT7QgppC+tqrq5x0G5xv6Huwcy6tf3U4O3F50Q=;
+	s=default; t=1560806715;
+	bh=7Iv5Ulhl84qu6JpysTXKjrWoWEeyUTjni8Mbp9/vFsk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LIV1rx/ax9Vz7I7ioijjeStJSzahLrZ/gBQFmHEPZR6fB9cHKfACYTEpGzpVLOi1+
-	 7JirlKr88vyPB1OYG/z5/PnCEH30Hif+M6uwqlgmp3Ps4k7MU/EDcIE+jaWpI7dGdz
-	 c0MkeRIFzknLORZsDPuKkInFsIBc+rj/qzWD0Co4=
+	b=pk7maG3hWuv5kFLUJA5O/STev3UxQgnL2HlNVegq2Ik785yit7L1erSDhAI7VHjZW
+	 MdNexy/p20FTaS/hiViqavPyJdRNfbuVRM9idUprqe1gy4KGn1nvFKffa4HT/36A9r
+	 vFouILuCDqeR9jc3gZdWD4/imPsikynzqRBYkgM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbfFQVZI (ORCPT
+        id S1730049AbfFQVZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:25:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51008 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:25:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730016AbfFQVZF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:25:05 -0400
+        id S1730034AbfFQVZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:25:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 569B920657;
-        Mon, 17 Jun 2019 21:25:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39D2920673;
+        Mon, 17 Jun 2019 21:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806703;
-        bh=np4gHvT7QgppC+tqrq5x0G5xv6Huwcy6tf3U4O3F50Q=;
+        s=default; t=1560806709;
+        bh=7Iv5Ulhl84qu6JpysTXKjrWoWEeyUTjni8Mbp9/vFsk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RJ3Kg2kvv48Q12RtKQ5KtWBGbT3z+GHxrGSTgdmWtAledwJ8Y4f2oepTo+zUZnMcf
-         Wx1lnrUkZU7FwXmCd2LgcnPKiEpRBsbTVdZYTYM6YPKgWBy0PPguIofGEtmvh4g1OX
-         Bms+gN7kM3vJPRjVA17Uxgo4XsfgARDfGq8zUSn4=
+        b=l16vOfBTLwrYV4jWxVBVxm9fUkYbWvavT/o11TI7doRWWlMmDD58LuF6XmA1MNWa9
+         S5zZdC68fAUjbcagJWUWIHSPHAAXJFHOJWq3TThkq0BZkQBG8bqe45Ay1OkN8LU0Gg
+         jAoDHL9ZEAgm5RNNPqYVIkaZ58uC6NuOxtoBUEV8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Skomra <aaron.skomra@wacom.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 4.19 07/75] HID: wacom: Correct button numbering 2nd-gen Intuos Pro over Bluetooth
-Date:   Mon, 17 Jun 2019 23:09:18 +0200
-Message-Id: <20190617210753.118731711@linuxfoundation.org>
+        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.19 09/75] Revert "ALSA: hda/realtek - Improve the headset mic for Acer Aspire laptops"
+Date:   Mon, 17 Jun 2019 23:09:20 +0200
+Message-Id: <20190617210753.220340169@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -60,69 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <jason.gerecke@wacom.com>
+From: Hui Wang <hui.wang@canonical.com>
 
-commit 6441fc781c344df61402be1fde582c4491fa35fa upstream.
+commit 17d304604a88cf20c8dfd2c95d3decb9c4f8bca4 upstream.
 
-The button numbering of the 2nd-gen Intuos Pro is not consistent between
-the USB and Bluetooth interfaces. Over USB, the HID_GENERIC codepath
-enumerates the eight ExpressKeys first (BTN_0 - BTN_7) followed by the
-center modeswitch button (BTN_8). The Bluetooth codepath, however, has
-the center modeswitch button as BTN_0 and the the eight ExpressKeys as
-BTN_1 - BTN_8. To ensure userspace button mappings do not change
-depending on how the tablet is connected, modify the Bluetooth codepath
-to report buttons in the same order as USB.
+This reverts commit 9cb40eb184c4220d244a532bd940c6345ad9dbd9.
 
-To ensure the mode switch LED continues to toggle in response to the
-mode switch button, the `wacom_is_led_toggled` function also requires
-a small update.
+This patch introduces noise and headphone playback issue after
+rebooting or suspending/resuming. Let us revert it.
 
-Link: https://github.com/linuxwacom/input-wacom/pull/79
-Fixes: 4922cd26f03c ("HID: wacom: Support 2nd-gen Intuos Pro's Bluetooth classic interface")
-Cc: <stable@vger.kernel.org> # 4.11+
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Reviewed-by: Aaron Skomra <aaron.skomra@wacom.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+BugLink: https://bugzilla.kernel.org/show_bug.cgi?id=203831
+Fixes: 9cb40eb184c4 ("ALSA: hda/realtek - Improve the headset mic for Acer Aspire laptops")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Hui Wang <hui.wang@canonical.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/wacom_wac.c |   11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ sound/pci/hda/patch_realtek.c |   16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -1381,7 +1381,7 @@ static void wacom_intuos_pro2_bt_pad(str
- 	struct input_dev *pad_input = wacom->pad_input;
- 	unsigned char *data = wacom->data;
- 
--	int buttons = (data[282] << 1) | ((data[281] >> 6) & 0x01);
-+	int buttons = data[282] | ((data[281] & 0x40) << 2);
- 	int ring = data[285] & 0x7F;
- 	bool ringstatus = data[285] & 0x80;
- 	bool prox = buttons || ringstatus;
-@@ -3850,7 +3850,7 @@ static void wacom_24hd_update_leds(struc
- static bool wacom_is_led_toggled(struct wacom *wacom, int button_count,
- 				 int mask, int group)
- {
--	int button_per_group;
-+	int group_button;
- 
- 	/*
- 	 * 21UX2 has LED group 1 to the left and LED group 0
-@@ -3860,9 +3860,12 @@ static bool wacom_is_led_toggled(struct
- 	if (wacom->wacom_wac.features.type == WACOM_21UX2)
- 		group = 1 - group;
- 
--	button_per_group = button_count/wacom->led.count;
-+	group_button = group * (button_count/wacom->led.count);
- 
--	return mask & (1 << (group * button_per_group));
-+	if (wacom->wacom_wac.features.type == INTUOSP2_BT)
-+		group_button = 8;
-+
-+	return mask & (1 << group_button);
- }
- 
- static void wacom_update_led(struct wacom *wacom, int button_count, int mask,
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -6084,15 +6084,13 @@ static const struct hda_fixup alc269_fix
+ 		.chain_id = ALC269_FIXUP_THINKPAD_ACPI,
+ 	},
+ 	[ALC255_FIXUP_ACER_MIC_NO_PRESENCE] = {
+-		.type = HDA_FIXUP_VERBS,
+-		.v.verbs = (const struct hda_verb[]) {
+-			/* Enable the Mic */
+-			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x45 },
+-			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5089 },
+-			{}
++		.type = HDA_FIXUP_PINS,
++		.v.pins = (const struct hda_pintbl[]) {
++			{ 0x19, 0x01a1913c }, /* use as headset mic, without its own jack detect */
++			{ }
+ 		},
+ 		.chained = true,
+-		.chain_id = ALC269_FIXUP_LIFEBOOK_EXTMIC
++		.chain_id = ALC255_FIXUP_HEADSET_MODE
+ 	},
+ 	[ALC255_FIXUP_ASUS_MIC_NO_PRESENCE] = {
+ 		.type = HDA_FIXUP_PINS,
+@@ -7124,10 +7122,6 @@ static const struct snd_hda_pin_quirk al
+ 		{0x19, 0x0181303F},
+ 		{0x21, 0x0221102f}),
+ 	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1025, "Acer", ALC255_FIXUP_ACER_MIC_NO_PRESENCE,
+-		{0x12, 0x90a60140},
+-		{0x14, 0x90170120},
+-		{0x21, 0x02211030}),
+-	SND_HDA_PIN_QUIRK(0x10ec0255, 0x1025, "Acer", ALC255_FIXUP_ACER_MIC_NO_PRESENCE,
+ 		{0x12, 0x90a601c0},
+ 		{0x14, 0x90171120},
+ 		{0x21, 0x02211030}),
 
 
