@@ -2,137 +2,115 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF24C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A29D7C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E02020861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 758A320861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:04:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ecdcx5xI"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="IuvGRaou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727701AbfFQLCu (ORCPT
+        id S1727805AbfFQLEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:02:50 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:47556 "EHLO mail.skyhub.de"
+        Mon, 17 Jun 2019 07:04:11 -0400
+Received: from mail.andi.de1.cc ([85.214.239.24]:58076 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726174AbfFQLCt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:02:49 -0400
-Received: from zn.tnic (p200300EC2F0613006087DD9CF534030C.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:1300:6087:dd9c:f534:30c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 600511EC0249;
-        Mon, 17 Jun 2019 13:02:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560769368;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=OijPc0WWIfdOsltA5SOHD4hbuYIyRTxsd1+8sNjTtHk=;
-        b=ecdcx5xI9o4i+Zruw2Jkv8SaWdeKSbRo0kW3W5sAxfi2Mm0yXsU7Svn7y2GNa7OYHm7xj0
-        wEov1MZL0HcvVRSFSFGVMzgUgdpBppioXX0ycCOO1wSqtrqV1nVYiVEx7z5dWPG86o2F08
-        BLpu0+pEE+e7y0tx1sX3UhXLHjWxhKc=
-Date:   Mon, 17 Jun 2019 13:02:41 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>
-Subject: Re: [PATCH v2 2/2] x86/mm: Create an SME workarea in the kernel for
- early encryption
-Message-ID: <20190617110241.GH27127@zn.tnic>
-References: <cover.1560546537.git.thomas.lendacky@amd.com>
- <cdb1fab3558ae11a50c922d8f373c2125c862e10.1560546537.git.thomas.lendacky@amd.com>
+        id S1726164AbfFQLEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:04:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
+        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8XdeYg0GlEJgt8p/N7L3c6uxos5/PKeCfsQ7LLmnUYw=; b=IuvGRaou5HUNJXpE0AAbIF/rF
+        u6PHU/hQ0TSVaOmy6/9EGTV43+qYi2ART6kKlk1HQfesa80EJk1W6AW7Y+Qi1Ck2o7HF21+tLD4HO
+        6qOEWxIgq4jzaspY2ICoo+CnpDdABhaKgEEkWJ3UgmadL7L/65At2872P2geg9b0cM76w=;
+Received: from p578b2b7d.dip0.t-ipconnect.de ([87.139.43.125] helo=localhost)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hcpQl-0000PF-SB; Mon, 17 Jun 2019 13:04:07 +0200
+Received: from [::1] (helo=localhost)
+        by eeepc with esmtp (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hcpQi-0003Ls-9m; Mon, 17 Jun 2019 13:04:04 +0200
+Date:   Mon, 17 Jun 2019 13:03:57 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
+Message-ID: <20190617130357.41204ff7@kemnade.info>
+In-Reply-To: <20190617103111.GM5316@sirena.org.uk>
+References: <20190615163314.28173-1-andreas@kemnade.info>
+        <20190617103111.GM5316@sirena.org.uk>
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <cdb1fab3558ae11a50c922d8f373c2125c862e10.1560546537.git.thomas.lendacky@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/T/ae9AiTrO+noE5l2ZRMJjS"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 09:15:19PM +0000, Lendacky, Thomas wrote:
-> diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-> index ca2252ca6ad7..a7aa65b44c71 100644
-> --- a/arch/x86/kernel/vmlinux.lds.S
-> +++ b/arch/x86/kernel/vmlinux.lds.S
-> @@ -387,6 +387,30 @@ SECTIONS
->  	. = ALIGN(PAGE_SIZE);		/* keep VO_INIT_SIZE page aligned */
->  	_end = .;
->  
-> +#ifdef CONFIG_AMD_MEM_ENCRYPT
-> +	/*
-> +	 * SME workarea section: Lives outside of the kernel proper (_text -
-> +	 * _end) for performing in-place encryption of the kernel during boot.
-> +	 *
-> +	 * Resides after _end because even though the .brk section is after
-> +	 * __end_of_kernel_reserve, the .brk section is later reserved as a
-> +	 * part of the kernel. It is used in very early boot code and not
-> +	 * needed after that, so it is located after __end_of_kernel_reserve
-> +	 * so that it will be discarded and become part of the available
-> +	 * memory.
-> +	 *
-> +	 * Resides on a 2MB boundary to simplify the pagetable setup used for
-> +	 * the encryption.
-> +	 */
-> +	. = ALIGN(HPAGE_SIZE);
-> +	.sme : AT(ADDR(.sme) - LOAD_OFFSET) {
+--Sig_/T/ae9AiTrO+noE5l2ZRMJjS
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Should we call that section something more generic as
+Hi,
 
-	.early_scratch
+On Mon, 17 Jun 2019 11:31:11 +0100
+Mark Brown <broonie@kernel.org> wrote:
 
-or so?
+> On Sat, Jun 15, 2019 at 06:33:14PM +0200, Andreas Kemnade wrote:
+>=20
+> > The VDD1/VDD2 regulators on twl4030 are neither defined with
+> > voltage lists nor with the continuous flag set, so
+> > regulator_is_supported_voltage() returns false and an error
+> > before above mentioned commit (which was considered success)
+> > The result is that after the above mentioned commit cpufreq
+> > does not work properly e.g. dm3730. =20
+>=20
+> Why is this a good fix and not defining the supported voltages?  These
+> look like fairly standard linear range regulators.
 
-Someone else might need something like that too, in the future...
+I am fixing the definition of the two regulators in the patch.
+I am defining them as continuous.=20
+Voltage ranges are defined in
+arch/arm/boot/dts/twl4030.dtsi
+Only the continuous flag is missing.
 
-Also, the DISCARDS sections do get freed at runtime so why not make it
-part of the DISCARD section...?
+Is there anything else do you want to be defined?
 
-> +		__sme_begin = .;
-> +		*(.sme)
-> +		. = ALIGN(HPAGE_SIZE);
-> +		__sme_end = .;
-> +	}
-> +#endif
-> +
->  	STABS_DEBUG
->  	DWARF_DEBUG
->  
-> diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-> index 4aa9b1480866..c55c2ec8fb12 100644
-> --- a/arch/x86/mm/mem_encrypt_identity.c
-> +++ b/arch/x86/mm/mem_encrypt_identity.c
-> @@ -73,6 +73,19 @@ struct sme_populate_pgd_data {
->  	unsigned long vaddr_end;
->  };
->  
-> +/*
-> + * This work area lives in the .sme section, which lives outside of
-> + * the kernel proper. It is sized to hold the intermediate copy buffer
-> + * and more than enough pagetable pages.
-> + *
-> + * By using this section, the kernel can be encrypted in place and we
+Regards,
+Andreas
 
-replace that "we" with an impartial passive formulation.
+--Sig_/T/ae9AiTrO+noE5l2ZRMJjS
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Other than that, I like the commenting, very helpful!
+-----BEGIN PGP SIGNATURE-----
 
-Thx.
+iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl0Hc50ACgkQl4jFM1s/
+ye8YpA/8CrtqyQjtHJXh7k+8PQQp3Shw7IYEnKTorCO7pz3jS6Y9LTGR11kH5GVe
+tsZpUKXcGjbNGPo9Urnb78t+SWySAABsd9F0zF00m0Ma8qA8KptW1Zggs1+zzm5z
+P+ariX43asVqSXLbdNAEEPrFmWSeHTl1+n6vk/D3FPxAisyPKknRwPSZ6nv/6w6V
+/IIiUYaJ1X4oBbr3ydhsIVmbmAsE1U6R5nl+nw5/+fRPakD2WVyv5oGCm6sgglvX
+5lLnvhZE1S6YJF/eSUwlqbJt0R9KLFCWlvede0a4OAx5tDvIqqyEGzjGjUt+YKBQ
+e3Jb8c2/oh29MtQHLvxxBEvWih0yact/T7ZDKUGsgJ9L0epJ56EGgFUTYmwQTDck
+Y2z4jt7ciNCcBSDx1SGhRZeUoBEeCrUzsRL6Pqeuxf1s6O9bnP1Xs1mbZOYmMkVl
+XPxpNqgbJNV1LLOHBHqac7nrm1lzkKPIbkNEk79A7pbWtWH67PoEUXcr5Y8Jkkjl
+HM4Qwzd3KM3DZvHed666wpJ6n8LSUb7f0TqzRJPjFt8AYsgu4uoQcwWycFVDGWDS
+P0t/41wyQQOCxzNIMj9HRaKnryqqo7+Frg+KaRuzXkUrAi6uwDFDH/jUbk/jmr0g
+AzX7JHDzzEVtdslahvTmKXparIef4Lch42NvaE0naDOyabZLRtg=
+=3Fg4
+-----END PGP SIGNATURE-----
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+--Sig_/T/ae9AiTrO+noE5l2ZRMJjS--
