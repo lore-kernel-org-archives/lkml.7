@@ -2,99 +2,88 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B94AC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B8F3C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:34:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BFE20644
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74BFE20644
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:34:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfFQMdZ (ORCPT
+        id S1727483AbfFQMeG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:33:25 -0400
-Received: from mga07.intel.com ([134.134.136.100]:28929 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfFQMdY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:33:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 05:33:24 -0700
-X-ExtLoop1: 1
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2019 05:33:21 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide book
-In-Reply-To: <20190614122755.1c7b4898@coco.lan>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <cover.1560477540.git.mchehab+samsung@kernel.org> <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org> <87o930uvur.fsf@intel.com> <20190614140603.GB7234@kroah.com> <20190614122755.1c7b4898@coco.lan>
-Date:   Mon, 17 Jun 2019 15:36:17 +0300
-Message-ID: <874l4ov16m.fsf@intel.com>
+        Mon, 17 Jun 2019 08:34:06 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:58319 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726005AbfFQMeF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:34:05 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MMoXC-1htQJR3L4G-00Ihzj; Mon, 17 Jun 2019 14:33:53 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Thierry Reding <treding@nvidia.com>, arm@kernel.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org
+Subject: [PATCH] firmware: trusted_foundations: add ARMv7 dependency
+Date:   Mon, 17 Jun 2019 14:33:23 +0200
+Message-Id: <20190617123352.742876-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:lG3EMn7eymquB1lgFAhu0K13XWBEH1PPENGNounZ6Xnzg65KD9H
+ K7KGoA6BDfG56L7Ecrfg52/nh0Wkl9GI4JMqNZ522rVXqelHcL5sgosETiLuFSnJaybdatK
+ tbzVbKcMFSV5HB4ECOima/g+smwK/Y4eXOe3AZLVnAwxeeNFCzZgJMp+Mrq2TcTDhEVbThS
+ MvyiJ2EXg1PGpN8yIODHw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:cTIULY2r9us=:hIiDtNFP+qCUQBEtaqIitG
+ Us5dRrmiNDw0C8YsTQngg1k9y3yPLuoap1c4pB1wKOYDlGH/Z2b16Bk9xZrFp/FQj1Hiu/wD3
+ M//QdUVAb2bgRCGUtVDdGnG1sa92uumtSpwYWWKhQgN2YefSeDikjXsdBi+R4xq9j2vQCbqU2
+ 48xPo/MG1dT0JIlexAXxXnlvnco/uhOGGwkX8zHvQQN1uiNmlKAKRmnt16kzpsoQ9r0nycTSb
+ C4una3bkX0IpfkSC/TPpiabqZjrr95g6ITZNtT3vTZTpkldeKlbbxA2JjoLLv+o0hYfhAOlZc
+ chciSIdFB3VxMD85YlssJOZ8oWiomVtJA5b2yvI6VkycfpMCZpTaymq9+kUKT8SD4+SF6Oxpd
+ pcpExgIinHqr6rvf1yeYL2+e2TNiwdSYd+x5UEcHbQzGSg9eebgF+8O2o9oda5wFQtL00m5o/
+ sCf3EGTnr8n3tZoLP9c/cY9FT0abxqDdAUADI5pH+kuAmwD/nMSTPVTZkpeTVpcaetJGs05X5
+ k3c2/p7dneTigsuXTqH2zZ6FPxBsaFj3UFzUtrLXsBsPgzCJEBpPMNqWgpJLecJ7+hfmXGN6f
+ wYVUJf4iBTxyZ8qxUiIgBOpyr2ZltJ9RPgysB2b+R6xkawQx0dZ19TGLoyhl0yYx1OhlwuJRS
+ HTZ4GvuOP6kN27rNAr3OccFx6vWj3oQRgPIiVZVLqwx7fPuRlUCc2Wwed25LofcnhyAvURSwK
+ LX6RFXSSMmLOq5noEXwNhKFZiyqJUQXTB03q6Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019, Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> Em Fri, 14 Jun 2019 16:06:03 +0200
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
->
->> On Fri, Jun 14, 2019 at 04:42:20PM +0300, Jani Nikula wrote:
->> > 2) Have the python extension read the ABI files directly, without an
->> >    extra pipeline.  
->> 
->> He who writes the script, get's to dictate the language of the script :)
+The "+sec" extension is invalid for older ARM architectures, but
+the code can now be built on any ARM configuration:
 
-The point is, it's an extension to a python based tool, written in perl,
-using pipes for communication, and losing any advantages of integrating
-with the tool it's extending.
+/tmp/trusted_foundations-2d0882.s: Assembler messages:
+/tmp/trusted_foundations-2d0882.s:194: Error: architectural extension `sec' is not allowed for the current base architecture
+/tmp/trusted_foundations-2d0882.s:201: Error: selected processor does not support `smc #0' in ARM mode
+/tmp/trusted_foundations-2d0882.s:213: Error: architectural extension `sec' is not allowed for the current base architecture
+/tmp/trusted_foundations-2d0882.s:220: Error: selected processor does not support `smc #0' in ARM mode
 
-I doubt you'd want to see system() to be used to subsequently extend the
-perl tool.
+Add a dependency on ARMv7 for the build.
 
-I think it's just sad to see the documentation system slowly drift
-further away from the ideals we had, and towards the old ways we worked
-so hard to fix.
+Fixes: 4cb5d9eca143 ("firmware: Move Trusted Foundations support")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/firmware/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> No idea about how much time it would take if written in python,
-> but this perl script is really fast:
->
-> 	$ time ./scripts/get_abi.pl search voltage_max >/dev/null
-> 	real	0m0,139s
-> 	user	0m0,132s
-> 	sys	0m0,006s
->
-> That's the time it takes here (SSD disks) to read all files under
-> Documentation/ABI, parse them and seek for a string.
->
-> That's about half of the time a python script takes to just import the
-> the sphinx modules and print its version, running at the same machine:
->
-> 	$ time sphinx-build --version >/dev/null
->
-> 	real	0m0,224s
-> 	user	0m0,199s
-> 	sys	0m0,024s
-
-Please at least use fair and sensible comparisons. If you want to make
-the extension usable standalone on the command-line, bypassing Sphinx,
-you can do that. No need to factor in Sphinx to your comparisons.
-
-
-BR,
-Jani.
-
-
+diff --git a/drivers/firmware/Kconfig b/drivers/firmware/Kconfig
+index 35078c6f334a..53446e39a32c 100644
+--- a/drivers/firmware/Kconfig
++++ b/drivers/firmware/Kconfig
+@@ -256,7 +256,7 @@ config TI_SCI_PROTOCOL
+ 
+ config TRUSTED_FOUNDATIONS
+ 	bool "Trusted Foundations secure monitor support"
+-	depends on ARM
++	depends on ARM && CPU_V7
+ 	help
+ 	  Some devices (including most early Tegra-based consumer devices on
+ 	  the market) are booted with the Trusted Foundations secure monitor
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.20.0
+
