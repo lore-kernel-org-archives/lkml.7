@@ -2,100 +2,139 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D520EC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 585BAC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F1C820657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:26:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 263C620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="aasxPrsC"
+	dkim=pass (2048-bit key) header.d=bytedance-com.20150623.gappssmtp.com header.i=@bytedance-com.20150623.gappssmtp.com header.b="yMnCM/bd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfFQN0n (ORCPT
+        id S1727745AbfFQN0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:26:43 -0400
-Received: from smtp121.ord1c.emailsrvr.com ([108.166.43.121]:44980 "EHLO
-        smtp121.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726028AbfFQN0n (ORCPT
+        Mon, 17 Jun 2019 09:26:47 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40469 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726028AbfFQN0p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:26:43 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1560777558;
-        bh=5TbJE6kgkkLp1/JINzOKzzcb0A8rBGMKS/yWgPbV0Bo=;
-        h=Subject:To:From:Date:From;
-        b=aasxPrsCPX9YDpRl6CZ8FO8w7OMs0IipOKSScZ3pErTJc9HuVa6NaAqBGrviIXIVB
-         UhNJfVpuIuspNhY6/Q2b7ZEwRjjZzMjSVMOMQkjLnRNsJx5y87AAPhgxHWd3It//Tz
-         VTpGqV09l1TxI1WKwkK3C3jUU4iHDDyBNuLJOOlg=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp16.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 90654C0270;
-        Mon, 17 Jun 2019 09:19:17 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.62] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Mon, 17 Jun 2019 09:19:18 -0400
-Subject: Re: [PATCH][next] staging: comedi: usbdux: remove redundant
- initialization of fx2delay
-To:     Colin King <colin.king@canonical.com>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190617130358.28749-1-colin.king@canonical.com>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <fe0881ce-90aa-0689-7563-0d94aeebb461@mev.co.uk>
-Date:   Mon, 17 Jun 2019 14:19:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190617130358.28749-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 09:26:45 -0400
+Received: by mail-pl1-f194.google.com with SMTP id a93so4104206pla.7
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 06:26:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bytedance-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=iNOXjuZREAy3pqMzT9qyi/Eg7jLleHcrbZVRNS23Pj8=;
+        b=yMnCM/bd6N4IgQjYrAHjB89GSMvMISjAxblDsKtRlxx6VTMWe2kKEcrL8FLDHixrz9
+         8uFgCNUDIcPHwdeusscgeQ5lFdTq8R+xkuEI4qabyQB8z41Scmdlwe9rWDxKmpPmZly5
+         xJShIZcxnENKNlRsWgyLcODf9fGH/1kSLf+QgBdAJgq9Z1Ty/rG5XT0bFnvw/3dM8B6/
+         /QR5sCDTz0obC713me79im/DGCodCmH1WJdrfdF+8mlB0cBeCUaMvbtKNfZG6pmi8G7S
+         f77DbylIEDUjyE/PZNcXKur1jnSEwCz9CT45Vt9CAtZmCzJCs86HEobm5ebzVTsOoGzi
+         Vy/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=iNOXjuZREAy3pqMzT9qyi/Eg7jLleHcrbZVRNS23Pj8=;
+        b=ZVCA4mh4D9zvQbC2tg4F3qox3Hg+chkti1Dey9bL8obytenYbTJpOeR24Lo9K4YaKG
+         JFGHLlyYWM/KOotbSmkBqxj3DQzZBFCOfHVeh90DEXSZArg67wndmFddrC3Hn03ytB1O
+         A7Dd35HOcrN+X38Spec63pEIhktdHjYljfAO0JFzV4qfwHY7aKleOYbBQI7VE2MgNWdM
+         G4h4LU/Qy79fxhO+8pROrhHcW0D9AIBqEfffn3ljIwBXLRoYeeNUbB7qQiFtg832nxOd
+         B0mKffPieiRz3c+DzG/10SLsmjXQYpIIiqAPDGDPErpjrRYbvmjnYVPJXwNAz9LuAdH7
+         0gzQ==
+X-Gm-Message-State: APjAAAWdUWJYL0nslJqh/RVB1ippDFod0TVbnxLtcnVjF7+6EhmXlf1w
+        CtY8T6JKS9d3KEtG/R4y3pRdzw==
+X-Google-Smtp-Source: APXvYqw2iDq0Ab7tchmhG+MTOb9wfk/of2zsP9Ugq5BJmQ8olAgmk5dogawvPBuud6IfwEQQ3L7vew==
+X-Received: by 2002:a17:902:9a06:: with SMTP id v6mr89500786plp.71.1560778004780;
+        Mon, 17 Jun 2019 06:26:44 -0700 (PDT)
+Received: from bogon.bytedance.net ([61.120.150.76])
+        by smtp.gmail.com with ESMTPSA id 135sm16530362pfb.137.2019.06.17.06.26.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 17 Jun 2019 06:26:44 -0700 (PDT)
+From:   Fei Li <lifei.shirley@bytedance.com>
+To:     davem@davemloft.net, jasowang@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     zhengfeiran@bytedance.com, duanxiongchun@bytedance.com,
+        Fei Li <lifei.shirley@bytedance.com>
+Subject: [PATCH net v2] tun: wake up waitqueues after IFF_UP is set
+Date:   Mon, 17 Jun 2019 21:26:36 +0800
+Message-Id: <20190617132636.72496-1-lifei.shirley@bytedance.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/06/2019 14:03, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Variable fx2delay is being initialized to a value that is never read
-> and is being re-assigned a few statements later. The initialization
-> is redundant and can be removed.
-> 
-> Addresses-Coverity: ("Unused value")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->   drivers/staging/comedi/drivers/usbdux.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/comedi/drivers/usbdux.c b/drivers/staging/comedi/drivers/usbdux.c
-> index b8f54b7fb34a..0350f303d557 100644
-> --- a/drivers/staging/comedi/drivers/usbdux.c
-> +++ b/drivers/staging/comedi/drivers/usbdux.c
-> @@ -1226,7 +1226,7 @@ static int usbdux_pwm_period(struct comedi_device *dev,
->   			     unsigned int period)
->   {
->   	struct usbdux_private *devpriv = dev->private;
-> -	int fx2delay = 255;
-> +	int fx2delay;
->   
->   	if (period < MIN_PWM_PERIOD)
->   		return -EAGAIN;
-> 
+Currently after setting tap0 link up, the tun code wakes tx/rx waited
+queues up in tun_net_open() when .ndo_open() is called, however the
+IFF_UP flag has not been set yet. If there's already a wait queue, it
+would fail to transmit when checking the IFF_UP flag in tun_sendmsg().
+Then the saving vhost_poll_start() will add the wq into wqh until it
+is waken up again. Although this works when IFF_UP flag has been set
+when tun_chr_poll detects; this is not true if IFF_UP flag has not
+been set at that time. Sadly the latter case is a fatal error, as
+the wq will never be waken up in future unless later manually
+setting link up on purpose.
 
-Looks good, thanks!
+Fix this by moving the wakeup process into the NETDEV_UP event
+notifying process, this makes sure IFF_UP has been set before all
+waited queues been waken up.
 
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Signed-off-by: Fei Li <lifei.shirley@bytedance.com>
+Acked-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/net/tun.c | 19 +++++++++----------
+ 1 file changed, 9 insertions(+), 10 deletions(-)
 
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index c452d6d831dd..d7c55e0fa8f4 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1014,18 +1014,8 @@ static void tun_net_uninit(struct net_device *dev)
+ /* Net device open. */
+ static int tun_net_open(struct net_device *dev)
+ {
+-	struct tun_struct *tun = netdev_priv(dev);
+-	int i;
+-
+ 	netif_tx_start_all_queues(dev);
+ 
+-	for (i = 0; i < tun->numqueues; i++) {
+-		struct tun_file *tfile;
+-
+-		tfile = rtnl_dereference(tun->tfiles[i]);
+-		tfile->socket.sk->sk_write_space(tfile->socket.sk);
+-	}
+-
+ 	return 0;
+ }
+ 
+@@ -3634,6 +3624,7 @@ static int tun_device_event(struct notifier_block *unused,
+ {
+ 	struct net_device *dev = netdev_notifier_info_to_dev(ptr);
+ 	struct tun_struct *tun = netdev_priv(dev);
++	int i;
+ 
+ 	if (dev->rtnl_link_ops != &tun_link_ops)
+ 		return NOTIFY_DONE;
+@@ -3643,6 +3634,14 @@ static int tun_device_event(struct notifier_block *unused,
+ 		if (tun_queue_resize(tun))
+ 			return NOTIFY_BAD;
+ 		break;
++	case NETDEV_UP:
++		for (i = 0; i < tun->numqueues; i++) {
++			struct tun_file *tfile;
++
++			tfile = rtnl_dereference(tun->tfiles[i]);
++			tfile->socket.sk->sk_write_space(tfile->socket.sk);
++		}
++		break;
+ 	default:
+ 		break;
+ 	}
 -- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+2.11.0
+
