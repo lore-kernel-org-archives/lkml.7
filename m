@@ -6,30 +6,30 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FE39C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 419B4C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:11:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33D7C218E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:11:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AB76218E0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:11:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725815AbfFQHLY (ORCPT
+        id S1726476AbfFQHL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:11:24 -0400
-Received: from lilium.sigma-star.at ([109.75.188.150]:34360 "EHLO
+        Mon, 17 Jun 2019 03:11:29 -0400
+Received: from lilium.sigma-star.at ([109.75.188.150]:34358 "EHLO
         lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725827AbfFQHLR (ORCPT
+        with ESMTP id S1725826AbfFQHLR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 03:11:17 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by lilium.sigma-star.at (Postfix) with ESMTP id 4CFE51809AD62;
-        Mon, 17 Jun 2019 09:03:56 +0200 (CEST)
-Subject: Re: [PATCH mtd-utils] ubi-tests: io_read: Filter invalid offset value
- before 'lseek' in io_read test
+        by lilium.sigma-star.at (Postfix) with ESMTP id AC3051802BB91;
+        Mon, 17 Jun 2019 09:03:38 +0200 (CEST)
+Subject: Re: [PATCH mtd-utils] ubi-tests: ubi_mkvol_request: Fully initialize
+ 'struct ubi_mkvol_request req'
 To:     chengzhihao1@huawei.com, richard@nod.at,
         boris.brezillon@bootlin.com, david@sigma-star.at,
         artem.bityutskiy@linux.intel.com, yi.zhang@huawei.com
 Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1560514696-54824-1-git-send-email-chengzhihao1@huawei.com>
+References: <1560514478-54276-1-git-send-email-chengzhihao1@huawei.com>
 From:   David Oberhollenzer <david.oberhollenzer@sigma-star.at>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david.oberhollenzer@sigma-star.at; prefer-encrypt=mutual;
@@ -58,12 +58,12 @@ Autocrypt: addr=david.oberhollenzer@sigma-star.at; prefer-encrypt=mutual;
  7In6ift5SNySojCOfAV0iKZb8QUXWktLleY8kQ8jltOsSRTuO4PDfzvtCQDixUw4tQ7WLwDT
  qyUpot0oG03vtSG4LIRCdxI=
 Organization: sigma star gmbh
-Message-ID: <97f7fed6-9d0e-4315-3237-fcd666539824@sigma-star.at>
-Date:   Mon, 17 Jun 2019 09:03:55 +0200
+Message-ID: <9da3996f-7e94-a3a0-374f-261691d5045e@sigma-star.at>
+Date:   Mon, 17 Jun 2019 09:03:31 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <1560514696-54824-1-git-send-email-chengzhihao1@huawei.com>
+In-Reply-To: <1560514478-54276-1-git-send-email-chengzhihao1@huawei.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
