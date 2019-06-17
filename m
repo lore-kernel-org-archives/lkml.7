@@ -2,131 +2,92 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFA3C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:31:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D85C31E5D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2034D208C4
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:31:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8285120B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:32:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="cDXfbdgg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728269AbfFQQb2 (ORCPT
+        id S1728394AbfFQQca (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:31:28 -0400
-Received: from smtp3.goneo.de ([85.220.129.37]:36582 "EHLO smtp3.goneo.de"
+        Mon, 17 Jun 2019 12:32:30 -0400
+Received: from mail.andi.de1.cc ([85.214.239.24]:58774 "EHLO mail.andi.de1.cc"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726292AbfFQQbZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:31:25 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp3.goneo.de (Postfix) with ESMTP id DD80323F252;
-        Mon, 17 Jun 2019 18:31:21 +0200 (CEST)
-X-Virus-Scanned: by goneo
-Received: from smtp3.goneo.de ([127.0.0.1])
-        by localhost (smtp3.goneo.de [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id s76l7b57MjrH; Mon, 17 Jun 2019 18:31:20 +0200 (CEST)
-Received: from [192.168.10.227] (ip-109-91-78-216.hsi12.unitymediagroup.de [109.91.78.216])
-        by smtp3.goneo.de (Postfix) with ESMTPSA id 18BDE23F021;
-        Mon, 17 Jun 2019 18:31:20 +0200 (CEST)
-Subject: Re: [PATCH 12/14] doc-rst: add ABI documentation to the admin-guide
- book
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <9da2a7f6ff57d9d53dcbb964eb310f7956522870.1560477540.git.mchehab+samsung@kernel.org>
- <87o930uvur.fsf@intel.com> <2955920a-3d6a-8e41-e8fe-b7db3cefed8b@darmarit.de>
- <20190614081546.64101411@lwn.net>
- <327067f6-2609-41e6-c987-e37620e7154e@darmarit.de>
- <20190617061146.06975213@coco.lan>
-From:   Markus Heiser <markus.heiser@darmarit.de>
-Message-ID: <c3caf35e-9790-661f-e9db-0a050d31ca7d@darmarit.de>
-Date:   Mon, 17 Jun 2019 18:31:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726091AbfFQQc3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:32:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=yXBewa4Yf6BB+kYm+6dRgzZs9LYrqO+9cPd26nhSsxE=; b=cDXfbdggRiOU2Z1QGSx2uu5bIn
+        aLaQyuEySdO9mvVyJId2oitvc++wLD9ODS54s4ccsU/GAp+/+M920xE5fFspUavL6/jUt2jWITds1
+        v/fNByl3s/p08p7hCdhX7u2VtOTf0krJJld+5+qWDwap2aGfQTuQb0npIokirGWU3Xh8=;
+Received: from p5dcc3c96.dip0.t-ipconnect.de ([93.204.60.150] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1hcuYU-0003fF-Q4; Mon, 17 Jun 2019 18:32:26 +0200
+Date:   Mon, 17 Jun 2019 18:32:25 +0200
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
+Message-ID: <20190617183225.1210c91c@aktux>
+In-Reply-To: <20190617114048.GN5316@sirena.org.uk>
+References: <20190615163314.28173-1-andreas@kemnade.info>
+        <20190617103111.GM5316@sirena.org.uk>
+        <20190617130357.41204ff7@kemnade.info>
+        <20190617114048.GN5316@sirena.org.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190617061146.06975213@coco.lan>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 17 Jun 2019 12:40:48 +0100
+Mark Brown <broonie@kernel.org> wrote:
 
-Am 17.06.19 um 11:11 schrieb Mauro Carvalho Chehab:
-> Em Sun, 16 Jun 2019 18:04:01 +0200
-> Markus Heiser <markus.heiser@darmarit.de> escreveu:
+> On Mon, Jun 17, 2019 at 01:03:57PM +0200, Andreas Kemnade wrote:
+> > Mark Brown <broonie@kernel.org> wrote:  
+> > > On Sat, Jun 15, 2019 at 06:33:14PM +0200, Andreas Kemnade wrote:  
 > 
->> Am 14.06.19 um 16:15 schrieb Jonathan Corbet:
->>> On Fri, 14 Jun 2019 16:10:31 +0200
->>> Markus Heiser <markus.heiser@darmarit.de> wrote:
->>>    
->>>> I agree with Jani. No matter how the decision ends, since I can't help here, I'd
->>>> rather not show up in the copyright.
->>>
->>> Is there something specific you are asking us to do here?
->>>    
->>
->>
->> I have lost the overview, but there was a patch Mauro added a
->> kernel_abi.py.  There was my name (Markus Heiser) listed with a
->> copyright notation.
->>
->> I guess Mauro picked up some old RFC or an other old patch of
->> mine from 2016 and made some C&P .. whatever .. ATM I do not have
->> time to give any support on parsing ABI and I'am not interested
->> in holding copyrights on a C&P of a old source  ;)
+> > > Why is this a good fix and not defining the supported voltages?  These
+> > > look like fairly standard linear range regulators.  
 > 
-> Well, the code was basically written by you :-)
+> > I am fixing the definition of the two regulators in the patch.
+> > I am defining them as continuous. 
+> > Voltage ranges are defined in
+> > arch/arm/boot/dts/twl4030.dtsi
+> > Only the continuous flag is missing.  
 > 
-> It was written to be a script capable of running a generic
-> script. On that time, my contribution to it was basically
-> to hardcode it to run "get_abi.pl".
+> > Is there anything else do you want to be defined?  
+> 
+> These regulators are not continuous regulators as far as I can see, they
+> are normal linear range regulators and so should have their voltages
+> enumerable like any other linear range regulator.
 
-Thanks for clarifying.
+another thing which might be misleading: The patch belongs to the
+section after
+#define TWL4030_ADJUSTABLE_SMPS(label, offset, num, turnon_delay, remap_conf)
 
-> 
-> This came from an old branch where the last change was back in 2017.
-> It was resurrected due to a discussion at KS ML.
-> 
-> There, the discussion was related to what's left to be converted
-> to ReST.
-> 
-> While I can't simply remove your copyright, would you be happy
-> with something like that?
+that might be easily misread (because of too less context in the diff),
+or if line numbers change.
+It is *not* for
+#define TWL4030_ADJUSTABLE_LDO(label, offset, num, turnon_delay, remap_conf)
 
-Yes, but basically I share Jani's and Jon's doubts about this solution.
-
--- Markus --
-
-> 
-> 
-> Thanks,
-> Mauro
-> 
-> diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
-> index 2d5d582207f7..ef91b1e1ff4b 100644
-> --- a/Documentation/sphinx/kernel_abi.py
-> +++ b/Documentation/sphinx/kernel_abi.py
-> @@ -7,7 +7,8 @@ u"""
->       Implementation of the ``kernel-abi`` reST-directive.
->   
->       :copyright:  Copyright (C) 2016  Markus Heiser
-> -    :copyright:  Copyright (C) 2016  Mauro Carvalho Chehab
-> +    :copyright:  Copyright (C) 2016-2019  Mauro Carvalho Chehab
-> +    :maintained-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
->       :license:    GPL Version 2, June 1991 see Linux/COPYING for details.
->   
->       The ``kernel-abi`` (:py:class:`KernelCmd`) directive calls the
-> 
-> 
-
-
+Regards,
+Andreas
