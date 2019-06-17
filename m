@@ -2,55 +2,53 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_DBL_ABUSE_SPAM,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0316C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A4BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B5DF20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7E9F2070B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806670;
-	bh=bCioLtJax1Ri1TSB08gPtY0nUINmbEhs/0Aiym8IIqQ=;
+	s=default; t=1560806673;
+	bh=welHjufBx5KtGae43pwEQmzihyKLa93/yiYwieSvCQI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kylRGlVKrRw4tc1v3brXOk7Jh8IZ7v6XZtY6sFtwidK05eKqMO86eNF9uIC2I74ek
-	 6E+/60aXfK4gJ6N9KfMvkfST9F61lqCrUUofVaIc6EYKEuOKjuSYct1htomW9Il/WD
-	 o62E9cFrWbcW+jzSSEjkqXtLDx+jYiFRdij69yBw=
+	b=cLZURZ/PuBApvuXHMSxWHdiHGkvoYgqjnA89aX7gHTMMq+IJnHr00Z3mhCvUHP7VV
+	 1fzOiiSuBMDY44846pqFZ6Pbc5m53dsg/qNH9zOzTD7AHrzzfNcvppoSD2m4KNAVFB
+	 uFKbr1XLLJx3vyi0DglQrB+3Yw6jHsbSaHQb6l/w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729934AbfFQVY3 (ORCPT
+        id S1729948AbfFQVYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:24:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50072 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:24:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50144 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729920AbfFQVY1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:24:27 -0400
+        id S1728963AbfFQVYa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:24:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4CF872070B;
-        Mon, 17 Jun 2019 21:24:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E54D52063F;
+        Mon, 17 Jun 2019 21:24:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806666;
-        bh=bCioLtJax1Ri1TSB08gPtY0nUINmbEhs/0Aiym8IIqQ=;
+        s=default; t=1560806669;
+        bh=welHjufBx5KtGae43pwEQmzihyKLa93/yiYwieSvCQI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fu8fkcc+wcUcQIP/G0MSYGI4NWFLAaOBSLMcaxtixVaahAT4hKNwToZbarlgG1gS7
-         R4NAizJBzQCLzyH6njm24BIHANw8Wq6uPWbVXYD9ksA9y7OQdPRtNClZg4qt+jM5O3
-         fSDfj+7/20j4qeZgqP1d21evlj8073AHDCsvuzP4=
+        b=NkzD7DpZVHnms1cy8zUkPGlQOYUFRjNzeW5UZ/ffDMqAy5WRD8TfxPmtg+070iBUo
+         7vhBVPZ6xCCASYUHApFz7UWFe3BLZZ4WnBqAICS9lkb+awTAQKP1TjwtA3eVVUtn7K
+         QdSlYPC+5v975Dc7canxuQm1plGVbFMzlQhNcdYc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-        Wu Fangsuo <fangsuowu@asrmicro.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 16/75] mm/vmscan.c: fix trying to reclaim unevictable LRU page
-Date:   Mon, 17 Jun 2019 23:09:27 +0200
-Message-Id: <20190617210753.501172598@linuxfoundation.org>
+        stable@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 17/75] [PATCH] signal/ptrace: Dont leak unitialized kernel memory with PTRACE_PEEK_SIGINFO
+Date:   Mon, 17 Jun 2019 23:09:28 +0200
+Message-Id: <20190617210753.532172735@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -63,79 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Minchan Kim <minchan@kernel.org>
+[ Upstream commit f6e2aa91a46d2bc79fce9b93a988dbe7655c90c0 ]
 
-commit a58f2cef26e1ca44182c8b22f4f4395e702a5795 upstream.
+Recently syzbot in conjunction with KMSAN reported that
+ptrace_peek_siginfo can copy an uninitialized siginfo to userspace.
+Inspecting ptrace_peek_siginfo confirms this.
 
-There was the below bug report from Wu Fangsuo.
+The problem is that off when initialized from args.off can be
+initialized to a negaive value.  At which point the "if (off >= 0)"
+test to see if off became negative fails because off started off
+negative.
 
-On the CMA allocation path, isolate_migratepages_range() could isolate
-unevictable LRU pages and reclaim_clean_page_from_list() can try to
-reclaim them if they are clean file-backed pages.
+Prevent the core problem by adding a variable found that is only true
+if a siginfo is found and copied to a temporary in preparation for
+being copied to userspace.
 
-  page:ffffffbf02f33b40 count:86 mapcount:84 mapping:ffffffc08fa7a810 index:0x24
-  flags: 0x19040c(referenced|uptodate|arch_1|mappedtodisk|unevictable|mlocked)
-  raw: 000000000019040c ffffffc08fa7a810 0000000000000024 0000005600000053
-  raw: ffffffc009b05b20 ffffffc009b05b20 0000000000000000 ffffffc09bf3ee80
-  page dumped because: VM_BUG_ON_PAGE(PageLRU(page) || PageUnevictable(page))
-  page->mem_cgroup:ffffffc09bf3ee80
-  ------------[ cut here ]------------
-  kernel BUG at /home/build/farmland/adroid9.0/kernel/linux/mm/vmscan.c:1350!
-  Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
-  Modules linked in:
-  CPU: 0 PID: 7125 Comm: syz-executor Tainted: G S              4.14.81 #3
-  Hardware name: ASR AQUILAC EVB (DT)
-  task: ffffffc00a54cd00 task.stack: ffffffc009b00000
-  PC is at shrink_page_list+0x1998/0x3240
-  LR is at shrink_page_list+0x1998/0x3240
-  pc : [<ffffff90083a2158>] lr : [<ffffff90083a2158>] pstate: 60400045
-  sp : ffffffc009b05940
-  ..
-     shrink_page_list+0x1998/0x3240
-     reclaim_clean_pages_from_list+0x3c0/0x4f0
-     alloc_contig_range+0x3bc/0x650
-     cma_alloc+0x214/0x668
-     ion_cma_allocate+0x98/0x1d8
-     ion_alloc+0x200/0x7e0
-     ion_ioctl+0x18c/0x378
-     do_vfs_ioctl+0x17c/0x1780
-     SyS_ioctl+0xac/0xc0
+Prevent args.off from being truncated when being assigned to off by
+testing that off is <= the maximum possible value of off.  Convert off
+to an unsigned long so that we should not have to truncate args.off,
+we have well defined overflow behavior so if we add another check we
+won't risk fighting undefined compiler behavior, and so that we have a
+type whose maximum value is easy to test for.
 
-Wu found it's due to commit ad6b67041a45 ("mm: remove SWAP_MLOCK in
-ttu").  Before that, unevictable pages go to cull_mlocked so that we
-can't reach the VM_BUG_ON_PAGE line.
-
-To fix the issue, this patch filters out unevictable LRU pages from the
-reclaim_clean_pages_from_list in CMA.
-
-Link: http://lkml.kernel.org/r/20190524071114.74202-1-minchan@kernel.org
-Fixes: ad6b67041a45 ("mm: remove SWAP_MLOCK in ttu")
-Signed-off-by: Minchan Kim <minchan@kernel.org>
-Reported-by: Wu Fangsuo <fangsuowu@asrmicro.com>
-Debugged-by: Wu Fangsuo <fangsuowu@asrmicro.com>
-Tested-by: Wu Fangsuo <fangsuowu@asrmicro.com>
-Reviewed-by: Andrew Morton <akpm@linux-foundation.org>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Cc: Pankaj Suryawanshi <pankaj.suryawanshi@einfochips.com>
-Cc: <stable@vger.kernel.org>	[4.12+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Andrei Vagin <avagin@gmail.com>
+Cc: stable@vger.kernel.org
+Reported-by: syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com
+Fixes: 84c751bd4aeb ("ptrace: add ability to retrieve signals without removing from a queue (v4)")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/vmscan.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/ptrace.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/mm/vmscan.c
-+++ b/mm/vmscan.c
-@@ -1510,7 +1510,7 @@ unsigned long reclaim_clean_pages_from_l
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index fc0d667f5792..ed33066a9736 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -704,6 +704,10 @@ static int ptrace_peek_siginfo(struct task_struct *child,
+ 	if (arg.nr < 0)
+ 		return -EINVAL;
  
- 	list_for_each_entry_safe(page, next, page_list, lru) {
- 		if (page_is_file_cache(page) && !PageDirty(page) &&
--		    !__PageMovable(page)) {
-+		    !__PageMovable(page) && !PageUnevictable(page)) {
- 			ClearPageActive(page);
- 			list_move(&page->lru, &clean_pages);
++	/* Ensure arg.off fits in an unsigned long */
++	if (arg.off > ULONG_MAX)
++		return 0;
++
+ 	if (arg.flags & PTRACE_PEEKSIGINFO_SHARED)
+ 		pending = &child->signal->shared_pending;
+ 	else
+@@ -711,18 +715,20 @@ static int ptrace_peek_siginfo(struct task_struct *child,
+ 
+ 	for (i = 0; i < arg.nr; ) {
+ 		siginfo_t info;
+-		s32 off = arg.off + i;
++		unsigned long off = arg.off + i;
++		bool found = false;
+ 
+ 		spin_lock_irq(&child->sighand->siglock);
+ 		list_for_each_entry(q, &pending->list, list) {
+ 			if (!off--) {
++				found = true;
+ 				copy_siginfo(&info, &q->info);
+ 				break;
+ 			}
  		}
+ 		spin_unlock_irq(&child->sighand->siglock);
+ 
+-		if (off >= 0) /* beyond the end of the list */
++		if (!found) /* beyond the end of the list */
+ 			break;
+ 
+ #ifdef CONFIG_COMPAT
+-- 
+2.20.1
+
 
 
