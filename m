@@ -2,90 +2,86 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31868C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A31EBC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:22:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065FA2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E592084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:22:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfFQQWh (ORCPT
+        id S1728288AbfFQQWs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:22:37 -0400
-Received: from foss.arm.com ([217.140.110.172]:55450 "EHLO foss.arm.com"
+        Mon, 17 Jun 2019 12:22:48 -0400
+Received: from foss.arm.com ([217.140.110.172]:55474 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725863AbfFQQWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:22:37 -0400
+        id S1725863AbfFQQWr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:22:47 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F004A28;
-        Mon, 17 Jun 2019 09:22:36 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B69B33F718;
-        Mon, 17 Jun 2019 09:22:35 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 17:22:33 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Zhangshaokun <zhangshaokun@hisilicon.com>
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 239F928;
+        Mon, 17 Jun 2019 09:22:47 -0700 (PDT)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.51])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DD4E33F718;
+        Mon, 17 Jun 2019 09:22:45 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 17:22:43 +0100
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
         linux-kernel@vger.kernel.org,
-        Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>,
-        Zhang Lei <zhang.lei@jp.fujitsu.com>
-Subject: Re: [PATCH v2] arm64/mm: Correct the cache line size warning with
- non coherent device
-Message-ID: <20190617162233.GB34565@arrakis.emea.arm.com>
-References: <20190614131141.4428-1-msys.mizuma@gmail.com>
- <aa445f8f-2576-4f78-a64e-1cde6a2f9593@hisilicon.com>
- <20190617104555.GA1367@arrakis.emea.arm.com>
- <7e567399-6f3d-b416-6636-c9f2f37ea407@hisilicon.com>
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Quentin Perret <quentin.perret@arm.com>
+Subject: Re: [PATCH v3 0/6] sched: Add new tracepoints required for EAS
+ testing
+Message-ID: <20190617162243.4gfzi7bpwbecv4xz@e107158-lin.cambridge.arm.com>
+References: <20190604111459.2862-1-qais.yousef@arm.com>
+ <20190617125122.ph4wb7mcvfjwpdce@e107158-lin.cambridge.arm.com>
+ <20190617155549.GI3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <7e567399-6f3d-b416-6636-c9f2f37ea407@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190617155549.GI3436@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 07:00:34PM +0800, Zhangshaokun wrote:
-> On 2019/6/17 18:45, Catalin Marinas wrote:
-> > On Sat, Jun 15, 2019 at 10:44:33AM +0800, Zhangshaokun wrote:
-> >> On 2019/6/14 21:11, Masayoshi Mizuma wrote:
-> >>> diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-> >>> index 1669618db08a..379589dc7113 100644
-> >>> --- a/arch/arm64/mm/dma-mapping.c
-> >>> +++ b/arch/arm64/mm/dma-mapping.c
-> >>> @@ -38,10 +38,6 @@ void arch_dma_prep_coherent(struct page *page, size_t size)
-> >>>  
-> >>>  static int __init arm64_dma_init(void)
-> >>>  {
-> >>> -	WARN_TAINT(ARCH_DMA_MINALIGN < cache_line_size(),
-> >>> -		   TAINT_CPU_OUT_OF_SPEC,
-> >>> -		   "ARCH_DMA_MINALIGN smaller than CTR_EL0.CWG (%d < %d)",
-> >>> -		   ARCH_DMA_MINALIGN, cache_line_size());
-> >>>  	return dma_atomic_pool_init(GFP_DMA32, __pgprot(PROT_NORMAL_NC));
-> >>>  }
-> >>>  arch_initcall(arm64_dma_init);
-> >>> @@ -56,7 +52,17 @@ void arch_teardown_dma_ops(struct device *dev)
-> >>>  void arch_setup_dma_ops(struct device *dev, u64 dma_base, u64 size,
-> >>>  			const struct iommu_ops *iommu, bool coherent)
-> >>>  {
-> >>> +	int cls = cache_line_size_of_cpu();
-> >>
-> >> whether we need this local variable, how about use cache_line_size_of_cpu
-> >> directly in WARN_TAINT just like before.
+On 06/17/19 17:55, Peter Zijlstra wrote:
+> On Mon, Jun 17, 2019 at 01:51:23PM +0100, Qais Yousef wrote:
+> > Hi Peter
 > > 
-> > The reason being?
+> > On 06/04/19 12:14, Qais Yousef wrote:
+> > > Changes in v3:
+> > > 	- Split pelt_rq TP into pelt_cfs, pelt_rq, pelt_dl and pelt_irq
+> > > 	- Replace the fatty preprocessing wrappers with exported helper
+> > > 	  functions to access data in unexported structures.
+> > > 	- Remove the now unnecessary headers that were introduced in the
+> > > 	  previous versions.
+> > > 	- Postfix the tracepoints with '_tp' to make them standout more in the
+> > > 	  code as bare tracepoints with no events associated.
+> > > 	- Updated the example module in [2]
+> > > 		- It demonstrates now how to convert the tracepoints into trace
+> > > 		  events that extend the sched events subsystem in tracefs.
+> > 
+> > Does this look okay now? If you have further comments please let me know so
+> > I can address them in time in hope it'd make it to the next merge window.
 > 
-> Since it is inline function,  maybe it is unnecessary, it is trivial.
+> Picked them up (with some minor edits). I feel there is far too much
 
-OTOH, you end up with two reads from the CTR_EL0 register.
+Thanks!
 
--- 
-Catalin
+> #ifdef in patch #2, but I couldn't quickly come up with anything much
+> saner either.
+
+We can protect the whole lot with #ifdef CONFIG_SMP? It means the external
+module will fail to compile for UP configurations - which is fine I think since
+we're just returning NULL anyway..
+
+--
+Qais Yousef
