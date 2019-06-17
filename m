@@ -2,153 +2,75 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B35CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF524C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F8D22063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807141;
-	bh=aH+v0/h2mKA1dFIi4orLVli+u2QNbOUpNKANA2fgTu4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k5Keo0+OLq/Pyqp7bmAzpm0aK5M0Ydmle+xO5wYGzqunWkxdinWuJolti9TzB3fuv
-	 fk5LsXCz23T/DNDWSaFxNWs2eLCGaDQqCm3LemRmF4Qh1886uKmCeQz9SYtWbYL/wT
-	 Cea5YPfGxgneyaX3Y//Um6SOeJkqznJf1IYLrFaI=
+	by mail.kernel.org (Postfix) with ESMTP id AFCFB204FD
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:32:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbfFQVcT (ORCPT
+        id S1730288AbfFQVcW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 17 Jun 2019 17:32:22 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:33662 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729121AbfFQVcT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 17 Jun 2019 17:32:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730434AbfFQV1n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:27:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2100E20673;
-        Mon, 17 Jun 2019 21:27:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806862;
-        bh=aH+v0/h2mKA1dFIi4orLVli+u2QNbOUpNKANA2fgTu4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CseZQbs2T2vL6v1dFLkTVZb3FZhVIsYF4LZJ94PDxa5mfWM+uVBEuIFD3d6hT6vdF
-         Joy+lCFL+coBX2yxpnqbTu0nJm7MWDfbcpoN7DsXh4JpdJQtEjVxQYi/lzlIVmt9ng
-         LCAEmIjurNZJ185V4YU3FrDLSorEL/VOFSK2vvvg=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Baoquan He <bhe@redhat.com>,
-        Borislav Petkov <bp@suse.de>,
-        Kees Cook <keescook@chromium.org>,
-        "Kirill A. Shutemov" <kirill@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@kernel.org>,
-        kirill.shutemov@linux.intel.com,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>
-Subject: [PATCH 4.19 71/75] x86/mm/KASLR: Compute the size of the vmemmap section properly
-Date:   Mon, 17 Jun 2019 23:10:22 +0200
-Message-Id: <20190617210755.997314413@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
-References: <20190617210752.799453599@linuxfoundation.org>
-User-Agent: quilt/0.66
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hczEZ-0008Fy-L0; Mon, 17 Jun 2019 21:32:11 +0000
+Date:   Mon, 17 Jun 2019 22:32:11 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     torvalds@linux-foundation.org, ebiederm@xmission.com,
+        linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v1] fs/namespace: fix unprivileged mount propagation
+Message-ID: <20190617213211.GV17978@ZenIV.linux.org.uk>
+References: <20190617212214.29868-1-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617212214.29868-1-christian@brauner.io>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baoquan He <bhe@redhat.com>
+On Mon, Jun 17, 2019 at 11:22:14PM +0200, Christian Brauner wrote:
+> When propagating mounts across mount namespaces owned by different user
+> namespaces it is not possible anymore to move or umount the mount in the
+> less privileged mount namespace.
+> 
+> Here is a reproducer:
+> 
+>   sudo mount -t tmpfs tmpfs /mnt
+>   sudo --make-rshared /mnt
+> 
+>   # create unprivileged user + mount namespace and preserve propagation
+>   unshare -U -m --map-root --propagation=unchanged
+> 
+>   # now change back to the original mount namespace in another terminal:
+>   sudo mkdir /mnt/aaa
+>   sudo mount -t tmpfs tmpfs /mnt/aaa
+> 
+>   # now in the unprivileged user + mount namespace
+>   mount --move /mnt/aaa /opt
+> 
+> Unfortunately, this is a pretty big deal for userspace since this is
+> e.g. used to inject mounts into running unprivileged containers.
+> So this regression really needs to go away rather quickly.
+> 
+> The problem is that a recent change falsely locked the root of the newly
+> added mounts by setting MNT_LOCKED. Fix this by only locking the mounts
+> on copy_mnt_ns() and not when adding a new mount.
 
-commit 00e5a2bbcc31d5fea853f8daeba0f06c1c88c3ff upstream.
+Applied.  Linus, if you want to apply it directly, feel free to add my
+Acked-by.  Alternatively, wait until tonight and I'll send a pull request
+with that (as well as missing mntget() in fsmount(2) fix, at least).
 
-The size of the vmemmap section is hardcoded to 1 TB to support the
-maximum amount of system RAM in 4-level paging mode - 64 TB.
-
-However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
-the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
-64 TB of vmemmap area is needed:
-
-  4 * 1000^5 PB / 4096 bytes page size * 64 bytes per page struct / 1000^4 TB = 62.5 TB.
-
-This hardcoding may cause vmemmap to corrupt the following
-cpu_entry_area section, if KASLR puts vmemmap very close to it and the
-actual vmemmap size is bigger than 1 TB.
-
-So calculate the actual size of the vmemmap region needed and then align
-it up to 1 TB boundary.
-
-In 4-level paging mode it is always 1 TB. In 5-level it's adjusted on
-demand. The current code reserves 0.5 PB for vmemmap on 5-level. With
-this change, the space can be saved and thus used to increase entropy
-for the randomization.
-
- [ bp: Spell out how the 64 TB needed for vmemmap is computed and massage commit
-   message. ]
-
-Fixes: eedb92abb9bb ("x86/mm: Make virtual memory layout dynamic for CONFIG_X86_5LEVEL=y")
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Kees Cook <keescook@chromium.org>
-Acked-by: Kirill A. Shutemov <kirill@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: kirill.shutemov@linux.intel.com
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable <stable@vger.kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190523025744.3756-1-bhe@redhat.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/x86/mm/kaslr.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
---- a/arch/x86/mm/kaslr.c
-+++ b/arch/x86/mm/kaslr.c
-@@ -51,7 +51,7 @@ static __initdata struct kaslr_memory_re
- } kaslr_regions[] = {
- 	{ &page_offset_base, 0 },
- 	{ &vmalloc_base, 0 },
--	{ &vmemmap_base, 1 },
-+	{ &vmemmap_base, 0 },
- };
- 
- /* Get size in bytes used by the memory region */
-@@ -77,6 +77,7 @@ void __init kernel_randomize_memory(void
- 	unsigned long rand, memory_tb;
- 	struct rnd_state rand_state;
- 	unsigned long remain_entropy;
-+	unsigned long vmemmap_size;
- 
- 	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
- 	vaddr = vaddr_start;
-@@ -108,6 +109,14 @@ void __init kernel_randomize_memory(void
- 	if (memory_tb < kaslr_regions[0].size_tb)
- 		kaslr_regions[0].size_tb = memory_tb;
- 
-+	/*
-+	 * Calculate the vmemmap region size in TBs, aligned to a TB
-+	 * boundary.
-+	 */
-+	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
-+			sizeof(struct page);
-+	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
-+
- 	/* Calculate entropy available between regions */
- 	remain_entropy = vaddr_end - vaddr_start;
- 	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
-
-
+Al, down to ~3Kmail in the pile...
