@@ -2,120 +2,148 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB20EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A4CAC46477
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:20:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF35620657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 742EC208CB
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:20:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560792018;
+	bh=6deeDpyaXOI01fNb+oVFs6vLcv98dqXp2Sct02Xm+C4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aa3VawVOaiIv+z2o4Odb8V00PKY8OYUAi9aO6XXJn+rBaP87yTvBrWVnZ4ciQ44NJ
+	 GWrOndfrQyOal5MM/Pstlc4Vjmh9lX1zBbHFI76l3jyOOJh6zIE1bFHp/Od+NA4mIv
+	 EUuMYM5h3awdvtu7KCn/8LAGxoOy3aHGVCC5OVDw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728254AbfFQRSW (ORCPT
+        id S1727839AbfFQRUR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 13:18:22 -0400
-Received: from foss.arm.com ([217.140.110.172]:57064 "EHLO foss.arm.com"
+        Mon, 17 Jun 2019 13:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56732 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726005AbfFQRSV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:18:21 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A9B7128;
-        Mon, 17 Jun 2019 10:18:20 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 08B543F246;
-        Mon, 17 Jun 2019 10:18:15 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 18:18:13 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Evgenii Stepanov <eugenis@google.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control
- the tagged user addresses ABI
-Message-ID: <20190617171813.GC34565@arrakis.emea.arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
- <20190617135636.GC1367@arrakis.emea.arm.com>
- <CAFKCwrjJ+0ijNKa3ioOP7xa91QmZU0NhkO=tNC-Q_ThC69vTug@mail.gmail.com>
+        id S1725995AbfFQRUQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:20:16 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B0AD208C0;
+        Mon, 17 Jun 2019 17:20:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560792015;
+        bh=6deeDpyaXOI01fNb+oVFs6vLcv98dqXp2Sct02Xm+C4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=vHlc/STIdf7nFcb1HMpHP6yU7WDmKK3QoYe2s8H1IbeGwKB0rJ1WjbYJRT48QXB24
+         pB3Aq1RvY7/eNbBLnGArcxtzyGGya+1H/1ZlJe5XE7WsCOhzQmjpEq8cx6uLYe8on5
+         0cI0lsVeVjI3R4GDBBa7QoEmAQvYpCWOOdmt0+vY=
+Date:   Mon, 17 Jun 2019 10:20:10 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        Eric Biggers <ebiggers@google.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Vitaly Chikunov <vt@altlinux.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] crypto: testmgr - reduce stack usage in fuzzers
+Message-ID: <20190617172008.GA92263@gmail.com>
+References: <20190617132343.2678836-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFKCwrjJ+0ijNKa3ioOP7xa91QmZU0NhkO=tNC-Q_ThC69vTug@mail.gmail.com>
+In-Reply-To: <20190617132343.2678836-1-arnd@arndb.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 09:57:36AM -0700, Evgenii Stepanov wrote:
-> On Mon, Jun 17, 2019 at 6:56 AM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Wed, Jun 12, 2019 at 01:43:20PM +0200, Andrey Konovalov wrote:
-> > > From: Catalin Marinas <catalin.marinas@arm.com>
-> > >
-> > > It is not desirable to relax the ABI to allow tagged user addresses into
-> > > the kernel indiscriminately. This patch introduces a prctl() interface
-> > > for enabling or disabling the tagged ABI with a global sysctl control
-> > > for preventing applications from enabling the relaxed ABI (meant for
-> > > testing user-space prctl() return error checking without reconfiguring
-> > > the kernel). The ABI properties are inherited by threads of the same
-> > > application and fork()'ed children but cleared on execve().
-> > >
-> > > The PR_SET_TAGGED_ADDR_CTRL will be expanded in the future to handle
-> > > MTE-specific settings like imprecise vs precise exceptions.
-> > >
-> > > Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> >
-> > A question for the user-space folk: if an application opts in to this
-> > ABI, would you want the sigcontext.fault_address and/or siginfo.si_addr
-> > to contain the tag? We currently clear it early in the arm64 entry.S but
-> > we could find a way to pass it down if needed.
+On Mon, Jun 17, 2019 at 03:23:02PM +0200, Arnd Bergmann wrote:
+> On arm32, we get warnings about high stack usage in some of the functions:
 > 
-> For HWASan this would not be useful because we instrument memory
-> accesses with explicit checks anyway. For MTE, on the other hand, it
-> would be very convenient to know the fault address tag without
-> disassembling the code.
+> crypto/testmgr.c:2269:12: error: stack frame size of 1032 bytes in function 'alg_test_aead' [-Werror,-Wframe-larger-than=]
+> static int alg_test_aead(const struct alg_test_desc *desc, const char *driver,
+>            ^
+> crypto/testmgr.c:1693:12: error: stack frame size of 1312 bytes in function '__alg_test_hash' [-Werror,-Wframe-larger-than=]
+> static int __alg_test_hash(const struct hash_testvec *vecs,
+>            ^
+> 
+> On of the larger objects on the stack here is struct testvec_config, so
+> change that to dynamic allocation.
+> 
+> Fixes: 40153b10d91c ("crypto: testmgr - fuzz AEADs against their generic implementation")
+> Fixes: d435e10e67be ("crypto: testmgr - fuzz skciphers against their generic implementation")
+> Fixes: 9a8a6b3f0950 ("crypto: testmgr - fuzz hashes against their generic implementation")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> I only compile-tested this, and it's not completely trivial, so please
+> review carefully.
+> ---
+>  crypto/testmgr.c | 61 +++++++++++++++++++++++++++++++++++-------------
+>  1 file changed, 45 insertions(+), 16 deletions(-)
+> 
+> diff --git a/crypto/testmgr.c b/crypto/testmgr.c
+> index 6c28055d41ca..7928296cdcb3 100644
+> --- a/crypto/testmgr.c
+> +++ b/crypto/testmgr.c
+> @@ -1503,13 +1503,15 @@ static int test_hash_vec(const char *driver, const struct hash_testvec *vec,
+>   * Generate a hash test vector from the given implementation.
+>   * Assumes the buffers in 'vec' were already allocated.
+>   */
+> -static void generate_random_hash_testvec(struct crypto_shash *tfm,
+> +static int generate_random_hash_testvec(struct crypto_shash *tfm,
+>  					 struct hash_testvec *vec,
+>  					 unsigned int maxkeysize,
+>  					 unsigned int maxdatasize,
+>  					 char *name, size_t max_namelen)
+>  {
+> -	SHASH_DESC_ON_STACK(desc, tfm);
+> +	struct shash_desc *desc = kmalloc(sizeof(*desc) + crypto_shash_descsize(tfm), GFP_KERNEL);
+> +	if (!desc)
+> +		return -ENOMEM;
+>  
+>  	/* Data */
+>  	vec->psize = generate_random_length(maxdatasize);
+> @@ -1541,6 +1543,10 @@ static void generate_random_hash_testvec(struct crypto_shash *tfm,
+>  done:
+>  	snprintf(name, max_namelen, "\"random: psize=%u ksize=%u\"",
+>  		 vec->psize, vec->ksize);
+> +
+> +	kfree(desc);
+> +
+> +	return 0;
+>  }
 
-I could as this differently: does anything break if, once the user
-opts in to TBI, fault_address and/or si_addr have non-zero top byte?
+Instead of allocating the shash_desc here, can you allocate it in
+test_hash_vs_generic_impl() and call it 'generic_desc'?  Then it would match
+test_skcipher_vs_generic_impl() and test_aead_vs_generic_impl() which already
+dynamically allocate their skcipher_request and aead_request, respectively.
 
-Alternatively, we could present the original FAR_EL1 register as a
-separate field as we do with ESR_EL1, independently of whether the user
-opted in to TBI or not.
+>  
+>  /*
+> @@ -1565,7 +1571,7 @@ static int test_hash_vs_generic_impl(const char *driver,
+>  	unsigned int i;
+>  	struct hash_testvec vec = { 0 };
+>  	char vec_name[64];
+> -	struct testvec_config cfg;
+> +	struct testvec_config *cfg;
+>  	char cfgname[TESTVEC_CONFIG_NAMELEN];
+>  	int err;
+>  
 
--- 
-Catalin
+Otherwise I guess this patch is fine for now, though there's still a lot of
+stuff with nontrivial size on the stack (cfgname, vec_name, _generic_driver,
+hash_testvec, plus the stuff in test_hash_vec_cfg).  There's also still a
+testvec_config on the stack in test_{hash,skcipher,aead}_vec(); I assume you
+didn't see a warning there only because it wasn't in combination with as much
+other stuff on the stack.
+
+I should probably have a go at refactoring this code to pack up most of this
+stuff in *_params structures, which would then be dynamically allocated much
+more easily.
+
+- Eric
