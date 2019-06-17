@@ -2,98 +2,123 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D15C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F8AC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57AF0208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDBD52084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:20:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="JKaeP9Ev"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727859AbfFQMUy (ORCPT
+        id S1726781AbfFQMUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:20:54 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:43602 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725973AbfFQMUx (ORCPT
+        Mon, 17 Jun 2019 08:20:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59160 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725906AbfFQMUL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:20:53 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hcqcr-0006q9-JE; Mon, 17 Jun 2019 14:20:41 +0200
-Date:   Mon, 17 Jun 2019 14:20:40 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Florian Weimer <fweimer@redhat.com>
-cc:     Dave Martin <Dave.Martin@arm.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
- ELF file
-In-Reply-To: <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
-Message-ID: <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>        <20190606200646.3951-23-yu-cheng.yu@intel.com>        <20190607180115.GJ28398@e103592.cambridge.arm.com>        <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>       
- <87lfy9cq04.fsf@oldenburg2.str.redhat.com>        <20190611114109.GN28398@e103592.cambridge.arm.com>        <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>        <20190612093238.GQ28398@e103592.cambridge.arm.com>
- <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 17 Jun 2019 08:20:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
+        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
+        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=EgU5lGgALUASevuDqm6D+3fpiqvPjFDOViczDZXWl1A=; b=JKaeP9Ev7LiZHvrRPLqNumCtMl
+        dquHp4cwMR0898RYkYJA8f51GaGPh3BxiQM89zTUVNPybDX6jDLLRDW5CqVLksUSOuWUa+cvlQ8mk
+        w9+KucND1Falz8nRMx1eEiY/2FPE6GUXvE3fUrbXkfvZtktVAvZJfKbjk10t1X2wwp3HNlKjVsbpZ
+        nMr9nNh18ZxuzY8Ik4oSxBPB7725XgTyT6ZIEblhmsG12E/PRS/MYGjE99RsOlElZePtDTxT6AaKH
+        G9uBZDtdvoB23crxPIQyhDLWCvDkzrjlIZ2DeF0DZ3caY8IZmNvK/38nJ2OM3XrG9DtbudCa8IxV/
+        cZ8Z0C4w==;
+Received: from clnet-p19-102.ikbnet.co.at ([83.175.77.102] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hcqcI-00047i-MP; Mon, 17 Jun 2019 12:20:07 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "Martin K . Petersen" <martin.petersen@oracle.com>
+Cc:     Sagi Grimberg <sagi@grimberg.me>, Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-rdma@vger.kernel.org, linux-scsi@vger.kernel.org,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/8] scsi: add a host / host template field for the virt boundary
+Date:   Mon, 17 Jun 2019 14:19:53 +0200
+Message-Id: <20190617122000.22181-2-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190617122000.22181-1-hch@lst.de>
+References: <20190617122000.22181-1-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Florian Weimer wrote:
-> * Dave Martin:
-> > On Tue, Jun 11, 2019 at 12:31:34PM -0700, Yu-cheng Yu wrote:
-> >> We can probably check PT_GNU_PROPERTY first, and fallback (based on ld-linux
-> >> version?) to PT_NOTE scanning?
-> >
-> > For arm64, we can check for PT_GNU_PROPERTY and then give up
-> > unconditionally.
-> >
-> > For x86, we would fall back to PT_NOTE scanning, but this will add a bit
-> > of cost to binaries that don't have NT_GNU_PROPERTY_TYPE_0.  The ld.so
-> > version doesn't tell you what ELF ABI a given executable conforms to.
-> >
-> > Since this sounds like it's largely a distro-specific issue, maybe there
-> > could be a Kconfig option to turn the fallback PT_NOTE scanning on?
-> 
-> I'm worried that this causes interop issues similarly to what we see
-> with VSYSCALL today.  If we need both and a way to disable it, it should
-> be something like a personality flag which can be configured for each
-> process tree separately.  Ideally, we'd settle on one correct approach
-> (i.e., either always process both, or only process PT_GNU_PROPERTY) and
-> enforce that.
+This allows drivers setting it up easily instead of branching out to
+block layer calls in slave_alloc, and ensures the upgraded
+max_segment_size setting gets picked up by the DMA layer.
 
-Chose one and only the one which makes technically sense and is not some
-horrible vehicle.
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/scsi/hosts.c     | 3 +++
+ drivers/scsi/scsi_lib.c  | 3 ++-
+ include/scsi/scsi_host.h | 3 +++
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
-Everytime we did those 'oh we need to make x fly workarounds' we regretted
-it sooner than later.
+diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c
+index ff0d8c6a8d0c..55522b7162d3 100644
+--- a/drivers/scsi/hosts.c
++++ b/drivers/scsi/hosts.c
+@@ -462,6 +462,9 @@ struct Scsi_Host *scsi_host_alloc(struct scsi_host_template *sht, int privsize)
+ 	else
+ 		shost->dma_boundary = 0xffffffff;
+ 
++	if (sht->virt_boundary_mask)
++		shost->virt_boundary_mask = sht->virt_boundary_mask;
++
+ 	device_initialize(&shost->shost_gendev);
+ 	dev_set_name(&shost->shost_gendev, "host%d", shost->host_no);
+ 	shost->shost_gendev.bus = &scsi_bus_type;
+diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+index 65d0a10c76ad..d333bb6b1c59 100644
+--- a/drivers/scsi/scsi_lib.c
++++ b/drivers/scsi/scsi_lib.c
+@@ -1775,7 +1775,8 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
+ 	dma_set_seg_boundary(dev, shost->dma_boundary);
+ 
+ 	blk_queue_max_segment_size(q, shost->max_segment_size);
+-	dma_set_max_seg_size(dev, shost->max_segment_size);
++	blk_queue_virt_boundary(q, shost->virt_boundary_mask);
++	dma_set_max_seg_size(dev, queue_max_segment_size(q));
+ 
+ 	/*
+ 	 * Set a reasonable default alignment:  The larger of 32-byte (dword),
+diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+index a5fcdad4a03e..cc139dbd71e5 100644
+--- a/include/scsi/scsi_host.h
++++ b/include/scsi/scsi_host.h
+@@ -369,6 +369,8 @@ struct scsi_host_template {
+ 	 */
+ 	unsigned long dma_boundary;
+ 
++	unsigned long virt_boundary_mask;
++
+ 	/*
+ 	 * This specifies "machine infinity" for host templates which don't
+ 	 * limit the transfer size.  Note this limit represents an absolute
+@@ -587,6 +589,7 @@ struct Scsi_Host {
+ 	unsigned int max_sectors;
+ 	unsigned int max_segment_size;
+ 	unsigned long dma_boundary;
++	unsigned long virt_boundary_mask;
+ 	/*
+ 	 * In scsi-mq mode, the number of hardware queues supported by the LLD.
+ 	 *
+-- 
+2.20.1
 
-Thanks,
-
-	tglx
