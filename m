@@ -2,67 +2,96 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E850AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42DA4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D6B20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AC012084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:41:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728780AbfFQSlv (ORCPT
+        id S1728793AbfFQSlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:41:51 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:34028 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727409AbfFQSln (ORCPT
+        Mon, 17 Jun 2019 14:41:52 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:33549 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfFQSlo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:41:43 -0400
-Received: from Internal Mail-Server by MTLPINE2 (envelope-from sramani@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 17 Jun 2019 21:41:41 +0300
-Received: from farm-0002.mtbu.labs.mlnx (farm-0002.mtbu.labs.mlnx [10.15.2.32])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x5HIfeLY003389;
-        Mon, 17 Jun 2019 14:41:40 -0400
-Received: (from sramani@localhost)
-        by farm-0002.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x5HIfd96011255;
-        Mon, 17 Jun 2019 14:41:39 -0400
-From:   Shravan Kumar Ramani <sramani@mellanox.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        James Morse <james.morse@arm.com>
-Cc:     Shravan Kumar Ramani <sramani@mellanox.com>,
-        Liming Sun <lsun@mellanox.com>, linux-edac@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/1] EDAC, mellanox: Add ECC support for BlueField DDR4
-Date:   Mon, 17 Jun 2019 14:41:15 -0400
-Message-Id: <cover.1560786127.git.sramani@mellanox.com>
-X-Mailer: git-send-email 2.1.2
+        Mon, 17 Jun 2019 14:41:44 -0400
+Received: from orion.localdomain ([77.2.173.233]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1My3AX-1iYB1C1P6F-00zTbF; Mon, 17 Jun 2019 20:41:29 +0200
+From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
+To:     linux-kernel@vger.kernel.org
+Cc:     thloh@altera.com, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, andriy.shevchenko@linux.intel.com,
+        shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
+        festevam@gmail.com, linux-imx@nxp.com, grygorii.strashko@ti.com,
+        ssantosh@kernel.org, khilman@kernel.org, mcoquelin.stm32@gmail.com,
+        alexandre.torgue@st.com, linux-gpio@vger.kernel.org,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        patches@opensource.cirrus.com
+Subject: [PATCH 06/30] drivers: gpio: lantiq: use subsys_platform_driver()
+Date:   Mon, 17 Jun 2019 20:40:47 +0200
+Message-Id: <1560796871-18560-6-git-send-email-info@metux.net>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1560796871-18560-1-git-send-email-info@metux.net>
+References: <1560796871-18560-1-git-send-email-info@metux.net>
+X-Provags-ID: V03:K1:GNYirr7jJEU69T27OYUit3DCM2eQ50qRxRzE0yyrJ7VYcGGI0FQ
+ tSb1LqO5HXvshCPpgNlHKsFwE9pjMgdLUghNSIZGWhdBKZUFPs/UX2lVoKqNPJd4OOOCyuu
+ QvH5XsWZrprwyKtNza7TVZrjRyaVDmsHXpdFouFyS4/1Wvo2ed3bxgLaZplkQlTvmOtZrTR
+ 2owe9fm1A5TvMl0zxZquw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Mw4fZ2uihQA=:FMr4oJjRvghnAVG6L0uOCz
+ gQKTXO9RJ/eO3egisxNa+n460m7XGrsy+n9BK2yOXzE1H9RJuHD5SXncy5WXGIVkXK9/Zq56A
+ K6mhJCiCGm9z7uwg5CoZuZlgPnEKs+JByB2yI8eRgaJAFS3+qRGaZA/qrI+cjxcnXDxsXlIEi
+ 9bnOXrB0DQQsDhzFGf56uyicfyUjzNjkiyo+9CmGQZWsVytUtbIVQaq2TH5tDIgpLv55EbqbA
+ QB/iL3neyNeXqq4Ec8t6Oo0KUjZ2VAIXxlwHd7pJW6g+558sFg9+hYSFfD5eCbxbdDl31E9tT
+ 0IqxMJUOSds2Gyn1e50sx1nrtvQQQVaJRdxsHPdLgSFkHsreL3GXAlps88Ep+782300yWXsh1
+ 6BlhEhIny9fqeDz7PsHLNOgu06SRaIXTaOnw+jOfeG72GhWDyN1bM1Xiwk1nrxgmXVfWhvRdL
+ Qbg/1GIOXfNTB5dsEvooRieWO2vCM6Fp2CCFXkaontZ49YbOt450n5IxrvIcu+7bd6on+lGhF
+ d7sfcpXac9mfeI5FD6SK0xYrv2/vPzlajvGyX0h/laQzkYSbwJEE3RB8hi6AGsWPTY1ihS4xR
+ JjqwebsqEipXA9wneLyd4B2flndTmtIkWkoX9DY2gR5sWCT02pUTiBZMpiTy28uNYY3UsT7B3
+ VgLPCwiPkvqG2XuGdFYQJsI0PFD5QJUqFqlOhjOuTd2l2QI4+3Zc8Y3+O1gML9V6iy/2C9tnh
+ nyu4lDFtepgVaQxIPWB6M3vZ+Qu7DFcdxNIuPw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes since v4:
-Shorten long macro names.
+From: Enrico Weigelt <info@metux.net>
 
-Changes since v3:
-Replace bitfields with shifts and masks.
-Make use of SZ_ and PAGE_ macros.
-Read DIMM count from the ACPI table instead of hard-coding the info in
-the driver.
+Reduce driver init boilerplate by using the new
+subsys_platform_driver() macro.
 
-Shravan Kumar Ramani (1):
-  EDAC, mellanox: Add ECC support for BlueField DDR4
+Signed-off-by: Enrico Weigelt <info@metux.net>
+---
+ drivers/gpio/gpio-mm-lantiq.c | 14 +-------------
+ 1 file changed, 1 insertion(+), 13 deletions(-)
 
- MAINTAINERS                   |   5 +
- drivers/edac/Kconfig          |   7 +
- drivers/edac/Makefile         |   1 +
- drivers/edac/bluefield_edac.c | 366 ++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 379 insertions(+)
- create mode 100644 drivers/edac/bluefield_edac.c
-
+diff --git a/drivers/gpio/gpio-mm-lantiq.c b/drivers/gpio/gpio-mm-lantiq.c
+index b0754fe..3e5ef46 100644
+--- a/drivers/gpio/gpio-mm-lantiq.c
++++ b/drivers/gpio/gpio-mm-lantiq.c
+@@ -146,16 +146,4 @@ static int ltq_mm_remove(struct platform_device *pdev)
+ 		.of_match_table = ltq_mm_match,
+ 	},
+ };
+-
+-static int __init ltq_mm_init(void)
+-{
+-	return platform_driver_register(&ltq_mm_driver);
+-}
+-
+-subsys_initcall(ltq_mm_init);
+-
+-static void __exit ltq_mm_exit(void)
+-{
+-	platform_driver_unregister(&ltq_mm_driver);
+-}
+-module_exit(ltq_mm_exit);
++subsys_platform_driver(ltq_mm_driver);
 -- 
-2.1.2
+1.9.1
 
