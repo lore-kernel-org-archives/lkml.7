@@ -2,89 +2,193 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D231C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:02:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9186DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:03:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403AC20863
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:02:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5BC2520863
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:03:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j3Sqrjt9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727990AbfFQSCx (ORCPT
+        id S1726668AbfFQSDs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:02:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50144 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfFQSCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:02:52 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CC29781DFE;
-        Mon, 17 Jun 2019 18:02:46 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-59.ams2.redhat.com [10.36.116.59])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4D96978401;
-        Mon, 17 Jun 2019 18:02:41 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Joseph Myers <joseph@codesourcery.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Paul Burton <pburton@wavecomp.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] uapi: avoid namespace conflict in linux/posix_types.h
-References: <20190319165123.3967889-1-arnd@arndb.de>
-        <alpine.DEB.2.21.1905072249570.19308@digraph.polyomino.org.uk>
-        <87tvd2j9ye.fsf@oldenburg2.str.redhat.com>
-        <CAHk-=wio1e4=WUUwmo-Ph55BEgH_X3oXzBpvPyLQg2TxzfGYuw@mail.gmail.com>
-        <871s05fd8o.fsf@oldenburg2.str.redhat.com>
-        <CAHk-=wg4ijSoPq-w7ct_VuZvgHx+tUv_QX-We-62dEwK+AOf2w@mail.gmail.com>
-        <87sgs8igfj.fsf@oldenburg2.str.redhat.com>
-        <CAHk-=wjCwnk0nfgCcMYqqX6o9bBrutDtut_fzZ-2VwiZR1y4kw@mail.gmail.com>
-Date:   Mon, 17 Jun 2019 20:02:39 +0200
-In-Reply-To: <CAHk-=wjCwnk0nfgCcMYqqX6o9bBrutDtut_fzZ-2VwiZR1y4kw@mail.gmail.com>
-        (Linus Torvalds's message of "Mon, 17 Jun 2019 10:49:44 -0700")
-Message-ID: <87k1dkdr9c.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Mon, 17 Jun 2019 14:03:48 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:39652 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQSDr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 14:03:47 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z23so341192wma.4;
+        Mon, 17 Jun 2019 11:03:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=TFiyw5H8UbmEqnzN9VYliPx04axpYuGQa7izdnFg+to=;
+        b=j3Sqrjt9VcWGhATppVKk55Z+8DsBWwqBhHtGf9s0Tw1GsII7+Jn1k2CVfd/UmlQouD
+         9NGF1vDnTX/pFUgM+yq0nBUQswEFCg2T0buRyCohSQVyZabqj9UsrNJzv1y9J6JmNIkI
+         4tJshgp9OepumlN82BoBA6iJ4lXQPAzl4jI3jIXPQio80t8ZhG/fF+kGPV/1bHKtuFES
+         lSAizCvBv1yEijeFpyfsXt23qyfCTfcuIk5G6BiKL/5mp+SqYRZ6kBVT6Du8e7UJnv1h
+         V0yNGeYR0mB6HEsghFV15GZ/BPm5WrjIXPKzlsi2Vuf7wAUWEMURJBbAV71rVrNErQtq
+         HVbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=TFiyw5H8UbmEqnzN9VYliPx04axpYuGQa7izdnFg+to=;
+        b=IC5yyavKmCJTJGErBKNqXxgJDDFrNkKe4l7fYHqFuSvjhc8PJ3dpxsDJbz6qVApEDr
+         7c0p5JqRdlDK/bKp1VvPdJeyraKvnzWL7oMSscVA9vIi7Zj2IxWeyfBShT1NF9GuCS1t
+         Wyswy//ZjDS4TCugo0vTBbOT0y570YbTATK3ikOMcjx+OwlaK1J7pnaWniStkirucWrd
+         PPMw1B7lWWE5SaIByWhwzUKL39aKme0/yD1Vim/sdknQsrx8ArffhrdnWUpPkjUyqrWz
+         pDT8dYhoeaVvg9s/AUrl0jeAVXyKWMSB7UCYOoumCwnl5AbrlfxNNvq+yey9rD1/Zk2l
+         QlUA==
+X-Gm-Message-State: APjAAAXOymYncpggb26t9mjQpw9ZzpwRLBdn/6Peh6ApZPSFfWozvyf3
+        pvHuJFTmdSaqOmEjqElES6kXS5IG
+X-Google-Smtp-Source: APXvYqxVnCiy6BvaYnSYIME9xcpCWdAkb6Jt1flbm9i+iE/r+8g9GVGAAhKwmnwx5eGjMkrR0ClQBA==
+X-Received: by 2002:a1c:ca14:: with SMTP id a20mr19246159wmg.71.1560794624209;
+        Mon, 17 Jun 2019 11:03:44 -0700 (PDT)
+Received: from [10.67.49.123] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id n14sm4339010wra.75.2019.06.17.11.03.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 11:03:43 -0700 (PDT)
+Subject: Re: [PATCH] arm64: Allow user selection of ARM64_MODULE_PLTS
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     linux-arm-kernel@vger.kernel.org,
+        bcm-kernel-feedback-list@Broadcom.com, ard.biesheuvel@linaro.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
+        <linux-arm-kernel@lists.infradead.org>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190614025932.533-1-f.fainelli@gmail.com>
+ <20190617173241.GM30800@fuggles.cambridge.arm.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <2624ce8b-0206-a217-8793-c1223178246c@gmail.com>
+Date:   Mon, 17 Jun 2019 11:03:28 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 17 Jun 2019 18:02:52 +0000 (UTC)
+In-Reply-To: <20190617173241.GM30800@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Linus Torvalds:
+On 6/17/19 10:32 AM, Will Deacon wrote:
+> On Thu, Jun 13, 2019 at 07:59:32PM -0700, Florian Fainelli wrote:
+>> Make ARM64_MODULE_PLTS a selectable Kconfig symbol, since some people
+>> might have very big modules spilling out of the dedicated module area
+>> into vmalloc. Help text is copied from the ARM 32-bit counterpart.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  arch/arm64/Kconfig | 14 +++++++++++++-
+>>  1 file changed, 13 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index 697ea0510729..36befe987b73 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -1418,8 +1418,20 @@ config ARM64_SVE
+>>  	  KVM in the same kernel image.
+>>  
+>>  config ARM64_MODULE_PLTS
+>> -	bool
+>> +	bool "Use PLTs to allow module memory to spill over into vmalloc area"
+>>  	select HAVE_MOD_ARCH_SPECIFIC
+>> +	help
+>> +	  Allocate PLTs when loading modules so that jumps and calls whose
+>> +	  targets are too far away for their relative offsets to be encoded
+>> +	  in the instructions themselves can be bounced via veneers in the
+>> +	  module's PLT. This allows modules to be allocated in the generic
+>> +	  vmalloc area after the dedicated module memory area has been
+>> +	  exhausted. The modules will use slightly more memory, but after
+>> +	  rounding up to page size, the actual memory footprint is usually
+>> +	  the same.
+> 
+> Isn't the worry really about the runtime performance overhead introduced
+> by the veneers, as opposed to the memory usage of the module?
 
->> A different approach would rename <asm/posix_types.h> to something more
->> basic, exclude the two structs, and move all internal #includes which do
->> need the structs to the new header.
->
-> In fact, I wouldn't even rename <posix_types.h> at all, I'd just make
-> sure it's namespace-clean.
->
-> I _think_ the only thing causing problems is  '__kernel_fsid_t' due to
-> that "val[]" thing, so just remove ity entirely, and add it to
-> <statfs.h> instead.
+The main concern is indeed runtime performance (both added veneers and
+possibly increased cache trashing) and second could be the increased
+vmalloc usage. Do you want me to rephrase that part, or drop it?
 
-There's also __kernel_fd_set in <linux/posix_types.h>.  I may have
-lumped this up with <asm/posix_types.h>, but it has the same problem.
+> 
+>> +	  Disabling this is usually safe for small single-platform
+>> +	  configurations. If unsure, say y.
+> 
+> So should this be on by default?
 
-If it's okay to move them both to more natural places (maybe
-<asm/statfs.h> and <linux/socket.h>), I think that should work well for
-glibc.
+It is turned on under certain conditions that require it (v2 makes that
+clearer, based on Ard's feedback), having it turned off by default at
+least makes people realize (or rather can be used as argument) that the
+modules are possibly too big.
 
-However, application code may have to include additional header files.
-I think the GCC/LLVM sanitizers currently get __kernel_fd_set from
-<linux/posix_types.h> (but I think we discussed it before, they really
-shouldn't use this type because it's misleading).
-
-Thanks,
+Under certain build configurations like test/manufacturing, you might
+have a set of large modules that should still load, hence this patch.
+-- 
 Florian
