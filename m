@@ -2,65 +2,142 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E6E84C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8985FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFA4B2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:04:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="uzePms7N"
+	by mail.kernel.org (Postfix) with ESMTP id 5C0292084D
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560783909;
+	bh=IH1XbiWghqPigFA4FSA4nHeq4Cc1dPUtDmix6UHfOvI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VIjmGeJSk3E6aBipegV1tI9Fgkk6YGIYc7HdmqyDFwT9AWya6UZfRS3fzBts3W5nc
+	 GrwMo31zHcgk1ZPpe7bXLJQ63Bh5R4/zxeBdj/qwl5MZR0n8XZLA+8DWP77t72SuEu
+	 e8NgLfKa1IYQWQoJoTDbrtHnr/SyBxTja7zT70fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728475AbfFQPE5 (ORCPT
+        id S1728493AbfFQPFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:04:57 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:33392 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbfFQPE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:04:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=N+nXDWqrqihqw6MNyCyPhz3odKcZAF6q0IHy8eM5AP8=; b=uzePms7NJchIgkuCaNZY10Sd5V
-        CxYE+7R4WzfoZHHoOfOLGnU8lk5TPGmDfBF+A6HoXN8H2mKZy3rom6VQx12KyOnmIEIKamaIJv+M9
-        Dt1Uz/DE4ZFQc9ewYCWZuHZxYHVL7m3Rybx06nCwYC77K1wG1MJ1dy5/D3iSbsBZencw=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hctBj-0008IL-DR; Mon, 17 Jun 2019 17:04:51 +0200
-Date:   Mon, 17 Jun 2019 17:04:51 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     nicolas.ferre@microchip.com, davem@davemloft.net,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-Subject: Re: [PATCH 0/6] net: macb patch set cover letter
-Message-ID: <20190617150451.GG25211@lunn.ch>
-References: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
+        Mon, 17 Jun 2019 11:05:08 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47014 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfFQPFH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 11:05:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gTKlpQWOKMdvBizylMdVUX6tkK8otEUiw4iXsxTBGyI=; b=r1DA3A36l1XskVNbLdokb8dOe
+        vb1sMUcPghIIeig26uHm4pz7UXXZYKREKoIdPoLOpqXT2Vr/aRzBuuFVCwQXZN/ZwQvmMrvNiltVj
+        wt+u6FJFsW1n8YFaGiytRURJMV2k99PQwM98Sum5Wyf7mQrmUL3ejXLGdZhlSsLVUvp9k=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hctBv-0001tQ-6B; Mon, 17 Jun 2019 15:05:03 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 9286B440046; Mon, 17 Jun 2019 16:05:02 +0100 (BST)
+Date:   Mon, 17 Jun 2019 16:05:02 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     lgirdwood@gmail.com, agross@kernel.org, bjorn.andersson@linaro.org,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v4 4/7] regulator: qcom_spmi: Add support for PM8005
+Message-ID: <20190617150502.GU5316@sirena.org.uk>
+References: <20190613212436.6940-1-jeffrey.l.hugo@gmail.com>
+ <20190613212553.10541-1-jeffrey.l.hugo@gmail.com>
+ <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="XUmrTyVHrg2/ImRG"
 Content-Disposition: inline
-In-Reply-To: <1560642311-25585-1-git-send-email-pthombar@cadence.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <20190613212553.10541-2-jeffrey.l.hugo@gmail.com>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> 3. 003-net-macb-add-PHY-configuration-in-MACB-PCI-wrapper.patch
->    This patch is to configure TI PHY DP83867 in SGMII mode from
->    our MAC PCI wrapper driver. 
->    With this change there is no need of PHY driver and dp83867
->    module must be disabled. Users wanting to setup DP83867 PHY	
->    in SGMII mode can disable dp83867.ko driver, else dp83867.ko
->    overwrite this configuration and PHY is setup as per dp83867.ko.
 
-This sounds very wrong. Why not make the dp83867 driver support SGMII?
+--XUmrTyVHrg2/ImRG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-     Andrew
+On Thu, Jun 13, 2019 at 02:25:53PM -0700, Jeffrey Hugo wrote:
+
+> +static int spmi_regulator_ftsmps426_set_voltage(struct regulator_dev *rdev,
+> +					      unsigned selector)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 buf[2];
+> +	int mV;
+> +
+> +	mV = spmi_regulator_common_list_voltage(rdev, selector) / 1000;
+> +
+> +	buf[0] = mV & 0xff;
+> +	buf[1] = mV >> 8;
+> +	return spmi_vreg_write(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
+> +}
+
+This could just be a set_voltage_sel(), no need for it to be a
+set_voltage() operation....
+
+> +static int spmi_regulator_ftsmps426_get_voltage(struct regulator_dev *rdev)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 buf[2];
+> +
+> +	spmi_vreg_read(vreg, SPMI_FTSMPS426_REG_VOLTAGE_LSB, buf, 2);
+> +
+> +	return (((unsigned int)buf[1] << 8) | (unsigned int)buf[0]) * 1000;
+> +}
+
+...or if the conversion is this trivial why do the list_voltage() lookup
+above?
+
+> +spmi_regulator_ftsmps426_set_mode(struct regulator_dev *rdev, unsigned int mode)
+> +{
+> +	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+> +	u8 mask = SPMI_FTSMPS426_MODE_MASK;
+> +	u8 val;
+> +
+> +	switch (mode) {
+> +	case REGULATOR_MODE_NORMAL:
+> +		val = SPMI_FTSMPS426_MODE_HPM_MASK;
+> +		break;
+> +	case REGULATOR_MODE_FAST:
+> +		val = SPMI_FTSMPS426_MODE_AUTO_MASK;
+> +		break;
+> +	default:
+> +		val = SPMI_FTSMPS426_MODE_LPM_MASK;
+> +		break;
+> +	}
+
+This should validate, it shouldn't just translate invalid values into
+valid ones.
+
+--XUmrTyVHrg2/ImRG
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HrB0ACgkQJNaLcl1U
+h9B0uAf/cYrB30Ayjn0Man4vuddPN/hR/NlbKN1B86AvFrFe6mrHPSuIJUdydTG+
+MtukGFvwCTrnDhnBMxcXeCGsgNrpFpPMcmvk6+5+PZH08FVYBBS6TzPOwTZewmjn
+WVDr6XBug+yYu5+2KMTskQgnfykO+iqMYHx6UyqaDuia/pYCUMoVz+5TVG0KUOYJ
+knWxItKJ3NGD1DlALPCk0K7+P8krq+e09mJME8OSi5HqywdmqxTtPlNbwRr5/YKR
+2ZXAyo4eDjJTE5MowrnA2yEl1d3eKFH6oYBy7btNQF7U8669XprdWTdsTLa+yj0x
+FC/y90cEdM7bE2QMxfyOs5aaBDGroA==
+=xcfk
+-----END PGP SIGNATURE-----
+
+--XUmrTyVHrg2/ImRG--
