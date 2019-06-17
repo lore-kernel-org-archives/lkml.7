@@ -2,131 +2,197 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C62DC31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:23:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CCD7C31E5C
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:23:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CB3208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:23:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCD9620833
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 15:23:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="XUfSTY7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728447AbfFQPXG (ORCPT
+        id S1728363AbfFQPXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 11:23:06 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46023 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfFQPXG (ORCPT
+        Mon, 17 Jun 2019 11:23:21 -0400
+Received: from mail.efficios.com ([167.114.142.138]:49246 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726731AbfFQPXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 11:23:06 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j19so11115595qtr.12;
-        Mon, 17 Jun 2019 08:23:05 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=XrEZUkFuELLhw0pt018loVt7YnupXDtD8eAxix9mLHM=;
-        b=WZT0xngbF/Mz5KGVFnYoznoCXQGb/eAHf4/UJfqoyvktiTPcQNgwM8j3a71a8BpJA0
-         sH7gsAuUdd8EKsqjS1l9zADW7maM+r25vm26dS7IJA9JcthuBz2ewFCTVf5nYu//n/RE
-         He4Idtt0eIzRIrlHzVar2oJ/3zVmPWo+5M2m/Oa8ilfp8Dm2dXOprEK3Y+CF+mw9GV88
-         873yncgGHNbk9WRMpBIxO7Lqy2HblXhfLeA6JdGFOzz6LRaMMze1wkmsmhP+dGaMP5Tj
-         0UACaE0tkbI5gEc6uHmF0WZXFg0EisT8mKR22bcxwLnoGL5Vk5F9kLmuC3ID3v4qUh2E
-         2rUA==
-X-Gm-Message-State: APjAAAWhcS0m1y++Vy/FH9JezRqEK1bdUZMR6j+QYy22ZIwR6B1gXQXj
-        f4Iyrq4YPmMt7IWg4j79sS2Hky5Hxe/No6s6enc=
-X-Google-Smtp-Source: APXvYqwdOCztB/HaPoHrVI4jezpNp3+qJM2SQ/2flC+wy6HEK6Ecu5v5vGFmMesw/QXPvfW0xI+P1XEXys1SUckw5CI=
-X-Received: by 2002:aed:2bc1:: with SMTP id e59mr74620252qtd.7.1560784984951;
- Mon, 17 Jun 2019 08:23:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190617132343.2678836-1-arnd@arndb.de> <20190617140435.qjzcouaqzepaicf4@gondor.apana.org.au>
- <CAK8P3a07Vcqs+6Rs2Ckq_itWfGKUv+_pdgdis9eSujCGHQgFkQ@mail.gmail.com>
- <20190617142419.yw4w5w344tf6ozrb@gondor.apana.org.au> <CAK8P3a0G2K4u-Sh495O7_nfc6zydtZBTOJcq19g3YYQA2ZMKFA@mail.gmail.com>
- <20190617145624.p6alck5m6bqaswgp@gondor.apana.org.au>
-In-Reply-To: <20190617145624.p6alck5m6bqaswgp@gondor.apana.org.au>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 17 Jun 2019 17:22:47 +0200
-Message-ID: <CAK8P3a1e4RGZGD3Ww8ym5iXdt7v8GPxY29jywNnZ-Wx51L-beQ@mail.gmail.com>
-Subject: Re: [PATCH] crypto: testmgr - reduce stack usage in fuzzers
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Eric Biggers <ebiggers@google.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
-        <linux-crypto@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 17 Jun 2019 11:23:21 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 826181D3299;
+        Mon, 17 Jun 2019 11:23:19 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id ngNwKsoUCGaa; Mon, 17 Jun 2019 11:23:19 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id EE5031D3296;
+        Mon, 17 Jun 2019 11:23:18 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com EE5031D3296
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1560784999;
+        bh=f6zEYKJAJi61hi21J79TEKs+00z096e7T6EdDgLZ27Q=;
+        h=From:To:Date:Message-Id;
+        b=XUfSTY7iw/fxGCimF720oI0UhmPxVmZr0fed4jAc6D0gpqwoyfmz/Cwdohyvv/Hm2
+         y6PMBYLiVQ8f/wDBthKLFyVvTG8sbCkTX9TBdZEaTT992gFU3Di082S30pv6t2wXJi
+         umbT3GGplzzGAxcu5tCOM0tw0waBdnivsaWvyIhSisWysalMqcYYMvOg6f+ndVje5q
+         VrWzzpTooBDGyo7nrHsXcIDlNeqgo7xQaRFKCZ1Q5ftx7cbXsDoUb34kR3Esax76OI
+         I3RF37qUbredmBKubaVKwjbIp0bF0aiL7gDknaLY9IPWqMKxjJu1SJg0gW9aSBa7SZ
+         hkIPnRV2GTO0g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id NWfrek6MexdY; Mon, 17 Jun 2019 11:23:18 -0400 (EDT)
+Received: from thinkos.internal.efficios.com (192-222-181-218.qc.cable.ebox.net [192.222.181.218])
+        by mail.efficios.com (Postfix) with ESMTPSA id 61ADB1D3291;
+        Mon, 17 Jun 2019 11:23:18 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Shuah Khan <shuah@kernel.org>, Will Deacon <will.deacon@arm.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Joel Fernandes <joelaf@google.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Watson <davejwatson@fb.com>,
+        Andi Kleen <andi@firstfloor.org>,
+        linux-kselftest@vger.kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+        Chris Lameter <cl@linux.com>,
+        Russell King <linux@arm.linux.org.uk>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>,
+        Paul Turner <pjt@google.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Ben Maurer <bmaurer@fb.com>, linux-api@vger.kernel.org,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Carlos O'Donell <carlos@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>
+Subject: [RFC PATCH 1/1] Revert "rseq/selftests: arm: use udf instruction for RSEQ_SIG"
+Date:   Mon, 17 Jun 2019 17:23:04 +0200
+Message-Id: <20190617152304.23371-1-mathieu.desnoyers@efficios.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 4:56 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
->
-> On Mon, Jun 17, 2019 at 04:54:16PM +0200, Arnd Bergmann wrote:
-> >
-> > Just converting the three testvec_config variables is what I originally
-> > had in my patch. It got some configurations below the warning level,
-> > but some others still had the problem. I considered sending two
-> > separate patches, but as the symptom was the same, I just folded
-> > it all into one patch that does the same thing in four functions.
->
-> Just curious, how bad is it with only moving testvec_config off
-> the stack?
+This reverts commit 2b845d4b4acd9422bbb668989db8dc36dfc8f438.
 
-I tried setting the warning limit to 256 now. On the original code I get
-crypto/testmgr.c:2816:12: error: stack frame size of 984 bytes in
-function 'alg_test_skcipher'
-crypto/testmgr.c:2273:12: error: stack frame size of 1032 bytes in
-function 'alg_test_aead'
-crypto/testmgr.c:3267:12: error: stack frame size of 576 bytes in
-function 'alg_test_crc32c'
-crypto/testmgr.c:3811:12: error: stack frame size of 280 bytes in
-function 'alg_test_akcipher'
-crypto/testmgr.c:2798:12: error: stack frame size of 600 bytes in
-function 'test_skcipher'
-crypto/testmgr.c:2413:12: error: stack frame size of 352 bytes in
-function 'test_skcipher_vec_cfg'
-crypto/testmgr.c:2255:12: error: stack frame size of 600 bytes in
-function 'test_aead'
-crypto/testmgr.c:1823:12: error: stack frame size of 368 bytes in
-function 'test_aead_vec_cfg'
-crypto/testmgr.c:1694:12: error: stack frame size of 1408 bytes in
-function '__alg_test_hash'
+That commit introduces build issues for programs compiled in Thumb mode.
+Rather than try to be clever and emit a valid trap instruction on arm32,
+which requires special care about big/little endian handling on that
+architecture, just emit plain data. Data in the instruction stream is
+technically expected on arm32: this is how literal pools are
+implemented. Reverting to the prior behavior does exactly that.
 
-Just removing the testvec_config reduces the size of the largest three functions
-by some 350 bytes, but I still get a warning for __alg_test_hash in some
-configurations with the default 1024 byte limit:
+Signed-off-by: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+CC: Peter Zijlstra <peterz@infradead.org>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Joel Fernandes <joelaf@google.com>
+CC: Catalin Marinas <catalin.marinas@arm.com>
+CC: Dave Watson <davejwatson@fb.com>
+CC: Will Deacon <will.deacon@arm.com>
+CC: Shuah Khan <shuah@kernel.org>
+CC: Andi Kleen <andi@firstfloor.org>
+CC: linux-kselftest@vger.kernel.org
+CC: "H . Peter Anvin" <hpa@zytor.com>
+CC: Chris Lameter <cl@linux.com>
+CC: Russell King <linux@arm.linux.org.uk>
+CC: Michael Kerrisk <mtk.manpages@gmail.com>
+CC: "Paul E . McKenney" <paulmck@linux.vnet.ibm.com>
+CC: Paul Turner <pjt@google.com>
+CC: Boqun Feng <boqun.feng@gmail.com>
+CC: Josh Triplett <josh@joshtriplett.org>
+CC: Steven Rostedt <rostedt@goodmis.org>
+CC: Ben Maurer <bmaurer@fb.com>
+CC: linux-api@vger.kernel.org
+CC: Andy Lutomirski <luto@amacapital.net>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Linus Torvalds <torvalds@linux-foundation.org>
+CC: Carlos O'Donell <carlos@redhat.com>
+CC: Florian Weimer <fweimer@redhat.com>
+---
+ tools/testing/selftests/rseq/rseq-arm.h | 52 ++-------------------------------
+ 1 file changed, 2 insertions(+), 50 deletions(-)
 
-crypto/testmgr.c:2837:12: error: stack frame size of 632 bytes in
-function 'alg_test_skcipher'
-crypto/testmgr.c:2287:12: error: stack frame size of 688 bytes in
-function 'alg_test_aead'
-crypto/testmgr.c:3288:12: error: stack frame size of 576 bytes in
-function 'alg_test_crc32c'
-crypto/testmgr.c:3832:12: error: stack frame size of 280 bytes in
-function 'alg_test_akcipher'
-crypto/testmgr.c:2819:12: error: stack frame size of 600 bytes in
-function 'test_skcipher'
-crypto/testmgr.c:2427:12: error: stack frame size of 352 bytes in
-function 'test_skcipher_vec_cfg'
-crypto/testmgr.c:2269:12: error: stack frame size of 600 bytes in
-function 'test_aead'
-crypto/testmgr.c:1830:12: error: stack frame size of 368 bytes in
-function 'test_aead_vec_cfg'
-crypto/testmgr.c:1701:12: error: stack frame size of 1088 bytes in
-function '__alg_test_hash'
+diff --git a/tools/testing/selftests/rseq/rseq-arm.h b/tools/testing/selftests/rseq/rseq-arm.h
+index 84f28f147fb6..5f262c54364f 100644
+--- a/tools/testing/selftests/rseq/rseq-arm.h
++++ b/tools/testing/selftests/rseq/rseq-arm.h
+@@ -5,54 +5,7 @@
+  * (C) Copyright 2016-2018 - Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+  */
+ 
+-/*
+- * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate operand
+- * value 0x5de3. This traps if user-space reaches this instruction by mistake,
+- * and the uncommon operand ensures the kernel does not move the instruction
+- * pointer to attacker-controlled code on rseq abort.
+- *
+- * The instruction pattern in the A32 instruction set is:
+- *
+- * e7f5def3    udf    #24035    ; 0x5de3
+- *
+- * This translates to the following instruction pattern in the T16 instruction
+- * set:
+- *
+- * little endian:
+- * def3        udf    #243      ; 0xf3
+- * e7f5        b.n    <7f5>
+- *
+- * pre-ARMv6 big endian code:
+- * e7f5        b.n    <7f5>
+- * def3        udf    #243      ; 0xf3
+- *
+- * ARMv6+ -mbig-endian generates mixed endianness code vs data: little-endian
+- * code and big-endian data. Ensure the RSEQ_SIG data signature matches code
+- * endianness. Prior to ARMv6, -mbig-endian generates big-endian code and data
+- * (which match), so there is no need to reverse the endianness of the data
+- * representation of the signature. However, the choice between BE32 and BE8
+- * is done by the linker, so we cannot know whether code and data endianness
+- * will be mixed before the linker is invoked.
+- */
+-
+-#define RSEQ_SIG_CODE	0xe7f5def3
+-
+-#ifndef __ASSEMBLER__
+-
+-#define RSEQ_SIG_DATA							\
+-	({								\
+-		int sig;						\
+-		asm volatile ("b 2f\n\t"				\
+-			      "1: .inst " __rseq_str(RSEQ_SIG_CODE) "\n\t" \
+-			      "2:\n\t"					\
+-			      "ldr %[sig], 1b\n\t"			\
+-			      : [sig] "=r" (sig));			\
+-		sig;							\
+-	})
+-
+-#define RSEQ_SIG	RSEQ_SIG_DATA
+-
+-#endif
++#define RSEQ_SIG	0x53053053
+ 
+ #define rseq_smp_mb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
+ #define rseq_smp_rmb()	__asm__ __volatile__ ("dmb" ::: "memory", "cc")
+@@ -125,8 +78,7 @@ do {									\
+ 		__rseq_str(table_label) ":\n\t"				\
+ 		".word " __rseq_str(version) ", " __rseq_str(flags) "\n\t" \
+ 		".word " __rseq_str(start_ip) ", 0x0, " __rseq_str(post_commit_offset) ", 0x0, " __rseq_str(abort_ip) ", 0x0\n\t" \
+-		".arm\n\t"						\
+-		".inst " __rseq_str(RSEQ_SIG_CODE) "\n\t"		\
++		".word " __rseq_str(RSEQ_SIG) "\n\t"			\
+ 		__rseq_str(label) ":\n\t"				\
+ 		teardown						\
+ 		"b %l[" __rseq_str(abort_label) "]\n\t"
+-- 
+2.11.0
 
-With the patch I posted, the last line goes down to 712:
-
-crypto/testmgr.c:1709:12: error: stack frame size of 712 bytes in
-function '__alg_test_hash'
-
-In other subsystems, the numbers tend to be much smaller than in the crypto
-code. I think a lot of that is inherent in the way the subsystem is designed,
-but it also seems a little dangerous.
-
-        Arnd
