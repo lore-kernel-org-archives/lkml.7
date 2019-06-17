@@ -2,115 +2,156 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A29D7C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2A6C31E59
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 758A320861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:04:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="IuvGRaou"
+	by mail.kernel.org (Postfix) with ESMTP id 1AC3C20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:04:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfFQLEL (ORCPT
+        id S1727937AbfFQLE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:04:11 -0400
-Received: from mail.andi.de1.cc ([85.214.239.24]:58076 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726164AbfFQLEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:04:10 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8XdeYg0GlEJgt8p/N7L3c6uxos5/PKeCfsQ7LLmnUYw=; b=IuvGRaou5HUNJXpE0AAbIF/rF
-        u6PHU/hQ0TSVaOmy6/9EGTV43+qYi2ART6kKlk1HQfesa80EJk1W6AW7Y+Qi1Ck2o7HF21+tLD4HO
-        6qOEWxIgq4jzaspY2ICoo+CnpDdABhaKgEEkWJ3UgmadL7L/65At2872P2geg9b0cM76w=;
-Received: from p578b2b7d.dip0.t-ipconnect.de ([87.139.43.125] helo=localhost)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1hcpQl-0000PF-SB; Mon, 17 Jun 2019 13:04:07 +0200
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1hcpQi-0003Ls-9m; Mon, 17 Jun 2019 13:04:04 +0200
-Date:   Mon, 17 Jun 2019 13:03:57 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
-Message-ID: <20190617130357.41204ff7@kemnade.info>
-In-Reply-To: <20190617103111.GM5316@sirena.org.uk>
-References: <20190615163314.28173-1-andreas@kemnade.info>
-        <20190617103111.GM5316@sirena.org.uk>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Mon, 17 Jun 2019 07:04:27 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:11867 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726164AbfFQLE1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:04:27 -0400
+X-UUID: b6d4cb7dd89a4b7fbaef042d397fbd85-20190617
+X-UUID: b6d4cb7dd89a4b7fbaef042d397fbd85-20190617
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
+        (envelope-from <jjian.zhou@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1232003957; Mon, 17 Jun 2019 19:04:14 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 17 Jun 2019 19:04:13 +0800
+Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 17 Jun 2019 19:04:12 +0800
+From:   Jjian Zhou <jjian.zhou@mediatek.com>
+To:     <ulf.hansson@linaro.org>, <chaotian.jing@mediatek.com>,
+        <matthias.bgg@gmail.com>, <linux-mmc@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <yong.mao@mediatek.com>, <srv_heupstream@mediatek.com>,
+        jjian zhou <jjian.zhou@mediatek.com>
+Subject: [PATCH V2 1/2] mmc: mediatek: fix SDIO IRQ interrupt handle flow
+Date:   Mon, 17 Jun 2019 19:04:07 +0800
+Message-ID: <1560769448-23070-1-git-send-email-jjian.zhou@mediatek.com>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/T/ae9AiTrO+noE5l2ZRMJjS"; protocol="application/pgp-signature"
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/T/ae9AiTrO+noE5l2ZRMJjS
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: jjian zhou <jjian.zhou@mediatek.com>
 
-Hi,
+SDIO IRQ is triggered by low level. It need disable SDIO IRQ
+detected function. Otherwise the interrupt register can't be cleared.
+It will process the interrupt more.
 
-On Mon, 17 Jun 2019 11:31:11 +0100
-Mark Brown <broonie@kernel.org> wrote:
+Signed-off-by: Jjian Zhou <jjian.zhou@mediatek.com>
+Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+Signed-off-by: Yong Mao <yong.mao@mediatek.com>
+---
+ drivers/mmc/host/mtk-sd.c | 37 ++++++++++++++++++++-----------------
+ 1 file changed, 20 insertions(+), 17 deletions(-)
 
-> On Sat, Jun 15, 2019 at 06:33:14PM +0200, Andreas Kemnade wrote:
->=20
-> > The VDD1/VDD2 regulators on twl4030 are neither defined with
-> > voltage lists nor with the continuous flag set, so
-> > regulator_is_supported_voltage() returns false and an error
-> > before above mentioned commit (which was considered success)
-> > The result is that after the above mentioned commit cpufreq
-> > does not work properly e.g. dm3730. =20
->=20
-> Why is this a good fix and not defining the supported voltages?  These
-> look like fairly standard linear range regulators.
+diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+index c518cc2..fa7d420 100644
+--- a/drivers/mmc/host/mtk-sd.c
++++ b/drivers/mmc/host/mtk-sd.c
+@@ -1383,24 +1383,25 @@ static void msdc_request_timeout(struct work_struct *work)
+ 	}
+ }
 
-I am fixing the definition of the two regulators in the patch.
-I am defining them as continuous.=20
-Voltage ranges are defined in
-arch/arm/boot/dts/twl4030.dtsi
-Only the continuous flag is missing.
+-static void __msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
++static void __msdc_enable_sdio_irq(struct msdc_host *host, int enb)
+ {
+-	unsigned long flags;
+-	struct msdc_host *host = mmc_priv(mmc);
+-
+-	spin_lock_irqsave(&host->lock, flags);
+-	if (enb)
++	if (enb) {
+ 		sdr_set_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
+-	else
++		sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
++	} else {
+ 		sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
+-	spin_unlock_irqrestore(&host->lock, flags);
++		sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
++	}
+ }
 
-Is there anything else do you want to be defined?
+ static void msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
+ {
++	unsigned long flags;
+ 	struct msdc_host *host = mmc_priv(mmc);
 
-Regards,
-Andreas
+-	__msdc_enable_sdio_irq(mmc, enb);
++	spin_lock_irqsave(&host->lock, flags);
++	__msdc_enable_sdio_irq(host, enb);
++	spin_unlock_irqrestore(&host->lock, flags);
 
---Sig_/T/ae9AiTrO+noE5l2ZRMJjS
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+ 	if (enb)
+ 		pm_runtime_get_noresume(host->dev);
+@@ -1422,6 +1423,8 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
+ 		spin_lock_irqsave(&host->lock, flags);
+ 		events = readl(host->base + MSDC_INT);
+ 		event_mask = readl(host->base + MSDC_INTEN);
++		if ((events & event_mask) & MSDC_INT_SDIOIRQ)
++			__msdc_enable_sdio_irq(host, 0);
+ 		/* clear interrupts */
+ 		writel(events & event_mask, host->base + MSDC_INT);
 
------BEGIN PGP SIGNATURE-----
+@@ -1430,10 +1433,8 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
+ 		data = host->data;
+ 		spin_unlock_irqrestore(&host->lock, flags);
 
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl0Hc50ACgkQl4jFM1s/
-ye8YpA/8CrtqyQjtHJXh7k+8PQQp3Shw7IYEnKTorCO7pz3jS6Y9LTGR11kH5GVe
-tsZpUKXcGjbNGPo9Urnb78t+SWySAABsd9F0zF00m0Ma8qA8KptW1Zggs1+zzm5z
-P+ariX43asVqSXLbdNAEEPrFmWSeHTl1+n6vk/D3FPxAisyPKknRwPSZ6nv/6w6V
-/IIiUYaJ1X4oBbr3ydhsIVmbmAsE1U6R5nl+nw5/+fRPakD2WVyv5oGCm6sgglvX
-5lLnvhZE1S6YJF/eSUwlqbJt0R9KLFCWlvede0a4OAx5tDvIqqyEGzjGjUt+YKBQ
-e3Jb8c2/oh29MtQHLvxxBEvWih0yact/T7ZDKUGsgJ9L0epJ56EGgFUTYmwQTDck
-Y2z4jt7ciNCcBSDx1SGhRZeUoBEeCrUzsRL6Pqeuxf1s6O9bnP1Xs1mbZOYmMkVl
-XPxpNqgbJNV1LLOHBHqac7nrm1lzkKPIbkNEk79A7pbWtWH67PoEUXcr5Y8Jkkjl
-HM4Qwzd3KM3DZvHed666wpJ6n8LSUb7f0TqzRJPjFt8AYsgu4uoQcwWycFVDGWDS
-P0t/41wyQQOCxzNIMj9HRaKnryqqo7+Frg+KaRuzXkUrAi6uwDFDH/jUbk/jmr0g
-AzX7JHDzzEVtdslahvTmKXparIef4Lch42NvaE0naDOyabZLRtg=
-=3Fg4
------END PGP SIGNATURE-----
+-		if ((events & event_mask) & MSDC_INT_SDIOIRQ) {
+-			__msdc_enable_sdio_irq(host->mmc, 0);
++		if ((events & event_mask) & MSDC_INT_SDIOIRQ)
+ 			sdio_signal_irq(host->mmc);
+-		}
 
---Sig_/T/ae9AiTrO+noE5l2ZRMJjS--
+ 		if ((events & event_mask) & MSDC_INT_CDSC) {
+ 			if (host->internal_cd)
+@@ -1572,10 +1573,7 @@ static void msdc_init_hw(struct msdc_host *host)
+ 	sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIO);
+
+ 	/* Config SDIO device detect interrupt function */
+-	if (host->mmc->caps & MMC_CAP_SDIO_IRQ)
+-		sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+-	else
+-		sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
++	sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+
+ 	/* Configure to default data timeout */
+ 	sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, 3);
+@@ -2103,7 +2101,12 @@ static void msdc_hw_reset(struct mmc_host *mmc)
+
+ static void msdc_ack_sdio_irq(struct mmc_host *mmc)
+ {
+-	__msdc_enable_sdio_irq(mmc, 1);
++	unsigned long flags;
++	struct msdc_host *host = mmc_priv(mmc);
++
++	spin_lock_irqsave(&host->lock, flags);
++	__msdc_enable_sdio_irq(host, 1);
++	spin_unlock_irqrestore(&host->lock, flags);
+ }
+
+ static int msdc_get_cd(struct mmc_host *mmc)
+--
+1.9.1
+
