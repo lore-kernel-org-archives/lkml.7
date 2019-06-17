@@ -2,122 +2,382 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991DFC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D86D6C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C92E218A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A00CF218A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 06:10:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="r55Olug4"
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="rpy4PTPj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbfFQGKD (ORCPT
+        id S1726073AbfFQGKZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 02:10:03 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:43462 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725914AbfFQGKD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 02:10:03 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5H64Lsi130933;
-        Mon, 17 Jun 2019 06:09:28 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=grdh29BU5yPRUROUC1gK19xRI+enCyZKgEFK2tTBSUk=;
- b=r55Olug45CBi7UUK63b+i0uGwVL2OZxoTNQDJNqyv5qxve3Nv3Sjvv8XFA1+ev5CFjym
- 8/iFWQtWiDQEWGZ9HVExOIZhW4Di9BT4MXx4Wr3e0zMZ8qskkatJgRIdZwQPgwfe3WAf
- dkRVSdtEF17G38I35GrioUvENz9ewK19+O3gQiNAaTfZFayOw6hvsCrQ2tsc64E3jz0e
- /OYhraHsoetNaAhLf7xpIJiW3nMHgmvWYVfXrTQfZZjibIMbVapybEP623SR2G1oPB+k
- zGP6twlX1njC0FciqjV+u3dy9gPQswM1W/aatT2j8ujVE2zEM7psbNFDXZoABXnOYsqj Zg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t4r3tcgv9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 06:09:28 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5H695oe117917;
-        Mon, 17 Jun 2019 06:09:28 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2t5h5sybe6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Jun 2019 06:09:27 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5H69QdH022783;
-        Mon, 17 Jun 2019 06:09:26 GMT
-Received: from [192.168.0.110] (/70.36.60.91)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 16 Jun 2019 23:09:26 -0700
-Subject: Re: [RFC PATCH 09/16] xen/evtchn: support evtchn in xenhost_t
-To:     Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org,
-        joao.m.martins@oracle.com
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-10-ankur.a.arora@oracle.com>
- <c91abc40-03e3-2ebd-a878-b251a97869db@suse.com>
-From:   Ankur Arora <ankur.a.arora@oracle.com>
-Message-ID: <be7c4638-6677-9ed1-7d68-539898b90b2a@oracle.com>
-Date:   Sun, 16 Jun 2019 23:09:22 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <c91abc40-03e3-2ebd-a878-b251a97869db@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9290 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906170057
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9290 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906170057
+        Mon, 17 Jun 2019 02:10:25 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:54175 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725823AbfFQGKZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 02:10:25 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45S1626f24z9v0hJ;
+        Mon, 17 Jun 2019 08:10:18 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=rpy4PTPj; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id nogowJqC3dEQ; Mon, 17 Jun 2019 08:10:18 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45S1625LcNz9v0hH;
+        Mon, 17 Jun 2019 08:10:18 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1560751818; bh=AeYbBJqrnbuK3ysLYT0tk2Zm0b9RNj2pBXn6SnxJees=;
+        h=From:Subject:To:Cc:Date:From;
+        b=rpy4PTPj3AH4SgJlWEWl3pbR27f9xHrJT32oAwrxzTpdqccM0jpFeySxb6fPNnJSK
+         VQhjOI8kZm5rW4ordwhodFbtjRN/DcBYeZPX2yRn9jBrx+62Jos/Z0YZ4xIChelES3
+         SxDgR0ADnAlvKoBy5ld/EHtHyEMRXJJSi3L2iaPw=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 3BE168B77E;
+        Mon, 17 Jun 2019 08:10:23 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id hD4dG_ani6nB; Mon, 17 Jun 2019 08:10:23 +0200 (CEST)
+Received: from PO15451.localdomain (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id E96238B75A;
+        Mon, 17 Jun 2019 08:10:22 +0200 (CEST)
+Received: by localhost.localdomain (Postfix, from userid 0)
+        id 8A11966B22; Mon, 17 Jun 2019 06:10:22 +0000 (UTC)
+Message-Id: <4291e0dd36aafff58bec429ac5355d10206c72d6.1560751738.git.christophe.leroy@c-s.fr>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Subject: [PATCH] powerpc/32s: fix suspend/resume when IBATs 4-7 are used
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andreas Schwab <schwab@linux-m68k.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Date:   Mon, 17 Jun 2019 06:10:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-14 5:04 a.m., Juergen Gross wrote:
-> On 09.05.19 19:25, Ankur Arora wrote:
->> Largely mechanical patch that adds a new param, xenhost_t * to the
->> evtchn interfaces. The evtchn port instead of being domain unique, is
->> now scoped to xenhost_t.
->>
->> As part of upcall handling we now look at all the xenhosts and, for
->> evtchn_2l, the xenhost's shared_info and vcpu_info. Other than this
->> event handling is largley unchanged.
->>
->> Note that the IPI, timer, VIRQ, FUNCTION, PMU etc vectors remain
->> attached to xh_default. Only interdomain evtchns are allowable as
->> xh_remote.
-> 
-> I'd do only the interface changes for now (including evtchn FIFO).
-Looking at this patch again, it seems to me that it would be best to
-limit the interface change (to take the xenhost_t * parameter) only to
-bind_interdomain_*. That also happily limits the change to the drivers/
-subtree.
+Previously, only IBAT1 and IBAT2 were used to map kernel linear mem.
+Since commit 63b2bc619565 ("powerpc/mm/32s: Use BATs for
+STRICT_KERNEL_RWX"), we may have all 8 BATs used for mapping
+kernel text. But the suspend/restore functions only save/restore
+BATs 0 to 3, and clears BATs 4 to 7.
 
-> 
-> The main difference will be how to call the hypervisor for sending an
-> event (either direct or via a passthrough-hypercall).
-Yeah, though, this would depend on how the evtchns are mapped (if it's
-the L1-Xen which is responsible for mapping the evtchn on behalf of the 
-L0-Xen, then notify_remote_via_evtchn() could just stay the same.)
-Still, I'll add a send interface (perhaps just an inline function) to
-the xenhost interface for this.
+Make suspend and restore functions respectively save and reload
+the 8 BATs on CPUs having MMU_FTR_USE_HIGH_BATS feature.
 
-Ankur
+Reported-by: Andreas Schwab <schwab@linux-m68k.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
+---
+ arch/powerpc/kernel/swsusp_32.S         | 108 +++++++++++++++++++++++++-------
+ arch/powerpc/platforms/powermac/sleep.S | 104 +++++++++++++++++++++++-------
+ 2 files changed, 166 insertions(+), 46 deletions(-)
 
-> 
-> 
-> Juergen
+diff --git a/arch/powerpc/kernel/swsusp_32.S b/arch/powerpc/kernel/swsusp_32.S
+index 7a919e9a3400..4d3068f24ff3 100644
+--- a/arch/powerpc/kernel/swsusp_32.S
++++ b/arch/powerpc/kernel/swsusp_32.S
+@@ -25,11 +25,19 @@
+ #define SL_IBAT2	0x48
+ #define SL_DBAT3	0x50
+ #define SL_IBAT3	0x58
+-#define SL_TB		0x60
+-#define SL_R2		0x68
+-#define SL_CR		0x6c
+-#define SL_LR		0x70
+-#define SL_R12		0x74	/* r12 to r31 */
++#define SL_DBAT4	0x60
++#define SL_IBAT4	0x68
++#define SL_DBAT5	0x70
++#define SL_IBAT5	0x78
++#define SL_DBAT6	0x80
++#define SL_IBAT6	0x88
++#define SL_DBAT7	0x90
++#define SL_IBAT7	0x98
++#define SL_TB		0xa0
++#define SL_R2		0xa8
++#define SL_CR		0xac
++#define SL_LR		0xb0
++#define SL_R12		0xb4	/* r12 to r31 */
+ #define SL_SIZE		(SL_R12 + 80)
+ 
+ 	.section .data
+@@ -97,6 +105,24 @@ _GLOBAL(swsusp_arch_suspend)
+ 	stw	r4,SL_DBAT3(r11)
+ 	mfdbatl	r4,3
+ 	stw	r4,SL_DBAT3+4(r11)
++BEGIN_MMU_FTR_SECTION
++	mfdbatu	r4,4
++	stw	r4,SL_DBAT4(r11)
++	mfdbatl	r4,4
++	stw	r4,SL_DBAT4+4(r11)
++	mfdbatu	r4,5
++	stw	r4,SL_DBAT5(r11)
++	mfdbatl	r4,5
++	stw	r4,SL_DBAT5+4(r11)
++	mfdbatu	r4,6
++	stw	r4,SL_DBAT6(r11)
++	mfdbatl	r4,6
++	stw	r4,SL_DBAT6+4(r11)
++	mfdbatu	r4,7
++	stw	r4,SL_DBAT7(r11)
++	mfdbatl	r4,7
++	stw	r4,SL_DBAT7+4(r11)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 	mfibatu	r4,0
+ 	stw	r4,SL_IBAT0(r11)
+ 	mfibatl	r4,0
+@@ -113,6 +139,24 @@ _GLOBAL(swsusp_arch_suspend)
+ 	stw	r4,SL_IBAT3(r11)
+ 	mfibatl	r4,3
+ 	stw	r4,SL_IBAT3+4(r11)
++BEGIN_MMU_FTR_SECTION
++	mfibatu	r4,4
++	stw	r4,SL_IBAT4(r11)
++	mfibatl	r4,4
++	stw	r4,SL_IBAT4+4(r11)
++	mfibatu	r4,5
++	stw	r4,SL_IBAT5(r11)
++	mfibatl	r4,5
++	stw	r4,SL_IBAT5+4(r11)
++	mfibatu	r4,6
++	stw	r4,SL_IBAT6(r11)
++	mfibatl	r4,6
++	stw	r4,SL_IBAT6+4(r11)
++	mfibatu	r4,7
++	stw	r4,SL_IBAT7(r11)
++	mfibatl	r4,7
++	stw	r4,SL_IBAT7+4(r11)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 
+ #if  0
+ 	/* Backup various CPU config stuffs */
+@@ -263,6 +307,24 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ 	mtdbatu	3,r4
+ 	lwz	r4,SL_DBAT3+4(r11)
+ 	mtdbatl	3,r4
++BEGIN_MMU_FTR_SECTION
++	lwz	r4,SL_DBAT4(r11)
++	mtdbatu	4,r4
++	lwz	r4,SL_DBAT4+4(r11)
++	mtdbatl	4,r4
++	lwz	r4,SL_DBAT5(r11)
++	mtdbatu	5,r4
++	lwz	r4,SL_DBAT5+4(r11)
++	mtdbatl	5,r4
++	lwz	r4,SL_DBAT6(r11)
++	mtdbatu	6,r4
++	lwz	r4,SL_DBAT6+4(r11)
++	mtdbatl	6,r4
++	lwz	r4,SL_DBAT7(r11)
++	mtdbatu	7,r4
++	lwz	r4,SL_DBAT7+4(r11)
++	mtdbatl	7,r4
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 	lwz	r4,SL_IBAT0(r11)
+ 	mtibatu	0,r4
+ 	lwz	r4,SL_IBAT0+4(r11)
+@@ -279,27 +341,25 @@ END_FTR_SECTION_IFSET(CPU_FTR_ALTIVEC)
+ 	mtibatu	3,r4
+ 	lwz	r4,SL_IBAT3+4(r11)
+ 	mtibatl	3,r4
+-#endif
+-
+ BEGIN_MMU_FTR_SECTION
+-	li	r4,0
+-	mtspr	SPRN_DBAT4U,r4
+-	mtspr	SPRN_DBAT4L,r4
+-	mtspr	SPRN_DBAT5U,r4
+-	mtspr	SPRN_DBAT5L,r4
+-	mtspr	SPRN_DBAT6U,r4
+-	mtspr	SPRN_DBAT6L,r4
+-	mtspr	SPRN_DBAT7U,r4
+-	mtspr	SPRN_DBAT7L,r4
+-	mtspr	SPRN_IBAT4U,r4
+-	mtspr	SPRN_IBAT4L,r4
+-	mtspr	SPRN_IBAT5U,r4
+-	mtspr	SPRN_IBAT5L,r4
+-	mtspr	SPRN_IBAT6U,r4
+-	mtspr	SPRN_IBAT6L,r4
+-	mtspr	SPRN_IBAT7U,r4
+-	mtspr	SPRN_IBAT7L,r4
++	lwz	r4,SL_IBAT4(r11)
++	mtibatu	4,r4
++	lwz	r4,SL_IBAT4+4(r11)
++	mtibatl	4,r4
++	lwz	r4,SL_IBAT5(r11)
++	mtibatu	5,r4
++	lwz	r4,SL_IBAT5+4(r11)
++	mtibatl	5,r4
++	lwz	r4,SL_IBAT6(r11)
++	mtibatu	6,r4
++	lwz	r4,SL_IBAT6+4(r11)
++	mtibatl	6,r4
++	lwz	r4,SL_IBAT7(r11)
++	mtibatu	7,r4
++	lwz	r4,SL_IBAT7+4(r11)
++	mtibatl	7,r4
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
++#endif
+ 
+ 	/* Flush all TLBs */
+ 	lis	r4,0x1000
+diff --git a/arch/powerpc/platforms/powermac/sleep.S b/arch/powerpc/platforms/powermac/sleep.S
+index 6bbcbec97712..2d7b035bee09 100644
+--- a/arch/powerpc/platforms/powermac/sleep.S
++++ b/arch/powerpc/platforms/powermac/sleep.S
+@@ -33,10 +33,18 @@
+ #define SL_IBAT2	0x48
+ #define SL_DBAT3	0x50
+ #define SL_IBAT3	0x58
+-#define SL_TB		0x60
+-#define SL_R2		0x68
+-#define SL_CR		0x6c
+-#define SL_R12		0x70	/* r12 to r31 */
++#define SL_DBAT4	0x60
++#define SL_IBAT4	0x68
++#define SL_DBAT5	0x70
++#define SL_IBAT5	0x78
++#define SL_DBAT6	0x80
++#define SL_IBAT6	0x88
++#define SL_DBAT7	0x90
++#define SL_IBAT7	0x98
++#define SL_TB		0xa0
++#define SL_R2		0xa8
++#define SL_CR		0xac
++#define SL_R12		0xb0	/* r12 to r31 */
+ #define SL_SIZE		(SL_R12 + 80)
+ 
+ 	.section .text
+@@ -104,6 +112,24 @@ _GLOBAL(low_sleep_handler)
+ 	stw	r4,SL_DBAT3(r1)
+ 	mfdbatl	r4,3
+ 	stw	r4,SL_DBAT3+4(r1)
++BEGIN_MMU_FTR_SECTION
++	mfdbatu	r4,4
++	stw	r4,SL_DBAT4(r1)
++	mfdbatl	r4,4
++	stw	r4,SL_DBAT4+4(r1)
++	mfdbatu	r4,5
++	stw	r4,SL_DBAT5(r1)
++	mfdbatl	r4,5
++	stw	r4,SL_DBAT5+4(r1)
++	mfdbatu	r4,6
++	stw	r4,SL_DBAT6(r1)
++	mfdbatl	r4,6
++	stw	r4,SL_DBAT6+4(r1)
++	mfdbatu	r4,7
++	stw	r4,SL_DBAT7(r1)
++	mfdbatl	r4,7
++	stw	r4,SL_DBAT7+4(r1)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 	mfibatu	r4,0
+ 	stw	r4,SL_IBAT0(r1)
+ 	mfibatl	r4,0
+@@ -120,6 +146,24 @@ _GLOBAL(low_sleep_handler)
+ 	stw	r4,SL_IBAT3(r1)
+ 	mfibatl	r4,3
+ 	stw	r4,SL_IBAT3+4(r1)
++BEGIN_MMU_FTR_SECTION
++	mfibatu	r4,4
++	stw	r4,SL_IBAT4(r1)
++	mfibatl	r4,4
++	stw	r4,SL_IBAT4+4(r1)
++	mfibatu	r4,5
++	stw	r4,SL_IBAT5(r1)
++	mfibatl	r4,5
++	stw	r4,SL_IBAT5+4(r1)
++	mfibatu	r4,6
++	stw	r4,SL_IBAT6(r1)
++	mfibatl	r4,6
++	stw	r4,SL_IBAT6+4(r1)
++	mfibatu	r4,7
++	stw	r4,SL_IBAT7(r1)
++	mfibatl	r4,7
++	stw	r4,SL_IBAT7+4(r1)
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 
+ 	/* Backup various CPU config stuffs */
+ 	bl	__save_cpu_setup
+@@ -303,6 +347,24 @@ grackle_wake_up:
+ 	mtdbatu	3,r4
+ 	lwz	r4,SL_DBAT3+4(r1)
+ 	mtdbatl	3,r4
++BEGIN_MMU_FTR_SECTION
++	lwz	r4,SL_DBAT4(r1)
++	mtdbatu	4,r4
++	lwz	r4,SL_DBAT4+4(r1)
++	mtdbatl	4,r4
++	lwz	r4,SL_DBAT5(r1)
++	mtdbatu	5,r4
++	lwz	r4,SL_DBAT5+4(r1)
++	mtdbatl	5,r4
++	lwz	r4,SL_DBAT6(r1)
++	mtdbatu	6,r4
++	lwz	r4,SL_DBAT6+4(r1)
++	mtdbatl	6,r4
++	lwz	r4,SL_DBAT7(r1)
++	mtdbatu	7,r4
++	lwz	r4,SL_DBAT7+4(r1)
++	mtdbatl	7,r4
++END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 	lwz	r4,SL_IBAT0(r1)
+ 	mtibatu	0,r4
+ 	lwz	r4,SL_IBAT0+4(r1)
+@@ -319,25 +381,23 @@ grackle_wake_up:
+ 	mtibatu	3,r4
+ 	lwz	r4,SL_IBAT3+4(r1)
+ 	mtibatl	3,r4
+-
+ BEGIN_MMU_FTR_SECTION
+-	li	r4,0
+-	mtspr	SPRN_DBAT4U,r4
+-	mtspr	SPRN_DBAT4L,r4
+-	mtspr	SPRN_DBAT5U,r4
+-	mtspr	SPRN_DBAT5L,r4
+-	mtspr	SPRN_DBAT6U,r4
+-	mtspr	SPRN_DBAT6L,r4
+-	mtspr	SPRN_DBAT7U,r4
+-	mtspr	SPRN_DBAT7L,r4
+-	mtspr	SPRN_IBAT4U,r4
+-	mtspr	SPRN_IBAT4L,r4
+-	mtspr	SPRN_IBAT5U,r4
+-	mtspr	SPRN_IBAT5L,r4
+-	mtspr	SPRN_IBAT6U,r4
+-	mtspr	SPRN_IBAT6L,r4
+-	mtspr	SPRN_IBAT7U,r4
+-	mtspr	SPRN_IBAT7L,r4
++	lwz	r4,SL_IBAT4(r1)
++	mtibatu	4,r4
++	lwz	r4,SL_IBAT4+4(r1)
++	mtibatl	4,r4
++	lwz	r4,SL_IBAT5(r1)
++	mtibatu	5,r4
++	lwz	r4,SL_IBAT5+4(r1)
++	mtibatl	5,r4
++	lwz	r4,SL_IBAT6(r1)
++	mtibatu	6,r4
++	lwz	r4,SL_IBAT6+4(r1)
++	mtibatl	6,r4
++	lwz	r4,SL_IBAT7(r1)
++	mtibatu	7,r4
++	lwz	r4,SL_IBAT7+4(r1)
++	mtibatl	7,r4
+ END_MMU_FTR_SECTION_IFSET(MMU_FTR_USE_HIGH_BATS)
+ 
+ 	/* Flush all TLBs */
+-- 
+2.13.3
 
