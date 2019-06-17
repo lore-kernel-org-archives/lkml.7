@@ -2,132 +2,128 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 991DEC31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:57:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC87AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:57:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DEC520665
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:57:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92936208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 18:57:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="yF68pHW8"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oIw06plI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfFQS5Z (ORCPT
+        id S1728384AbfFQS5i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 14:57:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40537 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726286AbfFQS5Y (ORCPT
+        Mon, 17 Jun 2019 14:57:38 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:41014 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725839AbfFQS5i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 14:57:24 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5HIv6Ii3553746
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 17 Jun 2019 11:57:06 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5HIv6Ii3553746
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560797827;
-        bh=GLNvcVn2YgCnOqi9+MPHucFyhebjlRKNIQSdt2k3cg4=;
-        h=Date:From:Cc:Reply-To:To:Subject:From;
-        b=yF68pHW8QQJzb3TNG/IP2MbVa3TLH7idIUCJ0k+2FUt0yR3vHHYJeNfRAgjRsFyr8
-         5ZwCJjO5P92tkYQuOvszCv3VEGNbbaTnPCK4WM+jU1nqf3PWAqk6sylAm4dWVxev73
-         k28ZAuz79pBy9otV3I7X7RZeGdNfJ/iJ/Zxeb9jBTs1huStilH7YDx9vBtDZDNdsdt
-         IYkVxDtu71oYUGTODHPj234xneeEvutwU+agc3QMqexBp7OAEG8zhh4wL+EvriXiP+
-         +C3eqeUPB8vyt9Vh/OfINcuEFUh5R2nnaWYTTOukkfc92fbJzyy+pcovBJbmqkh2WL
-         u4YPll707WoBA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5HIv5Ld3553743;
-        Mon, 17 Jun 2019 11:57:05 -0700
-Date:   Mon, 17 Jun 2019 11:57:05 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Arnaldo Carvalho de Melo <tipbot@zytor.com>
-Message-ID: <tip-jbrzb7ijb5al33gi8br6f9rr@git.kernel.org>
-Cc:     peterz@infradead.org, namhyung@kernel.org,
-        alexander.shishkin@linux.intel.com, linux-kernel@vger.kernel.org,
-        jolsa@kernel.org, hpa@zytor.com, ak@linux.intel.com,
-        acme@redhat.com, sque@chromium.org, tglx@linutronix.de,
-        mingo@kernel.org, adrian.hunter@intel.com,
-        alexey.budankov@linux.intel.com, chongjiang@chromium.org
-Reply-To: adrian.hunter@intel.com, chongjiang@chromium.org,
-          alexey.budankov@linux.intel.com, ak@linux.intel.com,
-          hpa@zytor.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
-          mingo@kernel.org, tglx@linutronix.de, sque@chromium.org,
-          acme@redhat.com, alexander.shishkin@linux.intel.com,
-          peterz@infradead.org, namhyung@kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf data: Document directory format header:
- HEADER_DIR_FORMAT
-Git-Commit-ID: 0da6ae94e4102fa145149dd0878b266c932507aa
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Mon, 17 Jun 2019 14:57:38 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5HIvPLJ005706;
+        Mon, 17 Jun 2019 13:57:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560797845;
+        bh=eXKVDlqZzqdlgcUJUU+jPPZepnuhi3ZTqQo/hbODeEM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=oIw06plIitBYLiJdchxsmU0MSki7Rlx0JhmUTmr2teR4u91wdDsjNpjwIYjoeLg1n
+         Z+J4I5d3HwJ5wVpymWg0Ry7rhcxKNViibyTroUMRqLATNP9Du2Gqmccpq0tlg9E9tP
+         M1STJHAzAB8aN53HvWsfWtEqGZIA/bgLzLAMoRT4=
+Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5HIvPdS082788
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 17 Jun 2019 13:57:25 -0500
+Received: from DFLE115.ent.ti.com (10.64.6.36) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
+ Jun 2019 13:57:24 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE115.ent.ti.com
+ (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 17 Jun 2019 13:57:24 -0500
+Received: from [10.250.96.121] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5HIvKQp019312;
+        Mon, 17 Jun 2019 13:57:21 -0500
+Subject: Re: [PATCH-next 20/20] gpio: gpio-omap: clean up register access in
+ omap2_set_gpio_debounce()
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Russell King <rmk@arm.linux.org.uk>,
+        Tony Lindgren <tony@atomide.com>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Linux-OMAP <linux-omap@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>
+References: <20190610171103.30903-1-grygorii.strashko@ti.com>
+ <20190610171103.30903-21-grygorii.strashko@ti.com>
+ <CACRpkda2FhYNYA2TkVANOF5GWd3hE9cqM7N_pFDFj9nh-fh=iA@mail.gmail.com>
+From:   grygorii <grygorii.strashko@ti.com>
+Message-ID: <0ab98094-f8b2-69a3-e73c-1dfdf812d627@ti.com>
+Date:   Mon, 17 Jun 2019 21:57:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+In-Reply-To: <CACRpkda2FhYNYA2TkVANOF5GWd3hE9cqM7N_pFDFj9nh-fh=iA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0da6ae94e4102fa145149dd0878b266c932507aa
-Gitweb:     https://git.kernel.org/tip/0da6ae94e4102fa145149dd0878b266c932507aa
-Author:     Arnaldo Carvalho de Melo <acme@redhat.com>
-AuthorDate: Wed, 29 May 2019 15:50:50 -0300
-Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Wed, 5 Jun 2019 09:47:53 -0300
 
-perf data: Document directory format header: HEADER_DIR_FORMAT
 
-We forgot to update the perf.data file format document for the
-HEADER_DIR_FORMAT header, do it now from comments in the patch
-introducing it.
+On 12/06/2019 12:11, Linus Walleij wrote:
+> On Mon, Jun 10, 2019 at 7:13 PM Grygorii Strashko
+> <grygorii.strashko@ti.com> wrote:
+> 
+>> From: Russell King <rmk+kernel@armlinux.org.uk>
+>>
+>> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+> 
+> Patch applied.
 
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Chong Jiang <chongjiang@chromium.org>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Simon Que <sque@chromium.org>
-Fixes: 258031c017c3 ("perf header: Add DIR_FORMAT feature to describe directory data")
-Link: https://lkml.kernel.org/n/tip-jbrzb7ijb5al33gi8br6f9rr@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/Documentation/perf.data-file-format.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Thanks Linus.
 
-diff --git a/tools/perf/Documentation/perf.data-file-format.txt b/tools/perf/Documentation/perf.data-file-format.txt
-index 600999f89c6d..6375e6fb8bac 100644
---- a/tools/perf/Documentation/perf.data-file-format.txt
-+++ b/tools/perf/Documentation/perf.data-file-format.txt
-@@ -302,6 +302,23 @@ One uint64_t for the clockid frequency, specified, for instance, via 'perf
- record -k' (see clock_gettime()), to enable timestamps derived metrics
- conversion into wall clock time on the reporting stage.
- 
-+	HEADER_DIR_FORMAT = 24,
-+
-+The data files layout is described by HEADER_DIR_FORMAT feature.  Currently it
-+holds only version number (1):
-+
-+  uint64_t version;
-+
-+The current version holds only version value (1) means that data files:
-+
-+- Follow the 'data.*' name format.
-+
-+- Contain raw events data in standard perf format as read from kernel (and need
-+  to be sorted)
-+
-+Future versions are expected to describe different data files layout according
-+to special needs.
-+
-         HEADER_BPF_PROG_INFO = 25,
- 
- struct bpf_prog_info_linear, which contains detailed information about
+> 
+> At your convenience please look at the debounce function a bit
+> closer because I think there is a bug/unpredictable behavior:
+> 
+> IIUC the whole bank/block of GPIOs share the same debounce
+> timer setting, and it is currently handled in a "last caller wins"
+> manner, so if the different GPIOs in the bank has different
+> debounce settings, the call order decides what debounce time
+> is used across all of them.
+
+Yeah. this is a "known" problem :(
+
+> 
+> In drivers/gpio/gpio-ftgpio.c function ftgpio_gpio_set_config()
+> I simply reject a dounce time setting
+> different from the currently configured if any GPIOs are
+> currently using the deounce feature.
+> 
+> (It's the semantic I came up with but maybe there are other
+> ideas here.)
+
+
+There is one more patch in int. queue for debounce, but I've
+decided to send it after this series as OMAP debounce changes are
+usually debatable.
+
+I'll look at gpio-ftgpio also.
+
+By the way, there seems no ABI for debounce cfg in gpio_dev interface.
+(or i'm missing smth?)
+
+-- 
+Best regards,
+grygorii
