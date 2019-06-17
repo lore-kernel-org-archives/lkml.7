@@ -2,153 +2,213 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18394C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:39:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62063C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:41:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCC162084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:39:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26924208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:41:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560814748;
-	bh=RlVq9+goQiRTPf4XaFdqefcmZD/0IfQ59bc/PNBhVyA=;
+	s=default; t=1560814914;
+	bh=pIjyNyWPgEfxOgkE5R5Wmxea9h4OvnpDOVDODY7GIEE=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=09V9GSl0zAgtZIj170+RBnphCeuvZvIVICaN3oLE3SMkiysEhdAVApMWg0WS9HewK
-	 /ASb/meZqqTDjFP4ekb0iyeS6R9nHX4TcuvU2ooWUi1SEWFmUv87/dGa4om1p5STAn
-	 qisgk8aZIh2xU/hsfiGbbwwWsxSKwLzrCYDcqGRg=
+	b=VL2MdeITWfXEKePkQzYOY3fQjq6553PcYsB7omSvCVzf3wJfJjxFFFzhJl4pnILDT
+	 w0AjJ24oTpJCIjQZ6NpGOpS1jOrBRdsB86gF8FYg/7mGvD2dNXMd7us7CZO/Q13OrK
+	 1rYpnS0gIB64/vWyxzj4lROyBxVjmj4D28E0tGYA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfFQXjG (ORCPT
+        id S1728398AbfFQXlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 19:39:06 -0400
-Received: from mail-lf1-f54.google.com ([209.85.167.54]:38745 "EHLO
-        mail-lf1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727443AbfFQXjF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 19:39:05 -0400
-Received: by mail-lf1-f54.google.com with SMTP id b11so7837011lfa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 16:39:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2NrsuK+fQa59Rf3zJAPEk/DpTvNWtzgqr6c6Hq01cwY=;
-        b=Im9oEjWyr/vEdz9cgtOyleEhoCBdeVCcp3kWvdMeHXiN7x58vAV8sjEQKDudUFBh8E
-         RxS+frlO5CQUO7JQDQ8qkogDUdkU7fmgqa4eHgTl13Zom7kAUMVec5A8Ne1jWBPaYFpa
-         rHkCrluVPIkibD3eDmgnHGA9jDsnp0HYN0hFo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2NrsuK+fQa59Rf3zJAPEk/DpTvNWtzgqr6c6Hq01cwY=;
-        b=q23zs5wwRixlLN4u6UDhDICr7A9Bb7y5FoUdb6+/mQPl/egnEQXDht5vlL/HtGFxBh
-         g+YP/clx2RCEHMoRW5JZF2jShGC82Rjv2lLmIE/ykBqITCm3asdvZ2cHct+9E/bz2A01
-         nXOtMq6FIE2btyOwO4lPgw7op+ARFz0nnTPY+lCAJqd21k2crfxah8bQ5U3MLYm5kz5A
-         xULTN9LTJmD1CIBUdxNsq43gGPTgPIJhCh8y9OnTDI4V6N9QarqXD7xd41y+ILwyVAZW
-         HlG0Hgdm5Ypbxhzy2CU9Kk8NQ8a3yDbignJ52Tgd9jV/ZkH3yehSSe4Alx1iIi/Jat8T
-         7VgA==
-X-Gm-Message-State: APjAAAUxYggczixXWZO7Km/Ru/oDfPyi5V2ljdwXS/6FDjCxGhEC1tY8
-        7qqu5uJZ6thjbZASyKX2shpezaDo5iI=
-X-Google-Smtp-Source: APXvYqwyOPHmXirlWlogsX9deNMzbFv41rg7cCFYSeA5zlxEhCp/H0xW7Rd4bMe8ZXdGWyRyXLDMOA==
-X-Received: by 2002:a19:6a07:: with SMTP id u7mr55978880lfu.74.1560814742182;
-        Mon, 17 Jun 2019 16:39:02 -0700 (PDT)
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com. [209.85.167.49])
-        by smtp.gmail.com with ESMTPSA id d15sm1911681lfq.76.2019.06.17.16.39.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 16:39:01 -0700 (PDT)
-Received: by mail-lf1-f49.google.com with SMTP id y17so7860929lfe.0
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 16:39:00 -0700 (PDT)
-X-Received: by 2002:a19:f808:: with SMTP id a8mr3385678lff.29.1560814740667;
- Mon, 17 Jun 2019 16:39:00 -0700 (PDT)
+        Mon, 17 Jun 2019 19:41:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726724AbfFQXlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 19:41:52 -0400
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD7AC21530
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 23:41:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560814911;
+        bh=pIjyNyWPgEfxOgkE5R5Wmxea9h4OvnpDOVDODY7GIEE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=m6qCyMZDbBid3RYL83C1MlGxMkh6jjCC3XZh9EOQlqrRBcQfPQrT2iqn6PqyhInGj
+         e4rDm8agWGdC+4O5Mv+PBNbe8vZ9MTwNVZ00KRK4ViOqo6KennYcjLkpSkCyXbeCWO
+         Ia5+INYTGg0VG7QVbP2z4MUbb/Yo3mW1EKxMXPr4=
+Received: by mail-wr1-f52.google.com with SMTP id n4so11821721wrw.13
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 16:41:50 -0700 (PDT)
+X-Gm-Message-State: APjAAAWUDCZrBe5juJEPOKmSuL8TtH4RZg1+noesQUIcRxa3KRPu9VwG
+        PmCNwaPabxY7j2CuV59tWBjFzAbbXSyuTQfhvWkRcA==
+X-Google-Smtp-Source: APXvYqzJsar69NggNKOk/89R2tFLJL8oeRQz+qRNp6cPwxpKH6uYbn46mS6q/4iRDkIBB5pz7BofXOsh+CtqaaWSYsc=
+X-Received: by 2002:a5d:6a42:: with SMTP id t2mr13574335wrw.352.1560814909361;
+ Mon, 17 Jun 2019 16:41:49 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190610191420.27007-1-kent.overstreet@gmail.com>
- <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
- <20190611011737.GA28701@kmo-pixel> <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel> <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel> <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com> <20190617224714.GR14363@dread.disaster.area>
-In-Reply-To: <20190617224714.GR14363@dread.disaster.area>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Mon, 17 Jun 2019 16:38:44 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
-Message-ID: <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>,
-        Amir Goldstein <amir73il@gmail.com>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
+References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
+ <1559944837-149589-4-git-send-email-fenghua.yu@intel.com> <CALCETrXEqqc3cKyJ5guRV3T6LP9dpSExk3a7dvR4PF8TDgD_OA@mail.gmail.com>
+ <20190610035302.GA162238@romley-ivt3.sc.intel.com> <CALCETrUSpk+_FDaPpA3a-duajUdF8kOK64AQJjsr7Pm0Gi04OA@mail.gmail.com>
+ <20190610060234.GD162238@romley-ivt3.sc.intel.com> <F021B947-90E9-450A-9196-531B7EE965F1@amacapital.net>
+ <20190617202702.GB217081@romley-ivt3.sc.intel.com> <CALCETrVENokx8VUCxdUzGeMA2oMOZ0kHRiP_O0KygyrAhf07Rg@mail.gmail.com>
+ <20190617231104.GF217081@romley-ivt3.sc.intel.com>
+In-Reply-To: <20190617231104.GF217081@romley-ivt3.sc.intel.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 17 Jun 2019 16:41:38 -0700
+X-Gmail-Original-Message-ID: <CALCETrXpB+3TjHacjfUZK6pu_L54upe+JHKKRs4x1HaHOeGbzA@mail.gmail.com>
+Message-ID: <CALCETrXpB+3TjHacjfUZK6pu_L54upe+JHKKRs4x1HaHOeGbzA@mail.gmail.com>
+Subject: Re: [PATCH v4 3/5] x86/umwait: Add sysfs interface to control umwait
+ C0.2 state
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 3:48 PM Dave Chinner <david@fromorbit.com> wrote:
+On Mon, Jun 17, 2019 at 4:20 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
 >
-> The wording of posix changes every time they release a new version
-> of the standard, and it's _never_ obvious what behaviour the
-> standard is actually meant to define. They are always written with
-> sufficient ambiguity and wiggle room that they could mean
-> _anything_. The POSIX 2017.1 standard you quoted is quite different
-> to older versions, but it's no less ambiguous...
-
-POSIX has always been pretty lax, partly because all the Unixes did
-things differently, but partly because it then also ended up about
-trying to work for the VMS and Windows posix subsystems..
-
-So yes, the language tends to be intentionally not all that strict.
-
-> > The pthreads atomicity thing seems to be about not splitting up IO and
-> > doing it in chunks when you have m:n threading models, but can be
-> > (mis-)construed to have threads given higher atomicity guarantees than
-> > processes.
+> On Mon, Jun 17, 2019 at 04:02:50PM -0700, Andy Lutomirski wrote:
+> > On Mon, Jun 17, 2019 at 1:36 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > >
+> > > On Mon, Jun 10, 2019 at 06:41:31AM -0700, Andy Lutomirski wrote:
+> > > >
+> > > >
+> > > > > On Jun 9, 2019, at 11:02 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > > > >
+> > > > >> On Sun, Jun 09, 2019 at 09:24:18PM -0700, Andy Lutomirski wrote:
+> > > > >>> On Sun, Jun 9, 2019 at 9:02 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > > > >>>
+> > > > >>>> On Sat, Jun 08, 2019 at 03:50:32PM -0700, Andy Lutomirski wrote:
+> > > > >>>>> On Fri, Jun 7, 2019 at 3:10 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
+> > > > >>>>>
+> > > > >>>>> C0.2 state in umwait and tpause instructions can be enabled or disabled
+> > > > >>>>> on a processor through IA32_UMWAIT_CONTROL MSR register.
+> > > > >>>>>
+> > > > >>>>> By default, C0.2 is enabled and the user wait instructions result in
+> > > > >>>>> lower power consumption with slower wakeup time.
+> > > > >>>>>
+> > > > >>>>> But in real time systems which require faster wakeup time although power
+> > > > >>>>> savings could be smaller, the administrator needs to disable C0.2 and all
+> > > > >>>>> C0.2 requests from user applications revert to C0.1.
+> > > > >>>>>
+> > > > >>>>> A sysfs interface "/sys/devices/system/cpu/umwait_control/enable_c02" is
+> > > > >>>>> created to allow the administrator to control C0.2 state during run time.
+> > > > >>>>
+> > > > >>>> This looks better than the previous version.  I think the locking is
+> > > > >>>> still rather confused.  You have a mutex that you hold while changing
+> > > > >>>> the value, which is entirely reasonable.  But, of the code paths that
+> > > > >>>> write the MSR, only one takes the mutex.
+> > > > >>>>
+> > > > >>>> I think you should consider making a function that just does:
+> > > > >>>>
+> > > > >>>> wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
+> > > > >>>>
+> > > > >>>> and using it in all the places that update the MSR.  The only thing
+> > > > >>>> that should need the lock is the sysfs code to avoid accidentally
+> > > > >>>> corrupting the value, but that code should also use WRITE_ONCE to do
+> > > > >>>> its update.
+> > > > >>>
+> > > > >>> Based on the comment, the illustrative CPU online and enable_c02 store
+> > > > >>> functions would be:
+> > > > >>>
+> > > > >>> umwait_cpu_online()
+> > > > >>> {
+> > > > >>>        wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
+> > > > >>>        return 0;
+> > > > >>> }
+> > > > >>>
+> > > > >>> enable_c02_store()
+> > > > >>> {
+> > > > >>>       mutex_lock(&umwait_lock);
+> > > > >>>       umwait_control_c02 = (u32)!c02_enabled;
+> > > > >>>       WRITE_ONCE(umwait_control_cached, 2 | get_umwait_control_max_time());
+> > > > >>>       on_each_cpu(umwait_control_msr_update, NULL, 1);
+> > > > >>>       mutex_unlock(&umwait_lock);
+> > > > >>> }
+> > > > >>>
+> > > > >>> Then suppose umwait_control_cached = 100000 initially and only CPU0 is
+> > > > >>> running. Admin change bit 0 in MSR from 0 to 1 to disable C0.2 and is
+> > > > >>> onlining CPU1 in the same time:
+> > > > >>>
+> > > > >>> 1. On CPU1, read umwait_control_cached to eax as 100000 in
+> > > > >>> umwait_cpu_online()
+> > > > >>> 2. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
+> > > > >>> 3. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
+> > > > >>> 4. On CPU0, wrmsr with 100001 in enabled_c02_store()
+> > > > >>>
+> > > > >>> The result is CPU0 and CPU1 have different MSR values.
+> > > > >>
+> > > > >> Yes, but only transiently, because you didn't finish your example.
+> > > > >>
+> > > > >> Step 5: enable_c02_store() does on_each_cpu(), and CPU 1 gets updated.
+> > > > >
+> > > > > There is no sync on wrmsr on CPU0 and CPU1.
+> > > >
+> > > > What do you mean by sync?
+> > > >
+> > > > > So a better sequence to
+> > > > > describe the problem is changing the order of wrmsr:
+> > > > >
+> > > > > 1. On CPU1, read umwait_control_cached to eax as 100000 in
+> > > > > umwait_cpu_online()
+> > > > > 2. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
+> > > > > 3. On CPU0, wrmsr with 100001 in on_each_cpu() in enabled_c02_store()
+> > > > > 4. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
+> > > > >
+> > > > > So CPU1 and CPU0 have different MSR values. This won't be transient.
+> > > >
+> > > > You are still ignoring the wrmsr on CPU1 due to on_each_cpu().
+> > > >
+> > >
+> > > Initially umwait_control_cached is 100000 and CPU0 is online while CPU1
+> > > is going to be online:
+> > >
+> > > 1. On CPU1, cpu_online_mask=0x3 in start_secondary()
+> > > 2. On CPU1, read umwait_control_cached to eax as 100000 in umwait_cpu_online()
+> > > 3. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
+> > > 4. On CPU0, execute one_each_cpu() in enabled_c02_store():
+> > >     wrmsr with 100001 on CPU0
+> > >     wrmsr with 100001 on CPU1
+> > > 5. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
+> > >
+> > > So the MSR is 100000 on CPU1 and 100001 on CPU0. The MSRs are different on
+> > > the CPUs.
+> > >
+> > > Is this a right sequence to demonstrate locking issue without the mutex
+> > > locking?
+> > >
+> >
+> > Fair enough.  I would fix it differently, though:
+> >
+> > static void update_this_cpu_umwait_msr(void)
+> > {
+> >   WARN_ON_ONCE(!irqs_disabled());  /* or local_irq_save() */
+> >
+> >   /* We need to prevent umwait_control from being changed *and*
+> > completing its WRMSR between our read and our WRMSR.  By turning IRQs
+> > off here, we ensure that no sysfs write happens on this CPU and we
+> > also make sure that any concurrent sysfs write from a different CPU
+> > will not finish updating us via IPI until we're done. */
+> >   wrmsrl(MSR_..., READ_ONCE(umwait_control), 0);
+> > }
 >
-> Right, but regardless of the spec we have to consider that the
-> behaviour of XFS comes from it's Irix heritage (actually from EFS,
-> the predecessor of XFS from the late 1980s)
+> If no other objections, then I will keep the current mutex lock/unlock to
+> protect wrmsr and the umwait_control_cached variable.
+>
 
-Sure. And as I mentioned, I think it's technically the nicer guarantee.
-
-That said, it's a pretty *expensive* guarantee. It's one that you
-yourself are not willing to give for O_DIRECT IO.
-
-And it's not a guarantee that Linux has ever had. In fact, it's not
-even something I've ever seen anybody ever depend on.
-
-I agree that it's possible that some app out there might depend on
-that kind of guarantee, but I also suspect it's much much more likely
-that it's the other way around: XFS is being unnecessarily strict,
-because everybody is testing against filesystems that don't actually
-give the total atomicity guarantees.
-
-Nobody develops for other unixes any more (and nobody really ever did
-it by reading standards papers - even if they had been very explicit).
-
-And honestly, the only people who really do threaded accesses to the same file
-
- (a) don't want that guarantee in the first place
-
- (b) are likely to use direct-io that apparently doesn't give that
-atomicity guarantee even on xfs
-
-so I do think it's moot.
-
-End result: if we had a really cheap range lock, I think it would be a
-good idea to use it (for the whole QoI implementation), but for
-practical reasons it's likely better to just stick to the current lack
-of serialization because it performs better and nobody really seems to
-want anything else anyway.
-
-                  Linus
+I don't think that's sufficient.  In your current code, you hold the
+mutex in some places and not in others, and there's no explanation.
+And I think you're relying on the IRQs-off protection in at least one
+code path already, so you're not gaining any simplicity.  At the very
+least, you need to add some extensive comments everywhere if you want
+to keep the mutex, but I think it's simpler and clearer if you just
+use the same logic everywhere, for example, as I proposed above.
