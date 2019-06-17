@@ -2,184 +2,120 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35D56C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AC04C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F19242086A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:53:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560775982;
-	bh=Lw4H+apTPqBmAWFUYxz+C05aM8XYDHNRGlPEvefR3u0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=XneUgSKO/BCU9pFnf65gCI2+4eZ98bwbTaSr4oBeD0TuXCTzRWNHeHwD0EWc/A2X2
-	 60BjONRrxt3xMYL3e8cOlOFJVL+XQrLAzQkhNViYD4NtF2pT68rfFSmI9+hyt2DeMI
-	 ilXjXmQJhEmAth31YYmspGNMdEQmSMx3qvZYhcOY=
+	by mail.kernel.org (Postfix) with ESMTP id 08CF02086A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:53:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728184AbfFQMxA (ORCPT
+        id S1727541AbfFQMxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:53:00 -0400
-Received: from mga01.intel.com ([192.55.52.88]:13071 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727763AbfFQMw7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:52:59 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 05:52:58 -0700
-X-ExtLoop1: 1
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga006.jf.intel.com with ESMTP; 17 Jun 2019 05:52:56 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Ran Wang <ran.wang_1@nxp.com>, Rob Herring <robh+dt@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "open list\:DESIGNWARE USB3 DRD IP DRIVER" 
-        <linux-usb@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "devicetree\@vger.kernel.org" <devicetree@vger.kernel.org>,
-        Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH] usb: dwc3: Enable the USB snooping
-In-Reply-To: <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20171115060459.45375-1-ran.wang_1@nxp.com> <87ineb9b5v.fsf@linux.intel.com> <VI1PR04MB1504776EF3D4D8C374F0C069F1290@VI1PR04MB1504.eurprd04.prod.outlook.com> <87shdfet90.fsf@linux.intel.com> <AM5PR0402MB28654EBE2D431CC2F8061CF8F11E0@AM5PR0402MB2865.eurprd04.prod.outlook.com> <87k1eaanjw.fsf@linux.intel.com> <AM5PR0402MB2865F3735D808E1BC9F67968F1180@AM5PR0402MB2865.eurprd04.prod.outlook.com> <AM5PR0402MB2865D0F0E2B4F65C86D051F8F1140@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-Date:   Mon, 17 Jun 2019 15:52:52 +0300
-Message-ID: <87o92wgyqj.fsf@linux.intel.com>
+        Mon, 17 Jun 2019 08:53:55 -0400
+Received: from lb1-smtp-cloud7.xs4all.net ([194.109.24.24]:55911 "EHLO
+        lb1-smtp-cloud7.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726028AbfFQMxy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:53:54 -0400
+Received: from [IPv6:2001:983:e9a7:1:9450:c90a:3140:14fc] ([IPv6:2001:983:e9a7:1:9450:c90a:3140:14fc])
+        by smtp-cloud7.xs4all.net with ESMTPA
+        id cr8whuvNH5qKacr8xhWxwg; Mon, 17 Jun 2019 14:53:52 +0200
+Subject: Re: [PATCH v7 0/3] media: v4l2-subdev: Verify arguments in
+ v4l2_subdev_call()
+To:     Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190520212747.368-1-jmkrzyszt@gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <4e2951b6-2fa7-c0c0-9c3c-85a6b04c3691@xs4all.nl>
+Date:   Mon, 17 Jun 2019 14:53:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <20190520212747.368-1-jmkrzyszt@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfBSmRzw+70wJnkv0H2WIQ8akfhoXjb1lZzw4t7GNm4BMPzwyLgzgqgx+Fg4vk9x6UDtuL0Z3lkS4K+H+n3yqFYU5+Sjrtg8c/2DCDo9W1/MAnMm5YA+l
+ keekHiLcWJD68JQX+/OBTCB2l5Lpn0Dg1q68uCSVApyw5vitFXjQyUVxSQW0h9CyWRhewJgFTbhiFUClStK4zB5W1ha9+Fy2CoNYKgHFPnUjnh9TIDII8MYa
+ t4dg6jTzRi0vkkK3qBMeEIGLULLbddKGxeXhpLTc+XRGAZPOI8M5I3wcmzNbZbQWgN3dOMGZO9jsx/UVc2yCPrddweLVsdsbs8AV1Ay92I6p/DYy1W4OtoKA
+ ou4BAU7S2lMw6tyogCb39iNwY2tH4ZfR+OW/imBdz5i0365azoIpGAApPwuGsYKMMftejhCZtGHmprCssdOkX4jfnkgd9g==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Sakari,
 
+Are you OK with this series? Please Ack if that's the case, so that I can
+merge it.
 
-Hi,
+Regards,
 
-Ran Wang <ran.wang_1@nxp.com> writes:
-> Hi Felipe,
->
-> On Thursday, May 30, 2019 17:09, Ran Wang wrote:
->>=20
->> <snip>
->> > >> >> >  /* Global Debug Queue/FIFO Space Available Register */
->> > >> >> >  #define DWC3_GDBGFIFOSPACE_NUM(n)	((n) & 0x1f)
->> > >> >> >  #define DWC3_GDBGFIFOSPACE_TYPE(n)	(((n) << 5) & 0x1e0)
->> > >> >> > @@ -859,6 +867,7 @@ struct dwc3_scratchpad_array {
->> > >> >> >   * 	3	- Reserved
->> > >> >> >   * @imod_interval: set the interrupt moderation interval in 2=
-50ns
->> > >> >> >   *                 increments or 0 to disable.
->> > >> >> > + * @dma_coherent: set if enable dma-coherent.
->> > >> >>
->> > >> >> you're not enabling dma coherency, you're enabling cache snoopin=
-g.
->> > >> >> And this property should describe that. Also, keep in mind that
->> > >> >> different devices may want different cache types for each of
->> > >> >> those fields, so your property would have to be a lot more
->> > >> >> complex. Something
->> > like:
->> > >> >>
->> > >> >> 	snps,cache-type =3D <foobar "cacheable">, <baz "cacheable">, ...
->> > >> >>
->> > >> >> Then driver would have to parse this properly to setup GSBUSCFG0.
->> > >
->> > > According to the DesignWare Cores SuperSpeed USB 3.0 Controller
->> > > Databook (v2.60a), it has described Type Bit Assignments for all
->> > > supported
->> > master bus type:
->> > > AHB, AXI3, AXI4 and Native. I found the bit definition are different
->> > > among
->> > them.
->> > > So, for the example you gave above, feel a little bit confused.
->> > > Did you mean:
->> > >     snps,cache-type =3D <DATA_RD  "write allocate">, <DESC_RD
->> > > "cacheable">, <DATA_WR  "bufferable">, <DESC_WR  "read allocate">
->> >
->> > yeah, something like that.
->>=20
->> I think DATA_RD  should be a macro, right? So, where I can put its defin=
-e?
->> Create a dwc3.h in include/dt-bindings/usb/ ?
->
-> Could you please give me some advice here? I'd like to prepare next versi=
-on patch after
-> getting this settled.
->
->> Another question about this remain open is: DWC3 data book's Table 6-5 C=
-ache
->> Type Bit Assignments show that bits definition will differ per MBUS_TYPE=
-s as
->> below:
->> ----------------------------------------------------------------
->>  MBUS_TYPE| bit[3]       |bit[2]       |bit[1]     |bit[0]
->>  ----------------------------------------------------------------
->>  AHB      |Cacheable     |Bufferable   |Privilegge |Data
->>  AXI3     |Write Allocate|Read Allocate|Cacheable  |Bufferable
->>  AXI4     |Allocate Other|Allocate     |Modifiable |Bufferable
->>  AXI4     |Other Allocate|Allocate     |Modifiable |Bufferable
->>  Native   |Same as AXI   |Same as AXI  |Same as AXI|Same as AXI
->>  ----------------------------------------------------------------
->>  Note: The AHB, AXI3, AXI4, and PCIe busses use different names for cert=
-ain
->>  signals, which have the same meaning:
->>    Bufferable =3D Posted
->>    Cacheable =3D Modifiable =3D Snoop (negation of No Snoop)
->>=20
->> For Layerscape SoCs, MBUS_TYPE is AXI3. So I am not sure how to use
->> snps,cache-type =3D <DATA_RD  "write allocate">, to cover all MBUS_TYPE?
->> (you can notice that AHB and AXI3's cacheable are on different bit) Or I=
- just need
->> to handle AXI3 case?
->
-> Also on this open. Thank you in advance.
+	Hans
 
-You could pass two strings and let the driver process them. Something
-like:
+On 5/20/19 11:27 PM, Janusz Krzysztofik wrote:
+> Correctness of format type (try or active) and pad ID parameters passed
+> to subdevice operation callbacks is now verified only for IOCTL calls.
+> However, those callbacks are also used by drivers, e.g., V4L2 host
+> interfaces.
+> 
+> Since both subdev_do_ioctl() and drivers are using v4l2_subdev_call()
+> macro while calling subdevice operations, move those parameter checks
+> from subdev_do_ioctl() to v4l2_subdev_call().  Also, add check for
+> non-NULL pointers, including pad config if V4L2_SUBDEV_FORMAT_TRY is
+> requested.
+> 
+> Having that done, we can avoid taking care of those checks inside
+> drivers.
+> 
+> Janusz Krzysztofik (3):
+>   media: v4l2-subdev: Verify arguments in v4l2_subdev_call()
+>   media: v4l2-subdev: Verify v4l2_subdev_call() pointer arguments
+>   media: v4l2-subdev: Verify v4l2_subdev_call() pad config argument
+> 
+>  drivers/media/v4l2-core/v4l2-subdev.c | 268 +++++++++++++++++---------
+>  include/media/v4l2-subdev.h           |   6 +
+>  2 files changed, 188 insertions(+), 86 deletions(-)
+> 
+> Changelog:
+> v6->v7:
+> Changes suggested by Sakari - thanks!
+> - never succeed pad check on media entities with pad_num == 0,
+> - allow pad 0 on subdevies not registered as media entities.
+> 
+> v5->v6:
+> - rename wrappers to call_something() as suggested by Sakari - thanks!
+> - make check_ functions inline - also on Sakari's suggestion, thanks!
+> - drop patch 2/4 and remove WARN_ONs from remaining patches to avoid
+>   kernel WARNs on non-kernel bugs - thanks Hans for pointing this out!
+> 
+> v4->v5:
+> - a few coding style and code formatting changes,
+> - require CONFIG_MEDIA_CONTROLLER, not CONFIG_VIDEO_V4L2_SUBDEV_API,
+>   for a valid pad ID check,
+> - perform pad ID check only if at least one pad is configured so
+>   drivers which don't configure pads are not affected if built with
+>   CONFIG_MEDIA_CONTROLLER defined,
+> - issue kernel warnings on invalid parameters (new patch - 2/4),
+> - validate pointers before using them (new patch - 3/4).
+> 
+> v3->v4:
+> - fix 'struct' keyword missing from patch 2/2,
+> - fix checkpatch reported style issue in patch 2/2
+> Sorry for that.
+> 
+> v2->v3:
+> - add patch 2/2 with pad config check,
+> - adjust continuation line alignments in patch 1/2 to match those
+>   used in 2/2.
+> 
+> v1->v2:
+> - replace the horrible macro with a structure of wrapper functions;
+>   inspired by Hans' and Sakari's comments - thanks!
+> 
 
-	snps,cache_type =3D <"data_wr" "write allocate">, <"desc_rd" "cacheable">.=
-..
-
-And so on. The only thing missing is for the mbus_type to be known by
-the driver. Is that something we can figure out on any of the HWPARAMS
-registers or does it have to be told explicitly?
-
-Another option would be to pass a string followed by one hex digit for
-the bits:
-
-	snps,cache_type =3D <"data_wr" 0x8>, <"desc_rd" 0x2>...;
-
-Then we don't need to describe mbus_type since the bits are what matters.
-
-Rob, any comments?
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0HjSQACgkQzL64meEa
-mQbg7g/+Lx8yM+keMyEm6/45HFbt8dj+svzOYxh0bbIrId4/UkgiphoH7tOEvT/m
-daGDtnccJ8ec6pGl1gHMweog+R7WEkFjf43hBoJjjGWqExeeNDaP6cKD60v2fU2v
-fpDbfEs4Y5HKxxaBu65MmRwBbtAg+O0ZXEC2RY5jan9GE/HbuqD5xorbRCtIdo1r
-a5f5CgMUgIglqJiQ+r9dH2M3BjlCBl+2h9YHs0IuLN9+wtRmE9V82s+b1egjot/N
-fsp9eB/YCCpuvsw38pis00SyN2KiYB1TSBYKFplZon9j1dPrUomP7dg6CUlp+UGf
-T3jlokigmXQKNK7vrBjm76fdtTAKLEuXLnVGMxFM+sn/vh95bVamyS6MNYTY/XdA
-q/0KA4Z3tpPXIF0jDV4H92sKt2qXfDjj0vt8oSpWMB4yLOpkKQtvOcpRqd3AYsbD
-+xvIOipBs6dtdp6wpvmK7BbobggCUxAObAYiJI4FoaqZbWWWnzd2piXWH5bAGkIp
-u14xAKyE7Nz20RuARpD+TchfbeAZUnrTF+PJ6LcRNshiGoPWBrRT2oCYjqN9XcE7
-K8sd6hxcXXwA4vPmo3faq4s1oiq/ACZWJPeGwCyF4yB+Y7b/I2aEicVSbOV49aiC
-j6yHlveZA9Z/GX8hVlxmkKLdhR5Uki6HP8wG5Bn2dlBK6tA2Kvk=
-=7tqt
------END PGP SIGNATURE-----
---=-=-=--
