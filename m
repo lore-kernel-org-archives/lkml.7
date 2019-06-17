@@ -2,213 +2,199 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62063C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:41:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB908C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:45:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26924208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:41:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560814914;
-	bh=pIjyNyWPgEfxOgkE5R5Wmxea9h4OvnpDOVDODY7GIEE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VL2MdeITWfXEKePkQzYOY3fQjq6553PcYsB7omSvCVzf3wJfJjxFFFzhJl4pnILDT
-	 w0AjJ24oTpJCIjQZ6NpGOpS1jOrBRdsB86gF8FYg/7mGvD2dNXMd7us7CZO/Q13OrK
-	 1rYpnS0gIB64/vWyxzj4lROyBxVjmj4D28E0tGYA=
+	by mail.kernel.org (Postfix) with ESMTP id 94A04208C0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:45:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728398AbfFQXlw (ORCPT
+        id S1728350AbfFQXpR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 19:41:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42114 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 19:45:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44036 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726724AbfFQXlw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 19:41:52 -0400
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1727443AbfFQXpR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 19:45:17 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD7AC21530
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 23:41:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560814911;
-        bh=pIjyNyWPgEfxOgkE5R5Wmxea9h4OvnpDOVDODY7GIEE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=m6qCyMZDbBid3RYL83C1MlGxMkh6jjCC3XZh9EOQlqrRBcQfPQrT2iqn6PqyhInGj
-         e4rDm8agWGdC+4O5Mv+PBNbe8vZ9MTwNVZ00KRK4ViOqo6KennYcjLkpSkCyXbeCWO
-         Ia5+INYTGg0VG7QVbP2z4MUbb/Yo3mW1EKxMXPr4=
-Received: by mail-wr1-f52.google.com with SMTP id n4so11821721wrw.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 16:41:50 -0700 (PDT)
-X-Gm-Message-State: APjAAAWUDCZrBe5juJEPOKmSuL8TtH4RZg1+noesQUIcRxa3KRPu9VwG
-        PmCNwaPabxY7j2CuV59tWBjFzAbbXSyuTQfhvWkRcA==
-X-Google-Smtp-Source: APXvYqzJsar69NggNKOk/89R2tFLJL8oeRQz+qRNp6cPwxpKH6uYbn46mS6q/4iRDkIBB5pz7BofXOsh+CtqaaWSYsc=
-X-Received: by 2002:a5d:6a42:: with SMTP id t2mr13574335wrw.352.1560814909361;
- Mon, 17 Jun 2019 16:41:49 -0700 (PDT)
+        by mail.kernel.org (Postfix) with ESMTPSA id D91AD20861;
+        Mon, 17 Jun 2019 23:45:15 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 19:45:14 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Divya Indi <divya.indi@oracle.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Srinivas Eeda <srinivas.eeda@oracle.com>,
+        Aruna Ramakrishna <aruna.ramakrishna@oracle.com>
+Subject: Re: [PATCH 3/3] tracing: Add 2 new funcs. for kernel access to
+ Ftrace instances.
+Message-ID: <20190617194514.2f760437@gandalf.local.home>
+In-Reply-To: <1560357259-3497-4-git-send-email-divya.indi@oracle.com>
+References: <1560357259-3497-1-git-send-email-divya.indi@oracle.com>
+        <1560357259-3497-2-git-send-email-divya.indi@oracle.com>
+        <1560357259-3497-3-git-send-email-divya.indi@oracle.com>
+        <1560357259-3497-4-git-send-email-divya.indi@oracle.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com>
- <1559944837-149589-4-git-send-email-fenghua.yu@intel.com> <CALCETrXEqqc3cKyJ5guRV3T6LP9dpSExk3a7dvR4PF8TDgD_OA@mail.gmail.com>
- <20190610035302.GA162238@romley-ivt3.sc.intel.com> <CALCETrUSpk+_FDaPpA3a-duajUdF8kOK64AQJjsr7Pm0Gi04OA@mail.gmail.com>
- <20190610060234.GD162238@romley-ivt3.sc.intel.com> <F021B947-90E9-450A-9196-531B7EE965F1@amacapital.net>
- <20190617202702.GB217081@romley-ivt3.sc.intel.com> <CALCETrVENokx8VUCxdUzGeMA2oMOZ0kHRiP_O0KygyrAhf07Rg@mail.gmail.com>
- <20190617231104.GF217081@romley-ivt3.sc.intel.com>
-In-Reply-To: <20190617231104.GF217081@romley-ivt3.sc.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 17 Jun 2019 16:41:38 -0700
-X-Gmail-Original-Message-ID: <CALCETrXpB+3TjHacjfUZK6pu_L54upe+JHKKRs4x1HaHOeGbzA@mail.gmail.com>
-Message-ID: <CALCETrXpB+3TjHacjfUZK6pu_L54upe+JHKKRs4x1HaHOeGbzA@mail.gmail.com>
-Subject: Re: [PATCH v4 3/5] x86/umwait: Add sysfs interface to control umwait
- C0.2 state
-To:     Fenghua Yu <fenghua.yu@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 4:20 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
->
-> On Mon, Jun 17, 2019 at 04:02:50PM -0700, Andy Lutomirski wrote:
-> > On Mon, Jun 17, 2019 at 1:36 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > >
-> > > On Mon, Jun 10, 2019 at 06:41:31AM -0700, Andy Lutomirski wrote:
-> > > >
-> > > >
-> > > > > On Jun 9, 2019, at 11:02 PM, Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > > > >
-> > > > >> On Sun, Jun 09, 2019 at 09:24:18PM -0700, Andy Lutomirski wrote:
-> > > > >>> On Sun, Jun 9, 2019 at 9:02 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > > > >>>
-> > > > >>>> On Sat, Jun 08, 2019 at 03:50:32PM -0700, Andy Lutomirski wrote:
-> > > > >>>>> On Fri, Jun 7, 2019 at 3:10 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > > > >>>>>
-> > > > >>>>> C0.2 state in umwait and tpause instructions can be enabled or disabled
-> > > > >>>>> on a processor through IA32_UMWAIT_CONTROL MSR register.
-> > > > >>>>>
-> > > > >>>>> By default, C0.2 is enabled and the user wait instructions result in
-> > > > >>>>> lower power consumption with slower wakeup time.
-> > > > >>>>>
-> > > > >>>>> But in real time systems which require faster wakeup time although power
-> > > > >>>>> savings could be smaller, the administrator needs to disable C0.2 and all
-> > > > >>>>> C0.2 requests from user applications revert to C0.1.
-> > > > >>>>>
-> > > > >>>>> A sysfs interface "/sys/devices/system/cpu/umwait_control/enable_c02" is
-> > > > >>>>> created to allow the administrator to control C0.2 state during run time.
-> > > > >>>>
-> > > > >>>> This looks better than the previous version.  I think the locking is
-> > > > >>>> still rather confused.  You have a mutex that you hold while changing
-> > > > >>>> the value, which is entirely reasonable.  But, of the code paths that
-> > > > >>>> write the MSR, only one takes the mutex.
-> > > > >>>>
-> > > > >>>> I think you should consider making a function that just does:
-> > > > >>>>
-> > > > >>>> wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
-> > > > >>>>
-> > > > >>>> and using it in all the places that update the MSR.  The only thing
-> > > > >>>> that should need the lock is the sysfs code to avoid accidentally
-> > > > >>>> corrupting the value, but that code should also use WRITE_ONCE to do
-> > > > >>>> its update.
-> > > > >>>
-> > > > >>> Based on the comment, the illustrative CPU online and enable_c02 store
-> > > > >>> functions would be:
-> > > > >>>
-> > > > >>> umwait_cpu_online()
-> > > > >>> {
-> > > > >>>        wrmsr(MSR_IA32_UMWAIT_CONTROL, READ_ONCE(umwait_control_cached), 0);
-> > > > >>>        return 0;
-> > > > >>> }
-> > > > >>>
-> > > > >>> enable_c02_store()
-> > > > >>> {
-> > > > >>>       mutex_lock(&umwait_lock);
-> > > > >>>       umwait_control_c02 = (u32)!c02_enabled;
-> > > > >>>       WRITE_ONCE(umwait_control_cached, 2 | get_umwait_control_max_time());
-> > > > >>>       on_each_cpu(umwait_control_msr_update, NULL, 1);
-> > > > >>>       mutex_unlock(&umwait_lock);
-> > > > >>> }
-> > > > >>>
-> > > > >>> Then suppose umwait_control_cached = 100000 initially and only CPU0 is
-> > > > >>> running. Admin change bit 0 in MSR from 0 to 1 to disable C0.2 and is
-> > > > >>> onlining CPU1 in the same time:
-> > > > >>>
-> > > > >>> 1. On CPU1, read umwait_control_cached to eax as 100000 in
-> > > > >>> umwait_cpu_online()
-> > > > >>> 2. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
-> > > > >>> 3. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
-> > > > >>> 4. On CPU0, wrmsr with 100001 in enabled_c02_store()
-> > > > >>>
-> > > > >>> The result is CPU0 and CPU1 have different MSR values.
-> > > > >>
-> > > > >> Yes, but only transiently, because you didn't finish your example.
-> > > > >>
-> > > > >> Step 5: enable_c02_store() does on_each_cpu(), and CPU 1 gets updated.
-> > > > >
-> > > > > There is no sync on wrmsr on CPU0 and CPU1.
-> > > >
-> > > > What do you mean by sync?
-> > > >
-> > > > > So a better sequence to
-> > > > > describe the problem is changing the order of wrmsr:
-> > > > >
-> > > > > 1. On CPU1, read umwait_control_cached to eax as 100000 in
-> > > > > umwait_cpu_online()
-> > > > > 2. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
-> > > > > 3. On CPU0, wrmsr with 100001 in on_each_cpu() in enabled_c02_store()
-> > > > > 4. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
-> > > > >
-> > > > > So CPU1 and CPU0 have different MSR values. This won't be transient.
-> > > >
-> > > > You are still ignoring the wrmsr on CPU1 due to on_each_cpu().
-> > > >
-> > >
-> > > Initially umwait_control_cached is 100000 and CPU0 is online while CPU1
-> > > is going to be online:
-> > >
-> > > 1. On CPU1, cpu_online_mask=0x3 in start_secondary()
-> > > 2. On CPU1, read umwait_control_cached to eax as 100000 in umwait_cpu_online()
-> > > 3. On CPU0, write 100001 to umwait_control_cached in enable_c02_store()
-> > > 4. On CPU0, execute one_each_cpu() in enabled_c02_store():
-> > >     wrmsr with 100001 on CPU0
-> > >     wrmsr with 100001 on CPU1
-> > > 5. On CPU1, wrmsr with eax=100000 in umwaint_cpu_online()
-> > >
-> > > So the MSR is 100000 on CPU1 and 100001 on CPU0. The MSRs are different on
-> > > the CPUs.
-> > >
-> > > Is this a right sequence to demonstrate locking issue without the mutex
-> > > locking?
-> > >
-> >
-> > Fair enough.  I would fix it differently, though:
-> >
-> > static void update_this_cpu_umwait_msr(void)
-> > {
-> >   WARN_ON_ONCE(!irqs_disabled());  /* or local_irq_save() */
-> >
-> >   /* We need to prevent umwait_control from being changed *and*
-> > completing its WRMSR between our read and our WRMSR.  By turning IRQs
-> > off here, we ensure that no sysfs write happens on this CPU and we
-> > also make sure that any concurrent sysfs write from a different CPU
-> > will not finish updating us via IPI until we're done. */
-> >   wrmsrl(MSR_..., READ_ONCE(umwait_control), 0);
-> > }
->
-> If no other objections, then I will keep the current mutex lock/unlock to
-> protect wrmsr and the umwait_control_cached variable.
->
+On Wed, 12 Jun 2019 09:34:19 -0700
+Divya Indi <divya.indi@oracle.com> wrote:
 
-I don't think that's sufficient.  In your current code, you hold the
-mutex in some places and not in others, and there's no explanation.
-And I think you're relying on the IRQs-off protection in at least one
-code path already, so you're not gaining any simplicity.  At the very
-least, you need to add some extensive comments everywhere if you want
-to keep the mutex, but I think it's simpler and clearer if you just
-use the same logic everywhere, for example, as I proposed above.
+> Adding 2 new functions -
+> 1) trace_array_lookup : Look up and return a trace array, given its
+> name.
+> 2) trace_array_set_clr_event : Enable/disable event recording to the
+> given trace array.
+> 
+> Newly added functions trace_array_lookup and trace_array_create also
+> need to increment the reference counter associated with the trace array
+> they return. This is to ensure the trace array does not get freed
+> while in use by the newly introduced APIs.
+> The reference ctr is decremented in the trace_array_destroy.
+> 
+> Signed-off-by: Divya Indi <divya.indi@oracle.com>
+> ---
+>  include/linux/trace_events.h |  3 +++
+>  kernel/trace/trace.c         | 30 +++++++++++++++++++++++++++++-
+>  kernel/trace/trace_events.c  | 22 ++++++++++++++++++++++
+>  3 files changed, 54 insertions(+), 1 deletion(-)
+> 
+> diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
+> index d7b7d85..0cc99a8 100644
+> --- a/include/linux/trace_events.h
+> +++ b/include/linux/trace_events.h
+> @@ -545,7 +545,10 @@ int trace_array_printk(struct trace_array *tr, unsigned long ip,
+>  struct trace_array *trace_array_create(const char *name);
+>  int trace_array_destroy(struct trace_array *tr);
+>  int ftrace_set_clr_event(struct trace_array *tr, char *buf, int set);
+> +struct trace_array *trace_array_lookup(const char *name);
+>  int trace_set_clr_event(const char *system, const char *event, int set);
+> +int trace_array_set_clr_event(struct trace_array *tr, const char *system,
+> +		const char *event, int set);
+>  
+>  /*
+>   * The double __builtin_constant_p is because gcc will give us an error
+> diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+> index a60dc13..fb70ccc 100644
+> --- a/kernel/trace/trace.c
+> +++ b/kernel/trace/trace.c
+> @@ -8364,6 +8364,8 @@ struct trace_array *trace_array_create(const char *name)
+>  
+>  	list_add(&tr->list, &ftrace_trace_arrays);
+>  
+> +	tr->ref++;
+> +
+
+Needs a comment for why the ref is incremented.
+
+
+>  	mutex_unlock(&trace_types_lock);
+>  	mutex_unlock(&event_mutex);
+>  
+> @@ -8385,7 +8387,14 @@ struct trace_array *trace_array_create(const char *name)
+>  
+>  static int instance_mkdir(const char *name)
+>  {
+> -	return PTR_ERR_OR_ZERO(trace_array_create(name));
+> +	struct trace_array *tr;
+> +
+> +	tr = trace_array_create(name);
+> +	if (IS_ERR(tr))
+> +		return PTR_ERR(tr);
+> +	trace_array_put(tr);
+
+Need a comment to why we need to do a put here.
+
+> +
+> +	return 0;
+>  }
+>  
+>  static int __remove_instance(struct trace_array *tr)
+> @@ -8434,6 +8443,7 @@ int trace_array_destroy(struct trace_array *tr)
+>  	mutex_lock(&event_mutex);
+>  	mutex_lock(&trace_types_lock);
+>  
+> +	tr->ref--;
+>  	ret = __remove_instance(tr);
+>  
+>  	mutex_unlock(&trace_types_lock);
+> @@ -8465,6 +8475,24 @@ static int instance_rmdir(const char *name)
+>  	return ret;
+>  }
+>  
+
+Need a kerneldoc heading here, that also states that if a trace_array
+is returned, it requires a call to trace_array_put().
+
+
+> +struct trace_array *trace_array_lookup(const char *name)
+> +{
+> +	struct trace_array *tr;
+> +
+> +	mutex_lock(&trace_types_lock);
+> +
+> +	list_for_each_entry(tr, &ftrace_trace_arrays, list) {
+> +		if (tr->name && strcmp(tr->name, name) == 0) {
+> +			tr->ref++;
+> +			mutex_unlock(&trace_types_lock);
+> +			return tr;
+> +		}
+> +	}
+> +	mutex_unlock(&trace_types_lock);
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(trace_array_lookup);
+> +
+>  static __init void create_trace_instances(struct dentry *d_tracer)
+>  {
+>  	trace_instance_dir = tracefs_create_instance_dir("instances", d_tracer,
+> diff --git a/kernel/trace/trace_events.c b/kernel/trace/trace_events.c
+> index 445b059..c126d2c 100644
+> --- a/kernel/trace/trace_events.c
+> +++ b/kernel/trace/trace_events.c
+> @@ -859,6 +859,28 @@ int trace_set_clr_event(const char *system, const char *event, int set)
+>  }
+>  EXPORT_SYMBOL_GPL(trace_set_clr_event);
+>  
+> +/**
+> + * trace_array_set_clr_event - enable or disable an event for a trace array
+> + * @system: system name to match (NULL for any system)
+> + * @event: event name to match (NULL for all events, within system)
+> + * @set: 1 to enable, 0 to disable
+> + *
+> + * This is a way for other parts of the kernel to enable or disable
+> + * event recording to instances.
+> + *
+> + * Returns 0 on success, -EINVAL if the parameters do not match any
+> + * registered events.
+> + */
+> +int trace_array_set_clr_event(struct trace_array *tr, const char *system,
+> +		const char *event, int set)
+> +{
+> +	if (!tr)
+> +		return -ENODEV;
+
+If we have this, should we get rid of the external use of
+ftrace_set_clr_event()?
+
+-- Steve
+
+> +
+> +	return __ftrace_set_clr_event(tr, NULL, system, event, set);
+> +}
+> +EXPORT_SYMBOL_GPL(trace_array_set_clr_event);
+> +
+>  /* 128 should be much more than enough */
+>  #define EVENT_BUF_SIZE		127
+>  
+
