@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06689C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72651C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C58D52063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 396D92063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807392;
-	bh=9TW6nDFtpQbe3fp7IK28uSIKJirN5VvFnYjgLlKLX1A=;
+	s=default; t=1560807396;
+	bh=hEgJyZc9Hwr8ie7GW20x125kBieP37qILr4Cyx2FG3U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=00ho7Wn1a20w3vwsaeMV/aYnKXYA3/SN0uqkTK3XZP4j6qHzEbu86eFS6NkKVMe5y
-	 6LrRG0+yGlAzIRvG69NCIDgkdE5Uc/uzKMlrf4MF2SO/n9inqeubkqvBXio2jhUdDK
-	 UKhxKG0vfbi0dMCEWb4DajygE5ibmGBTNPPlyZtE=
+	b=l3MlGrbm3jNTP+2blEbt394o3v3KrbvOe0xuwdkZQAUYDPQtMf3TMKLeuO7i6FOB8
+	 hCsoRCuy0t9Y4RXrWlb24PB9p7BLCQcnpv1tgh6EmJBjNCm/q68EU8jQarH4Wtga81
+	 Bu0YK3sPGrDWZhxRXI6fc5KUe/PKzfsv1QLEDQAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbfFQVVN (ORCPT
+        id S1729289AbfFQVVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:21:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:21:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45534 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729283AbfFQVVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:21:11 -0400
+        id S1728750AbfFQVVF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:21:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 389D52133F;
-        Mon, 17 Jun 2019 21:21:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7AF5520652;
+        Mon, 17 Jun 2019 21:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806470;
-        bh=9TW6nDFtpQbe3fp7IK28uSIKJirN5VvFnYjgLlKLX1A=;
+        s=default; t=1560806465;
+        bh=hEgJyZc9Hwr8ie7GW20x125kBieP37qILr4Cyx2FG3U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1Jju1cxhzZiL7pGCNjmTvTzPckc8WBaW/ahMKDhQK04JamCKS/cWixrIDKSlD682
-         RyZNuMH6AuzEf99m3Yp/pdF8b5gpFl2srnpmFOh3CFi8WIUbdMpewRsPMz2D9cIz+c
-         H/1EtVtfVnu9tsOGlirmzsyiqpGyZbWMiyceEsqE=
+        b=CLyWcV0zypDGvbDYVT3unBQ81JMR+hMV/Y5Po5DjJjPaZsicPrrYxgUNc0hv9oFFp
+         VRCUySgk0wjg0y5gyPTYSs5HfDedHXK9l3ynRqgC2WiEtwxK5cKrcVOuOFOgl99r/o
+         P+Bq+hEiQvSg4fkatUVpAQmply5EILQOgZ/Vpbmo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
+        stable@vger.kernel.org, Arika Chen <eaglesora@gmail.com>,
+        John Fastabend <john.fastabend@gmail.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 063/115] tools/bpftool: move set_max_rlimit() before __bpf_object__open_xattr()
-Date:   Mon, 17 Jun 2019 23:09:23 +0200
-Message-Id: <20190617210803.429088914@linuxfoundation.org>
+Subject: [PATCH 5.1 061/115] bpf, tcp: correctly handle DONT_WAIT flags and timeo == 0
+Date:   Mon, 17 Jun 2019 23:09:21 +0200
+Message-Id: <20190617210803.364287540@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -60,55 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ac4e0e055fee5751c78bba1fc9ce508a6874d916 ]
+[ Upstream commit 5fa2ca7c4a3fc176f31b495e1a704862d8188b53 ]
 
-For a host which has a lower rlimit for max locked memory (e.g., 64KB),
-the following error occurs in one of our production systems:
-  # /usr/sbin/bpftool prog load /paragon/pods/52877437/home/mark.o \
-    /sys/fs/bpf/paragon_mark_21 type cgroup/skb \
-    map idx 0 pinned /sys/fs/bpf/paragon_map_21
-  libbpf: Error in bpf_object__probe_name():Operation not permitted(1).
-    Couldn't load basic 'r0 = 0' BPF program.
-  Error: failed to open object file
+The tcp_bpf_wait_data() routine needs to check timeo != 0 before
+calling sk_wait_event() otherwise we may see unexpected stalls
+on receiver.
 
-The reason is due to low locked memory during bpf_object__probe_name()
-which probes whether program name is supported in kernel or not
-during __bpf_object__open_xattr().
+Arika did all the leg work here I just formatted, posted and ran
+a few tests.
 
-bpftool program load already tries to relax mlock rlimit before
-bpf_object__load(). Let us move set_max_rlimit() before
-__bpf_object__open_xattr(), which fixed the issue here.
-
-Fixes: 47eff61777c7 ("bpf, libbpf: introduce bpf_object__probe_caps to test BPF capabilities")
-Signed-off-by: Yonghong Song <yhs@fb.com>
-Signed-off-by: Alexei Starovoitov <ast@kernel.org>
+Fixes: 604326b41a6fb ("bpf, sockmap: convert to generic sk_msg interface")
+Reported-by: Arika Chen <eaglesora@gmail.com>
+Suggested-by: Arika Chen <eaglesora@gmail.com>
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/bpf/bpftool/prog.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/ipv4/tcp_bpf.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
-index d2be5a06c339..ed8ef5c82256 100644
---- a/tools/bpf/bpftool/prog.c
-+++ b/tools/bpf/bpftool/prog.c
-@@ -873,6 +873,8 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
- 		}
- 	}
- 
-+	set_max_rlimit();
+diff --git a/net/ipv4/tcp_bpf.c b/net/ipv4/tcp_bpf.c
+index 4a619c85daed..3d1e15401384 100644
+--- a/net/ipv4/tcp_bpf.c
++++ b/net/ipv4/tcp_bpf.c
+@@ -27,7 +27,10 @@ static int tcp_bpf_wait_data(struct sock *sk, struct sk_psock *psock,
+ 			     int flags, long timeo, int *err)
+ {
+ 	DEFINE_WAIT_FUNC(wait, woken_wake_function);
+-	int ret;
++	int ret = 0;
 +
- 	obj = __bpf_object__open_xattr(&attr, bpf_flags);
- 	if (IS_ERR_OR_NULL(obj)) {
- 		p_err("failed to open object file");
-@@ -952,8 +954,6 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
- 		goto err_close_obj;
- 	}
++	if (!timeo)
++		return ret;
  
--	set_max_rlimit();
--
- 	err = bpf_object__load(obj);
- 	if (err) {
- 		p_err("failed to load object file");
+ 	add_wait_queue(sk_sleep(sk), &wait);
+ 	sk_set_bit(SOCKWQ_ASYNC_WAITDATA, sk);
 -- 
 2.20.1
 
