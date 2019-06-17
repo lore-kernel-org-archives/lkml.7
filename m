@@ -2,102 +2,143 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A61C31E5C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAC3C46477
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C67E20B1F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560788106;
-	bh=JVZ01VQ9q2BY9LSCSpDeGenC0gNyM0CCxXIGe7cpTRk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ZsOxbIjJYDie5B6HUP/L57z4zmZIzUqBs6qUQpXKXXpLKMHJyJxWG5qOY0r9v4bNQ
-	 y3UYXcCzSDWs38eGSQqL2hPGWKFwz2si37mXcHtTiewg93XEzHLfCmKVAgfyonAtyc
-	 zx59bELd+bAbCvLoA0nssCEXvYBJA1fyLri3RpME=
+	by mail.kernel.org (Postfix) with ESMTP id 75506208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 16:15:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sW9fpUjd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728279AbfFQQPF (ORCPT
+        id S1728492AbfFQQPM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 12:15:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728193AbfFQQPE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 12:15:04 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58F4C2182B
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 16:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560788103;
-        bh=JVZ01VQ9q2BY9LSCSpDeGenC0gNyM0CCxXIGe7cpTRk=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=u0yPsNKYjsVDPjixo7eGt49hpgnj9Qzul0OjSRqTnkpQP/9jPpaQD4omedpzMB2lr
-         9051sf80GG3JB8m+1Z2RCtEy/6xh2uXK0IsU7wtiqF8+FXMLdRKWfssLvW2hnqbCzC
-         6R4kLuNGpy6jCcaZPdNYXNItJBk70On/mmPqEBsE=
-Received: by mail-wr1-f41.google.com with SMTP id p11so10634206wre.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 09:15:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAWpACEn3Gvq9T5EkLVVh2od68uyQBUUjkGcOAaJM/FZURaBA+FK
-        lzedXZVpN/kRSMfAewordas5vJEM0urtIfcgzXrbVw==
-X-Google-Smtp-Source: APXvYqw+aKjGo1oOpxFBQkSUulEn15Px0suva6OwH4jzhCqa52shTOhsLX33dxRlw1A3thzjVwlJh2/YrXPs9J0TKOY=
-X-Received: by 2002:adf:cc85:: with SMTP id p5mr16200961wrj.47.1560788101765;
- Mon, 17 Jun 2019 09:15:01 -0700 (PDT)
+        Mon, 17 Jun 2019 12:15:12 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:42096 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbfFQQPL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 12:15:11 -0400
+Received: by mail-pg1-f193.google.com with SMTP id l19so6071600pgh.9;
+        Mon, 17 Jun 2019 09:15:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=bRKPAiBDdS7Afghqz/SOxRPJ6FPjN+ps+2ffOIEw7VU=;
+        b=sW9fpUjdaRZWsNdxItpc/ms/cp9fd/mjIEjj/kdPJbqJ/hFrjrOBoxqs82IG5xzNFl
+         AywCgH5XOFyNqIzhyakCRmeHDLn1bfa6/F45xG8Zyj0wb5rXgfV0+yGm1b1yD8bRkh8I
+         yHqH/vXwbPmcClg/wG2roE2+MPFh2lPuUeRVBMtMgF5zrCeTOSLIVZR3LrmL6h9iqkf2
+         sebAVQEY9vXA2RwqCOMZT7V4nX5vIDvgPGAGBKvZVk7PVtAwWkdiKHwToSWqorC4EASn
+         YpegTKhNbS1I5DwQ5TCxXNfk5Q3QotEVVK7FZarP74Y/ubYXA+MTLP57flgePfW1wR8H
+         WS8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=bRKPAiBDdS7Afghqz/SOxRPJ6FPjN+ps+2ffOIEw7VU=;
+        b=Do3XEZi+l7C2pAOvoMPsbZ2XixARdkRkE2Qu/lvnUm2QyHZ4OHSyPigl/7fxPzzjPj
+         JPxcLpqlsuzH6dWkmSbvD/2DJnz8hBwzfWChr6+LC2iFfSa9sbqBled/7B6FOURB1Dx5
+         e8XxQKbPNbPsz3uORd0UhUJwMJk8a/R/yS1VST4FqzsxVu0EA3sHXOR3NKDA4R58W30Z
+         GNqlKT9YlohdktkSebFU0OpIZBFY38HH0UauOo5MP04pF617F1ctd0uoLQJfPUrEO2rJ
+         F5rXMnjPfGhEG5lEzGP4n9mXSjjP0ys4XeEXuI+zTcOsf9EUUGSuS7L3MuIV5WKDO6/w
+         jIDw==
+X-Gm-Message-State: APjAAAXHULpmOtXS4w1cLXBfqfZwPy2+kQOfyktbg72AU/WT0MVtSkJb
+        E1d0H2FzRQpWimGvmRXKOTJ4avrbiVU=
+X-Google-Smtp-Source: APXvYqxS7N66AVrCeD0fXY+6DE1zAFMbrOtSpmOzGTkbkfVwSrV+lsK3t24TPALJtrLzRMn3OTfk8w==
+X-Received: by 2002:a17:90a:cf0d:: with SMTP id h13mr26157865pju.63.1560788110218;
+        Mon, 17 Jun 2019 09:15:10 -0700 (PDT)
+Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
+        by smtp.gmail.com with ESMTPSA id c9sm14791953pfn.3.2019.06.17.09.15.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 09:15:09 -0700 (PDT)
+From:   Andrey Smirnov <andrew.smirnov@gmail.com>
+To:     linux-pm@vger.kernel.org
+Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Chris Healy <cphealy@gmail.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v6 02/12] thermal: qoriq: Don't store struct thermal_zone_device reference
+Date:   Mon, 17 Jun 2019 09:14:48 -0700
+Message-Id: <20190617161458.3754-3-andrew.smirnov@gmail.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190617161458.3754-1-andrew.smirnov@gmail.com>
+References: <20190617161458.3754-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
-References: <20190612170834.14855-1-mhillenb@amazon.de> <eecc856f-7f3f-ed11-3457-ea832351e963@intel.com>
- <A542C98B-486C-4849-9DAC-2355F0F89A20@amacapital.net> <alpine.DEB.2.21.1906141618000.1722@nanos.tec.linutronix.de>
- <58788f05-04c3-e71c-12c3-0123be55012c@amazon.com> <63b1b249-6bc7-ffd9-99db-d36dd3f1a962@intel.com>
- <CALCETrXph3Zg907kWTn6gAsZVsPbCB3A2XuNf0hy5Ez2jm2aNQ@mail.gmail.com> <698ca264-123d-46ae-c165-ed62ea149896@intel.com>
-In-Reply-To: <698ca264-123d-46ae-c165-ed62ea149896@intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 17 Jun 2019 09:14:50 -0700
-X-Gmail-Original-Message-ID: <CALCETrVt=X+FB2cM5hMN9okvbcROFfT4_KMwaKaN2YVvc7UQTw@mail.gmail.com>
-Message-ID: <CALCETrVt=X+FB2cM5hMN9okvbcROFfT4_KMwaKaN2YVvc7UQTw@mail.gmail.com>
-Subject: Re: [RFC 00/10] Process-local memory allocations for hiding KVM secrets
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Alexander Graf <graf@amazon.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marius Hillenbrand <mhillenb@amazon.de>,
-        kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux-MM <linux-mm@kvack.org>, Alexander Graf <graf@amazon.de>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 9:09 AM Dave Hansen <dave.hansen@intel.com> wrote:
->
-> On 6/17/19 8:54 AM, Andy Lutomirski wrote:
-> >>> Would that mean that with Meltdown affected CPUs we open speculation
-> >>> attacks against the mmlocal memory from KVM user space?
-> >> Not necessarily.  There would likely be a _set_ of local PGDs.  We could
-> >> still have pair of PTI PGDs just like we do know, they'd just be a local
-> >> PGD pair.
-> >>
-> > Unfortunately, this would mean that we need to sync twice as many
-> > top-level entries when we context switch.
->
-> Yeah, PTI sucks. :)
->
-> For anyone following along at home, I'm going to go off into crazy
-> per-cpu-pgds speculation mode now...  Feel free to stop reading now. :)
->
-> But, I was thinking we could get away with not doing this on _every_
-> context switch at least.  For instance, couldn't 'struct tlb_context'
-> have PGD pointer (or two with PTI) in addition to the TLB info?  That
-> way we only do the copying when we change the context.  Or does that tie
-> the implementation up too much with PCIDs?
+Struct thermal_zone_device reference stored as sensor's private data
+isn't really used anywhere in the code. Drop it.
 
-Hmm, that seems entirely reasonable.  I think the nasty bit would be
-figuring out all the interactions with PV TLB flushing.  PV TLB
-flushes already don't play so well with PCID tracking, and this will
-make it worse.  We probably need to rewrite all that code regardless.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Tested-by: Lucas Stach <l.stach@pengutronix.de>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Eduardo Valentin <edubezval@gmail.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: linux-imx@nxp.com
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ drivers/thermal/qoriq_thermal.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+index 91f9f49d2776..6d40b9788266 100644
+--- a/drivers/thermal/qoriq_thermal.c
++++ b/drivers/thermal/qoriq_thermal.c
+@@ -65,7 +65,6 @@ struct qoriq_tmu_data;
+  * Thermal zone data
+  */
+ struct qoriq_sensor {
+-	struct thermal_zone_device	*tzd;
+ 	struct qoriq_tmu_data		*qdata;
+ 	int				id;
+ };
+@@ -114,6 +113,8 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
+ 	int id, sites = 0;
+ 
+ 	for (id = 0; id < SITES_MAX; id++) {
++		struct thermal_zone_device *tzd;
++
+ 		qdata->sensor[id] = devm_kzalloc(&pdev->dev,
+ 				sizeof(struct qoriq_sensor), GFP_KERNEL);
+ 		if (!qdata->sensor[id])
+@@ -121,13 +122,15 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
+ 
+ 		qdata->sensor[id]->id = id;
+ 		qdata->sensor[id]->qdata = qdata;
+-		qdata->sensor[id]->tzd = devm_thermal_zone_of_sensor_register(
+-				&pdev->dev, id, qdata->sensor[id], &tmu_tz_ops);
+-		if (IS_ERR(qdata->sensor[id]->tzd)) {
+-			if (PTR_ERR(qdata->sensor[id]->tzd) == -ENODEV)
++
++		tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, id,
++							   qdata->sensor[id],
++							   &tmu_tz_ops);
++		if (IS_ERR(tzd)) {
++			if (PTR_ERR(tzd) == -ENODEV)
+ 				continue;
+ 			else
+-				return PTR_ERR(qdata->sensor[id]->tzd);
++				return PTR_ERR(tzd);
+ 		}
+ 
+ 		sites |= 0x1 << (15 - id);
+-- 
+2.21.0
+
