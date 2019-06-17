@@ -2,96 +2,105 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0C2CC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:49:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DD04C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:49:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 997702080A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:49:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dID/X0G/"
+	by mail.kernel.org (Postfix) with ESMTP id 6D0F62084B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:49:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560779389;
+	bh=EBuNzBd/qGbqCnmfVuPFwTpXaSxzUIxXb6DluxKP7J8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vryqotAhxQkjpHRc8DKQ2FejYFrzcePLmYyYeZdBToZ1fV7wcjZVe5JkMdlBCbMuK
+	 6QkFSOhDa6ek/0tUhckixNgZ0m+wgFinGVeuFqWytt0PQ0DtAMXW7NSTpkDx0sU2IK
+	 OGikXm3xyZT2fQmovScVJfmKncpxuGewUrCNng9w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfFQNtk (ORCPT
+        id S1727955AbfFQNts (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:49:40 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40089 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFQNtj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:49:39 -0400
-Received: by mail-ua1-f67.google.com with SMTP id s4so3503592uad.7;
-        Mon, 17 Jun 2019 06:49:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=gAJ7/EU7d8odPoO9pWe4aDd9tc+dB/pfZ4tLxqLbXJg=;
-        b=dID/X0G/KZCIk0PgUq85ATt2ShNl8nWB/JSZ2MU+e/u9iYRUuDlEZ+OmnlGCUG6Cq9
-         xUuixKV5I3YGnHJ18kmDfhsJIuPDCaoZuZ+41VZtWguUQuzKtF9fSgOt3qIK9n+TuQBA
-         hW2pYqBzh2YEf+qn9jJXdJ6dMlIehWdFFuMfWYfApTI84C47l3xuqFroUgR/PwJLqU3e
-         o2//ueyeebjPI6oD1edVHqQubwI9jFslJVkivA6yy7IfJx+wzD/J/Es5IXq0ZOBOofQE
-         ZKoZXKstVTeKKhyRgo3zwb0a5lxWjZt2CIpUOMhuCA8THO1RCF4k1v+f/6RuOALNzZeH
-         zg0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=gAJ7/EU7d8odPoO9pWe4aDd9tc+dB/pfZ4tLxqLbXJg=;
-        b=FC5AEiEfQk5N6tSQYsQrNdU20pP2fSe3xPHCQ9pE6LZJvymZK48WJ9WS4t4gfYtRxU
-         hqUB2Hdt1zEWHi4rYFvdPlMykSUyleNsPHhhiNICY8472NWpDEh76v5uwAnm7pY7hO7W
-         eF3qF//2sAzzHoi3Ao/AzjaJI3zk8+Vz4BLygik6InyaDAwmvEIgzr4Z3bBjlTmyprCL
-         1U8UoD7tgRIE56AHQOCdwnfGxIs4pWl22+QhQxlrmbt2ZQ2S3EWw6rqg9tm11hKUW8pc
-         /fH1+ZVgG7XmEbgLL1rXwb83FcO4+LTzaA5jr0yG8ETIUcnu+ZZ+rOwnlGVSz+f8lu24
-         i6yg==
-X-Gm-Message-State: APjAAAUcatmPvl9JH5gl5UG4XDijDAogZRs/sKer31oa3pl6TaSFnWCy
-        wBi+I4nD7KwxxUxlBDn8zeCSbPmP5fJ13W7pu4JX1t68ukM=
-X-Google-Smtp-Source: APXvYqw4lxNSbbGaEiZRZPbsUHGxGYb5IJWBMmyaQeJGDHMhb/Zi1+yaYBKQIdcSBRrrpLlKATPxaL8tMoEsEBHYy3g=
-X-Received: by 2002:ab0:4521:: with SMTP id r30mr31857546uar.70.1560779378220;
- Mon, 17 Jun 2019 06:49:38 -0700 (PDT)
+        Mon, 17 Jun 2019 09:49:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37866 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfFQNtr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:49:47 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA27E2080A;
+        Mon, 17 Jun 2019 13:49:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560779387;
+        bh=EBuNzBd/qGbqCnmfVuPFwTpXaSxzUIxXb6DluxKP7J8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=bNETxfszQdnVSL+nzOtmSUdViN8LmZW+UtXOeGITcw4s/oAlhvugoLKS7j5Khb562
+         ujC7jxrhPQ0foGT3yruPcenz4Lh9LbX7gq7T0NdkMxrjJ57N9FlqzS9mRXSTC0ggck
+         1BMJSARhJqATEcz3BeFZOa+K+jYH9mCUA1xxAPjo=
+Date:   Mon, 17 Jun 2019 08:49:45 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: Re: [PATCH v3 0/2] Fix a pair of setup bus bugs
+Message-ID: <20190617134447.GZ13533@google.com>
+References: <20190531171216.20532-1-logang@deltatee.com>
 MIME-Version: 1.0
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Mon, 17 Jun 2019 19:19:27 +0530
-Message-ID: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
-Subject: [IMX] [DRM]: suspend/resume support
-To:     open list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190531171216.20532-1-logang@deltatee.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi All,
+[+cc Ben, Nicholas]
 
-I am trying to implement suspend/resume functionality to to imx-hdmi driver:
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/gpu/drm/imx/dw_hdmi-imx.c?h=v4.9.181
-
-So, I need some help about this.
-I logged the request in imx community, but it seems they are not responding.
-Firstly I expect nxp community members to support (if anybody here).
-Otherwise, I guess, people who are experts here and have prior
-experience in implementing suspend/resume for their drivers, should be
-able to give me some guidance.
-
-Currently, I am trying to understand what needs to be taken care
-during suspend/resume.
-With some reference, I figured out that hdmi power off/on needs to be
-done during suspend/resume.
-But after resume, system is hanging.
-It seems like vblank events are not getting triggered after the resume.
-May be irq remains disabled after resume, I need to figure out some
-way to enable the all the irqs again.
-
-Even if I try to install hdmi driver as a dynamic loadable module,
-still I get the same issue.
-
-So, I wonder, what is the right way to handle suspend/resume for any driver.
-Some clue/reference should help me to keep going...
-
-
-Regards,
-Pintu
+On Fri, May 31, 2019 at 11:12:14AM -0600, Logan Gunthorpe wrote:
+> Hey,
+> 
+> This is another resend to get some more attention. Nothing has changed
+> since v2.
+> 
+> For the first patch, there's a lot more information in the original
+> thread here[1] including instructions on how to reproduce it in QEMU.
+> 
+> The second patch fixes an unrelated bug, with similar symptoms, in
+> the same code. It was a lot easier to debug and the reasoning should
+> hopefully be easier to follow, but I don't think it was reviewed much
+> during the first posting due to the nightmare in the first patch.
+> 
+> Thanks,
+> 
+> Logan
+> 
+> [1] https://lore.kernel.org/lkml/de3e34d8-2ac3-e89b-30f1-a18826ce5d7d@deltatee.com/T/#m96ba95de4678146ed46b602e8bfd6ac08a588fa2
+> 
+> --
+> 
+> Changes in v3:
+> 
+> * Rebased onto v5.2-rc2 (no changes)
+> 
+> Changes in v2:
+> 
+> * Rebased onto v5.1-rc6 (no changes)
+> * Reworked the commit message in the first commit to try and explain
+>   it better.
+> 
+> --
+> 
+> Logan Gunthorpe (2):
+>   PCI: Prevent 64-bit resources from being counted in 32-bit bridge
+>     region
+>   PCI: Fix disabling of bridge BARs when assigning bus resources
+> 
+>  drivers/pci/setup-bus.c | 24 ++++++++++++++----------
+>  1 file changed, 14 insertions(+), 10 deletions(-)
+> 
+> --
+> 2.20.1
