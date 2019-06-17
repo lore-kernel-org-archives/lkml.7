@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43E39C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B166C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11C6A208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0458F2089E
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:19:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806369;
-	bh=WrlX2A+LaoJ85GVbGcNaxS6vS7xBK2PoILYMjk4Xuys=;
+	s=default; t=1560806373;
+	bh=x7eZg+XnraK1zyNh45kBrIrXiTjSPE5QLBHqmdyQ2Wo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=otYqObP/TpcumacjZnvx2oCyVpfF8SXqWOEbIgvmzm7zzijOZokOWj3Rx2gDNh+bd
-	 ZMaZ2D6zR0T9eGKVmeRUypTDOQcqNISgMEmvY6cZmGPd3plqu6waa6mai7s++ej4ci
-	 g5d31afseuLJPFl+QwXD2rCZUVI3zl/eQb8+ecNM=
+	b=yrITlqpsUbvzAcS9ZVBhW+z1LSXHuUwv6TwHgMbB7Z7zjZXetHYQvc8O2ZZ6PcUT+
+	 6i4D4T3k44mlcdTqdZ6+Qpn9IDzYnKMmfC4JtHXbSTdubCVDoayXbSbzXKaUJuAM2w
+	 G9ePiBhmFnbhMIkosBDAqLsBjlDK53WK9yglX3Lw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728820AbfFQVT1 (ORCPT
+        id S1728836AbfFQVTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:19:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43120 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:19:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728745AbfFQVTU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:19:20 -0400
+        id S1728808AbfFQVT0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:19:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D243220B1F;
-        Mon, 17 Jun 2019 21:19:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 377442089E;
+        Mon, 17 Jun 2019 21:19:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806360;
-        bh=WrlX2A+LaoJ85GVbGcNaxS6vS7xBK2PoILYMjk4Xuys=;
+        s=default; t=1560806365;
+        bh=x7eZg+XnraK1zyNh45kBrIrXiTjSPE5QLBHqmdyQ2Wo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MsqNeOx1j3+wc2lJyJUhS8a5LCYq9aEaanm2SiAICEKuCZ1+fCosF7XRsunIKTzEi
-         Bzd/jppi1sCt/nYS7jJwSWWbmQCK1fyIszG5stfdBuc6CTqGBpvuJkKh+QbtV0ufe0
-         CQNgsnJUitPKVTervwdD+DUPdNY7VKoPLppmWZY4=
+        b=kUnf5BTJleJV7u8OusPmRnOWa9hHBWM32sAP0B6AMo9b8vJ1TTRgC/5Lr57Hw3Jql
+         ZEBjN7IxVQyT6mPLuSK47tME4YRdspOAgHVx3klIbY1R3Ipvq5uOet/qC3WlMWvayy
+         rfAkttW/iI6i1C17CXW/ubBn/U94xWY0W04OEGn8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
-        syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com,
-        "Eric W. Biederman" <ebiederm@xmission.com>
-Subject: [PATCH 5.1 025/115] signal/ptrace: Dont leak unitialized kernel memory with PTRACE_PEEK_SIGINFO
-Date:   Mon, 17 Jun 2019 23:08:45 +0200
-Message-Id: <20190617210801.224292495@linuxfoundation.org>
+        stable@vger.kernel.org, Sean Young <sean@mess.org>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Subject: [PATCH 5.1 027/115] media: dvb: warning about dvb frequency limits produces too much noise
+Date:   Mon, 17 Jun 2019 23:08:47 +0200
+Message-Id: <20190617210801.333369369@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -60,76 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric W. Biederman <ebiederm@xmission.com>
+From: Sean Young <sean@mess.org>
 
-commit f6e2aa91a46d2bc79fce9b93a988dbe7655c90c0 upstream.
+commit eb96e57b913ff668b8b804178cdc509f9b3d4472 upstream.
 
-Recently syzbot in conjunction with KMSAN reported that
-ptrace_peek_siginfo can copy an uninitialized siginfo to userspace.
-Inspecting ptrace_peek_siginfo confirms this.
+This can be a debug message. Favour dev_dbg() over dprintk() as this is
+already used much more than dprintk().
 
-The problem is that off when initialized from args.off can be
-initialized to a negaive value.  At which point the "if (off >= 0)"
-test to see if off became negative fails because off started off
-negative.
+dvb_frontend: dvb_frontend_get_frequency_limits: frequency interval: tuner: 45000000...860000000, frontend: 44250000...867250000
 
-Prevent the core problem by adding a variable found that is only true
-if a siginfo is found and copied to a temporary in preparation for
-being copied to userspace.
+Fixes: 00ecd6bc7128 ("media: dvb_frontend: add debug message for frequency intervals")
 
-Prevent args.off from being truncated when being assigned to off by
-testing that off is <= the maximum possible value of off.  Convert off
-to an unsigned long so that we should not have to truncate args.off,
-we have well defined overflow behavior so if we add another check we
-won't risk fighting undefined compiler behavior, and so that we have a
-type whose maximum value is easy to test for.
-
-Cc: Andrei Vagin <avagin@gmail.com>
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com
-Fixes: 84c751bd4aeb ("ptrace: add ability to retrieve signals without removing from a queue (v4)")
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: <stable@vger.kernel.org> # 5.0
+Signed-off-by: Sean Young <sean@mess.org>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/ptrace.c |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/media/dvb-core/dvb_frontend.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/kernel/ptrace.c
-+++ b/kernel/ptrace.c
-@@ -704,6 +704,10 @@ static int ptrace_peek_siginfo(struct ta
- 	if (arg.nr < 0)
- 		return -EINVAL;
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -917,7 +917,7 @@ static void dvb_frontend_get_frequency_l
+ 			 "DVB: adapter %i frontend %u frequency limits undefined - fix the driver\n",
+ 			 fe->dvb->num, fe->id);
  
-+	/* Ensure arg.off fits in an unsigned long */
-+	if (arg.off > ULONG_MAX)
-+		return 0;
-+
- 	if (arg.flags & PTRACE_PEEKSIGINFO_SHARED)
- 		pending = &child->signal->shared_pending;
- 	else
-@@ -711,18 +715,20 @@ static int ptrace_peek_siginfo(struct ta
+-	dprintk("frequency interval: tuner: %u...%u, frontend: %u...%u",
++	dev_dbg(fe->dvb->device, "frequency interval: tuner: %u...%u, frontend: %u...%u",
+ 		tuner_min, tuner_max, frontend_min, frontend_max);
  
- 	for (i = 0; i < arg.nr; ) {
- 		kernel_siginfo_t info;
--		s32 off = arg.off + i;
-+		unsigned long off = arg.off + i;
-+		bool found = false;
- 
- 		spin_lock_irq(&child->sighand->siglock);
- 		list_for_each_entry(q, &pending->list, list) {
- 			if (!off--) {
-+				found = true;
- 				copy_siginfo(&info, &q->info);
- 				break;
- 			}
- 		}
- 		spin_unlock_irq(&child->sighand->siglock);
- 
--		if (off >= 0) /* beyond the end of the list */
-+		if (!found) /* beyond the end of the list */
- 			break;
- 
- #ifdef CONFIG_COMPAT
+ 	/* If the standard is for satellite, convert frequencies to kHz */
 
 
