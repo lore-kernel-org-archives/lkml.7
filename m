@@ -2,190 +2,113 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE5AC31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45CACC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:10:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2FF9208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E15B2085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:10:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y6+XH3rT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727879AbfFQUKT (ORCPT
+        id S1728953AbfFQUKX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:10:19 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:48464 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfFQUKT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:10:19 -0400
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hcxxI-0004rl-Iq; Mon, 17 Jun 2019 14:10:17 -0600
-To:     Christoph Hellwig <hch@lst.de>,
-        Dan Williams <dan.j.williams@intel.com>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>
-Cc:     linux-nvdimm@lists.01.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, nouveau@lists.freedesktop.org
-References: <20190617122733.22432-1-hch@lst.de>
- <20190617122733.22432-17-hch@lst.de>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <e404fb0b-4ed8-34bb-7df8-9b59cb760f53@deltatee.com>
-Date:   Mon, 17 Jun 2019 14:10:16 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Mon, 17 Jun 2019 16:10:23 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39392 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfFQUKU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 16:10:20 -0400
+Received: by mail-io1-f65.google.com with SMTP id r185so18187229iod.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 13:10:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zhz2d9XJe8nX7yclD2KabSz2ABSlxKrOqshNsQUbLNs=;
+        b=Y6+XH3rTuBpT3/+zGSEve8N2Cd4liXJXGlvGeJlSlgjF4gvKqhNYNQxq4gH2UmWvyX
+         JRm4nzTjgugm66g7l1Ku3kx7AtyeUDOjqK0/t+VGLauGNDrRYHMgRW4cdQWrRGcBinuJ
+         IJ2ILz0XYXRMpBMaqMofa8CyfHQqrj4BGtpAU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Zhz2d9XJe8nX7yclD2KabSz2ABSlxKrOqshNsQUbLNs=;
+        b=MzD2Lszj0sD7nu9v5eD7JQSB6SDVl2f3DF+uSPweTuttcUQ1R6rZAH+OPTmr6LnUh3
+         Z09JkyJMon8blyHrgKOX04vv+GxYUgEny211XwxE7kz4VKNrNwN/32qzTMzPpeHPquWx
+         3JBcaMlGsnMyiX2xSSJJEMl9yO2s6YRna/+obDGy9fQadY3N3xwI1Wi139BQ6o1Gn/5b
+         m/KlthZJ11IePnu+GVONz/3UEZqGvpCTR8XmIsfSsYAjaySn090gPNlHFUcioqelpJhI
+         bUugQ2al96VfmZfncI6B4fYpwCpJrYFZY8vkDdG59BExEk9yoyi0hXljLJhPgMiTOiiN
+         mErg==
+X-Gm-Message-State: APjAAAUR8cdXk1PdIiVraRL3jIcvz4wSG7DqcMoiCkIix52vwWw+sJ1I
+        fUNFCXJ1Wjdz2Fycm/+byVSmtg==
+X-Google-Smtp-Source: APXvYqyvSFVPICXlZ5qOrdYqNCjoeODwgIZegCYh7Y1Z/RNaw1BomNUYMBee5d7BAhV7K2HU9ro+EQ==
+X-Received: by 2002:a5d:9643:: with SMTP id d3mr18399719ios.227.1560802220123;
+        Mon, 17 Jun 2019 13:10:20 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id b6sm9755978iok.71.2019.06.17.13.10.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 13:10:19 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-mmc@vger.kernel.org
+Cc:     ernest.zhang@bayhubtech.com, djkurtz@chromium.org,
+        Raul E Rangel <rrangel@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        linux-kernel@vger.kernel.org, Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v2 1/3] mmc: sdhci: sdhci-pci-o2micro: Correctly set bus width when tuning
+Date:   Mon, 17 Jun 2019 14:10:12 -0600
+Message-Id: <20190617201014.84503-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-In-Reply-To: <20190617122733.22432-17-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: nouveau@lists.freedesktop.org, linux-mm@kvack.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvdimm@lists.01.org, bskeggs@redhat.com, jgg@mellanox.com, jglisse@redhat.com, dan.j.williams@intel.com, hch@lst.de
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH 16/25] PCI/P2PDMA: use the dev_pagemap internal refcount
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The O2Micro controller only supports tuning at 4-bits. So the host driver
+needs to change the bus width while tuning and then set it back when done.
 
+There was a bug in the original implementation in that mmc->ios.bus_width
+also wasn't updated. Thus setting the incorrect blocksize in
+sdhci_send_tuning which results in a tuning failure.
 
-On 2019-06-17 6:27 a.m., Christoph Hellwig wrote:
-> The functionality is identical to the one currently open coded in
-> p2pdma.c.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Fixes: 0086fc217d5d7 ("mmc: sdhci: Add support for O2 hardware tuning")
+Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+---
 
-Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
+ drivers/mmc/host/sdhci-pci-o2micro.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-I also did a quick test with the full patch-set to ensure that the setup
-and tear down paths for p2pdma still work correctly and it all does.
+diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+index b29bf4e7dcb48..dd21315922c87 100644
+--- a/drivers/mmc/host/sdhci-pci-o2micro.c
++++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+@@ -115,6 +115,7 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 	 */
+ 	if (mmc->ios.bus_width == MMC_BUS_WIDTH_8) {
+ 		current_bus_width = mmc->ios.bus_width;
++		mmc->ios.bus_width = MMC_BUS_WIDTH_4;
+ 		sdhci_set_bus_width(host, MMC_BUS_WIDTH_4);
+ 	}
+ 
+@@ -126,8 +127,10 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+ 
+ 	sdhci_end_tuning(host);
+ 
+-	if (current_bus_width == MMC_BUS_WIDTH_8)
++	if (current_bus_width == MMC_BUS_WIDTH_8) {
++		mmc->ios.bus_width = MMC_BUS_WIDTH_8;
+ 		sdhci_set_bus_width(host, current_bus_width);
++	}
+ 
+ 	host->flags &= ~SDHCI_HS400_TUNING;
+ 	return 0;
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-Thanks,
-
-Logan
-
-> ---
->  drivers/pci/p2pdma.c | 56 ++++----------------------------------------
->  1 file changed, 4 insertions(+), 52 deletions(-)
-> 
-> diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-> index 48a88158e46a..608f84df604a 100644
-> --- a/drivers/pci/p2pdma.c
-> +++ b/drivers/pci/p2pdma.c
-> @@ -24,12 +24,6 @@ struct pci_p2pdma {
->  	bool p2pmem_published;
->  };
->  
-> -struct p2pdma_pagemap {
-> -	struct dev_pagemap pgmap;
-> -	struct percpu_ref ref;
-> -	struct completion ref_done;
-> -};
-> -
->  static ssize_t size_show(struct device *dev, struct device_attribute *attr,
->  			 char *buf)
->  {
-> @@ -78,32 +72,6 @@ static const struct attribute_group p2pmem_group = {
->  	.name = "p2pmem",
->  };
->  
-> -static struct p2pdma_pagemap *to_p2p_pgmap(struct percpu_ref *ref)
-> -{
-> -	return container_of(ref, struct p2pdma_pagemap, ref);
-> -}
-> -
-> -static void pci_p2pdma_percpu_release(struct percpu_ref *ref)
-> -{
-> -	struct p2pdma_pagemap *p2p_pgmap = to_p2p_pgmap(ref);
-> -
-> -	complete(&p2p_pgmap->ref_done);
-> -}
-> -
-> -static void pci_p2pdma_percpu_kill(struct dev_pagemap *pgmap)
-> -{
-> -	percpu_ref_kill(pgmap->ref);
-> -}
-> -
-> -static void pci_p2pdma_percpu_cleanup(struct dev_pagemap *pgmap)
-> -{
-> -	struct p2pdma_pagemap *p2p_pgmap =
-> -		container_of(pgmap, struct p2pdma_pagemap, pgmap);
-> -
-> -	wait_for_completion(&p2p_pgmap->ref_done);
-> -	percpu_ref_exit(&p2p_pgmap->ref);
-> -}
-> -
->  static void pci_p2pdma_release(void *data)
->  {
->  	struct pci_dev *pdev = data;
-> @@ -153,11 +121,6 @@ static int pci_p2pdma_setup(struct pci_dev *pdev)
->  	return error;
->  }
->  
-> -static const struct dev_pagemap_ops pci_p2pdma_pagemap_ops = {
-> -	.kill		= pci_p2pdma_percpu_kill,
-> -	.cleanup	= pci_p2pdma_percpu_cleanup,
-> -};
-> -
->  /**
->   * pci_p2pdma_add_resource - add memory for use as p2p memory
->   * @pdev: the device to add the memory to
-> @@ -171,7 +134,6 @@ static const struct dev_pagemap_ops pci_p2pdma_pagemap_ops = {
->  int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  			    u64 offset)
->  {
-> -	struct p2pdma_pagemap *p2p_pgmap;
->  	struct dev_pagemap *pgmap;
->  	void *addr;
->  	int error;
-> @@ -194,22 +156,12 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  			return error;
->  	}
->  
-> -	p2p_pgmap = devm_kzalloc(&pdev->dev, sizeof(*p2p_pgmap), GFP_KERNEL);
-> -	if (!p2p_pgmap)
-> +	pgmap = devm_kzalloc(&pdev->dev, sizeof(*pgmap), GFP_KERNEL);
-> +	if (!pgmap)
->  		return -ENOMEM;
-> -
-> -	init_completion(&p2p_pgmap->ref_done);
-> -	error = percpu_ref_init(&p2p_pgmap->ref,
-> -			pci_p2pdma_percpu_release, 0, GFP_KERNEL);
-> -	if (error)
-> -		goto pgmap_free;
-> -
-> -	pgmap = &p2p_pgmap->pgmap;
-> -
->  	pgmap->res.start = pci_resource_start(pdev, bar) + offset;
->  	pgmap->res.end = pgmap->res.start + size - 1;
->  	pgmap->res.flags = pci_resource_flags(pdev, bar);
-> -	pgmap->ref = &p2p_pgmap->ref;
->  	pgmap->type = MEMORY_DEVICE_PCI_P2PDMA;
->  	pgmap->pci_p2pdma_bus_offset = pci_bus_address(pdev, bar) -
->  		pci_resource_start(pdev, bar);
-> @@ -223,7 +175,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  	error = gen_pool_add_owner(pdev->p2pdma->pool, (unsigned long)addr,
->  			pci_bus_address(pdev, bar) + offset,
->  			resource_size(&pgmap->res), dev_to_node(&pdev->dev),
-> -			&p2p_pgmap->ref);
-> +			pgmap->ref);
->  	if (error)
->  		goto pages_free;
->  
-> @@ -235,7 +187,7 @@ int pci_p2pdma_add_resource(struct pci_dev *pdev, int bar, size_t size,
->  pages_free:
->  	devm_memunmap_pages(&pdev->dev, pgmap);
->  pgmap_free:
-> -	devm_kfree(&pdev->dev, p2p_pgmap);
-> +	devm_kfree(&pdev->dev, pgmap);
->  	return error;
->  }
->  EXPORT_SYMBOL_GPL(pci_p2pdma_add_resource);
-> 
