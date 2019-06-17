@@ -2,134 +2,171 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E131C31E5D
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263CFC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59848208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC47E208C4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 17:21:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="FR9ugC9L"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="YprNyBwc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfFQRVf (ORCPT
+        id S1728459AbfFQRVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 13:21:35 -0400
-Received: from mail.andi.de1.cc ([85.214.239.24]:58880 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725995AbfFQRVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 13:21:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Type:MIME-Version:References:
-        In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4afMFHfci1u5XXeLng+byGIrAzWSNyHsyI06871YI5k=; b=FR9ugC9LJ0EMC2/WW4dLztG7v
-        Z9BFt8fEyX5RVGOXY8z489nJKdESRtqNRSNS5QHNxjvaXV0RnundYRxH+Vx87UQTZp3a0HPVzEDna
-        nPP0c7qOVDer/AdFchb2UCLDMJiwwy2CLxPoHPRWNjCzYHTknewrQi9lZbL/JKINkSPLo=;
-Received: from p200300ccff076f007ee9d3fffe1fa246.dip0.t-ipconnect.de ([2003:cc:ff07:6f00:7ee9:d3ff:fe1f:a246] helo=eeepc)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1hcvJz-0004Db-89; Mon, 17 Jun 2019 19:21:31 +0200
-Received: from [::1] (helo=localhost)
-        by eeepc with esmtp (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1hcvJy-0005Fn-DA; Mon, 17 Jun 2019 19:21:30 +0200
-Date:   Mon, 17 Jun 2019 19:21:16 +0200
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
-        letux-kernel@openphoenux.org
-Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
-Message-ID: <20190617192116.053951e8@kemnade.info>
-In-Reply-To: <20190617170255.GF5316@sirena.org.uk>
-References: <20190615163314.28173-1-andreas@kemnade.info>
-        <20190617103111.GM5316@sirena.org.uk>
-        <20190617130357.41204ff7@kemnade.info>
-        <20190617114048.GN5316@sirena.org.uk>
-        <20190617182743.7f40f2ee@aktux>
-        <20190617170255.GF5316@sirena.org.uk>
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; i686-pc-linux-gnu)
+        Mon, 17 Jun 2019 13:21:54 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44921 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725995AbfFQRVx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 13:21:53 -0400
+Received: by mail-oi1-f195.google.com with SMTP id e189so7545019oib.11
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 10:21:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+m6hj6kR6+t7FFgSRKaK1PbX93Vf69qhd80YwAUvJfY=;
+        b=YprNyBwcuU7peH69ojyfcOHSG09vpn+WCDMlzGVZX7krGOxzA38q9jGCAuVJ3u8dUl
+         ARp0m4eM7XcX/eR8V6wFea0PHqsk2ILlfA4J8C3DcOEQ3mE+O51E01kszOwKzLuws2fF
+         6Igv5nh+vDV7XP9ueQ61ixTl17AHI6MdkwZpji/iK30Tn5OzQgi5Xx2TA38yrkdJrsR1
+         odxVF85VzukYawtRFMrPqVrmXrKlQ6HrdV+m99XuDdcrRABsCDi421y5SB7YP4Kn0iqZ
+         FZRt9w+dmb+eOjEHfy4knKFlViuuM33mdh1Zzdp5EHs3I45SN1TMzM8K80BnPc4E7ZZb
+         kqCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+m6hj6kR6+t7FFgSRKaK1PbX93Vf69qhd80YwAUvJfY=;
+        b=HAxTAoyvUZuK7FJ/jpktimYj7bsHl8m2w3Iwf3VVu/9feLWOpZT1iZnMd8Jfm2yAOT
+         8t6VyMQuorzyfKetVEfLk7Nr8vfWsnn1+tV1rM/geYhL/xjVIJ4G5xlBHZ4iTxD3DH9k
+         4dOhAUXb8LnzW0EpD6tuu3F4m+rp9129fZlIkf/QeqAcmNUyIU88DMrmaHMuFzxo7V65
+         TBNYpkMDnh7QIHV81zM/UlGKxbYhEYV1yiDDBRZARl9X5nTdl8T/idy63BIpvOQzjx54
+         kjXB02PDyorArtt5wGEevctFcns3T4wkqQu4uGGZwuKve7a3SQr1r+f2/P2jh2IlTjAr
+         s8GQ==
+X-Gm-Message-State: APjAAAXiuf+v2XaNMBhVJ5B8BiIjczsIjCYTp/0WBn++RHOr64D8tSgj
+        qNNHCmOx/7Akfmd9k36vD73UlO23UHJ74149smSatw==
+X-Google-Smtp-Source: APXvYqwVgRIrtHtXnTOpaGBVuVulNLYZy1sN1k1Po68BpCrKXTxlXWFQxhkbz94oC9uvIpMV9vHTUh/5w12QpAh0JY0=
+X-Received: by 2002:aca:1304:: with SMTP id e4mr11244312oii.149.1560792112232;
+ Mon, 17 Jun 2019 10:21:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/VP/ge4m0D4p08_w=ity.hXK"; protocol="application/pgp-signature"
+References: <1560366952-10660-1-git-send-email-cai@lca.pw> <CAPcyv4hn0Vz24s5EWKr39roXORtBTevZf7dDutH+jwapgV3oSw@mail.gmail.com>
+ <CAPcyv4iuNYXmF0-EMP8GF5aiPsWF+pOFMYKCnr509WoAQ0VNUA@mail.gmail.com>
+ <1560376072.5154.6.camel@lca.pw> <87lfy4ilvj.fsf@linux.ibm.com>
+ <20190614153535.GA9900@linux> <c3f2c05d-e42f-c942-1385-664f646ddd33@linux.ibm.com>
+ <CAPcyv4j_QQB8SrhTqL2mnEEHGYCg4H7kYanChiww35k0fwNv8Q@mail.gmail.com> <87imt6i3zd.fsf@linux.ibm.com>
+In-Reply-To: <87imt6i3zd.fsf@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Mon, 17 Jun 2019 10:21:40 -0700
+Message-ID: <CAPcyv4gKPBuZ_1=YRGpQb0hzgf_-PFdkgTgh1nHS_iAxbJ-MCg@mail.gmail.com>
+Subject: Re: [PATCH -next] mm/hotplug: skip bad PFNs from pfn_to_online_page()
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Oscar Salvador <osalvador@suse.de>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        jmoyer <jmoyer@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/VP/ge4m0D4p08_w=ity.hXK
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+On Sat, Jun 15, 2019 at 8:50 PM Aneesh Kumar K.V
+<aneesh.kumar@linux.ibm.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > On Fri, Jun 14, 2019 at 9:18 AM Aneesh Kumar K.V
+> > <aneesh.kumar@linux.ibm.com> wrote:
+> >>
+> >> On 6/14/19 9:05 PM, Oscar Salvador wrote:
+> >> > On Fri, Jun 14, 2019 at 02:28:40PM +0530, Aneesh Kumar K.V wrote:
+> >> >> Can you check with this change on ppc64.  I haven't reviewed this series yet.
+> >> >> I did limited testing with change . Before merging this I need to go
+> >> >> through the full series again. The vmemmap poplulate on ppc64 needs to
+> >> >> handle two translation mode (hash and radix). With respect to vmemap
+> >> >> hash doesn't setup a translation in the linux page table. Hence we need
+> >> >> to make sure we don't try to setup a mapping for a range which is
+> >> >> arleady convered by an existing mapping.
+> >> >>
+> >> >> diff --git a/arch/powerpc/mm/init_64.c b/arch/powerpc/mm/init_64.c
+> >> >> index a4e17a979e45..15c342f0a543 100644
+> >> >> --- a/arch/powerpc/mm/init_64.c
+> >> >> +++ b/arch/powerpc/mm/init_64.c
+> >> >> @@ -88,16 +88,23 @@ static unsigned long __meminit vmemmap_section_start(unsigned long page)
+> >> >>    * which overlaps this vmemmap page is initialised then this page is
+> >> >>    * initialised already.
+> >> >>    */
+> >> >> -static int __meminit vmemmap_populated(unsigned long start, int page_size)
+> >> >> +static bool __meminit vmemmap_populated(unsigned long start, int page_size)
+> >> >>   {
+> >> >>      unsigned long end = start + page_size;
+> >> >>      start = (unsigned long)(pfn_to_page(vmemmap_section_start(start)));
+> >> >>
+> >> >> -    for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page)))
+> >> >> -            if (pfn_valid(page_to_pfn((struct page *)start)))
+> >> >> -                    return 1;
+> >> >> +    for (; start < end; start += (PAGES_PER_SECTION * sizeof(struct page))) {
+> >> >>
+> >> >> -    return 0;
+> >> >> +            struct mem_section *ms;
+> >> >> +            unsigned long pfn = page_to_pfn((struct page *)start);
+> >> >> +
+> >> >> +            if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
+> >> >> +                    return 0;
+> >> >
+> >> > I might be missing something, but is this right?
+> >> > Having a section_nr above NR_MEM_SECTIONS is invalid, but if we return 0 here,
+> >> > vmemmap_populate will go on and populate it.
+> >>
+> >> I should drop that completely. We should not hit that condition at all.
+> >> I will send a final patch once I go through the full patch series making
+> >> sure we are not breaking any ppc64 details.
+> >>
+> >> Wondering why we did the below
+> >>
+> >> #if defined(ARCH_SUBSECTION_SHIFT)
+> >> #define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
+> >> #elif defined(PMD_SHIFT)
+> >> #define SUBSECTION_SHIFT (PMD_SHIFT)
+> >> #else
+> >> /*
+> >>   * Memory hotplug enabled platforms avoid this default because they
+> >>   * either define ARCH_SUBSECTION_SHIFT, or PMD_SHIFT is a constant, but
+> >>   * this is kept as a backstop to allow compilation on
+> >>   * !ARCH_ENABLE_MEMORY_HOTPLUG archs.
+> >>   */
+> >> #define SUBSECTION_SHIFT 21
+> >> #endif
+> >>
+> >> why not
+> >>
+> >> #if defined(ARCH_SUBSECTION_SHIFT)
+> >> #define SUBSECTION_SHIFT (ARCH_SUBSECTION_SHIFT)
+> >> #else
+> >> #define SUBSECTION_SHIFT  SECTION_SHIFT
+> >> #endif
+> >>
+> >> ie, if SUBSECTION is not supported by arch we have one sub-section per
+> >> section?
+> >
+> > A couple comments:
+> >
+> > The only reason ARCH_SUBSECTION_SHIFT exists is because PMD_SHIFT on
+> > PowerPC was a non-constant value. However, I'm planning to remove the
+> > distinction in the next rev of the patches. Jeff rightly points out
+> > that having a variable subsection size per arch will lead to
+> > situations where persistent memory namespaces are not portable across
+> > archs. So I plan to just make SUBSECTION_SHIFT 21 everywhere.
+>
+> What is the dependency between subsection and pageblock_order? Shouldn't
+> subsection size >= pageblock size?
+>
+> We do have pageblock size drived from HugeTLB size.
 
-On Mon, 17 Jun 2019 18:02:55 +0100
-Mark Brown <broonie@kernel.org> wrote:
-
-> On Mon, Jun 17, 2019 at 06:27:43PM +0200, Andreas Kemnade wrote:
->=20
-> > Citing tps65950 trm page 55: =20
->=20
-> > The device contains three switch-mode power supplies (SMPS):
-> > =E2=80=A2 VDD1: 1.2-A, buck DC/DC converter (VOUT =3D 0.6 V to 1.45 V, =
-in steps of 12.5 mV)
-> > =E2=80=A2 VDD2: 600-mA buck DC/DC converter (VOUT =3D 0.6 V to 1.45 V, =
-in steps of 12.5 mV, and 1.5 V as a
-> >    single programmable value) =20
->=20
-> > you are right, they are not really continuous. So should I add these
-> > 68 steps they have as a voltage list? =20
->=20
-> There's helpers for linear mappings, you should be able to use those
-> (see helpers.c).
->=20
-ok, I will send a 2 with such a list.
-
-Thanks for the hint.
-
-> > I think they are nearly continuous, so we should IMHO rather take that
-> > not that strict. I guess there are no really continuous regulators, all
-> > have steps as voltage is specified in a limited resolution. So what is
-> > the exact meaning of that flag here? =20
->=20
-> This was added for devices with extremely high resolution interfaces
-> like some microcontroller interfaces that take voltage values directly
-> (mirroring the regulator API) or PWM regulators - it's for cases where
-> enumerating all the voltages is unreasonable.  The TWL4030 regulators
-> look fairly standard in comparison.
-
-well, VDD1 is a lot more continuous than e.g. VAUX3, but your examples
-seem to be even more continuous. But maybe a comment in the api documentati=
-on
-might be helpful so that people do not misinterpret the meaning.
-
-Regards,
-Andreas
-
---Sig_/VP/ge4m0D4p08_w=ity.hXK
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEPIWxmAFyOaBcwCpFl4jFM1s/ye8FAl0HzAwACgkQl4jFM1s/
-ye/IoxAAuLW2LEMjp4xn39FDONGqu0QFyP9KNVd/Qur8jRIjxoXWgvkzwPTufX4R
-WMpf0hIhoyLcZVk+EJ46FeGqNavX77W2R+kqx8qPo57uVt+ZhP2vgda7V32xE/9l
-kYiyAzDnO7iVREnSSV39d8JRMz+QM86aKoGK7Int93AsIFwlTdRpaAOHXsf3dRiw
-PO6EZv96aytWmchRcvMAGMz02L65AkFRpyPCUbVCfd6QqVq+ddz4SHQPJTh1dtU8
-ubUE9oYmsLYg+5MeiOR6hNx+xZgIk086SbmeqRqdFZ8f21G44p8AIGDRRBx3HNX7
-usoIhX6O+kHR6m3tyTLbsINjURG60AvYRvNj2xqvIkRo9yr92Cr1moE/gzblckp4
-s8Jw/nA9cI7F7htdAFPJBRT+t5KZl2uI+HyxoA3kAzAuqSx2ZbD8lYJk2uSGLDOb
-gC4Ii/XIuweASfSLIkMcKBNPOvX62d2++rYVWrBmWhLYp8GA4ofNJzvCWhBPZkE5
-rLt8U3ejevmb0s8Embx+9M9Bs1DriliGMrdRqLpjg56T4sWiWfJYGy9exud0svhE
-cKU8XnylrRtOJvu9yHE3BDqR34FAMLjpwI+jKHnhJCfb+qWgpA7/+xmbpT01Rd7x
-DFHHIfoLhwJCM/2q/sWzan+S8AMgt9mmF7bbxxt6IThSEuhc8ic=
-=D/c6
------END PGP SIGNATURE-----
-
---Sig_/VP/ge4m0D4p08_w=ity.hXK--
+The pageblock size is independent of subsection-size. The pageblock
+size is a page-allocator concern, subsections only exist for pages
+that are never onlined to the page-allocator.
