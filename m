@@ -2,115 +2,114 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37C7C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1400EC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:40:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBFBE2084A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:36:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Wd26W2ri"
+	by mail.kernel.org (Postfix) with ESMTP id D76AF20861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560771657;
+	bh=rM96KOWd4bfHzmHk4U7lcmV6rxYtyFINkCP7DCMHEi8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZLXsbshKF2N7kCsTcnoIsU2jAyfk7DLFV1VsT39Zh3F7YkdvGDKk5P4K1epUZMijQ
+	 LcfanBKPlHulyKQg2p/l6peRU6xKbivpdAfMddmyqYKrJQ7boAo8KTaXrWGcZNPzBf
+	 3NniaN+rCjQBTlnw370pKBr3kvEpWwig4mXB8xz4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfFQLgC (ORCPT
+        id S1726183AbfFQLk4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:36:02 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:46748 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728384AbfFQLgA (ORCPT
+        Mon, 17 Jun 2019 07:40:56 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:42378 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725763AbfFQLkz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:36:00 -0400
-Received: by mail-vs1-f65.google.com with SMTP id l125so5844356vsl.13
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:36:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nSqieASavyS4hAmtN+rUBOJEe/7rLoXSKUZrznGx70k=;
-        b=Wd26W2riDHjXKZhtVVDjaHoRTCo3KoqecNJUxQy7SdCiyicfZtJoeym4YslYZT5z8v
-         58FAKGSTKivZqRWpfOAzDJ4Pr9XgSsidHnKMLgqKgyZvBC52+7FTVUkntYHFZ+f6bjuY
-         l89inADrQtD0oHbROqE0XItxwIjwx5CpmrjJGpVRGKB9buM78uT9I97VIelAf7DlT2lT
-         IrzctmCvBIV/jHMH0bbeLC2q10Al44VCam3QbtG3HOlv/RZPBUVtPIS6wgTpwhZ1yJUg
-         L+g4CPHP/OQwONR3R31FLXGfe0NaHXDBM42kCPs+TNNlXRODzovt82/ksNWfvBBhB3S4
-         fLaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nSqieASavyS4hAmtN+rUBOJEe/7rLoXSKUZrznGx70k=;
-        b=fjOVJdh2rbysiWPedrKNgTx2PFFH9qweWtY9H2DRjBir1xYTfEEl0YVBALQorgvKGm
-         sXWkBWkkUBsZSvXO2cpJPEk3FjD59eQxM7a+ouvfKxZeGvTnRjzwVzKQX7QxtDFeTp+V
-         E1L4qE/FTi1UbUTMYns4VG/VHLBCsf7/MVj2acO/u0KH/lDze2rHmk+dNco+uvNz5nuq
-         wTzA90HJN7GMUuwq6YQxyunamQXeWCno63bdVGdlMGwUlfU1oqMTl4SO7a7GM0URKdmO
-         GL/+6tCbe2jvuZiVCQABRpYmzp05hXpZZDYD3HdeNjGxAJP2fSLryo5Fn0WyQtkGBrR0
-         z5Yw==
-X-Gm-Message-State: APjAAAWVG4LgZpEIoi8HpK5nDLrgKO/36FFczBtGSK3zX9kBxXhP3yxM
-        tLuh4eWRuyA2obv3VNw0VAuoelhWt2gkFijrX96cUQ==
-X-Google-Smtp-Source: APXvYqwea4hF3OfO89ZgAeSGr7Xa0nI6gfa9nK3JhRJFHcuT+oslVZoDfXzz+JPqCiNXWQ9lxrEmy511Wc3ZPMRiQug=
-X-Received: by 2002:a67:7a90:: with SMTP id v138mr11500943vsc.200.1560771359908;
- Mon, 17 Jun 2019 04:35:59 -0700 (PDT)
+        Mon, 17 Jun 2019 07:40:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=TGS1jJo4f0gqZ+d4CFQwjoWxEngjb1gvJrhJoe43XXw=; b=ZBwbG3Gn/ueMgLs/6/3z0n1QM
+        507hzQfk0t9Zw1uJnlZeDzAPWNYDhAeo/UV94aOVTVW/5AywlPRBL02pEaEpoEFyUUdrxrGJh99mn
+        Nrzcw971o/sV50QDOkFF03USVvyeXz4z1PhCPhdiQ1rV4M9BBGW0dKByZQECxSQ73jPf8=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hcq0H-0001VF-Pe; Mon, 17 Jun 2019 11:40:49 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 0FA79440046; Mon, 17 Jun 2019 12:40:49 +0100 (BST)
+Date:   Mon, 17 Jun 2019 12:40:48 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Andreas Kemnade <andreas@kemnade.info>
+Cc:     tony@atomide.com, lgirdwood@gmail.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
+        letux-kernel@openphoenux.org
+Subject: Re: [PATCH] regulator: twl: mark vdd1/2 as continuous on twl4030
+Message-ID: <20190617114048.GN5316@sirena.org.uk>
+Mail-Followup-To: Andreas Kemnade <andreas@kemnade.info>, tony@atomide.com,
+        lgirdwood@gmail.com, linux-omap@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
+        sboyd@kernel.org, nm@ti.com, vireshk@kernel.org,
+        letux-kernel@openphoenux.org
+References: <20190615163314.28173-1-andreas@kemnade.info>
+ <20190617103111.GM5316@sirena.org.uk>
+ <20190617130357.41204ff7@kemnade.info>
 MIME-Version: 1.0
-References: <20190614082954.39648-1-yinbo.zhu@nxp.com> <20190614082954.39648-2-yinbo.zhu@nxp.com>
-In-Reply-To: <20190614082954.39648-2-yinbo.zhu@nxp.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 17 Jun 2019 13:35:23 +0200
-Message-ID: <CAPDyKFrS94QhxT4mrF_=uSaMTLcJL6wZBj7N12Gq+o772oN4Ug@mail.gmail.com>
-Subject: Re: [PATCH v1] mmc: sdhci-of-esdhc: use 1/2 periperhal clock for ls1028a
-To:     Yinbo Zhu <yinbo.zhu@nxp.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Xiaobo Xie <xiaobo.xie@nxp.com>,
-        Jiafei Pan <jiafei.pan@nxp.com>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Yangbo Lu <yangbo.lu@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ukZ3tWq1IjZw6zEx"
+Content-Disposition: inline
+In-Reply-To: <20190617130357.41204ff7@kemnade.info>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 14 Jun 2019 at 10:28, Yinbo Zhu <yinbo.zhu@nxp.com> wrote:
->
-> From: Yangbo Lu <yangbo.lu@nxp.com>
->
-> LS1028A used 1/2 periperhal clock as one reference clock.
->
-> Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 
-Applied for next, thanks!
+--ukZ3tWq1IjZw6zEx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Kind regards
-Uffe
+On Mon, Jun 17, 2019 at 01:03:57PM +0200, Andreas Kemnade wrote:
+> Mark Brown <broonie@kernel.org> wrote:
+> > On Sat, Jun 15, 2019 at 06:33:14PM +0200, Andreas Kemnade wrote:
 
+> > Why is this a good fix and not defining the supported voltages?  These
+> > look like fairly standard linear range regulators.
 
-> ---
->  drivers/mmc/host/sdhci-of-esdhc.c | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/mmc/host/sdhci-of-esdhc.c b/drivers/mmc/host/sdhci-of-esdhc.c
-> index c56c7d413a09..4dd43b1adf2c 100644
-> --- a/drivers/mmc/host/sdhci-of-esdhc.c
-> +++ b/drivers/mmc/host/sdhci-of-esdhc.c
-> @@ -1048,11 +1048,12 @@ static void esdhc_init(struct platform_device *pdev, struct sdhci_host *host)
->                 /*
->                  * esdhc->peripheral_clock would be assigned with a value
->                  * which is eSDHC base clock when use periperal clock.
-> -                * For ls1046a, the clock value got by common clk API is
-> -                * peripheral clock while the eSDHC base clock is 1/2
-> -                * peripheral clock.
-> +                * For some platforms, the clock value got by common clk
-> +                * API is peripheral clock while the eSDHC base clock is
-> +                * 1/2 peripheral clock.
->                  */
-> -               if (of_device_is_compatible(np, "fsl,ls1046a-esdhc"))
-> +               if (of_device_is_compatible(np, "fsl,ls1046a-esdhc") ||
-> +                   of_device_is_compatible(np, "fsl,ls1028a-esdhc"))
->                         esdhc->peripheral_clock = clk_get_rate(clk) / 2;
->                 else
->                         esdhc->peripheral_clock = clk_get_rate(clk);
-> --
-> 2.17.1
->
+> I am fixing the definition of the two regulators in the patch.
+> I am defining them as continuous.=20
+> Voltage ranges are defined in
+> arch/arm/boot/dts/twl4030.dtsi
+> Only the continuous flag is missing.
+
+> Is there anything else do you want to be defined?
+
+These regulators are not continuous regulators as far as I can see, they
+are normal linear range regulators and so should have their voltages
+enumerable like any other linear range regulator.
+
+--ukZ3tWq1IjZw6zEx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0HfEAACgkQJNaLcl1U
+h9C9fgf/demCydc2jv+vdSyZVH8mb+/coXKQUhsJXvaspY3plQYlF5HnzQrABgHC
+nFoahPYWwqbuRl4WzotNHAnblTLZz54cPzr+W89TPLVlfRLxKuF44I3807SJYW4f
++eh/7+cyOcyiA+eJba+PAG72l5oIkJszxNywvIDZENBjIc7exIxo5I8ee4zfTSoI
+2uv7ZzaeVVrI/1j7SIuC2KlBhQ6j3qOPew1r0kpl66Q7zPNFf4AWzl2LbhjIuUVk
+3BxJcetz+zA7NbCR2QIEr5o7vCnOuOLQQN8Dk1LNI4QxItF7MD0PXkSA33GCu8rD
+uYW9FLSQK0YzKaeddERgm1nLLKkKYg==
+=U7Iy
+-----END PGP SIGNATURE-----
+
+--ukZ3tWq1IjZw6zEx--
