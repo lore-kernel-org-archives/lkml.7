@@ -2,52 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7D8C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EC14C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B2520861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33E4720673
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:30:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806996;
-	bh=PUNNahiVj8y47dRYhB1/uNkyF/LxS2ZbcuAPzyHaIyY=;
+	s=default; t=1560807000;
+	bh=59veLdSvEe9BEys5yRYaEXKgybkj5rzWLSkW2eYQ+4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WS+c56ptdgoBKfLGvtu8+Yb0UEhi0pcTfZ1ZUXf6ONZEKIjI765xMH1VsEj89zCnM
-	 DFkR11Tr7xE+C0lmVoRX9b4aUejsnrOySpvRQoKd2Z3+YNGS39Rscn9z13b6r2/8h3
-	 vy6kemu0O8HJiZ0Ai3GVwhK/geVKmOnf88sPcIpk=
+	b=Sq6CHIjM9SLYfkSn9mhDSXLaZHdqM1tdt3f/aUFGyH/C+x+clPmYeWT0R98Iun3o3
+	 BiMGwhiQ+/gyXqE+zGAqRwawwyS9jAmlC6e/XB5BRfzO+Zsb/1eELDea8lNhUvXOGR
+	 UjoXVOgjVybyrMgyqapw1wnX9OygXJdNg3B3tMV4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbfFQV3y (ORCPT
+        id S1730770AbfFQV37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:29:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56956 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:29:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57074 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729963AbfFQV3q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:29:46 -0400
+        id S1730296AbfFQV3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:29:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E69A7204FD;
-        Mon, 17 Jun 2019 21:29:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56CE521734;
+        Mon, 17 Jun 2019 21:29:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806986;
-        bh=PUNNahiVj8y47dRYhB1/uNkyF/LxS2ZbcuAPzyHaIyY=;
+        s=default; t=1560806992;
+        bh=59veLdSvEe9BEys5yRYaEXKgybkj5rzWLSkW2eYQ+4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hcTgmcIMxdIYNr9x5AeghKhACW+HbWdZVg5uT/WV+VR69rp7dFX5dAqzbXDrXKXs0
-         bEhXSQz27CXioLw43004/wa3nl+OGAQwfCIJqdE3CohUbGSOW1sfaMl5omkQRAB/7k
-         BXqqZCcbqten8HQC7Stb/lHzayfy56uey/yU0AFo=
+        b=sGbTDEqYNSfMAdgi/D/8uVua4G5+fcveFPWO7SibrrWnfh6ADByxeKbgNf8lADNWR
+         dkH4sN7dbj0SqzKJlgy32ZZfuitgrkQsXPrHEPe+Ns1I8EwHnnVGLzn4gRRB3LD8t8
+         w1R+YbALwi3UpmbqT075uFdlYtrusGoOxszWp1R4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cong Wang <xiyou.wangcong@gmail.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        linux-edac <linux-edac@vger.kernel.org>
-Subject: [PATCH 4.14 50/53] RAS/CEC: Fix binary search function
-Date:   Mon, 17 Jun 2019 23:10:33 +0200
-Message-Id: <20190617210752.550132533@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 25/53] Revert "ALSA: seq: Protect in-kernel ioctl calls with mutex"
+Date:   Mon, 17 Jun 2019 23:10:08 +0200
+Message-Id: <20190617210750.276520329@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
 References: <20190617210745.104187490@linuxfoundation.org>
@@ -60,91 +60,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+[ Upstream commit f0654ba94e33699b295ce4f3dc73094db6209035 ]
 
-commit f3c74b38a55aefe1004200d15a83f109b510068c upstream.
+This reverts commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32.
 
-Switch to using Donald Knuth's binary search algorithm (The Art of
-Computer Programming, vol. 3, section 6.2.1). This should've been done
-from the very beginning but the author must've been smoking something
-very potent at the time.
+The fix attempt was incorrect, leading to the mutex deadlock through
+the close of OSS sequencer client.  The proper fix needs more
+consideration, so let's revert it now.
 
-The problem with the current one was that it would return the wrong
-element index in certain situations:
-
-  https://lkml.kernel.org/r/CAM_iQpVd02zkVJ846cj-Fg1yUNuz6tY5q1Vpj4LrXmE06dPYYg@mail.gmail.com
-
-and the noodling code after the loop was fishy at best.
-
-So switch to using Knuth's binary search. The final result is much
-cleaner and straightforward.
-
-Fixes: 011d82611172 ("RAS: Add a Corrected Errors Collector")
-Reported-by: Cong Wang <xiyou.wangcong@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: feb689025fbb ("ALSA: seq: Protect in-kernel ioctl calls with mutex")
+Reported-by: syzbot+47ded6c0f23016cde310@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/ras/cec.c |   34 ++++++++++++++++++++--------------
- 1 file changed, 20 insertions(+), 14 deletions(-)
+ sound/core/seq/seq_clientmgr.c | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
---- a/drivers/ras/cec.c
-+++ b/drivers/ras/cec.c
-@@ -185,32 +185,38 @@ static void cec_timer_fn(unsigned long d
-  */
- static int __find_elem(struct ce_array *ca, u64 pfn, unsigned int *to)
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index 068880ac47b5..7d2c07c1237c 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -2342,19 +2342,14 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
  {
-+	int min = 0, max = ca->n - 1;
- 	u64 this_pfn;
--	int min = 0, max = ca->n;
+ 	const struct ioctl_handler *handler;
+ 	struct snd_seq_client *client;
+-	int err;
  
--	while (min < max) {
--		int tmp = (max + min) >> 1;
-+	while (min <= max) {
-+		int i = (min + max) >> 1;
+ 	client = clientptr(clientid);
+ 	if (client == NULL)
+ 		return -ENXIO;
  
--		this_pfn = PFN(ca->array[tmp]);
-+		this_pfn = PFN(ca->array[i]);
- 
- 		if (this_pfn < pfn)
--			min = tmp + 1;
-+			min = i + 1;
- 		else if (this_pfn > pfn)
--			max = tmp;
--		else {
--			min = tmp;
--			break;
-+			max = i - 1;
-+		else if (this_pfn == pfn) {
-+			if (to)
-+				*to = i;
-+
-+			return i;
- 		}
+ 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
+-		if (handler->cmd == cmd) {
+-			mutex_lock(&client->ioctl_mutex);
+-			err = handler->func(client, arg);
+-			mutex_unlock(&client->ioctl_mutex);
+-			return err;
+-		}
++		if (handler->cmd == cmd)
++			return handler->func(client, arg);
  	}
  
-+	/*
-+	 * When the loop terminates without finding @pfn, min has the index of
-+	 * the element slot where the new @pfn should be inserted. The loop
-+	 * terminates when min > max, which means the min index points to the
-+	 * bigger element while the max index to the smaller element, in-between
-+	 * which the new @pfn belongs to.
-+	 *
-+	 * For more details, see exercise 1, Section 6.2.1 in TAOCP, vol. 3.
-+	 */
- 	if (to)
- 		*to = min;
- 
--	this_pfn = PFN(ca->array[min]);
--
--	if (this_pfn == pfn)
--		return min;
--
- 	return -ENOKEY;
- }
- 
+ 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
+-- 
+2.20.1
+
 
 
