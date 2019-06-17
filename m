@@ -2,107 +2,93 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABABEC31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:15:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701A0C31E53
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:15:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A4FB21954
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48E1121BA1
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:15:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="PkNPQh9J"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ciyWTDMr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726138AbfFQHPF (ORCPT
+        id S1726264AbfFQHPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:15:05 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:51494 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725826AbfFQHPF (ORCPT
+        Mon, 17 Jun 2019 03:15:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:40564 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfFQHPv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:15:05 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5H7F2sh045275;
-        Mon, 17 Jun 2019 02:15:02 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560755702;
-        bh=1KiWNol22bOYzL01WVy0sgNUkt47J5o6+/RPRsqVDlc=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=PkNPQh9JiJLF2L4LhcXUt2uveSVgOsls62y6XhwFUgsaf73c61j0d+CqocqP0Azz0
-         NvaLWILitMmJu2iR1EzjDfjE++A2q+fzBvcqvNWhzSCPgOSHSlaAaj9pTyW6xrfE/K
-         CRmB1SRUUj11VxGrT8fqYnapP/UZw4cXzm+Ps4SQ=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5H7F2SO123976
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 17 Jun 2019 02:15:02 -0500
-Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 17
- Jun 2019 02:15:02 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
- (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 17 Jun 2019 02:15:02 -0500
-Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5H7F0r4016991;
-        Mon, 17 Jun 2019 02:15:00 -0500
-Subject: Re: [GIT PULL] Immutable branch between MFD and Regulator due for the
- v5.3 merge window
-To:     Lee Jones <lee.jones@linaro.org>
-CC:     <broonie@kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>, <t-kristo@ti.com>
-References: <20190612144620.28331-1-j-keerthy@ti.com>
- <20190617070341.GC16364@dell>
-From:   Keerthy <j-keerthy@ti.com>
-Message-ID: <2a3240e2-75f5-ef87-8fa7-0162a84fb590@ti.com>
-Date:   Mon, 17 Jun 2019 12:45:48 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 17 Jun 2019 03:15:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gpRMsfGNXtpOHyXo1HHqlE0dlVAyPKBRJRDhBOKV9jk=; b=ciyWTDMrwSY3eNjL+rF5wFxvY
+        Hk0lkKZBcBzvIMyNlZFE0NW6MIWRBlxlwnMDVqs7KohK9iSwbzBy5AnCQbGRDRPTaWJDWsBEHbf6S
+        x2vJX1VhVXZiH6spDpYQwXl6RqXuKAeRagnraCMYavKvp+Sc/fsLkO/AHgrZtGSgDWkuGS781Vuej
+        UCWQr0KsCKYjfN/XoK5gwW2s3OqBX2wib/0PrlfQSff+SB3cwgBxTivqhBuUUuo0TcpdenkP5mOgs
+        nBHx8IXK+RndchBTpjqETN8U02sGo2U3SxhTEnnzA9GKAfbuiopJf2aHzCHL+/P6NlBB+1co33y6L
+        VDNnrnyjA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hclrT-0005ke-Jx; Mon, 17 Jun 2019 07:15:27 +0000
+Date:   Mon, 17 Jun 2019 00:15:27 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Alastair D'Silva <alastair@d-silva.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>, Qian Cai <cai@lca.pw>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Baoquan He <bhe@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-nvdimm@lists.01.org
+Subject: Re: [PATCH 5/5] mm/hotplug: export try_online_node
+Message-ID: <20190617071527.GA14003@infradead.org>
+References: <20190617043635.13201-1-alastair@au1.ibm.com>
+ <20190617043635.13201-6-alastair@au1.ibm.com>
+ <20190617065921.GV3436@hirez.programming.kicks-ass.net>
+ <f1bad6f784efdd26508b858db46f0192a349c7a1.camel@d-silva.org>
 MIME-Version: 1.0
-In-Reply-To: <20190617070341.GC16364@dell>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f1bad6f784efdd26508b858db46f0192a349c7a1.camel@d-silva.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 05:05:30PM +1000, Alastair D'Silva wrote:
+> On Mon, 2019-06-17 at 08:59 +0200, Peter Zijlstra wrote:
+> > On Mon, Jun 17, 2019 at 02:36:31PM +1000, Alastair D'Silva wrote:
+> > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > 
+> > > If an external driver module supplies physical memory and needs to
+> > > expose
+> > 
+> > Why would you ever want to allow a module to do such a thing?
+> > 
+> 
+> I'm working on a driver for Storage Class Memory, connected via an
+> OpenCAPI link.
+> 
+> The memory is only usable once the card says it's OK to access it.
 
-
-On 17/06/19 12:33 PM, Lee Jones wrote:
-> Enjoy!
-> 
-> The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
-> 
->    Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
-> 
-> are available in the Git repository at:
-> 
->    git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v5.3
-> 
-> for you to fetch changes up to 7ee63bd74750a2c6fac31805ca0ac67f2522bfa5:
-> 
->    regulator: lp87565: Add 4-phase lp87561 regulator support (2019-06-17 08:00:24 +0100)
-> 
-> ----------------------------------------------------------------
-> Immutable branch between MFD and Regulator due for the v5.3 merge window
-> 
-> ----------------------------------------------------------------
-> Keerthy (3):
->        dt-bindings: mfd: lp87565: Add LP87561 configuration
->        mfd: lp87565: Add support for 4-phase LP87561 combination
->        regulator: lp87565: Add 4-phase lp87561 regulator support
-
-Thanks Lee Jones.
-
-> 
->   Documentation/devicetree/bindings/mfd/lp87565.txt | 36 +++++++++++++++++++++++
->   drivers/mfd/lp87565.c                             |  4 +++
->   drivers/regulator/lp87565-regulator.c             | 17 ++++++++++-
->   include/linux/mfd/lp87565.h                       |  2 ++
->   4 files changed, 58 insertions(+), 1 deletion(-)
-> 
+And all that should go through our pmem APIs, not not directly
+poke into mm internals.  And if you still need core patches send them
+along with the actual driver.
