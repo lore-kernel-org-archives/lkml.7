@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76447C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 931CCC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37EF52089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6425320861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:21:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806496;
-	bh=kl4VkFn/kIn6Kaes2768yCdGWHalmqI56eqE0eTfxfY=;
+	s=default; t=1560806499;
+	bh=C84SnixK0vcc3hScpam/cnjcq0vDT3Nt64nsnV6q0jU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j3WOO9b/6rCM86FFKTzKVwkMH1E0WH4yiMavEazw4K745AyhgZAJwD3rqsc2CM5Wd
-	 QTSxpRpnmwTgkrJaGgrD6jrasB3YTstxTjL06ZRBppN7daRVhlhhoAWx8XYnuBeMgl
-	 VepC3IZl5VfD7JQecRWUPDsLYyEod1cT3RkCoTxU=
+	b=Pxc6ztihBrky/eAzlTGzlChLX+3ObB1uGsZguXJTqcyiQIUG3lAUSloNIboVPM7lG
+	 EcQtkewuftmVey51BiOMzoOUckYiS8cBUVXZqCiHHgY+l5Z0kClyoMsZHxXxisASHB
+	 gBTqQ2LAxAJo1Nc4NtYmeJOatA/6DAIgrcEUOzvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729378AbfFQVVe (ORCPT
+        id S1729390AbfFQVVh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:21:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46050 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:21:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728900AbfFQVVb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:21:31 -0400
+        id S1728904AbfFQVVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:21:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EBA620861;
-        Mon, 17 Jun 2019 21:21:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E54C2089E;
+        Mon, 17 Jun 2019 21:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806490;
-        bh=kl4VkFn/kIn6Kaes2768yCdGWHalmqI56eqE0eTfxfY=;
+        s=default; t=1560806493;
+        bh=C84SnixK0vcc3hScpam/cnjcq0vDT3Nt64nsnV6q0jU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1sxc+4GFIG1smomkpezkSTbgGL6vlLW7JRHivTiNTacBhdTTciS+tqJw1KsnL/hx5
-         TxR51ZxhbCU5OFkuydZYryIcPJLTNocH1VpnsD1bCG3KHLME1emlCTIwI//qPU07gi
-         fkJCeTUUDFNQvSs9Fg9WS4WOymliFOTe+AXUnnyo=
+        b=ZBan9yxPiJj9fzEdBEIuBopjT5n7pjAKRudWXFGjH0/V+KvBnOonHpSO9Afvf76U2
+         Gr9nfSiTronU9HtOfYZdCz3DQIBHq/LC6YhvGzEC8sTwES7FH2gJC2IWnTA5gvyWsu
+         tDaUpqcnc7obGDKkn5QSJmFDMLgJ1hbvRoMGU2Jo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Keith Busch <keith.busch@intel.com>,
-        David Milburn <dmilburn@redhat.com>,
-        Yufen Yu <yuyufen@huawei.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 070/115] nvme: fix memory leak for power latency tolerance
-Date:   Mon, 17 Jun 2019 23:09:30 +0200
-Message-Id: <20190617210803.656145049@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+9437020c82413d00222d@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 044/115] ALSA: seq: Fix race of get-subscription call vs port-delete ioctls
+Date:   Mon, 17 Jun 2019 23:09:04 +0200
+Message-Id: <20190617210802.304772741@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -60,36 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 510a405d945bc985abc513fafe45890cac34fafa ]
+[ Upstream commit 2eabc5ec8ab4d4748a82050dfcb994119b983750 ]
 
-Unconditionally hide device pm latency tolerance when uninitializing
-the controller to ensure all qos resources are released so that we're
-not leaking this memory. This is safe to call if none were allocated in
-the first place, or were previously freed.
+The snd_seq_ioctl_get_subscription() retrieves the port subscriber
+information as a pointer, while the object isn't protected, hence it
+may be deleted before the actual reference.  This race was spotted by
+syzkaller and may lead to a UAF.
 
-Fixes: c5552fde102fc("nvme: Enable autonomous power state transitions")
-Suggested-by: Keith Busch <keith.busch@intel.com>
-Tested-by: David Milburn <dmilburn@redhat.com>
-Signed-off-by: Yufen Yu <yuyufen@huawei.com>
-[changelog]
-Signed-off-by: Keith Busch <keith.busch@intel.com>
+The fix is simply copying the data in the lookup function that
+performs in the rwsem to protect against the deletion.
+
+Reported-by: syzbot+9437020c82413d00222d@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 1 +
- 1 file changed, 1 insertion(+)
+ sound/core/seq/seq_clientmgr.c | 10 ++--------
+ sound/core/seq/seq_ports.c     | 13 ++++++++-----
+ sound/core/seq/seq_ports.h     |  5 +++--
+ 3 files changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 23c90382a515..35d2202ee2fd 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -3699,6 +3699,7 @@ EXPORT_SYMBOL_GPL(nvme_start_ctrl);
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index b3280e81bfd1..8599f2937ac1 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1900,20 +1900,14 @@ static int snd_seq_ioctl_get_subscription(struct snd_seq_client *client,
+ 	int result;
+ 	struct snd_seq_client *sender = NULL;
+ 	struct snd_seq_client_port *sport = NULL;
+-	struct snd_seq_subscribers *p;
  
- void nvme_uninit_ctrl(struct nvme_ctrl *ctrl)
+ 	result = -EINVAL;
+ 	if ((sender = snd_seq_client_use_ptr(subs->sender.client)) == NULL)
+ 		goto __end;
+ 	if ((sport = snd_seq_port_use_ptr(sender, subs->sender.port)) == NULL)
+ 		goto __end;
+-	p = snd_seq_port_get_subscription(&sport->c_src, &subs->dest);
+-	if (p) {
+-		result = 0;
+-		*subs = p->info;
+-	} else
+-		result = -ENOENT;
+-
++	result = snd_seq_port_get_subscription(&sport->c_src, &subs->dest,
++					       subs);
+       __end:
+       	if (sport)
+ 		snd_seq_port_unlock(sport);
+diff --git a/sound/core/seq/seq_ports.c b/sound/core/seq/seq_ports.c
+index da31aa8e216e..16289aefb443 100644
+--- a/sound/core/seq/seq_ports.c
++++ b/sound/core/seq/seq_ports.c
+@@ -635,20 +635,23 @@ int snd_seq_port_disconnect(struct snd_seq_client *connector,
+ 
+ 
+ /* get matched subscriber */
+-struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
+-							  struct snd_seq_addr *dest_addr)
++int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
++				  struct snd_seq_addr *dest_addr,
++				  struct snd_seq_port_subscribe *subs)
  {
-+	dev_pm_qos_hide_latency_tolerance(ctrl->device);
- 	cdev_device_del(&ctrl->cdev, ctrl->device);
+-	struct snd_seq_subscribers *s, *found = NULL;
++	struct snd_seq_subscribers *s;
++	int err = -ENOENT;
+ 
+ 	down_read(&src_grp->list_mutex);
+ 	list_for_each_entry(s, &src_grp->list_head, src_list) {
+ 		if (addr_match(dest_addr, &s->info.dest)) {
+-			found = s;
++			*subs = s->info;
++			err = 0;
+ 			break;
+ 		}
+ 	}
+ 	up_read(&src_grp->list_mutex);
+-	return found;
++	return err;
  }
- EXPORT_SYMBOL_GPL(nvme_uninit_ctrl);
+ 
+ /*
+diff --git a/sound/core/seq/seq_ports.h b/sound/core/seq/seq_ports.h
+index 26bd71f36c41..06003b36652e 100644
+--- a/sound/core/seq/seq_ports.h
++++ b/sound/core/seq/seq_ports.h
+@@ -135,7 +135,8 @@ int snd_seq_port_subscribe(struct snd_seq_client_port *port,
+ 			   struct snd_seq_port_subscribe *info);
+ 
+ /* get matched subscriber */
+-struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
+-							  struct snd_seq_addr *dest_addr);
++int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
++				  struct snd_seq_addr *dest_addr,
++				  struct snd_seq_port_subscribe *subs);
+ 
+ #endif
 -- 
 2.20.1
 
