@@ -2,133 +2,330 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589F1C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:28:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECB9C31E58
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:30:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E18720657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:28:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5373F20657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:30:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="IMaulPYz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Gfw1yyyn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726584AbfFQN2y (ORCPT
+        id S1727276AbfFQNaB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:28:54 -0400
-Received: from mail-eopbgr130054.outbound.protection.outlook.com ([40.107.13.54]:16345
-        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725884AbfFQN2y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:28:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=UXdEZOOKnezUzKmpFBaKWBJGd3nS04aFoTGg5T7Yass=;
- b=IMaulPYz1qZO9sxXIE33umTn91jfoosTLnsOv2rmpe9f7BAVLGqb8fTM/6O7CFkh3R1b7RBGRuRhwcpuLjVlC5UEEGjuqtwo3tNeqV8fqPA/MM1tI8NOmFJB0LRBRNY1dvTWhZFruou/TXzdNWjXwa8pvvDxFJK/dx71iM0UObg=
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com (20.179.235.152) by
- VE1PR04MB6734.eurprd04.prod.outlook.com (20.179.234.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Mon, 17 Jun 2019 13:28:50 +0000
-Received: from VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::9e6:e136:4c09:fe67]) by VE1PR04MB6687.eurprd04.prod.outlook.com
- ([fe80::9e6:e136:4c09:fe67%5]) with mapi id 15.20.1987.014; Mon, 17 Jun 2019
- 13:28:50 +0000
-From:   Leo Li <leoyang.li@nxp.com>
-To:     Olof Johansson <olof@lixom.net>
-CC:     "arm@kernel.org" <arm@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>
-Subject: RE: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
-Thread-Topic: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
-Thread-Index: AQHVJQRRM+rvlXmln0KUqEroTyzJyqaf1DJA
-Date:   Mon, 17 Jun 2019 13:28:50 +0000
-Message-ID: <VE1PR04MB668773AB42154134CE18A6AB8FEB0@VE1PR04MB6687.eurprd04.prod.outlook.com>
-References: <20190605194511.12127-1-leoyang.li@nxp.com>
- <20190617114948.7xxtpivve52c2jnb@localhost>
-In-Reply-To: <20190617114948.7xxtpivve52c2jnb@localhost>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=leoyang.li@nxp.com; 
-x-originating-ip: [64.157.242.222]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 1941167b-0928-4a26-9881-08d6f327bbf3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6734;
-x-ms-traffictypediagnostic: VE1PR04MB6734:
-x-microsoft-antispam-prvs: <VE1PR04MB67340C2E09B0606C1D9429728FEB0@VE1PR04MB6734.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0071BFA85B
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(396003)(136003)(346002)(189003)(13464003)(199004)(316002)(7736002)(8676002)(53546011)(305945005)(14444005)(256004)(76176011)(6916009)(2906002)(6506007)(6436002)(478600001)(102836004)(26005)(55016002)(73956011)(76116006)(7696005)(4326008)(229853002)(25786009)(54906003)(71200400001)(9686003)(99286004)(66446008)(53936002)(186003)(6246003)(71190400001)(5660300002)(15650500001)(68736007)(14454004)(66946007)(52536014)(66556008)(66476007)(3846002)(6116002)(86362001)(64756008)(33656002)(11346002)(66066001)(446003)(486006)(476003)(8936002)(81166006)(81156014)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6734;H:VE1PR04MB6687.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 7M5msL7QeM2Q3txSLahmjLTuBD6OXB2ZwHcHFIzdGcDWXStkAFr2k1IH6G41dhVix9eW+C+IvIsiGiYRVhWtlWAv2umevBd2FJohRY0QDeSTt+3RW4qzPoVSheAjwGwikE7XtM1UpXZ3FLqBcSa5o2yMPHoatwMytlSRcV7VX6XHIDV8DUlZnMEkx4Kljir4In06RnXWuU6ccQUKK+MnQE2eplQ/f7rW49jvYGMwZnKHuMQpiPFcIK/aim3gGgLJ/+BbI/2rL7mqMcivQI+90VIHVMNg1yXLf9uIKN5XLFF9wC9X3rg3AZxCWloQQ2NOWBoqmv2ww9R80q2jjCjmtaiUYSD8Dc58eShLGVLnfcfNIp3+ScOkPA6B8DDU5tHR3HYilTGLKfpaN4k356s7S8p0W/KeuLirwZfm3sfUfk4=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Jun 2019 09:30:01 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42354 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725983AbfFQNaB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:30:01 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so9954928wrl.9;
+        Mon, 17 Jun 2019 06:29:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=cbldudMML2MwvQcB7m6YQgg0iKGbGlv6uQTNnPHYACA=;
+        b=Gfw1yyynBDN29VlWvgkmlFlrn59tbrQlj/7UTjXrzD3mEOsc2faa/J6YLOdVzsvOp5
+         Beso4n7h9cvi+UO9rsT8MzztcfJAdf4dMu21A+4nyL/vLeIvocBrBAJDFkPRg3MhC5pm
+         lCTTI65XWG5Acc+kMrldyF91tiEjEQE+6nfUbaYA1A6/DloyEn1Cnj3ascBlIWViLeV+
+         ZIwQYGGukZXFOr3KVk+AGjRwCySixKUhE80KsxGAf4zyjuT+9Wg/61YQeVK6kl29x//l
+         RR84fJfva0msAOXZruFb3VK0mejrDx3MLCGDbGc6QC1wyLqIwTpNCp6A1JgUbkgA7MFY
+         5lrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cbldudMML2MwvQcB7m6YQgg0iKGbGlv6uQTNnPHYACA=;
+        b=tJcTUd9HEFzfb3a3i1Jdxrj5oQ7rBEPauyzVafnvrhuoELtBNAWpnZWacLYKAekRqc
+         mOLVRw02gNH0xkC7spXo/obCEVKQfDG/2lTDaBk6Qj+B9ptKeSpmMhSTYe7WcLHXEhte
+         2Mvgjxt1NpQ07F1WPxETMkmCZ5cdmrghdah2TSmYzMSprx4A5L+H98+nWk6fCulmue2R
+         ppSDPzTaSMWRie9ieDrfwAcRRws9pB0UUsQiPxY0SAckWqkTFqAlMrzBy2xTID+zlU8T
+         7U3cipcBW8C8BNZfPtJFDMjSY5iMR9zW5gj0teNe9mAxYplSMUyGMcQtJ1i1Zvx4r68c
+         xPxA==
+X-Gm-Message-State: APjAAAUX6voCuirlxFUjRio5qF81O3/t0exMP3C6rBeHY3I4EbUkLRuL
+        1caykIABZZsXWswywV4JBZI4Mrtf
+X-Google-Smtp-Source: APXvYqyP/EOzzuA5YxS1CFnRD0YFU+wlnX0CQZ2eLnByxvt10zN0qgYNyZWXIQwTjrNoF48RI2V2VQ==
+X-Received: by 2002:adf:e3cc:: with SMTP id k12mr19689706wrm.159.1560778198798;
+        Mon, 17 Jun 2019 06:29:58 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id h84sm15890123wmf.43.2019.06.17.06.29.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 06:29:58 -0700 (PDT)
+Subject: Re: [PATCH 2/2] rtc: tegra: Implement suspend clock source
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-tegra@vger.kernel.org, linux-rtc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190614104747.19712-1-thierry.reding@gmail.com>
+ <20190614104747.19712-2-thierry.reding@gmail.com>
+ <5a00bccf-6542-51bd-9030-99a59f14f2f9@gmail.com>
+ <20190614134110.GF15526@ulmo>
+ <d9b65fd9-ecad-b241-a0d6-251a648488aa@gmail.com>
+ <20190614141400.GI15526@ulmo>
+ <3c6ac621-bc2a-c9c8-64fc-531be7dd323d@gmail.com> <20190617102049.GF508@ulmo>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <b5b12bd1-b522-0886-29b4-acfd7f4a7715@gmail.com>
+Date:   Mon, 17 Jun 2019 16:29:56 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1941167b-0928-4a26-9881-08d6f327bbf3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2019 13:28:50.0622
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: leoyang.li@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6734
+In-Reply-To: <20190617102049.GF508@ulmo>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+17.06.2019 13:20, Thierry Reding пишет:
+> On Fri, Jun 14, 2019 at 07:41:54PM +0300, Dmitry Osipenko wrote:
+>> 14.06.2019 17:14, Thierry Reding пишет:
+>>> On Fri, Jun 14, 2019 at 04:49:44PM +0300, Dmitry Osipenko wrote:
+>>>> 14.06.2019 16:41, Thierry Reding пишет:
+>>>>> On Fri, Jun 14, 2019 at 03:01:13PM +0300, Dmitry Osipenko wrote:
+>>>>>> 14.06.2019 13:47, Thierry Reding пишет:
+>>>>>>> From: Thierry Reding <treding@nvidia.com>
+>>>>>>>
+>>>>>>> The suspend clock source for Tegra210 and earlier is currently
+>>>>>>> implemented in the Tegra timer driver. However, the suspend clock source
+>>>>>>> code accesses registers that are part of the RTC hardware block, so both
+>>>>>>> can step on each others' toes. In practice this isn't an issue, but
+>>>>>>> there is no reason why the RTC driver can't implement the clock source,
+>>>>>>> so move the code over to the tegra-rtc driver.
+>>>>>>>
+>>>>>>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>>>>>>> ---
+>>>>>>>  drivers/clocksource/timer-tegra.c | 44 -------------------------------
+>>>>>>>  drivers/rtc/rtc-tegra.c           | 42 +++++++++++++++++++++++++++++
+>>>>>>>  2 files changed, 42 insertions(+), 44 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
+>>>>>>> index e6608141cccb..87eac618924d 100644
+>>>>>>> --- a/drivers/clocksource/timer-tegra.c
+>>>>>>> +++ b/drivers/clocksource/timer-tegra.c
+>>>>>>> @@ -21,10 +21,6 @@
+>>>>>>>  
+>>>>>>>  #include "timer-of.h"
+>>>>>>>  
+>>>>>>> -#define RTC_SECONDS		0x08
+>>>>>>> -#define RTC_SHADOW_SECONDS	0x0c
+>>>>>>> -#define RTC_MILLISECONDS	0x10
+>>>>>>> -
+>>>>>>>  #define TIMERUS_CNTR_1US	0x10
+>>>>>>>  #define TIMERUS_USEC_CFG	0x14
+>>>>>>>  #define TIMERUS_CNTR_FREEZE	0x4c
+>>>>>>> @@ -164,34 +160,6 @@ static struct delay_timer tegra_delay_timer = {
+>>>>>>>  };
+>>>>>>>  #endif
+>>>>>>>  
+>>>>>>> -static struct timer_of suspend_rtc_to = {
+>>>>>>> -	.flags = TIMER_OF_BASE | TIMER_OF_CLOCK,
+>>>>>>> -};
+>>>>>>> -
+>>>>>>> -/*
+>>>>>>> - * tegra_rtc_read - Reads the Tegra RTC registers
+>>>>>>> - * Care must be taken that this function is not called while the
+>>>>>>> - * tegra_rtc driver could be executing to avoid race conditions
+>>>>>>> - * on the RTC shadow register
+>>>>>>> - */
+>>>>>>> -static u64 tegra_rtc_read_ms(struct clocksource *cs)
+>>>>>>> -{
+>>>>>>> -	void __iomem *reg_base = timer_of_base(&suspend_rtc_to);
+>>>>>>> -
+>>>>>>> -	u32 ms = readl_relaxed(reg_base + RTC_MILLISECONDS);
+>>>>>>> -	u32 s = readl_relaxed(reg_base + RTC_SHADOW_SECONDS);
+>>>>>>> -
+>>>>>>> -	return (u64)s * MSEC_PER_SEC + ms;
+>>>>>>> -}
+>>>>>>> -
+>>>>>>> -static struct clocksource suspend_rtc_clocksource = {
+>>>>>>> -	.name	= "tegra_suspend_timer",
+>>>>>>> -	.rating	= 200,
+>>>>>>> -	.read	= tegra_rtc_read_ms,
+>>>>>>> -	.mask	= CLOCKSOURCE_MASK(32),
+>>>>>>> -	.flags	= CLOCK_SOURCE_IS_CONTINUOUS | CLOCK_SOURCE_SUSPEND_NONSTOP,
+>>>>>>> -};
+>>>>>>> -
+>>>>>>>  static inline unsigned int tegra_base_for_cpu(int cpu, bool tegra20)
+>>>>>>>  {
+>>>>>>>  	if (tegra20) {
+>>>>>>> @@ -385,15 +353,3 @@ static int __init tegra20_init_timer(struct device_node *np)
+>>>>>>>  	return tegra_init_timer(np, true, rating);
+>>>>>>>  }
+>>>>>>>  TIMER_OF_DECLARE(tegra20_timer, "nvidia,tegra20-timer", tegra20_init_timer);
+>>>>>>> -
+>>>>>>> -static int __init tegra20_init_rtc(struct device_node *np)
+>>>>>>> -{
+>>>>>>> -	int ret;
+>>>>>>> -
+>>>>>>> -	ret = timer_of_init(np, &suspend_rtc_to);
+>>>>>>> -	if (ret)
+>>>>>>> -		return ret;
+>>>>>>> -
+>>>>>>> -	return clocksource_register_hz(&suspend_rtc_clocksource, 1000);
+>>>>>>> -}
+>>>>>>> -TIMER_OF_DECLARE(tegra20_rtc, "nvidia,tegra20-rtc", tegra20_init_rtc);
+>>>>>>> diff --git a/drivers/rtc/rtc-tegra.c b/drivers/rtc/rtc-tegra.c
+>>>>>>> index 8fa1b3febf69..6da54264a27a 100644
+>>>>>>> --- a/drivers/rtc/rtc-tegra.c
+>>>>>>> +++ b/drivers/rtc/rtc-tegra.c
+>>>>>>> @@ -6,6 +6,7 @@
+>>>>>>>   */
+>>>>>>>  
+>>>>>>>  #include <linux/clk.h>
+>>>>>>> +#include <linux/clocksource.h>
+>>>>>>>  #include <linux/delay.h>
+>>>>>>>  #include <linux/init.h>
+>>>>>>>  #include <linux/io.h>
+>>>>>>> @@ -52,8 +53,15 @@ struct tegra_rtc_info {
+>>>>>>>  	struct clk *clk;
+>>>>>>>  	int irq; /* alarm and periodic IRQ */
+>>>>>>>  	spinlock_t lock;
+>>>>>>> +
+>>>>>>> +	struct clocksource clksrc;
+>>>>>>>  };
+>>>>>>>  
+>>>>>>> +static struct tegra_rtc_info *to_tegra_rtc(struct clocksource *clksrc)
+>>>>>>> +{
+>>>>>>> +	return container_of(clksrc, struct tegra_rtc_info, clksrc);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>  /*
+>>>>>>>   * RTC hardware is busy when it is updating its values over AHB once every
+>>>>>>>   * eight 32 kHz clocks (~250 us). Outside of these updates the CPU is free to
+>>>>>>> @@ -268,6 +276,17 @@ static const struct rtc_class_ops tegra_rtc_ops = {
+>>>>>>>  	.alarm_irq_enable = tegra_rtc_alarm_irq_enable,
+>>>>>>>  };
+>>>>>>>  
+>>>>>>> +static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
+>>>>>>> +{
+>>>>>>> +	struct tegra_rtc_info *info = to_tegra_rtc(clksrc);
+>>>>>>> +	u32 ms, s;
+>>>>>>> +
+>>>>>>> +	ms = readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
+>>>>>>> +	s = readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
+>>>>>>> +
+>>>>>>> +	return (u64)s * MSEC_PER_SEC + ms;
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>  static const struct of_device_id tegra_rtc_dt_match[] = {
+>>>>>>>  	{ .compatible = "nvidia,tegra20-rtc", },
+>>>>>>>  	{}
+>>>>>>> @@ -339,6 +358,28 @@ static int tegra_rtc_probe(struct platform_device *pdev)
+>>>>>>>  		goto disable_clk;
+>>>>>>>  	}
+>>>>>>>  
+>>>>>>> +	/*
+>>>>>>> +	 * The Tegra RTC is the only reliable clock source that persists
+>>>>>>> +	 * across an SC7 transition (VDD_CPU and VDD_CORE off) on Tegra210
+>>>>>>> +	 * and earlier. Starting with Tegra186, the ARM v8 architected timer
+>>>>>>> +	 * is in an always on power partition and its reference clock keeps
+>>>>>>> +	 * running during SC7. Therefore, we technically don't need to have
+>>>>>>> +	 * the RTC register as a clock source on Tegra186 and later, but it
+>>>>>>> +	 * doesn't hurt either, so we just register it unconditionally here.
+>>>>>>> +	 */
+>>>>>>> +	info->clksrc.name = "tegra_rtc";
+>>>>>>> +	info->clksrc.rating = 200;
+>>>>>>> +	info->clksrc.read = tegra_rtc_read_ms;
+>>>>>>> +	info->clksrc.mask = CLOCKSOURCE_MASK(32);
+>>>>>>
+>>>>>> Hm.. shouldn't this be CLOCKSOURCE_MASK(52)? Given that there are 32 bits for seconds and
+>>>>>> 10bits for milliseconds.
+>>>>>
+>>>>> Did you mean to say CLOCKSOURCE_MASK(42)? Yeah, that's probably better
+>>>>> here.
+>>>>
+>>>> Yes, 42 :)
+>>>
+>>> I'm wondering if that could perhaps be a little problematic because
+>>> we're not actually using all of the 10 bits for the milliseconds. So the
+>>> maximum value that we can return is:
+>>>
+>>> 	4294967296 * 1000 + 999 = 4294967296999
+>>>
+>>> However, the maximum value for a 42 bit mask is:
+>>>
+>>> 	2^42 - 1 = 4398046511103
+>>>
+>>> That mask is only used in order to wrap around in delta computations. So
+>>> I can imagine a situation where we'd end up with a wrong value in the
+>>> delta. I suppose this can only really happen if the two samples are very
+>>> far apart in time, so maybe this isn't worth worrying about.
+>>
+>> I'm a bit puzzled now. Looks problematic that wraparound will happen unexpectedly for
+>> the timekeeping. Although please bare in mind that I'm not expert in the area of
+>> timekeeping, actually I know very little about it.
+>>
+>> Maybe tegra_rtc_read_ms() should track wraparound case itself and return a
+>> monotonically incrementing value?
+>>
+>> static u64 tegra_rtc_read_ms(struct clocksource *clksrc)
+>> {
+>> 	struct tegra_rtc_info *info = to_tegra_rtc(clksrc);
+>> 	u64 ms, s, now;
+>>
+>> 	ms = readl_relaxed(info->base + TEGRA_RTC_REG_MILLI_SECONDS);
+>> 	s = readl_relaxed(info->base + TEGRA_RTC_REG_SHADOW_SECONDS);
+>>
+>> 	now = s * MSEC_PER_SEC + ms;
+>>
+>> 	if (now < info->last)
+>> 		info->ms_cnt += 0x3e8000003e8ull - info->last + now;
+>> 	else
+>> 		info->ms_cnt += now - info->last;
+>>
+>> 	info->last = now;
+>>
+>> 	return info->ms_cnt;
+>> }
+>>
+>> and then simply CLOCKSOURCE_MASK(64).
+> 
+> This sounds like a bit of overkill to me. There's an obscure constant in
+> there that's completely non-obvious and we're duplicating code that's
+> effectively already in the core. I think the only thing that we need to
+> make sure is that we don't confuse the timekeeping system by having this
+> discrepancy of 24 values between the values that we report and the mask.
+> 
+> I think we could probably do this by setting a mask of 41 bits and then
+> also applying that mask to the values that we return:
+> 
+> 	return (u64)(s * MSEC_PER_SEC + ms) & clksrc->mask;
+> 
+> That way we always wrap around before we reach the maximum numerical
+> value that we could. So we "loose" that 24 value range, but that's not
+> really a problem.
+> 
+> Actually, saying it that way I don't think we actually have to worry
+> about this at all. Those 24 values (0x3E8-0x3FF) are already lost. We
+> never return any values in that range because the MILLI_SECONDS register
+> wraps around to 0x000 after 0x3E7. So we will never end up with any of
+> those 24 values being used. They are effectively already lost. The fact
+> that we "hide" them by contracting the 10 bit field to 1000 values does
+> not change that.
 
+IIUC, clocksource code has assumption that the wraparound happens at a pow2 value,
+hence the problem is that the time will go backwards unexpectedly because 0xffffffff *
+1000 isn't a pow2 value and masking of 41 bits won't help with that. The mask is only
+needed by clocksource to account the pow2 overflow correctly and again, we don't have
+the pow2.
 
-> -----Original Message-----
-> From: Olof Johansson <olof@lixom.net>
-> Sent: Monday, June 17, 2019 6:50 AM
-> To: Leo Li <leoyang.li@nxp.com>
-> Cc: arm@kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> kernel@vger.kernel.org; shawnguo@kernel.org
-> Subject: Re: [GIT PULL v2] updates to soc/fsl drivers for next(v5.3)
->=20
-> On Wed, Jun 05, 2019 at 02:45:11PM -0500, Li Yang wrote:
-> > Hi arm-soc maintainers,
-> >
-> > This is a rebase of patches that missed 5.2 merge window together with
-> > some new patches for QE.  Please help to review and merge it.  We
-> > would like this to be merged earlier because there are other patches
-> > depending on patches in this pull request.  After this is merged in
-> > arm-soc, we can ask other sub-system maintainers to pull from this tag
-> > and apply additional patches.  Thanks.
->=20
-> Li,
->=20
-> You never followed up with a reply, or removed, the previous tag. So when
-> we process the pull requests that come in, we've already merged it.
+Indeed, it looks like a bit of overkill. But it's not a performance-critical code at
+all and thus it's better to preserve correctness whenever possible. You could add a
+clarifying comment to the obscure constant and to the code in general, explaining why
+that all is needed.
 
-Sorry about that.  Will reply the previous pull request and remove the old =
-tag if update is needed next time.
-
->=20
-> So, I've merged the previous version. Can you send an incremental pull
-> request on top of that branch/tag instead of a rebase like this was, plea=
-se?
-
-Actually the new pull request is based on the old pull request this time.  =
-I sent the new one as V2 hoping that you can see this first and avoid mergi=
-ng two times.  Since you have already merged the first one, you can merge t=
-he second pull request as an incremental pull request directly.
-
-Regards,
-Leo
-
->=20
->=20
-> Thanks!
->=20
-> -Olof
+Also, please note that the info->lock should be taken within tegra_rtc_read_ms() for
+consistency. I'd also rename "m" and "s" variables to "msec" "sec" to be consistent
+with the tegra_rtc_read_time().
