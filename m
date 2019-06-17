@@ -2,142 +2,113 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-12.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA44C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:03:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80959C31E44
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF98B218E0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:03:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506CB218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 07:03:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AZPXeGoc"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GlJiJVyg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726125AbfFQHDE (ORCPT
+        id S1726333AbfFQHDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 03:03:04 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39617 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725778AbfFQHDE (ORCPT
+        Mon, 17 Jun 2019 03:03:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34437 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725827AbfFQHDq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 03:03:04 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so8623488wrt.6;
-        Mon, 17 Jun 2019 00:03:02 -0700 (PDT)
+        Mon, 17 Jun 2019 03:03:46 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k11so8642968wrl.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 00:03:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/08HwRtUcVTCzzmcyja5YEJAa6PYX9c/fcHk5cauzEs=;
-        b=AZPXeGocFtVVQLMDMFslcEC3HVlPvFemb5OqXKG7ZIg4n+pbpCJnkO961xgpDcYQPm
-         cFb6f3hez8xTq+TM1if6wSLwLbk1etPOe7UzuR4wpybL79Vt11OUmWNKqxD47KMYQow4
-         GJLPPv0UdhVNpokceFvnLywP9M6zr0HS8TXXYYiLexpmRukNqDQn0b21IFpQE+XB+loS
-         mKBVlOtoXswCSn2STk69R1tmNmoV87qEzJG35ECfIm/qsGzpBnEbTbyXg87sMm50Co5R
-         ZlgY2FKHrXBqmzArgsRJo975oanfKdxv9Ou5T8UsYUR+LIGLnAW6B1mOISnlglDAsxnr
-         2Zmw==
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=4+pITYSfaf6rsitQnMBBcSbRxuZE47ZzaATw3AkXEIY=;
+        b=GlJiJVygE2SJu2dlv813B1LT1RBKsB8OADALaafZKHFOhQ6+Veg/uRGRyHJ9lHmpoQ
+         y2JLsWtApQC7szDYnTKUWgYBQknS8vLCK0cl8EgERMGZ9zLX/OugYJ4McPN/eGHWAyHR
+         L2bLqp/FOdRjxFs0rgdKIKWFBxOjOAd9qRnR40dMDOpSH/V4oYJmqiUwimyX62BBsJ91
+         HLTyEfJb7c4L7wl+TgA/oEMGHFHnGjGk19dEK2ercGoMHw6rJ25h32PTHHW6HGF+FuiW
+         k2M/vsYAcUeBRxC84OvLHu1q3A2Vpv+fHsMVrc09tMivqGC0PoIRMU39XYBCoqGfaU2Z
+         FUEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/08HwRtUcVTCzzmcyja5YEJAa6PYX9c/fcHk5cauzEs=;
-        b=jm/vzn94bNvUEEO1EvpWBDaB1FWQhOQ9T1SPMO7ot2J8H0qVYtio82hPJXmapu6FUm
-         wzpnSM16L3GhhDIr4SrYj/FSSjvZzFqhK6AzI8NmwQhvTi43fOfx5ALe3/D7CGBEJSme
-         l46DIDAI8aTOfmlqHYIdyCt9IqZck/EuaGSGaOGahPIGUmN8eYAEWYtzRCthiOMrMAfZ
-         gu4pUqUrBjA9bO/trfpe7ob+J39o+QrEVWJSU2Pdw/d3lz+kh0xoMOj5jWGNOBNy0km5
-         gkDhpHDSsHZMyY1u/zR63lCjpH/H7IUeO8ITtW6hic+gz3DhVJ2pObGF5fOTHmPsv8cr
-         EHRQ==
-X-Gm-Message-State: APjAAAVF1AwNkJlMsE1vJt0e0mk8Y7zJ3PpMzwiBazGJuABCG0g+wKCz
-        lbw+otE01C4Gcf76e6bqk433s+vh
-X-Google-Smtp-Source: APXvYqxQxEIx1A1i1Eb+vnIYA8kD+8BAyGsi5bezbQLe9fLx2miKdyg3y0PvQ1hQLGhjHz2AYSkBlA==
-X-Received: by 2002:a5d:46ce:: with SMTP id g14mr17948518wrs.203.1560754981966;
-        Mon, 17 Jun 2019 00:03:01 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id h90sm23765954wrh.15.2019.06.17.00.03.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 00:03:01 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 09:02:59 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Wolfram Sang <wsa@the-dreams.de>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-Subject: Re: [PATCH V3] i2c: busses: tegra: Add suspend-resume support
-Message-ID: <20190617070259.GA30126@ulmo>
-References: <1559885867-10190-1-git-send-email-bbiswas@nvidia.com>
- <20190614211129.GG17899@ninjato>
- <758d6dc2-f044-6be3-6896-196ef477d393@nvidia.com>
- <20190615045405.GA1023@kunai>
- <69a9a7e3-f885-b6ab-60bb-a1165ce2db23@gmail.com>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=4+pITYSfaf6rsitQnMBBcSbRxuZE47ZzaATw3AkXEIY=;
+        b=OTWjJyfPu8fSzIYAB6OtcyygQ6LUWVmVnPDQDZnUp7mMIvM8DQGjMwa632nbsrk6VJ
+         bmSlYE3yc+PMDop0RCwR2DsD0w/hLs653BkTZeuEgB01PwW0SIo4RueBNX67eprxoq5c
+         AUMAzOXpq24O04z3im+61VsK50Y/Iqyayg/WQrbCvtevafYXpd4tlchzT0QwguC1sZBI
+         xjfOwYEguBijiu3mH/pwQ/e9XnG1lGwf7O4APFMn7iA5vh8Vy6sH6FgDTJu5MI2Urcfc
+         0epLMvmK5DJ5NTfjSyZBenXzGL3C/JwAetgYc2D+9YWVWLdEKY/sWHcIhgTW8IcgeAjR
+         OXIA==
+X-Gm-Message-State: APjAAAUKffHnfZxfW9m+i15Na6pEDJ2w1hnjEZtYjVpGBGqH1TpweF4D
+        eCaWpsH95yIZGVd2zhfNE3qCaiy4q/A=
+X-Google-Smtp-Source: APXvYqzNat4IzfDWlts1T6Zm9jqhh/J1uCafDL7GG5Mn60bm6L8LeVgA4j3nnEkpv4fL1f34nwj4bA==
+X-Received: by 2002:a5d:5302:: with SMTP id e2mr59875456wrv.347.1560755023967;
+        Mon, 17 Jun 2019 00:03:43 -0700 (PDT)
+Received: from dell ([2.27.35.243])
+        by smtp.gmail.com with ESMTPSA id u23sm8108217wmj.33.2019.06.17.00.03.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 00:03:43 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 08:03:41 +0100
+From:   Lee Jones <lee.jones@linaro.org>
+To:     Keerthy <j-keerthy@ti.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, t-kristo@ti.com
+Subject: [GIT PULL] Immutable branch between MFD and Regulator due for the
+ v5.3 merge window
+Message-ID: <20190617070341.GC16364@dell>
+References: <20190612144620.28331-1-j-keerthy@ti.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="HlL+5n6rz5pIUxbD"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <69a9a7e3-f885-b6ab-60bb-a1165ce2db23@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612144620.28331-1-j-keerthy@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Enjoy!
 
---HlL+5n6rz5pIUxbD
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-On Sun, Jun 16, 2019 at 04:56:06PM +0300, Dmitry Osipenko wrote:
-> 15.06.2019 7:54, Wolfram Sang =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >=20
-> >>> Without a maintainer ack, this is an exception this time. Should we a=
-dd
-> >>> Dmitry as another maintainer or reviewer at least?
-> >>>
-> >> I shall followup with Maintainer for ACK in future I2C tegra patches.
-> >=20
-> > This comment was not directed at you, sorry if that was not clear. It
-> > was more for Laxman, Thierry, Jonathan, and Dmitry (if he is
-> > interested).
-> >=20
->=20
-> I don't mind at all to review and test patches for the driver and can pro=
-pose myself
-> as a reviewer if that helps and if there are no objections from the Tegra=
- maintainers.
-> My primary interest is to have my devices working after next kernel updat=
-e, but I also
-> like to review patches in general if they are touching area that I'm fami=
-liar with.
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-No objection from me.
+are available in the Git repository at:
 
-Thierry
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-regulator-v5.3
 
---HlL+5n6rz5pIUxbD
-Content-Type: application/pgp-signature; name="signature.asc"
+for you to fetch changes up to 7ee63bd74750a2c6fac31805ca0ac67f2522bfa5:
 
------BEGIN PGP SIGNATURE-----
+  regulator: lp87565: Add 4-phase lp87561 regulator support (2019-06-17 08:00:24 +0100)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0HOyAACgkQ3SOs138+
-s6FunA/9FnsBC0lgpKTkMD4x/XSYqwhavvrILocW3n6+bcJ2oQonGzaHr3+QJzHQ
-9Eipq1rP5XmUzm/OvCyUXWV+jXBuVmgUOt/duHJSC7rRs6YYQuhGYpF5+HWPAoQG
-dKiUX4/x/ziFiSorakCNQtTK/nufWC2Oe4k8qc5Gh2G8GRFwqij2DVRmCvElP4qm
-Cnf8J6K6gfwuTNX6KAcK0sfbDycBsu6VKa/9A72O8rf47JPCVYPR/8PpvftKzWZ+
-CcHHggTE2KfexaydT9VsC2PGniYwkcKp7CyS7YWQ/IPUuaVztydbJCdpmHgsd7yC
-kNWYdGUl9TeD0SyzK8vPRMmBiWZ9EqNE621iqg7gS2A3V4oru+NFWvlFsVDzLVs+
-SLFberGcdx6lgXDFLK5IMrTlpszfSG8Bwsc78ub2d9D+UU7tmsMXyxMqCbi+bCbu
-HbyqnLCivgz8t4lujcBggGWGzn4w+Rx0OafqSm/NhjmQfiBsQ5yc1n/zuEEMT/cO
-AkPxOLERNhHUanYwhz4bmErkmbdiKGZAz38I1nYnFzvNxRq77rfjMNgZg7e50wr6
-pK5LmpXZ14X4y4Fv1kD5y/CJh97dfrUqIAWiC8Az9N9zJ1mdEwjp7f41U44MA1+e
-mZd2Qf3kF1icB8X4lsgW47ObG7YAMK0oXxBdcV5d9RLYtwSoWks=
-=+FPI
------END PGP SIGNATURE-----
+----------------------------------------------------------------
+Immutable branch between MFD and Regulator due for the v5.3 merge window
 
---HlL+5n6rz5pIUxbD--
+----------------------------------------------------------------
+Keerthy (3):
+      dt-bindings: mfd: lp87565: Add LP87561 configuration
+      mfd: lp87565: Add support for 4-phase LP87561 combination
+      regulator: lp87565: Add 4-phase lp87561 regulator support
+
+ Documentation/devicetree/bindings/mfd/lp87565.txt | 36 +++++++++++++++++++++++
+ drivers/mfd/lp87565.c                             |  4 +++
+ drivers/regulator/lp87565-regulator.c             | 17 ++++++++++-
+ include/linux/mfd/lp87565.h                       |  2 ++
+ 4 files changed, 58 insertions(+), 1 deletion(-)
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
