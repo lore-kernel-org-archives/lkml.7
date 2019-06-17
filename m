@@ -2,108 +2,82 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BADEC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2342CC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:14:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E06E62080C
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C951C20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 09:14:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="A97y2r8a"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="jqYp+0dJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728070AbfFQJMN (ORCPT
+        id S1727815AbfFQJOH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 05:12:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46014 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbfFQJMM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 05:12:12 -0400
-Received: by mail-ot1-f66.google.com with SMTP id x21so8543789otq.12
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 02:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XkQKkEqj0Dk+yMwwMUT9kq+YcOABBfUMfQA+OLQkIhs=;
-        b=A97y2r8a4SElnnqWxEgYt9hqzUlV/cOq2E2WwDSEdCBsMl4m9cFtY2fwwCpdvcakGW
-         awt+SV7bLv8nxXRVmEnrNMG5nFwayb31HFNIpLayWLPTVlHkQNzKb7SuHGb/q/kFN1iG
-         KVV5NavH8nIx9y83mXraGlVjJ8aelPhg8mONarGKKwUmLvP7zgFt9KexSKptxXiLGBtB
-         AghmJ9J5muwb89JeCF2VbT9c8bxFbPOzohfyudUTv0h+bt9tmpFijVpS7R1W1toW/CwL
-         o9HaBfx9fAnEFi8vjuByIGu5qiqhE5bzRO7ym7pfTmOyYah4LXxvPFkfhV2bB4XvMmBB
-         qZjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=XkQKkEqj0Dk+yMwwMUT9kq+YcOABBfUMfQA+OLQkIhs=;
-        b=Zv17fUOqDrR5uXhzs1TPTcIAeuc4glU91hCBkm94dS70PmgChUkz60VvuLMTqZhpJS
-         +XprgPQkPfszf8lmenkzYwIjGJf7Hy1+SRp9GGo9JrNZWj8cXD4aUmVUdnh69Roz4qtd
-         8U8MRVyTk1NgzSc01EhKuPwpDfN9T3girYQZPTudILsyNC1hzsxWjvzsS5mknLGeuhlL
-         B1dwmWH9xZsCLTTg35iQKyg+mA4nGn6D5sBRwCDo4gbPvf1uh9uuwGVwRC62ZiVyw0HO
-         CeWiju+B997MWnyLIBGneD/03rbsMrCq3o1Xeosam3hVRDCvsFOaxwVQ4N03GCd93aen
-         2g3Q==
-X-Gm-Message-State: APjAAAXTtiimRw6sN647JorYjGNJsvsmx6oozGmplZgzj+Qc8eQ4fID4
-        l3Jj2gUjSISUGrViQGgu9WRVGA==
-X-Google-Smtp-Source: APXvYqwsv0A5/ztfsCZbU16h7iBULFGTI4PThp2tCsCGD02xzLu83QPfwHz3CgMUuRTE/EiYGmWv6w==
-X-Received: by 2002:a9d:4b88:: with SMTP id k8mr61017358otf.285.1560762731712;
-        Mon, 17 Jun 2019 02:12:11 -0700 (PDT)
-Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id l145sm4418324oib.6.2019.06.17.02.12.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 02:12:11 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>
-Subject: [PATCH 2/2] perf trace: Handle NULL pointer dereference in trace__syscall_info()
-Date:   Mon, 17 Jun 2019 17:11:40 +0800
-Message-Id: <20190617091140.24372-2-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190617091140.24372-1-leo.yan@linaro.org>
-References: <20190617091140.24372-1-leo.yan@linaro.org>
+        Mon, 17 Jun 2019 05:14:07 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:54694 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726753AbfFQJOH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 05:14:07 -0400
+Received: from zn.tnic (p200300EC2F061300E197F1B82D7E4667.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:1300:e197:f1b8:2d7e:4667])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E4CCC1EC0AB9;
+        Mon, 17 Jun 2019 11:14:05 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560762846;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=esWtvvaU+HTDTE+bUZUafraMPobPs9RAIBfZm9WP3nE=;
+        b=jqYp+0dJxQc41097/0iTI7yAt2X7EbZ8TpnXunoKsxcrr+01XbII9oCW9JxWUA7kkEMc1b
+        pUUOWsQMvGmH4ri+t72y6IFGrRO5sjMF/ZNyR+EoECFC/EDM2KFWW/dhfWf27G/uhyI26Y
+        YQEhkhdqYKYjCGt7EjK3Hmg5Q885ygs=
+Date:   Mon, 17 Jun 2019 11:13:57 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Len Brown <lenb@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 1/3] x86/resctrl: Get max rmid and occupancy scale
+ directly from CPUID instead of cpuinfo_x86
+Message-ID: <20190617091357.GF27127@zn.tnic>
+References: <1560705250-211820-1-git-send-email-fenghua.yu@intel.com>
+ <1560705250-211820-2-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1906162141301.1760@nanos.tec.linutronix.de>
+ <20190617031808.GA214090@romley-ivt3.sc.intel.com>
+ <20190617075214.GB27127@zn.tnic>
+ <20190617080909.GC214090@romley-ivt3.sc.intel.com>
+ <20190617083048.GE27127@zn.tnic>
+ <20190617083502.GD214090@romley-ivt3.sc.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190617083502.GD214090@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-trace__init_bpf_map_syscall_args() invokes trace__syscall_info() to
-retrieve system calls information, it always passes NULL for 'evsel'
-argument; when id is an invalid value then the logging will try to
-output event name, this triggers NULL pointer dereference.
+On Mon, Jun 17, 2019 at 01:35:02AM -0700, Fenghua Yu wrote:
+> Is this OK? Or the patch 0002 is unnecessary?
 
-This patch directly uses string "unknown" for event name when 'evsel'
-is NULL pointer.
+One patch: carve out and move it where you think it should belong.
 
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/builtin-trace.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/tools/perf/builtin-trace.c b/tools/perf/builtin-trace.c
-index 5cd74651db4c..49dfb2fd393b 100644
---- a/tools/perf/builtin-trace.c
-+++ b/tools/perf/builtin-trace.c
-@@ -1764,7 +1764,7 @@ static struct syscall *trace__syscall_info(struct trace *trace,
- 		static u64 n;
- 
- 		pr_debug("Invalid syscall %d id, skipping (%s, %" PRIu64 ")\n",
--			 id, perf_evsel__name(evsel), ++n);
-+			 id, evsel ? perf_evsel__name(evsel) : "unknown", ++n);
- 		return NULL;
- 	}
- 
 -- 
-2.17.1
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
