@@ -2,146 +2,91 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27619C31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 571D1C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F347520657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:22:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jMkkk91r";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="jMkkk91r"
+	by mail.kernel.org (Postfix) with ESMTP id 3648D206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 13:22:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727428AbfFQNWc (ORCPT
+        id S1727688AbfFQNWv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 09:22:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:47530 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726065AbfFQNWc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 09:22:32 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 8324260254; Mon, 17 Jun 2019 13:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560777750;
-        bh=ew/xbajXtVboXMA/g2sJySnJBP6r87Wf7tJKswJnaqs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jMkkk91rJHyKHUc8qdhdkxnNyBUBpMgikXZ9N35782cqteuJ+Xwi7CzdeQq7Zqcqk
-         flbAmjU4UdQ4glqfRCTixYWtV1KlJviVUyr+YJnj98lDnOLJj+7ZfdtkZXfJdRe4RI
-         wQGHzC1Cs36FFO0PNWaxdndHTc96p4IIiOPWSAMM=
-Received: from [10.204.78.89] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: neeraju@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7624B60265;
-        Mon, 17 Jun 2019 13:22:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560777750;
-        bh=ew/xbajXtVboXMA/g2sJySnJBP6r87Wf7tJKswJnaqs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jMkkk91rJHyKHUc8qdhdkxnNyBUBpMgikXZ9N35782cqteuJ+Xwi7CzdeQq7Zqcqk
-         flbAmjU4UdQ4glqfRCTixYWtV1KlJviVUyr+YJnj98lDnOLJj+7ZfdtkZXfJdRe4RI
-         wQGHzC1Cs36FFO0PNWaxdndHTc96p4IIiOPWSAMM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7624B60265
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=neeraju@codeaurora.org
-Subject: Re: Fwd: Re: [PATCH] pinctrl: qcom: Clear status bit on irq_unmask
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Tengfei Fan <tengfeif@codeaurora.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>, sramana@codeaurora.org
-References: <20190611185102.368ED21744@mail.kernel.org>
- <671f87d6-f4a4-6d2c-967b-e1aa0677d83e@codeaurora.org>
- <b0fdbcb1-4d5d-5c60-4150-7762a577cd10@codeaurora.org>
- <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
-From:   Neeraj Upadhyay <neeraju@codeaurora.org>
-Message-ID: <e88903a2-9b07-6eee-3776-0fc0ad429a2d@codeaurora.org>
-Date:   Mon, 17 Jun 2019 18:52:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 17 Jun 2019 09:22:51 -0400
+Received: from smtp3-g21.free.fr ([212.27.42.3]:9413 "EHLO smtp3-g21.free.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725906AbfFQNWv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 09:22:51 -0400
+Received: from anisse-station.iliad.local (unknown [213.36.7.13])
+        by smtp3-g21.free.fr (Postfix) with ESMTPS id 6347313F8DA;
+        Mon, 17 Jun 2019 15:22:22 +0200 (CEST)
+From:   Anisse Astier <aastier@freebox.fr>
+To:     Will Deacon <will.deacon@arm.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Rich Felker <dalias@aerifal.cx>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Ricardo Salveti <ricardo@foundries.io>,
+        Sasha Levin <sashal@kernel.org>,
+        Anisse Astier <aastier@freebox.fr>
+Subject: [PATCH v3 1/2] arm64: ssbd: explicitly depend on <linux/prctl.h>
+Date:   Mon, 17 Jun 2019 15:22:21 +0200
+Message-Id: <20190617132222.32182-1-aastier@freebox.fr>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190617084545.GA38959@anisse-station>
+References: <20190617084545.GA38959@anisse-station>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdahUNNOhQdri3T86jHr+qOBmXH61_AMmoWpv_be2koMrw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for the review, Linus.
+Fix ssbd.c which depends implicitly on asm/ptrace.h including
+linux/prctl.h (through for example linux/compat.h, then linux/time.h,
+linux/seqlock.h, linux/spinlock.h and linux/irqflags.h), and uses
+PR_SPEC* defines.
 
-On 6/17/19 5:20 PM, Linus Walleij wrote:
-> On Mon, Jun 17, 2019 at 12:35 PM Neeraj Upadhyay <neeraju@codeaurora.org> wrote:
->
->> Hi Stephen, there is one use case with is not covered by commit
->> b55326dc969e (
->>
->> "pinctrl: msm: Really mask level interrupts to prevent latching"). That
->> happens when
->>
->> gpio line is toggled between i/o mode and interrupt mode :
->>
->> 1. GPIO is configured as irq line. Peripheral raises interrupt.
->>
->> 2. IRQ handler runs and disables the irq line (through wq work).
->>
->> 3. GPIO is configured for input and and data is received from the
->> peripheral.
-> There is no distinction between using a GPIO line as input
-> and using it for IRQ. All input GPIOs can be used for IRQs,
-> if the hardware supports it (has an irqchip).
+This is an issue since we'll remove the include in the next commit.
 
-Ok
+Fixes: 9cdc0108baa8 ("arm64: ssbd: Add prctl interface for per-thread mitigation")
+Cc: stable@vger.kernel.org
+Signed-off-by: Anisse Astier <aastier@freebox.fr>
+---
+Contrary to what I said in the previous email, I can reproduce the build
+error on Linus' master when ARM64_SSBD is enabled.
 
->
->> 4. Now, when GPIO is re-enabled as irq, we see spurious irq, and there
->> isn't
->>
->> any data received on the gpio line, when it is read back after
->> configuring as input.
-> That's an interesting usecase. Hans Verkuil reworked the
-> GPIO irq support very elegantly exactly to support this type
-> of usecase (irq switch on and off dynamically), where he
-> was even switching the line into output mode between
-> the IRQ trains. (one-wire transcactions for CEC).
->
->> Patch https://lkml.org/lkml/2019/6/17/226 tries to cover this use case.
->> Can you please provide your comments?
-> What this patch does is clear all pending IRQs at irq
-> unmask. This is usually safe, unless there may be cases
-> where you *want* to catch any pending IRQs. I guess
-> normally you don't so it should be safe?
+Changes since v2:
+ - fix build when ARM64_SSBD is enabled with additionnal patch
+Changes since v1:
+ - made a bit more explicit that we copied defined symbols, in commit
+   and code.
+ - Use Fixes: tag in commit message
 
-We want to clear pending status at irq enable. Afaik, no,
+Thanks to Dave Martin and Will Deacon for the review, and Sasha Levin
+for the auto-build bot.
+---
+ arch/arm64/kernel/ssbd.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-we don't normally track these pending irqs. So, should be
-
-fine here.
-
->
-> The corner case is when you start some transaction
-> or whatever that gets ACKed by an IRQ and you actually
-> get the IRQ back before you had time to execute the code
-> enabling the IRQ.
->
-> That would be racy and bad code, as you should clearly
-> enable the IRQ first, then start the transaction. So I think
-> this patch is safe.
->
-> But let's see what Bjorn says.
->
-> Yours,
-> Linus Walleij
-
+diff --git a/arch/arm64/kernel/ssbd.c b/arch/arm64/kernel/ssbd.c
+index 885f13e58708..52cfc6148355 100644
+--- a/arch/arm64/kernel/ssbd.c
++++ b/arch/arm64/kernel/ssbd.c
+@@ -5,6 +5,7 @@
+ 
+ #include <linux/compat.h>
+ #include <linux/errno.h>
++#include <linux/prctl.h>
+ #include <linux/sched.h>
+ #include <linux/sched/task_stack.h>
+ #include <linux/thread_info.h>
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a
-member of the Code Aurora Forum, hosted by The Linux Foundation
+2.19.1
 
