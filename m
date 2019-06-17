@@ -2,142 +2,148 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E5EEC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5016EC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF342087F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:24:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 254E32084A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:24:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DLFCe8J7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="erP9kbch"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfFQLYN (ORCPT
+        id S1727991AbfFQLYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:24:13 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:42598 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfFQLYN (ORCPT
+        Mon, 17 Jun 2019 07:24:53 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38999 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726605AbfFQLYx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:24:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1560770649; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=XXgClKH7M7bb5E8c4HAo2DhEtqDm8AwWK0DAg3w6CSA=;
-        b=DLFCe8J7F1iPnSyAWfCXNCPswqEMS67tC5mWBLsUUPwwict7OqgpXo58qFhDKzwVuWmzPl
-        TCvyCpszlQ8FaFEm+TC3DOPxtvbwxLOoI1+wWRdFKVEjsCDewxvAz27jOkgCkA0D6HuhTQ
-        T0Cn9LgLxGKKsufguSZno81dsI1kJRU=
-Date:   Mon, 17 Jun 2019 13:24:04 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] mtd: rawnand: ingenic: fix ingenic_ecc dependency
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-Id: <1560770644.1774.0@crapouillou.net>
-In-Reply-To: <20190617111110.2103786-1-arnd@arndb.de>
-References: <20190617111110.2103786-1-arnd@arndb.de>
+        Mon, 17 Jun 2019 07:24:53 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 196so5658735pgc.6;
+        Mon, 17 Jun 2019 04:24:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=On7E7zmLSRgJj9Ttl1gLhH57uyxxO3PDcMqtYU/ZX3A=;
+        b=erP9kbch+/6D93JrTKRtB/9WivFEV597MDMtDcNbuA81UdsF/WYopiQgFtZt/DdMeJ
+         igUmflkUgVylTtJqDgqo86aOLhTQGCJ7asJo9ZxxpJNyOPfOm1OIL86ZhqEcpYGyxNwn
+         RgmP/UFuTIo6+AqSDR71wxFk4anXVEitvA1Ggvre3ObKdVFfbNVXAWJAfXPczB0Zt0r+
+         sqI4k3bOulwes5gH7cGUU5Nuw91afJmAXO2mwkgA2bZjSvcYyNCUVEH0g2m1isp2tK5Z
+         9bSyYcqbidNKrqcpufW0wwImIVaWzme2sQo4yjWHetsWgyzB6SolI40aNKagtB6l27j/
+         ZocA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=On7E7zmLSRgJj9Ttl1gLhH57uyxxO3PDcMqtYU/ZX3A=;
+        b=fBps6dQCbTfl0wNkHDUHCI5Mg8ivyLWpha5zbIhQSdBEX/0e6askYd2kMrhGheVbFY
+         rqooEGEfgNhmsG344mpHeb6BtZy4O/RHhG3q/QCpjVlnyrB2Vma+ZRfWGlL89ebweJpE
+         170KFLDvjwX5qvT+E5QFL8odAbBh3ab3eIsnCPfRqheuEEzk7bjieS7rnUOYTOcgCLzl
+         2rmwWeXNbqxfpa8E38RKpyssehwRnZzHE9XlV+fyB7gCHYoYFfW/LbxeDdUwD2GbjVC2
+         X9AYAFJ0X77qhw7lBZHX+Mvp8v0sAar3Spbch3t4bzeoPLOSiAyqNcBjJYYPsJhMcknu
+         7abA==
+X-Gm-Message-State: APjAAAU2DegaufORrW1Z2N8ODfFKv4G6a+yVESCF0Xcvncjrp4Uguvne
+        utO7OhrFi+4oCChndOaZx6lGM7yb
+X-Google-Smtp-Source: APXvYqysEiwTEoKS6WXujqPEY+h+jIj4Y7EPTe8opfIL0Wz6ucLZLbcZCZDZnoYc5R9JgXPTEzT5DA==
+X-Received: by 2002:a17:90a:ad93:: with SMTP id s19mr1033613pjq.36.1560770692765;
+        Mon, 17 Jun 2019 04:24:52 -0700 (PDT)
+Received: from localhost.localdomain ([203.205.141.123])
+        by smtp.googlemail.com with ESMTPSA id d4sm12535751pfc.149.2019.06.17.04.24.50
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 17 Jun 2019 04:24:52 -0700 (PDT)
+From:   Wanpeng Li <kernellwp@gmail.com>
+X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Subject: [PATCH v4 0/5] KVM: LAPIC: Implement Exitless Timer
+Date:   Mon, 17 Jun 2019 19:24:42 +0800
+Message-Id: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Dedicated instances are currently disturbed by unnecessary jitter due 
+to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
+There is no hardware virtual timer on Intel for guest like ARM. Both 
+programming timer in guest and the emulated timer fires incur vmexits.
+This patchset tries to avoid vmexit which is incurred by the emulated 
+timer fires in dedicated instance scenario. 
 
+When nohz_full is enabled in dedicated instances scenario, the unpinned 
+timer will be moved to the nearest busy housekeepers after commit
+9642d18eee2cd (nohz: Affine unpinned timers to housekeepers) and commit 
+444969223c8 ("sched/nohz: Fix affine unpinned timers mess"). However, 
+KVM always makes lapic timer pinned to the pCPU which vCPU residents, the 
+reason is explained by commit 61abdbe0 (kvm: x86: make lapic hrtimer 
+pinned). Actually, these emulated timers can be offload to the housekeeping 
+cpus since APICv is really common in recent years. The guest timer interrupt 
+is injected by posted-interrupt which is delivered by housekeeping cpu 
+once the emulated timer fires. 
 
-Le lun. 17 juin 2019 =E0 13:10, Arnd Bergmann <arnd@arndb.de> a =E9crit :
-> The ecc code is called from the main ingenic_nand module, but the
-> Kconfig symbol gets selected by the dependent ones.
->=20
-> If the child drivers are loadable modules, this leads to a link
-> error:
->=20
-> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
-> `ingenic_nand_remove':
-> ingenic_nand.c:(.text+0x1a1): undefined reference to=20
-> `ingenic_ecc_release'
-> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
-> `ingenic_nand_ecc_correct':
-> ingenic_nand.c:(.text+0x1fa): undefined reference to=20
-> `ingenic_ecc_correct'
-> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
-> `ingenic_nand_ecc_calculate':
-> ingenic_nand.c:(.text+0x255): undefined reference to=20
-> `ingenic_ecc_calculate'
-> drivers/mtd/nand/raw/ingenic/ingenic_nand.o: In function=20
-> `ingenic_nand_probe':
-> ingenic_nand.c:(.text+0x3ca): undefined reference to=20
-> `of_ingenic_ecc_get'
-> ingenic_nand.c:(.text+0x685): undefined reference to=20
-> `ingenic_ecc_release'
->=20
-> Rearrange this to have the ecc code linked the same way as the main
-> driver.
+The host admin should fine tuned, e.g. dedicated instances scenario w/ 
+nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
+for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root  
+mode, ~3% redis performance benefit can be observed on Skylake server.
 
-I think there's a better way to fix it, only in Kconfig.
+w/o patchset:
 
-* Add a bool symbol MTD_NAND_INGENIC_USE_HW_ECC
-* Have the three ECC/BCH drivers select this symbol instead of
-  MTD_NAND_INGENIC_ECC
-* Add the following to the MTD_NAND_JZ4780 config option:
-  "select MTD_NAND_INGENIC_ECC if MTD_NAND_INGENIC_USE_HW_ECC"
+            VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
 
+EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
 
-> Fixes: 15de8c6efd0e ("mtd: rawnand: ingenic: Separate top-level and=20
-> SoC specific code")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/mtd/nand/raw/ingenic/Kconfig  | 2 +-
->  drivers/mtd/nand/raw/ingenic/Makefile | 5 ++++-
->  2 files changed, 5 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/mtd/nand/raw/ingenic/Kconfig=20
-> b/drivers/mtd/nand/raw/ingenic/Kconfig
-> index 19a96ce515c1..66b7cffdb0c2 100644
-> --- a/drivers/mtd/nand/raw/ingenic/Kconfig
-> +++ b/drivers/mtd/nand/raw/ingenic/Kconfig
-> @@ -16,7 +16,7 @@ config MTD_NAND_JZ4780
->  if MTD_NAND_JZ4780
->=20
->  config MTD_NAND_INGENIC_ECC
-> -	tristate
-> +	bool
->=20
->  config MTD_NAND_JZ4740_ECC
->  	tristate "Hardware BCH support for JZ4740 SoC"
-> diff --git a/drivers/mtd/nand/raw/ingenic/Makefile=20
-> b/drivers/mtd/nand/raw/ingenic/Makefile
-> index 1ac4f455baea..5a55efc5d9bb 100644
-> --- a/drivers/mtd/nand/raw/ingenic/Makefile
-> +++ b/drivers/mtd/nand/raw/ingenic/Makefile
-> @@ -2,7 +2,10 @@
->  obj-$(CONFIG_MTD_NAND_JZ4740) +=3D jz4740_nand.o
->  obj-$(CONFIG_MTD_NAND_JZ4780) +=3D ingenic_nand.o
->=20
-> -obj-$(CONFIG_MTD_NAND_INGENIC_ECC) +=3D ingenic_ecc.o
-> +ifdef CONFIG_MTD_NAND_INGENIC_ECC
-> +obj-$(CONFIG_MTD_NAND_JZ4780) +=3D ingenic_ecc.o
-> +endif
-> +
->  obj-$(CONFIG_MTD_NAND_JZ4740_ECC) +=3D jz4740_ecc.o
->  obj-$(CONFIG_MTD_NAND_JZ4725B_BCH) +=3D jz4725b_bch.o
->  obj-$(CONFIG_MTD_NAND_JZ4780_BCH) +=3D jz4780_bch.o
-> --
-> 2.20.0
->=20
+w/ patchset:
 
-=
+            VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
+
+EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
+
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Radim Krčmář <rkrcmar@redhat.com>
+Cc: Marcelo Tosatti <mtosatti@redhat.com>
+
+v3 -> v4:
+ * drop the HRTIMER_MODE_ABS_PINNED, add kick after set pending timer
+ * don't posted inject already-expired timer
+
+v2 -> v3:
+ * disarming the vmx preemption timer when posted_interrupt_inject_timer_enabled()
+ * check kvm_hlt_in_guest instead
+
+v1 -> v2:
+ * check vcpu_halt_in_guest
+ * move module parameter from kvm-intel to kvm
+ * add housekeeping_enabled
+ * rename apic_timer_expired_pi to kvm_apic_inject_pending_timer_irqs
+
+Wanpeng Li (5):
+  KVM: LAPIC: Make lapic timer unpinned
+  KVM: LAPIC: inject lapic timer interrupt by posted interrupt
+  KVM: LAPIC: Ignore timer migration when lapic timer is injected by pi
+  KVM: LAPIC: Don't posted inject already-expired timer
+  KVM: LAPIC: add advance timer support to pi_inject_timer
+
+ arch/x86/kvm/lapic.c            | 62 ++++++++++++++++++++++++++++-------------
+ arch/x86/kvm/lapic.h            |  3 +-
+ arch/x86/kvm/svm.c              |  2 +-
+ arch/x86/kvm/vmx/vmx.c          |  5 ++--
+ arch/x86/kvm/x86.c              | 11 ++++----
+ arch/x86/kvm/x86.h              |  2 ++
+ include/linux/sched/isolation.h |  2 ++
+ kernel/sched/isolation.c        |  6 ++++
+ 8 files changed, 64 insertions(+), 29 deletions(-)
+
+-- 
+2.7.4
 
