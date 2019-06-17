@@ -2,53 +2,53 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1DFBC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4A3C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83FCA20657
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC54620657
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:23:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806602;
-	bh=AsC9uVI1BfZ0FNcxfLRwf9ePKz/nbVlobG9IK3mJHXM=;
+	s=default; t=1560806605;
+	bh=m9Q9Vlgl+kNwOg3Xk7nW9kRT4PszanSRflTUJekU/bQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qOjsI33cw6Sf9aEQ8rb1Hlu4hR/XtzFi+Eo7TIXJJVhpkwWujrRVmGlc67z2SoxOS
-	 9HpQL+quY3NyLHKjSP8FkAq8+otANGdNfwGKVMvdkeI4n9LvtiIinidLjnPyuWhYg/
-	 ZN591SWuwAt78ujPK/oPsdFnH3aqnd5t1FMvfOh0=
+	b=0CM0xh9lwwezpaSRyvDsnEpEnMKQiv4dgp08Wda0ozbK2DF9a3daSnPg3dF4U9FDX
+	 ntMGG4GGNZyK6TrcUMVSHW204o7KsgDdiZhXm0f6tecEPCeGEmeKW8t+yOTlJe9ugo
+	 Ul1a2iiAWsdgcxe1wCDf36lWtu4aFYdDkDc1Zu/c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729708AbfFQVXV (ORCPT
+        id S1729317AbfFQVXY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:23:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48328 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:23:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48416 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729697AbfFQVXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:23:18 -0400
+        id S1729308AbfFQVXU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:23:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0000420B1F;
-        Mon, 17 Jun 2019 21:23:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 98627208E4;
+        Mon, 17 Jun 2019 21:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806597;
-        bh=AsC9uVI1BfZ0FNcxfLRwf9ePKz/nbVlobG9IK3mJHXM=;
+        s=default; t=1560806600;
+        bh=m9Q9Vlgl+kNwOg3Xk7nW9kRT4PszanSRflTUJekU/bQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VenRDgw2ym2haB/H5fKGh/uxzjF/sRTm/0j7830SzhcoMfB+ZPOS4tKyfBTwaQ8bf
-         ZmJ5ol48En09+LB0i75a3N/vdASEvVJLFH967/rVmROGEKCKMOGyr8oTTv2Su1TQZH
-         ZhiVyb/48x1C7T7mZyTtD7CQJMkFOplywnQwGkUI=
+        b=R4hBs+D0sBP9PhaSQjFD/11tabiOfHHx1XRIdHxk+3PhwxShadyCriuY1b/hAydRf
+         py82SMYVb7BahHbX67Hgduz5VjXJuiZiCC9BjRfq6k5ljTBVU0qwOJogq9LQajOnH8
+         G/Qb7yY6LtoB5Sr9wZg1+zyCw6rTgtLM1+dhnaJo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adric Blake <promarbler14@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
-Subject: [PATCH 5.1 108/115] x86/microcode, cpuhotplug: Add a microcode loader CPU hotplug callback
-Date:   Mon, 17 Jun 2019 23:10:08 +0200
-Message-Id: <20190617210805.460259072@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 091/115] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
+Date:   Mon, 17 Jun 2019 23:09:51 +0200
+Message-Id: <20190617210804.577765445@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -61,76 +61,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+[ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
 
-commit 78f4e932f7760d965fb1569025d1576ab77557c5 upstream.
+kselftests exposed a problem in the s390 handling for memory slots.
+Right now we only do proper memory slot handling for creation of new
+memory slots. Neither MOVE, nor DELETION are handled properly. Let us
+implement those.
 
-Adric Blake reported the following warning during suspend-resume:
-
-  Enabling non-boot CPUs ...
-  x86: Booting SMP configuration:
-  smpboot: Booting Node 0 Processor 1 APIC 0x2
-  unchecked MSR access error: WRMSR to 0x10f (tried to write 0x0000000000000000) \
-   at rIP: 0xffffffff8d267924 (native_write_msr+0x4/0x20)
-  Call Trace:
-   intel_set_tfa
-   intel_pmu_cpu_starting
-   ? x86_pmu_dead_cpu
-   x86_pmu_starting_cpu
-   cpuhp_invoke_callback
-   ? _raw_spin_lock_irqsave
-   notify_cpu_starting
-   start_secondary
-   secondary_startup_64
-  microcode: sig=0x806ea, pf=0x80, revision=0x96
-  microcode: updated to revision 0xb4, date = 2019-04-01
-  CPU1 is up
-
-The MSR in question is MSR_TFA_RTM_FORCE_ABORT and that MSR is emulated
-by microcode. The log above shows that the microcode loader callback
-happens after the PMU restoration, leading to the conjecture that
-because the microcode hasn't been updated yet, that MSR is not present
-yet, leading to the #GP.
-
-Add a microcode loader-specific hotplug vector which comes before
-the PERF vectors and thus executes earlier and makes sure the MSR is
-present.
-
-Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
-Reported-by: Adric Blake <promarbler14@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Cc: x86@kernel.org
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203637
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/microcode/core.c |    2 +-
- include/linux/cpuhotplug.h           |    1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -876,7 +876,7 @@ int __init microcode_init(void)
- 		goto out_ucode_group;
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index c4180ecfbb2a..ee35f1112db9 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -4413,21 +4413,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				const struct kvm_memory_slot *new,
+ 				enum kvm_mr_change change)
+ {
+-	int rc;
+-
+-	/* If the basics of the memslot do not change, we do not want
+-	 * to update the gmap. Every update causes several unnecessary
+-	 * segment translation exceptions. This is usually handled just
+-	 * fine by the normal fault handler + gmap, but it will also
+-	 * cause faults on the prefix page of running guest CPUs.
+-	 */
+-	if (old->userspace_addr == mem->userspace_addr &&
+-	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
+-	    old->npages * PAGE_SIZE == mem->memory_size)
+-		return;
++	int rc = 0;
  
- 	register_syscore_ops(&mc_syscore_ops);
--	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/microcode:online",
-+	cpuhp_setup_state_nocalls(CPUHP_AP_MICROCODE_LOADER, "x86/microcode:online",
- 				  mc_cpu_online, mc_cpu_down_prep);
- 
- 	pr_info("Microcode Update Driver: v%s.", DRIVER_VERSION);
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -101,6 +101,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_BCM2836_STARTING,
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
-+	CPUHP_AP_MICROCODE_LOADER,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
- 	CPUHP_AP_PERF_X86_STARTING,
- 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
+-	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
+-		mem->guest_phys_addr, mem->memory_size);
++	switch (change) {
++	case KVM_MR_DELETE:
++		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
++					old->npages * PAGE_SIZE);
++		break;
++	case KVM_MR_MOVE:
++		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
++					old->npages * PAGE_SIZE);
++		if (rc)
++			break;
++		/* FALLTHROUGH */
++	case KVM_MR_CREATE:
++		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
++				      mem->guest_phys_addr, mem->memory_size);
++		break;
++	case KVM_MR_FLAGS_ONLY:
++		break;
++	default:
++		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
++	}
+ 	if (rc)
+ 		pr_warn("failed to commit memory region\n");
+ 	return;
+-- 
+2.20.1
+
 
 
