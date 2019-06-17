@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D6B1C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06689C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D01C2063F
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C58D52063F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:36:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560807385;
-	bh=G0ie8JgOWnbogLAjSH6t1iue8b20WpSQYvHMNaJVmt0=;
+	s=default; t=1560807392;
+	bh=9TW6nDFtpQbe3fp7IK28uSIKJirN5VvFnYjgLlKLX1A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=llEs/tzK4fQSIreOxJGh+O3iWUkR4CjescH897l2d6A8Ln2HgGexJ+82c0D/EWhHx
-	 bCCKjqavWxWRkLbCYLqT+XeIXLPaSjo4vRberROeXCOC7wRVVkxmjOBNsjw9/UE1g0
-	 zFS0iqXxsOrAMilMECgro98A5dbhArNYUxPst+xM=
+	b=00ho7Wn1a20w3vwsaeMV/aYnKXYA3/SN0uqkTK3XZP4j6qHzEbu86eFS6NkKVMe5y
+	 6LrRG0+yGlAzIRvG69NCIDgkdE5Uc/uzKMlrf4MF2SO/n9inqeubkqvBXio2jhUdDK
+	 UKhxKG0vfbi0dMCEWb4DajygE5ibmGBTNPPlyZtE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbfFQVVd (ORCPT
+        id S1729312AbfFQVVN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:21:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46020 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:21:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45656 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729359AbfFQVV2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:21:28 -0400
+        id S1729283AbfFQVVL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:21:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7C95720861;
-        Mon, 17 Jun 2019 21:21:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 389D52133F;
+        Mon, 17 Jun 2019 21:21:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806488;
-        bh=G0ie8JgOWnbogLAjSH6t1iue8b20WpSQYvHMNaJVmt0=;
+        s=default; t=1560806470;
+        bh=9TW6nDFtpQbe3fp7IK28uSIKJirN5VvFnYjgLlKLX1A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uWaM4c6TIIv//mazKDqNmp7UYzEMuZW7YJ+1Vt/1dkMF9oAqirUmjKgm5sRifhDSD
-         39OfnablGD5ucwhcqETMym8ZmDha1mnxeTf+SFHa5iD6k+AVcuo+sjN0eBxuBV47qP
-         t82zhVwYQR0BEhQpe5QG10emSP3HAiDivEhe4rIw=
+        b=T1Jju1cxhzZiL7pGCNjmTvTzPckc8WBaW/ahMKDhQK04JamCKS/cWixrIDKSlD682
+         RyZNuMH6AuzEf99m3Yp/pdF8b5gpFl2srnpmFOh3CFi8WIUbdMpewRsPMz2D9cIz+c
+         H/1EtVtfVnu9tsOGlirmzsyiqpGyZbWMiyceEsqE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kenneth Heitke <kenneth.heitke@intel.com>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 069/115] nvme: release namespace SRCU protection before performing controller ioctls
-Date:   Mon, 17 Jun 2019 23:09:29 +0200
-Message-Id: <20190617210803.623092805@linuxfoundation.org>
+        stable@vger.kernel.org, Yonghong Song <yhs@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 063/115] tools/bpftool: move set_max_rlimit() before __bpf_object__open_xattr()
+Date:   Mon, 17 Jun 2019 23:09:23 +0200
+Message-Id: <20190617210803.429088914@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
 References: <20190617210759.929316339@linuxfoundation.org>
@@ -61,70 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5fb4aac756acacf260b9ebd88747251effa3a2f2 ]
+[ Upstream commit ac4e0e055fee5751c78bba1fc9ce508a6874d916 ]
 
-Holding the SRCU critical section protecting the namespace list can
-cause deadlocks when using the per-namespace admin passthrough ioctl to
-delete as namespace.  Release it earlier when performing per-controller
-ioctls to avoid that.
+For a host which has a lower rlimit for max locked memory (e.g., 64KB),
+the following error occurs in one of our production systems:
+  # /usr/sbin/bpftool prog load /paragon/pods/52877437/home/mark.o \
+    /sys/fs/bpf/paragon_mark_21 type cgroup/skb \
+    map idx 0 pinned /sys/fs/bpf/paragon_map_21
+  libbpf: Error in bpf_object__probe_name():Operation not permitted(1).
+    Couldn't load basic 'r0 = 0' BPF program.
+  Error: failed to open object file
 
-Reported-by: Kenneth Heitke <kenneth.heitke@intel.com>
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Reviewed-by: Keith Busch <keith.busch@intel.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+The reason is due to low locked memory during bpf_object__probe_name()
+which probes whether program name is supported in kernel or not
+during __bpf_object__open_xattr().
+
+bpftool program load already tries to relax mlock rlimit before
+bpf_object__load(). Let us move set_max_rlimit() before
+__bpf_object__open_xattr(), which fixed the issue here.
+
+Fixes: 47eff61777c7 ("bpf, libbpf: introduce bpf_object__probe_caps to test BPF capabilities")
+Signed-off-by: Yonghong Song <yhs@fb.com>
+Signed-off-by: Alexei Starovoitov <ast@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/core.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ tools/bpf/bpftool/prog.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
-index 8b77e6a05f4b..23c90382a515 100644
---- a/drivers/nvme/host/core.c
-+++ b/drivers/nvme/host/core.c
-@@ -1395,14 +1395,31 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 	if (unlikely(!ns))
- 		return -EWOULDBLOCK;
- 
-+	/*
-+	 * Handle ioctls that apply to the controller instead of the namespace
-+	 * seperately and drop the ns SRCU reference early.  This avoids a
-+	 * deadlock when deleting namespaces using the passthrough interface.
-+	 */
-+	if (cmd == NVME_IOCTL_ADMIN_CMD || is_sed_ioctl(cmd)) {
-+		struct nvme_ctrl *ctrl = ns->ctrl;
-+
-+		nvme_get_ctrl(ns->ctrl);
-+		nvme_put_ns_from_disk(head, srcu_idx);
-+
-+		if (cmd == NVME_IOCTL_ADMIN_CMD)
-+			ret = nvme_user_cmd(ctrl, NULL, argp);
-+		else
-+			ret = sed_ioctl(ctrl->opal_dev, cmd, argp);
-+
-+		nvme_put_ctrl(ctrl);
-+		return ret;
-+	}
-+
- 	switch (cmd) {
- 	case NVME_IOCTL_ID:
- 		force_successful_syscall_return();
- 		ret = ns->head->ns_id;
- 		break;
--	case NVME_IOCTL_ADMIN_CMD:
--		ret = nvme_user_cmd(ns->ctrl, NULL, argp);
--		break;
- 	case NVME_IOCTL_IO_CMD:
- 		ret = nvme_user_cmd(ns->ctrl, ns, argp);
- 		break;
-@@ -1412,8 +1429,6 @@ static int nvme_ioctl(struct block_device *bdev, fmode_t mode,
- 	default:
- 		if (ns->ndev)
- 			ret = nvme_nvm_ioctl(ns, cmd, arg);
--		else if (is_sed_ioctl(cmd))
--			ret = sed_ioctl(ns->ctrl->opal_dev, cmd, argp);
- 		else
- 			ret = -ENOTTY;
+diff --git a/tools/bpf/bpftool/prog.c b/tools/bpf/bpftool/prog.c
+index d2be5a06c339..ed8ef5c82256 100644
+--- a/tools/bpf/bpftool/prog.c
++++ b/tools/bpf/bpftool/prog.c
+@@ -873,6 +873,8 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
+ 		}
  	}
+ 
++	set_max_rlimit();
++
+ 	obj = __bpf_object__open_xattr(&attr, bpf_flags);
+ 	if (IS_ERR_OR_NULL(obj)) {
+ 		p_err("failed to open object file");
+@@ -952,8 +954,6 @@ static int load_with_options(int argc, char **argv, bool first_prog_only)
+ 		goto err_close_obj;
+ 	}
+ 
+-	set_max_rlimit();
+-
+ 	err = bpf_object__load(obj);
+ 	if (err) {
+ 		p_err("failed to load object file");
 -- 
 2.20.1
 
