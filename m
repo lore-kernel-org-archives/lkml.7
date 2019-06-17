@@ -2,107 +2,117 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84685C31E53
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8394CC31E53
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA6A218A0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:26:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C38A218A0
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 04:27:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T1bv07G6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jVpb4eWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726080AbfFQE05 (ORCPT
+        id S1726115AbfFQE1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 00:26:57 -0400
-Received: from mail-pf1-f179.google.com ([209.85.210.179]:33343 "EHLO
-        mail-pf1-f179.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725730AbfFQE05 (ORCPT
+        Mon, 17 Jun 2019 00:27:23 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36610 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725730AbfFQE1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 00:26:57 -0400
-Received: by mail-pf1-f179.google.com with SMTP id x15so4945021pfq.0
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 21:26:57 -0700 (PDT)
+        Mon, 17 Jun 2019 00:27:22 -0400
+Received: by mail-qt1-f196.google.com with SMTP id p15so9231489qtl.3
+        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 21:27:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PmqFguwW3dYc7xJhH5/ZTk/3G85fwsIEI5IZBeTVbMI=;
-        b=T1bv07G606y22acLgdMZkhaLJx08RUHyZBX7NdaHMzsC4fMzVPcJ02aU7u5IykZhqg
-         SlAfQR0uFoGC+bPxUEGOXI6tFFYfoZLFmk1py+M7f9MftwDzqJCzY/6BvQ/k10SbjYt1
-         Sg1ky4ojNLm9kyNOa+3B56ibkdrvgeDgx55vLLfg6TT86hDy2fCvMyIViyZ5nFPI/4lW
-         8RDCU91bKDgJHKygUFl6M+7lyW6y3JosmhS2sCekPqqmfPvshQ/fh9FJsbXHh/LF1BcH
-         bCzZn5g4twxBZ7Rsn0H8SegEmRp47yDF57icq13SQvZfGTFfOwW9xlLbgilfbDOsQkQI
-         LETQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Jbyq7Q2frV79XYaBb+RkixOf6rqvbIp5HPcBcMU9Ye0=;
+        b=jVpb4eWygwk/ckbAnoKWWrEL8/9ciuMeXo+OXMQbw4lVohXTa2QFT9iPZ22RMmTuG2
+         kFzfBgluct1Lij+sA5G/Cky2Psq9/psI9HP6gEWqczMKh4QYF95VTgpFZ2FL/3KNHrKX
+         iE1OChVEgj5cNjyyGmbEZaUswSIhsr6p5eNjtkg99/6I+WGhkqc3TZ3hw+0+EIqnugVQ
+         DDeLGCkBaKM1E7JQzDEanIRZ27cv6hKXYyOuuox8efU5S1Xny/VbQCBRk06kDC1/LcFq
+         uN/eO1YaOGrb/elEj/xB4/gLbSV78HD2r14HLRGsLTWrOCnjyb/SC7Dab4+Vj2tlvbKF
+         D9FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PmqFguwW3dYc7xJhH5/ZTk/3G85fwsIEI5IZBeTVbMI=;
-        b=SEJkiQWpVJxQR7JyaJ0skJO8Lokfyghn2y9ct+ylharK2jEIhakITAuhUJJrERerp9
-         bf0PNWflWdtq0ttYVWTQCUhojtLL++wMZgxwWHvEdVRq3vPcyPHsg1OrTAGzr8pFj8fZ
-         LvynjLPldv3fo6VZPRkUaMzen1eixyqa0dK6QiTQwgPlmfORHdbHWEeFp7A/exiogzCu
-         UBQS/WsMGFoMsJSL9ZAXkvr6sdGuNudt8kC5T+Da1OS2Wa3lePN2WMQ6OyOshXEViKua
-         d9ZUR6eU9uCwrLFL2jAswUcilR9Yi+/BOjKPeas2q9omAVOlXcCe2dh+6re123uep/q9
-         4PoA==
-X-Gm-Message-State: APjAAAV7+wYrGl6uwidLtJPUGalZ7hgdKWNaYeQXwezPJnRsW8Gou85z
-        1WtHKW/di39eYvSaMAmP8BJeZrbTVJM=
-X-Google-Smtp-Source: APXvYqzqf2rvVzZQ9jtplmCuuCEzv3tRRPzxsJ+P8Z5XBfMDeAYsYxpXV5gZplXN6I0Z9Bp2k24iCA==
-X-Received: by 2002:a63:246:: with SMTP id 67mr48365918pgc.145.1560745616533;
-        Sun, 16 Jun 2019 21:26:56 -0700 (PDT)
-Received: from localhost ([122.172.66.84])
-        by smtp.gmail.com with ESMTPSA id s64sm10266562pfb.160.2019.06.16.21.26.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Jun 2019 21:26:55 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 09:56:54 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-scsi@vger.kernel.org, swboyd@chromium.org,
-        ulf.hansson@linaro.org, dianders@chromium.org, rafael@kernel.org
-Subject: Re: [RFC v2 00/11] DVFS in the OPP core
-Message-ID: <20190617042654.xdqx5naxo3lq7kv6@vireshk-i7>
-References: <20190320094918.20234-1-rnayak@codeaurora.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Jbyq7Q2frV79XYaBb+RkixOf6rqvbIp5HPcBcMU9Ye0=;
+        b=d56a+MByo9IS/1oDmCxSsoEl0AbYrZ3QGCxnz7dEv7kY1j9zFK8528A8lkQ+UaHiUq
+         49d54tEMG6Cit302VaFvwo2yYXrx/tjWIaG/P123MFQGiCEGzUJZV3DC+4oZvsvSg/Fm
+         3JCBKb+irK5IvzF7V/HG3P/SG5BnYbgo/0nKiEpXPjKI4wXTjI1bvwnpGDnYhs14B1zI
+         J7XnFIm6Mx5nxXoUgtn5rlFatf+RYXiU7acW+XhxUaBq7Nw55m/4vol9+hpHvqXchAba
+         3Rqqg6jYDbPkwo6xMu9bYlRAxws17CtetOOjkD6oLuDafkPt6Ff2cMetgPaBsD3bF2qG
+         2cbQ==
+X-Gm-Message-State: APjAAAUuRpZUgkbxmAlZvPt6pXL0zjDB8zM4lcGahcLtd+OiQBrTmhgK
+        A/Txxu73XRLoLmZZTjecePl1e5BvlNGjwiufvz8=
+X-Google-Smtp-Source: APXvYqz98YOorzFY4+k5v0LreYOOqec8w5b+vRF+LffTx/HLtStoJ/Aj3kJlMhu0loBjNZ2ykOkSKJhYWsW+jV1pTwE=
+X-Received: by 2002:aed:3b66:: with SMTP id q35mr93395728qte.118.1560745641667;
+ Sun, 16 Jun 2019 21:27:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190320094918.20234-1-rnayak@codeaurora.org>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <20190613175747.1964753-1-songliubraving@fb.com>
+In-Reply-To: <20190613175747.1964753-1-songliubraving@fb.com>
+From:   Song Liu <liu.song.a23@gmail.com>
+Date:   Sun, 16 Jun 2019 21:27:10 -0700
+Message-ID: <CAPhsuW6PEwRnw=z57LPLtsvZPVCcnZR69uhs5FRVczM2OZSeXA@mail.gmail.com>
+Subject: Re: [PATCH v4 0/5] THP aware uprobe
+To:     Song Liu <songliubraving@fb.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>, Oleg Nesterov <oleg@redhat.com>,
+        Steven Rostedt <rostedt@goodmis.org>, mhiramat@kernel.org,
+        matthew.wilcox@oracle.com, kirill.shutemov@linux.intel.com,
+        Kernel Team <kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-03-19, 15:19, Rajendra Nayak wrote:
-> This is a v2 of the RFC posted earlier by Stephen Boyd [1]
-> 
-> As part of v2 I still follow the same approach of dev_pm_opp_set_rate()
-> API using clk framework to round the frequency passed and making it
-> accept 0 as a valid frequency indicating the frequency isn't required
-> anymore. It just has a few more drivers converted to use this approach
-> like dsi/dpu and ufs.
-> ufs demonstrates the case of having to handle multiple power domains, one
-> of which is scalable.
-> 
-> The patches are based on 5.1-rc1 and depend on some ufs fixes I posted
-> earlier [2] and a DT patch to include the rpmpd header [3]
-> 
-> [1] https://lkml.org/lkml/2019/1/28/2086
-> [2] https://lkml.org/lkml/2019/3/8/70
-> [3] https://lkml.org/lkml/2019/3/20/120
-> 
-> Rajendra Nayak (10):
->   OPP: Make dev_pm_opp_set_rate() with freq=0 as valid
-> 
-> Stephen Boyd (1):
->   OPP: Don't overwrite rounded clk rate
+On Thu, Jun 13, 2019 at 10:58 AM Song Liu <songliubraving@fb.com> wrote:
+>
+> This set makes uprobe aware of THPs.
+>
+> Currently, when uprobe is attached to text on THP, the page is split by
+> FOLL_SPLIT. As a result, uprobe eliminates the performance benefit of THP.
+>
+> This set makes uprobe THP-aware. Instead of FOLL_SPLIT, we introduces
+> FOLL_SPLIT_PMD, which only split PMD for uprobe. After all uprobes within
+> the THP are removed, the PTEs are regrouped into huge PMD.
+>
+> Note that, with uprobes attached, the process runs with PTEs for the huge
+> page. The performance benefit of THP is recovered _after_ all uprobes on
+> the huge page are detached.
+>
+> This set (plus a few THP patches) is also available at
+>
+>    https://github.com/liu-song-6/linux/tree/uprobe-thp
+>
+> Changes since v3:
+> 1. Simplify FOLL_SPLIT_PMD case in follow_pmd_mask(), (Kirill A. Shutemov)
+> 2. Fix try_collapse_huge_pmd() to match change in follow_pmd_mask().
+>
+> Changes since v2:
+> 1. For FOLL_SPLIT_PMD, populated the page table in follow_pmd_mask().
+> 2. Simplify logic in uprobe_write_opcode. (Oleg Nesterov)
+> 3. Fix page refcount handling with FOLL_SPLIT_PMD.
+> 4. Much more testing, together with THP on ext4 and btrfs (sending in
+>    separate set).
+> 5. Rebased up on Linus's tree:
+>    commit 35110e38e6c5 ("Merge tag 'media/v5.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/mchehab/linux-media")
+>
+> Changes since v1:
+> 1. introduces FOLL_SPLIT_PMD, instead of modifying split_huge_pmd*();
+> 2. reuse pages_identical() from ksm.c;
+> 3. rewrite most of try_collapse_huge_pmd().
+>
 
-I have applied modified version of these two patches to the OPP tree now.
-Thanks.
+Hi Kirill and Oleg,
 
--- 
-viresh
+Does this version look good to you? If so, could you please reply with
+your Acked-by and/or Reviewed-by?
+
+Thanks,
+Song
