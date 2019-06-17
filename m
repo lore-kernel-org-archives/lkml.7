@@ -2,129 +2,133 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA35C31E44
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:55:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8738C31E54
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:59:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69E4C2147A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:55:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C168A217D4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 03:59:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="QNNfyl42"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s+C7YoZ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfFQDzf (ORCPT
+        id S1727729AbfFQD7Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 23:55:35 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43785 "EHLO
+        Sun, 16 Jun 2019 23:59:16 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41104 "EHLO
         mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727611AbfFQDze (ORCPT
+        with ESMTP id S1727518AbfFQD7Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 23:55:34 -0400
-Received: by mail-pf1-f194.google.com with SMTP id i189so4880174pfg.10
-        for <linux-kernel@vger.kernel.org>; Sun, 16 Jun 2019 20:55:34 -0700 (PDT)
+        Sun, 16 Jun 2019 23:59:16 -0400
+Received: by mail-pf1-f194.google.com with SMTP id m30so4885882pff.8;
+        Sun, 16 Jun 2019 20:59:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vqJC7xd4cP2xpAKX8G95YoEsmqVNCEblRXgdAkHCapM=;
-        b=QNNfyl42w6byYynB7rie9EzAzYFuxbsJrA50fJY8WM5bonPLS23f4e7cxoAkvfq/lX
-         0nZrdjylhTEbzuFVWupwnQVBibKxgttbTeD2/H9tbj/p4yGeWUdQhXYG7Zy8us880YD9
-         0TseLImsZsc9wISY/IKOoeeZUBRgekmFvLRCU=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zkZocmIy2nM4Zonb/tOptWrSoVmluNaywc50q2sTUtA=;
+        b=s+C7YoZ91NgGTEDf8Me/8kwPO5Mk7qRXJKdcC4TMTanNGBdfALj1QqTZdnf3CZzrXg
+         Yc07bLF2jE4IHvI0GT8X4ufzjbEhhQLJk6UEJ0C5kTvrvjhvFVfpSkauoc2o1t3Ct5gf
+         KkHrDb5aaUXWRNTyaypR2IOWTrHiaiaD11ovX4xplsMQ5oTLOiV0rnf2DJAgV3JPHZso
+         BXMdzqeYnUFOGuYJxqG6DJdHlr5+OFyyhvZc3HZuH1POsNsJuMDT1ds6stDtwZPM143u
+         4q9iTSdz9OHHRwd/XNNg1oGNfbZfyZnrNl+tCWGbh1TXpAZc5JHraGOCh1fSg/bPtfNA
+         ct6A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=vqJC7xd4cP2xpAKX8G95YoEsmqVNCEblRXgdAkHCapM=;
-        b=M1mceWbhAmn7y3D3TfUalNZNe0puyNd2pYbn2HmaVfHG3c/OvfOrFPfiXXzXjtu4sx
-         R10tDlnPxK5CeFQy0+GVgVP7SyzwnGa3gkIXbCu49MbHk4uv857H6RNC+EJ+mHgyV3az
-         a57gsQ8b4OEIAF5/Ba4rle9UlDu1pwT3Van8LVrGUoOxtARflm5lbCYX/2bmjiFK69Pj
-         cdowqrKKesZh5ZnKcU+XO0OfKP5UPtTr+DqnEU3+9aPG4LqbxiFRpPFzJ1HC51J1gppi
-         ADCrWiar9QZsTuWpiVE82zxNXVEjb0UdNOp6/NIfwyVjuKC5KUvQP6IDXdfLThYX1Tbx
-         gakQ==
-X-Gm-Message-State: APjAAAX5waLRPk2HRmdMvKlvyU+JxOrkRCLV+qzWoiQYFtRka6Ls/jJ9
-        1Q3LPgj6kaxeWnlAoxrVMtPHaKMIw5Q=
-X-Google-Smtp-Source: APXvYqzMcJGvPCzd3KYYEdzBOyrQBsmuYJagogI+c0tD6CSvNL8goYmfenj4fCeIdCvv3A9NE5ZTDg==
-X-Received: by 2002:a17:90b:8d2:: with SMTP id ds18mr24710251pjb.132.1560743733942;
-        Sun, 16 Jun 2019 20:55:33 -0700 (PDT)
-Received: from localhost ([2401:fa00:1:10:845f:e35d:e30c:4b47])
-        by smtp.gmail.com with ESMTPSA id a3sm9720214pfo.49.2019.06.16.20.55.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 16 Jun 2019 20:55:33 -0700 (PDT)
-From:   Yu-Hsuan Hsu <yuhsuan@chromium.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Yu-Hsuan Hsu <yuhsuan@chromium.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>, dgreid@chromium.org,
-        cychiang@chromium.org
-Subject: [PATCH v5] ASoC: max98090: remove 24-bit format support if RJ is 0
-Date:   Mon, 17 Jun 2019 11:55:26 +0800
-Message-Id: <20190617035526.85310-1-yuhsuan@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zkZocmIy2nM4Zonb/tOptWrSoVmluNaywc50q2sTUtA=;
+        b=krPk1tysgpj1FBpiHP94dWzLL7gCBtbMORR+aGoUjYAmK3mzR0qJp0Ye+svsHZlqjw
+         0N+Jmlg3Jz4TerEdxgEX1dICBYHvqrYeiHWIDkfJ0Wu+59X/DaqYLDnr6KckOWsQ8W1E
+         Aom9YwpSAABd5tg8q8nXKAkxDzPb4UvGuzPUA/VKuKpmHOeErr1+D+BBFgLAE1M96228
+         OlpFAmEuzY0DtkOlJRcAq1DTBbtb7hfDfv09huusS2mvg9i/98dT2fyh7KmLfScdJSZb
+         0eCQZEygdS3qwxnZdUA70lDuNuWWsVTTlxL/aNFaWmx3ud9WCT0r8IE/0EEod+1R/EYA
+         swFw==
+X-Gm-Message-State: APjAAAVTuJS03C2mmCXT50vBsSVTwaorLtEiC0jkv6k5tzfGBJ6ZzkAD
+        LX1BFwCiR5wSprwUfDKxjo4=
+X-Google-Smtp-Source: APXvYqyGsTJ6fst3wGAXG8LzupVa/RwDiDCgvy+HZkE1qQ/mj89ubW1rem8srR97zCjotSdjASqeiA==
+X-Received: by 2002:a63:e018:: with SMTP id e24mr46758408pgh.361.1560743955359;
+        Sun, 16 Jun 2019 20:59:15 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id l1sm10023297pgj.67.2019.06.16.20.59.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 16 Jun 2019 20:59:15 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 03:59:14 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mikelley@microsoft.com,
+        kys@microsoft.com, haiyangz@microsoft.com, sthemmin@microsoft.com,
+        sashal@kernel.org
+Subject: Re: [PATCH v2 2/5] x86: hv: hv_init.c: Add functions to
+ allocate/deallocate page for Hyper-V
+Message-ID: <20190617035913.GA91412@maya190131.isni1t2eisqetojrdim5hhf1se.xx.internal.cloudapp.net>
+References: <cover.1559807514.git.m.maya.nakamura@gmail.com>
+ <5cf4ad6f3fae8dec33e364b367b99cbb5b0f2ba4.1559807514.git.m.maya.nakamura@gmail.com>
+ <87muindr9c.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87muindr9c.fsf@vitty.brq.redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The supported formats are S16_LE and S24_LE now. However, S24_LE is
-not supported when TDM is 0 and it is not in the right justified mode.
-We should remove 24-bit format in that situation to avoid triggering
-error.
+On Wed, Jun 12, 2019 at 12:36:47PM +0200, Vitaly Kuznetsov wrote:
+> Maya Nakamura <m.maya.nakamura@gmail.com> writes:
+> 
+> > Introduce two new functions, hv_alloc_hyperv_page() and
+> > hv_free_hyperv_page(), to allocate/deallocate memory with the size and
+> > alignment that Hyper-V expects as a page. Although currently they are
+> > not used, they are ready to be used to allocate/deallocate memory on x86
+> > when their ARM64 counterparts are implemented, keeping symmetry between
+> > architectures with potentially different guest page sizes.
+> >
+> > Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+> > ---
+> >  arch/x86/hyperv/hv_init.c | 14 ++++++++++++++
+> >  1 file changed, 14 insertions(+)
+> >
+> > diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> > index e4ba467a9fc6..84baf0e9a2d4 100644
+> > --- a/arch/x86/hyperv/hv_init.c
+> > +++ b/arch/x86/hyperv/hv_init.c
+> > @@ -98,6 +98,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
+> >  u32 hv_max_vp_index;
+> >  EXPORT_SYMBOL_GPL(hv_max_vp_index);
+> >  
+> > +void *hv_alloc_hyperv_page(void)
+> > +{
+> > +	BUILD_BUG_ON(!(PAGE_SIZE == HV_HYP_PAGE_SIZE));
+> 
+> (nit)
+> 
+> PAGE_SIZE != HV_HYP_PAGE_SIZE ?
+> 
+> > +
+> > +	return (void *)__get_free_page(GFP_KERNEL);
+> > +}
+> > +EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
+> > +
+> > +void hv_free_hyperv_page(unsigned long addr)
+> > +{
+> > +	free_page(addr);
+> > +}
+> > +EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
+> > +
+> >  static int hv_cpu_init(unsigned int cpu)
+> >  {
+> >  	u64 msr_vp_index;
+> 
+> Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+> 
+> -- 
+> Vitaly
 
-Signed-off-by: Yu-Hsuan Hsu <yuhsuan@chromium.org>
----
-The datasheet said that when TDM=0 and RJ=0, S24_LE is not supported.
-So I added a constraint to check TDM. Please take a look. Thanks!
-
- sound/soc/codecs/max98090.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index 7619ea31ab50..d118cf80b6b2 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -1909,6 +1909,26 @@ static int max98090_configure_dmic(struct max98090_priv *max98090,
- 	return 0;
- }
- 
-+static int max98090_dai_startup(struct snd_pcm_substream *substream,
-+				struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_component *component = dai->component;
-+	struct max98090_priv *max98090 = snd_soc_component_get_drvdata(component);
-+	unsigned int fmt = max98090->dai_fmt;
-+
-+	/*
-+	 * When TDM = 0, remove 24-bit format support if it is not in right
-+	 * justified mode.
-+	 */
-+	if (!max98090->tdm_slots &&
-+		(fmt & SND_SOC_DAIFMT_FORMAT_MASK) != SND_SOC_DAIFMT_RIGHT_J) {
-+		substream->runtime->hw.formats = SNDRV_PCM_FMTBIT_S16_LE;
-+		snd_pcm_hw_constraint_msbits(substream->runtime, 0, 16, 16);
-+	}
-+
-+	return 0;
-+}
-+
- static int max98090_dai_hw_params(struct snd_pcm_substream *substream,
- 				   struct snd_pcm_hw_params *params,
- 				   struct snd_soc_dai *dai)
-@@ -2316,6 +2336,7 @@ EXPORT_SYMBOL_GPL(max98090_mic_detect);
- #define MAX98090_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S24_LE)
- 
- static const struct snd_soc_dai_ops max98090_dai_ops = {
-+	.startup = max98090_dai_startup,
- 	.set_sysclk = max98090_dai_set_sysclk,
- 	.set_fmt = max98090_dai_set_fmt,
- 	.set_tdm_slot = max98090_set_tdm_slot,
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+Agreed. I will resubmit the patch set with this correction.
