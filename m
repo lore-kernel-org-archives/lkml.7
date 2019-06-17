@@ -2,400 +2,242 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1622DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8620C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:08:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D06352085A
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:07:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC062085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 20:08:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="s7qYn4Ym";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="kQIzGHjO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728574AbfFQUHP convert rfc822-to-8bit (ORCPT
+        id S1728698AbfFQUIL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 16:07:15 -0400
-Received: from saturn.retrosnub.co.uk ([46.235.226.198]:32776 "EHLO
-        saturn.retrosnub.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726872AbfFQUHO (ORCPT
+        Mon, 17 Jun 2019 16:08:11 -0400
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:8912 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726721AbfFQUIK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 16:07:14 -0400
-Received: from archlinux (cpc149474-cmbg20-2-0-cust94.5-4.cable.virginm.net [82.4.196.95])
-        by saturn.retrosnub.co.uk (Postfix; Retrosnub mail submission) with ESMTPSA id 604C79E6A66;
-        Mon, 17 Jun 2019 21:07:08 +0100 (BST)
-Date:   Mon, 17 Jun 2019 21:07:06 +0100
-From:   Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-To:     Beniamin Bia <beniamin.bia@analog.com>
-Cc:     <lars@metafoo.de>, <Michael.Hennerich@analog.com>,
-        <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <gregkh@linuxfoundation.org>, <linux-iio@vger.kernel.org>,
-        <devel@driverdev.osuosl.org>, <linux-kernel@vger.kernel.org>,
-        <mark.rutland@arm.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>, <biabeniamin@outlook.com>
-Subject: Re: [PATCH v2 3/4] iio: adc: ad7606: Add support for software mode
- for ad7616
-Message-ID: <20190617210706.3b5becb0@archlinux>
-In-Reply-To: <20190608123039.31e691bd@archlinux>
-References: <20190527125650.2405-1-beniamin.bia@analog.com>
-        <20190527125650.2405-3-beniamin.bia@analog.com>
-        <20190608123039.31e691bd@archlinux>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 17 Jun 2019 16:08:10 -0400
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5HK4rm4013750;
+        Mon, 17 Jun 2019 13:07:58 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-id : content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=lB2ChPV5iZU/6F/eZDYPHUyKbwiTw7SG/AnU3EJxhIo=;
+ b=s7qYn4YmeVXDGioMbgkqww7pvz3ZEqHPNWnWicaVbd0HQMSPbDjkIrM0L5K5d4jsw3z0
+ iWvn3mkq5Oy+i8ykMmsRqbbdu5/k3jKthMEMEhOe38OMOWsMZOZtylmLOZ8ziABpRaKd
+ 4Oic2JbAPnr9SD+p5MML30bta60OhufOHqbRo0c7HKnjs6HGJtIQQVcCl93T08n1GZ7N
+ axuKQ0Ojfy2m+DXBeAhCvlDTsxJcDPQ6Fw06IiTbhotcPg28SX6E+PX5T99DX8L8akfL
+ Zni2RkSHpOEhAPLZurX1lTSqK8hCp6IhWTghRrfpaBf/Hk8sARGh0kZzLtcR1AOstl+w 6Q== 
+Received: from sc-exch04.marvell.com ([199.233.58.184])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2t68rpabhs-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 17 Jun 2019 13:07:58 -0700
+Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH04.marvell.com
+ (10.93.176.84) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Mon, 17 Jun
+ 2019 13:07:57 -0700
+Received: from NAM04-BN3-obe.outbound.protection.outlook.com (104.47.46.59) by
+ SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Mon, 17 Jun 2019 13:07:57 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lB2ChPV5iZU/6F/eZDYPHUyKbwiTw7SG/AnU3EJxhIo=;
+ b=kQIzGHjOjM3QGqHO+BRiO/5LQ0xNra4ePkAHtn2Tj93787Wj+x7I9wLO3F8VYs0YUwr7ymGFLluPHjG+lunYAH7FEjE7Zp4Mry76emnVCfytV7jvphAjkumHWCBxMwMRQQYv89JAc00dhk4oP2s9BcxdZcEKfGuDGqzbxx2/DGA=
+Received: from BN8PR18MB2788.namprd18.prod.outlook.com (20.179.73.220) by
+ BN8PR18MB2964.namprd18.prod.outlook.com (20.179.76.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Mon, 17 Jun 2019 20:07:55 +0000
+Received: from BN8PR18MB2788.namprd18.prod.outlook.com
+ ([fe80::99e5:34a8:2f99:3149]) by BN8PR18MB2788.namprd18.prod.outlook.com
+ ([fe80::99e5:34a8:2f99:3149%7]) with mapi id 15.20.1987.014; Mon, 17 Jun 2019
+ 20:07:55 +0000
+From:   Jayachandran Chandrasekharan Nair <jnair@marvell.com>
+To:     Will Deacon <will.deacon@arm.com>
+CC:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Kees Cook <keescook@chromium.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        Jan Glauber <jglauber@marvell.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [RFC] Disable lockref on arm64
+Thread-Topic: [RFC] Disable lockref on arm64
+Thread-Index: AQHVJUhZrbOg/WOpcE2VXDha9giiEQ==
+Date:   Mon, 17 Jun 2019 20:07:54 +0000
+Message-ID: <20190617200750.GB5565@dc5-eodlnx05.marvell.com>
+References: <20190614095846.GC10506@fuggles.cambridge.arm.com>
+ <CAKv+Gu_Kdq=UPijjA84FpmO=ZsdEO9EyyF7GeOQ+WmfqtO_hMg@mail.gmail.com>
+ <20190614103850.GG10659@fuggles.cambridge.arm.com>
+ <201906142026.1BC27EDB1E@keescook>
+ <CAKv+Gu_XuhgUCYOeykrbaxJz-wL1HFrc_O+HeZHqaGkMHd2J9Q@mail.gmail.com>
+ <201906150654.FF4400F7C8@keescook>
+ <CAKv+Gu9-rZ16Nb9t3=knzW0BHu0eNxQoPwWS4c8UMMm=2iqiuw@mail.gmail.com>
+ <201906161429.BCE1083@keescook>
+ <CAKv+Gu_8ibO4D01DZv6KjL2GnvKuVBVnt=doxkN0w=4utJ7NvQ@mail.gmail.com>
+ <20190617172620.GK30800@fuggles.cambridge.arm.com>
+In-Reply-To: <20190617172620.GK30800@fuggles.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR07CA0038.namprd07.prod.outlook.com
+ (2603:10b6:a03:60::15) To BN8PR18MB2788.namprd18.prod.outlook.com
+ (2603:10b6:408:77::28)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [199.233.59.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1d673804-847e-43ee-54ce-08d6f35f7bf7
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN8PR18MB2964;
+x-ms-traffictypediagnostic: BN8PR18MB2964:
+x-microsoft-antispam-prvs: <BN8PR18MB296414DA2FC72AED9A1A2F73A6EB0@BN8PR18MB2964.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0071BFA85B
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(376002)(39860400002)(346002)(136003)(396003)(199004)(189003)(31014005)(26005)(478600001)(6436002)(4326008)(25786009)(386003)(6506007)(8676002)(54906003)(186003)(5660300002)(76176011)(6916009)(305945005)(102836004)(14454004)(52116002)(66066001)(7736002)(6246003)(81166006)(81156014)(8936002)(71200400001)(2906002)(256004)(99286004)(486006)(6512007)(14444005)(73956011)(229853002)(6486002)(446003)(53936002)(66946007)(476003)(316002)(66476007)(71190400001)(64756008)(66446008)(66556008)(86362001)(6116002)(3846002)(1076003)(33656002)(11346002)(68736007);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR18MB2964;H:BN8PR18MB2788.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: KCfO7UM9cVPwJjwnlk3kWCKDvPaMT39AzDBWL+yMWpSjywHaruQkbbm1s9kmV3QX06cnmlDFFfOmvjgM2+4TyIlmwSSQrq2r9firDF8/ZAdpNccgFELfWUbUFHVvDbVcZ1TJ9O/JNQKW7in8XRbAnA92dTXvY+99Z1a0NQ9HBrDKL9VIZgpcyhXeRS2CS8cexhn6QwMouM5E05x+YDjJp6xkec3vWzKv6HdFSMHgxuH6QEwvPQn6icqb7d6/zusMqRWE0I3tLSwkXXPNAi8Y3nryNCTBaEInUBveaYK0neVRzuRYS/JeFD+HkfYelb0c2T8py0Ut5jq7sTCli82PqWFgVsTeK+QFz5O2TlMFwQ6SsHqWvzeXYyMJ1zfutwrc1ja0YrPnWxgQVQaqyFt9JLZcvOpYS2Z+E1QSebslvYI=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <A5DBFAE6E51B474A8578B81FC61E1FDC@namprd18.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1d673804-847e-43ee-54ce-08d6f35f7bf7
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2019 20:07:54.9211
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: jnair@marvell.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR18MB2964
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-17_08:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 8 Jun 2019 12:30:39 +0100
-Jonathan Cameron <jic23@kernel.org> wrote:
+On Mon, Jun 17, 2019 at 06:26:20PM +0100, Will Deacon wrote:
+> On Mon, Jun 17, 2019 at 01:33:19PM +0200, Ard Biesheuvel wrote:
+> > On Sun, 16 Jun 2019 at 23:31, Kees Cook <keescook@chromium.org> wrote:
+> > > On Sat, Jun 15, 2019 at 04:18:21PM +0200, Ard Biesheuvel wrote:
+> > > > Yes, I am using the same saturation point as x86. In this example, =
+I
+> > > > am not entirely sure I understand why it matters, though: the atomi=
+cs
+> > > > guarantee that the write by CPU2 fails if CPU1 changed the value in
+> > > > the mean time, regardless of which value it wrote.
+> > > >
+> > > > I think the concern is more related to the likelihood of another CP=
+U
+> > > > doing something nasty between the moment that the refcount overflow=
+s
+> > > > and the moment that the handler pins it at INT_MIN/2, e.g.,
+> > > >
+> > > > > CPU 1                   CPU 2
+> > > > > inc()
+> > > > >   load INT_MAX
+> > > > >   about to overflow?
+> > > > >   yes
+> > > > >
+> > > > >   set to 0
+> > > > >                          <insert exploit here>
+> > > > >   set to INT_MIN/2
+> > >
+> > > Ah, gotcha, but the "set to 0" is really "set to INT_MAX+1" (not zero=
+)
+> > > if you're using the same saturation.
+> > >
+> >=20
+> > Of course. So there is no issue here: whatever manipulations are
+> > racing with the overflow handler can never result in the counter to
+> > unsaturate.
+> >=20
+> > And actually, moving the checks before the stores is not as trivial as
+> > I thought, E.g., for the LSE refcount_add case, we have
+> >=20
+> >         "       ldadd           %w[i], w30, %[cval]\n"                 =
+ \
+> >         "       adds            %w[i], %w[i], w30\n"                   =
+ \
+> >         REFCOUNT_PRE_CHECK_ ## pre (w30))                              =
+ \
+> >         REFCOUNT_POST_CHECK_ ## post                                   =
+ \
+> >=20
+> > and changing this into load/test/store defeats the purpose of using
+> > the LSE atomics in the first place.
+> >=20
+> > On my single core TX2, the comparative performance is as follows
+> >=20
+> > Baseline: REFCOUNT_TIMING test using REFCOUNT_FULL (LSE cmpxchg)
+> >       191057942484      cycles                    #    2.207 GHz
+> >       148447589402      instructions              #    0.78  insn per
+> > cycle
+> >=20
+> >       86.568269904 seconds time elapsed
+> >=20
+> > Upper bound: ATOMIC_TIMING
+> >       116252672661      cycles                    #    2.207 GHz
+> >        28089216452      instructions              #    0.24  insn per
+> > cycle
+> >=20
+> >       52.689793525 seconds time elapsed
+> >=20
+> > REFCOUNT_TIMING test using LSE atomics
+> >       127060259162      cycles                    #    2.207 GHz
+>=20
+> Ok, so assuming JC's complaint is valid, then these numbers are compellin=
+g.
 
-> On Mon, 27 May 2019 15:56:49 +0300
-> Beniamin Bia <beniamin.bia@analog.com> wrote:
-> 
-> > Support for ad7616 running in software was added. In order
-> > to activate the software mode, HW_RNGSEL pins must be pulled low.
-> > Oversampling and input ranges are now configured in corresponding
-> > registers. Ad7616 has multiple scale options when it is configured
-> > in software mode.
-> > Also, in order to support multiple devices in software mode, the spi
-> > the calculation of registers address must be generic. Because
-> > the length of address and bit which specifies the read/write operation is
-> > different for every device, calculation of address was made generic.
-> > 
-> > Signed-off-by: Beniamin Bia <beniamin.bia@analog.com>  
-> Applied to the togreg branch of iio.git and pushed out as testing
-> to see if the autobuilders can find anything we have missed.
-> 
-Oops. Missed that this makes the core driver dependant on spi support.
-Two ways of fixing it. Either make it dependant and fuse the lot
-or use some calls into the ad7606_spi file with suitable dummy
-versions in the header.
+Let me try to point out the issues I see again, to make sure that we are
+not talking just about micro-benchmarks.
 
-I've dropped this and patch 4 for now until we have this sorted.
-Another win for 0-day!
+That first issue: on arm64, REFCOUNT_FULL is 'select'-ed. There is
+no option to go to the atomics implementation or a x86-like compromise
+implementation, without patching the kernel. Currently we are stuck with
+a function call for what has to be a single atomic instruction.
 
-Thanks,
+The second part is that REFCOUNT_FULL uses a unbounded CAS loop which is
+problematic when the core count increases and when there is contention.
+Upto to some level of contention, the CAS loop works fine. But when we
+go to the order of a hundred CPUs this becomes an issue. The LDADD
+series of atomics can be handled fairly well by hardware even with
+heavy contention, but in case of CAS(or LDXR/STXR) loops, getting it
+correct in hardware is much more difficult. There is nothing in the
+arm64 ISA to manage this correctly. As discussed earlier in the thread,
+WFE does not work, YIELD is troublesome, and there is no 'wait in low
+power for exclusive access' hint instruction. This is not a TX2
+specific issue.
 
-Jonathan
-> Thanks,
-> 
-> Jonathan
-> 
-> > ---
-> > Changes in v2:
-> > -squashed with the patch which introduces the reg access function.
-> > -some casting warnings were fixed.
-> > 
-> >  drivers/iio/adc/ad7606.c | 171 +++++++++++++++++++++++++++++++++++++--
-> >  drivers/iio/adc/ad7606.h |   4 +
-> >  2 files changed, 167 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/drivers/iio/adc/ad7606.c b/drivers/iio/adc/ad7606.c
-> > index aba0fd123a51..8e09ad4bb72e 100644
-> > --- a/drivers/iio/adc/ad7606.c
-> > +++ b/drivers/iio/adc/ad7606.c
-> > @@ -25,8 +25,24 @@
-> >  #include <linux/iio/triggered_buffer.h>
-> >  #include <linux/iio/trigger_consumer.h>
-> >  
-> > +#include <linux/spi/spi.h>
-> > +
-> >  #include "ad7606.h"
-> >  
-> > +#define AD7606_RANGE_CH_ADDR(ch)	(0x03 + ((ch) >> 1))
-> > +#define AD7606_OS_MODE			0x08
-> > +
-> > +#define AD7616_CONFIGURATION_REGISTER	0x02
-> > +#define AD7616_OS_MASK			GENMASK(4,  2)
-> > +#define AD7616_BURST_MODE		BIT(6)
-> > +#define AD7616_SEQEN_MODE		BIT(5)
-> > +#define AD7616_RANGE_CH_ADDR_OFF	0x04
-> > +#define AD7616_RANGE_CH_ADDR(ch)	((((ch) & 0x1) << 1) + ((ch) >> 3))
-> > +#define AD7616_RANGE_CH_MSK(ch)		(GENMASK(1, 0) << ((ch) & 0x6))
-> > +#define AD7616_RANGE_CH_MODE(ch, mode)	((mode) << (ch & GENMASK(2, 1)))
-> > +
-> > +static int ad7616_sw_mode_config(struct iio_dev *indio_dev);
-> > +
-> >  /*
-> >   * Scales are computed as 5000/32768 and 10000/32768 respectively,
-> >   * so that when applied to the raw values they provide mV values
-> > @@ -35,6 +51,11 @@ static const unsigned int ad7606_scale_avail[2] = {
-> >  	152588, 305176
-> >  };
-> >  
-> > +
-> > +static const unsigned int ad7616_sw_scale_avail[3] = {
-> > +	76293, 152588, 305176
-> > +};
-> > +
-> >  static const unsigned int ad7606_oversampling_avail[7] = {
-> >  	1, 2, 4, 8, 16, 32, 64,
-> >  };
-> > @@ -43,6 +64,11 @@ static const unsigned int ad7616_oversampling_avail[8] = {
-> >  	1, 2, 4, 8, 16, 32, 64, 128,
-> >  };
-> >  
-> > +static u16 ad7616_spi_rd_wr_cmd(int addr, char isWriteOp)
-> > +{
-> > +	return ((addr & 0x7F) << 1) | ((isWriteOp & 0x1) << 7);
-> > +}
-> > +
-> >  static int ad7606_reset(struct ad7606_state *st)
-> >  {
-> >  	if (st->gpio_reset) {
-> > @@ -55,6 +81,59 @@ static int ad7606_reset(struct ad7606_state *st)
-> >  	return -ENODEV;
-> >  }
-> >  
-> > +static int ad7606_spi_reg_read(struct ad7606_state *st, unsigned int addr)
-> > +{
-> > +	struct spi_device *spi = to_spi_device(st->dev);
-> > +	struct spi_transfer t[] = {
-> > +		{
-> > +			.tx_buf = &st->d16[0],
-> > +			.len = 2,
-> > +			.cs_change = 0,
-> > +		}, {
-> > +			.rx_buf = &st->d16[1],
-> > +			.len = 2,
-> > +		},
-> > +	};
-> > +	int ret;
-> > +
-> > +	st->d16[0] = cpu_to_be16(st->chip_info->spi_rd_wr_cmd(addr, 0) << 8);
-> > +
-> > +	ret = spi_sync_transfer(spi, t, ARRAY_SIZE(t));
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return be16_to_cpu(st->d16[1]);
-> > +}
-> > +
-> > +static int ad7606_spi_reg_write(struct ad7606_state *st,
-> > +				unsigned int addr,
-> > +				unsigned int val)
-> > +{
-> > +	struct spi_device *spi = to_spi_device(st->dev);
-> > +
-> > +	st->d16[0] = cpu_to_be16((st->chip_info->spi_rd_wr_cmd(addr, 1) << 8) |
-> > +				  (val & 0x1FF));
-> > +
-> > +	return spi_write(spi, &st->d16[0], sizeof(st->d16[0]));
-> > +}
-> > +
-> > +static int ad7606_spi_write_mask(struct ad7606_state *st,
-> > +				 unsigned int addr,
-> > +				 unsigned long mask,
-> > +				 unsigned int val)
-> > +{
-> > +	int readval;
-> > +
-> > +	readval = ad7606_spi_reg_read(st, addr);
-> > +	if (readval < 0)
-> > +		return readval;
-> > +
-> > +	readval &= ~mask;
-> > +	readval |= val;
-> > +
-> > +	return ad7606_spi_reg_write(st, addr, readval);
-> > +}
-> > +
-> >  static int ad7606_read_samples(struct ad7606_state *st)
-> >  {
-> >  	unsigned int num = st->chip_info->num_channels;
-> > @@ -222,6 +301,26 @@ static int ad7606_write_os_hw(struct iio_dev *indio_dev, int val)
-> >  	return 0;
-> >  }
-> >  
-> > +static int ad7616_write_scale_sw(struct iio_dev *indio_dev, int ch, int val)
-> > +{
-> > +	struct ad7606_state *st = iio_priv(indio_dev);
-> > +	unsigned int ch_addr, mode;
-> > +
-> > +	ch_addr = AD7616_RANGE_CH_ADDR_OFF + AD7616_RANGE_CH_ADDR(ch);
-> > +	mode = AD7616_RANGE_CH_MODE(ch, ((val + 1) & 0x3));
-> > +
-> > +	return ad7606_spi_write_mask(st, ch_addr, AD7616_RANGE_CH_MSK(ch),
-> > +				     mode);
-> > +}
-> > +
-> > +static int ad7616_write_os_sw(struct iio_dev *indio_dev, int val)
-> > +{
-> > +	struct ad7606_state *st = iio_priv(indio_dev);
-> > +
-> > +	return ad7606_spi_write_mask(st, AD7616_CONFIGURATION_REGISTER,
-> > +				     AD7616_OS_MASK, val << 2);
-> > +}
-> > +
-> >  static int ad7606_write_raw(struct iio_dev *indio_dev,
-> >  			    struct iio_chan_spec const *chan,
-> >  			    int val,
-> > @@ -308,14 +407,14 @@ static const struct attribute_group ad7606_attribute_group_range = {
-> >  	.attrs = ad7606_attributes_range,
-> >  };
-> >  
-> > -#define AD760X_CHANNEL(num, mask) {				\
-> > +#define AD760X_CHANNEL(num, mask_sep, mask_type, mask_all) {	\
-> >  		.type = IIO_VOLTAGE,				\
-> >  		.indexed = 1,					\
-> >  		.channel = num,					\
-> >  		.address = num,					\
-> > -		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),	\
-> > -		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),\
-> > -		.info_mask_shared_by_all = mask,		\
-> > +		.info_mask_separate = mask_sep,			\
-> > +		.info_mask_shared_by_type = mask_type,		\
-> > +		.info_mask_shared_by_all = mask_all,		\
-> >  		.scan_index = num,				\
-> >  		.scan_type = {					\
-> >  			.sign = 's',				\
-> > @@ -325,11 +424,18 @@ static const struct attribute_group ad7606_attribute_group_range = {
-> >  		},						\
-> >  }
-> >  
-> > -#define AD7605_CHANNEL(num)	\
-> > -	AD760X_CHANNEL(num, 0)
-> > +#define AD7605_CHANNEL(num)				\
-> > +	AD760X_CHANNEL(num, BIT(IIO_CHAN_INFO_RAW),	\
-> > +		BIT(IIO_CHAN_INFO_SCALE), 0)
-> > +
-> > +#define AD7606_CHANNEL(num)				\
-> > +	AD760X_CHANNEL(num, BIT(IIO_CHAN_INFO_RAW),	\
-> > +		BIT(IIO_CHAN_INFO_SCALE),		\
-> > +		BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO))
-> >  
-> > -#define AD7606_CHANNEL(num)	\
-> > -	AD760X_CHANNEL(num, BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO))
-> > +#define AD7616_CHANNEL(num)	\
-> > +	AD760X_CHANNEL(num, BIT(IIO_CHAN_INFO_RAW) | BIT(IIO_CHAN_INFO_SCALE),\
-> > +		0, BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO))
-> >  
-> >  static const struct iio_chan_spec ad7605_channels[] = {
-> >  	IIO_CHAN_SOFT_TIMESTAMP(4),
-> > @@ -381,6 +487,26 @@ static const struct iio_chan_spec ad7616_channels[] = {
-> >  	AD7606_CHANNEL(15),
-> >  };
-> >  
-> > +static const struct iio_chan_spec ad7616_sw_channels[] = {
-> > +	IIO_CHAN_SOFT_TIMESTAMP(16),
-> > +	AD7616_CHANNEL(0),
-> > +	AD7616_CHANNEL(1),
-> > +	AD7616_CHANNEL(2),
-> > +	AD7616_CHANNEL(3),
-> > +	AD7616_CHANNEL(4),
-> > +	AD7616_CHANNEL(5),
-> > +	AD7616_CHANNEL(6),
-> > +	AD7616_CHANNEL(7),
-> > +	AD7616_CHANNEL(8),
-> > +	AD7616_CHANNEL(9),
-> > +	AD7616_CHANNEL(10),
-> > +	AD7616_CHANNEL(11),
-> > +	AD7616_CHANNEL(12),
-> > +	AD7616_CHANNEL(13),
-> > +	AD7616_CHANNEL(14),
-> > +	AD7616_CHANNEL(15),
-> > +};
-> > +
-> >  static const struct ad7606_chip_info ad7606_chip_info_tbl[] = {
-> >  	/* More devices added in future */
-> >  	[ID_AD7605_4] = {
-> > @@ -408,9 +534,13 @@ static const struct ad7606_chip_info ad7606_chip_info_tbl[] = {
-> >  	[ID_AD7616] = {
-> >  		.channels = ad7616_channels,
-> >  		.num_channels = 17,
-> > +		.sw_mode_config = ad7616_sw_mode_config,
-> >  		.oversampling_avail = ad7616_oversampling_avail,
-> >  		.oversampling_num = ARRAY_SIZE(ad7616_oversampling_avail),
-> >  		.os_req_reset = true,
-> > +		.spi_rd_wr_cmd = ad7616_spi_rd_wr_cmd,
-> > +		.write_scale_sw = ad7616_write_scale_sw,
-> > +		.write_os_sw = ad7616_write_os_sw,
-> >  	},
-> >  };
-> >  
-> > @@ -544,6 +674,23 @@ static void ad7606_regulator_disable(void *data)
-> >  	regulator_disable(st->reg);
-> >  }
-> >  
-> > +static int ad7616_sw_mode_config(struct iio_dev *indio_dev)
-> > +{
-> > +	struct ad7606_state *st = iio_priv(indio_dev);
-> > +
-> > +	/*
-> > +	 * Scale can be configured individually for each channel
-> > +	 * in software mode.
-> > +	 */
-> > +	indio_dev->channels = ad7616_sw_channels;
-> > +
-> > +	/* Activate Burst mode and SEQEN MODE */
-> > +	return ad7606_spi_write_mask(st,
-> > +			      AD7616_CONFIGURATION_REGISTER,
-> > +			      AD7616_BURST_MODE | AD7616_SEQEN_MODE,
-> > +			      AD7616_BURST_MODE | AD7616_SEQEN_MODE);
-> > +}
-> > +
-> >  int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
-> >  		 const char *name, unsigned int id,
-> >  		 const struct ad7606_bus_ops *bops)
-> > @@ -617,6 +764,10 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
-> >  	if (ret)
-> >  		dev_warn(st->dev, "failed to RESET: no RESET GPIO specified\n");
-> >  
-> > +	/* AD7616 requires al least 15ms to reconfigure after a reset */
-> > +	if (msleep_interruptible(15))
-> > +		return -ERESTARTSYS;
-> > +
-> >  	st->write_scale = ad7606_write_scale_hw;
-> >  	st->write_os = ad7606_write_os_hw;
-> >  
-> > @@ -625,6 +776,10 @@ int ad7606_probe(struct device *dev, int irq, void __iomem *base_address,
-> >  							 "adi,sw-mode");
-> >  
-> >  	if (st->sw_mode_en) {
-> > +		/* Scale of 0.076293 is only available in sw mode */
-> > +		st->scale_avail = ad7616_sw_scale_avail;
-> > +		st->num_scales = ARRAY_SIZE(ad7616_sw_scale_avail);
-> > +
-> >  		/* After reset, in software mode, ±10 V is set by default */
-> >  		memset32(st->range, 2, ARRAY_SIZE(st->range));
-> >  		indio_dev->info = &ad7606_info_os_and_range;
-> > diff --git a/drivers/iio/adc/ad7606.h b/drivers/iio/adc/ad7606.h
-> > index d8a509c2c428..154dc5d1a0cf 100644
-> > --- a/drivers/iio/adc/ad7606.h
-> > +++ b/drivers/iio/adc/ad7606.h
-> > @@ -16,6 +16,7 @@
-> >   *			oversampling ratios.
-> >   * @oversampling_num	number of elements stored in oversampling_avail array
-> >   * @os_req_reset	some devices require a reset to update oversampling
-> > + * @spi_rd_wr_cmd	pointer to the function which calculates the spi address
-> >   * @write_scale_sw	pointer to the function which writes the scale via spi
-> >  			in software mode
-> >   * @write_os_sw		pointer to the function which writes the os via spi
-> > @@ -29,6 +30,7 @@ struct ad7606_chip_info {
-> >  	const unsigned int		*oversampling_avail;
-> >  	unsigned int			oversampling_num;
-> >  	bool				os_req_reset;
-> > +	u16 (*spi_rd_wr_cmd)(int addr, char isWriteOp);
-> >  	int (*write_scale_sw)(struct iio_dev *indio_dev, int ch, int val);
-> >  	int (*write_os_sw)(struct iio_dev *indio_dev, int val);
-> >  	int (*sw_mode_config)(struct iio_dev *indio_dev);
-> > @@ -63,6 +65,7 @@ struct ad7606_chip_info {
-> >   * @complete		completion to indicate end of conversion
-> >   * @trig		The IIO trigger associated with the device.
-> >   * @data		buffer for reading data from the device
-> > + * @d16			be16 buffer for reading data from the device
-> >   */
-> >  struct ad7606_state {
-> >  	struct device			*dev;
-> > @@ -96,6 +99,7 @@ struct ad7606_state {
-> >  	 * 16 * 16-bit samples + 64-bit timestamp
-> >  	 */
-> >  	unsigned short			data[20] ____cacheline_aligned;
-> > +	__be16				d16[2];
-> >  };
-> >  
-> >  /**  
-> 
+The testcase I provided was not really a microbenchmark. That was a
+simplified webserver testcase where multiple threads read a small file
+in parallel. With Ubuntu configuration (apparmor enabled) and when
+other things line up (I had made the file & dir non-writable), you
+can see that refcount is the top function. I expect this kind of
+situation to be more frequent as more subsystems move to refcount_t.
 
+> In particular, my understanding of this thread is that your optimised
+> implementation doesn't actually sacrifice any precision; it just changes
+> the saturation behaviour in a way that has no material impact. Kees, is t=
+hat
+> right?
+>=20
+> If so, I'm not against having this for arm64, with the premise that we ca=
+n
+> hide the REFCOUNT_FULL option entirely given that it would only serve to
+> confuse if exposed.
+
+Thanks for looking into this! From the discussion it seems likely
+that we can get a version of Ard's patch in, which does not have CAS
+loop in most cases.
+
+JC
