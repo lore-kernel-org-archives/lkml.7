@@ -2,145 +2,186 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4782BC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B6BBC31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 272FA208C0
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51E8A21880
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 11:35:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ahERndKw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfFQLfN (ORCPT
+        id S1728357AbfFQLfs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 07:35:13 -0400
-Received: from mga12.intel.com ([192.55.52.136]:54390 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728171AbfFQLfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 07:35:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 04:35:10 -0700
-X-ExtLoop1: 1
-Received: from xxx.igk.intel.com ([10.237.93.170])
-  by fmsmga006.fm.intel.com with ESMTP; 17 Jun 2019 04:35:06 -0700
-From:   =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Amadeusz=20S=C5=82awi=C5=84ski?= 
-        <amadeuszx.slawinski@linux.intel.com>
-Subject: [PATCH v2 07/11] ASoC: Intel: Skylake: Properly cleanup on component removal
-Date:   Mon, 17 Jun 2019 13:36:40 +0200
-Message-Id: <20190617113644.25621-8-amadeuszx.slawinski@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
-References: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
+        Mon, 17 Jun 2019 07:35:48 -0400
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:45437 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726173AbfFQLfs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 07:35:48 -0400
+Received: by mail-vs1-f68.google.com with SMTP id n21so5844639vsp.12
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 04:35:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rdj5y7WUhCyxuRRSk61DK/G2r8mbCnRcx9QGkbHiSrE=;
+        b=ahERndKw2GY6JLEmRsjtiw3oDqIj+mYbgL6lSV96YnKupRUkausE5qwiHJqwzfXqWL
+         v8zneB63ByCBnkQMtgj9MX/cVJ2Ta1DLnfwalFQbkq7fNAWQX2RWu17yMWsbI7u00bmI
+         FgLTp2YvgADDyXx/WXcH96Ux4+qlE1/Kzl4Ckt96KdZ/Nhtm6zpTCbqbiuQYtslkfgQX
+         G1HN8/KI8qxPB7aNZ9FhbpRkO+7vv1f48hCSkyTFAUfz/hUI70RfXJWI7aWkgiCrUg16
+         e2vvJ2hSh9nDfyS4CZA0XmB3CH3x8cpWGUqB32GFVxNJcF5WQZ0bDvgvl7SCqRiUQa6j
+         bBdg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rdj5y7WUhCyxuRRSk61DK/G2r8mbCnRcx9QGkbHiSrE=;
+        b=A8VKCu64wD/3tgDDyOphBhHRQn+ydjWHLz0PGrWkc8TsBgoAG/WEzS30BA35+6LMza
+         8GWcisJJUokcsVFCGEo8iowToZL18g1PmTWyYY9sqCUGeWdtf324T8JGUfVBR7WaZLh+
+         npqtwBrzgYpz7PgzBCYKb36dYwmodsB6zL0ZrZb7IwwcqbLYHwH6wZV6PDAs1Bp+Ubnb
+         u+xGZKJ3ANvAcl/jH6r00pt5X2a9VrO7tx5EjzPc8yf+i3AXn5xUL4TKERM3zi+xaxTC
+         7u7UsCaCm6DSVUqeWyjdQWRQn0onnXaSPKJ3uBirfF4ex4SezJcIAFwRW4hp893z5tAA
+         1Kzw==
+X-Gm-Message-State: APjAAAXk3yLmbnPwVByqcW9/DSfB7/4wnoE/ChLVJlh620i3PP5bALLw
+        9JBWqA+hKtqKsGC3eVHzkDKRykELc++LP+9klsZUfQ==
+X-Google-Smtp-Source: APXvYqzzGaGuVCedyz80q6rNgp0f0P5Uq2ofFroB+k9lv/ume7i4twtBuzApD3RlCd+N9qQ92YfAsRGk0Fjz+dYV07U=
+X-Received: by 2002:a67:ee16:: with SMTP id f22mr10488350vsp.191.1560771347027;
+ Mon, 17 Jun 2019 04:35:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <1560769448-23070-1-git-send-email-jjian.zhou@mediatek.com>
+In-Reply-To: <1560769448-23070-1-git-send-email-jjian.zhou@mediatek.com>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Mon, 17 Jun 2019 13:35:10 +0200
+Message-ID: <CAPDyKFo5zpoRFMG6U_Y2uMk0qCyypW-Ui1Kha5t9_Rher4CDkw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] mmc: mediatek: fix SDIO IRQ interrupt handle flow
+To:     Jjian Zhou <jjian.zhou@mediatek.com>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-mediatek@lists.infradead.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Yong Mao <yong.mao@mediatek.com>,
+        srv_heupstream <srv_heupstream@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When we remove component we need to reverse things which were done on
-init, this consists of topology cleanup, lists cleanup and releasing
-firmware.
+On Mon, 17 Jun 2019 at 13:04, Jjian Zhou <jjian.zhou@mediatek.com> wrote:
+>
+> From: jjian zhou <jjian.zhou@mediatek.com>
+>
+> SDIO IRQ is triggered by low level. It need disable SDIO IRQ
+> detected function. Otherwise the interrupt register can't be cleared.
+> It will process the interrupt more.
+>
+> Signed-off-by: Jjian Zhou <jjian.zhou@mediatek.com>
+> Signed-off-by: Chaotian Jing <chaotian.jing@mediatek.com>
+> Signed-off-by: Yong Mao <yong.mao@mediatek.com>
 
-Currently cleanup handlers are put in wrong places or otherwise missing.
-So add proper component cleanup function and perform cleanups in it.
+Applied for fixes and by adding a fixes/stable tag, thanks!
 
-Signed-off-by: Amadeusz Sławiński <amadeuszx.slawinski@linux.intel.com>
----
- sound/soc/intel/skylake/skl-pcm.c      |  8 ++++++--
- sound/soc/intel/skylake/skl-topology.c | 15 +++++++++++++++
- sound/soc/intel/skylake/skl-topology.h |  2 ++
- sound/soc/intel/skylake/skl.c          |  2 --
- 4 files changed, 23 insertions(+), 4 deletions(-)
+Kind regards
+Uffe
 
-diff --git a/sound/soc/intel/skylake/skl-pcm.c b/sound/soc/intel/skylake/skl-pcm.c
-index 5e3421cc0feb..af479e9c8d0b 100644
---- a/sound/soc/intel/skylake/skl-pcm.c
-+++ b/sound/soc/intel/skylake/skl-pcm.c
-@@ -1450,8 +1450,12 @@ static int skl_platform_soc_probe(struct snd_soc_component *component)
- 
- static void skl_pcm_remove(struct snd_soc_component *component)
- {
--	/* remove topology */
--	snd_soc_tplg_component_remove(component, SND_SOC_TPLG_INDEX_ALL);
-+	struct hdac_bus *bus = dev_get_drvdata(component->dev);
-+	struct skl *skl = bus_to_skl(bus);
-+
-+	skl_tplg_exit(component, bus);
-+
-+	skl_debugfs_exit(skl);
- }
- 
- static const struct snd_soc_component_driver skl_component  = {
-diff --git a/sound/soc/intel/skylake/skl-topology.c b/sound/soc/intel/skylake/skl-topology.c
-index 44f3b29a7210..3964262109ac 100644
---- a/sound/soc/intel/skylake/skl-topology.c
-+++ b/sound/soc/intel/skylake/skl-topology.c
-@@ -3748,3 +3748,18 @@ int skl_tplg_init(struct snd_soc_component *component, struct hdac_bus *bus)
- 
- 	return 0;
- }
-+
-+void skl_tplg_exit(struct snd_soc_component *component, struct hdac_bus *bus)
-+{
-+	struct skl *skl = bus_to_skl(bus);
-+	struct skl_pipeline *ppl, *tmp;
-+
-+	if (!list_empty(&skl->ppl_list))
-+		list_for_each_entry_safe(ppl, tmp, &skl->ppl_list, node)
-+			list_del(&ppl->node);
-+
-+	/* clean up topology */
-+	snd_soc_tplg_component_remove(component, SND_SOC_TPLG_INDEX_ALL);
-+
-+	release_firmware(skl->tplg);
-+}
-diff --git a/sound/soc/intel/skylake/skl-topology.h b/sound/soc/intel/skylake/skl-topology.h
-index b66e3a728853..a8ecb615d24b 100644
---- a/sound/soc/intel/skylake/skl-topology.h
-+++ b/sound/soc/intel/skylake/skl-topology.h
-@@ -462,6 +462,8 @@ void skl_tplg_set_be_dmic_config(struct snd_soc_dai *dai,
- 	struct skl_pipe_params *params, int stream);
- int skl_tplg_init(struct snd_soc_component *component,
- 				struct hdac_bus *ebus);
-+void skl_tplg_exit(struct snd_soc_component *component,
-+				struct hdac_bus *bus);
- struct skl_module_cfg *skl_tplg_fe_get_cpr_module(
- 		struct snd_soc_dai *dai, int stream);
- int skl_tplg_update_pipe_params(struct device *dev,
-diff --git a/sound/soc/intel/skylake/skl.c b/sound/soc/intel/skylake/skl.c
-index cae97c65eef8..7e093fb13c92 100644
---- a/sound/soc/intel/skylake/skl.c
-+++ b/sound/soc/intel/skylake/skl.c
-@@ -1111,14 +1111,12 @@ static void skl_remove(struct pci_dev *pci)
- 	struct skl *skl = bus_to_skl(bus);
- 
- 	cancel_work_sync(&skl->probe_work);
--	release_firmware(skl->tplg);
- 
- 	pm_runtime_get_noresume(&pci->dev);
- 
- 	/* codec removal, invoke bus_device_remove */
- 	snd_hdac_ext_bus_device_remove(bus);
- 
--	skl->debugfs = NULL;
- 	skl_platform_unregister(&pci->dev);
- 	skl_free_dsp(skl);
- 	skl_machine_device_unregister(skl);
--- 
-2.17.1
 
+> ---
+>  drivers/mmc/host/mtk-sd.c | 37 ++++++++++++++++++++-----------------
+>  1 file changed, 20 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
+> index c518cc2..fa7d420 100644
+> --- a/drivers/mmc/host/mtk-sd.c
+> +++ b/drivers/mmc/host/mtk-sd.c
+> @@ -1383,24 +1383,25 @@ static void msdc_request_timeout(struct work_struct *work)
+>         }
+>  }
+>
+> -static void __msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
+> +static void __msdc_enable_sdio_irq(struct msdc_host *host, int enb)
+>  {
+> -       unsigned long flags;
+> -       struct msdc_host *host = mmc_priv(mmc);
+> -
+> -       spin_lock_irqsave(&host->lock, flags);
+> -       if (enb)
+> +       if (enb) {
+>                 sdr_set_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
+> -       else
+> +               sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+> +       } else {
+>                 sdr_clr_bits(host->base + MSDC_INTEN, MSDC_INTEN_SDIOIRQ);
+> -       spin_unlock_irqrestore(&host->lock, flags);
+> +               sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+> +       }
+>  }
+>
+>  static void msdc_enable_sdio_irq(struct mmc_host *mmc, int enb)
+>  {
+> +       unsigned long flags;
+>         struct msdc_host *host = mmc_priv(mmc);
+>
+> -       __msdc_enable_sdio_irq(mmc, enb);
+> +       spin_lock_irqsave(&host->lock, flags);
+> +       __msdc_enable_sdio_irq(host, enb);
+> +       spin_unlock_irqrestore(&host->lock, flags);
+>
+>         if (enb)
+>                 pm_runtime_get_noresume(host->dev);
+> @@ -1422,6 +1423,8 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
+>                 spin_lock_irqsave(&host->lock, flags);
+>                 events = readl(host->base + MSDC_INT);
+>                 event_mask = readl(host->base + MSDC_INTEN);
+> +               if ((events & event_mask) & MSDC_INT_SDIOIRQ)
+> +                       __msdc_enable_sdio_irq(host, 0);
+>                 /* clear interrupts */
+>                 writel(events & event_mask, host->base + MSDC_INT);
+>
+> @@ -1430,10 +1433,8 @@ static irqreturn_t msdc_irq(int irq, void *dev_id)
+>                 data = host->data;
+>                 spin_unlock_irqrestore(&host->lock, flags);
+>
+> -               if ((events & event_mask) & MSDC_INT_SDIOIRQ) {
+> -                       __msdc_enable_sdio_irq(host->mmc, 0);
+> +               if ((events & event_mask) & MSDC_INT_SDIOIRQ)
+>                         sdio_signal_irq(host->mmc);
+> -               }
+>
+>                 if ((events & event_mask) & MSDC_INT_CDSC) {
+>                         if (host->internal_cd)
+> @@ -1572,10 +1573,7 @@ static void msdc_init_hw(struct msdc_host *host)
+>         sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIO);
+>
+>         /* Config SDIO device detect interrupt function */
+> -       if (host->mmc->caps & MMC_CAP_SDIO_IRQ)
+> -               sdr_set_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+> -       else
+> -               sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+> +       sdr_clr_bits(host->base + SDC_CFG, SDC_CFG_SDIOIDE);
+>
+>         /* Configure to default data timeout */
+>         sdr_set_field(host->base + SDC_CFG, SDC_CFG_DTOC, 3);
+> @@ -2103,7 +2101,12 @@ static void msdc_hw_reset(struct mmc_host *mmc)
+>
+>  static void msdc_ack_sdio_irq(struct mmc_host *mmc)
+>  {
+> -       __msdc_enable_sdio_irq(mmc, 1);
+> +       unsigned long flags;
+> +       struct msdc_host *host = mmc_priv(mmc);
+> +
+> +       spin_lock_irqsave(&host->lock, flags);
+> +       __msdc_enable_sdio_irq(host, 1);
+> +       spin_unlock_irqrestore(&host->lock, flags);
+>  }
+>
+>  static int msdc_get_cd(struct mmc_host *mmc)
+> --
+> 1.9.1
+>
