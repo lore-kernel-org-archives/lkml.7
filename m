@@ -2,53 +2,52 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9EE3C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:27:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F886C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:27:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A86521734
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:27:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E92D20B1F
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560806833;
-	bh=KHBCZmoAoSC8wWq+9lyqmimJZJMLsLCc32XuJ2EdBII=;
+	s=default; t=1560806838;
+	bh=0wXskfR48+WoqgLU/lrgW0K9K635M8QSd+0mF8troUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l6HawUjWkOqsCjSbowMPCdRGpJH+te2ZGgCop35SDpx2jgvdb+ek6YvbF+VIuYb1H
-	 8JplSK51O3ulT6dJaj4vqiEhxV2N5u9vkmTAY+tXsk/DyoSvv9/BmemNUxBUnBlBey
-	 FGLV3vjFl1I9PSHlK5gHYJURFkWRQoy2qWwlzURw=
+	b=1HyxRvDg1F2DmnuOpLlf1WUjHkkFgTEN/+P4NPLcHPI+Wl/yOYFa42HEnfIRKn0NZ
+	 ie6ovs67caJS0Kqigp81FZwVGjIXgIU/dwdVW8w5hWy6dI81XMXX5RdYKYTOR1npS7
+	 6rIDO3gifxLkZB5DO46LuBq/1ECTWMdxbVqRHJiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbfFQV1M (ORCPT
+        id S1730373AbfFQV1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:27:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53982 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 17:27:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54150 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730344AbfFQV1J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:27:09 -0400
+        id S1729918AbfFQV1P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:27:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D151E20B1F;
-        Mon, 17 Jun 2019 21:27:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 656FB2063F;
+        Mon, 17 Jun 2019 21:27:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560806828;
-        bh=KHBCZmoAoSC8wWq+9lyqmimJZJMLsLCc32XuJ2EdBII=;
+        s=default; t=1560806833;
+        bh=0wXskfR48+WoqgLU/lrgW0K9K635M8QSd+0mF8troUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=L6iOkjzw9Oi6yauuaqoEnp8CQu2aqEoG7qWuW2QssjDndkKx5fuXRgsP//dbgGhTd
-         GJ1Gtl13btMng7hsgEVs26L/dneAz4U0K4HXdS1IkxWvj/V4IcqpcFzPRFppKzztev
-         pR0mBMFVZwIW43XO+Ovj5aHH5hW2vPJ3ZlQsk+Ug=
+        b=nMAGjvuqODqvcAz8XIjl/UReLojCvnlSYFAyX1mcHWgG4vuSlC9B6jjwFU1d5zfl+
+         KmvXcxMQQ+NrFv0JntDRQpCQjXLBPEZINw6O1IeRnU/Ir48t18mSsj0Ph+OnxC2+Xw
+         yIQEWKI/oJMlNXHKKBmeP7FG0UYMEdJbEOYt+ad4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adric Blake <promarbler14@gmail.com>,
-        Borislav Petkov <bp@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org
-Subject: [PATCH 4.19 69/75] x86/microcode, cpuhotplug: Add a microcode loader CPU hotplug callback
-Date:   Mon, 17 Jun 2019 23:10:20 +0200
-Message-Id: <20190617210755.879289114@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+9437020c82413d00222d@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 29/75] ALSA: seq: Fix race of get-subscription call vs port-delete ioctls
+Date:   Mon, 17 Jun 2019 23:09:40 +0200
+Message-Id: <20190617210753.951221853@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
 References: <20190617210752.799453599@linuxfoundation.org>
@@ -61,76 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Borislav Petkov <bp@suse.de>
+[ Upstream commit 2eabc5ec8ab4d4748a82050dfcb994119b983750 ]
 
-commit 78f4e932f7760d965fb1569025d1576ab77557c5 upstream.
+The snd_seq_ioctl_get_subscription() retrieves the port subscriber
+information as a pointer, while the object isn't protected, hence it
+may be deleted before the actual reference.  This race was spotted by
+syzkaller and may lead to a UAF.
 
-Adric Blake reported the following warning during suspend-resume:
+The fix is simply copying the data in the lookup function that
+performs in the rwsem to protect against the deletion.
 
-  Enabling non-boot CPUs ...
-  x86: Booting SMP configuration:
-  smpboot: Booting Node 0 Processor 1 APIC 0x2
-  unchecked MSR access error: WRMSR to 0x10f (tried to write 0x0000000000000000) \
-   at rIP: 0xffffffff8d267924 (native_write_msr+0x4/0x20)
-  Call Trace:
-   intel_set_tfa
-   intel_pmu_cpu_starting
-   ? x86_pmu_dead_cpu
-   x86_pmu_starting_cpu
-   cpuhp_invoke_callback
-   ? _raw_spin_lock_irqsave
-   notify_cpu_starting
-   start_secondary
-   secondary_startup_64
-  microcode: sig=0x806ea, pf=0x80, revision=0x96
-  microcode: updated to revision 0xb4, date = 2019-04-01
-  CPU1 is up
-
-The MSR in question is MSR_TFA_RTM_FORCE_ABORT and that MSR is emulated
-by microcode. The log above shows that the microcode loader callback
-happens after the PMU restoration, leading to the conjecture that
-because the microcode hasn't been updated yet, that MSR is not present
-yet, leading to the #GP.
-
-Add a microcode loader-specific hotplug vector which comes before
-the PERF vectors and thus executes earlier and makes sure the MSR is
-present.
-
-Fixes: 400816f60c54 ("perf/x86/intel: Implement support for TSX Force Abort")
-Reported-by: Adric Blake <promarbler14@gmail.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
-Cc: x86@kernel.org
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=203637
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: syzbot+9437020c82413d00222d@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/microcode/core.c |    2 +-
- include/linux/cpuhotplug.h           |    1 +
- 2 files changed, 2 insertions(+), 1 deletion(-)
+ sound/core/seq/seq_clientmgr.c | 10 ++--------
+ sound/core/seq/seq_ports.c     | 13 ++++++++-----
+ sound/core/seq/seq_ports.h     |  5 +++--
+ 3 files changed, 13 insertions(+), 15 deletions(-)
 
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -873,7 +873,7 @@ int __init microcode_init(void)
- 		goto out_ucode_group;
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index 40ae8f67efde..37312a3ae60f 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1900,20 +1900,14 @@ static int snd_seq_ioctl_get_subscription(struct snd_seq_client *client,
+ 	int result;
+ 	struct snd_seq_client *sender = NULL;
+ 	struct snd_seq_client_port *sport = NULL;
+-	struct snd_seq_subscribers *p;
  
- 	register_syscore_ops(&mc_syscore_ops);
--	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/microcode:online",
-+	cpuhp_setup_state_nocalls(CPUHP_AP_MICROCODE_LOADER, "x86/microcode:online",
- 				  mc_cpu_online, mc_cpu_down_prep);
+ 	result = -EINVAL;
+ 	if ((sender = snd_seq_client_use_ptr(subs->sender.client)) == NULL)
+ 		goto __end;
+ 	if ((sport = snd_seq_port_use_ptr(sender, subs->sender.port)) == NULL)
+ 		goto __end;
+-	p = snd_seq_port_get_subscription(&sport->c_src, &subs->dest);
+-	if (p) {
+-		result = 0;
+-		*subs = p->info;
+-	} else
+-		result = -ENOENT;
+-
++	result = snd_seq_port_get_subscription(&sport->c_src, &subs->dest,
++					       subs);
+       __end:
+       	if (sport)
+ 		snd_seq_port_unlock(sport);
+diff --git a/sound/core/seq/seq_ports.c b/sound/core/seq/seq_ports.c
+index da31aa8e216e..16289aefb443 100644
+--- a/sound/core/seq/seq_ports.c
++++ b/sound/core/seq/seq_ports.c
+@@ -635,20 +635,23 @@ int snd_seq_port_disconnect(struct snd_seq_client *connector,
  
- 	pr_info("Microcode Update Driver: v%s.", DRIVER_VERSION);
---- a/include/linux/cpuhotplug.h
-+++ b/include/linux/cpuhotplug.h
-@@ -101,6 +101,7 @@ enum cpuhp_state {
- 	CPUHP_AP_IRQ_BCM2836_STARTING,
- 	CPUHP_AP_IRQ_MIPS_GIC_STARTING,
- 	CPUHP_AP_ARM_MVEBU_COHERENCY,
-+	CPUHP_AP_MICROCODE_LOADER,
- 	CPUHP_AP_PERF_X86_AMD_UNCORE_STARTING,
- 	CPUHP_AP_PERF_X86_STARTING,
- 	CPUHP_AP_PERF_X86_AMD_IBS_STARTING,
+ 
+ /* get matched subscriber */
+-struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
+-							  struct snd_seq_addr *dest_addr)
++int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
++				  struct snd_seq_addr *dest_addr,
++				  struct snd_seq_port_subscribe *subs)
+ {
+-	struct snd_seq_subscribers *s, *found = NULL;
++	struct snd_seq_subscribers *s;
++	int err = -ENOENT;
+ 
+ 	down_read(&src_grp->list_mutex);
+ 	list_for_each_entry(s, &src_grp->list_head, src_list) {
+ 		if (addr_match(dest_addr, &s->info.dest)) {
+-			found = s;
++			*subs = s->info;
++			err = 0;
+ 			break;
+ 		}
+ 	}
+ 	up_read(&src_grp->list_mutex);
+-	return found;
++	return err;
+ }
+ 
+ /*
+diff --git a/sound/core/seq/seq_ports.h b/sound/core/seq/seq_ports.h
+index 26bd71f36c41..06003b36652e 100644
+--- a/sound/core/seq/seq_ports.h
++++ b/sound/core/seq/seq_ports.h
+@@ -135,7 +135,8 @@ int snd_seq_port_subscribe(struct snd_seq_client_port *port,
+ 			   struct snd_seq_port_subscribe *info);
+ 
+ /* get matched subscriber */
+-struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
+-							  struct snd_seq_addr *dest_addr);
++int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
++				  struct snd_seq_addr *dest_addr,
++				  struct snd_seq_port_subscribe *subs);
+ 
+ #endif
+-- 
+2.20.1
+
 
 
