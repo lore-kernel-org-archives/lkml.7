@@ -2,91 +2,91 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84591C31E5B
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:06:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0522C31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:09:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 597DC20861
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:06:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80FE020861
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 21:09:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727503AbfFQVGp (ORCPT
+        id S1727637AbfFQVJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 17:06:45 -0400
-Received: from mga11.intel.com ([192.55.52.93]:47887 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725497AbfFQVGo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 17:06:44 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 14:06:44 -0700
-Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga006-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 14:06:44 -0700
-Subject: [PATCH] libnvdimm: Enable unit test infrastructure compile checks
-From:   Dan Williams <dan.j.williams@intel.com>
-To:     linux-nvdimm@lists.01.org
-Cc:     =?utf-8?b?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org
-Date:   Mon, 17 Jun 2019 13:52:27 -0700
-Message-ID: <156080474760.3765313.13075804303259765566.stgit@dwillia2-desk3.amr.corp.intel.com>
-User-Agent: StGit/0.18-2-gc94f
+        Mon, 17 Jun 2019 17:09:04 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:45710 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726593AbfFQVJE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 17:09:04 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hcys2-0005WT-Rm; Mon, 17 Jun 2019 23:08:55 +0200
+Date:   Mon, 17 Jun 2019 23:08:54 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Petr Mladek <pmladek@suse.com>
+cc:     Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Laurence Oberman <loberman@redhat.com>,
+        Vincent Whitchurch <vincent.whitchurch@axis.com>,
+        Michal Hocko <mhocko@suse.com>, linux-kernel@vger.kernel.org
+Subject: Re: [RFC 0/3] watchdog/softlockup: Make softlockup reports more
+ reliable and useful
+In-Reply-To: <20190605140954.28471-1-pmladek@suse.com>
+Message-ID: <alpine.DEB.2.21.1906172307260.1963@nanos.tec.linutronix.de>
+References: <20190605140954.28471-1-pmladek@suse.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The infrastructure to mock core libnvdimm routines for unit testing
-purposes is prone to bitrot relative to refactoring of that core.
-Arrange for the unit test core to be built when CONFIG_COMPILE_TEST=y.
-This does not result in a functional unit test environment, it is only a
-helper for 0day to catch unit test build regressions.
+On Wed, 5 Jun 2019, Petr Mladek wrote:
 
-Cc: Jérôme Glisse <jglisse@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Reported-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/nvdimm/Kconfig  |   11 +++++++++++
- drivers/nvdimm/Makefile |    4 ++++
- 2 files changed, 15 insertions(+)
+> Hi,
+> 
+> we were analyzing logs with several softlockup reports in flush_tlb_kernel_range().
+> They were confusing. Especially it was not clear whether it was deadlock,
+> livelock, or separate softlockups.
+> 
+> It went out that even a simple busy loop:
+> 
+> 	while (true)
+> 	      cpu_relax();
+> 
+> is able to produce several softlockups reports:
+> 
+> [  168.277520] watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [cat:4865]
+> [  196.277604] watchdog: BUG: soft lockup - CPU#1 stuck for 22s! [cat:4865]
+> [  236.277522] watchdog: BUG: soft lockup - CPU#1 stuck for 23s! [cat:4865]
+> 
+> 
+> I tried to understand the tricky watchdog code and produced two patches
+> that would be helpful to debug the original real bug:
+> 
+>    1st patch prevents restart of the watchdog from unrelated locations.
+> 
+>    2nd patch helps to distinguish several possible situations by
+>    regular reports.
+> 
+>    3rd patch can be used for testing the problem.
+> 
+> 
+> The watchdog code might deserve even more clean up. Anyway, I would
+> like to hear other's opinion first.
 
-diff --git a/drivers/nvdimm/Kconfig b/drivers/nvdimm/Kconfig
-index 54500798f23a..57d3a6c3ac70 100644
---- a/drivers/nvdimm/Kconfig
-+++ b/drivers/nvdimm/Kconfig
-@@ -118,4 +118,15 @@ config NVDIMM_KEYS
- 	depends on ENCRYPTED_KEYS
- 	depends on (LIBNVDIMM=ENCRYPTED_KEYS) || LIBNVDIMM=m
- 
-+config NVDIMM_TEST_BUILD
-+	bool "Build the unit test core"
-+	depends on COMPILE_TEST
-+	default COMPILE_TEST
-+	help
-+	  Build the core of the unit test infrastructure.  The result of
-+	  this build is non-functional for unit test execution, but it
-+	  otherwise helps catch build errors induced by changes to the
-+	  core devm_memremap_pages() implementation and other
-+	  infrastructure.
-+
- endif
-diff --git a/drivers/nvdimm/Makefile b/drivers/nvdimm/Makefile
-index 6f2a088afad6..40080c120363 100644
---- a/drivers/nvdimm/Makefile
-+++ b/drivers/nvdimm/Makefile
-@@ -28,3 +28,7 @@ libnvdimm-$(CONFIG_BTT) += btt_devs.o
- libnvdimm-$(CONFIG_NVDIMM_PFN) += pfn_devs.o
- libnvdimm-$(CONFIG_NVDIMM_DAX) += dax_devs.o
- libnvdimm-$(CONFIG_NVDIMM_KEYS) += security.o
-+
-+TOOLS := ../../tools
-+TEST_SRC := $(TOOLS)/testing/nvdimm/test
-+obj-$(CONFIG_NVDIMM_TEST_BUILD) := $(TEST_SRC)/iomap.o
+Anything which improves debugability is welcome. Unfortunately you missed
+to add an example of the output after these patches are applied.
+
+Thanks,
+
+	tglx
 
