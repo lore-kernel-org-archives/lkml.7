@@ -2,98 +2,162 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 681CEC31E50
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 00:19:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F37C31E50
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CAC72089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 00:19:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="k8G3nAUT"
+	by mail.kernel.org (Postfix) with ESMTP id A86732085A
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 01:15:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbfFQASy (ORCPT
+        id S1727495AbfFQBOx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 16 Jun 2019 20:18:54 -0400
-Received: from onstation.org ([52.200.56.107]:54760 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727322AbfFQASx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 16 Jun 2019 20:18:53 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 523DC3E956;
-        Mon, 17 Jun 2019 00:18:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1560730732;
-        bh=wqA8kfgeU/wUimDPIjCQxIw3A0hNMdWnQpZyfBayxSU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=k8G3nAUTxcqNgWImzT7xSUUpvFWnN0uIXQY0GSCS5P4TBF3nLsLWog4BZA6HedlLN
-         Fe1ps7X05QlQkibypgS1bULvBX066jBkqIn5KG3pWVgoIPG/ZtMEiovQ63Ur8yjS8J
-         aVmk4fijaFoLxcWSZedSPwER1/S1LOwGaFbjs4oY=
-Date:   Sun, 16 Jun 2019 20:18:51 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
-        sean@poorly.run, robh+dt@kernel.org, airlied@linux.ie,
-        daniel@ffwll.ch, mark.rutland@arm.com, jonathan@marek.ca,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH 6/6] drm/msm/gpu: add ocmem init/cleanup functions
-Message-ID: <20190617001851.GA19038@onstation.org>
-References: <20190616132930.6942-1-masneyb@onstation.org>
- <20190616132930.6942-7-masneyb@onstation.org>
- <20190616180633.GS22737@tuxbook-pro>
+        Sun, 16 Jun 2019 21:14:53 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:27718 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727235AbfFQBOx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 16 Jun 2019 21:14:53 -0400
+X-UUID: 7dc4172e2c0b4428b3c477938d2bad8d-20190617
+X-UUID: 7dc4172e2c0b4428b3c477938d2bad8d-20190617
+Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 461576476; Mon, 17 Jun 2019 09:14:44 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 17 Jun 2019 09:14:44 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Mon, 17 Jun 2019 09:14:43 +0800
+Message-ID: <1560734084.11128.2.camel@mtksdaap41>
+Subject: Re: [PATCH v8 11/12] soc: mediatek: cmdq: add
+ cmdq_dev_get_client_reg function
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Daniel Kurtz <djkurtz@chromium.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Sascha Hauer <kernel@pengutronix.de>,
+        "Philipp Zabel" <p.zabel@pengutronix.de>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        "YT Shen" <yt.shen@mediatek.com>,
+        Daoyuan Huang <daoyuan.huang@mediatek.com>,
+        Jiaguang Zhang <jiaguang.zhang@mediatek.com>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>,
+        <ginny.chen@mediatek.com>
+Date:   Mon, 17 Jun 2019 09:14:44 +0800
+In-Reply-To: <20190612085349.21243-12-bibby.hsieh@mediatek.com>
+References: <20190612085349.21243-1-bibby.hsieh@mediatek.com>
+         <20190612085349.21243-12-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190616180633.GS22737@tuxbook-pro>
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hi, Bibby:
 
-On Sun, Jun 16, 2019 at 11:06:33AM -0700, Bjorn Andersson wrote:
-> > diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > index 6f7f4114afcf..e0a9409c8a32 100644
-> > --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
-> > @@ -29,6 +29,10 @@
-> >  #include "msm_gem.h"
-> >  #include "msm_mmu.h"
-> >  
-> > +#ifdef CONFIG_QCOM_OCMEM
-> > +#  include <soc/qcom/ocmem.h>
-> > +#endif
+On Wed, 2019-06-12 at 16:53 +0800, Bibby Hsieh wrote:
+> GCE cannot know the register base address, this function
+> can help cmdq client to get the cmdq_client_reg structure.
 > 
-> This file exists (after the previous patch), so no need to make its
-> inclusion conditional.
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 24 ++++++++++++++++++++++++
+>  include/linux/soc/mediatek/mtk-cmdq.h  | 20 ++++++++++++++++++++
+>  2 files changed, 44 insertions(+)
 > 
-> > +
-> >  static bool zap_available = true;
-> >  
-> >  static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
-> > @@ -897,6 +901,43 @@ static int adreno_get_pwrlevels(struct device *dev,
-> >  	return 0;
-> >  }
-> >  
-> > +int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
-> > +			  struct adreno_ocmem *adreno_ocmem)
-> > +{
-> > +#ifdef CONFIG_QCOM_OCMEM
-> 
-> No need to make this conditional.
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 70ad4d806fac..fac4d33fd520 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -27,6 +27,30 @@ struct cmdq_instruction {
+>  	u8 op;
+>  };
+>  
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx)
+> +{
+> +	struct of_phandle_args spec;
+> +
+> +	if (!client_reg)
+> +		return -EINVAL;
+> +
+> +	if (of_parse_phandle_with_args(dev->of_node, "mediatek,gce-client-reg",
+> +				       "#subsys-cells", idx, &spec)) {
+> +		dev_err(dev, "can't parse gce-client-reg property (%d)", idx);
+> +
+> +		return -EINVAL;
 
-I have these #ifdefs for the a5xx and a6xx GPUs that don't have ocmem
-in the SoC. Without the #ifdefs, those systems would need to have the
-ocmem driver in their kernel.
+of_parse_phandle_with_args() may return -ENOENT, why do you change it to
+-EINVAL?
 
-Thanks for the quick review on the patch set!
+Regards,
+CK
 
-Brian
+> +	}
+> +
+> +	client_reg->subsys = spec.args[0];
+> +	client_reg->offset = spec.args[1];
+> +	client_reg->size = spec.args[2];
+> +	of_node_put(spec.np);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(cmdq_dev_get_client_reg);
+> +
+>  static void cmdq_client_timeout(struct timer_list *t)
+>  {
+>  	struct cmdq_client *client = from_timer(client, t, timer);
+> diff --git a/include/linux/soc/mediatek/mtk-cmdq.h b/include/linux/soc/mediatek/mtk-cmdq.h
+> index a345870a6d10..2e2a2274c231 100644
+> --- a/include/linux/soc/mediatek/mtk-cmdq.h
+> +++ b/include/linux/soc/mediatek/mtk-cmdq.h
+> @@ -15,6 +15,12 @@
+>  
+>  struct cmdq_pkt;
+>  
+> +struct cmdq_client_reg {
+> +	u8 subsys;
+> +	u16 offset;
+> +	u16 size;
+> +};
+> +
+>  struct cmdq_client {
+>  	spinlock_t lock;
+>  	u32 pkt_cnt;
+> @@ -142,4 +148,18 @@ int cmdq_pkt_flush_async(struct cmdq_pkt *pkt, cmdq_async_flush_cb cb,
+>   */
+>  int cmdq_pkt_flush(struct cmdq_pkt *pkt);
+>  
+> +/**
+> + * cmdq_dev_get_client_reg() - parse cmdq client reg from the device node of CMDQ client
+> + * @dev:	device of CMDQ mailbox clienti
+> + * @client_reg: CMDQ client reg pointer
+> + * @idx:	the index of desired reg
+> + *
+> + * Return: 0 for success; else the error code is returned
+> + *
+> + * Help CMDQ client pasing the cmdq client reg
+> + * from the device node of CMDQ client.
+> + */
+> +int cmdq_dev_get_client_reg(struct device *dev,
+> +			    struct cmdq_client_reg *client_reg, int idx);
+> +
+>  #endif	/* __MTK_CMDQ_H__ */
+
+
