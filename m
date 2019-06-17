@@ -2,86 +2,90 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E37FC31E57
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C729C31E57
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63A342089E
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:55:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F1A2208E4
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 12:57:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560776227;
+	bh=xdETj5mf6aeUoLj5hEhq8+dwhZFws6OLsC2VvsYVJ5o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mHSfJmmxd4ccZHakv5FM/vtVnBXo7jUqsHDirrO5xgTZ1gXzfe9q9SChzaIQzEiIr
+	 rnE8pQpkPWiZOR3T5EOrNt0q12GJvjQrzqUqCXsZ14dLPSUlsv+mk+aIm9VLJVxQPa
+	 W/zdqBMSsv/OhoaoLs2SDHNMHzJRe3NNFXhc8T9I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728025AbfFQMzr (ORCPT
+        id S1728076AbfFQM5F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 08:55:47 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:45045 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727921AbfFQMzo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 08:55:44 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1N3KgE-1ibs0F23KE-010PaW; Mon, 17 Jun 2019 14:55:25 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Paul Walmsley <paul@pwsan.com>,
-        Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Tony Lindgren <tony@atomide.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Kevin Hilman <khilman@kernel.org>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH, for GregKH] ARM: omap1: remove unused variable
-Date:   Mon, 17 Jun 2019 14:55:02 +0200
-Message-Id: <20190617125521.1553103-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 17 Jun 2019 08:57:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60212 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726286AbfFQM5F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 08:57:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57C212089E;
+        Mon, 17 Jun 2019 12:57:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560776224;
+        bh=xdETj5mf6aeUoLj5hEhq8+dwhZFws6OLsC2VvsYVJ5o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nsEF4PxvDA0r6DHB4M8Djp8eU2sl7B8TBIQry4L9GCDem3Dfb8yTpDqmotIUb0OZy
+         hZpHMWVKkPrWYMhyuTH5/sQkNhYAP9BD8EXtxx9xuT7EXQPVLEeRcIM8v4VM5TfdW6
+         Q6QpII6vbYQCzD3w6o6EMQjuqfgzdxkH8KHx218o=
+Date:   Mon, 17 Jun 2019 14:57:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v2 03/16] scripts: add an script to parse the ABI files
+Message-ID: <20190617125702.GA20042@kroah.com>
+References: <3b8d7c64f887ddea01df3c4eeabc745c8ec45406.1560534648.git.mchehab+samsung@kernel.org>
+ <680fb978ef9322c705eca9927c79b220cd3ccc4a.1560534648.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:5sZGK4gs2Z6lmbY+AZRULzOzFNndqrsR+LR3N/b8eoORxP0RDRK
- 4cwluOKmjFxZCnLo2qjBpxUUor/ZXJ6iEOFu4JpoLJpxM9m4apj+ajihoQh0JF6jBNqRUk6
- 6PPyM14TQksrd7+xKxkYUtkmSnkp4rcQ+bNDJB86ByweuvD+ZWfuaaSvro2a99gv7/O6PtM
- yrVhks6FHyXfuGJOb8tkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vOzSgpnzn8Y=:1UhMFQ7PRhzaTbKtTHzgsT
- 5+AiVHzBehXpewrih74danSoQRVN7gVvj2LwcJMjovTHaV/Wyw4ViTKEqbVzd4scs1XsCGzO1
- Uf0MYtPBFdXpjUY7EdnT9n/Sx3X9ZEv8buU8UjwG9r3csAMpb2DG0k+A8Vwe8WtV+JBbW4hKF
- kkQSzdm3YZz5daeUE8MxrYUfJlpl8jXHmlR9FAsDz748cfxqiwvYi7r6d3oGWCa9krHTvldF9
- ifuTXbZZ6/s9zRxzsA0Iw+lbc7b4iW+MWhBp6MF/HOakiWDQvowMgPEK9q6cGqiJmA60GqvJk
- 27fGHmd3qp997d5pGrZUgbUtg+9eRe65Pi4CC42FghZ/FqHhAtMjHZz2YdVhUReZ51Ju0jOxW
- iK6OrUR3wNTS0Of90ifwvPRkTzJ3uXQESeImSIeNO+VSFjTJJ3AffNyJfV7moQF4BdCeZn9pb
- hCStqGC+UbBGwjmOi/U1OhkYFluLjG46BwkaFV70Qkk4z8Xe8AyUaKfreqTQweEvBWTN5djKA
- Knz3ZQT13EC/45cg0E+EsVNclYxV0dkG/qNoIe3nZ7SUde5whaJV4E2nZbdFCaOILpylFzyRz
- jtB/qrS5wmw9P6iKCkc6aUzpkp5z1xXHXycv695xZdFIBNC5BkoTM+Xsykg+Io46UGfoQ0oux
- s4vvsz8urhMUWnUF5BGBe7aAfYcI2fUWZc7SkLo1iRfeIgzBA5Vu8dsZ8s421DQ22epTb8HCj
- uwKQnAgsCRwDixLu77x5b2TVETajW7qitnG9hA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <680fb978ef9322c705eca9927c79b220cd3ccc4a.1560534648.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The cleanup of the debugfs functions left one variable behind that
-should now be removed as well:
+On Fri, Jun 14, 2019 at 02:52:17PM -0300, Mauro Carvalho Chehab wrote:
+> Add a script to parse the Documentation/ABI files and produce
+> an output with all entries inside an ABI (sub)directory.
+> 
+> Right now, it outputs its contents on ReST format. It shouldn't
+> be hard to make it produce other kind of outputs, since the ABI
+> file parser is implemented in separate than the output generator.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  scripts/get_abi.pl | 212 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 212 insertions(+)
+>  create mode 100755 scripts/get_abi.pl
+> 
+> diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
+> new file mode 100755
+> index 000000000000..f7c9944a833c
+> --- /dev/null
+> +++ b/scripts/get_abi.pl
+> @@ -0,0 +1,212 @@
+> +#!/usr/bin/perl
+> +
 
-arch/arm/mach-omap1/clock.c:1008:6: error: unused variable 'err' [-Werror,-Wunused-variable]
+Ok, I was going to apply this, but there is no SPDX line on the script.
+Can you resend this series with that on it, so that I can apply the
+patches of the series that adds the script to the kernel tree?
 
-Fixes: d5ddd5a51726 ("arm: omap1: no need to check return value of debugfs_create functions")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-omap1/clock.c | 1 -
- 1 file changed, 1 deletion(-)
+thanks,
 
-diff --git a/arch/arm/mach-omap1/clock.c b/arch/arm/mach-omap1/clock.c
-index 3d7ab2bcf46c..a5a50efc8e17 100644
---- a/arch/arm/mach-omap1/clock.c
-+++ b/arch/arm/mach-omap1/clock.c
-@@ -1005,7 +1005,6 @@ static void clk_debugfs_register_one(struct clk *c)
- 
- static void clk_debugfs_register(struct clk *c)
- {
--	int err;
- 	struct clk *pa = c->parent;
- 
- 	if (pa && !pa->dent)
--- 
-2.20.0
-
+greg k-h
