@@ -2,128 +2,64 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC52C31E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB02C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:59:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA451208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:58:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560823081;
-	bh=8eJzG0QkG+7iwVlI/t7yW6Fig5RNCmwWmykPQq2nGgA=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BIdtt9lixP8OMC6yEW+R2uPJWvMVARX7aC7cHZKKl/nFwR2bWzLqyVlNA79O8g7k/
-	 BzUnqDkkAVWPhbiOxBqs9KL+Ul8gX0pTnGnt5ke5h+CPXF8c1tL/4PE/PN1L1rUH7w
-	 4jzECA11SPhfmy7cCO75geev8Y/PwCVPMqz2KX3c=
+	by mail.kernel.org (Postfix) with ESMTP id E778A2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:59:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727241AbfFRB6A (ORCPT
+        id S1727626AbfFRB7I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:58:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34356 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfFRB57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:57:59 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52D602080C;
-        Tue, 18 Jun 2019 01:57:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560823079;
-        bh=8eJzG0QkG+7iwVlI/t7yW6Fig5RNCmwWmykPQq2nGgA=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=OE+XgpgtZhH0f75UQlTQL3rSRdRRP05S+vKJvMay+8BmyMAjkXZLwJC6z89WkLyWv
-         6xTZtwGGzs/c3VHzQzw94somd65KvS6zN7TbnwRgUQ+WTFBiYdGcHlHPlJeDB/vFEn
-         R7E5dmgyl20XVW7R8vwXalARxFtvIQNepfCrhC/4=
-Date:   Mon, 17 Jun 2019 18:57:57 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Baoquan He <bhe@redhat.com>, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>,
-        linux-acpi@vger.kernel.org,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Arun KS <arunks@codeaurora.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: Re: [PATCH v1 1/6] mm: Section numbers use the type "unsigned long"
-Message-Id: <20190617185757.b57402b465caff0cf6f85320@linux-foundation.org>
-In-Reply-To: <701e8feb-cbf8-04c1-758c-046da9394ac1@c-s.fr>
-References: <20190614100114.311-1-david@redhat.com>
-        <20190614100114.311-2-david@redhat.com>
-        <20190614120036.00ae392e3f210e7bc9ec6960@linux-foundation.org>
-        <701e8feb-cbf8-04c1-758c-046da9394ac1@c-s.fr>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Jun 2019 21:59:08 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:37066 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726026AbfFRB7I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 21:59:08 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hd3Om-0004se-Gu; Tue, 18 Jun 2019 01:59:00 +0000
+Date:   Tue, 18 Jun 2019 02:59:00 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        James Morris <jmorris@namei.org>,
+        David Howells <dhowells@redhat.com>,
+        stable <stable@vger.kernel.org>, Jose Bollo <jose.bollo@iot.bzh>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] Smack: Restore the smackfsdef mount option and add
+ missing prefixes
+Message-ID: <20190618015900.GZ17978@ZenIV.linux.org.uk>
+References: <155930001303.17253.2447519598157285098.stgit@warthog.procyon.org.uk>
+ <17467.1559300202@warthog.procyon.org.uk>
+ <alpine.LRH.2.21.1906040842110.13657@namei.org>
+ <6cfd5113-8473-f962-dee7-e490e6f76f9c@schaufler-ca.com>
+ <cb3749a6-e45b-3e07-27f9-841adf6f4640@schaufler-ca.com>
+ <CAHk-=wj8VCxjwyd_BDgRtDigik5UdizCZP7PU4wUtj4vHsEWNw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj8VCxjwyd_BDgRtDigik5UdizCZP7PU4wUtj4vHsEWNw@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 15 Jun 2019 10:06:54 +0200 Christophe Leroy <christophe.leroy@c-s.f=
-r> wrote:
+On Fri, Jun 14, 2019 at 02:24:09PM -1000, Linus Torvalds wrote:
+> On Fri, Jun 14, 2019 at 1:08 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
+> >
+> > Al, are you going to take this, or should I find another way
+> > to get it in for 5.2?
+> 
+> I guess I can take it directly.
+> 
+> I was assuming it would come through either Al (which is how I got the
+> commit it fixes) or Casey (as smack maintainer), so I ignored the
+> patch.
 
->=20
->=20
-> Le 14/06/2019 =E0 21:00, Andrew Morton a =E9crit=A0:
-> > On Fri, 14 Jun 2019 12:01:09 +0200 David Hildenbrand <david@redhat.com>=
- wrote:
-> >=20
-> >> We are using a mixture of "int" and "unsigned long". Let's make this
-> >> consistent by using "unsigned long" everywhere. We'll do the same with
-> >> memory block ids next.
-> >>
-> >> ...
-> >>
-> >> -	int i, ret, section_count =3D 0;
-> >> +	unsigned long i;
-> >>
-> >> ...
-> >>
-> >> -	unsigned int i;
-> >> +	unsigned long i;
-> >=20
-> > Maybe I did too much fortran back in the day, but I think the
-> > expectation is that a variable called "i" has type "int".
-> >=20
-> > This?
-> >=20
-> >=20
-> >=20
-> > s/unsigned long i/unsigned long section_nr/
->=20
->  From my point of view you degrade readability by doing that.
->=20
-> section_nr_to_pfn(mem->start_section_nr + section_nr);
->=20
-> Three times the word 'section_nr' in one line, is that worth it ? Gives=20
-> me headache.
->=20
-> Codying style says the following, which makes full sense in my opinion:
->=20
-> LOCAL variable names should be short, and to the point.  If you have
-> some random integer loop counter, it should probably be called ``i``.
-> Calling it ``loop_counter`` is non-productive, if there is no chance of it
-> being mis-understood.
-
-Well.  It did say "integer".  Calling an unsigned long `i' is flat out
-misleading.
-
-> What about just naming it 'nr' if we want to use something else than 'i' ?
-
-Sure, that works.
-
-
+FWIW, (belated) ACK...
