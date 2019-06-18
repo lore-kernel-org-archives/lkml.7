@@ -2,104 +2,79 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA366C46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:08:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A774C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:08:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E031213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3063620B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:08:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560874133;
+	bh=YCsNI3NUEf3Ql1pa6VJY/tDOkScY+nHIByu9NbnC36Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wxIrgP7vf+bQjRI3PB1CitiujkmMc2olAKRg3vNJcxN1j16ww0m6t4dHf93IBjxLM
+	 ayI8TSOQS/l+9OeAUQpXZDJsXfVj7r7evmJsD0ga2CRRbpJiKcbHkrcNO4N9hu3SUz
+	 XvwT7WqImcHawz+CLhRiNunNwm0QjL6d4PdLuPJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729854AbfFRQIq (ORCPT
+        id S1729893AbfFRQIv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:08:46 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12038 "EHLO mga03.intel.com"
+        Tue, 18 Jun 2019 12:08:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbfFRQIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:08:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 09:08:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,389,1557212400"; 
-   d="scan'208";a="358310992"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga006.fm.intel.com with ESMTP; 18 Jun 2019 09:08:44 -0700
-Message-ID: <b0491cb517ba377da6496fe91a98fdbfca4609a9.camel@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
- ELF file
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Florian Weimer <fweimer@redhat.com>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Date:   Tue, 18 Jun 2019 09:00:35 -0700
-In-Reply-To: <87blyu7ubf.fsf@oldenburg2.str.redhat.com>
-References: <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
-         <20190611114109.GN28398@e103592.cambridge.arm.com>
-         <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
-         <20190612093238.GQ28398@e103592.cambridge.arm.com>
-         <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
-         <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
-         <20190618091248.GB2790@e103592.cambridge.arm.com>
-         <20190618124122.GH3419@hirez.programming.kicks-ass.net>
-         <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
-         <20190618125512.GJ3419@hirez.programming.kicks-ass.net>
-         <20190618133223.GD2790@e103592.cambridge.arm.com>
-         <d54fe81be77b9edd8578a6d208c72cd7c0b8c1dd.camel@intel.com>
-         <87pnna7v1d.fsf@oldenburg2.str.redhat.com>
-         <1ca57aaae8a2121731f2dcb1a137b92eed39a0d2.camel@intel.com>
-         <87blyu7ubf.fsf@oldenburg2.str.redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1729247AbfFRQIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:08:50 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A80C213F2;
+        Tue, 18 Jun 2019 16:08:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560874130;
+        bh=YCsNI3NUEf3Ql1pa6VJY/tDOkScY+nHIByu9NbnC36Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=0YKi/KzPywEj1N8qH2KtYtm/gAy7MGUSAmSjnLozqZfHcQkhJAsnU26kBZW3TnOs3
+         x050ZxqF1ZgcYIvK+f5UqVtG8lb76QINYtwEW8rJcere9TfZck1vQOubHmTKC07Jd7
+         ty3Y8cr9LSJxKvrBnJqvaycxBX2cJ6GxEC26G9m0=
+Date:   Tue, 18 Jun 2019 18:08:47 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, hch@infradead.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH v2] fs: cramfs_fs.h: Fix shifting
+ signed 32-bit value by 31 bits problem
+Message-ID: <20190618160847.GC27611@kroah.com>
+References: <20190618114947.10563-1-puranjay12@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618114947.10563-1-puranjay12@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-18 at 18:05 +0200, Florian Weimer wrote:
-> * Yu-cheng Yu:
+On Tue, Jun 18, 2019 at 05:19:47PM +0530, Puranjay Mohan wrote:
+> Fix CRAMFS_BLK_FLAG_UNCOMPRESSED to use "U" cast to avoid shifting signed
+> 32-bit value by 31 bits problem. This isn't a problem for kernel builds
+> with gcc.
 > 
-> > > I assumed that it would also parse the main executable and make
-> > > adjustments based on that.
-> > 
-> > Yes, Linux also looks at the main executable's header, but not its
-> > NT_GNU_PROPERTY_TYPE_0 if there is a loader.
-> > 
-> > > 
-> > > ld.so can certainly provide whatever the kernel needs.  We need to tweak
-> > > the existing loader anyway.
-> > > 
-> > > No valid statically-linked binaries exist today, so this is not a
-> > > consideration at this point.
-> > 
-> > So from kernel, we look at only PT_GNU_PROPERTY?
+> This could be problem since this header is part of public API which
+> could be included for builds using compilers that don't handle this
+> condition safely resulting in undefined behavior.
 > 
-> If you don't parse notes/segments in the executable for CET, then yes.
-> We can put PT_GNU_PROPERTY into the loader.
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
 
-Thanks!
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+You should resend this and cc: Nicolas Pitre <nico@fluxnic.net> as he is
+the cramfs maintainer.
+
+thanks,
+
+greg k-h
