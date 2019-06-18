@@ -2,209 +2,100 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8BFC31E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:05:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A8AC31E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE8DF20833
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98BF420665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:11:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="VCqGRQfq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727711AbfFRDE7 (ORCPT
+        id S1726818AbfFRDLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 23:04:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:60266 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRDE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 23:04:59 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 20:04:58 -0700
-X-ExtLoop1: 1
-Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.196.224]) ([10.239.196.224])
-  by orsmga003.jf.intel.com with ESMTP; 17 Jun 2019 20:04:55 -0700
-Subject: Re: [PATCH RESEND v3 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-To:     Xiaoyao Li <xiaoyao.li@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com, fenghua.yu@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jingqi.liu@intel.com
-References: <20190616095555.20978-1-tao3.xu@intel.com>
- <20190616095555.20978-3-tao3.xu@intel.com>
- <d99b2ae1-38fc-0b71-2613-8131decc923a@intel.com>
-From:   Tao Xu <tao3.xu@intel.com>
-Message-ID: <3468075c-9289-b2b5-8310-e1f39524a8e9@intel.com>
-Date:   Tue, 18 Jun 2019 11:04:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <d99b2ae1-38fc-0b71-2613-8131decc923a@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Mon, 17 Jun 2019 23:11:12 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:37765 "EHLO
+        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRDLM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 23:11:12 -0400
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id x5I39ceS006664;
+        Tue, 18 Jun 2019 12:09:38 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x5I39ceS006664
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560827379;
+        bh=w4XaL6DWiMYpTTLcCsZBTR/341ShCtHYlKihuEWxr64=;
+        h=From:To:Cc:Subject:Date:From;
+        b=VCqGRQfqg7FKlT6XeLpvCjmUWP/l/a5jGC4yCAMB5tT8HiAkKBU5yPYOse0+DHylm
+         t4ucw7vLHJX5d8laPEl2rYvJKjwQYLBozaAjxFXI9Ev2TDg1d9ZJaV+qS6TZlXjH8h
+         +BtM/qmZLZ8+Tz8Gvcr0OsBvMXdN7dEDV4GBnVqjj2D9vQ2Z6fBqn12huGQkby9ep1
+         hfEoHadDNqLmxptfBc7RttKdpktJoLEZKICRwS13qctmF+ZaHV7P4GRA1VPR5Wb2O0
+         Rh6XGQpYCnt3+1sfxVvyQm7hGeCFx6jM/t+iykeq0/mmkDcaeQkTEibbbOPEYsbdH/
+         UmL1tFervQqFg==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     Boris Brezillon <bbrezillon@kernel.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] jffs2: remove C++ style comments from uapi header
+Date:   Tue, 18 Jun 2019 12:09:26 +0900
+Message-Id: <20190618030926.30616-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/2019 11:32 AM, Xiaoyao Li wrote:
-> 
-> 
-> On 6/16/2019 5:55 PM, Tao Xu wrote:
->> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
->> to determines the maximum time in TSC-quanta that the processor can 
->> reside
->> in either C0.1 or C0.2.
->>
->> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
->> IA32_UMWAIT_CONTROL between host and guest. The variable
->> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
->> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
->>
->> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
->> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
->> Signed-off-by: Tao Xu <tao3.xu@intel.com>
->> ---
->>   arch/x86/kvm/vmx/vmx.c  | 36 ++++++++++++++++++++++++++++++++++++
->>   arch/x86/kvm/vmx/vmx.h  |  3 +++
->>   arch/x86/power/umwait.c |  3 ++-
->>   3 files changed, 41 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index b35bfac30a34..f33a25e82cb8 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -1679,6 +1679,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, 
->> struct msr_data *msr_info)
->>   #endif
->>       case MSR_EFER:
->>           return kvm_get_msr_common(vcpu, msr_info);
->> +    case MSR_IA32_UMWAIT_CONTROL:
->> +        if (!vmx_waitpkg_supported())
->> +            return 1;
->> +
->> +        msr_info->data = vmx->msr_ia32_umwait_control;
->> +        break;
->>       case MSR_IA32_SPEC_CTRL:
->>           if (!msr_info->host_initiated &&
->>               !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
->> @@ -1841,6 +1847,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, 
->> struct msr_data *msr_info)
->>               return 1;
->>           vmcs_write64(GUEST_BNDCFGS, data);
->>           break;
->> +    case MSR_IA32_UMWAIT_CONTROL:
->> +        if (!vmx_waitpkg_supported())
->> +            return 1;
->> +
->> +        if (!data)
->> +            break;
->> +
-> 
-> Why cannot clear it to zero?
-> 
+Linux kernel tolerates C++ style comments these days. Actually, the
+SPDX License tags for .c files start with //.
 
-After read the kernel code of umwait again and test it again, host can 
-set it to 0, when we set sys max_time to 0. So I am wondering to remove 
-the "if (!data)" and set the value of msr value to 0x186a0(maxtime = 
-100000) when KVM initialization.
+On the other hand, uapi headers are written in more strict C, where
+the C++ comment style is forbidden.
 
-And considering we use "-overcommit cpu-pm=on" to use umwait in QEMU 
-side. It means guest can over-commit the host CPU, so set to 0 make sense.
+I simply dropped these lines instead of fixing the comment style.
 
->> +        vmx->msr_ia32_umwait_control = data;
->> +        break;
->>       case MSR_IA32_SPEC_CTRL:
->>           if (!msr_info->host_initiated &&
->>               !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
->> @@ -4126,6 +4141,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu 
->> *vcpu, bool init_event)
->>       vmx->rmode.vm86_active = 0;
->>       vmx->spec_ctrl = 0;
->> +    vmx->msr_ia32_umwait_control = 0;
->> +
->>       vcpu->arch.microcode_version = 0x100000000ULL;
->>       vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->>       kvm_set_cr8(vcpu, 0);
->> @@ -6339,6 +6356,23 @@ static void atomic_switch_perf_msrs(struct 
->> vcpu_vmx *vmx)
->>                       msrs[i].host, false);
->>   }
->> +static void atomic_switch_ia32_umwait_control(struct vcpu_vmx *vmx)
->> +{
->> +    u64 host_umwait_control;
->> +
->> +    if (!vmx_waitpkg_supported())
->> +        return;
->> +
->> +    host_umwait_control = umwait_control_cached;
->> +
-> 
-> It's redundant to define host_umwait_control and this line, we can just 
-> use umwait_control_cached.
+This code has been always commented out since it was added around
+Linux 2.4.9 (i.e. commented out for more than 17 years).
 
-Thanks for reminding.
-> 
->> +    if (vmx->msr_ia32_umwait_control != host_umwait_control)
->> +        add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
->> +                      vmx->msr_ia32_umwait_control,
->> +                      host_umwait_control, false);
-> 
-> The bit 1 is reserved, at least, we need to do below to ensure not 
-> modifying the reserved bit:
-> 
->      guest_val = (vmx->msr_ia32_umwait_control & ~BIT_ULL(1)) |
->              (host_val & BIT_ULL(1))
-> 
->> +    else
->> +        clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
->> +}
->> +
->>   static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
->>   {
->>       vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
->> @@ -6447,6 +6481,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
->>       atomic_switch_perf_msrs(vmx);
->> +    atomic_switch_ia32_umwait_control(vmx);
->> +
->>       vmx_update_hv_timer(vcpu);
->>       /*
->> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
->> index 61128b48c503..8485bec7c38a 100644
->> --- a/arch/x86/kvm/vmx/vmx.h
->> +++ b/arch/x86/kvm/vmx/vmx.h
->> @@ -14,6 +14,8 @@
->>   extern const u32 vmx_msr_index[];
->>   extern u64 host_efer;
->> +extern u32 umwait_control_cached;
->> +
->>   #define MSR_TYPE_R    1
->>   #define MSR_TYPE_W    2
->>   #define MSR_TYPE_RW    3
->> @@ -194,6 +196,7 @@ struct vcpu_vmx {
->>   #endif
->>       u64              spec_ctrl;
->> +    u64              msr_ia32_umwait_control;
->>       u32 vm_entry_controls_shadow;
->>       u32 vm_exit_controls_shadow;
->> diff --git a/arch/x86/power/umwait.c b/arch/x86/power/umwait.c
->> index 7fa381e3fd4e..2e6ce4cbccb3 100644
->> --- a/arch/x86/power/umwait.c
->> +++ b/arch/x86/power/umwait.c
->> @@ -9,7 +9,8 @@
->>    * MSR value. By default, umwait max time is 100000 in TSC-quanta 
->> and C0.2
->>    * is enabled
->>    */
->> -static u32 umwait_control_cached = 100000;
->> +u32 umwait_control_cached = 100000;
->> +EXPORT_SYMBOL_GPL(umwait_control_cached);
->>   /*
->>    * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL 
->> MSR
->>
+'Maybe later...' will never happen.
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Changes in v2:
+  - Delete the comments entirely instead of fixing the comment style
+
+ include/uapi/linux/jffs2.h | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/include/uapi/linux/jffs2.h b/include/uapi/linux/jffs2.h
+index a18b719f49d4..784ba0b9690a 100644
+--- a/include/uapi/linux/jffs2.h
++++ b/include/uapi/linux/jffs2.h
+@@ -77,11 +77,6 @@
+ 
+ #define JFFS2_ACL_VERSION		0x0001
+ 
+-// Maybe later...
+-//#define JFFS2_NODETYPE_CHECKPOINT (JFFS2_FEATURE_RWCOMPAT_DELETE | JFFS2_NODE_ACCURATE | 3)
+-//#define JFFS2_NODETYPE_OPTIONS (JFFS2_FEATURE_RWCOMPAT_COPY | JFFS2_NODE_ACCURATE | 4)
+-
+-
+ #define JFFS2_INO_FLAG_PREREAD	  1	/* Do read_inode() for this one at
+ 					   mount time, don't wait for it to
+ 					   happen later */
+-- 
+2.17.1
 
