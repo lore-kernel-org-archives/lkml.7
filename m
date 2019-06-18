@@ -2,114 +2,90 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D689C46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AC1C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:09:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664532147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D401B2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:09:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730175AbfFRSIz (ORCPT
+        id S1730281AbfFRSJd convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:08:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:53354 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbfFRSIz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:08:55 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 91FB9344;
-        Tue, 18 Jun 2019 11:08:54 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2194F3F738;
-        Tue, 18 Jun 2019 11:08:53 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 19:08:51 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc:     joro@8bytes.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        robin.murphy@arm.com, jacob.jun.pan@linux.intel.com,
-        iommu@lists.linux-foundation.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        eric.auger@redhat.com
-Subject: Re: [PATCH 3/8] iommu/arm-smmu-v3: Support platform SSID
-Message-ID: <20190618180851.GK4270@fuggles.cambridge.arm.com>
-References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
- <20190610184714.6786-4-jean-philippe.brucker@arm.com>
+        Tue, 18 Jun 2019 14:09:33 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35409 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727616AbfFRSJd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:09:33 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d23so16552012qto.2;
+        Tue, 18 Jun 2019 11:09:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=oHj24vcv49o6J15KAKRxHCuXIYgSsjgYc3eEZOnK3fk=;
+        b=tQcQ69As5SqfD/1vGLzwiRL0F6PFGXWQQhGNNct46AHQt+KVM4kJkJe9eCC8QKDCSI
+         86ODxEiBpgThBMlpUbbX8a8HYRsNSR1QbarY89ZSs32miIK6arxCWhSLtfVK+NUj4Q93
+         z9z6BEOECw3ApM4+nO5WJgtZ3Y2g7u3wNQJ4aQdJMz7XxUysPfq5iwr3XgeGW0lmWJhm
+         Az5ti351J51onEikochzvgCFq7rnOEMSeGPkyCNl5jCbsUfRn25rGq7k+iUWmxCiE1MW
+         Zzrjkjmzn0QZvoJySk2SyyXK1BgLoxuVsA9lkbKJ3LiOe+3FMMjByU12ZIZ9ud9gcH63
+         VRsQ==
+X-Gm-Message-State: APjAAAWagJJy7Ek3waF9Wx6tlMnxlC9K4DeXk53jLHC/0r2tIBc/Kqpt
+        M/TFq0eBSxOvi888M5U6P1nukXOGws8Jl/3NJwg=
+X-Google-Smtp-Source: APXvYqzoeNQ+qNXk+Bqr/BBsWwStrS4xCx8wxHWRCYgGKPvM4hp6VttYyVgzD05adAZxSxyf/ZDZB37DLa0Eb9Zc8Eg=
+X-Received: by 2002:aed:2bc1:: with SMTP id e59mr81171140qtd.7.1560881371987;
+ Tue, 18 Jun 2019 11:09:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610184714.6786-4-jean-philippe.brucker@arm.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+References: <20190304204019.2142770-1-arnd@arndb.de> <20190308160441.ler2hs44oaozoq7w@salvia>
+ <CAF1oqRAuk7h2Z2iheq3Ze1vTMNWLf5HHn83fZt07hXA4nOPbAg@mail.gmail.com>
+In-Reply-To: <CAF1oqRAuk7h2Z2iheq3Ze1vTMNWLf5HHn83fZt07hXA4nOPbAg@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 18 Jun 2019 20:09:15 +0200
+Message-ID: <CAK8P3a2Go0=9wMfOvdw+GGRNqNZ9c2TJy=jN6dB1VR3K8qz-rg@mail.gmail.com>
+Subject: Re: [PATCH] netfilter: nf_conntrack_sip: fix IPV6 dependency
+To:     =?UTF-8?B?QWxpbiBOxINzdGFj?= <alin.nastac@gmail.com>
+Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        =?UTF-8?B?TcOhdMOpIEVja2w=?= <ecklm94@gmail.com>,
+        Fernando Fernandez Mancera <ffmancera@riseup.net>,
+        netfilter-devel <netfilter-devel@vger.kernel.org>,
+        coreteam@netfilter.org, Networking <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 07:47:09PM +0100, Jean-Philippe Brucker wrote:
-> For platform devices that support SubstreamID (SSID), firmware provides
-> the number of supported SSID bits. Restrict it to what the SMMU supports
-> and cache it into master->ssid_bits.
-> 
-> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-> ---
->  drivers/iommu/arm-smmu-v3.c | 11 +++++++++++
->  drivers/iommu/of_iommu.c    |  6 +++++-
->  include/linux/iommu.h       |  1 +
->  3 files changed, 17 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-> index 4d5a694f02c2..3254f473e681 100644
-> --- a/drivers/iommu/arm-smmu-v3.c
-> +++ b/drivers/iommu/arm-smmu-v3.c
-> @@ -604,6 +604,7 @@ struct arm_smmu_master {
->  	struct list_head		domain_head;
->  	u32				*sids;
->  	unsigned int			num_sids;
-> +	unsigned int			ssid_bits;
->  	bool				ats_enabled		:1;
->  };
->  
-> @@ -2097,6 +2098,16 @@ static int arm_smmu_add_device(struct device *dev)
->  		}
->  	}
->  
-> +	master->ssid_bits = min(smmu->ssid_bits, fwspec->num_pasid_bits);
-> +
-> +	/*
-> +	 * If the SMMU doesn't support 2-stage CD, limit the linear
-> +	 * tables to a reasonable number of contexts, let's say
-> +	 * 64kB / sizeof(ctx_desc) = 1024 = 2^10
-> +	 */
-> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
-> +		master->ssid_bits = min(master->ssid_bits, 10U);
+On Fri, Mar 8, 2019 at 5:23 PM Alin Năstac <alin.nastac@gmail.com> wrote:
 
-Please introduce a #define for the 10, so that it is computed in the way
-you describe in the comment (a bit like we do for things like queue sizes).
+> On Fri, Mar 8, 2019 at 5:04 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
+> > On Mon, Mar 04, 2019 at 09:40:12PM +0100, Arnd Bergmann wrote:
+> > > With CONFIG_IPV6=m and CONFIG_NF_CONNTRACK_SIP=y, we now get a link failure:
+> > >
+> > > net/netfilter/nf_conntrack_sip.o: In function `process_sdp':
+> > > nf_conntrack_sip.c:(.text+0x4344): undefined reference to `ip6_route_output_flags'
+> >
+> > I see. We can probably use nf_route() instead.
+> >
+> > Or if needed, use struct nf_ipv6_ops for this.
+> >
+> >         if (v6ops)
+> >                 ret = v6ops->route_xyz(...);
+> >
+> > @Alin: Would you send us a patch to do so to fix a3419ce3356cf1f
+> > netfilter: nf_conntrack_sip: add sip_external_media logic".
+>
+> nf_ip6_route(net, &dst, &fl6, false) seems to be appropriate.
+> I'll send the patch Monday.
 
-> +
->  	group = iommu_group_get_for_dev(dev);
->  	if (!IS_ERR(group)) {
->  		iommu_group_put(group);
-> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
-> index f04a6df65eb8..04f4f6b95d82 100644
-> --- a/drivers/iommu/of_iommu.c
-> +++ b/drivers/iommu/of_iommu.c
-> @@ -206,8 +206,12 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
->  			if (err)
->  				break;
->  		}
-> -	}
->  
-> +		fwspec = dev_iommu_fwspec_get(dev);
-> +		if (!err && fwspec)
-> +			of_property_read_u32(master_np, "pasid-num-bits",
-> +					     &fwspec->num_pasid_bits);
-> +	}
+I see the original bug I reported is still there. Can you send that patch
+you had planned to do?
 
-Hmm. Do you know if there's anything in ACPI for this?
-
-Otherwise, patch looks fine. Thanks.
-
-Will
+       Arnd
