@@ -2,180 +2,128 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8722C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC52C31E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B787D2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA451208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:58:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560823081;
+	bh=8eJzG0QkG+7iwVlI/t7yW6Fig5RNCmwWmykPQq2nGgA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BIdtt9lixP8OMC6yEW+R2uPJWvMVARX7aC7cHZKKl/nFwR2bWzLqyVlNA79O8g7k/
+	 BzUnqDkkAVWPhbiOxBqs9KL+Ul8gX0pTnGnt5ke5h+CPXF8c1tL/4PE/PN1L1rUH7w
+	 4jzECA11SPhfmy7cCO75geev8Y/PwCVPMqz2KX3c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727765AbfFRB4r (ORCPT
+        id S1727241AbfFRB6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:56:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33912 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 21:58:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34356 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbfFRB4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:56:47 -0400
-Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        id S1726047AbfFRB57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 21:57:59 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2A8462080C;
-        Tue, 18 Jun 2019 01:56:45 +0000 (UTC)
-Date:   Mon, 17 Jun 2019 21:56:43 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 10/21] tracing/probe: Split trace_event related data
- from trace_probe
-Message-ID: <20190617215643.05a33541@oasis.local.home>
-In-Reply-To: <155931589667.28323.6107724588059072406.stgit@devnote2>
-References: <155931578555.28323.16360245959211149678.stgit@devnote2>
-        <155931589667.28323.6107724588059072406.stgit@devnote2>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 52D602080C;
+        Tue, 18 Jun 2019 01:57:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560823079;
+        bh=8eJzG0QkG+7iwVlI/t7yW6Fig5RNCmwWmykPQq2nGgA=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=OE+XgpgtZhH0f75UQlTQL3rSRdRRP05S+vKJvMay+8BmyMAjkXZLwJC6z89WkLyWv
+         6xTZtwGGzs/c3VHzQzw94somd65KvS6zN7TbnwRgUQ+WTFBiYdGcHlHPlJeDB/vFEn
+         R7E5dmgyl20XVW7R8vwXalARxFtvIQNepfCrhC/4=
+Date:   Mon, 17 Jun 2019 18:57:57 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Baoquan He <bhe@redhat.com>, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>,
+        linux-acpi@vger.kernel.org,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1 1/6] mm: Section numbers use the type "unsigned long"
+Message-Id: <20190617185757.b57402b465caff0cf6f85320@linux-foundation.org>
+In-Reply-To: <701e8feb-cbf8-04c1-758c-046da9394ac1@c-s.fr>
+References: <20190614100114.311-1-david@redhat.com>
+        <20190614100114.311-2-david@redhat.com>
+        <20190614120036.00ae392e3f210e7bc9ec6960@linux-foundation.org>
+        <701e8feb-cbf8-04c1-758c-046da9394ac1@c-s.fr>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  1 Jun 2019 00:18:16 +0900
-Masami Hiramatsu <mhiramat@kernel.org> wrote:
+On Sat, 15 Jun 2019 10:06:54 +0200 Christophe Leroy <christophe.leroy@c-s.f=
+r> wrote:
 
-> Split the trace_event related data from trace_probe data structure
-> and introduce trace_probe_event data structure for its folder.
-> This trace_probe_event data structure can have multiple trace_probe.
-> 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  kernel/trace/trace_kprobe.c |   99 ++++++++++++++++++++++-------------
->  kernel/trace/trace_probe.c  |   53 +++++++++++++------
->  kernel/trace/trace_probe.h  |   48 +++++++++++++----
->  kernel/trace/trace_uprobe.c |  123 +++++++++++++++++++++++++++++--------------
->  4 files changed, 221 insertions(+), 102 deletions(-)
-> 
-> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
-> index 9d483ad9bb6c..633edb88cd0e 100644
-> --- a/kernel/trace/trace_kprobe.c
-> +++ b/kernel/trace/trace_kprobe.c
-> @@ -180,9 +180,17 @@ unsigned long trace_kprobe_address(struct trace_kprobe *tk)
->  	return addr;
->  }
->  
-> +static nokprobe_inline struct trace_kprobe *
-> +trace_kprobe_primary_from_call(struct trace_event_call *call)
-> +{
-> +	struct trace_probe *tp = trace_probe_primary_from_call(call);
-> +
-> +	return container_of(tp, struct trace_kprobe, tp);
+>=20
+>=20
+> Le 14/06/2019 =E0 21:00, Andrew Morton a =E9crit=A0:
+> > On Fri, 14 Jun 2019 12:01:09 +0200 David Hildenbrand <david@redhat.com>=
+ wrote:
+> >=20
+> >> We are using a mixture of "int" and "unsigned long". Let's make this
+> >> consistent by using "unsigned long" everywhere. We'll do the same with
+> >> memory block ids next.
+> >>
+> >> ...
+> >>
+> >> -	int i, ret, section_count =3D 0;
+> >> +	unsigned long i;
+> >>
+> >> ...
+> >>
+> >> -	unsigned int i;
+> >> +	unsigned long i;
+> >=20
+> > Maybe I did too much fortran back in the day, but I think the
+> > expectation is that a variable called "i" has type "int".
+> >=20
+> > This?
+> >=20
+> >=20
+> >=20
+> > s/unsigned long i/unsigned long section_nr/
+>=20
+>  From my point of view you degrade readability by doing that.
+>=20
+> section_nr_to_pfn(mem->start_section_nr + section_nr);
+>=20
+> Three times the word 'section_nr' in one line, is that worth it ? Gives=20
+> me headache.
+>=20
+> Codying style says the following, which makes full sense in my opinion:
+>=20
+> LOCAL variable names should be short, and to the point.  If you have
+> some random integer loop counter, it should probably be called ``i``.
+> Calling it ``loop_counter`` is non-productive, if there is no chance of it
+> being mis-understood.
 
+Well.  It did say "integer".  Calling an unsigned long `i' is flat out
+misleading.
 
-Hmm, is there a possibility that trace_probe_primary_from_call() may
-not have a primary?
+> What about just naming it 'nr' if we want to use something else than 'i' ?
 
-
-> +}
-> +
->  bool trace_kprobe_on_func_entry(struct trace_event_call *call)
->  {
-> -	struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
-> +	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
->  
->  	return kprobe_on_func_entry(tk->rp.kp.addr,
->  			tk->rp.kp.addr ? NULL : tk->rp.kp.symbol_name,
-> @@ -191,7 +199,7 @@ bool trace_kprobe_on_func_entry(struct trace_event_call *call)
->  
->  bool trace_kprobe_error_injectable(struct trace_event_call *call)
->  {
-> -	struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
-> +	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
->  
->  	return within_error_injection_list(trace_kprobe_address(tk));
->  }
-> @@ -295,28 +303,40 @@ static inline int __enable_trace_kprobe(struct trace_kprobe *tk)
->   * Enable trace_probe
->   * if the file is NULL, enable "perf" handler, or enable "trace" handler.
->   */
-> -static int
-> -enable_trace_kprobe(struct trace_kprobe *tk, struct trace_event_file *file)
-> +static int enable_trace_kprobe(struct trace_event_call *call,
-> +				struct trace_event_file *file)
->  {
-> -	bool enabled = trace_probe_is_enabled(&tk->tp);
-> -	int ret = 0;
-> +	struct trace_probe *pos, *tp = trace_probe_primary_from_call(call);
-> +	struct trace_kprobe *tk;
-> +	bool enabled = trace_probe_is_enabled(tp);
-> +	int ret = 0, ecode;
->  
->  	if (file) {
-> -		ret = trace_probe_add_file(&tk->tp, file);
-> +		ret = trace_probe_add_file(tp, file);
->  		if (ret)
->  			return ret;
->  	} else
-> -		trace_probe_set_flag(&tk->tp, TP_FLAG_PROFILE);
-> +		trace_probe_set_flag(tp, TP_FLAG_PROFILE);
->  
->  	if (enabled)
->  		return 0;
->  
-> -	ret = __enable_trace_kprobe(tk);
-> -	if (ret) {
-> +	enabled = false;
-> +	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
-> +		tk = container_of(pos, struct trace_kprobe, tp);
-> +		ecode = __enable_trace_kprobe(tk);
-> +		if (ecode)
-> +			ret = ecode;	/* Save the last error code */
-> +		else
-> +			enabled = true;
-
-So, if we have some enabled but return an error code, what should a
-caller think of that? Wouldn't it be an inconsistent state?
-
--- Steve
+Sure, that works.
 
 
-> +	}
-> +
-> +	if (!enabled) {
-> +		/* No probe is enabled. Roll back */
->  		if (file)
-> -			trace_probe_remove_file(&tk->tp, file);
-> +			trace_probe_remove_file(tp, file);
->  		else
-> -			trace_probe_clear_flag(&tk->tp, TP_FLAG_PROFILE);
-> +			trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
->  	}
->  
->
-
-
-> +static inline struct trace_probe_event *
-> +trace_probe_event_from_call(struct trace_event_call *event_call)
-> +{
-> +	return container_of(event_call, struct trace_probe_event, call);
-> +}
-> +
-> +static inline struct trace_probe *
-> +trace_probe_primary_from_call(struct trace_event_call *call)
-> +{
-> +	struct trace_probe_event *tpe = trace_probe_event_from_call(call);
-> +
-> +	return list_first_entry(&tpe->probes, struct trace_probe, list);
-> +}
-> +
-> +static inline struct list_head *trace_probe_probe_list(struct trace_probe *tp)
-> +{
-> +	return &tp->event->probes;
->  }
->  
