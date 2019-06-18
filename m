@@ -2,113 +2,216 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E56C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 263B2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B742520861
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:20:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbHv0ugu"
+	by mail.kernel.org (Postfix) with ESMTP id EA74C2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:24:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfFRBUM (ORCPT
+        id S1726554AbfFRBYX convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:20:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:38785 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRBUM (ORCPT
+        Mon, 17 Jun 2019 21:24:23 -0400
+Received: from twhmllg4.macronix.com ([211.75.127.132]:53341 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRBYX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:20:12 -0400
-Received: by mail-pl1-f195.google.com with SMTP id f97so4968266plb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=AuHccIdSxPbt86ZJkXZzP91IaZ8/7FsD2wmDGIVu61M=;
-        b=gbHv0ugum9zXI3n7MsAdeKtL3MTfXanNJBbnNSGb+cUVrX9fJmnj2pKhTm1F2nsD9d
-         a5EAtPuIZCywAG1YhzX/PBFeCqnKlbHe+e0cALtBivbUz3WO13WyEUv1Wxxy7hOb+5Z8
-         m8CKot7KkocPxV5DaCPWnWGhlZo9FLGDSMpNO98qXEiOXMuWkPJq/GfWIDxourXzRjWE
-         ETXRRAv/+E8m65I5r+eTblPVFJ/RbDY9F7xSPWVJj3/xjZ66G7N53NFLE1M/MkQz3fn+
-         yYKNoazoG5Mh5DztKJXb5Ia02uaDQDHImDQlSFGvRW5TpFvvgCXAzCC60PrvqLS9d8SK
-         eg2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=AuHccIdSxPbt86ZJkXZzP91IaZ8/7FsD2wmDGIVu61M=;
-        b=loPZGAGeNPS4eqH+v7Pidr1sI39JwAyzpicjkPgitquYSjV55WrIz/meKpZvW6qIl/
-         314LX4cqx39udyDlVpLWXVLX/t93atVXenDcicHggqnM2K239kvEvhIcBgd0RvaX+fxN
-         /79lnIwRNMIjXIMmhF6jACDwToWcphVwo3E4g8ZXLKi343T6ejM9A1qDkPO0HCbxJS5E
-         g0PFXnZIRPBZL9Hs4QcGpyAWfgsyV3P/fmfwlKulbAF2erIuynHqjPYlKUUrQpBvPrwO
-         t5O6M+YA+XBWZ/ZGqy8pGPl/MOSX8z/9NDp2S8kBq5eOjopinDfKCethsp1Edcji3333
-         RZNw==
-X-Gm-Message-State: APjAAAVPMkKx4BrqpBCb6/OVgbAWQmpyDFNPv9tsjazJe+zpWpD4etPJ
-        FkNG4rbVQXnyKOhkPzLjd24=
-X-Google-Smtp-Source: APXvYqwyQ1urEoas4pLxiFnN/OcxePRhS51EIPNamFdJr3m1TCl0OnaXoJfEWuhuzFCUaOHkzluMmA==
-X-Received: by 2002:a17:902:42a5:: with SMTP id h34mr74671190pld.16.1560820811540;
-        Mon, 17 Jun 2019 18:20:11 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id a3sm11674246pff.122.2019.06.17.18.20.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 18:20:11 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 06:50:07 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: hal: rtl8723b_rf6052: fix spaces
- preferred around unary operator
-Message-ID: <20190618012007.GA7871@hari-Inspiron-1545>
+        Mon, 17 Jun 2019 21:24:23 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x5I1OD5R094554;
+        Tue, 18 Jun 2019 09:24:14 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
+        by Forcepoint Email with ESMTP id CD86B7F724E890CDD5EA;
+        Tue, 18 Jun 2019 09:24:13 +0800 (CST)
+In-Reply-To: <20190617143510.4ded5728@xps13>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
+        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
+        <20190520142333.390091d5@xps13> <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
+        <20190527144250.71908bd9@xps13> <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw> <20190617143510.4ded5728@xps13>
+To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
+        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
+        mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at,
+        robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+X-KeepSent: 1C1397B4:241DC339-4825841D:000482A2;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Tue, 18 Jun 2019 09:24:14 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/06/18 AM 09:24:13,
+        Serialize complete at 2019/06/18 AM 09:24:13
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 8BIT
+X-MAIL: TWHMLLG4.macronix.com x5I1OD5R094554
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ERROR: spaces required around that '<<' (ctx:VxV)
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Hi Miquel,
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c b/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
-index aa45a84..c205345 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
-@@ -114,12 +114,12 @@ static int phy_RF6052_Config_ParaFile(struct adapter *Adapter)
- 			break;
- 		case RF_PATH_B:
- 		case RF_PATH_D:
--			u4RegValue = PHY_QueryBBReg(Adapter, pPhyReg->rfintfs, bRFSI_RFENV<<16);
-+			u4RegValue = PHY_QueryBBReg(Adapter, pPhyReg->rfintfs, bRFSI_RFENV << 16);
- 			break;
- 		}
+> 
+> > > > > > > > +static void mxic_nand_select_chip(struct nand_chip *chip, 
+int 
+> > 
+> > > > chipnr) 
+> > > > > > > 
+> > > > > > > _select_target() is preferred now 
+> > > > > > 
+> > > > > > Do you mean I implement mxic_nand_select_target() to control 
+#CS ?
+> > > > > > 
+> > > > > > If so, I need to call mxic_nand_select_target( ) to control 
+#CS ON
+> > > > > > and then #CS OFF in _exec_op() due to nand_select_target()<in  
+
+> > > > nand_base,c> 
+> > > > > > is still calling chip->legacy.select_chip ? 
+> > > > > 
+> > > > > You must forget about the ->select_chip() callback. Now it 
+should be
+> > > > > handled directly from the controller driver. Please have a look 
+at 
+> > the
+> > > > > commit pointed against the marvell_nand.c driver. 
+> > > > 
+> > > > I have no Marvell NFC datasheet and have one question.
+> > > > 
+> > > > In marvell_nand.c, there is no xxx_deselect_target() or 
+> > > > something like that doing #CS OFF.
+> > > > marvell_nfc_select_target() seems always to make one of chip or 
+die
+> > > > #CS keep low.
+> > > > 
+> > > > Is it right ? 
+> > > 
+> > > Yes, AFAIR there is no "de-assert" mechanism in this controller.
+> > > 
+> > > > 
+> > > > How to make all #CS keep high for NAND to enter 
+> > > > low-power standby mode if driver don't use "legacy.select_chip()" 
+? 
+> > > 
+> > > See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip() 
+optional
+> > > when ->exec_op() is implemented") which states:
+> > > 
+> > >         "When [->select_chip() is] not implemented, the core is 
+assuming
+> > >    the CS line is automatically asserted/deasserted by the driver 
+> > >    ->exec_op() implementation." 
+> > > 
+> > > Of course, the above is right only when the controller driver 
+supports
+> > > the ->exec_op() interface. 
+> > 
+> > Currently, it seems that we will get the incorrect data and error
+> > operation due to CS in error toggling if CS line is controlled in 
+> > ->exec_op(). 
+> 
+> Most of the chips today are CS-don't-care, which chip are you using?
+
+I think CS-don't-care means read-write operation for NAND device to reside
+on the same memory bus as other Flash or SRAM devices. Other devices on 
+the 
+memory bus can then be accessed while the NAND Flash is busy with internal 
+
+operations. This capability is very important for designs that require 
+multiple
+NAND Flash devices on the same bus.
+
+> 
+> Is this behavior publicly documented?
+> 
+
+CS# pin goes High enter standby mode to reduce power consumption,
+i.e,. standby mode w/ CS# keep High, standby current: 10 uA (Typ for 3.3V 
+NAND)
+        otherwise, current is more than 1 mA.
+i.e,. page read current, 25 mA (Typ for 3.3V NAND)
  
- 		/*----Set RF_ENV enable----*/
--		PHY_SetBBReg(Adapter, pPhyReg->rfintfe, bRFSI_RFENV<<16, 0x1);
-+		PHY_SetBBReg(Adapter, pPhyReg->rfintfe, bRFSI_RFENV << 16, 0x1);
- 		udelay(1);/* PlatformStallExecution(1); */
- 
- 		/*----Set RF_ENV output high----*/
-@@ -163,7 +163,7 @@ static int phy_RF6052_Config_ParaFile(struct adapter *Adapter)
- 			break;
- 		case RF_PATH_B:
- 		case RF_PATH_D:
--			PHY_SetBBReg(Adapter, pPhyReg->rfintfs, bRFSI_RFENV<<16, u4RegValue);
-+			PHY_SetBBReg(Adapter, pPhyReg->rfintfs, bRFSI_RFENV << 16, u4RegValue);
- 			break;
- 		}
- 
--- 
-2.7.4
+
+> Is this LPM mode always activated?
+> 
+> > i.e,. 
+> > 
+> > 1) In nand_onfi_detect() to call nand_exec_op() twice by 
+> > nand_read_param_page_op() and annd_read_data_op()
+> > 
+> > 2) In nand_write_page_xxx to call nand_exec_op() many times by
+> > nand_prog_page_begin_op(), nand_write_data_op() and 
+> > nand_prog_page_end_op().
+> > 
+> > 
+> > Should we consider to add a CS line controller in struct 
+nand_controller
+> > i.e,.
+> > 
+> > struct nand_controller {
+> >          struct mutex lock;
+> >          const struct nand_controller_ops *ops;
+> > +          void (*select_chip)(struct nand_chip *chip, int cs);
+> > };
+> > 
+> > to replace legacy.select_chip() ?
+> > 
+> 
+> No, if really needed, we could add a "macro op done" flag in the nand
+> operation structure.
+> 
+
+Is this "macron op done" flag good for multiple NAND devices on
+the same bus ?
+
+Any other way to control CS# pin? if user application is really
+care of power consumption, i.e,. loT.
+
+> 
+> Thanks,
+> Miquèl
+
+thanks & best regards,
+Mason
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
 
