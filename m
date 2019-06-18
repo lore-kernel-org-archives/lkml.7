@@ -4,104 +4,120 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2D71C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD253C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A863B2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74C0D2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="osrgXa++"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X6s1zfB3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728934AbfFRINa (ORCPT
+        id S1728826AbfFRIP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:13:30 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35935 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfFRIN3 (ORCPT
+        Tue, 18 Jun 2019 04:15:57 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:36797 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfFRIP5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:13:29 -0400
-Received: by mail-wr1-f65.google.com with SMTP id n4so4770187wrs.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 01:13:28 -0700 (PDT)
+        Tue, 18 Jun 2019 04:15:57 -0400
+Received: by mail-wm1-f68.google.com with SMTP id u8so2147669wmm.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 01:15:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:content-transfer-encoding:in-reply-to
          :user-agent;
-        bh=06HNdPNgDbi2f1j2ONuEOl1EHxJYMZdY3r9dArsvaPQ=;
-        b=osrgXa++2Q+19SyQ1z7d1ONbADxeD3tCbVl2v95iwqfC2jN8JrzlBbSbotWm1ib1eH
-         k7pfiV8Atc1w84Uk1cJi29Cb/UH0z9GWMSdfcZVUWHhC1pWzLNZPt7jAEYRWVNgNRFJP
-         NqTDPRy3PAzP5J5RLPVLnNb322kTOi6Lsx7CDeIoXEPdV3UjpG1pw2m4vzq6tihzWGKg
-         9iJ7ltctXwXheg7nvUO2gp+tSjBbWlAAjX8rUnmWm8D+us+OU94WWgzoJc7Wpb2fspXj
-         4OfKrLEbehWaBOkEwT7wILE7J8EufELTCIawMLqMicz4oyI0EF2xahSvlbEdMWsufMqb
-         n9ig==
+        bh=g8vYSlEh40qjxrDzT9jGJ/rFo/H3u7VmlwgvhhLCV2w=;
+        b=X6s1zfB326S+/ukGcYonJRSv41H21bJmX0asSmEtS3cW/NnNEkkA5T7Jc0OpMmvwAl
+         cjn1f11luCYmOVnDrEuczcXmBpTbH1qqkbTZ7p18CvKiemyQ5+egQpkRnJLgQBJSVHSh
+         xVt//BFOfnt9VLqAwc2V0GKNDYZ1q09Fs9suqZyfwxHaiHRPv/eSHkNzZ9ndt/HdwLCY
+         w5cmaY6gTrktfL+n4vtt/Ii7KagLKrN9UP1AXk9j720IC5PVx5/fIlzJpRtXW6o2BIWT
+         vNWm2+LfHFsCAccfwhyMFQBlWUerWFMAo/4NyIgCeXjz7spHnXL8RhJvTla9CSnru8TV
+         Oe+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=06HNdPNgDbi2f1j2ONuEOl1EHxJYMZdY3r9dArsvaPQ=;
-        b=iFGvRB7nIVvJe+9WbdVkWKiBOy3y1O7C+H1Dt8j19S1f/x0Bhigma/goI8t2ZUaPcu
-         Eo5a4Q0O+QIY6C8x746s8iATK3E9NBHQKh6nr2LHnhCqsZirg9JZExVgqEMnUh8FjXNq
-         PU2Y2I3Kr7W9lV/YkvBbgx2Y5yiposi/gvAyv3mlGQoo/V3TCkAlD/aKSBbTQxlpKJd9
-         jfjADwkPCaepeAQ4j2WeAlhVPAhEhi/jt36OLrRxcrusBWBGeOBsDGXUoQ+6DDpFfq3t
-         RCQfEX2iFJsQiEdwTisDIRv8KLvlOiu/oEdZDmvgyP+sr0LkmVqnE78bOesrDveaSSWl
-         9G1Q==
-X-Gm-Message-State: APjAAAX8IenWIWJI/jdFPuCOXQwZf22Pj3NrwIta9TpqoqOIrnXNjft/
-        vPobbxoM46P4x49B06O1BRmoew==
-X-Google-Smtp-Source: APXvYqzwXi+RbIPkFmf4CacE1T+w7xAM0/5ckvB5TE8zDrHsOAfEV+IgJ4W1J07pX0Aa83hlfmc9WQ==
-X-Received: by 2002:adf:f6cb:: with SMTP id y11mr3195081wrp.245.1560845606659;
-        Tue, 18 Jun 2019 01:13:26 -0700 (PDT)
+        bh=g8vYSlEh40qjxrDzT9jGJ/rFo/H3u7VmlwgvhhLCV2w=;
+        b=X3VdE1Pr7THV3SHZQlHLqrSjuNMpeToEESVusCKP4MS3/W0yudaDJcmWP+5uA8yzhn
+         5MVBEsZGmPVLBhJF+R281ZHEO4DajJJ9mjAVfQcGeLUlKW2V5s4TvKpqfmvren+EOUgg
+         jp0LLZx5wkOIVchEl/W+RvBdt/LoL6QNAzzMl1B3j3NWP5YNkg6KGuPhiY2ABn8QMods
+         Zqf0SiQqQAtibqru89K4gr285OBL1/q/0Jfo4dygP+C6Z+8yOWoU2bN0/50dhmrqkNNY
+         NsL2EqbYDpZrjeK6V8rA9/bJUT5uwCK++LJFBVIAjg18cHWSjn0+KE+wvudE72X5mP8v
+         k8aA==
+X-Gm-Message-State: APjAAAVVDAdwnvSLdZApszX2EcSvNO55+1WhrHLyPFNf5LpORLsUL9h6
+        EHOTkr9P1/AGup0o3mDHJH3k9wYj2bA=
+X-Google-Smtp-Source: APXvYqzRL81ShqZ05aNVi640BmNpCaYsMEn0751A7X6xFT0/QeokhOt/u1bZkDJbm/+C1F+/FBa9vA==
+X-Received: by 2002:a7b:c313:: with SMTP id k19mr2233785wmj.2.1560845755075;
+        Tue, 18 Jun 2019 01:15:55 -0700 (PDT)
 Received: from dell ([2.27.35.243])
-        by smtp.gmail.com with ESMTPSA id v204sm1871127wma.20.2019.06.18.01.13.25
+        by smtp.gmail.com with ESMTPSA id p140sm1897862wme.31.2019.06.18.01.15.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Jun 2019 01:13:26 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 09:13:24 +0100
+        Tue, 18 Jun 2019 01:15:54 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 09:15:53 +0100
 From:   Lee Jones <lee.jones@linaro.org>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        lgirdwood@gmail.com, robh+dt@kernel.org, afaerber@suse.de,
-        linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org,
-        thomas.liau@actions-semi.com, devicetree@vger.kernel.org,
-        linus.walleij@linaro.org
-Subject: Re: [PATCH 3/4] regulator: Add regulator driver for ATC260x PMICs
-Message-ID: <20190618081324.GK16364@dell>
-References: <20190617155011.15376-1-manivannan.sadhasivam@linaro.org>
- <20190617155011.15376-4-manivannan.sadhasivam@linaro.org>
- <20190617163015.GD5316@sirena.org.uk>
- <20190617163413.GA16152@Mani-XPS-13-9360>
- <20190617170356.GG5316@sirena.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Subject: Re: [GIT PULL] MFD fixes for v5.2
+Message-ID: <20190618081553.GL16364@dell>
+References: <20190617100054.GE16364@dell>
+ <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190617170356.GG5316@sirena.org.uk>
+In-Reply-To: <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
 User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Mark Brown wrote:
+On Mon, 17 Jun 2019, Linus Torvalds wrote:
 
-> On Mon, Jun 17, 2019 at 10:04:13PM +0530, Manivannan Sadhasivam wrote:
+> On Mon, Jun 17, 2019 at 3:01 AM Lee Jones <lee.jones@linaro.org> wrote:
+> >
+> > Enjoy!
 > 
-> > > > + * Copyright (C) 2019 Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> No.
 > 
-> > > You definitely didn't assign copyright to your employer?
+> This is still entirely wrong.
 > 
-> > Yeah, that was intentional. This work is not part of Linaro working hours and
-> > falls into my spare time works where I'm trying to complete the upstream support
-> > for Actions Semi Owl series SoCs and target boards which I'm co-maintaining
-> > (sort of)...
+> You can't just randomly cast an "u32 *" to "unsigned long *".
 > 
-> OK...  seems very weird to use your work address for developing on
-> products closely associated with your employer in non-work time.
+> It wasn't correct when you did it the other way in regmap_read(), but
+> it's also not correct when you now for it this way for
+> for_each_set_bit().
+> 
+> You can do
+> 
+>     u32 regmap_bits;
+>     unsigned long bits;
+> 
+> and then
+> 
+>     ret = regmap_read(stmfx->map, STMFX_REG_IRQ_PENDING, &regmap_bits);
+>     ...
+>     bits = regmap_bits;
+>     for_each_set_bit(n, &bits, STMFX_REG_IRQ_SRC_MAX) ..
+> 
+> but casting pointers at either point is *completely* wrong.
+> 
+> Yes, yes, it happens to work on little-endian, but on a 64-bit
+> big-endian machine, the low 32 bits of the "unsigned int" will have
+> absolutely _zero_ overlap with the low 32 bits of the "unsigned long"
+> in memory.
+> 
+> When you moved the cast to for_each_set_bit(), it only moves the
+> access of the bogus bits to another place instead.
+> 
+> So that patch doesn't fix anything at all, it only moves the same error around.
 
-I use my Linaro address for everything.  So long as the work is of the
-required standard, I cannot see anyone having reservations.
+Good catch.  Thank you for taking the time to review Linus.
 
 -- 
 Lee Jones [李琼斯]
