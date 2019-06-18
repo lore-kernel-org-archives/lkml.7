@@ -2,183 +2,121 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55AEDC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:03:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E91C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:06:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3657420679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:03:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FC5120679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:06:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="E957Zdrl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfFRMDH (ORCPT
+        id S1726852AbfFRMGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:03:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:37354 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfFRMDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:03:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96F1A2B;
-        Tue, 18 Jun 2019 05:03:06 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D9E003F246;
-        Tue, 18 Jun 2019 05:03:04 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 13:02:59 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Alex =?iso-8859-1?Q?Benn=E9e?= <alex.bennee@linaro.org>,
-        Peter Maydell <peter.maydell@linaro.org>,
-        Alan Hayward <alan.hayward@arm.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] arm64/sve: fix genksyms generation
-Message-ID: <20190618120259.GA31041@fuggles.cambridge.arm.com>
-References: <20190617104237.2082388-1-arnd@arndb.de>
- <20190617112652.GB30800@fuggles.cambridge.arm.com>
- <CAK8P3a2aJNiLTyfRDqazJa2sAc-Jf-QShSZ7+4-whHSxKbLUVQ@mail.gmail.com>
- <20190617161330.GD30800@fuggles.cambridge.arm.com>
- <CAKv+Gu9Fh3anh6-TeDWZ+pL7rs7EBWZqvLXASRNjicGu7k+WKw@mail.gmail.com>
- <20190617164553.GI30800@fuggles.cambridge.arm.com>
+        Tue, 18 Jun 2019 08:06:00 -0400
+Received: from mail-eopbgr80075.outbound.protection.outlook.com ([40.107.8.75]:58519
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725934AbfFRMGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:06:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=gcWx94Q5Uyanjwk94sd/nnI7jx4KAUy+b3+ehsY3k4Q=;
+ b=E957Zdrl47Xy2d8/21jBLw0AoGcaRpypw9uoK2UYZY7K54Tp7SCKA5NE1/0ZOD0DzvzkDp3yPVLrp0jXvMFOHURpZt2uu6Qrp6XB8oEzqyPprDIKzHu8vS6xHJNWhBOa6ctXkObdt1XIiEASjFMdiwtSWEpEHQ+jXxMaspoPmPw=
+Received: from DB6PR0501MB2342.eurprd05.prod.outlook.com (10.168.56.21) by
+ DB6PR0501MB2328.eurprd05.prod.outlook.com (10.168.56.27) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.15; Tue, 18 Jun 2019 12:05:56 +0000
+Received: from DB6PR0501MB2342.eurprd05.prod.outlook.com
+ ([fe80::ec3d:c810:e8d8:8aef]) by DB6PR0501MB2342.eurprd05.prod.outlook.com
+ ([fe80::ec3d:c810:e8d8:8aef%9]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
+ 12:05:56 +0000
+From:   Shalom Toledo <shalomt@mellanox.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>
+CC:     Petr Machata <petrm@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: arm32 build failure after
+ 992aa864dca068554802a65a467a2640985cc213
+Thread-Topic: arm32 build failure after
+ 992aa864dca068554802a65a467a2640985cc213
+Thread-Index: AQHVJXeaQJyu+P7LqEmJZmmYcFVfYqahUWoA
+Date:   Tue, 18 Jun 2019 12:05:56 +0000
+Message-ID: <60390608-aec3-503d-e4f2-2b4e93aeefaa@mellanox.com>
+References: <20190618014604.GA17174@archlinux-epyc>
+In-Reply-To: <20190618014604.GA17174@archlinux-epyc>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.1
+x-clientproxiedby: AM5PR0201CA0015.eurprd02.prod.outlook.com
+ (2603:10a6:203:3d::25) To DB6PR0501MB2342.eurprd05.prod.outlook.com
+ (2603:10a6:4:4c::21)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shalomt@mellanox.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.47.165.251]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 0d7db394-8708-4c76-2692-08d6f3e55194
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2328;
+x-ms-traffictypediagnostic: DB6PR0501MB2328:
+x-microsoft-antispam-prvs: <DB6PR0501MB23288EBC24C169DBF5E3CA7EC5EA0@DB6PR0501MB2328.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1751;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(366004)(51914003)(189003)(199004)(53754006)(7736002)(86362001)(316002)(73956011)(58126008)(66476007)(110136005)(5660300002)(71190400001)(36756003)(256004)(31696002)(54906003)(6246003)(65826007)(66556008)(71200400001)(14444005)(486006)(2906002)(99286004)(26005)(11346002)(446003)(476003)(52116002)(76176011)(6506007)(386003)(53546011)(186003)(102836004)(2616005)(66946007)(25786009)(64126003)(3846002)(14454004)(81166006)(8936002)(68736007)(6486002)(6436002)(31686004)(229853002)(6636002)(53936002)(66066001)(64756008)(65806001)(65956001)(81156014)(66446008)(8676002)(4326008)(6116002)(478600001)(305945005)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2328;H:DB6PR0501MB2342.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: JZqeNadyxCBG0pjfPIS/PUFi5/pT5/Ool9jbNQfGp4aRCGd6TNyCPkuaoisN/nqGOTni65IUOOQAoLrpzOLV/3pI5pWuTeuD3SSsgyMBphmu6Ik7SkTE3sgsJV7Fgrqlk1z4V1fVPn7emwQEbdxoZASrjuRM9YIMFHeooHgoTs134AUhYzch+1Pr3iwxF+fWwj55sgpJ//OyuoRnL+HL/XwAtXzZfbBEyrNLW7wjfSMOrnEvtm5tpK683b6VFCgZQyGAAe86aVR6FyO4PFxoi3mplxt5+6qG5YV2lvUltwkHRDVqCOMwNRZzc8yhXyswcdDjDDUpL4+XgVQMPzPn42f/PwXgYl8ENVIwa0qNM2Pkbl6dTTKaMdt1HwF1GRhuiBb7CO6T6SHVK+5/Jr47eKHQuP8DR5N1pWmMNK8EGBo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <94E9B454FC28BD4A9154D89988536B10@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617164553.GI30800@fuggles.cambridge.arm.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d7db394-8708-4c76-2692-08d6f3e55194
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 12:05:56.6742
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: shalomt@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2328
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd, Ard,
-
-On Mon, Jun 17, 2019 at 05:45:56PM +0100, Will Deacon wrote:
-> On Mon, Jun 17, 2019 at 06:32:16PM +0200, Ard Biesheuvel wrote:
-> > The problem is not about the types we're *exporting*. Genksyms just
-> > gives up halfway through the file, as soon as it encounters something
-> > it doesn't like, and any symbol that hasn't been encountered yet at
-> > that point will not have a crc generated for it.
-> 
-> Hmm, but it appears to be either working or failing silently for me, which
-> doesn't match what Arnd is seeing. I'd prefer to fix genksyms but I'm not
-> happy touching it if I can't show it's broken to begin with. If I pass '-w'
-> I see it barfing on all sorts of random stuff, for example the static_assert
-> in include/linux/fs.h:
-> 
-> 	static_assert(offsetof(struct filename, iname) % sizeof(long) == 0);
-
-Ok, I had some more fun with this today. First of all, we needed a new
-.config, but also, the issue only appears with linux-next. With that
-configuration, I can hit the issue.
-
-What seems to occur is that when parsing:
-
-	static __uint128_t arm64_cpu_to_le128(__uint128_t x)
-	{
-		u64 a = swab64(x);
-		u64 b = swab64(x >> 64);
-
-		return ((__uint128_t)a << 64) | b;
-	}
-
-in fpsimd.c, then genksyms doesn't treate __uint128_t as a type and
-therefore fails to figure out that this is a function. Consequently, it
-keeps trying (and failing) to parse until it sees the end of the current
-expression. This happens when it hits:
-
-	EXPORT_SYMBOL(kernel_neon_begin);
-
-thanks to the semi-colon.
-
-So one nasty bodge to fix this is:
-
-
-diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-index bb42cd04baec..693a978f41f9 100644
---- a/arch/arm64/kernel/fpsimd.c
-+++ b/arch/arm64/kernel/fpsimd.c
-@@ -368,6 +368,8 @@ static __uint128_t arm64_cpu_to_le128(__uint128_t x)
- }
- #endif
- 
-+short of_fixing_genksyms_we_must_use_this_hack;
-+
- #define arm64_le128_to_cpu(x) arm64_cpu_to_le128(x)
- 
- /*
-
-
-but actually, I think I've managed to hack genksyms itself. Patch below.
-
-Will
-
---->8
-
-From 6e004b8824d4eb6a4e61cd794fbc3a761b50135b Mon Sep 17 00:00:00 2001
-From: Will Deacon <will.deacon@arm.com>
-Date: Tue, 18 Jun 2019 12:56:49 +0100
-Subject: [PATCH] genksyms: Teach parse about __uint128_t built-in type
-
-__uint128_t crops up in a few files that export symbols to modules, so
-teach genksyms about it so that we don't end up skipping the CRC
-generation for some symbols due to the parser failing to spot them:
-
-  | WARNING: EXPORT symbol "kernel_neon_begin" [vmlinux] version
-  |          generation failed, symbol will not be versioned.
-  | ld: arch/arm64/kernel/fpsimd.o: relocation R_AARCH64_ABS32 against
-  |     `__crc_kernel_neon_begin' can not be used when making a shared
-  |     object
-  | ld: arch/arm64/kernel/fpsimd.o:(.data+0x0): dangerous relocation:
-  |     unsupported relocation
-
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Reported-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
----
- scripts/genksyms/keywords.c | 1 +
- scripts/genksyms/parse.y    | 2 ++
- 2 files changed, 3 insertions(+)
-
-diff --git a/scripts/genksyms/keywords.c b/scripts/genksyms/keywords.c
-index 9f40bcd17d07..6ec585febfa4 100644
---- a/scripts/genksyms/keywords.c
-+++ b/scripts/genksyms/keywords.c
-@@ -53,6 +53,7 @@ static struct resword {
- 	{ "struct", STRUCT_KEYW },
- 	{ "typedef", TYPEDEF_KEYW },
- 	{ "typeof", TYPEOF_KEYW },
-+	{ "__uint128_t", BUILTIN_INT_KEYW },
- 	{ "union", UNION_KEYW },
- 	{ "unsigned", UNSIGNED_KEYW },
- 	{ "void", VOID_KEYW },
-diff --git a/scripts/genksyms/parse.y b/scripts/genksyms/parse.y
-index 00a6d7e54971..1ebcf52cd0f9 100644
---- a/scripts/genksyms/parse.y
-+++ b/scripts/genksyms/parse.y
-@@ -76,6 +76,7 @@ static void record_compound(struct string_list **keyw,
- %token ATTRIBUTE_KEYW
- %token AUTO_KEYW
- %token BOOL_KEYW
-+%token BUILTIN_INT_KEYW
- %token CHAR_KEYW
- %token CONST_KEYW
- %token DOUBLE_KEYW
-@@ -263,6 +264,7 @@ simple_type_specifier:
- 	| VOID_KEYW
- 	| BOOL_KEYW
- 	| VA_LIST_KEYW
-+	| BUILTIN_INT_KEYW
- 	| TYPE			{ (*$1)->tag = SYM_TYPEDEF; $$ = $1; }
- 	;
- 
--- 
-2.11.0
-
+T24gMTgvMDYvMjAxOSA0OjQ2LCBOYXRoYW4gQ2hhbmNlbGxvciB3cm90ZToNCj4gSGkgYWxsLA0K
+PiANCj4gQSAzMi1iaXQgQVJNIGFsbHllc2NvbmZpZyBmYWlscyB0byBsaW5rIGFmdGVyIGNvbW1p
+dCA5OTJhYTg2NGRjYTANCj4gKCJtbHhzdzogc3BlY3RydW1fcHRwOiBBZGQgaW1wbGVtZW50YXRp
+b24gZm9yIHBoeXNpY2FsIGhhcmR3YXJlIGNsb2NrDQo+IG9wZXJhdGlvbnMiKSBiZWNhdXNlIG9m
+IDY0LWJpdCBkaXZpc2lvbjoNCj4gDQo+IGFybS1saW51eC1nbnVlYWJpLWxkOg0KPiBkcml2ZXJz
+L25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHhzdy9zcGVjdHJ1bV9wdHAubzogaW4gZnVuY3Rpb24N
+Cj4gYG1seHN3X3NwMV9wdHBfcGhjX3NldHRpbWUnOg0KPiBzcGVjdHJ1bV9wdHAuYzooLnRleHQr
+MHgzOWMpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBfX2FlYWJpX3VsZGl2bW9kJw0KPiANCj4g
+VGhlIGZvbGxvd2luZyBkaWZmIGZpeGVzIGl0IGJ1dCBJIGhhdmUgbm8gaWRlYSBpZiBpdCBpcyBw
+cm9wZXIgb3Igbm90DQo+IChoZW5jZSByZWFjaGluZyBvdXQgYmVmb3JlIHNlbmRpbmcgaXQsIGlu
+IGNhc2Ugb25lIG9mIHlvdSBoYXMgYSBtb3JlDQo+IHByb3BlciBpZGVhKS4NCj4gDQo+IENoZWVy
+cywNCj4gTmF0aGFuDQo+IA0KPiAtLS0NCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9l
+dGhlcm5ldC9tZWxsYW5veC9tbHhzdy9zcGVjdHJ1bV9wdHAuYyBiL2RyaXZlcnMvbmV0L2V0aGVy
+bmV0L21lbGxhbm94L21seHN3L3NwZWN0cnVtX3B0cC5jDQo+IGluZGV4IDJhOWJiYzkwMjI1ZS4u
+NjU2ODZmMGI2ODM0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5v
+eC9tbHhzdy9zcGVjdHJ1bV9wdHAuYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxs
+YW5veC9tbHhzdy9zcGVjdHJ1bV9wdHAuYw0KPiBAQCAtODcsNyArODcsNyBAQCBtbHhzd19zcDFf
+cHRwX3BoY19zZXR0aW1lKHN0cnVjdCBtbHhzd19zcF9wdHBfY2xvY2sgKmNsb2NrLCB1NjQgbnNl
+YykNCj4gICAgICAgICB1MzIgbmV4dF9zZWM7DQo+ICAgICAgICAgaW50IGVycjsNCj4gIA0KPiAt
+ICAgICAgIG5leHRfc2VjID0gbnNlYyAvIE5TRUNfUEVSX1NFQyArIDE7DQo+ICsgICAgICAgbmV4
+dF9zZWMgPSAodTMyKWRpdjY0X3U2NChuc2VjLCBOU0VDX1BFUl9TRUMgKyAxKTsNCj4gICAgICAg
+ICBuZXh0X3NlY19pbl9uc2VjID0gbmV4dF9zZWMgKiBOU0VDX1BFUl9TRUM7DQo+ICANCj4gICAg
+ICAgICBzcGluX2xvY2soJmNsb2NrLT5sb2NrKTsNCj4gDQo+IA0KDQoNCg0KVGhhbmtzIGZvciB0
+aGUgcmVwb3J0LiBJIHdpbGwgc2VuZCBhIGZpeC4NCg==
