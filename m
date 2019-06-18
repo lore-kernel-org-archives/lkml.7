@@ -2,108 +2,261 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD90C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:10:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7AEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A5A320863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:10:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NmHlXE54"
+	by mail.kernel.org (Postfix) with ESMTP id 99FA420863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:15:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730460AbfFRTKY (ORCPT
+        id S1730387AbfFRTPD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:10:24 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36759 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfFRTKX (ORCPT
+        Tue, 18 Jun 2019 15:15:03 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:46188 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727386AbfFRTPD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:10:23 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i21so689574ljj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 12:10:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=u69+nLXPtFpbs6TaePvjeaTV79sjBn+0kMLOo8QV9dQ=;
-        b=NmHlXE549XG+CtzrGl8FRRUnyJMBn0Ba3aS5JivNDC+A5JPz2Yu7wHyIBXn4Xp8E6V
-         +tknKiyvaCuv7ze4AXJHR1qp5i7fvOJbOcw0iJuAu8/91zOGW2QYkqYeW/ZI+k12mSww
-         yEB2J+NHetS/6lLWvIHXYEa6iGpBEbKM3+uhjB+46CZxoFqr6MT/QQKwf/g+FPF8/EVX
-         O/C88+IQ8Ukt0L/7G3GXgQizQAp2VJqMnGDnMDKs1x3n7CHM9tmtaSJw+YQPD5aUGWei
-         chsoQnxg+awKflDM5STp2/1scSzQmrXB9sZ15ScrhAFF2S0zvQ0N6eAS+i1ovwkGolRH
-         5sRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=u69+nLXPtFpbs6TaePvjeaTV79sjBn+0kMLOo8QV9dQ=;
-        b=tl6mwz1JivHP4kI1BRP1vrh0OvtR4T5ucAkmxWpUP3b7U0R3nzBuWoSZ2aMp95cpq+
-         cF7FwYLSjmcszjkBSz8csJv60wzGL08ro9ZKRmbHZVxQy/W6ykCegWmcvwC7q4LldRja
-         cMI/LXo1jalcZi9Tr4WnfZ9H/b0oQj57t1l0uJ+i5X/teJQbIIVsg1lc9aI1+GksftBF
-         BK/W0f/S+BdWkPn2ssn2wCUqNPNcpXF6KTxxdVfBLNIRoRXEEnCUgWDRFZdTnvnO4IPG
-         J3cXj6cOyruta2rzOAPmfFELHg+gZiv9yPaZ69yWaQphWmhQUOSupWI0QGEgjcAOzrl/
-         lWHA==
-X-Gm-Message-State: APjAAAUaGwNsD/CJexll/NhEyA6dwgOPJgNxk77rk2jrSKEYP/PWskO/
-        X6rUtZiJTM1CQklp3NkrgTSd/Rsj1gr3m1seuijNDQ==
-X-Google-Smtp-Source: APXvYqwLkpvNF/wVs3KqDx5UiSroFjYcsfziiGdNbJ6lJvw8dk/WsNpJ1kNCKjRCMErTB4agKCXbrCz8Hl94x0zS+io=
-X-Received: by 2002:a2e:4a1a:: with SMTP id x26mr47206359lja.207.1560885021249;
- Tue, 18 Jun 2019 12:10:21 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190614194854.208436-1-fletcherw@chromium.org>
- <20190614194854.208436-4-fletcherw@chromium.org> <4e560e12-4c20-8d5d-b3f9-587a55da279d@intel.com>
- <CAN-6NYZzMqwDaw2oDyms4P9uKFPJvuQOtGbqMWLtFV3kDyQHJQ@mail.gmail.com>
- <CAOReqxhETC9xAojXyDWLMOJ3W22Zn4GNGry44=XC=t_k7SCHqA@mail.gmail.com> <20190618184710.GP5316@sirena.org.uk>
-In-Reply-To: <20190618184710.GP5316@sirena.org.uk>
-From:   Curtis Malainey <cujomalainey@google.com>
-Date:   Tue, 18 Jun 2019 12:10:10 -0700
-Message-ID: <CAOReqxj+9WH70P5oDN12KdDqkX8Kp18NBdTswOZSC8u=AwS_LQ@mail.gmail.com>
-Subject: Re: [PATCH v7 3/4] ASoC: rt5677: clear interrupts by polarity flip
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Tue, 18 Jun 2019 15:15:03 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hdJZ7-0005DR-J3; Tue, 18 Jun 2019 21:14:46 +0200
+Message-ID: <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Alex Elder <elder@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc:     abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        Dan Williams <dcbw@redhat.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Takashi Iwai <tiwai@suse.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Ross Zwisler <zwisler@chromium.org>,
-        ALSA development <alsa-devel@alsa-project.org>
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        syadagir@codeaurora.org
+Date:   Tue, 18 Jun 2019 21:14:39 +0200
+In-Reply-To: <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org> (sfid-20190618_151608_865253_7DD4EC08)
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
+         <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
+         (sfid-20190618_151608_865253_7DD4EC08)
 Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:47 AM Mark Brown <broonie@kernel.org> wrote:
->
-> On Tue, Jun 18, 2019 at 11:12:58AM -0700, Curtis Malainey wrote:
-> > On Tue, Jun 18, 2019 at 11:01 AM Fletcher Woodruff
-> > > On Sun, Jun 16, 2019 at 10:56 AM Cezary Rojewski
-> > > > On 2019-06-14 21:48, Fletcher Woodruff wrote:
->
-> > > > > +     ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
-> > > > > +     if (ret) {
-> > > > > +             pr_err("rt5677: failed reading IRQ status: %d\n", ret);
->
-> > > > The entire rt5677 makes use of dev_XXX with the exception of.. this very
-> > > > function. Consider reusing "component" field which is already part of
-> > > > struct rt5677_priv and removing pr_XXX.
->
-> > > I was using dev_XXX, but I believe Curtis found that 'component' was
-> > > sometimes uninitialized when this function was called, so I switched
-> > > back to pr_XXX. I may be misremembering though, so I'll let Curtis
-> > > comment as well.
->
-> > The issue here is that the IRQ is setup in the i2c probe and the
-> > component is setup in the codec probe. In theory if the hardware is in
->
-> The component is not needed for a struct device, you must have a struct
-> device if you have a regmap or have probed at all.
-Ah yes, we could modify the struct and store the i2c device and get
-the device out of that as well. That will likely be simpler. Ok lets
-do that.
+On Tue, 2019-06-18 at 08:16 -0500, Alex Elder wrote:
+> On 6/17/19 6:28 AM, Johannes Berg wrote:
+> > On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
+> > > On Tue, Jun 11, 2019 at 10:12 AM Johannes Berg
+> > > <johannes@sipsolutions.net> wrote:
+> > > 
+> > > > > As I've made clear before, my work on this has been focused on the IPA transport,
+> > > > > and some of this higher-level LTE architecture is new to me.  But it
+> > > > > seems pretty clear that an abstracted WWAN subsystem is a good plan,
+> > > > > because these devices represent a superset of what a "normal" netdev
+> > > > > implements.
+> > > > 
+> > > > I'm not sure I'd actually call it a superset. By themselves, these
+> > > > netdevs are actually completely useless to the network stack, AFAICT.
+> > > > Therefore, the overlap with netdevs you can really use with the network
+> > > > stack is pretty small?
+> > > 
+> > > I think Alex meant the concept of having a type of netdev with a generic
+> > > user space interface for wwan and similar to a wlan device, as I understood
+> > > you had suggested as well, as opposed to a stacked device as in
+> > > rmnet or those drivers it seems to be modeled after (vlan, ip tunnel, ...)/.
+> 
+> Yes, that's pretty much what I meant by "superset."  We still need
+> netdev functionality (though not between rmnet and ipa).  And it sounds
+> like we're talking about a better framework for managing the related
+> WWAN devices that represent logical modem connections.  We're discussing
+> more than one spot in the networking stack though, so I can see why
+> "superset" wasn't the right word.
+
+Right, ok, gotcha. I was focused (here at least) much more on the
+netdevs, rather than the whole "superset" of functionality :-)
+
+> > I guess. It is indeed currently modelled after the stacked devices, but
+> > those regular netdevs are inherently useful by themselves, you don't
+> > *have* to tunnel or use VLANs after all.
+> > 
+> > With rmnet, the underlying netdev *isn't* useful by itself, because
+> > you're always forced to have the stacked rmnet device on top.
+> 
+> Well I had mentioned earlier that I thought IPA could present just
+> a single non-rmnet interface that could be used "directly" (i.e.,
+> without rmnet).  But that would be a sort of hard-wired thing, and
+> would not be part of the general WWAN framework under discussion.
+
+Oh, I guess I didn't see that (got to the thread late), but is that
+actually useful? It doesn't seem very useful to me since you can't
+actually do anything there.
+
+> Here's a little background.
+
+That's great to have :-) Let me read and comment/ask questions.
+
+> The IPA driver was very large, and in an effort to have an initial driver
+> that was more easily accepted upstream, it was carved down to support
+> a single, very simple use case.  It supports only a single channel for
+> carrying network data, and does not expose any of the IPA's other
+> capabilities like filtering and routing (and multiplexing).
+
+Ok. But it *does* use (or even require using) rmnet, so it has multiple
+channels in a sense, no?
+
+> Originally the IPA code had an IOCTL interface for adding and removing
+> multiplexed channel IDs, but the simplified use case expected only one
+> channel to be used.  
+
+What did those channels do? Create different netdevs? Something else?
+
+> IOCTLs had to be removed to make the code acceptable
+> for upstream, and again to simplify things, we went with a hard-wired
+> configuration, with a single channel with an assumed set of features
+> in use (TCP offload, basically).  Once upstream, we planned to add back
+> features in layers, including adding a netlink interface to control
+> things like managing multiplexed channels.
+
+Right, ok.
+
+> The overall design assumed that the IPA connection between the modem
+> and AP was carrying QMAP protocol though.  And the rmnet driver is
+> designed to parse and handle that, so for the design I started with
+> the use of the rmnet driver made sense:  it is a shim layer that takes
+> care of rmnet multiplexing and aggregation (and checksum offload).
+
+Sure, I can't really disagree. It's just that we have an ongoing
+discussion separately about whether or not rmnet really makes sense
+itself, mostly starting from our interest in supporting the Intel modem,
+and realizing that we have like 5 or 6 different driver-specific
+interfaces of doing the same thing.
+
+> So getting back to your question, the IPA in its current form only
+> has a single "multiplexed" channel carried over the connection
+> between the AP and modem.  Previously (and in the future) there
+> was a way to add or remove channels.
+
+What would those channels do?
+
+I've not really been very clear with the differentiation between a
+channel and what's multiplexed inside of the channel.
+
+Using the terminology you defined in your other mail, are you saying
+that IPA (originally) allowed multiple *connections* to the device, or
+is there basically just one connection, with multiple (QMAP-muxed)
+*channels* on top of it?
+
+If the latter, why did IPA need ioctls, rather than rmnet?
+
+> > The software bridging is very questionable to start with, I'd advocate
+> > not supporting that at all but adding tracepoints or similar if needed
+> > for debugging instead.
+> 
+> To be honest I don't understand the connection between software
+> bridging and debugging, but that's OK.
+
+It's a mess. Basically, AFAICT, the only use for the rmnet bridging is
+in fact debugging. What it does, again AFAICT, is mirror out all the
+rmnet packets to the bridge if you attach it to a bridge, so that then
+you can attach another netdev to the bridge and forward all the rmnet
+packets to another system for debugging.
+
+It's a very weird way of doing this, IMHO.
+
+> I'm a fan of tracepoints
+> and have always intended to make use of them in the IPA driver.
+
+:-)
+
+> The hardware can aggregate multiple packets received from the
+> modem into a single buffer, which the rmnet driver is then able
+> to deaggregate.
+
+Right, I gathered that much, but I'm not really sure I see why userspace
+would even be allowed to control this? Either the device is doing it or
+not, but the driver is going to have to cope either way?
+
+> This feature is supposed to help performance
+> but I've always been a little skeptical because it also comes
+> at a cost.  This is used as a flag in an rmnet (QMAP) header,
+> which to me seems a little odd.  (There should be a distinction
+> between flags needed in a message header and flags that represent
+> properties of a connection or channel.)
+
+I'm not going to comment on the QMAP protocol, I know nothing about it
+:-)
+
+> I believe the only QMAP commands are for doing essentially
+> XON/XOFF flow control on a single channel.  In the course of
+> the e-mail discussion in the past few weeks I've come to see
+> why that would be necessary.
+
+It does make sense, because you only have a single hardware (DMA)
+channel in these cases, so you implement flow control in software on
+top.
+
+(As I said before, the Intel modem uses different hardware channels for
+different sessions, so doesn't need something like this - the hardware
+ring just fills up and there's your flow control)
+
+> The checksum offload is done differently, depending on whether
+> it's ingress (download from modem) or egress.  For egress,
+> a header is inserted that describes what the hardware should
+> checksum and where it should place the result.  For ingress,
+> the hardware appends a trailer that contains information
+> about the computed checksum values.  The rmnet driver is
+> currently responsible for inserting the header and parsing
+> the trailer.
+
+Sure, makes sense, but again - if you can negotiate with the modem on
+whether it's going to do RX CSUM offload, you can tell it with ethtool
+(assuming you do have a netdev per channel, I guess), and for TX CSUM
+you can just have the header or not depending on whether you want it and
+the modem is capable of it.
+
+> I'm probably missing something, but I think the checksum
+> offload could be handled by the IPA driver rather than
+> rmnet.  It seems to be an add-on that is completely
+> independent of the multiplexing and aggregation capabilities
+> that QMAP provides.
+
+Agree.
+
+> > > > If true though, then I think this would be the killer argument *in
+> > > > favour* of *not* merging this - because that would mean we *don't* have
+> > > > to actually keep the rmnet API around for all foreseeable future.
+> 
+> This is because it's a user space API?  If so I now understand
+> what you mean.
+
+Yes.
+
+> As Arnd said (below) this is designed in the way out-of-tree code
+> works and expects.  I don't want to advocate for breaking that,
+> but if a general model that supports what's required can be used,
+> I'll adapt the IPA code to suit that.
+> 
+> My goal continues to be getting a baseline IPA driver accepted
+> upstream as soon as possible, so I can then start building on
+> that foundation.
+
+Yeah. My goal is actually the same, but for the Intel driver, but I
+don't have much code yet (it's being cleaned up now) :-)
+
+johannes
+
