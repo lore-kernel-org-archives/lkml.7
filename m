@@ -3,135 +3,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE22C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:06:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9295DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E85E20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:06:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 763672147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729466AbfFRPGr (ORCPT
+        id S1729545AbfFRPG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:06:47 -0400
-Received: from mga07.intel.com ([134.134.136.100]:26254 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727105AbfFRPGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:06:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 08:06:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,389,1557212400"; 
-   d="scan'208";a="160085055"
-Received: from yyu32-desk1.sc.intel.com ([10.144.153.205])
-  by fmsmga008.fm.intel.com with ESMTP; 18 Jun 2019 08:06:47 -0700
-Message-ID: <d54fe81be77b9edd8578a6d208c72cd7c0b8c1dd.camel@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
- ELF file
-From:   Yu-cheng Yu <yu-cheng.yu@intel.com>
-To:     Dave Martin <Dave.Martin@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Date:   Tue, 18 Jun 2019 07:58:37 -0700
-In-Reply-To: <20190618133223.GD2790@e103592.cambridge.arm.com>
-References: <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
-         <20190611114109.GN28398@e103592.cambridge.arm.com>
-         <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
-         <20190612093238.GQ28398@e103592.cambridge.arm.com>
-         <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
-         <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
-         <20190618091248.GB2790@e103592.cambridge.arm.com>
-         <20190618124122.GH3419@hirez.programming.kicks-ass.net>
-         <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
-         <20190618125512.GJ3419@hirez.programming.kicks-ass.net>
-         <20190618133223.GD2790@e103592.cambridge.arm.com>
+        Tue, 18 Jun 2019 11:06:59 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:34324 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfFRPG6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:06:58 -0400
+Received: by mail-qt1-f196.google.com with SMTP id m29so15745984qtu.1;
+        Tue, 18 Jun 2019 08:06:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NSTbZII6CFZgYZ4ha7ois9c79JsFHc6lXj+oBGA25dE=;
+        b=Z1v+XDsapzwmyzZpyvkCT3Ed1WrCWHMoDPUhazDasHcyWLLUof9RZlQe9kJVx+i6+I
+         h+jphI4o8EgoxzB4OKzd7or1fpBCeQteUCTcAeiNncptmlWedE9SsEqCACHFWb1bOMDV
+         zqRxdAyEZHM8/rbuWNUHQJqTLeXe5XaqwyDOTb8b7cjAPnh9TGQw7im/KUfEsyMp3YbY
+         sH6omHdJeCrkzkjFAxN2y7ScZZVueVuMwOqnkT7ZYOj2dk4/6kpphaJCA1rGeXbJbHFY
+         hvcECK/blg4qU/R5JVo91T/HIi9g1yyLhBdd2Sp0cv42jdT5jexp159dQDc3jKPJYVdD
+         JuuA==
+X-Gm-Message-State: APjAAAVHOd9++2kvd6VALzN8M7UevNjn8xdho6ccBuW4Q6PCk9f0usDj
+        rtDBseO1RrhIAdklzi1dGmny3CM3ECoRmRBuWD4=
+X-Google-Smtp-Source: APXvYqyxk5sbuVIhdcXdtak1JiLgBG3rOdIY72VJKoe4UEXZFDi2s9WaEZrSOm8hY+p6d/NV3S9io+PUKYur4PHTigY=
+X-Received: by 2002:a0c:87ab:: with SMTP id 40mr26958568qvj.93.1560870417626;
+ Tue, 18 Jun 2019 08:06:57 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190617123109.667090-1-arnd@arndb.de> <20190617140210.GB3436@hirez.programming.kicks-ass.net>
+ <CAK8P3a3iwWOkMBL-H3h5aSaHKjKWFce22rvydvVE=3uMfeOhVg@mail.gmail.com>
+ <fc10bc69-0628-59eb-c243-9cd1dd3b47a4@virtuozzo.com> <20190618135911.GR3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190618135911.GR3436@hirez.programming.kicks-ass.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 18 Jun 2019 17:06:39 +0200
+Message-ID: <CAK8P3a1ZgSYMuD0Xy_fxTqzPhg=U6rqG2Lcfc+3Bni=ZijiE3A@mail.gmail.com>
+Subject: Re: [PATCH] ubsan: mark ubsan_type_mismatch_common inline
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.1-2 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-18 at 14:32 +0100, Dave Martin wrote:
-> On Tue, Jun 18, 2019 at 02:55:12PM +0200, Peter Zijlstra wrote:
-> > On Tue, Jun 18, 2019 at 02:47:00PM +0200, Florian Weimer wrote:
-> > > * Peter Zijlstra:
-> > > 
-> > > > I'm not sure I read Thomas' comment like that. In my reading keeping the
-> > > > PT_NOTE fallback is exactly one of those 'fly workarounds'. By not
-> > > > supporting PT_NOTE only the 'fine' people already shit^Hpping this out
-> > > > of tree are affected, and we don't have to care about them at all.
-> > > 
-> > > Just to be clear here: There was an ABI document that required PT_NOTE
-> > > parsing.
-> > 
-> > URGH.
-> > 
-> > > The Linux kernel does *not* define the x86-64 ABI, it only
-> > > implements it.  The authoritative source should be the ABI document.
-> > > 
-> > > In this particularly case, so far anyone implementing this ABI extension
-> > > tried to provide value by changing it, sometimes successfully.  Which
-> > > makes me wonder why we even bother to mainatain ABI documentation.  The
-> > > kernel is just very late to the party.
-> > 
-> > How can the kernel be late to the party if all of this is spinning
-> > wheels without kernel support?
-> 
-> PT_GNU_PROPERTY is mentioned and allocated a p_type value in hjl's
-> spec [1], but otherwise seems underspecified.
-> 
-> In particular, it's not clear whether a PT_GNU_PROPERTY phdr _must_ be
-> emitted for NT_GNU_PROPERTY_TYPE_0.  While it seems a no-brainer to emit
-> it, RHEL's linker already doesn't IIUC, and there are binaries in the
-> wild.
-> 
-> Maybe this phdr type is a late addition -- I haven't attempted to dig
-> through the history.
-> 
-> 
-> For arm64 we don't have this out-of-tree legacy to support, so we can
-> avoid exhausitvely searching for the note: no PT_GNU_PROPERTY ->
-> no note.
-> 
-> So, can we do the same for x86, forcing RHEL to carry some code out of
-> tree to support their legacy binaries?  Or do we accept that there is
-> already a de facto ABI and try to be compatible with it?
-> 
-> 
-> From my side, I want to avoid duplication between x86 and arm64, and
-> keep unneeded complexity out of the ELF loader where possible.
+On Tue, Jun 18, 2019 at 3:59 PM Peter Zijlstra <peterz@infradead.org> wrote:
+> On Tue, Jun 18, 2019 at 04:27:45PM +0300, Andrey Ryabinin wrote:
+> > On 6/18/19 3:56 PM, Arnd Bergmann wrote:
+> > > On Mon, Jun 17, 2019 at 4:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
 
-Hi Florian,
+> > I guess this:
+> > ccflags-y += $(DISABLE_STACKLEAK_PLUGIN)
+>
+> Or more specifically this, I guess:
+>
+> CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
+>
+> we'd not want to exclude all of lib/ from stackleak I figure.
+>
+> Of these two options, I think I prefer the latter, because a smaller
+> whitelist is a better whitelist and since we already disable
+> stack protector, it is only consistent to also disable stack leak.
 
-The kernel looks at only ld-linux.  Other applications are loaded by ld-linux. 
-So the issues are limited to three versions of ld-linux's.  Can we somehow
-update those??
+Ok, sounds good to me. Can you send that upstream then, or should
+I write it up as a proper patch?
 
-Thanks,
-Yu-cheng
+       Arnd
