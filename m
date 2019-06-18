@@ -2,92 +2,118 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A040C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C159C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:38:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6164420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:37:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB7320873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:38:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gRfo0su4"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aqBX0fp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729989AbfFRQh6 (ORCPT
+        id S1730015AbfFRQiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:37:58 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:43227 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729349AbfFRQh5 (ORCPT
+        Tue, 18 Jun 2019 12:38:11 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46594 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729349AbfFRQiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:37:57 -0400
-Received: by mail-pl1-f194.google.com with SMTP id cl9so5929804plb.10;
-        Tue, 18 Jun 2019 09:37:57 -0700 (PDT)
+        Tue, 18 Jun 2019 12:38:11 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d4so22613605edr.13;
+        Tue, 18 Jun 2019 09:38:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=9S1tG0HhIH97LRIta5mSzXislzsfvJdu1l2txZ11Jjw=;
-        b=gRfo0su4BF73/wbSbNlitsopte46aUzLz5uMK2NxAfA0fmSMOAOEIfmHA8em66+C7q
-         Xwafe3qvgiezON18CMsa8Hh5vYQIx1sNhHZl27bDGFst2UxDaclfNwx5VUrgAa1hEF/y
-         qg5mPpjS/wUzKlfE94V8E/p4sJobhyD3WGs1hvsf2uWDB6IU9vSQ0mazhH0ZFADZsHpI
-         18dnYVboTvu/24NeaUdEQuZEwjjyf70jRZExdHSblJZwdRrUzzd4N73Y6joOMhDC1VjI
-         HbO3lzvKoPY7pF9NMZvYjq+1upAXhhwROykO8ozC7619BDt0Ur1jMnXrh3uGvLS3ntAH
-         6vIQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jXvYZkP3QgcqTxDSuncKgo4ShXluNam18sSbFv5z5xQ=;
+        b=aqBX0fp2a5KdzVqzyq88Qk4VrNCAp8+J6RpZE5ov+uxD89jHzVXUWhbsp5un/nw7s4
+         WHy7YH2Lf528kIC9QWinidXkZUMYkpmhxFwuW3nyjfvdo/PTPz6ywVz9REjup6lLTmn5
+         TAayu7vmEnQ0Wq0owMSpG5v/eRq8JezKJeF56TNsJn5FGiAGO7+IivzCe5V//Jw25bp7
+         NTnDqKJqXQTiqdMSSJRpvwkIerLwk2MWQos+WP0YQzRmNek2qBCcJXmKww8bDT8k0T0m
+         Y9l/f1tsoCJQH2qyyo3yUyG7xQBY8nelnODKBWckIb8z2cJs2CqUiNE8M9GRC53kBCRb
+         ioPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=9S1tG0HhIH97LRIta5mSzXislzsfvJdu1l2txZ11Jjw=;
-        b=EWqQGsvbL2cNp2Ef6NaH37hPL0fLHVthITZJIbea8bcHOa2E89/g8LOPB2ZS+SMw+S
-         5reYgSfeedjiW6/fq7coasLJiAtR2ggAGgRiph4Bi+MxjPckNt1eWslPQ667kBN5Erq0
-         vw/HEtxuwb6FurXQYE9btVwzXa7n/SEO3yoIeJqXYoYv5OZ8/c6smosKnW8RE+Ufrr9v
-         2r3EAuqTv6LI1XwwtKmfD4ucJokLUASICUIk+dcH/aLftroj5kSC04rdTEbr1jPuUiiD
-         E3+MooMED1UWiF98oBnuWhlhDiJyGYkMhmV5FWxHQeObJhoCSQJMf4DjfZeBjRrM8Aj5
-         R3Wg==
-X-Gm-Message-State: APjAAAXGdaYnlATzGb8sF/xssBFTDnqDjPsSxfRW3h0ZCJ67BZEiPA9N
-        +Gx+n2zRfeXVqnxIMqQU/2g=
-X-Google-Smtp-Source: APXvYqz9GLahVk5B7R8NS7m9UYkDMb/KD8eDSB4DZU0CLzKxvg/aeLoQFSYakgG704yT5gF0JjucKA==
-X-Received: by 2002:a17:902:1003:: with SMTP id b3mr116215415pla.172.1560875877307;
-        Tue, 18 Jun 2019 09:37:57 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e127sm16450716pfe.98.2019.06.18.09.37.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 09:37:56 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 09:37:55 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 4.19 00/75] 4.19.53-stable review
-Message-ID: <20190618163755.GB1718@roeck-us.net>
-References: <20190617210752.799453599@linuxfoundation.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jXvYZkP3QgcqTxDSuncKgo4ShXluNam18sSbFv5z5xQ=;
+        b=NVGBgIimjXr4k3cSNJFpe6YHxJK2R7wxFgHsI7Ia8S9OHiCZY9dXiXCGTcWOYntqDh
+         eqZvp3fvJX45U8P97l6P4f/J3IXe9wnxpidv6Ha2tZj2xmZgL+zTHYV8lQ0r7wC+u3kp
+         91TlQpAOur7JHJBKCcz5AuWXfS7TSAye7VmVTV0Q+7aAnOufbRSfL9uUXMrkefuYKmxt
+         ymJ5Sbl/Z1X4FYg+LeY4h8jtRh0naBf8vw7dBnsUHY49gKubZRK/2vSojNmk8Pkckl2o
+         LgkD19Kj4fBQkHSwzyYLE6jJeAlwZ6NffhCyV5/ZrjuU/r9b4J7N57KIj89X1DW7OVIO
+         od3w==
+X-Gm-Message-State: APjAAAW/g5E8qfmtOytwRQMj9M+0mDTQ29cs8W4XCeq2tVRcAOAya69T
+        2O6j/JX6/r1t72X12IpgyoNAv7YHJrTrvizk3HT4tQ==
+X-Google-Smtp-Source: APXvYqw9pH+6wam8u8vh6qWJbTBhm1QeTozsFqj2bAghBHPIFlFM+3Jo3Umal/5U93AZZRzO8XGL3Im4JLIhd+6rzbI=
+X-Received: by 2002:a17:906:2acf:: with SMTP id m15mr101493524eje.31.1560875889268;
+ Tue, 18 Jun 2019 09:38:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <CA+G9fYs2+-yeYcx7oe228oo9GfDgTuPL1=TemT3R20tzCmcjsw@mail.gmail.com>
+ <CA+FuTSfBFqRViKfG5crEv8xLMgAkp3cZ+yeuELK5TVv61xT=Yw@mail.gmail.com> <20190618161036.GA28190@kroah.com>
+In-Reply-To: <20190618161036.GA28190@kroah.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 18 Jun 2019 12:37:33 -0400
+Message-ID: <CAF=yD-JnTHdDE8K-EaJM2fH9awvjAmOJkoZbtU+Wi58pPnyAxw@mail.gmail.com>
+Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Fred Klassen <fklassen@appneta.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:09:11PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.53 release.
-> There are 75 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
-> Anything received after that time might be too late.
-> 
+On Tue, Jun 18, 2019 at 12:10 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+>
+> On Tue, Jun 18, 2019 at 08:31:16AM -0400, Willem de Bruijn wrote:
+> > On Tue, Jun 18, 2019 at 7:27 AM Naresh Kamboju
+> > <naresh.kamboju@linaro.org> wrote:
+> > >
+> > > selftests: net: udpgso_bench.sh failed on 4.19, 4.14, 4.9 and 4.4 branches.
+> > > PASS on stable branch 5.1, mainline and next.
+> > > This failure is started happening on 4.19 and older kernel branches after
+> > > kselftest upgrade to version 5.1
+> >
+> > Does version 5.1 here mean running tests from Linux 5.1, against older kernels?
+> >
+> > > Is there any possibilities to backport ?
+> > >
+> > > Error:
+> > > udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
+> >
+> > MSG_ZEROCOPY for UDP was added in commit b5947e5d1e71 ("udp:
+> > msg_zerocopy") in Linux 5.0.
+> >
+> > The selftest was expanded with this feature in commit db63e489c7aa
+> > ("selftests: extend zerocopy tests to udp"), also in Linux 5.0.
+> >
+> > Those tests are not expected to pass on older kernels.
+>
+> Any way to degrade gracefully if the feature is not present at all in
+> the kernel under test?  People run the latest version of kselftests on
+> older kernels all the time.
 
-Build results:
-	total: 156 pass: 156 fail: 0
-Qemu test results:
-	total: 366 pass: 366 fail: 0
+We add new tests along with new features and bug fixes all the time.
+All of those will fail on older kernels, as expected.
 
-Guenter
+I'm honestly surprised to hear that we run newer tests against older
+kernels. Is the idea to validate fixes in stable branches? If so,
+should we instead backport the relevant tests to those stable
+branches? Only the tests that verify fixes, leaving out those for new
+features, of course.
+
+Specific to the above test, I can add a check command testing
+setsockopt SO_ZEROCOPY  return value. AFAIK kselftest has no explicit
+way to denote "skipped", so this would just return "pass". Sounds a
+bit fragile, passing success when a feature is absent.
