@@ -2,183 +2,207 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 166E0C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51083C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:34:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E355C2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:34:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oLIKcVxn"
+	by mail.kernel.org (Postfix) with ESMTP id 2A144208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560861291;
+	bh=JkOBXbTwTxFiJgkV+khp3o5rzReMI//+FtduWLEOSGs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=o4gzu2INqyBiA1C3eGxW8v/MHA5V9trMgzF7zSQ0/G+lMird0AhiJ7kAZulAO9BJ2
+	 XFnwUWzLOZrS5UjPqJ1tKA2CM6GEp2j6lhFtKg2ezpr2DgFzJVdpjwm/hFZ6VL4su8
+	 eaq+1K3SnMecn9PsqFCI8vRJmiHTLBGDlZWo1F1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726888AbfFRMej (ORCPT
+        id S1728795AbfFRMet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:34:39 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41382 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725988AbfFRMei (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:34:38 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 136so9126162lfa.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 05:34:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mS5RnvuKMOqlVsA7l+DtvxWKqOTIjTs/YP9uQGG4Zag=;
-        b=oLIKcVxnz9IgOVdTuatFzk9cKxcOC9pl2aLFEZAHUgH75Dtfia6TJH22C2G65VmFz1
-         IbeXyqX9QEtZJIHrdmhT2Huph1UYaCA04l374aUTnwowEkHwfS/1VBU/H/DUPOdrqbjk
-         jnRl20Vo3VHfBF6EZy4Zyq8ocVi891nAO1eyXIY0t4E0MnOWJGSDJSWYPMDBHvi0CPN2
-         5Ish1ieKg7f/sGXWANwnMMFknL6Cpz8X1T9tim4Lkspi2UoOrHg9ZQRTKLOIkZuI6PcM
-         KZpuHggz16ZkhyUSr5+XrDxMmCIlVyzvJS9aP/gmz3NUsCvTdAIEV+hI+jj7hPKTiWBe
-         p1xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mS5RnvuKMOqlVsA7l+DtvxWKqOTIjTs/YP9uQGG4Zag=;
-        b=IE6v/oxyxjgKWr3kcYUyi2GnCw1dTbx15QRbR/GQqay/zWEfMTr/KHR3SxuhtbBn5J
-         Vr2wzw7AR3bc+VBtzQfgZ950trWVRWEClFLWgQ+NQlTIaARJMNF4RFcmonHMqPFp9NAD
-         fjacGw1N/oukm81upAbigvUQJnoAaqQ6rawqvI1HZTpZT0bLh8dEvOfbXjEPWc24zcKw
-         ASG8C8aP4dmdzdSnCmvBJI0niIHrgxP5OrMPRMITL0CQkoIQACURE601cxb0N1Oh0azB
-         sqsGN5mMWoEs2dwS8fXxTFMBZY6GKbn/KLMIbzpSZiaKZ7AIrLR+BOO512fMA4L15iJ4
-         Gllg==
-X-Gm-Message-State: APjAAAV/OVr4LYlelS+kRbpa9H0ZBxUhsx1IwPSRu3rmHpSzcIwVMD5k
-        bCT0biBW77frGtzsIcd9ec/wVbd65YZ/OSiS9IneXmTowfk=
-X-Google-Smtp-Source: APXvYqxOQvAdJzvQbybKhqM925/XVRciuQGlH6JgKMdujokRD/VIzJBvMPzoA4gtPpNxqV9I+Zq3ObgXqtZlRc+eIaU=
-X-Received: by 2002:a05:6512:51c:: with SMTP id o28mr42431131lfb.67.1560861276939;
- Tue, 18 Jun 2019 05:34:36 -0700 (PDT)
+        Tue, 18 Jun 2019 08:34:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33352 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725988AbfFRMet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:34:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6B67BAE51;
+        Tue, 18 Jun 2019 12:34:47 +0000 (UTC)
+Date:   Tue, 18 Jun 2019 14:34:46 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Shakeel Butt <shakeelb@google.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] mm, oom: fix oom_unkillable_task for memcg OOMs
+Message-ID: <20190618123446.GE3318@dhcp22.suse.cz>
+References: <20190617231207.160865-1-shakeelb@google.com>
+ <20190617231207.160865-2-shakeelb@google.com>
 MIME-Version: 1.0
-References: <20190617210759.929316339@linuxfoundation.org>
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 18 Jun 2019 18:04:25 +0530
-Message-ID: <CA+G9fYsUmFrTDHJfS=1vYVfv4BVRZ0AByEOHV6toidAxWuDqDg@mail.gmail.com>
-Subject: Re: [PATCH 5.1 000/115] 5.1.12-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617231207.160865-2-shakeelb@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 at 02:50, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 5.1.12 release.
-> There are 115 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.1.12-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.1.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+On Mon 17-06-19 16:12:07, Shakeel Butt wrote:
+> Currently oom_unkillable_task() checks mems_allowed even for memcg OOMs
+> which does not make sense as memcg OOMs can not be triggered due to
+> numa constraints. Fixing that.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+"Fixing that" is a poor description of the fix. Also it is quite useful
+to note that it is not only bogus to check mems_allowed. It is also
+harmful as per the syzbot test IIRC. Pasting the report here would
+be helpful as well.
 
-NOTE:
-kernel/workqueue.c:3030 __flush_work+0x2c2/0x2d0
-Kernel warning is been fixed by below patch.
+> This commit also removed the bogus usage of oom_unkillable_task() from
+> oom_badness(). Currently reading /proc/[pid]/oom_score will do a bogus
+> cpuset_mems_allowed_intersects() check. Removing that.
 
-> John Fastabend <john.fastabend@gmail.com>
->     bpf: sockmap, only stop/flush strp if it was enabled at some point
+Again, there shouldn't be any real reason to squash the two things into
+a single patch. This is a subtle bug/behavior on its own because the
+result of oom_badness depends on the calling process context. This
+should be called out in the changelog explicitly.
 
-Summary
-------------------------------------------------------------------------
+> Signed-off-by: Shakeel Butt <shakeelb@google.com>
 
-kernel: 5.1.12-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.1.y
-git commit: 760bc74bb0d3cb65cdc8af61a564384ba10374ac
-git describe: v5.1.11-116-g760bc74bb0d3
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.1-oe/bui=
-ld/v5.1.11-116-g760bc74bb0d3
+Other than that it looks good to me. I will ack after the split out and
+the changelog improvements.
 
+Thanks!
 
-No regressions (compared to build v5.1.11)
+> ---
+> Changelog since v1:
+> - Divide the patch into two patches.
+> 
+>  fs/proc/base.c      |  3 +--
+>  include/linux/oom.h |  1 -
+>  mm/oom_kill.c       | 28 +++++++++++++++-------------
+>  3 files changed, 16 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/proc/base.c b/fs/proc/base.c
+> index b8d5d100ed4a..57b7a0d75ef5 100644
+> --- a/fs/proc/base.c
+> +++ b/fs/proc/base.c
+> @@ -532,8 +532,7 @@ static int proc_oom_score(struct seq_file *m, struct pid_namespace *ns,
+>  	unsigned long totalpages = totalram_pages() + total_swap_pages;
+>  	unsigned long points = 0;
+>  
+> -	points = oom_badness(task, NULL, NULL, totalpages) *
+> -					1000 / totalpages;
+> +	points = oom_badness(task, totalpages) * 1000 / totalpages;
+>  	seq_printf(m, "%lu\n", points);
+>  
+>  	return 0;
+> diff --git a/include/linux/oom.h b/include/linux/oom.h
+> index d07992009265..c696c265f019 100644
+> --- a/include/linux/oom.h
+> +++ b/include/linux/oom.h
+> @@ -108,7 +108,6 @@ static inline vm_fault_t check_stable_address_space(struct mm_struct *mm)
+>  bool __oom_reap_task_mm(struct mm_struct *mm);
+>  
+>  extern unsigned long oom_badness(struct task_struct *p,
+> -		struct mem_cgroup *memcg, const nodemask_t *nodemask,
+>  		unsigned long totalpages);
+>  
+>  extern bool out_of_memory(struct oom_control *oc);
+> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
+> index bd80997e0969..d779d9da1069 100644
+> --- a/mm/oom_kill.c
+> +++ b/mm/oom_kill.c
+> @@ -152,20 +152,23 @@ static inline bool is_memcg_oom(struct oom_control *oc)
+>  }
+>  
+>  /* return true if the task is not adequate as candidate victim task. */
+> -static bool oom_unkillable_task(struct task_struct *p,
+> -		struct mem_cgroup *memcg, const nodemask_t *nodemask)
+> +static bool oom_unkillable_task(struct task_struct *p, struct oom_control *oc)
+>  {
+>  	if (is_global_init(p))
+>  		return true;
+>  	if (p->flags & PF_KTHREAD)
+>  		return true;
+>  
+> -	/* When mem_cgroup_out_of_memory() and p is not member of the group */
+> -	if (memcg && !task_in_mem_cgroup(p, memcg))
+> -		return true;
+> +	/*
+> +	 * For memcg OOM, we reach here through mem_cgroup_scan_tasks(), no
+> +	 * need to check p's memcg membership and the checks after this
+> +	 * are irrelevant for memcg OOMs.
+> +	 */
+> +	if (is_memcg_oom(oc))
+> +		return false;
+>  
+>  	/* p may not have freeable memory in nodemask */
+> -	if (!has_intersects_mems_allowed(p, nodemask))
+> +	if (!has_intersects_mems_allowed(p, oc->nodemask))
+>  		return true;
+>  
+>  	return false;
+> @@ -201,13 +204,12 @@ static bool is_dump_unreclaim_slabs(void)
+>   * predictable as possible.  The goal is to return the highest value for the
+>   * task consuming the most memory to avoid subsequent oom failures.
+>   */
+> -unsigned long oom_badness(struct task_struct *p, struct mem_cgroup *memcg,
+> -			  const nodemask_t *nodemask, unsigned long totalpages)
+> +unsigned long oom_badness(struct task_struct *p, unsigned long totalpages)
+>  {
+>  	long points;
+>  	long adj;
+>  
+> -	if (oom_unkillable_task(p, memcg, nodemask))
+> +	if (is_global_init(p) || p->flags & PF_KTHREAD)
+>  		return 0;
+>  
+>  	p = find_lock_task_mm(p);
+> @@ -318,7 +320,7 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
+>  	struct oom_control *oc = arg;
+>  	unsigned long points;
+>  
+> -	if (oom_unkillable_task(task, NULL, oc->nodemask))
+> +	if (oom_unkillable_task(task, oc))
+>  		goto next;
+>  
+>  	/*
+> @@ -342,7 +344,7 @@ static int oom_evaluate_task(struct task_struct *task, void *arg)
+>  		goto select;
+>  	}
+>  
+> -	points = oom_badness(task, NULL, oc->nodemask, oc->totalpages);
+> +	points = oom_badness(task, oc->totalpages);
+>  	if (!points || points < oc->chosen_points)
+>  		goto next;
+>  
+> @@ -390,7 +392,7 @@ static int dump_task(struct task_struct *p, void *arg)
+>  	struct oom_control *oc = arg;
+>  	struct task_struct *task;
+>  
+> -	if (oom_unkillable_task(p, NULL, oc->nodemask))
+> +	if (oom_unkillable_task(p, oc))
+>  		return 0;
+>  
+>  	task = find_lock_task_mm(p);
+> @@ -1090,7 +1092,7 @@ bool out_of_memory(struct oom_control *oc)
+>  	check_panic_on_oom(oc, constraint);
+>  
+>  	if (!is_memcg_oom(oc) && sysctl_oom_kill_allocating_task &&
+> -	    current->mm && !oom_unkillable_task(current, NULL, oc->nodemask) &&
+> +	    current->mm && !oom_unkillable_task(current, oc) &&
+>  	    current->signal->oom_score_adj != OOM_SCORE_ADJ_MIN) {
+>  		get_task_struct(current);
+>  		oc->chosen = current;
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
 
-No fixes (compared to build v5.1.11)
-
-Ran 22821 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* libgpiod
-* ltp-containers-tests
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+-- 
+Michal Hocko
+SUSE Labs
