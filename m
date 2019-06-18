@@ -2,251 +2,110 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB7D9C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6192C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:03:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6C1D20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:03:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560862980;
-	bh=+5Ry1w8vG3L6OdDMt4Ndn0SbbMtBBU8jgKjECxHnBxY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JnsPy/N3fMa+0khTKYnJgfxjmaYF2upbTZvKIBu3f0zlncgvhaK1y+Yo9x6DLP6K/
-	 06Q9FFVUvAPLBmZc+13rmzpaN+Ru7Ssn394ZN/7nHKDrR5X2h0090HCBr6k92nVDV8
-	 YpmUdTjCl2r+J8k15nI2rxWVuBQJ8ca8OB6+ewEc=
+	by mail.kernel.org (Postfix) with ESMTP id A949F20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:03:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728893AbfFRNC7 (ORCPT
+        id S1728990AbfFRNDQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:02:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42614 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725913AbfFRNC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:02:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id EAD26B034;
-        Tue, 18 Jun 2019 13:02:54 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 15:02:53 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
-        mgorman@techsingularity.net, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
- correctly in mbind
-Message-ID: <20190618130253.GH3318@dhcp22.suse.cz>
-References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
+        Tue, 18 Jun 2019 09:03:16 -0400
+Received: from foss.arm.com ([217.140.110.172]:39962 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbfFRNDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:03:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 130192B;
+        Tue, 18 Jun 2019 06:03:15 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0EDAE3F246;
+        Tue, 18 Jun 2019 06:03:13 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 14:03:08 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Bharat Kumar Gogada <bharatku@xilinx.com>
+Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>
+Subject: Re: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
+Message-ID: <20190618130308.GA9002@e121166-lin.cambridge.arm.com>
+References: <1560334679-9206-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20190617092108.GA18020@e121166-lin.cambridge.arm.com>
+ <CH2PR02MB6453032A01A540F5E9C58402A5EA0@CH2PR02MB6453.namprd02.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CH2PR02MB6453032A01A540F5E9C58402A5EA0@CH2PR02MB6453.namprd02.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[Cc networking people - see a question about setsockopt below]
+On Tue, Jun 18, 2019 at 12:28:02PM +0000, Bharat Kumar Gogada wrote:
 
-On Tue 18-06-19 02:48:10, Yang Shi wrote:
-> When running syzkaller internally, we ran into the below bug on 4.9.x
-> kernel:
-> 
-> kernel BUG at mm/huge_memory.c:2124!
-
-What is the BUG_ON because I do not see any BUG_ON neither in v4.9 nor
-the latest stable/linux-4.9.y
-
-> invalid opcode: 0000 [#1] SMP KASAN
 [...]
-> Code: c7 80 1c 02 00 e8 26 0a 76 01 <0f> 0b 48 c7 c7 40 46 45 84 e8 4c
-> RIP  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
->  RSP <ffff88006899f980>
-> 
-> with the below test:
-> 
-> ---8<---
-> 
-> uint64_t r[1] = {0xffffffffffffffff};
-> 
-> int main(void)
-> {
-> 	syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
-> 				intptr_t res = 0;
-> 	res = syscall(__NR_socket, 0x11, 3, 0x300);
-> 	if (res != -1)
-> 		r[0] = res;
-> *(uint32_t*)0x20000040 = 0x10000;
-> *(uint32_t*)0x20000044 = 1;
-> *(uint32_t*)0x20000048 = 0xc520;
-> *(uint32_t*)0x2000004c = 1;
-> 	syscall(__NR_setsockopt, r[0], 0x107, 0xd, 0x20000040, 0x10);
-> 	syscall(__NR_mmap, 0x20fed000, 0x10000, 0, 0x8811, r[0], 0);
-> *(uint64_t*)0x20000340 = 2;
-> 	syscall(__NR_mbind, 0x20ff9000, 0x4000, 0x4002, 0x20000340,
-> 0x45d4, 3);
-> 	return 0;
-> }
-> 
-> ---8<---
-> 
-> Actually the test does:
-> 
-> mmap(0x20000000, 16777216, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x20000000
-> socket(AF_PACKET, SOCK_RAW, 768)        = 3
-> setsockopt(3, SOL_PACKET, PACKET_TX_RING, {block_size=65536, block_nr=1, frame_size=50464, frame_nr=1}, 16) = 0
-> mmap(0x20fed000, 65536, PROT_NONE, MAP_SHARED|MAP_FIXED|MAP_POPULATE|MAP_DENYWRITE, 3, 0) = 0x20fed000
-> mbind(..., MPOL_MF_STRICT|MPOL_MF_MOVE) = 0
 
-Ughh. Do I get it right that that this setsockopt allows an arbitrary
-contiguous memory allocation size to be requested by a unpriviledged
-user? Or am I missing something that restricts there any restriction?
+> > Applied to pci/xilinx for v5.3, please have a look and check if the commit log
+> > I wrote provides a clear description of the issue.
+> > 
+> > Lorenzo
+> Thanks Lorenzo and Marc.
+> Lorenzo, can you please point to link for above commit.
 
-> The setsockopt() would allocate compound pages (16 pages in this test)
-> for packet tx ring, then the mmap() would call packet_mmap() to map the
-> pages into the user address space specifed by the mmap() call.
-> 
-> When calling mbind(), it would scan the vma to queue the pages for
-> migration to the new node.  It would split any huge page since 4.9
-> doesn't support THP migration, however, the packet tx ring compound
-> pages are not THP and even not movable.  So, the above bug is triggered.
-> 
-> However, the later kernel is not hit by this issue due to the commit
-> d44d363f65780f2ac2ec672164555af54896d40d ("mm: don't assume anonymous
-> pages have SwapBacked flag"), which just removes the PageSwapBacked
-> check for a different reason.
-> 
-> But, there is a deeper issue.  According to the semantic of mbind(), it
-> should return -EIO if MPOL_MF_MOVE or MPOL_MF_MOVE_ALL was specified and
-> the kernel was unable to move all existing pages in the range.  The tx ring
-> of the packet socket is definitely not movable, however, mbind returns
-> success for this case.
-> 
-> Although the most socket file associates with non-movable pages, but XDP
-> may have movable pages from gup.  So, it sounds not fine to just check
-> the underlying file type of vma in vma_migratable().
-> 
-> Change migrate_page_add() to check if the page is movable or not, if it
-> is unmovable, just return -EIO.  We don't have to check non-LRU movable
-> pages since just zsmalloc and virtio-baloon support this.  And, they
-> should be not able to reach here.
+I did already.
 
-You are not checking whether the page is movable, right? You only rely
-on PageLRU check which is not really an equivalent thing. There are
-movable pages which are not LRU and also pages might be off LRU
-temporarily for many reasons so this could lead to false positives.
-So I do not think this fix is correct. Blowing up on a BUG_ON is
-definitely not a right thing to do but we should rely on migrate_pages
-to fail the migration and report the failure based on that.
+Anyway:
 
-> With this change the above test would return -EIO as expected.
-> 
-> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
-> ---
->  include/linux/mempolicy.h |  3 ++-
->  mm/mempolicy.c            | 22 +++++++++++++++++-----
->  2 files changed, 19 insertions(+), 6 deletions(-)
-> 
-> diff --git a/include/linux/mempolicy.h b/include/linux/mempolicy.h
-> index 5228c62..cce7ba3 100644
-> --- a/include/linux/mempolicy.h
-> +++ b/include/linux/mempolicy.h
-> @@ -198,7 +198,8 @@ static inline bool vma_migratable(struct vm_area_struct *vma)
->  	if (vma->vm_file &&
->  		gfp_zone(mapping_gfp_mask(vma->vm_file->f_mapping))
->  								< policy_zone)
-> -			return false;
-> +		return false;
-> +
+https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/commit/?h=pci/xilinx&id=46c1bfcfcd873f8754f733e4258121748bcae3a3
 
-Any reason to make this change?
-
->  	return true;
->  }
->  
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 2219e74..4d9e17d 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -403,7 +403,7 @@ void mpol_rebind_mm(struct mm_struct *mm, nodemask_t *new)
->  	},
->  };
->  
-> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
-> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
->  				unsigned long flags);
->  
->  struct queue_pages {
-> @@ -467,7 +467,9 @@ static int queue_pages_pmd(pmd_t *pmd, spinlock_t *ptl, unsigned long addr,
->  			goto unlock;
->  		}
->  
-> -		migrate_page_add(page, qp->pagelist, flags);
-> +		ret = migrate_page_add(page, qp->pagelist, flags);
-> +		if (ret)
-> +			goto unlock;
->  	} else
->  		ret = -EIO;
->  unlock:
-> @@ -521,7 +523,9 @@ static int queue_pages_pte_range(pmd_t *pmd, unsigned long addr,
->  		if (flags & (MPOL_MF_MOVE | MPOL_MF_MOVE_ALL)) {
->  			if (!vma_migratable(vma))
->  				break;
-> -			migrate_page_add(page, qp->pagelist, flags);
-> +			ret = migrate_page_add(page, qp->pagelist, flags);
-> +			if (ret)
-> +				break;
->  		} else
->  			break;
->  	}
-> @@ -940,10 +944,15 @@ static long do_get_mempolicy(int *policy, nodemask_t *nmask,
->  /*
->   * page migration, thp tail pages can be passed.
->   */
-> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
-> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
->  				unsigned long flags)
->  {
->  	struct page *head = compound_head(page);
-> +
-> +	/* Non-movable page may reach here. */
-> +	if (!PageLRU(head))
-> +		return -EIO;
-> +
->  	/*
->  	 * Avoid migrating a page that is shared with others.
->  	 */
-> @@ -955,6 +964,8 @@ static void migrate_page_add(struct page *page, struct list_head *pagelist,
->  				hpage_nr_pages(head));
->  		}
->  	}
-> +
-> +	return 0;
->  }
->  
->  /* page allocation callback for NUMA node migration */
-> @@ -1157,9 +1168,10 @@ static struct page *new_page(struct page *page, unsigned long start)
->  }
->  #else
->  
-> -static void migrate_page_add(struct page *page, struct list_head *pagelist,
-> +static int migrate_page_add(struct page *page, struct list_head *pagelist,
->  				unsigned long flags)
->  {
-> +	return -EIO;
->  }
->  
->  int do_migrate_pages(struct mm_struct *mm, const nodemask_t *from,
-> -- 
-> 1.8.3.1
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+> Regards,
+> Bharat
+> > > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > > b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > > index 81538d7..a9e07b8 100644
+> > > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > > @@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct
+> > irq_domain *domain, unsigned int virq,
+> > >  	int i;
+> > >
+> > >  	mutex_lock(&msi->lock);
+> > > -	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> > > -					 nr_irqs, 0);
+> > > -	if (bit >= INT_PCI_MSI_NR) {
+> > > +	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
+> > > +				      get_count_order(nr_irqs));
+> > > +	if (bit < 0) {
+> > >  		mutex_unlock(&msi->lock);
+> > >  		return -ENOSPC;
+> > >  	}
+> > >
+> > > -	bitmap_set(msi->bitmap, bit, nr_irqs);
+> > > -
+> > >  	for (i = 0; i < nr_irqs; i++) {
+> > >  		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
+> > >  				domain->host_data, handle_simple_irq, @@
+> > -509,7 +507,8 @@ static
+> > > void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+> > >  	struct nwl_msi *msi = &pcie->msi;
+> > >
+> > >  	mutex_lock(&msi->lock);
+> > > -	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
+> > > +	bitmap_release_region(msi->bitmap, data->hwirq,
+> > > +			      get_count_order(nr_irqs));
+> > >  	mutex_unlock(&msi->lock);
+> > >  }
+> > >
+> > > --
+> > > 2.7.4
+> > >
