@@ -2,165 +2,161 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
-	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409E2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18865C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:03:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AEF821655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="YT6nFSrN"
+	by mail.kernel.org (Postfix) with ESMTP id E384F20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:03:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729901AbfFRQBt (ORCPT
+        id S1729750AbfFRQDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:01:49 -0400
-Received: from smtp-fw-9101.amazon.com ([207.171.184.25]:34395 "EHLO
-        smtp-fw-9101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729209AbfFRQBs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:01:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1560873708; x=1592409708;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version;
-  bh=5dxPM2jebBBl2HqfGDgN1kkUGse4zSbBuv7sLIXFwD0=;
-  b=YT6nFSrNBaKjQ2G7yo9v4DyZ1N0WiyDEM2MNdp2VK55taAqd9c88eLv5
-   a7bCwgz3Y7ARU13dbxhWHMBwuobDDcDQQNgIRgB9sO6cAB/RTUc+roJ1Q
-   +KRnE7v3zKpGgdfFWux6rOtUBnidPe4tUMhgTUwifyuGlpH3qLvYqZtn4
-   w=;
-X-IronPort-AV: E=Sophos;i="5.62,389,1554768000"; 
-   d="scan'208";a="811117649"
-Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1a-715bee71.us-east-1.amazon.com) ([10.47.22.34])
-  by smtp-border-fw-out-9101.sea19.amazon.com with ESMTP; 18 Jun 2019 16:01:45 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1a-715bee71.us-east-1.amazon.com (Postfix) with ESMTPS id CED09A2373;
-        Tue, 18 Jun 2019 16:01:40 +0000 (UTC)
-Received: from EX13D21UWB001.ant.amazon.com (10.43.161.108) by
- EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 18 Jun 2019 16:01:22 +0000
-Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
- EX13D21UWB001.ant.amazon.com (10.43.161.108) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 18 Jun 2019 16:01:22 +0000
-Received: from 8c859006a84e.ant.amazon.com (172.26.203.28) by
- mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
- 15.0.1367.3 via Frontend Transport; Tue, 18 Jun 2019 16:01:20 +0000
-From:   <alpawi@amazon.com>
-CC:     Benjamin Herrenschmidt <benh@amazon.com>,
-        Patrick Williams <alpawi@amazon.com>,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/2] pinctrl: armada-37xx: fix control of pins 32 and up
-Date:   Tue, 18 Jun 2019 11:01:05 -0500
-Message-ID: <20190618160105.26343-3-alpawi@amazon.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
-In-Reply-To: <20190618160105.26343-1-alpawi@amazon.com>
-References: <20190618160105.26343-1-alpawi@amazon.com>
+        Tue, 18 Jun 2019 12:03:52 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19039 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729209AbfFRQDw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:03:52 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E4C1B12414D8A08DBFF9;
+        Wed, 19 Jun 2019 00:03:48 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Jun 2019
+ 00:03:46 +0800
+Date:   Tue, 18 Jun 2019 17:03:35 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC:     <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 17/22] iommu/vt-d: Avoid duplicated code for PASID
+ setup
+Message-ID: <20190618170335.000078db@huawei.com>
+In-Reply-To: <1560087862-57608-18-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1560087862-57608-18-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrick Williams <alpawi@amazon.com>
+On Sun, 9 Jun 2019 06:44:17 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-The 37xx configuration registers are only 32 bits long, so
-pins 32-35 spill over into the next register.  The calculation
-for the register address was done, but the bitmask was not, so
-any configuration to pin 32 or above resulted in a bitmask that
-overflowed and performed no action.
+> After each setup for PASID entry, related translation caches must be flushed.
+> We can combine duplicated code into one function which is less error prone.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Formatting nitpick below ;)
 
-Fix the register / offset calculation to also adjust the offset.
+Otherwise it's cut and paste
+> ---
+>  drivers/iommu/intel-pasid.c | 48 +++++++++++++++++----------------------------
+>  1 file changed, 18 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
+> index 1e25539..1ff2ecc 100644
+> --- a/drivers/iommu/intel-pasid.c
+> +++ b/drivers/iommu/intel-pasid.c
+> @@ -522,6 +522,21 @@ void intel_pasid_tear_down_entry(struct intel_iommu *iommu,
+>  		devtlb_invalidation_with_pasid(iommu, dev, pasid);
+>  }
+>  
+> +static inline void pasid_flush_caches(struct intel_iommu *iommu,
+> +				struct pasid_entry *pte,
+> +				int pasid, u16 did)
+> +{
+> +	if (!ecap_coherent(iommu->ecap))
+> +		clflush_cache_range(pte, sizeof(*pte));
+> +
+> +	if (cap_caching_mode(iommu->cap)) {
+> +		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> +		iotlb_invalidation_with_pasid(iommu, did, pasid);
+> +	} else
+> +		iommu_flush_write_buffer(iommu);
 
-Signed-off-by: Patrick Williams <alpawi@amazon.com>
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+I have some vague recollection kernel style says use brackets around
+single lines if other blocks in an if / else stack have multiple lines..
 
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index 00598b6f5c2a..82c980c5cccd 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -221,11 +221,11 @@ static const struct armada_37xx_pin_data armada_37xx_pin_sb = {
- };
- 
- static inline void armada_37xx_calc_reg_offset(unsigned int *reg,
--					       unsigned int offset)
-+					       unsigned int *offset)
- {
- 	/* We never have more than 2 registers */
--	if (offset >= GPIO_PER_REG) {
--		offset -= GPIO_PER_REG;
-+	if (*offset >= GPIO_PER_REG) {
-+		*offset -= GPIO_PER_REG;
- 		*reg += sizeof(u32);
- 	}
- }
-@@ -376,7 +376,7 @@ static inline void armada_37xx_irq_update_reg(unsigned int *reg,
- {
- 	int offset = irqd_to_hwirq(d);
- 
--	armada_37xx_calc_reg_offset(reg, offset);
-+	armada_37xx_calc_reg_offset(reg, &offset);
- }
- 
- static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
-@@ -386,7 +386,7 @@ static int armada_37xx_gpio_direction_input(struct gpio_chip *chip,
- 	unsigned int reg = OUTPUT_EN;
- 	unsigned int mask;
- 
--	armada_37xx_calc_reg_offset(&reg, offset);
-+	armada_37xx_calc_reg_offset(&reg, &offset);
- 	mask = BIT(offset);
- 
- 	return regmap_update_bits(info->regmap, reg, mask, 0);
-@@ -399,7 +399,7 @@ static int armada_37xx_gpio_get_direction(struct gpio_chip *chip,
- 	unsigned int reg = OUTPUT_EN;
- 	unsigned int val, mask;
- 
--	armada_37xx_calc_reg_offset(&reg, offset);
-+	armada_37xx_calc_reg_offset(&reg, &offset);
- 	mask = BIT(offset);
- 	regmap_read(info->regmap, reg, &val);
- 
-@@ -413,7 +413,7 @@ static int armada_37xx_gpio_direction_output(struct gpio_chip *chip,
- 	unsigned int reg = OUTPUT_EN;
- 	unsigned int mask, val, ret;
- 
--	armada_37xx_calc_reg_offset(&reg, offset);
-+	armada_37xx_calc_reg_offset(&reg, &offset);
- 	mask = BIT(offset);
- 
- 	ret = regmap_update_bits(info->regmap, reg, mask, mask);
-@@ -434,7 +434,7 @@ static int armada_37xx_gpio_get(struct gpio_chip *chip, unsigned int offset)
- 	unsigned int reg = INPUT_VAL;
- 	unsigned int val, mask;
- 
--	armada_37xx_calc_reg_offset(&reg, offset);
-+	armada_37xx_calc_reg_offset(&reg, &offset);
- 	mask = BIT(offset);
- 
- 	regmap_read(info->regmap, reg, &val);
-@@ -449,7 +449,7 @@ static void armada_37xx_gpio_set(struct gpio_chip *chip, unsigned int offset,
- 	unsigned int reg = OUTPUT_VAL;
- 	unsigned int mask, val;
- 
--	armada_37xx_calc_reg_offset(&reg, offset);
-+	armada_37xx_calc_reg_offset(&reg, &offset);
- 	mask = BIT(offset);
- 	val = value ? mask : 0;
- 
--- 
-2.17.2 (Apple Git-113)
+I checked, this case is specifically called out
+
+https://www.kernel.org/doc/html/v5.1/process/coding-style.html
+> +
+This blank line doesn't add anything either ;)
+> +}
+> +
+>  /*
+>   * Set up the scalable mode pasid table entry for first only
+>   * translation type.
+> @@ -567,16 +582,7 @@ int intel_pasid_setup_first_level(struct intel_iommu *iommu,
+>  	/* Setup Present and PASID Granular Transfer Type: */
+>  	pasid_set_translation_type(pte, 1);
+>  	pasid_set_present(pte);
+> -
+> -	if (!ecap_coherent(iommu->ecap))
+> -		clflush_cache_range(pte, sizeof(*pte));
+> -
+> -	if (cap_caching_mode(iommu->cap)) {
+> -		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> -		iotlb_invalidation_with_pasid(iommu, did, pasid);
+> -	} else {
+> -		iommu_flush_write_buffer(iommu);
+> -	}
+> +	pasid_flush_caches(iommu, pte, pasid, did);
+>  
+>  	return 0;
+>  }
+> @@ -640,16 +646,7 @@ int intel_pasid_setup_second_level(struct intel_iommu *iommu,
+>  	 */
+>  	pasid_set_sre(pte);
+>  	pasid_set_present(pte);
+> -
+> -	if (!ecap_coherent(iommu->ecap))
+> -		clflush_cache_range(pte, sizeof(*pte));
+> -
+> -	if (cap_caching_mode(iommu->cap)) {
+> -		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> -		iotlb_invalidation_with_pasid(iommu, did, pasid);
+> -	} else {
+> -		iommu_flush_write_buffer(iommu);
+> -	}
+> +	pasid_flush_caches(iommu, pte, pasid, did);
+>  
+>  	return 0;
+>  }
+> @@ -683,16 +680,7 @@ int intel_pasid_setup_pass_through(struct intel_iommu *iommu,
+>  	 */
+>  	pasid_set_sre(pte);
+>  	pasid_set_present(pte);
+> -
+> -	if (!ecap_coherent(iommu->ecap))
+> -		clflush_cache_range(pte, sizeof(*pte));
+> -
+> -	if (cap_caching_mode(iommu->cap)) {
+> -		pasid_cache_invalidation_with_pasid(iommu, did, pasid);
+> -		iotlb_invalidation_with_pasid(iommu, did, pasid);
+> -	} else {
+> -		iommu_flush_write_buffer(iommu);
+> -	}
+> +	pasid_flush_caches(iommu, pte, pasid, did);
+>  
+>  	return 0;
+>  }
+
 
