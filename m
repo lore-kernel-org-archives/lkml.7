@@ -2,90 +2,84 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1772C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:02:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51425C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:03:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12A820665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:02:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560841345;
-	bh=2ugJ+4jbEDNf3IaKlqSNtduwn51MkrS5VDiaJCRhmYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=xWKu+ttEhGsJ64swmuE1sfsXiMGEukIdi1nhy7Y/2Y9wR0bnCGMJGjHZepDTUOVqa
-	 u9wSUOTJN41xhrXP4DgALf7dWT7A7v50kcx18HcyxNgtQZxTpAhBvkwgTdAfKtzv6s
-	 KOa19Q7WhNFh0uN42tqr+B1RKcHnFPGHQeBHhLxY=
+	by mail.kernel.org (Postfix) with ESMTP id 2A19C20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:03:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfFRHCY (ORCPT
+        id S1728654AbfFRHDN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:02:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRHCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:02:24 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1F6C213F2;
-        Tue, 18 Jun 2019 05:47:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560836832;
-        bh=2ugJ+4jbEDNf3IaKlqSNtduwn51MkrS5VDiaJCRhmYc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=siWcg5jv7S7enP/dNIGa2avKBd20kFJLLKKmDQOd50TmtgVpdF/ODiH9jSweJauM4
-         nNPzX4HXmKyOyAqer94mO0tPqUW5raXp9pZaSocIvPrazoQm2xEnZMfxq9gCL/zAqe
-         yPvtYsSUnHMEpRz+yzv515R9CO3+aPiZgySE+QsE=
-Date:   Tue, 18 Jun 2019 07:47:09 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Gao Xiang <gaoxiang25@huawei.com>
-Cc:     devel@driverdev.osuosl.org, Miao Xie <miaoxie@huawei.com>,
-        chao@kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        weidu.du@huawei.com, Fang Wei <fangwei1@huawei.com>,
-        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
-Subject: Re: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
-Message-ID: <20190618054709.GA4271@kroah.com>
-References: <20190614181619.64905-1-gaoxiang25@huawei.com>
- <20190617203609.GA22034@kroah.com>
- <c86d3fc0-8b4a-6583-4309-911960fbe862@huawei.com>
+        Tue, 18 Jun 2019 03:03:13 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:41474 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726037AbfFRHDM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:03:12 -0400
+X-UUID: e9ff0065f9b342c9b5853322474eb434-20190618
+X-UUID: e9ff0065f9b342c9b5853322474eb434-20190618
+Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw01.mediatek.com
+        (envelope-from <roger.lu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2080643755; Tue, 18 Jun 2019 15:03:03 +0800
+Received: from mtkcas07.mediatek.inc (172.21.101.84) by
+ mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 18 Jun 2019 15:03:02 +0800
+Received: from mtksdaap41.mediatek.inc (172.21.77.4) by mtkcas07.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 18 Jun 2019 15:03:02 +0800
+From:   Roger Lu <roger.lu@mediatek.com>
+To:     Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Nicolas Boichat <drinkcat@google.com>,
+        Stephen Boyd <sboyd@kernel.org>
+CC:     Fan Chen <fan.chen@mediatek.com>,
+        HenryC Chen <HenryC.Chen@mediatek.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Nishanth Menon <nm@ti.com>, Roger Lu <roger.lu@mediatek.com>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pm@vger.kernel.org>
+Subject: PM / AVS: SVS: Introduce SVS engine
+Date:   Tue, 18 Jun 2019 15:02:56 +0800
+Message-ID: <20190618070258.11520-1-roger.lu@mediatek.com>
+X-Mailer: git-send-email 2.18.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c86d3fc0-8b4a-6583-4309-911960fbe862@huawei.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 09:47:08AM +0800, Gao Xiang wrote:
-> 
-> 
-> On 2019/6/18 4:36, Greg Kroah-Hartman wrote:
-> > On Sat, Jun 15, 2019 at 02:16:11AM +0800, Gao Xiang wrote:
-> >> At last, this is RFC patch v1, which means it is not suitable for
-> >> merging soon... I'm still working on it, testing its stability
-> >> these days and hope these patches get merged for 5.3 LTS
-> >> (if 5.3 is a LTS version).
-> > 
-> > Why would 5.3 be a LTS kernel?
-> > 
-> > curious as to how you came up with that :)
-> 
-> My personal thought is about one LTS kernel one year...
-> Usually 5 versions after the previous kernel...(4.4 -> 4.9 -> 4.14 -> 4.19),
-> which is not suitable for all historical LTSs...just prepare for 5.3...
+SVS driver use OPP adjust event in [1] to update
+OPP table voltage part.
 
-I try to pick the "last" kernel that is released each year, which
-sometimes is 5 kernels, sometimes 4, sometimes 6, depending on the
-release cycle.
+[1] https://patchwork.kernel.org/patch/10946069/
 
-So odds are it will be 5.4 for the next LTS kernel, but we will not know
-more until it gets closer to release time.
+changes since v1:
+- Add svs subnodes description in binding documents
+- Set svs_cpu_little & svs_cci vmin to 0x18 to meet cpufreq
+and cci software architecture.
 
-thanks,
+Roger Lu (2):
+  dt-bindings: soc: add mtk svs dt-bindings
+  PM / AVS: SVS: Introduce SVS engine
 
-greg k-h
+ .../devicetree/bindings/power/mtk-svs.txt     |   88 +
+ drivers/power/avs/Kconfig                     |   10 +
+ drivers/power/avs/Makefile                    |    1 +
+ drivers/power/avs/mtk_svs.c                   | 2086 +++++++++++++++++
+ include/linux/power/mtk_svs.h                 |   23 +
+ 5 files changed, 2208 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/mtk-svs.txt
+ create mode 100644 drivers/power/avs/mtk_svs.c
+ create mode 100644 include/linux/power/mtk_svs.h
+
+
