@@ -2,112 +2,116 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4356DC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFF7C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 13D9A20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:16:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19BBE20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:17:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+ThJ5pC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WUyn0HUp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbfFRHQX (ORCPT
+        id S1728847AbfFRHRf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:16:23 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42778 "EHLO
+        Tue, 18 Jun 2019 03:17:35 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:33985 "EHLO
         mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfFRHQX (ORCPT
+        with ESMTP id S1725955AbfFRHRf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:16:23 -0400
-Received: by mail-pl1-f196.google.com with SMTP id ay6so3083807plb.9;
-        Tue, 18 Jun 2019 00:16:22 -0700 (PDT)
+        Tue, 18 Jun 2019 03:17:35 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so5316851plt.1;
+        Tue, 18 Jun 2019 00:17:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HNJi6hiuYdfL3u8IXlFr2ptQbwtW7ZdNyo5Hq+iVFb0=;
-        b=Y+ThJ5pCj+BAiwHO4j2p2nYITjKlpl+FSuLSTNOe+TBAgWSMDCYqb8cPLlvg0F1dth
-         HnhM5kNjqYivCUy7GrQd16xPch7qNWQX18sl65tAEEtv2Df2RwLmv2I0D+LUcee1jdVX
-         KGaclhr/o20kE66rX6k4zqkjW2TIjWOUzINkK/LYswE9neLxBEuDN+PAnIUsgXtgSBgx
-         AQPuhtt8NnsINJQNjvoNXPgmbajWFp9UtDyJ2kZSvPNkmyi+964tUXmqTiwhy21ZhtPT
-         AvgX+EE4PPKYe1X/jfll6qk8oltbqEu4yW3hADikabGGGThnwh0+BNCoQXmNd2V37UEi
-         aorg==
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=6ls+i1u+lWJagjHM7534F8Uv5sC5LPRBjSxm2ecigcI=;
+        b=WUyn0HUpRkDvaQuENXAK0PGnCB5TxeJa5MJFSJVY5qlfM2PUnK5Rh65Uup9Zxg+KlC
+         Sd7mPCIvGKAePXHwuo+zAEW9XGDehg/1O3k+rWNlq4dsrDKDlTqcZ7Krh/T2g686FARo
+         Y92y/YV8KouEjNRAqpL94FZuxw3zyVxYzezozpU8W826c6QXnef6F2C45Pvx/FX4i23d
+         7wHDKsUcvU7W4QE2h3LvEKfROtqzhJB0WnLsRhzQn6x2sAR+arNrGkHwRn7UeY+dOm3r
+         jWWxUQXsgdp9BpXZVBvrscdbNgS4iVXRHYv2mvojh4ZIfG8xhb+7MV44tCh8qitjES6f
+         buoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HNJi6hiuYdfL3u8IXlFr2ptQbwtW7ZdNyo5Hq+iVFb0=;
-        b=NAdxBpHrDzKwyjsqWUqBvfN78Soq1paImQTbXMniFZ7uDQVL5obhxofqHM+w5VakJz
-         UgssxdH7goOMeaCwQkZkwNn3uZrAZzquh5KV0TBfmT8x6HcBX66brZoT/UV+hT7jA2B9
-         BSR68vjXg5+H53+qqXPYVNNaXZi9h0wN9q/0Dc6mlyu190SDNUaVUKbpEO9gtWKtZ+7H
-         g85D7W/ZfgtEXxhE+ues1iR7trCP2CQ7MTbL2g9f+sY4dEqs5C85UvU169S8Riiqv0l7
-         ZgPwbNfRpMhnOgAV/d9jLGVN+vhCaASCpChk7CnFVSEEpXTdWuj/UX84WLPDdA6zEbDl
-         CWpQ==
-X-Gm-Message-State: APjAAAUQ3rhkujsWpTPHtfs/hsfKua0ISM9swD7/520xKAhH7OEMxsbE
-        q/AVNiC6ofEWrSecF5PVvRFUeMSxm8Y=
-X-Google-Smtp-Source: APXvYqzQY3y9xEauwLFI59PlhTMcKf6K26shYUvaumGkoTV5SyH8/M3fZ5Z05bsG0ptz3yCTmUM1sg==
-X-Received: by 2002:a17:902:d715:: with SMTP id w21mr112846469ply.234.1560838478885;
-        Mon, 17 Jun 2019 23:14:38 -0700 (PDT)
-Received: from maya190131 ([13.66.160.195])
-        by smtp.gmail.com with ESMTPSA id a7sm13038951pgj.42.2019.06.17.23.14.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 23:14:38 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 06:14:38 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/5] hv: vmbus: Replace page definition with Hyper-V
- specific one
-Message-ID: <aef1958c0b0a5d005899620d205a55b2c91f7f78.1560837096.git.m.maya.nakamura@gmail.com>
-References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=6ls+i1u+lWJagjHM7534F8Uv5sC5LPRBjSxm2ecigcI=;
+        b=BjWqy5hwAU2Rh7ung8oxvWkXNhO+Dtfc5oY8XOp+tfyU6OydjjHbs1j/HsYjebCBZg
+         cCvkHivt+Bc3RosICDP5FMrvd9Z+q1wUGZZnPIdfHJztptFD5UVEt07qPCQRwRA199NY
+         +tLtCOxCpgKNTuNwjbBfKu33TaOadPdvM1Fka6333McHUoivGTcy6ESSxpMiExbJLtqq
+         nAgD/OXkUNxtDapV1m0rfKzuozwc02bqZ1XAFIpCWGXIFx69A4d9U2jnO3doy4zackcr
+         4htfFP5l9nAfo4JMIYaDdLHdDXej9O0FZfrm5fwOW+o52GT6EQAVonXCjXRlYcn1q7Ab
+         nZXw==
+X-Gm-Message-State: APjAAAVRnu+UMabGw3tS6C0Ngc3ydJO6Y+oNq9kQev8ryq3rQwU8CKFG
+        GYekJQSFcgwi/ClIXSR8YOYrcpFE
+X-Google-Smtp-Source: APXvYqyINnOm+mjTZ+CUFcz86nookJ6AW/68jaX/bNlGiAR7RzP3b1FIxJN6D1gmjwWmvIHE04lGQA==
+X-Received: by 2002:a17:902:a504:: with SMTP id s4mr42724651plq.117.1560838363437;
+        Mon, 17 Jun 2019 23:12:43 -0700 (PDT)
+Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
+        by smtp.gmail.com with ESMTPSA id m96sm1195616pjb.1.2019.06.17.23.12.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 23:12:42 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+CC:     Han Jingoo <jingoohan1@gmail.com>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] video: fbdev: s3c-fb: add COMPILE_TEST support
+Thread-Topic: [PATCH] video: fbdev: s3c-fb: add COMPILE_TEST support
+Thread-Index: AWIzNHA0y3vT+npVfJhuNQKkYC3mSWVjM2Fi4rm3H+w=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Tue, 18 Jun 2019 06:12:27 +0000
+Message-ID: <PSXP216MB0662B10864E4DDEC1EC1823CAAEA0@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
+References: <CGME20190614144634eucas1p1b04dcfcc040c3c886d2b33592c501d3b@eucas1p1.samsung.com>
+ <e771b89b-0e38-a712-b635-8d53cbf95a8e@samsung.com>
+In-Reply-To: <e771b89b-0e38-a712-b635-8d53cbf95a8e@samsung.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1560837096.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
-not be 4096 on all architectures and Hyper-V always runs with a page
-size of 4096.
-
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
-Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- drivers/hv/hyperv_vmbus.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
-index 362e70e9d145..019469c3cbca 100644
---- a/drivers/hv/hyperv_vmbus.h
-+++ b/drivers/hv/hyperv_vmbus.h
-@@ -192,11 +192,11 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
- 		       u64 *requestid, bool raw);
- 
- /*
-- * Maximum channels is determined by the size of the interrupt page
-- * which is PAGE_SIZE. 1/2 of PAGE_SIZE is for send endpoint interrupt
-- * and the other is receive endpoint interrupt
-+ * Maximum channels, 16348, is determined by the size of the interrupt page,
-+ * which is HV_HYP_PAGE_SIZE. 1/2 of HV_HYP_PAGE_SIZE is to send endpoint
-+ * interrupt, and the other is to receive endpoint interrupt.
-  */
--#define MAX_NUM_CHANNELS	((PAGE_SIZE >> 1) << 3)	/* 16348 channels */
-+#define MAX_NUM_CHANNELS	((HV_HYP_PAGE_SIZE >> 1) << 3)
- 
- /* The value here must be in multiple of 32 */
- /* TODO: Need to make this configurable */
--- 
-2.17.1
-
+On 6/14/19, 11:46 PM, Bartlomiej Zolnierkiewicz wrote:
+>=20
+> Add COMPILE_TEST support to s3c-fb driver for better compile
+> testing coverage.
+>
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> ---
+>  drivers/video/fbdev/Kconfig |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> Index: b/drivers/video/fbdev/Kconfig
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- a/drivers/video/fbdev/Kconfig
+> +++ b/drivers/video/fbdev/Kconfig
+> @@ -1877,7 +1877,8 @@ config FB_TMIO_ACCELL
+> =20
+>  config FB_S3C
+>  	tristate "Samsung S3C framebuffer support"
+> -	depends on FB && (CPU_S3C2416 || ARCH_S3C64XX)
+> +	depends on FB && HAVE_CLK && HAS_IOMEM
+> +	depends on (CPU_S3C2416 || ARCH_S3C64XX) || COMPILE_TEST
+>  	select FB_CFB_FILLRECT
+>  	select FB_CFB_COPYAREA
+>  	select FB_CFB_IMAGEBLIT
