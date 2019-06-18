@@ -2,149 +2,135 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886CAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:59:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5636DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:04:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68713214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:59:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2879A20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:04:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560870281;
+	bh=GLkzNmB11mIMqXWKKDlm+xnN5jJVONf5DNID/7gX8dM=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=CyXRLlol2nSmB1E8wr73UGyeO6m8gfOv4M7T4YW6l5CZA91aNTvwfMNOxU+HFCvFj
+	 aj0aWAATF9QJXvxShbDM55zoW+Idk1Yqht+z2kQ0GpQ1CaHMqpCFF9J5ZD+HNXqHWp
+	 x40pdsouD2mLrBkXfzWDlZl6SOWD+fHO3xZPnfME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729437AbfFRO7u (ORCPT
+        id S1729516AbfFRPEj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:59:50 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:38910 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729042AbfFRO7t (ORCPT
+        Tue, 18 Jun 2019 11:04:39 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:37858 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729356AbfFRPEj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:59:49 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id AFB44634C7B;
-        Tue, 18 Jun 2019 17:59:22 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hdFZy-0000tJ-LA; Tue, 18 Jun 2019 17:59:22 +0300
-Date:   Tue, 18 Jun 2019 17:59:22 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Vishal Sagar <vsagar@xilinx.com>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Vishal Sagar <vishal.sagar@xilinx.com>,
-        Hyun Kwon <hyunk@xilinx.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        Michal Simek <michals@xilinx.com>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dinesh Kumar <dineshk@xilinx.com>,
-        Sandip Kothari <sandipk@xilinx.com>,
-        Luca Ceresoli <luca@lucaceresoli.net>,
-        Jacopo Mondi <jacopo@jmondi.org>
-Subject: Re: [PATCH v8 2/2] media: v4l: xilinx: Add Xilinx MIPI CSI-2 Rx
- Subsystem driver
-Message-ID: <20190618145922.sq4jovxoz2khs3tq@valkosipuli.retiisi.org.uk>
-References: <1559555971-193235-1-git-send-email-vishal.sagar@xilinx.com>
- <1559555971-193235-3-git-send-email-vishal.sagar@xilinx.com>
- <20190605124851.xr2hmgyoe46q6xud@kekkonen.localdomain>
- <CH2PR02MB60889F3BF23FD96BF11053A2A7100@CH2PR02MB6088.namprd02.prod.outlook.com>
+        Tue, 18 Jun 2019 11:04:39 -0400
+Received: by mail-io1-f67.google.com with SMTP id e5so30662783iok.4
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 08:04:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=n+Ql3wVC/12fF84n4zpf2k7UpDcKmujEt1DaiiPw9qM=;
+        b=S5z34YtusjYEDrmJRpYdDkLNkEyqZu2h0VztZzhWaBFSPMcfGjsfL4fPxA8epFlCl0
+         7EYgCFMMMOJi+6eDL60CzSqoLl22mrz9wj837Byc3ao3hmvAIEgkqvGh252sQt+oHfQJ
+         88csRkNqH6wPqPa8M6QrcTns38DwR0C+hDyr4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=n+Ql3wVC/12fF84n4zpf2k7UpDcKmujEt1DaiiPw9qM=;
+        b=ZMlONPUDLODm5ZO8UvNISADjBdvB6N2oYIZr8j7rZWHDCzMZvUZVQQGAWwafo25zZf
+         5wMIIDm8J8XWEM+o7nyRLBSJiwKBu/++d1VGQJYKEyZmG6+/anlrNcgFV+Rqejg4Cjq5
+         i78uZNq0+0ghmlVzz6hznCBU0rwyxY8fUIiE0DgUlbVM4fQhUjCtGZwzgfM2h7zrNfiI
+         RtvLr12HjhDR6UgfOtRlIyIWszhPDSC6ZoxDfJOmlNUpsuTq/9shKDWAlX1ZfLzQ3RQt
+         MEATOwbqHWNl7OyUI7oSLuW1tJk5x9ntEBSHcTEqaFX8hJAYi3BX2QDzF3eQ6Yn6Cyq6
+         WZog==
+X-Gm-Message-State: APjAAAX051GZyhOfDDbgZ8ff5SU4utQ0rK02tauYQPbG6zAQaBzpS4eo
+        M7VIUbFemweNejwxRwWi34BiLQ==
+X-Google-Smtp-Source: APXvYqxj0KuCDj3+zY6rRSN6uEABJMKSdM9JnxVOi3emiC+fs8zDQXFdWYHimb0In4JQsTwcp1rg4g==
+X-Received: by 2002:a5e:a712:: with SMTP id b18mr6336031iod.220.1560870278397;
+        Tue, 18 Jun 2019 08:04:38 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id n7sm16602070ioo.79.2019.06.18.08.04.37
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 08:04:37 -0700 (PDT)
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: platform: convert
+ x86-laptop-drivers.txt to reST
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>, cezary.jackiewicz@gmail.com,
+        Darren Hart <dvhart@infradead.org>, andy@infradead.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>, linux-doc@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
+References: <20190618053227.31678-1-puranjay12@gmail.com>
+ <20190618054158.GA3713@kroah.com> <20190618071717.2132a1b7@lwn.net>
+ <20190618133948.GB5416@kroah.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <8aeb222a-ee44-4125-45fd-ce9a741e7ecc@linuxfoundation.org>
+Date:   Tue, 18 Jun 2019 09:04:36 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CH2PR02MB60889F3BF23FD96BF11053A2A7100@CH2PR02MB6088.namprd02.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190618133948.GB5416@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vishal,
-
-On Fri, Jun 07, 2019 at 07:11:47AM +0000, Vishal Sagar wrote:
-...
-> > > +/**
-> > > + * xcsi2rxss_s_ctrl - This is used to set the Xilinx MIPI CSI-2 V4L2 controls
-> > > + * @ctrl: V4L2 control to be set
-> > > + *
-> > > + * This function is used to set the V4L2 controls for the Xilinx MIPI
-> > > + * CSI-2 Rx Subsystem. It is used to set the active lanes in the system.
-> > > + * The event counters can be reset.
-> > > + *
-> > > + * Return: 0 on success, errors otherwise
-> > > + */
-> > > +static int xcsi2rxss_s_ctrl(struct v4l2_ctrl *ctrl)
-> > > +{
-> > > +     struct xcsi2rxss_state *xcsi2rxss =
-> > > +             container_of(ctrl->handler, struct xcsi2rxss_state,
-> > > +                          ctrl_handler);
-> > > +     struct xcsi2rxss_core *core = &xcsi2rxss->core;
-> > > +     int ret = 0;
-> > > +
-> > > +     mutex_lock(&xcsi2rxss->lock);
-> > > +
-> > > +     switch (ctrl->id) {
-> > > +     case V4L2_CID_XILINX_MIPICSISS_ACT_LANES:
-> > > +             /*
-> > > +              * This will be called only when "Enable Active Lanes" parameter
-> > > +              * is set in design
-> > > +              */
-> > 
-> > You generally get the number of lanes from firmware. There's no need to add
-> > a control for it. 
-> > 
+On 6/18/19 7:39 AM, Greg KH wrote:
+> On Tue, Jun 18, 2019 at 07:17:17AM -0600, Jonathan Corbet wrote:
+>> On Tue, 18 Jun 2019 07:41:58 +0200
+>> Greg KH <gregkh@linuxfoundation.org> wrote:
+>>
+>>> On Tue, Jun 18, 2019 at 11:02:27AM +0530, Puranjay Mohan wrote:
+>>>> This converts the plain text documentation to reStructuredText format.
+>>>> No essential content change.
+>>>>
+>>>> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+>>>> ---
+>>>>   Documentation/platform/x86-laptop-drivers.rst | 23 +++++++++++++++++++
+>>>>   Documentation/platform/x86-laptop-drivers.txt | 18 ---------------
+>>>>   2 files changed, 23 insertions(+), 18 deletions(-)
+>>>>   create mode 100644 Documentation/platform/x86-laptop-drivers.rst
+>>>>   delete mode 100644 Documentation/platform/x86-laptop-drivers.txt
+>>>
+>>> Don't you also need to hook it up to the documentation build process
+>>> when doing this?
+>>
+>> Hooking it into the TOC tree is a good thing, but I think it's also good
+>> to think about the exercise in general.  This is a document dropped into
+>> place five years ago and never touched again.  It's a short list of
+>> seemingly ancient laptops with no explanation of what it means.  So the
+>> real question, IMO, is whether this document is useful to anybody and, if
+>> not, whether it should just be deleted instead.
 > 
-> I don't understand what firmware means here. There is no other code running.
-> I don't see how to modify the number of lanes apart from using v4l control.
-
-It's not the user that provides this information. Again, if you want this
-feature right from the time the driver is merged to mainline, then rebase
-the set on top of Jacopo's frame descriptor set. But it may take a while.
-
+> I bet it should be deleted, but we should ask the platform driver
+> maintainers first before we do that :)
 > 
-> > > +             if (core->enable_active_lanes) {
-> > > +                     u32 active_lanes;
-> > > +
-> > > +                     xcsi2rxss_clr_and_set(core, XCSI_PCR_OFFSET,
-> > > +                                           XCSI_PCR_ACTLANES_MASK,
-> > > +                                           ctrl->val - 1);
-> > > +                     /*
-> > > +                      * This delay is to allow the value to reflect as write
-> > > +                      * and read paths are different.
-> > > +                      */
-> > > +                     udelay(1);
-> > > +                     active_lanes = xcsi2rxss_read(core, XCSI_PCR_OFFSET);
-> > > +                     active_lanes &= XCSI_PCR_ACTLANES_MASK;
-> > > +                     active_lanes++;
-> > > +                     if (active_lanes != ctrl->val)
-> > > +                             dev_info(core->dev, "RxByteClkHS absent\n");
-> > > +                     dev_dbg(core->dev, "active lanes = %d\n", ctrl->val);
-> > > +             } else {
-> > > +                     ret = -EINVAL;
-> > > +             }
-> > > +             break;
-> > > +     case V4L2_CID_XILINX_MIPICSISS_RESET_COUNTERS:
-> > > +             xcsi2rxss_reset_event_counters(xcsi2rxss);
-> > > +             break;
-> > > +     default:
-> > > +             ret = -EINVAL;
-> > > +             break;
-> > > +     }
-> > > +
-> > > +     mutex_unlock(&xcsi2rxss->lock);
-> > > +
-> > > +     return ret;
-> > > +}
 
--- 
-Regards,
+Adding Platform driver maintainers Darren Hart and Andy Shevchenko, and
+Compal laptop maintainer Cezary Jackiewicz to the discussion.
 
-Sakari Ailus
++ platform-driver-x86@vger.kernel.org
+
+Hi Darren, Andy, and Cezary,
+
+Would it be okay to remove the x86-laptop-drivers.txt or should it be
+converted to .rst and kept around?
+
+thanks,
+-- Shuah
+
+
+
+
+
