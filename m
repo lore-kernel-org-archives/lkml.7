@@ -2,82 +2,77 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CC4C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:38:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 797ADC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88E5B206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:38:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57FC320B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:38:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729160AbfFRIii (ORCPT
+        id S1729177AbfFRIir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:38:38 -0400
-Received: from foss.arm.com ([217.140.110.172]:57178 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728818AbfFRIii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:38:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79F1F28;
-        Tue, 18 Jun 2019 01:38:37 -0700 (PDT)
-Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F9CE3F246;
-        Tue, 18 Jun 2019 01:38:36 -0700 (PDT)
-Subject: Re: [PATCH v2 09/28] drivers: Add generic match helper by
- ACPI_COMPANION device
-To:     rafael@kernel.org
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        lenb@kernel.org, linux-acpi@vger.kernel.org,
-        linux-spi@vger.kernel.org, broonie@kernel.org
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-10-git-send-email-suzuki.poulose@arm.com>
- <CAJZ5v0gi2vpr5y3USnPnPBHjPA1YAwfqjsJppfLgBP5CcycGog@mail.gmail.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <85f942fc-52fd-c4ed-29b3-f28c55a6a7bb@arm.com>
-Date:   Tue, 18 Jun 2019 09:38:35 +0100
+        Tue, 18 Jun 2019 04:38:47 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:59772 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728818AbfFRIiq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:38:46 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 83956260DF9
+Subject: Re: [PATCH 1/2] platform/chrome: wilco_ec: Fix unreleased lock in
+ event_read()
+To:     Nick Crews <ncrews@chromium.org>, bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        djkurtz@chromium.org, dtor@google.com, sjg@chromium.org,
+        kernel-janitors@vger.kernel.org, dan.carpenter@oracle.com
+References: <20190614205631.90222-1-ncrews@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <f77eda75-70f4-e276-21f7-cb64a65d121f@collabora.com>
+Date:   Tue, 18 Jun 2019 10:38:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <CAJZ5v0gi2vpr5y3USnPnPBHjPA1YAwfqjsJppfLgBP5CcycGog@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190614205631.90222-1-ncrews@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
 
-On 17/06/2019 23:07, Rafael J. Wysocki wrote:
-> On Fri, Jun 14, 2019 at 7:55 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->>
->> Add a generic helper to match a device by the ACPI_COMPANION device.
->> This will be later used for providing wrappers for
->> (bus/class/driver)_find_device().
->>
->> Cc: Len Brown <lenb@kernel.org>
->> Cc: linux-acpi@vger.kernel.org
->> Cc: linux-spi@vger.kernel.org
->> Cc: Mark Brown <broonie@kernel.org>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+
+On 14/6/19 22:56, Nick Crews wrote:
+> When copying an event to userspace failed, the event queue
+> lock was never released. This fixes that.
 > 
-> Please fold this change into the patch adding users of device_match_acpi_dev().
+> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Nick Crews <ncrews@chromium.org>
+> ---
+>  drivers/platform/chrome/wilco_ec/event.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/platform/chrome/wilco_ec/event.c b/drivers/platform/chrome/wilco_ec/event.c
+> index 4d2776f77dbd..1eed55681598 100644
+> --- a/drivers/platform/chrome/wilco_ec/event.c
+> +++ b/drivers/platform/chrome/wilco_ec/event.c
+> @@ -342,7 +342,7 @@ static ssize_t event_read(struct file *filp, char __user *buf, size_t count,
+>  				 struct ec_event_entry, list);
+>  	n_bytes_written = entry->size;
+>  	if (copy_to_user(buf, &entry->event, n_bytes_written))
+> -		return -EFAULT;
+> +		n_bytes_written = -EFAULT;
+>  	list_del(&entry->list);
+>  	kfree(entry);
+>  	dev_data->num_events--;
+> 
 
-There are variants of this by class/bus/driver and all of them are introduced
-as separate patches with the respective users. If we do for this, we have to
-do the same for other matches as well.
+Applied for chrome-platform-5.3
 
-i.e, [ device_match_by_attr + class_find_device_by_attr & users + 
-driver_find_device_by_attr & users + bus_find_device_by_attr & users ]
-
-And that becomes a large chunk, which could make the review painful.
-
-If you would still like that approach, I could do that in the next revision.
-
-Cheers
-Suzuki
+Thanks,
+~ Enric
