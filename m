@@ -2,119 +2,87 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A14AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:56:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0BEDC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:57:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E132B20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:56:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UFyDjb+1"
+	by mail.kernel.org (Postfix) with ESMTP id 8449520873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:57:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729804AbfFRO4x (ORCPT
+        id S1729621AbfFRO53 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:56:53 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:61838 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728572AbfFRO4x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:56:53 -0400
-Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x5IEulO3002830
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 23:56:48 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5IEulO3002830
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560869808;
-        bh=6dxnBt3fIGFW+ROubfk95PVQRUtkj7Ua/pB+llQ1Ju0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UFyDjb+14G6pcwzM0N1YGpjD8LsS7oJHSZ/R7lBwUgfiwxvwQ3UT7CvXrXF+ubFxA
-         NxIPZ1Of+iqSsQuc6Iwn3kXLxP/Q5eVHjakfjmY7sJPvDpmewM3jPqNTh8F8Q8dxH6
-         921U1Gl8n5Z5BTv1pmB2QOfkG66epNXapFSIlY2JOTqPpIZC+ZFBWa1STHil8rWSdX
-         1IGZ2B7t+ZdgoZDB7ujiZxxWfL5L+DU4T6KMzDJkaVy8MAUHkOXmJiwOK1WVeiztgy
-         9vBJXCTA9oznqY2IJlxMDpa+CWcNbpy2+ByGkF2cI7ChUeae8Eu4ZqckESqolTneKF
-         f9TtQCfHM2FSA==
-X-Nifty-SrcIP: [209.85.222.41]
-Received: by mail-ua1-f41.google.com with SMTP id 34so6284304uar.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:56:48 -0700 (PDT)
-X-Gm-Message-State: APjAAAUKb3WjwRZpTlojSYLBMqMZn1sPKMF4yMr+i5m9cjS3eITlsc1L
-        Ka0fpdBB+oGieeymVxpFIiF/LYpsEfGhQU02fLs=
-X-Google-Smtp-Source: APXvYqyFy7PjzXrke2SGI3Ov1shSEe5A0cTjaMUsuLy2ti7lQsJriQ0xM0+UJqKY02rLhDN4+v5wVdf9p3y6jUchTbc=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr24650793vsl.155.1560869807098;
- Tue, 18 Jun 2019 07:56:47 -0700 (PDT)
+        Tue, 18 Jun 2019 10:57:29 -0400
+Received: from david.siemens.de ([192.35.17.14]:35859 "EHLO david.siemens.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728572AbfFRO53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:57:29 -0400
+Received: from mail2.sbs.de (mail2.sbs.de [192.129.41.66])
+        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id x5IEu7bC031531
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 16:56:07 +0200
+Received: from [139.25.68.37] (md1q0hnc.ad001.siemens.net [139.25.68.37] (may be forged))
+        by mail2.sbs.de (8.15.2/8.15.2) with ESMTP id x5IEu4CT006763;
+        Tue, 18 Jun 2019 16:56:04 +0200
+Subject: Re: [PATCH] x86: Optimize load_mm_cr4 to load_mm_cr4_irqsoff
+To:     Dave Hansen <dave.hansen@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>, linux-kernel@vger.kernel.org
+References: <0fbbcb64-5f26-4ffb-1bb9-4f5f48426893@siemens.com>
+ <fc5cd013-c230-2eb2-02c5-cf9bbf350ec2@intel.com>
+From:   Jan Kiszka <jan.kiszka@siemens.com>
+Message-ID: <d9bcbb64-6961-c52f-bb8e-bef3c424e224@siemens.com>
+Date:   Tue, 18 Jun 2019 16:56:03 +0200
+User-Agent: Mozilla/5.0 (X11; U; Linux i686 (x86_64); de; rv:1.8.1.12)
+ Gecko/20080226 SUSE/2.0.0.12-1.1 Thunderbird/2.0.0.12 Mnenhy/0.7.5.666
 MIME-Version: 1.0
-References: <20190529182324.8140-1-Jason@zx2c4.com> <CAK7LNARFUaaJH+g3oGzwFyKnELum72nOzxnvUfMKYBaAoGVkug@mail.gmail.com>
- <CAHmME9rGAUW9hjjZ7ZqNvZvaOCGrVHs3JNhYyr6g2PhZgS3TQg@mail.gmail.com>
-In-Reply-To: <CAHmME9rGAUW9hjjZ7ZqNvZvaOCGrVHs3JNhYyr6g2PhZgS3TQg@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 18 Jun 2019 23:56:11 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT4+O=eNoJHnW58pVob0Po0ULj3cEksXZ3w+kTGMNJj2w@mail.gmail.com>
-Message-ID: <CAK7LNAT4+O=eNoJHnW58pVob0Po0ULj3cEksXZ3w+kTGMNJj2w@mail.gmail.com>
-Subject: Re: [PATCH] arm: vdso: pass --be8 to linker if necessary
-To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
-Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <fc5cd013-c230-2eb2-02c5-cf9bbf350ec2@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi.
+On 18.06.19 16:41, Dave Hansen wrote:
+> On 6/18/19 12:32 AM, Jan Kiszka wrote:
+>> Thus, we can avoid disabling interrupts again in cr4_set/clear_bits.
+> 
+> Seems reasonable.
+> 
+> Your *_irqsoff() variants need lockdep_assert_irqs_disabled(), at least,
+> though.
 
-On Fri, May 31, 2019 at 5:20 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
->
-> Hey Masahiro,
->
-> I'm not sure exactly. I did just notice another place --be8 is being added:
+It inherits this check via __cr4_set, so I didn't add that to the outer path.
 
-That is not my question.
+> 
+> Can you talk a bit about the motivation here, though?  Did you encounter
+> some performance issue that led you to make this patch, or was it simply
+> an improvement you realized you could make from code inspection?
+> 
 
-I just asked about your commit log:
-"big-endian ARM was relying on gcc to translate
-its -mbe8 option into ld's --be8 option"
+I ran into a downstream issue adjusting patches to this code. In a nutshell, 
+Xenomai has something like an NMI context over most Linux code that shares some 
+codepaths with the kernel, though. One of them is switch_mm_irqs_off, and there 
+our checking logic warned. The rest was code inspection.
 
-I grepped '-mbe8', but I did not see it anywhere
-in the source tree.
+For upstream, this is a micro-optimization. But given that something like 
+switch_mm is in the path, I thought it's worth to propose.
 
-So, I just wondered where it came from.
-
-
-> ifeq ($(CONFIG_CPU_ENDIAN_BE8),y)
-> LDFLAGS_vmlinux += --be8
-> KBUILD_LDFLAGS_MODULE   += --be8
-> endif
->
-> I suppose it's possible that this is kbuild related where one of those
-> isn't winding up in the right place. I did see that the commit that
-> this patch addresses uses "=" instead of the more usual ":=" or "+="
-> for whatever reason.
->
-> Jason
-
-Perhaps, the following will be cleaner:
-
-ldflags-$(CONFIG_CPU_ENDIAN_BE8) += --be8
-ldflags-y += -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
-            -z max-page-size=4096 -z common-page-size=4096 \
-            -nostdlib -shared \
-            $(call ld-option, --hash-style=sysv) \
-            $(call ld-option, --build-id) \
-            -T
-
-
-I think this fix-up should be applied by Russell.
-Please note he does not pick up patches directly from ML.
-To ask him to pick up patches, you need to put
-patches into his patch tracker.
-(patches@arm.linux.org.uk)
-
+Jan
 
 -- 
-Best Regards
-Masahiro Yamada
+Siemens AG, Corporate Technology, CT RDA IOT SES-DE
+Corporate Competence Center Embedded Linux
