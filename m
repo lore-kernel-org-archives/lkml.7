@@ -2,143 +2,220 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 408DCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03626C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15CA020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:45:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560887106;
-	bh=3SVyETw2E2EX1ucf8dX5XihBlytLx4R2+9VoWquLfZ0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=siSLc3wGCJCR3wR/2xdgJNVU23lE3cOSM/lkmXp3s76rV93AGjbTEpV+A2htSi1+Y
-	 nPTEy1TLnjycnLb/IyEIF0Ia1Zj2Cwcp9nTxgwDMugCrVE+uBPfzeoawZOSKNnAStc
-	 VdbWgaFujT2V9EfHX1CgVuRzq80WLL8KbBY+1Xuc=
+	by mail.kernel.org (Postfix) with ESMTP id CA85720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:47:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="s2Uy7F2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730529AbfFRTpE (ORCPT
+        id S1730451AbfFRTrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:45:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730494AbfFRTpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:45:04 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E4AF2084B;
-        Tue, 18 Jun 2019 19:45:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560887103;
-        bh=3SVyETw2E2EX1ucf8dX5XihBlytLx4R2+9VoWquLfZ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ux/8q1+R+SGkuJvyxGL5MB3IcTZzJnsY9YYEa8vnbLQQxX+jPZ2QB7LNc/awkQVT8
-         KmXsHCVzPnOmtaydBRw3os8e2NolICsAgAYf7cg/CovkaTK/zb81ap2GkPdqCkCVX7
-         zPfEs99C5nkuUu3LGsXblb+6J32MdX/+ImBYsnw0=
-Date:   Tue, 18 Jun 2019 12:45:02 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Colin King <colin.king@canonical.com>
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>, linux-mm@kvack.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Subject: Re: [PATCH] mm: idle-page: fix oops because end_pfn is larger than
- max_pfn
-Message-Id: <20190618124502.7b9c32a00a54f0c618a12ca4@linux-foundation.org>
-In-Reply-To: <20190618124352.28307-1-colin.king@canonical.com>
-References: <20190618124352.28307-1-colin.king@canonical.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Jun 2019 15:47:23 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:36678 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730189AbfFRTrW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:47:22 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r6so16712625oti.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 12:47:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KdzTI56/zG61CRTFghoJgUKFV1Q8B4zDnAoIv6r27HM=;
+        b=s2Uy7F2zSbJmvMOmCMRUi/PHWSrNmkd+yGx8fJ35yqjrx0VA2g4YYc0V0vIwh56Z/0
+         BKgsgx566zdN/soUBM+hoVSPg0Mh339pfKaZgnXQ9whOVS/VisWHxVN9WcoYYav3yECk
+         Ij61J5BrFPqR+ChgqtjTrxSj+HZo/Wi3cxewVxCzA6SdioZEqsUUz0FjTzFcjq5+jDL3
+         W2eJpXAWBAeQDuOHPPDjWTeepbZZcaK0bwqBN0lAn86Q+NQi6cXesdKLyg5ZhJ+PKQWL
+         ILFMB95thwvXk8Yhg5TY/3cQLZfeRvv7FWwXv8GnfNwMUDdeT8DHF2iVNEmofRWm0l1+
+         BWaw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KdzTI56/zG61CRTFghoJgUKFV1Q8B4zDnAoIv6r27HM=;
+        b=oT0ATqYJfpUABLk6Ncy8bQ8V9OVEmQyoMIplXdcNI3g8nvJGkb2LBeXS9Af4A/H7ar
+         wvUMfiEugxevGjKEzxDfVOZ7cUJKybXgbPbRxo9gNAZlFlZWZqsNQX/QbQFUr+WeZQnp
+         itbpRr6U01qWJUWP3wNVInHCRQ/W2Wf3AtsrWbRe3TbK/Dcm0Ati/45m+iveA4OTw4Qh
+         cUNCwC6mq25PHiSGMCQrqJ8D6RfujPeg8FNcBRjpkpoNKzwgV63ddmHymFvN1M3GAuBA
+         YgYSRcVDxY05wSiAALUjudn+jpwnbIFGkpLMnutamSUkXF+nE+1tBx518KUYT2wLn6HC
+         XCJQ==
+X-Gm-Message-State: APjAAAUdiE7dB0Jgg+oZdHTZHgY9Bp5ZrCpq72Sy03x5KDABSYe+bRxT
+        8QOFtCNaYmptprqjrQWzRoHkwpin8kRkE4UtbjuADw==
+X-Google-Smtp-Source: APXvYqySF7rQ3CS5aYa5WUQws2eei8Wnpe7WRTBg73J6Btkx3UaxdRnRh4Rn6PBOGuhYC6vnCKHCnWzCQAn50NUniuI=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr6127462oto.207.1560887240878;
+ Tue, 18 Jun 2019 12:47:20 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190617122733.22432-1-hch@lst.de>
+In-Reply-To: <20190617122733.22432-1-hch@lst.de>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 18 Jun 2019 12:47:10 -0700
+Message-ID: <CAPcyv4hBUJB2RxkDqHkfEGCupDdXfQSrEJmAdhLFwnDOwt8Lig@mail.gmail.com>
+Subject: Re: dev_pagemap related cleanups v2
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="000000000000872d5f058b9e614c"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 13:43:52 +0100 Colin King <colin.king@canonical.com> wrote:
+--000000000000872d5f058b9e614c
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> Currently the calcuation of end_pfn can round up the pfn number to
-> more than the actual maximum number of pfns, causing an Oops. Fix
-> this by ensuring end_pfn is never more than max_pfn.
-> 
-> This can be easily triggered when on systems where the end_pfn gets
-> rounded up to more than max_pfn using the idle-page stress-ng
-> stress test:
-> 
+On Mon, Jun 17, 2019 at 5:27 AM Christoph Hellwig <hch@lst.de> wrote:
+>
+> Hi Dan, J=C3=A9r=C3=B4me and Jason,
+>
+> below is a series that cleans up the dev_pagemap interface so that
+> it is more easily usable, which removes the need to wrap it in hmm
+> and thus allowing to kill a lot of code
+>
+> Note: this series is on top of the rdma/hmm branch + the dev_pagemap
+> releas fix series from Dan that went into 5.2-rc5.
+>
+> Git tree:
+>
+>     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup.2
+>
+> Gitweb:
+>
+>     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-d=
+evmem-cleanup.2
+>
+> Changes since v1:
+>  - rebase
+>  - also switch p2pdma to the internal refcount
+>  - add type checking for pgmap->type
+>  - rename the migrate method to migrate_to_ram
+>  - cleanup the altmap_valid flag
+>  - various tidbits from the reviews
 
-cc Vladimir.  This seems rather obvious - I'm wondering if the code was
-that way for some subtle reason?
+Attached is my incremental fixups on top of this series, with those
+integrated you can add:
 
-(I'll add a cc:stable to this)
+Tested-by: Dan Williams <dan.j.williams@intel.com>
 
-From: Colin Ian King <colin.king@canonical.com>
-Subject: mm/page_idle.c: fix oops because end_pfn is larger than max_pfn
+...to the patches that touch kernel/memremap.c, drivers/dax, and drivers/nv=
+dimm.
 
-Currently the calcuation of end_pfn can round up the pfn number to more
-than the actual maximum number of pfns, causing an Oops.  Fix this by
-ensuring end_pfn is never more than max_pfn.
+You can also add:
 
-This can be easily triggered when on systems where the end_pfn gets
-rounded up to more than max_pfn using the idle-page stress-ng stress test:
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
 
-sudo stress-ng --idle-page 0
+...for the series.
 
-[ 3812.222790] BUG: unable to handle kernel paging request at 00000000000020d8
-[ 3812.224341] #PF error: [normal kernel read fault]
-[ 3812.225144] PGD 0 P4D 0
-[ 3812.225626] Oops: 0000 [#1] SMP PTI
-[ 3812.226264] CPU: 1 PID: 11039 Comm: stress-ng-idle- Not tainted 5.0.0-5-generic #6-Ubuntu
-[ 3812.227643] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-[ 3812.229286] RIP: 0010:page_idle_get_page+0xc8/0x1a0
-[ 3812.230173] Code: 0f b1 0a 75 7d 48 8b 03 48 89 c2 48 c1 e8 33 83 e0 07 48 c1 ea 36 48 8d 0c 40 4c 8d 24 88 49 c1 e4 07 4c 03 24 d5 00 89 c3 be <49> 8b 44 24 58 48 8d b8 80 a1 02 00 e8 07 d5 77 00 48 8b 53 08 48
-[ 3812.234641] RSP: 0018:ffffafd7c672fde8 EFLAGS: 00010202
-[ 3812.235792] RAX: 0000000000000005 RBX: ffffe36341fff700 RCX: 000000000000000f
-[ 3812.237739] RDX: 0000000000000284 RSI: 0000000000000275 RDI: 0000000001fff700
-[ 3812.239225] RBP: ffffafd7c672fe00 R08: ffffa0bc34056410 R09: 0000000000000276
-[ 3812.241027] R10: ffffa0bc754e9b40 R11: ffffa0bc330f6400 R12: 0000000000002080
-[ 3812.242555] R13: ffffe36341fff700 R14: 0000000000080000 R15: ffffa0bc330f6400
-[ 3812.244073] FS: 00007f0ec1ea5740(0000) GS:ffffa0bc7db00000(0000) knlGS:0000000000000000
-[ 3812.245968] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 3812.247162] CR2: 00000000000020d8 CR3: 0000000077d68000 CR4: 00000000000006e0
-[ 3812.249045] Call Trace:
-[ 3812.249625] page_idle_bitmap_write+0x8c/0x140
-[ 3812.250567] sysfs_kf_bin_write+0x5c/0x70
-[ 3812.251406] kernfs_fop_write+0x12e/0x1b0
-[ 3812.252282] __vfs_write+0x1b/0x40
-[ 3812.253002] vfs_write+0xab/0x1b0
-[ 3812.253941] ksys_write+0x55/0xc0
-[ 3812.254660] __x64_sys_write+0x1a/0x20
-[ 3812.255446] do_syscall_64+0x5a/0x110
-[ 3812.256254] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+--000000000000872d5f058b9e614c
+Content-Type: text/x-patch; charset="US-ASCII"; name="incremental.diff"
+Content-Disposition: attachment; filename="incremental.diff"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jx27x1rf0>
+X-Attachment-Id: f_jx27x1rf0
 
---- a/mm/page_idle.c~mm-idle-page-fix-oops-because-end_pfn-is-larger-than-max_pfn
-+++ a/mm/page_idle.c
-@@ -136,7 +136,7 @@ static ssize_t page_idle_bitmap_read(str
- 
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
- 
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
-@@ -181,7 +181,7 @@ static ssize_t page_idle_bitmap_write(st
- 
- 	end_pfn = pfn + count * BITS_PER_BYTE;
- 	if (end_pfn > max_pfn)
--		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
-+		end_pfn = max_pfn;
- 
- 	for (; pfn < end_pfn; pfn++) {
- 		bit = pfn % BITMAP_CHUNK_BITS;
-_
-
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvZGF4L2RldmljZS5jIGIvZHJpdmVycy9kYXgvZGV2aWNlLmMK
+aW5kZXggYTlkN2M5MGVjZjFlLi4xYWY4MjNiMmZlNmIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZGF4
+L2RldmljZS5jCisrKyBiL2RyaXZlcnMvZGF4L2RldmljZS5jCkBAIC00MjgsNiArNDI4LDcgQEAg
+aW50IGRldl9kYXhfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2KQogCQlyZXR1cm4gLUVCVVNZOwog
+CX0KIAorCWRldl9kYXgtPnBnbWFwLnR5cGUgPSBNRU1PUllfREVWSUNFX0RFVkRBWDsKIAlhZGRy
+ID0gZGV2bV9tZW1yZW1hcF9wYWdlcyhkZXYsICZkZXZfZGF4LT5wZ21hcCk7CiAJaWYgKElTX0VS
+UihhZGRyKSkKIAkJcmV0dXJuIFBUUl9FUlIoYWRkcik7CmRpZmYgLS1naXQgYS9kcml2ZXJzL252
+ZGltbS9LY29uZmlnIGIvZHJpdmVycy9udmRpbW0vS2NvbmZpZwppbmRleCA1NDUwMDc5OGYyM2Eu
+LjU3ZDNhNmMzYWM3MCAxMDA2NDQKLS0tIGEvZHJpdmVycy9udmRpbW0vS2NvbmZpZworKysgYi9k
+cml2ZXJzL252ZGltbS9LY29uZmlnCkBAIC0xMTgsNCArMTE4LDE1IEBAIGNvbmZpZyBOVkRJTU1f
+S0VZUwogCWRlcGVuZHMgb24gRU5DUllQVEVEX0tFWVMKIAlkZXBlbmRzIG9uIChMSUJOVkRJTU09
+RU5DUllQVEVEX0tFWVMpIHx8IExJQk5WRElNTT1tCiAKK2NvbmZpZyBOVkRJTU1fVEVTVF9CVUlM
+RAorCWJvb2wgIkJ1aWxkIHRoZSB1bml0IHRlc3QgY29yZSIKKwlkZXBlbmRzIG9uIENPTVBJTEVf
+VEVTVAorCWRlZmF1bHQgQ09NUElMRV9URVNUCisJaGVscAorCSAgQnVpbGQgdGhlIGNvcmUgb2Yg
+dGhlIHVuaXQgdGVzdCBpbmZyYXN0cnVjdHVyZS4gIFRoZSByZXN1bHQgb2YKKwkgIHRoaXMgYnVp
+bGQgaXMgbm9uLWZ1bmN0aW9uYWwgZm9yIHVuaXQgdGVzdCBleGVjdXRpb24sIGJ1dCBpdAorCSAg
+b3RoZXJ3aXNlIGhlbHBzIGNhdGNoIGJ1aWxkIGVycm9ycyBpbmR1Y2VkIGJ5IGNoYW5nZXMgdG8g
+dGhlCisJICBjb3JlIGRldm1fbWVtcmVtYXBfcGFnZXMoKSBpbXBsZW1lbnRhdGlvbiBhbmQgb3Ro
+ZXIKKwkgIGluZnJhc3RydWN0dXJlLgorCiBlbmRpZgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9udmRp
+bW0vTWFrZWZpbGUgYi9kcml2ZXJzL252ZGltbS9NYWtlZmlsZQppbmRleCA2ZjJhMDg4YWZhZDYu
+LjQwMDgwYzEyMDM2MyAxMDA2NDQKLS0tIGEvZHJpdmVycy9udmRpbW0vTWFrZWZpbGUKKysrIGIv
+ZHJpdmVycy9udmRpbW0vTWFrZWZpbGUKQEAgLTI4LDMgKzI4LDcgQEAgbGlibnZkaW1tLSQoQ09O
+RklHX0JUVCkgKz0gYnR0X2RldnMubwogbGlibnZkaW1tLSQoQ09ORklHX05WRElNTV9QRk4pICs9
+IHBmbl9kZXZzLm8KIGxpYm52ZGltbS0kKENPTkZJR19OVkRJTU1fREFYKSArPSBkYXhfZGV2cy5v
+CiBsaWJudmRpbW0tJChDT05GSUdfTlZESU1NX0tFWVMpICs9IHNlY3VyaXR5Lm8KKworVE9PTFMg
+Oj0gLi4vLi4vdG9vbHMKK1RFU1RfU1JDIDo9ICQoVE9PTFMpL3Rlc3RpbmcvbnZkaW1tL3Rlc3QK
+K29iai0kKENPTkZJR19OVkRJTU1fVEVTVF9CVUlMRCkgOj0gJChURVNUX1NSQykvaW9tYXAubwpk
+aWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tZW1yZW1hcC5oIGIvaW5jbHVkZS9saW51eC9tZW1y
+ZW1hcC5oCmluZGV4IDdlMGYwNzJkZGNlNy4uNDcwZGU2OGRhYmQ2IDEwMDY0NAotLS0gYS9pbmNs
+dWRlL2xpbnV4L21lbXJlbWFwLmgKKysrIGIvaW5jbHVkZS9saW51eC9tZW1yZW1hcC5oCkBAIC01
+NSwxMiArNTUsMTkgQEAgc3RydWN0IHZtZW1fYWx0bWFwIHsKICAqIE1FTU9SWV9ERVZJQ0VfUENJ
+X1AyUERNQToKICAqIERldmljZSBtZW1vcnkgcmVzaWRpbmcgaW4gYSBQQ0kgQkFSIGludGVuZGVk
+IGZvciB1c2Ugd2l0aCBQZWVyLXRvLVBlZXIKICAqIHRyYW5zYWN0aW9ucy4KKyAqCisgKiBNRU1P
+UllfREVWSUNFX0RFVkRBWDoKKyAqIEhvc3QgbWVtb3J5IHRoYXQgaGFzIHNpbWlsYXIgYWNjZXNz
+IHNlbWFudGljcyBhcyBTeXN0ZW0gUkFNIGkuZS4gRE1BCisgKiBjb2hlcmVudCBhbmQgc3VwcG9y
+dHMgcGFnZSBwaW5uaW5nLiBJbiBjb250cmFzdCB0bworICogTUVNT1JZX0RFVklDRV9GU19EQVgs
+IHRoaXMgbWVtb3J5IGlzIGFjY2VzcyB2aWEgYSBkZXZpY2UtZGF4CisgKiBjaGFyYWN0ZXIgZGV2
+aWNlLgogICovCiBlbnVtIG1lbW9yeV90eXBlIHsKIAlNRU1PUllfREVWSUNFX1BSSVZBVEUgPSAx
+LAogCU1FTU9SWV9ERVZJQ0VfUFVCTElDLAogCU1FTU9SWV9ERVZJQ0VfRlNfREFYLAogCU1FTU9S
+WV9ERVZJQ0VfUENJX1AyUERNQSwKKwlNRU1PUllfREVWSUNFX0RFVkRBWCwKIH07CiAKIHN0cnVj
+dCBkZXZfcGFnZW1hcF9vcHMgewpkaWZmIC0tZ2l0IGEva2VybmVsL21lbXJlbWFwLmMgYi9rZXJu
+ZWwvbWVtcmVtYXAuYwppbmRleCA2MDY5M2ExZThlOTIuLjUyYjQ5NjhlNjJjZCAxMDA2NDQKLS0t
+IGEva2VybmVsL21lbXJlbWFwLmMKKysrIGIva2VybmVsL21lbXJlbWFwLmMKQEAgLTE3Myw2ICsx
+NzMsNyBAQCB2b2lkICpkZXZtX21lbXJlbWFwX3BhZ2VzKHN0cnVjdCBkZXZpY2UgKmRldiwgc3Ry
+dWN0IGRldl9wYWdlbWFwICpwZ21hcCkKIAl9OwogCXBncHJvdF90IHBncHJvdCA9IFBBR0VfS0VS
+TkVMOwogCWludCBlcnJvciwgbmlkLCBpc19yYW07CisJYm9vbCBnZXRfb3BzID0gdHJ1ZTsKIAog
+CXN3aXRjaCAocGdtYXAtPnR5cGUpIHsKIAljYXNlIE1FTU9SWV9ERVZJQ0VfUFJJVkFURToKQEAg
+LTE5OSw2ICsyMDAsOCBAQCB2b2lkICpkZXZtX21lbXJlbWFwX3BhZ2VzKHN0cnVjdCBkZXZpY2Ug
+KmRldiwgc3RydWN0IGRldl9wYWdlbWFwICpwZ21hcCkKIAkJfQogCQlicmVhazsKIAljYXNlIE1F
+TU9SWV9ERVZJQ0VfUENJX1AyUERNQToKKwljYXNlIE1FTU9SWV9ERVZJQ0VfREVWREFYOgorCQln
+ZXRfb3BzID0gZmFsc2U7CiAJCWJyZWFrOwogCWRlZmF1bHQ6CiAJCVdBUk4oMSwgIkludmFsaWQg
+cGdtYXAgdHlwZSAlZFxuIiwgcGdtYXAtPnR5cGUpOwpAQCAtMjIyLDcgKzIyNSw3IEBAIHZvaWQg
+KmRldm1fbWVtcmVtYXBfcGFnZXMoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2X3BhZ2Vt
+YXAgKnBnbWFwKQogCQl9CiAJfQogCi0JaWYgKHBnbWFwLT50eXBlICE9IE1FTU9SWV9ERVZJQ0Vf
+UENJX1AyUERNQSkgeworCWlmIChnZXRfb3BzKSB7CiAJCWVycm9yID0gZGV2X3BhZ2VtYXBfZ2V0
+X29wcyhkZXYsIHBnbWFwKTsKIAkJaWYgKGVycm9yKQogCQkJcmV0dXJuIEVSUl9QVFIoZXJyb3Ip
+OwpkaWZmIC0tZ2l0IGEvdG9vbHMvdGVzdGluZy9udmRpbW0vdGVzdC9pb21hcC5jIGIvdG9vbHMv
+dGVzdGluZy9udmRpbW0vdGVzdC9pb21hcC5jCmluZGV4IDhjZDliOTg3M2E3Zi4uOTAxOWRkOGFm
+YmMxIDEwMDY0NAotLS0gYS90b29scy90ZXN0aW5nL252ZGltbS90ZXN0L2lvbWFwLmMKKysrIGIv
+dG9vbHMvdGVzdGluZy9udmRpbW0vdGVzdC9pb21hcC5jCkBAIC0xMDYsNyArMTA2LDcgQEAgRVhQ
+T1JUX1NZTUJPTChfX3dyYXBfZGV2bV9tZW1yZW1hcCk7CiAKIHN0YXRpYyB2b2lkIG5maXRfdGVz
+dF9raWxsKHZvaWQgKl9wZ21hcCkKIHsKLQlXQVJOX09OKCFwZ21hcCB8fCAhcGdtYXAtPnJlZikK
+KwlzdHJ1Y3QgZGV2X3BhZ2VtYXAgKnBnbWFwID0gX3BnbWFwOwogCiAJaWYgKHBnbWFwLT5vcHMg
+JiYgcGdtYXAtPm9wcy0+a2lsbCkKIAkJcGdtYXAtPm9wcy0+a2lsbChwZ21hcCk7CkBAIC0xMjEs
+MjAgKzEyMSw0NSBAQCBzdGF0aWMgdm9pZCBuZml0X3Rlc3Rfa2lsbCh2b2lkICpfcGdtYXApCiAJ
+fQogfQogCitzdGF0aWMgdm9pZCBkZXZfcGFnZW1hcF9wZXJjcHVfcmVsZWFzZShzdHJ1Y3QgcGVy
+Y3B1X3JlZiAqcmVmKQoreworCXN0cnVjdCBkZXZfcGFnZW1hcCAqcGdtYXAgPQorCQljb250YWlu
+ZXJfb2YocmVmLCBzdHJ1Y3QgZGV2X3BhZ2VtYXAsIGludGVybmFsX3JlZik7CisKKwljb21wbGV0
+ZSgmcGdtYXAtPmRvbmUpOworfQorCiB2b2lkICpfX3dyYXBfZGV2bV9tZW1yZW1hcF9wYWdlcyhz
+dHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZfcGFnZW1hcCAqcGdtYXApCiB7CisJaW50IGVy
+cm9yOwogCXJlc291cmNlX3NpemVfdCBvZmZzZXQgPSBwZ21hcC0+cmVzLnN0YXJ0OwogCXN0cnVj
+dCBuZml0X3Rlc3RfcmVzb3VyY2UgKm5maXRfcmVzID0gZ2V0X25maXRfcmVzKG9mZnNldCk7CiAK
+LQlpZiAobmZpdF9yZXMpIHsKLQkJaW50IHJjOworCWlmICghbmZpdF9yZXMpCisJCXJldHVybiBk
+ZXZtX21lbXJlbWFwX3BhZ2VzKGRldiwgcGdtYXApOwogCi0JCXJjID0gZGV2bV9hZGRfYWN0aW9u
+X29yX3Jlc2V0KGRldiwgbmZpdF90ZXN0X2tpbGwsIHBnbWFwKTsKLQkJaWYgKHJjKQotCQkJcmV0
+dXJuIEVSUl9QVFIocmMpOwotCQlyZXR1cm4gbmZpdF9yZXMtPmJ1ZiArIG9mZnNldCAtIG5maXRf
+cmVzLT5yZXMuc3RhcnQ7CisJcGdtYXAtPmRldiA9IGRldjsKKwlpZiAoIXBnbWFwLT5yZWYpIHsK
+KwkJaWYgKHBnbWFwLT5vcHMgJiYgKHBnbWFwLT5vcHMtPmtpbGwgfHwgcGdtYXAtPm9wcy0+Y2xl
+YW51cCkpCisJCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsKKworCQlpbml0X2NvbXBsZXRpb24o
+JnBnbWFwLT5kb25lKTsKKwkJZXJyb3IgPSBwZXJjcHVfcmVmX2luaXQoJnBnbWFwLT5pbnRlcm5h
+bF9yZWYsCisJCQkJZGV2X3BhZ2VtYXBfcGVyY3B1X3JlbGVhc2UsIDAsIEdGUF9LRVJORUwpOwor
+CQlpZiAoZXJyb3IpCisJCQlyZXR1cm4gRVJSX1BUUihlcnJvcik7CisJCXBnbWFwLT5yZWYgPSAm
+cGdtYXAtPmludGVybmFsX3JlZjsKKwl9IGVsc2UgeworCQlpZiAoIXBnbWFwLT5vcHMgfHwgIXBn
+bWFwLT5vcHMtPmtpbGwgfHwgIXBnbWFwLT5vcHMtPmNsZWFudXApIHsKKwkJCVdBUk4oMSwgIk1p
+c3NpbmcgcmVmZXJlbmNlIGNvdW50IHRlYXJkb3duIGRlZmluaXRpb25cbiIpOworCQkJcmV0dXJu
+IEVSUl9QVFIoLUVJTlZBTCk7CisJCX0KIAl9Ci0JcmV0dXJuIGRldm1fbWVtcmVtYXBfcGFnZXMo
+ZGV2LCBwZ21hcCk7CisKKwllcnJvciA9IGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldChkZXYsIG5m
+aXRfdGVzdF9raWxsLCBwZ21hcCk7CisJaWYgKGVycm9yKQorCQlyZXR1cm4gRVJSX1BUUihlcnJv
+cik7CisJcmV0dXJuIG5maXRfcmVzLT5idWYgKyBvZmZzZXQgLSBuZml0X3Jlcy0+cmVzLnN0YXJ0
+OwogfQogRVhQT1JUX1NZTUJPTF9HUEwoX193cmFwX2Rldm1fbWVtcmVtYXBfcGFnZXMpOwogCg==
+--000000000000872d5f058b9e614c--
