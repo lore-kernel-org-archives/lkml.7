@@ -2,77 +2,109 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4095CC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B255C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 154F120665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:54:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560862480;
-	bh=3b8Z4yxbEGhAeiG8va44KaQqFXq6NYIDObPibnDI/H0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=rn7SOS/jNNFHfOZexlWT8iRnbfMvRNyYpwU0LaxstLxFsgR/NRXXmsn8u2o63tjNf
-	 uUgNlCk1OzmouweZTMrGLVudujxv0JMMhd9fAyHY1r1rBsTKlT8cO5ikpSErPxEboL
-	 i1ZHaAhqYDglrASxIWwjlDrE5ovwSI3CLwxURVX0=
+	by mail.kernel.org (Postfix) with ESMTP id 5F12F20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728797AbfFRMyi (ORCPT
+        id S1728815AbfFRM4Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:54:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56140 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfFRMyi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:54:38 -0400
-Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D991420665
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 12:54:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560862478;
-        bh=3b8Z4yxbEGhAeiG8va44KaQqFXq6NYIDObPibnDI/H0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=YaZTIqwUYrT48BwsXbO14NvfzzqUIntfcjwApWXtI2QvkvYaUuIklZzhwg0E4eQ/H
-         v3pGtmLmFtU8633/RwY4ZL84nMrZtT4RVNVqw+tgmtZdwFIc21NpE/scaWbvcdmboR
-         edBKMqavxN8FfS6gtv2HKyLp31CO3n65VVc+Eei4=
-Received: by mail-qt1-f177.google.com with SMTP id w17so8685018qto.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 05:54:37 -0700 (PDT)
-X-Gm-Message-State: APjAAAVmzyx7hpeIIANMzSR/d9YTtxGoqNNl3eQeyw7qgum1PE+Ln5Uk
-        Ch6S5LuFoQoIKUn+DC9YpXBCcaezhPwYPv/5pcQ=
-X-Google-Smtp-Source: APXvYqyvii3weH4ntVz7079/ThnMO4GmPSC82hZRSPCysLMzoxjrVy8/tsj0U+KfXPisSh2FsXww3O60axMieC704Jo=
-X-Received: by 2002:ac8:32e8:: with SMTP id a37mr24113144qtb.231.1560862477176;
- Tue, 18 Jun 2019 05:54:37 -0700 (PDT)
+        Tue, 18 Jun 2019 08:56:25 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40057 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFRM4Z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:56:25 -0400
+Received: by mail-qt1-f196.google.com with SMTP id a15so15085108qtn.7;
+        Tue, 18 Jun 2019 05:56:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fCf5iHrLfN/sCDfBuv4fsEiVMo3wKaNoIwbeEHLt/rc=;
+        b=PT6Pa5D4n6l9kyKzExM2NFZe3+YbP5u3ymXhF58YTPTEVzVyC/cQUq3I5UyRs9e9KK
+         IIU4AFvTFcxwSibJk2iTDRd1rq7aVptJFfBkTesyFFl4gAREmkyBm8qnrAjhdEK7Rc9X
+         nJe0+HsA92fEOapnYSxVu/JyGrtucL0KzpFMclthtIdLG6JSqx4st/wdGSVaPU+mZwhy
+         oqvbaIDKDWpRZwIIVLeWcgK6aZ6fts0ScOgi3JLe/PN4vF7YvtbDCar/X/TWK64IL5Eg
+         jX+FYdK9XHSHYh5Dm7zb3kB64Y/kBv3ZooIEq+bIsQYA2B8lsuMa1UG+sviCNBX2BGs0
+         ymxg==
+X-Gm-Message-State: APjAAAXU3TDFruLNvyVp2nCCVH8eUshP8qtra7ZmSC1iI9f4SEtLahCQ
+        dS1gmURlintfCcrRSjjpfifbYmE2EG2lq/Sg9eshoyPkBUY=
+X-Google-Smtp-Source: APXvYqwCVpXxqSfg0MzgdN3t4njvASb5EphGuU2IedZxTHyAW5Lc4aDC1ZXBq7xmQcAheuz7YuaPjxEgHvyJiCiNl9E=
+X-Received: by 2002:a0c:b758:: with SMTP id q24mr27130440qve.45.1560862584288;
+ Tue, 18 Jun 2019 05:56:24 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613184541.22846-1-john.allen@amd.com>
-In-Reply-To: <20190613184541.22846-1-john.allen@amd.com>
-From:   Josh Boyer <jwboyer@kernel.org>
-Date:   Tue, 18 Jun 2019 08:54:26 -0400
-X-Gmail-Original-Message-ID: <CA+5PVA4BTyLd-23DvF6PtykFhbRAuENjBEmG1DaVypC_E0nkbg@mail.gmail.com>
-Message-ID: <CA+5PVA4BTyLd-23DvF6PtykFhbRAuENjBEmG1DaVypC_E0nkbg@mail.gmail.com>
-Subject: Re: [PATCH] linux-firmware: Update AMD SEV firmware
-To:     "Allen, John" <John.Allen@amd.com>
-Cc:     "linux-firmware@kernel.org" <linux-firmware@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+References: <20190617123109.667090-1-arnd@arndb.de> <20190617140210.GB3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190617140210.GB3436@hirez.programming.kicks-ass.net>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 18 Jun 2019 14:56:07 +0200
+Message-ID: <CAK8P3a3iwWOkMBL-H3h5aSaHKjKWFce22rvydvVE=3uMfeOhVg@mail.gmail.com>
+Subject: Re: [PATCH] ubsan: mark ubsan_type_mismatch_common inline
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 2:45 PM Allen, John <John.Allen@amd.com> wrote:
+On Mon, Jun 17, 2019 at 4:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
 >
-> Update AMD SEV firmware to version 0.17 build 22 for AMD family 17h
-> processors with models in the range 00h to 0fh.
+> On Mon, Jun 17, 2019 at 02:31:09PM +0200, Arnd Bergmann wrote:
+> > objtool points out a condition that it does not like:
+> >
+> > lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+> > lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+> >
+> > I guess this is related to the call ubsan_type_mismatch_common()
+> > not being inline before it calls user_access_restore(), though
+> > I don't fully understand why that is a problem.
 >
-> Signed-off-by: John Allen <john.allen@amd.com>
-> ---
->  amd/amd_sev_fam17h_model0xh.sbin | Bin 32000 -> 32576 bytes
->  1 file changed, 0 insertions(+), 0 deletions(-)
+> The rules are that when AC is set, one is not allowed to CALL schedule,
+> because scheduling does not save/restore AC.  Preemption, through the
+> exceptions is fine, because the exceptions do save/restore AC.
+>
+> And while most functions do not appear to call into schedule, function
+> trace ensures that every single call does in fact call into schedule.
+> Therefore any CALL (with AC set) is invalid.
 
-Applied and pushed out.
+I see that stackleak_track_stack is already marked 'notrace',
+since we must ensure we don't recurse when calling into it from
+any of the function trace logic.
 
-josh
+Does that mean we could just mark it as another safe call?
+
+--- a/tools/objtool/check.c
++++ b/tools/objtool/check.c
+@@ -486,6 +486,7 @@ static const char *uaccess_safe_builtin[] = {
+        "__ubsan_handle_type_mismatch",
+        "__ubsan_handle_type_mismatch_v1",
+        /* misc */
++       "stackleak_track_stack",
+        "csum_partial_copy_generic",
+        "__memcpy_mcsafe",
+        "ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
+
+
+> Maybe we should disable stackleak when building ubsan instead? We
+> already disable stack-protector when building ubsan.
+
+I couldn't find out how that is done.
+
+> > Fixes: 42440c1f9911 ("lib/ubsan: add type mismatch handler for new GCC/Clang")
+>
+> I don't think this is quite right, because back then there wasn't any
+> uaccess validation.
+
+Right.
+
+       Arnd
