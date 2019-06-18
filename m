@@ -2,90 +2,69 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C0FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:12:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C960C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C88CC213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RzFJ/8d2"
+	by mail.kernel.org (Postfix) with ESMTP id 79D0D213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:15:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729483AbfFRPME (ORCPT
+        id S1729816AbfFRPPQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:12:04 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46183 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfFRPMD (ORCPT
+        Tue, 18 Jun 2019 11:15:16 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:53304 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729038AbfFRPPP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:12:03 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so14380662wrw.13
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 08:12:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XMfa9NJpDXh8dDL9yFLkdc/RmjSvoaHVSjRiYPgy7AU=;
-        b=RzFJ/8d2DQVpdpSN66TgWH5FYsc9Os+fcsszwdEdRiHoXMgA1PIV3bLurXKkC7Yfm2
-         WouFAm13XKYXcw2na3YdFMwyVTomRiE8GcJt7T0UkpCALOrQqSInLzUwFkKfsM2JiAKW
-         axUHeuXw1lVc5yE9i0Nno/wdZI8oyrbEgvtmwDzTRYtZcIp30ff4W0yvUt2j7xoA/gTZ
-         wyC+bN6bQhAd750oPFey+eCSuBBvM3yTCzeAeBlUC83k4E7dzSdV5lcDYAFUBwa1CSOt
-         KlTXHV8Lm/JLy7emfb3OUwFyo8Y3WlHJhQTy+jrci8gAf78nCdsOuN2ZG2JIv2gv7chT
-         pr/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XMfa9NJpDXh8dDL9yFLkdc/RmjSvoaHVSjRiYPgy7AU=;
-        b=uDUKNPPu5JymNIrhzN6zPf6u1GkwPNOXxJtxN9Wq5kt2UNbBz0i9frce5Yp2LgtqqN
-         cyovvHTfUCfTHasDytzmlcOpcNcksFQjWMI1K/RQaHmjp5L3fTo1dbEbmewgdLHuKZA+
-         u5vpRf8wP+Te4gF+op1xC5Jz+5A9pJIZneOlmCd4yA5/GHPdh21Y4sqTMzfNPTA4RzaL
-         zIYF+MjYeWZd+ag0sUQH3qvDU+HBhaPvfsw1q3Lius40MptWLjWdB2sAQPHWvpazHsw/
-         gpD2iV8WNIrO+ZrO+29M0DRLSnnBzP5nBVUoLDuJokw5ol5cGe9OOqjXf0Fx2BxrEzFR
-         kwmQ==
-X-Gm-Message-State: APjAAAVNvhjQfWEywyYJTtRHv3y6q3ipGpmyaBW6tvPTE3cW4rphzcgP
-        ghBOaNo8BeUTRmcIMUYEENPPJA==
-X-Google-Smtp-Source: APXvYqyrqTtNMWynSOgiXHoVZjhnncDqEEw1XV2KrhXPMaVDno3t7MXb5Vtc1ZRd/MUwl+UmMXGINA==
-X-Received: by 2002:a5d:488b:: with SMTP id g11mr5139572wrq.72.1560870722429;
-        Tue, 18 Jun 2019 08:12:02 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id x83sm2964625wmb.42.2019.06.18.08.12.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 08:12:01 -0700 (PDT)
-Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
-To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
- <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
- <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
- <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
-Date:   Tue, 18 Jun 2019 16:12:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 18 Jun 2019 11:15:15 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hdFpG-0004da-Kr; Tue, 18 Jun 2019 15:15:10 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net/mlx5: add missing void argument to function mlx5_devlink_alloc
+Date:   Tue, 18 Jun 2019 16:15:10 +0100
+Message-Id: <20190618151510.18672-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Colin Ian King <colin.king@canonical.com>
 
+Function mlx5_devlink_alloc is missing a void argument, add it
+to clean up the non-ANSI function declaration.
 
-On 18/06/2019 15:56, Sricharan R wrote:
->    So MAX_DESCRIPTORS is used in driver for masking head/tail pointers.
->    That's why we have to pass MAX_DESCRIPTORS + 1 so that it works
->    when the Macros does a size - 1
-Isn't that incorrect to do that, pretending to have more descriptors 
-than we actually have?
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/devlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---srini
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+index ed4202e883f0..1533c657220b 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/devlink.c
+@@ -37,7 +37,7 @@ static const struct devlink_ops mlx5_devlink_ops = {
+ 	.flash_update = mlx5_devlink_flash_update,
+ };
+ 
+-struct devlink *mlx5_devlink_alloc()
++struct devlink *mlx5_devlink_alloc(void)
+ {
+ 	return devlink_alloc(&mlx5_devlink_ops, sizeof(struct mlx5_core_dev));
+ }
+-- 
+2.20.1
+
