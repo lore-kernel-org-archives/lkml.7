@@ -2,67 +2,68 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A46DC31E5F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED4E7C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE25D2084A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE73B2084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560892075;
-	bh=ZQCMSa8fIHVGCOzsnOniNrHF8OUGMG4alqAROtDh1uY=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=fhkPtktOIU2POxcSNr/Lfl6j84DMBM7chuXuaXgaNCLqWyEEJ2gkN5knP74i4/w0/
-	 ddlWIQwcluv/Akr85k+F51UOgTFDFFeaG6V5aIolu4ZQmn0Ii3K2N7CFnvu5lcuwBp
-	 qT1vCXyHhRZ1Hy4lNh6rJPG3U7YJyW8it//I9GUM=
+	s=default; t=1560892080;
+	bh=CDtLKsZb0opDrWhZHEPTxvfVRR8NNuc5kwCxet6217E=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=pN/Qm9PT08GjYzjkxt1WkHBNKIouew+nUfm3ENmbG/Hu3m32VtZKD1htc5uRr0Gse
+	 F0X9mM/6qem5bNyVostpudkFul78eufpnPyO+MVg7Cz/v24EEbMSeMfn79xbfmYkDN
+	 Wb8eyoKiX7TeqY1Wdy+2S1B1JoQJwn+flGM/DTAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730874AbfFRVHy (ORCPT
+        id S1731159AbfFRVHu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 17:07:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34508 "EHLO
+        Tue, 18 Jun 2019 17:07:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34500 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730789AbfFRVFx (ORCPT
+        with ESMTP id S1730788AbfFRVFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 17:05:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6Olw/Jt6p3FQJK+KHgcRjPZvPg9dYcTB/APDCUh9Tjg=; b=k9plp4z7v/mRcIWOI7tr7k2Ue
-        wQZODatAsooJm1Pt5c4Dru04DcvZYFDNuzKkB7eCRptExvmhWppt7RcBgo+4GR9wC3mAbSsjxX6xP
-        Q9tv36G51X1Qxy449Ok2Pk2ZruuKjQfxA9jieTWC8NKgb90TSsp8U9oFHO6UrwBAy8uqY2m5FuhRP
-        aFMBsWi1VKD2HEI6qoOwx2pfe6ACqwiNGjRIofDv9bUw8mGOAKMK9jrWOxDTZXp916sC5wTQfbZx6
-        VsAH6DrIB5MHDQZMTwG+NzxDscBLO7JAyrD6qzHfM6WK6gI8cw+SzuPV+ZNM1erraXbJmNpXtw43v
-        3HwwC66ag==;
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=gS3/DzaoumQZOjtOHaSKbCrZyzMjw8uVpsbpAiA1YFU=; b=VRprJ4KmyRzNRK2xaUlJD0U/hN
+        v0IXy267w71vCrz1vwDWIs2iYSy81yCPYXVnmpS/cIktMHHh9w48jPMU6n978rNS6hKmQ9gWPtL1z
+        hcfupTjo6PXpy8lQeX3VPwyNb/giW5D4FVjPjXXlk/v/c8p2qCd5744oFFChkMR/jIOprVQ4X25j6
+        sYPp4H9Rv+Iefxt9iXDE7VyQnEJRBUd1I+U/+G+LW3SchNBoZOrhwmVmEKLN3wBCX2akVwJhUMxV7
+        J91eXfMSGsSuVrzbGw/qA3eqBjxjH2GEBkYijbYhQetJtL30mYqaX9xAjXtydrZzrxCPSctq3IH/J
+        omDpQXZQ==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdLIb-0006yL-O2; Tue, 18 Jun 2019 21:05:50 +0000
+        id 1hdLIc-0006yd-0m; Tue, 18 Jun 2019 21:05:50 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdLIZ-0002Bg-Jb; Tue, 18 Jun 2019 18:05:47 -0300
+        id 1hdLIZ-0002C8-QY; Tue, 18 Jun 2019 18:05:47 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: [PATCH v1 00/22] Convert files to ReST - part 3
-Date:   Tue, 18 Jun 2019 18:05:24 -0300
-Message-Id: <cover.1560891322.git.mchehab+samsung@kernel.org>
+        Shaokun Zhang <zhangshaokun@hisilicon.com>,
+        Khuong Dinh <khuong@os.amperecomputing.com>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v1 07/22] docs: perf: convert to ReST
+Date:   Tue, 18 Jun 2019 18:05:31 -0300
+Message-Id: <5a05fd0db12dc6c71d0a8f11990fb648daac5901.1560891322.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1560891322.git.mchehab+samsung@kernel.org>
+References: <cover.1560891322.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,641 +71,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the third part of a series I wrote sometime ago where I manually
-convert lots of files to be properly parsed by Sphinx as ReST files.
+Rename the perf documentation files to ReST, add an
+index for them and adjust in order to produce a nice html
+output via the Sphinx build system.
 
-As it touches on lot of stuff, this series is based on today's linux-next, 
-at tag next-20190617.
+At its new index.rst, let's add a :orphan: while this is not linked to
+the main index.rst file, in order to avoid build warnings.
 
-The first version of this series had 57 patches. The first part with 28 patches
-were already merged.  The second part has 29 patches. This series with 22 
-patches finishes the conversion part of my series. That's because I opted to
-do ~1 patch per converted directory.
-
-That sounds too much to be send on a single round. So, I'm opting to split
-it on 3 parts for the conversion.
-
-After having those three patch series merged, I should submit a final patch 
-series adding orphaned books to existing ones (with ~50 patches), to be
-applied on a convenient moment (probably late on a merge window).
-
-Those patches should probably be good to be merged either by subsystem
-maintainers or via the docs tree.
-
-I opted to mark new files not included yet to the main index.rst (directly or
-indirectly) with the :orphan: tag, in order to avoid adding warnings to the
-build system. This should be removed after we find a "home" for all
-the converted files within the new document tree arrangement, after I
-submit the third part.
-
-Both this series and  the other parts of this work are on my devel git tree,
-at:
-
-	https://git.linuxtv.org/mchehab/experimental.git/log/?h=convert_rst_renames_v5.1
-
-The final output in html (after all patches I currently have, including 
-the upcoming series) can be seen at:
-
-	https://www.infradead.org/~mchehab/rst_conversion/
-
-It contains all pending work from my side related to the conversion, plus
-the patches I finished a first version today with contains the renaming 
-patches and de-orphan changes.
-
-Mauro Carvalho Chehab (22):
-  docs: Documentation/*.txt: rename all ReST files to *.rst
-  docs: ioctl-number.txt: convert it to ReST format
-  docs: ioctl: convert to ReST
-  docs: thermal: convert to ReST
-  docs: rapidio: convert to ReST
-  docs: blockdev: convert to ReST
-  docs: perf: convert to ReST
-  docs: sysctl: convert to ReST
-  docs: block: convert to ReST
-  docs: security: move some books to it and update
-  docs: admin-guide: add .rst files from the main dir
-  docs: driver-api: add .rst files from the main dir
-  docs: x86: move two x86-specific files to x86 arch dir
-  docs: usb: rename files to .rst and add them to drivers-api
-  docs: driver-api: add a chapter for memory-related API
-  docs: driver-api: add xilinx driver API documentation
-  docs: add arch doc directories to the index
-  docs: admin-guide: move sysctl directory to it
-  docs: driver-api: add remaining converted dirs to it
-  docs: extcon: move it to acpi dir and convert it to ReST
-  docs: admin-guide: add laptops documentation
-  admin-guide: add kdump documentation into it
-
- CREDITS                                       |   2 +-
- Documentation/ABI/removed/sysfs-class-rfkill  |   2 +-
- Documentation/ABI/stable/sysfs-class-rfkill   |   2 +-
- Documentation/ABI/stable/sysfs-devices-node   |   2 +-
- Documentation/ABI/testing/procfs-diskstats    |   2 +-
- Documentation/ABI/testing/sysfs-block         |   2 +-
- Documentation/ABI/testing/sysfs-block-device  |   2 +-
- .../ABI/testing/sysfs-class-switchtec         |   2 +-
- .../ABI/testing/sysfs-devices-system-cpu      |   4 +-
- .../ABI/testing/sysfs-platform-asus-laptop    |   2 +-
- Documentation/PCI/pci.rst                     |   8 +-
- Documentation/{ => admin-guide}/aoe/aoe.rst   |   4 +-
- .../{ => admin-guide}/aoe/autoload.sh         |   1 -
- .../{ => admin-guide}/aoe/examples.rst        |   0
- Documentation/{ => admin-guide}/aoe/index.rst |   2 -
- Documentation/{ => admin-guide}/aoe/status.sh |   0
- Documentation/{ => admin-guide}/aoe/todo.rst  |   0
- .../{ => admin-guide}/aoe/udev-install.sh     |   4 +-
- Documentation/{ => admin-guide}/aoe/udev.txt  |   8 +-
- .../{btmrvl.txt => admin-guide/btmrvl.rst}    |   0
- Documentation/admin-guide/bug-hunting.rst     |   4 +-
- .../cgroup-v1/blkio-controller.rst            |   0
- .../{ => admin-guide}/cgroup-v1/cgroups.rst   |   4 +-
- .../{ => admin-guide}/cgroup-v1/cpuacct.rst   |   0
- .../{ => admin-guide}/cgroup-v1/cpusets.rst   |   2 +-
- .../{ => admin-guide}/cgroup-v1/devices.rst   |   0
- .../cgroup-v1/freezer-subsystem.rst           |   0
- .../{ => admin-guide}/cgroup-v1/hugetlb.rst   |   0
- .../{ => admin-guide}/cgroup-v1/index.rst     |   2 -
- .../cgroup-v1/memcg_test.rst                  |   4 +-
- .../{ => admin-guide}/cgroup-v1/memory.rst    |   0
- .../{ => admin-guide}/cgroup-v1/net_cls.rst   |   0
- .../{ => admin-guide}/cgroup-v1/net_prio.rst  |   0
- .../{ => admin-guide}/cgroup-v1/pids.rst      |   0
- .../{ => admin-guide}/cgroup-v1/rdma.rst      |   0
- Documentation/admin-guide/cgroup-v2.rst       |   2 +-
- .../clearing-warn-once.rst}                   |   0
- .../cpu-load.rst}                             |   0
- .../cputopology.rst}                          |   0
- .../efi-stub.rst}                             |   0
- .../{highuid.txt => admin-guide/highuid.rst}  |   2 +-
- Documentation/admin-guide/hw-vuln/l1tf.rst    |   4 +-
- .../hw_random.rst}                            |   0
- Documentation/admin-guide/index.rst           |  26 +
- .../{iostats.txt => admin-guide/iostats.rst}  |   0
- .../{ => admin-guide}/kdump/gdbmacros.txt     |   0
- .../{ => admin-guide}/kdump/index.rst         |   1 -
- .../{ => admin-guide}/kdump/kdump.rst         |   0
- .../{ => admin-guide}/kdump/vmcoreinfo.rst    |   0
- .../admin-guide/kernel-parameters.txt         |  46 +-
- .../kernel-per-cpu-kthreads.rst}              |   4 +-
- .../{ => admin-guide}/laptops/asus-laptop.rst |   0
- .../laptops/disk-shock-protection.rst         |   0
- .../{ => admin-guide}/laptops/index.rst       |   1 -
- .../{ => admin-guide}/laptops/laptop-mode.rst |   0
- .../{ => admin-guide}/laptops/lg-laptop.rst   |   1 -
- .../{ => admin-guide}/laptops/sony-laptop.rst |   0
- .../{ => admin-guide}/laptops/sonypi.rst      |   0
- .../laptops/thinkpad-acpi.rst                 |   6 +-
- .../laptops/toshiba_haps.rst                  |   0
- .../lcd-panel-cgram.rst                       |   2 -
- .../{ldm.txt => admin-guide/ldm.rst}          |   3 +-
- .../lockup-watchdogs.rst}                     |   0
- .../mm/cma_debugfs.rst}                       |   2 -
- Documentation/admin-guide/mm/index.rst        |   2 +-
- Documentation/admin-guide/mm/ksm.rst          |   2 +-
- .../admin-guide/mm/numa_memory_policy.rst     |   2 +-
- .../numastat.rst}                             |   3 +-
- .../{pnp.txt => admin-guide/pnp.rst}          |  11 +-
- .../{rtc.txt => admin-guide/rtc.rst}          |   6 +-
- .../{svga.txt => admin-guide/svga.rst}        |   0
- .../abi.txt => admin-guide/sysctl/abi.rst}    |  71 +-
- .../fs.txt => admin-guide/sysctl/fs.rst}      | 142 +--
- .../README => admin-guide/sysctl/index.rst}   |  34 +-
- .../sysctl/kernel.rst}                        | 378 ++++----
- .../net.txt => admin-guide/sysctl/net.rst}    | 141 ++-
- .../sysctl/sunrpc.rst}                        |  13 +-
- .../user.txt => admin-guide/sysctl/user.rst}  |  32 +-
- .../vm.txt => admin-guide/sysctl/vm.rst}      | 264 ++---
- .../video-output.rst}                         |   1 -
- Documentation/arm/index.rst                   |   2 -
- Documentation/arm64/index.rst                 |   2 -
- .../{bfq-iosched.txt => bfq-iosched.rst}      |  68 +-
- .../block/{biodoc.txt => biodoc.rst}          | 366 ++++---
- .../block/{biovecs.txt => biovecs.rst}        |  20 +-
- .../block/{capability.txt => capability.rst}  |  17 +-
- ...ne-partition.txt => cmdline-partition.rst} |  13 +-
- ...{data-integrity.txt => data-integrity.rst} |  60 +-
- ...dline-iosched.txt => deadline-iosched.rst} |  21 +-
- Documentation/block/index.rst                 |  25 +
- .../block/{ioprio.txt => ioprio.rst}          |  95 +-
- .../{kyber-iosched.txt => kyber-iosched.rst}  |   3 +-
- .../block/{null_blk.txt => null_blk.rst}      |  65 +-
- Documentation/block/{pr.txt => pr.rst}        |  18 +-
- .../{queue-sysfs.txt => queue-sysfs.rst}      |   7 +-
- .../block/{request.txt => request.rst}        |  47 +-
- Documentation/block/{stat.txt => stat.rst}    |  13 +-
- ...witching-sched.txt => switching-sched.rst} |  28 +-
- ...ontrol.txt => writeback_cache_control.rst} |  12 +-
- ...structure-v9.txt => data-structure-v9.rst} |   6 +-
- Documentation/blockdev/drbd/figures.rst       |  28 +
- .../blockdev/drbd/{README.txt => index.rst}   |  15 +-
- .../blockdev/{floppy.txt => floppy.rst}       |  88 +-
- Documentation/blockdev/index.rst              |  16 +
- Documentation/blockdev/{nbd.txt => nbd.rst}   |   2 +-
- .../blockdev/{paride.txt => paride.rst}       | 194 ++--
- .../blockdev/{ramdisk.txt => ramdisk.rst}     |  55 +-
- Documentation/blockdev/{zram.txt => zram.rst} | 197 ++--
- Documentation/core-api/printk-formats.rst     |   2 +-
- Documentation/device-mapper/statistics.rst    |   4 +-
- .../devicetree/bindings/phy/phy-bindings.txt  |   2 +-
- .../atomic_bitops.rst}                        |   1 -
- .../bt8xxgpio.rst}                            |   1 -
- .../bus-virt-phys-mapping.rst}                |  52 +-
- .../{connector => driver-api}/connector.rst   |   2 -
- .../{console => driver-api}/console.rst       |   2 -
- .../{crc32.txt => driver-api/crc32.rst}       |   0
- .../{dcdbas.txt => driver-api/dcdbas.rst}     |   0
- .../debugging-modules.rst}                    |   0
- .../debugging-via-ohci1394.rst}               |   0
- .../{dell_rbu.txt => driver-api/dell_rbu.rst} |   1 -
- .../{digsig.txt => driver-api/digsig.rst}     |   0
- .../{EDID/howto.rst => driver-api/edid.rst}   |   2 -
- .../{eisa.txt => driver-api/eisa.rst}         |   0
- .../futex-requeue-pi.rst}                     |   0
- .../gcc-plugins.rst}                          |   0
- .../hwspinlock.rst}                           |   0
- Documentation/driver-api/index.rst            |  71 +-
- .../io-mapping.rst}                           |   0
- .../io_ordering.rst}                          |   0
- .../{IPMI.txt => driver-api/ipmi.rst}         |   0
- .../irq-affinity.rst}                         |   0
- .../irq-domain.rst}                           |   0
- Documentation/{IRQ.txt => driver-api/irq.rst} |   0
- .../irqflags-tracing.rst}                     |   1 -
- Documentation/{isa.txt => driver-api/isa.rst} |   0
- .../{isapnp.txt => driver-api/isapnp.rst}     |   0
- .../{kobject.txt => driver-api/kobject.rst}   |   4 +-
- .../{kprobes.txt => driver-api/kprobes.rst}   |   1 -
- .../{kref.txt => driver-api/kref.rst}         |   0
- .../pblk.txt => driver-api/lightnvm-pblk.rst} |   0
- Documentation/{lzo.txt => driver-api/lzo.rst} |   0
- .../{mailbox.txt => driver-api/mailbox.rst}   |   0
- .../men-chameleon-bus.rst}                    |   0
- .../mm/dma-api-howto.rst}                     |   0
- .../mm/dma-api.rst}                           |   6 +-
- .../mm/dma-attributes.rst}                    |   0
- .../mm/dma-isa-lpc.rst}                       |   2 +-
- Documentation/driver-api/mm/index.rst         |  11 +
- .../nommu-mmap.rst}                           |   0
- Documentation/{ntb.txt => driver-api/ntb.rst} |   0
- Documentation/{nvmem => driver-api}/nvmem.rst |   2 -
- .../{padata.txt => driver-api/padata.rst}     |   0
- .../parport-lowlevel.rst}                     |   0
- .../percpu-rw-semaphore.rst}                  |   0
- .../{pi-futex.txt => driver-api/pi-futex.rst} |   0
- Documentation/driver-api/pps.rst              |   2 -
- .../preempt-locking.rst}                      |   2 +-
- .../{pti => driver-api}/pti_intel_mid.rst     |   2 -
- Documentation/driver-api/ptp.rst              |   2 -
- Documentation/{pwm.txt => driver-api/pwm.rst} |   0
- .../{rbtree.txt => driver-api/rbtree.rst}     |  52 +-
- .../remoteproc.rst}                           |   2 +-
- .../{rfkill.txt => driver-api/rfkill.rst}     |   0
- .../robust-futex-ABI.rst}                     |   0
- .../robust-futexes.rst}                       |   0
- .../{rpmsg.txt => driver-api/rpmsg.rst}       |   0
- .../{sgi-ioc4.txt => driver-api/sgi-ioc4.rst} |   0
- .../{SM501.txt => driver-api/sm501.rst}       |   0
- .../smsc_ece1099.rst}                         |   0
- .../speculation.rst}                          |   8 +-
- .../static-keys.rst}                          |   0
- .../switchtec.rst}                            |   2 +-
- .../sync_file.rst}                            |   0
- Documentation/{tee.txt => driver-api/tee.rst} |   0
- .../this_cpu_ops.rst}                         |   0
- .../unaligned-memory-access.rst}              |   0
- Documentation/driver-api/usb/dma.rst          |   6 +-
- .../vfio-mediated-device.rst}                 |   2 +-
- .../{vfio.txt => driver-api/vfio.rst}         |   0
- .../{ => driver-api}/xilinx/eemi.rst          |   0
- .../{ => driver-api}/xilinx/index.rst         |   1 -
- .../{xillybus.txt => driver-api/xillybus.rst} |   0
- Documentation/{xz.txt => driver-api/xz.rst}   |   0
- .../{zorro.txt => driver-api/zorro.rst}       |   5 +-
- Documentation/driver-model/device.rst         |   2 +-
- Documentation/fb/fbcon.rst                    |   4 +-
- Documentation/fb/vesafb.rst                   |   2 +-
- Documentation/filesystems/proc.txt            |   2 +-
- Documentation/filesystems/sysfs.txt           |   2 +-
- Documentation/filesystems/tmpfs.txt           |   2 +-
- .../acpi/extcon-intel-int3496.rst}            |  14 +-
- Documentation/firmware-guide/acpi/index.rst   |   1 +
- Documentation/gpu/drm-mm.rst                  |   2 +-
- Documentation/ia64/index.rst                  |   2 -
- Documentation/ia64/irq-redir.rst              |   2 +-
- Documentation/index.rst                       |  14 +
- ...g-up-ioctls.txt => botching-up-ioctls.rst} |   1 +
- Documentation/ioctl/{cdrom.txt => cdrom.rst}  | 908 +++++++++++-------
- Documentation/ioctl/{hdio.txt => hdio.rst}    | 835 ++++++++++------
- Documentation/ioctl/index.rst                 |  16 +
- ...{ioctl-decoding.txt => ioctl-decoding.rst} |  13 +-
- .../{ioctl-number.txt => ioctl-number.rst}    | 588 ++++++------
- Documentation/locking/rt-mutex.rst            |   2 +-
- Documentation/m68k/index.rst                  |   2 -
- Documentation/memory-barriers.txt             |   6 +-
- Documentation/mic/index.rst                   |   2 -
- Documentation/networking/ip-sysctl.txt        |   2 +-
- Documentation/networking/scaling.rst          |   4 +-
- .../perf/{arm-ccn.txt => arm-ccn.rst}         |  18 +-
- .../perf/{arm_dsu_pmu.txt => arm_dsu_pmu.rst} |   5 +-
- .../perf/{hisi-pmu.txt => hisi-pmu.rst}       |  35 +-
- Documentation/perf/index.rst                  |  16 +
- .../perf/{qcom_l2_pmu.txt => qcom_l2_pmu.rst} |   3 +-
- .../perf/{qcom_l3_pmu.txt => qcom_l3_pmu.rst} |   3 +-
- .../{thunderx2-pmu.txt => thunderx2-pmu.rst}  |  25 +-
- .../perf/{xgene-pmu.txt => xgene-pmu.rst}     |   3 +-
- Documentation/{phy.txt => phy.rst}            |   2 +
- Documentation/phy/samsung-usb2.rst            |   2 -
- .../powerpc/firmware-assisted-dump.rst        |   2 +-
- Documentation/process/submit-checklist.rst    |   2 +-
- Documentation/rapidio/index.rst               |  15 +
- .../{mport_cdev.txt => mport_cdev.rst}        |  47 +-
- .../rapidio/{rapidio.txt => rapidio.rst}      |  39 +-
- .../rapidio/{rio_cm.txt => rio_cm.rst}        |  66 +-
- .../rapidio/{sysfs.txt => sysfs.rst}          |   4 +
- .../rapidio/{tsi721.txt => tsi721.rst}        |  45 +-
- Documentation/riscv/index.rst                 |   2 -
- Documentation/s390/index.rst                  |   2 -
- Documentation/s390/vfio-ccw.rst               |   6 +-
- Documentation/scheduler/index.rst             |   2 -
- Documentation/scheduler/sched-deadline.rst    |   2 +-
- Documentation/scheduler/sched-design-CFS.rst  |   2 +-
- Documentation/scheduler/sched-rt-group.rst    |   2 +-
- Documentation/security/index.rst              |   5 +-
- .../security/{LSM.rst => lsm-development.rst} |   0
- Documentation/{lsm.txt => security/lsm.rst}   |   0
- Documentation/{SAK.txt => security/sak.rst}   |   1 -
- .../{siphash.txt => security/siphash.rst}     |   0
- Documentation/security/tpm/index.rst          |   1 +
- Documentation/security/tpm/xen-tpmfront.rst   |   2 -
- Documentation/sparc/index.rst                 |   2 -
- ...pu-cooling-api.txt => cpu-cooling-api.rst} |  39 +-
- .../{exynos_thermal => exynos_thermal.rst}    |  47 +-
- ...emulation => exynos_thermal_emulation.rst} |  66 +-
- Documentation/thermal/index.rst               |  18 +
- ...el_powerclamp.txt => intel_powerclamp.rst} | 177 ++--
- .../{nouveau_thermal => nouveau_thermal.rst}  |  54 +-
- ...ower_allocator.txt => power_allocator.rst} | 140 +--
- .../thermal/{sysfs-api.txt => sysfs-api.rst}  | 490 ++++++----
- ...hermal => x86_pkg_temperature_thermal.rst} |  28 +-
- Documentation/trace/kprobetrace.rst           |   2 +-
- .../it_IT/process/submit-checklist.rst        |   2 +-
- .../translations/ko_KR/memory-barriers.txt    |   6 +-
- Documentation/translations/zh_CN/IRQ.txt      |   4 +-
- .../translations/zh_CN/filesystems/sysfs.txt  |   2 +-
- .../translations/zh_CN/io_ordering.txt        |   4 +-
- .../translations/zh_CN/oops-tracing.txt       |   4 +-
- .../zh_CN/process/submit-checklist.rst        |   2 +-
- Documentation/usb/{acm.txt => acm.rst}        |   0
- .../{authorization.txt => authorization.rst}  |   0
- .../usb/{chipidea.txt => chipidea.rst}        |   0
- Documentation/usb/{dwc3.txt => dwc3.rst}      |   0
- Documentation/usb/{ehci.txt => ehci.rst}      |   0
- .../usb/{functionfs.txt => functionfs.rst}    |   0
- ...{gadget-testing.txt => gadget-testing.rst} |   4 +-
- ...adget_configfs.txt => gadget_configfs.rst} |   0
- .../usb/{gadget_hid.txt => gadget_hid.rst}    |   0
- .../{gadget_multi.txt => gadget_multi.rst}    |   0
- ...{gadget_printer.txt => gadget_printer.rst} |   0
- .../{gadget_serial.txt => gadget_serial.rst}  |   0
- Documentation/usb/index.rst                   |  39 +
- .../usb/{iuu_phoenix.txt => iuu_phoenix.rst}  |   0
- .../{mass-storage.txt => mass-storage.rst}    |   0
- ...{misc_usbsevseg.txt => misc_usbsevseg.rst} |   0
- .../usb/{mtouchusb.txt => mtouchusb.rst}      |   0
- Documentation/usb/{ohci.txt => ohci.rst}      |   0
- Documentation/usb/{rio.txt => rio.rst}        |   0
- Documentation/usb/text_files.rst              |  29 +
- .../usb/{usb-help.txt => usb-help.rst}        |   0
- .../usb/{usb-serial.txt => usb-serial.rst}    |   0
- ...{usbip_protocol.txt => usbip_protocol.rst} |   0
- Documentation/usb/{usbmon.txt => usbmon.rst}  |   0
- ...-overview.txt => wusb-design-overview.rst} |   0
- Documentation/vm/numa.rst                     |   4 +-
- Documentation/vm/page_migration.rst           |   2 +-
- Documentation/vm/unevictable-lru.rst          |   4 +-
- Documentation/w1/w1.netlink                   |   2 +-
- Documentation/watchdog/hpwdt.rst              |   4 +-
- Documentation/x86/index.rst                   |   2 +
- .../{Intel-IOMMU.txt => x86/intel-iommu.rst}  |   1 +
- .../{intel_txt.txt => x86/intel_txt.rst}      |   1 +
- Documentation/x86/topology.rst                |   2 +-
- .../x86/x86_64/fake-numa-for-cpusets.rst      |   4 +-
- Documentation/xtensa/index.rst                |   2 -
- MAINTAINERS                                   | 106 +-
- arch/Kconfig                                  |   4 +-
- arch/arm/Kconfig                              |   4 +-
- arch/arm64/Kconfig                            |   2 +-
- arch/ia64/hp/common/sba_iommu.c               |  12 +-
- arch/ia64/sn/pci/pci_dma.c                    |   4 +-
- arch/parisc/Kconfig                           |   2 +-
- arch/parisc/kernel/pci-dma.c                  |   2 +-
- arch/sh/Kconfig                               |   4 +-
- arch/sparc/Kconfig                            |   2 +-
- arch/unicore32/include/asm/io.h               |   2 +-
- arch/x86/Kconfig                              |   8 +-
- arch/x86/include/asm/dma-mapping.h            |   4 +-
- arch/x86/kernel/amd_gart_64.c                 |   2 +-
- block/Kconfig                                 |   4 +-
- block/Kconfig.iosched                         |   2 +-
- block/bfq-iosched.c                           |   2 +-
- block/blk-integrity.c                         |   2 +-
- block/ioprio.c                                |   2 +-
- block/mq-deadline.c                           |   2 +-
- block/partitions/Kconfig                      |   2 +-
- block/partitions/cmdline.c                    |   2 +-
- drivers/base/core.c                           |   2 +-
- drivers/block/Kconfig                         |   8 +-
- drivers/block/floppy.c                        |   2 +-
- drivers/block/zram/Kconfig                    |   6 +-
- drivers/char/Kconfig                          |   6 +-
- drivers/char/hw_random/core.c                 |   2 +-
- drivers/char/ipmi/Kconfig                     |   2 +-
- drivers/char/ipmi/ipmi_si_hotmod.c            |   2 +-
- drivers/char/ipmi/ipmi_si_intf.c              |   2 +-
- drivers/dma-buf/Kconfig                       |   2 +-
- drivers/gpio/Kconfig                          |   2 +-
- drivers/gpu/drm/Kconfig                       |   2 +-
- drivers/gpu/drm/drm_ioctl.c                   |   2 +-
- drivers/parisc/sba_iommu.c                    |  16 +-
- drivers/pci/switch/Kconfig                    |   2 +-
- drivers/perf/qcom_l3_pmu.c                    |   2 +-
- drivers/platform/x86/Kconfig                  |   8 +-
- drivers/platform/x86/dcdbas.c                 |   2 +-
- drivers/platform/x86/dell_rbu.c               |   2 +-
- drivers/pnp/isapnp/Kconfig                    |   2 +-
- drivers/rapidio/Kconfig                       |   2 +-
- drivers/tty/Kconfig                           |   2 +-
- drivers/usb/Kconfig                           |   2 +-
- drivers/usb/class/Kconfig                     |   2 +-
- drivers/usb/gadget/Kconfig                    |   6 +-
- drivers/usb/gadget/function/f_mass_storage.c  |   2 +-
- drivers/usb/gadget/legacy/Kconfig             |   6 +-
- drivers/usb/host/Kconfig                      |   2 +-
- drivers/usb/misc/Kconfig                      |   2 +-
- drivers/usb/mon/Kconfig                       |   2 +-
- drivers/usb/serial/Kconfig                    |  10 +-
- drivers/usb/serial/belkin_sa.c                |   2 +-
- drivers/usb/serial/belkin_sa.h                |   2 +-
- drivers/usb/serial/cypress_m8.c               |   2 +-
- drivers/usb/serial/empeg.c                    |   2 +-
- drivers/usb/serial/ftdi_sio.c                 |   2 +-
- drivers/usb/serial/ir-usb.c                   |   2 +-
- drivers/usb/serial/keyspan_pda.c              |   2 +-
- drivers/usb/serial/omninet.c                  |   2 +-
- drivers/usb/serial/oti6858.c                  |   2 +-
- drivers/usb/serial/pl2303.c                   |   2 +-
- drivers/usb/serial/usb-serial.c               |   2 +-
- drivers/usb/serial/visor.c                    |   2 +-
- drivers/usb/serial/visor.h                    |   2 +-
- drivers/usb/serial/whiteheat.c                |   2 +-
- drivers/usb/serial/whiteheat.h                |   2 +-
- drivers/vfio/Kconfig                          |   2 +-
- drivers/vfio/mdev/Kconfig                     |   2 +-
- drivers/w1/Kconfig                            |   2 +-
- fs/proc/Kconfig                               |   2 +-
- include/asm-generic/bitops/atomic.h           |   2 +-
- include/linux/cgroup-defs.h                   |   2 +-
- include/linux/dma-mapping.h                   |   2 +-
- include/linux/hw_random.h                     |   2 +-
- include/linux/io-mapping.h                    |   2 +-
- include/linux/jump_label.h                    |   2 +-
- include/linux/kobject.h                       |   2 +-
- include/linux/kobject_ns.h                    |   2 +-
- include/linux/rbtree.h                        |   2 +-
- include/linux/rbtree_augmented.h              |   2 +-
- include/linux/thermal.h                       |   4 +-
- include/media/videobuf-dma-sg.h               |   2 +-
- include/uapi/linux/bpf.h                      |   2 +-
- include/uapi/rdma/rdma_user_ioctl_cmds.h      |   2 +-
- init/Kconfig                                  |   6 +-
- kernel/cgroup/cpuset.c                        |   2 +-
- kernel/dma/debug.c                            |   2 +-
- kernel/padata.c                               |   2 +-
- kernel/panic.c                                |   2 +-
- lib/Kconfig                                   |   2 +-
- lib/Kconfig.debug                             |   2 +-
- lib/crc32.c                                   |   2 +-
- lib/kobject.c                                 |   4 +-
- lib/lzo/lzo1x_decompress_safe.c               |   2 +-
- lib/xz/Kconfig                                |   2 +-
- mm/Kconfig                                    |   2 +-
- mm/nommu.c                                    |   2 +-
- mm/swap.c                                     |   2 +-
- samples/Kconfig                               |   2 +-
- samples/kprobes/kprobe_example.c              |   2 +-
- samples/kprobes/kretprobe_example.c           |   2 +-
- scripts/gcc-plugins/Kconfig                   |   2 +-
- security/Kconfig                              |   2 +-
- security/device_cgroup.c                      |   2 +-
- tools/include/linux/rbtree.h                  |   2 +-
- tools/include/linux/rbtree_augmented.h        |   2 +-
- tools/include/uapi/linux/bpf.h                |   2 +-
- tools/testing/selftests/zram/README           |   2 +-
- 405 files changed, 4491 insertions(+), 2896 deletions(-)
- rename Documentation/{ => admin-guide}/aoe/aoe.rst (97%)
- rename Documentation/{ => admin-guide}/aoe/autoload.sh (99%)
- rename Documentation/{ => admin-guide}/aoe/examples.rst (100%)
- rename Documentation/{ => admin-guide}/aoe/index.rst (95%)
- rename Documentation/{ => admin-guide}/aoe/status.sh (100%)
- rename Documentation/{ => admin-guide}/aoe/todo.rst (100%)
- rename Documentation/{ => admin-guide}/aoe/udev-install.sh (92%)
- rename Documentation/{ => admin-guide}/aoe/udev.txt (91%)
- rename Documentation/{btmrvl.txt => admin-guide/btmrvl.rst} (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/blkio-controller.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/cgroups.rst (99%)
- rename Documentation/{ => admin-guide}/cgroup-v1/cpuacct.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/cpusets.rst (99%)
- rename Documentation/{ => admin-guide}/cgroup-v1/devices.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/freezer-subsystem.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/hugetlb.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/index.rst (97%)
- rename Documentation/{ => admin-guide}/cgroup-v1/memcg_test.rst (98%)
- rename Documentation/{ => admin-guide}/cgroup-v1/memory.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/net_cls.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/net_prio.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/pids.rst (100%)
- rename Documentation/{ => admin-guide}/cgroup-v1/rdma.rst (100%)
- rename Documentation/{clearing-warn-once.txt => admin-guide/clearing-warn-once.rst} (100%)
- rename Documentation/{cpu-load.txt => admin-guide/cpu-load.rst} (100%)
- rename Documentation/{cputopology.txt => admin-guide/cputopology.rst} (100%)
- rename Documentation/{efi-stub.txt => admin-guide/efi-stub.rst} (100%)
- rename Documentation/{highuid.txt => admin-guide/highuid.rst} (99%)
- rename Documentation/{hw_random.txt => admin-guide/hw_random.rst} (100%)
- rename Documentation/{iostats.txt => admin-guide/iostats.rst} (100%)
- rename Documentation/{ => admin-guide}/kdump/gdbmacros.txt (100%)
- rename Documentation/{ => admin-guide}/kdump/index.rst (97%)
- rename Documentation/{ => admin-guide}/kdump/kdump.rst (100%)
- rename Documentation/{ => admin-guide}/kdump/vmcoreinfo.rst (100%)
- rename Documentation/{kernel-per-CPU-kthreads.txt => admin-guide/kernel-per-cpu-kthreads.rst} (98%)
- rename Documentation/{ => admin-guide}/laptops/asus-laptop.rst (100%)
- rename Documentation/{ => admin-guide}/laptops/disk-shock-protection.rst (100%)
- rename Documentation/{ => admin-guide}/laptops/index.rst (95%)
- rename Documentation/{ => admin-guide}/laptops/laptop-mode.rst (100%)
- rename Documentation/{ => admin-guide}/laptops/lg-laptop.rst (99%)
- rename Documentation/{ => admin-guide}/laptops/sony-laptop.rst (100%)
- rename Documentation/{ => admin-guide}/laptops/sonypi.rst (100%)
- rename Documentation/{ => admin-guide}/laptops/thinkpad-acpi.rst (99%)
- rename Documentation/{ => admin-guide}/laptops/toshiba_haps.rst (100%)
- rename Documentation/{auxdisplay => admin-guide}/lcd-panel-cgram.rst (99%)
- rename Documentation/{ldm.txt => admin-guide/ldm.rst} (98%)
- rename Documentation/{lockup-watchdogs.txt => admin-guide/lockup-watchdogs.rst} (100%)
- rename Documentation/{cma/debugfs.rst => admin-guide/mm/cma_debugfs.rst} (98%)
- rename Documentation/{numastat.txt => admin-guide/numastat.rst} (93%)
- rename Documentation/{pnp.txt => admin-guide/pnp.rst} (98%)
- rename Documentation/{rtc.txt => admin-guide/rtc.rst} (99%)
- rename Documentation/{svga.txt => admin-guide/svga.rst} (100%)
- rename Documentation/{sysctl/abi.txt => admin-guide/sysctl/abi.rst} (30%)
- rename Documentation/{sysctl/fs.txt => admin-guide/sysctl/fs.rst} (77%)
- rename Documentation/{sysctl/README => admin-guide/sysctl/index.rst} (78%)
- rename Documentation/{sysctl/kernel.txt => admin-guide/sysctl/kernel.rst} (79%)
- rename Documentation/{sysctl/net.txt => admin-guide/sysctl/net.rst} (85%)
- rename Documentation/{sysctl/sunrpc.txt => admin-guide/sysctl/sunrpc.rst} (62%)
- rename Documentation/{sysctl/user.txt => admin-guide/sysctl/user.rst} (77%)
- rename Documentation/{sysctl/vm.txt => admin-guide/sysctl/vm.rst} (84%)
- rename Documentation/{video-output.txt => admin-guide/video-output.rst} (99%)
- rename Documentation/block/{bfq-iosched.txt => bfq-iosched.rst} (95%)
- rename Documentation/block/{biodoc.txt => biodoc.rst} (83%)
- rename Documentation/block/{biovecs.txt => biovecs.rst} (92%)
- rename Documentation/block/{capability.txt => capability.rst} (40%)
- rename Documentation/block/{cmdline-partition.txt => cmdline-partition.rst} (92%)
- rename Documentation/block/{data-integrity.txt => data-integrity.rst} (91%)
- rename Documentation/block/{deadline-iosched.txt => deadline-iosched.rst} (89%)
- create mode 100644 Documentation/block/index.rst
- rename Documentation/block/{ioprio.txt => ioprio.rst} (75%)
- rename Documentation/block/{kyber-iosched.txt => kyber-iosched.rst} (86%)
- rename Documentation/block/{null_blk.txt => null_blk.rst} (60%)
- rename Documentation/block/{pr.txt => pr.rst} (93%)
- rename Documentation/block/{queue-sysfs.txt => queue-sysfs.rst} (99%)
- rename Documentation/block/{request.txt => request.rst} (59%)
- rename Documentation/block/{stat.txt => stat.rst} (89%)
- rename Documentation/block/{switching-sched.txt => switching-sched.rst} (67%)
- rename Documentation/block/{writeback_cache_control.txt => writeback_cache_control.rst} (94%)
- rename Documentation/blockdev/drbd/{data-structure-v9.txt => data-structure-v9.rst} (94%)
- create mode 100644 Documentation/blockdev/drbd/figures.rst
- rename Documentation/blockdev/drbd/{README.txt => index.rst} (55%)
- rename Documentation/blockdev/{floppy.txt => floppy.rst} (81%)
- create mode 100644 Documentation/blockdev/index.rst
- rename Documentation/blockdev/{nbd.txt => nbd.rst} (96%)
- rename Documentation/blockdev/{paride.txt => paride.rst} (81%)
- rename Documentation/blockdev/{ramdisk.txt => ramdisk.rst} (84%)
- rename Documentation/blockdev/{zram.txt => zram.rst} (76%)
- rename Documentation/{atomic_bitops.txt => driver-api/atomic_bitops.rst} (99%)
- rename Documentation/{bt8xxgpio.txt => driver-api/bt8xxgpio.rst} (99%)
- rename Documentation/{bus-virt-phys-mapping.txt => driver-api/bus-virt-phys-mapping.rst} (93%)
- rename Documentation/{connector => driver-api}/connector.rst (99%)
- rename Documentation/{console => driver-api}/console.rst (99%)
- rename Documentation/{crc32.txt => driver-api/crc32.rst} (100%)
- rename Documentation/{dcdbas.txt => driver-api/dcdbas.rst} (100%)
- rename Documentation/{debugging-modules.txt => driver-api/debugging-modules.rst} (100%)
- rename Documentation/{debugging-via-ohci1394.txt => driver-api/debugging-via-ohci1394.rst} (100%)
- rename Documentation/{dell_rbu.txt => driver-api/dell_rbu.rst} (99%)
- rename Documentation/{digsig.txt => driver-api/digsig.rst} (100%)
- rename Documentation/{EDID/howto.rst => driver-api/edid.rst} (99%)
- rename Documentation/{eisa.txt => driver-api/eisa.rst} (100%)
- rename Documentation/{futex-requeue-pi.txt => driver-api/futex-requeue-pi.rst} (100%)
- rename Documentation/{gcc-plugins.txt => driver-api/gcc-plugins.rst} (100%)
- rename Documentation/{hwspinlock.txt => driver-api/hwspinlock.rst} (100%)
- rename Documentation/{io-mapping.txt => driver-api/io-mapping.rst} (100%)
- rename Documentation/{io_ordering.txt => driver-api/io_ordering.rst} (100%)
- rename Documentation/{IPMI.txt => driver-api/ipmi.rst} (100%)
- rename Documentation/{IRQ-affinity.txt => driver-api/irq-affinity.rst} (100%)
- rename Documentation/{IRQ-domain.txt => driver-api/irq-domain.rst} (100%)
- rename Documentation/{IRQ.txt => driver-api/irq.rst} (100%)
- rename Documentation/{irqflags-tracing.txt => driver-api/irqflags-tracing.rst} (99%)
- rename Documentation/{isa.txt => driver-api/isa.rst} (100%)
- rename Documentation/{isapnp.txt => driver-api/isapnp.rst} (100%)
- rename Documentation/{kobject.txt => driver-api/kobject.rst} (99%)
- rename Documentation/{kprobes.txt => driver-api/kprobes.rst} (99%)
- rename Documentation/{kref.txt => driver-api/kref.rst} (100%)
- rename Documentation/{lightnvm/pblk.txt => driver-api/lightnvm-pblk.rst} (100%)
- rename Documentation/{lzo.txt => driver-api/lzo.rst} (100%)
- rename Documentation/{mailbox.txt => driver-api/mailbox.rst} (100%)
- rename Documentation/{men-chameleon-bus.txt => driver-api/men-chameleon-bus.rst} (100%)
- rename Documentation/{DMA-API-HOWTO.txt => driver-api/mm/dma-api-howto.rst} (100%)
- rename Documentation/{DMA-API.txt => driver-api/mm/dma-api.rst} (99%)
- rename Documentation/{DMA-attributes.txt => driver-api/mm/dma-attributes.rst} (100%)
- rename Documentation/{DMA-ISA-LPC.txt => driver-api/mm/dma-isa-lpc.rst} (98%)
- create mode 100644 Documentation/driver-api/mm/index.rst
- rename Documentation/{nommu-mmap.txt => driver-api/nommu-mmap.rst} (100%)
- rename Documentation/{ntb.txt => driver-api/ntb.rst} (100%)
- rename Documentation/{nvmem => driver-api}/nvmem.rst (99%)
- rename Documentation/{padata.txt => driver-api/padata.rst} (100%)
- rename Documentation/{parport-lowlevel.txt => driver-api/parport-lowlevel.rst} (100%)
- rename Documentation/{percpu-rw-semaphore.txt => driver-api/percpu-rw-semaphore.rst} (100%)
- rename Documentation/{pi-futex.txt => driver-api/pi-futex.rst} (100%)
- rename Documentation/{preempt-locking.txt => driver-api/preempt-locking.rst} (99%)
- rename Documentation/{pti => driver-api}/pti_intel_mid.rst (99%)
- rename Documentation/{pwm.txt => driver-api/pwm.rst} (100%)
- rename Documentation/{rbtree.txt => driver-api/rbtree.rst} (94%)
- rename Documentation/{remoteproc.txt => driver-api/remoteproc.rst} (99%)
- rename Documentation/{rfkill.txt => driver-api/rfkill.rst} (100%)
- rename Documentation/{robust-futex-ABI.txt => driver-api/robust-futex-ABI.rst} (100%)
- rename Documentation/{robust-futexes.txt => driver-api/robust-futexes.rst} (100%)
- rename Documentation/{rpmsg.txt => driver-api/rpmsg.rst} (100%)
- rename Documentation/{sgi-ioc4.txt => driver-api/sgi-ioc4.rst} (100%)
- rename Documentation/{SM501.txt => driver-api/sm501.rst} (100%)
- rename Documentation/{smsc_ece1099.txt => driver-api/smsc_ece1099.rst} (100%)
- rename Documentation/{speculation.txt => driver-api/speculation.rst} (100%)
- rename Documentation/{static-keys.txt => driver-api/static-keys.rst} (100%)
- rename Documentation/{switchtec.txt => driver-api/switchtec.rst} (97%)
- rename Documentation/{sync_file.txt => driver-api/sync_file.rst} (100%)
- rename Documentation/{tee.txt => driver-api/tee.rst} (100%)
- rename Documentation/{this_cpu_ops.txt => driver-api/this_cpu_ops.rst} (100%)
- rename Documentation/{unaligned-memory-access.txt => driver-api/unaligned-memory-access.rst} (100%)
- rename Documentation/{vfio-mediated-device.txt => driver-api/vfio-mediated-device.rst} (99%)
- rename Documentation/{vfio.txt => driver-api/vfio.rst} (100%)
- rename Documentation/{ => driver-api}/xilinx/eemi.rst (100%)
- rename Documentation/{ => driver-api}/xilinx/index.rst (94%)
- rename Documentation/{xillybus.txt => driver-api/xillybus.rst} (100%)
- rename Documentation/{xz.txt => driver-api/xz.rst} (100%)
- rename Documentation/{zorro.txt => driver-api/zorro.rst} (99%)
- rename Documentation/{extcon/intel-int3496.txt => firmware-guide/acpi/extcon-intel-int3496.rst} (66%)
- rename Documentation/ioctl/{botching-up-ioctls.txt => botching-up-ioctls.rst} (99%)
- rename Documentation/ioctl/{cdrom.txt => cdrom.rst} (39%)
- rename Documentation/ioctl/{hdio.txt => hdio.rst} (54%)
- create mode 100644 Documentation/ioctl/index.rst
- rename Documentation/ioctl/{ioctl-decoding.txt => ioctl-decoding.rst} (54%)
- rename Documentation/ioctl/{ioctl-number.txt => ioctl-number.rst} (11%)
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ .../perf/{arm-ccn.txt => arm-ccn.rst}         | 18 +++++-----
+ .../perf/{arm_dsu_pmu.txt => arm_dsu_pmu.rst} |  5 +--
+ .../perf/{hisi-pmu.txt => hisi-pmu.rst}       | 35 +++++++++++--------
+ Documentation/perf/index.rst                  | 16 +++++++++
+ .../perf/{qcom_l2_pmu.txt => qcom_l2_pmu.rst} |  3 +-
+ .../perf/{qcom_l3_pmu.txt => qcom_l3_pmu.rst} |  3 +-
+ .../{thunderx2-pmu.txt => thunderx2-pmu.rst}  | 25 ++++++-------
+ .../perf/{xgene-pmu.txt => xgene-pmu.rst}     |  3 +-
+ MAINTAINERS                                   |  4 +--
+ drivers/perf/qcom_l3_pmu.c                    |  2 +-
+ 10 files changed, 72 insertions(+), 42 deletions(-)
  rename Documentation/perf/{arm-ccn.txt => arm-ccn.rst} (86%)
  rename Documentation/perf/{arm_dsu_pmu.txt => arm_dsu_pmu.rst} (92%)
  rename Documentation/perf/{hisi-pmu.txt => hisi-pmu.rst} (73%)
@@ -713,55 +99,318 @@ Mauro Carvalho Chehab (22):
  rename Documentation/perf/{qcom_l3_pmu.txt => qcom_l3_pmu.rst} (93%)
  rename Documentation/perf/{thunderx2-pmu.txt => thunderx2-pmu.rst} (73%)
  rename Documentation/perf/{xgene-pmu.txt => xgene-pmu.rst} (96%)
- rename Documentation/{phy.txt => phy.rst} (99%)
- create mode 100644 Documentation/rapidio/index.rst
- rename Documentation/rapidio/{mport_cdev.txt => mport_cdev.rst} (84%)
- rename Documentation/rapidio/{rapidio.txt => rapidio.rst} (97%)
- rename Documentation/rapidio/{rio_cm.txt => rio_cm.rst} (76%)
- rename Documentation/rapidio/{sysfs.txt => sysfs.rst} (75%)
- rename Documentation/rapidio/{tsi721.txt => tsi721.rst} (79%)
- rename Documentation/security/{LSM.rst => lsm-development.rst} (100%)
- rename Documentation/{lsm.txt => security/lsm.rst} (100%)
- rename Documentation/{SAK.txt => security/sak.rst} (99%)
- rename Documentation/{siphash.txt => security/siphash.rst} (100%)
- rename Documentation/thermal/{cpu-cooling-api.txt => cpu-cooling-api.rst} (82%)
- rename Documentation/thermal/{exynos_thermal => exynos_thermal.rst} (67%)
- rename Documentation/thermal/{exynos_thermal_emulation => exynos_thermal_emulation.rst} (36%)
- create mode 100644 Documentation/thermal/index.rst
- rename Documentation/thermal/{intel_powerclamp.txt => intel_powerclamp.rst} (76%)
- rename Documentation/thermal/{nouveau_thermal => nouveau_thermal.rst} (64%)
- rename Documentation/thermal/{power_allocator.txt => power_allocator.rst} (74%)
- rename Documentation/thermal/{sysfs-api.txt => sysfs-api.rst} (66%)
- rename Documentation/thermal/{x86_pkg_temperature_thermal => x86_pkg_temperature_thermal.rst} (80%)
- rename Documentation/usb/{acm.txt => acm.rst} (100%)
- rename Documentation/usb/{authorization.txt => authorization.rst} (100%)
- rename Documentation/usb/{chipidea.txt => chipidea.rst} (100%)
- rename Documentation/usb/{dwc3.txt => dwc3.rst} (100%)
- rename Documentation/usb/{ehci.txt => ehci.rst} (100%)
- rename Documentation/usb/{functionfs.txt => functionfs.rst} (100%)
- rename Documentation/usb/{gadget-testing.txt => gadget-testing.rst} (99%)
- rename Documentation/usb/{gadget_configfs.txt => gadget_configfs.rst} (100%)
- rename Documentation/usb/{gadget_hid.txt => gadget_hid.rst} (100%)
- rename Documentation/usb/{gadget_multi.txt => gadget_multi.rst} (100%)
- rename Documentation/usb/{gadget_printer.txt => gadget_printer.rst} (100%)
- rename Documentation/usb/{gadget_serial.txt => gadget_serial.rst} (100%)
- create mode 100644 Documentation/usb/index.rst
- rename Documentation/usb/{iuu_phoenix.txt => iuu_phoenix.rst} (100%)
- rename Documentation/usb/{mass-storage.txt => mass-storage.rst} (100%)
- rename Documentation/usb/{misc_usbsevseg.txt => misc_usbsevseg.rst} (100%)
- rename Documentation/usb/{mtouchusb.txt => mtouchusb.rst} (100%)
- rename Documentation/usb/{ohci.txt => ohci.rst} (100%)
- rename Documentation/usb/{rio.txt => rio.rst} (100%)
- create mode 100644 Documentation/usb/text_files.rst
- rename Documentation/usb/{usb-help.txt => usb-help.rst} (100%)
- rename Documentation/usb/{usb-serial.txt => usb-serial.rst} (100%)
- rename Documentation/usb/{usbip_protocol.txt => usbip_protocol.rst} (100%)
- rename Documentation/usb/{usbmon.txt => usbmon.rst} (100%)
- rename Documentation/usb/{WUSB-Design-overview.txt => wusb-design-overview.rst} (100%)
- rename Documentation/{Intel-IOMMU.txt => x86/intel-iommu.rst} (99%)
- rename Documentation/{intel_txt.txt => x86/intel_txt.rst} (99%)
 
+diff --git a/Documentation/perf/arm-ccn.txt b/Documentation/perf/arm-ccn.rst
+similarity index 86%
+rename from Documentation/perf/arm-ccn.txt
+rename to Documentation/perf/arm-ccn.rst
+index 15cdb7bc57c3..832b0c64023a 100644
+--- a/Documentation/perf/arm-ccn.txt
++++ b/Documentation/perf/arm-ccn.rst
+@@ -1,3 +1,4 @@
++==========================
+ ARM Cache Coherent Network
+ ==========================
+ 
+@@ -29,6 +30,7 @@ Crosspoint watchpoint-based events (special "event" value 0xfe)
+ require "xp" and "vc" as as above plus "port" (device port index),
+ "dir" (transmit/receive direction), comparator values ("cmp_l"
+ and "cmp_h") and "mask", being index of the comparator mask.
++
+ Masks are defined separately from the event description
+ (due to limited number of the config values) in the "cmp_mask"
+ directory, with first 8 configurable by user and additional
+@@ -44,16 +46,16 @@ request the events on this processor (if not, the perf_event->cpu value
+ will be overwritten anyway). In case of this processor being offlined,
+ the events are migrated to another one and the attribute is updated.
+ 
+-Example of perf tool use:
++Example of perf tool use::
+ 
+-/ # perf list | grep ccn
+-  ccn/cycles/                                        [Kernel PMU event]
+-<...>
+-  ccn/xp_valid_flit,xp=?,port=?,vc=?,dir=?/          [Kernel PMU event]
+-<...>
++  / # perf list | grep ccn
++    ccn/cycles/                                        [Kernel PMU event]
++  <...>
++    ccn/xp_valid_flit,xp=?,port=?,vc=?,dir=?/          [Kernel PMU event]
++  <...>
+ 
+-/ # perf stat -a -e ccn/cycles/,ccn/xp_valid_flit,xp=1,port=0,vc=1,dir=1/ \
+-                                                                       sleep 1
++  / # perf stat -a -e ccn/cycles/,ccn/xp_valid_flit,xp=1,port=0,vc=1,dir=1/ \
++                                                                         sleep 1
+ 
+ The driver does not support sampling, therefore "perf record" will
+ not work. Per-task (without "-a") perf sessions are not supported.
+diff --git a/Documentation/perf/arm_dsu_pmu.txt b/Documentation/perf/arm_dsu_pmu.rst
+similarity index 92%
+rename from Documentation/perf/arm_dsu_pmu.txt
+rename to Documentation/perf/arm_dsu_pmu.rst
+index d611e15f5add..7fd34db75d13 100644
+--- a/Documentation/perf/arm_dsu_pmu.txt
++++ b/Documentation/perf/arm_dsu_pmu.rst
+@@ -1,3 +1,4 @@
++==================================
+ ARM DynamIQ Shared Unit (DSU) PMU
+ ==================================
+ 
+@@ -13,7 +14,7 @@ PMU doesn't support process specific events and cannot be used in sampling mode.
+ The DSU provides a bitmap for a subset of implemented events via hardware
+ registers. There is no way for the driver to determine if the other events
+ are available or not. Hence the driver exposes only those events advertised
+-by the DSU, in "events" directory under :
++by the DSU, in "events" directory under::
+ 
+   /sys/bus/event_sources/devices/arm_dsu_<N>/
+ 
+@@ -23,6 +24,6 @@ and use the raw event code for the unlisted events.
+ The driver also exposes the CPUs connected to the DSU instance in "associated_cpus".
+ 
+ 
+-e.g usage :
++e.g usage::
+ 
+ 	perf stat -a -e arm_dsu_0/cycles/
+diff --git a/Documentation/perf/hisi-pmu.txt b/Documentation/perf/hisi-pmu.rst
+similarity index 73%
+rename from Documentation/perf/hisi-pmu.txt
+rename to Documentation/perf/hisi-pmu.rst
+index 267a028b2741..404a5c3d9d00 100644
+--- a/Documentation/perf/hisi-pmu.txt
++++ b/Documentation/perf/hisi-pmu.rst
+@@ -1,5 +1,7 @@
++======================================================
+ HiSilicon SoC uncore Performance Monitoring Unit (PMU)
+ ======================================================
++
+ The HiSilicon SoC chip includes various independent system device PMUs
+ such as L3 cache (L3C), Hydra Home Agent (HHA) and DDRC. These PMUs are
+ independent and have hardware logic to gather statistics and performance
+@@ -11,11 +13,13 @@ called Super CPU cluster (SCCL) and is made up of 6 CCLs. Each SCCL has
+ two HHAs (0 - 1) and four DDRCs (0 - 3), respectively.
+ 
+ HiSilicon SoC uncore PMU driver
+----------------------------------------
++-------------------------------
++
+ Each device PMU has separate registers for event counting, control and
+ interrupt, and the PMU driver shall register perf PMU drivers like L3C,
+ HHA and DDRC etc. The available events and configuration options shall
+-be described in the sysfs, see :
++be described in the sysfs, see:
++
+ /sys/devices/hisi_sccl{X}_<l3c{Y}/hha{Y}/ddrc{Y}>/, or
+ /sys/bus/event_source/devices/hisi_sccl{X}_<l3c{Y}/hha{Y}/ddrc{Y}>.
+ The "perf list" command shall list the available events from sysfs.
+@@ -24,27 +28,30 @@ Each L3C, HHA and DDRC is registered as a separate PMU with perf. The PMU
+ name will appear in event listing as hisi_sccl<sccl-id>_module<index-id>.
+ where "sccl-id" is the identifier of the SCCL and "index-id" is the index of
+ module.
++
+ e.g. hisi_sccl3_l3c0/rd_hit_cpipe is READ_HIT_CPIPE event of L3C index #0 in
+ SCCL ID #3.
++
+ e.g. hisi_sccl1_hha0/rx_operations is RX_OPERATIONS event of HHA index #0 in
+ SCCL ID #1.
+ 
+ The driver also provides a "cpumask" sysfs attribute, which shows the CPU core
+ ID used to count the uncore PMU event.
+ 
+-Example usage of perf:
+-$# perf list
+-hisi_sccl3_l3c0/rd_hit_cpipe/ [kernel PMU event]
+-------------------------------------------
+-hisi_sccl3_l3c0/wr_hit_cpipe/ [kernel PMU event]
+-------------------------------------------
+-hisi_sccl1_l3c0/rd_hit_cpipe/ [kernel PMU event]
+-------------------------------------------
+-hisi_sccl1_l3c0/wr_hit_cpipe/ [kernel PMU event]
+-------------------------------------------
++Example usage of perf::
+ 
+-$# perf stat -a -e hisi_sccl3_l3c0/rd_hit_cpipe/ sleep 5
+-$# perf stat -a -e hisi_sccl3_l3c0/config=0x02/ sleep 5
++  $# perf list
++  hisi_sccl3_l3c0/rd_hit_cpipe/ [kernel PMU event]
++  ------------------------------------------
++  hisi_sccl3_l3c0/wr_hit_cpipe/ [kernel PMU event]
++  ------------------------------------------
++  hisi_sccl1_l3c0/rd_hit_cpipe/ [kernel PMU event]
++  ------------------------------------------
++  hisi_sccl1_l3c0/wr_hit_cpipe/ [kernel PMU event]
++  ------------------------------------------
++
++  $# perf stat -a -e hisi_sccl3_l3c0/rd_hit_cpipe/ sleep 5
++  $# perf stat -a -e hisi_sccl3_l3c0/config=0x02/ sleep 5
+ 
+ The current driver does not support sampling. So "perf record" is unsupported.
+ Also attach to a task is unsupported as the events are all uncore.
+diff --git a/Documentation/perf/index.rst b/Documentation/perf/index.rst
+new file mode 100644
+index 000000000000..4bf848e27f26
+--- /dev/null
++++ b/Documentation/perf/index.rst
+@@ -0,0 +1,16 @@
++:orphan:
++
++===========================
++Performance monitor support
++===========================
++
++.. toctree::
++   :maxdepth: 1
++
++   hisi-pmu
++   qcom_l2_pmu
++   qcom_l3_pmu
++   arm-ccn
++   xgene-pmu
++   arm_dsu_pmu
++   thunderx2-pmu
+diff --git a/Documentation/perf/qcom_l2_pmu.txt b/Documentation/perf/qcom_l2_pmu.rst
+similarity index 94%
+rename from Documentation/perf/qcom_l2_pmu.txt
+rename to Documentation/perf/qcom_l2_pmu.rst
+index b25b97659ab9..c130178a4a55 100644
+--- a/Documentation/perf/qcom_l2_pmu.txt
++++ b/Documentation/perf/qcom_l2_pmu.rst
+@@ -1,3 +1,4 @@
++=====================================================================
+ Qualcomm Technologies Level-2 Cache Performance Monitoring Unit (PMU)
+ =====================================================================
+ 
+@@ -28,7 +29,7 @@ The driver provides a "cpumask" sysfs attribute which contains a mask
+ consisting of one CPU per cluster which will be used to handle all the PMU
+ events on that cluster.
+ 
+-Examples for use with perf:
++Examples for use with perf::
+ 
+   perf stat -e l2cache_0/config=0x001/,l2cache_0/config=0x042/ -a sleep 1
+ 
+diff --git a/Documentation/perf/qcom_l3_pmu.txt b/Documentation/perf/qcom_l3_pmu.rst
+similarity index 93%
+rename from Documentation/perf/qcom_l3_pmu.txt
+rename to Documentation/perf/qcom_l3_pmu.rst
+index 96b3a9444a0d..a3d014a46bfd 100644
+--- a/Documentation/perf/qcom_l3_pmu.txt
++++ b/Documentation/perf/qcom_l3_pmu.rst
+@@ -1,3 +1,4 @@
++===========================================================================
+ Qualcomm Datacenter Technologies L3 Cache Performance Monitoring Unit (PMU)
+ ===========================================================================
+ 
+@@ -17,7 +18,7 @@ The hardware implements 32bit event counters and has a flat 8bit event space
+ exposed via the "event" format attribute. In addition to the 32bit physical
+ counters the driver supports virtual 64bit hardware counters by using hardware
+ counter chaining. This feature is exposed via the "lc" (long counter) format
+-flag. E.g.:
++flag. E.g.::
+ 
+   perf stat -e l3cache_0_0/read-miss,lc/
+ 
+diff --git a/Documentation/perf/thunderx2-pmu.txt b/Documentation/perf/thunderx2-pmu.rst
+similarity index 73%
+rename from Documentation/perf/thunderx2-pmu.txt
+rename to Documentation/perf/thunderx2-pmu.rst
+index dffc57143736..08e33675853a 100644
+--- a/Documentation/perf/thunderx2-pmu.txt
++++ b/Documentation/perf/thunderx2-pmu.rst
+@@ -1,3 +1,4 @@
++=============================================================
+ Cavium ThunderX2 SoC Performance Monitoring Unit (PMU UNCORE)
+ =============================================================
+ 
+@@ -24,18 +25,18 @@ and configuration options under sysfs, see
+ The driver does not support sampling, therefore "perf record" will not
+ work. Per-task perf sessions are also not supported.
+ 
+-Examples:
++Examples::
+ 
+-# perf stat -a -e uncore_dmc_0/cnt_cycles/ sleep 1
++  # perf stat -a -e uncore_dmc_0/cnt_cycles/ sleep 1
+ 
+-# perf stat -a -e \
+-uncore_dmc_0/cnt_cycles/,\
+-uncore_dmc_0/data_transfers/,\
+-uncore_dmc_0/read_txns/,\
+-uncore_dmc_0/write_txns/ sleep 1
++  # perf stat -a -e \
++  uncore_dmc_0/cnt_cycles/,\
++  uncore_dmc_0/data_transfers/,\
++  uncore_dmc_0/read_txns/,\
++  uncore_dmc_0/write_txns/ sleep 1
+ 
+-# perf stat -a -e \
+-uncore_l3c_0/read_request/,\
+-uncore_l3c_0/read_hit/,\
+-uncore_l3c_0/inv_request/,\
+-uncore_l3c_0/inv_hit/ sleep 1
++  # perf stat -a -e \
++  uncore_l3c_0/read_request/,\
++  uncore_l3c_0/read_hit/,\
++  uncore_l3c_0/inv_request/,\
++  uncore_l3c_0/inv_hit/ sleep 1
+diff --git a/Documentation/perf/xgene-pmu.txt b/Documentation/perf/xgene-pmu.rst
+similarity index 96%
+rename from Documentation/perf/xgene-pmu.txt
+rename to Documentation/perf/xgene-pmu.rst
+index d7cff4454e5b..644f8ed89152 100644
+--- a/Documentation/perf/xgene-pmu.txt
++++ b/Documentation/perf/xgene-pmu.rst
+@@ -1,3 +1,4 @@
++================================================
+ APM X-Gene SoC Performance Monitoring Unit (PMU)
+ ================================================
+ 
+@@ -33,7 +34,7 @@ each PMU, please refer to APM X-Gene User Manual.
+ Each perf driver also provides a "cpumask" sysfs attribute, which contains a
+ single CPU ID of the processor which will be used to handle all the PMU events.
+ 
+-Example for perf tool use:
++Example for perf tool use::
+ 
+  / # perf list | grep -e l3c -e iob -e mcb -e mc
+    l3c0/ackq-full/                                    [Kernel PMU event]
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 163327d6a856..2f8e1543caff 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1139,7 +1139,7 @@ APPLIED MICRO (APM) X-GENE SOC PMU
+ M:	Khuong Dinh <khuong@os.amperecomputing.com>
+ S:	Supported
+ F:	drivers/perf/xgene_pmu.c
+-F:	Documentation/perf/xgene-pmu.txt
++F:	Documentation/perf/xgene-pmu.rst
+ F:	Documentation/devicetree/bindings/perf/apm-xgene-pmu.txt
+ 
+ APTINA CAMERA SENSOR PLL
+@@ -7180,7 +7180,7 @@ M:	Shaokun Zhang <zhangshaokun@hisilicon.com>
+ W:	http://www.hisilicon.com
+ S:	Supported
+ F:	drivers/perf/hisilicon
+-F:	Documentation/perf/hisi-pmu.txt
++F:	Documentation/perf/hisi-pmu.rst
+ 
+ HISILICON ROCE DRIVER
+ M:	Lijun Ou <oulijun@huawei.com>
+diff --git a/drivers/perf/qcom_l3_pmu.c b/drivers/perf/qcom_l3_pmu.c
+index 15b8c10c2b2b..90f88ce5192b 100644
+--- a/drivers/perf/qcom_l3_pmu.c
++++ b/drivers/perf/qcom_l3_pmu.c
+@@ -8,7 +8,7 @@
+  * the slices. User space needs to aggregate to individual counts to provide
+  * a global picture.
+  *
+- * See Documentation/perf/qcom_l3_pmu.txt for more details.
++ * See Documentation/perf/qcom_l3_pmu.rst for more details.
+  *
+  * Copyright (c) 2015-2017, The Linux Foundation. All rights reserved.
+  */
 -- 
 2.21.0
-
 
