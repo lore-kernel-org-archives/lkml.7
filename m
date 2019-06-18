@@ -2,76 +2,126 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF28C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:23:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D308C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BBD20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:23:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E61F12082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:24:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="F/I7R90c"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NAEDJY2Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbfFRMXd (ORCPT
+        id S1728765AbfFRMYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:23:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33800 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfFRMXd (ORCPT
+        Tue, 18 Jun 2019 08:24:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46458 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfFRMYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:23:33 -0400
+        Tue, 18 Jun 2019 08:24:43 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=kNi3XQTa/+ngtDRDU/l4s27s4LRCp411GOAAso5qJSY=; b=F/I7R90ceFW+vmCgY+WJQOJbA
-        pvhriAwL77+n2hr/V0SY5YVh+q6jxecKm0igOHx2o2ZXLcgUUe5AZaKu4Przn8gyt5lIOUx+H2PW2
-        bTH+beQOHI67CgnkH7JxSkMQSzaD1zf440yUCztXudXE14U52SBXNbdnzu7ZNjw+4a4Q881/0VSOC
-        Jr8HGqVj2tMSqEhghpDjzVTNXJETzsInnYJ9afOnarjb3mIQNb0D1cnnGFpGKTAHlkYAD9SWSpakD
-        tiMq3I6gpclW9GBKx8lzKnrz+N/n1h9tPgX9kUf9vdaXWEFlvZvHT2mGOX04TofqkeYY9R4OJa2ho
-        BQXbBINNw==;
+         bh=tD8Ldis1b1ybeeBuDIwXZsiRf2P3qbbvUlnCoUXwyuY=; b=NAEDJY2YdVxbiTrefTEuYU5Ti
+        H/iWv7twG2VncqxpEZ4HA9OiOOSv8QEjwievCiXzhW/NSGfcW/vzV52+aDKkIiNusXXiAF+DNWkTY
+        tIi9K4wjN9c191xRkQv3VFdN9ZmA1NyXfKlEBMakvFL+zpjrLT8AxUtW/cKyrNUAVWXkDYkj8Claj
+        J7003OnUSqDZwVB6YyRMLERu8/3iIubOn9bCpKNZgaKCCctS982Ivx6+yk77k/TduV8XJ4Xav6ySs
+        ghrnWuHcHMe+jBR9qyUGaC8JqHrlvmUN/4AHGMfBs7YIWfs+NWFNLPr3hVX+X7g+DOZXmExLzZOl7
+        qOovV3u0w==;
 Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdD99-0004ua-Ho; Tue, 18 Jun 2019 12:23:31 +0000
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdDA7-0007Go-O0; Tue, 18 Jun 2019 12:24:32 +0000
 Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 4F8302076F70F; Tue, 18 Jun 2019 14:23:29 +0200 (CEST)
-Date:   Tue, 18 Jun 2019 14:23:29 +0200
+        id 3ABFA2076F70F; Tue, 18 Jun 2019 14:24:30 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 14:24:30 +0200
 From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Raghavendra Rao Ananta <rananta@codeaurora.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>
-Subject: Re: [PATCH V4] perf: event preserve and create across cpu hotplug
-Message-ID: <20190618122329.GE3419@hirez.programming.kicks-ass.net>
-References: <1560337045-13298-1-git-send-email-mojha@codeaurora.org>
- <1560848091-15694-1-git-send-email-mojha@codeaurora.org>
+To:     Jann Horn <jannh@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH v3 3/3] x86/asm: Pin sensitive CR0 bits
+Message-ID: <20190618122430.GF3419@hirez.programming.kicks-ass.net>
+References: <20190618045503.39105-1-keescook@chromium.org>
+ <20190618045503.39105-4-keescook@chromium.org>
+ <CAG48ez37iY3pfTWn4wiqdt7zdkSPpOcvz3gtwjTWAYz9qKbBNA@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560848091-15694-1-git-send-email-mojha@codeaurora.org>
+In-Reply-To: <CAG48ez37iY3pfTWn4wiqdt7zdkSPpOcvz3gtwjTWAYz9qKbBNA@mail.gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 02:24:51PM +0530, Mukesh Ojha wrote:
-> Perf framework doesn't allow preserving CPU events across
-> CPU hotplugs. The events are scheduled out as and when the
-> CPU walks offline. Moreover, the framework also doesn't
-> allow the clients to create events on an offline CPU. As
-> a result, the clients have to keep on monitoring the CPU
-> state until it comes back online.
+On Tue, Jun 18, 2019 at 11:38:02AM +0200, Jann Horn wrote:
+> On Tue, Jun 18, 2019 at 6:55 AM Kees Cook <keescook@chromium.org> wrote:
+> > With sensitive CR4 bits pinned now, it's possible that the WP bit for
+> > CR0 might become a target as well. Following the same reasoning for
+> > the CR4 pinning, this pins CR0's WP bit (but this can be done with a
+> > static value).
+> >
+> > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/x86/include/asm/special_insns.h | 15 ++++++++++++++-
+> >  1 file changed, 14 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+> > index c8c8143ab27b..b2e84d113f2a 100644
+> > --- a/arch/x86/include/asm/special_insns.h
+> > +++ b/arch/x86/include/asm/special_insns.h
+> > @@ -31,7 +31,20 @@ static inline unsigned long native_read_cr0(void)
+> >
+> >  static inline void native_write_cr0(unsigned long val)
+> >  {
 > 
-> Therefore,
+> So, assuming a legitimate call to native_write_cr0(), we come in here...
+> 
+> > -       asm volatile("mov %0,%%cr0": : "r" (val), "m" (__force_order));
+> > +       unsigned long bits_missing = 0;
 
-That's not a therefore. There's a distinct lack of rationale here. Why
-do you want this?
+^^^
+
+> > +
+> > +set_register:
+> > +       asm volatile("mov %0,%%cr0": "+r" (val), "+m" (__force_order));
+> 
+> ... here we've updated CR0...
+> 
+> > +       if (static_branch_likely(&cr_pinning)) {
+> 
+> ... this branch is taken, since cr_pinning is set to true after boot...
+> 
+> > +               if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
+> 
+> ... this branch isn't taken, because a legitimate update preserves the WP bit...
+> 
+> > +                       bits_missing = X86_CR0_WP;
+
+^^^
+
+> > +                       val |= bits_missing;
+> > +                       goto set_register;
+> > +               }
+> > +               /* Warn after we've set the missing bits. */
+> > +               WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
+> 
+> ... and we reach this WARN_ONCE()? Am I missing something, or does
+> every legitimate CR0 write after early boot now trigger a warning?
+
+bits_missing will be 0 and WARN will not be issued.
+
+> > +       }
+> >  }
