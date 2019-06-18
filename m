@@ -2,165 +2,180 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEB1C31E5F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B6EC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E634F214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BFB3D20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="djkt6tnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729784AbfFROFL (ORCPT
+        id S1729796AbfFROFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:05:11 -0400
-Received: from foss.arm.com ([217.140.110.172]:42860 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729161AbfFROFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:05:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A69A2B;
-        Tue, 18 Jun 2019 07:05:07 -0700 (PDT)
-Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AA0E3F718;
-        Tue, 18 Jun 2019 07:05:05 -0700 (PDT)
-Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "ashok.raj@intel.com" <ashok.raj@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        Marc Zyngier <Marc.Zyngier@arm.com>,
-        Will Deacon <Will.Deacon@arm.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Vincent Stehle <Vincent.Stehle@arm.com>,
-        Robin Murphy <Robin.Murphy@arm.com>,
-        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
-        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
-        "Liu, Yi L" <yi.l.liu@intel.com>
-References: <20190526161004.25232-1-eric.auger@redhat.com>
- <20190526161004.25232-27-eric.auger@redhat.com>
- <20190603163139.70fe8839@x1.home>
- <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
- <20190605154553.0d00ad8d@jacob-builder>
- <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
- <20190606132903.064f7ac4@jacob-builder>
- <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
- <20190607104301.6b1bbd74@jacob-builder>
- <e02b024f-6ebc-e8fa-c30c-5bf3f4b164d6@arm.com>
- <20190610143134.7bff96e9@jacob-builder>
- <905f130b-02dc-6971-8d5b-ce87d9bc96a4@arm.com>
- <20190612115358.0d90b322@jacob-builder>
-From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Message-ID: <77405d39-81a4-d9a8-5d35-27602199867a@arm.com>
-Date:   Tue, 18 Jun 2019 15:04:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 10:05:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45714 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFROFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:05:54 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so14090513wre.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:05:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8qHqhUTLPLAeUp/D+WrLyXnpz1H1Jll7QCXTM4rdBnU=;
+        b=djkt6tnmuZedsgQ4v+Rua7yfQcRyCI0RbFda0KhvSR/oADzdiA/209ohNfhcVRf8d6
+         lBE9K/fJZ8A/ZxP0jl48u8DqygtjLk6pPcX8AUimocdYXLXQw2RJnr38R2XKwe/o6X9N
+         ZOamdY9l71DGHUPX8V3uIZCrEbLY+wqRqK7B1FvRUTZM/MkMpzxXqA7hgrkn5Vv+p3o/
+         2i+Q5LM8XfqFHVaM1HEQ/GwNCw/9/FMpfSh9bxU2w3XRUBG016B+1xnhdb43B8UsSRqy
+         +fvmLZDCETQ8DJLKlkJh49O4rQZNrKvjfVhSeSVPO8KLHJgxbRRnFB65V8aEhN9ws1tS
+         SjiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8qHqhUTLPLAeUp/D+WrLyXnpz1H1Jll7QCXTM4rdBnU=;
+        b=e/gpKMAEOlU/KLHbphgXnWvyPLXLAh9zTrt3/xzP8mJa4PgXlueM4UO1UaVhvAeZdH
+         n8Sf1rlhvTCQYx6Ge1AoSaQXjQW0X34zo5TlYHMNQosn1TqayGya3dee44BcyzoV8HRQ
+         92co6KekaJw+UbOr4fYkItGyXP6hf8yI5HRYBi1cDs+OHVk2V6D3v98mExZEgDYTlb5p
+         IR1yx7WCM90f8uw16maXfns9detsUPzPc5b+44viQM9roMqrbB2ooLF4vLTvDNFZk9nS
+         tJlzAg5fddidIdriWfVBVrEsqxw8ierqU1baahdKpiEodZhYxZidabhcLemULOUM1EV6
+         H2LA==
+X-Gm-Message-State: APjAAAV3PHLJJNj3X201CWzKt4fcuTugu97NHCiE7bI+cH/wdklCQd9S
+        x+oVDKqzcLafUFmPl005J144Wi4FY1eC+N4nqrqHYw==
+X-Google-Smtp-Source: APXvYqweODXawSwtgymTZRrJNdMT45q8SqezxZPypJ8zBOLy843m58QTD1p0JxHjbascNuxyphfbzEeuTcKrS6urlOY=
+X-Received: by 2002:adf:90c3:: with SMTP id i61mr63288158wri.48.1560866751639;
+ Tue, 18 Jun 2019 07:05:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190612115358.0d90b322@jacob-builder>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
+ <1560169080-27134-15-git-send-email-yong.wu@mediatek.com> <CAAFQd5A5GUn1Zq1xF2_2V0MReNPd5bra2F=nquvodSAZUua5AQ@mail.gmail.com>
+ <1560859743.8082.23.camel@mhfsdcap03>
+In-Reply-To: <1560859743.8082.23.camel@mhfsdcap03>
+From:   Tomasz Figa <tfiga@google.com>
+Date:   Tue, 18 Jun 2019 23:05:39 +0900
+Message-ID: <CAAFQd5B8MiMA_OCUJ5HRmC5SA2772HF-rBGK0aZcKoWscOzOog@mail.gmail.com>
+Subject: Re: [PATCH v7 14/21] iommu/mediatek: Add mmu1 support
+To:     Yong Wu <yong.wu@mediatek.com>
+Cc:     youlin.pei@mediatek.com, devicetree@vger.kernel.org,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Evan Green <evgreen@chromium.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= 
+        <yingjoe.chen@mediatek.com>, anan.sun@mediatek.com,
+        Robin Murphy <robin.murphy@arm.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/06/2019 19:53, Jacob Pan wrote:
->>> You are right, the worst case of the spurious PS is to terminate the
->>> group prematurely. Need to know the scope of the HW damage in case
->>> of mdev where group IDs can be shared among mdevs belong to the
->>> same PF.  
->>
->> But from the IOMMU fault API point of view, the full page request is
->> identified by both PRGI and PASID. Given that each mdev has its own
->> set of PASIDs, it should be easy to isolate page responses per mdev.
->>
-> On Intel platform, devices sending page request with private data must
-> receive page response with matching private data. If we solely depend
-> on PRGI and PASID, we may send stale private data to the device in
-> those incorrect page response. Since private data may represent PF
-> device wide contexts, the consequence of sending page response with
-> wrong private data may affect other mdev/PASID.
-> 
-> One solution we are thinking to do is to inject the sequence #(e.g.
-> ktime raw mono clock) as vIOMMU private data into to the guest. Guest
-> would return this fake private data in page response, then host will
-> send page response back to the device that matches PRG1 and PASID and
-> private_data.
-> 
-> This solution does not expose HW context related private data to the
-> guest but need to extend page response in iommu uapi.
-> 
-> /**
->  * struct iommu_page_response - Generic page response information
->  * @version: API version of this structure
->  * @flags: encodes whether the corresponding fields are valid
->  *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
->  * @pasid: Process Address Space ID
->  * @grpid: Page Request Group Index
->  * @code: response code from &enum iommu_page_response_code
->  * @private_data: private data for the matching page request
->  */
-> struct iommu_page_response {
-> #define IOMMU_PAGE_RESP_VERSION_1	1
-> 	__u32	version;
-> #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
-> #define IOMMU_PAGE_RESP_PRIVATE_DATA	(1 << 1)
-> 	__u32	flags;
-> 	__u32	pasid;
-> 	__u32	grpid;
-> 	__u32	code;
-> 	__u32	padding;
-> 	__u64	private_data[2];
-> };
-> 
-> There is also the change needed for separating storage for the real and
-> fake private data.
-> 
-> Sorry for the last minute change, did not realize the HW implications.
-> 
-> I see this as a future extension due to limited testing, 
+On Tue, Jun 18, 2019 at 9:09 PM Yong Wu <yong.wu@mediatek.com> wrote:
+>
+> On Tue, 2019-06-18 at 15:19 +0900, Tomasz Figa wrote:
+> > On Mon, Jun 10, 2019 at 9:21 PM Yong Wu <yong.wu@mediatek.com> wrote:
+> > >
+> > > Normally the M4U HW connect EMI with smi. the diagram is like below:
+> > >               EMI
+> > >                |
+> > >               M4U
+> > >                |
+> > >             smi-common
+> > >                |
+> > >        -----------------
+> > >        |    |    |     |    ...
+> > >     larb0 larb1  larb2 larb3
+> > >
+> > > Actually there are 2 mmu cells in the M4U HW, like this diagram:
+> > >
+> > >               EMI
+> > >            ---------
+> > >             |     |
+> > >            mmu0  mmu1     <- M4U
+> > >             |     |
+> > >            ---------
+> > >                |
+> > >             smi-common
+> > >                |
+> > >        -----------------
+> > >        |    |    |     |    ...
+> > >     larb0 larb1  larb2 larb3
+> > >
+> > > This patch add support for mmu1. In order to get better performance,
+> > > we could adjust some larbs go to mmu1 while the others still go to
+> > > mmu0. This is controlled by a SMI COMMON register SMI_BUS_SEL(0x220).
+> > >
+> > > mt2712, mt8173 and mt8183 M4U HW all have 2 mmu cells. the default
+> > > value of that register is 0 which means all the larbs go to mmu0
+> > > defaultly.
+> > >
+> > > This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
+> > >
+> > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> > > Reviewed-by: Evan Green <evgreen@chromium.org>
+> > > ---
+> > >  drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++-----------------
+> > >  1 file changed, 29 insertions(+), 17 deletions(-)
+> > >
+> > > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > > index 3a14301..ec4ce74 100644
+> > > --- a/drivers/iommu/mtk_iommu.c
+> > > +++ b/drivers/iommu/mtk_iommu.c
+> > > @@ -72,26 +72,32 @@
+> > >  #define F_INT_CLR_BIT                          BIT(12)
+> > >
+> > >  #define REG_MMU_INT_MAIN_CONTROL               0x124
+> > > -#define F_INT_TRANSLATION_FAULT                        BIT(0)
+> > > -#define F_INT_MAIN_MULTI_HIT_FAULT             BIT(1)
+> > > -#define F_INT_INVALID_PA_FAULT                 BIT(2)
+> > > -#define F_INT_ENTRY_REPLACEMENT_FAULT          BIT(3)
+> > > -#define F_INT_TLB_MISS_FAULT                   BIT(4)
+> > > -#define F_INT_MISS_TRANSACTION_FIFO_FAULT      BIT(5)
+> > > -#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   BIT(6)
+> > > +                                               /* mmu0 | mmu1 */
+> > > +#define F_INT_TRANSLATION_FAULT                        (BIT(0) | BIT(7))
+> > > +#define F_INT_MAIN_MULTI_HIT_FAULT             (BIT(1) | BIT(8))
+> > > +#define F_INT_INVALID_PA_FAULT                 (BIT(2) | BIT(9))
+> > > +#define F_INT_ENTRY_REPLACEMENT_FAULT          (BIT(3) | BIT(10))
+> > > +#define F_INT_TLB_MISS_FAULT                   (BIT(4) | BIT(11))
+> > > +#define F_INT_MISS_TRANSACTION_FIFO_FAULT      (BIT(5) | BIT(12))
+> > > +#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   (BIT(6) | BIT(13))
+> >
+> > If there are two IOMMUs, shouldn't we have two driver instances handle
+> > them, instead of making the driver combine them two internally?
+>
+> Actually it means only one IOMMU(M4U) HW here. Each a M4U HW has two
+> small iommu cells which have independent MTLB. As the diagram above, M4U
+> contain mmu0 and mmu1.
+>
+> MT8173 and MT8183 have only one M4U HW while MT2712 have 2 M4U HWs(two
+> driver instances).
+>
+> >
+> > And, what is even more important from security point of view actually,
+> > have two separate page tables (aka IOMMU groups) for them?
+>
+> Each a IOMMU(M4U) have its own pagetable, thus, mt8183 have only one
+> pagetable while mt2712 have two.
 
-I'm wondering how we deal with:
-(1) old userspace that won't fill the new private_data field in
-page_response. A new kernel still has to support it.
-(2) old kernel that won't recognize the new PRIVATE_DATA flag. Currently
-iommu_page_response() rejects page responses with unknown flags.
+I see, thanks for clarifying.
 
-I guess we'll need a two-way negotiation, where userspace queries
-whether the kernel supports the flag (2), and the kernel learns whether
-it should expect the private data to come back (1).
-
-> perhaps for
-> now, can you add paddings similar to page request? Make it 64B as well.
-
-I don't think padding is necessary, because iommu_page_response is sent
-by userspace to the kernel, unlike iommu_fault which is allocated by
-userspace and filled by the kernel.
-
-Page response looks a lot more like existing VFIO mechanisms, so I
-suppose we'll wrap the iommu_page_response structure and include an
-argsz parameter at the top:
-
-	struct vfio_iommu_page_response {
-		u32 argsz;
-		struct iommu_page_response pr;
-	};
-
-	struct vfio_iommu_page_response vpr = {
-		.argsz = sizeof(vpr),
-		.pr = ...
-		...
-	};
-
-	ioctl(devfd, VFIO_IOMMU_PAGE_RESPONSE, &vpr);
-
-In that case supporting private data can be done by simply appending a
-field at the end (plus the negotiation above).
-
-Thanks,
-Jean
+Best regards,
+Tomasz
