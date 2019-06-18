@@ -2,63 +2,127 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D99C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:25:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD27AC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:26:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6A662085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:25:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A69362085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:26:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PHPN2gJT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729347AbfFRPZV (ORCPT
+        id S1729556AbfFRP0I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:25:21 -0400
-Received: from 8bytes.org ([81.169.241.247]:59816 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728982AbfFRPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:25:21 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 188C34B5; Tue, 18 Jun 2019 17:25:19 +0200 (CEST)
-Date:   Tue, 18 Jun 2019 17:25:17 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Srinath Mannam <srinath.mannam@broadcom.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Oza Pawandeep <poza@codeaurora.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Eric Auger <eric.auger@redhat.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] iommu: fix integer truncation
-Message-ID: <20190618152517.GB21128@8bytes.org>
-References: <20190617133101.2817807-1-arnd@arndb.de>
+        Tue, 18 Jun 2019 11:26:08 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48970 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728982AbfFRP0H (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:26:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=zDQuLvyPeQhgh7/ZzmUlpMUVHgADFhKIg7Jx10j8T5Y=; b=PHPN2gJTKxWUHzfd0/kg7rMWvA
+        Yj3i5FFGVoxgSjQttV4VLQROldiE+URTLhWKZONApFUFQZPSia/6BqSPcPFo1hHkvmDU+1zb/7KH8
+        iAfuTs7fL8c+u3T4C7a5k8A+vCStaGR7Rq866QEQuJgAAfPc/5Z6TwmPANQLLk+JTxtXZdeHvEbhi
+        x5ZWr4fkXLWhGIsf/tgQyShCfFSeWbXWjzoJvmqEgvksGpX0524r9XpMHLI03T/R3ZdqG1duoVouV
+        4/V9aXlXKwpWtE7Qty9AtdI5jjEhd3yIreXwmZgu7AvtuvokiWBkx+2gDLHn44ABf3u+mvkf4vZV7
+        MTxOG69Q==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdFzm-0000Kn-4u; Tue, 18 Jun 2019 15:26:02 +0000
+Subject: Re: [PATCH v4 2/2] fTPM: add documentation for ftpm driver
+To:     Sasha Levin <sashal@kernel.org>, peterhuewe@gmx.de,
+        jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
+Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@microsoft.com, thiruan@microsoft.com,
+        bryankel@microsoft.com, tee-dev@lists.linaro.org
+References: <20190530152758.16628-1-sashal@kernel.org>
+ <20190530152758.16628-3-sashal@kernel.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <c1cf6154-7140-66c9-dff9-dc7a788df518@infradead.org>
+Date:   Tue, 18 Jun 2019 08:25:58 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617133101.2817807-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190530152758.16628-3-sashal@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 03:30:54PM +0200, Arnd Bergmann wrote:
-> On 32-bit architectures, phys_addr_t may be different from dma_add_t,
-> both smaller and bigger. This can lead to an overflow during an assignment
-> that clang warns about:
+On 5/30/19 8:27 AM, Sasha Levin wrote:
+> This patch adds basic documentation to describe the new fTPM driver.
 > 
-> drivers/iommu/dma-iommu.c:230:10: error: implicit conversion from 'dma_addr_t' (aka 'unsigned long long') to
->       'phys_addr_t' (aka 'unsigned int') changes value from 18446744073709551615 to 4294967295 [-Werror,-Wconstant-conversion]
-> 
-> Use phys_addr_t here because that is the type that the variable was
-> declared as.
-> 
-> Fixes: aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible DMA address")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
+> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+> ---
+>  Documentation/security/tpm/index.rst        |  1 +
+>  Documentation/security/tpm/tpm_ftpm_tee.rst | 31 +++++++++++++++++++++
+>  2 files changed, 32 insertions(+)
+>  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
 
-Applied, thanks.
+Hi,
+Just some minor editing...
+
+> diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst b/Documentation/security/tpm/tpm_ftpm_tee.rst
+> new file mode 100644
+> index 0000000000000..29c2f8b5ed100
+> --- /dev/null
+> +++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
+> @@ -0,0 +1,31 @@
+> +=============================================
+> +Firmware TPM Driver
+> +=============================================
+> +
+> +| Authors:
+> +| Thirupathaiah Annapureddy <thiruan@microsoft.com>
+> +| Sasha Levin <sashal@kernel.org>
+> +
+> +This document describes the firmware Trusted Platform Module (fTPM)
+> +device driver.
+> +
+> +Introduction
+> +============
+> +
+> +This driver is a shim for a firmware implemented in ARM's TrustZone
+
+                         for firmware
+
+> +environment. The driver allows programs to interact with the TPM in the same
+> +way the would interact with a hardware TPM.
+
+       they
+
+> +
+> +Design
+> +======
+> +
+> +The driver acts as a thin layer that passes commands to and from a TPM
+> +implemented in firmware. The driver itself doesn't contain much logic and is
+> +used more like a dumb pipe between firmware and kernel/userspace.
+> +
+> +The firmware itself is based on the following paper:
+> +https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/ftpm1.pdf
+> +
+> +When the driver is loaded it will expose ``/dev/tpmX`` character devices to
+> +userspace which will enable userspace to communicate with the firmware tpm
+
+                                                                          TPM
+
+> +through this device.
+> 
+
+
+-- 
+~Randy
