@@ -2,132 +2,92 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B38DDC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:11:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 645C6C31E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 982ED20861
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:11:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31BE220833
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:16:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728115AbfFRCLr (ORCPT
+        id S1726797AbfFRCQt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 22:11:47 -0400
-Received: from mga12.intel.com ([192.55.52.136]:31762 "EHLO mga12.intel.com"
+        Mon, 17 Jun 2019 22:16:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41220 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRCLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 22:11:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 19:11:45 -0700
-X-ExtLoop1: 1
-Received: from khuang2-desk.gar.corp.intel.com ([10.255.91.82])
-  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2019 19:11:40 -0700
-Message-ID: <1560823899.5187.92.camel@linux.intel.com>
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call
- for MKTME
-From:   Kai Huang <kai.huang@linux.intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Date:   Tue, 18 Jun 2019 14:11:39 +1200
-In-Reply-To: <CALCETrXNCmSnrTwGiwuF9=wLu797WBPZ0gt92D-CyU+V3sq7hA@mail.gmail.com>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
-         <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
-         <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
-         <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com>
-         <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
-         <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
-         <CALCETrWFXSndmPH0OH4DVVrAyPEeKUUfNwo_9CxO-3xy9awq0g@mail.gmail.com>
-         <d599b1d7-9455-3012-0115-96ddbad31833@intel.com>
-         <1560818931.5187.70.camel@linux.intel.com>
-         <CALCETrXNCmSnrTwGiwuF9=wLu797WBPZ0gt92D-CyU+V3sq7hA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.24.6 (3.24.6-1.fc26) 
-Mime-Version: 1.0
+        id S1726088AbfFRCQt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 22:16:49 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C80F20833;
+        Tue, 18 Jun 2019 02:16:48 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 22:16:46 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 16/21] tracing/uprobe: Add per-probe delete from event
+Message-ID: <20190617221646.7c848beb@oasis.local.home>
+In-Reply-To: <155931595698.28323.17594202275209962525.stgit@devnote2>
+References: <155931578555.28323.16360245959211149678.stgit@devnote2>
+        <155931595698.28323.17594202275209962525.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 18:50 -0700, Andy Lutomirski wrote:
-> On Mon, Jun 17, 2019 at 5:48 PM Kai Huang <kai.huang@linux.intel.com> wrote:
-> > 
-> > 
-> > > 
-> > > > And another silly argument: if we had /dev/mktme, then we could
-> > > > possibly get away with avoiding all the keyring stuff entirely.
-> > > > Instead, you open /dev/mktme and you get your own key under the hook.
-> > > > If you want two keys, you open /dev/mktme twice.  If you want some
-> > > > other program to be able to see your memory, you pass it the fd.
-> > > 
-> > > We still like the keyring because it's one-stop-shopping as the place
-> > > that *owns* the hardware KeyID slots.  Those are global resources and
-> > > scream for a single global place to allocate and manage them.  The
-> > > hardware slots also need to be shared between any anonymous and
-> > > file-based users, no matter what the APIs for the anonymous side.
-> > 
-> > MKTME driver (who creates /dev/mktme) can also be the one-stop-shopping. I think whether to
-> > choose
-> > keyring to manage MKTME key should be based on whether we need/should take advantage of existing
-> > key
-> > retention service functionalities. For example, with key retention service we can
-> > revoke/invalidate/set expiry for a key (not sure whether MKTME needs those although), and we
-> > have
-> > several keyrings -- thread specific keyring, process specific keyring, user specific keyring,
-> > etc,
-> > thus we can control who can/cannot find the key, etc. I think managing MKTME key in MKTME driver
-> > doesn't have those advantages.
-> > 
-> 
-> Trying to evaluate this with the current proposed code is a bit odd, I
-> think.  Suppose you create a thread-specific key and then fork().  The
-> child can presumably still use the key regardless of whether the child
-> can nominally access the key in the keyring because the PTEs are still
-> there.
+On Sat,  1 Jun 2019 00:19:17 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
 
-Right. This is a little bit odd, although virtualization (Qemu, which is the main use case of MKTME
-at least so far) doesn't use fork().
+> +static bool trace_uprobe_match_command_head(struct trace_uprobe *tu,
+> +					    int argc, const char **argv)
+> +{
+> +	char buf[MAX_ARGSTR_LEN + 1];
+> +	int len;
+> +
+> +	if (!argc)
+> +		return true;
+> +
+> +	len = strlen(tu->filename);
+> +	if (argv[0][len] != ':' || strncmp(tu->filename, argv[0], len))
 
-> 
-> More fundamentally, in some sense, the current code has no semantics.
-> Associating a key with memory and "encrypting" it doesn't actually do
-> anything unless you are attacking the memory bus but you haven't
-> compromised the kernel.  There's no protection against a guest that
-> can corrupt its EPT tables, there's no protection against kernel bugs
-> (*especially* if the duplicate direct map design stays), and there
-> isn't even any fd or other object around by which you can only access
-> the data if you can see the key.
+Hmm, isn't it possible that 'len' can be greater than whatever argv[0] is?
 
-I am not saying managing MKTME key/keyID in key retention service is definitely better, but it seems
-all those you mentioned are not related to whether to choose key retention service to manage MKTME
-key/keyID? Or you are saying it doesn't matter we manage key/keyID in key retention service or in
-MKTME driver, since MKTME barely have any security benefits (besides physical attack)?
+The argv[0][len] looks very dangerous to me.
 
-> 
-> I'm also wondering whether the kernel will always be able to be a
-> one-stop shop for key allocation -- if the MKTME hardware gains
-> interesting new uses down the road, who knows how key allocation will
-> work?
+Perhaps that should be changed to:
 
-I by now don't have any use case which requires to manage key/keyID specifically for its own use,
-rather than letting kernel to manage keyID allocation. Please inspire us if you have any potential.
+	if (!(!strncmp(tu->filename, argv[0], len) && argv[0][len] == ':'))
 
-Thanks,
--Kai
+That way, the test of argv[0][len] will only happen if argv[0] is of length len.
+
+-- Steve
+
+
+> +		return false;
+> +
+> +	if (tu->ref_ctr_offset == 0)
+> +		snprintf(buf, sizeof(buf), "0x%0*lx",
+> +				(int)(sizeof(void *) * 2), tu->offset);
+> +	else
+> +		snprintf(buf, sizeof(buf), "0x%0*lx(0x%lx)",
+> +				(int)(sizeof(void *) * 2), tu->offset,
+> +				tu->ref_ctr_offset);
+> +	if (strcmp(buf, &argv[0][len + 1]))
+> +		return false;
+> +
+> +	argc--; argv++;
+> +
+> +	return trace_probe_match_command_args(&tu->tp, argc, argv);
+> +}
+> +
