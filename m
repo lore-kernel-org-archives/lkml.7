@@ -2,125 +2,95 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D08C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:42:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 382C6C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:43:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 650DB20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:42:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P2kn25Hj"
+	by mail.kernel.org (Postfix) with ESMTP id 17E962070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:43:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbfFRJmh (ORCPT
+        id S1729441AbfFRJna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:42:37 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:7289 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729230AbfFRJmh (ORCPT
+        Tue, 18 Jun 2019 05:43:30 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41017 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729230AbfFRJna (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:42:37 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d08b20d0000>; Tue, 18 Jun 2019 02:42:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 02:42:36 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 02:42:36 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 09:42:33 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
- phylib logic
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <cover.1560266175.git.joabreu@synopsys.com>
- <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
- <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
-Date:   Tue, 18 Jun 2019 10:42:31 +0100
+        Tue, 18 Jun 2019 05:43:30 -0400
+Received: by mail-wr1-f68.google.com with SMTP id c2so13172811wrm.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 02:43:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7H+CZItQJTM8gOKdEIO6tgbmZC/1DVL8U5ona3SCpCI=;
+        b=OSXDR6nlPxra75do/Xp6yXf7P7utAhZYhdjBd83k54Wil3HKXsTgKNiKQisaukgzfa
+         gUqYTs8bKMqHc9p4YIK7sgyba5S0gA9bPDoIZBWTOxNrIiCynoyIywBaNZ/yJTSB41Vs
+         yFrWgI66vRfSAZAoPId2tS3xWWeEqqLLnL3ij2EG8jE4+4mbot5GT8/PFUB4Mi/pBG69
+         RtnN5HJM7mOYZh0+qGmN/fwMFJhO4avDpVpYwwekW8w5XsSUAhzQGnIzc7hVKA8bQRSr
+         YEpcf8JjtsCVYca69W0dr+G17icEGNfOU5vECH9HNd2GE7S87esO9/yYMZocurhlkgVG
+         6piQ==
+X-Gm-Message-State: APjAAAV1X/az0Ftl8m//pgjCg+PE5o2BqH+Ykes/dVC97+DN+ZsnvIPJ
+        nwMKyClwtNVdVp5eOc8TL4ZFsA==
+X-Google-Smtp-Source: APXvYqx1u72NgLWUSb0cmYjIEFnfvl7lohvWUsuD8u7IfbzZrWhSU9lechEAXsHLnsuA/1rkasQ/sQ==
+X-Received: by 2002:adf:ff84:: with SMTP id j4mr2988875wrr.71.1560851007943;
+        Tue, 18 Jun 2019 02:43:27 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:1da0:213e:1763:a1a8? ([2001:b07:6468:f312:1da0:213e:1763:a1a8])
+        by smtp.gmail.com with ESMTPSA id x8sm1752029wmc.5.2019.06.18.02.43.22
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 02:43:27 -0700 (PDT)
+Subject: Re: [PATCH 22/43] KVM: nVMX: Don't dump VMCS if virtual APIC page
+ can't be mapped
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        vkuznets@redhat.com, stable@vger.kernel.org
+References: <1560445409-17363-1-git-send-email-pbonzini@redhat.com>
+ <1560445409-17363-23-git-send-email-pbonzini@redhat.com>
+ <20190617191724.GA26860@flask> <20190617200700.GA30158@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <0d59375c-9313-d31a-4af9-d68115e05d55@redhat.com>
+Date:   Tue, 18 Jun 2019 11:43:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190617200700.GA30158@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560850957; bh=6ywibFbCY0rz8BUxmWv9bQKBe+TuciATlqPC1X2BbkA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=P2kn25Hju8a0JGq4HOpr3oesLS3VbStz41WoXn91E7n4tmfJGN2W1tVzoLcxiJYGW
-         omIDk2J1SSNSo5ACYqkCYb+Sd/YDDeV/7M1jHkL4z1o7Kc6xPwivIcSmOR5O2p3lWi
-         gBOFxP+wK1+yK6SJIq7W7bwpkadbnxtGkBZraG/+hsbCb1jd38YKBCtPi7P7Izsruu
-         CsuCoFImUu5v1uTBM9iUsgCMoY8ZycyN7VsXI6tYs2S3azEl5eHBMbaoyOT9Q54izE
-         6aDSWg7UekE2X9EMGaPmxUSVgECI4fa6aSzlc7YCU073KkVpxZTE7keP2M3Tn3m+RH
-         WlBUUzdSOQh9A==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 18/06/2019 10:35, Jose Abreu wrote:
-> From: Jon Hunter <jonathanh@nvidia.com>
+On 17/06/19 22:07, Sean Christopherson wrote:
+> On Mon, Jun 17, 2019 at 09:17:24PM +0200, Radim Krčmář wrote:
+>> 2019-06-13 19:03+0200, Paolo Bonzini:
+>>> From: Sean Christopherson <sean.j.christopherson@intel.com>
+>>>
+>>> ... as a malicious userspace can run a toy guest to generate invalid
+>>> virtual-APIC page addresses in L1, i.e. flood the kernel log with error
+>>> messages.
+>>>
+>>> Fixes: 690908104e39d ("KVM: nVMX: allow tests to use bad virtual-APIC page address")
+>>> Cc: stable@vger.kernel.org
+>>> Cc: Paolo Bonzini <pbonzini@redhat.com>
+>>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>>> ---
+>>
+>> Makes me wonder why it looks like this in kvm/queue. :)
 > 
->> I am seeing a boot regression on -next for some of our boards that have
->> a synopsys ethernet controller that uses the dwmac-dwc-qos-ethernet
->> driver. Git bisect is pointing to this commit, but unfortunately this
->> cannot be cleanly reverted on top of -next to confirm. 
-> 
-> Thanks for reporting. Looks like the timer is not setup when 
-> stmmac_tx_clean() is called. When do you see this stacktrace ? After 
-> ifdown ?
+> Presumably something is wonky in Paolo's workflow, this happened before.
 
-I am not certain but I don't believe so. We are using a static IP address
-and mounting the root file-system via NFS when we see this ...
+It's more my non-workflow... when I cannot find a patch for some reason
+(deleted by mistake, eaten by Gmane, etc.), I search it with Google and
+sometimes spinics.net comes up which mangles the domain.  I should just
+subscribe to kvm@vger.kernel.org since Gmane has gotten less reliable,
+or set up a Patchew instance for it.
 
-[   10.607510] dwc-eth-dwmac 2490000.ethernet eth0: phy link up rgmii/1Gbps/Full
-[   10.607536] dwc-eth-dwmac 2490000.ethernet eth0: phylink_mac_config: mode=phy/rgmii/1Gbps/Full adv=00,00000000,00000000 pause=0f link=1 an=0
-[   10.608804] dwc-eth-dwmac 2490000.ethernet eth0: Link is Up - 1Gbps/Full - flow control rx/tx
-[   10.630979] IP-Config: Complete:
-[   10.639046]      device=eth0, hwaddr=d2:e5:1c:57:26:4b, ipaddr=192.168.99.2, mask=255.255.255.0, gw=192.168.99.1
-[   10.649201]      host=192.168.99.2, domain=, nis-domain=(none)
-[   10.655022]      bootserver=192.168.0.1, rootserver=192.168.0.1, rootpath=
-[   10.677531] VDD_1V8_AP_PLL: disabling
-[   10.681194] VDD_RTC: disabling
-[   10.684246] VDDIO_SDMMC3_AP: disabling
-[   10.688132] VDD_HDMI_1V05: disabling
-[   10.691704] SD_CARD_SW_PWR: disabling
-[   10.695357] VDD_USB0: disabling
-[   10.698488] VDD_USB1: disabling
-[   10.701621] VDD_HDMI_5V0: disabling
-[   10.705100] ALSA device list:
-[   10.708063]   No soundcards found.
-[   10.711914] Freeing unused kernel memory: 1472K
-[   10.727005] Run /init as init process
-[   10.784989] ------------[ cut here ]------------
-[   10.789597] kernel BUG at /home/jonathanh/workdir/tegra/mlt-linux_next/kernel/kernel/time/timer.c:952!
-
-Cheers
-Jon
-
--- 
-nvpublic
+Paolo
