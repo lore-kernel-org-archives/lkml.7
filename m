@@ -2,114 +2,139 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF152C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B5E0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3A76206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:07:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HIchASJa"
+	by mail.kernel.org (Postfix) with ESMTP id 6692520861
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfFRBHK (ORCPT
+        id S1726898AbfFRBH5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:07:10 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34369 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRBHK (ORCPT
+        Mon, 17 Jun 2019 21:07:57 -0400
+Received: from kvm5.telegraphics.com.au ([98.124.60.144]:34586 "EHLO
+        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRBH5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:07:10 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c85so6610426pfc.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:07:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=3qTJFL8TPYAqD0lX4UvXoMh+5EQ/OFFtCVywLSut39U=;
-        b=HIchASJa206vE1wX0c7Oz9ds9JnvLJZKFYjW3anhBAHYujhrWUR9H0Lr9tZQpWO5kE
-         huPFQLgon04TOH+mUxayg0ngWwQq4UPRfU9KRVL9yI8ZeMHaVVffXnqN3vV/VolXhHv3
-         h/SbSSprbALTU+4mFTtb+b/PuTMXJMWOyZnczYbvLpYkoMCmhfNzDXLAFepTHo3QVbdt
-         c72/2m7wsqG6gUbA7Vi1tM+fOTG0tNuOnRkPQumXgFL4cGtplwG5awcVGaAcAgonF2BT
-         Pc9Y4RnPJ6XQ/e+h14jhV9ancEKGQmx6+o38gQ1CoAzJMjDn5c9a2fnJxw3PdIB26nsF
-         in9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=3qTJFL8TPYAqD0lX4UvXoMh+5EQ/OFFtCVywLSut39U=;
-        b=k8+jtjVlXtcfhwWzeiDkxhsEsA3UEIceFb0coLX2quRwpbKtG+rLJvWYnZqnE2L/wZ
-         C5QoGikFDqu/SDdej1P4bdjZv06P97ZX2zDFmV74g74UnG2tdH3AvgCpWHUaho6WMfL9
-         py78wEGrts96MHn3wTXD/kq5W3NgNgl2brH3w22NXSn0vQ0M3h0L0CshcUMYST3cAm16
-         ffH1/6QGDGRsHZh0TSaQnLXH3TpCfAdY5+Qtw5JDSWEg7/tU0BCJIycAiJ8PNpb1KcDr
-         q/nEJCOYOSE0TONZfHKlp49OdCMSw3cJgsi6qhRNjSnxLS5uIYFwgHAizMMuIAKyY1Hd
-         8wLg==
-X-Gm-Message-State: APjAAAWh5D5czDkBK/SVsJTGA5TZwtzVZD3Mm4GAhaDWUdsxqEY+luwg
-        gpXJgN+kVVdZdRffvyzGrWA=
-X-Google-Smtp-Source: APXvYqweCsmBFCydDkHkLeyQD5pSD2Sp8qrKxrENAs7Xm/i3YBEfTpUlJYGwJDHb6k5T2fg0XgMmeQ==
-X-Received: by 2002:a17:90a:5d15:: with SMTP id s21mr2134582pji.126.1560820029360;
-        Mon, 17 Jun 2019 18:07:09 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id j16sm432558pjz.31.2019.06.17.18.07.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 18:07:08 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 06:37:03 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Himadri Pandya <himadri18.07@gmail.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] staging: rtl8723bs: hal: rtl8723b_hal_init: fix
- Comparison to NULL
-Message-ID: <20190618010703.GA7061@hari-Inspiron-1545>
+        Mon, 17 Jun 2019 21:07:57 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by kvm5.telegraphics.com.au (Postfix) with ESMTP id C87BF29544;
+        Mon, 17 Jun 2019 21:07:52 -0400 (EDT)
+Date:   Tue, 18 Jun 2019 11:08:03 +1000 (AEST)
+From:   Finn Thain <fthain@telegraphics.com.au>
+To:     Douglas Gilbert <dgilbert@interlog.com>
+cc:     Bart Van Assche <bvanassche@acm.org>,
+        Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Martin Petersen <martin.petersen@oracle.com>,
+        SCSI <linux-scsi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
+In-Reply-To: <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
+Message-ID: <alpine.LNX.2.21.1906181107240.287@nippy.intranet>
+References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr> <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org> <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch tries to fix below issues reported by checkpatch
+On Mon, 17 Jun 2019, Douglas Gilbert wrote:
 
-CHECK: Comparison to NULL could be written "!efuseTbl"
-CHECK: Comparison to NULL could be written "!psta"
+> On 2019-06-17 5:11 p.m., Bart Van Assche wrote:
+> > On 6/12/19 6:59 AM, Marc Gonzalez wrote:
+> > > According to the option's help message, SCSI_PROC_FS has been
+> > > superseded for ~15 years. Don't select it by default anymore.
+> > > 
+> > > Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> > > ---
+> > >   drivers/scsi/Kconfig | 3 ---
+> > >   1 file changed, 3 deletions(-)
+> > > 
+> > > diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
+> > > index 73bce9b6d037..8c95e9ad6470 100644
+> > > --- a/drivers/scsi/Kconfig
+> > > +++ b/drivers/scsi/Kconfig
+> > > @@ -54,14 +54,11 @@ config SCSI_NETLINK
+> > >   config SCSI_PROC_FS
+> > >       bool "legacy /proc/scsi/ support"
+> > >       depends on SCSI && PROC_FS
+> > > -    default y
+> > >       ---help---
+> > >         This option enables support for the various files in
+> > >         /proc/scsi.  In Linux 2.6 this has been superseded by
+> > >         files in sysfs but many legacy applications rely on this.
+> > > -      If unsure say Y.
+> > > -
+> > >   comment "SCSI support type (disk, tape, CD-ROM)"
+> > >       depends on SCSI
+> > 
+> > Hi Doug,
+> > 
+> > If I run grep "/proc/scsi" over the sg3_utils source code then grep reports
+> > 38 matches for that string. Does sg3_utils break with SCSI_PROC_FS=n?
+> 
+> First, the sg driver. If placing
+> #undef CONFIG_SCSI_PROC_FS
+> 
+> prior to the includes in sg.c is a valid way to test that then the
+> answer is no. Ah, but you are talking about sg3_utils .
+> 
+> Or are you? For sg3_utils:
+> 
+> $ find . -name '*.c' -exec grep "/proc/scsi" {} \; -print
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./src/sg_read.c
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./src/sgp_dd.c
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./src/sgm_dd.c
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./src/sg_dd.c
+>                 "'echo 1 > /proc/scsi/sg/allow_dio'\n", q_len, dirio_count);
+> ./testing/sg_tst_bidi.c
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./examples/sgq_dd.c
+> 
+> 
+> That is 6 (not 38) by my count. Those 6 are all for direct IO
+> (see below) which is off by default. I suspect old scanning
+> utilities like sg_scan and sg_map might also use /proc/scsi/* .
+> That is one reason why I wrote lsscsi. However I can't force folks
+> to use lsscsi. As a related example, I still get bug reports for
+> sginfo which I inherited from Eric Youngdale.
+> 
+> If I was asked to debug a problem with the sg driver in a
+> system without CONFIG_SCSI_PROC_FS defined, I would decline.
+> 
+> The absence of /proc/scsi/sg/debug would be my issue. Can this
+> be set up to do the same thing:
+>     cat /sys/class/scsi_generic/debug
+>   Is that breaking any sysfs rules?
+> 
+> 
+> Also folks who rely on this to work:
+>    cat /proc/scsi/sg/devices
+> 0	0	0	0	0	1	255	0	1
+> 0	0	0	1	0	1	255	0	1
+> 0	0	0	2	0	1	255	0	1
+> 
+> would be disappointed. Further I note that setting allow_dio via
+> /proc/scsi/sg/allow_dio can also be done via /sys/module/sg/allow_dio .
+> So that would be an interface breakage, but with an alternative.
+> 
+> Doug Gilbert
+> 
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+You can grep for /proc/scsi/ across all Debian packages:
+https://codesearch.debian.net/
 
-diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-index 21f2365..624188e 100644
---- a/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-+++ b/drivers/staging/rtl8723bs/hal/rtl8723b_hal_init.c
-@@ -1023,7 +1023,7 @@ static void hal_ReadEFuse_BT(
- 	}
- 
- 	efuseTbl = rtw_malloc(EFUSE_BT_MAP_LEN);
--	if (efuseTbl == NULL) {
-+	if (!efuseTbl) {
- 		DBG_8192C("%s: efuseTbl malloc fail!\n", __func__);
- 		return;
- 	}
-@@ -2139,7 +2139,7 @@ static void UpdateHalRAMask8723B(struct adapter *padapter, u32 mac_id, u8 rssi_l
- 		return;
- 
- 	psta = pmlmeinfo->FW_sta_info[mac_id].psta;
--	if (psta == NULL)
-+	if (!psta)
- 		return;
- 
- 	shortGIrate = query_ra_short_GI(psta);
+This reveals that /proc/scsi/sg/ appears in smartmontools and other 
+packages, for example.
+
 -- 
-2.7.4
-
