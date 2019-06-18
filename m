@@ -2,87 +2,87 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FCA9C46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87E17C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DE5920863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:06:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="O4i7eAzf"
+	by mail.kernel.org (Postfix) with ESMTP id 68B642080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:06:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730867AbfFRXGD (ORCPT
+        id S1730948AbfFRXGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 19:06:03 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:53998 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730783AbfFRXGC (ORCPT
+        Tue, 18 Jun 2019 19:06:40 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34625 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730908AbfFRXGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 19:06:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=UeGvfOSgh0lmIfsrQ9r/naqdVM5Ysl4qpJE0tYJsMho=; b=O4i7eAzfxTQyBaQPayFivDhE+d
-        jhaxbVYb7sfwhDqakONp4icdY9cyK6BaK9LUVlfnsEr9dsCKSoqRpwNxAvVQ9jaDnohmdCXdqeDUl
-        9hH0pRnRFoD0Q9y79cDWmullmowJnP2ygN70x371aJPiCvPxqoE53F7G/XPlVfBJX1XbKjMsGZwN1
-        dwfN+4PBZJ2eOHo9/+9bWTO4OSVEEF6UrZfS5VhEGD9i82OmsbW1f0fAlzKAAMJeeHjOO4xfRSQm+
-        vqDp45A0e8817rLg4LnbA2EywlHV66rUAMcgtojPz/JQFD2npP8tsIYPKwyz4pXshG7RI0W4tBDQR
-        XZWL+6nw==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdNAv-0002qo-AR; Tue, 18 Jun 2019 23:06:01 +0000
-Subject: Re: [PATCH RFC 2/3] fonts: Use BUILD_BUG_ON() for checking empty font
- table
-To:     Takashi Iwai <tiwai@suse.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190618203425.10723-1-tiwai@suse.de>
- <20190618203425.10723-3-tiwai@suse.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <896583b9-3231-9e31-e51b-c76b889db85b@infradead.org>
-Date:   Tue, 18 Jun 2019 16:05:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 19:06:39 -0400
+Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=lindsey)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <tyhicks@canonical.com>)
+        id 1hdNAS-0003iA-Kq; Tue, 18 Jun 2019 23:05:33 +0000
+Date:   Tue, 18 Jun 2019 18:05:28 -0500
+From:   Tyler Hicks <tyhicks@canonical.com>
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Gen Zhang <blackgod016574@gmail.com>, broonie@kernel.org,
+        lgirdwood@gmail.com, perex@perex.cz, wen.yang99@zte.com.cn,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] wcd9335: fix a incorrect use of kstrndup()
+Message-ID: <20190618230527.GE6248@lindsey>
+References: <20190529015305.GA4700@zhanggen-UX430UQ>
+ <7573d8ce-7160-39b1-8901-be9155c451a1@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190618203425.10723-3-tiwai@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7573d8ce-7160-39b1-8901-be9155c451a1@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 1:34 PM, Takashi Iwai wrote:
-> We have a nice macro, and the check of emptiness of the font table can
-> be done in a simpler way.
+On 2019-06-05 06:57:02, Jiri Slaby wrote:
+> On 29. 05. 19, 3:53, Gen Zhang wrote:
+> > In wcd9335_codec_enable_dec(), 'widget_name' is allocated by kstrndup().
+> > However, according to doc: "Note: Use kmemdup_nul() instead if the size
+> > is known exactly."
 > 
-> Signed-off-by: Takashi Iwai <tiwai@suse.de>
+> Except the size is not known exactly. It is at most 15, not 15. Right?
 
-Hi,
+That's my understanding, as well. This change looks incorrect/misguided
+to me.
 
-Looks good to me.
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
+CVE-2019-12454 was assigned for this but I've requested that MITRE
+reject it as there doesn't seem to be any security impact and possibly
+no reason at all for this change.
 
-Also, would you mind adding TER16x32 to Documentation/fb/fbcon.rst, here:
-(AFAIK that would be appropriate.)
+Tyler
 
-1. fbcon=font:<name>
-
-	Select the initial font to use. The value 'name' can be any of the
-	compiled-in fonts: 10x18, 6x10, 7x14, Acorn8x8, MINI4x6,
-	PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, VGA8x16, VGA8x8.
-
-> ---
->  lib/fonts/fonts.c | 15 +--------------
->  1 file changed, 1 insertion(+), 14 deletions(-)
-
-Thanks.
--- 
-~Randy
+> 
+> > So we should use kmemdup_nul() here instead of
+> > kstrndup().
+> > 
+> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+> > ---
+> > diff --git a/sound/soc/codecs/wcd9335.c b/sound/soc/codecs/wcd9335.c
+> > index a04a7ce..85737fe 100644
+> > --- a/sound/soc/codecs/wcd9335.c
+> > +++ b/sound/soc/codecs/wcd9335.c
+> > @@ -2734,7 +2734,7 @@ static int wcd9335_codec_enable_dec(struct snd_soc_dapm_widget *w,
+> >  	char *dec;
+> >  	u8 hpf_coff_freq;
+> >  
+> > -	widget_name = kstrndup(w->name, 15, GFP_KERNEL);
+> > +	widget_name = kmemdup_nul(w->name, 15, GFP_KERNEL);
+> >  	if (!widget_name)
+> >  		return -ENOMEM;
+> >  
+> 
+> thanks,
+> -- 
+> js
+> suse labs
