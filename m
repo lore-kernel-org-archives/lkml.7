@@ -2,105 +2,170 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FA0C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A644C31E62
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FE1F20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B4621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560892028;
+	bh=c6rVZbP2FBt2QKPI/HmO00VTUi5TasNLq/qONXwHqOQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tcucCIgJuI+ZUc+BdjWVo/JcehDEqlQoFkEOcCW6lLYQ5S/wHVJGsR50s5uuXlmUv
+	 mW4gPWfnrHPtXKEBh0cBaXhLA2GWf8hiCe6qyo8qDigmuvcZ0ZoDlzpbI6Si8S9aA4
+	 Z5TtYyY/2nMlnWBnrC8ol1oigvGStccrDJHrHlhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731043AbfFRVGt (ORCPT
+        id S1730823AbfFRVFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 17:06:49 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45992 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730653AbfFRVGs (ORCPT
+        Tue, 18 Jun 2019 17:05:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34372 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730755AbfFRVFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 17:06:48 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s22so9533227qkj.12;
-        Tue, 18 Jun 2019 14:06:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PhQShykXloliKPMckMupDfwZ8pnrhdgE2i1x2GgfEmI=;
-        b=ukYtKO2nfsZfAhueJCu8NbbqpXKNV9imjzRX1HUortW+t4FD/FJfJfeITZ+1twwwMg
-         CI2wrEqy7Tv8NSh6F4EHTfafRnZRLBn5pVzJ+gcrfUNj67UVHaZ3WJIZHCu/K8939Ljo
-         5BZtqE7tx/uXsAuwxDTT6zVHQgbAj9HjZjB4SOG/R/NIZws5VlUqUH9J/WAXJEsLRroA
-         dKatXBmMA4gYt5raPpWpjxrvRYR1gtqcfbNAdCOrza8z6NfwqXITHwTHTM9LhPONR2Wk
-         3OSzjSHvQpFO0EQR+hcnpTxX60v5YOC6zkQFFKvVKpCfoRu2zkOAB7ye+dTklVHrj/RC
-         wl3A==
-X-Gm-Message-State: APjAAAUV8A7HskDg77MLPUGecQnpUyN54i+hN1lCfX6hcx8TII1r7rpY
-        7jum8HwifWtM9SsZPmZPni0O96vaooHfRDK9lz8=
-X-Google-Smtp-Source: APXvYqyldOckhcLwc1fQrwZ7LnDDOLS2W9t7zPz5YSzYHLSMEwkWyDge/ONSs2cFdXB+lyGj7IX6kT1wQZim1MIdYpE=
-X-Received: by 2002:ae9:e608:: with SMTP id z8mr87456546qkf.182.1560892007052;
- Tue, 18 Jun 2019 14:06:47 -0700 (PDT)
+        Tue, 18 Jun 2019 17:05:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=QtAOSZpbxXOSMRds/InKAMA97jUuNyRQoI3TiAtqpG0=; b=Hxp8HlZxCL0r0RBpZtpnPfhJ07
+        MA2ajCjn8jMepM0CVyv7IpS7yRLjKgj7T/Bkv2hkQ5MKV1B0KKD5x496LKATfe9tTGtpXevb68uVC
+        nUfLV1KNGWiwtJzf6p6PuRNKxB5kQXsZP1K2PFQoECHXKdu8yRAx6HFzroDYVtRr/3dcQooV8wruO
+        4ag+iQ5ZXOUdbVWgfHr6eqqPUK4gN6PA/86heKmhGZhEgMCVUN63RJg3s3dsC5lhbfJxVJ9JyOexJ
+        KAb7gzNb1syryLjXbO+DOHbTjaze9I3sMgc9LAOMiX5VFpQ1LhBGdymgbaoPB7JJ85a3r/E/k2i9Q
+        nUuJ8pog==;
+Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdLIc-0006yv-82; Tue, 18 Jun 2019 21:05:50 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hdLIa-0002D9-69; Tue, 18 Jun 2019 18:05:48 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH v1 20/22] docs: extcon: move it to acpi dir and convert it to ReST
+Date:   Tue, 18 Jun 2019 18:05:44 -0300
+Message-Id: <b6d199c3e7c8c868acbb313a1a516ea8aed042ee.1560891322.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1560891322.git.mchehab+samsung@kernel.org>
+References: <cover.1560891322.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org> <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
- <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
- <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
- <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
- <d533b708-c97a-710d-1138-3ae79107f209@linaro.org> <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
- <CAK8P3a3ksrFTo2+dLB+doLeY+kPP7rYxv2O7BwvjYgK2cwCTuQ@mail.gmail.com>
- <97cbfb3723607c95d78e25785262ae7b0acdb11c.camel@sipsolutions.net>
- <CAK8P3a29+JKbDdS9ikhgaKa-AJ1qd1sDMTAfzivGh5wN4VL88A@mail.gmail.com> <54a5acb6cf26ebc6447f8ebcbdcb8e0eed693ab3.camel@sipsolutions.net>
-In-Reply-To: <54a5acb6cf26ebc6447f8ebcbdcb8e0eed693ab3.camel@sipsolutions.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 18 Jun 2019 23:06:29 +0200
-Message-ID: <CAK8P3a3r95gXMdq7s9GF=37v6t4kR+-2iyC6bnmUDVuM+bn80Q@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Alex Elder <elder@linaro.org>, Dan Williams <dcbw@redhat.com>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:39 PM Johannes Berg
-<johannes@sipsolutions.net> wrote:
-> On Tue, 2019-06-18 at 22:33 +0200, Arnd Bergmann wrote:
+The intel-int3496.txt file is a documentation for an ACPI driver.
 
-> It seems to me though that this is far more complex than what I'm
-> proposing? What I'm proposing there doesn't even need any userspace
-> involvement, as long as all the pieces are in the different sub-drivers,
-> they'd fall out automatically.
->
-> And realistically, the wwan_device falls out anyway at some point, the
-> only question is if we really make one specific driver be the "owner" of
-> it. I'm suggesting that we don't, and just make its lifetime depend on
-> the links to parts it has (unless something like IPA actually wants to
-> be an owner).
+There's no reason to keep it on a separate directory.
 
-My feeling so far is that having the wwan_device be owned by a device
-gives a nicer abstraction model that is also simpler for the common
-case. A device driver like ipa would end up with a probe() function
-that does does wwan_device_alloc/wwan_device_register, corresponding
-to alloc_etherdev/register_netdev, and then communicates through
-callbacks.
+So, instead of keeping it on some random location, move it
+to a sub-directory inside the ACPI documentation dir.
 
-I agree the compound device case would get more complex by
-shoehorning it into this model, but that can be a valid tradeoff
-if it's the exceptional case rather than the common one.
+For now, keep it with .txt extension, in order to avoid
+Sphinx build noise. A later patch should change it to .rst
+and movin it to be together with other acpi docs.
 
-      Arnd
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ .../acpi/extcon-intel-int3496.rst}                 | 14 ++++++++++----
+ Documentation/firmware-guide/acpi/index.rst        |  1 +
+ MAINTAINERS                                        |  6 +++---
+ 3 files changed, 14 insertions(+), 7 deletions(-)
+ rename Documentation/{extcon/intel-int3496.txt => firmware-guide/acpi/extcon-intel-int3496.rst} (66%)
+
+diff --git a/Documentation/extcon/intel-int3496.txt b/Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+similarity index 66%
+rename from Documentation/extcon/intel-int3496.txt
+rename to Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+index 8155dbc7fad3..5137ca834b54 100644
+--- a/Documentation/extcon/intel-int3496.txt
++++ b/Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+@@ -1,5 +1,6 @@
++=====================================================
+ Intel INT3496 ACPI device extcon driver documentation
+------------------------------------------------------
++=====================================================
+ 
+ The Intel INT3496 ACPI device extcon driver is a driver for ACPI
+ devices with an acpi-id of INT3496, such as found for example on
+@@ -13,15 +14,20 @@ between an USB host and an USB peripheral controller.
+ The ACPI devices exposes this functionality by returning an array with up
+ to 3 gpio descriptors from its ACPI _CRS (Current Resource Settings) call:
+ 
+-Index 0: The input gpio for the id-pin, this is always present and valid
+-Index 1: The output gpio for enabling Vbus output from the device to the otg
++=======  =====================================================================
++Index 0  The input gpio for the id-pin, this is always present and valid
++Index 1  The output gpio for enabling Vbus output from the device to the otg
+          port, write 1 to enable the Vbus output (this gpio descriptor may
+          be absent or invalid)
+-Index 2: The output gpio for muxing of the data pins between the USB host and
++Index 2  The output gpio for muxing of the data pins between the USB host and
+          the USB peripheral controller, write 1 to mux to the peripheral
+          controller
++=======  =====================================================================
+ 
+ There is a mapping between indices and GPIO connection IDs as follows
++
++	======= =======
+ 	id	index 0
+ 	vbus	index 1
+ 	mux	index 2
++	======= =======
+diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+index ae609eec4679..90c90d42d9ad 100644
+--- a/Documentation/firmware-guide/acpi/index.rst
++++ b/Documentation/firmware-guide/acpi/index.rst
+@@ -24,3 +24,4 @@ ACPI Support
+    acpi-lid
+    lpit
+    video_extension
++   extcon-intel-int3496
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e07cbd44d48a..b7c81bd0f8e8 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -321,7 +321,7 @@ F:	drivers/pnp/pnpacpi/
+ F:	include/linux/acpi.h
+ F:	include/linux/fwnode.h
+ F:	include/acpi/
+-F:	Documentation/acpi/
++F:	Documentation/firmware-guide/acpi/
+ F:	Documentation/ABI/testing/sysfs-bus-acpi
+ F:	Documentation/ABI/testing/configfs-acpi
+ F:	drivers/pci/*acpi*
+@@ -4881,7 +4881,7 @@ S:	Maintained
+ F:	Documentation/
+ F:	scripts/kernel-doc
+ X:	Documentation/ABI/
+-X:	Documentation/acpi/
++X:	Documentation/firmware-guide/acpi/
+ X:	Documentation/devicetree/
+ X:	Documentation/i2c/
+ X:	Documentation/media/
+@@ -6057,7 +6057,7 @@ S:	Maintained
+ F:	drivers/extcon/
+ F:	include/linux/extcon/
+ F:	include/linux/extcon.h
+-F:	Documentation/extcon/
++F:	Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+ F:	Documentation/devicetree/bindings/extcon/
+ 
+ EXYNOS DP DRIVER
+-- 
+2.21.0
+
