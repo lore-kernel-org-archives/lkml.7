@@ -6,86 +6,101 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AC1C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:09:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF104C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:11:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D401B2063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:09:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4A3A2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:11:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730281AbfFRSJd convert rfc822-to-8bit (ORCPT
+        id S1730163AbfFRSLq convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:09:33 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35409 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727616AbfFRSJd (ORCPT
+        Tue, 18 Jun 2019 14:11:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23038 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727616AbfFRSLp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:09:33 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so16552012qto.2;
-        Tue, 18 Jun 2019 11:09:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=oHj24vcv49o6J15KAKRxHCuXIYgSsjgYc3eEZOnK3fk=;
-        b=tQcQ69As5SqfD/1vGLzwiRL0F6PFGXWQQhGNNct46AHQt+KVM4kJkJe9eCC8QKDCSI
-         86ODxEiBpgThBMlpUbbX8a8HYRsNSR1QbarY89ZSs32miIK6arxCWhSLtfVK+NUj4Q93
-         z9z6BEOECw3ApM4+nO5WJgtZ3Y2g7u3wNQJ4aQdJMz7XxUysPfq5iwr3XgeGW0lmWJhm
-         Az5ti351J51onEikochzvgCFq7rnOEMSeGPkyCNl5jCbsUfRn25rGq7k+iUWmxCiE1MW
-         Zzrjkjmzn0QZvoJySk2SyyXK1BgLoxuVsA9lkbKJ3LiOe+3FMMjByU12ZIZ9ud9gcH63
-         VRsQ==
-X-Gm-Message-State: APjAAAWagJJy7Ek3waF9Wx6tlMnxlC9K4DeXk53jLHC/0r2tIBc/Kqpt
-        M/TFq0eBSxOvi888M5U6P1nukXOGws8Jl/3NJwg=
-X-Google-Smtp-Source: APXvYqzoeNQ+qNXk+Bqr/BBsWwStrS4xCx8wxHWRCYgGKPvM4hp6VttYyVgzD05adAZxSxyf/ZDZB37DLa0Eb9Zc8Eg=
-X-Received: by 2002:aed:2bc1:: with SMTP id e59mr81171140qtd.7.1560881371987;
- Tue, 18 Jun 2019 11:09:31 -0700 (PDT)
+        Tue, 18 Jun 2019 14:11:45 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5II6iEB071557
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:11:44 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7498255m-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:11:44 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Tue, 18 Jun 2019 19:11:42 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Jun 2019 19:11:40 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5IIBdbn54657038
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 18:11:39 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BB6CAE056;
+        Tue, 18 Jun 2019 18:11:39 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E8E03AE059;
+        Tue, 18 Jun 2019 18:11:38 +0000 (GMT)
+Received: from localhost (unknown [9.85.74.6])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Jun 2019 18:11:38 +0000 (GMT)
+Date:   Tue, 18 Jun 2019 23:41:37 +0530
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Subject: Re: [PATCH 5/7] powerpc/ftrace: Update ftrace_location() for powerpc
+ -mprofile-kernel
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+        <186656540d3e6225abd98374e791a13d10d86fab.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+        <20190618114509.5b1acbe5@gandalf.local.home>
+In-Reply-To: <20190618114509.5b1acbe5@gandalf.local.home>
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
 MIME-Version: 1.0
-References: <20190304204019.2142770-1-arnd@arndb.de> <20190308160441.ler2hs44oaozoq7w@salvia>
- <CAF1oqRAuk7h2Z2iheq3Ze1vTMNWLf5HHn83fZt07hXA4nOPbAg@mail.gmail.com>
-In-Reply-To: <CAF1oqRAuk7h2Z2iheq3Ze1vTMNWLf5HHn83fZt07hXA4nOPbAg@mail.gmail.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 18 Jun 2019 20:09:15 +0200
-Message-ID: <CAK8P3a2Go0=9wMfOvdw+GGRNqNZ9c2TJy=jN6dB1VR3K8qz-rg@mail.gmail.com>
-Subject: Re: [PATCH] netfilter: nf_conntrack_sip: fix IPV6 dependency
-To:     =?UTF-8?B?QWxpbiBOxINzdGFj?= <alin.nastac@gmail.com>
-Cc:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        =?UTF-8?B?TcOhdMOpIEVja2w=?= <ecklm94@gmail.com>,
-        Fernando Fernandez Mancera <ffmancera@riseup.net>,
-        netfilter-devel <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org, Networking <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8BIT
+X-TM-AS-GCONF: 00
+x-cbid: 19061818-0012-0000-0000-0000032A397D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061818-0013-0000-0000-00002163578F
+Message-Id: <1560881411.p0i6a1dkwk.naveen@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=791 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906180145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Mar 8, 2019 at 5:23 PM Alin Năstac <alin.nastac@gmail.com> wrote:
+Steven Rostedt wrote:
+> On Tue, 18 Jun 2019 20:17:04 +0530
+> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+> 
+>> @@ -1551,7 +1551,7 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>>  	key.flags = end;	/* overload flags, as it is unsigned long */
+>>  
+>>  	for (pg = ftrace_pages_start; pg; pg = pg->next) {
+>> -		if (end < pg->records[0].ip ||
+>> +		if (end <= pg->records[0].ip ||
+> 
+> This breaks the algorithm. "end" is inclusive. That is, if you look for
+> a single byte, where "start" and "end" are the same, and it happens to
+> be the first ip on the pg page, it will be skipped, and not found.
 
-> On Fri, Mar 8, 2019 at 5:04 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
-> > On Mon, Mar 04, 2019 at 09:40:12PM +0100, Arnd Bergmann wrote:
-> > > With CONFIG_IPV6=m and CONFIG_NF_CONNTRACK_SIP=y, we now get a link failure:
-> > >
-> > > net/netfilter/nf_conntrack_sip.o: In function `process_sdp':
-> > > nf_conntrack_sip.c:(.text+0x4344): undefined reference to `ip6_route_output_flags'
-> >
-> > I see. We can probably use nf_route() instead.
-> >
-> > Or if needed, use struct nf_ipv6_ops for this.
-> >
-> >         if (v6ops)
-> >                 ret = v6ops->route_xyz(...);
-> >
-> > @Alin: Would you send us a patch to do so to fix a3419ce3356cf1f
-> > netfilter: nf_conntrack_sip: add sip_external_media logic".
->
-> nf_ip6_route(net, &dst, &fl6, false) seems to be appropriate.
-> I'll send the patch Monday.
+Thanks. It looks like I should be over-riding ftrace_location() instead.  
+I will update this patch.
 
-I see the original bug I reported is still there. Can you send that patch
-you had planned to do?
+- Naveen
 
-       Arnd
+
