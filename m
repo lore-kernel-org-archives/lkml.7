@@ -2,257 +2,124 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC9C6C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5DF6C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB68B2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9548B2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vcUy7JtA"
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="pEx6jeAU";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="UOp3IzG9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729802AbfFRLvA (ORCPT
+        id S1729862AbfFRLvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:51:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51782 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729662AbfFRLvA (ORCPT
+        Tue, 18 Jun 2019 07:51:37 -0400
+Received: from wout1-smtp.messagingengine.com ([64.147.123.24]:50621 "EHLO
+        wout1-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729712AbfFRLvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:51:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 207so2921367wma.1;
-        Tue, 18 Jun 2019 04:50:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hijuCzAY2Pi9akbVtbMbIWMuy5Jj/AsTuvCGyCYSJJI=;
-        b=vcUy7JtAouiP/n8/clS6ufdx7IOtAXbV+UUFCN+/e7VZWSigf64wfDbgbJQYCKVXss
-         /BavSP0D0Xy5e0nT/vaEBZxEnevYVcAOFP4ntanCMHjO8zjfcxKni7P2tGNDTskeF++J
-         koFN4quqbUe09UnITXwqqQ8uZAPOMkd3M+wE0IeSuKngm7oiGh4n/dQayG1nN53IHIz2
-         89ymhEf3VKzJBiW665oDu/JmagKjaUZaGFWdz7NAX53PBYVJqHytQab9uk01l54e02KC
-         xj0xtNxobpQcsPD6qA+iveRX394soHv777Qg9jHKaWvGjQx2+ZDpGk/qmbwC/3en2GeN
-         8K9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hijuCzAY2Pi9akbVtbMbIWMuy5Jj/AsTuvCGyCYSJJI=;
-        b=s1nV/GTDecFPYBNIr1XYgbHxHTxScFKn6m3eH9BXdcWSw/HFK3cFd463ZQHJhs+xfd
-         b6BTLFMeUEMdG9gSMIa7Ebjty5h1fU8JMPwQYYyxT/5b0AnG9U7FX6GO1zQIs0vIIvfn
-         lgiZwQ6B4WDE5ABVmUThtgOWVwLxH02kdJw02uEQVJGaBU63Mgm2/MWjPGsKGTK8LdB+
-         58jcS6/Veb1clDoifnVo2/dhiUSQBEkMY7EP52dBTV9eTOho9Dr+gzAheUwHTX3FSsW1
-         /SjsvgowZ57j/KMfNHmRRQU/X9LHUELwgg32DJmkE7tbJhEXCUl4wnpGNDOfNWTEYchn
-         XO+g==
-X-Gm-Message-State: APjAAAVWcew/ByxM2P7IKpQGBImQbR9Id3O8NQpqCFibd1KDVWGgoBBM
-        sfEowg7PSd77uSvugaPwKf65s9FQcC8=
-X-Google-Smtp-Source: APXvYqzoJL5ciO7+g5+3dBHsq0vNDBvVWd+2THefs9ev0GsNqemmcPFTPn7jcJtzirzfOynjNOIkWA==
-X-Received: by 2002:a1c:f20f:: with SMTP id s15mr3166467wmc.33.1560858657282;
-        Tue, 18 Jun 2019 04:50:57 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id x83sm2307570wmb.42.2019.06.18.04.50.56
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 04:50:56 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 13:50:55 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 08/17] clk: tegra: add support for peripheral clock
- suspend and resume
-Message-ID: <20190618115055.GK28892@ulmo>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-9-git-send-email-skomatineni@nvidia.com>
+        Tue, 18 Jun 2019 07:51:37 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.west.internal (Postfix) with ESMTP id 84220754;
+        Tue, 18 Jun 2019 07:51:35 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Tue, 18 Jun 2019 07:51:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=DC9V7nZigwULy1vXQzkKAfN8Y81
+        PyCPnn1G5PFEEkWs=; b=pEx6jeAUlu1KEq3LJcLdHwKFkgEzcJsQzyYkZEL++np
+        wCmnL29+7hit1h1cim3TQxlLNTRd93PqUF+odnsv1RGghB1V/BXS73SMRHYDv5Fb
+        SVTIqNy6L650QF3saKqN0E7Wsk6wN+iLhVk0RVNNlLXCPY5jL7yCc+1c8JD6fDVK
+        mXL00vaQH58aTy95YodXO9k+W3NQ3+hQMYItnnmoHABEAfBUALR8QMWNSJ66ACZ1
+        PXCxw9tONOFKVFhy7jmXs8bCyOJerqy7qWFrBkuVGbU/mSa0RdPTeH3iX4e+tAAh
+        lDquW+sEaPVNe3cindpijtw8e1LA2AvDXCH7llsKLhg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=DC9V7n
+        ZigwULy1vXQzkKAfN8Y81PyCPnn1G5PFEEkWs=; b=UOp3IzG99VID2tkE3N9AAG
+        G+66LMK6ep2PTHdsqzNNSYg3zpsU1fzjN6ctjH0HW/xs/1oBNU2xjXTHw1FvduwO
+        nFoddJBZSY+NxShvPQGZHF09uuqvpkxWON1Z+5ar03J2S6eleJ86a4dW7eGlm+79
+        vVgFcBu0zRdJjjEr6H1l/9Jr6AVr8lKEWT8woWlmUvrjxmZhLQQ0XRWN1j8F8jJl
+        7fqF0OOr+GZZGR0+9Yo0nAn6Colp5X5lpM/s9oHqF4dS9f7bL9tQhLu1Ul+8EhrN
+        VKGapQs38PMns4SdaLD/beILDWmVLhVFH7fpxtrRq1bwmfG/O8q3OH4Pdy/tT17g
+        ==
+X-ME-Sender: <xms:RtAIXQDSdVfjb8-bjMHZlvCN1MemiEsf6z9I04UvqPlglDkGGwanXw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtddtgddugecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:RtAIXdun1X8KGtREfWcXtAdrdDhL_M0EmpqThnLlpUuQaNGKSHvATA>
+    <xmx:RtAIXXa440YQGHt3UsMG2Z4GEkGEUodjZ2JAf4K9aRcBRqWA8gd1lg>
+    <xmx:RtAIXRGUJAYYHv2hvrbC9UYU75ekSW2VHEeznKPVs4EV_aXqCjkLbA>
+    <xmx:R9AIXfPmfvhfHD9fN2kQWAckSn79O9eO8p8azkp84D3ryyphHBU2jA>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id AE5FD38008B;
+        Tue, 18 Jun 2019 07:51:33 -0400 (EDT)
+Date:   Tue, 18 Jun 2019 13:51:31 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Patrick Havelange <patrick.havelange@essensium.com>,
+        William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Lorenzo Bianconi <lorenzo@kernel.org>
+Subject: Re: linux-next: Fixes tags need some work in the staging.current tree
+Message-ID: <20190618115131.GB21419@kroah.com>
+References: <20190618073618.0682627e@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="6TC23+W66xmFESAX"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560843991-24123-9-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190618073618.0682627e@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 18, 2019 at 07:36:18AM +1000, Stephen Rothwell wrote:
+> Hi all,
+> 
+> In commit
+> 
+>   0c75376fa395 ("counter/ftm-quaddec: Add missing dependencies in Kconfig")
+> 
+> Fixes tag
+> 
+>   Fixes: a3b9a99 ("counter: add FlexTimer Module Quadrature decoder counter driver")
+> 
+> has these problem(s):
+> 
+>   - SHA1 should be at least 12 digits long
+>     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+>     or later) just making sure it is not set (or set to "auto").
+> 
+> In commit
+> 
+>   bce0d57db388 ("iio: imu: st_lsm6dsx: fix PM support for st_lsm6dsx i2c controller")
+> 
+> Fixes tag
+> 
+>   Fixes: c91c1c844ebd ("imu: st_lsm6dsx: add i2c embedded controller support")
+> 
+> has these problem(s):
+> 
+>   - Subject does not match target commit subject
+>     Just use
+> 	git log -1 --format='Fixes: %h ("%s")'
 
---6TC23+W66xmFESAX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ugh.
 
-On Tue, Jun 18, 2019 at 12:46:22AM -0700, Sowjanya Komatineni wrote:
-> This patch creates APIs to save and restore the state of all
-> peripheral clocks reset and enables.
->=20
-> These APIs are invoked by Tegra210 clock driver during suspend and
-> resume to save the peripheral clocks state before suspend and to
-> restore them on resume.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk.c | 70 +++++++++++++++++++++++++++++++++++++++++++=
-+++++-
->  drivers/clk/tegra/clk.h |  3 +++
->  2 files changed, 72 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index 26690663157a..bd3b46c5f941 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -70,6 +70,7 @@ static struct clk **clks;
->  static int clk_num;
->  static struct clk_onecell_data clk_data;
-> =20
-> +static u32 *periph_ctx;
->  static u32 cclkg_burst_policy_ctx[2];
->  static u32 cclklp_burst_policy_ctx[2];
->  static u32 sclk_burst_policy_ctx[2];
-> @@ -279,6 +280,63 @@ void tegra_sclk_cpulp_burst_policy_restore_context(v=
-oid)
->  	writel_relaxed(clk_arm_ctx, clk_base + CLK_MASK_ARM);
->  }
-> =20
-> +void tegra_clk_periph_suspend(void __iomem *clk_base)
-> +{
-> +	int i, idx;
+I blame Jonathan for all of these as they came in through his tree :)
 
-Can be unsigned int. Same for below.
+thanks,
 
-> +
-> +	idx =3D 0;
-> +	for (i =3D 0; i < periph_banks; i++, idx++)
-> +		periph_ctx[idx] =3D
-> +			readl_relaxed(clk_base + periph_regs[i].rst_reg);
-> +
-> +	for (i =3D 0; i < periph_banks; i++, idx++)
-> +		periph_ctx[idx] =3D
-> +			readl_relaxed(clk_base + periph_regs[i].enb_reg);
-> +}
-> +
-> +void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *cl=
-k_base)
-
-count can also be unsigned int.
-
-> +{
-> +	int i;
-> +
-> +	WARN_ON(count !=3D periph_banks);
-> +
-> +	for (i =3D 0; i < count; i++)
-> +		writel_relaxed(clks_on[i], clk_base + periph_regs[i].enb_reg);
-> +}
-> +
-> +void tegra_clk_periph_resume(void __iomem *clk_base)
-> +{
-> +	int i, idx;
-> +
-> +	idx =3D 0;
-> +	for (i =3D 0; i < periph_banks; i++, idx++)
-> +		writel_relaxed(periph_ctx[idx],
-> +			       clk_base + periph_regs[i].rst_reg);
-> +
-> +	/* ensure all resets have propagated */
-> +	fence_udelay(2, clk_base);
-> +	tegra_read_chipid();
-> +
-> +	for (i =3D 0; i < periph_banks; i++, idx++)
-> +		writel_relaxed(periph_ctx[idx],
-> +			       clk_base + periph_regs[i].enb_reg);
-> +
-> +	/* ensure all enables have propagated */
-> +	fence_udelay(2, clk_base);
-> +	tegra_read_chipid();
-> +}
-> +
-> +static int tegra_clk_suspend_ctx_init(int banks)
-> +{
-> +	int err =3D 0;
-> +
-> +	periph_ctx =3D kcalloc(2 * banks, sizeof(*periph_ctx), GFP_KERNEL);
-> +	if (!periph_ctx)
-> +		err =3D -ENOMEM;
-> +
-> +	return err;
-> +}
-> +
->  struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int ban=
-ks)
->  {
->  	clk_base =3D regs;
-> @@ -295,11 +353,21 @@ struct clk ** __init tegra_clk_init(void __iomem *r=
-egs, int num, int banks)
->  	periph_banks =3D banks;
-> =20
->  	clks =3D kcalloc(num, sizeof(struct clk *), GFP_KERNEL);
-> -	if (!clks)
-> +	if (!clks) {
->  		kfree(periph_clk_enb_refcnt);
-> +		return NULL;
-> +	}
-> =20
->  	clk_num =3D num;
-> =20
-> +	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
-> +		if (tegra_clk_suspend_ctx_init(banks)) {
-> +			kfree(periph_clk_enb_refcnt);
-> +			kfree(clks);
-> +			return NULL;
-> +		}
-> +	}
-> +
->  	return clks;
->  }
-> =20
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index c8f8a23096e2..a354cacae5a6 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -853,6 +853,9 @@ void tegra_cclkg_burst_policy_save_context(void);
->  void tegra_cclkg_burst_policy_restore_context(void);
->  void tegra_sclk_cclklp_burst_policy_save_context(void);
->  void tegra_sclk_cpulp_burst_policy_restore_context(void);
-> +void tegra_clk_periph_suspend(void __iomem *clk_base);
-> +void tegra_clk_periph_resume(void __iomem *clk_base);
-> +void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *cl=
-k_base);
-> =20
->  /* Combined read fence with delay */
->  #define fence_udelay(delay, reg)	\
-
-Other than the nitpicks, looks good:
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---6TC23+W66xmFESAX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0I0B8ACgkQ3SOs138+
-s6GfZhAAmD6cbOIgUCROHyAhWdbEC6b72a8qyJYEbvoQ8eGoa52c+EGCZVgUFZqL
-30PtlxxLfWKdDJesDhVRtHCdpKcMn5Zhm4vEpP1Oj/7oVCySPkHMgCPi9PBlBMdC
-Bk75n0Y6j1sNblSrXrQESF2nvK6YjPRRT42YKCr7/ES1iZqL8IbN9adme2OSmTOD
-4q1SEfCP7J2r4XpEq8YwJ4Hoq74MOwnsBDYytahE1iFrxW9pazT89a/7RmIcCdL9
-FY+y4+xUL80/K1rYB3LQLZZXNjSw/xAptYtCxMIZKggyPapBv7NgazfmO1ofi8cF
-Rl3KcKL5ryWhPxXtx3RgPjbVlNfjoOiJSdnj62936v73MSf/p9v+FXKvU2SJSIGw
-OuYoo1HhKgV/VYUGIEE3annwC/vhqkoC445rcc/yrrkBAXTo2lM4y2DiGa1QTHeI
-tQ+EnYCCBQ+uypKEPiU0PFlolUycP8xK5KnNAXXpu4AKXsYsw/9B20AhpYix26KN
-e/f9/nOxgOlubtExDmSCDVQsasiEKm8Fw5Ow3clSn77CvlEhCkRZ6g/OU9Il4Eh0
-0PUxLqs/hjUqYOgKWFpQ1WZy5A+rMww+wLrmfXa/3Fw+AqJAMJswTESep+hEFJd/
-54GDr/Rey0HQ5c4QV2sUbl2G40RVel/bkNt5COK0cUIgyl6pqiM=
-=04ad
------END PGP SIGNATURE-----
-
---6TC23+W66xmFESAX--
+greg k-h
