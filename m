@@ -2,69 +2,95 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135ADC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D259CC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC9542085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:28:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560864492;
-	bh=RDwm7cqlA7kxiru7hO8Sr4amKpAdU9f3OR/1UMtFrWo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eNaG83fkFkiGqUhuj7BhPpqPam8msHl3ihzsKLRKSOp5xoYn8DIs4XQKfpypQ2miy
-	 sQ+GATy+Zca4+AVm+CrQe6oIqZGIXba+iBTYzq21K762E+8D0+/FqmepgxGgM6RTHG
-	 dlRigLMe3DZGNvB0M8Qxv/M+kQeOCGkjcUAsQEKQ=
+	by mail.kernel.org (Postfix) with ESMTP id B5CF62085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:30:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729115AbfFRN2K (ORCPT
+        id S1729109AbfFRNat (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:28:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45090 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 09:30:49 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:48696 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfFRN2K (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:28:10 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B1342085A;
-        Tue, 18 Jun 2019 13:28:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560864489;
-        bh=RDwm7cqlA7kxiru7hO8Sr4amKpAdU9f3OR/1UMtFrWo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WVSSL5HK1R3vnjfDctoFE3waIkcb/NhczSYPrD/DsZS0GN4oufPLVigDpVDVaGrRU
-         aUUuDUkz6EziUmDzVB7/8cd/5G2msenFLrxZ+YN+xZAyRrzfg9STDzluMt1B4f0LP6
-         HWE2pCLJddjYTAIbOGzMlffWuB1A+KLHYfOjjP1M=
-Date:   Tue, 18 Jun 2019 21:27:14 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, abel.vesa@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Linux-imx@nxp.com
-Subject: Re: [PATCH RESEND V2] soc: imx8: Use existing of_root directly
-Message-ID: <20190618132713.GG1959@dragon>
-References: <20190618094338.11183-1-Anson.Huang@nxp.com>
+        id S1726088AbfFRNat (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:30:49 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 49941200DD0;
+        Tue, 18 Jun 2019 15:30:47 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 3C5A62003D7;
+        Tue, 18 Jun 2019 15:30:47 +0200 (CEST)
+Received: from fsr-ub1664-046.ea.freescale.net (fsr-ub1664-046.ea.freescale.net [10.171.96.34])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 27FCB20631;
+        Tue, 18 Jun 2019 15:30:47 +0200 (CEST)
+Received: from localhost (localhost [127.0.0.1])
+        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id E955255B1;
+        Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
+Received: from fsr-ub1664-046.ea.freescale.net ([127.0.0.1])
+        by localhost (fsr-ub1664-046.ea.freescale.net [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id WyWO7bCRI6C1; Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
+Received: from localhost (localhost [127.0.0.1])
+        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id 81B0C55B3;
+        Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
+X-Virus-Scanned: amavisd-new at ea.freescale.net
+Received: from fsr-ub1664-046.ea.freescale.net ([127.0.0.1])
+        by localhost (fsr-ub1664-046.ea.freescale.net [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id PfxNs3qU2e-H; Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
+Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
+        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id 3F8594D1D;
+        Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        Robert Chiras <robert.chiras@nxp.com>
+Subject: [PATCH v2 0/2] Add DSI panel driver for Raydium RM67191
+Date:   Tue, 18 Jun 2019 16:30:44 +0300
+Message-Id: <1560864646-1468-1-git-send-email-robert.chiras@nxp.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618094338.11183-1-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: text/plain; charset="iso-8859-1"
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 05:43:38PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> There is common of_root for reference, no need to find it
-> from DT again, use of_root directly to make driver simple.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+This patch-set contains the DRM panel driver and dt-bindings documentation
+for the DSI driven panel: Raydium RM67191.
 
-Applied, thanks.
+Changes since v1:
+- Fixed 'reset-gpio' to 'reset-gpios' property naming
+- Changed the state of the reset gpio to active low and fixed how it is
+  handled in driver
+- Fixed copyright statement
+- Reordered includes
+- Added defines for panel specific color formats
+- Removed unnecessary tests in enable and unprepare
+- Removed the unnecessary backlight write in enable
+
+Robert Chiras (2):
+  dt-bindings: display: panel: Add support for Raydium RM67191 panel
+  drm/panel: Add support for Raydium RM67191 panel driver
+
+ .../bindings/display/panel/raydium,rm67191.txt     |  43 ++
+ drivers/gpu/drm/panel/Kconfig                      |   9 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-raydium-rm67191.c      | 709 +++++++++++++++++++++
+ 4 files changed, 762 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
+
+-- 
+2.7.4
+
