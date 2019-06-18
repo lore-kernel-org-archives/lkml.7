@@ -2,106 +2,133 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C11CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE3BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7EA220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:50:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560880203;
-	bh=2s5JXaKAuAm51+zEi5iSTey2SYDXY/3li7doYYkuVg8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zNcaywEDZAgXFOe0GqQbCssFtUIv4iK8lMygbiUAyHu0wYQa3DkDGj/9m8bF7Isxx
-	 xDt+T4X9NUV6QNRuAcdcpVA0ZGCCPsijwpN4Db7gzpgkE5qsj8F0vOaisydaPZr2wh
-	 XOwNJpUbZGnYVnVBCC+sehGYWVn4Jzy9Vc6A6upM=
+	by mail.kernel.org (Postfix) with ESMTP id 392A920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:50:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RwBVnBXM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729865AbfFRRtx (ORCPT
+        id S1730007AbfFRRuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:49:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729285AbfFRRtx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:49:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 946F420863;
-        Tue, 18 Jun 2019 17:49:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560880192;
-        bh=2s5JXaKAuAm51+zEi5iSTey2SYDXY/3li7doYYkuVg8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PQoUj4xgzTjeYc9oX9DHwNKU15/cbzRwP5rwHjYZX7eZOT38i9SZVV8DI5lNcgdWH
-         ofgyy9gef30zDQ3fF7YSsh+C+XHCaDDyBTWPx2TaumYwAbk0qCCaetUCEXZk/ntGs9
-         QCMiK+unMa6ml6T/2KteVIrZFfSDnJ4hz1P+2R5Y=
-Date:   Tue, 18 Jun 2019 19:49:49 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     James Feeney <james@nurealm.net>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: Re: [PATCH 5.1 003/115] HID: input: make sure the wheel high
- resolution multiplier is set
-Message-ID: <20190618174949.GD3649@kroah.com>
-References: <20190617210759.929316339@linuxfoundation.org>
- <20190617210800.096317488@linuxfoundation.org>
- <a90f3536-8833-498d-c9d5-ef460ad153da@nurealm.net>
+        Tue, 18 Jun 2019 13:50:39 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:35591 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbfFRRui (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:50:38 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c6so4182535wml.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:50:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c1WigYm0cUIC6hZkrAWAPPTHDebRZz1ezFBY1qzMeiw=;
+        b=RwBVnBXMUs6CyRSqQXw1Doxy4/DTjCa3zCPa//ustSWnjdVbTRmtoP9TN/oSuf+krX
+         xl4fkoWrMAxa7R40u5rQS4PdI+iEJcO3uKO4D0bkbh/B5KWBLvg3lGo7+FdIxMUrU+Bk
+         rvEmDc+IBNiTeTABtleg0an5BGIUgk10CMRKiYoZNAttBlfEicQfnQLY+9kDs29ckxqz
+         65IqBq5uwXfydw2R7Lg1zG/1DFjmBXIwHeqx3q8Ijsr1e4cNt7GKq0hvEoPL5iNKvtQq
+         U6SWTmZI7yQGUfc753z1fEtZRZPvUdKT1kOJcVZtu+PEDdRq29uH2R2DzGprlWoXffg8
+         KCVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c1WigYm0cUIC6hZkrAWAPPTHDebRZz1ezFBY1qzMeiw=;
+        b=rK/0v8bIvO3mBHLpO2hL1QXLj1VmBeGNqmjoZ+lDuOkCMGyzwdZR+gs16C5+0zJ+3c
+         LnLiw+RacUp/ON8X0+JkJcJRw5viEZdk3PgvuQaMu8MK0qAPGoNtc3KelzJdt/3SeoUG
+         h162+LAnm3w94g3YxhmLySZPiWIKES4V1nGAk3l0tB/YSFRzavD2bQUyd3AmvRB7N/2g
+         6jr0YaoQQCo+oNiH8Rcu/4iefd/k8cXk7guPitTrBqEQphjQs95rDObxEEwuK/C0fT8U
+         hZYcPndLczodl9Q/tD9sAVePKS0eIctS1zQ14Dv1F8PhFSL49z8x1Lm07luGI0xXt0Wx
+         yaLw==
+X-Gm-Message-State: APjAAAWWXwtiBxyi1+Aw76s5SaAUGukozpBlfPIo7i9/6WYGl37ldXaP
+        qpA/E9Q2dUZC2Iik2A/vJAXDJA7hX7sQfCrcNWXr
+X-Google-Smtp-Source: APXvYqwLpfFc3r+km3hllshfsJW4QlbwLhJP2SjcQT8KlUVTF5+VyukGnP6yn1xqzrGCctHX8i1Wihvkr2VXhMe2zT8=
+X-Received: by 2002:a1c:f102:: with SMTP id p2mr4299194wmh.60.1560880235583;
+ Tue, 18 Jun 2019 10:50:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a90f3536-8833-498d-c9d5-ef460ad153da@nurealm.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <1560507893-42553-1-git-send-email-john.garry@huawei.com>
+ <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
+ <CAErSpo6qaMc1O7vgcuCwdDbe4QBcOw83wd7PbuUVS+7GDPgK9Q@mail.gmail.com>
+ <82840955-6365-0b95-6d69-8a2f7c7880af@huawei.com> <CAErSpo5cqJCZjt6QqMNZ6_n=G-_WxFeERnsESOMxsdr1P-6JLg@mail.gmail.com>
+ <9e8b6971-3189-9d4b-de9a-ff09f859f4f6@huawei.com> <CAErSpo4DemDWtnP2Gtram9tfQ0CaN9Na9_Gxk6Qk+nG5+JLuzA@mail.gmail.com>
+ <539835d3-770c-285c-0c49-ae15ceaa3079@huawei.com>
+In-Reply-To: <539835d3-770c-285c-0c49-ae15ceaa3079@huawei.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Tue, 18 Jun 2019 12:50:23 -0500
+Message-ID: <CAErSpo576mVAFkF69bxaTpyxELXEG+z_m7CmUE3WGqfCmy57uQ@mail.gmail.com>
+Subject: Re: [PATCH v2] bus: hisi_lpc: Don't use devm_kzalloc() to allocate
+ logical PIO range
+To:     John Garry <john.garry@huawei.com>
+Cc:     xuwei5@huawei.com, linuxarm@huawei.com, arm@kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>, linux-pci@kernel.org,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Jiang Liu <jiang.liu@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:22:55AM -0600, James Feeney wrote:
-> Uhm - could someone please "clue me in" here?
-> 
-> When I look into:
-> 
-> 'move all the pending queues back to their "real" places'
-> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=c5da0df8985ac2f29ffdaba77bae201121bc0e10
+[+cc Rafael, Mika, Jiang, linux-pci for ACPI host bridge hotplug test question]
 
-No need to worry about that patch, that was done because my scripts
-normally assume specific directory locations of the patch queues, and I
-had to do a kernel release that did not include the existing pending
-patches.
+On Tue, Jun 18, 2019 at 3:44 AM John Garry <john.garry@huawei.com> wrote:
 
-> I can find both the "d43c17ead879ba7c076dc2f5fd80cd76047c9ff4" patch, "HID: input: make sure the wheel high resolution multiplier is set" and the "39b3c3a5fbc5d744114e497d35bf0c12f798c134" patch, "HID: input: fix assignment of .value".
-> 
-> I take this to mean that these patches are "in the stable-queue".  But then, these patches are not "in the kernel".
+> >>> Could you just move the logic_pio_register_range() call farther down
+> >>> in hisi_lpc_probe()?  IIUC, once logic_pio_register_range() returns,
+> >>> an inb() with the right port number will try to access that port, so
+> >>> we should be prepared for that, i.e., maybe this in the wrong order to
+> >>> begin with?
+> >>
+> >> No, unfortunately we can't. The reason is that we need the logical PIO
+> >> base for that range before we enumerate the children of that host. We
+> >> need that base address for "translating" the child bus addresses to
+> >> logical PIO addresses.
 
-Yes.
+> > Ah, yeah, that makes sense.  I think.  We do assume that we know all
+> > the MMIO and I/O port translations before enumerating devices.  It's
+> > *conceivable* that could be changed someday since we don't actually
+> > need the translations until a driver claims the device,
+>
+> We actually need them before a driver claims the device.
+>
+> The reason is that when we create that child platform device we set the
+> device's IORESOURCE_IO resources according to the translated logic PIO
+> addresses, and not the host bus address. This is what makes the host
+> transparent to the child device driver.
 
-> So then, how do these patches go from being "in the stable-queue" to being "in the kernel"?
+I think you need it to set pdev->resource[], which is currently done
+long before the driver claims the device (though one could imagine
+delaying it even as far as pci_enable_device()-time).  I don't think
+the translation is actually *used* until the driver claims the device
+because only the driver knows how to do any inb/outb to the device.
 
-I apply them when I do the release in a few hours/days.
+But of course, that's all speculative and doesn't change what you need
+to do now.  The current code assumes we know the translations during
+enumeration, so you need to do the logic_pio registration before
+enumerating.
 
-> To the "uninitiated" and "naive", as I am, to outward appearances, the
-> patches are "just sitting there".  How do the patches get selected for
-> inclusion into the "next" kernel revision?
+> > and it would
+> > gain some flexibility if we didn't have to program the host bridge
+> > windows until we know how much space is required.  But I don't see
+> > that happening anytime soon.
 
-I already selected them, sent emails saying they were selected and to
-what specific branches they were selected to.  Then when the -rc
-releases happen so that people can do one final round of testing and
-object if I messed anything up, they get sent out again (which you
-responded to here.)
+> My problem is that I need to ensure that the new logical PIO unregister
+> function works ok for hot-pluggable host bridges. I need to get some way
+> to test this. Advice?
 
-If all goes well, when the "deadling" passes (usually 2 days +-2 days
-depending on stuff), I'll do a realease and apply the patches "for real"
-to the different kernel branches and cut a release.
+Good question.  The ACPI host bridge driver (drivers/acpi/pci_root.c)
+should support hotplug, but I'm not sure if there's a manual way to
+trigger it via sysfs or something similar.  If there is, and you have
+a machine with more than one host bridge, you might be able to remove
+one that leads to non-essential devices.
 
-Then I start all over again...
-
-I understand that seeing a git tree of patches in a quilt series is odd,
-but it is very powerful and works very very well for what we do here.
-
-Does that help?
-
-greg k-h
+Bjorn
