@@ -6,76 +6,113 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 234CDC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:24:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0A89C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:31:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC8320873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:24:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFF220873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:31:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730807AbfFRWYe (ORCPT
+        id S1730664AbfFRWbB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:24:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60588 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730519AbfFRWYe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:24:34 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7D4D187633;
-        Tue, 18 Jun 2019 22:24:33 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 72D941001DC3;
-        Tue, 18 Jun 2019 22:24:31 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpegtkpNNOOWQ3TnLPGSm=bwL2otQp1--GjNNFiXO7imMxEQ@mail.gmail.com>
-References: <CAJfpegtkpNNOOWQ3TnLPGSm=bwL2otQp1--GjNNFiXO7imMxEQ@mail.gmail.com> <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk> <155905627049.1662.17033721577309385838.stgit@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        Ian Kent <raven@themaw.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: Re: [PATCH 01/25] vfs: syscall: Add fsinfo() to query filesystem information [ver #13]
+        Tue, 18 Jun 2019 18:31:01 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:48985 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730196AbfFRWbA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 18:31:00 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hdMcW-0006VX-LW; Wed, 19 Jun 2019 00:30:28 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+        <20190607162349.18199-2-john.ogness@linutronix.de>
+        <20190618112237.GP3436@hirez.programming.kicks-ass.net>
+Date:   Wed, 19 Jun 2019 00:30:26 +0200
+In-Reply-To: <20190618112237.GP3436@hirez.programming.kicks-ass.net> (Peter
+        Zijlstra's message of "Tue, 18 Jun 2019 13:22:37 +0200")
+Message-ID: <87a7eebk71.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <23582.1560896665.1@warthog.procyon.org.uk>
-Date:   Tue, 18 Jun 2019 23:24:25 +0100
-Message-ID: <23583.1560896665@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 18 Jun 2019 22:24:33 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+On 2019-06-18, Peter Zijlstra <peterz@infradead.org> wrote:
+>> +/**
+>> + * DOC: memory barriers
+>
+> What's up with that 'DOC' crap?
 
-> Please don't resurrect MS_ flags.  They are from the old API and
-> shouldn't be used in the new one.  Some of them (e.g. MS_POSIXACL,
-> MS_I_VERSION) are actually internal flags despite being exported on
-> the old API.
+The separate documentation in
+Documentation/core-api/printk-ringbuffer.rst references this so it
+automatically shows up in the kernel docs. An external reference
+requires the DOC keyword.
 
-That makes it harder to emulate statfs() using this interface, but ok.
+Maybe the memory barrier descriptions do not belong in the kernel docs?
 
-I wonder if I should split the standard parameters (rw/ro, posixacl, dirsync,
-sync, lazytime, mand) out of FSINFO_ATTR_PARAMETERS and stick them in their
-own attribute, say FSINFO_ATTR_STD_PARAMETERS.  That would make it easier for
-a filesystem to only overload them if it wants to.
+>> + *
+>> + * Writers
+>> + * -------
+>> + * The main issue with writers is expiring/invalidating old data blocks in
+>> + * order to create new data blocks. This is performed in 6 steps that must
+>> + * be observed in order by all writers to allow cooperation. Here is a list
+>> + * of the 6 steps and the named acquire/release memory barrier pairs that
+>> + * are used to synchronized them:
+>> + *
+>> + * * old data invalidation (MB1): Pushing rb.data_list.oldest forward.
+>> + *   Necessary for identifying if data has been expired.
+>> + *
+>> + * * new data reservation (MB2): Pushing rb.data_list.newest forward.
+>> + *   Necessary for validating data.
+>> + *
+>> + * * assign the data block to a descriptor (MB3): Setting data block id to
+>> + *   descriptor id. Necessary for finding the descriptor associated with th
+>> + *   data block.
+>> + *
+>> + * * commit data (MB4): Setting data block data_next. (Now data block is
+>> + *   valid). Necessary for validating data.
+>> + *
+>> + * * make descriptor newest (MB5): Setting rb.descr_list.newest to descriptor.
+>> + *   (Now following new descriptors will be linked to this one.) Necessary for
+>> + *   ensuring the descriptor's next is set to EOL before adding to the list.
+>> + *
+>> + * * link descriprtor to previous newest (MB6): Setting the next of the
+>> + *   previous descriptor to this one. Necessary for correctly identifying if
+>> + *   a descriptor is the only descriptor on the list.
+>> + *
+>> + * Readers
+>> + * -------
+>> + * Readers only make of smb_rmb() to ensure that certain critical load
+>> + * operations are performed in an order that allows readers to evaluate if
+>> + * the data they read is really valid.
+>> + */
+>
+> This isn't really helping much I feel. It doesn't begin to describe the
+> ordering. But maybe the code makes more sense.
 
-> And there's SB_SILENT which is simply not a superblock flag and we might be
-> better getting rid of it entirely.
+Sorry. I really have no feel about what (or how) exactly I should
+document the memory barriers. I think the above comments make sense when
+someone understands the details of the implementation. But perhaps it
+should describe things such that someone without knowledge of the
+implementation would understand what the memory barriers are for? That
+would significantly increase the amount of text as I would have to
+basically explain the implementation.
 
-Yeah.  It's a parse-time flag.
+I would appreciate it if you could point out a source file that
+documents its memory barriers the way you would like to see these memory
+barriers documented.
 
-> The proper way to query mount options should be analogous to the way
-> they are set on the new API: list of {key, type, value, aux} tuples.
-
-It's not quite that simple: "aux" might be a datum that you can't recover or
-is meaningless to another process (an fd, for example).
-
-David
+John Ogness
