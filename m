@@ -2,164 +2,461 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D5BC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F5FEC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50FFA2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110622084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:29:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="MP7flYTO";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="JI4+b7lr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bc0HWjCX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbfFRJ2t (ORCPT
+        id S1729426AbfFRJ3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:28:49 -0400
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:35970 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729113AbfFRJ2s (ORCPT
+        Tue, 18 Jun 2019 05:29:00 -0400
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:53196 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729384AbfFRJ26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:28:48 -0400
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5I9Po14013985;
-        Tue, 18 Jun 2019 02:28:42 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=2OMFaY3DvEdNQscN/Z79rzD5wQAQXAiehbS+Tsi/kqw=;
- b=MP7flYTOiu4LCXAMLtfsv3L7EfSBlEHfpLyq8s3uPwMexZnWXM4dHZBmNDIq+2levbmr
- gLgnJVRydDfl7MOXegaeeWkUEBxznfEba06kW3w02Mx4hWGxl9Fbg5N9CVb6443AK4I9
- NfQvbEtPK0B0GfaxLaJFGxVDP41CGmDfX3vnW9kdEeczypgeqwW+QipiYh3uraOFwRHQ
- p/XV2bXKip61CE0kKS1ykTm17f6EfOySsEY+oLLW8YvGhHiCsIomygShKdgIpNz28wx7
- MabAptoaCnuseRw5b2d7D2PlvxzTWGK0GNhCm45tctlkO6htynjvY7FqZt9GJ+jD7iM/ jQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2t6qgp98x1-8
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jun 2019 02:28:42 -0700
-Received: from SC-EXCH04.marvell.com (10.93.176.84) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 18 Jun
- 2019 02:27:34 -0700
-Received: from NAM04-SN1-obe.outbound.protection.outlook.com (104.47.44.59) by
- SC-EXCH04.marvell.com (10.93.176.84) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 18 Jun 2019 02:27:34 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=2OMFaY3DvEdNQscN/Z79rzD5wQAQXAiehbS+Tsi/kqw=;
- b=JI4+b7lrDFYwfK7SrBkUGrPtIzn8mhCUzokBaeoyxkdjOKd3bY0IIvuhZEtW1VMlik2jef0yzqBqtMeAV0aY55s6yCj05J+pbadiOGooV5h/V49SGJ/mvOW84cN042cHroDG+x2nhbFEt4FXFVI8Ei4zwINRuv2X8tHtPH/J96E=
-Received: from MN2PR18MB3182.namprd18.prod.outlook.com (10.255.236.143) by
- MN2PR18MB2384.namprd18.prod.outlook.com (20.179.80.150) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Tue, 18 Jun 2019 09:27:29 +0000
-Received: from MN2PR18MB3182.namprd18.prod.outlook.com
- ([fe80::9880:2b8b:52e5:b413]) by MN2PR18MB3182.namprd18.prod.outlook.com
- ([fe80::9880:2b8b:52e5:b413%3]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
- 09:27:28 +0000
-From:   Michal Kalderon <mkalderon@marvell.com>
-To:     Arnd Bergmann <arnd@arndb.de>, Ariel Elior <aelior@marvell.com>,
-        GR-everest-linux-l2 <GR-everest-linux-l2@marvell.com>,
-        "David S. Miller" <davem@davemloft.net>
-CC:     Ariel Elior <aelior@marvell.com>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Denis Bolotin <dbolotin@marvell.com>,
-        Tomer Tayar <tomer.tayar@cavium.com>,
-        Sudarsana Reddy Kalluru <skalluru@marvell.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] qed: Fix -Wmaybe-uninitialized false positive
-Thread-Topic: [PATCH] qed: Fix -Wmaybe-uninitialized false positive
-Thread-Index: AQHVJQ1RjdAP7KlUu0KWNfQZMWSgEaahJdXw
-Date:   Tue, 18 Jun 2019 09:27:28 +0000
-Message-ID: <MN2PR18MB318218F121EBE1144A4AA36EA1EA0@MN2PR18MB3182.namprd18.prod.outlook.com>
-References: <20190617130504.1906523-1-arnd@arndb.de>
-In-Reply-To: <20190617130504.1906523-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [212.199.69.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 203523ef-8246-450f-00af-08d6f3cf2ee4
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MN2PR18MB2384;
-x-ms-traffictypediagnostic: MN2PR18MB2384:
-x-microsoft-antispam-prvs: <MN2PR18MB23842DF7EF97073DAA581DBCA1EA0@MN2PR18MB2384.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 007271867D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(346002)(39860400002)(366004)(376002)(189003)(199004)(305945005)(7736002)(229853002)(102836004)(71190400001)(2906002)(6436002)(68736007)(52536014)(76116006)(33656002)(66476007)(66946007)(64756008)(66556008)(6246003)(73956011)(66446008)(25786009)(316002)(4326008)(86362001)(11346002)(446003)(476003)(486006)(76176011)(186003)(9686003)(14444005)(26005)(8936002)(71200400001)(54906003)(110136005)(8676002)(256004)(5660300002)(7696005)(55016002)(99286004)(478600001)(74316002)(6506007)(66066001)(14454004)(81166006)(53936002)(3846002)(81156014)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2384;H:MN2PR18MB3182.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: RHdU2ycBejTqu/Y0rE/iEne+MXO9TsxKf+nMoA+lndUH+hUqL8/+e4jsZtRO0H3xkCHN2VbcZ5/FZi3CgE2BsyLwCtvgIybXk7s2ynLRxaTicw1FLBMKp4hsYBwhJ2l2jVj1uhd9SwgHmUsIR6cM9iPf1JCCFdxGkBLOgG5B4T03kb8qoX6vczCih+GKz46Ssrexcq5rAPe+K4rFvqjoNuO0utketsMvACz5rYt+F/KcBcRilRj3R3g96InuJ7bubZGCI59yBOYZZaF+DDPvoLwh9EM9voldj6O6Shr1RLZm+4N6YfUGTRsL9YM/+Dm+NLrdz4MHEl8g+5svPjy4kOd9Mxd/LNsuUQfboZdvkVAMz0La5v8CR+7HNE2JnOgKqKeqLLZLeT3MkK6sozwUQpVRq2nZkMIwAusgAZNF4a0=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Jun 2019 05:28:58 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5I9ScLA084460;
+        Tue, 18 Jun 2019 04:28:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560850118;
+        bh=kRYs1gNE6ZAp1XJw4VVHMAv5SQq1DTHhU5CYKXqUANw=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=Bc0HWjCXVHMGLxyOI1ZCXr5ObFK7RWqhdH6s9lHcpaacX/GVyjjrnFMm6UfZB1TBj
+         CERCl2YdnWwuso8KZ6iPRu88eRTS7NyFhwLFRCjfSct2ortq72egKfjIWv/M4rQsZF
+         kj0NEikah4KOIPreXGdf3HewnlsJNKijvT9JGOus=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5I9Scgq042706
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Jun 2019 04:28:38 -0500
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
+ Jun 2019 04:28:37 -0500
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 18 Jun 2019 04:28:37 -0500
+Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5I9SJS0067156;
+        Tue, 18 Jun 2019 04:28:33 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-mtd@lists.infradead.org>,
+        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
+        <devicetree@vger.kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v6 3/5] mtd: Add support for HyperBus memory devices
+Date:   Tue, 18 Jun 2019 14:58:59 +0530
+Message-ID: <20190618092901.31764-4-vigneshr@ti.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190618092901.31764-1-vigneshr@ti.com>
+References: <20190618092901.31764-1-vigneshr@ti.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 203523ef-8246-450f-00af-08d6f3cf2ee4
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 09:27:28.8478
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: mkalderon@marvell.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2384
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_05:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Arnd Bergmann <arnd@arndb.de>
-> Sent: Monday, June 17, 2019 4:05 PM
->=20
-> A previous attempt to shut up the uninitialized variable use warning was
-> apparently insufficient. When CONFIG_PROFILE_ANNOTATED_BRANCHES is
-> set, gcc-8 still warns, because the unlikely() check in DP_NOTICE() cause=
-s it to
-> no longer track the state of all variables correctly:
->=20
-> drivers/net/ethernet/qlogic/qed/qed_dev.c: In function
-> 'qed_llh_set_ppfid_affinity':
-> drivers/net/ethernet/qlogic/qed/qed_dev.c:798:47: error: 'abs_ppfid' may
-> be used uninitialized in this function [-Werror=3Dmaybe-uninitialized]
->   addr =3D NIG_REG_PPF_TO_ENGINE_SEL + abs_ppfid * 0x4;
->                                      ~~~~~~~~~~^~~~~
->=20
-> This is not a nice workaround, but always initializing the output from
-> qed_llh_abs_ppfid() at least shuts up the false positive reliably.
->=20
-> Fixes: 79284adeb99e ("qed: Add llh ppfid interface and 100g support for
-> offload protocols")
-> Fixes: 8e2ea3ea9625 ("qed: Fix static checker warning")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/net/ethernet/qlogic/qed/qed_dev.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-> b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-> index eec7cb65c7e6..a1ebc2b1ca0b 100644
-> --- a/drivers/net/ethernet/qlogic/qed/qed_dev.c
-> +++ b/drivers/net/ethernet/qlogic/qed/qed_dev.c
-> @@ -652,6 +652,7 @@ static int qed_llh_abs_ppfid(struct qed_dev *cdev, u8
-> ppfid, u8 *p_abs_ppfid)
->  		DP_NOTICE(cdev,
->  			  "ppfid %d is not valid, available indices are
-> 0..%hhd\n",
->  			  ppfid, p_llh_info->num_ppfid - 1);
-> +		*p_abs_ppfid =3D 0;
->  		return -EINVAL;
->  	}
->=20
-> --
-> 2.20.0
+Cypress' HyperBus is Low Signal Count, High Performance Double Data Rate
+Bus interface between a host system master and one or more slave
+interfaces. HyperBus is used to connect microprocessor, microcontroller,
+or ASIC devices with random access NOR flash memory (called HyperFlash)
+or self refresh DRAM (called HyperRAM).
 
-Thanks,=A0
+Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+signal and either Single-ended clock(3.0V parts) or Differential clock
+(1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+At bus level, it follows a separate protocol described in HyperBus
+specification[1].
 
-Acked-by: Michal Kalderon=A0<michal.kalderon@marvell.com>
+HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+to that of existing parallel NORs. Since HyperBus is x8 DDR bus,
+its equivalent to x16 parallel NOR flash wrt bits per clock cycle. But
+HyperBus operates at >166MHz frequencies.
+HyperRAM provides direct random read/write access to flash memory
+array.
 
+But, HyperBus memory controllers seem to abstract implementation details
+and expose a simple MMIO interface to access connected flash.
+
+Add support for registering HyperFlash devices with MTD framework. MTD
+maps framework along with CFI chip support framework are used to support
+communicating with flash.
+
+Framework is modelled along the lines of spi-nor framework. HyperBus
+memory controller (HBMC) drivers calls hyperbus_register_device() to
+register a single HyperFlash device. HyperFlash core parses MMIO access
+information from DT, sets up the map_info struct, probes CFI flash and
+registers it with MTD framework.
+
+HyperRAM is not supported at the moment.
+
+HyperBus specification can be found at[1]
+HyperFlash datasheet can be found at[2]
+
+[1] https://www.cypress.com/file/213356/download
+[2] https://www.cypress.com/file/213346/download
+[3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+    Table 12-5741. HyperFlash Access Sequence
+
+Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
+---
+v6:
+Clarify read16()/write16() APIs
+Move calibration code out into TI specific driver
+
+ MAINTAINERS                          |   7 ++
+ drivers/mtd/Kconfig                  |   2 +
+ drivers/mtd/Makefile                 |   1 +
+ drivers/mtd/hyperbus/Kconfig         |  11 ++
+ drivers/mtd/hyperbus/Makefile        |   3 +
+ drivers/mtd/hyperbus/hyperbus-core.c | 154 +++++++++++++++++++++++++++
+ include/linux/mtd/hyperbus.h         |  86 +++++++++++++++
+ 7 files changed, 264 insertions(+)
+ create mode 100644 drivers/mtd/hyperbus/Kconfig
+ create mode 100644 drivers/mtd/hyperbus/Makefile
+ create mode 100644 drivers/mtd/hyperbus/hyperbus-core.c
+ create mode 100644 include/linux/mtd/hyperbus.h
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ff7c2b7e67b9..58c6ad3dae66 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -7353,6 +7353,13 @@ F:	include/asm-generic/mshyperv.h
+ F:	tools/hv/
+ F:	Documentation/ABI/stable/sysfs-bus-vmbus
+ 
++HYPERBUS SUPPORT
++M:	Vignesh Raghavendra <vigneshr@ti.com>
++S:	Supported
++F:	drivers/mtd/hyperbus/
++F:	include/linux/mtd/hyperbus.h
++F:	Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
++
+ HYPERVISOR VIRTUAL CONSOLE DRIVER
+ L:	linuxppc-dev@lists.ozlabs.org
+ S:	Odd Fixes
+diff --git a/drivers/mtd/Kconfig b/drivers/mtd/Kconfig
+index fb31a7f649a3..80a6e2dcd085 100644
+--- a/drivers/mtd/Kconfig
++++ b/drivers/mtd/Kconfig
+@@ -274,4 +274,6 @@ source "drivers/mtd/spi-nor/Kconfig"
+ 
+ source "drivers/mtd/ubi/Kconfig"
+ 
++source "drivers/mtd/hyperbus/Kconfig"
++
+ endif # MTD
+diff --git a/drivers/mtd/Makefile b/drivers/mtd/Makefile
+index 806287e80e84..62d649a959e2 100644
+--- a/drivers/mtd/Makefile
++++ b/drivers/mtd/Makefile
+@@ -34,3 +34,4 @@ obj-y		+= chips/ lpddr/ maps/ devices/ nand/ tests/
+ 
+ obj-$(CONFIG_MTD_SPI_NOR)	+= spi-nor/
+ obj-$(CONFIG_MTD_UBI)		+= ubi/
++obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus/
+diff --git a/drivers/mtd/hyperbus/Kconfig b/drivers/mtd/hyperbus/Kconfig
+new file mode 100644
+index 000000000000..98147e28caa0
+--- /dev/null
++++ b/drivers/mtd/hyperbus/Kconfig
+@@ -0,0 +1,11 @@
++menuconfig MTD_HYPERBUS
++	tristate "HyperBus support"
++	select MTD_CFI
++	select MTD_MAP_BANK_WIDTH_2
++	select MTD_CFI_AMDSTD
++	select MTD_COMPLEX_MAPPINGS
++	help
++	  This is the framework for the HyperBus which can be used by
++	  the HyperBus Controller driver to communicate with
++	  HyperFlash. See Cypress HyperBus specification for more
++	  details
+diff --git a/drivers/mtd/hyperbus/Makefile b/drivers/mtd/hyperbus/Makefile
+new file mode 100644
+index 000000000000..ca61dedd730d
+--- /dev/null
++++ b/drivers/mtd/hyperbus/Makefile
+@@ -0,0 +1,3 @@
++# SPDX-License-Identifier: GPL-2.0
++
++obj-$(CONFIG_MTD_HYPERBUS)	+= hyperbus-core.o
+diff --git a/drivers/mtd/hyperbus/hyperbus-core.c b/drivers/mtd/hyperbus/hyperbus-core.c
+new file mode 100644
+index 000000000000..63a9e64895bc
+--- /dev/null
++++ b/drivers/mtd/hyperbus/hyperbus-core.c
+@@ -0,0 +1,154 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++// Author: Vignesh Raghavendra <vigneshr@ti.com>
++
++#include <linux/err.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/mtd/hyperbus.h>
++#include <linux/mtd/map.h>
++#include <linux/mtd/mtd.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/types.h>
++
++static struct hyperbus_device *map_to_hbdev(struct map_info *map)
++{
++	return container_of(map, struct hyperbus_device, map);
++}
++
++static map_word hyperbus_read16(struct map_info *map, unsigned long addr)
++{
++	struct hyperbus_device *hbdev = map_to_hbdev(map);
++	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
++	map_word read_data;
++
++	read_data.x[0] = ctlr->ops->read16(hbdev, addr);
++
++	return read_data;
++}
++
++static void hyperbus_write16(struct map_info *map, map_word d,
++			     unsigned long addr)
++{
++	struct hyperbus_device *hbdev = map_to_hbdev(map);
++	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
++
++	ctlr->ops->write16(hbdev, addr, d.x[0]);
++}
++
++static void hyperbus_copy_from(struct map_info *map, void *to,
++			       unsigned long from, ssize_t len)
++{
++	struct hyperbus_device *hbdev = map_to_hbdev(map);
++	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
++
++	ctlr->ops->copy_from(hbdev, to, from, len);
++}
++
++static void hyperbus_copy_to(struct map_info *map, unsigned long to,
++			     const void *from, ssize_t len)
++{
++	struct hyperbus_device *hbdev = map_to_hbdev(map);
++	struct hyperbus_ctlr *ctlr = hbdev->ctlr;
++
++	ctlr->ops->copy_to(hbdev, to, from, len);
++}
++
++int hyperbus_register_device(struct hyperbus_device *hbdev)
++{
++	const struct hyperbus_ops *ops;
++	struct hyperbus_ctlr *ctlr;
++	struct device_node *np;
++	struct map_info *map;
++	struct resource res;
++	struct device *dev;
++	int ret;
++
++	if (!hbdev || !hbdev->np || !hbdev->ctlr || !hbdev->ctlr->dev) {
++		pr_err("hyperbus: please fill all the necessary fields!\n");
++		return -EINVAL;
++	}
++
++	np = hbdev->np;
++	ctlr = hbdev->ctlr;
++	if (!of_device_is_compatible(np, "cypress,hyperflash"))
++		return -ENODEV;
++
++	hbdev->memtype = HYPERFLASH;
++
++	ret = of_address_to_resource(np, 0, &res);
++	if (ret)
++		return ret;
++
++	dev = ctlr->dev;
++	map = &hbdev->map;
++	map->size = resource_size(&res);
++	map->virt = devm_ioremap_resource(dev, &res);
++	if (IS_ERR(map->virt))
++		return PTR_ERR(map->virt);
++
++	map->name = dev_name(dev);
++	map->bankwidth = 2;
++	map->device_node = np;
++
++	simple_map_init(map);
++	ops = ctlr->ops;
++	if (ops) {
++		if (ops->read16)
++			map->read = hyperbus_read16;
++		if (ops->write16)
++			map->write = hyperbus_write16;
++		if (ops->copy_to)
++			map->copy_to = hyperbus_copy_to;
++		if (ops->copy_from)
++			map->copy_from = hyperbus_copy_from;
++
++		if (ops->calibrate && !ctlr->calibrated) {
++			ret = ops->calibrate(hbdev);
++			if (!ret) {
++				dev_err(dev, "Calibration failed\n");
++				return -ENODEV;
++			}
++			ctlr->calibrated = true;
++		}
++	}
++
++	hbdev->mtd = do_map_probe("cfi_probe", map);
++	if (!hbdev->mtd) {
++		dev_err(dev, "probing of hyperbus device failed\n");
++		return -ENODEV;
++	}
++
++	hbdev->mtd->dev.parent = dev;
++	mtd_set_of_node(hbdev->mtd, np);
++
++	ret = mtd_device_register(hbdev->mtd, NULL, 0);
++	if (ret) {
++		dev_err(dev, "failed to register mtd device\n");
++		map_destroy(hbdev->mtd);
++		return ret;
++	}
++	hbdev->registered = true;
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(hyperbus_register_device);
++
++int hyperbus_unregister_device(struct hyperbus_device *hbdev)
++{
++	int ret = 0;
++
++	if (hbdev && hbdev->mtd && hbdev->registered) {
++		ret = mtd_device_unregister(hbdev->mtd);
++		map_destroy(hbdev->mtd);
++	}
++
++	return ret;
++}
++EXPORT_SYMBOL_GPL(hyperbus_unregister_device);
++
++MODULE_DESCRIPTION("HyperBus Framework");
++MODULE_LICENSE("GPL v2");
++MODULE_AUTHOR("Vignesh Raghavendra <vigneshr@ti.com>");
+diff --git a/include/linux/mtd/hyperbus.h b/include/linux/mtd/hyperbus.h
+new file mode 100644
+index 000000000000..ead969aad35b
+--- /dev/null
++++ b/include/linux/mtd/hyperbus.h
+@@ -0,0 +1,86 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (C) 2019 Texas Instruments Incorporated - http://www.ti.com/
++ */
++
++#ifndef __LINUX_MTD_HYPERBUS_H__
++#define __LINUX_MTD_HYPERBUS_H__
++
++#include <linux/mtd/map.h>
++
++enum hyperbus_memtype {
++	HYPERFLASH,
++	HYPERRAM,
++};
++
++/**
++ * struct hyperbus_device - struct representing HyperBus slave device
++ * @map: map_info struct for accessing MMIO HyperBus flash memory
++ * @np: pointer to HyperBus slave device node
++ * @mtd: pointer to MTD struct
++ * @ctlr: pointer to HyperBus controller struct
++ * @memtype: type of memory device: HyperFlash or HyperRAM
++ * @registered: flag to indicate whether device is registered with MTD core
++ */
++
++struct hyperbus_device {
++	struct map_info map;
++	struct device_node *np;
++	struct mtd_info *mtd;
++	struct hyperbus_ctlr *ctlr;
++	enum hyperbus_memtype memtype;
++	bool registered;
++};
++
++/**
++ * struct hyperbus_ops - struct representing custom HyperBus operations
++ * @read16: read 16 bit of data to flash in a single burst. Used to read
++ *          from non default address space, such as ID/CFI space
++ * @write16: write 16 bit of data to flash in a single burst. Used to
++ *           send cmd to flash or write single 16 bit word at a time
++ * @copy_from: copy data from flash memory
++ * @copy_to: copy data to flash memory
++ * @calibrate: calibrate HyperBus controller
++ */
++
++struct hyperbus_ops {
++	u16 (*read16)(struct hyperbus_device *hbdev, unsigned long addr);
++	void (*write16)(struct hyperbus_device *hbdev,
++			unsigned long addr, u16 val);
++	void (*copy_from)(struct hyperbus_device *hbdev, void *to,
++			  unsigned long from, ssize_t len);
++	void (*copy_to)(struct hyperbus_device *dev, unsigned long to,
++			const void *from, ssize_t len);
++	int (*calibrate)(struct hyperbus_device *dev);
++};
++
++/**
++ * struct hyperbus_ctlr - struct representing HyperBus controller
++ * @dev: pointer to HyperBus controller device
++ * @calibrated: flag to indicate ctlr calibration sequence is complete
++ * @ops: HyperBus controller ops
++ */
++struct hyperbus_ctlr {
++	struct device *dev;
++	bool calibrated;
++
++	const struct hyperbus_ops *ops;
++};
++
++/**
++ * hyperbus_register_device - probe and register a HyperBus slave memory device
++ * @hbdev: hyperbus_device struct with dev, np and ctlr field populated
++ *
++ * Return: 0 for success, others for failure.
++ */
++int hyperbus_register_device(struct hyperbus_device *hbdev);
++
++/**
++ * hyperbus_unregister_device - deregister HyperBus slave memory device
++ * @hbdev: hyperbus_device to be unregistered
++ *
++ * Return: 0 for success, others for failure.
++ */
++int hyperbus_unregister_device(struct hyperbus_device *hbdev);
++
++#endif /* __LINUX_MTD_HYPERBUS_H__ */
+-- 
+2.21.0
 
