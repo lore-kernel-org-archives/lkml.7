@@ -2,140 +2,133 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D38CC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE666C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 41B7E2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 848782082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ACGp0e0b"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJDLWvDz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729807AbfFRLlc (ORCPT
+        id S1729822AbfFRLlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:41:32 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:40247 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729744AbfFRLla (ORCPT
+        Tue, 18 Jun 2019 07:41:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:40713 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729689AbfFRLly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:41:30 -0400
-Received: by mail-ua1-f68.google.com with SMTP id s4so5593276uad.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:41:29 -0700 (PDT)
+        Tue, 18 Jun 2019 07:41:54 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p11so13610089wre.7;
+        Tue, 18 Jun 2019 04:41:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OquRai3EL/XExl349Wm14w8fFke8wkLsWLanUHJ1x0Y=;
-        b=ACGp0e0bbjN9+Q4/kCoX0brWtGvbzlyFg+9i2UVIrIq4DiMq2Lp/nKjKa27+XYaXi2
-         WsMMZuxv2V1TVtw+543zlPN3fbNHt2VLwBdSD3FDvm9+etccnrOuqe6uwEL2AJCF2idj
-         wnmJdkPPiJ7/ftYpONKRzTLc+K6Qv1QfrwjVRpdfV95wh3iL1nWwkg4IWaONxYKHiRSU
-         vzWxcoczCmgF04mmB9w8F8tM7yrMc6r6IbwUu5GMaUToGRJYnGCaGnYxbENWlTtLgskO
-         9KSoLzT2y77PlqysOmGv+XKSrEkfUpUIQcbdd1kATH8x6cxG4aUk8oS0C2F0kZ6+bQhb
-         UlbA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=G40j/Nzkdl2CTqIXlYK3mXMlUbPHSgML6O47dCP4epg=;
+        b=iJDLWvDz41LVTFJYr5Q+jqbHPTSpZdcuG8zfIULf5az1I+qo3nUWK1o/1qxP6I+q/B
+         OibmUExajk1h6VOGuXy5cQda7PjOLZcRhmBOcPGufReQYlpEdQD2AYWzd4ranNvGXprI
+         RM6FZbXdcvPjK1En/AgMGAG0ai6OPMTl6ZJNLRFtzALxpjhApcaoDZGWpirG0m5xF9ZC
+         Mn5LkNpnExczuDlYThuFqNJZOIpNl+qVELd1ecY6HXxj3YRTi3+JfpK3rdthN5iYY9t/
+         R6QZ/AjPk+TQ6BP/48e6L/rg6pDfD/MYSXqJyzeqMBTmdBigWnv5acDaJel++pB1PR7E
+         ASjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OquRai3EL/XExl349Wm14w8fFke8wkLsWLanUHJ1x0Y=;
-        b=S8HqilYqEb+lNHGj9XtfntIXyndrKHIJjQCaWrs/8zjX47yifUw4ptb0aceHtRz2Zj
-         vkxPcp1ucYZ1nFx4CkXCeFCXddnN5LBafVbsKKUfkEQfuk4VrPwwe3QB0fyDhcuPcyJk
-         IqF7RfqE4EWIaMucMNPwGmJxCqEDGBlhtcW0P5uE189nOhwfOJtFuIqAd884QcWk1uYO
-         zv5log5OAKhu7xmUNnMP9V8NWOwaf7xtdcM0Bg7qhzyv+DyzYZmWsxa93xTEr2hdd+il
-         P8ZhqiHsti+jyNfZ3T10i8EyyQr3dMLxthV35GhX8aO7SWXTU8reMwO1oq4NDQ1Lp2+g
-         ce0w==
-X-Gm-Message-State: APjAAAXkS4G0oqqQXur3rsoPBkmoQ6Z6uMCgq4gAKdW+ppGQCNOCUX09
-        ntm11gu14b/cRgEe6odlEtpA2a9uFQokSlTLqAQ20Q==
-X-Google-Smtp-Source: APXvYqyDx2iNOhICHPrjB4I0UdRvZse1KFSF6Oe9p6mWYhECI/wqjO25kBLfTIcatteCxBl8HLM3AQe0C18zFiyAX+8=
-X-Received: by 2002:a67:ee16:: with SMTP id f22mr13773698vsp.191.1560858089104;
- Tue, 18 Jun 2019 04:41:29 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=G40j/Nzkdl2CTqIXlYK3mXMlUbPHSgML6O47dCP4epg=;
+        b=AqSEN/Jy1Tv+PJ9QMIJRnxSdsRe07jI1f/cPTWXGfsbd4ZvThQn3wlp4yxDZYyzC7F
+         xtuJZPvTPz9gdU/Hf6PBvrEJ6NxbhQtLHArsoz1hjb5Hq1JXUSA4RvOz9mqinnHXuoxV
+         c6EYFWTOgb3hXPQSzgWNLZ8nyjXjTmQpbrsGJjV+RFn5XuV/GhfJFqfiAFaSubD4yGwG
+         s3c2aLtM9BIkrcTXVIvqC+Rp3ReSh4tEjBFGYwRTK+RcXyWIFzH9J2t2LtRtjvL4Owz8
+         Z/0k/5YJ+zgv0CqNf1nsCIT8rg2icdGhux+FBJ5SkPLH+d3QhMntk4J4pXdIRf8j7Kab
+         bIyA==
+X-Gm-Message-State: APjAAAXdaHgvmEmT2uGBKGbeDw4DcrxB1jyP8NQXn+jBAiN1O/USz3z1
+        5Uo9B9PP/xgRYYTnpiBP2LY=
+X-Google-Smtp-Source: APXvYqyWOrpkA2WysOQtPeiDDYUV6LJ5QgaxQ6Kb0Oov8r4fgD/jUb3GftkV6uzdO8MBzuXOGfZPPA==
+X-Received: by 2002:a05:6000:c9:: with SMTP id q9mr15571277wrx.208.1560858111547;
+        Tue, 18 Jun 2019 04:41:51 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id f204sm3904542wme.18.2019.06.18.04.41.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 04:41:50 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 13:41:49 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 05/17] clk: tegra: pllout: save and restore pllout
+ context
+Message-ID: <20190618114149.GH28892@ulmo>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-6-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-References: <20190617201014.84503-1-rrangel@chromium.org> <20190617201014.84503-2-rrangel@chromium.org>
-In-Reply-To: <20190617201014.84503-2-rrangel@chromium.org>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 18 Jun 2019 13:40:53 +0200
-Message-ID: <CAPDyKFpdWRyb+0Cz=FZgVsOnaCRqik539F3QgJ676yVr-YCF0g@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] mmc: sdhci: sdhci-pci-o2micro: Check if controller
- supports 8-bit width
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        "ernest.zhang" <ernest.zhang@bayhubtech.com>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Adrian Hunter <adrian.hunter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="FLPM4o+7JoHGki3m"
+Content-Disposition: inline
+In-Reply-To: <1560843991-24123-6-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019 at 22:10, Raul E Rangel <rrangel@chromium.org> wrote:
->
-> The O2 controller supports 8-bit EMMC access.
->
-> JESD84-B51 section A.6.3.a defines the bus testing procedure that
-> `mmc_select_bus_width()` implements. This is used to determine the actual
-> bus width of the eMMC.
->
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 
-Applied for next, thanks!
+--FLPM4o+7JoHGki3m
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Kind regards
-Uffe
-
-
-
+On Tue, Jun 18, 2019 at 12:46:19AM -0700, Sowjanya Komatineni wrote:
+> This patch implements save and restore of pllout context.
+>=20
+> During system suspend, core power goes off and looses the settings
+> of the Tegra CAR controller registers.
+>=20
+> So during suspend entry the state of pllout is saved and on resume
+> it is restored back to have pllout in same state as before suspend.
+>=20
+> pllout rate is saved and restore in clock divider so it will be at
+> same rate as before suspend when pllout state is restored.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
-> I tested this on an AMD chromebook.
->
-> $ cat /sys/kernel/debug/mmc1/ios
-> clock:          200000000 Hz
-> actual clock:   200000000 Hz
-> vdd:            21 (3.3 ~ 3.4 V)
-> bus mode:       2 (push-pull)
-> chip select:    0 (don't care)
-> power mode:     2 (on)
-> bus width:      3 (8 bits)
-> timing spec:    9 (mmc HS200)
-> signal voltage: 1 (1.80 V)
-> driver type:    0 (driver type B)
->
-> Before this patch only 4 bit was negotiated.
->
->  drivers/mmc/host/sdhci-pci-o2micro.c | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index dd21315922c87..9dc4548271b4b 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -395,11 +395,21 @@ int sdhci_pci_o2_probe_slot(struct sdhci_pci_slot *slot)
->  {
->         struct sdhci_pci_chip *chip;
->         struct sdhci_host *host;
-> -       u32 reg;
-> +       u32 reg, caps;
->         int ret;
->
->         chip = slot->chip;
->         host = slot->host;
-> +
-> +       caps = sdhci_readl(host, SDHCI_CAPABILITIES);
-> +
-> +       /*
-> +        * mmc_select_bus_width() will test the bus to determine the actual bus
-> +        * width.
-> +        */
-> +       if (caps & SDHCI_CAN_DO_8BIT)
-> +               host->mmc->caps |= MMC_CAP_8_BIT_DATA;
-> +
->         switch (chip->pdev->device) {
->         case PCI_DEVICE_ID_O2_SDS0:
->         case PCI_DEVICE_ID_O2_SEABIRD0:
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
+>  drivers/clk/tegra/clk-pll-out.c | 28 ++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk.h         |  3 +++
+>  2 files changed, 31 insertions(+)
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--FLPM4o+7JoHGki3m
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Izf0ACgkQ3SOs138+
+s6HACRAAoY2W4UsKZljxr2IYcO5jw3l6eed1Pi5LyaUGbDHH9gVYo2xPr4WVid2t
+MYuTEaFNH8Okh4+F8YC/HjfxcixZvmHCWRD7u3s89gdN3ElUv/jpHuQ9KKn7xsql
+AC5mdlK6pqlOJK3hlFFsiiWVxegzGKHoVpfOscMmWJS10SlyMbp2WVX0IhPmz7Bp
+swDcc18qxhHP7CVHBPf0CTosYqvwcBPQpY7/KnXyN4ayHJmAINl4xA1iZiuUxh/G
+IKC9c4mK1a3x6QPP4YL4XLtnIVdzbE4Aw7fwQ0YEz/bKPQzLoIk9ZT1id1YaoRXJ
+TGEVYVB42SmTpgIJxhOSIbjBxZl9m9KyCrTxAH2vJgRQ0f19mO9JFGzCG9vUKP6/
+deO9943vDMKAh72qxQPbwd1+QEqje/O1N56NTR2IedFoiuiax8SrgssXo7J64nGO
+62lzo7OSo3EAeipyK0kO74NP0K7BJ/3iae2ntE73u+1o25WlXRjsMzc9hfm8boIE
+oG16ybi1XGKxeaqIo9p7YjovIttveS76TRWv/CEXL1X6XPnbnejYPIzZdrTr4qIE
+ohLWgWKxu/zVuoPZtdn1QdS4sVo0bgWsBHzDSyeNEZxsSpRdJn3ZqRSjJgKlTRVt
+0ok9Wdv+5sxWqVPZf4puIloLQVD3QRbFWDGSfpo2yKNHFrqyjTk=
+=vltX
+-----END PGP SIGNATURE-----
+
+--FLPM4o+7JoHGki3m--
