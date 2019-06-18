@@ -2,192 +2,171 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02EE8C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BE5C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:28:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D04C32082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:25:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560860704;
-	bh=yW82F4gqXy0ZcUKc18bcDth8ibokWF51gkEBKCld8/E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OgVvx+nJTWGmoBoCahJ0HFg2n5YmTRtQuaYp+oSgA1FuF9D+lPR0hYAcM2+s8cPWK
-	 CLDEdbQUwZgajyIruiu/X6XsETEhnZF30gFywWZJgKbzVUa6KljdSQJKcgReh3BsWL
-	 wJ9QSIBEeR8CJdc/HIJNI8oIpNkzapRU4Betae3k=
+	by mail.kernel.org (Postfix) with ESMTP id 8371E2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:28:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="sRKGWk/S"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728981AbfFRMZD (ORCPT
+        id S1726275AbfFRM2H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:25:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58380 "EHLO mx1.suse.de"
+        Tue, 18 Jun 2019 08:28:07 -0400
+Received: from mail-eopbgr810049.outbound.protection.outlook.com ([40.107.81.49]:32000
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbfFRMZD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:25:03 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 4181EAF49;
-        Tue, 18 Jun 2019 12:25:01 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 14:24:57 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>, Roman Gushchin <guro@fb.com>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] mm, oom: refactor dump_tasks for memcg OOMs
-Message-ID: <20190618122457.GD3318@dhcp22.suse.cz>
-References: <20190617231207.160865-1-shakeelb@google.com>
+        id S1725919AbfFRM2H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:28:07 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5Zm0jDVCCqDNt3W3hYGDEGAmc01tkRV943G38pqB4Sk=;
+ b=sRKGWk/SCxhS/YV7Q3c+BqvnrQegVnK8Qi+BOiWALDnQVnyitVkldjEhLaKjIKGzIsWMdNbF0K3vc7CFWPfNdJxyvM9zdRwXURTlH94SOJBrxTpjsc6tOnbaz2hvTiMHKaxYALjtYZqBPz5ehU4qh5ySRrqqpgWwjHuiS/3w7hI=
+Received: from CH2PR02MB6453.namprd02.prod.outlook.com (52.132.228.24) by
+ CH2PR02MB6038.namprd02.prod.outlook.com (10.255.156.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Tue, 18 Jun 2019 12:28:02 +0000
+Received: from CH2PR02MB6453.namprd02.prod.outlook.com
+ ([fe80::8121:11ae:9021:ba9e]) by CH2PR02MB6453.namprd02.prod.outlook.com
+ ([fe80::8121:11ae:9021:ba9e%7]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
+ 12:28:02 +0000
+From:   Bharat Kumar Gogada <bharatku@xilinx.com>
+To:     "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Ravikiran Gummaluri <rgummal@xilinx.com>
+Subject: RE: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
+Thread-Topic: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
+Thread-Index: AQHVIQgn2G+6s2M/0EWS6kSrcyuXeqafme0AgAHGMRA=
+Date:   Tue, 18 Jun 2019 12:28:02 +0000
+Message-ID: <CH2PR02MB6453032A01A540F5E9C58402A5EA0@CH2PR02MB6453.namprd02.prod.outlook.com>
+References: <1560334679-9206-1-git-send-email-bharat.kumar.gogada@xilinx.com>
+ <20190617092108.GA18020@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20190617092108.GA18020@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=bharatku@xilinx.com; 
+x-originating-ip: [149.199.50.133]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a8a8c915-509f-4a90-5541-08d6f3e86840
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:CH2PR02MB6038;
+x-ms-traffictypediagnostic: CH2PR02MB6038:
+x-ld-processed: 657af505-d5df-48d0-8300-c31994686c5c,ExtAddr
+x-microsoft-antispam-prvs: <CH2PR02MB6038D8E2226D32A77D3FD2D0A5EA0@CH2PR02MB6038.namprd02.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39860400002)(136003)(376002)(346002)(366004)(189003)(199004)(64756008)(102836004)(2351001)(26005)(6506007)(478600001)(66556008)(11346002)(66446008)(73956011)(6436002)(66476007)(7696005)(55016002)(33656002)(66946007)(446003)(76116006)(5640700003)(76176011)(476003)(86362001)(486006)(6246003)(107886003)(186003)(74316002)(4326008)(25786009)(5660300002)(68736007)(7736002)(8676002)(71190400001)(71200400001)(66066001)(2501003)(81166006)(81156014)(14444005)(256004)(6916009)(229853002)(8936002)(6116002)(3846002)(52536014)(9686003)(99286004)(2906002)(316002)(54906003)(53936002)(305945005)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6038;H:CH2PR02MB6453.namprd02.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: xilinx.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: WNdCFm0SSUIRPzx9vJ8YYWRjSWAyk+/mprF8p4ksaYl2r5T/Eyb+L/lnTQGILW30TgI7CLFxhafHZpdGztSP3Ww49WrPnUrVRcW4gBbF7tN/gMZKJvTYtCaZG0cR1GjU/7WOVxgCZYTRPvZjYv4BsFcv5FtSdpgr9N5g6mfrahFWNiGkexYKu0tFBj+KAaHnZQ2lDG0neTqj/GZsXE8z0ODHetwS7EBEGieP5sSCcN9o6WQi4IQZ8gK1kef80d4sXO47xwaeobRm0+H0s0JMmT/OOQBNo2L3Opk2s1EV9xNbNPr3A7AnOT2NIlTrEofd0iI311Y+E0aEMoGauAG1DcWHjqE9qbYqMAPnKZQxli0Kb/TO1MZsmAlvRWBqtYQZeYRdKGa2Qije/NZjgEET5ysNmU7soPthTWrTslfLPFk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617231207.160865-1-shakeelb@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a8a8c915-509f-4a90-5541-08d6f3e86840
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 12:28:02.4873
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bharatku@xilinx.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6038
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 17-06-19 16:12:06, Shakeel Butt wrote:
-> dump_tasks() currently goes through all the processes present on the
-> system even for memcg OOMs. Change dump_tasks() similar to
-> select_bad_process() and use mem_cgroup_scan_tasks() to selectively
-> traverse the processes of the memcgs during memcg OOM.
+>=20
+> On Wed, Jun 12, 2019 at 03:47:59PM +0530, Bharat Kumar Gogada wrote:
+> > The current Multi MSI data programming fails if multiple end points
+> > requesting MSI and multi MSI are connected with switch, i.e the
+> > current multi MSI data being given is not considering the number of
+> > vectors being requested in case of multi MSI.
+> > Ex: Two EP's connected via switch, EP1 requesting single MSI first,
+> > EP2 requesting Multi MSI of count four. The current code gives MSI
+> > data 0x0 to EP1 and 0x1 to EP2, but EP2 can modify lower two bits due
+> > to which EP2 also sends interrupt with MSI data 0x0 which results in
+> > always invoking virq of EP1 due to which EP2 MSI interrupt never gets
+> > handled.
+> >
+> > Fix Multi MSI data programming with required alignment by using number
+> > of vectors being requested.
+> >
+> > Fixes: ab597d35ef11 ("PCI: xilinx-nwl: Add support for Xilinx NWL PCIe
+> > Host Controller")
+> >
+> > Signed-off-by: Bharat Kumar Gogada <bharat.kumar.gogada@xilinx.com>
+> > ---
+> > V4:
+> >  - Using a different bitmap registration API whcih serves single and mu=
+lti
+> >    MSI requests.
+> > ---
+> >  drivers/pci/controller/pcie-xilinx-nwl.c | 11 +++++------
+> >  1 file changed, 5 insertions(+), 6 deletions(-)
+>=20
+> Applied to pci/xilinx for v5.3, please have a look and check if the commi=
+t log
+> I wrote provides a clear description of the issue.
+>=20
+> Lorenzo
+Thanks Lorenzo and Marc.
+Lorenzo, can you please point to link for above commit.
 
-The changelog is quite modest to be honest. I would go with
-
-"
-dump_tasks() traverses all the existing processes even for the memcg OOM
-context which is not only unnecessary but also wasteful. This imposes
-a long RCU critical section even from a contained context which can be
-quite disruptive.
-
-Change dump_tasks() to be aligned with select_bad_process and use
-mem_cgroup_scan_tasks to selectively traverse only processes of the
-target memcg hierarchy during memcg OOM.
-"
-
-> Signed-off-by: Shakeel Butt <shakeelb@google.com>
-
-Acked-by: Michal Hocko <mhocko@suse.com>
-
-Thanks!
-
-> ---
-> Changelog since v1:
-> - Divide the patch into two patches.
-> 
->  mm/oom_kill.c | 68 ++++++++++++++++++++++++++++++---------------------
->  1 file changed, 40 insertions(+), 28 deletions(-)
-> 
-> diff --git a/mm/oom_kill.c b/mm/oom_kill.c
-> index 05aaa1a5920b..bd80997e0969 100644
-> --- a/mm/oom_kill.c
-> +++ b/mm/oom_kill.c
-> @@ -385,10 +385,38 @@ static void select_bad_process(struct oom_control *oc)
->  	oc->chosen_points = oc->chosen_points * 1000 / oc->totalpages;
->  }
->  
-> +static int dump_task(struct task_struct *p, void *arg)
-> +{
-> +	struct oom_control *oc = arg;
-> +	struct task_struct *task;
-> +
-> +	if (oom_unkillable_task(p, NULL, oc->nodemask))
-> +		return 0;
-> +
-> +	task = find_lock_task_mm(p);
-> +	if (!task) {
-> +		/*
-> +		 * This is a kthread or all of p's threads have already
-> +		 * detached their mm's.  There's no need to report
-> +		 * them; they can't be oom killed anyway.
-> +		 */
-> +		return 0;
-> +	}
-> +
-> +	pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
-> +		task->pid, from_kuid(&init_user_ns, task_uid(task)),
-> +		task->tgid, task->mm->total_vm, get_mm_rss(task->mm),
-> +		mm_pgtables_bytes(task->mm),
-> +		get_mm_counter(task->mm, MM_SWAPENTS),
-> +		task->signal->oom_score_adj, task->comm);
-> +	task_unlock(task);
-> +
-> +	return 0;
-> +}
-> +
->  /**
->   * dump_tasks - dump current memory state of all system tasks
-> - * @memcg: current's memory controller, if constrained
-> - * @nodemask: nodemask passed to page allocator for mempolicy ooms
-> + * @oc: pointer to struct oom_control
->   *
->   * Dumps the current memory state of all eligible tasks.  Tasks not in the same
->   * memcg, not in the same cpuset, or bound to a disjoint set of mempolicy nodes
-> @@ -396,37 +424,21 @@ static void select_bad_process(struct oom_control *oc)
->   * State information includes task's pid, uid, tgid, vm size, rss,
->   * pgtables_bytes, swapents, oom_score_adj value, and name.
->   */
-> -static void dump_tasks(struct mem_cgroup *memcg, const nodemask_t *nodemask)
-> +static void dump_tasks(struct oom_control *oc)
->  {
-> -	struct task_struct *p;
-> -	struct task_struct *task;
-> -
->  	pr_info("Tasks state (memory values in pages):\n");
->  	pr_info("[  pid  ]   uid  tgid total_vm      rss pgtables_bytes swapents oom_score_adj name\n");
-> -	rcu_read_lock();
-> -	for_each_process(p) {
-> -		if (oom_unkillable_task(p, memcg, nodemask))
-> -			continue;
->  
-> -		task = find_lock_task_mm(p);
-> -		if (!task) {
-> -			/*
-> -			 * This is a kthread or all of p's threads have already
-> -			 * detached their mm's.  There's no need to report
-> -			 * them; they can't be oom killed anyway.
-> -			 */
-> -			continue;
-> -		}
-> +	if (is_memcg_oom(oc))
-> +		mem_cgroup_scan_tasks(oc->memcg, dump_task, oc);
-> +	else {
-> +		struct task_struct *p;
->  
-> -		pr_info("[%7d] %5d %5d %8lu %8lu %8ld %8lu         %5hd %s\n",
-> -			task->pid, from_kuid(&init_user_ns, task_uid(task)),
-> -			task->tgid, task->mm->total_vm, get_mm_rss(task->mm),
-> -			mm_pgtables_bytes(task->mm),
-> -			get_mm_counter(task->mm, MM_SWAPENTS),
-> -			task->signal->oom_score_adj, task->comm);
-> -		task_unlock(task);
-> +		rcu_read_lock();
-> +		for_each_process(p)
-> +			dump_task(p, oc);
-> +		rcu_read_unlock();
->  	}
-> -	rcu_read_unlock();
->  }
->  
->  static void dump_oom_summary(struct oom_control *oc, struct task_struct *victim)
-> @@ -458,7 +470,7 @@ static void dump_header(struct oom_control *oc, struct task_struct *p)
->  			dump_unreclaimable_slab();
->  	}
->  	if (sysctl_oom_dump_tasks)
-> -		dump_tasks(oc->memcg, oc->nodemask);
-> +		dump_tasks(oc);
->  	if (p)
->  		dump_oom_summary(oc, p);
->  }
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
-
--- 
-Michal Hocko
-SUSE Labs
+Regards,
+Bharat
+> > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > index 81538d7..a9e07b8 100644
+> > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
+> > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
+> > @@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct
+> irq_domain *domain, unsigned int virq,
+> >  	int i;
+> >
+> >  	mutex_lock(&msi->lock);
+> > -	bit =3D bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
+> > -					 nr_irqs, 0);
+> > -	if (bit >=3D INT_PCI_MSI_NR) {
+> > +	bit =3D bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
+> > +				      get_count_order(nr_irqs));
+> > +	if (bit < 0) {
+> >  		mutex_unlock(&msi->lock);
+> >  		return -ENOSPC;
+> >  	}
+> >
+> > -	bitmap_set(msi->bitmap, bit, nr_irqs);
+> > -
+> >  	for (i =3D 0; i < nr_irqs; i++) {
+> >  		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
+> >  				domain->host_data, handle_simple_irq, @@
+> -509,7 +507,8 @@ static
+> > void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
+> >  	struct nwl_msi *msi =3D &pcie->msi;
+> >
+> >  	mutex_lock(&msi->lock);
+> > -	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
+> > +	bitmap_release_region(msi->bitmap, data->hwirq,
+> > +			      get_count_order(nr_irqs));
+> >  	mutex_unlock(&msi->lock);
+> >  }
+> >
+> > --
+> > 2.7.4
+> >
