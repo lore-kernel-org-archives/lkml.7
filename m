@@ -2,129 +2,111 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAA7C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:59:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A63C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80C2A2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:59:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7A7F20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:01:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/qKKvqX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZbHQj3x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726912AbfFRL7T (ORCPT
+        id S1729216AbfFRMBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:59:19 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:38550 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfFRL7R (ORCPT
+        Tue, 18 Jun 2019 08:01:45 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:55798 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFRMBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:59:17 -0400
-Received: by mail-wr1-f67.google.com with SMTP id d18so13668574wrs.5;
-        Tue, 18 Jun 2019 04:59:16 -0700 (PDT)
+        Tue, 18 Jun 2019 08:01:44 -0400
+Received: by mail-wm1-f66.google.com with SMTP id a15so2943306wmj.5;
+        Tue, 18 Jun 2019 05:01:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DEWG2BH5s+bceHzj1OrNgR0N1NtX/mrCz6t22kRGhD0=;
-        b=b/qKKvqX8WCBDeIb2YpQuHltoaLm6n+7OLE2IJ62n0vIAAD2nmQlOb6euGIhG8Lx87
-         aq00jDSlajL+csqXtDipmaDYFOGjlzB0bdbAVcC9CRsx+GZuGkCO3TzpANPso+SKZPLk
-         2Tr8QSOoJmdD3LBuQ43+zsRMLxUOUXz4bxVptVTHBtlf6VJJpGM85YvEuqEpyMRaj7VR
-         30SmClE5f3ehcrwGx7TB+Gd3pfA71J6wqY1vau+Bd8hpmkdC/OptlvRkh4K8KEQ1P6gr
-         xC++uY3qpNT7cynkCXqMn5YDqp9RMK4HvhPPG48S78QKKsN/wKq9FyMvJnkEcZ/hhPfo
-         nUxA==
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oj9R2h7PLbPIbssfUEZGisJttd/OMEPsCeLkAVDP4/k=;
+        b=EZbHQj3xMGBqj9Q9GX/wU+YiLHLfXk+cdZg7gRWU9n/Y8XEhWmFdCUR+bTHZJ5cSvc
+         KUzll32D21EfZi+MHAOH8vq6rbY/m6fHvYeohptFvTxOqEC386rTUHlyh0nKeIiNS4Wl
+         friRRybP9vG4hZB0omRydPP9Df6NCF/z8lJ6CQI0q0ic5hPulqLbxUA9E/iHUvRnx8Jc
+         Sw0myf5f4DlMTs4nLW166v7sL6iQKANBux9MRMDV7Sp1REbzRVLEOiXzF5vPZc3paY8z
+         VmxE9Pz38snaHNywmkwY+N9aNhb+KCistFLoqqkBjRZoe+xNrX0XRa6FcexZ8mcB2SjF
+         tEWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DEWG2BH5s+bceHzj1OrNgR0N1NtX/mrCz6t22kRGhD0=;
-        b=WGxaxafBet91lbf+7LK9+9ZEYU1tO25tm3svgTcP597jEanU67jTt7SFt0dOTyH/yi
-         fbKNxauIzPtbqK5BgZbh4aCkCF+FagpZMTYxfuAGHErr5BijpzPk3RfcrDEeQLQhUy0v
-         5OfcpLapjW+UeTriqNOKxYMI+r/W3Pc2pr9ZoAYP4WnR3mJGNMDnwJsfX0Q5d1hMLPUv
-         UI7jkeW5KZUOotYWhNLaynmjhPTrXGsNiQ1AC9eyg5ztjoRPu4kNsE4lAeyVQJGIUbeG
-         3q98VBFD9dqYoR+zjtVu7jG0N1aiS9CF5l5XztFoabNOX4SiiHsLmwjio6Eh2M5tIHJ8
-         yMrA==
-X-Gm-Message-State: APjAAAXlLCW2h/AFi3OlG3p3Ew+oA/X1SSsId+cmvxVqvRu+H/OPEabS
-        SCyV2P8WrKdLXRSXzfq9MRY=
-X-Google-Smtp-Source: APXvYqwn3Pkbmvszrd5BJKqACm8lVeSy+vC3seguauYahizMsBuYeCJCixhWLdcwkP2gwz/r65unDw==
-X-Received: by 2002:a5d:6742:: with SMTP id l2mr18898657wrw.323.1560859155283;
-        Tue, 18 Jun 2019 04:59:15 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id j189sm3292003wmb.48.2019.06.18.04.59.14
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 04:59:14 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 13:59:13 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 10/17] clk: tegra: add suspend resume support for DFLL
-Message-ID: <20190618115913.GM28892@ulmo>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-11-git-send-email-skomatineni@nvidia.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oj9R2h7PLbPIbssfUEZGisJttd/OMEPsCeLkAVDP4/k=;
+        b=OE+BbU1k7+YIRLQSSeMZE3QJmiSFVsb7MewbmYBEjmcjmQgzGPXcgqazvs8AB1KoQw
+         ZzxDFll1pLan/Sc8rCyvEsoFjpI+H2bpNXg64p+4PTblRSyV7WU7I6my1g0D/IH1WKHi
+         Ycwa4M51aneIHWJKqUdb+d2yx5fbxC50WFbs/g4eq7WO05ShWkLpAQ8OC9ndIWer3+c6
+         d3j9ursqgMmLxdxwqyk09PZ+YrPOZI6lofPgWSJpA6a2OspGsQ9SzcZ1WOqlE3I0UhkC
+         tqDcy+4PFZSg8ZrCo99YBKPJXcNPM9e4P2M8qkJCIVeTpAM/fk7zpuxckIAB2XfMwFes
+         VBbg==
+X-Gm-Message-State: APjAAAUIQpRk2w2WCYlMeElGbbLZfE+wkj7RYgShfHF1fctMYnEZnCIo
+        CINaYov5qCQEphfquSchA2s=
+X-Google-Smtp-Source: APXvYqzsfBn5Vi+/8ppaMw0HGNWkGiV0h3v4+fwxzpiUXMBe6NlmaVTpFJobraD+wboFQBeWNXiMJQ==
+X-Received: by 2002:a1c:3c8a:: with SMTP id j132mr3279580wma.172.1560859301896;
+        Tue, 18 Jun 2019 05:01:41 -0700 (PDT)
+Received: from [192.168.1.4] (ip-86-49-110-70.net.upcbroadband.cz. [86.49.110.70])
+        by smtp.gmail.com with ESMTPSA id r12sm21413531wrt.95.2019.06.18.05.01.40
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 05:01:41 -0700 (PDT)
+Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3
+ RPC-IF controller bindings
+To:     masonccyang@mxic.com.tw, Lee Jones <lee.jones@linaro.org>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-spi@vger.kernel.org, mark.rutland@arm.com,
+        miquel.raynal@bootlin.com, robh+dt@kernel.org,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw>
+ <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw>
+ <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com>
+ <20190603130428.GX4797@dell>
+ <02addf64-9f6e-ccc1-2f94-8983456e3ebc@cogentembedded.com>
+ <OFDA7648A0.F1733EA5-ON48258411.002946DF-48258411.002A2F0D@mxic.com.tw>
+From:   Marek Vasut <marek.vasut@gmail.com>
+Openpgp: preference=signencrypt
+Message-ID: <2671d488-82a1-8720-d9a1-03554d955a38@gmail.com>
+Date:   Tue, 18 Jun 2019 14:01:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="VB1oQhYtJt8uuzk+"
-Content-Disposition: inline
-In-Reply-To: <1560843991-24123-11-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <OFDA7648A0.F1733EA5-ON48258411.002946DF-48258411.002A2F0D@mxic.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/6/19 9:40 AM, masonccyang@mxic.com.tw wrote:
+[...]
 
---VB1oQhYtJt8uuzk+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> RPC-IF works either in SPI or HyperFlash is decided by external hardware 
+> pins 
+> configuration and it can NOT switch it's operation mode in the run time. 
+> This is not like my understanding of MFD.
 
-On Tue, Jun 18, 2019 at 12:46:24AM -0700, Sowjanya Komatineni wrote:
-> This patch creates APIs for supporting Tegra210 clock driver to
-> perform DFLL suspend and resume operation.
->=20
-> During suspend, DFLL mode is saved and on resume Tegra210 clock driver
-> invokes DFLL resume API to re-initialize DFLL to enable target device
-> clock in open loop mode or closed loop mode.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-dfll.c | 78 ++++++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/clk/tegra/clk-dfll.h |  2 ++
->  2 files changed, 80 insertions(+)
+Which external hardware pins decide the RPC configuration ?
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+It seems to me like PHYCNT register, PHYMEM bitfield, selects what
+device is connected, and then a couple of other bits control the
+communication, but I see nothing which would be tied to any external
+configuration pins.
 
---VB1oQhYtJt8uuzk+
-Content-Type: application/pgp-signature; name="signature.asc"
+[...]
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0I0hEACgkQ3SOs138+
-s6EKmA/7BKKxe4K40G19IsWN0t2GnZNUe6alysAl7lWVuw4DHcAHG1DTpZGqAPJU
-5eP6/jwJZYVC7cR1bDT4S/tnErF4ZJZSPGDPwtEPTpiX27hEGWnJl/PiFrAEf1m2
-0XhBlK7P5j/n957G3pRJrvfz1RkSxT5J/0wZwkJIPaU43v6Sw1pxB/NiwHRW+eIT
-PUaw2bNytrTJWoVmyyxDXHc9R8KCbtkJNtIAXxSE52Clde/uaSyDhBfqbbzBs4kV
-YGZEqkh3uAG/Q9/ZGDd5XAFR3ZToNJqAac+QYVhV26Xo9UwV9Rsy7eLxYsLO3KvW
-szw+frexcDuuV7Ecx75VeFhf7oaam33TvQPUcrWAO9NWfMiNzAzbtGVS41PjQM06
-f+3y+4OnSSdc6z6RlfKqFzuzfs9b3qeOlsR0CRLDiD6/wgJ725UeFsbga3vqCD+3
-AH0euxJCJCRkLjOuEXO/p/So/TA46OstJmJm6QZYgGwwVFWYjlUT756TVY7xrlqg
-NAn4PxiJvaY+JkR+bWKH7+6KfpOzo6mbvQax43QsX0CmoKUHvCwKyY5/4jkZ25lI
-QBQkmmXCMrgPlACpPjtcKfTlJ5ExDJQqW13r4wg9MIiSKGoXMuvUbuz+WPDDFxVq
-ZdcJixDmfeYsrLm9eCwV5IaFy9V35f2M4Y7qfqL7KyDFTCE1WTg=
-=BZR8
------END PGP SIGNATURE-----
-
---VB1oQhYtJt8uuzk+--
+-- 
+Best regards,
+Marek Vasut
