@@ -2,137 +2,94 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D52E0C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:13:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B72AC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB3C620679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:13:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B5HKKSVZ";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="atN1Si4h"
+	by mail.kernel.org (Postfix) with ESMTP id 61DEE20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:13:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728933AbfFRHNm (ORCPT
+        id S1728956AbfFRHN4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:13:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:40570 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfFRHNm (ORCPT
+        Tue, 18 Jun 2019 03:13:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21252 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725919AbfFRHN4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:13:42 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1E30B6090E; Tue, 18 Jun 2019 07:13:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560842021;
-        bh=XTiimhV+n9VzS1rZyfIwb9pLvIYzN1Osq4PZikeOl/4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=B5HKKSVZtAPIdRyC3FIXb3LV8KFcX+dbVBp1rqarNtbdm/clH0IKb80cSXpOfP0pa
-         mwN25N8RhWG8ungDBKCrG6de/pRJeMCTcZkulUrln5kgwdq650TOGqxvIFVySUzrpd
-         I1udRLOjLEzlNUSn4rnWuLoKwEQpWcjj+wPsOO7o=
-Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 30887602BC;
-        Tue, 18 Jun 2019 07:13:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560842019;
-        bh=XTiimhV+n9VzS1rZyfIwb9pLvIYzN1Osq4PZikeOl/4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=atN1Si4hNIPPz+RxguhRNz9bE9uWQZ1ukCyEbAdtLm1WsHgFACS5aWiBBY39HnJt0
-         OhThHmAdJxVJLbzajmtEBFRzm9kDHG5gxRLrEmhI/bFVQ5+qGOLFqmzl5V6s6ZHJOY
-         zyG2oH9rQ/3R4SEVodbGQb6IcbTrAICXmajFolpM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 30887602BC
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
-Date:   Tue, 18 Jun 2019 12:43:35 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 03:13:56 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5I7DbH5083261
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 03:13:55 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t6tuus5p3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 03:13:55 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Tue, 18 Jun 2019 08:13:49 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Jun 2019 08:13:46 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5I7Dkxo40960504
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 07:13:46 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E896BA4059;
+        Tue, 18 Jun 2019 07:13:45 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D316EA405E;
+        Tue, 18 Jun 2019 07:13:42 +0000 (GMT)
+Received: from [9.199.63.86] (unknown [9.199.63.86])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Jun 2019 07:13:42 +0000 (GMT)
+Subject: Re: [PATCH 3/5] Powerpc/hw-breakpoint: Refactor set_dawr()
+To:     Michael Neuling <mikey@neuling.org>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, christophe.leroy@c-s.fr,
+        naveen.n.rao@linux.vnet.ibm.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
+ <20190618042732.5582-4-ravi.bangoria@linux.ibm.com>
+ <b8d8682c8cf13d307ca1e936f924f31a9eac3227.camel@neuling.org>
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Date:   Tue, 18 Jun 2019 12:43:41 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+In-Reply-To: <b8d8682c8cf13d307ca1e936f924f31a9eac3227.camel@neuling.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061807-0020-0000-0000-0000034B075D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061807-0021-0000-0000-0000219E529E
+Message-Id: <2fe2f9cf-d9a4-bbe8-7a6b-6a902d3643c4@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=744 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906180060
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srini,
 
-On 6/14/2019 7:50 PM, Srinivas Kandagatla wrote:
-> For some reason arguments to most of the circular buffers
-> macros are used in reverse, tail is used for head and vice versa.
-> 
-> This leads to bam thinking that there is an extra descriptor at the
-> end and leading to retransmitting descriptor which was not scheduled
-> by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
-> and done, so most of the drivers would not notice this, unless they are
-> heavily using bam dma. Originally found this issue while testing
-> SoundWire over SlimBus on DB845c which uses DMA very heavily for
-> read/writes.
-> 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  drivers/dma/qcom/bam_dma.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
-> index cb860cb53c27..43d7b0a9713a 100644
-> --- a/drivers/dma/qcom/bam_dma.c
-> +++ b/drivers/dma/qcom/bam_dma.c
-> @@ -350,8 +350,8 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
->  #define BAM_DESC_FIFO_SIZE	SZ_32K
->  #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
->  #define BAM_FIFO_SIZE	(SZ_32K - 8)
-> -#define IS_BUSY(chan)	(CIRC_SPACE(bchan->tail, bchan->head,\
-> -			 MAX_DESCRIPTORS + 1) == 0)
-> +#define IS_BUSY(chan)	(CIRC_SPACE(bchan->head, bchan->tail,\
-> +			 MAX_DESCRIPTORS) == 0)
->  
->  struct bam_chan {
->  	struct virt_dma_chan vc;
-> @@ -806,7 +806,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
->  		offset /= sizeof(struct bam_desc_hw);
->  
->  		/* Number of bytes available to read */
-> -		avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
-> +		avail = CIRC_CNT(bchan->head, offset, MAX_DESCRIPTORS);
->
- one question, so MAX_DESCRIPTORS is already a mask,
-    #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
 
- CIRC_CNT/SPACE macros also does a size - 1, so would it not be a problem if we
- just pass MAX_DESCRIPTORS ?
+On 6/18/19 11:41 AM, Michael Neuling wrote:
+> This is going to collide with this patch 
+> https://patchwork.ozlabs.org/patch/1109594/
 
-Regards,
- Sricharan
-  
->  		list_for_each_entry_safe(async_desc, tmp,
->  					 &bchan->desc_list, desc_node) {
-> @@ -997,8 +997,7 @@ static void bam_start_dma(struct bam_chan *bchan)
->  			bam_apply_new_config(bchan, async_desc->dir);
->  
->  		desc = async_desc->curr_desc;
-> -		avail = CIRC_SPACE(bchan->tail, bchan->head,
-> -				   MAX_DESCRIPTORS + 1);
-> +		avail = CIRC_SPACE(bchan->head, bchan->tail, MAX_DESCRIPTORS);
->  
->  		if (async_desc->num_desc > avail)
->  			async_desc->xfer_len = avail;
-> 
+Yeah, I'm aware of the patch. I just developed this on powerpc/next.
+I'll rebase my patches accordingly once mpe picks up that patche.
 
--- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
