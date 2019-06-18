@@ -2,101 +2,82 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A499C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5CC4C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5822920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88E5B206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:38:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729266AbfFRIhc convert rfc822-to-8bit (ORCPT
+        id S1729160AbfFRIii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:37:32 -0400
-Received: from ZXSHCAS1.zhaoxin.com ([203.148.12.81]:21808 "EHLO
-        ZXSHCAS1.zhaoxin.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729122AbfFRIhb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:37:31 -0400
-Received: from zxbjmbx3.zhaoxin.com (10.29.252.165) by ZXSHCAS1.zhaoxin.com
- (10.28.252.161) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Tue, 18 Jun
- 2019 16:37:30 +0800
-Received: from zxbjmbx1.zhaoxin.com (10.29.252.163) by zxbjmbx3.zhaoxin.com
- (10.29.252.165) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1261.35; Tue, 18 Jun
- 2019 16:37:29 +0800
-Received: from zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d]) by
- zxbjmbx1.zhaoxin.com ([fe80::b41a:737:a784:b70d%16]) with mapi id
- 15.01.1261.035; Tue, 18 Jun 2019 16:37:29 +0800
-From:   Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
-        "lenb@kernel.org" <lenb@kernel.org>
-CC:     David Wang <DavidWang@zhaoxin.com>,
-        "Cooper Yan(BJ-RD)" <CooperYan@zhaoxin.com>,
-        "Qiyuan Wang(BJ-RD)" <QiyuanWang@zhaoxin.com>,
-        "Herry Yang(BJ-RD)" <HerryYang@zhaoxin.com>
-Subject: [PATCH v2 3/3] x86/acpi/cstate: add Zhaoxin processors support for
- cache flush policy in C3
-Thread-Topic: [PATCH v2 3/3] x86/acpi/cstate: add Zhaoxin processors support
- for cache flush policy in C3
-Thread-Index: AdUlrXyaXF+iCRFCSOO5QfgXRuCt6w==
-Date:   Tue, 18 Jun 2019 08:37:29 +0000
-Message-ID: <a370503660994669991a7f7cda7c5e98@zhaoxin.com>
-Accept-Language: en-US, zh-CN
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.32.64.75]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 18 Jun 2019 04:38:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:57178 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728818AbfFRIii (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:38:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 79F1F28;
+        Tue, 18 Jun 2019 01:38:37 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8F9CE3F246;
+        Tue, 18 Jun 2019 01:38:36 -0700 (PDT)
+Subject: Re: [PATCH v2 09/28] drivers: Add generic match helper by
+ ACPI_COMPANION device
+To:     rafael@kernel.org
+Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
+        lenb@kernel.org, linux-acpi@vger.kernel.org,
+        linux-spi@vger.kernel.org, broonie@kernel.org
+References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
+ <1560534863-15115-10-git-send-email-suzuki.poulose@arm.com>
+ <CAJZ5v0gi2vpr5y3USnPnPBHjPA1YAwfqjsJppfLgBP5CcycGog@mail.gmail.com>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <85f942fc-52fd-c4ed-29b3-f28c55a6a7bb@arm.com>
+Date:   Tue, 18 Jun 2019 09:38:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <CAJZ5v0gi2vpr5y3USnPnPBHjPA1YAwfqjsJppfLgBP5CcycGog@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Same as Intel, Zhaoxin MP CPUs support C3 share cache and on all
-recent Zhaoxin platforms ARB_DISABLE is a nop. So set related
-flags correctly in the same way as Intel does.
+Hi Rafael,
 
-Signed-off-by: Tony W Wang-oc <TonyWWang-oc@zhaoxin.com>
----
- arch/x86/kernel/acpi/cstate.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On 17/06/2019 23:07, Rafael J. Wysocki wrote:
+> On Fri, Jun 14, 2019 at 7:55 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
+>>
+>> Add a generic helper to match a device by the ACPI_COMPANION device.
+>> This will be later used for providing wrappers for
+>> (bus/class/driver)_find_device().
+>>
+>> Cc: Len Brown <lenb@kernel.org>
+>> Cc: linux-acpi@vger.kernel.org
+>> Cc: linux-spi@vger.kernel.org
+>> Cc: Mark Brown <broonie@kernel.org>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> 
+> Please fold this change into the patch adding users of device_match_acpi_dev().
 
-diff --git a/arch/x86/kernel/acpi/cstate.c b/arch/x86/kernel/acpi/cstate.c
-index a5e5484..caf2edc 100644
---- a/arch/x86/kernel/acpi/cstate.c
-+++ b/arch/x86/kernel/acpi/cstate.c
-@@ -64,6 +64,21 @@ void acpi_processor_power_init_bm_check(struct acpi_processor_flags *flags,
- 		    c->x86_stepping >= 0x0e))
- 			flags->bm_check = 1;
- 	}
-+
-+	if (c->x86_vendor == X86_VENDOR_ZHAOXIN) {
-+		/*
-+		 * All Zhaoxin CPUs that support C3 share cache.
-+		 * And caches should not be flushed by software while
-+		 * entering C3 type state.
-+		 */
-+		flags->bm_check = 1;
-+		/*
-+		 * On all recent Zhaoxin platforms, ARB_DISABLE is a nop.
-+		 * So, set bm_control to zero to indicate that ARB_DISABLE
-+		 * is not required while entering C3 type state.
-+		 */
-+		flags->bm_control = 0;
-+	}
- }
- EXPORT_SYMBOL(acpi_processor_power_init_bm_check);
- 
--- 
-2.7.4
+There are variants of this by class/bus/driver and all of them are introduced
+as separate patches with the respective users. If we do for this, we have to
+do the same for other matches as well.
+
+i.e, [ device_match_by_attr + class_find_device_by_attr & users + 
+driver_find_device_by_attr & users + bus_find_device_by_attr & users ]
+
+And that becomes a large chunk, which could make the review painful.
+
+If you would still like that approach, I could do that in the next revision.
+
+Cheers
+Suzuki
