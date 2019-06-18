@@ -2,102 +2,107 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D689C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1AEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:59:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F264206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:59:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3c4XTWo"
+	by mail.kernel.org (Postfix) with ESMTP id 742FD20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730013AbfFRQ7k (ORCPT
+        id S1730067AbfFRQ7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:59:40 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37970 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729528AbfFRQ7k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:59:40 -0400
-Received: by mail-pl1-f193.google.com with SMTP id f98so381739plb.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:59:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dRMDk2BAfRDYDNECYYhM1BfKg5f7KkTU03mHf+QYRbE=;
-        b=C3c4XTWoNgJakO71gg1YUplJAt4MELRvc4yd0sAONMl1zgwrGjZnEgmulHFTBQtsSN
-         zJpp3FK/4A8RkSgj+I8H445n9VaHxYRfCmIH0gPhLGCtErpM0MWqlZVhcbpKHNrhl9zt
-         fmWkivPYggTvuFKel8SMOuNoFNFsUGzN3VEbtVEoUmtNjm3B5JBQqNCBm5vmpDbMP2Zn
-         k65KS0bDEcOIdWrjoFEutjHusI6DMoxLTgv+qS5kPiJ4uq8jgLtcPuk7sq8Mi/itZvnw
-         LFPS68lD5kUz0Qt4XTTqy4Icn0kXywtcQNIGwebC1xKwlCACmrugcYPeTpdlLpWT7M6y
-         THlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dRMDk2BAfRDYDNECYYhM1BfKg5f7KkTU03mHf+QYRbE=;
-        b=TZgHrjpjySR0bGMuSgGmG9cZCuZYJFyymL29vm85S+FvgA7WyCa5GdYJMB8cbyedSw
-         F64BbIg6WD+siF8Gj3w5sjK9sJr3/ecKI2MXhw50GA6LZC+LEC45lBDk+P7XbIahvrf0
-         rCRvffOibFKJ55NhvimNztjghnIPiq9poSaMi/ZbSzUSWKk5ac2xm/tzIvqhpmw+IzWD
-         5CCRhEhGktLdIf32UtEs9S1BiTA7OJ+wk0M6Y9d5y0Ju3/X4hrOf58vxaeQ6qQkM5d7Q
-         7uG3/qDkf4VKTAEhIFllHnR17B7MmhLxxM+R+U2Sz4dFVo4cHNc0necq45vTdcjHP3WS
-         XmRg==
-X-Gm-Message-State: APjAAAXVdL2TICWgir+3yzSl9PaTamrTlaRG2x9fEh5Nm/Sno4a62+QZ
-        Er1jBwXlEMG+NDwhVRZ5i/o=
-X-Google-Smtp-Source: APXvYqwpWBjfeXR2nSPVbLHaFfOhqkDLRBzVuZj6BkNDNTEsIJKP1MGFkea5KKD3TI5XDk+hlKqOBA==
-X-Received: by 2002:a17:902:2ae7:: with SMTP id j94mr30537867plb.270.1560877179452;
-        Tue, 18 Jun 2019 09:59:39 -0700 (PDT)
-Received: from localhost.localdomain ([112.196.181.128])
-        by smtp.googlemail.com with ESMTPSA id r6sm3307678pji.0.2019.06.18.09.59.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 09:59:38 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: [PATCH] Sched: Change type of 'overrun' from int to u64
-Date:   Tue, 18 Jun 2019 22:29:08 +0530
-Message-Id: <20190618165908.15012-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 18 Jun 2019 12:59:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47070 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729514AbfFRQ7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:59:51 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7200C3162909;
+        Tue, 18 Jun 2019 16:59:30 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A3241001E73;
+        Tue, 18 Jun 2019 16:59:24 +0000 (UTC)
+Subject: Re: [PATCH] mm, memcg: Report number of memcg caches in slabinfo
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-api@vger.kernel.org
+References: <20190617142149.5245-1-longman@redhat.com>
+ <20190617143842.GC1492@dhcp22.suse.cz>
+ <9e165eae-e354-04c4-6362-0f80fe819469@redhat.com>
+ <20190618123750.GG3318@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <dee4dee2-1f4f-a7c9-0014-dca54b991377@redhat.com>
+Date:   Tue, 18 Jun 2019 12:59:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <20190618123750.GG3318@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 18 Jun 2019 16:59:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Callers of hrtimer_forward_now() should save the return value in u64.
-function sched_cfs_period_timer() stores
-it in variable 'overrun' of type int
-change type of overrun from int to u64 to solve the issue.
+On 6/18/19 8:37 AM, Michal Hocko wrote:
+> On Mon 17-06-19 10:50:23, Waiman Long wrote:
+>> On 6/17/19 10:38 AM, Michal Hocko wrote:
+>>> [Cc linux-api]
+>>>
+>>> On Mon 17-06-19 10:21:49, Waiman Long wrote:
+>>>> There are concerns about memory leaks from extensive use of memory
+>>>> cgroups as each memory cgroup creates its own set of kmem caches. There
+>>>> is a possiblity that the memcg kmem caches may remain even after the
+>>>> memory cgroup removal.
+>>>>
+>>>> Therefore, it will be useful to show how many memcg caches are present
+>>>> for each of the kmem caches.
+>>> How is a user going to use that information?  Btw. Don't we have an
+>>> interface to display the number of (dead) cgroups?
+>> The interface to report dead cgroups is for cgroup v2 (cgroup.stat)
+>> only. I don't think there is a way to find that for cgroup v1.
+> Doesn't debug_legacy_files provide the information for both cgroups
+> APIs?
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
----
- kernel/sched/fair.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Not really. The debug controller doesn't provide information about the
+number of dead cgroups, for instance. Of course, we can always add those
+information there. Also the debug controller is not typically configured
+into a production kernel.
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index f35930f5e528..c6bcae7d4e49 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -4896,7 +4896,7 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
- 	struct cfs_bandwidth *cfs_b =
- 		container_of(timer, struct cfs_bandwidth, period_timer);
- 	unsigned long flags;
--	int overrun;
-+	u64 overrun;
- 	int idle = 0;
- 	int count = 0;
- 
--- 
-2.21.0
 
+>> Also the
+>> number of memcg kmem caches may not be the same as the number of
+>> memcg's. It can range from 0 to above the number of memcg's.  So it is
+>> an interesting number by itself.
+> Is this useful enough to put into slabinfo? Doesn't this sound more like
+> a debugfs kinda a thing?
+
+I guess it is probably more on the debug side of things. I add it to
+slabinfo as the data is readily available. It will be much more work if
+we need to export the data via debugfs.
+
+We are seeing the kmem_cache slab growing continuously overtime when
+running a container-based workloads. Roman's kmem_cache reparenting
+patch will hopefully solve a major part of the problem, but we still
+need a way to confirm that by looking at how many memcg kmem_caches are
+associated with each root kmem_cache.
+
+Cheers,
+Longman
