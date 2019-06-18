@@ -2,138 +2,102 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D31F9C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B58C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A23A120873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:47:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E5A20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:51:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qQhSpRvb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730683AbfFRVrf (ORCPT
+        id S1730510AbfFRVv3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 17:47:35 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:43559 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729982AbfFRVre (ORCPT
+        Tue, 18 Jun 2019 17:51:29 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39747 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729982AbfFRVv2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 17:47:34 -0400
-Received: by mail-ua1-f65.google.com with SMTP id o2so7584166uae.10;
-        Tue, 18 Jun 2019 14:47:34 -0700 (PDT)
+        Tue, 18 Jun 2019 17:51:28 -0400
+Received: by mail-ua1-f68.google.com with SMTP id j8so7633453uan.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:51:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=PYYUQ3e7ONlVseVSNvQlJ7x1YpG18Xt9WTuVNuLCobA=;
+        b=qQhSpRvb5Kvqh7fFh1aP152lsn2HY6VLkvsHO6s/bMzpVnI0c30FB7HrI8Vg7DnN5U
+         Qa3bqSAgpQMP0SdAO38n9/WniD8wRYqi97LDsaL/QXHwZ2MCCLfPzGG0HrkKyO+G33HR
+         splQ1lr4TiCc4MlvGm5HyNg+SLfdtLu1/fFh/BRg/T8EO6QpZ/SXrlbNVGvvtUr2ZE2p
+         TMIArJMEjVyNuYsH0EWjZKHex7zgiRpxu5d8isiAzJ+3yn6m6k/QaMfvMhtCZrXGs3SO
+         lhkBVKqg/Jz5YBcBIQdLmcdd2K7my3VetDLzrCMYwP8AiQw7iC1ALOVucH8O2vFSzgOt
+         mUGg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=I0RWfX7/brWCQJZlmTP4b1pf0cVwk5bUjTnCrdF8UAY=;
-        b=cUXKUiQ935N3nlS6kFzB0TCzb78U/V078a6zAg8F82mDBMaMZoPg24ItFFb8STlRVS
-         F0qSgwpTj19HwCLZuQ5/VqymocKDL9fmNtXngjG4hw9y/LiEtjX/racQ8UdhvRXcbUUu
-         oYHz8JQ9FFwRGHsOXSB8+ZYOd3MJA6lJQrBLQdJZMzOtSWW6H9hAyOiZwv9UfhPQzpUs
-         0Jqzmn2jcRfg7Fa9Lx5xfMz3wUM/GW7AZv9cFgzmVk3fosTWXsiqx5iz2A0i2yswVRQg
-         7alXD9gi3PqGitRKAd9lsc5rc3Y/SIFoGkm3Mu+T5cS3uPGa1SXHgL2d6Qi8ImVl3p3g
-         ZMFQ==
-X-Gm-Message-State: APjAAAX2jRINuruQlVgUrOa1WZ/ZQS84rlABKMfZ+NTTTavUoL97atj3
-        kLzVFQr7S/StsmNNsiDuu47/1925KSo0reKl+kg=
-X-Google-Smtp-Source: APXvYqxuHJvBUgcTAIF7H6uuKf/TgeRQI8Gc97Xr2WBYZISyfbVN7S7r7p3sI20JELN7OjPaH4dM5N25VHb2Dddyzm8=
-X-Received: by 2002:a9f:31a2:: with SMTP id v31mr12191937uad.15.1560894453845;
- Tue, 18 Jun 2019 14:47:33 -0700 (PDT)
+        bh=PYYUQ3e7ONlVseVSNvQlJ7x1YpG18Xt9WTuVNuLCobA=;
+        b=AhAgArY1Y+3kwLypa+/1KGmWd7EAmqjMUsdNemppyBLzABkzQ+s1D1thukuUZhE5Xy
+         hgdxb6fO/0gbu5EHHGaZH4Msr3MvSeRgZBvjOHxP5n+UAngw2z9eS7JpI7mx4WvgsioJ
+         v3ssMHG2II4wxfhkj6GSNy22rEZgRvumSKxCBRvENYYcZy8Hg+dAaOroNukubUAa8dLA
+         Fg5piZqA86Hessp1PCO96Ocvhhv04wMHAYOzsNkYlX1gB8RJ5ZDLXKufjEP6Us/SJN8I
+         qlw/qXnJ/z+8GUHCCfpefp/s3s7rGc/D9Gn8tugCSKi+6wIKzPkljiGhk+7NrCFgiFHw
+         E7Tw==
+X-Gm-Message-State: APjAAAUTrI7rpXLM9bXMnf1g+wjk36pqTZvvWOj704e3uj69Fw+HlmTM
+        g7CspVZkXcrPzXSDaDgQ2hNnT6VepXw6d28Hd4g=
+X-Google-Smtp-Source: APXvYqyDelhTfDEa4jc4T+QXKh2CqnygOwHY3Zf/VM9l/nU/fn1P+SUkyIh9Rlb4jtppJOEy/4PiW1XR65IIyxMOyok=
+X-Received: by 2002:ab0:208c:: with SMTP id r12mr46741116uak.27.1560894687847;
+ Tue, 18 Jun 2019 14:51:27 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190618213406.7667-1-ezequiel@collabora.com> <20190618213406.7667-3-ezequiel@collabora.com>
-In-Reply-To: <20190618213406.7667-3-ezequiel@collabora.com>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Tue, 18 Jun 2019 17:47:22 -0400
-Message-ID: <CAKb7UvgvY0tJDV9A=4+8=iqraziyt8SGF-QrX=M8jz+R+5JC=A@mail.gmail.com>
-Subject: Re: [PATCH 2/3] drm/rockchip: Add optional support for CRTC gamma LUT
-To:     Ezequiel Garcia <ezequiel@collabora.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-rockchip@lists.infradead.org,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
-        Sean Paul <seanpaul@chromium.org>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <cover.1559860606.git.rodrigosiqueiramelo@gmail.com>
+ <e3bc263b273d91182e0577ed820b1c4f096834ec.1559860606.git.rodrigosiqueiramelo@gmail.com>
+ <20190607073957.GB21222@phenom.ffwll.local> <CADKXj+7OLRLrGo+YbxZjR7f90WNPPjT_rkcyt3GrxomCAjOjHA@mail.gmail.com>
+ <20190607150420.GI21222@phenom.ffwll.local> <20190618021944.7ilhgaswme2a6amt@smtp.gmail.com>
+ <WQuF2MGabt8DxA1rdWhTcZIGSaXav-5XOae4hkdkxq51gom6tklMqrfOLnyN6WSm9TY5sLXp_fxoNQhtC3E7zY9A3dLEpfZ1phdw23m0SI8=@emersion.fr>
+In-Reply-To: <WQuF2MGabt8DxA1rdWhTcZIGSaXav-5XOae4hkdkxq51gom6tklMqrfOLnyN6WSm9TY5sLXp_fxoNQhtC3E7zY9A3dLEpfZ1phdw23m0SI8=@emersion.fr>
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Date:   Tue, 18 Jun 2019 18:51:17 -0300
+Message-ID: <CADKXj+4R=J0mEs3hYGiMS_iK+yhAZyXi_xOg-nRMtTAvSuCz2Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2] drm/vkms: Use index instead of 0 in possible crtc
+To:     Simon Ser <contact@emersion.fr>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 5:43 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+On Tue, Jun 18, 2019 at 2:18 AM Simon Ser <contact@emersion.fr> wrote:
 >
-> Add an optional CRTC gamma LUT support, and enable it on RK3288.
-> This is currently enabled via a separate address resource,
-> which needs to be specified in the devicetree.
+> On Tuesday, June 18, 2019 5:19 AM, Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com> wrote:
+> > I made the patch, but when I started to write the commit message, I just
+> > realized that I did not understand why possible_crtcs should not be
+> > equal zero. Why can we not use zero?
 >
-> The address resource is required because on some SoCs, such as
-> RK3288, the LUT address is after the MMU address, and the latter
-> is supported by a different driver. This prevents the DRM driver
-> from requesting an entire register space.
+> Hi,
 >
-> The current implementation works for RGB 10-bit tables, as that
-> is what seems to work on RK3288.
+> possible_crtcs is a bitfield. If it's zero, it means the plane cannot
+> be attached to any CRTC, which makes it rather useless.
+
+Hi,
+
+Thank you very much for your explanation. I'll try to finish the patch.
+
+> Thanks,
 >
-> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
-> ---
-> Changes from RFC:
-> * Request (an optional) address resource for the LUT.
-> * Drop support for RK3399, which doesn't seem to work
->   out of the box and needs more research.
-> * Support pass-thru setting when GAMMA_LUT is NULL.
-> * Add a check for the gamma size, as suggested by Ilia.
-> * Move gamma setting to atomic_commit_tail, as pointed
->   out by Jacopo/Laurent, is the correct way.
-> ---
-> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> index 12ed5265a90b..5b6edbe2673f 100644
-> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
-> +static void vop_crtc_gamma_set(struct vop *vop, struct drm_crtc *crtc,
-> +                              struct drm_crtc_state *old_state)
-> +{
-> +       int idle, ret, i;
-> +
-> +       spin_lock(&vop->reg_lock);
-> +       VOP_REG_SET(vop, common, dsp_lut_en, 0);
-> +       vop_cfg_done(vop);
-> +       spin_unlock(&vop->reg_lock);
-> +
-> +       ret = readx_poll_timeout(vop_dsp_lut_is_enable, vop,
-> +                          idle, !idle, 5, 30 * 1000);
-> +       if (ret)
-> +               return;
-> +
-> +       spin_lock(&vop->reg_lock);
-> +
-> +       if (crtc->state->gamma_lut) {
-> +               if (!old_state->gamma_lut || (crtc->state->gamma_lut->base.id !=
-> +                                             old_state->gamma_lut->base.id))
-> +                       vop_crtc_write_gamma_lut(vop, crtc);
-> +       } else {
-> +               for (i = 0; i < crtc->gamma_size; i++) {
-> +                       u32 word;
-> +
-> +                       word = (i << 20) | (i << 10) | i;
-> +                       writel(word, vop->lut_regs + i * 4);
-> +               }
+> Simon
 
-Note - I'm not in any way familiar with the hardware, so take with a
-grain of salt --
 
-Could you just leave dsp_lut_en turned off in this case?
 
-Cheers,
+-- 
 
-  -ilia
-
-> +       }
-> +
-> +       VOP_REG_SET(vop, common, dsp_lut_en, 1);
-> +       vop_cfg_done(vop);
-> +       spin_unlock(&vop->reg_lock);
-> +}
+Rodrigo Siqueira
+https://siqueira.tech
