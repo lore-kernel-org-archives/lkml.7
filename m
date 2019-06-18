@@ -2,125 +2,108 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9074C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91149C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:35:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1C5320863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 682DB20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:35:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DAlZdM4C"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bm7i7c5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730457AbfFRSeM (ORCPT
+        id S1730353AbfFRSfA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:34:12 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38424 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729642AbfFRSeM (ORCPT
+        Tue, 18 Jun 2019 14:35:00 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44842 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730116AbfFRSe7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:34:12 -0400
-Received: by mail-lj1-f195.google.com with SMTP id r9so568603ljg.5;
-        Tue, 18 Jun 2019 11:34:10 -0700 (PDT)
+        Tue, 18 Jun 2019 14:34:59 -0400
+Received: by mail-pf1-f193.google.com with SMTP id t16so8133332pfe.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:34:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=LUTcC8R+5dFr9R0YY+BhHcC1Z9+J2f6PapOJUQzgkSs=;
-        b=DAlZdM4CzRLCjdt8CtdqrU2BUOC0C2LJP2ZSloK1/ylQ8IApeYFnaQuSmIcYq2W3ny
-         M0lzE7674VSrYkq1Qyff0punD6tR9xtE7+F+Z8STbBxP+M+/izpIxQOa5MtYBK19okQq
-         Jpx0XcywJlMf8ERGPCjJV86UKlfUvhXegjIpYgRgZyUjHIMCKQ+9WpbdxPt1EyLDgAB/
-         61/r9ftEtynbLQpOpshnYdeHnFltFZQZrKmfaibN2o73F5OXj88m9RN9P/zMsdVusbEO
-         IHy6Uyb3nwNXyC050fVkvWfwjm66VfCy8vCYQD1llUCrHjTf+yibrlzd/MUlf+9GQJLY
-         7Apw==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6kNZlMyc+BT+bVh0V15w4cgbur+weciC7/ZsAv2IV7U=;
+        b=bm7i7c5f2/GAPKW27PQz1CiDRmYmVVba0JO3/GX7R8G+fkjmqzIIjlSd4nI38HMNiO
+         JG+isnGj0iq6Ofd/6L/6Az0kLFKN3KBe+DUwfNJZrmXGBX8SDqz9yFi5xBVYZhRXZvx8
+         pJQsKXZRSuhhm6WH3KSC1QPvrSbAjRWmtJKOA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=LUTcC8R+5dFr9R0YY+BhHcC1Z9+J2f6PapOJUQzgkSs=;
-        b=hMM3ragAd8rxhwDFZ0YA6IhqeMq8EGSSrFOr4dhOpF0nXtQC0eYx7/8mcC0d5CL13n
-         JhGOey924T4Jh8sngwxes998BnUIHw5ExuI++JusFA4MK+YQZRojqltb8cXLiGtuOBD7
-         3qNW5v+YmtmEqbiSKBcpM/jh7Sc+7RrfYKltibq9O4NsBGOuo9IiwHlEyWcZ+IpxTxZt
-         Hhlpuuece8DReD+UdWT5m+E6Xj9TI8VUQw2g99xV5vTS4msOUt76sNhY0qHnboO7ZV+L
-         JTP2WkTXUAbW/JrUFJdbbhcMV1f7J5fOyLTuw0stvZPn2EgC7htSbs8exyJTOWKoEcLc
-         sZKA==
-X-Gm-Message-State: APjAAAVYN2Fk5QGA/7SpOfb0PF5SKBHQ2Z3gNa4+QtNNijUsJD6Gxbj3
-        g8k1B9dDk6JJPGb98OyfRso=
-X-Google-Smtp-Source: APXvYqwgIyXPVkyoagm4bVZF4xt0brYs6vaWPpojnz7lmpws28SY8JiVu2fVW7oUCLUCkbIc+710iw==
-X-Received: by 2002:a2e:89ca:: with SMTP id c10mr4868002ljk.106.1560882850067;
-        Tue, 18 Jun 2019 11:34:10 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id l15sm3031426ljh.0.2019.06.18.11.34.08
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6kNZlMyc+BT+bVh0V15w4cgbur+weciC7/ZsAv2IV7U=;
+        b=mdQVfL2kz7w4hMCiBxRn9KcL26kWVlAFYylIBek4KNliJrEZZ8/ll/Ap2aDB6Luv3C
+         46+6OArHkOd/c317mmtYACGv82CLUWA9LREo6iC/B5lgJ7L87nQPvmwteFUWfwZq7HIX
+         FpdIsXJysDZjybb5nxxh9xfaqBL6i2U1gbw8Z+dIhK4nRLZyfT5+GU9zfQ5QCAUxCwVU
+         QLz+9ie6iqwl3hJ2S76FoA9RwxvKxNaFloVP0DJOci4+dBIqOwFeQT8Z4bo3XdhwwFxX
+         VbnMXj0s08ihBl/kPtH4ob8r97QgMbJz90djVXRqjuPz037/O0sfvJt6wCin6YunvawU
+         r7lg==
+X-Gm-Message-State: APjAAAWCFu4WjNzIiln6suYl2BSGt3zKiZAlSVxxZhSt+l9N674fYaMZ
+        nMNxpI0GB83JYBkIOgPtDc5rEQ==
+X-Google-Smtp-Source: APXvYqy+QvRjs4Drmi2FUQIv8wv4fenqIqrDebMofryze6kGt+JsmRV9NB16VTZPs4PMvqJusTHJsA==
+X-Received: by 2002:a65:654f:: with SMTP id a15mr3860571pgw.73.1560882898990;
+        Tue, 18 Jun 2019 11:34:58 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id e16sm22768169pga.11.2019.06.18.11.34.58
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 11:34:09 -0700 (PDT)
-Subject: Re: [PATCH V2] i2c: tegra: disable irq in tegra_i2c_xfer_msg
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
- <61c2dbcd-85f2-2094-7596-78ac01f55421@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <28cd06ca-3bd4-87e1-6d52-504cd00e1adb@gmail.com>
-Date:   Tue, 18 Jun 2019 21:34:08 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 18 Jun 2019 11:34:58 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 11:34:55 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
+        Douglas Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight
+ settings for Minnie"
+Message-ID: <20190618183455.GU137143@google.com>
+References: <20190614224533.169881-1-mka@chromium.org>
+ <45f94c6a-5bd7-92b0-d23f-ae7e0481935f@collabora.com>
 MIME-Version: 1.0
-In-Reply-To: <61c2dbcd-85f2-2094-7596-78ac01f55421@nvidia.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <45f94c6a-5bd7-92b0-d23f-ae7e0481935f@collabora.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.06.2019 12:13, Jon Hunter пишет:
-> 
-> On 18/06/2019 09:42, Bitan Biswas wrote:
->> tegra_i2c_xfer_msg initiates the I2C transfer in DMA
->> or PIO mode. It involves steps that need FIFO register
->> access, DMA API calls like dma_sync_single_for_device, etc.
->> Tegra I2C ISR has calls to tegra_i2c_empty_rx_fifo in PIO mode
->> and in DMA/PIO mode writes different I2C registers including
->> I2C interrupt status. ISR cannot start processing
->> before the preparation step at tegra_i2c_xfer_msg is complete.
->> Hence, a synchronization between ISR and tegra_i2c_xfer_msg
->> is in place today using spinlock.
->>
->> Spinlock busy waits and can add avoidable delays.
->>
->> In this patch needed synchronization is achieved by disabling
->> I2C interrupt during preparation step and enabling interrupt
->> once preparation is over and spinlock is no longer needed.
-> Sorry but I still don't understand the problem you are trying to solve.
-> Yes spinlocks are busy waits but is this busy wait an actual problem? If
-> so what is the problem with this?
+Hi Enric,
 
-There is no real problem here, the intent is to clean up the code more and that should
-be mentioned in the commit message for clarity. This was actually my suggestion that
-Bitan is now started to implement, which is very nice! It should be a good result in
-the end.
+On Tue, Jun 18, 2019 at 10:21:52AM +0200, Enric Balletbo i Serra wrote:
+> Hi Matthias,
+> 
+> On 15/6/19 0:45, Matthias Kaehlcke wrote:
+> > This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
+> > 
+> > According to the commit message the AUO B101EAN01 panel on minnie
+> > requires a PWM delay of 200 ms, however this is not what the
+> > datasheet says. The datasheet mentions a *max* delay of 200 ms
+> > for T2 ("delay from LCDVDD to black video generation") and T3
+> > ("delay from LCDVDD to HPD high"), which aren't related to the
+> > PWM. The backlight power sequence does not specify min/max
+> > constraints for T15 (time from PWM on to BL enable) or T16
+> > (time from BL disable to PWM off).
+> > 
+> 
+> Could you point from where the confusion comes from? I think will be helpful for
+> the record. B101EAN01.8 vs B101EAN01.1
 
-> It appears that the spinlock was added to prevent error interrupts
-> occurring until the transfer has started. If this is for error cases,
-> then probably it is not often that the CPU is stuck busy waiting on the
-> spinlock.
+sounds good
+
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 > 
-> Furthermore, in addition to the spinlock we also have calls to
-> tegra_i2c_unmask_irq/tegra_i2c_mask_irq. Therefore, if we are going to
-> change this it would seem like a good idea to consolidate the
-> masking/unmasking of IRQs and the spinlock, if possible.
+> With the above added:
 > 
-> Finally, I still see that we have a spinlock in the downstream kernels
-> we are shipping and so I would prefer to see such a change also be
-> tested in the downstream kernels we are releasing.
+> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+Thanks!
