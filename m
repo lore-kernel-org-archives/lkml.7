@@ -2,71 +2,112 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FB1C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4356DC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:16:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5EFF20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:16:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560842178;
-	bh=sN1/dE3GrAH4LiGZu8UJOE6L3qSpdz8c5huI877lyBs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mNnbpazu2grzybKqVFqUbRudqUoLoVncXdIUeHPBVVwaK7guoCzJfyo+ntCZxCwGJ
-	 eyAl2rVP0KyhWkhrHgJNmYPb7vpPe8rMHrR6PB31vFntNXay5jP831Ja0kFgwMamFr
-	 lZjLsuuKrGl9B6DZP4WL75s0HS2w+CwHPUbfRtm4=
+	by mail.kernel.org (Postfix) with ESMTP id 13D9A20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:16:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+ThJ5pC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbfFRHQQ (ORCPT
+        id S1729032AbfFRHQX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:16:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40304 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725955AbfFRHQQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:16:16 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91E6C2080A;
-        Tue, 18 Jun 2019 07:16:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560842175;
-        bh=sN1/dE3GrAH4LiGZu8UJOE6L3qSpdz8c5huI877lyBs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m+MyZSydPHGMWLLx71r98+SXOxgvyjMuaMyPp5BRhQXygnQLs5ZjxGENn3sEoDCw+
-         NVTPaGvPVCvODrrw4JjMwCR4XV/Q0A77ESKa8g5SVaqLNBvn+iPQFfPZLd7WqkXgmU
-         vSDmdtr9f7tmNhOi7x4jlY8eyYD7qfTQM39O7ANc=
-Date:   Tue, 18 Jun 2019 15:15:24 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH 1/6] ARM: dts: imx6qdl: Enable SNVS power key according
- to board design
-Message-ID: <20190618071522.GG29881@dragon>
-References: <20190613033527.40555-1-Anson.Huang@nxp.com>
+        Tue, 18 Jun 2019 03:16:23 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:42778 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725955AbfFRHQX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:16:23 -0400
+Received: by mail-pl1-f196.google.com with SMTP id ay6so3083807plb.9;
+        Tue, 18 Jun 2019 00:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HNJi6hiuYdfL3u8IXlFr2ptQbwtW7ZdNyo5Hq+iVFb0=;
+        b=Y+ThJ5pCj+BAiwHO4j2p2nYITjKlpl+FSuLSTNOe+TBAgWSMDCYqb8cPLlvg0F1dth
+         HnhM5kNjqYivCUy7GrQd16xPch7qNWQX18sl65tAEEtv2Df2RwLmv2I0D+LUcee1jdVX
+         KGaclhr/o20kE66rX6k4zqkjW2TIjWOUzINkK/LYswE9neLxBEuDN+PAnIUsgXtgSBgx
+         AQPuhtt8NnsINJQNjvoNXPgmbajWFp9UtDyJ2kZSvPNkmyi+964tUXmqTiwhy21ZhtPT
+         AvgX+EE4PPKYe1X/jfll6qk8oltbqEu4yW3hADikabGGGThnwh0+BNCoQXmNd2V37UEi
+         aorg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HNJi6hiuYdfL3u8IXlFr2ptQbwtW7ZdNyo5Hq+iVFb0=;
+        b=NAdxBpHrDzKwyjsqWUqBvfN78Soq1paImQTbXMniFZ7uDQVL5obhxofqHM+w5VakJz
+         UgssxdH7goOMeaCwQkZkwNn3uZrAZzquh5KV0TBfmT8x6HcBX66brZoT/UV+hT7jA2B9
+         BSR68vjXg5+H53+qqXPYVNNaXZi9h0wN9q/0Dc6mlyu190SDNUaVUKbpEO9gtWKtZ+7H
+         g85D7W/ZfgtEXxhE+ues1iR7trCP2CQ7MTbL2g9f+sY4dEqs5C85UvU169S8Riiqv0l7
+         ZgPwbNfRpMhnOgAV/d9jLGVN+vhCaASCpChk7CnFVSEEpXTdWuj/UX84WLPDdA6zEbDl
+         CWpQ==
+X-Gm-Message-State: APjAAAUQ3rhkujsWpTPHtfs/hsfKua0ISM9swD7/520xKAhH7OEMxsbE
+        q/AVNiC6ofEWrSecF5PVvRFUeMSxm8Y=
+X-Google-Smtp-Source: APXvYqzQY3y9xEauwLFI59PlhTMcKf6K26shYUvaumGkoTV5SyH8/M3fZ5Z05bsG0ptz3yCTmUM1sg==
+X-Received: by 2002:a17:902:d715:: with SMTP id w21mr112846469ply.234.1560838478885;
+        Mon, 17 Jun 2019 23:14:38 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id a7sm13038951pgj.42.2019.06.17.23.14.38
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 23:14:38 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 06:14:38 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 3/5] hv: vmbus: Replace page definition with Hyper-V
+ specific one
+Message-ID: <aef1958c0b0a5d005899620d205a55b2c91f7f78.1560837096.git.m.maya.nakamura@gmail.com>
+References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613033527.40555-1-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <cover.1560837096.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 11:35:22AM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> The SNVS power key depends on board design, by default it should
-> be disabled in SoC DT and ONLY be enabled on board DT if it is
-> wired up.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Replace PAGE_SIZE with HV_HYP_PAGE_SIZE because the guest page size may
+not be 4096 on all architectures and Hyper-V always runs with a page
+size of 4096.
 
-Applied all, thanks.
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ drivers/hv/hyperv_vmbus.h | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/hv/hyperv_vmbus.h b/drivers/hv/hyperv_vmbus.h
+index 362e70e9d145..019469c3cbca 100644
+--- a/drivers/hv/hyperv_vmbus.h
++++ b/drivers/hv/hyperv_vmbus.h
+@@ -192,11 +192,11 @@ int hv_ringbuffer_read(struct vmbus_channel *channel,
+ 		       u64 *requestid, bool raw);
+ 
+ /*
+- * Maximum channels is determined by the size of the interrupt page
+- * which is PAGE_SIZE. 1/2 of PAGE_SIZE is for send endpoint interrupt
+- * and the other is receive endpoint interrupt
++ * Maximum channels, 16348, is determined by the size of the interrupt page,
++ * which is HV_HYP_PAGE_SIZE. 1/2 of HV_HYP_PAGE_SIZE is to send endpoint
++ * interrupt, and the other is to receive endpoint interrupt.
+  */
+-#define MAX_NUM_CHANNELS	((PAGE_SIZE >> 1) << 3)	/* 16348 channels */
++#define MAX_NUM_CHANNELS	((HV_HYP_PAGE_SIZE >> 1) << 3)
+ 
+ /* The value here must be in multiple of 32 */
+ /* TODO: Need to make this configurable */
+-- 
+2.17.1
+
