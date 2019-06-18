@@ -2,83 +2,129 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB86C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E41C3C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:04:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D5C20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5A8520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:04:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iXXv6lHp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729199AbfFRODZ (ORCPT
+        id S1729291AbfFROEi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:03:25 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:46868 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFRODZ (ORCPT
+        Tue, 18 Jun 2019 10:04:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35806 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFROEh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:03:25 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdEh6-00037d-Bm; Tue, 18 Jun 2019 14:02:40 +0000
-Date:   Tue, 18 Jun 2019 15:02:40 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     syzbot <syzbot+6004acbaa1893ad013f0@syzkaller.appspotmail.com>
-Cc:     arnd@arndb.de, axboe@kernel.dk, bp@alien8.de,
-        catalin.marinas@arm.com, christian@brauner.io, dhowells@redhat.com,
-        geert@linux-m68k.org, hare@suse.com, heiko.carstens@de.ibm.com,
-        hpa@zytor.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de, x86@kernel.org
-Subject: Re: general protection fault in do_move_mount (2)
-Message-ID: <20190618140239.GA17978@ZenIV.linux.org.uk>
-References: <000000000000bb362d058b96d54d@google.com>
+        Tue, 18 Jun 2019 10:04:37 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so3674477ljh.2;
+        Tue, 18 Jun 2019 07:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rRsqt/jb8lgBcOz/dnBTtpAXvq2EAkriRLFP/IPTkfI=;
+        b=iXXv6lHpkvoPe6L8zswzO8zsadDQmmCGo8XY6+a+1RkUYcsM+eKxzDgkQ4QjPGcWve
+         Gb70HS+9j60ac/L2BmSZ1EvZuCcyieNIRVfxrD99uRTIaCRoydcHcLY8EnoGDvCiDPy+
+         ktbTwXqZpeiWvWMkjNSrgn31gSYoTNV47P1WfUbWVfmU92oAOB45bPWuOtBhvZK/AOkh
+         GI9gdt5j/oLSlH2tfSkHDdsgY6QBVhf5y7NIwpZw44OfnNUqN2mLd3WATheFh8jeijUX
+         7YwqYoCUTtEf9Brk9/0RyaUOAutQ9dl41aI+Xk6DsRttFAhJ8PWejgheJsRA7ZhnU1KK
+         Noug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rRsqt/jb8lgBcOz/dnBTtpAXvq2EAkriRLFP/IPTkfI=;
+        b=f75r1TUX5UYKBPBit0CF9ZoYoXnDojJ6HuJHQ2q03hiWDt65zXiXg9F1L9dIhXMYSV
+         Q5uon6ycXRHHNZgcbYqMvrbgHguRMaYCL93lwehwvfYNk6qEiTqCWIwCiU4zyN3S2ghP
+         xWRddAb+4vZ+8tffbQYAdB30iopYboOkwwDx9HwhRVZ3TUJt659Vlli9vMwN/Uog0GyS
+         MMUbnCgjJY40ZG5GaG2fz50yVuA+mUXUUHLgSo/7wN/L4adIrZZq/MGQQITi730V1b+j
+         5bp4kAJ5mUDMfloDL20ELCCqpFnnqfadVtjkk/8jPH7DY/Qaa1K8ZSu5b57d0vMn9Eu4
+         JI2w==
+X-Gm-Message-State: APjAAAXuCTNQ8vKKhdT6WyJQBAyGoyg41SLXWiUdiOKCL4zm/UJ4C5an
+        Uo4bS+k+vHfHlTVwVrDtV+0=
+X-Google-Smtp-Source: APXvYqwr6+g5URrS11S4EwIk3EMj3zGzM1wPeH0B1ytMIPbelo7w03Nb/OM3nY4lFi4FXSQy8p4HQQ==
+X-Received: by 2002:a2e:3e01:: with SMTP id l1mr47922443lja.208.1560866675480;
+        Tue, 18 Jun 2019 07:04:35 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id q6sm2650538lji.70.2019.06.18.07.04.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 07:04:34 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v3 0/8] Few more cleanups for tegra-timer
+Date:   Tue, 18 Jun 2019 17:03:50 +0300
+Message-Id: <20190618140358.13148-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <000000000000bb362d058b96d54d@google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 03:47:10AM -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    9e0babf2 Linux 5.2-rc5
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=138b310aa00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=d16883d6c7f0d717
-> dashboard link: https://syzkaller.appspot.com/bug?extid=6004acbaa1893ad013f0
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=154e8c2aa00000
+Hello,
 
-IDGI...
+This a followup to [0] that includes some more fixes and further
+prettifies the driver's code.
 
-mkdir(&(0x7f0000632000)='./file0\x00', 0x0)
-mount(0x0, 0x0, 0x0, 0x0, 0x0)
-syz_open_procfs(0x0, 0x0)
-r0 = open(&(0x7f0000032ff8)='./file0\x00', 0x0, 0x0)
-r1 = memfd_create(&(0x7f00000001c0)='\xb3', 0x0)
-write$FUSE_DIRENT(r1, &(0x7f0000000080)=ANY=[], 0x29)
-move_mount(r0, &(0x7f0000000040)='./file0\x00', 0xffffffffffffff9c, &(0x7f0000000100)='./file0\x00', 0x66)
+[0] https://patchwork.ozlabs.org/project/linux-tegra/list/?series=111529
 
-reads as if we'd done mkdir ./file0, opened it and then tried
-to feed move_mount(2) "./file0" relative to that descriptor.
-How the hell has that avoided an instant -ENOENT?  On the first
-pair, that is - the second one (AT_FDCWD, "./file0") is fine...
+Changelog:
 
-Confused...  Incidentally, what the hell is
-	mount(0x0, 0x0, 0x0, 0x0, 0x0)
-about?  *IF* that really refers to mount(2) with
-such arguments, all you'll get is -EFAULT.  Way before
-it gets to actually doing anything - it won't get past
-        /* ... and get the mountpoint */
-        retval = user_path(dir_name, &path);
-        if (retval)
-                return retval;
-in do_mount(2)...
+v3: Addressed request from Jon Hunter that was made in a review comment
+    to v2 by dropping the timer's period rounding-up in the "Set and use
+    timer' period" patch.
+
+    Appended two new patches to this series that were already sent out
+    and reviewed after the v2 of this series:
+
+      clocksource/drivers/tegra: Cycles can't be 0
+      clocksource/drivers/tegra: Set up maximum-ticks limit properly
+
+    In this two new patches I addressed review comments that were made by
+    Thierry Reding by adding clarifying comments to the code and extending
+    the commit messages a tad.
+
+    Corrected the "Fixes" tag in a "Restore timer rate on Tegra210"
+    patch such that linux-next checker won't complain about the shortened
+    commit's subject.
+
+v2: Fixed a bug that was introduced by [0] in a newly added patch:
+    "Restore timer rate on Tegra210".
+
+    Fixed potential problem in regards to error handling in another new
+    patch: "Restore base address before cleanup".
+
+    Added new patch "Add verbose definition for 1MHz constant" as per
+    Daniel's Lezcano recommendation.
+
+    Fixed a code typo that was made in "Remove duplicated use of per_cpu_ptr"
+    of v1.
+
+Dmitry Osipenko (8):
+  clocksource/drivers/tegra: Restore timer rate on Tegra210
+  clocksource/drivers/tegra: Remove duplicated use of per_cpu_ptr
+  clocksource/drivers/tegra: Set and use timer's period
+  clocksource/drivers/tegra: Drop unneeded typecasting in one place
+  clocksource/drivers/tegra: Add verbose definition for 1MHz constant
+  clocksource/drivers/tegra: Restore base address before cleanup
+  clocksource/drivers/tegra: Cycles can't be 0
+  clocksource/drivers/tegra: Set up maximum-ticks limit properly
+
+ drivers/clocksource/timer-tegra.c | 82 +++++++++++++++++++++----------
+ 1 file changed, 56 insertions(+), 26 deletions(-)
+
+-- 
+2.22.0
+
