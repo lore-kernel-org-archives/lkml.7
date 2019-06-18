@@ -2,68 +2,99 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 646BDC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:25:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEDFC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4357920863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:25:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560882308;
-	bh=L+BH+/BGSmQQzkiJDmS7NMe77KecW+xd6L4POtLcO4Q=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=wLqZ1cq0S8ADQZlGDSk2QjcKzKM7jg34frijVLUmgSuYD1JYBRyiUJLAKOa6acVzI
-	 dAAKruqbR3N/6ZGh2JlYX8AxUl62KNh90r00QKm8ZpeGAT83Bikx4SUEMntASu/MaE
-	 qRBF7hc1w/aBqjUaOrGiVj27wMhtn6RfQITLiUnQ=
+	by mail.kernel.org (Postfix) with ESMTP id 550532147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:25:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDDlyAvv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730169AbfFRSZH (ORCPT
+        id S1730257AbfFRSZP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:25:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52196 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729943AbfFRSZG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:25:06 -0400
-Subject: Re: [GIT PULL] Btrfs fixes for 5.2-rc6
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560882305;
-        bh=L+BH+/BGSmQQzkiJDmS7NMe77KecW+xd6L4POtLcO4Q=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=SRwnsc84tLlud3MerfpyYzs13pbJ0GnjPhK2EnZMY+xBx2QY8rwznbkkPt9Y3mD5G
-         cTyCT+WbqghOogn5vHhgfKTbCs4kIvKmgN2B4Z5smXoK8hKlLRZbisX7KY8N/izWp5
-         Osjhw4ta+FT0HWxxCxHHgZnLgGUQRJXeXSc5/j7Y=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cover.1560875945.git.dsterba@suse.com>
-References: <cover.1560875945.git.dsterba@suse.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cover.1560875945.git.dsterba@suse.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.2-rc5-tag
-X-PR-Tracked-Commit-Id: 3763771cf60236caaf7ccc79cea244c63d7c49a0
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: bed3c0d84e7e25c8e0964d297794f4c215b01f33
-Message-Id: <156088230576.11931.6591802047054785950.pr-tracker-bot@kernel.org>
-Date:   Tue, 18 Jun 2019 18:25:05 +0000
-To:     David Sterba <dsterba@suse.com>
-Cc:     torvalds@linux-foundation.org, David Sterba <dsterba@suse.com>,
-        clm@fb.com, linux-btrfs@vger.kernel.org,
+        Tue, 18 Jun 2019 14:25:15 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:35797 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729943AbfFRSZO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:25:14 -0400
+Received: by mail-pl1-f194.google.com with SMTP id p1so6060002plo.2;
+        Tue, 18 Jun 2019 11:25:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=ZWfAOAxoVbPij4WvtmFyrhlxSXKOQxDJzGR7xW1Qhl4=;
+        b=rDDlyAvvtsHMAO0xf644R8e0EQPSxem326pnG6VLJloD9q3ZMMlpOAT4t7gkgQdhM2
+         W0iC9W2W+DXCoN3BdpkExKZC8QJVpYhOF4C7WGszSQu+nbKhuZn/4yNEI2JzFzWuCdBC
+         2Y4U40rJJVg210CmG/P2ljebo+D3yeS778WgJ/Plevek8DAFFhEv1kpeb21htZJO60FZ
+         6X2XaSN+NQnjAd1q9XviYtXbTzX56n9Ro6AVEd8VUeOkvbXTb1Pe0FO2u3bBhX3YsMk0
+         DfjjvIYO5U1An9bvFbST4qIVrqRdK2r8SeX9cAG5ewyr/FdHqls6r2bgRd2Lxi20sAiH
+         VP+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=ZWfAOAxoVbPij4WvtmFyrhlxSXKOQxDJzGR7xW1Qhl4=;
+        b=OqD+z1hzD82mjGQQzhNbwzAwR5DWmpnx03oXi29LgBRw8tcddyOBzEeIPCm5Doxowy
+         9IXLOBPauIB6tgqwt+PHnAogrncuLjhAdr7YSZixkObN/0W/aU4ZRM5Xad8ztKwT0MTI
+         nZZaY8LAciP17SjtYtLQGlh+zVa69/PHvcvQWqAtEPYKyvj4IzQQy8TwinaynSN93muS
+         4vS0CLvFUcxQhH9usHT3RL4fpvKrOsUh0mCLyuDgU5fvF04NxvbMrMSb/XQgeU1EUvK9
+         W18FbxOK9Li7r9s5fd1rd0sTbEILXnRPhKZWixrNZIlddzhfHzNsF7vMpSJf7qqc8ORD
+         n/1g==
+X-Gm-Message-State: APjAAAXoOoeCO9MVA66kKoyBoiXC/tlEy9fqX/pLUH2VJ8Uniz7adhUT
+        nNTlCCmyvv2SIGOv1JsqXXY=
+X-Google-Smtp-Source: APXvYqz8piH56vYUozmcdQ6KNkkF1F+FrG6bOMilJRTIj1HC6m3jGo47OqTa5F1u9LkmBbos6unY4A==
+X-Received: by 2002:a17:902:b70f:: with SMTP id d15mr32734935pls.318.1560882313798;
+        Tue, 18 Jun 2019 11:25:13 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id w14sm10510083pfn.47.2019.06.18.11.25.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 11:25:12 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 23:55:07 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
         linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: wilc1000: Remove redundant memset
+Message-ID: <20190618182506.GA9007@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 18 Jun 2019 18:52:07 +0200:
+alloc_etherdev function internally calls kvzalloc . So we may not need
+explicit memset after this call.
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/kdave/linux.git for-5.2-rc5-tag
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/wilc1000/wilc_netdev.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/bed3c0d84e7e25c8e0964d297794f4c215b01f33
-
-Thank you!
-
+diff --git a/drivers/staging/wilc1000/wilc_netdev.c b/drivers/staging/wilc1000/wilc_netdev.c
+index ba78c08..c4efec2 100644
+--- a/drivers/staging/wilc1000/wilc_netdev.c
++++ b/drivers/staging/wilc1000/wilc_netdev.c
+@@ -1010,7 +1010,6 @@ int wilc_netdev_init(struct wilc **wilc, struct device *dev, int io_type,
+ 		}
+ 
+ 		vif = netdev_priv(ndev);
+-		memset(vif, 0, sizeof(struct wilc_vif));
+ 
+ 		if (i == 0) {
+ 			strcpy(ndev->name, "wlan%d");
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.7.4
+
