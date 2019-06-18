@@ -7,236 +7,257 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E430CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04EEC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6D82147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DB542189F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560891235;
-	bh=VdafxH3HUUcr/7qDsWyG8AqYP2EMihrdCts/1jK5vBc=;
+	s=default; t=1560891242;
+	bh=L/Sdk6CKaFTbu8gWc1tk0/YYEd2dapzu3worQ5M9/Bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zK7VVmKA7OlDOOoE2J6sSFOEV/TpAxJHcZolw1/fpe0KNJiudb1oQLXt0RvsKuvTL
-	 9oYWHeYtSBUiF8CvZUzDjp1Ckk8TlTynIWluGjG7Ma79mGkhOzR3MIlAWMiXR5EIQE
-	 lCkgKjZwWS9JEovGj5rMORZSwNpPhT2j2SZrvJVc=
+	b=MmwyFq5P2B5e16H9ayFSd/9sv++aSpP0ULDvemUCH11eY0g+mDkbElNgxJ47obL6q
+	 AYHmWRl7okk5BjybT9MXiXtzj1ZMsTa63WYifdEkh3HxVIhMJOarKnnb63QdrKUg9n
+	 9+qwYyA7iyHXQUOekY26ZIIOWtxmIIYd5krut5F8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730698AbfFRUxy (ORCPT
+        id S1730801AbfFRUyB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:53:54 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50308 "EHLO
+        Tue, 18 Jun 2019 16:54:01 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50772 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730181AbfFRUxy (ORCPT
+        with ESMTP id S1730739AbfFRUx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:53:54 -0400
+        Tue, 18 Jun 2019 16:53:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LvMZCNqyjGCYorMHMnZsk1Wxffwcw4B9xSPUy6NpG7A=; b=XVxjWv7HGrfjCzeXzENuLOb9Be
-        g/j6stqYjNL9awd3mSzUb3SVGaavvAwhp6vraHQt0n5pnB3I0iSOoG0wB6kzt7Q2/8ZOHSNE8GMSu
-        dWHdIE4U73bXmCMKEpuhmxu07Q8ou+zWdPmqs3YPVHL5/9tciqLIdJ2Di9FLQg+FGDW2XJVQyv+jW
-        HpI+zI30YxS1o3ABjcd4gs4BXo48//+rOAibs8C91NHoIvurrnc8IMZIez/ET+kftLlNRfS42lALq
-        vZ8nntXoqiKfpap1+Oy8KrRWrXHqXLJo5hdXcCGk4nFGaxaxakkjHrMp4SxdNxqqjHc3mfrL53sVA
-        +51b6aOQ==;
+        bh=5SfYNoI2veL+EyE/1v6HXSjfJsKXEwialcjlovAv4sY=; b=KaM4aDL40giM6QvI/jsAUrV0E3
+        AkqJaP1WWuZlMn/sdrD8zBgr2uHkrLumYJaZearrmxJjOxInT83IO/3KQQEJvPZC+mLDKUleWeAd/
+        xGIFbR6mdqSM9Vs9AT6Fl44QbT8af8MdwHrYNBV+8iZvKs6l4XHxOkl9wcmUEuLWWwMoTJJfX7nTD
+        b2DmiWbMXE5JHA/z3tJ8bSxZd/Ov4rzKxOPfYYGLtilRX0h76jnS1UuMKVqByQTTtOfVeEyUPfUYk
+        COzzmD2hK+qCWXeRys0itcvMP6HsM4sycopZil0CpTBytgfVnThm1PgUAdvr3vNSlDLvHsfFnZZbq
+        IrlbT8Mg==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdL73-0008Ml-Eo; Tue, 18 Jun 2019 20:53:53 +0000
+        id 1hdL77-0008Ra-5F; Tue, 18 Jun 2019 20:53:57 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdL6z-0001zd-Ux; Tue, 18 Jun 2019 17:53:49 -0300
+        id 1hdL6z-0001z2-Ly; Tue, 18 Jun 2019 17:53:49 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 12/29] docs: xen-tpmfront.txt: convert it to .rst
-Date:   Tue, 18 Jun 2019 17:53:30 -0300
-Message-Id: <1c600880caa3344d65ab53b808b7fbb62a8e6fc4.1560890800.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 03/29] docs: lp855x-driver.txt: convert to ReST and move to kernel-api
+Date:   Tue, 18 Jun 2019 17:53:21 -0300
+Message-Id: <335fddb362664bbcc7b7360b35e56a8d347880d9.1560890800.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560890800.git.mchehab+samsung@kernel.org>
 References: <cover.1560890800.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to be able to add this file to the security book,
-we need first to convert it to reST.
+This small file seems to be an attempt to start documenting
+backlight drivers.
 
-While this is not part of any book, mark it as :orphan:, in order
-to avoid build warnings.
+It contains descriptions of the controls for the driver
+with could sound as an somewhat user-faced description, but
+it's main focus is to describe, instead, the data that should
+be passed via platform data and some driver-specific stuff.
+
+While this is not part of the driver-api book, mark it as
+:orphan:, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{xen-tpmfront.txt => xen-tpmfront.rst}    | 103 ++++++++++--------
- 1 file changed, 58 insertions(+), 45 deletions(-)
- rename Documentation/security/tpm/{xen-tpmfront.txt => xen-tpmfront.rst} (66%)
+ Documentation/backlight/lp855x-driver.rst | 83 +++++++++++++++++++++++
+ Documentation/backlight/lp855x-driver.txt | 66 ------------------
+ MAINTAINERS                               |  2 +-
+ 3 files changed, 84 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/backlight/lp855x-driver.rst
+ delete mode 100644 Documentation/backlight/lp855x-driver.txt
 
-diff --git a/Documentation/security/tpm/xen-tpmfront.txt b/Documentation/security/tpm/xen-tpmfront.rst
-similarity index 66%
-rename from Documentation/security/tpm/xen-tpmfront.txt
-rename to Documentation/security/tpm/xen-tpmfront.rst
-index 69346de87ff3..98a16ab87360 100644
---- a/Documentation/security/tpm/xen-tpmfront.txt
-+++ b/Documentation/security/tpm/xen-tpmfront.rst
-@@ -1,4 +1,8 @@
+diff --git a/Documentation/backlight/lp855x-driver.rst b/Documentation/backlight/lp855x-driver.rst
+new file mode 100644
+index 000000000000..62b7ed847a77
+--- /dev/null
++++ b/Documentation/backlight/lp855x-driver.rst
+@@ -0,0 +1,83 @@
 +:orphan:
 +
-+﻿=============================
- Virtual TPM interface for Xen
-+=============================
++====================
++Kernel driver lp855x
++====================
++
++Backlight driver for LP855x ICs
++
++Supported chips:
++
++	Texas Instruments LP8550, LP8551, LP8552, LP8553, LP8555, LP8556 and
++	LP8557
++
++Author: Milo(Woogyom) Kim <milo.kim@ti.com>
++
++Description
++-----------
++
++* Brightness control
++
++  Brightness can be controlled by the pwm input or the i2c command.
++  The lp855x driver supports both cases.
++
++* Device attributes
++
++  1) bl_ctl_mode
++
++  Backlight control mode.
++
++  Value: pwm based or register based
++
++  2) chip_id
++
++  The lp855x chip id.
++
++  Value: lp8550/lp8551/lp8552/lp8553/lp8555/lp8556/lp8557
++
++Platform data for lp855x
++------------------------
++
++For supporting platform specific data, the lp855x platform data can be used.
++
++* name:
++	Backlight driver name. If it is not defined, default name is set.
++* device_control:
++	Value of DEVICE CONTROL register.
++* initial_brightness:
++	Initial value of backlight brightness.
++* period_ns:
++	Platform specific PWM period value. unit is nano.
++	Only valid when brightness is pwm input mode.
++* size_program:
++	Total size of lp855x_rom_data.
++* rom_data:
++	List of new eeprom/eprom registers.
++
++Examples
++========
++
++1) lp8552 platform data: i2c register mode with new eeprom data::
++
++    #define EEPROM_A5_ADDR	0xA5
++    #define EEPROM_A5_VAL	0x4f	/* EN_VSYNC=0 */
++
++    static struct lp855x_rom_data lp8552_eeprom_arr[] = {
++	{EEPROM_A5_ADDR, EEPROM_A5_VAL},
++    };
++
++    static struct lp855x_platform_data lp8552_pdata = {
++	.name = "lcd-bl",
++	.device_control = I2C_CONFIG(LP8552),
++	.initial_brightness = INITIAL_BRT,
++	.size_program = ARRAY_SIZE(lp8552_eeprom_arr),
++	.rom_data = lp8552_eeprom_arr,
++    };
++
++2) lp8556 platform data: pwm input mode with default rom data::
++
++    static struct lp855x_platform_data lp8556_pdata = {
++	.device_control = PWM_CONFIG(LP8556),
++	.initial_brightness = INITIAL_BRT,
++	.period_ns = 1000000,
++    };
+diff --git a/Documentation/backlight/lp855x-driver.txt b/Documentation/backlight/lp855x-driver.txt
+deleted file mode 100644
+index 01bce243d3d7..000000000000
+--- a/Documentation/backlight/lp855x-driver.txt
++++ /dev/null
+@@ -1,66 +0,0 @@
+-Kernel driver lp855x
+-====================
+-
+-Backlight driver for LP855x ICs
+-
+-Supported chips:
+-	Texas Instruments LP8550, LP8551, LP8552, LP8553, LP8555, LP8556 and
+-	LP8557
+-
+-Author: Milo(Woogyom) Kim <milo.kim@ti.com>
+-
+-Description
+------------
+-
+-* Brightness control
+-
+-Brightness can be controlled by the pwm input or the i2c command.
+-The lp855x driver supports both cases.
+-
+-* Device attributes
+-
+-1) bl_ctl_mode
+-Backlight control mode.
+-Value : pwm based or register based
+-
+-2) chip_id
+-The lp855x chip id.
+-Value : lp8550/lp8551/lp8552/lp8553/lp8555/lp8556/lp8557
+-
+-Platform data for lp855x
+-------------------------
+-
+-For supporting platform specific data, the lp855x platform data can be used.
+-
+-* name : Backlight driver name. If it is not defined, default name is set.
+-* device_control : Value of DEVICE CONTROL register.
+-* initial_brightness : Initial value of backlight brightness.
+-* period_ns : Platform specific PWM period value. unit is nano.
+-	     Only valid when brightness is pwm input mode.
+-* size_program : Total size of lp855x_rom_data.
+-* rom_data : List of new eeprom/eprom registers.
+-
+-example 1) lp8552 platform data : i2c register mode with new eeprom data
+-
+-#define EEPROM_A5_ADDR	0xA5
+-#define EEPROM_A5_VAL	0x4f	/* EN_VSYNC=0 */
+-
+-static struct lp855x_rom_data lp8552_eeprom_arr[] = {
+-	{EEPROM_A5_ADDR, EEPROM_A5_VAL},
+-};
+-
+-static struct lp855x_platform_data lp8552_pdata = {
+-	.name = "lcd-bl",
+-	.device_control = I2C_CONFIG(LP8552),
+-	.initial_brightness = INITIAL_BRT,
+-	.size_program = ARRAY_SIZE(lp8552_eeprom_arr),
+-	.rom_data = lp8552_eeprom_arr,
+-};
+-
+-example 2) lp8556 platform data : pwm input mode with default rom data
+-
+-static struct lp855x_platform_data lp8556_pdata = {
+-	.device_control = PWM_CONFIG(LP8556),
+-	.initial_brightness = INITIAL_BRT,
+-	.period_ns = 1000000,
+-};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index d64d8bb46323..3e43c7ab3d6a 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -15831,7 +15831,7 @@ F:	sound/soc/codecs/isabelle*
+ TI LP855x BACKLIGHT DRIVER
+ M:	Milo Kim <milo.kim@ti.com>
+ S:	Maintained
+-F:	Documentation/backlight/lp855x-driver.txt
++F:	Documentation/backlight/lp855x-driver.rst
+ F:	drivers/video/backlight/lp855x_bl.c
+ F:	include/linux/platform_data/lp855x.h
  
- Authors: Matthew Fioravante (JHUAPL), Daniel De Graaf (NSA)
- 
-@@ -6,7 +10,8 @@ This document describes the virtual Trusted Platform Module (vTPM) subsystem for
- Xen. The reader is assumed to have familiarity with building and installing Xen,
- Linux, and a basic understanding of the TPM and vTPM concepts.
- 
--INTRODUCTION
-+Introduction
-+------------
- 
- The goal of this work is to provide a TPM functionality to a virtual guest
- operating system (in Xen terms, a DomU).  This allows programs to interact with
-@@ -24,81 +29,89 @@ This mini-os vTPM subsystem was built on top of the previous vTPM work done by
- IBM and Intel corporation.
- 
- 
--DESIGN OVERVIEW
-+Design Overview
- ---------------
- 
--The architecture of vTPM is described below:
-+The architecture of vTPM is described below::
- 
--+------------------+
--|    Linux DomU    | ...
--|       |  ^       |
--|       v  |       |
--|   xen-tpmfront   |
--+------------------+
--        |  ^
--        v  |
--+------------------+
--| mini-os/tpmback  |
--|       |  ^       |
--|       v  |       |
--|  vtpm-stubdom    | ...
--|       |  ^       |
--|       v  |       |
--| mini-os/tpmfront |
--+------------------+
--        |  ^
--        v  |
--+------------------+
--| mini-os/tpmback  |
--|       |  ^       |
--|       v  |       |
--| vtpmmgr-stubdom  |
--|       |  ^       |
--|       v  |       |
--| mini-os/tpm_tis  |
--+------------------+
--        |  ^
--        v  |
--+------------------+
--|   Hardware TPM   |
--+------------------+
-+  +------------------+
-+  |    Linux DomU    | ...
-+  |       |  ^       |
-+  |       v  |       |
-+  |   xen-tpmfront   |
-+  +------------------+
-+          |  ^
-+          v  |
-+  +------------------+
-+  | mini-os/tpmback  |
-+  |       |  ^       |
-+  |       v  |       |
-+  |  vtpm-stubdom    | ...
-+  |       |  ^       |
-+  |       v  |       |
-+  | mini-os/tpmfront |
-+  +------------------+
-+          |  ^
-+          v  |
-+  +------------------+
-+  | mini-os/tpmback  |
-+  |       |  ^       |
-+  |       v  |       |
-+  | vtpmmgr-stubdom  |
-+  |       |  ^       |
-+  |       v  |       |
-+  | mini-os/tpm_tis  |
-+  +------------------+
-+          |  ^
-+          v  |
-+  +------------------+
-+  |   Hardware TPM   |
-+  +------------------+
- 
-- * Linux DomU: The Linux based guest that wants to use a vTPM. There may be
-+* Linux DomU:
-+	       The Linux based guest that wants to use a vTPM. There may be
- 	       more than one of these.
- 
-- * xen-tpmfront.ko: Linux kernel virtual TPM frontend driver. This driver
-+* xen-tpmfront.ko:
-+		    Linux kernel virtual TPM frontend driver. This driver
-                     provides vTPM access to a Linux-based DomU.
- 
-- * mini-os/tpmback: Mini-os TPM backend driver. The Linux frontend driver
-+* mini-os/tpmback:
-+		    Mini-os TPM backend driver. The Linux frontend driver
- 		    connects to this backend driver to facilitate communications
- 		    between the Linux DomU and its vTPM. This driver is also
- 		    used by vtpmmgr-stubdom to communicate with vtpm-stubdom.
- 
-- * vtpm-stubdom: A mini-os stub domain that implements a vTPM. There is a
-+* vtpm-stubdom:
-+		 A mini-os stub domain that implements a vTPM. There is a
- 		 one to one mapping between running vtpm-stubdom instances and
-                  logical vtpms on the system. The vTPM Platform Configuration
-                  Registers (PCRs) are normally all initialized to zero.
- 
-- * mini-os/tpmfront: Mini-os TPM frontend driver. The vTPM mini-os domain
-+* mini-os/tpmfront:
-+		     Mini-os TPM frontend driver. The vTPM mini-os domain
- 		     vtpm-stubdom uses this driver to communicate with
- 		     vtpmmgr-stubdom. This driver is also used in mini-os
- 		     domains such as pv-grub that talk to the vTPM domain.
- 
-- * vtpmmgr-stubdom: A mini-os domain that implements the vTPM manager. There is
-+* vtpmmgr-stubdom:
-+		    A mini-os domain that implements the vTPM manager. There is
- 		    only one vTPM manager and it should be running during the
- 		    entire lifetime of the machine.  This domain regulates
- 		    access to the physical TPM on the system and secures the
- 		    persistent state of each vTPM.
- 
-- * mini-os/tpm_tis: Mini-os TPM version 1.2 TPM Interface Specification (TIS)
-+* mini-os/tpm_tis:
-+		    Mini-os TPM version 1.2 TPM Interface Specification (TIS)
-                     driver. This driver used by vtpmmgr-stubdom to talk directly to
-                     the hardware TPM. Communication is facilitated by mapping
-                     hardware memory pages into vtpmmgr-stubdom.
- 
-- * Hardware TPM: The physical TPM that is soldered onto the motherboard.
-+* Hardware TPM:
-+		The physical TPM that is soldered onto the motherboard.
- 
- 
--INTEGRATION WITH XEN
-+Integration With Xen
- --------------------
- 
- Support for the vTPM driver was added in Xen using the libxl toolstack in Xen
 -- 
 2.21.0
 
