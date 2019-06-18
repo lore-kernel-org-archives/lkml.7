@@ -2,162 +2,231 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C5B2C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:43:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99255C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0475420652
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:43:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6161220652
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:43:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dvsdqA01"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="NwplxFSo";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="LKJh3Y/K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728764AbfFRGnX (ORCPT
+        id S1728794AbfFRGnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 02:43:23 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34099 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfFRGnX (ORCPT
+        Tue, 18 Jun 2019 02:43:55 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:24107 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725900AbfFRGnz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 02:43:23 -0400
-Received: by mail-wr1-f68.google.com with SMTP id k11so12592555wrl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 23:43:21 -0700 (PDT)
+        Tue, 18 Jun 2019 02:43:55 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1560840235; x=1592376235;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=QGz5wR04NGj/l2TbPlBzzhEoyiM5o3UH+tCv0KLJ+Ik=;
+  b=NwplxFSo6As9/1CuIDGERFix/edgUv7K2NacqEEE8xuiymaSI9AOIgjt
+   Gl1YKru2gv6uYANYR4qMNhmhPqhpumjyoD1k+zWkuXmNiJRMM2IyzOnGY
+   4RohWUw3PuDged5kgvKXTdxryzGkkjtdPEC4sHBEzZKk7ahpDhhBMEpi4
+   GGTUnKu8BhSkW8tMvoZkhPKXj6AaJE33pfj08biecEI0HhHxXsE6jsi/C
+   e7csVcV76570/hJypOxTZoFaQFie1DMq+rj+/v9EfCWfpgHGWif5+Xeg7
+   LnkVgk74RmF89MyKm2dyRAB2rDmb8C0td7gsiLCVsRwvjsZbnXe2f/o8N
+   A==;
+X-IronPort-AV: E=Sophos;i="5.63,388,1557158400"; 
+   d="scan'208";a="217185253"
+Received: from mail-cys01nam02lp2054.outbound.protection.outlook.com (HELO NAM02-CY1-obe.outbound.protection.outlook.com) ([104.47.37.54])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2019 14:43:53 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2qhMEjTGxN0dhDss7cc7zfKbD1VT4IQism6fVgX1NpE=;
-        b=dvsdqA01/pZ+815FjjW8tFL5UWf7khLLQ82Ejhqn6TxNO1tCDktEgPtkMa4HNv7OLR
-         1U39nh2EFsrtSmlNZcgDcq/9sa+nGn3SUOMpDbfIAp95GzajjL3XI+3GbjB5ULFzEoSH
-         IwACWh8kuOmwu5jEKWjMzofeGDXqP9safEXyJXu8ve2REW9BQaUclrQL8parNOK0OQjD
-         B3wkQTkyxFJk8UmfoMVdfQg+Tn/UTwLgckw83gJpr19cDBf/Gz90iGpXy7nsEYrqDA2m
-         eZwEj4HpXDoxWiOrmV6yaBfhp8pBtJeFO0hOjxV5cmt7gkv5WG1rUgP3mWcFMvMsVNL0
-         dfKw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2qhMEjTGxN0dhDss7cc7zfKbD1VT4IQism6fVgX1NpE=;
-        b=DkSmx4Nb1RhjoXK/0y9qmwA1gbCKZggEC4YQHe5jaEdj8K7NpPjeJb89LGLn/bpTH2
-         EUU3xU5WYOC+mOmcstL69l3e2MUKfu3tg5nU1tw/43kNZFXgMyIL/O748sUB8wr53NfO
-         NHoB1mGNRpAe+W3fJk9FsOJFFcS1Pc0VimpgV95t+JXjnN6rPMSxuDgONtvsoskMOptz
-         zKtU6oFUwj9v92pOa3vg2Dma39eYnoYV9BTmDfLN2g9s7pv2LZzkTrNbwGHbsfQ8PkYD
-         BBKQZU/myhMNyEKd111AtiA5ti6PyHsfVqAjxvrL9/f9tkgZc4RWvdKVvNLG/hULdlHJ
-         HkTw==
-X-Gm-Message-State: APjAAAXdu0TbPqeGm3aqnuRA+jR+qCZKPCNbTzw5UsLoIG961NT2K4fm
-        G//FHgW2ghmw3AXFvRwFBkJDxFtpkLECd8CKVsq9VM0c
-X-Google-Smtp-Source: APXvYqyc9odfP5kl53sVaAJSFZ9kxou4Lg+4NAUEX3RWJa1eraarQrRn5NVyE6c41JtA+QlG76Va2MCtJMEgh2C9gYE=
-X-Received: by 2002:a5d:4b43:: with SMTP id w3mr14892373wrs.166.1560838760111;
- Mon, 17 Jun 2019 23:19:20 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FT3aHOTrqZ2aPsjxAMdblbByTynah5k12DYSxkqi7SA=;
+ b=LKJh3Y/KMAaYLeM0adJl3DNE2pwswAEnBdx7EoaNRDJCsfYes7auFDt3uvzwJr0agIrBbhDf53X02yXTJsQM4b4SGLJuoKL5kG8x+blvhZHp/nWctfqUHEXLjWyCEkRxL7ejdHulapig5+mCGLKYWVnaQ0Iq6SS3yBDkLl+yC/c=
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com (20.177.254.85) by
+ SN6PR04MB4256.namprd04.prod.outlook.com (52.135.72.11) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Tue, 18 Jun 2019 06:43:52 +0000
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088]) by SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088%6]) with mapi id 15.20.1987.013; Tue, 18 Jun 2019
+ 06:43:52 +0000
+From:   Naohiro Aota <Naohiro.Aota@wdc.com>
+To:     Josef Bacik <josef@toxicpanda.com>
+CC:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 03/19] btrfs: Check and enable HMZONED mode
+Thread-Topic: [PATCH 03/19] btrfs: Check and enable HMZONED mode
+Thread-Index: AQHVHTKBzmgdNkH+W06mgCGzH1JPPA==
+Date:   Tue, 18 Jun 2019 06:43:52 +0000
+Message-ID: <SN6PR04MB52312145B9AAC21B0A70CA8A8CEA0@SN6PR04MB5231.namprd04.prod.outlook.com>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-4-naohiro.aota@wdc.com>
+ <20190613135710.nu5r5bpcwdm4we2w@MacBook-Pro-91.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Naohiro.Aota@wdc.com; 
+x-originating-ip: [199.255.47.8]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 824cf0dc-cb81-4c9a-6045-08d6f3b853af
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4256;
+x-ms-traffictypediagnostic: SN6PR04MB4256:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB4256AA806CAC03DF0EBD40798CEA0@SN6PR04MB4256.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(396003)(39860400002)(376002)(366004)(136003)(189003)(199004)(64756008)(2906002)(6246003)(66066001)(66556008)(66446008)(6506007)(66476007)(73956011)(476003)(68736007)(76176011)(53936002)(486006)(66946007)(53546011)(86362001)(76116006)(478600001)(99286004)(91956017)(81166006)(7696005)(9686003)(71190400001)(4326008)(71200400001)(72206003)(25786009)(5660300002)(446003)(52536014)(74316002)(186003)(256004)(55016002)(6916009)(81156014)(8936002)(8676002)(33656002)(316002)(26005)(229853002)(6116002)(102836004)(6436002)(3846002)(305945005)(7736002)(54906003)(14454004)(7416002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4256;H:SN6PR04MB5231.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yC3YthiUoe8j2f4WNgDOg49uXXpB/wguYo/6bDBRoUE99wYoIi5c15R43bhxEJGBTpHQdnNhCQWRJLVzf69QbMWVOtVWE/UGNXT3wJyMIQvF8IJBd9wrpHnlLNXAUqvRweYbkcvnNp02YuFHzsn8BYTPrs76pcH7+n3uIQa6waZNDhvxkaDoWg+j3srvrkQtn4Tpvf6sHx3T4gfH6kfqnwQF9viLoPCpRx4K35V4Rx93q25a4ao5UXrjXaCfaw+jRmrzuCnsV+aP7e0iZZbXr6+O2PFFRjmyGcT8Pn6PG7OkYY8Dn1rzHP/q9DxDulKr6saIFgn9nMUV1ru1VQjBUgaSN9bKVBcLWfcs42gw7a6ErYDOwuqLetH4Xnb6Ek24iZot9vlywK5qNqe0LILDejx95IHXBR2Sg6W+vE5R8TY=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com> <1560169080-27134-15-git-send-email-yong.wu@mediatek.com>
-In-Reply-To: <1560169080-27134-15-git-send-email-yong.wu@mediatek.com>
-From:   Tomasz Figa <tfiga@google.com>
-Date:   Tue, 18 Jun 2019 15:19:07 +0900
-Message-ID: <CAAFQd5A5GUn1Zq1xF2_2V0MReNPd5bra2F=nquvodSAZUua5AQ@mail.gmail.com>
-Subject: Re: [PATCH v7 14/21] iommu/mediatek: Add mmu1 support
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Will Deacon <will.deacon@arm.com>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= 
-        <yingjoe.chen@mediatek.com>, youlin.pei@mediatek.com,
-        Nicolas Boichat <drinkcat@chromium.org>, anan.sun@mediatek.com,
-        Matthias Kaehlcke <mka@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 824cf0dc-cb81-4c9a-6045-08d6f3b853af
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 06:43:52.1828
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Naohiro.Aota1@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 9:21 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> Normally the M4U HW connect EMI with smi. the diagram is like below:
->               EMI
->                |
->               M4U
->                |
->             smi-common
->                |
->        -----------------
->        |    |    |     |    ...
->     larb0 larb1  larb2 larb3
->
-> Actually there are 2 mmu cells in the M4U HW, like this diagram:
->
->               EMI
->            ---------
->             |     |
->            mmu0  mmu1     <- M4U
->             |     |
->            ---------
->                |
->             smi-common
->                |
->        -----------------
->        |    |    |     |    ...
->     larb0 larb1  larb2 larb3
->
-> This patch add support for mmu1. In order to get better performance,
-> we could adjust some larbs go to mmu1 while the others still go to
-> mmu0. This is controlled by a SMI COMMON register SMI_BUS_SEL(0x220).
->
-> mt2712, mt8173 and mt8183 M4U HW all have 2 mmu cells. the default
-> value of that register is 0 which means all the larbs go to mmu0
-> defaultly.
->
-> This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
->
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> ---
->  drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++-----------------
->  1 file changed, 29 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index 3a14301..ec4ce74 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -72,26 +72,32 @@
->  #define F_INT_CLR_BIT                          BIT(12)
->
->  #define REG_MMU_INT_MAIN_CONTROL               0x124
-> -#define F_INT_TRANSLATION_FAULT                        BIT(0)
-> -#define F_INT_MAIN_MULTI_HIT_FAULT             BIT(1)
-> -#define F_INT_INVALID_PA_FAULT                 BIT(2)
-> -#define F_INT_ENTRY_REPLACEMENT_FAULT          BIT(3)
-> -#define F_INT_TLB_MISS_FAULT                   BIT(4)
-> -#define F_INT_MISS_TRANSACTION_FIFO_FAULT      BIT(5)
-> -#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   BIT(6)
-> +                                               /* mmu0 | mmu1 */
-> +#define F_INT_TRANSLATION_FAULT                        (BIT(0) | BIT(7))
-> +#define F_INT_MAIN_MULTI_HIT_FAULT             (BIT(1) | BIT(8))
-> +#define F_INT_INVALID_PA_FAULT                 (BIT(2) | BIT(9))
-> +#define F_INT_ENTRY_REPLACEMENT_FAULT          (BIT(3) | BIT(10))
-> +#define F_INT_TLB_MISS_FAULT                   (BIT(4) | BIT(11))
-> +#define F_INT_MISS_TRANSACTION_FIFO_FAULT      (BIT(5) | BIT(12))
-> +#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   (BIT(6) | BIT(13))
-
-If there are two IOMMUs, shouldn't we have two driver instances handle
-them, instead of making the driver combine them two internally?
-
-And, what is even more important from security point of view actually,
-have two separate page tables (aka IOMMU groups) for them?
-
-Best regards,
-Tomasz
+On 2019/06/13 22:57, Josef Bacik wrote:=0A=
+> On Fri, Jun 07, 2019 at 10:10:09PM +0900, Naohiro Aota wrote:=0A=
+>> HMZONED mode cannot be used together with the RAID5/6 profile for now.=
+=0A=
+>> Introduce the function btrfs_check_hmzoned_mode() to check this. This=0A=
+>> function will also check if HMZONED flag is enabled on the file system a=
+nd=0A=
+>> if the file system consists of zoned devices with equal zone size.=0A=
+>>=0A=
+>> Additionally, as updates to the space cache are in-place, the space cach=
+e=0A=
+>> cannot be located over sequential zones and there is no guarantees that =
+the=0A=
+>> device will have enough conventional zones to store this cache. Resolve=
+=0A=
+>> this problem by disabling completely the space cache.  This does not=0A=
+>> introduces any problems with sequential block groups: all the free space=
+ is=0A=
+>> located after the allocation pointer and no free space before the pointe=
+r.=0A=
+>> There is no need to have such cache.=0A=
+>>=0A=
+>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+>> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>=0A=
+>> ---=0A=
+>>   fs/btrfs/ctree.h       |  3 ++=0A=
+>>   fs/btrfs/dev-replace.c |  7 +++=0A=
+>>   fs/btrfs/disk-io.c     |  7 +++=0A=
+>>   fs/btrfs/super.c       | 12 ++---=0A=
+>>   fs/btrfs/volumes.c     | 99 ++++++++++++++++++++++++++++++++++++++++++=
+=0A=
+>>   fs/btrfs/volumes.h     |  1 +=0A=
+>>   6 files changed, 124 insertions(+), 5 deletions(-)=0A=
+>>=0A=
+>> diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h=0A=
+>> index b81c331b28fa..6c00101407e4 100644=0A=
+>> --- a/fs/btrfs/ctree.h=0A=
+>> +++ b/fs/btrfs/ctree.h=0A=
+>> @@ -806,6 +806,9 @@ struct btrfs_fs_info {=0A=
+>>   	struct btrfs_root *uuid_root;=0A=
+>>   	struct btrfs_root *free_space_root;=0A=
+>>   =0A=
+>> +	/* Zone size when in HMZONED mode */=0A=
+>> +	u64 zone_size;=0A=
+>> +=0A=
+>>   	/* the log root tree is a directory of all the other log roots */=0A=
+>>   	struct btrfs_root *log_root_tree;=0A=
+>>   =0A=
+>> diff --git a/fs/btrfs/dev-replace.c b/fs/btrfs/dev-replace.c=0A=
+>> index ee0989c7e3a9..fbe5ea2a04ed 100644=0A=
+>> --- a/fs/btrfs/dev-replace.c=0A=
+>> +++ b/fs/btrfs/dev-replace.c=0A=
+>> @@ -201,6 +201,13 @@ static int btrfs_init_dev_replace_tgtdev(struct btr=
+fs_fs_info *fs_info,=0A=
+>>   		return PTR_ERR(bdev);=0A=
+>>   	}=0A=
+>>   =0A=
+>> +	if ((bdev_zoned_model(bdev) =3D=3D BLK_ZONED_HM &&=0A=
+>> +	     !btrfs_fs_incompat(fs_info, HMZONED)) ||=0A=
+>> +	    (!bdev_is_zoned(bdev) && btrfs_fs_incompat(fs_info, HMZONED))) {=
+=0A=
+> =0A=
+> You do this in a few places, turn this into a helper please.=0A=
+> =0A=
+>> +		ret =3D -EINVAL;=0A=
+>> +		goto error;=0A=
+>> +	}=0A=
+>> +=0A=
+>>   	filemap_write_and_wait(bdev->bd_inode->i_mapping);=0A=
+>>   =0A=
+>>   	devices =3D &fs_info->fs_devices->devices;=0A=
+>> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c=0A=
+>> index 663efce22d98..7c1404c76768 100644=0A=
+>> --- a/fs/btrfs/disk-io.c=0A=
+>> +++ b/fs/btrfs/disk-io.c=0A=
+>> @@ -3086,6 +3086,13 @@ int open_ctree(struct super_block *sb,=0A=
+>>   =0A=
+>>   	btrfs_free_extra_devids(fs_devices, 1);=0A=
+>>   =0A=
+>> +	ret =3D btrfs_check_hmzoned_mode(fs_info);=0A=
+>> +	if (ret) {=0A=
+>> +		btrfs_err(fs_info, "failed to init hmzoned mode: %d",=0A=
+>> +				ret);=0A=
+>> +		goto fail_block_groups;=0A=
+>> +	}=0A=
+>> +=0A=
+>>   	ret =3D btrfs_sysfs_add_fsid(fs_devices, NULL);=0A=
+>>   	if (ret) {=0A=
+>>   		btrfs_err(fs_info, "failed to init sysfs fsid interface: %d",=0A=
+>> diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c=0A=
+>> index 2c66d9ea6a3b..740a701f16c5 100644=0A=
+>> --- a/fs/btrfs/super.c=0A=
+>> +++ b/fs/btrfs/super.c=0A=
+>> @@ -435,11 +435,13 @@ int btrfs_parse_options(struct btrfs_fs_info *info=
+, char *options,=0A=
+>>   	bool saved_compress_force;=0A=
+>>   	int no_compress =3D 0;=0A=
+>>   =0A=
+>> -	cache_gen =3D btrfs_super_cache_generation(info->super_copy);=0A=
+>> -	if (btrfs_fs_compat_ro(info, FREE_SPACE_TREE))=0A=
+>> -		btrfs_set_opt(info->mount_opt, FREE_SPACE_TREE);=0A=
+>> -	else if (cache_gen)=0A=
+>> -		btrfs_set_opt(info->mount_opt, SPACE_CACHE);=0A=
+>> +	if (!btrfs_fs_incompat(info, HMZONED)) {=0A=
+>> +		cache_gen =3D btrfs_super_cache_generation(info->super_copy);=0A=
+>> +		if (btrfs_fs_compat_ro(info, FREE_SPACE_TREE))=0A=
+>> +			btrfs_set_opt(info->mount_opt, FREE_SPACE_TREE);=0A=
+>> +		else if (cache_gen)=0A=
+>> +			btrfs_set_opt(info->mount_opt, SPACE_CACHE);=0A=
+>> +	}=0A=
+>>   =0A=
+> =0A=
+> This disables the free space tree as well as the cache, sounds like you o=
+nly=0A=
+> need to disable the free space cache?  Thanks,=0A=
+=0A=
+Right. We can still use the free space tree on HMZONED. I'll fix in the nex=
+t version.=0A=
+Thanks=0A=
+=0A=
