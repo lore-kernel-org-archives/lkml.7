@@ -2,116 +2,135 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DE2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B41DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:15:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF4C820B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560878100;
-	bh=AdqmnS+jSpXufXG/3VyMe7oXq2Nu3sE27Csk/wuPMmo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KSPBcXUbtU6ogkPpHDRumPdXrTzHvK2lCe6s4Dpyv4dkF84fy/MxIw5PoYzBaxQhC
-	 HGrS99IaPHlG8mfabIBA+G3FhvGSMAcA2ByUEL6tcI9qtkY7EvtSN/dm8mhkn7bELn
-	 pX0zNXlSclo28UNxT7yu8mu9FUG/iPvInqtyPqak=
+	by mail.kernel.org (Postfix) with ESMTP id 311802147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:15:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="DQ/prbm6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbfFRRO7 (ORCPT
+        id S1729790AbfFRRPR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:14:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:56688 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728572AbfFRRO6 (ORCPT
+        Tue, 18 Jun 2019 13:15:17 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39240 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbfFRRPR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:14:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=AdqmnS+jSpXufXG/3VyMe7oXq2Nu3sE27Csk/wuPMmo=; b=vzHqAUcrGvyva+Zzs0Ak9hl0Q
-        BNC3mnAzNrkLx7pN8lWManuEj9IIkjgOla9PZEROf99WTOwnQp2LUzqJkH+8aReTf8A4nD9nTd/PY
-        TP7X+SCxKsD66mx7O/iWWTBbR9KW0Elo/ZyczZ+/Ntht/hRi+kCnqULszXYpz1MzwJGRY=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hdHh8-0005Fb-Am; Tue, 18 Jun 2019 17:14:54 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id B1519440046; Tue, 18 Jun 2019 18:14:53 +0100 (BST)
-Date:   Tue, 18 Jun 2019 18:14:53 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 7/8] soc/tegra: regulators: Add regulators coupler for
- Tegra20
-Message-ID: <20190618171453.GO5316@sirena.org.uk>
-References: <20190603235904.19097-1-digetx@gmail.com>
- <20190603235904.19097-8-digetx@gmail.com>
- <20190617154632.GB5316@sirena.org.uk>
- <2308e5da-a8fd-a0e6-f98c-0931a30baf14@gmail.com>
+        Tue, 18 Jun 2019 13:15:17 -0400
+Received: by mail-ot1-f65.google.com with SMTP id r21so13078551otq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:15:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xf9JaMcfMTpA+95buSp6V+RKo2piqDxI9Pf5r4xWOgw=;
+        b=DQ/prbm6F/jVALB23o1UX7hNkF+klFj23vBoHAQ0naQTfSoTf2YsYc4H+xShOvuJ/I
+         wii73VN4+ZQ8Sflop7Vp3eleYkzqlaMuNgBF38D3NACNU4Vk86EV5lPAaA2nA8Kq+tvG
+         8lc5ZSXaDohScGj3b3YdhrjE02Cz5WEBLJZDQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xf9JaMcfMTpA+95buSp6V+RKo2piqDxI9Pf5r4xWOgw=;
+        b=q0QiqwD13xXYMqsqB+NcayrziZpCnJ+R55YflC4D2y4JWviXz74PdLHTRJqVpZY62x
+         3QV0AyMSSOaKFngguEen2C4MlE4ph5z9OJ7IjdYQ+oRbn1zrkWo8rk7f8ZcMspImDERs
+         jkxZ8AHJ3QRLnXFWxMPby6kV3w8FaO1vuUOmmCU4zEYcy/A4YmT+RywXwxQjzeqF2QAW
+         AC+U2elwajCqkJLxfG3EezFVKwcu744N0aR/8BiokajQ3VTLpkB0BGM3GwMPgfSrar0V
+         KQq+Ls+aVLpjKWaYmpN/g206aOl2hKyIiN49JAsCQNoul2d6ichNdY37bqPP37ROCAzY
+         VDpQ==
+X-Gm-Message-State: APjAAAXoD12+vdA+zvsvoEsUQcyPNZ2nmkfoChj1omFo0Sai9j1BKWJD
+        qffY9HvbeyGJIF7mINLrb7dEQpG7J9Y=
+X-Google-Smtp-Source: APXvYqwN2f6dh538phmdAfSrk3/FPP5hD4sIjmS82mOzwtqryMe7Gly2agY9wALHJnexOySv3Lhxfg==
+X-Received: by 2002:a9d:591a:: with SMTP id t26mr1400786oth.170.1560878116121;
+        Tue, 18 Jun 2019 10:15:16 -0700 (PDT)
+Received: from mail-ot1-f53.google.com (mail-ot1-f53.google.com. [209.85.210.53])
+        by smtp.gmail.com with ESMTPSA id t30sm5924108otb.50.2019.06.18.10.15.15
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 10:15:15 -0700 (PDT)
+Received: by mail-ot1-f53.google.com with SMTP id b7so15950413otl.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:15:15 -0700 (PDT)
+X-Received: by 2002:a9d:2c41:: with SMTP id f59mr40634751otb.268.1560878114700;
+ Tue, 18 Jun 2019 10:15:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="e890kymSckUvwzhr"
-Content-Disposition: inline
-In-Reply-To: <2308e5da-a8fd-a0e6-f98c-0931a30baf14@gmail.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190618153924.19491-1-colin.king@canonical.com>
+In-Reply-To: <20190618153924.19491-1-colin.king@canonical.com>
+From:   Nick Crews <ncrews@chromium.org>
+Date:   Tue, 18 Jun 2019 11:15:03 -0600
+X-Gmail-Original-Message-ID: <CAHX4x85sETNNS8gdQYQniCM=K35DjMjdHOihJ76pGPrAoB9gyA@mail.gmail.com>
+Message-ID: <CAHX4x85sETNNS8gdQYQniCM=K35DjMjdHOihJ76pGPrAoB9gyA@mail.gmail.com>
+Subject: Re: [PATCH][next] platform/chrome: wilco_ec: fix null pointer
+ dereference on failed kzalloc
+To:     Colin King <colin.king@canonical.com>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Thanks Colin, good catch.
 
---e890kymSckUvwzhr
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Enric, could you squash this into the real commit?
 
-On Tue, Jun 18, 2019 at 07:52:06PM +0300, Dmitry Osipenko wrote:
-> 17.06.2019 18:46, Mark Brown =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+On Tue, Jun 18, 2019 at 9:39 AM Colin King <colin.king@canonical.com> wrote:
+>
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> If the kzalloc of the entries queue q fails a null pointer dereference
+> occurs when accessing q->capacity and q->lock.  Add a kzalloc failure
+> check and handle the null return case in the calling function
+> event_device_add.
+>
+> Addresses-Coverity: ("Dereference null return")
+> Fixes: 75589e37d1dc ("platform/chrome: wilco_ec: Add circular buffer as event queue")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/platform/chrome/wilco_ec/event.c | 12 ++++++++++--
+>  1 file changed, 10 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/platform/chrome/wilco_ec/event.c b/drivers/platform/chrome/wilco_ec/event.c
+> index c975b76e6255..e251a989b152 100644
+> --- a/drivers/platform/chrome/wilco_ec/event.c
+> +++ b/drivers/platform/chrome/wilco_ec/event.c
+> @@ -112,8 +112,11 @@ module_param(queue_size, int, 0644);
+>  static struct ec_event_queue *event_queue_new(int capacity)
+>  {
+>         size_t entries_size = sizeof(struct ec_event *) * capacity;
+> -       struct ec_event_queue *q = kzalloc(sizeof(*q) + entries_size,
+> -                                          GFP_KERNEL);
+> +       struct ec_event_queue *q;
+> +
+> +       q = kzalloc(sizeof(*q) + entries_size, GFP_KERNEL);
+> +       if (!q)
+> +               return NULL;
+>
+>         q->capacity = capacity;
+>         spin_lock_init(&q->lock);
+> @@ -474,6 +477,11 @@ static int event_device_add(struct acpi_device *adev)
+>         /* Initialize the device data. */
+>         adev->driver_data = dev_data;
+>         dev_data->events = event_queue_new(queue_size);
+> +       if (!dev_data->events) {
+> +               kfree(dev_data);
+> +               error = -ENOMEM;
+> +               goto free_minor;
+> +       }
+>         init_waitqueue_head(&dev_data->wq);
+>         dev_data->exist = true;
+>         atomic_set(&dev_data->available, 1);
 
-> >> +// SPDX-License-Identifier: GPL-2.0+
-> >> +/*
-> >> + * Voltage regulators coupling resolver for NVIDIA Tegra20
-> >> + *
-> >> + * Copyright (C) 2019 GRATE-DRIVER project
+Signed-off-by: Nick Crews <ncrews@chromium.org>
 
-> > Please make the entire comment a C++ one so things look more
-> > intentional.
-
-> This is actually a correct SPDX comment style for the source files, accor=
-dingly to
-> checkpatch. While the C++ style should be used for header files only. I'm=
- not
-> following the SPDX effort much, don't know from where these SPDX-style ru=
-les are
-> coming from.
-
-The SPDX bit is fine, what I'm saying is make the rest of the comment
-also be a C++ comment.
-
---e890kymSckUvwzhr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0JHAwACgkQJNaLcl1U
-h9Adkgf7BRUN7vDJiY8PukrNZjKDCtqOwtshsNBH1cFOzUQKpciz9amzrYfVfsc/
-6ov8uf5yZSf9hI5bDdTc50dUt0/OgO9GzicotrEEFigksUYoiXRGdSxw3KdbUZt/
-oUlj1kMfYyPuMJAlfjhUENenMFLjdy+cVMh3eLInBpAgb05vqVA5iVQe7TIhhEoG
-SnEYnQhnoYhlfWW5QedRHVJqT2Q2plD1D1etkNDJ8mLnkthpp41qltl3CCWQB7Du
-8PyUAEdj2c2ghozukM/G462I9un6VMh+umO3j49Ub9bhc/aZMI0XE1v/y+G7EI3G
-R02wzbvVGiTHnJxbj4Tpf/W4wwFAdQ==
-=Dc/q
------END PGP SIGNATURE-----
-
---e890kymSckUvwzhr--
+> --
+> 2.20.1
+>
