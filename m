@@ -2,99 +2,196 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEDFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 074C5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:26:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 550532147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:25:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC7F22080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:26:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rDDlyAvv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AcEFUp2/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730257AbfFRSZP (ORCPT
+        id S1730344AbfFRS04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:25:15 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35797 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729943AbfFRSZO (ORCPT
+        Tue, 18 Jun 2019 14:26:56 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:40945 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727616AbfFRS04 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:25:14 -0400
-Received: by mail-pl1-f194.google.com with SMTP id p1so6060002plo.2;
-        Tue, 18 Jun 2019 11:25:14 -0700 (PDT)
+        Tue, 18 Jun 2019 14:26:56 -0400
+Received: by mail-lf1-f66.google.com with SMTP id a9so10058686lff.7;
+        Tue, 18 Jun 2019 11:26:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=ZWfAOAxoVbPij4WvtmFyrhlxSXKOQxDJzGR7xW1Qhl4=;
-        b=rDDlyAvvtsHMAO0xf644R8e0EQPSxem326pnG6VLJloD9q3ZMMlpOAT4t7gkgQdhM2
-         W0iC9W2W+DXCoN3BdpkExKZC8QJVpYhOF4C7WGszSQu+nbKhuZn/4yNEI2JzFzWuCdBC
-         2Y4U40rJJVg210CmG/P2ljebo+D3yeS778WgJ/Plevek8DAFFhEv1kpeb21htZJO60FZ
-         6X2XaSN+NQnjAd1q9XviYtXbTzX56n9Ro6AVEd8VUeOkvbXTb1Pe0FO2u3bBhX3YsMk0
-         DfjjvIYO5U1An9bvFbST4qIVrqRdK2r8SeX9cAG5ewyr/FdHqls6r2bgRd2Lxi20sAiH
-         VP+Q==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yidQ/JoteqePmrNToanD1FIIm5PIfhjC5P+85GqoSXo=;
+        b=AcEFUp2/gfNe+FIlVyznfRqaCq766VcPH3by9YSNylW2HcG1LpRed+HCwDsWB+3kqn
+         9FnX02StNBCRlsSBY+zdKDEsE3VcjpwViCngstHzMkR7Ymt9jpoZ2hhremG9JVsgFMga
+         q6t8Zke/wB0JavdQQM5M4lxwFA/8r9ruamAz95yb5LMSpWpRD1M9+UIGLM8t39d644QV
+         CngnyI+nmLDVq729klEzV5NskyK//cbwVnzRWk7njV91fMPQGm7+CeP11BC9WZQ9JjXz
+         xttnVJm/ivBJaNbhzGmcpH4++agS9zkHWT5iaOC6cwWYo/G/wTTgPqK2J5H69U2GSyD/
+         6kAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=ZWfAOAxoVbPij4WvtmFyrhlxSXKOQxDJzGR7xW1Qhl4=;
-        b=OqD+z1hzD82mjGQQzhNbwzAwR5DWmpnx03oXi29LgBRw8tcddyOBzEeIPCm5Doxowy
-         9IXLOBPauIB6tgqwt+PHnAogrncuLjhAdr7YSZixkObN/0W/aU4ZRM5Xad8ztKwT0MTI
-         nZZaY8LAciP17SjtYtLQGlh+zVa69/PHvcvQWqAtEPYKyvj4IzQQy8TwinaynSN93muS
-         4vS0CLvFUcxQhH9usHT3RL4fpvKrOsUh0mCLyuDgU5fvF04NxvbMrMSb/XQgeU1EUvK9
-         W18FbxOK9Li7r9s5fd1rd0sTbEILXnRPhKZWixrNZIlddzhfHzNsF7vMpSJf7qqc8ORD
-         n/1g==
-X-Gm-Message-State: APjAAAXoOoeCO9MVA66kKoyBoiXC/tlEy9fqX/pLUH2VJ8Uniz7adhUT
-        nNTlCCmyvv2SIGOv1JsqXXY=
-X-Google-Smtp-Source: APXvYqz8piH56vYUozmcdQ6KNkkF1F+FrG6bOMilJRTIj1HC6m3jGo47OqTa5F1u9LkmBbos6unY4A==
-X-Received: by 2002:a17:902:b70f:: with SMTP id d15mr32734935pls.318.1560882313798;
-        Tue, 18 Jun 2019 11:25:13 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id w14sm10510083pfn.47.2019.06.18.11.25.11
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yidQ/JoteqePmrNToanD1FIIm5PIfhjC5P+85GqoSXo=;
+        b=blM91wgxiab/NIKNoRfcbIYq4+chWLx0VvMMuyqHSLC33k9iGQxhvyX4LrRIQi00vk
+         BtWZUdyR5ZA3k5/cN3bgqv5d4jBoEn7SKQATfNrHz8WYFWyZgbrLayrYgQf25/0VCMj9
+         80pC/VR+VNhAEo4K92q+WcmMwkl0uh3MELxLapQhhu2tOa+o3P1tmuNmFRvlqX/OoR5e
+         lprNOqJiT/7PlDLi/L50G2aWzNDi0MABlF+9Vg/gFp0aVcom11H057RFEpcnp6LJleSQ
+         xelVmIHtAdpsj6seKr0B4xtpp5pZXfrwr1fecvsd4ANEEg4JzIL2m8bhuichCM2aUEUC
+         b7+g==
+X-Gm-Message-State: APjAAAVAFf+IJAkxSghAtNtEBtq6rNi0Hq0zjvEG20DgP+iRezJq0Qwz
+        Wngruc9W+BApfarM5Egc7/w=
+X-Google-Smtp-Source: APXvYqwMuI2ursOsy+CrF8ir3Ch7WCOQc4IyMeY71CthSm6OZIy5lGwis8NRfH05k7PyHsO2DIFckA==
+X-Received: by 2002:a19:6e41:: with SMTP id q1mr52075192lfk.20.1560882412849;
+        Tue, 18 Jun 2019 11:26:52 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id b6sm2580242lfa.54.2019.06.18.11.26.51
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 11:25:12 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 23:55:07 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Adham Abozaeid <adham.abozaeid@microchip.com>,
-        Ajay Singh <ajay.kathat@microchip.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: wilc1000: Remove redundant memset
-Message-ID: <20190618182506.GA9007@hari-Inspiron-1545>
+        Tue, 18 Jun 2019 11:26:52 -0700 (PDT)
+Subject: Re: [PATCH V2] i2c: tegra: disable irq in tegra_i2c_xfer_msg
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <cda89c10-c597-ce90-98dd-5cc13ee9b83d@gmail.com>
+Date:   Tue, 18 Jun 2019 21:26:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-alloc_etherdev function internally calls kvzalloc . So we may not need
-explicit memset after this call.
+18.06.2019 11:42, Bitan Biswas пишет:
+> tegra_i2c_xfer_msg initiates the I2C transfer in DMA
+> or PIO mode. It involves steps that need FIFO register
+> access, DMA API calls like dma_sync_single_for_device, etc.
+> Tegra I2C ISR has calls to tegra_i2c_empty_rx_fifo in PIO mode
+> and in DMA/PIO mode writes different I2C registers including
+> I2C interrupt status. ISR cannot start processing
+> before the preparation step at tegra_i2c_xfer_msg is complete.
+> Hence, a synchronization between ISR and tegra_i2c_xfer_msg
+> is in place today using spinlock.
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/wilc1000/wilc_netdev.c | 1 -
- 1 file changed, 1 deletion(-)
+Please use full 75 chars per-line, this should make commit message to look better.
 
-diff --git a/drivers/staging/wilc1000/wilc_netdev.c b/drivers/staging/wilc1000/wilc_netdev.c
-index ba78c08..c4efec2 100644
---- a/drivers/staging/wilc1000/wilc_netdev.c
-+++ b/drivers/staging/wilc1000/wilc_netdev.c
-@@ -1010,7 +1010,6 @@ int wilc_netdev_init(struct wilc **wilc, struct device *dev, int io_type,
- 		}
- 
- 		vif = netdev_priv(ndev);
--		memset(vif, 0, sizeof(struct wilc_vif));
- 
- 		if (i == 0) {
- 			strcpy(ndev->name, "wlan%d");
--- 
-2.7.4
+> Spinlock busy waits and can add avoidable delays.
+> 
+> In this patch needed synchronization is achieved by disabling
+> I2C interrupt during preparation step and enabling interrupt
+> once preparation is over and spinlock is no longer needed.
+> 
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 17 ++++++++---------
+>  1 file changed, 8 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 6fb545e..ccc7fae 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -240,7 +240,6 @@ struct tegra_i2c_hw_feature {
+>   * @bus_clk_rate: current I2C bus clock rate
+>   * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
+>   * @is_multimaster_mode: track if I2C controller is in multi-master mode
+> - * @xfer_lock: lock to serialize transfer submission and processing
+>   * @tx_dma_chan: DMA transmit channel
+>   * @rx_dma_chan: DMA receive channel
+>   * @dma_phys: handle to DMA resources
+> @@ -270,8 +269,6 @@ struct tegra_i2c_dev {
+>  	u32 bus_clk_rate;
+>  	u16 clk_divisor_non_hs_mode;
+>  	bool is_multimaster_mode;
+> -	/* xfer_lock: lock to serialize transfer submission and processing */
+> -	spinlock_t xfer_lock;
+>  	struct dma_chan *tx_dma_chan;
+>  	struct dma_chan *rx_dma_chan;
+>  	dma_addr_t dma_phys;
+> @@ -835,7 +832,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>  
+>  	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
+>  
+> -	spin_lock(&i2c_dev->xfer_lock);
+>  	if (status == 0) {
+>  		dev_warn(i2c_dev->dev, "irq status 0 %08x %08x %08x\n",
+>  			 i2c_readl(i2c_dev, I2C_PACKET_TRANSFER_STATUS),
+> @@ -935,7 +931,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>  
+>  	complete(&i2c_dev->msg_complete);
+>  done:
+> -	spin_unlock(&i2c_dev->xfer_lock);
+>  	return IRQ_HANDLED;
+>  }
+>  
+> @@ -1054,7 +1049,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>  	u32 packet_header;
+>  	u32 int_mask;
+>  	unsigned long time_left;
+> -	unsigned long flags;
+>  	size_t xfer_size;
+>  	u32 *buffer = NULL;
+>  	int err = 0;
+> @@ -1085,7 +1079,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>  	 */
+>  	xfer_time += DIV_ROUND_CLOSEST(((xfer_size * 9) + 2) * MSEC_PER_SEC,
+>  					i2c_dev->bus_clk_rate);
+> -	spin_lock_irqsave(&i2c_dev->xfer_lock, flags);
+> +	if (!i2c_dev->irq_disabled) {
+> +		disable_irq_nosync(i2c_dev->irq);
+> +		i2c_dev->irq_disabled = true;
+> +	}
 
+1) Peter correctly pointed out in the other email that the disabling should be synced.
+But see more below in 3.
+
+2) i2c_dev->irq_disabled == true can't ever be the case here because tegra_i2c_init()
+re-enables interrupt in a case of error condition. Hence interrupt always enabled at
+the beginning of the transfer.
+
+3) In my previous answer I was suggesting to request IRQ in a disabled state, this
+will allow to remove i2c_dev->irq_disabled completely.
+
+Then the tegra_i2c_xfer_msg() will have to enable IRQ after completion of the
+transfer-preparation process and disable IRQ once transfer is done (both success and
+failure cases). This is actually not a bad additional motivation for this patch, to
+keep CPU's interrupt disabled while idling and not to only rely on interrupt masking
+of the I2C hardware.
+
+4) ISR should simply return IRQ_NONE when interrupt status is 0 and allow kernel core
+to disable the faulty interrupt itself. There will be "unhandled interrupt" error
+message in KMSG log, following the disabling.
+
+5) In order to request IRQ in a disabled state, the IRQ_NOAUTOEN flag need to be set
+before the requesting, like this:
+
+    irq_set_status_flags(irq, IRQ_NOAUTOEN);
+
+    devm_request_irq(&pdev->dev, irq...);
+
+In a result of combining 3-5, both i2c_dev->irq_disabled and i2c_dev->irq variables
+become obsolete and could be removed in addition to xfer_lock. That all is a good
+cleanup in my opinion.
+
+[snip]
