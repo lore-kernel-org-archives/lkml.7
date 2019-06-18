@@ -2,83 +2,94 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5A2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED98C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:36:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06C5820873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:34:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8869F20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:36:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TJJzmgJQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbfFRWey (ORCPT
+        id S1730655AbfFRWgZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:34:54 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56122 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729982AbfFRWey (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:34:54 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2FE433092674;
-        Tue, 18 Jun 2019 22:34:54 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 68C6C100996F;
-        Tue, 18 Jun 2019 22:34:50 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <CAJfpegutheVtnmN6BFSjzrmz8p9+DpZxFoKa4CoShoh4MW+5gQ@mail.gmail.com>
-References: <CAJfpegutheVtnmN6BFSjzrmz8p9+DpZxFoKa4CoShoh4MW+5gQ@mail.gmail.com> <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk> <155905629702.1662.7233272785972036117.stgit@warthog.procyon.org.uk>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     dhowells@redhat.com, Al Viro <viro@zeniv.linux.org.uk>,
-        Ian Kent <raven@themaw.net>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miklos Szeredi <mszeredi@redhat.com>
-Subject: Re: [PATCH 04/25] vfs: Implement parameter value retrieval with fsinfo() [ver #13]
+        Tue, 18 Jun 2019 18:36:25 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41092 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729982AbfFRWgY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 18:36:24 -0400
+Received: by mail-lf1-f68.google.com with SMTP id 136so10490041lfa.8;
+        Tue, 18 Jun 2019 15:36:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OmWI+jPSOU4GzXhhmiJ7IENEOWtdm0c+3gyyHlOWvqc=;
+        b=TJJzmgJQH+0YaqHqaI05h6/a2QNcYpFEiPf6fCr5DHyjHjD87HNUx0mM6HRZvRQ6Ep
+         2KByAdsdHykeh/tziTXUTYbDmQMl1FetXi26liIbFSIxyvTaQbIth6VBGO6xOFpOkD4w
+         VlVZJ05a44+437c0F54r+p41O3ZbN+nAwtscWZmoiB0mLLYxZ3kbOYHaxZBX8MG5T9A1
+         zxji+DAiD6z8Sc4VIrIBPARiMX57KVZhkaNsTqoVnIh2tagwf3F0jZvBuo5pa09zhKoC
+         S4l0xSRwVpiFy0Wmkktg2hlmM7CS4xwDZ3QHszcbrYbgjOds1LH/waP2nNAwq5LvnoXt
+         wLMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OmWI+jPSOU4GzXhhmiJ7IENEOWtdm0c+3gyyHlOWvqc=;
+        b=b5/3gGj+2QYgoOpAg/Lm3w3Tv8wdqDMYgYZRcFqA69wAK4wCGxrb79w2WOvRIm0oL9
+         O/OQvWs53GslrnL5AJlDqxlvlgSy+e4Lhm+S8LrvBBHLmenHwP/hoc28ODsmst96B8CV
+         8h/SScA2gKdQRBRNUKg+MVMl7rHtjRXvaUvm53kPLTltPtvJone8toVuTYqsdyw0Bn/D
+         Dgs5y96zhdf3Rg1t38evursek7qRl4MyP0hnWs2pMnFsIpBL979NO01MM9usWdHCp3S7
+         GrphJXaSs9Wrg3WHUZUUwE+R8gOlxN2kvsLeDmOm9cRI8gIxKWrZTVOmTwpdkgeRR+4z
+         voTQ==
+X-Gm-Message-State: APjAAAX+LEwhYgv9qUUOTpJcfrZPC6l/dAP/sQvZ8PLQ+fBptmnygV/k
+        eHRcCC6qzWemXjtv3R744Ng9PkPyWeZKcit1e6Y=
+X-Google-Smtp-Source: APXvYqxVxnco4ZxfcINkyM3EPMHdvT8k36eLksXyP8cjLk9NtCWF+uLO5jPWzi8akJxZwabtOTCJPRUNMtGyyO+qJQU=
+X-Received: by 2002:a19:5044:: with SMTP id z4mr57625740lfj.80.1560897382598;
+ Tue, 18 Jun 2019 15:36:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <24126.1560897289.1@warthog.procyon.org.uk>
-Date:   Tue, 18 Jun 2019 23:34:49 +0100
-Message-ID: <24127.1560897289@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 18 Jun 2019 22:34:54 +0000 (UTC)
+References: <20190614074140.15276-1-andrew.smirnov@gmail.com>
+In-Reply-To: <20190614074140.15276-1-andrew.smirnov@gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 18 Jun 2019 19:36:34 -0300
+Message-ID: <CAOMZO5ALbjLu8+QBL2Z3dEg7Qkb6jcfHLW_CPzVyyifhDasFLQ@mail.gmail.com>
+Subject: Re: [PATCH] thermal: imx: skip registering legacy cooling on i.MX7
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        NXP Linux Team <linux-imx@nxp.com>, linux-pm@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Miklos Szeredi <miklos@szeredi.hu> wrote:
+Hi Andrey,
 
-> Again, don't blindly transform s_flags into options, because some of
-> them may have been internally manipulated by the filesystem.
+On Fri, Jun 14, 2019 at 4:41 AM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
+>
+> i.MX7 doesn't have a mainline cpufreq driver, so
 
-In what filesystems do I need to undo this manipulation?
+i.MX7 uses the generic cpufreq-dt driver since commit:
 
-> You could do a helper for filesystems that does the the common ones
-> (ro/sync/dirsync) but all of that *should* go through the filesystem.
+commit e3526f004a35e5f324b1c835bca056f4df05bff0
+Author: Bai Ping <b51503@freescale.com>
+Date:   Tue Nov 24 18:25:16 2015 +0800
 
-I don't agree, but since you keep insisting, I've changed the helper function
-that renders these so that it now takes s_flags as an argument and is called
-from generic_fsinfo() if the filesystem doesn't handle FSINFO_ATTR_PARAMETERS.
+    ARM: imx: enable cpufreq device on i.mx7d
 
-Therefore, every filesystem that handles FSINFO_ATTR_PARAMETERS, *must* call
-the function itself (or do the noting directly) otherwise these parameters
-will not get rendered.
+    Add a cpufreq-dt device on i.MX7D, using the
+    generic cpufreq-dt for CPU frequency scaling.
 
-The helper function has been exported, and the calling filesystem can give any
-s_flags it likes.  All the filesystems so far just use
-path->dentry->d_sb->s_flags.
-
-> Same goes for vfs_parse_sb_flag() btw.   It should be moved into each
-> filesystem's ->parse_param() and not be a mandatory thing.
-
-I disagree.  Every filesystem *must* be able to accept these standard flags,
-even if it then ignores them.
-
-David
+    Signed-off-by: Bai Ping <b51503@freescale.com>
+    Acked-by: Lucas Stach <l.stach@pengutronix.de>
+    Signed-off-by: Shawn Guo <shawnguo@kernel.org>
