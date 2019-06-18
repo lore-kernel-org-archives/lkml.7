@@ -2,100 +2,129 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC912C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F719C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5BE020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:04:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bXsdOgNN"
+	by mail.kernel.org (Postfix) with ESMTP id 0C15620863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:05:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560884747;
+	bh=vK8tc7Kd1ER0oaq0T5vbExeB1V5IbhRIZBrXithdRSM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=qQ6Fec2pb5+IjC5mJ1XDk3G6Hxt3mzMV2dQP/hHAZN8ehje6gO25YqwdvFch/7Tjq
+	 qUjQewTqhjWvbhmMkIR7adAsH4Rb8w1tccxmsrijjBnRh4LeQ/7EnfTU10swDkB/Mu
+	 DkRys+B8L30kzZcdlFzUNVoLb0DCVPFJv6cuZ9GI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730497AbfFRTEc (ORCPT
+        id S1730483AbfFRTFp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:04:32 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:38317 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727386AbfFRTEc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:04:32 -0400
-Received: by mail-io1-f66.google.com with SMTP id j6so2729030ioa.5;
-        Tue, 18 Jun 2019 12:04:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=a/uPUQoJ6eu9AxAlNMMd5WX6nBQBlPI8ohAXNes42aw=;
-        b=bXsdOgNNhHUU2Rh39DVh//DYSa8wLO17UKjyb5/VQukQMLaldrf+4dIX59LX69TnYN
-         K3WlokHw19Le+wRnE5hPEsWSMb2KbaNDx5aQ+C7b7g5d9yDelAgekAyu8ertsRj+QOT3
-         guCRjWqHYE+PLmbZPW3w3AonMOFEZxCC6+RetJ7CfwQSLIkUVWb/FJnImmatNF3vq349
-         fbNv1IfWTHrF6RCtOhKB+5LKmi1QtyGn5XN1Ti6YIvMVc6IkJkfULVAYcZ5EvLqVk6na
-         ndPSUblNdlZ3TZRg7jeFrHSRj7Rcwi2SpNUAZ8Ww8069HASVMOREAOYZwsIDziRy2bDW
-         HlYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=a/uPUQoJ6eu9AxAlNMMd5WX6nBQBlPI8ohAXNes42aw=;
-        b=jvxRX+X+k8e6a65z9H7mt4QViYsYF2liUfw4wt10HPDuv/WIviBXXiw3fcSzbX2Zqi
-         q/vY4PGXG8O12GmfFZ3sPQ8EmaRpES5uudMqOINNON6dFtW6SC61y2y1RTRmlMlv3bOQ
-         4uB2B1RPWE6SVMbwRuE8PYodwiZrIPJNrGo18ejR0L7secsgu21qllWcCyU9FS2S5iGj
-         AXCutofHQz/MoBkptmvpJcRyj5EyKIkIXNLcWkeQ9TtQUEo4zaCp5MSZWxBgRRl+4KUT
-         J/XjfSHHbkXIzJ0k7saFQ3KtdZJZYhNkK8lDZMr1kFQ2OXNb8weFjm4PJZmSBSZeFhhH
-         ke3Q==
-X-Gm-Message-State: APjAAAUpVUBXTpQcJonDVR9wFygfrNL9h0bpT54WfJRWDHkztf7psJWt
-        jkZYsk0wHJBkb9p1OWLTb1HLcAQTqnaFMeni2sk=
-X-Google-Smtp-Source: APXvYqyuCjkE0XkrMs+AVF+eYtg4xPIL2ITAp0mwmOnta8bq2cWffxL5pzIh0ImORxmb0xK8gWevVNC32cPKk+1JltA=
-X-Received: by 2002:a5e:8e42:: with SMTP id r2mr26795246ioo.305.1560884669745;
- Tue, 18 Jun 2019 12:04:29 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190525181329.18657-1-tiny.windzz@gmail.com> <20190525181329.18657-2-tiny.windzz@gmail.com>
- <CA+E=qVdh1E8Y7dZO0JSS4DJE2bo=98MuSKRt7nmeFg-td7Ua9Q@mail.gmail.com>
- <CAEExFWtjNridLsMXOnBe2mJOPhUOYJ6G3wGF3gx=0oQoQROOGg@mail.gmail.com>
- <CA+E=qVeOSw=_z4OiQ4++z8g-KN29UYVXGicNd3PtHobg4xaG+w@mail.gmail.com>
- <CAEExFWs58UNcVcQNnwK3dk5cpmfQRnjdRWAmYs5M1t_ONr1Bpw@mail.gmail.com> <CA+E=qVf-_2DWbf55bCnjbkZH9N4a1_K16OxN9=o=NrZAV7GXPA@mail.gmail.com>
-In-Reply-To: <CA+E=qVf-_2DWbf55bCnjbkZH9N4a1_K16OxN9=o=NrZAV7GXPA@mail.gmail.com>
-From:   Frank Lee <tiny.windzz@gmail.com>
-Date:   Wed, 19 Jun 2019 03:04:18 +0800
-Message-ID: <CAEExFWtcNUVKc1-9MVgwoq0QErn3nhSHWTpzQNpcydQRPh9uqw@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] thermal: sun8i: add thermal driver for h6
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     rui.zhang@intel.com, Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Tue, 18 Jun 2019 15:05:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40508 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727386AbfFRTFp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:05:45 -0400
+Received: from localhost.localdomain (unknown [194.230.155.186])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9939220B1F;
+        Tue, 18 Jun 2019 19:05:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560884744;
+        bh=vK8tc7Kd1ER0oaq0T5vbExeB1V5IbhRIZBrXithdRSM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=gFY5e132yO4yupLmLmnqzmDydMEQ4VP+fUPR85du/PyG0jwiZmvr1iSWYTUiTRtAK
+         z4i3BdnIg3UmIccOouDtHfQ6KI/izeu1wMHR/y6EbSarhsOPoHYIYCWMjI3/wG7Hoz
+         hFvxW+ldZQGwE5xx/t/7C5DY17w8/U+ekqdHTsj4=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        paulmck@linux.ibm.com, devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        arm-linux <linux-arm-kernel@lists.infradead.org>,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Kukjin Kim <kgene@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Olof Johansson <olof@lixom.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     Joseph Kogut <joseph.kogut@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [RFT 00/10] ARM/arm64: dts: exynos: Add support for Mali
+Date:   Tue, 18 Jun 2019 21:05:24 +0200
+Message-Id: <20190618190534.4951-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 7:08 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> On Wed, Jun 12, 2019 at 9:50 AM Frank Lee <tiny.windzz@gmail.com> wrote:
-> >
-> > > If you have a git tree I'll be happy to contribute A64 support. IIRC
-> > > it was quite similar to H3.
-> >
-> > I built a ths branch and I will do some work later.
-> >
-> > https://github.com/TinyWindzz/linux/tree/ths
->
-> Looks like you forgot to add your patches to this branch.
+Hi,
 
-Done.
+Inspired by patch from Joseph Kogut [1], let's add support for Mali GPUs
+to most of other boards.  However it was tested only on Odroid U3
+(Exynos4412) and not fully because requirement of special Mesa drivers
+with Lima support.
+
+Even without tests it brings full description of hardware and replaces
+some out-of-tree downstream code (e.g. in Tizen).
+
+Comments and tests are welcomed.
+
+[1] https://patchwork.kernel.org/patch/10996887/
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (10):
+  dt-bindings: gpu: mali: Add Samsung compatibles for Midgard and Utgard
+  clk: samsung: Add bus clock for GPU/G3D on Exynos4412
+  ARM: dts: exynos: Fix language typo and indentation
+  ARM: dts: exynos: Add GPU/Mali 400 node to Exynos3250
+  ARM: dts: exynos: Add GPU/Mali 400 node to Exynos4
+  arm64: dts: exynos: Add GPU/Mali T760 node to Exynos5433
+  arm64: dts: exynos: Add GPU/Mali T760 node to Exynos7
+  ARM: multi_v7_defconfig: Enable Panfrost and LIMA drivers
+  ARM: exynos_defconfig: Enable Panfrost and LIMA drivers
+  arm64: defconfig: Enable Panfrost driver
+
+ .../bindings/gpu/arm,mali-midgard.txt         |  1 +
+ .../bindings/gpu/arm,mali-utgard.txt          |  1 +
+ arch/arm/boot/dts/exynos3250-artik5.dtsi      |  5 ++
+ arch/arm/boot/dts/exynos3250-monk.dts         |  5 ++
+ arch/arm/boot/dts/exynos3250-rinato.dts       |  5 ++
+ arch/arm/boot/dts/exynos3250.dtsi             | 33 ++++++++++++
+ arch/arm/boot/dts/exynos4.dtsi                | 29 +++++++++++
+ arch/arm/boot/dts/exynos4210-origen.dts       |  5 ++
+ arch/arm/boot/dts/exynos4210-trats.dts        |  4 ++
+ .../boot/dts/exynos4210-universal_c210.dts    |  5 ++
+ arch/arm/boot/dts/exynos4210.dtsi             | 36 +++++++++++--
+ .../boot/dts/exynos4412-itop-scp-core.dtsi    |  5 ++
+ arch/arm/boot/dts/exynos4412-midas.dtsi       |  5 ++
+ .../boot/dts/exynos4412-odroid-common.dtsi    |  5 ++
+ arch/arm/boot/dts/exynos4412.dtsi             | 32 ++++++++++++
+ arch/arm/configs/exynos_defconfig             |  3 +-
+ arch/arm/configs/multi_v7_defconfig           |  3 +-
+ .../dts/exynos/exynos5433-tm2-common.dtsi     |  5 ++
+ arch/arm64/boot/dts/exynos/exynos5433.dtsi    | 51 +++++++++++++++++++
+ .../boot/dts/exynos/exynos7-espresso.dts      |  5 ++
+ arch/arm64/boot/dts/exynos/exynos7.dtsi       | 11 ++++
+ arch/arm64/configs/defconfig                  |  2 +-
+ drivers/clk/samsung/clk-exynos4.c             |  1 +
+ include/dt-bindings/clock/exynos4.h           |  1 +
+ 24 files changed, 251 insertions(+), 7 deletions(-)
+
+-- 
+2.17.1
+
