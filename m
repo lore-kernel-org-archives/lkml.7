@@ -2,119 +2,84 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93925C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:26:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88857C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77DCF20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:26:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684562054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729954AbfFRQ0R (ORCPT
+        id S1729974AbfFRQ0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:26:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57784 "EHLO mx1.redhat.com"
+        Tue, 18 Jun 2019 12:26:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47312 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729295AbfFRQ0Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:26:16 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1729308AbfFRQ0W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:26:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 087AF308A951;
-        Tue, 18 Jun 2019 16:26:09 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-87.ams2.redhat.com [10.36.116.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6F0C75F1B7;
-        Tue, 18 Jun 2019 16:25:53 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an ELF file
-References: <20190618091248.GB2790@e103592.cambridge.arm.com>
-        <20190618124122.GH3419@hirez.programming.kicks-ass.net>
-        <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
-        <20190618125512.GJ3419@hirez.programming.kicks-ass.net>
-        <20190618133223.GD2790@e103592.cambridge.arm.com>
-        <d54fe81be77b9edd8578a6d208c72cd7c0b8c1dd.camel@intel.com>
-        <87pnna7v1d.fsf@oldenburg2.str.redhat.com>
-        <1ca57aaae8a2121731f2dcb1a137b92eed39a0d2.camel@intel.com>
-        <87blyu7ubf.fsf@oldenburg2.str.redhat.com>
-        <b0491cb517ba377da6496fe91a98fdbfca4609a9.camel@intel.com>
-        <20190618162005.GF2790@e103592.cambridge.arm.com>
-Date:   Tue, 18 Jun 2019 18:25:51 +0200
-In-Reply-To: <20190618162005.GF2790@e103592.cambridge.arm.com> (Dave Martin's
-        message of "Tue, 18 Jun 2019 17:20:07 +0100")
-Message-ID: <8736k67tdc.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4B79F8552E;
+        Tue, 18 Jun 2019 16:26:12 +0000 (UTC)
+Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0860D600C8;
+        Tue, 18 Jun 2019 16:26:00 +0000 (UTC)
+Date:   Tue, 18 Jun 2019 18:25:58 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate
+ resource in use
+Message-ID: <20190618182558.7d7e025a.cohuck@redhat.com>
+In-Reply-To: <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
+References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
+        <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 18 Jun 2019 16:26:15 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 18 Jun 2019 16:26:22 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Dave Martin:
+On Thu, 13 Jun 2019 15:39:36 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> On Tue, Jun 18, 2019 at 09:00:35AM -0700, Yu-cheng Yu wrote:
->> On Tue, 2019-06-18 at 18:05 +0200, Florian Weimer wrote:
->> > * Yu-cheng Yu:
->> > 
->> > > > I assumed that it would also parse the main executable and make
->> > > > adjustments based on that.
->> > > 
->> > > Yes, Linux also looks at the main executable's header, but not its
->> > > NT_GNU_PROPERTY_TYPE_0 if there is a loader.
->> > > 
->> > > > 
->> > > > ld.so can certainly provide whatever the kernel needs.  We need to tweak
->> > > > the existing loader anyway.
->> > > > 
->> > > > No valid statically-linked binaries exist today, so this is not a
->> > > > consideration at this point.
->> > > 
->> > > So from kernel, we look at only PT_GNU_PROPERTY?
->> > 
->> > If you don't parse notes/segments in the executable for CET, then yes.
->> > We can put PT_GNU_PROPERTY into the loader.
->> 
->> Thanks!
->
-> Would this require the kernel and ld.so to be updated in a particular
-> order to avoid breakage?  I don't know enough about RHEL to know how
-> controversial that might be.
+> Introduces a new driver callback to prevent a root user from unbinding
+> an AP queue from its device driver if the queue is in use. This prevents
+> a root user from inadvertently taking a queue away from a guest and
+> giving it to the host, or vice versa. The callback will be invoked
+> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
+> result in one or more AP queues being removed from its driver. If the
+> callback responds in the affirmative for any driver queried, the change
+> to the apmask or aqmask will be rejected with a device in use error.
+> 
+> For this patch, only non-default drivers will be queried. Currently,
+> there is only one non-default driver, the vfio_ap device driver. The
+> vfio_ap device driver manages AP queues passed through to one or more
+> guests and we don't want to unexpectedly take AP resources away from
+> guests which are most likely independently administered.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
+>  drivers/s390/crypto/ap_bus.h |   3 +
+>  2 files changed, 135 insertions(+), 6 deletions(-)
 
-There is no official ld.so that will work with the current userspace
-interface (in this patch submission).  Upstream glibc needs to be
-updated anyway, so yet another change isn't much of an issue.  This is
-not a problem; we knew that something like this might happen.
+Hm... I recall objecting to this patch before, fearing that it makes it
+possible for a bad actor to hog resources that can't be removed by
+root, even forcefully. (I have not had time to look at the intervening
+versions, so I might be missing something.)
 
-Sure, people need a new binutils with backports for PT_GNU_PROPERTY, but
-given that only very few people will build CET binaries with older
-binutils, I think that's not a real issue either.
-
-Thanks,
-Florian
+Is there a way for root to forcefully override this?
