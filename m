@@ -5,72 +5,80 @@ X-Spam-Level:
 X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B51C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:58:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B18C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A08AC2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:58:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9727D2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNe/IM6E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEKCtOAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbfFRK6C (ORCPT
+        id S1729637AbfFRK7D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:58:02 -0400
-Received: from mail-wr1-f42.google.com ([209.85.221.42]:44613 "EHLO
-        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729491AbfFRK6B (ORCPT
+        Tue, 18 Jun 2019 06:59:03 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40951 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfFRK7C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:58:01 -0400
-Received: by mail-wr1-f42.google.com with SMTP id r16so13421727wrl.11;
-        Tue, 18 Jun 2019 03:57:59 -0700 (PDT)
+        Tue, 18 Jun 2019 06:59:02 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so13461866wre.7;
+        Tue, 18 Jun 2019 03:59:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=XQvVKHxeSgcqLnyzzTyNxjA3usGAS6zCVGXO0R/QfL0=;
-        b=TNe/IM6EQ6FqbHKU2iUx8oEi1YKRTXlW1c+mTu0csxW+y5kmr92lTKKS1Y0ki6zois
-         GF5j0p6hCICQcxKHwYiiu3LHJYrIHv4SSDyA8LUH3O0cX3bP4LFgpJeGC9WllYCmirzI
-         C2nETkBD//rAzimUughJuku57cu2Xj5QGS6BnVSxaRtyf2qMfg/Csrm3Rjnp/vzZO9Js
-         r6o4GPYBjQcKpiO5tQQPaPqiCZYBd8wCrraxmz6cSqd62LQSM5qNDCZ66fUsAxnQ7IJB
-         O+RBhjUoRtAAruAps5HPBAG2hRJCB0bgkXflCwXOAiWTfzWd3y5pbQ8y6BnsR9rJnZ6t
-         pPng==
+        bh=erWl2ztGQC1+LMUU2GDgbAUN0dxGbS3XfDl1jE6l2ow=;
+        b=vEKCtOARKjx5EDFmxAJP5qqdrxjSakRCZS/TgKM4RtapEG3kuF3EcgT+PH7T7Et5xP
+         YFmWyPUzNyz/Sikfrd2Wvs40djchhc4QsPzZFtFYyvgb6MmHE6gVCk2iSkxw/iFYYAB2
+         DiqR/87gvY86T+U12boAwdwwjhnXBlsraE2LNmc/5SVXbQ259vZ3kym0MHWOzSsNGg4/
+         rDCrjn4s2Op1omFqMkOwkdQF4QzgQnymUDW9oSFeC3YCHPSwjxmZYUUzDMhSL5kdCIXj
+         s5YZLLa7iVK+sg56EJFDFhGVN09zKD0Pla3p/go1FbagxfZnqlyQpfcMiPHyUIKYA/bI
+         G2qw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XQvVKHxeSgcqLnyzzTyNxjA3usGAS6zCVGXO0R/QfL0=;
-        b=J+DcPhNGIHBeOEFOylkIgN3n/+B1uhLPLyXmHjL9+R/HCZ00q0YBKQapovk1gOxnyq
-         J3V8T5wS6VzdIwe9Ch0sC32Yeox7Vx4zymsex5/s3vC0TQj9iU56Geqb3Dwqak74xGld
-         ZtAMa9FbAZuRD6D7X8lICKZclgpaXi3/JPEWMpKtXQESNvxMQZRFjWknDLofmi95P2kO
-         +WFcqR4g/HJLvLQbG7LWyk0gQVCHCJ8Jhafi8/Z7UMI+5i6cEyrfXm3UTO+NtKjYw0iM
-         6NNvhyA2AU+fYAI/h7CDLyY/RWBjwO++FV/zDbGs6Bvg+4Z2ZfoGw32sB2OkbPe4+f5f
-         HBOQ==
-X-Gm-Message-State: APjAAAXP1npaEwabtWbPpbKebx762Ewm2t81mblDOLX2MVXzLJHHX9Nx
-        HfbBmuUKu66lJgzdAg7C8nQ=
-X-Google-Smtp-Source: APXvYqw9hI/mxhmRW42S1eiDNlGbtjcBgBwMHiE+PtZr+RNSXVRedsfSoM3aW+bG9o7NCoR64LBtVQ==
-X-Received: by 2002:a5d:494d:: with SMTP id r13mr28758585wrs.152.1560855478819;
-        Tue, 18 Jun 2019 03:57:58 -0700 (PDT)
+        bh=erWl2ztGQC1+LMUU2GDgbAUN0dxGbS3XfDl1jE6l2ow=;
+        b=gmg5204szueOsUlOSb7aV8zd9Z91VtoNjanULaRk0vkOb8vxPrAB5jGgtBn/3m3oaY
+         gDv5dB71bL2BX3J/NQaPXsWfT1ZkufciIlptT5pEH3yN6xSLDjKrTWf33EV8oIfugTpx
+         m7p85PT3Q3w/uObDawqkajwCWrLy2BKTWxpebV7UpAeFSa2zowIOlq2iWwZYsSQXq9GZ
+         TvH4lY1XoU+aUn/wwHVKmWro/ewzrUWSvrweRafqZ7GgazpHVvaK31f8ZhDk/QtpEfZx
+         OOI5oOokPTza5R/qdR5jI09B4lEc5BaILyW5yuewoPeDe3qP/FFem4S4rVy/t1RLEk+j
+         6LWw==
+X-Gm-Message-State: APjAAAVifWmQQ4PXz5uBsUXOP1rVFKUkklbi4+XP8p8tk+tPOpnkGsKW
+        FPA1NVAoimB9lbgFvtPGwws=
+X-Google-Smtp-Source: APXvYqyrCJUtg1gqiMWv2NhNK6EU8WMp4kmrJ0w+oq+L1m8gW/h13kuBpFPjrwh8Cp3+wVCytRNK9g==
+X-Received: by 2002:a5d:4a90:: with SMTP id o16mr22664381wrq.13.1560855539430;
+        Tue, 18 Jun 2019 03:58:59 -0700 (PDT)
 Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id j7sm14584049wru.54.2019.06.18.03.57.57
+        by smtp.gmail.com with ESMTPSA id l1sm1930397wmg.13.2019.06.18.03.58.58
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 03:57:57 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 12:57:56 +0200
+        Tue, 18 Jun 2019 03:58:58 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 12:58:57 +0200
 From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Nicolin Chen <nicoleotsuka@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: tegra: Add INA3221 channel info for Jetson TX2
-Message-ID: <20190618105756.GC28892@ulmo>
-References: <20190617221659.25366-1-nicoleotsuka@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 01/17] irqchip: tegra: do not disable COP IRQ during
+ suspend
+Message-ID: <20190618105857.GD28892@ulmo>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-2-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
+        protocol="application/pgp-signature"; boundary="RhUH2Ysw6aD5utA4"
 Content-Disposition: inline
-In-Reply-To: <20190617221659.25366-1-nicoleotsuka@gmail.com>
+In-Reply-To: <1560843991-24123-2-git-send-email-skomatineni@nvidia.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -78,55 +86,46 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---xesSdrSSBC0PokLI
+--RhUH2Ysw6aD5utA4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jun 17, 2019 at 03:16:59PM -0700, Nicolin Chen wrote:
-> There are four INA3221 chips on the Jetson TX2 (p3310 + p2771).
-> And each INA3221 chip has three input channels to monitor power.
+On Tue, Jun 18, 2019 at 12:46:15AM -0700, Sowjanya Komatineni wrote:
+> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
+> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
 >=20
-> So this patch adds these 12 channels to the DT of Jetson TX2, by
-> following the DT binding of INA3221 and official documents from
-> https://developer.nvidia.com/embedded/downloads
+> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
+> for Tegra210.
 >=20
-> tegra186-p3310:
-> https://developer.nvidia.com/embedded/dlc/jetson-tx2-series-modules-oem-p=
-roduct-design-guide
+> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+> interrupt controller suspend operation.
 >=20
-> tegra186-p2771-0000:
-> http://developer.nvidia.com/embedded/dlc/jetson-tx1-tx2-developer-kit-car=
-rier-board-spec-20180618
->=20
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  .../boot/dts/nvidia/tegra186-p2771-0000.dts   | 40 +++++++++++++++++++
->  .../arm64/boot/dts/nvidia/tegra186-p3310.dtsi | 40 +++++++++++++++++++
->  2 files changed, 80 insertions(+)
+>  drivers/irqchip/irq-tegra.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
 
-Applied, thanks.
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-Thierry
-
---xesSdrSSBC0PokLI
+--RhUH2Ysw6aD5utA4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Iw7QACgkQ3SOs138+
-s6EXmQ/9GZLFKQR0NGbOGAN7fcKrt2ibZoOvzKBBoHjDUnPERTfkFJFPZpr1QiI1
-s2lG+C4nzxfhh2VMLBjAB/T4S7icF66zo7azRRhOeWZYYt7yfjv61wn48TOEV0vo
-BKWR9NF9f4CUc4bAbMwkD9rGc3FLkvrh63rxPzPCqboY0k0tjz/rss3+DoSYaSY3
-C6yu4gej37N/Bj9jFx6l0RKIsiLVErLrnHupqzgKsqNjbaZOIwQgJPvVQFxt7QnA
-9ckz2JTV2AEYjsD2EG2rUw3Sy/CeyD7OgpLhWaQ0yaw5XQyyVpuZJvGTYrjgxn1b
-lAW+MlmxGBxhrYmOzRhh11FAZwTAtObaLdjGk1jaR25hnw5DYk1ESL8mlTaxUTWA
-3ISZU9ADj5x7BHF0M5f/YH0FRg8BdBS0BgDGGiMJNcNk+HNrhODhrEY66vLcTjDZ
-Tg7TL9sPnAgeRumKc/xnV4sa1CJ3HLR6GdxxUMgD64OzRH0xKEeSBhzadGenCzyp
-x6EYsHAETEc0CER1WzDDgsGEsqxHPegpe8e+eI299Qf7yhBzLA4D43eI7GeCRgQo
-Z3yMBrxH8GW6co9v2VTHbDiFuBLjPtiwOSvWw4jHr1HpguVA/6S/wzYAD2tgjPk7
-9838K6HJj7rOiC0Ojzn6fGi7XS0nnDWIGnjMpaTuXjKWi++mc/g=
-=sXFk
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Iw/EACgkQ3SOs138+
+s6GLLRAAvKzInFHRhecpwNZPDwkUnBKfQIyiErHNkSUfLXJP6QSIaQa+BCBJuoNf
+BTxROMwnCIJebjytKZIoLlNjND82Hk/5NDNhjivrBhsXVdmL4vCnlwFNSCQNEqbi
+Hp2iVP/LtvGNaeG2Wrp3UD8bA7w4Qb94jXItmE2iwLfCaJV+7myCiySGJea3CTqQ
+p7PCgu0joBLlfFG9nYE/JA+VAZPSi+IV7mCvyWquvVV7nfca1Cjfje1FcJDn08YI
+eTMxfqj+hSUrmYadTXgqERUoZOPHjaQ/TGTyTsyWKsFvR/zTB9PNZpzo7o7wOnik
+0ph9gZo4LKY88tSzdK9AM+r3F5sMQCXM8WAETePUrrADLLRUEQvnTKeG3tJvaIRB
+Zk1WbiJIXH7K54epAeuLnu4zHFj5XFaDs4orPkXhF36d1BouB01KZ9KytMnnrRUv
+tIVMGNDFuYV77jKUdAVUl0qBoZmFaYDW+WfGfassadJEpgJDNR4SgkhJZrq2O0VF
+3J2mc8k0frM0EPbtldLOpAMGJbAbchHFKd51mRxVNBLYFzA9N8N+d6oC15ZIpBKN
+iiM35hN9xskQpJdZJYsNBISdEW8+9AcODhhY8FrD6B8IvV4wPaTvmdAj+NhI17As
+M1P9Sm4OTVElx0ApVdGLDdDir6s/I5CiErAqXEQejQKlmMbAxnI=
+=NwCH
 -----END PGP SIGNATURE-----
 
---xesSdrSSBC0PokLI--
+--RhUH2Ysw6aD5utA4--
