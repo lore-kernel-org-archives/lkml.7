@@ -2,243 +2,113 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4B8C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AEE9C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:13:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B21CC2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:12:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="x8SMGPt5"
+	by mail.kernel.org (Postfix) with ESMTP id DA2592082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:13:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730713AbfFRWMf (ORCPT
+        id S1730818AbfFRWND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:12:35 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40242 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730301AbfFRWMc (ORCPT
+        Tue, 18 Jun 2019 18:13:03 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:48940 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730398AbfFRWND (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:12:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a9so10465073lff.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 15:12:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7ijTfZvfI5wTJeK3N+IrXSjofyksCP1FMpQA/cT2QWU=;
-        b=x8SMGPt5CiziwkN3SCSA7Z0jWoPKkMXC56QCq+rhpdnCQb7X0zm6NrCqztIGSaqu0S
-         nyx9ubiWqlPc5g01uCZnYqwpwQ+ekwt2L19wdNEr8eQ4SMT23yDlXm6uyuKiKEAncj8a
-         38eLY2zHb8L9ly8vD63stgevnXOR2av3Rl1kjVaJ7v5e41jfNdl5sO7i6uBeFqHOn2lc
-         xuI2Ibg6KEl9kMayLNOnRibmy+knfntp/5G3h4GQKG3amw+q/cyR6WDR5lE5sr9TXTPy
-         O24VLdSd2ef7nPlyXmjKEsQCNSlingjELGr0xPg14Yar7eH7+qJMmBrqv91BJaROoXyo
-         10NA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7ijTfZvfI5wTJeK3N+IrXSjofyksCP1FMpQA/cT2QWU=;
-        b=Saaanh5v54e2AACyH0coqmktnxNfwtadc7wJeDxQvaKiNRMhiY9p0Fdk+QYs0h6ehj
-         y/WBV/Xg6mIfizG2ZjF07wqzbLIOQ5OrSMowrSjtOLQubHhKMURqchQ0QdsikWV5RX7O
-         IXexpC6Iqae0rcWNsJyi44Cv2dCGVlWSDG3ia6WsiWgr/bMPzQiQSY1pztk1Ly5tA+N7
-         QmEFlmv0eyCs7ESA5KAcmmJl8XOLYzxkAYQl87R7ay+ERNLf5csgjrieEj/WC3e3VqGA
-         g5uiyZMuTacxSgAFZtgL4RmkrlgCifLVrVtlgJApJ6mo9/HBL+dOVqNXEheolNymMBL4
-         krEQ==
-X-Gm-Message-State: APjAAAVj4RkY7YUreiy69xOX8n1jt3qUNo6l1aaGMiTPhA55kegkmwdV
-        js0jQwOKDpi1ZSqwfYPdX4m3Yg2vdm+OT5tnGWsA
-X-Google-Smtp-Source: APXvYqzZQi06PsgleLiA9BnZDSf+AVj02P6GpIYllhxTaBU8QmqZTlzv0Kz7u7O4QUVbSMdtwS/xzb4L+qw66/UkkdQ=
-X-Received: by 2002:ac2:5310:: with SMTP id c16mr59181153lfh.119.1560895948607;
- Tue, 18 Jun 2019 15:12:28 -0700 (PDT)
+        Tue, 18 Jun 2019 18:13:03 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1hdMLQ-0005xi-8L; Wed, 19 Jun 2019 00:12:48 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+        <20190607162349.18199-2-john.ogness@linutronix.de>
+        <20190618045117.GA7419@jagdpanzerIV>
+Date:   Wed, 19 Jun 2019 00:12:43 +0200
+Message-ID: <87imt2bl0k.fsf@linutronix.de>
 MIME-Version: 1.0
-References: <20190529145742.GA8959@cisco> <20190531002058.tsddah4edcazkuzs@madcap2.tricolour.ca>
- <CAHC9VhTrM1op_EH=YAn9pU8dMOr=jB-Ph4SxFeqGFskwLmFnCA@mail.gmail.com> <97478582.yP93vGJyqj@x2>
-In-Reply-To: <97478582.yP93vGJyqj@x2>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Tue, 18 Jun 2019 18:12:17 -0400
-Message-ID: <CAHC9VhQTPUnHt73SVn=iA_PW1mHkkDf=Nri1kgw_m5mcoiJV9A@mail.gmail.com>
-Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     Richard Guy Briggs <rgb@redhat.com>,
-        Tycho Andersen <tycho@tycho.ws>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
-        Linux-Audit Mailing List <linux-audit@redhat.com>,
-        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
-        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
-        nhorman@tuxdriver.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 3, 2019 at 4:24 PM Steve Grubb <sgrubb@redhat.com> wrote:
-> Hello Paul,
+On 2019-06-18, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
+>> +	struct prb_reserved_entry e;
+>> +	char *s;
+>> +
+>> +	s = prb_reserve(&e, &rb, 32);
+>> +	if (s) {
+>> +		sprintf(s, "Hello, world!");
+>> +		prb_commit(&e);
+>> +	}
 >
-> I am curious about this. We seemed to be close to getting this patch pulled
-> in. A lot of people are waiting for it. Can you summarize what you think the
-> patches need and who we think needs to do it? I'm lost. Does LXC people need
-> to propose something? Does Richard? Someone else? Who's got the ball?
-
-[My apologies, this was lost in my inbox and I just not noticed it.]
-
-Please don't top post on things sent to the mailing lists Steve, you
-know better than that.
-
-Yes, things were moving along well, but upon talking with the LXC
-folks it appears we underestimated the importance of nested
-orchestrators.  I suspect my reply to Dan on the 4th covered your
-questions, if you didn't see it, here is the relevant snippet:
-
-"To be clear, that's where we are at: we need to figure out what the
-kernel API would look like to support nested container orchestrators.
-My gut feeling is that this isn't going to be terribly complicated
-compared to the rest of the audit container ID work, but it is going
-to be some work.  We had a discussion about some potential solutions
-in the cover letter and it sounds like Richard is working up some
-ideas now, let's wait to see what that looks like."
-
-... and that is where we are at.  I'm looking forward to seeing
-Richard's next patchset.
-
-> On Friday, May 31, 2019 8:44:45 AM EDT Paul Moore wrote:
-> > On Thu, May 30, 2019 at 8:21 PM Richard Guy Briggs <rgb@redhat.com> wrote:
-> > > On 2019-05-30 19:26, Paul Moore wrote:
-> > > > On Thu, May 30, 2019 at 5:29 PM Tycho Andersen <tycho@tycho.ws> wrote:
-> > > > > On Thu, May 30, 2019 at 03:29:32PM -0400, Paul Moore wrote:
-> > > > > > [REMINDER: It is an "*audit* container ID" and not a general
-> > > > > > "container ID" ;)  Smiley aside, I'm not kidding about that part.]
-> > > > >
-> > > > > This sort of seems like a distinction without a difference;
-> > > > > presumably
-> > > > > audit is going to want to differentiate between everything that
-> > > > > people
-> > > > > in userspace call a container. So you'll have to support all this
-> > > > > insanity anyway, even if it's "not a container ID".
-> > > >
-> > > > That's not quite right.  Audit doesn't care about what a container is,
-> > > > or is not, it also doesn't care if the "audit container ID" actually
-> > > > matches the ID used by the container engine in userspace and I think
-> > > > that is a very important line to draw.  Audit is simply given a value
-> > > > which it calls the "audit container ID", it ensures that the value is
-> > > > inherited appropriately (e.g. children inherit their parent's audit
-> > > > container ID), and it uses the value in audit records to provide some
-> > > > additional context for log analysis.  The distinction isn't limited to
-> > > > the value itself, but also to how it is used; it is an "audit
-> > > > container ID" and not a "container ID" because this value is
-> > > > exclusively for use by the audit subsystem.  We are very intentionally
-> > > > not adding a generic container ID to the kernel.  If the kernel does
-> > > > ever grow a general purpose container ID we will be one of the first
-> > > > ones in line to make use of it, but we are not going to be the ones to
-> > > > generically add containers to the kernel.  Enough people already hate
-> > > > audit ;)
-> > > >
-> > > > > > I'm not interested in supporting/merging something that isn't
-> > > > > > useful;
-> > > > > > if this doesn't work for your use case then we need to figure out
-> > > > > > what
-> > > > > > would work.  It sounds like nested containers are much more common
-> > > > > > in
-> > > > > > the lxc world, can you elaborate a bit more on this?
-> > > > > >
-> > > > > > As far as the possible solutions you mention above, I'm not sure I
-> > > > > > like the per-userns audit container IDs, I'd much rather just emit
-> > > > > > the
-> > > > > > necessary tracking information via the audit record stream and let
-> > > > > > the
-> > > > > > log analysis tools figure it out.  However, the bigger question is
-> > > > > > how
-> > > > > > to limit (re)setting the audit container ID when you are in a
-> > > > > > non-init
-> > > > > > userns.  For reasons already mentioned, using capable() is a non
-> > > > > > starter for everything but the initial userns, and using
-> > > > > > ns_capable()
-> > > > > > is equally poor as it essentially allows any userns the ability to
-> > > > > > munge it's audit container ID (obviously not good).  It appears we
-> > > > > > need a different method for controlling access to the audit
-> > > > > > container
-> > > > > > ID.
-> > > > >
-> > > > > One option would be to make it a string, and have it be append only.
-> > > > > That should be safe with no checks.
-> > > > >
-> > > > > I know there was a long thread about what type to make this thing. I
-> > > > > think you could accomplish the append-only-ness with a u64 if you had
-> > > > > some rule about only allowing setting lower order bits than those
-> > > > > that
-> > > > > are already set. With 4 bits for simplicity:
-> > > > >
-> > > > > 1100         # initial container id
-> > > > > 1100 -> 1011 # not allowed
-> > > > > 1100 -> 1101 # allowed, but now 1101 is set in stone since there are
-> > > > >
-> > > > >              # no lower order bits left
-> > > > >
-> > > > > There are probably fancier ways to do it if you actually understand
-> > > > > math :)
-> > > >
-> > > >  ;)
-> > > >
-> > > > > Since userns nesting is limited to 32 levels (right now, IIRC), and
-> > > > > you have 64 bits, this might be reasonable. You could just teach
-> > > > > container engines to use the first say N bits for themselves, with a
-> > > > > 1
-> > > > > bit for the barrier at the end.
-> > > >
-> > > > I like the creativity, but I worry that at some point these
-> > > > limitations are going to be raised (limits have a funny way of doing
-> > > > that over time) and we will be in trouble.  I say "trouble" because I
-> > > > want to be able to quickly do an audit container ID comparison and
-> > > > we're going to pay a penalty for these larger values (we'll need this
-> > > > when we add multiple auditd support and the requisite record routing).
-> > > >
-> > > > Thinking about this makes me also realize we probably need to think a
-> > > > bit longer about audit container ID conflicts between orchestrators.
-> > > > Right now we just take the value that is given to us by the
-> > > > orchestrator, but if we want to allow multiple container orchestrators
-> > > > to work without some form of cooperation in userspace (I think we have
-> > > > to assume the orchestrators will not talk to each other) we likely
-> > > > need to have some way to block reuse of an audit container ID.  We
-> > > > would either need to prevent the orchestrator from explicitly setting
-> > > > an audit container ID to a currently in use value, or instead generate
-> > > > the audit container ID in the kernel upon an event triggered by the
-> > > > orchestrator (e.g. a write to a /proc file).  I suspect we should
-> > > > start looking at the idr code, I think we will need to make use of it.
-> > >
-> > > My first reaction to using the IDR code is that once an idr is given up,
-> > > it can be reused.  I suppose we request IDRs and then never give them up
-> > > to avoid reuse...
-> >
-> > I'm not sure we ever what to guarantee that an audit container ID
-> > won't be reused during the lifetime of the system, it is a discrete
-> > integer after all.  What I think we do want to guarantee is that we
-> > won't allow an unintentional audit container ID collision between
-> > different orchestrators; if a single orchestrator wants to reuse an
-> > audit container ID then that is its choice.
-> >
-> > > I already had some ideas of preventing an existing ID from being reused,
-> >
-> > Cool.  I only made the idr suggestion since it is used for PIDs and
-> > solves a very similar problem.
-> >
-> > > but that makes the practice of some container engines injecting
-> > > processes into existing containers difficult if not impossible.
-> >
-> > Yes, we'll need some provision to indicate which orchestrator
-> > "controls" that particular audit container ID, and allow that
-> > orchestrator to reuse that particular audit container ID (until all
-> > those containers disappear and the audit container ID is given back to
-> > the pool).
+> A nit: snprintf().
 >
->
->
->
+> sprintf() is tricky, it may write "slightly more than was
+> anticipated" bytes - all those string_nocheck(" disabled"),
+> error_string("pK-error"), etc.
 
+Agreed. Documentation should show good examples.
 
---
-paul moore
-www.paul-moore.com
+>> +Sample reader code::
+>> +
+>> +	DECLARE_PRINTKRB_ENTRY(entry, 128);
+>> +	DECLARE_PRINTKRB_ITER(iter, &test_rb, &entry);
+>> +	u64 last_seq = 0;
+>> +	int len;
+>> +	char *s;
+>> +
+>> +	prb_for_each_entry(&iter, len) {
+>> +		if (entry.seq - last_seq != 1) {
+>> +			printf("LOST %llu ENTRIES\n",
+>> +				entry.seq - (last_seq + 1));
+>> +		}
+>> +		last_seq = entry.seq;
+>> +
+>> +		s = (char *)&entry.buffer[0];
+>> +		if (len >= 128)
+>> +			s[128 - 1] = 0;
+>> +		printf("data: %s\n", s);
+>> +	}
+>
+> How are we going to handle pr_cont() loops?
+>
+> print_modules()
+>  preempt_disable();
+>  list_for_each_entry_rcu(mod, &modules, list) {
+>   pr_cont(" %s%s", mod->name, module_flags(mod, buf));
+>  }
+>  preempt_enable();
+
+pr_cont() (in its current form) is not related to the printk buffer
+because cont messages use their own separate struct cont buffer. And for
+the initial integration of the new ringbuffer I would leave that as it
+is. Which means initially, pr_cont() would still sit behind a raw
+spinlock and pr_cont() from NMI context would be stored as individual
+messages.
+
+However, to remove the spinlock of the cont buffer and allow pr_cont()
+to work from NMI context, I would like to introduce a separate lockless
+ringbuffer instance for cont that contains all the cont pieces
+(including the caller_id). As soon as the caller_id changes from the
+oldest record in the cont ringbuffer, that caller would assemble the
+full cont message, popping all the pieces from the ringbuffer (with a
+single cmpxchg) and insert the message to the printk ringbuffer.
+
+John Ogness
