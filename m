@@ -2,131 +2,99 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 560A9C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:26:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEB7C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EE3B2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:26:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="ULNdvw8+"
+	by mail.kernel.org (Postfix) with ESMTP id 40A412085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728371AbfFRD0S (ORCPT
+        id S1728446AbfFRD2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 23:26:18 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41681 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFRD0S (ORCPT
+        Mon, 17 Jun 2019 23:28:05 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34758 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRD2E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 23:26:18 -0400
-Received: by mail-ed1-f65.google.com with SMTP id p15so19315643eds.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 20:26:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=QB8lwnfAWM5eSh/acU+B5HKYIehkA7mV7O4FwPzcexo=;
-        b=ULNdvw8+tq8QeUnFaQePLqg1iryaaYp/aWw9fGLemPYhJkDQ2H5XhjVIbUsBgZd64F
-         61o+JYMVnvgUgyC2GM30u6jjijf/A+ftp23F81RdhJ6D/jXzJERTFZQtARcBDdkleqUm
-         eSS18Q1TKM1uvznC79K30CCQx89bqEa2ol9lykGFnO2MgthvqOpwwdQlIaF9soPy+4eF
-         JjRf8fu6RYvl3V91iXvxVZWnUOBsUx2Y413J/6USyWI3DJBU5uVxOTO3zdofWGkN+zPM
-         NZTnFSpl1IBQtE31RIDo+sedqJJ1JRgx6wCpeaKFcOVy9par13mVHGq1nrg8fik0S7v6
-         NqCw==
+        Mon, 17 Jun 2019 23:28:04 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c85so6796743pfc.1;
+        Mon, 17 Jun 2019 20:28:04 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=QB8lwnfAWM5eSh/acU+B5HKYIehkA7mV7O4FwPzcexo=;
-        b=dJmo7bhe9zFDV8njrxZEHRiHRSy224GYogbmAU41kkeRa1j5b7OpOKH1HnbSOXDiKy
-         twmaYKVJK6oGzHXsGkFbLlwUwZrrVdqieKA67coW6tkfzDzZL5h1BYrWt1d3HfblIjiX
-         XPubW7fm2F3ROzbVrFId94z0TGAO8Omh85IDP6LL4tT8DQo6UEWSEXsI3n5eYiurB/Fe
-         zesDu9RQIw+ekThU6LzBjqgF4x6oZ9W+O6C/co8P820LNn5YxaAZLJDyBERzaryxFXzl
-         sKHNbU6s80prB0U35sLJBYameABfExu+fTb9ap0hKnvO+TIOhX+/sPXT11bU/ZVMmxtq
-         0wxQ==
-X-Gm-Message-State: APjAAAWRjLTxpUSOqFq2nIjJuoPGWrX9LMaFjRMr5PqJigvc3wrmx4do
-        CHFug80HZOguy8Aq4YMY5Z6rGg==
-X-Google-Smtp-Source: APXvYqxL2/de9bApOM2UVDgl9BgIS/9w1EYyRUg0PCwWi1lKmzkg9zrpNro5VMkplRIqrlo+htLQGA==
-X-Received: by 2002:a50:b962:: with SMTP id m89mr58857595ede.104.1560828376089;
-        Mon, 17 Jun 2019 20:26:16 -0700 (PDT)
-Received: from localhost ([81.92.102.43])
-        by smtp.gmail.com with ESMTPSA id d1sm1800559ejc.72.2019.06.17.20.26.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 20:26:15 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 20:26:14 -0700 (PDT)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Alistair Francis <Alistair.Francis@wdc.com>
-cc:     "troy.benjegerdes@sifive.com" <troy.benjegerdes@sifive.com>,
-        "jamez@wit.com" <jamez@wit.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "schwab@suse.de" <schwab@suse.de>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "ynezz@true.cz" <ynezz@true.cz>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        "yash.shah@sifive.com" <yash.shah@sifive.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-In-Reply-To: <d2836a90b92f3522a398d57ab8555d08956a0d1f.camel@wdc.com>
-Message-ID: <alpine.DEB.2.21.9999.1906172019040.15057@viisi.sifive.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>  <mvmtvco62k9.fsf@suse.de>  <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>  <mvmpnnc5y49.fsf@suse.de>  <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com> 
- <mvmh88o5xi5.fsf@suse.de>  <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>  <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com> <d2836a90b92f3522a398d57ab8555d08956a0d1f.camel@wdc.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Dc068kFuuIDX3bGg/sCi/c8aRklky+fPiCT3Bn0V2CM=;
+        b=CqUOzNFarhQhckbVeXTInm8kvIikJv5FHB3cvjDtzc9fN77KdX4VI8aRNBcMpNtZk6
+         yrfKiXgxtDgwVeJIdCKb+LnCdMRnwuDXlzXc8alMoIIDpiWwhhkmr09luJeD7b8ZB7E4
+         4huTT7xBmJjBFGYM/A3vUtyQSOZ7gBSYJb5la3VSU69/XdvMxhOCgVG0wzNWl3l1b62N
+         71rvK3VzxsnG9mHGDoSEeHfg22qYP/C7RlNTQNLhcLmimTiLqbf6uoANhrg2XDWYJJMx
+         R3qsZydEhtH+2s9OdwBRJ5Pe7pfZ80eHATaonSol1aKDKHxksZeG8FjowMsSTZLJ1oX6
+         tXWA==
+X-Gm-Message-State: APjAAAWO3HY2ZzY7bu8HcT0VGqzh0o6j5MrsZ2kQKx0yJ79a+dS/PIzy
+        dNTVMzW0tLPmEjBftTDprXI=
+X-Google-Smtp-Source: APXvYqzFvZOkWoL4GkYyvTKa/4MObDC4loXp4hKkIH+TitLiXG81PqkNQSkJUmfreMSelPYhx10S9w==
+X-Received: by 2002:a62:29c7:: with SMTP id p190mr116173105pfp.218.1560828483791;
+        Mon, 17 Jun 2019 20:28:03 -0700 (PDT)
+Received: from asus.site ([2601:647:4000:5dd1:c193:fa16:d79e:155e])
+        by smtp.gmail.com with ESMTPSA id u2sm678123pjv.30.2019.06.17.20.28.02
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 20:28:02 -0700 (PDT)
+Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
+To:     dgilbert@interlog.com, Marc Gonzalez <marc.w.gonzalez@free.fr>,
+        James Bottomley <jejb@linux.ibm.com>,
+        Martin Petersen <martin.petersen@oracle.com>
+Cc:     SCSI <linux-scsi@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
+References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr>
+ <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org>
+ <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
+From:   Bart Van Assche <bvanassche@acm.org>
+Message-ID: <da579578-349e-1320-0867-14fde659733e@acm.org>
+Date:   Mon, 17 Jun 2019 20:28:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1540646092-1560828374=:15057"
+In-Reply-To: <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On 6/17/19 5:35 PM, Douglas Gilbert wrote:
+> For sg3_utils:
+> 
+> $ find . -name '*.c' -exec grep "/proc/scsi" {} \; -print
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./src/sg_read.c
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./src/sgp_dd.c
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./src/sgm_dd.c
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./src/sg_dd.c
+>                  "'echo 1 > /proc/scsi/sg/allow_dio'\n", q_len, 
+> dirio_count);
+> ./testing/sg_tst_bidi.c
+> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
+> ./examples/sgq_dd.c
+>  
+> That is 6 (not 38) by my count.
 
---8323329-1540646092-1560828374=:15057
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Hi Doug,
 
-On Mon, 17 Jun 2019, Alistair Francis wrote:
+This is the command I ran:
 
-> > The legacy M-mode U-boot handles the phy reset already, and I=E2=80=99v=
-e been
-> > able to load upstream S-mode uboot as a payload via TFTP, and then=20
-> > load and boot a 4.19 kernel.=20
-> >=20
-> > It would be nice to get this all working with 5.x, however there are
-> > still
-> > several missing pieces to really have it work well.
->=20
-> Let me know what is still missing/doesn't work and I can add it. At the
-> moment the only known issue I know of is a missing SD card driver in U-
-> Boot.
+$ git grep /proc/scsi | wc -l
+38
 
-The DT data has changed between the non-upstream data that people=20
-developed against previously, vs. the DT data that just went upstream=20
-here:
+I think your query excludes scripts/rescan-scsi-bus.sh.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3D72296bde4f4207566872ee355950a59cbc29f852
-
-and
-
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?=
-id=3Dc35f1b87fc595807ff15d2834d241f9771497205
-
-So Upstream U-Boot is going to need several patches to get things working=
-=20
-again.  Clock identifiers and Ethernet are two known areas.
-
-
-- Paul
---8323329-1540646092-1560828374=:15057--
+Bart.
