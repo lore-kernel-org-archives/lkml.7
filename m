@@ -2,222 +2,78 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA67C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5389C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABDDD20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:57:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="exxVVQS+";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NPm9hCzm"
+	by mail.kernel.org (Postfix) with ESMTP id 9F4CD20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:57:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560841046;
+	bh=+QRebg6toQEXk2xt0KfLP2gEAhm9ZZ14Nl8WNSxXxVs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mEj689npWJ/1a3l4kHutjNAhb6HFUdpwj21DwQir5Hq+0TDlmG6RX/9U+/rE35737
+	 IUQR5hvW/mlWm6iaPpi1nQFD6FpoV8++Yx4Bi55iwReQ05YY6eNRNfUKoPB04Ug1A+
+	 bHMHObkg13AOPH148ftoPhTnmv8izVCFJM2xEQCU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728101AbfFRG5O (ORCPT
+        id S1728807AbfFRG5Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 02:57:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:58622 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFRG5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 02:57:14 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1CA5C60A97; Tue, 18 Jun 2019 06:21:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560838887;
-        bh=P/SMdVYW3xpmJ2Q4KDX7a1RxqgZ4fB6O25+9ELAvFv0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=exxVVQS+DhZ5lgqd7XyoOG1zaCEUC/LF0+kvf2iP9swzn+vt7RaDl5vk+MjNy5FVD
-         Ywygtpymi0g3f/p8CYiJMYOAcY9EfXXu/jxVldroqNQuBgzUbbolEzAz2sD6g4s9Ui
-         RtotTSPWpJgS/yqsOd4zjZ5W8Apn+1lzzs4mH1M0=
-Received: from [192.168.43.187] (unknown [223.227.13.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 18 Jun 2019 02:57:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58934 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfFRG5Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 02:57:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: nishakumari@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6F87F6086B;
-        Tue, 18 Jun 2019 06:21:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560838886;
-        bh=P/SMdVYW3xpmJ2Q4KDX7a1RxqgZ4fB6O25+9ELAvFv0=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=NPm9hCzmuhyKVsZyn8hbkcX8YSJ5pi/gvp/pg1kQ1XCgDqKhoF6TnknfiYu+X9+C0
-         c3/hb6Rs3IPpsotqxQdniYDwfRJN68XpMx1re/CV6XWNCYx3c6tWIQSoL6O7VNcHcI
-         4hISthxJq6LvGrmfFCoedZ6kCkdqorNJ7x+9KqsU=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6F87F6086B
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=nishakumari@codeaurora.org
-Subject: Re: [PATCH 3/4] regulator: Add labibb driver
-To:     Mark Brown <broonie@kernel.org>
-Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com,
-        david.brown@linaro.org, linux-kernel@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org
-References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
- <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
- <20190613172518.GN5316@sirena.org.uk>
-From:   Nisha Kumari <nishakumari@codeaurora.org>
-Message-ID: <577d6e90-0bed-ff2e-32dc-e64c3118458f@codeaurora.org>
-Date:   Tue, 18 Jun 2019 11:51:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        by mail.kernel.org (Postfix) with ESMTPSA id E069C20863;
+        Tue, 18 Jun 2019 05:42:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560836521;
+        bh=+QRebg6toQEXk2xt0KfLP2gEAhm9ZZ14Nl8WNSxXxVs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S03fz8RyICJEbA23G+syKb/UQ6INJlvQIhsYIdMJbm/ohR8isujjpXGMw+ffSPkpc
+         3jrEooBnvIdpTh4wF2XMUIaaXB72foaiczdVOCGkdL11jpaWK+LqcsUHYAQmtEFX7+
+         XPvWrK5y8IRFC39MMv4XBbASVs1bbjt+T2L91GNQ=
+Date:   Tue, 18 Jun 2019 07:41:58 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>, linux-doc@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: platform: convert
+ x86-laptop-drivers.txt to reST
+Message-ID: <20190618054158.GA3713@kroah.com>
+References: <20190618053227.31678-1-puranjay12@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190613172518.GN5316@sirena.org.uk>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618053227.31678-1-puranjay12@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 18, 2019 at 11:02:27AM +0530, Puranjay Mohan wrote:
+> This converts the plain text documentation to reStructuredText format.
+> No essential content change.
+> 
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> ---
+>  Documentation/platform/x86-laptop-drivers.rst | 23 +++++++++++++++++++
+>  Documentation/platform/x86-laptop-drivers.txt | 18 ---------------
+>  2 files changed, 23 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/platform/x86-laptop-drivers.rst
+>  delete mode 100644 Documentation/platform/x86-laptop-drivers.txt
 
-On 6/13/2019 10:55 PM, Mark Brown wrote:
-> On Wed, Jun 12, 2019 at 04:30:51PM +0530, Nisha Kumari wrote:
->
->> +static int qcom_labibb_read(struct qcom_labibb *labibb, u16 address,
->> +			    u8 *val, int count)
->> +{
->> +	int ret;
->> +
->> +	ret = regmap_bulk_read(labibb->regmap, address, val, count);
->> +	if (ret < 0)
->> +		dev_err(labibb->dev, "spmi read failed ret=%d\n", ret);
->> +
->> +	return ret;
->> +}
-> This (and the write function) are utterly trivial wrappers around the
-> corresponding regmap functions...
-Yeah, i will use the regmap functions directly wherever required
->
->> +static int qcom_labibb_masked_write(struct qcom_labibb *labibb, u16 address,
->> +				    u8 mask, u8 val)
->> +{
->> +	int ret;
->> +
->> +	ret = regmap_update_bits(labibb->regmap, address, mask, val);
->> +	if (ret < 0)
->> +		dev_err(labibb->dev, "spmi write failed: ret=%d\n", ret);
->> +
->> +	return ret;
->> +}
-> ...as is this but it changes the name for some reason.
-Yeah, i will use the regmap functions directly wherever required
->
->> +static int qcom_enable_ibb(struct qcom_labibb *labibb, bool enable)
->> +{
->> +	int ret;
->> +	u8 val = enable ? IBB_CONTROL_ENABLE : 0;
-> Please write normal conditional statements, it makes things easier to
-> read.  Though this function is so trivial it seems better to just inline
-> it into the callers.
-Sure, I will do that
->
->> +static int qcom_lab_regulator_enable(struct regulator_dev *rdev)
->> +{
->> +	int ret;
->> +	u8 val;
->> +	struct qcom_labibb *labibb  = rdev_get_drvdata(rdev);
->> +
->> +	val = LAB_ENABLE_CTL_EN;
->> +	ret = qcom_labibb_write(labibb,
->> +				labibb->lab_base + REG_LAB_ENABLE_CTL,
->> +				&val, 1);
-> Why not just use regmap_write()?  It'd be clearer.
-Sure, I will do that
->
->> +	labibb->lab_vreg.vreg_enabled = 1;
-> What function does this serve?  It never seems to be read.
-Its used in next patch for handling interrupts
->
->> +	ret = qcom_labibb_write(labibb,
->> +				labibb->lab_base + REG_LAB_ENABLE_CTL,
->> +				&val, 1);
->> +	if (ret < 0) {
->> +		dev_err(labibb->dev, "Write register failed ret = %d\n", ret);
->> +		return ret;
->> +	}
->> +	/* after this delay, lab should get disabled */
->> +	usleep_range(POWER_DELAY, POWER_DELAY + 100);
->> +
->> +	ret = qcom_labibb_read(labibb, labibb->lab_base +
->> +			       REG_LAB_STATUS1, &val, 1);
->> +	if (ret < 0) {
->> +		dev_err(labibb->dev, "Read register failed ret = %d\n", ret);
->> +		return ret;
->> +	}
-> I'm not clear that these status checks are actually a good idea, and if
-> they are it feels like they should be factored out into the framework -
-> these are just regular enable or disable followed by the usual dead
-> reckoning delay for completion and then a get_status() call to confirm
-> if the operation worked.  That's not at all driver specific so if it's
-> useful the core should do it for all regulators with status readback and
-> if you didn't do it you could use the standard regmap helpers for these
-> operations.
-Sure, I will do that
->
->> +static int qcom_lab_regulator_is_enabled(struct regulator_dev *rdev)
->> +{
->> +	int ret;
->> +	u8 val;
->> +	struct qcom_labibb *labibb  = rdev_get_drvdata(rdev);
->> +
->> +	ret = qcom_labibb_read(labibb, labibb->lab_base +
->> +			       REG_LAB_STATUS1, &val, 1);
->> +	if (ret < 0) {
->> +		dev_err(labibb->dev, "Read register failed ret = %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	return val & LAB_STATUS1_VREG_OK_BIT;
->> +}
-> Please use the standard helper for this, and this is a get_status()
-> operation not an is_enabled() - it checks if the regulator is working,
-> not what status was requested.
-ok
->
->> +	while (retries--) {
->> +		/* Wait for a small period before reading IBB_STATUS1 */
->> +		usleep_range(POWER_DELAY, POWER_DELAY + 100);
->> +
->> +		ret = qcom_labibb_read(labibb, labibb->ibb_base +
->> +				       REG_IBB_STATUS1, &val, 1);
->> +		if (ret < 0) {
->> +			dev_err(labibb->dev,
->> +				"Read register failed ret = %d\n", ret);
->> +			return ret;
->> +		}
->> +
->> +		if (val & IBB_STATUS1_VREG_OK_BIT) {
->> +			labibb->ibb_vreg.vreg_enabled = 1;
->> +			return 0;
->> +		}
->> +	}
-> This is doing more than the other regulator was but it's not clear why -
-> is it just that the delays are different for the two regulators?
-LAB regulator comes up in first try, so we did not added much delay in 
-that like IBB. Planning to make equal no of retries for both in next 
-patch so that code can be reused.
->
->> +static int register_lab_regulator(struct qcom_labibb *labibb,
->> +				  struct device_node *of_node)
->> +{
->> +	int ret = 0;
->> +	struct regulator_init_data *init_data;
->> +	struct regulator_config cfg = {};
->> +
->> +	cfg.dev = labibb->dev;
->> +	cfg.driver_data = labibb;
->> +	cfg.of_node = of_node;
->> +	init_data =
->> +		of_get_regulator_init_data(labibb->dev,
->> +					   of_node, &lab_desc);
->> +	if (!init_data) {
->> +		dev_err(labibb->dev,
->> +			"unable to get init data for LAB\n");
->> +		return -ENOMEM;
->> +	}
-> The core will parse the DT for you.
-ok
+Don't you also need to hook it up to the documentation build process
+when doing this?
+
+thanks,
+
+greg k-h
