@@ -2,130 +2,90 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0B18C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F03BC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9727D2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 734542070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vEKCtOAR"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="T1wUG2r/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729637AbfFRK7D (ORCPT
+        id S1729649AbfFRK7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:59:03 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:40951 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfFRK7C (ORCPT
+        Tue, 18 Jun 2019 06:59:25 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33645 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfFRK7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:59:02 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p11so13461866wre.7;
-        Tue, 18 Jun 2019 03:59:00 -0700 (PDT)
+        Tue, 18 Jun 2019 06:59:24 -0400
+Received: by mail-io1-f66.google.com with SMTP id u13so28822755iop.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 03:59:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=erWl2ztGQC1+LMUU2GDgbAUN0dxGbS3XfDl1jE6l2ow=;
-        b=vEKCtOARKjx5EDFmxAJP5qqdrxjSakRCZS/TgKM4RtapEG3kuF3EcgT+PH7T7Et5xP
-         YFmWyPUzNyz/Sikfrd2Wvs40djchhc4QsPzZFtFYyvgb6MmHE6gVCk2iSkxw/iFYYAB2
-         DiqR/87gvY86T+U12boAwdwwjhnXBlsraE2LNmc/5SVXbQ259vZ3kym0MHWOzSsNGg4/
-         rDCrjn4s2Op1omFqMkOwkdQF4QzgQnymUDW9oSFeC3YCHPSwjxmZYUUzDMhSL5kdCIXj
-         s5YZLLa7iVK+sg56EJFDFhGVN09zKD0Pla3p/go1FbagxfZnqlyQpfcMiPHyUIKYA/bI
-         G2qw==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wDeuVf27dsWWQyi/G9Z1cR/nnFqjHy2XRRgIkWDwa+w=;
+        b=T1wUG2r/CYW88UkEOUiQ7rn3R1tausZPc1kdqBEQIfxIQ9SSbgVOaTVYT/BDN6Z0Am
+         hYXDY1Zib0Da5pwz+bxOXhsIs1AC7/iyzbrD6oihoif/2Rnd+FaZFJQYpHF1VLgYpKXo
+         O6tD8pDILAHb9l68gGlzhLCUoZsRZY4jOGlPY/Rn2nMREMwL1N+U2BidEBPQUNfXWUYz
+         2NkneM3j9QBpX2/lr9Rzjo9cX1ohCBkXmbjI8Vb0X8uNy0cTN4e8NwQedi7v+OHHRoZL
+         4sBXCMpNc3bqtjIMZ22yHkjrRzfMvvcVrzyQc5JTtmBsGspb8vHTNwY1Yq5c0W7aSHhz
+         223Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=erWl2ztGQC1+LMUU2GDgbAUN0dxGbS3XfDl1jE6l2ow=;
-        b=gmg5204szueOsUlOSb7aV8zd9Z91VtoNjanULaRk0vkOb8vxPrAB5jGgtBn/3m3oaY
-         gDv5dB71bL2BX3J/NQaPXsWfT1ZkufciIlptT5pEH3yN6xSLDjKrTWf33EV8oIfugTpx
-         m7p85PT3Q3w/uObDawqkajwCWrLy2BKTWxpebV7UpAeFSa2zowIOlq2iWwZYsSQXq9GZ
-         TvH4lY1XoU+aUn/wwHVKmWro/ewzrUWSvrweRafqZ7GgazpHVvaK31f8ZhDk/QtpEfZx
-         OOI5oOokPTza5R/qdR5jI09B4lEc5BaILyW5yuewoPeDe3qP/FFem4S4rVy/t1RLEk+j
-         6LWw==
-X-Gm-Message-State: APjAAAVifWmQQ4PXz5uBsUXOP1rVFKUkklbi4+XP8p8tk+tPOpnkGsKW
-        FPA1NVAoimB9lbgFvtPGwws=
-X-Google-Smtp-Source: APXvYqyrCJUtg1gqiMWv2NhNK6EU8WMp4kmrJ0w+oq+L1m8gW/h13kuBpFPjrwh8Cp3+wVCytRNK9g==
-X-Received: by 2002:a5d:4a90:: with SMTP id o16mr22664381wrq.13.1560855539430;
-        Tue, 18 Jun 2019 03:58:59 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id l1sm1930397wmg.13.2019.06.18.03.58.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 03:58:58 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 12:58:57 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 01/17] irqchip: tegra: do not disable COP IRQ during
- suspend
-Message-ID: <20190618105857.GD28892@ulmo>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-2-git-send-email-skomatineni@nvidia.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=wDeuVf27dsWWQyi/G9Z1cR/nnFqjHy2XRRgIkWDwa+w=;
+        b=kLWtU6pJGgmDzuQt7nBWK4gNRvIoLd/nxGBUcKx3oFLRpFwqb5PV66j3m//YiMFpOK
+         8K5vDAgyQLlpTvIas1sbVkszxpP2x8j04QSzIKlxRQtxPNIihpCu3yf2FZAT0x+/l10Z
+         L+x00vgwQOG5w+VuG4k0kiXYYjezXBe6YmVeebSCwVqwjXGsXenFpKPbV63WMrhTmDKh
+         pH9Ky5dUSpiPsLXY6+SFFkit4owO0DBSp2cFeEN4gIIl/I3Qn+mv0wNw9H05url2D8Zo
+         ShkPUC2e91guAhUZw5qHUVTHxZ7s9z7ZP+bT2i8hw+PBJG0lUvMdjPsnPue4dLD/3Qzq
+         YG6A==
+X-Gm-Message-State: APjAAAXO2oyXD8A3evRB13xFjVxy5p65AgnOClTD9eX1ITtpdT4dg8RE
+        Msai9OOnN++odNdBp2H+YlKr4dusGhF137uQR4waPQ==
+X-Google-Smtp-Source: APXvYqygUc9NtkUKqHAZsrJLDcE1z7TbO5n2M0BkA4Kg2xoRZpQqn8fUKR360iFU7smgRnci3PL6o8QOmteT2MwzdH8=
+X-Received: by 2002:a6b:9257:: with SMTP id u84mr2859483iod.278.1560855563794;
+ Tue, 18 Jun 2019 03:59:23 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="RhUH2Ysw6aD5utA4"
-Content-Disposition: inline
-In-Reply-To: <1560843991-24123-2-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190617123352.742876-1-arnd@arndb.de>
+In-Reply-To: <20190617123352.742876-1-arnd@arndb.de>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Tue, 18 Jun 2019 11:59:12 +0100
+Message-ID: <CAOesGMjEwQw05g7ARDddQNgfnuk9yUXkmVz7BTOEe8FKknSL4A@mail.gmail.com>
+Subject: Re: [PATCH] firmware: trusted_foundations: add ARMv7 dependency
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Thierry Reding <treding@nvidia.com>,
+        ARM-SoC Maintainers <arm@kernel.org>,
+        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> The "+sec" extension is invalid for older ARM architectures, but
+> the code can now be built on any ARM configuration:
+>
+> /tmp/trusted_foundations-2d0882.s: Assembler messages:
+> /tmp/trusted_foundations-2d0882.s:194: Error: architectural extension `sec' is not allowed for the current base architecture
+> /tmp/trusted_foundations-2d0882.s:201: Error: selected processor does not support `smc #0' in ARM mode
+> /tmp/trusted_foundations-2d0882.s:213: Error: architectural extension `sec' is not allowed for the current base architecture
+> /tmp/trusted_foundations-2d0882.s:220: Error: selected processor does not support `smc #0' in ARM mode
+>
+> Add a dependency on ARMv7 for the build.
+>
+> Fixes: 4cb5d9eca143 ("firmware: Move Trusted Foundations support")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
---RhUH2Ysw6aD5utA4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Applied to arm/fixes. Thanks!
 
-On Tue, Jun 18, 2019 at 12:46:15AM -0700, Sowjanya Komatineni wrote:
-> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
-> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
->=20
-> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
-> for Tegra210.
->=20
-> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
-> interrupt controller suspend operation.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/irqchip/irq-tegra.c | 21 +++++++++++++++++++--
->  1 file changed, 19 insertions(+), 2 deletions(-)
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---RhUH2Ysw6aD5utA4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Iw/EACgkQ3SOs138+
-s6GLLRAAvKzInFHRhecpwNZPDwkUnBKfQIyiErHNkSUfLXJP6QSIaQa+BCBJuoNf
-BTxROMwnCIJebjytKZIoLlNjND82Hk/5NDNhjivrBhsXVdmL4vCnlwFNSCQNEqbi
-Hp2iVP/LtvGNaeG2Wrp3UD8bA7w4Qb94jXItmE2iwLfCaJV+7myCiySGJea3CTqQ
-p7PCgu0joBLlfFG9nYE/JA+VAZPSi+IV7mCvyWquvVV7nfca1Cjfje1FcJDn08YI
-eTMxfqj+hSUrmYadTXgqERUoZOPHjaQ/TGTyTsyWKsFvR/zTB9PNZpzo7o7wOnik
-0ph9gZo4LKY88tSzdK9AM+r3F5sMQCXM8WAETePUrrADLLRUEQvnTKeG3tJvaIRB
-Zk1WbiJIXH7K54epAeuLnu4zHFj5XFaDs4orPkXhF36d1BouB01KZ9KytMnnrRUv
-tIVMGNDFuYV77jKUdAVUl0qBoZmFaYDW+WfGfassadJEpgJDNR4SgkhJZrq2O0VF
-3J2mc8k0frM0EPbtldLOpAMGJbAbchHFKd51mRxVNBLYFzA9N8N+d6oC15ZIpBKN
-iiM35hN9xskQpJdZJYsNBISdEW8+9AcODhhY8FrD6B8IvV4wPaTvmdAj+NhI17As
-M1P9Sm4OTVElx0ApVdGLDdDir6s/I5CiErAqXEQejQKlmMbAxnI=
-=NwCH
------END PGP SIGNATURE-----
-
---RhUH2Ysw6aD5utA4--
+-Olof
