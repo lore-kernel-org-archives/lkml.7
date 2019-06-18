@@ -2,80 +2,119 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD92C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:06:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B19C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:07:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A9C2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:06:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560881204;
-	bh=yfcudZ+ucn3bTGDOuYYL1wZnSM5wsihhuo0WtmveN0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FAYRbD9pWiR9sP4isjhcPxA5GsCyJpWkfGicmBsJ0UXO7SB4I1OaIzcQwQbtZfAqG
-	 maR1KxF2pmt7mBDefCaKRK4KzShEgUmZF03o79aC3baZc83/tKgZrLPUF87fMAzA0X
-	 5YUo7c9fPdcvpig0V+aaMsg7ylI0HB9ULbJWEvWM=
+	by mail.kernel.org (Postfix) with ESMTP id 7EDBC2063F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:07:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730286AbfFRSGn (ORCPT
+        id S1730295AbfFRSHF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:06:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47126 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbfFRSGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:06:43 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C2782084A;
-        Tue, 18 Jun 2019 18:06:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560881202;
-        bh=yfcudZ+ucn3bTGDOuYYL1wZnSM5wsihhuo0WtmveN0c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ZwfNeHOzYEUk4GBIH2rR2l002Q2Fh2JZaYBlytLihL4W37FSG4x0XGjpO8NQoFKXb
-         cPEdqifNKLBYjouGUpXUB5g2cv6K/ZZI2DlNxWlTzaO8VnTVxtwvrnSzUCgYPMTG7P
-         lLrtDNiRUhCgDO9LSdJTXBgZib6zGUS4fzQqW1jA=
-Date:   Tue, 18 Jun 2019 20:06:40 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 000/115] 5.1.12-stable review
-Message-ID: <20190618180640.GE31484@kroah.com>
-References: <20190617210759.929316339@linuxfoundation.org>
- <20190618163832.GC1718@roeck-us.net>
+        Tue, 18 Jun 2019 14:07:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36680 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729319AbfFRSHE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:07:04 -0400
+Received: by mail-qt1-f193.google.com with SMTP id p15so16535085qtl.3;
+        Tue, 18 Jun 2019 11:07:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tc5SveGAk5xUuqd8TE/eo44xuPz3szmJWnQMQ7ceihc=;
+        b=fLOYIz2AWOld4qC6XnjvF+f+iyBqcLmCpjL8suMPryo8VrIp9031kkF2mnEjDreb4j
+         afAXc0tYVyVTNdy1HOjYGwSz9UElYR+4gPnFTL1TD9ZuBf8RDRtE8OQvgXETXmxO+cw2
+         3s76eZvGUyzS755evBhVr/T+y2uuZnW5fBcRimLtHRkGGGMd8IGn9E1pHQ6jdwL0yjSU
+         UNFXNX2owQmF/b/i4rg9XPVEfPjFClbBNQ3ikPJpBT77K1hEX3N6R+DB3ofZTjIB3V1Z
+         1qm4n9us1LeTxEJVcY3SXaDaHgn/NdOTjJl/zaAeg+U6nYB9LOyuDSELBE5fRz6w84x8
+         dHiw==
+X-Gm-Message-State: APjAAAWarKsSXaZDGOTUv5CyJqHenbz1mSog5WKegEkeE/8FxssxBsji
+        2Jt6DHvRPS0UAbBMAu+fXz3DiWZ+YU/n4e3TUPk=
+X-Google-Smtp-Source: APXvYqxZap79tJRc+geEbzJzShPPIrQc8XHYJtp7zMygG22X1MJgBEecbGk1pYegoT0Ow/kbm8aHMpqcn2Zo5zMZc2Y=
+X-Received: by 2002:ac8:8dd:: with SMTP id y29mr35512555qth.304.1560881223019;
+ Tue, 18 Jun 2019 11:07:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618163832.GC1718@roeck-us.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190617115838.2397872-1-arnd@arndb.de> <1560786951.4072.103.camel@linux.ibm.com>
+ <1560794826.4072.169.camel@linux.ibm.com> <CAK8P3a1Q2JG3KBYNYgWg0_XtGUufNc6zuqcUBqiGSaBRp+au-w@mail.gmail.com>
+ <1560861878.9530.17.camel@linux.ibm.com>
+In-Reply-To: <1560861878.9530.17.camel@linux.ibm.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 18 Jun 2019 20:06:46 +0200
+Message-ID: <CAK8P3a0_7ocqJZHA5Zbkd4yvhQnczKJxiSrBjOUDCmzO4gAb2Q@mail.gmail.com>
+Subject: Re: [PATCH] ima: dynamically allocate shash_desc
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        Stefan Berger <stefanb@linux.vnet.ibm.com>,
+        linux-integrity@vger.kernel.org,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 09:38:32AM -0700, Guenter Roeck wrote:
-> On Mon, Jun 17, 2019 at 11:08:20PM +0200, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.12 release.
-> > There are 115 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> 
-> Build results:
-> 	total: 159 pass: 159 fail: 0
-> Qemu test results:
-> 	total: 366 pass: 366 fail: 0
+On Tue, Jun 18, 2019 at 3:55 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+>
+> On Mon, 2019-06-17 at 22:08 +0200, Arnd Bergmann wrote:
+> > On Mon, Jun 17, 2019 at 8:08 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
+> > >
+> > > On Mon, 2019-06-17 at 11:55 -0400, Mimi Zohar wrote:
+> > > > On Mon, 2019-06-17 at 13:20 +0200, Arnd Bergmann wrote:
+> > > > > On 32-bit ARM, we get a warning about excessive stack usage when
+> > > > > building with clang.
+> > > > >
+> > > > > security/integrity/ima/ima_crypto.c:504:5: error: stack frame size
+> > > > > of 1152 bytes in function 'ima_calc_field_array_hash' [-Werror,-
+> > > > > Wframe-larger-than=]
+> > > >
+> > > > I'm definitely not seeing this.  Is this problem a result of non
+> > > > upstreamed patches?  For sha1, currently the only possible hash
+> > > > algorithm, I'm seeing 664.
+> >
+> > You won't see it with gcc, only with clang in some randconfig builds,
+> > I suppose only when KASAN is enabled.
+> >
+> > > Every time a measurement is added to the measurement list, the memory
+> > > would be allocated/freed.  The frequency of new measurements is policy
+> > > dependent.  For performance reasons, I'd prefer if the allocation
+> > > remains on the stack.
+> >
+> > Is there a way to preallocate the shash_desc instead? That would
+> > avoid the overhead.
+>
+> There are 3 other SHASH_DESC_ON_STACK definitions in just
+> ima_crypto.c, with a total of ~55 other places in the kernel.  Before
+> fixing this particular function, I'd like to know if the "excessive
+> stack usage" warning is limited to ima_calc_field_array_hash_tfm().
+>  If so, what is so special about its usage of SHASH_DESC_ON_STACK?
 
-Wonderful, thanks for testing and letting me know.
+SHASH_DESC_ON_STACK() uses at least 512 bytes of stack
+everywhere, which is half of the warning limit for a function on
+32 bit kernels.
 
-greg k-h
+With KASAN, a small redzone is put around it so we can detect out
+of bounds access to a variable that is passed by reference.
+clang makes that buffer larger than gcc, so we end up with something
+like 768 bytes for each instance of SHASH_DESC_ON_STACK().
+
+Most other users still stay below the 1024 byte warning level though,
+because typical functions only use a few bytes of stack space.
+In case of ima_calc_field_array_hash_tfm(), the is also the buffer[]
+array of 255 bytes that gets another large redzone.
+
+I fixed up all the (randconfig) warnings I get for arm32, arm64 and
+x86 kernels, and I think there were four to five that were because of
+SHASH_DESC_ON_STACK(). It might make sense to convert all
+three instances in ima to preallocate the descriptor if we do it for
+one of them, even when it's not actually needed.
+
+     Arnd
