@@ -2,123 +2,140 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0087DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A502AC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C539520B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:05:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0KpQEdS"
+	by mail.kernel.org (Postfix) with ESMTP id 86E5920679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbfFRUFU (ORCPT
+        id S1730579AbfFRUFq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:05:20 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44938 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbfFRUFU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:05:20 -0400
-Received: by mail-ed1-f66.google.com with SMTP id k8so23459731edr.11;
-        Tue, 18 Jun 2019 13:05:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=KWnI481UmCPDjIZ0XrCY42jsxMovXIO86L/MeMLISRM=;
-        b=n0KpQEdSGQ5PKuTkB+/Z06u4nECf6mkQJz7Meo5OnYtsgDl9meBsiq2o00SAdXNvet
-         TTZnNi4aG81ep1rsOQ8bk27QDuNzIaEBHYHNCna/jJ3ZA0e/oihc+yT36MSr0WpbMkvm
-         GmmY4tcpSFcxjVLPzAmitdto6JN00+J3BuG+IOnATyFlzwZ++y9lQmnJYKiUHTDNfBOV
-         KEScEjf/R/o9RXWmtxuqWvS92gPK7Ifh/FzIPaSCgpt2iV87dA3DHuDM1FBKPfblIrTk
-         3/Cez3+C6gwBf/Uab6uUaVzjgf5mngEVZQNwRe4lGCKRWhdGXHe4R2v4IsOtz2fjpnWl
-         3gCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KWnI481UmCPDjIZ0XrCY42jsxMovXIO86L/MeMLISRM=;
-        b=In4HBfPtd4k9ssz2Xcy8uoAXmbGyq2t8VtVnpMGzOkdXudsnsnsra6h2LD1rNu9oFG
-         su1iPoJRNWOAdM9wC/U5GhD4GmggFVZB8SJzTgDIHr4E/icOkWONqLGMlhL4gzU/PkUv
-         NA9rNnJT4Nb01o5nKEgWDA9Gag5r+tAn3EwXs3hTd5En23F6Un0dV4EQbkZoZ7LgEcJf
-         dVaFj1jk/myu0PtqzaigRGmZXd8eWDbYrTXhL1uRqoWpvDV8O+TqPfAA4RUTZUoBI1Ut
-         HoLBIwauL+Ng4Kgz+9Ej22cwuOPQVFxZS5Ho4kSvSWhxwkbVVTsjnyKl3Qp9qrAgf7XX
-         HNmA==
-X-Gm-Message-State: APjAAAUjQzUx88/QGkEfgyipqQB0DjmTXSKnvKhTUWAY5PZtp9RGWmb9
-        uaRt4Su7HM4RxwbRQO4uVxisAckjQ2mEvNslq4w=
-X-Google-Smtp-Source: APXvYqzqoo0HXHFjoJtbtPpzDUDsVTfLgbc+FKH9YUlmQ4CiuTBdrnO5gZfvmnGS+KnlnynqpcJaiC2XfJXdmzWQW9I=
-X-Received: by 2002:a50:a53a:: with SMTP id y55mr110598370edb.147.1560888318156;
- Tue, 18 Jun 2019 13:05:18 -0700 (PDT)
+        Tue, 18 Jun 2019 16:05:46 -0400
+Received: from mga07.intel.com ([134.134.136.100]:41618 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729331AbfFRUFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 16:05:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 13:05:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,390,1557212400"; 
+   d="scan'208";a="160156703"
+Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
+  by fmsmga008.fm.intel.com with ESMTP; 18 Jun 2019 13:05:44 -0700
+To:     Jon Masters <jcm@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ben Greear <greearb@candelatech.com>, stable@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Jun Nakajima <jun.nakajima@intel.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        David Woodhouse <dwmw@amazon.co.uk>,
+        Asit Mallick <asit.k.mallick@intel.com>,
+        Arjan van de Ven <arjan@linux.intel.com>,
+        Waiman Long <longman9394@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Mark Gross <mgross@linux.intel.com>,
+        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
+References: <c63945d34bfc9df2412f813d0b9b3a321a65de5d.1560795378.git.tim.c.chen@linux.intel.com>
+ <5ff842bb-e0b8-c4aa-134d-32c9d838a162@redhat.com>
+ <526833c7-b9b4-1847-9f9b-52dd248548ad@redhat.com>
+From:   Tim Chen <tim.c.chen@linux.intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
+ 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
+ l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
+Subject: Re: [PATCH v3] Documentation: Add section about CPU vulnerabilities
+ for Spectre
+Message-ID: <95881c0e-5849-9062-a0c5-eb55081a06aa@linux.intel.com>
+Date:   Tue, 18 Jun 2019 13:05:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CA+FuTSfBFqRViKfG5crEv8xLMgAkp3cZ+yeuELK5TVv61xT=Yw@mail.gmail.com>
- <20190618161036.GA28190@kroah.com> <CAF=yD-JnTHdDE8K-EaJM2fH9awvjAmOJkoZbtU+Wi58pPnyAxw@mail.gmail.com>
- <20190618.094759.539007481404905339.davem@davemloft.net> <20190618171516.GA17547@kroah.com>
- <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com>
- <20190618173906.GB3649@kroah.com> <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
-In-Reply-To: <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 18 Jun 2019 16:04:42 -0400
-Message-ID: <CAF=yD-L8ZRwVJmp4WJcNW-B_1JdSAM9QmMHOQJ=x_nd24v5Qnw@mail.gmail.com>
-Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Fred Klassen <fklassen@appneta.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <526833c7-b9b4-1847-9f9b-52dd248548ad@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 2:59 PM Willem de Bruijn
-<willemdebruijn.kernel@gmail.com> wrote:
->
-> On Tue, Jun 18, 2019 at 1:39 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Jun 18, 2019 at 01:27:14PM -0400, Willem de Bruijn wrote:
-> > > On Tue, Jun 18, 2019 at 1:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > > >
-> > > > On Tue, Jun 18, 2019 at 09:47:59AM -0700, David Miller wrote:
-> > > > > From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> > > > > Date: Tue, 18 Jun 2019 12:37:33 -0400
-> > > > >
-> > > > > > Specific to the above test, I can add a check command testing
-> > > > > > setsockopt SO_ZEROCOPY  return value. AFAIK kselftest has no explicit
-> > > > > > way to denote "skipped", so this would just return "pass". Sounds a
-> > > > > > bit fragile, passing success when a feature is absent.
-> > > > >
-> > > > > Especially since the feature might be absent because the 'config'
-> > > > > template forgot to include a necessary Kconfig option.
-> > > >
-> > > > That is what the "skip" response is for, don't return "pass" if the
-> > > > feature just isn't present.  That lets people run tests on systems
-> > > > without the config option enabled as you say, or on systems without the
-> > > > needed userspace tools present.
-> > >
-> > > I was not aware that kselftest had this feature.
-> > >
-> > > But it appears that exit code KSFT_SKIP (4) will achieve this. Okay,
-> > > I'll send a patch and will keep that in mind for future tests.
-> >
-> > Wonderful, thanks for doing that!
->
-> One complication: an exit code works for a single test, but here
-> multiple test variants are run from a single shell script.
->
-> I see that in similar such cases that use the test harness
-> (ksft_test_result_skip) the overall test returns success as long as
-> all individual cases return either success or skip.
->
-> I think it's preferable to return KSFT_SKIP if any of the cases did so
-> (and none returned an error). I'll do that unless anyone objects.
+On 6/17/19 1:30 PM, Jon Masters wrote:
+> On 6/17/19 4:22 PM, Jon Masters wrote:
+> 
+>>> +   For kernel code that has been identified where data pointers could
+>>> +   potentially be influenced for Spectre attacks, new "nospec" accessor
+>>> +   macros are used to prevent speculative loading of data.
+>>
+>> Maybe explain that nospec (speculative clamping) relies on the absence
+>> of value prediction in the masking (in current hardware). It may NOT
+>> always be a safe approach in future hardware, where Spectre-v1 attacks
+>> are likely to persist but hardware may speculate about the mask value.
+> 
+> Something like the Arm CSDB barrier would seem to be potentially useful
+> for $FUTURE_X86 as a fence with lighter-weight semantics than an *fence.
+> 
 
-http://patchwork.ozlabs.org/patch/1118309/
+Is it necessary to go into such level of implementation details on nospec?
+These seem to be appropriate as code comments in nospec for kernel developer.
+But for an admin-guide doc, it may confuse sys admin to think that nospec
+could not be ineffective.
 
-The shell script scaffolding can perhaps be reused for other similar tests.
+When new hardware appears that need new implementations of nospec, we should
+tweak nospec and not need the admin to worry about such implementation details.
+
+Tim
