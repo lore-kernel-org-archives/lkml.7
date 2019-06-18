@@ -2,80 +2,98 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A3A7C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF6EC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D37292084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:49:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560844148;
-	bh=5s30GomD44N92xGZszrfWfrIiZv9xCuvrxnPayt45R8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=k9ps2tmXjRWhzXkZtUVveuz6fUjB3KD+SFUPXxr4pWI4oNlOPgR2SOXiCdacbGM6y
-	 MdsLhgBDB1VfVUo03eBTvWMrS9876dIYAAxSEIgDLCu/QyN9zQq5MEeqdr6ecplezQ
-	 wufuRwvyzCCN85/eHL3sye9swJsIf/IfUhff/hqk=
+	by mail.kernel.org (Postfix) with ESMTP id A21B02084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:49:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727186AbfFRHtH (ORCPT
+        id S1728954AbfFRHtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:49:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60226 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 03:49:14 -0400
+Received: from foss.arm.com ([217.140.110.172]:55246 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfFRHtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:49:06 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 87CB120663;
-        Tue, 18 Jun 2019 07:49:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560844146;
-        bh=5s30GomD44N92xGZszrfWfrIiZv9xCuvrxnPayt45R8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vXHzl4rTLK5B2MQBjMB7daMyhCH0b6oHm8NOrBCUaIAO4Rl2YuzkoOiDS8d7WntPK
-         xUEKOhsQlG77RjUWW+WzokOgbFd0pejnYlX9zU2QBGguNYnTiWErh/UA29nQCsKG2C
-         Guzaku0nCrA+RGI2mXHwXzUVZYQP+Ti3e07sXrY4=
-Date:   Tue, 18 Jun 2019 09:49:03 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Stefan Roese <sr@denx.de>
-Cc:     linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>
-Subject: Re: [PATCH 2/2 v5] tty/serial/8250: use mctrl_gpio helpers
-Message-ID: <20190618074903.GA5216@kroah.com>
-References: <20190611105603.4435-1-sr@denx.de>
- <20190611105603.4435-2-sr@denx.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611105603.4435-2-sr@denx.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1725870AbfFRHtN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:49:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E3FD328;
+        Tue, 18 Jun 2019 00:49:12 -0700 (PDT)
+Received: from big-swifty.misterjones.org (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86EF23F246;
+        Tue, 18 Jun 2019 00:49:11 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 08:48:56 +0100
+Message-ID: <86h88npc47.wl-marc.zyngier@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        <linux-kernel@vger.kernel.org>, <guohanjun@huawei.com>
+Subject: Re: [PATCH] irqchip/mbigen: stop printing kernel addresses
+In-Reply-To: <20190618032202.11087-1-wangkefeng.wang@huawei.com>
+References: <20190618032202.11087-1-wangkefeng.wang@huawei.com>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI-EPG/1.14.7 (Harue)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 EasyPG/1.0.0 Emacs/26
+ (aarch64-unknown-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+Organization: ARM Ltd
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 12:56:03PM +0200, Stefan Roese wrote:
-> From: Yegor Yefremov <yegorslists@googlemail.com>
-> 
-> This patch permits the usage for GPIOs to control
-> the CTS/RTS/DTR/DSR/DCD/RI signals.
-> 
-> Changed by Stefan:
-> Only call mctrl_gpio_init(), if the device has no ACPI companion device
-> to not break existing ACPI based systems. Also only use the mctrl_gpio_
-> functions when "gpios" is available.
-> 
-> Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Hi Kefeng,
 
-Please do not add a signed-off-by from people for an old patch that was
-reverted.  It implies that I still agree with this change :(
+On Tue, 18 Jun 2019 04:22:02 +0100,
+Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+> 
+> After commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
+> it will print "____ptrval____" instead of actual addresses when mbigen
+> create domain fails,
+> 
+>   Hisilicon MBIGEN-V2 HISI0152:00: Failed to create mbi-gen@(____ptrval____) irqdomain
+>   Hisilicon MBIGEN-V2: probe of HISI0152:00 failed with error -12
+> 
+> Instead of changing the print to "%px", and leaking kernel addresses,
+> just remove the print completely.
+> 
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+>  drivers/irqchip/irq-mbigen.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+> index 98b6e1d4b1a6..d0cf596c801b 100644
+> --- a/drivers/irqchip/irq-mbigen.c
+> +++ b/drivers/irqchip/irq-mbigen.c
+> @@ -355,8 +355,7 @@ static int mbigen_device_probe(struct platform_device *pdev)
+>  		err = -EINVAL;
+>  
+>  	if (err) {
+> -		dev_err(&pdev->dev, "Failed to create mbi-gen@%p irqdomain",
+> -			mgn_chip->base);
+> +		dev_err(&pdev->dev, "Failed to create mbi-gen irqdomain");
 
-greg k-h
+The alternative would be to print res as a resource, which would still
+help identifying the offending device by printing its physical
+layout, and still not reveal much.
+
+Just let me know what you prefer.
+
+Thanks,
+
+	M.
+
+>  		return err;
+>  	}
+>  
+> -- 
+> 2.20.1
+> 
+
+-- 
+Jazz is not dead, it just smells funny.
