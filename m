@@ -2,163 +2,119 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9919C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:39:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77309C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:40:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D0E820B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:39:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FE5220B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:40:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ZCfZMXr6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jq1e67QV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729348AbfFROjS (ORCPT
+        id S1729450AbfFROkX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:39:18 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:56140 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfFROjR (ORCPT
+        Tue, 18 Jun 2019 10:40:23 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35692 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729327AbfFROkX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:39:17 -0400
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5IEcuUj069345;
-        Tue, 18 Jun 2019 09:38:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560868736;
-        bh=rqfVhjWQ4OgEtWX4zDB2QW7U3AsflGprPp13jexG7N4=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ZCfZMXr6Od2g99jn6oGDr5zopNHEBfvdmb3+GnM2cuVGHOQ8UOE8Xf8Wx02TImJL8
-         WSiUZ1YwwQikEITAubpxm07Ntgar4RMGQr0kxJOhQ5VIw1F9FEYnlt/Hc3LEUVZbpH
-         ydGOIkOuNIAePONHW1XZass1EX8gfoCCnRYYJJkg=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5IEcugd014086
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Jun 2019 09:38:56 -0500
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
- Jun 2019 09:38:55 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 18 Jun 2019 09:38:55 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5IEcpcb101103;
-        Tue, 18 Jun 2019 09:38:52 -0500
-Subject: Re: [PATCH 3/6] arm64: dts: ti: Add Support for J721E SoC
-To:     Suman Anna <s-anna@ti.com>, Nishanth Menon <nm@ti.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>
-References: <20190522161921.20750-1-nm@ti.com>
- <20190522161921.20750-4-nm@ti.com>
- <a786a889-7414-8cb9-7618-67fa1adf705d@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <665a246b-53ec-b10d-5fbb-840e950977a7@ti.com>
-Date:   Tue, 18 Jun 2019 17:38:51 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 18 Jun 2019 10:40:23 -0400
+Received: by mail-ed1-f65.google.com with SMTP id p26so22134594edr.2;
+        Tue, 18 Jun 2019 07:40:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FPmqGlLqRaYsv5QgGolRusboFAose75I5VSohz4ueiE=;
+        b=jq1e67QVaCOiRylO+VQp9tG5iEzpSV3Duy6Vx85CDYXe8syEMBWuDUdmcD64H7IpMq
+         W9c6L4lHj15dOo76pOWnvBzGNVVnK+864NonAnwpaJGSU/lMFPE/C1mkzH7N4SJNHquM
+         FAponMKenVFYn31s8XhfkSR3a1P07b8s+/oWqJhqIIBrRTnISjK5AcxEj4IciiQxG+3Z
+         0OO4hXNX7uvzkpFJzCYKBSMLmOx9nqkEqf4aGjHAlGnSS68Et9fTjaC6yNGjDOPhB86U
+         n1OJF0/6KNCxofUYqcZDFXmwZg7lnW79IZvBg3OWyXsJUimsAnvornV5k/a4v2WbL9aL
+         Ybtg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FPmqGlLqRaYsv5QgGolRusboFAose75I5VSohz4ueiE=;
+        b=rJuDrVbp0kxbpQaXH24sS8j4vYSMXP6WWM5MmXH77l6gESgQDKkVtX/z/EUWD/ZYi/
+         qQbMt2dFMSZJ/WNx189bbGCux95sRpZoxGQiSGUnSzaZc/mcmI3Z4PULi7N/x/JuDD1p
+         /+EmWH6puIVn7QV0lMBXcc//e4CAqsY6bMzve0gI33W/yyMtoWOEgpj7ZPda+cBHb/Fj
+         K5fbvFsr0JAtTFvKr8AjCsyCG8pOUcgvbwR/LjXxz9hDquVj9hrv+IOwwqpbDwYYuW0C
+         KYVm6zL6Sz+4WsAP5MyxIuCt8x4Ei2WvCZRtoosrwi3Qfi526Qox1uUybwNlfe3bKumt
+         rgYA==
+X-Gm-Message-State: APjAAAV4bdwAbATVGo6i1gdfJrQN90NJKJN99PsRfr8QBZcUSBDN4Sdv
+        r1lbcztgkmdCXZc6bE6thNU=
+X-Google-Smtp-Source: APXvYqxt5h1W6a2Ca8NWGsKSDu10az3ukyEF1VBfMOe5R41qedc4r8PZzY8U/w815tPnxWZXL9raBg==
+X-Received: by 2002:a50:996e:: with SMTP id l43mr102049233edb.187.1560868821425;
+        Tue, 18 Jun 2019 07:40:21 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id y22sm4810536edl.29.2019.06.18.07.40.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 07:40:20 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 07:40:18 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Shawn Guo <shawnguo@kernel.org>
+Cc:     Abel Vesa <abel.vesa@nxp.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>
+Subject: Re: [PATCH] clk: imx6q: Annotate imx6q_obtain_fixed_clk_hw with
+ __init
+Message-ID: <20190618144018.GA63161@archlinux-epyc>
+References: <20190618022405.27952-1-natechancellor@gmail.com>
+ <20190618134253.GK1959@dragon>
 MIME-Version: 1.0
-In-Reply-To: <a786a889-7414-8cb9-7618-67fa1adf705d@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618134253.GK1959@dragon>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/2019 23:58, Suman Anna wrote:
-> Hi Nishanth, Tero,
+On Tue, Jun 18, 2019 at 09:42:55PM +0800, Shawn Guo wrote:
+> On Mon, Jun 17, 2019 at 07:24:05PM -0700, Nathan Chancellor wrote:
+> > When building with clang, the following modpost warning occurs:
+> > 
+> > WARNING: vmlinux.o(.text+0x974dbc): Section mismatch in reference from
+> > the function imx6q_obtain_fixed_clk_hw() to the function
+> > .init.text:imx_obtain_fixed_clock_hw()
+> > The function imx6q_obtain_fixed_clk_hw() references
+> > the function __init imx_obtain_fixed_clock_hw().
+> > This is often because imx6q_obtain_fixed_clk_hw lacks a __init
+> > annotation or the annotation of imx_obtain_fixed_clock_hw is wrong.
+> > 
+> > imx6q_obtain_fixed_clk_hw is only used in imx6q_clocks_init, which is
+> > marked __init so do that to imx6q_obtain_fixed_clk_hw to avoid this
+> > warning.
+> > 
+> > Fixes: 992b703b5b38 ("clk: imx6q: Switch to clk_hw based API")
+> > Link: https://github.com/ClangBuiltLinux/linux/issues/541
+> > Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 > 
-> On 5/22/19 11:19 AM, Nishanth Menon wrote:
->> The J721E SoC belongs to the K3 Multicore SoC architecture platform,
->> providing advanced system integration to enable lower system costs
->> of automotive applications such as infotainment, cluster, premium
->> Audio, Gateway, industrial and a range of broad market applications.
->> This SoC is designed around reducing the system cost by eliminating
->> the need of an external system MCU and is targeted towards ASIL-B/C
->> certification/requirements in addition to allowing complex software
->> and system use-cases.
->>
->> Some highlights of this SoC are:
->> * Dual Cortex-A72s in a single cluster, three clusters of lockstep
->>    capable dual Cortex-R5F MCUs, Deep-learning Matrix Multiply Accelerator(MMA),
->>    C7x floating point Vector DSP, Two C66x floating point DSPs.
->> * 3D GPU PowerVR Rogue 8XE GE8430
->> * Vision Processing Accelerator (VPAC) with image signal processor and Depth
->>    and Motion Processing Accelerator (DMPAC)
->> * Two Gigabit Industrial Communication Subsystems (ICSSG), each with dual
->>    PRUs and dual RTUs
->> * Two CSI2.0 4L RX plus one CSI2.0 4L TX, one eDP/DP, One DSI Tx, and
->>    up to two DPI interfaces.
->> * Integrated Ethernet switch supporting up to a total of 8 external ports in
->>    addition to legacy Ethernet switch of up to 2 ports.
->> * System MMU (SMMU) Version 3.0 and advanced virtualisation
->>    capabilities.
->> * Upto 4 PCIe-GEN3 controllers, 2 USB3.0 Dual-role device subsystems,
->>    16 MCANs, 12 McASP, eMMC and SD, UFS, OSPI/HyperBus memory controller, QSPI,
->>    I3C and I2C, eCAP/eQEP, eHRPWM, MLB among other peripherals.
->> * Two hardware accelerator block containing AES/DES/SHA/MD5 called SA2UL
->>    management.
->> * Configurable L3 Cache and IO-coherent architecture with high data throughput
->>    capable distributed DMA architecture under NAVSS
->> * Centralized System Controller for Security, Power, and Resource
->>    Management (DMSC)
->>
->> See J721E Technical Reference Manual (SPRUIL1, May 2019)
->> for further details: http://www.ti.com/lit/pdf/spruil1
->>
->> Signed-off-by: Nishanth Menon <nm@ti.com>
->> ---
->>   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 202 ++++++++++++++++++
->>   .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  72 +++++++
->>   arch/arm64/boot/dts/ti/k3-j721e.dtsi          | 176 +++++++++++++++
->>   3 files changed, 450 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->>   create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
->>   create mode 100644 arch/arm64/boot/dts/ti/k3-j721e.dtsi
->>
-
-<snip>
-
->> +			 /* MCUSS_WKUP Range */
->> +			 <0x00 0x28380000 0x00 0x28380000 0x00 0x03880000>,
->> +			 <0x00 0x40200000 0x00 0x40200000 0x00 0x00998400>,
->> +			 <0x00 0x40f00000 0x00 0x40f00000 0x00 0x00020000>,
->> +			 <0x00 0x41000000 0x00 0x41000000 0x00 0x00020000>,
->> +			 <0x00 0x41400000 0x00 0x41400000 0x00 0x00020000>,
->> +			 <0x00 0x41c00000 0x00 0x41c00000 0x00 0x00100000>,
->> +			 <0x00 0x42040000 0x00 0x42040000 0x00 0x03ac2400>,
->> +			 <0x00 0x45100000 0x00 0x45100000 0x00 0x00c24000>,
->> +			 <0x00 0x46000000 0x00 0x46000000 0x00 0x00200000>,
->> +			 <0x00 0x47000000 0x00 0x47000000 0x00 0x00068400>,
->> +			 <0x00 0x50000000 0x00 0x50000000 0x00 0x10000000>,
->> +			 <0x00 0x70000000 0x00 0x70000000 0x00 0x00800000>,
+> Thanks for the patch, Nathan.  But we already queued up a patch [1]
+> from Arnd for that.
 > 
-> minor nit, can we have this MSMC RAM range line moved to before the
-> MCUSS_WKUP comment since it doesn't belong to the MCUSS range. Perhaps
-> can be fixed up while applying the patch.
+> Shawn
 > 
-> Other than that, everything looks good.
-> 
-> Reviewed-by: Suman Anna <s-anna@ti.com>
+> [1] https://lkml.org/lkml/2019/6/17/317
 
-Fixed this issue also locally, thanks.
+Ugh, sorry for the noise, I should have done a search and seen if
+someone had sent out a fix already.
 
--Tero
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Cheers,
+Nathan
