@@ -2,181 +2,120 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6947C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:47:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07790C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:49:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78214206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:47:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA591206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:49:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L24lwIQc"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hoC6zDdI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730524AbfFRTrm (ORCPT
+        id S1730536AbfFRTti (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:47:42 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39910 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730176AbfFRTrl (ORCPT
+        Tue, 18 Jun 2019 15:49:38 -0400
+Received: from mail-pl1-f182.google.com ([209.85.214.182]:41038 "EHLO
+        mail-pl1-f182.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730266AbfFRTth (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:47:41 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z23so4471760wma.4;
-        Tue, 18 Jun 2019 12:47:39 -0700 (PDT)
+        Tue, 18 Jun 2019 15:49:37 -0400
+Received: by mail-pl1-f182.google.com with SMTP id m7so2542919pls.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 12:49:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=OSvSO6y1MZfAEeNKZrRbq2TAlzZir3iu87Vjo4j1u8U=;
-        b=L24lwIQcCT28W/0Tgv0y8ya1Y2cnWY0dbw00YQJiS3FP2sWNeuGTfSux/UCDmJqB5e
-         i4uUaUvZrxKPL5eLCy7ovAyULfOMYlIp+L8G9swTrcMMe4D49j+VnH64YpsFow2NV4dm
-         r9aMPdiqknG1xbtbvd3QMwPb5VAN71YUiZon3Qp6KmiRXG7WqqlMlRU3QH3KjTvQRuZ0
-         Ot3YJy5rE89Y1f8Wrlrl1AaWWWEXebCJkhCjEMX4gCIwnocBmuhr3jNTfGkFA6AhoyId
-         gpUKL0QkH1CfpLx25kY47aVDOhDc0FIJAntSXDm1m4IPsgc1LdHj+Ct4F7tkzSEZ/x0l
-         KhuQ==
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SCzkPutafS6puOzenmw/jtEGahtjfTycw8CEIiSbQ18=;
+        b=hoC6zDdIV93amSLFot1BR7nmnxvXEgTTZ2MJ8694yabGA7bGfvVfHTvYNBb2uAHK73
+         RFigY5dxByvW0CBNPf3ozXgkP9+XQs9/BMlgN1afYP0eSCmpTkcQIvN5p9G2hLtrnoYl
+         mIC4AomWgK1zpD5Cw6onogaUzO52/eMupcHeiXqGz2c8I08qzXS1oiEzceYksw57tiGJ
+         Fy2nWWuTODVtz3gSZ5Y+i1UEVwmft5z+JMM2mnB/y9MNUQScOg5eUXhZfuZNJwUVv1rP
+         EInECaWQPmaMbyseskPu2FNhhM6ZAkLW6Yh3JJlfm8buCy0dve7e7M1PVr1+zHYAAEbt
+         KTZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=OSvSO6y1MZfAEeNKZrRbq2TAlzZir3iu87Vjo4j1u8U=;
-        b=cjgx3hzKR3MqchQ7yl12XzBcbLEbvtvx/7L+l/x6CK6K/kcTatn+K1RA9bS7Y4XIj6
-         uLuhj6QyNSzjisxmuWuJQJBMIa36o7bEGAkrd/XukcXztuGlfCl2N29gn3JT8rFRxMvD
-         /+zdeTkdclbzUrnGZVfi/RzSMjz5d1ls47kEbJTgY/xwD5Cm8P/a9WD+0iD5H/Of9/0M
-         NE4rAYw2nlI8rUUCD2T1aXyIajwfeqN5ftpSUHyNWbALRYPhWrpE9kscjchHsFun4I86
-         vPoyhG57uJQKOZ0fshmJcsfG4RDhq3eA6yGevB/91dcPlzOzdRxJ5VkyaqJmO5KkwMqM
-         hjZw==
-X-Gm-Message-State: APjAAAXni+sVYcGe045ngO4o7O/uUkTbozhqM4kS+HALzfSZGRRCUsJ1
-        QmI0cPmulBjFmfHRWhkYERGFK8wG
-X-Google-Smtp-Source: APXvYqypdP0qsDj6ZrENjcBavV7vw/Tm+vfF1StuZNGvUPgffCRxUqRQ+K1igTZIq6MMYZqJPzIULA==
-X-Received: by 2002:a1c:3b02:: with SMTP id i2mr4659596wma.23.1560887258225;
-        Tue, 18 Jun 2019 12:47:38 -0700 (PDT)
-Received: from [10.67.49.123] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id o11sm2244139wmh.37.2019.06.18.12.47.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 12:47:37 -0700 (PDT)
-Subject: Re: [PATCH v2 6/6] net: macb: parameter added to cadence ethernet
- controller DT binding
-To:     Parshuram Thombare <pthombar@cadence.com>, andrew@lunn.ch,
-        nicolas.ferre@microchip.com, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-References: <1560642579-29803-1-git-send-email-pthombar@cadence.com>
- <1560883527-10591-1-git-send-email-pthombar@cadence.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <0375c350-ed33-728d-4106-e6f5348c5295@gmail.com>
-Date:   Tue, 18 Jun 2019 12:47:28 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SCzkPutafS6puOzenmw/jtEGahtjfTycw8CEIiSbQ18=;
+        b=XXfRFiMz4RAwmjqqnpFsNk5aedDQxJKqnrAtB31ifJbyL8xV9fGOk0i+MrZgNyJPd0
+         HrMaxoVCW5JlCqxZjssicQdLv+GELVAL8uGaDsZUcpfqiNbeL6YhfUoBbQFe3U54UKnZ
+         5Emi+lYSdxUUG6nbzRYSygm0Wpk3Kjg+CY/qdzaCQ2lNQoUPp9JJn0OUjKvIIxUJi6Uw
+         JX0l0f6gASGoi+whJ3VW1OXM6mH5ulJctrwBYOoRHdtcKqBrzZ5M3Nf8U13IhzD+gl1U
+         0jGw/90+3epHI2mfc5qnCaLHjPw09js8OZ/g6INvWNDvYb1i9RyYYU0wbTfcv9ygaAXh
+         3iag==
+X-Gm-Message-State: APjAAAXfBBY2MlgIRsvGCdWPehrX2+m6Dwoam/eoj1V8tUXoRvD/a4oT
+        eWx/+seRbg/LcuRA36S+HaWQWg==
+X-Google-Smtp-Source: APXvYqyfDVhE0Rj7KuDcNm/CG3YH2wDN54io4gffIFDGt0FGePEgYgI5wxJrFEl22T+h4+UcoBFmig==
+X-Received: by 2002:a17:902:a405:: with SMTP id p5mr43107506plq.51.1560887376052;
+        Tue, 18 Jun 2019 12:49:36 -0700 (PDT)
+Received: from google.com ([2620:15c:202:201:bc61:d85d:eb16:9036])
+        by smtp.gmail.com with ESMTPSA id y133sm17606800pfb.28.2019.06.18.12.49.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 12:49:35 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 12:49:30 -0700
+From:   Benson Leung <bleung@google.com>
+To:     Nick Crews <ncrews@chromium.org>
+Cc:     Colin King <colin.king@canonical.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        kernel-janitors@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] platform/chrome: wilco_ec: fix null pointer
+ dereference on failed kzalloc
+Message-ID: <20190618194930.GA209269@google.com>
+References: <20190618153924.19491-1-colin.king@canonical.com>
+ <CAHX4x85sETNNS8gdQYQniCM=K35DjMjdHOihJ76pGPrAoB9gyA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1560883527-10591-1-git-send-email-pthombar@cadence.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="lrZ03NoBR/3+SXJZ"
+Content-Disposition: inline
+In-Reply-To: <CAHX4x85sETNNS8gdQYQniCM=K35DjMjdHOihJ76pGPrAoB9gyA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 11:45 AM, Parshuram Thombare wrote:
-> New parameters added to Cadence ethernet controller DT binding
-> for USXGMII interface.
 
-Please don't resubmit individual patches as replies to your previous
-ones, re-submitting the entire patch series, see this netdev-FAQ section
-for details:
+--lrZ03NoBR/3+SXJZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/networking/netdev-FAQ.rst#n134
+Hi Nick,
 
-> 
-> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
-> ---
->  Documentation/devicetree/bindings/net/macb.txt | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-> index 9c5e94482b5f..b80d58ed1650 100644
-> --- a/Documentation/devicetree/bindings/net/macb.txt
-> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> @@ -25,6 +25,9 @@ Required properties:
->  	Optional elements: 'rx_clk' applies to cdns,zynqmp-gem
->  	Optional elements: 'tsu_clk'
->  - clocks: Phandles to input clocks.
-> +- serdes-rate External serdes rate.Mandatory for USXGMII mode.
-> +	5 - 5G
-> +	10 - 10G
+On Tue, Jun 18, 2019 at 11:15:03AM -0600, Nick Crews wrote:
+> Thanks Colin, good catch.
+>=20
+> Enric, could you squash this into the real commit?
 
-There should be an unit specifier in that property, something like:
+I've applied this to for-next and for-kernelci in chrome-platform.
 
-serdes-rate-gbps
+Thanks,
+Benson
 
-can't we somehow automatically detect that?
+--=20
+Benson Leung
+Staff Software Engineer
+Chrome OS Kernel
+Google Inc.
+bleung@google.com
+Chromium OS Project
+bleung@chromium.org
 
->  
->  The MAC address will be determined using the optional properties
->  defined in ethernet.txt.
-> 
+--lrZ03NoBR/3+SXJZ
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Florian
+iHUEABYKAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCXQlASgAKCRBzbaomhzOw
+wvzvAQCyOTKS1SOAS0+Jun5Ci7dnvQYHXaDKXlumIB/vwgWr0wD/YyL8KgdowZi8
+meyb3F1r5KtA3s6FXZ/AN0VbqnHDUws=
+=3u8A
+-----END PGP SIGNATURE-----
+
+--lrZ03NoBR/3+SXJZ--
