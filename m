@@ -2,189 +2,455 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A73ABC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:49:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A04CC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 632AA20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:49:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="s6U4V5I8"
+	by mail.kernel.org (Postfix) with ESMTP id 0576B205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:49:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfFRGtO (ORCPT
+        id S1726812AbfFRGtl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 02:49:14 -0400
-Received: from mail-eopbgr70070.outbound.protection.outlook.com ([40.107.7.70]:14340
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725988AbfFRGtO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 02:49:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=jg11UFsuG8yLgVKAb2iXZ6Brtbhmfy1eccVVMXVHDCs=;
- b=s6U4V5I8bfnzzLIGfz5NbozkSc6px9SzEBmlkGR6cgG1YRLyJKGgUy29JQvSqP1X5Cmhzja3YhLbvZee6BAlGt0IKBbZeBVGcjZQ0t4TyEwI9z7bP2N3EsURbYqtCwV7GQ81H01VWvlUuaadODjkZkmnrcLkSF6r1N8EKJYVN/U=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB5071.eurprd08.prod.outlook.com (20.179.29.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Tue, 18 Jun 2019 05:24:46 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
- 05:24:46 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Ayan Halder <Ayan.Halder@arm.com>
-CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [v2] drm/komeda: Make Komeda interrupts shareable
-Thread-Topic: [v2] drm/komeda: Make Komeda interrupts shareable
-Thread-Index: AQHVJZYkGje/vtT4XU6VNPIgpehS3Q==
-Date:   Tue, 18 Jun 2019 05:24:46 +0000
-Message-ID: <20190618052439.GA3638@james-ThinkStation-P300>
-References: <20190613151257.32297-1-ayan.halder@arm.com>
-In-Reply-To: <20190613151257.32297-1-ayan.halder@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.9.4 (2018-02-28)
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK0PR03CA0082.apcprd03.prod.outlook.com
- (2603:1096:203:72::22) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 04387cfc-5d06-45ac-b66a-08d6f3ad46cc
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB5071;
-x-ms-traffictypediagnostic: VE1PR08MB5071:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VE1PR08MB5071E1C3C230A6043E06C21DB3EA0@VE1PR08MB5071.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:104;
-x-forefront-prvs: 007271867D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(39860400002)(136003)(366004)(346002)(396003)(376002)(199004)(189003)(66066001)(71200400001)(9686003)(6636002)(71190400001)(5660300002)(6512007)(52116002)(229853002)(256004)(7736002)(11346002)(6436002)(4326008)(5024004)(99286004)(66446008)(55236004)(102836004)(64756008)(14454004)(66946007)(14444005)(6506007)(76176011)(66476007)(305945005)(1076003)(66556008)(68736007)(81166006)(476003)(54906003)(2906002)(8676002)(81156014)(73956011)(386003)(6486002)(478600001)(26005)(86362001)(186003)(53936002)(486006)(6862004)(446003)(3846002)(58126008)(33656002)(316002)(25786009)(6116002)(8936002)(33716001)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5071;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: V4BnsgEQnxRnEl6z0SjII9ddPoYF07BJX3FaWMhOgsh6dSyqqarKXgR1JevWgjJPUd4fyAzrs64FRFVJoOMJqosQsN9Hdh0+7kWIkdbjqsyXVN0HH8WHxLY0JMhaM7hZbnbX7kYB9EOk9wh9fyVgftdkJi30k73/5x+UDMhdE1bg1NDWnKL69GdqqUoDfK9uy9mtDXkSihz44UPQmd73R46RoLPLQfmEePBuPZHimbWMy0lFJY524VhZJNBioG36SzexGzBtqYUG+5tSaLxK8DTkr1AWDFrnEe61XLr2VucGIlw8N0x1xFt14qzdlv9PlIr3s/tntXxU3OP6eVCvrgBSHaw0X5Z3UJMHiydEaLKezhPG+XFgSPbuTFKkPvr1LG9KB2QotCmI+JXUB1tTYN71dbgkdgBJlRKOgGpX5MY=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F05A4150F9974B4CB2FCB81ED970D441@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Jun 2019 02:49:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15814 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725900AbfFRGtl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 02:49:41 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5I6miDR030469
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 02:49:39 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t6thc92d7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 02:49:38 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <freude@linux.ibm.com>;
+        Tue, 18 Jun 2019 07:49:37 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Jun 2019 07:49:33 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5I6nVuQ59310190
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 06:49:31 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3D12D42041;
+        Tue, 18 Jun 2019 06:49:31 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85D554203F;
+        Tue, 18 Jun 2019 06:49:30 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.152.224.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Jun 2019 06:49:30 +0000 (GMT)
+Subject: Re: [PATCH v4 5/7] s390: vfio-ap: allow assignment of unavailable AP
+ resources to mdev device
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, cohuck@redhat.com, frankja@linux.ibm.com,
+        david@redhat.com, mjrosato@linux.ibm.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
+        pasic@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com
+References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
+ <1560454780-20359-6-git-send-email-akrowiak@linux.ibm.com>
+ <21cdd1ec-27aa-5f9a-8ac2-db2b2cef7d61@linux.ibm.com>
+ <8c029b68-1084-8d17-6064-3209910c04b9@linux.ibm.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Tue, 18 Jun 2019 08:49:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 04387cfc-5d06-45ac-b66a-08d6f3ad46cc
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 05:24:46.5055
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5071
+In-Reply-To: <8c029b68-1084-8d17-6064-3209910c04b9@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19061806-0020-0000-0000-0000034B05B2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061806-0021-0000-0000-0000219E50D3
+Message-Id: <80639474-8d9f-2f95-be0b-ae44cbbac3fe@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906180056
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 03:13:10PM +0000, Ayan Halder wrote:
-> Komeda interrupts may be shared with other hardware blocks.
-> One needs to use devm_request_irq() with IRQF_SHARED to create a shared
->  interrupt handler.
-> As a result of not using drm_irq_install() api, one needs to set
-> "(struct drm_device *)->irq_enabled =3D true/false" to enable/disable
-> vblank interrupts.
->=20
-> Changes from v1:-
-> 1. Squashed the following two patches into one (as the second patch is a
-> consequence of the first one):-
->    drm/komeda: Avoid using DRIVER_IRQ_SHARED
->    drm/komeda: Enable/Disable vblank interrupts
-> 2. Fixed the commit message (as pointed by Daniel Vetter)
-> 3. Removed calls to 'drm_irq_uninstall()' as we are no longer using
-> drm_irq_install()
-> 4. Removed the struct member 'komeda_kms_driver.irq_handler' as it is not
-> used anywhere.
->=20
-> Signed-off-by: Ayan Kumar halder <ayan.halder@arm.com>
-> ---
->  drivers/gpu/drm/arm/display/komeda/komeda_kms.c | 16 +++++++++-------
->  1 file changed, 9 insertions(+), 7 deletions(-)
->=20
-> --=20
-> 2.21.0
-> Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
->=20
+On 17.06.19 17:07, Tony Krowiak wrote:
+> On 6/17/19 6:05 AM, Harald Freudenberger wrote:
+>> On 13.06.19 21:39, Tony Krowiak wrote:
+>>> The AP architecture does not preclude assignment of AP resources that are
+>>> not available. Let's go ahead and implement this facet of the AP
+>>> architecture for linux guests.
+>>>
+>>> The current implementation does not allow assignment of AP adapters or
+>>> domains to an mdev device if the APQNs resulting from the assignment
+>>> reference AP queue devices that are not bound to the vfio_ap device
+>>> driver. This patch allows assignment of AP resources to the mdev device as
+>>> long as the APQNs resulting from the assignment are not reserved by the AP
+>>> BUS for use by the zcrypt device drivers and the APQNs are not assigned to
+>>> another mdev device.
+>>>
+>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>>> ---
+>>>   drivers/s390/crypto/vfio_ap_ops.c | 231 ++++++++------------------------------
+>>>   1 file changed, 44 insertions(+), 187 deletions(-)
+>>>
+>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>>> index 60efd3d7896d..9db86c0db52e 100644
+>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>>> @@ -406,122 +406,6 @@ static struct attribute_group *vfio_ap_mdev_type_groups[] = {
+>>>       NULL,
+>>>   };
+>>>   -struct vfio_ap_queue_reserved {
+>>> -    unsigned long *apid;
+>>> -    unsigned long *apqi;
+>>> -    bool reserved;
+>>> -};
+>>> -
+>>> -/**
+>>> - * vfio_ap_has_queue
+>>> - *
+>>> - * @dev: an AP queue device
+>>> - * @data: a struct vfio_ap_queue_reserved reference
+>>> - *
+>>> - * Flags whether the AP queue device (@dev) has a queue ID containing the APQN,
+>>> - * apid or apqi specified in @data:
+>>> - *
+>>> - * - If @data contains both an apid and apqi value, then @data will be flagged
+>>> - *   as reserved if the APID and APQI fields for the AP queue device matches
+>>> - *
+>>> - * - If @data contains only an apid value, @data will be flagged as
+>>> - *   reserved if the APID field in the AP queue device matches
+>>> - *
+>>> - * - If @data contains only an apqi value, @data will be flagged as
+>>> - *   reserved if the APQI field in the AP queue device matches
+>>> - *
+>>> - * Returns 0 to indicate the input to function succeeded. Returns -EINVAL if
+>>> - * @data does not contain either an apid or apqi.
+>>> - */
+>>> -static int vfio_ap_has_queue(struct device *dev, void *data)
+>>> -{
+>>> -    struct vfio_ap_queue_reserved *qres = data;
+>>> -    struct ap_queue *ap_queue = to_ap_queue(dev);
+>>> -    ap_qid_t qid;
+>>> -    unsigned long id;
+>>> -
+>>> -    if (qres->apid && qres->apqi) {
+>>> -        qid = AP_MKQID(*qres->apid, *qres->apqi);
+>>> -        if (qid == ap_queue->qid)
+>>> -            qres->reserved = true;
+>>> -    } else if (qres->apid && !qres->apqi) {
+>>> -        id = AP_QID_CARD(ap_queue->qid);
+>>> -        if (id == *qres->apid)
+>>> -            qres->reserved = true;
+>>> -    } else if (!qres->apid && qres->apqi) {
+>>> -        id = AP_QID_QUEUE(ap_queue->qid);
+>>> -        if (id == *qres->apqi)
+>>> -            qres->reserved = true;
+>>> -    } else {
+>>> -        return -EINVAL;
+>>> -    }
+>>> -
+>>> -    return 0;
+>>> -}
+>>> -
+>>> -/**
+>>> - * vfio_ap_verify_queue_reserved
+>>> - *
+>>> - * @matrix_dev: a mediated matrix device
+>>> - * @apid: an AP adapter ID
+>>> - * @apqi: an AP queue index
+>>> - *
+>>> - * Verifies that the AP queue with @apid/@apqi is reserved by the VFIO AP device
+>>> - * driver according to the following rules:
+>>> - *
+>>> - * - If both @apid and @apqi are not NULL, then there must be an AP queue
+>>> - *   device bound to the vfio_ap driver with the APQN identified by @apid and
+>>> - *   @apqi
+>>> - *
+>>> - * - If only @apid is not NULL, then there must be an AP queue device bound
+>>> - *   to the vfio_ap driver with an APQN containing @apid
+>>> - *
+>>> - * - If only @apqi is not NULL, then there must be an AP queue device bound
+>>> - *   to the vfio_ap driver with an APQN containing @apqi
+>>> - *
+>>> - * Returns 0 if the AP queue is reserved; otherwise, returns -EADDRNOTAVAIL.
+>>> - */
+>>> -static int vfio_ap_verify_queue_reserved(unsigned long *apid,
+>>> -                     unsigned long *apqi)
+>>> -{
+>>> -    int ret;
+>>> -    struct vfio_ap_queue_reserved qres;
+>>> -
+>>> -    qres.apid = apid;
+>>> -    qres.apqi = apqi;
+>>> -    qres.reserved = false;
+>>> -
+>>> -    ret = driver_for_each_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>>> -                     &qres, vfio_ap_has_queue);
+>>> -    if (ret)
+>>> -        return ret;
+>>> -
+>>> -    if (qres.reserved)
+>>> -        return 0;
+>>> -
+>>> -    return -EADDRNOTAVAIL;
+>>> -}
+>>> -
+>>> -static int
+>>> -vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev *matrix_mdev,
+>>> -                         unsigned long apid)
+>>> -{
+>>> -    int ret;
+>>> -    unsigned long apqi;
+>>> -    unsigned long nbits = matrix_mdev->matrix.aqm_max + 1;
+>>> -
+>>> -    if (find_first_bit_inv(matrix_mdev->matrix.aqm, nbits) >= nbits)
+>>> -        return vfio_ap_verify_queue_reserved(&apid, NULL);
+>>> -
+>>> -    for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm, nbits) {
+>>> -        ret = vfio_ap_verify_queue_reserved(&apid, &apqi);
+>>> -        if (ret)
+>>> -            return ret;
+>>> -    }
+>>> -
+>>> -    return 0;
+>>> -}
+>>> -
+>>>   /**
+>>>    * vfio_ap_mdev_verify_no_sharing
+>>>    *
+>>> @@ -529,18 +413,26 @@ vfio_ap_mdev_verify_queues_reserved_for_apid(struct ap_matrix_mdev *matrix_mdev,
+>>>    * and AP queue indexes comprising the AP matrix are not configured for another
+>>>    * mediated device. AP queue sharing is not allowed.
+>>>    *
+>>> - * @matrix_mdev: the mediated matrix device
+>>> + * @mdev_apm: the mask identifying the adapters assigned to mdev
+>>> + * @mdev_apm: the mask identifying the adapters assigned to mdev
+>> I assume you wanted to write @mdev_aqm ... queues ... at the 2nd line.
+>
+> You assumed correctly. I also mean to say "domains assigned to mdev".
+>
+>>>    *
+>>>    * Returns 0 if the APQNs are not shared, otherwise; returns -EADDRINUSE.
+>>>    */
+>>> -static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>>> +static int vfio_ap_mdev_verify_no_sharing(unsigned long *mdev_apm,
+>>> +                      unsigned long *mdev_aqm)
+>>>   {
+>>>       struct ap_matrix_mdev *lstdev;
+>>>       DECLARE_BITMAP(apm, AP_DEVICES);
+>>>       DECLARE_BITMAP(aqm, AP_DOMAINS);
+>>>         list_for_each_entry(lstdev, &matrix_dev->mdev_list, node) {
+>>> -        if (matrix_mdev == lstdev)
+>>> +        /*
+>>> +         * If either of the input masks belongs to the mdev to which an
+>>> +         * AP resource is being assigned, then we don't need to verify
+>>> +         * that mdev's masks.
+>>> +         */
+>>> +        if ((mdev_apm == lstdev->matrix.apm) ||
+>>> +            (mdev_aqm == lstdev->matrix.aqm))
+>>>               continue;
+>>>             memset(apm, 0, sizeof(apm));
+>>> @@ -550,12 +442,10 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>>>            * We work on full longs, as we can only exclude the leftover
+>>>            * bits in non-inverse order. The leftover is all zeros.
+>>>            */
+>>> -        if (!bitmap_and(apm, matrix_mdev->matrix.apm,
+>>> -                lstdev->matrix.apm, AP_DEVICES))
+>>> +        if (!bitmap_and(apm, mdev_apm, lstdev->matrix.apm, AP_DEVICES))
+>>>               continue;
+>>>   -        if (!bitmap_and(aqm, matrix_mdev->matrix.aqm,
+>>> -                lstdev->matrix.aqm, AP_DOMAINS))
+>>> +        if (!bitmap_and(aqm, mdev_aqm, lstdev->matrix.aqm, AP_DOMAINS))
+>>>               continue;
+>>>             return -EADDRINUSE;
+>>> @@ -564,6 +454,17 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>>>       return 0;
+>>>   }
+>>>   +static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+>>> +{
+>>> +    int ret;
+>>> +
+>>> +    ret = ap_apqn_in_matrix_owned_by_def_drv(apm, aqm);
+>>> +    if (ret)
+>>> +        return (ret == 1) ? -EADDRNOTAVAIL : ret;
+>>> +
+>>> +    return vfio_ap_mdev_verify_no_sharing(apm, aqm);
+>>> +}
+>>> +
+>>>   /**
+>>>    * assign_adapter_store
+>>>    *
+>>> @@ -602,6 +503,7 @@ static ssize_t assign_adapter_store(struct device *dev,
+>>>   {
+>>>       int ret;
+>>>       unsigned long apid;
+>>> +    DECLARE_BITMAP(apm, AP_DEVICES);
+>>>       struct mdev_device *mdev = mdev_from_dev(dev);
+>>>       struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>>   @@ -616,32 +518,19 @@ static ssize_t assign_adapter_store(struct device *dev,
+>>>       if (apid > matrix_mdev->matrix.apm_max)
+>>>           return -ENODEV;
+>>>   -    /*
+>>> -     * Set the bit in the AP mask (APM) corresponding to the AP adapter
+>>> -     * number (APID). The bits in the mask, from most significant to least
+>>> -     * significant bit, correspond to APIDs 0-255.
+>>> -     */
+>>> -    mutex_lock(&matrix_dev->lock);
+>>> -
+>>> -    ret = vfio_ap_mdev_verify_queues_reserved_for_apid(matrix_mdev, apid);
+>>> -    if (ret)
+>>> -        goto done;
+>>> +    memset(apm, 0, ARRAY_SIZE(apm) * sizeof(*apm));
+>> What about just memset(apm, 0, sizeof(apm));
+>
+> apm is a pointer to an array of unsigned long, so sizeof(apm) will
+> yield the number of bytes in the pointer (8), not the number of bytes in
+> the array (32); or am I wrong about that?
+The
+  DECLARE_BITMAP(apm, AP_DEVICES);
+with the macro definition in types.h:
+  #define DECLARE_BITMAP(name,bits) \
+    unsigned long name[BITS_TO_LONGS(bits)]
+gives this expanded code:
+  unsigned long apm[BITS_TO_LONGS(AP_DEVICES)];
+which is an ordinary unsigned long array.
+So sizeof(apm) gives the size of the array in bytes:
+  sizeof(apm) = 32
+I know this is weird, but it is common practice.
 
-looks good to me.
+Funnily look at this code:
+  int blubber[10];
+  int *ptr = blubber;
+sizeof(blubber) gives 10*sizeof(int) but
+sizeof(ptr) gives the size of the pointer pointing to
+the blubber array.
 
-Thank you Ayan.
+>
+>>> +    set_bit_inv(apid, apm);
+>>>   +    mutex_lock(&matrix_dev->lock);
+>>> +    ret = vfio_ap_mdev_validate_masks(apm, matrix_mdev->matrix.aqm);
+>>> +    if (ret) {
+>>> +        mutex_unlock(&matrix_dev->lock);
+>>> +        return ret;
+>>> +    }
+>>>       set_bit_inv(apid, matrix_mdev->matrix.apm);
+>>> -
+>>> -    ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
+>>> -    if (ret)
+>>> -        goto share_err;
+>>> -
+>>> -    ret = count;
+>>> -    goto done;
+>>> -
+>>> -share_err:
+>>> -    clear_bit_inv(apid, matrix_mdev->matrix.apm);
+>>> -done:
+>>>       mutex_unlock(&matrix_dev->lock);
+>>>   -    return ret;
+>>> +    return count;
+>>>   }
+>>>   static DEVICE_ATTR_WO(assign_adapter);
+>>>   @@ -690,26 +579,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
+>>>   }
+>>>   static DEVICE_ATTR_WO(unassign_adapter);
+>>>   -static int
+>>> -vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev *matrix_mdev,
+>>> -                         unsigned long apqi)
+>>> -{
+>>> -    int ret;
+>>> -    unsigned long apid;
+>>> -    unsigned long nbits = matrix_mdev->matrix.apm_max + 1;
+>>> -
+>>> -    if (find_first_bit_inv(matrix_mdev->matrix.apm, nbits) >= nbits)
+>>> -        return vfio_ap_verify_queue_reserved(NULL, &apqi);
+>>> -
+>>> -    for_each_set_bit_inv(apid, matrix_mdev->matrix.apm, nbits) {
+>>> -        ret = vfio_ap_verify_queue_reserved(&apid, &apqi);
+>>> -        if (ret)
+>>> -            return ret;
+>>> -    }
+>>> -
+>>> -    return 0;
+>>> -}
+>>> -
+>>>   /**
+>>>    * assign_domain_store
+>>>    *
+>>> @@ -748,6 +617,7 @@ static ssize_t assign_domain_store(struct device *dev,
+>>>   {
+>>>       int ret;
+>>>       unsigned long apqi;
+>>> +    DECLARE_BITMAP(aqm, AP_DEVICES);
+>> AP_DEVICES -> AP_DOMAINS
+>
+> Copy and paste error, it should be AP_DOMAINS.
+>
+>>>       struct mdev_device *mdev = mdev_from_dev(dev);
+>>>       struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>>>       unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
+>>> @@ -762,27 +632,19 @@ static ssize_t assign_domain_store(struct device *dev,
+>>>       if (apqi > max_apqi)
+>>>           return -ENODEV;
+>>>   -    mutex_lock(&matrix_dev->lock);
+>>> -
+>>> -    ret = vfio_ap_mdev_verify_queues_reserved_for_apqi(matrix_mdev, apqi);
+>>> -    if (ret)
+>>> -        goto done;
+>>> +    memset(aqm, 0, ARRAY_SIZE(aqm) * sizeof(*aqm));
+>> memset(aqm, 0, sizeof(aqm));
+>
+> See response above.
+>
+>>> +    set_bit_inv(apqi, aqm);
+>>>   +    mutex_lock(&matrix_dev->lock);
+>>> +    ret = vfio_ap_mdev_validate_masks(matrix_mdev->matrix.apm, aqm);
+>>> +    if (ret) {
+>>> +        mutex_unlock(&matrix_dev->lock);
+>>> +        return ret;
+>>> +    }
+>>>       set_bit_inv(apqi, matrix_mdev->matrix.aqm);
+>>> -
+>>> -    ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
+>>> -    if (ret)
+>>> -        goto share_err;
+>>> -
+>>> -    ret = count;
+>>> -    goto done;
+>>> -
+>>> -share_err:
+>>> -    clear_bit_inv(apqi, matrix_mdev->matrix.aqm);
+>>> -done:
+>>>       mutex_unlock(&matrix_dev->lock);
+>>>   -    return ret;
+>>> +    return count;
+>>>   }
+>>>   static DEVICE_ATTR_WO(assign_domain);
+>>>   @@ -868,11 +730,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
+>>>       if (id > matrix_mdev->matrix.adm_max)
+>>>           return -ENODEV;
+>>>   -    /* Set the bit in the ADM (bitmask) corresponding to the AP control
+>>> -     * domain number (id). The bits in the mask, from most significant to
+>>> -     * least significant, correspond to IDs 0 up to the one less than the
+>>> -     * number of control domains that can be assigned.
+>>> -     */
+>>>       mutex_lock(&matrix_dev->lock);
+>>>       set_bit_inv(id, matrix_mdev->matrix.adm);
+>>>       mutex_unlock(&matrix_dev->lock);
+>>
+>
 
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
-m>
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c b/drivers/gp=
-u/drm/arm/display/komeda/komeda_kms.c
-> index 86f6542afb40..bb2bffc0e022 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_kms.c
-> @@ -58,7 +58,6 @@ static struct drm_driver komeda_kms_driver =3D {
->  	.driver_features =3D DRIVER_GEM | DRIVER_MODESET | DRIVER_ATOMIC |
->  			   DRIVER_PRIME | DRIVER_HAVE_IRQ,
->  	.lastclose			=3D drm_fb_helper_lastclose,
-> -	.irq_handler			=3D komeda_kms_irq_handler,
->  	.gem_free_object_unlocked	=3D drm_gem_cma_free_object,
->  	.gem_vm_ops			=3D &drm_gem_cma_vm_ops,
->  	.dumb_create			=3D komeda_gem_cma_dumb_create,
-> @@ -194,23 +193,26 @@ struct komeda_kms_dev *komeda_kms_attach(struct kom=
-eda_dev *mdev)
-> =20
->  	drm_mode_config_reset(drm);
-> =20
-> -	err =3D drm_irq_install(drm, mdev->irq);
-> +	err =3D devm_request_irq(drm->dev, mdev->irq,
-> +			       komeda_kms_irq_handler, IRQF_SHARED,
-> +			       drm->driver->name, drm);
->  	if (err)
->  		goto cleanup_mode_config;
-> =20
->  	err =3D mdev->funcs->enable_irq(mdev);
->  	if (err)
-> -		goto uninstall_irq;
-> +		goto cleanup_mode_config;
-> +
-> +	drm->irq_enabled =3D true;
-> =20
->  	err =3D drm_dev_register(drm, 0);
->  	if (err)
-> -		goto uninstall_irq;
-> +		goto cleanup_mode_config;
-> =20
->  	return kms;
-> =20
-> -uninstall_irq:
-> -	drm_irq_uninstall(drm);
->  cleanup_mode_config:
-> +	drm->irq_enabled =3D false;
->  	drm_mode_config_cleanup(drm);
->  	komeda_kms_cleanup_private_objs(kms);
->  free_kms:
-> @@ -223,9 +225,9 @@ void komeda_kms_detach(struct komeda_kms_dev *kms)
->  	struct drm_device *drm =3D &kms->base;
->  	struct komeda_dev *mdev =3D drm->dev_private;
-> =20
-> +	drm->irq_enabled =3D false;
->  	mdev->funcs->disable_irq(mdev);
->  	drm_dev_unregister(drm);
-> -	drm_irq_uninstall(drm);
->  	component_unbind_all(mdev->dev, drm);
->  	komeda_kms_cleanup_private_objs(kms);
->  	drm_mode_config_cleanup(drm);
