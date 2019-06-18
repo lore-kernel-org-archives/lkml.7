@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6ABC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D98AC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:50:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C28820B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 075E520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:50:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="udv6A62f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nPT4JqOe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbfFROtx (ORCPT
+        id S1729749AbfFROuH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:49:53 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38091 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729406AbfFROtx (ORCPT
+        Tue, 18 Jun 2019 10:50:07 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45112 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729308AbfFROuG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:49:53 -0400
-Received: by mail-wm1-f66.google.com with SMTP id s15so3576502wmj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:49:51 -0700 (PDT)
+        Tue, 18 Jun 2019 10:50:06 -0400
+Received: by mail-wr1-f68.google.com with SMTP id f9so14270354wre.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:50:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=subject:to:cc:references:from:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
         bh=Bw9Az1sDvYftv6OoenbcNn/WFNLrPeZPeUya6SiZhJE=;
-        b=udv6A62ft/6+VkDzxa/PEOUwv3/ZITu7g/8w9iRR9ReSzG9lypxa62Pi4r9SN/Hhll
-         FxiwNMpXKfogjWbeqkzE2jV1lTTjRsI5u2Ncn8o1StwJg3GwNsiQ0HTrn5K0u/7RXh8S
-         e1Q4tcAQsalTh9bGi3YD4OfZYOGVt+uw3PnER43NYbFCThzlpqmKHcTqPQw3ZVPe9tWG
-         PH1NVJSU5xUCVBCrz1s0Olr29daX709FTtmsAxJ+DWL2f1e3r2fWhIlvai+QmhWcokqz
-         +sesl3yqFuJNNFqf70VfLr0azantLnGN1l0EabSUQ1F3+PVqxu2f2zGH9FeOGs9C6sdr
-         aP+A==
+        b=nPT4JqOeIx8n6bo9lSQeKSOrP8LvEe6fwMIUoxyRgvR6iV8gkXSG+61y1ga4BaBR52
+         L74gvHsyBP+F4lx0tb0+KVmUJ9mnp2lqCErhlAzuOJjT/HwINiCBs84011tu7122HGx1
+         kBXps9HXeOnDCzjd/uUlN4DayZcF+QCOQqU1IzygT+DalmGQY9YTvC8yiAZaIaU/bUcK
+         n6gNCv5JfRZfrQGZGQu+nFzF4kxWMPSD4gBmxr+iPBk+nGUqXdz5DJ5pHixdfZN9OXI+
+         U/LdVBgIu6cpem2MMFYcYzwypwpDKrMrAAjTaKxptuFsE8n6ZWcHilhWrzGTlLoOAFex
+         sDBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
         bh=Bw9Az1sDvYftv6OoenbcNn/WFNLrPeZPeUya6SiZhJE=;
-        b=dTLwo/wZMTxMd1TxTYLhGokmpxYfsEWCliP9sPAyDBdbNNXL7kQIo82ylUPPSF7ay/
-         VmNmo5BqdbirJTlIomEjmY+c8WNO81trG2JUIeMYZW/6S1aRtSfIFd0FzuUkihCBhpDb
-         d+fIr/n2O/IBfQWwZCptf4yixunBPtLf8BU/XyYfcoUxqMjdrU/pFNetjONinRqVRFFJ
-         mIDS0GHc+SFhB/S2cKre1ggbSqML6DAqtEPgqo2AsZsTLTNipserr/VaO1hioe1tDIrT
-         H4JmKQ+26KSlXlm/hWDD3W7LCxS1f+mus7AO1sUkn4pg+zHeEPXGuNX7aHZBvgzy/2U6
-         1aDw==
-X-Gm-Message-State: APjAAAW/YUaJw5hisylEzDLAE5dYIb579OddOuUfjV/Uan516llAPA0Q
-        pGCbYBbdGsXqZUZiNUmmxxGdbg==
-X-Google-Smtp-Source: APXvYqy81kOsWTfc3qI9cyUFMvjSdlsf4pF4JIm5L+OGMDjbnEgEg9Dfd3m/D9WpbJsDGd8xvzXW1Q==
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr3834115wmk.99.1560869390770;
-        Tue, 18 Jun 2019 07:49:50 -0700 (PDT)
+        b=lyvhGpXYtHDr9AcP+ajarJ7E1w9KooykR9aX0vw2DM4wsc+wa7LDwCnGN9tOOobHnT
+         YxgzJzyp4mRMIJhssuFObO8JJhZx4MooplTyq9oBQaxvcBFV8H1n1zeumBVQRinemF5a
+         iwGc/hl3pfCTt4BJ8qqHmk1jJ9Bhy++yA8cjmtzUHKVzOJkikKvxKBO5TEfArQ/UdHDd
+         69Vv5/PEH/ANilp2mc1aLDhTqHPVhn3ZxHp8qmbGM8HI5BsKpqKpf/y95Xh+2NcfKVIy
+         u1O4CwGR4iqmmBJRZHdGbZfsIx1UBQnew6M0ePSZ+gYhFKrSmkTxSe2czKrbn/ND9V5o
+         ZQAg==
+X-Gm-Message-State: APjAAAWcCUHW/b8ujZJIm57m5oWd02GOlS2Jigi3Tad2PH/w6+hwLHkr
+        /dHDhkCh1VrVF6RmA78lqink1buXntRGdA==
+X-Google-Smtp-Source: APXvYqxjnKoS80zlbwp0cUQJ/rprjRcDz55dDwt8Tgr/K/fjpKiaByOclSoAGfjyb4mvHNqBQKMfmg==
+X-Received: by 2002:adf:e442:: with SMTP id t2mr7152968wrm.286.1560869404524;
+        Tue, 18 Jun 2019 07:50:04 -0700 (PDT)
 Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id j189sm3881237wmb.48.2019.06.18.07.49.49
+        by smtp.googlemail.com with ESMTPSA id o126sm4052040wmo.1.2019.06.18.07.50.03
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 07:49:50 -0700 (PDT)
+        Tue, 18 Jun 2019 07:50:03 -0700 (PDT)
 Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
 To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
 Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
@@ -64,8 +64,8 @@ Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
 References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
  <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
 From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <ab29c08b-d509-a275-f208-ace1041a27af@linaro.org>
-Date:   Tue, 18 Jun 2019 15:49:49 +0100
+Message-ID: <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
+Date:   Tue, 18 Jun 2019 15:50:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
