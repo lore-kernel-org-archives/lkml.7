@@ -2,82 +2,105 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F4DAC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B098EC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:06:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2322220665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A01C20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:06:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ue8LR2Qk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728565AbfFRHFr (ORCPT
+        id S1728951AbfFRHGA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:05:47 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:46485 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfFRHFr (ORCPT
+        Tue, 18 Jun 2019 03:06:00 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:36677 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfFRHF7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:05:47 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hd6uL-0006Wk-1p; Tue, 18 Jun 2019 07:43:49 +0200
-Date:   Tue, 18 Jun 2019 07:43:48 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Andy Lutomirski <luto@kernel.org>, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, H Peter Anvin <hpa@zytor.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v4 2/5] x86/umwait: Initialize umwait control values
-In-Reply-To: <20190617204619.GC217081@romley-ivt3.sc.intel.com>
-Message-ID: <alpine.DEB.2.21.1906180741440.1963@nanos.tec.linutronix.de>
-References: <1559944837-149589-1-git-send-email-fenghua.yu@intel.com> <1559944837-149589-3-git-send-email-fenghua.yu@intel.com> <CALCETrWtmrwqjThkMKU9YpTDK4o95V4HBb2_yQF2tvx5JZ9Ukw@mail.gmail.com> <20190610041343.GC162238@romley-ivt3.sc.intel.com>
- <alpine.DEB.2.21.1906112242410.2214@nanos.tec.linutronix.de> <20190617204619.GC217081@romley-ivt3.sc.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 18 Jun 2019 03:05:59 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r7so7101409pfl.3;
+        Tue, 18 Jun 2019 00:05:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=KY0hOmAa86HuZE0h9c7QHLSN/sFybZcvdeeWuBmi/OU=;
+        b=Ue8LR2Qk7y+EWsK1kXFMPLzPeXzkdfH0ztEPZVb5Jfusm1NYSEeT8qzhlDfQo/Mo7m
+         l9409MLPWW+t0N0zo++a14pi+SGGltJ0SS42uhY4SXXGgGi8HAOE+LIGSyFLRA3NfbtE
+         zisJAa/0g+CPDB7AKAO2nYYFmLPH0ypBESfc0UCOavmrIrB0PoXhmASaaXN1DbY2quVq
+         lIdZ3KIjdRBUdJMe5gTa05BWd2YrDH+OAptQsADdxajQOZBK8XWvB/Rz4HWFSdGFYwBy
+         gvcj70OXo+RRh5f5nWUyIdktSspfSuZQBQ3QsJqNz1KMuGqDklr9UxiZHVATVylJMcyH
+         4Gpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=KY0hOmAa86HuZE0h9c7QHLSN/sFybZcvdeeWuBmi/OU=;
+        b=iTPL4beohlgK0QWR+SH1a9kEirgWvihaXVFnjMi76HFnxjASzOzBJRVIUvJU2WGVzV
+         WzfI3VOgjHyV9An/oKIo6DLaDYp7z3R/tzDq0XsFSBbfooj2AHYv0vrweMJp3gKiuuid
+         oahgx2lVr76P3UTgsxW8b0sNqb88Rua2Hy3UvYxk1NZ4CmHyzDDUKZ0//ktFSkW4985v
+         MCpY/3dSSQayj6HCq3as9jYVnl4yRepxF8ktvWlJ/WD+adHnvBwbv2m3ifZ3mMouyB6h
+         V0Cqgxy7w6UHjP8G8HQfj9Tn7FY7rCT3TAPSLZHiEGFbkxLj+OIlKi400UvJD7SJ5OpJ
+         Um+g==
+X-Gm-Message-State: APjAAAVvjP6uulz8yfrrg/2KJ0w4wH2eN21mH5Ae3ozVSKfo9hrEQPng
+        8WrNN2kjfqo90q6+qb2UTpVgJ1JsWJA=
+X-Google-Smtp-Source: APXvYqxTytyfk9wnV8foDumcE1FOZD+ACJGrgFdfF44453aFg6xoz3efdMevejBUgM67y8CrZf3Wng==
+X-Received: by 2002:a17:90a:9b08:: with SMTP id f8mr3264521pjp.103.1560838638921;
+        Mon, 17 Jun 2019 23:17:18 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id y185sm14143581pfy.110.2019.06.17.23.17.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 23:17:18 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 06:17:18 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 5/5] Input: hv: Remove dependencies on PAGE_SIZE for ring
+ buffer
+Message-ID: <78f6e9646f762c51febba6c5a52eb777c238d4aa.1560837096.git.m.maya.nakamura@gmail.com>
+References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1560837096.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Fenghua Yu wrote:
-> On Tue, Jun 11, 2019 at 10:46:55PM +0200, Thomas Gleixner wrote:
-> > On Sun, 9 Jun 2019, Fenghua Yu wrote:
-> > > > Sounds good, but:
-> > > > 
-> > > > > +#define MSR_IA32_UMWAIT_CONTROL_C02            BIT(0)
-> > > > 
-> > > > > +static u32 umwait_control_cached = 100000;
-> > > > 
-> > > > The code seems to disagree.
-> > > 
-> > > The definition of bit[0] is: C0.2 is disabled when bit[0]=1. So
-> > > 100000 means C0.2 is enabled (and max time is 100000).
-> > 
-> > which is totally non obvious. If you have to encode the control bit, then
-> > please make it explicit, i.e. mask out the disable bit in the initializer.
-> 
-> Is this right?
-> 
-> static u32 umwait_control_cached = 100000 & ~MSR_IA32_UMWAIT_CONTROL_C02_DISABLED;
+Define the ring buffer size as a constant expression because it should
+not depend on the guest page size.
 
-Works, but looks pretty odd. I'd rather create an explicit initializer
-macro, something like:
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+---
+ drivers/input/serio/hyperv-keyboard.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-    	   UMWAIT_CTRL_VAL(100000, UMWAIT_DISABLED);
+diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
+index 8e457e50f837..88ae7c2ac3c8 100644
+--- a/drivers/input/serio/hyperv-keyboard.c
++++ b/drivers/input/serio/hyperv-keyboard.c
+@@ -75,8 +75,8 @@ struct synth_kbd_keystroke {
+ 
+ #define HK_MAXIMUM_MESSAGE_SIZE 256
+ 
+-#define KBD_VSC_SEND_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
+-#define KBD_VSC_RECV_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
++#define KBD_VSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
++#define KBD_VSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
+ 
+ #define XTKBD_EMUL0     0xe0
+ #define XTKBD_EMUL1     0xe1
+-- 
+2.17.1
 
-Hmm?
-
-Thanks,
-
-	tglx
