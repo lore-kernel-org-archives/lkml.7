@@ -2,182 +2,307 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D197BC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:26:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB8CC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A848E2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:26:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2AE912084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:27:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TBXn5NHk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729422AbfFRJ0g (ORCPT
+        id S1729432AbfFRJ1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:26:36 -0400
-Received: from foss.arm.com ([217.140.110.172]:59236 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729233AbfFRJ0f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:26:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 616ED344;
-        Tue, 18 Jun 2019 02:26:34 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D6923F246;
-        Tue, 18 Jun 2019 02:26:27 -0700 (PDT)
-Subject: Re: [PATCH V3 12/17] soc/tegra: pmc: allow support for more tegra
- wake
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
-        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com
-Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        digetx@gmail.com, devicetree@vger.kernel.org
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-13-git-send-email-skomatineni@nvidia.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- mQINBE6Jf0UBEADLCxpix34Ch3kQKA9SNlVQroj9aHAEzzl0+V8jrvT9a9GkK+FjBOIQz4KE
- g+3p+lqgJH4NfwPm9H5I5e3wa+Scz9wAqWLTT772Rqb6hf6kx0kKd0P2jGv79qXSmwru28vJ
- t9NNsmIhEYwS5eTfCbsZZDCnR31J6qxozsDHpCGLHlYym/VbC199Uq/pN5gH+5JHZyhyZiNW
- ozUCjMqC4eNW42nYVKZQfbj/k4W9xFfudFaFEhAf/Vb1r6F05eBP1uopuzNkAN7vqS8XcgQH
- qXI357YC4ToCbmqLue4HK9+2mtf7MTdHZYGZ939OfTlOGuxFW+bhtPQzsHiW7eNe0ew0+LaL
- 3wdNzT5abPBscqXWVGsZWCAzBmrZato+Pd2bSCDPLInZV0j+rjt7MWiSxEAEowue3IcZA++7
- ifTDIscQdpeKT8hcL+9eHLgoSDH62SlubO/y8bB1hV8JjLW/jQpLnae0oz25h39ij4ijcp8N
- t5slf5DNRi1NLz5+iaaLg4gaM3ywVK2VEKdBTg+JTg3dfrb3DH7ctTQquyKun9IVY8AsxMc6
- lxl4HxrpLX7HgF10685GG5fFla7R1RUnW5svgQhz6YVU33yJjk5lIIrrxKI/wLlhn066mtu1
- DoD9TEAjwOmpa6ofV6rHeBPehUwMZEsLqlKfLsl0PpsJwov8TQARAQABtCNNYXJjIFp5bmdp
- ZXIgPG1hcmMuenluZ2llckBhcm0uY29tPokCTwQTAQIAOQIbAwYLCQgHAwIGFQgCCQoLBBYC
- AwECHgECF4AWIQSf1RxT4LVjGP2VnD0j0NC60T16QwUCXO+WxgAKCRAj0NC60T16QzfuEACd
- oPsSJdUg3nm61VKq86Pp0mfCC5IVyD/vTDw3jDErsmtT7t8mMVgidSJe9cMEudLO5xske/mY
- sC7ZZ4GFNRRsFs3wY5g+kg4yk2UY6q18HXRQJwzWCug2bkJPUxbh71nS3KPsvq4BBOeQiTIX
- Xr0lTyReFAp+JZ0HpanAU/iD2usEZLDNLXYLRjaHlfkwouxt02XcTKbqRWNtKl3Ybj+mz5IA
- qEQnA5Z8Nt9ZQmlZ4ASiXVVCbZKIR3RewBL6BP4OhYrvcPCtkoqlqKWZoHBs3ZicRXvcVUr/
- nqUyZpqhmfht2mIE063L3kTfBqxJ1SQqPc0ZIModTh4ATEjC44x8ObQvtnmgL8EKJBhxJfjY
- EUYLnwSejH1h+qgj94vn7n1RMVqXpCrWHyF7pCDBqq3gBxtDu6TWgi4iwh4CtdOzXBw2V39D
- LlnABnrZl5SdVbRwV+Ek1399s/laceH8e4uNea50ho89WmP9AUCrXlawHohfDE3GMOV4BdQ2
- DbJAtZnENQXaRK9gr86jbGQBga9VDvsBbRd+uegEmQ8nPspryWIz/gDRZLXIG8KE9Jj9OhwE
- oiusVTLsw7KS4xKDK2Ixb/XGtJPLtUXbMM1n9YfLsB5JPZ3B08hhrv+8Vmm734yCXtxI0+7B
- F1V4T2njuJKWTsmJWmx+tIY8y9muUK9rabkCDQROiX9FARAAz/al0tgJaZ/eu0iI/xaPk3DK
- NIvr9SsKFe2hf3CVjxriHcRfoTfriycglUwtvKvhvB2Y8pQuWfLtP9Hx3H+YI5a78PO2tU1C
- JdY5Momd3/aJBuUFP5blbx6n+dLDepQhyQrAp2mVC3NIp4T48n4YxL4Og0MORytWNSeygISv
- Rordw7qDmEsa7wgFsLUIlhKmmV5VVv+wAOdYXdJ9S8n+XgrxSTgHj5f3QqkDtT0yG8NMLLmY
- kZpOwWoMumeqn/KppPY/uTIwbYTD56q1UirDDB5kDRL626qm63nF00ByyPY+6BXH22XD8smj
- f2eHw2szECG/lpD4knYjxROIctdC+gLRhz+Nlf8lEHmvjHgiErfgy/lOIf+AV9lvDF3bztjW
- M5oP2WGeR7VJfkxcXt4JPdyDIH6GBK7jbD7bFiXf6vMiFCrFeFo/bfa39veKUk7TRlnX13go
- gIZxqR6IvpkG0PxOu2RGJ7Aje/SjytQFa2NwNGCDe1bH89wm9mfDW3BuZF1o2+y+eVqkPZj0
- mzfChEsiNIAY6KPDMVdInILYdTUAC5H26jj9CR4itBUcjE/tMll0n2wYRZ14Y/PM+UosfAhf
- YfN9t2096M9JebksnTbqp20keDMEBvc3KBkboEfoQLU08NDo7ncReitdLW2xICCnlkNIUQGS
- WlFVPcTQ2sMAEQEAAYkCHwQYAQIACQUCTol/RQIbDAAKCRAj0NC60T16QwsFD/9T4y30O0Wn
- MwIgcU8T2c2WwKbvmPbaU2LDqZebHdxQDemX65EZCv/NALmKdA22MVSbAaQeqsDD5KYbmCyC
- czilJ1i+tpZoJY5kJALHWWloI6Uyi2s1zAwlMktAZzgGMnI55Ifn0dAOK0p8oy7/KNGHNPwJ
- eHKzpHSRgysQ3S1t7VwU4mTFJtXQaBFMMXg8rItP5GdygrFB7yUbG6TnrXhpGkFBrQs9p+SK
- vCqRS3Gw+dquQ9QR+QGWciEBHwuSad5gu7QC9taN8kJQfup+nJL8VGtAKgGr1AgRx/a/V/QA
- ikDbt/0oIS/kxlIdcYJ01xuMrDXf1jFhmGZdocUoNJkgLb1iFAl5daV8MQOrqciG+6tnLeZK
- HY4xCBoigV7E8KwEE5yUfxBS0yRreNb+pjKtX6pSr1Z/dIo+td/sHfEHffaMUIRNvJlBeqaj
- BX7ZveskVFafmErkH7HC+7ErIaqoM4aOh/Z0qXbMEjFsWA5yVXvCoJWSHFImL9Bo6PbMGpI0
- 9eBrkNa1fd6RGcktrX6KNfGZ2POECmKGLTyDC8/kb180YpDJERN48S0QBa3Rvt06ozNgFgZF
- Wvu5Li5PpY/t/M7AAkLiVTtlhZnJWyEJrQi9O2nXTzlG1PeqGH2ahuRxn7txA5j5PHZEZdL1
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <bbbaaad7-d20d-c648-af73-ec0960a33896@arm.com>
-Date:   Tue, 18 Jun 2019 10:26:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 05:27:19 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41403 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729207AbfFRJ1T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:27:19 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p15so20647812eds.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 02:27:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Ui/BzLNa6wvXLsPsurjOjVu8WC6QRyBQbt6hZ7KPEOU=;
+        b=TBXn5NHklI2eEWguR3Yl2FEmK46zYkTMTZyy3xIpig0j/IQlAv9OMqtM8pRiUmOUjv
+         HtVRxPX8W7yGYL4BDrCDagO9ZG/W8mNPOQBld9ls9+svZ9j7Qieq36uwsK5TroIg1FTo
+         tXgFCwSESncMNCU/omydAKCKAike5ANebeJg0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=Ui/BzLNa6wvXLsPsurjOjVu8WC6QRyBQbt6hZ7KPEOU=;
+        b=EN16ikWRC+FRsE+fFKP5KLqKDgJZtEaiSHDFqQEIO+1nktcTS4tCg9DxnfNrNHK5W8
+         Yv0ZYYUSzjO6ML2WSw4VqNvuXKIXbQHkg2RBJavoSe6tv6LcgjBxeQdg6/w5Ury/Mw7T
+         /yj1BZI/ejcI//Br4YRduQK2o3YSR/ABf27g/WxvGUvc8IWNQoJ2bFVzprWjrO0gbMf9
+         /7NUz/YlQuqc6BAnsctpuGY72lybMASf7/HzreM+f0vczjpiCfLEGk0fbDXNsN4cItkk
+         fsyTw5uXKDciA0AzafKe+wi3rd/v4TKJ1Ui8s7wXEyYOCVGvrscrbc98LN4Xw47YSr2r
+         9cJA==
+X-Gm-Message-State: APjAAAVde1nfQgqzkU0KYS4aI4Dq9N1EQvangraCAxraTP6w4ynwUod7
+        bRPOm/+3CD4ojttJ54aI57tq9g==
+X-Google-Smtp-Source: APXvYqyeCeOpkcu7agLefsQcHTxiauFG4f43uh0M6maMqCFA7aB8x0O3RSCZTuqRvwxLisGm9v5qqA==
+X-Received: by 2002:a17:907:2130:: with SMTP id qo16mr23273141ejb.235.1560850036799;
+        Tue, 18 Jun 2019 02:27:16 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id g2sm475855edg.81.2019.06.18.02.27.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 02:27:16 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 11:27:14 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 1/5] drm/vkms: Move functions from vkms_crc to
+ vkms_composer
+Message-ID: <20190618092714.GP12905@phenom.ffwll.local>
+Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1560820888.git.rodrigosiqueiramelo@gmail.com>
+ <408a662d504db1cfe13919688a4e9f7f7a6d8489.1560820888.git.rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <1560843991-24123-13-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <408a662d504db1cfe13919688a4e9f7f7a6d8489.1560820888.git.rodrigosiqueiramelo@gmail.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2019 08:46, Sowjanya Komatineni wrote:
-> This patch allows to create separate irq_set_wake and irq_set_type
-> implementations for different tegra designs PMC that has different
-> wake models which require difference wake registers and different
-> programming sequence.
+On Mon, Jun 17, 2019 at 11:42:33PM -0300, Rodrigo Siqueira wrote:
+> The vkms_crc file has functions related to compose operations which are
+> not directly associated with CRC. This patch, move those function for a
+> new file named vkms_composer.
 > 
-> AOWAKE model support is available for Tegra186 and Tegra194 only
-> and it resides within PMC and supports tiered wake architecture.
-> 
-> Tegra210 and prior tegra designs uses PMC directly to receive wake
-> events and coordinate the wake sequence.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+
+I guess my suggestion wasn't quite clear: I thought we should rename the
+entire file from vkms_crc.c to vkms_composor.c. And then adjust functions
+and datastructures to use vkms_composer instead of vkms_crc as the prefix.
+-Daniel
+
 > ---
->  drivers/soc/tegra/pmc.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
+>  drivers/gpu/drm/vkms/Makefile        |  9 +++-
+>  drivers/gpu/drm/vkms/vkms_composer.c | 69 ++++++++++++++++++++++++++++
+>  drivers/gpu/drm/vkms/vkms_composer.h | 12 +++++
+>  drivers/gpu/drm/vkms/vkms_crc.c      | 65 +-------------------------
+>  4 files changed, 90 insertions(+), 65 deletions(-)
+>  create mode 100644 drivers/gpu/drm/vkms/vkms_composer.c
+>  create mode 100644 drivers/gpu/drm/vkms/vkms_composer.h
 > 
-> diff --git a/drivers/soc/tegra/pmc.c b/drivers/soc/tegra/pmc.c
-> index edd4fe06810f..e87f29a35fcf 100644
-> --- a/drivers/soc/tegra/pmc.c
-> +++ b/drivers/soc/tegra/pmc.c
-> @@ -226,6 +226,8 @@ struct tegra_pmc_soc {
->  	void (*setup_irq_polarity)(struct tegra_pmc *pmc,
->  				   struct device_node *np,
->  				   bool invert);
-> +	int (*irq_set_wake)(struct irq_data *data, unsigned int on);
-> +	int (*irq_set_type)(struct irq_data *data, unsigned int type);
+> diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
+> index 89f09bec7b23..b4c040854bd6 100644
+> --- a/drivers/gpu/drm/vkms/Makefile
+> +++ b/drivers/gpu/drm/vkms/Makefile
+> @@ -1,4 +1,11 @@
+>  # SPDX-License-Identifier: GPL-2.0-only
+> -vkms-y := vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o vkms_crc.o
+> +vkms-y := \
+> +	vkms_drv.o \
+> +	vkms_plane.o \
+> +	vkms_output.o \
+> +	vkms_crtc.o \
+> +	vkms_gem.o \
+> +	vkms_composer.o \
+> +	vkms_crc.o
 >  
->  	const char * const *reset_sources;
->  	unsigned int num_reset_sources;
-> @@ -1919,7 +1921,7 @@ static const struct irq_domain_ops tegra_pmc_irq_domain_ops = {
->  	.alloc = tegra_pmc_irq_alloc,
->  };
+>  obj-$(CONFIG_DRM_VKMS) += vkms.o
+> diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
+> new file mode 100644
+> index 000000000000..3d7c5e316d6e
+> --- /dev/null
+> +++ b/drivers/gpu/drm/vkms/vkms_composer.c
+> @@ -0,0 +1,69 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +
+> +#include "vkms_drv.h"
+> +#include "vkms_composer.h"
+> +#include <drm/drm_gem_framebuffer_helper.h>
+> +
+> +/**
+> + * blend - belnd value at vaddr_src with value at vaddr_dst
+> + * @vaddr_dst: destination address
+> + * @vaddr_src: source address
+> + * @dest: destination framebuffer's metadata
+> + * @src: source framebuffer's metadata
+> + *
+> + * Blend value at vaddr_src with value at vaddr_dst.
+> + * Currently, this function write value at vaddr_src on value
+> + * at vaddr_dst using buffer's metadata to locate the new values
+> + * from vaddr_src and their distenation at vaddr_dst.
+> + *
+> + * Todo: Use the alpha value to blend vaddr_src with vaddr_dst
+> + *	 instead of overwriting it.
+> + */
+> +void blend(void *vaddr_dst, void *vaddr_src, struct vkms_crc_data *dest,
+> +	   struct vkms_crc_data *src)
+> +{
+> +	int i, j, j_dst, i_dst;
+> +	int offset_src, offset_dst;
+> +
+> +	int x_src = src->src.x1 >> 16;
+> +	int y_src = src->src.y1 >> 16;
+> +
+> +	int x_dst = src->dst.x1;
+> +	int y_dst = src->dst.y1;
+> +	int h_dst = drm_rect_height(&src->dst);
+> +	int w_dst = drm_rect_width(&src->dst);
+> +
+> +	int y_limit = y_src + h_dst;
+> +	int x_limit = x_src + w_dst;
+> +
+> +	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
+> +		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
+> +			offset_dst = dest->offset
+> +				     + (i_dst * dest->pitch)
+> +				     + (j_dst++ * dest->cpp);
+> +			offset_src = src->offset
+> +				     + (i * src->pitch)
+> +				     + (j * src->cpp);
+> +
+> +			memcpy(vaddr_dst + offset_dst,
+> +			       vaddr_src + offset_src, sizeof(u32));
+> +		}
+> +		i_dst++;
+> +	}
+> +}
+> +
+> +void compose_cursor(struct vkms_crc_data *cursor,
+> +		    struct vkms_crc_data *primary, void *vaddr_out)
+> +{
+> +	struct drm_gem_object *cursor_obj;
+> +	struct vkms_gem_object *cursor_vkms_obj;
+> +
+> +	cursor_obj = drm_gem_fb_get_obj(&cursor->fb, 0);
+> +	cursor_vkms_obj = drm_gem_to_vkms_gem(cursor_obj);
+> +
+> +	if (WARN_ON(!cursor_vkms_obj->vaddr))
+> +		return;
+> +
+> +	blend(vaddr_out, cursor_vkms_obj->vaddr, primary, cursor);
+> +}
+> +
+> diff --git a/drivers/gpu/drm/vkms/vkms_composer.h b/drivers/gpu/drm/vkms/vkms_composer.h
+> new file mode 100644
+> index 000000000000..53fdee17a632
+> --- /dev/null
+> +++ b/drivers/gpu/drm/vkms/vkms_composer.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0+ */
+> +
+> +#ifndef _VKMS_COMPOSER_H_
+> +#define _VKMS_COMPOSER_H_
+> +
+> +void blend(void *vaddr_dst, void *vaddr_src, struct vkms_crc_data *dest,
+> +	   struct vkms_crc_data *src);
+> +
+> +void compose_cursor(struct vkms_crc_data *cursor,
+> +		    struct vkms_crc_data *primary, void *vaddr_out);
+> +
+> +#endif /* _VKMS_COMPOSER_H_ */
+> diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_crc.c
+> index 4b3146d83265..3c6a35aba494 100644
+> --- a/drivers/gpu/drm/vkms/vkms_crc.c
+> +++ b/drivers/gpu/drm/vkms/vkms_crc.c
+> @@ -1,6 +1,7 @@
+>  // SPDX-License-Identifier: GPL-2.0+
 >  
-> -static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
-> +static int tegra186_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->  {
->  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->  	unsigned int offset, bit;
-> @@ -1951,7 +1953,7 @@ static int tegra_pmc_irq_set_wake(struct irq_data *data, unsigned int on)
->  	return 0;
+>  #include "vkms_drv.h"
+> +#include "vkms_composer.h"
+>  #include <linux/crc32.h>
+>  #include <drm/drm_atomic.h>
+>  #include <drm/drm_atomic_helper.h>
+> @@ -39,70 +40,6 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_crc_data *crc_out)
+>  	return crc;
 >  }
 >  
-> -static int tegra_pmc_irq_set_type(struct irq_data *data, unsigned int type)
-> +static int tegra186_pmc_irq_set_type(struct irq_data *data, unsigned int type)
+> -/**
+> - * blend - belnd value at vaddr_src with value at vaddr_dst
+> - * @vaddr_dst: destination address
+> - * @vaddr_src: source address
+> - * @crc_dst: destination framebuffer's metadata
+> - * @crc_src: source framebuffer's metadata
+> - *
+> - * Blend value at vaddr_src with value at vaddr_dst.
+> - * Currently, this function write value at vaddr_src on value
+> - * at vaddr_dst using buffer's metadata to locate the new values
+> - * from vaddr_src and their distenation at vaddr_dst.
+> - *
+> - * Todo: Use the alpha value to blend vaddr_src with vaddr_dst
+> - *	 instead of overwriting it.
+> - */
+> -static void blend(void *vaddr_dst, void *vaddr_src,
+> -		  struct vkms_crc_data *crc_dst,
+> -		  struct vkms_crc_data *crc_src)
+> -{
+> -	int i, j, j_dst, i_dst;
+> -	int offset_src, offset_dst;
+> -
+> -	int x_src = crc_src->src.x1 >> 16;
+> -	int y_src = crc_src->src.y1 >> 16;
+> -
+> -	int x_dst = crc_src->dst.x1;
+> -	int y_dst = crc_src->dst.y1;
+> -	int h_dst = drm_rect_height(&crc_src->dst);
+> -	int w_dst = drm_rect_width(&crc_src->dst);
+> -
+> -	int y_limit = y_src + h_dst;
+> -	int x_limit = x_src + w_dst;
+> -
+> -	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
+> -		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
+> -			offset_dst = crc_dst->offset
+> -				     + (i_dst * crc_dst->pitch)
+> -				     + (j_dst++ * crc_dst->cpp);
+> -			offset_src = crc_src->offset
+> -				     + (i * crc_src->pitch)
+> -				     + (j * crc_src->cpp);
+> -
+> -			memcpy(vaddr_dst + offset_dst,
+> -			       vaddr_src + offset_src, sizeof(u32));
+> -		}
+> -		i_dst++;
+> -	}
+> -}
+> -
+> -static void compose_cursor(struct vkms_crc_data *cursor_crc,
+> -			   struct vkms_crc_data *primary_crc, void *vaddr_out)
+> -{
+> -	struct drm_gem_object *cursor_obj;
+> -	struct vkms_gem_object *cursor_vkms_obj;
+> -
+> -	cursor_obj = drm_gem_fb_get_obj(&cursor_crc->fb, 0);
+> -	cursor_vkms_obj = drm_gem_to_vkms_gem(cursor_obj);
+> -
+> -	if (WARN_ON(!cursor_vkms_obj->vaddr))
+> -		return;
+> -
+> -	blend(vaddr_out, cursor_vkms_obj->vaddr, primary_crc, cursor_crc);
+> -}
+> -
+>  static uint32_t _vkms_get_crc(struct vkms_crc_data *primary_crc,
+>  			      struct vkms_crc_data *cursor_crc)
 >  {
->  	struct tegra_pmc *pmc = irq_data_get_irq_chip_data(data);
->  	u32 value;
-> @@ -2005,8 +2007,10 @@ static int tegra_pmc_irq_init(struct tegra_pmc *pmc)
->  	pmc->irq.irq_unmask = irq_chip_unmask_parent;
->  	pmc->irq.irq_eoi = irq_chip_eoi_parent;
->  	pmc->irq.irq_set_affinity = irq_chip_set_affinity_parent;
-> -	pmc->irq.irq_set_type = tegra_pmc_irq_set_type;
-> -	pmc->irq.irq_set_wake = tegra_pmc_irq_set_wake;
-> +	if (pmc->soc->irq_set_type)
-> +		pmc->irq.irq_set_type = pmc->soc->irq_set_type;
-> +	if (pmc->soc->irq_set_wake)
-> +		pmc->irq.irq_set_wake = pmc->soc->irq_set_wake;
+> -- 
+> 2.21.0
 
-Two cases: either the value is non NULL, and we assign it, or it is
-NULL, and we leave it to what it was, presumably NULL. I guess you can
-drop the both ifs.
-
->  
->  	pmc->domain = irq_domain_add_hierarchy(parent, 0, 96, pmc->dev->of_node,
->  					       &tegra_pmc_irq_domain_ops, pmc);
-> @@ -2679,6 +2683,8 @@ static const struct tegra_pmc_soc tegra186_pmc_soc = {
->  	.regs = &tegra186_pmc_regs,
->  	.init = NULL,
->  	.setup_irq_polarity = tegra186_pmc_setup_irq_polarity,
-> +	.irq_set_wake = tegra186_pmc_irq_set_wake,
-> +	.irq_set_type = tegra186_pmc_irq_set_type,
->  	.reset_sources = tegra186_reset_sources,
->  	.num_reset_sources = ARRAY_SIZE(tegra186_reset_sources),
->  	.reset_levels = tegra186_reset_levels,
-> 
-
-Thanks,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
