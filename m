@@ -2,127 +2,69 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15B78C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:59:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 443F7C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7DC2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:59:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="G/bPQ2Sf"
+	by mail.kernel.org (Postfix) with ESMTP id 238872084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729733AbfFRN7R (ORCPT
+        id S1729231AbfFROAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:59:17 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:37650 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729161AbfFRN7R (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:59:17 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5rihIar1qARykSREZLm4vtBN9o2tMlTetAcfWA8C5Pg=; b=G/bPQ2SfD5W8WwEs50dsV84QH
-        luA+t3KYCMVhr+OTY5J+zq8rrkyp82y6BhNPTfeq1VDMHBpR4fnHGHbcNDWCfjpwjcVKmUyDbHJvF
-        0eI5wxRLkbZRlNX+0ZbqIsOorFvwLQwFIs9gClJcAxZo9qFrk1qlAcVfP6ZUhSb9hivNmAWbyEIsJ
-        EgwJ6e3vsYu9d7/ILw0/PD0HrCO4Ful90hpav9urzv2l0LVTeCxswlvQ/flmRtuqKriJNNZZZV6A3
-        kR5n1py+UDomYG56aJR5BUVntIL+VK+C7f7l/fbGS7ISI5lBtCavAyJwwqN7g8nVgAYBU1g/uudYL
-        hNHZE99DA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdEdl-0003G9-K5; Tue, 18 Jun 2019 13:59:13 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 9D2DF20A4A686; Tue, 18 Jun 2019 15:59:11 +0200 (CEST)
-Date:   Tue, 18 Jun 2019 15:59:11 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Andrey Ryabinin <aryabinin@virtuozzo.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Subject: Re: [PATCH] ubsan: mark ubsan_type_mismatch_common inline
-Message-ID: <20190618135911.GR3436@hirez.programming.kicks-ass.net>
-References: <20190617123109.667090-1-arnd@arndb.de>
- <20190617140210.GB3436@hirez.programming.kicks-ass.net>
- <CAK8P3a3iwWOkMBL-H3h5aSaHKjKWFce22rvydvVE=3uMfeOhVg@mail.gmail.com>
- <fc10bc69-0628-59eb-c243-9cd1dd3b47a4@virtuozzo.com>
+        Tue, 18 Jun 2019 10:00:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51480 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726047AbfFROAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:00:42 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B293308792D;
+        Tue, 18 Jun 2019 14:00:37 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 06F427BE64;
+        Tue, 18 Jun 2019 14:00:30 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+In-Reply-To: <20190601160822.GA77761@google.com>
+References: <20190601160822.GA77761@google.com> <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk> <155905633578.1662.8087594848892366318.stgit@warthog.procyon.org.uk>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mszeredi@redhat.com
+Subject: Re: [PATCH 09/25] vfs: Allow mount information to be queried by fsinfo() [ver #13]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fc10bc69-0628-59eb-c243-9cd1dd3b47a4@virtuozzo.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <18753.1560866343.1@warthog.procyon.org.uk>
+From:   David Howells <dhowells@redhat.com>
+Date:   Tue, 18 Jun 2019 15:00:30 +0100
+Message-ID: <18849.1560866430@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 18 Jun 2019 14:00:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 04:27:45PM +0300, Andrey Ryabinin wrote:
+Joel Fernandes <joel@joelfernandes.org> wrote:
+
+> > +	record.mnt_id = m->mnt_id;
+> > +	record.notify_counter = atomic_read(&m->mnt_notify_counter);
+> > +	store_mount_fsinfo(params, &record);
+> > +
+> > +	rcu_read_unlock();
 > 
+> Not super familiar with this code, but wanted to check with you:
 > 
-> On 6/18/19 3:56 PM, Arnd Bergmann wrote:
-> > On Mon, Jun 17, 2019 at 4:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> >>
-> >> On Mon, Jun 17, 2019 at 02:31:09PM +0200, Arnd Bergmann wrote:
-> >>> objtool points out a condition that it does not like:
-> >>>
-> >>> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-> >>> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-> >>>
-> >>> I guess this is related to the call ubsan_type_mismatch_common()
-> >>> not being inline before it calls user_access_restore(), though
-> >>> I don't fully understand why that is a problem.
-> >>
-> >> The rules are that when AC is set, one is not allowed to CALL schedule,
-> >> because scheduling does not save/restore AC.  Preemption, through the
-> >> exceptions is fine, because the exceptions do save/restore AC.
-> >>
-> >> And while most functions do not appear to call into schedule, function
-> >> trace ensures that every single call does in fact call into schedule.
-> >> Therefore any CALL (with AC set) is invalid.
-> > 
-> > I see that stackleak_track_stack is already marked 'notrace',
-> > since we must ensure we don't recurse when calling into it from
-> > any of the function trace logic.
-> > 
-> > Does that mean we could just mark it as another safe call?
-> > 
-> > --- a/tools/objtool/check.c
-> > +++ b/tools/objtool/check.c
-> > @@ -486,6 +486,7 @@ static const char *uaccess_safe_builtin[] = {
-> >         "__ubsan_handle_type_mismatch",
-> >         "__ubsan_handle_type_mismatch_v1",
-> >         /* misc */
-> > +       "stackleak_track_stack",
-> >         "csum_partial_copy_generic",
-> >         "__memcpy_mcsafe",
-> >         "ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
+> Here, if the rcu_read_lock is supposed to protect the RCU list, can
+> rcu_read_lock() scope be reduced to just wrapping around the
+> list_for_each_entry_rcu?
 
-Indeed, we could do this.
+Done.
 
-> > 
-> >> Maybe we should disable stackleak when building ubsan instead? We
-> >> already disable stack-protector when building ubsan.
-> > 
-> > I couldn't find out how that is done.
-> > 
-> 
-> I guess this:
-> ccflags-y += $(DISABLE_STACKLEAK_PLUGIN)
-
-Or more specifically this, I guess:
-
-CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
-
-we'd not want to exclude all of lib/ from stackleak I figure.
-
-Of these two options, I think I prefer the latter, because a smaller
-whitelist is a better whitelist and since we already disable
-stack protector, it is only consistent to also disable stack leak.
+David
