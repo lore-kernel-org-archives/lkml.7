@@ -3,106 +3,157 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C1AEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:59:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26E4AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 742FD20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0283F21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730067AbfFRQ7w (ORCPT
+        id S1729946AbfFRRB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:59:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47070 "EHLO mx1.redhat.com"
+        Tue, 18 Jun 2019 13:01:57 -0400
+Received: from mga01.intel.com ([192.55.52.88]:31480 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729514AbfFRQ7v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:59:51 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7200C3162909;
-        Tue, 18 Jun 2019 16:59:30 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8A3241001E73;
-        Tue, 18 Jun 2019 16:59:24 +0000 (UTC)
-Subject: Re: [PATCH] mm, memcg: Report number of memcg caches in slabinfo
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-api@vger.kernel.org
-References: <20190617142149.5245-1-longman@redhat.com>
- <20190617143842.GC1492@dhcp22.suse.cz>
- <9e165eae-e354-04c4-6362-0f80fe819469@redhat.com>
- <20190618123750.GG3318@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <dee4dee2-1f4f-a7c9-0014-dca54b991377@redhat.com>
-Date:   Tue, 18 Jun 2019 12:59:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1729319AbfFRRB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:01:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 10:01:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,389,1557212400"; 
+   d="scan'208";a="334915185"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga005.jf.intel.com with ESMTP; 18 Jun 2019 10:01:56 -0700
+Date:   Tue, 18 Jun 2019 10:05:08 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     Jonathan Cameron <jonathan.cameron@huawei.com>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH 1/8] iommu: Add I/O ASID allocator
+Message-ID: <20190618100508.7835780f@jacob-builder>
+In-Reply-To: <13e19d8c-8918-a3bb-f398-2ac41c71d307@arm.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+        <20190610184714.6786-2-jean-philippe.brucker@arm.com>
+        <20190611103625.00001399@huawei.com>
+        <62d1f310-0cba-4d55-0f16-68bba3c64927@arm.com>
+        <20190611111333.425ce809@jacob-builder>
+        <13e19d8c-8918-a3bb-f398-2ac41c71d307@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190618123750.GG3318@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 18 Jun 2019 16:59:51 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 8:37 AM, Michal Hocko wrote:
-> On Mon 17-06-19 10:50:23, Waiman Long wrote:
->> On 6/17/19 10:38 AM, Michal Hocko wrote:
->>> [Cc linux-api]
->>>
->>> On Mon 17-06-19 10:21:49, Waiman Long wrote:
->>>> There are concerns about memory leaks from extensive use of memory
->>>> cgroups as each memory cgroup creates its own set of kmem caches. There
->>>> is a possiblity that the memcg kmem caches may remain even after the
->>>> memory cgroup removal.
->>>>
->>>> Therefore, it will be useful to show how many memcg caches are present
->>>> for each of the kmem caches.
->>> How is a user going to use that information?  Btw. Don't we have an
->>> interface to display the number of (dead) cgroups?
->> The interface to report dead cgroups is for cgroup v2 (cgroup.stat)
->> only. I don't think there is a way to find that for cgroup v1.
-> Doesn't debug_legacy_files provide the information for both cgroups
-> APIs?
+On Tue, 18 Jun 2019 15:22:20 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-Not really. The debug controller doesn't provide information about the
-number of dead cgroups, for instance. Of course, we can always add those
-information there. Also the debug controller is not typically configured
-into a production kernel.
+> On 11/06/2019 19:13, Jacob Pan wrote:
+> >>>> +/**
+> >>>> + * ioasid_find - Find IOASID data
+> >>>> + * @set: the IOASID set
+> >>>> + * @ioasid: the IOASID to find
+> >>>> + * @getter: function to call on the found object
+> >>>> + *
+> >>>> + * The optional getter function allows to take a reference to
+> >>>> the found object
+> >>>> + * under the rcu lock. The function can also check if the object
+> >>>> is still valid:
+> >>>> + * if @getter returns false, then the object is invalid and NULL
+> >>>> is returned.
+> >>>> + *
+> >>>> + * If the IOASID has been allocated for this set, return the
+> >>>> private pointer
+> >>>> + * passed to ioasid_alloc. Private data can be NULL if not set.
+> >>>> Return an error
+> >>>> + * if the IOASID is not found or does not belong to the set.    
+> >>>
+> >>> Perhaps should make it clear that @set can be null.    
+> >>
+> >> Indeed. But I'm not sure allowing @set to be NULL is such a good
+> >> idea, because the data type associated to an ioasid depends on its
+> >> set. For example SVA will put an mm_struct in there, and auxiliary
+> >> domains use some structure private to the IOMMU domain.
+> >>  
+> > I am not sure we need to count on @set to decipher data type.
+> > Whoever does the allocation and owns the IOASID should knows its
+> > own data type. My thought was that @set is only used to group IDs,
+> > permission check etc.
+> >   
+> >> Jacob, could me make @set mandatory, or do you see a use for a
+> >> global search? If @set is NULL, then callers can check if the
+> >> return pointer is NULL, but will run into trouble if they try to
+> >> dereference it. 
+> > A global search use case can be for PRQ. IOMMU driver gets a IOASID
+> > (first interrupt then retrieve from a queue), it has no idea which
+> > @set it belongs to. But the data types are the same for all IOASIDs
+> > used by the IOMMU.  
+> 
+> They aren't when we use a generic SVA handler. Following a call to
+> iommu_sva_bind_device(), iommu-sva.c allocates an IOASID and store an
+> mm_struct. If auxiliary domains are also enabled for the device,
+> following a call to iommu_aux_attach_device() the IOMMU driver
+> allocates an IOASID and stores some private object.
+> 
+> Now for example the IOMMU driver receives a PPR and calls
+> ioasid_find() with @set = NULL. ioasid_find() may return either an
+> mm_struct or a private object, and the driver cannot know which it is
+> so the returned value is unusable.
+I think we might have a misunderstanding of what ioasid_set is. Or i
+have misused your original intention for it:) So my understanding of an
+ioasid_set is to identify a sub set of IOASIDs that
+1. shares the same data type
+2. belongs to the same permission group, owner.
 
+Our usage is #2., we put a mm_struct as the set to do permission
+check. E.g VFIO can check guest PASID ownership based on QEMU process
+mm. This will make sure IOASID allocated by one guest can only be used
+by the same guest.
 
->> Also the
->> number of memcg kmem caches may not be the same as the number of
->> memcg's. It can range from 0 to above the number of memcg's.  So it is
->> an interesting number by itself.
-> Is this useful enough to put into slabinfo? Doesn't this sound more like
-> a debugfs kinda a thing?
+For IOASID used for sva bind, let it be native or guest sva, we always
+have the same data type. Therefore, when page request handler gets
+called to search with ioasid_find(), it knows its data type. An
+additional flag will tell if it is a guest bind or native bind.
 
-I guess it is probably more on the debug side of things. I add it to
-slabinfo as the data is readily available. It will be much more work if
-we need to export the data via debugfs.
+I was under the assumption that aux domain and its IOASID is a 1:1
+mapping, there is no need for a search. Or even it needs to search, it
+will be searched by the same caller that did the allocation, therefore
+it knows what private data type is.
 
-We are seeing the kmem_cache slab growing continuously overtime when
-running a container-based workloads. Roman's kmem_cache reparenting
-patch will hopefully solve a major part of the problem, but we still
-need a way to confirm that by looking at how many memcg kmem_caches are
-associated with each root kmem_cache.
+In addition, aux domain is used for request w/o PASID. And PPR for
+request w/o PASID is not to be supported. So there would not be a need
+to search from page request handler.
 
-Cheers,
-Longman
+Now if we take the above assumption away, and use ioasid_set strictly
+to differentiate the data types (Usage #1). Then I agree we can get
+rid of NULL set and global search.
+
+That would require we converge on the generic sva_bind for both
+native and guest. The additional implication is that VFIO layer has to
+be SVA struct aware in order to sanitize the mm_struct for guest bind.
+i.e. check guest ownership by using QEMU process mm. Whereas we have
+today, VFIO just use IOASID set as mm to check ownership, no need to
+know the type.
+
+Can we keep the NULL set for now and remove it __after__ we converge on
+the sva bind flows?
+
+Thanks,
+
+Jacob
