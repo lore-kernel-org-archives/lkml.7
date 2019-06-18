@@ -2,111 +2,152 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DA3C31E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7DEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:56:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CED4120861
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:55:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560819315;
-	bh=LngrchH4I/IBN3Zh6OPsxtvSRQcY1UhYSAdzmmrSMZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JWGxPbyJzK1D73SP5Sp3hw8AZdsm20NH0nthKewiWzjomjK0OLRG03ecTpH1WoLiq
-	 omrYyii3vQf6WvLJO8fiqUeK4XXmMgcIUzcHfALu2J0QWnQixEwWDwdq0M2Sk96S0p
-	 atZ2JMf1O8CHN5BZN0OAEvQrXY+cuxlPKlv6PEHw=
+	by mail.kernel.org (Postfix) with ESMTP id DA03120833
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:56:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAIs7vmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726542AbfFRAzO (ORCPT
+        id S1726819AbfFRA4k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 20:55:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRAzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 20:55:14 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B089320833;
-        Tue, 18 Jun 2019 00:55:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560819314;
-        bh=LngrchH4I/IBN3Zh6OPsxtvSRQcY1UhYSAdzmmrSMZI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=oYn2ijJx2tyO/bwbH/NumDeIYuwoNhxc+WEvJdQ3tRhRtrnjbJZED4nHzzNDovMfg
-         he7lamj91s07bXu4cRiBZDOjDkCsVNcfnoqnniZvSwuaIT3b4wFSvVSYEb8RwvVW6W
-         13yAsZGMAoZL5Co54QcVOqiHELUx4VfuqjzqGSRg=
-Date:   Mon, 17 Jun 2019 20:55:12 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Borislav Petkov <bp@suse.de>, Toshi Kani <toshi.kani@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 1/3] resource: Fix locking in find_next_iomem_res()
-Message-ID: <20190618005512.GC2226@sasha-vm>
-References: <20190613045903.4922-2-namit@vmware.com>
- <20190615221557.CD1492183F@mail.kernel.org>
- <549284C3-6A1C-4434-B716-FF9B0C87EE45@vmware.com>
+        Mon, 17 Jun 2019 20:56:40 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:38277 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRA4k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 20:56:40 -0400
+Received: by mail-ot1-f65.google.com with SMTP id d17so11836051oth.5;
+        Mon, 17 Jun 2019 17:56:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=LAof2iPuEsmEYY4js8fXji44icMGLEIkpZjnqdzAtFI=;
+        b=NAIs7vmQcsIIa8lS+vTvC5bC1yt5vtdlN596xVfEf8KBK7ly+kPIH49W5sZweA/Ar5
+         PA4/gqSU3x5eUZ0EtsBshtI91HVoJKNqtK6Ou+yQB7Gjsm7MZm4cqPjgpzW7RlbVFSN6
+         YhnqPmRSGWE8NntPKcZ7CCpEftrq4oNhfZgDPcSVKNyBk4zxI+veE9QHenHLTUzhnipp
+         bbtUbg36mT3JQA7Wl9g2HSRNGKbn+tMG/JW+aNYQ79yVEzzhX2bpOcGEBtQz8/JiIjHC
+         CDmw6qkhEzYvCzD5tjXQocYSqYRGCH72DeLaqI2NIS2py8OQegBrJOaMTbMUjTyAVbey
+         K1tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=LAof2iPuEsmEYY4js8fXji44icMGLEIkpZjnqdzAtFI=;
+        b=KNPyi8GGgDO7fT4XB7t0G9psPPDhBDiCMwmMSNSzMbdLq567rkhbaj0aoU/Zxb1PId
+         ee4RY2CVUCNNCVM2QklmTbLdxXzgbkkUnArQl6ylQt1Hg+OJu4ZqbVjmdTX2TGLJ+njz
+         +L7S+GkB0/7rMMZz7HLr2tCsWXZnhVAJXlI5TWDi8xfBcMqghLEYZujFUFtdfc0q/U5z
+         53U+gmjllhFNVSCgjUKojeMcXBR3ZzXl+ODJWcP1Ww/XqM75iLzrbUFTBWgFPmsjC4Wd
+         am9kYMq644kTmJzCNXIQ24jaE3/BhCJ3MmNQgX4nVf3A92EuuurMHNI2eIxpxEVjLDkv
+         CZuA==
+X-Gm-Message-State: APjAAAVuUbMkdq+LRIWD0kazYKj15BbtxUYwqGGNqkdfaGWl/lRCXkNn
+        xYpUNdy6QGqWYDfQZui4Zp03jnxxrkPuLuUxBpy78HfS
+X-Google-Smtp-Source: APXvYqxStP/pRcAOqf4HKAwAeLrfDpYbv22OnkQz8YMUT/lESO9FbeQpHSXEliXQuDp75dLIJfSM1BhMkWzVmdHmgDU=
+X-Received: by 2002:a9d:62c4:: with SMTP id z4mr45374362otk.56.1560819399619;
+ Mon, 17 Jun 2019 17:56:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <549284C3-6A1C-4434-B716-FF9B0C87EE45@vmware.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-6-git-send-email-wanpengli@tencent.com> <20190617213201.GA26346@flask>
+ <CANRm+Cxrn51mJUvjH7df+U-HpPPLJJzsRf+BMebxDogSabex3g@mail.gmail.com>
+In-Reply-To: <CANRm+Cxrn51mJUvjH7df+U-HpPPLJJzsRf+BMebxDogSabex3g@mail.gmail.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 18 Jun 2019 08:57:15 +0800
+Message-ID: <CANRm+CwBY3xku7uE5fHRNBoHEctc1k-AS0DSny8jKKDsOUZs=g@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] KVM: LAPIC: add advance timer support to pi_inject_timer
+To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 07:14:53PM +0000, Nadav Amit wrote:
->> On Jun 15, 2019, at 3:15 PM, Sasha Levin <sashal@kernel.org> wrote:
->>
->> Hi,
->>
->> [This is an automated email]
->>
->> This commit has been processed because it contains a "Fixes:" tag,
->> fixing commit: ff3cc952d3f0 resource: Add remove_resource interface.
->>
->> The bot has tested the following trees: v5.1.9, v4.19.50, v4.14.125, v4.9.181.
->>
->> v5.1.9: Build OK!
->> v4.19.50: Failed to apply! Possible dependencies:
->>    010a93bf97c7 ("resource: Fix find_next_iomem_res() iteration issue")
->>    a98959fdbda1 ("resource: Include resource end in walk_*() interfaces")
->>
->> v4.14.125: Failed to apply! Possible dependencies:
->>    010a93bf97c7 ("resource: Fix find_next_iomem_res() iteration issue")
->>    0e4c12b45aa8 ("x86/mm, resource: Use PAGE_KERNEL protection for ioremap of memory pages")
->>    1d2e733b13b4 ("resource: Provide resource struct in resource walk callback")
->>    4ac2aed837cb ("resource: Consolidate resource walking code")
->>    a98959fdbda1 ("resource: Include resource end in walk_*() interfaces")
->>
->> v4.9.181: Failed to apply! Possible dependencies:
->>    010a93bf97c7 ("resource: Fix find_next_iomem_res() iteration issue")
->>    0e4c12b45aa8 ("x86/mm, resource: Use PAGE_KERNEL protection for ioremap of memory pages")
->>    1d2e733b13b4 ("resource: Provide resource struct in resource walk callback")
->>    4ac2aed837cb ("resource: Consolidate resource walking code")
->>    60fe3910bb02 ("kexec_file: Allow arch-specific memory walking for kexec_add_buffer")
->>    a0458284f062 ("powerpc: Add support code for kexec_file_load()")
->>    a98959fdbda1 ("resource: Include resource end in walk_*() interfaces")
->>    da6658859b9c ("powerpc: Change places using CONFIG_KEXEC to use CONFIG_KEXEC_CORE instead.")
->>    ec2b9bfaac44 ("kexec_file: Change kexec_add_buffer to take kexec_buf as argument.")
+On Tue, 18 Jun 2019 at 08:44, Wanpeng Li <kernellwp@gmail.com> wrote:
 >
->Is there a reason 010a93bf97c7 ("resource: Fix find_next_iomem_res()
->iteration issue”) was not backported?
+> On Tue, 18 Jun 2019 at 05:32, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat=
+.com> wrote:
+> >
+> > 2019-06-17 19:24+0800, Wanpeng Li:
+> > > From: Wanpeng Li <wanpengli@tencent.com>
+> > >
+> > > Wait before calling posted-interrupt deliver function directly to add
+> > > advance timer support to pi_inject_timer.
+> > >
+> > > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > > ---
+> >
+> > Please merge this patch with [2/5], so bisection doesn't break.
+>
+> Agreed.
+>
+> >
+> > >  arch/x86/kvm/lapic.c   | 6 ++++--
+> > >  arch/x86/kvm/lapic.h   | 2 +-
+> > >  arch/x86/kvm/svm.c     | 2 +-
+> > >  arch/x86/kvm/vmx/vmx.c | 2 +-
+> > >  4 files changed, 7 insertions(+), 5 deletions(-)
+> > >
+> > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > > index 1a31389..1a31ba5 100644
+> > > --- a/arch/x86/kvm/lapic.c
+> > > +++ b/arch/x86/kvm/lapic.c
+> > > @@ -1462,6 +1462,8 @@ static void apic_timer_expired(struct kvm_lapic=
+ *apic, bool can_pi_inject)
+> > >               return;
+> > >
+> > >       if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu))=
+ {
+> > > +             if (apic->lapic_timer.timer_advance_ns)
+> > > +                     kvm_wait_lapic_expire(vcpu, true);
+> >
+> > From where does kvm_wait_lapic_expire() take
+> > apic->lapic_timer.expired_tscdeadline?
+>
+> Sorry, I failed to understand this.
+> https://git.kernel.org/pub/scm/virt/kvm/kvm.git/tree/arch/x86/kvm/lapic.c=
+?h=3Dqueue#n1541
+> We can get apic->lapic_timer.expired_tscdeadline in
+> kvm_wait_lapic_expire() directly.
 
-Mostly because it's not tagged for stable :)
+Oh, miss the latest expired_tscdeadline, how about something like below?
 
---
-Thanks,
-Sasha
+diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+index 1a31ba5..7cd95ea 100644
+--- a/arch/x86/kvm/lapic.c
++++ b/arch/x86/kvm/lapic.c
+@@ -1461,6 +1461,9 @@ static void apic_timer_expired(struct kvm_lapic
+*apic, bool can_pi_inject)
+     if (atomic_read(&apic->lapic_timer.pending))
+         return;
+
++    if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
++        ktimer->expired_tscdeadline =3D ktimer->tscdeadline;
++
+     if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu)) {
+         if (apic->lapic_timer.timer_advance_ns)
+             kvm_wait_lapic_expire(vcpu, true);
+@@ -1477,9 +1480,6 @@ static void apic_timer_expired(struct kvm_lapic
+*apic, bool can_pi_inject)
+      */
+     if (swait_active(q))
+         swake_up_one(q);
+-
+-    if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
+-        ktimer->expired_tscdeadline =3D ktimer->tscdeadline;
+ }
+
+ /*
