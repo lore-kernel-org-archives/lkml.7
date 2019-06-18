@@ -2,127 +2,111 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B43FAC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:15:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0710AC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821E92085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:15:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560849342;
-	bh=gA2YgqZkn0Wi5r13BQk+BBwL1hF7Y6PBm5f+5w9qDqI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mCJpAL3mdbxoe04vY8SBuYyaD/iW6/SUZ1JNGAzrqgJgUrMjutehHoBHZpwfODYsQ
-	 X1EMWYhtHkegPdvXdiINlkwNDVLuMZs8/N1j8QSOWwfLc6Ig7/SqGrNqv85LfEuKIN
-	 wTwae0ssZkMPQNDaGlzvJGsRCfGk6uUrzTrjkNfI=
+	by mail.kernel.org (Postfix) with ESMTP id D0B052084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:17:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RiJtJdWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbfFRJPl (ORCPT
+        id S1729313AbfFRJRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:15:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbfFRJPk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:15:40 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 55CE4206BA;
-        Tue, 18 Jun 2019 09:15:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560849340;
-        bh=gA2YgqZkn0Wi5r13BQk+BBwL1hF7Y6PBm5f+5w9qDqI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pp6ieOAEYOEwunUaoY5CXNUYhXinz+c5vNQxqrWJvgbFUtPzEsYuJwy9EBfV3oHKr
-         M6OXEtFbG+jD1EGPrZYfF1JCua1MXePEbLHYapmQVdSNnP8bmY3YzL7Mme5OwCe4no
-         wHteUl8FhhCoZnjFrT2v3738Im/QqoU1mk6jZjTk=
-Date:   Tue, 18 Jun 2019 17:14:45 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        leonard.crestez@nxp.com, viresh.kumar@linaro.org,
-        abel.vesa@nxp.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH V2 2/2] soc: imx8: Use existing of_root directly
-Message-ID: <20190618091442.GM29881@dragon>
-References: <20190614080748.32997-1-Anson.Huang@nxp.com>
- <20190614080748.32997-2-Anson.Huang@nxp.com>
+        Tue, 18 Jun 2019 05:17:30 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39599 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729220AbfFRJR3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:17:29 -0400
+Received: by mail-lf1-f66.google.com with SMTP id p24so8692936lfo.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 02:17:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rJanYe36yi/CmGKqaCrG1otgHpkv5KX5H3hS1IRh33g=;
+        b=RiJtJdWoPD8zAWLrRuFlXYtFDm2X0N6/21V3ItMvPDDbdX9jIMVD2NDDE50Evpd7c5
+         NP91pnFt1FTIfxm71pG+sw/GLrffxSGkjN5FKLqFCZzFnGDzFCMG19dHtlagjO53JVr/
+         80CRzxaL1cN4BtODGKh0tEiNCVJAKGD2hlezCr0t0JeIi0cngbJDXFeAYYfVdH4xapR0
+         1nFQQDgIcTIQ1+QHAOYncbIigzuTHyGJIGn5wK5x+yFT1HBY5GkQFMYtVVGMYtPf8zk4
+         6jr/zmJsnunS/onnUn73MCCqmxxeoLyyYlMOV/H4O9N6tMze7daUZL+ggyMfqPaVWAIO
+         OQZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rJanYe36yi/CmGKqaCrG1otgHpkv5KX5H3hS1IRh33g=;
+        b=Wfr1uerZpU26NrrcQWfigM0tQAEB5/WcVEO0jw/u4YKOquKMC4Ya5VzEmnvJT6gLDk
+         ux68fDEODlPk13yhptrIReP7E7qumqM3OZ9bSWPTM5a66di1QerPekb7CQdCaipHhdIt
+         iwCa8uA0caoHtfbBXVRCmzjMpf0/+0Qhdvu77AKvdxYHyL/VCHmz4oLDVFD5yQIPAk3i
+         lBZri9nknwTC303XAtrknJg0A+5Ma75L2otsNDs9BpdTWDx/70Lp79XsAk+pp0uFOwS0
+         rUUlImJS/w8+qdCnmOF0i+k6+wTi+ySoaSt3NrF3jwoNRHzFEROvDQxWF8Rt+13DcILI
+         T+0A==
+X-Gm-Message-State: APjAAAWp5n6uTFgZFWEEwLgv5xvaAnsgU555C3lrJ+9wQUVlMaO9dfzR
+        GmRVOSPjGVsL3RxL+PTqFBiE3w==
+X-Google-Smtp-Source: APXvYqzZIY8KYRJ7T3S77TJbee+KXLTlqzbOJRplLldZUlUxRX5u3jYNnsAy45fO6GHH7GsxDOvD1w==
+X-Received: by 2002:ac2:482d:: with SMTP id 13mr14129676lft.132.1560849447214;
+        Tue, 18 Jun 2019 02:17:27 -0700 (PDT)
+Received: from localhost.localdomain ([212.45.67.2])
+        by smtp.googlemail.com with ESMTPSA id b9sm2497444ljj.92.2019.06.18.02.17.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 18 Jun 2019 02:17:26 -0700 (PDT)
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+To:     linux-pm@vger.kernel.org
+Cc:     daidavid1@codeaurora.org, vincent.guittot@linaro.org,
+        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
+        evgreen@chromium.org, dianders@chromium.org,
+        seansw@qti.qualcomm.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
+Subject: [PATCH v2 0/2] interconnect: Add path tagging support
+Date:   Tue, 18 Jun 2019 12:17:22 +0300
+Message-Id: <20190618091724.28232-1-georgi.djakov@linaro.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614080748.32997-2-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 04:07:48PM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> There is common of_root for reference, no need to find it
-> from DT again, use of_root directly to make driver simple.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Reviewed-by: Dong Aisheng <aisheng.dong@nxp.com>
+SoCs that have multiple coexisting CPUs and DSPs, may have shared
+interconnect buses between them. In such cases, each CPU/DSP may have
+different bandwidth needs, depending on whether it is active or sleeping.
+This means that we have to keep different bandwidth configurations for
+the CPU (active/sleep). In such systems, usually there is a way to
+communicate and synchronize this information with some firmware or pass
+it to another processor responsible for monitoring and switching the
+interconnect configurations based on the state of each CPU/DSP.
 
-It cannot be applied.  Please resend by basing on my imx/drivers branch.
+The above problem can be solved by introducing the path tagging concept,
+that allows consumers to optionally attach a tag to each path they use.
+This tag is used to differentiate between the aggregated bandwidth values
+for each state. The tag is generic and how it's handled is up to the
+platform specific interconnect provider drivers.
 
-Shawn
+v2:
+- Store tag with the request. (Evan)
+- Reorganize the code to save bandwidth values into buckets and use the
+  tag as a bitfield. (Evan)
+- Clear the aggregated values after icc_set().
 
-> ---
-> No changes.
-> ---
->  drivers/soc/imx/soc-imx8.c | 9 ++-------
->  1 file changed, 2 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/soc/imx/soc-imx8.c b/drivers/soc/imx/soc-imx8.c
-> index 5c7f330..b459bf2 100644
-> --- a/drivers/soc/imx/soc-imx8.c
-> +++ b/drivers/soc/imx/soc-imx8.c
-> @@ -105,7 +105,6 @@ static int __init imx8_soc_init(void)
->  {
->  	struct soc_device_attribute *soc_dev_attr;
->  	struct soc_device *soc_dev;
-> -	struct device_node *root;
->  	const struct of_device_id *id;
->  	u32 soc_rev = 0;
->  	const struct imx8_soc_data *data;
-> @@ -117,12 +116,11 @@ static int __init imx8_soc_init(void)
->  
->  	soc_dev_attr->family = "Freescale i.MX";
->  
-> -	root = of_find_node_by_path("/");
-> -	ret = of_property_read_string(root, "model", &soc_dev_attr->machine);
-> +	ret = of_property_read_string(of_root, "model", &soc_dev_attr->machine);
->  	if (ret)
->  		goto free_soc;
->  
-> -	id = of_match_node(imx8_soc_match, root);
-> +	id = of_match_node(imx8_soc_match, of_root);
->  	if (!id) {
->  		ret = -ENODEV;
->  		goto free_soc;
-> @@ -147,8 +145,6 @@ static int __init imx8_soc_init(void)
->  		goto free_rev;
->  	}
->  
-> -	of_node_put(root);
-> -
->  	if (IS_ENABLED(CONFIG_ARM_IMX_CPUFREQ_DT))
->  		platform_device_register_simple("imx-cpufreq-dt", -1, NULL, 0);
->  
-> @@ -159,7 +155,6 @@ static int __init imx8_soc_init(void)
->  		kfree(soc_dev_attr->revision);
->  free_soc:
->  	kfree(soc_dev_attr);
-> -	of_node_put(root);
->  	return ret;
->  }
->  device_initcall(imx8_soc_init);
-> -- 
-> 2.7.4
-> 
+v1: https://lore.kernel.org/lkml/20190208172152.1807-1-georgi.djakov@linaro.org/
+
+
+David Dai (1):
+  interconnect: qcom: Add tagging and wake/sleep support for sdm845
+
+Georgi Djakov (1):
+  interconnect: Add support for path tags
+
+ drivers/interconnect/core.c           |  24 ++++-
+ drivers/interconnect/qcom/sdm845.c    | 131 +++++++++++++++++++-------
+ include/linux/interconnect-provider.h |   4 +-
+ include/linux/interconnect.h          |   5 +
+ 4 files changed, 129 insertions(+), 35 deletions(-)
+
