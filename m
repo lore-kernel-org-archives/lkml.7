@@ -2,117 +2,99 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67045C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A027C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:30:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27E152082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:28:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 751F620873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:30:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxQiLwoo"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="pWeo/B2e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726783AbfFRB20 (ORCPT
+        id S1726721AbfFRBav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:28:26 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:42100 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfFRB20 (ORCPT
+        Mon, 17 Jun 2019 21:30:51 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41705 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726048AbfFRBau (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:28:26 -0400
-Received: by mail-pg1-f196.google.com with SMTP id l19so6713830pgh.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:28:26 -0700 (PDT)
+        Mon, 17 Jun 2019 21:30:50 -0400
+Received: by mail-wr1-f65.google.com with SMTP id c2so12016379wrm.8
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:30:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EhVn2VpMWMF3z6W4xlxwl8wypc2+4cPuZsN0Q8XyuuU=;
-        b=QxQiLwooXqMRIkh11AjjQpzoWU1haTiRRfs3v/EaP87xSPpKa5JBxenQkYqUhXEx6h
-         kpkbHAPqme66p1Q341yD7s78oKCSHZNbtW+zdGku+s0PPSEg/N6Qm03TgetlcHx4TVbm
-         xYbt5LQ9uNSfw7VHrymOZwu7PAirRKyhzC1CJLfiA5gaPz+PzM205K7+UjJt9CREqGLi
-         ae96RwBqoMwWiMtBVkevOr02W/5NRlj9qAQsr2K1562c0CKuUfGB3UWJAQzknBqI/X0k
-         O7NEMWsFgncoYbAlTl0F6/bux/7NUyVv3bT+YZkmsVAJkZdQhZA9809soAHcBiPWrxYB
-         zUBw==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=XpVeh+sz8l0MglOFihLIUBQe1u4nS2JU8kbEBnBdz+E=;
+        b=pWeo/B2eO7lNBNG+NGf1psnaK9Bz1g9gqlU6XOHEXehvJkTdsYz159HFRSlbRe08rj
+         Ug2Vty8V/cDv8kEDe+jl3jL8botZBCVTLKWUqrNA1jCmwGL5tAkAFlVW+9yKegVrIaMi
+         549Miw4N5mxxTIFnhg9U6ZeLF8EiYX7gB3VgjlBr+yH4/lHZZdJCrc9jCstsXEXziIM8
+         lE63JAB491FehYFjdM8w8oYGoOWP8/3FjlgwRff/fX2LMZyvhKrVsllzZEIzr7tWyn3r
+         rb0ZSual4VS01ywLbfCjyv179uoBsedHGiwjBkMX4/uZUxLyVmMoFvU9O9qheqEPMJ+H
+         hsDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EhVn2VpMWMF3z6W4xlxwl8wypc2+4cPuZsN0Q8XyuuU=;
-        b=asKAKfxZJhdlWehpUtTRk2gn+S4F9PIenUtjc8otsNX5wUFzvlKLbpdscId9Pc0rKs
-         dqJdvoBF6Vi5B0qkRsVc3LpF8YakMVWWIaJjXtl9x6lIJ0x4CDZyYgwpN05aLEbfy8js
-         vgHqjdp0r74cH+167x3nKRl4VbWIOc3Uv6yQix8Re2OlGmQpH0xvFTzni3dUGZ7VHKEt
-         +FfoQcfBdvUClN+8I0ybfIpUdB+M9gWw80WtwIHPxWccSUYayOHGNwWqBQgP/8dWquR2
-         v/W0bzK2a400kUdKdPUhPzmDMHM+Qy0/jflJINF+xtZQpwv58FEbq2oe9TbaBgpaSXva
-         Ojfw==
-X-Gm-Message-State: APjAAAXgJD4wKUiBVezJqMz7E0C4Bq4mUFaUbHGVV0QFMxhlFk2jFxek
-        1ih3/BSQGvOmNoFQ2AJlZBfZUytU
-X-Google-Smtp-Source: APXvYqzwqhVNBJpFvgKBoGS/o0RnWQY7px1RA77j748IdScaUq3udhxsYRuSfDF2Jy9SBRk7xBSF7A==
-X-Received: by 2002:a62:2643:: with SMTP id m64mr113828678pfm.46.1560821305718;
-        Mon, 17 Jun 2019 18:28:25 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id k4sm3153187pfk.42.2019.06.17.18.28.22
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=XpVeh+sz8l0MglOFihLIUBQe1u4nS2JU8kbEBnBdz+E=;
+        b=TMYeGVI5Qj/lYSbGddrzcMtSSJw8sdLCy+sEwcIYIhX1a/SQssNSYW3h1jBRoaLrtY
+         SKTOpz8hVa7wIdhamlAR/k/IDIanIMXxYJ/+vaO44v3sT9DslSJ+lVPO8VhiQmk8BVXg
+         LH6WDUjSSmtOhWgIq+OB+3iJ2ZBz9zMIOG0+VE29e+G7falGXaaJiXaLR3Pbr/61yNXh
+         YiBjxFx+sZPgM6PK602u+9OQuUoDJCcGnBxTpxLNburYRPijrHF/5ySYBWLVq9CDbX1x
+         40HlTLnRfUiiRwTwFOAlu38JKQ5okvFOdG4wN1XBDmwd/boFpDSf/52M2deKO2oEeibg
+         4MhQ==
+X-Gm-Message-State: APjAAAUkYOI6wisqzlCDyo73cBgZSFUiVF9z1pqd/wSq28WSsHZMzXAB
+        BNN0j0AhVV1cvJUrpOyONqsMPw==
+X-Google-Smtp-Source: APXvYqxXH1WiGUiS4USOydi2PH6JSND1aSmufIk12JiYjaB/PpKwr4NasNi7bhWPzwo3l5BPwoxs8Q==
+X-Received: by 2002:adf:fc45:: with SMTP id e5mr30375644wrs.240.1560821448873;
+        Mon, 17 Jun 2019 18:30:48 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id t6sm734906wmb.29.2019.06.17.18.30.47
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 18:28:25 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 06:58:20 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: os_dep: ioctl_linux:  Make use
- rtw_zmalloc
-Message-ID: <20190618012819.GA7963@hari-Inspiron-1545>
-References: <20190616053250.GA16116@hari-Inspiron-1545>
- <20190616071522.GE28859@kadam>
+        Mon, 17 Jun 2019 18:30:48 -0700 (PDT)
+Message-ID: <5d083ec8.1c69fb81.9934b.416c@mx.google.com>
+Date:   Mon, 17 Jun 2019 18:30:48 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190616071522.GE28859@kadam>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.14.127-54-g1ed3ad23f285
+X-Kernelci-Branch: linux-4.14.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
+References: <20190617210745.104187490@linuxfoundation.org>
+Subject: Re: [PATCH 4.14 00/53] 4.14.128-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 10:15:22AM +0300, Dan Carpenter wrote:
-> On Sun, Jun 16, 2019 at 11:02:50AM +0530, Hariprasad Kelam wrote:
-> > rtw_malloc with memset can be replace with rtw_zmalloc.
-> > 
-> > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> > ---
-> >  drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 12 +++---------
-> >  1 file changed, 3 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> > index fc3885d..c59e366 100644
-> > --- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> > +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-> > @@ -478,14 +478,12 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
-> >  		if (wep_key_len > 0) {
-> >  			wep_key_len = wep_key_len <= 5 ? 5 : 13;
-> >  			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
-> > -			pwep = rtw_malloc(wep_total_len);
-> > +			pwep = rtw_zmalloc(wep_total_len);
-> 
-> We should not introduce new uses of rtw_malloc() or rtw_zmalloc().  They
-> are buggy garbage.  Use normall kmalloc() and kzalloc().
-Hi Dan Carpenter,
+stable-rc/linux-4.14.y boot: 105 boots: 0 failed, 105 passed (v4.14.127-54-=
+g1ed3ad23f285)
 
-Sure , will  resend this patch with suggested changes.
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.14.y/kernel/v4.14.127-54-g1ed3ad23f285/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
+y/kernel/v4.14.127-54-g1ed3ad23f285/
 
-Thanks,
-Hariprasad k
+Tree: stable-rc
+Branch: linux-4.14.y
+Git Describe: v4.14.127-54-g1ed3ad23f285
+Git Commit: 1ed3ad23f2853e59a94e55528b42112d3e00c842
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 59 unique boards, 24 SoC families, 15 builds out of 201
 
-> 
-> regards,
-> dan carpenter
- 
+---
+For more info write to <info@kernelci.org>
