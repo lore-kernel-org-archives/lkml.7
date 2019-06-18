@@ -5,67 +5,67 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CFA4C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:04:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 316D0C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:04:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 661F2214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:04:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 055EA214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:04:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRFUU+v5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jpqi7QOh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729705AbfFROEt (ORCPT
+        id S1729592AbfFROEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:04:49 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:37094 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729497AbfFROEp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 10:04:45 -0400
-Received: by mail-lf1-f65.google.com with SMTP id d11so9392992lfb.4;
-        Tue, 18 Jun 2019 07:04:44 -0700 (PDT)
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39822 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729412AbfFROEm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:04:42 -0400
+Received: by mail-lf1-f65.google.com with SMTP id p24so9391658lfo.6;
+        Tue, 18 Jun 2019 07:04:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NGtYvpn4I0jJbqxAf7ldvCplrBd2VH6MuMjptajnNUk=;
-        b=JRFUU+v5WIoi99mY2jb0ZfXWXd6tGt848YpxJzJho3JpJKNNU6G2k9s+PuTFUoaGTr
-         pPAAIupVitqL4XWBLNe1wiHqayP6C7i20a6bBK3fVi3XBgd2Ss+5RGR9DzA3FN3+iNm0
-         6G/8KB+eeeWvTb21Z/J3FoQnd2Q+LVSOdckNWSenjE/Sbtqxm9HbbZZttqnL5ncb6MVM
-         9BuMZVOlphORSpa7o1h7BKxFShMaZy9B+nxgX2U0+4jl2QyCJEmMjST0zNe1vEs/GDx6
-         MD2SMk20EnpMGfIaw5E61jPur3gk7Z5XzguA7lVPCBV8l9bLpY978zrvXBO+D1Ih9Gk0
-         VtZQ==
+        bh=jbSwj9tUYUHF48lpxbApn6xo6/PnzEwRmK2D71mFg54=;
+        b=jpqi7QOh3MeuEJ43NFXnswv0GgO4DpujFqguQy7sKDOALjc49PLGlKrghoM+KZQtaR
+         CnoZSOa5cBcT+5x6mIdDiGr74pPXaQB1hhXO+X1V5uOFrREJpEjitv1mICyq0KmyiurX
+         CVjMcELcvsgwmwmH13glCy8yL8H5LtqdQpS0bdirsadj+48nZUsChcW1KfpoSdOlJ2qE
+         1RrAczWpSYp58EHj9eGcqdIUfPCRMfYDPkHWXAl+4nQFrKbJThLtGPtv50mjjzvnLGTk
+         pl3mZjCu6gkR/I6vpAeR9jgkxUk6xz5E73wL5E8CFFxoYLMGJnBFQMN2wqTiEGBS3XwG
+         4afA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NGtYvpn4I0jJbqxAf7ldvCplrBd2VH6MuMjptajnNUk=;
-        b=TzMXrt6AoHSxi6pQhuIKMAjQO8jo8IpeMD4MXLFhducINGszGO0WdTAKPSmtPy5H/H
-         +Akhk7aOwcq7fp687BSiBkDyPtVgOIpAZ61YPEmntq4h40cr7iH06BhlHb6pY4i1lZsI
-         +wf0xOgfXLj1q1ywTftG8EgrCy/csQp7byDr/Ed/QOP5KFApAPeNOcTh08kT7agdqODd
-         FxbwsU2Zf8+N2XJ/Hkxl9nBQWr8aAjcrLhiqDLenbaYf+yY9cwA4wQ6WlpAeZ4jHPRrp
-         5PYzY+0enJ/xfsWS4OgRM1f7iB7oKvgr2icWuk84ZX/nW7Ol+VX3E90uIx2PKT+F/xNB
-         JAoA==
-X-Gm-Message-State: APjAAAW2yZzTHpvqgM2RQ/bRGhBkOEacVW3GBG2mgcRjOMGeZDnXc85n
-        jammS+ndAkCXzsfUkzt4OLs=
-X-Google-Smtp-Source: APXvYqy4wwqSdOKSc8aHYzMQqM/TTQCx8pj5NWfBNRQECvYckaVREVOiHKUf3bCe6bURZ0SyfbZd2w==
-X-Received: by 2002:ac2:4312:: with SMTP id l18mr51123390lfh.139.1560866683466;
-        Tue, 18 Jun 2019 07:04:43 -0700 (PDT)
+        bh=jbSwj9tUYUHF48lpxbApn6xo6/PnzEwRmK2D71mFg54=;
+        b=LP3cCwjlI0NVPMpCCuxj+AX0LY98vqlblVFmrJxGqnHJObF/N+D1JI8WeA4gODzmnp
+         YnWGpYg1ABJoyakoZWRUyWbn5f5th1QQWYTpQuDTtqPza3OxHBm7gpQydq33qa1O1FOQ
+         cVE+1fkYfrJw3a0ImCC4CkYAdyLbxKqCG2PpL7k7b69iuJAgw2nJGD1zP5DMuSu8HSYu
+         RyLTVuhvnTA4sq4hkGjhCnAlsuCpI5rQO7/ziBKk9Itf5Y65gpJP1+XVRuBZE3faFb36
+         Nt9egUaGBnqs7TDh4dSLU0+05gN3R4HLTbS9JOKnmwyk+PCYdzhZdLvY0+4DZVZztc/E
+         OmGw==
+X-Gm-Message-State: APjAAAX5HoTZbN++enrMERvR4g+t6/0Qt+nUxDQ8/fQQ6eaUBWZwgdgi
+        fHOX+YN8+MOrZBPvbr5l6Kk2KaG8
+X-Google-Smtp-Source: APXvYqwAfHaV5/YPnj9tSQVq+uqrTgr3R5Kl/tYaSgQZA4pTCu3nAW7MeK0ZO8ZAqIhDeFNX2p/B2g==
+X-Received: by 2002:ac2:5310:: with SMTP id c16mr58074870lfh.119.1560866680518;
+        Tue, 18 Jun 2019 07:04:40 -0700 (PDT)
 Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id q6sm2650538lji.70.2019.06.18.07.04.42
+        by smtp.gmail.com with ESMTPSA id q6sm2650538lji.70.2019.06.18.07.04.39
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 07:04:42 -0700 (PDT)
+        Tue, 18 Jun 2019 07:04:40 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
         Peter De Schrijver <pdeschrijver@nvidia.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 8/8] clocksource/drivers/tegra: Set up maximum-ticks limit properly
-Date:   Tue, 18 Jun 2019 17:03:58 +0300
-Message-Id: <20190618140358.13148-9-digetx@gmail.com>
+Subject: [PATCH v3 5/8] clocksource/drivers/tegra: Add verbose definition for 1MHz constant
+Date:   Tue, 18 Jun 2019 17:03:55 +0300
+Message-Id: <20190618140358.13148-6-digetx@gmail.com>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190618140358.13148-1-digetx@gmail.com>
 References: <20190618140358.13148-1-digetx@gmail.com>
@@ -76,40 +76,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra's timer has 29 bits for the counter and for the "load" register
-which sets counter to a load-value. The counter's value is lower than
-the actual value by 1 because it starts to decrement after one tick,
-hence the maximum number of ticks that hardware can handle equals to
-29 bits + 1.
+Convert all 1MHz literals to a verbose constant for better readability.
 
+Suggested-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/clocksource/timer-tegra.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/clocksource/timer-tegra.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
-index b84324288749..355b29ff6362 100644
+index 3afa66c6730b..ddf5531c48a9 100644
 --- a/drivers/clocksource/timer-tegra.c
 +++ b/drivers/clocksource/timer-tegra.c
-@@ -137,9 +137,17 @@ static int tegra_timer_setup(unsigned int cpu)
- 	irq_force_affinity(to->clkevt.irq, cpumask_of(cpu));
- 	enable_irq(to->clkevt.irq);
+@@ -44,6 +44,8 @@
+ #define TIMER1_IRQ_IDX		0
+ #define TIMER10_IRQ_IDX		10
  
-+	/*
-+	 * Tegra's timer uses n+1 scheme for the counter, i.e. timer will
-+	 * fire after one tick if 0 is loaded and thus minimum number of
-+	 * ticks is 1. In result both of the clocksource's tick limits are
-+	 * higher than a minimum and maximum that hardware register can
-+	 * take by 1, this is then taken into account by set_next_event
-+	 * callback.
-+	 */
- 	clockevents_config_and_register(&to->clkevt, timer_of_rate(to),
- 					1, /* min */
--					0x1fffffff); /* 29 bits */
-+					0x1fffffff + 1); /* max 29 bits + 1 */
++#define TIMER_1MHz		1000000
++
+ static u32 usec_config;
+ static void __iomem *timer_reg_base;
  
- 	return 0;
+@@ -158,7 +160,7 @@ static unsigned long tegra_delay_timer_read_counter_long(void)
+ 
+ static struct delay_timer tegra_delay_timer = {
+ 	.read_current_timer = tegra_delay_timer_read_counter_long,
+-	.freq = 1000000,
++	.freq = TIMER_1MHz,
+ };
+ #endif
+ 
+@@ -224,7 +226,7 @@ static inline unsigned long tegra_rate_for_timer(struct timer_of *to,
+ 	 * parent clock.
+ 	 */
+ 	if (tegra20)
+-		return 1000000;
++		return TIMER_1MHz;
+ 
+ 	return timer_of_rate(to);
  }
+@@ -313,11 +315,11 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
+ 		}
+ 	}
+ 
+-	sched_clock_register(tegra_read_sched_clock, 32, 1000000);
++	sched_clock_register(tegra_read_sched_clock, 32, TIMER_1MHz);
+ 
+ 	ret = clocksource_mmio_init(timer_reg_base + TIMERUS_CNTR_1US,
+-				    "timer_us", 1000000,
+-				    300, 32, clocksource_mmio_readl_up);
++				    "timer_us", TIMER_1MHz, 300, 32,
++				    clocksource_mmio_readl_up);
+ 	if (ret)
+ 		pr_err("failed to register clocksource: %d\n", ret);
+ 
 -- 
 2.22.0
 
