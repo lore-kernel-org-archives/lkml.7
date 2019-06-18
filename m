@@ -2,97 +2,124 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA021C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D6AC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3AC2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:23:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Q3hIMOin"
+	by mail.kernel.org (Postfix) with ESMTP id E15552080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:23:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560842610;
+	bh=ORNSm3VV7yBbWhw7wrgIXiHj+NTwg/Ayf9t01rN2feQ=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=opLbZx9mSk9IjdvPcXuOJKp3uK7cn+ia640cpVsOQ3KewkEFAGJt5gqH4ylglDYQP
+	 p6emq4I8oFSjdi4Wkd/cC1t0DPhQSE6n3VZrmkw2UwlLIF6Hcrcsb7IGE/EwBy8vbS
+	 jpGqrD0TK6FL5ecxC71hbd8wtGJYejspiUoxa8/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbfFRHXP (ORCPT
+        id S1727099AbfFRHX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:23:15 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:38091 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFRHXO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:23:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id a186so7119093pfa.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:23:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=dEsKaJXoDJkA5TF5UYVq8fg5KxBVITSyK3x9GUtiEtI=;
-        b=Q3hIMOin+2zsiD8vYGq/3X6J1SuuZzyIZPPwpUEiQeLrbWpi/e1dq/7SIryYs4OKgc
-         z3rBAFLdOtYt5Z6olZwKQ9lf4/HPu177OQzeogJM6fwI+hQdSKKC1Lc2JnWSoyRQ5HQj
-         0ZhHg35UUTzkR/GiUtfC7uR78c1KItYhO5Bb4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=dEsKaJXoDJkA5TF5UYVq8fg5KxBVITSyK3x9GUtiEtI=;
-        b=FAVvBfK87iABI7oBccWaIGuK4+SDWyxTISIfyIJphRG+BTl2wqqdbkXdSbKBUTD2Bj
-         GN3YJPDir0rDw0XyoLl/ISmUsjy0rpzYXDYRdEL0l7qrz9HUJ6Ym2ISDHngTq4wrlLYC
-         WECNwT8Shal9lxQsyp7Yvb3sYwNzYQphivtWi2JZBLj8MxYEDJ2bjaR4HVmXlXnebELv
-         peRxqSHkkDu8ad1GUO5IilIZNJk1BjNTZpIJtewAyAszDfxXeh8wJQ2aMG2rmf9JrwoD
-         GhryG9Ikag+vya/229rGS8j7VTR8nbsRbaL36Xv1dpZnL/068EpySwwI1hrEQKCFejwE
-         j0IA==
-X-Gm-Message-State: APjAAAWlGU05Ds8LlCTuQWjJqxeyq68kImxVWezU1ZFbltpxRzbPQdLG
-        4yhksrP1RoLYV4Kn4FsXnW1R7Q==
-X-Google-Smtp-Source: APXvYqzD7fAz73M0c0VOd4C2AvHukf6CXWL7neDgSk4Ft1Gef+dHJA31Bnp0vePUR0O2PI6rnZm4qA==
-X-Received: by 2002:a63:5c15:: with SMTP id q21mr1379707pgb.248.1560842594126;
-        Tue, 18 Jun 2019 00:23:14 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id u23sm12579075pfh.84.2019.06.18.00.23.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Jun 2019 00:23:13 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 00:23:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        linux-kernel@vger.kernel.org, kernel-hardening@lists.openwall.com
-Subject: Re: [PATCH v3 1/3] lkdtm: Check for SMEP clearing protections
-Message-ID: <201906180019.EEA60F3@keescook>
-References: <20190618045503.39105-1-keescook@chromium.org>
- <20190618045503.39105-2-keescook@chromium.org>
- <580611da-fd97-e82e-b604-581f105416ee@rasmusvillemoes.dk>
+        Tue, 18 Jun 2019 03:23:28 -0400
+Received: from mga07.intel.com ([134.134.136.100]:5733 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbfFRHX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:23:28 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 00:23:27 -0700
+X-ExtLoop1: 1
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga007.jf.intel.com with ESMTP; 18 Jun 2019 00:23:24 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v4 0/4] I2C: DWC3 USB: Add support for ACPI based AArch64 Laptops
+In-Reply-To: <20190617132349.GI16364@dell>
+References: <20190617125105.6186-1-lee.jones@linaro.org> <87lfy0gym0.fsf@linux.intel.com> <20190617132349.GI16364@dell>
+Date:   Tue, 18 Jun 2019 10:23:20 +0300
+Message-ID: <87a7efgxw7.fsf@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <580611da-fd97-e82e-b604-581f105416ee@rasmusvillemoes.dk>
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 09:10:13AM +0200, Rasmus Villemoes wrote:
-> On 18/06/2019 06.55, Kees Cook wrote:
-> 
-> > +#else
-> > +	pr_err("FAIL: this test is x86_64-only\n");
-> > +#endif
-> > +}
-> 
-> Why expose it at all on all other architectures? If you wrap the
-> CRASHTYPE() in an #ifdef, you can also guard the whole lkdtm_UNSET_SMEP
-> definition (the declaration in lkdtm.h can stay, possibly with a comment
-> saying /* x86-64 only */).
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-My preference for LKDTM is for all the tests to be visible regardless
-of architecture so that the testing "environment" doesn't have to change
-depending on architecture. I've found it easier to deal with when I ran
-test harnesses on Chrome OS where I had cross-architectural scripts.
-Doing a side-by-side with a PASS and an XFAIL was more sensible to
-compare than a PASS and a missing test.
 
--- 
-Kees Cook
+Hi,
+
+Lee Jones <lee.jones@linaro.org> writes:
+> On Mon, 17 Jun 2019, Felipe Balbi wrote:
+>
+>> Lee Jones <lee.jones@linaro.org> writes:
+>>=20
+>> > This patch-set ensures the kernel is bootable on the newly released
+>> > AArch64 based Laptops using ACPI configuration tables.  The Pinctrl
+>> > changes have been accepted, leaving only I2C (keyboard, touchpad,
+>> > touchscreen, fingerprint, etc, HID device) and USB (root filesystem,
+>> > camera, networking, etc) enablement.
+>> >
+>> > RESEND: Stripped I2C patches as they have also been merged into
+>> >         their respective subsystem.
+>> >
+>> > v4:
+>> >  * Collecting Acks
+>> >  * Adding Andy Gross' new email
+>> >  * Removing applied Pinctrl patches
+>> >
+>> > Lee Jones (4):
+>> >   soc: qcom: geni: Add support for ACPI
+>> >   usb: dwc3: qcom: Add support for booting with ACPI
+>> >   usb: dwc3: qcom: Start USB in 'host mode' on the SDM845
+>> >   usb: dwc3: qcom: Improve error handling
+>>=20
+>> pushed to testing/next
+>
+> Sounds promising, thanks Felipe.
+>
+> OOI, what is your process?
+>
+> How does do the patches typically sit in there?
+
+I'll probably merge to my 'next' branch today. I leave them in
+testing/next for a couple days, usually, so 0-day can run its thing and
+I get a chance of at least boot testing on our machines in the lab here.
+
+Since this doesn't touch anything "generic", I don't _have_ to boot
+test, so I'll probably merge to 'next' today.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0IkWgACgkQzL64meEa
+mQZfuBAAuQZcnBloj3LoF6OISK9Br5hFTGB0GgLw0eVC0w8VavE1eR4HWJYAD9HU
+OtpJSw049QWg5tdam9Se6Vuz6vxi3Hsd0ALTLxaSscinMd1YoMmpnmnX83uSbINn
+V9OhiWwV7WmbGKSGAyvO9v+2tYsopxDyoFQr7uleNEF53w8hP4FEHY0BXmd7ZGqR
+X5zr6hA03V/7huGC6zqQgtWzrqif3quk/dns882qvNsb5KbsF6nHvbpmYj/50ytn
+jRJUG9XdqBgSKx9n4qdQNwtD1eJmpRm+Oa/M9MFwWMw/RZOciS0sfhcl7gHMJaGD
+x328NQj80cTs+jq0OiqqYdnKy8R+x7UuKdnNgZW7QvENVJwmEUOwFjU1Btyz4TYH
+FORe9XJiVXRUy9ytCykWNgj3jhlYeocnr9ZWGks5wTJkMKER+fUvMJfMSrW0PHDQ
+dn1Rs/orlx3rdJ1TnpfBTgqMBWqtxSPaYTqd0gHMPkUSoLm1ion1et7QlGUnteYb
+bsave1+35O6UT5b1hf6vUGWICU7zUdfMoQUD0pq+A6QlnvkpK7IBZhfvR0Z+5kNl
+1F+ut0O8O+PCE93AKYyhIGKDhy/dZYIR26/0ukGhGwtk8fbS4FfaYEYQYsr0fJuV
+myZ3TiG0YZXqgOKo8qauXRj0kZUw85lkzyeBCvpj3EgGzbtze28=
+=UaAI
+-----END PGP SIGNATURE-----
+--=-=-=--
