@@ -2,68 +2,62 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31425C31E5F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F351AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F9820873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7D0221479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560891297;
-	bh=PsHTU8Erd+vtKNKmSlyXDC3LQk8ZNGmFsW4B4wWBAAU=;
+	s=default; t=1560891304;
+	bh=hcQOiXiUlLdpQavtM5lQlIaKL+LyjDqwlx+ZalQYgzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DT2jUVDFv3fbjRXyQqOW3oOYaZxeXY+7ccwTLLp3WWAA7cNN6VwhK1PX69qVTrumZ
-	 wA1zLYLg2L59W9IwT3A87RnxAJzh31RhuUWrTC1VYowX9BW90NVEI/xCd9j91xeXPB
-	 ICShQwcqDhEs6hfgoLWTZoEiGr/+zQxUzplUHjM0=
+	b=vKlkJq7YaV8QHkkiUSWn4ASCkWZY9TV+hFGvL71sc2yP3CxEeJmtvE+oU+XBXB9pJ
+	 mU8xpxirhaWaOu6S58lP+nQC4dtRFRmjgSBX2gFjkFIz4hV2+FfibWMWvGq0AbKvZc
+	 ydSifFfXTubCQdZsIh4jZl9jURa6KecN1JrOkp78=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730777AbfFRUx7 (ORCPT
+        id S1730992AbfFRUzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:53:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50676 "EHLO
+        Tue, 18 Jun 2019 16:55:03 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50938 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730733AbfFRUx5 (ORCPT
+        with ESMTP id S1730772AbfFRUx7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:53:57 -0400
+        Tue, 18 Jun 2019 16:53:59 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ia8axAJLdhpvWbY463d2N4OqOe3tarfo78y8xKsRdDk=; b=LevyiXcpS04Eq2d2msD3z6IXFD
-        651gjVoyXTuuE2+ll9s4c864puS8WwghyBIK78AsLJHJv+xHdneK+cCiWeySqhyhuAsjFz7K7kiXO
-        e69mi+MT82i/iMmMRk5uDnxtmzLCvwC09jyRW3eoGmqdmXnRZBKvDKOPAOldPeMNbCevy2FOrMtCH
-        ZibvFIAdHGbZEDUAomS/fKr567/ftrORQ0lRxQsxSSg0veaLcUQ4eRZQyC3Kk3mbmyxl4yVWDjGdH
-        ojtOrzgTL6ZZy61nnNiNXD2b6YNDuJvJxQ4oOMBOTqVBHfoQwFANcuzFshpK+If1EJnTUN4V19Fgh
-        5OIvHd+g==;
+        bh=xd8ftG/fTlUxVtmXvmQG8Iuh9fusMy5ANPML2tMEoOw=; b=LZdVyByb4gsvMcjGYSIt0ns3tu
+        TmbQ4A47r31YJb+77l8UyKPsdwxuxVh7wOmO6I1GgkHnk8ritZhGMk615GjuOFs4uwJPAO7B74kMf
+        jRKc2RG2232qnkbooIIJrNeh51kAfVuaiZyUirvrOcSlb3f6hX2vim+A0gwle8C4V6Qy7sMueS8bN
+        uQm1KxoAQH8nxzyYZzt5sG59AWmvUDNCm9SsYWEZ6Ed1C1zKx+jap/amqm51inxd3Oig83db4VCRR
+        XbV4mZj9jND/EyXlmapvshmLBPT7DVmRYDu0EYH31Bk+AGMAArEcPds6FrB/EQOe44CrrNDBFOQ+a
+        UTLp6vYA==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdL74-0008Nf-9G; Tue, 18 Jun 2019 20:53:55 +0000
+        id 1hdL77-0008RT-4a; Tue, 18 Jun 2019 20:53:57 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdL70-00020X-Bo; Tue, 18 Jun 2019 17:53:50 -0300
+        id 1hdL6z-0001yp-JU; Tue, 18 Jun 2019 17:53:49 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org
-Subject: [PATCH v2 26/29] docs: mtd: convert to ReST
-Date:   Tue, 18 Jun 2019 17:53:44 -0300
-Message-Id: <c44c6fc5caed39d7823060ba4aca0087adb76261.1560890801.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 00/29] Convert files to ReST - part 2
+Date:   Tue, 18 Jun 2019 17:53:18 -0300
+Message-Id: <cover.1560890800.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1560890800.git.mchehab+samsung@kernel.org>
-References: <cover.1560890800.git.mchehab+samsung@kernel.org>
+In-Reply-To: <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
+References: <cover.1560890771.git.mchehab+samsung@kernel.org>
+ <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -71,841 +65,531 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the mtd documentation files to ReST, add an
-index for them and adjust in order to produce a nice html
-output via the Sphinx build system.
+This is the second part of a series I wrote sometime ago where I manually
+convert lots of files to be properly parsed by Sphinx as ReST files.
 
-It should be noticed that Sphinx doesn't handle very well
-URLs with dots in the middle. Thankfully, internally, the '.'
-char is translated to %2E, so we can jus use %2E instead of
-dots, and this will work fine on both text and processed files.
+As it touches on lot of stuff, this series is based on today's linux-next, 
+at tag next-20190617.
 
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
+The first version of this series had 57 patches. The first part with 28 patches
+were already merged. Right now, there are still ~76  patches pending applying
+(including this series), and that's because I opted to do ~1 patch per converted
+ directory.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+That sounds too much to be send on a single round. So, I'm opting to split
+it on 3 parts for the conversion, plus a final patch adding orphaned books
+to existing ones. 
+
+Those patches should probably be good to be merged either by subsystem
+maintainers or via the docs tree.
+
+I opted to mark new files not included yet to the main index.rst (directly or
+indirectly) with the :orphan: tag, in order to avoid adding warnings to the
+build system. This should be removed after we find a "home" for all
+the converted files within the new document tree arrangement, after I
+submit the third part.
+
+Both this series and  the other parts of this work are on my devel git tree,
+at:
+
+	https://git.linuxtv.org/mchehab/experimental.git/log/?h=convert_rst_renames_v5.1
+
+The final output in html (after all patches I currently have, including 
+the upcoming series) can be seen at:
+
+	https://www.infradead.org/~mchehab/rst_conversion/
+
+It contains all pending work from my side related to the conversion, plus
+the patches I finished a first version today with contains the renaming 
+patches and de-orphan changes.
+
 ---
+
+Version 2:
+
+- Removed patches merged via other trees;
+- rebased on the top of today's linux-next (next-20190617);
+- Fix a typo on one patch's description;
+- Added received acks.
+
+
+Mauro Carvalho Chehab (29):
+  docs: connector: convert to ReST and rename to connector.rst
+  docs: lcd-panel-cgram.txt: convert docs to ReST and rename to *.rst
+  docs: lp855x-driver.txt: convert to ReST and move to kernel-api
+  docs: m68k: convert docs to ReST and rename to *.rst
+  docs: cma/debugfs.txt: convert docs to ReST and rename to *.rst
+  docs: console.txt: convert docs to ReST and rename to *.rst
+  docs: pti_intel_mid.txt: convert it to pti_intel_mid.rst
+  docs: early-userspace: convert docs to ReST and rename to *.rst
+  docs: driver-model: convert docs to ReST and rename to *.rst
+  docs: arm: convert docs to ReST and rename to *.rst
+  docs: memory-devices: convert ti-emif.txt to ReST
+  docs: xen-tpmfront.txt: convert it to .rst
+  docs: bus-devices: ti-gpmc.rst: convert it to ReST
+  docs: nvmem: convert docs to ReST and rename to *.rst
+  docs: phy: convert samsung-usb2.txt to ReST format
+  docs: rbtree.txt: fix Sphinx build warnings
+  docs: DMA-API-HOWTO.txt: fix an unmarked code block
+  docs: accounting: convert to ReST
+  docs: ia64: convert to ReST
+  docs: leds: convert to ReST
+  docs: laptops: convert to ReST
+  docs: iio: convert to ReST
+  docs: namespaces: convert to ReST
+  docs: nfc: convert to ReST
+  docs: md: convert to ReST
+  docs: mtd: convert to ReST
+  docs: nvdimm: convert to ReST
+  docs: xtensa: convert to ReST
+  docs: mmc: convert to ReST
+
+ Documentation/ABI/testing/sysfs-block-device  |   2 +-
+ .../ABI/testing/sysfs-platform-asus-laptop    |   2 +-
+ Documentation/DMA-API-HOWTO.txt               |   2 +-
+ .../{cgroupstats.txt => cgroupstats.rst}      |  14 +-
+ ...ay-accounting.txt => delay-accounting.rst} |  61 ++-
+ Documentation/accounting/index.rst            |  14 +
+ Documentation/accounting/{psi.txt => psi.rst} |  40 +-
+ ...kstats-struct.txt => taskstats-struct.rst} |  79 ++-
+ .../{taskstats.txt => taskstats.rst}          |  15 +-
+ Documentation/admin-guide/cgroup-v2.rst       |   6 +-
+ .../admin-guide/kernel-parameters.rst         |   2 +-
+ .../admin-guide/kernel-parameters.txt         |   2 +-
+ Documentation/arm/Marvell/README              | 395 -------------
+ Documentation/arm/Netwinder                   |  78 ---
+ Documentation/arm/SA1100/FreeBird             |  21 -
+ Documentation/arm/SA1100/empeg                |   2 -
+ Documentation/arm/SA1100/serial_UART          |  47 --
+ Documentation/arm/{README => arm.rst}         |  50 +-
+ Documentation/arm/{Booting => booting.rst}    |  71 ++-
+ ...ance.txt => cluster-pm-race-avoidance.rst} | 177 +++---
+ .../arm/{firmware.txt => firmware.rst}        |  14 +-
+ Documentation/arm/index.rst                   |  80 +++
+ .../arm/{Interrupts => interrupts.rst}        |  86 +--
+ Documentation/arm/{IXP4xx => ixp4xx.rst}      |  61 ++-
+ ...nel_mode_neon.txt => kernel_mode_neon.rst} |   3 +
+ ...er_helpers.txt => kernel_user_helpers.rst} |  79 +--
+ .../keystone/{knav-qmss.txt => knav-qmss.rst} |   6 +-
+ .../keystone/{Overview.txt => overview.rst}   |  47 +-
+ Documentation/arm/marvel.rst                  | 488 +++++++++++++++++
+ .../arm/{mem_alignment => mem_alignment.rst}  |  11 +-
+ Documentation/arm/{memory.txt => memory.rst}  |   9 +-
+ .../arm/{Microchip/README => microchip.rst}   |  63 ++-
+ Documentation/arm/netwinder.rst               |  85 +++
+ Documentation/arm/nwfpe/index.rst             |  11 +
+ .../nwfpe/{README.FPE => netwinder-fpe.rst}   |  24 +-
+ Documentation/arm/nwfpe/{NOTES => notes.rst}  |   3 +
+ Documentation/arm/nwfpe/{README => nwfpe.rst} |  10 +-
+ Documentation/arm/nwfpe/{TODO => todo.rst}    |  47 +-
+ Documentation/arm/{OMAP/DSS => omap/dss.rst}  | 112 ++--
+ Documentation/arm/omap/index.rst              |  10 +
+ .../arm/{OMAP/README => omap/omap.rst}        |   7 +
+ .../arm/{OMAP/omap_pm => omap/omap_pm.rst}    |  55 +-
+ Documentation/arm/{Porting => porting.rst}    |  14 +-
+ Documentation/arm/pxa/{mfp.txt => mfp.rst}    | 106 ++--
+ .../{SA1100/ADSBitsy => sa1100/adsbitsy.rst}  |  14 +-
+ .../{SA1100/Assabet => sa1100/assabet.rst}    | 185 +++----
+ .../arm/{SA1100/Brutus => sa1100/brutus.rst}  |  45 +-
+ .../arm/{SA1100/CERF => sa1100/cerf.rst}      |  10 +-
+ Documentation/arm/sa1100/freebird.rst         |  25 +
+ .../graphicsclient.rst}                       |  46 +-
+ .../graphicsmaster.rst}                       |  13 +-
+ .../HUW_WEBPANEL => sa1100/huw_webpanel.rst}  |   8 +-
+ Documentation/arm/sa1100/index.rst            |  23 +
+ .../arm/{SA1100/Itsy => sa1100/itsy.rst}      |  14 +-
+ .../arm/{SA1100/LART => sa1100/lart.rst}      |   3 +-
+ .../nanoEngine => sa1100/nanoengine.rst}      |   6 +-
+ .../{SA1100/Pangolin => sa1100/pangolin.rst}  |  10 +-
+ .../arm/{SA1100/PLEB => sa1100/pleb.rst}      |   6 +-
+ Documentation/arm/sa1100/serial_uart.rst      |  51 ++
+ .../arm/{SA1100/Tifon => sa1100/tifon.rst}    |   4 +-
+ .../arm/{SA1100/Yopy => sa1100/yopy.rst}      |   5 +-
+ .../cpufreq.rst}                              |   5 +-
+ .../eb2410itx.rst}                            |   5 +-
+ .../GPIO.txt => samsung-s3c24xx/gpio.rst}     |  23 +-
+ .../H1940.txt => samsung-s3c24xx/h1940.rst}   |   5 +-
+ Documentation/arm/samsung-s3c24xx/index.rst   |  18 +
+ .../NAND.txt => samsung-s3c24xx/nand.rst}     |   6 +-
+ .../overview.rst}                             |  21 +-
+ .../s3c2412.rst}                              |   5 +-
+ .../s3c2413.rst}                              |   7 +-
+ .../smdk2440.rst}                             |   5 +-
+ .../suspend.rst}                              |  20 +-
+ .../usb-host.rst}                             |  16 +-
+ .../bootloader-interface.rst}                 |  27 +-
+ .../clksrc-change-registers.awk               |   0
+ .../{Samsung/GPIO.txt => samsung/gpio.rst}    |   7 +-
+ Documentation/arm/samsung/index.rst           |  10 +
+ .../Overview.txt => samsung/overview.rst}     |  15 +-
+ Documentation/arm/{Setup => setup.rst}        |  49 +-
+ .../arm/{SH-Mobile => sh-mobile}/.gitignore   |   0
+ .../overview.txt => spear/overview.rst}       |  20 +-
+ .../arm/sti/{overview.txt => overview.rst}    |  21 +-
+ ...h407-overview.txt => stih407-overview.rst} |   9 +-
+ ...h415-overview.txt => stih415-overview.rst} |   8 +-
+ ...h416-overview.txt => stih416-overview.rst} |   5 +-
+ ...h418-overview.txt => stih418-overview.rst} |   9 +-
+ Documentation/arm/stm32/overview.rst          |   2 -
+ .../arm/stm32/stm32f429-overview.rst          |   7 +-
+ .../arm/stm32/stm32f746-overview.rst          |   7 +-
+ .../arm/stm32/stm32f769-overview.rst          |   7 +-
+ .../arm/stm32/stm32h743-overview.rst          |   7 +-
+ .../arm/stm32/stm32mp157-overview.rst         |   3 +-
+ Documentation/arm/{sunxi/README => sunxi.rst} |  98 +++-
+ .../arm/sunxi/{clocks.txt => clocks.rst}      |   7 +-
+ .../arm/{swp_emulation => swp_emulation.rst}  |  24 +-
+ Documentation/arm/{tcm.txt => tcm.rst}        |  54 +-
+ Documentation/arm/{uefi.txt => uefi.rst}      |  39 +-
+ .../release-notes.rst}                        |   4 +-
+ Documentation/arm/{vlocks.txt => vlocks.rst}  |   9 +-
+ ...cd-panel-cgram.txt => lcd-panel-cgram.rst} |   9 +-
+ Documentation/backlight/lp855x-driver.rst     |  83 +++
+ Documentation/backlight/lp855x-driver.txt     |  66 ---
+ .../bus-devices/{ti-gpmc.txt => ti-gpmc.rst}  | 159 ++++--
+ .../cma/{debugfs.txt => debugfs.rst}          |   8 +-
+ .../{connector.txt => connector.rst}          | 130 ++---
+ .../console/{console.txt => console.rst}      |  63 ++-
+ Documentation/devicetree/bindings/arm/xen.txt |   2 +-
+ .../devicetree/booting-without-of.txt         |   4 +-
+ Documentation/driver-api/gpio/driver.rst      |   2 +-
+ .../driver-model/{binding.txt => binding.rst} |  20 +-
+ .../driver-model/{bus.txt => bus.rst}         |  69 +--
+ .../driver-model/{class.txt => class.rst}     |  74 +--
+ ...esign-patterns.txt => design-patterns.rst} | 106 ++--
+ .../driver-model/{device.txt => device.rst}   |  57 +-
+ .../driver-model/{devres.txt => devres.rst}   |  50 +-
+ .../driver-model/{driver.txt => driver.rst}   | 112 ++--
+ Documentation/driver-model/index.rst          |  26 +
+ .../{overview.txt => overview.rst}            |  37 +-
+ .../{platform.txt => platform.rst}            |  30 +-
+ .../driver-model/{porting.txt => porting.rst} | 333 +++++------
+ .../{buffer-format.txt => buffer-format.rst}  |  19 +-
+ .../{README => early_userspace_support.rst}   |   3 +
+ Documentation/early-userspace/index.rst       |  18 +
+ Documentation/eisa.txt                        |   4 +-
+ Documentation/fb/fbcon.rst                    |   4 +-
+ Documentation/filesystems/nfs/nfsroot.txt     |   2 +-
+ .../filesystems/ramfs-rootfs-initramfs.txt    |   4 +-
+ Documentation/hwmon/submitting-patches.rst    |   2 +-
+ .../ia64/{aliasing.txt => aliasing.rst}       |  73 ++-
+ Documentation/ia64/{efirtc.txt => efirtc.rst} | 118 ++--
+ .../ia64/{err_inject.txt => err_inject.rst}   | 349 ++++++------
+ Documentation/ia64/{fsys.txt => fsys.rst}     | 127 +++--
+ Documentation/ia64/{README => ia64.rst}       |  26 +-
+ Documentation/ia64/index.rst                  |  18 +
+ .../ia64/{IRQ-redir.txt => irq-redir.rst}     |  31 +-
+ Documentation/ia64/{mca.txt => mca.rst}       |  10 +-
+ Documentation/ia64/{serial.txt => serial.rst} |  36 +-
+ Documentation/ia64/xen.rst                    | 206 +++++++
+ Documentation/ia64/xen.txt                    | 183 -------
+ .../iio/{ep93xx_adc.txt => ep93xx_adc.rst}    |  15 +-
+ .../{iio_configfs.txt => iio_configfs.rst}    |  52 +-
+ Documentation/iio/index.rst                   |  12 +
+ Documentation/index.rst                       |   1 +
+ .../{asus-laptop.txt => asus-laptop.rst}      |  92 ++--
+ ...otection.txt => disk-shock-protection.rst} |  32 +-
+ Documentation/laptops/index.rst               |  17 +
+ .../{laptop-mode.txt => laptop-mode.rst}      | 509 +++++++++--------
+ .../{sony-laptop.txt => sony-laptop.rst}      |  58 +-
+ .../laptops/{sonypi.txt => sonypi.rst}        |  28 +-
+ .../{thinkpad-acpi.txt => thinkpad-acpi.rst}  | 367 ++++++++-----
+ .../{toshiba_haps.txt => toshiba_haps.rst}    |  47 +-
+ Documentation/leds/index.rst                  |  25 +
+ .../leds/{leds-blinkm.txt => leds-blinkm.rst} |  64 ++-
+ ...s-class-flash.txt => leds-class-flash.rst} |  49 +-
+ .../leds/{leds-class.txt => leds-class.rst}   |  15 +-
+ .../leds/{leds-lm3556.txt => leds-lm3556.rst} | 100 +++-
+ .../leds/{leds-lp3944.txt => leds-lp3944.rst} |  23 +-
+ Documentation/leds/leds-lp5521.rst            | 115 ++++
+ Documentation/leds/leds-lp5521.txt            | 101 ----
+ Documentation/leds/leds-lp5523.rst            | 147 +++++
+ Documentation/leds/leds-lp5523.txt            | 130 -----
+ Documentation/leds/leds-lp5562.rst            | 137 +++++
+ Documentation/leds/leds-lp5562.txt            | 120 ----
+ Documentation/leds/leds-lp55xx.rst            | 224 ++++++++
+ Documentation/leds/leds-lp55xx.txt            | 194 -------
+ Documentation/leds/leds-mlxcpld.rst           | 118 ++++
+ Documentation/leds/leds-mlxcpld.txt           | 110 ----
+ ...edtrig-oneshot.txt => ledtrig-oneshot.rst} |  11 +-
+ ...ig-transient.txt => ledtrig-transient.rst} |  63 ++-
+ ...edtrig-usbport.txt => ledtrig-usbport.rst} |  11 +-
+ Documentation/leds/{uleds.txt => uleds.rst}   |   5 +-
+ Documentation/m68k/index.rst                  |  17 +
+ ...{kernel-options.txt => kernel-options.rst} | 319 ++++++-----
+ Documentation/md/index.rst                    |  12 +
+ .../md/{md-cluster.txt => md-cluster.rst}     | 188 ++++---
+ .../md/{raid5-cache.txt => raid5-cache.rst}   |  28 +-
+ .../md/{raid5-ppl.txt => raid5-ppl.rst}       |   2 +
+ .../{ti-emif.txt => ti-emif.rst}              |  27 +-
+ Documentation/mmc/index.rst                   |  13 +
+ .../{mmc-async-req.txt => mmc-async-req.rst}  |  53 +-
+ .../{mmc-dev-attrs.txt => mmc-dev-attrs.rst}  |  32 +-
+ .../{mmc-dev-parts.txt => mmc-dev-parts.rst}  |  13 +-
+ .../mmc/{mmc-tools.txt => mmc-tools.rst}      |   5 +-
  Documentation/mtd/index.rst                   |  12 +
  .../mtd/{intel-spi.txt => intel-spi.rst}      |  46 +-
- .../mtd/{nand_ecc.txt => nand_ecc.rst}        | 481 ++++++++++--------
+ .../mtd/{nand_ecc.txt => nand_ecc.rst}        | 481 ++++++++--------
  .../mtd/{spi-nor.txt => spi-nor.rst}          |   7 +-
+ ...bility-list.txt => compatibility-list.rst} |  10 +-
+ Documentation/namespaces/index.rst            |  11 +
+ ...ource-control.txt => resource-control.rst} |   4 +
+ Documentation/nfc/index.rst                   |  11 +
+ .../nfc/{nfc-hci.txt => nfc-hci.rst}          | 163 +++---
+ .../nfc/{nfc-pn544.txt => nfc-pn544.rst}      |   6 +-
+ Documentation/nvdimm/{btt.txt => btt.rst}     | 140 ++---
+ Documentation/nvdimm/index.rst                |  12 +
+ .../nvdimm/{nvdimm.txt => nvdimm.rst}         | 518 ++++++++++--------
+ .../nvdimm/{security.txt => security.rst}     |   4 +-
+ Documentation/nvmem/{nvmem.txt => nvmem.rst}  | 112 ++--
+ .../{samsung-usb2.txt => samsung-usb2.rst}    |  62 ++-
+ Documentation/pti/pti_intel_mid.rst           | 106 ++++
+ Documentation/pti/pti_intel_mid.txt           |  99 ----
+ Documentation/rbtree.txt                      |   6 +-
+ .../{xen-tpmfront.txt => xen-tpmfront.rst}    | 103 ++--
+ Documentation/sysctl/vm.txt                   |   4 +-
+ Documentation/translations/zh_CN/arm/Booting  |   4 +-
+ .../zh_CN/arm/kernel_user_helpers.txt         |   4 +-
+ .../xtensa/{atomctl.txt => atomctl.rst}       |  13 +-
+ .../xtensa/{booting.txt => booting.rst}       |   5 +-
+ Documentation/xtensa/index.rst                |  12 +
+ Documentation/xtensa/mmu.rst                  | 195 +++++++
+ Documentation/xtensa/mmu.txt                  | 189 -------
+ MAINTAINERS                                   |  16 +-
+ arch/arm/Kconfig                              |   2 +-
+ arch/arm/common/mcpm_entry.c                  |   2 +-
+ arch/arm/common/mcpm_head.S                   |   2 +-
+ arch/arm/common/vlock.S                       |   2 +-
+ arch/arm/include/asm/setup.h                  |   2 +-
+ arch/arm/include/uapi/asm/setup.h             |   2 +-
+ arch/arm/kernel/entry-armv.S                  |   2 +-
+ arch/arm/mach-exynos/common.h                 |   2 +-
+ arch/arm/mach-ixp4xx/Kconfig                  |  14 +-
+ arch/arm/mach-s3c24xx/pm.c                    |   2 +-
+ arch/arm/mm/Kconfig                           |   4 +-
+ arch/arm/plat-samsung/Kconfig                 |   6 +-
+ arch/arm/tools/mach-types                     |   2 +-
+ arch/arm64/Kconfig                            |   2 +-
+ arch/arm64/kernel/kuser32.S                   |   2 +-
+ arch/ia64/kernel/efi.c                        |   2 +-
+ arch/ia64/kernel/fsys.S                       |   2 +-
+ arch/ia64/mm/ioremap.c                        |   2 +-
+ arch/ia64/pci/pci.c                           |   2 +-
+ arch/mips/bmips/setup.c                       |   2 +-
+ arch/xtensa/include/asm/initialize_mmu.h      |   2 +-
+ drivers/base/platform.c                       |   2 +-
+ drivers/char/Kconfig                          |   2 +-
+ drivers/crypto/sunxi-ss/sun4i-ss-cipher.c     |   2 +-
+ drivers/crypto/sunxi-ss/sun4i-ss-core.c       |   2 +-
+ drivers/crypto/sunxi-ss/sun4i-ss-hash.c       |   2 +-
+ drivers/crypto/sunxi-ss/sun4i-ss.h            |   2 +-
+ drivers/gpio/gpio-cs5535.c                    |   2 +-
+ drivers/iio/Kconfig                           |   2 +-
+ drivers/input/touchscreen/sun4i-ts.c          |   2 +-
+ drivers/leds/trigger/Kconfig                  |   2 +-
+ drivers/leds/trigger/ledtrig-transient.c      |   2 +-
  drivers/mtd/nand/raw/nand_ecc.c               |   2 +-
- 5 files changed, 306 insertions(+), 242 deletions(-)
+ drivers/net/ethernet/intel/ice/ice_main.c     |   2 +-
+ drivers/nvdimm/Kconfig                        |   2 +-
+ drivers/platform/x86/Kconfig                  |   4 +-
+ drivers/tty/Kconfig                           |   2 +-
+ drivers/tty/serial/Kconfig                    |   2 +-
+ drivers/w1/Kconfig                            |   2 +-
+ include/linux/connector.h                     |  63 ++-
+ init/Kconfig                                  |   2 +-
+ net/netfilter/Kconfig                         |   2 +-
+ samples/Kconfig                               |   2 +-
+ scripts/coccinelle/free/devm_free.cocci       |   2 +-
+ usr/Kconfig                                   |   2 +-
+ 257 files changed, 7122 insertions(+), 5341 deletions(-)
+ rename Documentation/accounting/{cgroupstats.txt => cgroupstats.rst} (77%)
+ rename Documentation/accounting/{delay-accounting.txt => delay-accounting.rst} (77%)
+ create mode 100644 Documentation/accounting/index.rst
+ rename Documentation/accounting/{psi.txt => psi.rst} (91%)
+ rename Documentation/accounting/{taskstats-struct.txt => taskstats-struct.rst} (78%)
+ rename Documentation/accounting/{taskstats.txt => taskstats.rst} (95%)
+ delete mode 100644 Documentation/arm/Marvell/README
+ delete mode 100644 Documentation/arm/Netwinder
+ delete mode 100644 Documentation/arm/SA1100/FreeBird
+ delete mode 100644 Documentation/arm/SA1100/empeg
+ delete mode 100644 Documentation/arm/SA1100/serial_UART
+ rename Documentation/arm/{README => arm.rst} (88%)
+ rename Documentation/arm/{Booting => booting.rst} (89%)
+ rename Documentation/arm/{cluster-pm-race-avoidance.txt => cluster-pm-race-avoidance.rst} (84%)
+ rename Documentation/arm/{firmware.txt => firmware.rst} (86%)
+ create mode 100644 Documentation/arm/index.rst
+ rename Documentation/arm/{Interrupts => interrupts.rst} (81%)
+ rename Documentation/arm/{IXP4xx => ixp4xx.rst} (84%)
+ rename Documentation/arm/{kernel_mode_neon.txt => kernel_mode_neon.rst} (99%)
+ rename Documentation/arm/{kernel_user_helpers.txt => kernel_user_helpers.rst} (78%)
+ rename Documentation/arm/keystone/{knav-qmss.txt => knav-qmss.rst} (92%)
+ rename Documentation/arm/keystone/{Overview.txt => overview.rst} (59%)
+ create mode 100644 Documentation/arm/marvel.rst
+ rename Documentation/arm/{mem_alignment => mem_alignment.rst} (89%)
+ rename Documentation/arm/{memory.txt => memory.rst} (90%)
+ rename Documentation/arm/{Microchip/README => microchip.rst} (92%)
+ create mode 100644 Documentation/arm/netwinder.rst
+ create mode 100644 Documentation/arm/nwfpe/index.rst
+ rename Documentation/arm/nwfpe/{README.FPE => netwinder-fpe.rst} (94%)
+ rename Documentation/arm/nwfpe/{NOTES => notes.rst} (99%)
+ rename Documentation/arm/nwfpe/{README => nwfpe.rst} (98%)
+ rename Documentation/arm/nwfpe/{TODO => todo.rst} (75%)
+ rename Documentation/arm/{OMAP/DSS => omap/dss.rst} (86%)
+ create mode 100644 Documentation/arm/omap/index.rst
+ rename Documentation/arm/{OMAP/README => omap/omap.rst} (62%)
+ rename Documentation/arm/{OMAP/omap_pm => omap/omap_pm.rst} (83%)
+ rename Documentation/arm/{Porting => porting.rst} (94%)
+ rename Documentation/arm/pxa/{mfp.txt => mfp.rst} (83%)
+ rename Documentation/arm/{SA1100/ADSBitsy => sa1100/adsbitsy.rst} (90%)
+ rename Documentation/arm/{SA1100/Assabet => sa1100/assabet.rst} (62%)
+ rename Documentation/arm/{SA1100/Brutus => sa1100/brutus.rst} (75%)
+ rename Documentation/arm/{SA1100/CERF => sa1100/cerf.rst} (91%)
+ create mode 100644 Documentation/arm/sa1100/freebird.rst
+ rename Documentation/arm/{SA1100/GraphicsClient => sa1100/graphicsclient.rst} (87%)
+ rename Documentation/arm/{SA1100/GraphicsMaster => sa1100/graphicsmaster.rst} (92%)
+ rename Documentation/arm/{SA1100/HUW_WEBPANEL => sa1100/huw_webpanel.rst} (78%)
+ create mode 100644 Documentation/arm/sa1100/index.rst
+ rename Documentation/arm/{SA1100/Itsy => sa1100/itsy.rst} (88%)
+ rename Documentation/arm/{SA1100/LART => sa1100/lart.rst} (90%)
+ rename Documentation/arm/{SA1100/nanoEngine => sa1100/nanoengine.rst} (74%)
+ rename Documentation/arm/{SA1100/Pangolin => sa1100/pangolin.rst} (81%)
+ rename Documentation/arm/{SA1100/PLEB => sa1100/pleb.rst} (95%)
+ create mode 100644 Documentation/arm/sa1100/serial_uart.rst
+ rename Documentation/arm/{SA1100/Tifon => sa1100/tifon.rst} (88%)
+ rename Documentation/arm/{SA1100/Yopy => sa1100/yopy.rst} (74%)
+ rename Documentation/arm/{Samsung-S3C24XX/CPUfreq.txt => samsung-s3c24xx/cpufreq.rst} (96%)
+ rename Documentation/arm/{Samsung-S3C24XX/EB2410ITX.txt => samsung-s3c24xx/eb2410itx.rst} (92%)
+ rename Documentation/arm/{Samsung-S3C24XX/GPIO.txt => samsung-s3c24xx/gpio.rst} (89%)
+ rename Documentation/arm/{Samsung-S3C24XX/H1940.txt => samsung-s3c24xx/h1940.rst} (94%)
+ create mode 100644 Documentation/arm/samsung-s3c24xx/index.rst
+ rename Documentation/arm/{Samsung-S3C24XX/NAND.txt => samsung-s3c24xx/nand.rst} (92%)
+ rename Documentation/arm/{Samsung-S3C24XX/Overview.txt => samsung-s3c24xx/overview.rst} (94%)
+ rename Documentation/arm/{Samsung-S3C24XX/S3C2412.txt => samsung-s3c24xx/s3c2412.rst} (96%)
+ rename Documentation/arm/{Samsung-S3C24XX/S3C2413.txt => samsung-s3c24xx/s3c2413.rst} (77%)
+ rename Documentation/arm/{Samsung-S3C24XX/SMDK2440.txt => samsung-s3c24xx/smdk2440.rst} (94%)
+ rename Documentation/arm/{Samsung-S3C24XX/Suspend.txt => samsung-s3c24xx/suspend.rst} (94%)
+ rename Documentation/arm/{Samsung-S3C24XX/USB-Host.txt => samsung-s3c24xx/usb-host.rst} (94%)
+ rename Documentation/arm/{Samsung/Bootloader-interface.txt => samsung/bootloader-interface.rst} (72%)
+ rename Documentation/arm/{Samsung => samsung}/clksrc-change-registers.awk (100%)
+ rename Documentation/arm/{Samsung/GPIO.txt => samsung/gpio.rst} (87%)
+ create mode 100644 Documentation/arm/samsung/index.rst
+ rename Documentation/arm/{Samsung/Overview.txt => samsung/overview.rst} (86%)
+ rename Documentation/arm/{Setup => setup.rst} (87%)
+ rename Documentation/arm/{SH-Mobile => sh-mobile}/.gitignore (100%)
+ rename Documentation/arm/{SPEAr/overview.txt => spear/overview.rst} (91%)
+ rename Documentation/arm/sti/{overview.txt => overview.rst} (82%)
+ rename Documentation/arm/sti/{stih407-overview.txt => stih407-overview.rst} (82%)
+ rename Documentation/arm/sti/{stih415-overview.txt => stih415-overview.rst} (79%)
+ rename Documentation/arm/sti/{stih416-overview.txt => stih416-overview.rst} (83%)
+ rename Documentation/arm/sti/{stih418-overview.txt => stih418-overview.rst} (83%)
+ rename Documentation/arm/{sunxi/README => sunxi.rst} (83%)
+ rename Documentation/arm/sunxi/{clocks.txt => clocks.rst} (92%)
+ rename Documentation/arm/{swp_emulation => swp_emulation.rst} (63%)
+ rename Documentation/arm/{tcm.txt => tcm.rst} (86%)
+ rename Documentation/arm/{uefi.txt => uefi.rst} (63%)
+ rename Documentation/arm/{VFP/release-notes.txt => vfp/release-notes.rst} (92%)
+ rename Documentation/arm/{vlocks.txt => vlocks.rst} (98%)
+ rename Documentation/auxdisplay/{lcd-panel-cgram.txt => lcd-panel-cgram.rst} (88%)
+ create mode 100644 Documentation/backlight/lp855x-driver.rst
+ delete mode 100644 Documentation/backlight/lp855x-driver.txt
+ rename Documentation/bus-devices/{ti-gpmc.txt => ti-gpmc.rst} (58%)
+ rename Documentation/cma/{debugfs.txt => debugfs.rst} (91%)
+ rename Documentation/connector/{connector.txt => connector.rst} (57%)
+ rename Documentation/console/{console.txt => console.rst} (80%)
+ rename Documentation/driver-model/{binding.txt => binding.rst} (92%)
+ rename Documentation/driver-model/{bus.txt => bus.rst} (76%)
+ rename Documentation/driver-model/{class.txt => class.rst} (75%)
+ rename Documentation/driver-model/{design-patterns.txt => design-patterns.rst} (59%)
+ rename Documentation/driver-model/{device.txt => device.rst} (71%)
+ rename Documentation/driver-model/{devres.txt => devres.rst} (93%)
+ rename Documentation/driver-model/{driver.txt => driver.rst} (75%)
+ create mode 100644 Documentation/driver-model/index.rst
+ rename Documentation/driver-model/{overview.txt => overview.rst} (90%)
+ rename Documentation/driver-model/{platform.txt => platform.rst} (95%)
+ rename Documentation/driver-model/{porting.txt => porting.rst} (62%)
+ rename Documentation/early-userspace/{buffer-format.txt => buffer-format.rst} (91%)
+ rename Documentation/early-userspace/{README => early_userspace_support.rst} (99%)
+ create mode 100644 Documentation/early-userspace/index.rst
+ rename Documentation/ia64/{aliasing.txt => aliasing.rst} (83%)
+ rename Documentation/ia64/{efirtc.txt => efirtc.rst} (70%)
+ rename Documentation/ia64/{err_inject.txt => err_inject.rst} (82%)
+ rename Documentation/ia64/{fsys.txt => fsys.rst} (76%)
+ rename Documentation/ia64/{README => ia64.rst} (61%)
+ create mode 100644 Documentation/ia64/index.rst
+ rename Documentation/ia64/{IRQ-redir.txt => irq-redir.rst} (86%)
+ rename Documentation/ia64/{mca.txt => mca.rst} (96%)
+ rename Documentation/ia64/{serial.txt => serial.rst} (87%)
+ create mode 100644 Documentation/ia64/xen.rst
+ delete mode 100644 Documentation/ia64/xen.txt
+ rename Documentation/iio/{ep93xx_adc.txt => ep93xx_adc.rst} (71%)
+ rename Documentation/iio/{iio_configfs.txt => iio_configfs.rst} (73%)
+ create mode 100644 Documentation/iio/index.rst
+ rename Documentation/laptops/{asus-laptop.txt => asus-laptop.rst} (84%)
+ rename Documentation/laptops/{disk-shock-protection.txt => disk-shock-protection.rst} (91%)
+ create mode 100644 Documentation/laptops/index.rst
+ rename Documentation/laptops/{laptop-mode.txt => laptop-mode.rst} (62%)
+ rename Documentation/laptops/{sony-laptop.txt => sony-laptop.rst} (85%)
+ rename Documentation/laptops/{sonypi.txt => sonypi.rst} (87%)
+ rename Documentation/laptops/{thinkpad-acpi.txt => thinkpad-acpi.rst} (89%)
+ rename Documentation/laptops/{toshiba_haps.txt => toshiba_haps.rst} (60%)
+ create mode 100644 Documentation/leds/index.rst
+ rename Documentation/leds/{leds-blinkm.txt => leds-blinkm.rst} (57%)
+ rename Documentation/leds/{leds-class-flash.txt => leds-class-flash.rst} (74%)
+ rename Documentation/leds/{leds-class.txt => leds-class.rst} (92%)
+ rename Documentation/leds/{leds-lm3556.txt => leds-lm3556.rst} (70%)
+ rename Documentation/leds/{leds-lp3944.txt => leds-lp3944.rst} (78%)
+ create mode 100644 Documentation/leds/leds-lp5521.rst
+ delete mode 100644 Documentation/leds/leds-lp5521.txt
+ create mode 100644 Documentation/leds/leds-lp5523.rst
+ delete mode 100644 Documentation/leds/leds-lp5523.txt
+ create mode 100644 Documentation/leds/leds-lp5562.rst
+ delete mode 100644 Documentation/leds/leds-lp5562.txt
+ create mode 100644 Documentation/leds/leds-lp55xx.rst
+ delete mode 100644 Documentation/leds/leds-lp55xx.txt
+ create mode 100644 Documentation/leds/leds-mlxcpld.rst
+ delete mode 100644 Documentation/leds/leds-mlxcpld.txt
+ rename Documentation/leds/{ledtrig-oneshot.txt => ledtrig-oneshot.rst} (90%)
+ rename Documentation/leds/{ledtrig-transient.txt => ledtrig-transient.rst} (81%)
+ rename Documentation/leds/{ledtrig-usbport.txt => ledtrig-usbport.rst} (86%)
+ rename Documentation/leds/{uleds.txt => uleds.rst} (95%)
+ create mode 100644 Documentation/m68k/index.rst
+ rename Documentation/m68k/{kernel-options.txt => kernel-options.rst} (78%)
+ create mode 100644 Documentation/md/index.rst
+ rename Documentation/md/{md-cluster.txt => md-cluster.rst} (68%)
+ rename Documentation/md/{raid5-cache.txt => raid5-cache.rst} (92%)
+ rename Documentation/md/{raid5-ppl.txt => raid5-ppl.rst} (98%)
+ rename Documentation/memory-devices/{ti-emif.txt => ti-emif.rst} (81%)
+ create mode 100644 Documentation/mmc/index.rst
+ rename Documentation/mmc/{mmc-async-req.txt => mmc-async-req.rst} (75%)
+ rename Documentation/mmc/{mmc-dev-attrs.txt => mmc-dev-attrs.rst} (73%)
+ rename Documentation/mmc/{mmc-dev-parts.txt => mmc-dev-parts.rst} (83%)
+ rename Documentation/mmc/{mmc-tools.txt => mmc-tools.rst} (92%)
  create mode 100644 Documentation/mtd/index.rst
  rename Documentation/mtd/{intel-spi.txt => intel-spi.rst} (71%)
  rename Documentation/mtd/{nand_ecc.txt => nand_ecc.rst} (67%)
  rename Documentation/mtd/{spi-nor.txt => spi-nor.rst} (94%)
+ rename Documentation/namespaces/{compatibility-list.txt => compatibility-list.rst} (86%)
+ create mode 100644 Documentation/namespaces/index.rst
+ rename Documentation/namespaces/{resource-control.txt => resource-control.rst} (89%)
+ create mode 100644 Documentation/nfc/index.rst
+ rename Documentation/nfc/{nfc-hci.txt => nfc-hci.rst} (71%)
+ rename Documentation/nfc/{nfc-pn544.txt => nfc-pn544.rst} (82%)
+ rename Documentation/nvdimm/{btt.txt => btt.rst} (71%)
+ create mode 100644 Documentation/nvdimm/index.rst
+ rename Documentation/nvdimm/{nvdimm.txt => nvdimm.rst} (60%)
+ rename Documentation/nvdimm/{security.txt => security.rst} (99%)
+ rename Documentation/nvmem/{nvmem.txt => nvmem.rst} (62%)
+ rename Documentation/phy/{samsung-usb2.txt => samsung-usb2.rst} (77%)
+ create mode 100644 Documentation/pti/pti_intel_mid.rst
+ delete mode 100644 Documentation/pti/pti_intel_mid.txt
+ rename Documentation/security/tpm/{xen-tpmfront.txt => xen-tpmfront.rst} (66%)
+ rename Documentation/xtensa/{atomctl.txt => atomctl.rst} (81%)
+ rename Documentation/xtensa/{booting.txt => booting.rst} (91%)
+ create mode 100644 Documentation/xtensa/index.rst
+ create mode 100644 Documentation/xtensa/mmu.rst
+ delete mode 100644 Documentation/xtensa/mmu.txt
 
-diff --git a/Documentation/mtd/index.rst b/Documentation/mtd/index.rst
-new file mode 100644
-index 000000000000..4fdae418ac97
---- /dev/null
-+++ b/Documentation/mtd/index.rst
-@@ -0,0 +1,12 @@
-+:orphan:
-+
-+==============================
-+Memory Technology Device (MTD)
-+==============================
-+
-+.. toctree::
-+   :maxdepth: 1
-+
-+   intel-spi
-+   nand_ecc
-+   spi-nor
-diff --git a/Documentation/mtd/intel-spi.txt b/Documentation/mtd/intel-spi.rst
-similarity index 71%
-rename from Documentation/mtd/intel-spi.txt
-rename to Documentation/mtd/intel-spi.rst
-index bc357729c2cb..0e6d9cd5388d 100644
---- a/Documentation/mtd/intel-spi.txt
-+++ b/Documentation/mtd/intel-spi.rst
-@@ -1,5 +1,6 @@
-+==============================
- Upgrading BIOS using intel-spi
--------------------------------
-+==============================
- 
- Many Intel CPUs like Baytrail and Braswell include SPI serial flash host
- controller which is used to hold BIOS and other platform specific data.
-@@ -36,45 +37,45 @@ Linux.
-     module parameter to modprobe).
- 
-  4) Once the board is up and running again, find the right MTD partition
--    (it is named as "BIOS"):
-+    (it is named as "BIOS")::
- 
--    # cat /proc/mtd
--    dev:    size   erasesize  name
--    mtd0: 00800000 00001000 "BIOS"
-+	# cat /proc/mtd
-+	dev:    size   erasesize  name
-+	mtd0: 00800000 00001000 "BIOS"
- 
-     So here it will be /dev/mtd0 but it may vary.
- 
-- 5) Make backup of the existing image first:
-+ 5) Make backup of the existing image first::
- 
--    # dd if=/dev/mtd0ro of=bios.bak
--    16384+0 records in
--    16384+0 records out
--    8388608 bytes (8.4 MB) copied, 10.0269 s, 837 kB/s
-+	# dd if=/dev/mtd0ro of=bios.bak
-+	16384+0 records in
-+	16384+0 records out
-+	8388608 bytes (8.4 MB) copied, 10.0269 s, 837 kB/s
- 
-- 6) Verify the backup
-+ 6) Verify the backup:
- 
--    # sha1sum /dev/mtd0ro bios.bak
--    fdbb011920572ca6c991377c4b418a0502668b73  /dev/mtd0ro
--    fdbb011920572ca6c991377c4b418a0502668b73  bios.bak
-+	# sha1sum /dev/mtd0ro bios.bak
-+	fdbb011920572ca6c991377c4b418a0502668b73  /dev/mtd0ro
-+	fdbb011920572ca6c991377c4b418a0502668b73  bios.bak
- 
-     The SHA1 sums must match. Otherwise do not continue any further!
- 
-  7) Erase the SPI serial flash. After this step, do not reboot the
--    board! Otherwise it will not start anymore.
-+    board! Otherwise it will not start anymore::
- 
--    # flash_erase /dev/mtd0 0 0
--    Erasing 4 Kibyte @ 7ff000 -- 100 % complete
-+	# flash_erase /dev/mtd0 0 0
-+	Erasing 4 Kibyte @ 7ff000 -- 100 % complete
- 
-  8) Once completed without errors you can write the new BIOS image:
- 
-     # dd if=MNW2MAX1.X64.0092.R01.1605221712.bin of=/dev/mtd0
- 
-  9) Verify that the new content of the SPI serial flash matches the new
--    BIOS image:
-+    BIOS image::
- 
--    # sha1sum /dev/mtd0ro MNW2MAX1.X64.0092.R01.1605221712.bin
--    9b4df9e4be2057fceec3a5529ec3d950836c87a2  /dev/mtd0ro
--    9b4df9e4be2057fceec3a5529ec3d950836c87a2 MNW2MAX1.X64.0092.R01.1605221712.bin
-+	# sha1sum /dev/mtd0ro MNW2MAX1.X64.0092.R01.1605221712.bin
-+	9b4df9e4be2057fceec3a5529ec3d950836c87a2  /dev/mtd0ro
-+	9b4df9e4be2057fceec3a5529ec3d950836c87a2 MNW2MAX1.X64.0092.R01.1605221712.bin
- 
-     The SHA1 sums should match.
- 
-@@ -84,5 +85,6 @@ Linux.
- References
- ----------
- 
--[1] https://firmware.intel.com/sites/default/files/MinnowBoard.MAX_.X64.92.R01.zip
-+[1] https://firmware.intel.com/sites/default/files/MinnowBoard%2EMAX_%2EX64%2E92%2ER01%2Ezip
-+
- [2] http://www.linux-mtd.infradead.org/
-diff --git a/Documentation/mtd/nand_ecc.txt b/Documentation/mtd/nand_ecc.rst
-similarity index 67%
-rename from Documentation/mtd/nand_ecc.txt
-rename to Documentation/mtd/nand_ecc.rst
-index f8c3284bf6a7..e8d3c53a5056 100644
---- a/Documentation/mtd/nand_ecc.txt
-+++ b/Documentation/mtd/nand_ecc.rst
-@@ -1,3 +1,7 @@
-+==========================
-+NAND Error-correction Code
-+==========================
-+
- Introduction
- ============
- 
-@@ -37,63 +41,79 @@ sometimes also referred to as xor. In C the operator for xor is ^
- Back to ecc.
- Let's give a small figure:
- 
-+=========  ==== ==== ==== ==== ==== ==== ==== ====   === === === === ====
- byte   0:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp2 rp4 ... rp14
- byte   1:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp2 rp4 ... rp14
- byte   2:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp3 rp4 ... rp14
- byte   3:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp3 rp4 ... rp14
- byte   4:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp2 rp5 ... rp14
--....
-+...
- byte 254:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp0 rp3 rp5 ... rp15
- byte 255:  bit7 bit6 bit5 bit4 bit3 bit2 bit1 bit0   rp1 rp3 rp5 ... rp15
-            cp1  cp0  cp1  cp0  cp1  cp0  cp1  cp0
-            cp3  cp3  cp2  cp2  cp3  cp3  cp2  cp2
-            cp5  cp5  cp5  cp5  cp4  cp4  cp4  cp4
-+=========  ==== ==== ==== ==== ==== ==== ==== ====   === === === === ====
- 
- This figure represents a sector of 256 bytes.
- cp is my abbreviation for column parity, rp for row parity.
- 
- Let's start to explain column parity.
--cp0 is the parity that belongs to all bit0, bit2, bit4, bit6.
--so the sum of all bit0, bit2, bit4 and bit6 values + cp0 itself is even.
-+
-+- cp0 is the parity that belongs to all bit0, bit2, bit4, bit6.
-+
-+  so the sum of all bit0, bit2, bit4 and bit6 values + cp0 itself is even.
-+
- Similarly cp1 is the sum of all bit1, bit3, bit5 and bit7.
--cp2 is the parity over bit0, bit1, bit4 and bit5
--cp3 is the parity over bit2, bit3, bit6 and bit7.
--cp4 is the parity over bit0, bit1, bit2 and bit3.
--cp5 is the parity over bit4, bit5, bit6 and bit7.
-+
-+- cp2 is the parity over bit0, bit1, bit4 and bit5
-+- cp3 is the parity over bit2, bit3, bit6 and bit7.
-+- cp4 is the parity over bit0, bit1, bit2 and bit3.
-+- cp5 is the parity over bit4, bit5, bit6 and bit7.
-+
- Note that each of cp0 .. cp5 is exactly one bit.
- 
- Row parity actually works almost the same.
--rp0 is the parity of all even bytes (0, 2, 4, 6, ... 252, 254)
--rp1 is the parity of all odd bytes (1, 3, 5, 7, ..., 253, 255)
--rp2 is the parity of all bytes 0, 1, 4, 5, 8, 9, ...
--(so handle two bytes, then skip 2 bytes).
--rp3 is covers the half rp2 does not cover (bytes 2, 3, 6, 7, 10, 11, ...)
--for rp4 the rule is cover 4 bytes, skip 4 bytes, cover 4 bytes, skip 4 etc.
--so rp4 calculates parity over bytes 0, 1, 2, 3, 8, 9, 10, 11, 16, ...)
--and rp5 covers the other half, so bytes 4, 5, 6, 7, 12, 13, 14, 15, 20, ..
-+
-+- rp0 is the parity of all even bytes (0, 2, 4, 6, ... 252, 254)
-+- rp1 is the parity of all odd bytes (1, 3, 5, 7, ..., 253, 255)
-+- rp2 is the parity of all bytes 0, 1, 4, 5, 8, 9, ...
-+  (so handle two bytes, then skip 2 bytes).
-+- rp3 is covers the half rp2 does not cover (bytes 2, 3, 6, 7, 10, 11, ...)
-+- for rp4 the rule is cover 4 bytes, skip 4 bytes, cover 4 bytes, skip 4 etc.
-+
-+  so rp4 calculates parity over bytes 0, 1, 2, 3, 8, 9, 10, 11, 16, ...)
-+- and rp5 covers the other half, so bytes 4, 5, 6, 7, 12, 13, 14, 15, 20, ..
-+
- The story now becomes quite boring. I guess you get the idea.
--rp6 covers 8 bytes then skips 8 etc
--rp7 skips 8 bytes then covers 8 etc
--rp8 covers 16 bytes then skips 16 etc
--rp9 skips 16 bytes then covers 16 etc
--rp10 covers 32 bytes then skips 32 etc
--rp11 skips 32 bytes then covers 32 etc
--rp12 covers 64 bytes then skips 64 etc
--rp13 skips 64 bytes then covers 64 etc
--rp14 covers 128 bytes then skips 128
--rp15 skips 128 bytes then covers 128
-+
-+- rp6 covers 8 bytes then skips 8 etc
-+- rp7 skips 8 bytes then covers 8 etc
-+- rp8 covers 16 bytes then skips 16 etc
-+- rp9 skips 16 bytes then covers 16 etc
-+- rp10 covers 32 bytes then skips 32 etc
-+- rp11 skips 32 bytes then covers 32 etc
-+- rp12 covers 64 bytes then skips 64 etc
-+- rp13 skips 64 bytes then covers 64 etc
-+- rp14 covers 128 bytes then skips 128
-+- rp15 skips 128 bytes then covers 128
- 
- In the end the parity bits are grouped together in three bytes as
- follows:
-+
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- ECC    Bit 7 Bit 6 Bit 5 Bit 4 Bit 3 Bit 2 Bit 1 Bit 0
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- ECC 0   rp07  rp06  rp05  rp04  rp03  rp02  rp01  rp00
- ECC 1   rp15  rp14  rp13  rp12  rp11  rp10  rp09  rp08
- ECC 2   cp5   cp4   cp3   cp2   cp1   cp0      1     1
-+=====  ===== ===== ===== ===== ===== ===== ===== =====
- 
- I detected after writing this that ST application note AN1823
- (http://www.st.com/stonline/) gives a much
- nicer picture.(but they use line parity as term where I use row parity)
- Oh well, I'm graphically challenged, so suffer with me for a moment :-)
-+
- And I could not reuse the ST picture anyway for copyright reasons.
- 
- 
-@@ -101,9 +121,10 @@ Attempt 0
- =========
- 
- Implementing the parity calculation is pretty simple.
--In C pseudocode:
--for (i = 0; i < 256; i++)
--{
-+In C pseudocode::
-+
-+  for (i = 0; i < 256; i++)
-+  {
-     if (i & 0x01)
-        rp1 = bit7 ^ bit6 ^ bit5 ^ bit4 ^ bit3 ^ bit2 ^ bit1 ^ bit0 ^ rp1;
-     else
-@@ -142,7 +163,7 @@ for (i = 0; i < 256; i++)
-     cp3 = bit7 ^ bit6 ^ bit3 ^ bit2 ^ cp3
-     cp4 = bit3 ^ bit2 ^ bit1 ^ bit0 ^ cp4
-     cp5 = bit7 ^ bit6 ^ bit5 ^ bit4 ^ cp5
--}
-+  }
- 
- 
- Analysis 0
-@@ -167,82 +188,84 @@ This leads to:
- Attempt 1
- =========
- 
--const char parity[256] = {
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
--    0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
--};
-+::
- 
--void ecc1(const unsigned char *buf, unsigned char *code)
--{
--    int i;
--    const unsigned char *bp = buf;
--    unsigned char cur;
--    unsigned char rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
--    unsigned char rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
--    unsigned char par;
-+  const char parity[256] = {
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 0, 0, 1,
-+      0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 0
-+  };
- 
--    par = 0;
--    rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
--    rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
--    rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
--    rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
-+  void ecc1(const unsigned char *buf, unsigned char *code)
-+  {
-+      int i;
-+      const unsigned char *bp = buf;
-+      unsigned char cur;
-+      unsigned char rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
-+      unsigned char rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
-+      unsigned char par;
- 
--    for (i = 0; i < 256; i++)
--    {
--        cur = *bp++;
--        par ^= cur;
--        if (i & 0x01) rp1 ^= cur; else rp0 ^= cur;
--        if (i & 0x02) rp3 ^= cur; else rp2 ^= cur;
--        if (i & 0x04) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x08) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x10) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x20) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x40) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x80) rp15 ^= cur; else rp14 ^= cur;
--    }
--    code[0] =
--        (parity[rp7] << 7) |
--        (parity[rp6] << 6) |
--        (parity[rp5] << 5) |
--        (parity[rp4] << 4) |
--        (parity[rp3] << 3) |
--        (parity[rp2] << 2) |
--        (parity[rp1] << 1) |
--        (parity[rp0]);
--    code[1] =
--        (parity[rp15] << 7) |
--        (parity[rp14] << 6) |
--        (parity[rp13] << 5) |
--        (parity[rp12] << 4) |
--        (parity[rp11] << 3) |
--        (parity[rp10] << 2) |
--        (parity[rp9]  << 1) |
--        (parity[rp8]);
--    code[2] =
--        (parity[par & 0xf0] << 7) |
--        (parity[par & 0x0f] << 6) |
--        (parity[par & 0xcc] << 5) |
--        (parity[par & 0x33] << 4) |
--        (parity[par & 0xaa] << 3) |
--        (parity[par & 0x55] << 2);
--    code[0] = ~code[0];
--    code[1] = ~code[1];
--    code[2] = ~code[2];
--}
-+      par = 0;
-+      rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
-+      rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
-+      rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
-+      rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
-+
-+      for (i = 0; i < 256; i++)
-+      {
-+          cur = *bp++;
-+          par ^= cur;
-+          if (i & 0x01) rp1 ^= cur; else rp0 ^= cur;
-+          if (i & 0x02) rp3 ^= cur; else rp2 ^= cur;
-+          if (i & 0x04) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x08) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x10) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x20) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x40) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x80) rp15 ^= cur; else rp14 ^= cur;
-+      }
-+      code[0] =
-+          (parity[rp7] << 7) |
-+          (parity[rp6] << 6) |
-+          (parity[rp5] << 5) |
-+          (parity[rp4] << 4) |
-+          (parity[rp3] << 3) |
-+          (parity[rp2] << 2) |
-+          (parity[rp1] << 1) |
-+          (parity[rp0]);
-+      code[1] =
-+          (parity[rp15] << 7) |
-+          (parity[rp14] << 6) |
-+          (parity[rp13] << 5) |
-+          (parity[rp12] << 4) |
-+          (parity[rp11] << 3) |
-+          (parity[rp10] << 2) |
-+          (parity[rp9]  << 1) |
-+          (parity[rp8]);
-+      code[2] =
-+          (parity[par & 0xf0] << 7) |
-+          (parity[par & 0x0f] << 6) |
-+          (parity[par & 0xcc] << 5) |
-+          (parity[par & 0x33] << 4) |
-+          (parity[par & 0xaa] << 3) |
-+          (parity[par & 0x55] << 2);
-+      code[0] = ~code[0];
-+      code[1] = ~code[1];
-+      code[2] = ~code[2];
-+  }
- 
- Still pretty straightforward. The last three invert statements are there to
- give a checksum of 0xff 0xff 0xff for an empty flash. In an empty flash
-@@ -293,88 +316,90 @@ Let's give it a try...
- Attempt 2
- =========
- 
--extern const char parity[256];
-+::
- 
--void ecc2(const unsigned char *buf, unsigned char *code)
--{
--    int i;
--    const unsigned long *bp = (unsigned long *)buf;
--    unsigned long cur;
--    unsigned long rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
--    unsigned long rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
--    unsigned long par;
-+  extern const char parity[256];
- 
--    par = 0;
--    rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
--    rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
--    rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
--    rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
-+  void ecc2(const unsigned char *buf, unsigned char *code)
-+  {
-+      int i;
-+      const unsigned long *bp = (unsigned long *)buf;
-+      unsigned long cur;
-+      unsigned long rp0, rp1, rp2, rp3, rp4, rp5, rp6, rp7;
-+      unsigned long rp8, rp9, rp10, rp11, rp12, rp13, rp14, rp15;
-+      unsigned long par;
- 
--    for (i = 0; i < 64; i++)
--    {
--        cur = *bp++;
--        par ^= cur;
--        if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
--    }
--    /*
--       we need to adapt the code generation for the fact that rp vars are now
--       long; also the column parity calculation needs to be changed.
--       we'll bring rp4 to 15 back to single byte entities by shifting and
--       xoring
--    */
--    rp4 ^= (rp4 >> 16); rp4 ^= (rp4 >> 8); rp4 &= 0xff;
--    rp5 ^= (rp5 >> 16); rp5 ^= (rp5 >> 8); rp5 &= 0xff;
--    rp6 ^= (rp6 >> 16); rp6 ^= (rp6 >> 8); rp6 &= 0xff;
--    rp7 ^= (rp7 >> 16); rp7 ^= (rp7 >> 8); rp7 &= 0xff;
--    rp8 ^= (rp8 >> 16); rp8 ^= (rp8 >> 8); rp8 &= 0xff;
--    rp9 ^= (rp9 >> 16); rp9 ^= (rp9 >> 8); rp9 &= 0xff;
--    rp10 ^= (rp10 >> 16); rp10 ^= (rp10 >> 8); rp10 &= 0xff;
--    rp11 ^= (rp11 >> 16); rp11 ^= (rp11 >> 8); rp11 &= 0xff;
--    rp12 ^= (rp12 >> 16); rp12 ^= (rp12 >> 8); rp12 &= 0xff;
--    rp13 ^= (rp13 >> 16); rp13 ^= (rp13 >> 8); rp13 &= 0xff;
--    rp14 ^= (rp14 >> 16); rp14 ^= (rp14 >> 8); rp14 &= 0xff;
--    rp15 ^= (rp15 >> 16); rp15 ^= (rp15 >> 8); rp15 &= 0xff;
--    rp3 = (par >> 16); rp3 ^= (rp3 >> 8); rp3 &= 0xff;
--    rp2 = par & 0xffff; rp2 ^= (rp2 >> 8); rp2 &= 0xff;
--    par ^= (par >> 16);
--    rp1 = (par >> 8); rp1 &= 0xff;
--    rp0 = (par & 0xff);
--    par ^= (par >> 8); par &= 0xff;
-+      par = 0;
-+      rp0 = 0; rp1 = 0; rp2 = 0; rp3 = 0;
-+      rp4 = 0; rp5 = 0; rp6 = 0; rp7 = 0;
-+      rp8 = 0; rp9 = 0; rp10 = 0; rp11 = 0;
-+      rp12 = 0; rp13 = 0; rp14 = 0; rp15 = 0;
- 
--    code[0] =
--        (parity[rp7] << 7) |
--        (parity[rp6] << 6) |
--        (parity[rp5] << 5) |
--        (parity[rp4] << 4) |
--        (parity[rp3] << 3) |
--        (parity[rp2] << 2) |
--        (parity[rp1] << 1) |
--        (parity[rp0]);
--    code[1] =
--        (parity[rp15] << 7) |
--        (parity[rp14] << 6) |
--        (parity[rp13] << 5) |
--        (parity[rp12] << 4) |
--        (parity[rp11] << 3) |
--        (parity[rp10] << 2) |
--        (parity[rp9]  << 1) |
--        (parity[rp8]);
--    code[2] =
--        (parity[par & 0xf0] << 7) |
--        (parity[par & 0x0f] << 6) |
--        (parity[par & 0xcc] << 5) |
--        (parity[par & 0x33] << 4) |
--        (parity[par & 0xaa] << 3) |
--        (parity[par & 0x55] << 2);
--    code[0] = ~code[0];
--    code[1] = ~code[1];
--    code[2] = ~code[2];
--}
-+      for (i = 0; i < 64; i++)
-+      {
-+          cur = *bp++;
-+          par ^= cur;
-+          if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
-+      }
-+      /*
-+         we need to adapt the code generation for the fact that rp vars are now
-+         long; also the column parity calculation needs to be changed.
-+         we'll bring rp4 to 15 back to single byte entities by shifting and
-+         xoring
-+      */
-+      rp4 ^= (rp4 >> 16); rp4 ^= (rp4 >> 8); rp4 &= 0xff;
-+      rp5 ^= (rp5 >> 16); rp5 ^= (rp5 >> 8); rp5 &= 0xff;
-+      rp6 ^= (rp6 >> 16); rp6 ^= (rp6 >> 8); rp6 &= 0xff;
-+      rp7 ^= (rp7 >> 16); rp7 ^= (rp7 >> 8); rp7 &= 0xff;
-+      rp8 ^= (rp8 >> 16); rp8 ^= (rp8 >> 8); rp8 &= 0xff;
-+      rp9 ^= (rp9 >> 16); rp9 ^= (rp9 >> 8); rp9 &= 0xff;
-+      rp10 ^= (rp10 >> 16); rp10 ^= (rp10 >> 8); rp10 &= 0xff;
-+      rp11 ^= (rp11 >> 16); rp11 ^= (rp11 >> 8); rp11 &= 0xff;
-+      rp12 ^= (rp12 >> 16); rp12 ^= (rp12 >> 8); rp12 &= 0xff;
-+      rp13 ^= (rp13 >> 16); rp13 ^= (rp13 >> 8); rp13 &= 0xff;
-+      rp14 ^= (rp14 >> 16); rp14 ^= (rp14 >> 8); rp14 &= 0xff;
-+      rp15 ^= (rp15 >> 16); rp15 ^= (rp15 >> 8); rp15 &= 0xff;
-+      rp3 = (par >> 16); rp3 ^= (rp3 >> 8); rp3 &= 0xff;
-+      rp2 = par & 0xffff; rp2 ^= (rp2 >> 8); rp2 &= 0xff;
-+      par ^= (par >> 16);
-+      rp1 = (par >> 8); rp1 &= 0xff;
-+      rp0 = (par & 0xff);
-+      par ^= (par >> 8); par &= 0xff;
-+
-+      code[0] =
-+          (parity[rp7] << 7) |
-+          (parity[rp6] << 6) |
-+          (parity[rp5] << 5) |
-+          (parity[rp4] << 4) |
-+          (parity[rp3] << 3) |
-+          (parity[rp2] << 2) |
-+          (parity[rp1] << 1) |
-+          (parity[rp0]);
-+      code[1] =
-+          (parity[rp15] << 7) |
-+          (parity[rp14] << 6) |
-+          (parity[rp13] << 5) |
-+          (parity[rp12] << 4) |
-+          (parity[rp11] << 3) |
-+          (parity[rp10] << 2) |
-+          (parity[rp9]  << 1) |
-+          (parity[rp8]);
-+      code[2] =
-+          (parity[par & 0xf0] << 7) |
-+          (parity[par & 0x0f] << 6) |
-+          (parity[par & 0xcc] << 5) |
-+          (parity[par & 0x33] << 4) |
-+          (parity[par & 0xaa] << 3) |
-+          (parity[par & 0x55] << 2);
-+      code[0] = ~code[0];
-+      code[1] = ~code[1];
-+      code[2] = ~code[2];
-+  }
- 
- The parity array is not shown any more. Note also that for these
- examples I kinda deviated from my regular programming style by allowing
-@@ -403,28 +428,32 @@ lookups
- Attempt 3
- =========
- 
--Odd replaced:
--        if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
--        if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
--        if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
--        if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
--        if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
--        if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
--with
--        if (i & 0x01) rp5 ^= cur;
--        if (i & 0x02) rp7 ^= cur;
--        if (i & 0x04) rp9 ^= cur;
--        if (i & 0x08) rp11 ^= cur;
--        if (i & 0x10) rp13 ^= cur;
--        if (i & 0x20) rp15 ^= cur;
-+Odd replaced::
- 
--        and outside the loop added:
--        rp4  = par ^ rp5;
--        rp6  = par ^ rp7;
--        rp8  = par ^ rp9;
--        rp10  = par ^ rp11;
--        rp12  = par ^ rp13;
--        rp14  = par ^ rp15;
-+          if (i & 0x01) rp5 ^= cur; else rp4 ^= cur;
-+          if (i & 0x02) rp7 ^= cur; else rp6 ^= cur;
-+          if (i & 0x04) rp9 ^= cur; else rp8 ^= cur;
-+          if (i & 0x08) rp11 ^= cur; else rp10 ^= cur;
-+          if (i & 0x10) rp13 ^= cur; else rp12 ^= cur;
-+          if (i & 0x20) rp15 ^= cur; else rp14 ^= cur;
-+
-+with::
-+
-+          if (i & 0x01) rp5 ^= cur;
-+          if (i & 0x02) rp7 ^= cur;
-+          if (i & 0x04) rp9 ^= cur;
-+          if (i & 0x08) rp11 ^= cur;
-+          if (i & 0x10) rp13 ^= cur;
-+          if (i & 0x20) rp15 ^= cur;
-+
-+and outside the loop added::
-+
-+          rp4  = par ^ rp5;
-+          rp6  = par ^ rp7;
-+          rp8  = par ^ rp9;
-+          rp10  = par ^ rp11;
-+          rp12  = par ^ rp13;
-+          rp14  = par ^ rp15;
- 
- And after that the code takes about 30% more time, although the number of
- statements is reduced. This is also reflected in the assembly code.
-@@ -448,7 +477,7 @@ Attempt 4
- =========
- 
- Unrolled the loop 1, 2, 3 and 4 times.
--For 4 the code starts with:
-+For 4 the code starts with::
- 
-     for (i = 0; i < 4; i++)
-     {
-@@ -471,8 +500,11 @@ Analysis 4
- ==========
- 
- Unrolling once gains about 15%
-+
- Unrolling twice keeps the gain at about 15%
-+
- Unrolling three times gives a gain of 30% compared to attempt 2.
-+
- Unrolling four times gives a marginal improvement compared to unrolling
- three times.
- 
-@@ -492,8 +524,10 @@ Attempt 5
- 
- Effectively so all odd digit rp assignments in the loop were removed.
- This included the else clause of the if statements.
--Of course after the loop we need to correct things by adding code like:
-+Of course after the loop we need to correct things by adding code like::
-+
-     rp5 = par ^ rp4;
-+
- Also the initial assignments (rp5 = 0; etc) could be removed.
- Along the line I also removed the initialisation of rp0/1/2/3.
- 
-@@ -513,7 +547,7 @@ statement. Time for yet another version!
- Attempt 6
- =========
- 
--THe code within the for loop was changed to:
-+THe code within the for loop was changed to::
- 
-     for (i = 0; i < 4; i++)
-     {
-@@ -564,13 +598,17 @@ million iterations in order not to lose too much accuracy. This one
- definitely seemed to be the jackpot!
- 
- There is a little bit more room for improvement though. There are three
--places with statements:
--rp4 ^= cur; rp6 ^= cur;
-+places with statements::
-+
-+	rp4 ^= cur; rp6 ^= cur;
-+
- It seems more efficient to also maintain a variable rp4_6 in the while
- loop; This eliminates 3 statements per loop. Of course after the loop we
--need to correct by adding:
--    rp4 ^= rp4_6;
--    rp6 ^= rp4_6
-+need to correct by adding::
-+
-+	rp4 ^= rp4_6;
-+	rp6 ^= rp4_6
-+
- Furthermore there are 4 sequential assignments to rp8. This can be
- encoded slightly more efficiently by saving tmppar before those 4 lines
- and later do rp8 = rp8 ^ tmppar ^ notrp8;
-@@ -582,7 +620,7 @@ Time for a new test!
- Attempt 7
- =========
- 
--The new code now looks like:
-+The new code now looks like::
- 
-     for (i = 0; i < 4; i++)
-     {
-@@ -644,9 +682,12 @@ Although it seems that the code within the loop cannot be optimised
- further there is still room to optimize the generation of the ecc codes.
- We can simply calculate the total parity. If this is 0 then rp4 = rp5
- etc. If the parity is 1, then rp4 = !rp5;
-+
- But if rp4 = rp5 we do not need rp5 etc. We can just write the even bits
--in the result byte and then do something like
-+in the result byte and then do something like::
-+
-     code[0] |= (code[0] << 1);
-+
- Lets test this.
- 
- 
-@@ -657,11 +698,13 @@ Changed the code but again this slightly degrades performance. Tried all
- kind of other things, like having dedicated parity arrays to avoid the
- shift after parity[rp7] << 7; No gain.
- Change the lookup using the parity array by using shift operators (e.g.
--replace parity[rp7] << 7 with:
--rp7 ^= (rp7 << 4);
--rp7 ^= (rp7 << 2);
--rp7 ^= (rp7 << 1);
--rp7 &= 0x80;
-+replace parity[rp7] << 7 with::
-+
-+	rp7 ^= (rp7 << 4);
-+	rp7 ^= (rp7 << 2);
-+	rp7 ^= (rp7 << 1);
-+	rp7 &= 0x80;
-+
- No gain.
- 
- The only marginal change was inverting the parity bits, so we can remove
-@@ -683,13 +726,16 @@ Correcting errors
- 
- For correcting errors I again used the ST application note as a starter,
- but I also peeked at the existing code.
-+
- The algorithm itself is pretty straightforward. Just xor the given and
- the calculated ecc. If all bytes are 0 there is no problem. If 11 bits
- are 1 we have one correctable bit error. If there is 1 bit 1, we have an
- error in the given ecc code.
-+
- It proved to be fastest to do some table lookups. Performance gain
- introduced by this is about a factor 2 on my system when a repair had to
- be done, and 1% or so if no repair had to be done.
-+
- Code size increased from 330 bytes to 686 bytes for this function.
- (gcc 4.2, -O3)
- 
-@@ -700,8 +746,10 @@ Conclusion
- The gain when calculating the ecc is tremendous. Om my development hardware
- a speedup of a factor of 18 for ecc calculation was achieved. On a test on an
- embedded system with a MIPS core a factor 7 was obtained.
-+
- On a test with a Linksys NSLU2 (ARMv5TE processor) the speedup was a factor
- 5 (big endian mode, gcc 4.1.2, -O3)
-+
- For correction not much gain could be obtained (as bitflips are rare). Then
- again there are also much less cycles spent there.
- 
-@@ -711,4 +759,5 @@ out of it with an assembler program, but due to pipeline behaviour etc
- this is very tricky (at least for intel hw).
- 
- Author: Frans Meulenbroeks
-+
- Copyright (C) 2008 Koninklijke Philips Electronics NV.
-diff --git a/Documentation/mtd/spi-nor.txt b/Documentation/mtd/spi-nor.rst
-similarity index 94%
-rename from Documentation/mtd/spi-nor.txt
-rename to Documentation/mtd/spi-nor.rst
-index da1fbff5a24c..f5333e3bf486 100644
---- a/Documentation/mtd/spi-nor.txt
-+++ b/Documentation/mtd/spi-nor.rst
-@@ -1,5 +1,6 @@
--                          SPI NOR framework
--               ============================================
-+=================
-+SPI NOR framework
-+=================
- 
- Part I - Why do we need this framework?
- ---------------------------------------
-@@ -23,7 +24,7 @@ This framework just adds a new layer between the MTD and the SPI bus driver.
- With this new layer, the SPI NOR controller driver does not depend on the
- m25p80 code anymore.
- 
--   Before this framework, the layer is like:
-+Before this framework, the layer is like::
- 
-                    MTD
-          ------------------------
-diff --git a/drivers/mtd/nand/raw/nand_ecc.c b/drivers/mtd/nand/raw/nand_ecc.c
-index 223fbd8052b3..f6a7808db818 100644
---- a/drivers/mtd/nand/raw/nand_ecc.c
-+++ b/drivers/mtd/nand/raw/nand_ecc.c
-@@ -11,7 +11,7 @@
-  *   Thomas Gleixner (tglx@linutronix.de)
-  *
-  * Information on how this algorithm works and how it was developed
-- * can be found in Documentation/mtd/nand_ecc.txt
-+ * can be found in Documentation/mtd/nand_ecc.rst
-  */
- 
- #include <linux/types.h>
 -- 
 2.21.0
+
 
