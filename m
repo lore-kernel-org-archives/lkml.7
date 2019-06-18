@@ -2,274 +2,138 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9083FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:57:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9D2EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6511820873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:57:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A02F20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:57:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729761AbfFRP5a (ORCPT
+        id S1729842AbfFRP5g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:57:30 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:51656 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729189AbfFRP53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:57:36 -0400
+Received: from mail.us.es ([193.147.175.20]:57328 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729619AbfFRP53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 11:57:29 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AD07FDD4A694AB0CBA8A;
-        Tue, 18 Jun 2019 23:57:26 +0800 (CST)
-Received: from localhost (10.202.226.61) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Jun 2019
- 23:57:21 +0800
-Date:   Tue, 18 Jun 2019 16:57:09 +0100
-From:   Jonathan Cameron <jonathan.cameron@huawei.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-CC:     <iommu@lists.linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Eric Auger" <eric.auger@redhat.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v4 15/22] iommu/vt-d: Replace Intel specific PASID
- allocator with IOASID
-Message-ID: <20190618165709.00005dbf@huawei.com>
-In-Reply-To: <1560087862-57608-16-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1560087862-57608-16-git-send-email-jacob.jun.pan@linux.intel.com>
-Organization: Huawei
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id CB41C81A02
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 17:57:27 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id B8AAADA712
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 17:57:27 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id AA320DA70C; Tue, 18 Jun 2019 17:57:27 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 70901DA701;
+        Tue, 18 Jun 2019 17:57:25 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Tue, 18 Jun 2019 17:57:25 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 22F294265A2F;
+        Tue, 18 Jun 2019 17:57:25 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 17:57:23 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     linmiaohe <linmiaohe@huawei.com>
+Cc:     kadlec@blackhole.kfki.hu, fw@strlen.de, davem@davemloft.net,
+        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dsahern@gmail.com, Mingfangsen <mingfangsen@huawei.com>
+Subject: Re: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Message-ID: <20190618155723.m4l5mkpo4ecmcajt@salvia>
+References: <212e4feb-39de-2627-9948-bbb117ff4d4e@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.61]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <212e4feb-39de-2627-9948-bbb117ff4d4e@huawei.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 9 Jun 2019 06:44:15 -0700
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-
-> Make use of generic IOASID code to manage PASID allocation,
-> free, and lookup. Replace Intel specific code.
+On Thu, Apr 25, 2019 at 09:43:53PM +0800, linmiaohe wrote:
+> From: Miaohe Lin <linmiaohe@huawei.com>
 > 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-Hi Jacob,
-
-One question inline.
-
-Jonathan
-
+> When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
+> ipv4/ipv6 packets will be dropped because in device is
+> vrf but out device is an enslaved device. So failed with
+> the check of the rpfilter.
+> 
+> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
 > ---
->  drivers/iommu/intel-iommu.c | 11 +++++------
->  drivers/iommu/intel-pasid.c | 36 ------------------------------------
->  drivers/iommu/intel-svm.c   | 37 +++++++++++++++++++++----------------
->  3 files changed, 26 insertions(+), 58 deletions(-)
+>  net/ipv4/netfilter/ipt_rpfilter.c  |  1 +
+>  net/ipv6/netfilter/ip6t_rpfilter.c | 10 +++++++++-
+>  2 files changed, 10 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 5b84994..39b63fe 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -5167,7 +5167,7 @@ static void auxiliary_unlink_device(struct dmar_domain *domain,
->  	domain->auxd_refcnt--;
->  
->  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> -		intel_pasid_free_id(domain->default_pasid);
-> +		ioasid_free(domain->default_pasid);
+> diff --git a/net/ipv4/netfilter/ipt_rpfilter.c b/net/ipv4/netfilter/ipt_rpfilter.c
+> index 0b10d8812828..6e07cd0ecbec 100644
+> --- a/net/ipv4/netfilter/ipt_rpfilter.c
+> +++ b/net/ipv4/netfilter/ipt_rpfilter.c
+> @@ -81,6 +81,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
+>  	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
+>  	flow.flowi4_tos = RT_TOS(iph->tos);
+>  	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
+> +	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
+> 
+>  	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par), info->flags) ^ invert;
 >  }
->  
->  static int aux_domain_add_dev(struct dmar_domain *domain,
-> @@ -5185,10 +5185,9 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
->  	if (domain->default_pasid <= 0) {
->  		int pasid;
->  
-> -		pasid = intel_pasid_alloc_id(domain, PASID_MIN,
-> -					     pci_max_pasids(to_pci_dev(dev)),
-> -					     GFP_KERNEL);
-> -		if (pasid <= 0) {
-> +		pasid = ioasid_alloc(NULL, PASID_MIN, pci_max_pasids(to_pci_dev(dev)) - 1,
-> +				domain);
-
-Is there any point in passing the domain in as the private pointer here?
-I can't immediately see anywhere it is read back?
-
-It is also rather confusing as the same driver stashes two different types of data
-in the same xarray.
-
-> +		if (pasid == INVALID_IOASID) {
->  			pr_err("Can't allocate default pasid\n");
->  			return -ENODEV;
->  		}
-> @@ -5224,7 +5223,7 @@ static int aux_domain_add_dev(struct dmar_domain *domain,
->  	spin_unlock(&iommu->lock);
->  	spin_unlock_irqrestore(&device_domain_lock, flags);
->  	if (!domain->auxd_refcnt && domain->default_pasid > 0)
-> -		intel_pasid_free_id(domain->default_pasid);
-> +		ioasid_free(domain->default_pasid);
->  
->  	return ret;
->  }
-> diff --git a/drivers/iommu/intel-pasid.c b/drivers/iommu/intel-pasid.c
-> index 69fddd3..1e25539 100644
-> --- a/drivers/iommu/intel-pasid.c
-> +++ b/drivers/iommu/intel-pasid.c
-> @@ -26,42 +26,6 @@
->   */
->  static DEFINE_SPINLOCK(pasid_lock);
->  u32 intel_pasid_max_id = PASID_MAX;
-> -static DEFINE_IDR(pasid_idr);
-> -
-> -int intel_pasid_alloc_id(void *ptr, int start, int end, gfp_t gfp)
-> -{
-> -	int ret, min, max;
-> -
-> -	min = max_t(int, start, PASID_MIN);
-> -	max = min_t(int, end, intel_pasid_max_id);
-> -
-> -	WARN_ON(in_interrupt());
-> -	idr_preload(gfp);
-> -	spin_lock(&pasid_lock);
-> -	ret = idr_alloc(&pasid_idr, ptr, min, max, GFP_ATOMIC);
-> -	spin_unlock(&pasid_lock);
-> -	idr_preload_end();
-> -
-> -	return ret;
-> -}
-> -
-> -void intel_pasid_free_id(int pasid)
-> -{
-> -	spin_lock(&pasid_lock);
-> -	idr_remove(&pasid_idr, pasid);
-> -	spin_unlock(&pasid_lock);
-> -}
-> -
-> -void *intel_pasid_lookup_id(int pasid)
-> -{
-> -	void *p;
-> -
-> -	spin_lock(&pasid_lock);
-> -	p = idr_find(&pasid_idr, pasid);
-> -	spin_unlock(&pasid_lock);
-> -
-> -	return p;
-> -}
->  
->  int vcmd_alloc_pasid(struct intel_iommu *iommu, unsigned int *pasid)
->  {
-> diff --git a/drivers/iommu/intel-svm.c b/drivers/iommu/intel-svm.c
-> index 8f87304..9cbcc1f 100644
-> --- a/drivers/iommu/intel-svm.c
-> +++ b/drivers/iommu/intel-svm.c
-> @@ -25,6 +25,7 @@
->  #include <linux/dmar.h>
->  #include <linux/interrupt.h>
->  #include <linux/mm_types.h>
-> +#include <linux/ioasid.h>
->  #include <asm/page.h>
->  
->  #include "intel-pasid.h"
-> @@ -332,16 +333,15 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->  		if (pasid_max > intel_pasid_max_id)
->  			pasid_max = intel_pasid_max_id;
->  
-> -		/* Do not use PASID 0 in caching mode (virtualised IOMMU) */
-> -		ret = intel_pasid_alloc_id(svm,
-> -					   !!cap_caching_mode(iommu->cap),
-> -					   pasid_max - 1, GFP_KERNEL);
-> -		if (ret < 0) {
-> +		/* Do not use PASID 0, reserved for RID to PASID */
-> +		svm->pasid = ioasid_alloc(NULL, PASID_MIN,
-> +					pasid_max - 1, svm);
-> +		if (svm->pasid == INVALID_IOASID) {
->  			kfree(svm);
->  			kfree(sdev);
-> +			ret = ENOSPC;
->  			goto out;
->  		}
-> -		svm->pasid = ret;
->  		svm->notifier.ops = &intel_mmuops;
->  		svm->mm = mm;
->  		svm->flags = flags;
-> @@ -351,7 +351,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->  		if (mm) {
->  			ret = mmu_notifier_register(&svm->notifier, mm);
->  			if (ret) {
-> -				intel_pasid_free_id(svm->pasid);
-> +				ioasid_free(svm->pasid);
->  				kfree(svm);
->  				kfree(sdev);
->  				goto out;
-> @@ -367,7 +367,7 @@ int intel_svm_bind_mm(struct device *dev, int *pasid, int flags, struct svm_dev_
->  		if (ret) {
->  			if (mm)
->  				mmu_notifier_unregister(&svm->notifier, mm);
-> -			intel_pasid_free_id(svm->pasid);
-> +			ioasid_free(svm->pasid);
->  			kfree(svm);
->  			kfree(sdev);
->  			goto out;
-> @@ -400,7 +400,12 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
->  	if (!iommu)
+> diff --git a/net/ipv6/netfilter/ip6t_rpfilter.c b/net/ipv6/netfilter/ip6t_rpfilter.c
+> index c3c6b09acdc4..a28c81322148 100644
+> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
+> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+> @@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+>  	if (rpfilter_addr_linklocal(&iph->saddr)) {
+>  		lookup_flags |= RT6_LOOKUP_F_IFACE;
+>  		fl6.flowi6_oif = dev->ifindex;
+> -	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
+> +	} else if (((flags & XT_RPFILTER_LOOSE) == 0) ||
+> +		   (netif_is_l3_master(dev)) ||
+> +		   (netif_is_l3_slave(dev)))
+>  		fl6.flowi6_oif = dev->ifindex;
+> 
+>  	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags);
+> @@ -73,6 +75,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
 >  		goto out;
->  
-> -	svm = intel_pasid_lookup_id(pasid);
-> +	svm = ioasid_find(NULL, pasid, NULL);
-> +	if (IS_ERR(svm)) {
-> +		ret = PTR_ERR(svm);
-> +		goto out;
+>  	}
+> 
+> +	if (netif_is_l3_master(dev)) {
+> +		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
+> +		if (!dev)
+> +			goto out;
 > +	}
-> +
->  	if (!svm)
->  		goto out;
->  
-> @@ -422,7 +427,7 @@ int intel_svm_unbind_mm(struct device *dev, int pasid)
->  				kfree_rcu(sdev, rcu);
->  
->  				if (list_empty(&svm->devs)) {
-> -					intel_pasid_free_id(svm->pasid);
-> +					ioasid_free(svm->pasid);
->  					if (svm->mm)
->  						mmu_notifier_unregister(&svm->notifier, svm->mm);
->  
-> @@ -457,10 +462,11 @@ int intel_svm_is_pasid_valid(struct device *dev, int pasid)
->  	if (!iommu)
->  		goto out;
->  
-> -	svm = intel_pasid_lookup_id(pasid);
-> -	if (!svm)
-> +	svm = ioasid_find(NULL, pasid, NULL);
-> +	if (IS_ERR(svm)) {
-> +		ret = PTR_ERR(svm);
->  		goto out;
-> -
-> +	}
->  	/* init_mm is used in this case */
->  	if (!svm->mm)
->  		ret = 1;
-> @@ -567,13 +573,12 @@ static irqreturn_t prq_event_thread(int irq, void *d)
->  
->  		if (!svm || svm->pasid != req->pasid) {
->  			rcu_read_lock();
-> -			svm = intel_pasid_lookup_id(req->pasid);
-> +			svm = ioasid_find(NULL, req->pasid, NULL);
->  			/* It *can't* go away, because the driver is not permitted
->  			 * to unbind the mm while any page faults are outstanding.
->  			 * So we only need RCU to protect the internal idr code. */
->  			rcu_read_unlock();
-> -
-> -			if (!svm) {
-> +			if (IS_ERR(svm) || !svm) {
->  				pr_err("%s: Page request for invalid PASID %d: %08llx %08llx\n",
->  				       iommu->name, req->pasid, ((unsigned long long *)req)[0],
->  				       ((unsigned long long *)req)[1]);
 
+So, for the l3 device cases this makes:
 
+#1 ip6_route_lookup() to fetch the route, using the device in xt_in()
+   (the _LOOSE flag is ignored for the l3 device case).
+
+#2 If this is a l3dev master, then you make a global lookup for the
+   device using IP6CB(skb)->iif.
+
+#3 You check if route matches with the device, using the new device
+   from the lookup:
+
+   if (rt->rt6i_idev->dev == dev ...
+
+If there is no other way to fix this, OK, that's fair enough.
+
+Still this fix looks a bit tricky to me.
+
+And this assymmetric between the IPv4 and IPv6 codebase looks rare.
+
+Probably someone can explain me this in more detail? I'd appreciate.
+
+Thanks!
