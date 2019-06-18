@@ -2,270 +2,239 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C108BC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6835C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:29:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96F4B2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:28:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704362084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:29:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="e6Tkq5Wm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728734AbfFRE2D (ORCPT
+        id S1726678AbfFRE33 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 00:28:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52586 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728608AbfFRE2C (ORCPT
+        Tue, 18 Jun 2019 00:29:29 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:9676 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFRE33 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 00:28:02 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5I4RHRY026574
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:28:01 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t6n5getwj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:28:00 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Tue, 18 Jun 2019 05:27:59 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Jun 2019 05:27:56 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5I4Rtul36241720
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 04:27:55 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6078811C050;
-        Tue, 18 Jun 2019 04:27:55 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59D7311C064;
-        Tue, 18 Jun 2019 04:27:52 +0000 (GMT)
-Received: from bangoria.ibmuc.com (unknown [9.199.63.86])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Jun 2019 04:27:52 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     benh@kernel.crashing.org, paulus@samba.org, mikey@neuling.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, christophe.leroy@c-s.fr,
-        naveen.n.rao@linux.vnet.ibm.com,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: [PATCH 5/5] Powerpc/Watchpoint: Fix length calculation for unaligned target
-Date:   Tue, 18 Jun 2019 09:57:32 +0530
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
-References: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
+        Tue, 18 Jun 2019 00:29:29 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0868a70000>; Mon, 17 Jun 2019 21:29:28 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 21:29:27 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 21:29:27 -0700
+Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 04:29:23 +0000
+Subject: Re: [PATCH V7] i2c: tegra: remove BUG, BUG_ON
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560748152-6575-1-git-send-email-bbiswas@nvidia.com>
+ <5a8ad23f-33c8-5140-cef8-f9cef70764b1@gmail.com>
+ <43a3fae8-dd3e-c7d3-42a7-493210e601e2@nvidia.com>
+ <070ee927-be5a-327f-36d7-e6395c898574@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <6ff6c8c8-7978-2662-266c-6122c5e2969b@nvidia.com>
+Date:   Mon, 17 Jun 2019 21:29:20 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061804-4275-0000-0000-0000034336F6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061804-4276-0000-0000-000038535CFC
-Message-Id: <20190618042732.5582-6-ravi.bangoria@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906180035
+In-Reply-To: <070ee927-be5a-327f-36d7-e6395c898574@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560832168; bh=+nNlYKr643t5w63TkytxJdKwNydrIe2wDqhHK0Tp4tg=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=e6Tkq5WmOo4FewQZKH2L985ZI1MZ57QMovhkmTx17tsGtpVTuqhGYKQ9Wu41USJ0a
+         WGNLyccxFPnaOo/xXdYDMy2JwFi9w5iULZ3RliQHWSUVqD7XNOxJrINzJmn/twkjot
+         K+sF6K0aujEghUTdmHB5kRDKuQBgFG8hMj8wmRtJ5MziiKBCSe8TOGJjfRbu9XC66D
+         vi0Hm4b6b3k74jJamiwTU5GuX1oMG8TLoCUwHtsut1u4hQeCAd6PZB4JbFIxEzvBBE
+         mdIx0WPmHkORUp2n7djhFrTklNPM0C017Wfu2Xu0VF45PT6YYiu1vTZUUMDBRdV8BZ
+         wge+CbzHKge5A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Watchpoint match range is always doubleword(8 bytes) aligned on
-powerpc. If the given range is crossing doubleword boundary, we
-need to increase the length such that next doubleword also get
-covered. Ex,
 
-          address   len = 6 bytes
-                |=========.
-   |------------v--|------v--------|
-   | | | | | | | | | | | | | | | | |
-   |---------------|---------------|
-    <---8 bytes--->
 
-In such case, current code configures hw as:
-  start_addr = address & ~HW_BREAKPOINT_ALIGN
-  len = 8 bytes
+On 6/17/19 12:28 PM, Dmitry Osipenko wrote:
+> 17.06.2019 21:41, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>>
+>> On 6/17/19 5:13 AM, Dmitry Osipenko wrote:
+>>> 17.06.2019 8:09, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> Remove BUG, BUG_ON as it makes system usable:
+>>>>  =C2=A0 - Remove redundant BUG_ON calls or replace with WARN_ON_ONCE
+>>>>  =C2=A0=C2=A0=C2=A0 as needed.
+>>>>  =C2=A0 - Remove BUG() and mask Rx interrupt similar as Tx
+>>>>  =C2=A0=C2=A0=C2=A0 for message fully sent case.
+>>>>  =C2=A0 - Add caller error handling and WARN_ON_ONCE check for non-zer=
+o
+>>>>  =C2=A0=C2=A0=C2=A0 rx_fifo_avail in tegra_i2c_empty_rx_fifo() after a=
+ll processing.
+>>>
+>>> The commit message should describe motivation of the change and not the=
+ change itself,
+>>> unless it's some additional information which is required for better un=
+derstanding of
+>>> the code.
+>>>
+>>> In yours case it could be something like that:
+>>>
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0 The usage of BUG() macro is generally discour=
+aged in kernel, unless
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0 it's a problem that results in a physical dam=
+age or loss of data.
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0 This patch removes unnecessary BUG() macros a=
+nd replaces the rest
+>>>  =C2=A0=C2=A0=C2=A0=C2=A0 with a warnings.
+>> I shall update as per above comments.
+>>
+>>>
+>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>> ---
+>>>>  =C2=A0 drivers/i2c/busses/i2c-tegra.c | 45 ++++++++++++++++++++++++++=
+++++++++--------
+>>>>  =C2=A0 1 file changed, 37 insertions(+), 8 deletions(-)
+>>>>
+>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-t=
+egra.c
+>>>> index 4dfb4c1..b155b61 100644
+>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>> @@ -73,6 +73,7 @@
+>>>>  =C2=A0 #define I2C_ERR_NO_ACK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BIT(0)
+>>>>  =C2=A0 #define I2C_ERR_ARBITRATION_LOST=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0 BIT(1)
+>>>>  =C2=A0 #define I2C_ERR_UNKNOWN_INTERRUPT=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 BIT(2)
+>>>> +#define I2C_ERR_RX_BUFFER_OVERFLOW=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 BIT(3)
+>>>>  =C2=A0 =C2=A0 #define PACKET_HEADER0_HEADER_SIZE_SHIFT=C2=A0=C2=A0=C2=
+=A0 28
+>>>>  =C2=A0 #define PACKET_HEADER0_PACKET_ID_SHIFT=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0 16
+>>>> @@ -515,7 +516,11 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i=
+2c_dev *i2c_dev)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * prevent overwriting past the e=
+nd of buf
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (rx_fifo_avail > 0 && buf_remaining=
+ > 0) {
+>>>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 BUG_ON(buf_remaining > 3);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 /*
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * buf_remaining > 3 =
+check not needed as rx_fifo_avail =3D=3D 0
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * when (words_to_tra=
+nsfer was > rx_fifo_avail) earlier
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 * in this function.
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 */
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D i2c_re=
+adl(i2c_dev, I2C_RX_FIFO);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D cpu_to=
+_le32(val);
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memcpy(buf, &v=
+al, buf_remaining);
+>>>> @@ -523,7 +528,15 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i=
+2c_dev *i2c_dev)
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 rx_fifo_avail-=
+-;
+>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>  =C2=A0 -=C2=A0=C2=A0=C2=A0 BUG_ON(rx_fifo_avail > 0 && buf_remaining =
+> 0);
+>>>> +=C2=A0=C2=A0=C2=A0 if ((!(i2c_dev->msg_buf_remaining)) &&
+>>>
+>>> The RX FIFO shall be drained completely no matter what.
+>>>
+>>> Hence why the "i2c_dev->msg_buf_remaining" checking is needed here?
+>> I moved the part of below condition in Patch V6 to function tegra_i2c_em=
+pty_rx_fifo:
+>>
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 er=
+r_val =3D tegra_i2c_empty_rx_fifo(i2c_dev);
+>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if=
+ ((!(i2c_dev->msg_buf_remaining)) &&
+>>
+>>> Let's move this check into tegra_i2c_empty_rx_fifo() and return -EINVAL=
+ for that case.
+>>> This will make code to look cleaner.
+>>
+>> Is above condition not needed?
+>=20
+> Let's put it at the very beginning. This may give a bit more information =
+about the
+> problem by knowing if the offending overflow happens after or during of t=
+he buffer's
+> fill up.
+>=20
+> static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+> {
+> 	u32 val;
+> 	int rx_fifo_avail;
+> 	u8 *buf =3D i2c_dev->msg_buf;
+> 	size_t buf_remaining =3D i2c_dev->msg_buf_remaining;
+> 	int words_to_transfer;
+>=20
+> 	if (WARN_ON(!i2c_dev->msg_buf_remaining))
+> 		return -EINVAL;
+> ...
+>=20
+OK
 
-And thus read/write in last 4 bytes of the given range is ignored.
-Fix this by including next doubleword in the length. Watchpoint
-exception handler already ignores extraneous exceptions, so no
-changes required for that.
+> In general, the original logic should be preserved during of refactoring.=
+ In this case
+> we are keeping the original check and then also making it a bit more info=
+rmative.
+>=20
+I feel the msg_buf_remaining check was not there in original code. The=20
+corresponding line was probably the following checking for error when=20
+(buf_remaining > 0) after all work in the function tegra_i2c_empty_rx_fifo(=
+)
 
-Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
----
- arch/powerpc/include/asm/hw_breakpoint.h |  7 ++--
- arch/powerpc/kernel/hw_breakpoint.c      | 44 +++++++++++++-----------
- arch/powerpc/kernel/process.c            | 34 ++++++++++++++++--
- 3 files changed, 60 insertions(+), 25 deletions(-)
+https://elixir.bootlin.com/linux/v5.2-rc5/source/drivers/i2c/busses/i2c-teg=
+ra.c#L536
 
-diff --git a/arch/powerpc/include/asm/hw_breakpoint.h b/arch/powerpc/include/asm/hw_breakpoint.h
-index 8acbbdd4a2d5..749a357164d5 100644
---- a/arch/powerpc/include/asm/hw_breakpoint.h
-+++ b/arch/powerpc/include/asm/hw_breakpoint.h
-@@ -34,6 +34,8 @@ struct arch_hw_breakpoint {
- #define HW_BRK_TYPE_PRIV_ALL	(HW_BRK_TYPE_USER | HW_BRK_TYPE_KERNEL | \
- 				 HW_BRK_TYPE_HYP)
- 
-+#define HW_BREAKPOINT_ALIGN 0x7
-+
- #ifdef CONFIG_HAVE_HW_BREAKPOINT
- #include <linux/kdebug.h>
- #include <asm/reg.h>
-@@ -45,8 +47,6 @@ struct pmu;
- struct perf_sample_data;
- struct task_struct;
- 
--#define HW_BREAKPOINT_ALIGN 0x7
--
- extern int hw_breakpoint_slots(int type);
- extern int arch_bp_generic_fields(int type, int *gen_bp_type);
- extern int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw);
-@@ -76,7 +76,8 @@ static inline void hw_breakpoint_disable(void)
- }
- extern void thread_change_pc(struct task_struct *tsk, struct pt_regs *regs);
- int hw_breakpoint_handler(struct die_args *args);
--
-+extern u16 hw_breakpoint_get_final_len(struct arch_hw_breakpoint *brk,
-+		unsigned long *start_addr, unsigned long *end_addr);
- extern int set_dawr(struct arch_hw_breakpoint *brk);
- extern bool dawr_force_enable;
- static inline bool dawr_enabled(void)
-diff --git a/arch/powerpc/kernel/hw_breakpoint.c b/arch/powerpc/kernel/hw_breakpoint.c
-index 36bcf705df65..c122fd55aa44 100644
---- a/arch/powerpc/kernel/hw_breakpoint.c
-+++ b/arch/powerpc/kernel/hw_breakpoint.c
-@@ -126,6 +126,28 @@ int arch_bp_generic_fields(int type, int *gen_bp_type)
- 	return 0;
- }
- 
-+/* Maximum len for DABR is 8 bytes and DAWR is 512 bytes */
-+static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
-+{
-+	u16 length_max = 8;
-+	u16 final_len;
-+	unsigned long start_addr, end_addr;
-+
-+	final_len = hw_breakpoint_get_final_len(hw, &start_addr, &end_addr);
-+
-+	if (dawr_enabled()) {
-+		length_max = 512;
-+		/* DAWR region can't cross 512 bytes boundary */
-+		if ((start_addr >> 9) != (end_addr >> 9))
-+			return -EINVAL;
-+	}
-+
-+	if (final_len > length_max)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
- /*
-  * Validate the arch-specific HW Breakpoint register settings
-  */
-@@ -133,12 +155,10 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 			     const struct perf_event_attr *attr,
- 			     struct arch_hw_breakpoint *hw)
- {
--	int length_max;
--
- 	if (!ppc_breakpoint_available())
- 		return -ENODEV;
- 
--	if (!bp)
-+	if (!bp || !attr->bp_len)
- 		return -EINVAL;
- 
- 	hw->type = HW_BRK_TYPE_TRANSLATE;
-@@ -160,23 +180,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
- 	hw->address = attr->bp_addr;
- 	hw->len = attr->bp_len;
- 
--	length_max = 8; /* DABR */
--	if (dawr_enabled()) {
--		length_max = 512 ; /* 64 doublewords */
--		/* DAWR region can't cross 512 bytes boundary */
--		if ((hw->address >> 9) != ((hw->address + hw->len - 1) >> 9))
--			return -EINVAL;
--	}
--
--	/*
--	 * Since breakpoint length can be a maximum of length_max and
--	 * breakpoint addresses are aligned to nearest double-word
--	 * HW_BREAKPOINT_ALIGN by rounding off to the lower address,
--	 * the 'symbolsize' should satisfy the check below.
--	 */
--	if (hw->len > (length_max - (hw->address & HW_BREAKPOINT_ALIGN)))
--		return -EINVAL;
--	return 0;
-+	return hw_breakpoint_validate_len(hw);
- }
- 
- /*
-diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.c
-index 265fac9fb3a4..159aaa70de46 100644
---- a/arch/powerpc/kernel/process.c
-+++ b/arch/powerpc/kernel/process.c
-@@ -802,9 +802,39 @@ static int disable_dawr(void)
- 	return 0;
- }
- 
-+/*
-+ * Watchpoint match range is always doubleword(8 bytes) aligned on
-+ * powerpc. If the given range is crossing doubleword boundary, we
-+ * need to increase the length such that next doubleword also get
-+ * covered. Ex,
-+ *
-+ *          address   len = 6 bytes
-+ *                |=========.
-+ *   |------------v--|------v--------|
-+ *   | | | | | | | | | | | | | | | | |
-+ *   |---------------|---------------|
-+ *    <---8 bytes--->
-+ *
-+ * In this case, we should configure hw as:
-+ *   start_addr = address & ~HW_BREAKPOINT_ALIGN
-+ *   len = 16 bytes
-+ *
-+ * @start_addr and @end_addr are inclusive.
-+ */
-+u16 hw_breakpoint_get_final_len(struct arch_hw_breakpoint *brk,
-+				unsigned long *start_addr,
-+				unsigned long *end_addr)
-+{
-+	*start_addr = brk->address & ~HW_BREAKPOINT_ALIGN;
-+	*end_addr = (brk->address + brk->len - 1) | HW_BREAKPOINT_ALIGN;
-+	return *end_addr - *start_addr + 1;
-+}
-+
- int set_dawr(struct arch_hw_breakpoint *brk)
- {
- 	unsigned long dawr, dawrx, mrd;
-+	unsigned long start_addr, end_addr;
-+	u16 final_len;
- 
- 	if (brk->type == HW_BRK_TYPE_DISABLE)
- 		return disable_dawr();
-@@ -815,8 +845,8 @@ int set_dawr(struct arch_hw_breakpoint *brk)
- 	dawrx |= ((brk->type & HW_BRK_TYPE_TRANSLATE) >> 2) << (63 - 59);
- 	dawrx |= (brk->type & HW_BRK_TYPE_PRIV_ALL) >> 3;
- 
--	/* brk->len is in bytes. */
--	mrd = ((brk->len + 7) >> 3) - 1;
-+	final_len = hw_breakpoint_get_final_len(brk, &start_addr, &end_addr);
-+	mrd = ((final_len + 7) >> 3) - 1;
- 	dawrx |= (mrd & 0x3f) << (63 - 53);
- 
- 	if (ppc_md.set_dawr)
--- 
-2.20.1
 
+
+>>
+>>>
+>>> Secondly, in the future please don't add parens where they are not need=
+ed. In this
+>>> case parens around !i2c_dev->msg_buf_remaining are not needed at all.
+>>>
+>> I shall look out for similar unnecessary parentheses and update the patc=
+h.
+>=20
+> Yes, please clean up all the occurrences in the code if there are any. An=
+d please do
+> it in a separate patch.
+>=20
+I reviewed the source for unnecessary parentheses and do not find any.=20
+Hence not planning to push any patch. Let me know if I missed a case.
+
+-Thanks,
+  Bitan
