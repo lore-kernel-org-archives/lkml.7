@@ -2,152 +2,129 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABC57C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:56:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAA7C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:59:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ACE92085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:56:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80C2A2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:59:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mo7//ZZm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b/qKKvqX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729183AbfFRL4u (ORCPT
+        id S1726912AbfFRL7T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:56:50 -0400
-Received: from mail-ua1-f66.google.com ([209.85.222.66]:42066 "EHLO
-        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfFRL4u (ORCPT
+        Tue, 18 Jun 2019 07:59:19 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:38550 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfFRL7R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:56:50 -0400
-Received: by mail-ua1-f66.google.com with SMTP id a97so5572742uaa.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:56:49 -0700 (PDT)
+        Tue, 18 Jun 2019 07:59:17 -0400
+Received: by mail-wr1-f67.google.com with SMTP id d18so13668574wrs.5;
+        Tue, 18 Jun 2019 04:59:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=piRTAebFx2FsROFm2zYcU51EDgaGKwKW/nF1spIt1sI=;
-        b=mo7//ZZm5CR0ywBO0NeDMxPL71X9bJ2kFFt6G1IOlFmJ9ImsK53ikh7RHrkrW1cWy9
-         16iNhl4WpSQJUkAAbTw5KSaMvEgibjhRAeDdK923fBEpZYNAE20PQW/MvuGIVYjvr3Ly
-         PGlsFZh24pJnk4p97S+BlQxGQ5YXakodnK0IFr1Bs6JN3UMFSZC7746dzX1JbDjIEtFl
-         5D7+lIshQcZUkRwA2eOa9jcmCy7QsLu2FCDfbDU8EzbL7pWXZADfQcDYZH0I6ds16AwR
-         BbQa3geAipWWpwweByap68mRGunqBK9j3PxpS3+GHbGeM8wXH2f7fbKEAVQS0ldqg9eV
-         IXAQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DEWG2BH5s+bceHzj1OrNgR0N1NtX/mrCz6t22kRGhD0=;
+        b=b/qKKvqX8WCBDeIb2YpQuHltoaLm6n+7OLE2IJ62n0vIAAD2nmQlOb6euGIhG8Lx87
+         aq00jDSlajL+csqXtDipmaDYFOGjlzB0bdbAVcC9CRsx+GZuGkCO3TzpANPso+SKZPLk
+         2Tr8QSOoJmdD3LBuQ43+zsRMLxUOUXz4bxVptVTHBtlf6VJJpGM85YvEuqEpyMRaj7VR
+         30SmClE5f3ehcrwGx7TB+Gd3pfA71J6wqY1vau+Bd8hpmkdC/OptlvRkh4K8KEQ1P6gr
+         xC++uY3qpNT7cynkCXqMn5YDqp9RMK4HvhPPG48S78QKKsN/wKq9FyMvJnkEcZ/hhPfo
+         nUxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=piRTAebFx2FsROFm2zYcU51EDgaGKwKW/nF1spIt1sI=;
-        b=sdr5z37Rpq2872CjbRXa9kKEojBpIqmmrtSW/Ni8LRgQBjp5XIGcwmTXarWLv12AGr
-         +bX3DEzygHHK/yvRQaVRNEMaCQwzw73jESW5tqyGWgvQ0aA2sBVJ6qdgeQitZ2zeQwli
-         Y8PRnrXrIUb0WR9s/LD2kG/0XcFHulNu8QMR1gTMxbhfC4QVTjdYuLXKUtkxm8H/XSED
-         kWyTysbWnSq8JP/pygftgdLsMgiFVg2GpMXsjd0dHLINj2scD1NuynXG95oKGGsdyLS7
-         /yaV3xNLg0ZIh596FFvuc/D3n8PcE/rXtCw+97GIE9G3IWlMe/Lv2Q0JNTVZK1uoDY9r
-         mUeQ==
-X-Gm-Message-State: APjAAAWDKlZQkf8/Q64ktm7nVmlQ3JVrh2E2IRRqEBAgb9GGMR5kzVor
-        XhIx1E0Uv1skNsIFd8T0aMrQsUS3IpPAHrTC3m2zbw==
-X-Google-Smtp-Source: APXvYqxWE7NU+QUzDoR4u6I5eIyinKhKJ2E54DPFNLSdMDWyWFZV8l2G2R1evmkcZ1mRW3Z8CNDF2/bizF6JGRucbC8=
-X-Received: by 2002:a67:3254:: with SMTP id y81mr24197966vsy.34.1560859009184;
- Tue, 18 Jun 2019 04:56:49 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DEWG2BH5s+bceHzj1OrNgR0N1NtX/mrCz6t22kRGhD0=;
+        b=WGxaxafBet91lbf+7LK9+9ZEYU1tO25tm3svgTcP597jEanU67jTt7SFt0dOTyH/yi
+         fbKNxauIzPtbqK5BgZbh4aCkCF+FagpZMTYxfuAGHErr5BijpzPk3RfcrDEeQLQhUy0v
+         5OfcpLapjW+UeTriqNOKxYMI+r/W3Pc2pr9ZoAYP4WnR3mJGNMDnwJsfX0Q5d1hMLPUv
+         UI7jkeW5KZUOotYWhNLaynmjhPTrXGsNiQ1AC9eyg5ztjoRPu4kNsE4lAeyVQJGIUbeG
+         3q98VBFD9dqYoR+zjtVu7jG0N1aiS9CF5l5XztFoabNOX4SiiHsLmwjio6Eh2M5tIHJ8
+         yMrA==
+X-Gm-Message-State: APjAAAXlLCW2h/AFi3OlG3p3Ew+oA/X1SSsId+cmvxVqvRu+H/OPEabS
+        SCyV2P8WrKdLXRSXzfq9MRY=
+X-Google-Smtp-Source: APXvYqwn3Pkbmvszrd5BJKqACm8lVeSy+vC3seguauYahizMsBuYeCJCixhWLdcwkP2gwz/r65unDw==
+X-Received: by 2002:a5d:6742:: with SMTP id l2mr18898657wrw.323.1560859155283;
+        Tue, 18 Jun 2019 04:59:15 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id j189sm3292003wmb.48.2019.06.18.04.59.14
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 04:59:14 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 13:59:13 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
+        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        sboyd@kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
+        talho@nvidia.com, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
+        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH V3 10/17] clk: tegra: add suspend resume support for DFLL
+Message-ID: <20190618115913.GM28892@ulmo>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-11-git-send-email-skomatineni@nvidia.com>
 MIME-Version: 1.0
-References: <20190513192300.653-1-ulf.hansson@linaro.org> <CAJZ5v0gbK3AFCVC1b9LyXeMOM8fKR1=ECXZwaeSYRSqcK0UgYA@mail.gmail.com>
- <CAPDyKFpU3u248Gi+FnrVdY-EWXJQuu14uNV9d3Xs0W-K-EMEhg@mail.gmail.com>
- <20190607154210.GJ15577@e107155-lin> <20190607193407.GB24059@builder>
- <20190610103225.GA26602@e107155-lin> <CAPDyKFr31SwmHHAREbR3dWMQ55LzzUyTc4M5FZvNsqWfX7SE8Q@mail.gmail.com>
- <20190610171557.GA4560@redmoon> <CAPDyKFqC8+Sv5WRhwOxqphAt8tb_PDisy13Miz5e-PajvwS1ew@mail.gmail.com>
-In-Reply-To: <CAPDyKFqC8+Sv5WRhwOxqphAt8tb_PDisy13Miz5e-PajvwS1ew@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 18 Jun 2019 13:56:13 +0200
-Message-ID: <CAPDyKFpo8pJroOq=YkkNkt6+xyOdu3tTovEbsEp2ry0OJUu7JQ@mail.gmail.com>
-Subject: Re: [PATCH 00/18] ARM/ARM64: Support hierarchical CPU arrangement for PSCI
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Sudeep Holla <sudeep.holla@arm.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Lina Iyer <ilina@codeaurora.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Souvik Chakravarty <souvik.chakravarty@arm.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="VB1oQhYtJt8uuzk+"
+Content-Disposition: inline
+In-Reply-To: <1560843991-24123-11-git-send-email-skomatineni@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 at 20:57, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> On Mon, 10 Jun 2019 at 19:16, Lorenzo Pieralisi
-> <lorenzo.pieralisi@arm.com> wrote:
-> >
-> > On Mon, Jun 10, 2019 at 05:54:39PM +0200, Ulf Hansson wrote:
-> >
-> > [...]
-> >
-> > > My summary from the earlier ones, is that because the PSCI spec
-> > > includes support for OSI, we should also support it in the kernel (and
-> > > ATF). In a discussion offlist, Lorenzo agreed that it's okay to add,
-> > > without an apple to apple comparison. Maybe Lorenzo can fill in and
-> > > state this publicly, to save us all some time?
-> >
-> > The comparison should have been made before even requesting PSCI OSI
-> > mode changes to the specifications, so we have a chip on our shoulders
-> > anyway.
-> >
-> > We will enable PSCI OSI but that's not where the problem lies, enabling
-> > PSCI OSI from a firmware perspective should take 10 lines of code,
-> > not:
->
-> Thanks for confirming!
->
-> >
-> >  drivers/firmware/psci/Makefile                |   2 +-
-> >  drivers/firmware/psci/psci.c                  | 219 ++++++++--
-> >  drivers/firmware/psci/psci.h                  |  29 ++
-> >  drivers/firmware/psci/psci_pm_domain.c        | 403 ++++++++++++++++++
-> >
-> > I have some concerns about these changes that I will state in the
-> > relevant patches.
->
-> Most of the above changes isn't for solely for OSI, but to support a
-> hierarchical topology described in the PSCI DT layout. This is for
-> example needed when other resources shares the same power rail as the
-> CPU cluster.
->
-> In other words, the series is orthogonal to whether OSI or PC mode is
-> used for PSCI, just to make that clear. BTW, this is what you
-> requested me to change into, a while ago.
->
-> >
-> > > My final point in regards to the OSI mode support, it's a minor part
-> > > of the series. I don't see how that should hurt from a maintenance
-> > > point of view, or perhaps I am wrong? In any case, I offer my help
-> > > with review/maintenance in any form as you may see need/fit.
-> >
-> > I will go through the series but most of this code should move
-> > to core PM code, it has nothing to do with PSCI.
->
-> I am looking forward to your review - and for sure, I am open to suggestions!
->
-> >
-> > BTW, apologies for the delay, I was away.
 
-Lorenzo, a gentle ping.
+--VB1oQhYtJt8uuzk+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Kind regards
-Uffe
+On Tue, Jun 18, 2019 at 12:46:24AM -0700, Sowjanya Komatineni wrote:
+> This patch creates APIs for supporting Tegra210 clock driver to
+> perform DFLL suspend and resume operation.
+>=20
+> During suspend, DFLL mode is saved and on resume Tegra210 clock driver
+> invokes DFLL resume API to re-initialize DFLL to enable target device
+> clock in open loop mode or closed loop mode.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/clk/tegra/clk-dfll.c | 78 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  drivers/clk/tegra/clk-dfll.h |  2 ++
+>  2 files changed, 80 insertions(+)
+
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--VB1oQhYtJt8uuzk+
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0I0hEACgkQ3SOs138+
+s6EKmA/7BKKxe4K40G19IsWN0t2GnZNUe6alysAl7lWVuw4DHcAHG1DTpZGqAPJU
+5eP6/jwJZYVC7cR1bDT4S/tnErF4ZJZSPGDPwtEPTpiX27hEGWnJl/PiFrAEf1m2
+0XhBlK7P5j/n957G3pRJrvfz1RkSxT5J/0wZwkJIPaU43v6Sw1pxB/NiwHRW+eIT
+PUaw2bNytrTJWoVmyyxDXHc9R8KCbtkJNtIAXxSE52Clde/uaSyDhBfqbbzBs4kV
+YGZEqkh3uAG/Q9/ZGDd5XAFR3ZToNJqAac+QYVhV26Xo9UwV9Rsy7eLxYsLO3KvW
+szw+frexcDuuV7Ecx75VeFhf7oaam33TvQPUcrWAO9NWfMiNzAzbtGVS41PjQM06
+f+3y+4OnSSdc6z6RlfKqFzuzfs9b3qeOlsR0CRLDiD6/wgJ725UeFsbga3vqCD+3
+AH0euxJCJCRkLjOuEXO/p/So/TA46OstJmJm6QZYgGwwVFWYjlUT756TVY7xrlqg
+NAn4PxiJvaY+JkR+bWKH7+6KfpOzo6mbvQax43QsX0CmoKUHvCwKyY5/4jkZ25lI
+QBQkmmXCMrgPlACpPjtcKfTlJ5ExDJQqW13r4wg9MIiSKGoXMuvUbuz+WPDDFxVq
+ZdcJixDmfeYsrLm9eCwV5IaFy9V35f2M4Y7qfqL7KyDFTCE1WTg=
+=BZR8
+-----END PGP SIGNATURE-----
+
+--VB1oQhYtJt8uuzk+--
