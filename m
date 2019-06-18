@@ -2,102 +2,167 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4DFC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:40:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23B80C46477
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:42:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA54C2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:40:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560822046;
-	bh=KsbO8zqRDwjqNqLUKDtxw38bKGpR6/rXffGf+dHWdqY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=zPy8me8+ChCcVlsoKwYAgM+MZ1vtHB0+PejZZ8sSOO8Kev1sRJ71UcZaQRy8P204q
-	 AbMQ8Zy3NoAaUVeU/nf/REPrv3ig1dj+LcFX3hD6bCfaHuxHOx8D+hPcaJMXTihzuR
-	 oGc5hDxAGS/lhFz2n2CXQvmNO/3ypapls20qXNgc=
+	by mail.kernel.org (Postfix) with ESMTP id 08B2B2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:42:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727450AbfFRBkp (ORCPT
+        id S1727121AbfFRBmt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:40:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55186 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 21:42:49 -0400
+Received: from mga12.intel.com ([192.55.52.136]:30642 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726215AbfFRBko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:40:44 -0400
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFAD22147A
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 01:40:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560822044;
-        bh=KsbO8zqRDwjqNqLUKDtxw38bKGpR6/rXffGf+dHWdqY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=tAYxS8CzDFuv2tQZHZR4A3RbB0atwX6vH4WU+fA+oZHmeDZ2QCd8tIftSy05dWYvx
-         Zr2+5L9RCAkPUy8diltaJF7/yaAZ9lLrLPKmiWFNUhWORvS5gl44MTXH5S00eMh8Dm
-         CARK3lbj5/kG+g8UA3DoM4IVv0LeK7RA1QPw8H0E=
-Received: by mail-wm1-f41.google.com with SMTP id a15so1341089wmj.5
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:40:43 -0700 (PDT)
-X-Gm-Message-State: APjAAAUCTkKMsuNBcn77uSTJD8CX12iBx2mdE41TqgB8d5VAfBWvJqy+
-        fuNQDc+qHbzvFJ17n2QrdbMBaDPR+CuTbdIsWkBQVg==
-X-Google-Smtp-Source: APXvYqzS0tk+KNMV6hutqJZNe+OpQ2triMNDvKY2XNxjx+/s7nYJx2KaD0PtMpxVPGCU2zuqJwIgx5ai1DRb5gWNARw=
-X-Received: by 2002:a7b:cd84:: with SMTP id y4mr928755wmj.79.1560822042435;
- Mon, 17 Jun 2019 18:40:42 -0700 (PDT)
+        id S1726023AbfFRBms (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 21:42:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 18:42:48 -0700
+X-ExtLoop1: 1
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga005.fm.intel.com with ESMTP; 17 Jun 2019 18:42:46 -0700
+Date:   Tue, 18 Jun 2019 09:42:23 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, Vlastimil Babka <vbabka@suse.cz>,
+        osalvador@suse.de
+Subject: Re: [PATCH v9 03/12] mm/hotplug: Prepare shrink_{zone, pgdat}_span
+ for sub-section removal
+Message-ID: <20190618014223.GD18161@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155977188458.2443951.9573565800736334460.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-46-kirill.shutemov@linux.intel.com> <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
- <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com> <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
- <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com> <1560815959.5187.57.camel@linux.intel.com>
- <cbbc6af7-36f8-a81f-48b1-2ad4eefc2417@amd.com>
-In-Reply-To: <cbbc6af7-36f8-a81f-48b1-2ad4eefc2417@amd.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 17 Jun 2019 18:40:31 -0700
-X-Gmail-Original-Message-ID: <CALCETrWq98--AgXXj=h1R70CiCWNncCThN2fEdxj2ZkedMw6=A@mail.gmail.com>
-Message-ID: <CALCETrWq98--AgXXj=h1R70CiCWNncCThN2fEdxj2ZkedMw6=A@mail.gmail.com>
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for MKTME
-To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Cc:     Kai Huang <kai.huang@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155977188458.2443951.9573565800736334460.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 6:34 PM Lendacky, Thomas
-<Thomas.Lendacky@amd.com> wrote:
+On Wed, Jun 05, 2019 at 02:58:04PM -0700, Dan Williams wrote:
+>Sub-section hotplug support reduces the unit of operation of hotplug
+>from section-sized-units (PAGES_PER_SECTION) to sub-section-sized units
+>(PAGES_PER_SUBSECTION). Teach shrink_{zone,pgdat}_span() to consider
+>PAGES_PER_SUBSECTION boundaries as the points where pfn_valid(), not
+>valid_section(), can toggle.
 >
-> On 6/17/19 6:59 PM, Kai Huang wrote:
-> > On Mon, 2019-06-17 at 11:27 -0700, Dave Hansen wrote:
-
-> >
-> > And yes from my reading (better to have AMD guys to confirm) SEV guest uses anonymous memory, but it
-> > also pins all guest memory (by calling GUP from KVM -- SEV specifically introduced 2 KVM ioctls for
-> > this purpose), since SEV architecturally cannot support swapping, migraiton of SEV-encrypted guest
-> > memory, because SME/SEV also uses physical address as "tweak", and there's no way that kernel can
-> > get or use SEV-guest's memory encryption key. In order to swap/migrate SEV-guest memory, we need SGX
-> > EPC eviction/reload similar thing, which SEV doesn't have today.
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: Vlastimil Babka <vbabka@suse.cz>
+>Cc: Logan Gunthorpe <logang@deltatee.com>
+>Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+>Reviewed-by: Oscar Salvador <osalvador@suse.de>
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>---
+> mm/memory_hotplug.c |   29 ++++++++---------------------
+> 1 file changed, 8 insertions(+), 21 deletions(-)
 >
-> Yes, all the guest memory is currently pinned by calling GUP when creating
-> an SEV guest.
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index 7b963c2d3a0d..647859a1d119 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -318,12 +318,8 @@ static unsigned long find_smallest_section_pfn(int nid, struct zone *zone,
+> 				     unsigned long start_pfn,
+> 				     unsigned long end_pfn)
+> {
+>-	struct mem_section *ms;
+>-
+>-	for (; start_pfn < end_pfn; start_pfn += PAGES_PER_SECTION) {
+>-		ms = __pfn_to_section(start_pfn);
+>-
+>-		if (unlikely(!valid_section(ms)))
+>+	for (; start_pfn < end_pfn; start_pfn += PAGES_PER_SUBSECTION) {
+>+		if (unlikely(!pfn_valid(start_pfn)))
+> 			continue;
 
-Ick.
+Hmm, we change the granularity of valid section from SECTION to SUBSECTION.
+But we didn't change the granularity of node id and zone information.
 
-What happens if QEMU tries to read the memory?  Does it just see
-ciphertext?  Is cache coherency lost if QEMU writes it?
+For example, we found the node id of a pfn mismatch, we can skip the whole
+section instead of a subsection.
+
+Maybe this is not a big deal.
+
+> 
+> 		if (unlikely(pfn_to_nid(start_pfn) != nid))
+>@@ -343,15 +339,12 @@ static unsigned long find_biggest_section_pfn(int nid, struct zone *zone,
+> 				    unsigned long start_pfn,
+> 				    unsigned long end_pfn)
+> {
+>-	struct mem_section *ms;
+> 	unsigned long pfn;
+> 
+> 	/* pfn is the end pfn of a memory section. */
+> 	pfn = end_pfn - 1;
+>-	for (; pfn >= start_pfn; pfn -= PAGES_PER_SECTION) {
+>-		ms = __pfn_to_section(pfn);
+>-
+>-		if (unlikely(!valid_section(ms)))
+>+	for (; pfn >= start_pfn; pfn -= PAGES_PER_SUBSECTION) {
+>+		if (unlikely(!pfn_valid(pfn)))
+> 			continue;
+> 
+> 		if (unlikely(pfn_to_nid(pfn) != nid))
+>@@ -373,7 +366,6 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> 	unsigned long z = zone_end_pfn(zone); /* zone_end_pfn namespace clash */
+> 	unsigned long zone_end_pfn = z;
+> 	unsigned long pfn;
+>-	struct mem_section *ms;
+> 	int nid = zone_to_nid(zone);
+> 
+> 	zone_span_writelock(zone);
+>@@ -410,10 +402,8 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> 	 * it check the zone has only hole or not.
+> 	 */
+> 	pfn = zone_start_pfn;
+>-	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SECTION) {
+>-		ms = __pfn_to_section(pfn);
+>-
+>-		if (unlikely(!valid_section(ms)))
+>+	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
+>+		if (unlikely(!pfn_valid(pfn)))
+> 			continue;
+> 
+> 		if (page_zone(pfn_to_page(pfn)) != zone)
+>@@ -441,7 +431,6 @@ static void shrink_pgdat_span(struct pglist_data *pgdat,
+> 	unsigned long p = pgdat_end_pfn(pgdat); /* pgdat_end_pfn namespace clash */
+> 	unsigned long pgdat_end_pfn = p;
+> 	unsigned long pfn;
+>-	struct mem_section *ms;
+> 	int nid = pgdat->node_id;
+> 
+> 	if (pgdat_start_pfn == start_pfn) {
+>@@ -478,10 +467,8 @@ static void shrink_pgdat_span(struct pglist_data *pgdat,
+> 	 * has only hole or not.
+> 	 */
+> 	pfn = pgdat_start_pfn;
+>-	for (; pfn < pgdat_end_pfn; pfn += PAGES_PER_SECTION) {
+>-		ms = __pfn_to_section(pfn);
+>-
+>-		if (unlikely(!valid_section(ms)))
+>+	for (; pfn < pgdat_end_pfn; pfn += PAGES_PER_SUBSECTION) {
+>+		if (unlikely(!pfn_valid(pfn)))
+> 			continue;
+> 
+> 		if (pfn_to_nid(pfn) != nid)
+>
+>_______________________________________________
+>Linux-nvdimm mailing list
+>Linux-nvdimm@lists.01.org
+>https://lists.01.org/mailman/listinfo/linux-nvdimm
+
+-- 
+Wei Yang
+Help you, Help me
