@@ -2,177 +2,111 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AE2C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 911AEC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:52:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5A4E2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67A0A2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:52:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwQw3hOv"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nXI/Gx44"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729836AbfFRLvh (ORCPT
+        id S1729920AbfFRLwr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:51:37 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:39679 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729662AbfFRLvg (ORCPT
+        Tue, 18 Jun 2019 07:52:47 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:12449 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729775AbfFRLwq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:51:36 -0400
-Received: by mail-lf1-f66.google.com with SMTP id p24so9035936lfo.6;
-        Tue, 18 Jun 2019 04:51:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zpZnTmiFobuKU/2JfAFEVs7n9lSj0UZdJLNtCpW3WX4=;
-        b=XwQw3hOve6XBYc4/Iqrypk1r/tdsXiyIvS0Vwvelo++xpDTNelSdaurum8wqVwJ/Jm
-         vDT5EvbeOB6aalveng+13exox31Le1W1LG7Dza9D02AcOv4l8WxAmoiKRCZxBBcMbGHd
-         BrskdeRuDihLG7AhLcdgZ+lzTfoSAyZr8NlmOwJIpXzsr38nx8g3rBg0aFQbNoyXT6n1
-         U3li8ehgmX03aGAWzMzzKhO966tbH5vU/fL4uMd8tjMlb84dmOq6FGDz4fc+IpTVwVz5
-         Op4pn/I7TeOSyYYNFoX4LqnxrD61+0Cx2LkXmeU4PAsyH0VlP/gfhuSJjzxKrJRq/81T
-         8W7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zpZnTmiFobuKU/2JfAFEVs7n9lSj0UZdJLNtCpW3WX4=;
-        b=pd7kYU9xIpHzyZPPUDUmz9Yjvp0ygqx5Embwt7v7g8ObqUsIsT6DCfwNsUQrDqprg5
-         22hJIe7dvztyUzr4JbXJRohfzRzsAcyS5zT1nOs2mxzhv52TYCsUw/L2t5QnezxktAHu
-         zKyL9dXhof/qUUztAHbdk2SIfLzVvDXHLFQl8PNWLHkzz2rYEVVvIykksW0xMifPTQ9i
-         0rhGYt2h2GS3qy+CV/7ATI5oNrrmmlSeo6Y7h6ewyFxbjfT7yF9TPnAPZJvRe/DhCf05
-         d4a5lzxCw2gKQuQru5jDRtptnbBgWoMS67tTLG6AsLLivywo4KUE+NPDpWAvtxUsJAWY
-         ZAbg==
-X-Gm-Message-State: APjAAAVr/2T9iLzkTawSwp2WYJpQJd+c/qlz/+rlz15d+XGQWaZ8Qv05
-        Ee3Y6bva0FtonCmIrAQGqWvwjk5F
-X-Google-Smtp-Source: APXvYqyeEFt5PkWYBttPbqQ2wNvXaY9LOk479JqdCP/UPYEcpOZ6l5XVTEiZN0kdbiOumjmz0kW0cw==
-X-Received: by 2002:ac2:482d:: with SMTP id 13mr14528286lft.132.1560858694302;
-        Tue, 18 Jun 2019 04:51:34 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id l1sm2172154lfe.60.2019.06.18.04.51.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 04:51:33 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
+        Tue, 18 Jun 2019 07:52:46 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d08d08d0000>; Tue, 18 Jun 2019 04:52:45 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 04:52:45 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 04:52:45 -0700
+Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 11:52:42 +0000
+Subject: Re: [PATCH V9] i2c: tegra: remove BUG() macro
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dmaengine: tegra-apb: Support per-burst residue granularity
-Date:   Tue, 18 Jun 2019 14:50:35 +0300
-Message-Id: <20190618115035.29250-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+ <e1bf5aac-5528-3e54-0f41-5a1bbabce419@gmail.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <2724f809-fe0b-810c-6236-d94a1efc2112@nvidia.com>
+Date:   Tue, 18 Jun 2019 04:52:39 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <e1bf5aac-5528-3e54-0f41-5a1bbabce419@gmail.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560858765; bh=e1tSso8N3GCOauwbmbeeod/T6BaFIk3wbGNaptwkfqo=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nXI/Gx44H5Pc1Wl65W+eH9mEscbbjjtHYht1M4aTe1qwaM58xgatN5HlVNQY3dxjv
+         SSAIHxycH7rjhiO2sIjGNeib6gQ9RWvVWCLNs+ynDnHFVD+4jLQVIovU5eFoyLLjOb
+         K1zKjXveIvOGM12myYcw3c5gCsreI5B5LDaM1Jy40DjWwZuAMZYv2dcRUXk8gZdQ4h
+         QR1xA6PVa16XuVrKBb0iPdHTN0C2r+NBGLrBEd1FSAYt+mG6B9s+TUAqVGw8Aiyc01
+         k52jm7kCyA4o6KxG+3VTPKtvDIzFqDC8RI76taws+TG9/D3k0bked0fObQR5UYujap
+         aeE0h5sFLPiEg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tegra's APB DMA engine updates words counter after each transferred burst
-of data, hence it can report transfer's residual with more fidelity which
-may be required in cases like audio playback. In particular this fixes
-audio stuttering during playback in a chromiuim web browser. The patch is
-based on the original work that was made by Ben Dooks. It was tested on
-Tegra20 and Tegra30 devices.
 
-Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
-Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
 
-Changelog:
+On 6/18/19 4:29 AM, Dmitry Osipenko wrote:
+> 18.06.2019 14:09, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>> The usage of BUG() macro is generally discouraged in kernel, unless
+>> it's a problem that results in a physical damage or loss of data.
+>> This patch removes unnecessary BUG() macros and replaces the rest
+>> with warning.
+>>
+>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>> ---
+>>   drivers/i2c/busses/i2c-tegra.c | 47 ++++++++++++++++++++++++++++++++++=
++-------
+>>   1 file changed, 39 insertions(+), 8 deletions(-)
+>=20
+> Thank you very much! Please keep applying all the advises that were given=
+ to you
+> during the reviews in the future patches.
+Thank you Dmitry for the review inputs and patience. I shall try to keep=20
+the advices in mind for future reviews.
 
-v2:  Addressed review comments made by Jon Hunter to v1. We won't try
-     to get words count if dma_desc is on free list as it will result
-     in a NULL dereference because this case wasn't handled properly.
 
-     The residual value is now updated properly, avoiding potential
-     integer overflow by adding the "bytes" to the "bytes_transferred"
-     instead of the subtraction.
+>=20
+> I made a quick test and no problems spotted, all warning spots are silent=
+.
+>=20
+> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+> Tested-by: Dmitry Osipenko <digetx@gmail.com>
+>=20
+Also, Thank you for help in testing the patch at your end.
 
- drivers/dma/tegra20-apb-dma.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
-
-diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
-index 79e9593815f1..fed18bc46479 100644
---- a/drivers/dma/tegra20-apb-dma.c
-+++ b/drivers/dma/tegra20-apb-dma.c
-@@ -797,6 +797,28 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
- 	return 0;
- }
- 
-+static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
-+					       struct tegra_dma_sg_req *sg_req)
-+{
-+	unsigned long status, wcount = 0;
-+
-+	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
-+		return 0;
-+
-+	if (tdc->tdma->chip_data->support_separate_wcount_reg)
-+		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
-+
-+	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
-+
-+	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
-+		wcount = status;
-+
-+	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
-+		return sg_req->req_len;
-+
-+	return get_current_xferred_count(tdc, sg_req, wcount);
-+}
-+
- static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	dma_cookie_t cookie, struct dma_tx_state *txstate)
- {
-@@ -806,6 +828,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	enum dma_status ret;
- 	unsigned long flags;
- 	unsigned int residual;
-+	unsigned int bytes = 0;
- 
- 	ret = dma_cookie_status(dc, cookie, txstate);
- 	if (ret == DMA_COMPLETE)
-@@ -825,6 +848,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- 	list_for_each_entry(sg_req, &tdc->pending_sg_req, node) {
- 		dma_desc = sg_req->dma_desc;
- 		if (dma_desc->txd.cookie == cookie) {
-+			bytes = tegra_dma_sg_bytes_xferred(tdc, sg_req);
- 			ret = dma_desc->dma_status;
- 			goto found;
- 		}
-@@ -836,7 +860,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
- found:
- 	if (dma_desc && txstate) {
- 		residual = dma_desc->bytes_requested -
--			   (dma_desc->bytes_transferred %
-+			   ((dma_desc->bytes_transferred + bytes) %
- 			    dma_desc->bytes_requested);
- 		dma_set_residue(txstate, residual);
- 	}
-@@ -1441,12 +1465,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
- 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
- 		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
- 	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
--	/*
--	 * XXX The hardware appears to support
--	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
--	 * only used by this driver during tegra_dma_terminate_all()
--	 */
--	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
-+	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
- 	tdma->dma_dev.device_config = tegra_dma_slave_config;
- 	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
- 	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
--- 
-2.22.0
+-regards,
+  Bitan
 
