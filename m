@@ -2,76 +2,111 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA05C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:52:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891C3C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368502080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:52:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=neuling.org header.i=@neuling.org header.b="eEMk/1Wu"
+	by mail.kernel.org (Postfix) with ESMTP id 6BEDE20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728963AbfFRGw1 (ORCPT
+        id S1728984AbfFRGwn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 02:52:27 -0400
-Received: from ozlabs.org ([203.11.71.1]:38681 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726687AbfFRGwY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 02:52:24 -0400
-Received: from neuling.org (localhost [127.0.0.1])
-        by ozlabs.org (Postfix) with ESMTP id 45SdCW5P9Fz9sNT;
-        Tue, 18 Jun 2019 16:17:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neuling.org;
-        s=201811; t=1560838631;
-        bh=hjnDP1X53F9+JxiYVHuk5dMlaqbiLqfcJICtYM3IoQk=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=eEMk/1WuABimOGZcS3sBsCcicLTRiiwgpGP2oCzD0Iqnfv5MXEuAmg2CGUI+xR9SK
-         5RGCb6hp9lCTRWcsF1ewHedu+gMsw8IEuLI82yZuqr9cewGo531bzjwALU/kWXcDsj
-         GUyM3wfEMgQBo52csiOpeDNtsOr619ngd0oxTtiH4iD3Irsj25a6Ltqav1kkf0qd9E
-         bprS72JfhXeVAw82GPHp6Y//lIajLSzDVd7ihoKquwyJwdPJQtyaYGfQ+Ecf53uOec
-         38YFv1EFzx1fwsxZ3lsTHSttwY1lJO6M7s7QJEGBZx8m91ocFVR6eLl9L/2aXgp6p7
-         CQ9TWY94XD/4w==
-Received: by neuling.org (Postfix, from userid 1000)
-        id A1CED2A2538; Tue, 18 Jun 2019 16:17:11 +1000 (AEST)
-Message-ID: <85d5494d2a5d4a887e739c379105436e498217a8.camel@neuling.org>
-Subject: Re: [PATCH 0/5] Powerpc/hw-breakpoint: Fixes plus Code refactor
-From:   Michael Neuling <mikey@neuling.org>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au
-Cc:     benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, naveen.n.rao@linux.vnet.ibm.com
-Date:   Tue, 18 Jun 2019 16:17:11 +1000
-In-Reply-To: <2344165b-b55b-d1b9-fd96-e057500e8c74@c-s.fr>
-References: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
-         <2344165b-b55b-d1b9-fd96-e057500e8c74@c-s.fr>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Tue, 18 Jun 2019 02:52:43 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18633 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728158AbfFRGwm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 02:52:42 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 43AAFAF366D1653AD995;
+        Tue, 18 Jun 2019 14:52:38 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun
+ 2019 14:52:28 +0800
+Subject: Re: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, Miao Xie <miaoxie@huawei.com>,
+        <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <weidu.du@huawei.com>, Fang Wei <fangwei1@huawei.com>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>
+References: <20190614181619.64905-1-gaoxiang25@huawei.com>
+ <20190617203609.GA22034@kroah.com>
+ <c86d3fc0-8b4a-6583-4309-911960fbe862@huawei.com>
+ <20190618054709.GA4271@kroah.com>
+ <df18d7f9-f65a-5697-c7c4-edb1ad846c3e@huawei.com>
+ <20190618064523.GA6015@kroah.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <2a6abbf9-20a9-c1dd-0091-d8e3009037eb@huawei.com>
+Date:   Tue, 18 Jun 2019 14:52:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
+In-Reply-To: <20190618064523.GA6015@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-18 at 08:01 +0200, Christophe Leroy wrote:
->=20
-> Le 18/06/2019 =C3=A0 06:27, Ravi Bangoria a =C3=A9crit :
-> > patch 1-3: Code refactor
-> > patch 4: Speedup disabling breakpoint
-> > patch 5: Fix length calculation for unaligned targets
->=20
-> While you are playing with hw breakpoints, did you have a look at=20
-> https://github.com/linuxppc/issues/issues/38 ?
 
-Agreed and also:=20
 
-https://github.com/linuxppc/issues/issues/170
+On 2019/6/18 14:45, Greg Kroah-Hartman wrote:
+> On Tue, Jun 18, 2019 at 02:18:00PM +0800, Gao Xiang wrote:
+>>
+>>
+>> On 2019/6/18 13:47, Greg Kroah-Hartman wrote:
+>>> On Tue, Jun 18, 2019 at 09:47:08AM +0800, Gao Xiang wrote:
+>>>>
+>>>>
+>>>> On 2019/6/18 4:36, Greg Kroah-Hartman wrote:
+>>>>> On Sat, Jun 15, 2019 at 02:16:11AM +0800, Gao Xiang wrote:
+>>>>>> At last, this is RFC patch v1, which means it is not suitable for
+>>>>>> merging soon... I'm still working on it, testing its stability
+>>>>>> these days and hope these patches get merged for 5.3 LTS
+>>>>>> (if 5.3 is a LTS version).
+>>>>>
+>>>>> Why would 5.3 be a LTS kernel?
+>>>>>
+>>>>> curious as to how you came up with that :)
+>>>>
+>>>> My personal thought is about one LTS kernel one year...
+>>>> Usually 5 versions after the previous kernel...(4.4 -> 4.9 -> 4.14 -> 4.19),
+>>>> which is not suitable for all historical LTSs...just prepare for 5.3...
+>>>
+>>> I try to pick the "last" kernel that is released each year, which
+>>> sometimes is 5 kernels, sometimes 4, sometimes 6, depending on the
+>>> release cycle.
+>>>
+>>> So odds are it will be 5.4 for the next LTS kernel, but we will not know
+>>> more until it gets closer to release time.
+>>
+>> Thanks for kindly explanation :)
+>>
+>> Anyway, I will test these patches, land to our commerical products and try the best
+>> efforts on making it more stable for Linux upstream to merge.
+> 
+> Sounds great.
+> 
+> But why do you need to add compression to get this code out of staging?
+> Why not move it out now and then add compression and other new features
+> to it then?
 
-https://github.com/linuxppc/issues/issues/128=20
+Move out of staging could be over several linux versions since I'd like to get
+majority fs people agreed to this.
 
-Mikey
+Decompression inplace is an important part of erofs to show its performance
+benefits over existed compress filesystems and I tend to merge it in advance.
+
+Thanks,
+Gao Xiang
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
