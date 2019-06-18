@@ -2,129 +2,132 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62A58C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:16:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9ED9C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 372692080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:16:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BEFF2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:17:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LTei/vPt"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="B4i3u2Ne";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="g6Y2P/gV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728948AbfFRIQu (ORCPT
+        id S1729028AbfFRIRz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:16:50 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35039 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfFRIQu (ORCPT
+        Tue, 18 Jun 2019 04:17:55 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:59670 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725963AbfFRIRy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:16:50 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c6so2158617wml.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 01:16:48 -0700 (PDT)
+        Tue, 18 Jun 2019 04:17:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1560845874; x=1592381874;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=nZVOgOzFmr6Kssz3+tjK0aNLllEcL1/lXKBhQcsyBh0=;
+  b=B4i3u2NeOOqTkxwCI15xUVu0HP9boFZH6+Bcz8S8XQWa86J+348WtGdh
+   2UDSjDwNMNRExMuThmxz8acilCYZaJ53p8OsK+QAWlwnJoGx2Conq/Do8
+   phrnMQXPlKm2R4TIJJK7jQ95Z6WZY4NspiWfDSH2L1xiH88Ptv71DbGPE
+   HIxO2v66p3pCuxFv4tu6WJQecscyy3dJUNI7q9db/oeRRWKDYC+F7bS31
+   7sf6GF6ZT3eppIcPNY/7RcVVe1CpRlDITog/n0QQR643rLpqwPQMP0dC9
+   erfSGWiYiVL0IXWj2eXi5peJ712EoDfnIAzV7SuBK9HADk9rWBxKSbnk3
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.63,388,1557158400"; 
+   d="scan'208";a="217192935"
+Received: from mail-co1nam04lp2058.outbound.protection.outlook.com (HELO NAM04-CO1-obe.outbound.protection.outlook.com) ([104.47.45.58])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2019 16:17:53 +0800
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=t/jrlwVbqUGm5LlxED/u8lqvV/TkMHlvG38VrHjMZwM=;
-        b=LTei/vPtrKAGo+xiHG938K3xZdc34NOswQ0WZSU7et3BB+FoPlGssMxDzK6esyJSja
-         QNoCDNSmTtY1kYZ1bly52+mKA135BDgOFFA6ugJ699DK43sih5uZp8XmvqgIr+LwLRtk
-         LPQlyeWJ2hkr5rgaRT3CHorvxpilQW6OvrXFYHyeM1Viz545C2V/QhgMdcVGGVXI3p1d
-         JTe27YjN3ZmjGvr6csX7WB6FYvbN1ywUAEKWlDIZg22hBeQ/qkQ+mp//G8FEvqKVaUFE
-         tbHm6TLstQTl3vkr+1CBDxhm29P4fndqXWdxYbLcVb9eQQ32K3+qQc04c3/L600uA6Kx
-         ezmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=t/jrlwVbqUGm5LlxED/u8lqvV/TkMHlvG38VrHjMZwM=;
-        b=f+4NAKw6yT+ARKhFNDBjn8lg6BoN4LTHEocq5vY/qIRT7nIfiJs8c32+1UkhegYdjP
-         vb3KEl8tIzjD12hVxMxqD8II43XJi/bCAbjeMBULbexMnmr6OFnMMvsKSecIk66Z2AWp
-         /OACUgkYKQR7Wfy1s3myChU4SlfhhxGNnkWhtyb3Spqk+Z2P+TppfMCnafPvDmVFaZPl
-         /6taUIV6VF2eNrp+e1c8+rQZo+SWsrvt7uOLf5nxtGt/Lf7InoQUgen//3U3K7jIBPto
-         9RqlZDatI2Hl9G6ezvli0QvJGypkprj26Gx2sD3RctYFLM8Kkjqe1LflM5ivEywXPR3t
-         FRJg==
-X-Gm-Message-State: APjAAAXsHnkXr/dziaztE7yz4H2473e6zkH7RSXmcVKwqqBWyv865/H3
-        7En56VUq0iVMVfEr9TIexWLOTA==
-X-Google-Smtp-Source: APXvYqwYTr5x7DrdrPoLH+qfq4DTqLezqkCP1jdXSp6iYQxgp2pEEprK6f3SFvlWPAjwHdlqgPP9mw==
-X-Received: by 2002:a1c:208c:: with SMTP id g134mr2318494wmg.112.1560845807845;
-        Tue, 18 Jun 2019 01:16:47 -0700 (PDT)
-Received: from dell ([2.27.35.243])
-        by smtp.gmail.com with ESMTPSA id k125sm2847763wmf.41.2019.06.18.01.16.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Jun 2019 01:16:47 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 09:16:45 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] mfd: stmfx: Fix an endian bug in stmfx_irq_handler()
-Message-ID: <20190618081645.GM16364@dell>
-References: <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
- <20190617190605.GA21332@mwanda>
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=qGPehlAUNA1ncKJZuPp2p0HXigQnhwMiSTBjnINLosI=;
+ b=g6Y2P/gV7Ztkrt1aZW/odpNcZxY7WI1Jn7gJKsNV2AfOofM+0Y7Ql88CSd3H8/fTpk+TjNCIiHNG7E4KfKnGrG4EoP73Nag6XJWh5GMGxUVc1riNFPFOmmH3O8lV1Ea6VnllH6MgyNjMv10mQlBK7LuCkKfgQIDZWINkFomI5f8=
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com (20.177.254.85) by
+ SN6PR04MB4365.namprd04.prod.outlook.com (52.135.72.142) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Tue, 18 Jun 2019 08:17:52 +0000
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088]) by SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088%6]) with mapi id 15.20.1987.013; Tue, 18 Jun 2019
+ 08:17:52 +0000
+From:   Naohiro Aota <Naohiro.Aota@wdc.com>
+To:     Josef Bacik <josef@toxicpanda.com>
+CC:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 05/19] btrfs: disable direct IO in HMZONED mode
+Thread-Topic: [PATCH 05/19] btrfs: disable direct IO in HMZONED mode
+Thread-Index: AQHVHTKDedTybPjxfEqayUijXk/wXg==
+Date:   Tue, 18 Jun 2019 08:17:52 +0000
+Message-ID: <SN6PR04MB523168E867B817288A587BA48CEA0@SN6PR04MB5231.namprd04.prod.outlook.com>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-6-naohiro.aota@wdc.com>
+ <20190613140020.iiqzrkdztindfjyh@MacBook-Pro-91.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Naohiro.Aota@wdc.com; 
+x-originating-ip: [199.255.47.8]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 44ef5d6c-979b-466e-3f7f-08d6f3c57559
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4365;
+x-ms-traffictypediagnostic: SN6PR04MB4365:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB43655183113FEA8AEFC3304F8CEA0@SN6PR04MB4365.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(346002)(376002)(366004)(396003)(136003)(199004)(189003)(52536014)(91956017)(478600001)(5660300002)(476003)(446003)(33656002)(2906002)(68736007)(6246003)(54906003)(25786009)(4744005)(66476007)(66556008)(86362001)(72206003)(4326008)(6916009)(316002)(6116002)(71200400001)(6436002)(55016002)(3846002)(81166006)(81156014)(14454004)(53936002)(64756008)(305945005)(229853002)(7736002)(7416002)(74316002)(66066001)(76176011)(6506007)(256004)(7696005)(8936002)(9686003)(66946007)(53546011)(26005)(73956011)(186003)(102836004)(486006)(99286004)(76116006)(71190400001)(8676002)(66446008);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4365;H:SN6PR04MB5231.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: yt7azKT5bQLAwKC6ax3o3zOPOq6ITiVfyRYQoWdSP1e++rqW4mjKWQKe38No233nlft+hFhagUrP87/QkQWGgboQ7yUKk0ExJY3WiYq+ohbFl+nUPNq74Aerc67UwZbmWlUNR+FkV7+J0DFSk5aLrLK6wdDdssMBey8Nlw/UzX3OssM4xnc5JOOpM8/Z3A9mN4lO/labH7g2H0jiKR46vSRCk3miBClVS0iBEG0dOUPUupazSTPxS3TSk9iDyYzfjTBzoPbwSGKZXpaXkztuoLuCnDieKJQW1yYqEmlZ3hHg/B0/n6tbjvKGdkd2TOcdsSy5dOJBT0SynBYSZfJyJqyNbAoOtCL9GpGC99nwrULycHCrSEZAJLWTQsi4PPgvOJhSvaaJ6MeJQ9y/thrCo7rgxieIaC/9uF5r5Cb7AV8=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190617190605.GA21332@mwanda>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44ef5d6c-979b-466e-3f7f-08d6f3c57559
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 08:17:52.0595
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Naohiro.Aota1@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4365
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Dan Carpenter wrote:
-
-> It's not okay to cast a "u32 *" to "unsigned long *" when you are
-> doing a for_each_set_bit() loop because that will break on big
-> endian systems.
-> 
-> Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-
-Ideally we can get a review too.
-
-> Fixes: 386145601b82 ("mfd: stmfx: Uninitialized variable in stmfx_irq_handler()")
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-> ---
->  drivers/mfd/stmfx.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mfd/stmfx.c b/drivers/mfd/stmfx.c
-> index 7c419c078688..857991cb3cbb 100644
-> --- a/drivers/mfd/stmfx.c
-> +++ b/drivers/mfd/stmfx.c
-> @@ -204,6 +204,7 @@ static struct irq_chip stmfx_irq_chip = {
->  static irqreturn_t stmfx_irq_handler(int irq, void *data)
->  {
->  	struct stmfx *stmfx = data;
-> +	unsigned long bits;
->  	u32 pending, ack;
->  	int n, ret;
->  
-> @@ -222,7 +223,8 @@ static irqreturn_t stmfx_irq_handler(int irq, void *data)
->  			return IRQ_NONE;
->  	}
->  
-> -	for_each_set_bit(n, (unsigned long *)&pending, STMFX_REG_IRQ_SRC_MAX)
-> +	bits = pending;
-> +	for_each_set_bit(n, &bits, STMFX_REG_IRQ_SRC_MAX)
->  		handle_nested_irq(irq_find_mapping(stmfx->irq_domain, n));
->  
->  	return IRQ_HANDLED;
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+On 2019/06/13 23:00, Josef Bacik wrote:=0A=
+> On Fri, Jun 07, 2019 at 10:10:11PM +0900, Naohiro Aota wrote:=0A=
+>> Direct write I/Os can be directed at existing extents that have already=
+=0A=
+>> been written. Such write requests are prohibited on host-managed zoned=
+=0A=
+>> block devices. So disable direct IO support for a volume with HMZONED mo=
+de=0A=
+>> enabled.=0A=
+>>=0A=
+> =0A=
+> That's only if we're nocow, so seems like you only need to disable DIO in=
+to=0A=
+> nocow regions with hmzoned?  Thanks,=0A=
+> =0A=
+> Josef=0A=
+> =0A=
+=0A=
+True. And actually, I had to disable or ignore BTRFS_INODE_NODATACOW on HMZ=
+ONED.=0A=
+I'll replace this patch with that one.=0A=
+Thanks,=0A=
