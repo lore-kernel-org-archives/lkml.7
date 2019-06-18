@@ -2,111 +2,90 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6460FC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1772C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:02:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42C8620665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C12A820665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560841345;
+	bh=2ugJ+4jbEDNf3IaKlqSNtduwn51MkrS5VDiaJCRhmYc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=xWKu+ttEhGsJ64swmuE1sfsXiMGEukIdi1nhy7Y/2Y9wR0bnCGMJGjHZepDTUOVqa
+	 u9wSUOTJN41xhrXP4DgALf7dWT7A7v50kcx18HcyxNgtQZxTpAhBvkwgTdAfKtzv6s
+	 KOa19Q7WhNFh0uN42tqr+B1RKcHnFPGHQeBHhLxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728880AbfFRHB5 (ORCPT
+        id S1728919AbfFRHCY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:01:57 -0400
-Received: from gate.crashing.org ([63.228.1.57]:44279 "EHLO gate.crashing.org"
+        Tue, 18 Jun 2019 03:02:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33110 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRHB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:01:56 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5I5RJD1009174;
-        Tue, 18 Jun 2019 00:27:22 -0500
-Message-ID: <e406c7bc73971a3626cf587f3ee9970973b0782a.camel@kernel.crashing.org>
-Subject: Re: [PATCH v3 2/2] PCI: Fix disabling of bridge BARs when assigning
- bus resources
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Bjorn Helgaas <helgaas@kernel.org>,
-        Logan Gunthorpe <logang@deltatee.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
-        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
-Date:   Tue, 18 Jun 2019 15:27:18 +1000
-In-Reply-To: <20190617135307.GA13533@google.com>
-References: <20190531171216.20532-1-logang@deltatee.com>
-         <20190531171216.20532-3-logang@deltatee.com>
-         <20190617135307.GA13533@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1725829AbfFRHCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:02:24 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1F6C213F2;
+        Tue, 18 Jun 2019 05:47:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560836832;
+        bh=2ugJ+4jbEDNf3IaKlqSNtduwn51MkrS5VDiaJCRhmYc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=siWcg5jv7S7enP/dNIGa2avKBd20kFJLLKKmDQOd50TmtgVpdF/ODiH9jSweJauM4
+         nNPzX4HXmKyOyAqer94mO0tPqUW5raXp9pZaSocIvPrazoQm2xEnZMfxq9gCL/zAqe
+         yPvtYsSUnHMEpRz+yzv515R9CO3+aPiZgySE+QsE=
+Date:   Tue, 18 Jun 2019 07:47:09 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Gao Xiang <gaoxiang25@huawei.com>
+Cc:     devel@driverdev.osuosl.org, Miao Xie <miaoxie@huawei.com>,
+        chao@kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        weidu.du@huawei.com, Fang Wei <fangwei1@huawei.com>,
+        linux-fsdevel@vger.kernel.org, linux-erofs@lists.ozlabs.org
+Subject: Re: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
+Message-ID: <20190618054709.GA4271@kroah.com>
+References: <20190614181619.64905-1-gaoxiang25@huawei.com>
+ <20190617203609.GA22034@kroah.com>
+ <c86d3fc0-8b4a-6583-4309-911960fbe862@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c86d3fc0-8b4a-6583-4309-911960fbe862@huawei.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 08:53 -0500, Bjorn Helgaas wrote:
-> On Fri, May 31, 2019 at 11:12:16AM -0600, Logan Gunthorpe wrote:
-> > One odd quirk of PLX switches is that their upstream bridge port has
-> > 256K of space allocated behind its BAR0 (most other bridge
-> > implementations do not report any BAR space).
+On Tue, Jun 18, 2019 at 09:47:08AM +0800, Gao Xiang wrote:
 > 
-> Somewhat unusual, but completely legal, of course.
-
-Ah yes, I've seen these. They have an MMIO path to their internal
-registers in addition to cfg. Can be annoying.
-
-> If a bridge has memory BARs, AFAIK it is impossible to enable a memory
-> window without also enabling the BARs, so if we want to use the bridge
-> at all, we *must* allocate space for its BARs, just like for any other
-> device.
-
-Right.
-
- .../... (agreeing violently)
-
-> In my ideal world we wouldn't zap the flags of any resource.  I think
-> we should derive the flags from the device's config space *once*
-> during enumeration and remember them for the life of the device.
-
-Amen brother. It will take a little while to get there. One thing we
-should do is have a clearer way to mark a resource that failed to
-assign/allocate (though technically parent=NULL is it really, as long
-as all archs these days claim properly, it used not to be the case).
-
-We do wipe *bridge* windows (nor BARs) all over the place, that is less
-of an issue I suppose though I would be more comfortable if we also
-wrote to the bridge to close those windows as we do so...
-
-The problem of course is how much old weird quirky will break due to
-subtle assumptions as we "fix" these things :-)
-
-> This patch preserves res->flags for bridge BARs just like for any
-> other device, so I think this is definitely a step in the right
-> direction.
 > 
-> I'm not sure the "dev->subordinate" test is really correct, though.
-
-Right, shouldn't it be pci_is_bridge() ?
-
-> I think the original intent of this code was to clear res->flags for
-> bridge windows under the assumptions that (a) we can identify bridges
-> by "dev->subordinate" being non-zero, and (b) bridges only have
-> windows and didn't have BARs.
+> On 2019/6/18 4:36, Greg Kroah-Hartman wrote:
+> > On Sat, Jun 15, 2019 at 02:16:11AM +0800, Gao Xiang wrote:
+> >> At last, this is RFC patch v1, which means it is not suitable for
+> >> merging soon... I'm still working on it, testing its stability
+> >> these days and hope these patches get merged for 5.3 LTS
+> >> (if 5.3 is a LTS version).
+> > 
+> > Why would 5.3 be a LTS kernel?
+> > 
+> > curious as to how you came up with that :)
 > 
-> This patch fixes assumption (b), but I think (a) is false, and we
-> should fix it as well.  One can imagine a bridge device without a
-> subordinate bus (maybe we ran out of bus numbers), so I don't think we
-> should test dev->subordinate.
+> My personal thought is about one LTS kernel one year...
+> Usually 5 versions after the previous kernel...(4.4 -> 4.9 -> 4.14 -> 4.19),
+> which is not suitable for all historical LTSs...just prepare for 5.3...
 
-Yup.
+I try to pick the "last" kernel that is released each year, which
+sometimes is 5 kernels, sometimes 4, sometimes 6, depending on the
+release cycle.
 
-> We could test something like pci_is_bridge(), although testing for idx
-> being in the PCI_BRIDGE_RESOURCES range should be sufficient because I
-> don't think we use those resource for anything other than windows.
+So odds are it will be 5.4 for the next LTS kernel, but we will not know
+more until it gets closer to release time.
 
-Yeah quite possibly.
+thanks,
 
-Cheers,
-Ben.
-
-
+greg k-h
