@@ -2,248 +2,265 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE81CC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:47:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8364C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:48:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FE4208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:47:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91AA52070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:48:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H5tfAqm2";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lWS5vBN2"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HJaU4gT1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729787AbfFRLrl (ORCPT
+        id S1729821AbfFRLsG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:47:41 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36108 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbfFRLrk (ORCPT
+        Tue, 18 Jun 2019 07:48:06 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:45912 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbfFRLsF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:47:40 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id AE02E6090E; Tue, 18 Jun 2019 11:47:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560858458;
-        bh=zsiyismHkNaIwa20jYT3ygpjBUSpDFV20h1wHyoiRi4=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=H5tfAqm20VO08QFGVdOVOtMkcVVGFL246Sf3UyVYR2o3TEG6v5OeIXMB8aHE8WN33
-         pDspwYOueoJUPxXUit0AQPkd4sK0qCot1aRU7IsQraLuq+vH5r7fO6vlyFCDXr8Nol
-         z4SSAolCahXWQV4OslSkw2Crm+rq16NTPpqxpa7c=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 99F376028D;
-        Tue, 18 Jun 2019 11:47:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560858456;
-        bh=zsiyismHkNaIwa20jYT3ygpjBUSpDFV20h1wHyoiRi4=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=lWS5vBN2n7mllaKBfP/xGUE/WXX3mG7tlT+2NMunARaEo6J1Emg3O4Bd61KfgDnIm
-         tS+SssTn8qjpetiuUWVaLkZGKYxngG+qLqIj7cxilaIwLuiNDycKy6gHTRjyNTfOof
-         5NF9IZc9lCRLoudqobxCMnGqIAVsAeTxfbXyP68Q=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 99F376028D
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "open list\:ARM\/Rockchip SoC..." 
-        <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Tue, 18 Jun 2019 07:48:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=gQ2r+ow4Kr8y2JbBiwa/byiRtuo+eaSkrtwAEtgI0so=; b=HJaU4gT1BpdopCNXNUNpOsuuM
+        B70JNqP5zQ67T3P4PXmLraT1ssVTYnZMFLLXDgEer9g9+fZgBLqYJjXreeQQQ1lpxhLwDMnATCGLj
+        CwCqyuqV1c8FATRF4azyjtzr4AZuMeQwPKYI5T3pmEC4iKJnL75kKK95MCCpZnulWnRXLhfvF0Ezy
+        OgBsqe25j706G7w30BjFNQmi7tUURU8QMmoJW4BOI8o/y5o2yRYhvJp6x4Jsphh4x3gZGi7vjhsiT
+        Zypt5WMuvLs6tlN19ZfDBCPp2CST34uSeipf9MBMxT7YquViqLH+bMO0KlMpzeKaduwEFyD4nZWXV
+        AeoyZ/WXg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdCac-0006rk-Aq; Tue, 18 Jun 2019 11:47:50 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 05F3220A3C471; Tue, 18 Jun 2019 13:47:48 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 13:47:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas =?utf-8?Q?S=C3=B6derl?= =?utf-8?Q?und?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avri Altman <avri.altman@wdc.com>
-Subject: Re: [PATCH v5 0/5] brcmfmac: sdio: Deal better w/ transmission errors related to idle
-References: <20190617175653.21756-1-dianders@chromium.org>
-        <CAPDyKFpaX6DSM_BjtghAHUf7qYCyEG+wMagXPUdgz3Eutovqfw@mail.gmail.com>
-        <87v9x39mxf.fsf@kamboji.qca.qualcomm.com>
-        <CAPDyKFoE0+KNBT5j3_VpJKcztghVa-eFJhy8887bZcUk8bfN2Q@mail.gmail.com>
-Date:   Tue, 18 Jun 2019 14:47:27 +0300
-In-Reply-To: <CAPDyKFoE0+KNBT5j3_VpJKcztghVa-eFJhy8887bZcUk8bfN2Q@mail.gmail.com>
-        (Ulf Hansson's message of "Tue, 18 Jun 2019 13:28:10 +0200")
-Message-ID: <87ef3r9kts.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
+ implementation
+Message-ID: <20190618114747.GQ3436@hirez.programming.kicks-ass.net>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+ <20190607162349.18199-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607162349.18199-2-john.ogness@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ulf Hansson <ulf.hansson@linaro.org> writes:
+On Fri, Jun 07, 2019 at 06:29:48PM +0206, John Ogness wrote:
+> +#define DATAARRAY_SIZE(rb) (1 << rb->data_array_size_bits)
+> +#define DATAARRAY_SIZE_BITMASK(rb) (DATAARRAY_SIZE(rb) - 1)
 
-> On Tue, 18 Jun 2019 at 13:02, Kalle Valo <kvalo@codeaurora.org> wrote:
->
->     Ulf Hansson <ulf.hansson@linaro.org> writes:
->     
->     > On Mon, 17 Jun 2019 at 19:57, Douglas Anderson
->     <dianders@chromium.org> wrote:
->     >>
->     >> This series attempts to deal better with the expected
->     transmission
->     >> errors related to the idle states (handled by the
->     Always-On-Subsystem
->     >> or AOS) on the SDIO-based WiFi on rk3288-veyron-minnie,
->     >> rk3288-veyron-speedy, and rk3288-veyron-mickey.
->     >>
->     >> Some details about those errors can be found in
->     >> <https://crbug.com/960222>, but to summarize it here: if we try
->     to
->     >> send the wakeup command to the WiFi card at the same time it
->     has
->     >> decided to wake up itself then it will behave badly on the SDIO
->     bus.
->     >> This can cause timeouts or CRC errors.
->     >>
->     >> When I tested on 4.19 and 4.20 these CRC errors can be seen to
->     cause
->     >> re-tuning. Since I am currently developing on 4.19 this was the
->     >> original problem I attempted to solve.
->     >>
->     >> On mainline it turns out that you don't see the retuning errors
->     but
->     >> you see tons of spam about timeouts trying to wakeup from
->     sleep. I
->     >> tracked down the commit that was causing that and have
->     partially
->     >> reverted it here. I have no real knowledge about Broadcom WiFi,
->     but
->     >> the commit that was causing problems sounds (from the
->     descriptioin) to
->     >> be a hack commit penalizing all Broadcom WiFi users because of
->     a bug
->     >> in a Cypress SD controller. I will let others comment if this
->     is
->     >> truly the case and, if so, what the right solution should be.
->     >>
->     >> For v3 of this series I have added 2 patches to the end of the
->     series
->     >> to address errors that would show up on systems with these same
->     SDIO
->     >> WiFi cards when used on controllers that do periodic retuning.
->     These
->     >> systems need an extra fix to prevent the retuning from
->     happening when
->     >> the card is asleep.
->     >>
->     >> I believe v5 of this series is all ready to go assuming Kalle
->     Valo is
->     >> good with it. I've added after-the-cut notes to patches
->     awaiting his
->     >> Ack and have added other tags collected so far.
->     >>
->     >> Changes in v5:
->     >> - Add missing sdio_retune_crc_enable() in comments (Ulf).
->     >> - /s/reneable/re-enable (Ulf).
->     >> - Remove leftover prototypes: mmc_expect_errors_begin() / end()
->     (Ulf).
->     >> - Rewording of "sleep command" in commit message (Arend).
->     >>
->     >> Changes in v4:
->     >> - Moved to SDIO API only (Adrian, Ulf).
->     >> - Renamed to make it less generic, now retune_crc_disable
->     (Ulf).
->     >> - Function header makes it clear host must be claimed (Ulf).
->     >> - No more WARN_ON (Ulf).
->     >> - Adjust to API rename (Adrian, Ulf).
->     >> - Moved retune hold/release to SDIO API (Adrian).
->     >> - Adjust to API rename (Adrian).
->     >>
->     >> Changes in v3:
->     >> - Took out the spinlock since I believe this is all in one
->     context.
->     >> - Expect errors for all of brcmf_sdio_kso_control() (Adrian).
->     >> - ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release
->     ()") new for v3.
->     >> - ("brcmfmac: sdio: Don't tune while the card is off") new for
->     v3.
->     >>
->     >> Changes in v2:
->     >> - A full revert, not just a partial one (Arend). ...with
->     explicit Cc.
->     >> - Updated commit message to clarify based on discussion of v1.
->     >>
->     >> Douglas Anderson (5):
->     >> Revert "brcmfmac: disable command decode in sdio_aos"
->     >> mmc: core: API to temporarily disable retuning for SDIO CRC
->     errors
->     >> brcmfmac: sdio: Disable auto-tuning around commands expected to
->     fail
->     >> mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
->     >> brcmfmac: sdio: Don't tune while the card is off
->     >>
->     >> drivers/mmc/core/core.c | 5 +-
->     >> drivers/mmc/core/sdio_io.c | 77 +++++++++++++++++++
->     >> .../broadcom/brcm80211/brcmfmac/sdio.c | 17 ++--
->     >> include/linux/mmc/host.h | 1 +
->     >> include/linux/mmc/sdio_func.h | 6 ++
->     >> 5 files changed, 99 insertions(+), 7 deletions(-)
->     >>
->     >> --
->     >> 2.22.0.410.gd8fdbe21b5-goog
->     >>
->     >
->     > Applied for fixes, thanks!
->     >
->     > Some minor changes:
->     > 1) Dropped the a few "commit notes", that was more related to
->     version
->     > and practical information about the series.
->     > 2) Dropped fixes tags for patch 2->5, but instead put a stable
->     tag
->     > targeted for v4.18+.
->     >
->     > Awaiting an ack from Kalle before sending the PR to Linus.
->     >
->     > Kalle, perhaps you prefer to pick patch 1, as it could go
->     separate.
->     > Then please tell - and/or if there is anything else you want me
->     to
->     > change.
->     
->     TBH I haven't followed the thread (or patches) that closely :) So
->     feel
->     free to take them and push them to Linus.
->     
->
-> I take that as an ack and will add your tag for it, thanks!
+*phew* no comments on those..
 
-Yes, it was an ack :) I forgot to add:
+I think the kernel typically uses _MASK instead of _BITMASK for this
+though.
 
-Acked-by: Kalle Valo <kvalo@codeaurora.org>
+> +/**
+> + * DATA_INDEX() - Determine the data array index from logical position.
+> + * @rb: The associated ringbuffer.
+> + * @lpos: The logical position (data/data_next).
+> + */
+> +#define DATA_INDEX(rb, lpos) (lpos & DATAARRAY_SIZE_BITMASK(rb))
+> +
+> +/**
+> + * DATA_WRAPS() - Determine how many times the data array has wrapped.
+> + * @rb: The associated ringbuffer.
+> + * @lpos: The logical position (data/data_next).
+> + *
+> + * The number of wraps is useful when determining if one logical position
+> + * is overtaking the data array index another logical position.
+> + */
+> +#define DATA_WRAPS(rb, lpos) (lpos >> rb->data_array_size_bits)
+> +
+> +/**
+> + * DATA_THIS_WRAP_START_LPOS() - Get the position at the start of the wrap.
+> + * @rb: The associated ringbuffer.
+> + * @lpos: The logical position (data/data_next).
+> + *
+> + * Given a logical position, return the logical position if backed up to the
+> + * beginning (data array index 0) of the current wrap. This is used when a
+> + * data block wraps and therefore needs to begin at the beginning of the data
+> + * array (for the next wrap).
+> + */
+> +#define DATA_THIS_WRAP_START_LPOS(rb, lpos) \
+> +	(DATA_WRAPS(rb, lpos) << rb->data_array_size_bits)
 
-BTW, your previous mail was in HTML so most likely it didn't reach the
-list.
+That's more easily written as: ((lpos) & ~MASK(rb))
 
--- 
-Kalle Valo
+> +
+> +#define DATA_ALIGN sizeof(long)
+> +#define DATA_ALIGN_SIZE(sz) \
+> +	((sz + (DATA_ALIGN - 1)) & ~(DATA_ALIGN - 1))
+
+We have ALIGN() for that
+
+> +
+> +#define DESCR_COUNT_BITMASK(rb) (rb->descr_max_count - 1)
+
+I think the kernel typically uses 'DESC' as shorthand for Descriptor.
+Idem on the MASK vs BITMASK thing.
+
+> +
+> +/**
+> + * DESCR_INDEX() - Determine the descriptor array index from the id.
+> + * @rb: The associated ringbuffer.
+> + * @id: The descriptor id.
+> + */
+> +#define DESCR_INDEX(rb, id) (id & DESCR_COUNT_BITMASK(rb))
+> +
+> +#define TO_DATABLOCK(rb, lpos) \
+> +	((struct prb_datablock *)&rb->data_array[DATA_INDEX(rb, lpos)])
+
+If I were paranoid, I'd point out that this evaluates @rb twice, and
+doesn't have the macro arguments in parens.
+
+> +#define TO_DESCR(rb, id) \
+> +	(&rb->descr_array[DESCR_INDEX(rb, id)])
+> +
+> +/**
+> + * data_valid() - Check if a data block is valid.
+> + * @rb: The ringbuffer containing the data.
+> + * @oldest_data: The oldest data logical position.
+> + * @newest_data: The newest data logical position.
+> + * @data: The logical position for the data block to check.
+> + * @data_next: The logical position for the data block next to this one.
+> + *             This value is used to identify the end of the data block.
+> + *
+> + * A data block is considered valid if it satisfies the two conditions:
+> + *
+> + * * oldest_data <= data < data_next <= newest_data
+> + * * oldest_data is at most exactly 1 wrap behind newest_data
+> + *
+> + * Return: true if the specified data block is valid.
+> + */
+> +static inline bool data_valid(struct printk_ringbuffer *rb,
+> +			      unsigned long oldest_data,
+> +			      unsigned long newest_data,
+> +			      unsigned long data, unsigned long data_next)
+> +
+> +{
+> +	return ((data - oldest_data) < DATAARRAY_SIZE(rb) &&
+> +		data_next != data &&
+> +		(data_next - data) < DATAARRAY_SIZE(rb) &&
+> +		(newest_data - data_next) < DATAARRAY_SIZE(rb) &&
+> +		(newest_data - oldest_data) <= DATAARRAY_SIZE(rb));
+
+	unsigned long size = DATA_SIZE(rb);
+
+	/* oldest_data <= data */
+	if (data - oldest_data >= size);
+		return false;
+
+	/* data_next < data */
+	if (data_next == data)
+		return false
+
+	/* data_next <= newest_data */
+	if (newest_data - data_next >= size)
+		return false;
+
+	/* 1 wrap */
+	if (newest_data - oldest_data >= size)
+		return false;
+
+	return true;
+
+> +}
+> +
+> +/**
+> + * add_descr_list() - Add a descriptor to the descriptor list.
+> + * @e: An entry that has already reserved data.
+> + *
+> + * The provided entry contains a pointer to a descriptor that has already
+> + * been reserved for this entry. However, the reserved descriptor is not
+> + * yet on the list. Add this descriptor as the newest item.
+> + *
+> + * A descriptor is added in two steps. The first step is to make this
+> + * descriptor the newest. The second step is to update the "next" field of
+> + * the former newest item to point to this item.
+> + */
+> +static void add_descr_list(struct prb_reserved_entry *e)
+> +{
+> +	struct printk_ringbuffer *rb = e->rb;
+> +	struct prb_list *l = &rb->descr_list;
+> +	struct prb_descr *d = e->descr;
+> +	struct prb_descr *newest_d;
+> +	unsigned long newest_id;
+> +
+> +	/* set as newest */
+> +	do {
+> +		/* MB5: synchronize add descr */
+> +		newest_id = smp_load_acquire(&l->newest);
+> +		newest_d = TO_DESCR(rb, newest_id);
+> +
+> +		if (newest_id == EOL)
+> +			WRITE_ONCE(d->seq, 1);
+> +		else
+> +			WRITE_ONCE(d->seq, READ_ONCE(newest_d->seq) + 1);
+> +		/*
+> +		 * MB5: synchronize add descr
+> +		 *
+> +		 * In particular: next written before cmpxchg
+> +		 */
+> +	} while (cmpxchg_release(&l->newest, newest_id, e->id) != newest_id);
+
+What does this pair with? I find ->newest usage in:
+
+  - later this function with an MB6 comment
+  - remove_oldest_descr() with no comment
+  - expire_oldest_data() with an MB2 comment
+  - get_new_lpos() with no comment
+  - data_reserve() with an MB2 comment
+  - prb_iter_next_valid_entry() with no comment
+    (and the smp_rmb()s have no clear comments either).
+
+In short; I've no frigging clue and I might as well just delete all
+these comments and reverse engineer :-(
+
+> +
+> +	if (unlikely(newest_id == EOL)) {
+> +		/* no previous newest means we *are* the list, set oldest */
+> +
+> +		/*
+> +		 * MB UNPAIRED
+
+That's a bug, MB must always be paired.
+
+> +		 *
+> +		 * In particular: Force cmpxchg _after_ cmpxchg on newest.
+> +		 */
+> +		WARN_ON_ONCE(cmpxchg_release(&l->oldest, EOL, e->id) != EOL);
+> +	} else {
+> +		/* link to previous chain */
+> +
+> +		/*
+> +		 * MB6: synchronize link descr
+> +		 *
+> +		 * In particular: Force cmpxchg _after_ cmpxchg on newest.
+
+But why... and who cares.
+
+> +		 */
+> +		WARN_ON_ONCE(cmpxchg_release(&newest_d->next,
+> +					     EOL, e->id) != EOL);
+> +	}
+> +}
