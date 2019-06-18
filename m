@@ -2,178 +2,257 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E53C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:51:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8193C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 985CB20657
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:51:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEFD82080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:55:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Uul2SZpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727661AbfFRBvJ (ORCPT
+        id S1727087AbfFRBzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:51:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11906 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726851AbfFRBvI (ORCPT
+        Mon, 17 Jun 2019 21:55:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:33342 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726088AbfFRBzt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:51:08 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5I1kuXd068015
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 21:51:07 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t6k29xauc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 21:51:06 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Tue, 18 Jun 2019 02:51:05 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Jun 2019 02:51:03 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5I1p2Ed59572338
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 01:51:02 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5EF55A4053;
-        Tue, 18 Jun 2019 01:51:02 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C66F6A4051;
-        Tue, 18 Jun 2019 01:51:01 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Jun 2019 01:51:01 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id AA010A0207;
-        Tue, 18 Jun 2019 11:51:00 +1000 (AEST)
-Subject: Re: [PATCH] ocxl: Allow contexts to be attached with a NULL mm
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20190617044152.13707-1-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Tue, 18 Jun 2019 11:50:59 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 21:55:49 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5I1s71a196012;
+        Tue, 18 Jun 2019 01:54:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=eE542OKo6D9dJ8OdHYUoOzoLNeU+roC70rOF9ID3jus=;
+ b=Uul2SZprobH89p7Kqpx0O/HDXfODfGzcZhaZpvjveLJ3MuF+dUiDV3TuWwHW4HccvqLZ
+ uQEm0ReAKopnHtpdZhD+BXXXIkN1UymXLv5ZmPjD3JU7A8R/Oe2tbd35uKl3Y8ucUBx0
+ 9fzVz/EEVzE3OSIJYaWBMacOUHYLyQnMOUI3uzSIX1IugeaigQMjM19NLLtGv72hbf+1
+ 6h1I82z3zKDPP+nLFWoQdPtnBylmpcR/2UvjLMDjxc70lTVVNgeFDA3CUXjNcqFJ4KP+
+ uMX1Mwtttp4ErPJ6LaZb8B5MRweyPR6GalEx38seavTlEMJprV6v6bf4oRHYEO23MkqD Qw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2t4rmp1eak-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 01:54:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5I1rLAF158501;
+        Tue, 18 Jun 2019 01:54:50 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by aserp3030.oracle.com with ESMTP id 2t5cpds8em-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Jun 2019 01:54:50 +0000
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5I1soWg160304;
+        Tue, 18 Jun 2019 01:54:50 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2t5cpds8eg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 01:54:50 +0000
+Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5I1skT4027573;
+        Tue, 18 Jun 2019 01:54:47 GMT
+Received: from localhost (/10.159.211.102)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 18:54:46 -0700
+Date:   Mon, 17 Jun 2019 21:54:42 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, dtrace-devel@oss.oracle.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190618015442.GG8794@oracle.com>
+References: <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521213648.GK2422@oracle.com>
+ <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+ <20190522041253.GM2422@oracle.com>
+ <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
+ <20190523051608.GP2422@oracle.com>
+ <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
+ <20190618012509.GF8794@oracle.com>
+ <CAADnVQJoH4WOQ0t7ZhLgh4kh2obxkFs0UGDRas0y4QSqh1EMsg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190617044152.13707-1-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061801-0028-0000-0000-0000037B29CB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061801-0029-0000-0000-0000243B3100
-Message-Id: <81f8951e-a095-3e13-4229-6475f6a8d4a5@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=961 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906180012
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAADnVQJoH4WOQ0t7ZhLgh4kh2obxkFs0UGDRas0y4QSqh1EMsg@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906180013
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/6/19 2:41 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Mon, Jun 17, 2019 at 06:32:22PM -0700, Alexei Starovoitov wrote:
+> On Mon, Jun 17, 2019 at 6:25 PM Kris Van Hees <kris.van.hees@oracle.com> wrote:
+> >
+> > On Thu, May 23, 2019 at 01:28:44PM -0700, Alexei Starovoitov wrote:
+> >
+> > << stuff skipped because it is not relevant to the technical discussion... >>
+> >
+> > > > > In particular you brought up a good point that there is a use case
+> > > > > for sharing a piece of bpf program between kprobe and tracepoint events.
+> > > > > The better way to do that is via bpf2bpf call.
+> > > > > Example:
+> > > > > void bpf_subprog(arbitrary args)
+> > > > > {
+> > > > > }
+> > > > >
+> > > > > SEC("kprobe/__set_task_comm")
+> > > > > int bpf_prog_kprobe(struct pt_regs *ctx)
+> > > > > {
+> > > > >   bpf_subprog(...);
+> > > > > }
+> > > > >
+> > > > > SEC("tracepoint/sched/sched_switch")
+> > > > > int bpf_prog_tracepoint(struct sched_switch_args *ctx)
+> > > > > {
+> > > > >   bpf_subprog(...);
+> > > > > }
+> > > > >
+> > > > > Such configuration is not supported by the verifier yet.
+> > > > > We've been discussing it for some time, but no work has started,
+> > > > > since there was no concrete use case.
+> > > > > If you can work on adding support for it everyone will benefit.
+> > > > >
+> > > > > Could you please consider doing that as a step forward?
+> > > >
+> > > > This definitely looks to be an interesting addition and I am happy to look into
+> > > > that further.  I have a few questions that I hope you can shed light on...
+> > > >
+> > > > 1. What context would bpf_subprog execute with?  If it can be called from
+> > > >    multiple different prog types, would it see whichever context the caller
+> > > >    is executing with?  Or would you envision bpf_subprog to not be allowed to
+> > > >    access the execution context because it cannot know which one is in use?
+> > >
+> > > bpf_subprog() won't be able to access 'ctx' pointer _if_ it's ambiguous.
+> > > The verifier already smart enough to track all the data flow, so it's fine to
+> > > pass 'struct pt_regs *ctx' as long as it's accessed safely.
+> > > For example:
+> > > void bpf_subprog(int kind, struct pt_regs *ctx1, struct sched_switch_args *ctx2)
+> > > {
+> > >   if (kind == 1)
+> > >      bpf_printk("%d", ctx1->pc);
+> > >   if (kind == 2)
+> > >      bpf_printk("%d", ctx2->next_pid);
+> > > }
+> > >
+> > > SEC("kprobe/__set_task_comm")
+> > > int bpf_prog_kprobe(struct pt_regs *ctx)
+> > > {
+> > >   bpf_subprog(1, ctx, NULL);
+> > > }
+> > >
+> > > SEC("tracepoint/sched/sched_switch")
+> > > int bpf_prog_tracepoint(struct sched_switch_args *ctx)
+> > > {
+> > >   bpf_subprog(2, NULL, ctx);
+> > > }
+> > >
+> > > The verifier should be able to prove that the above is correct.
+> > > It can do so already if s/ctx1/map_value1/, s/ctx2/map_value2/
+> > > What's missing is an ability to have more than one 'starting' or 'root caller'
+> > > program.
+> > >
+> > > Now replace SEC("tracepoint/sched/sched_switch") with SEC("cgroup/ingress")
+> > > and it's becoming clear that BPF_PROG_TYPE_PROBE approach is not good enough, right?
+> > > Folks are already sharing the bpf progs between kprobe and networking.
+> > > Currently it's done via code duplication and actual sharing happens via maps.
+> > > That's not ideal, hence we've been discussing 'shared library' approach for
+> > > quite some time. We need a way to support common bpf functions that can be called
+> > > from networking and from tracing programs.
+> > >
+> > > > 2. Given that BPF programs are loaded with a specification of the prog type,
+> > > >    how would one load a code construct as the one you outline above?  How can
+> > > >    you load a BPF function and have it be used as subprog from programs that
+> > > >    are loaded separately?  I.e. in the sample above, if bpf_subprog is loaded
+> > > >    as part of loading bpf_prog_kprobe (prog type KPROBE), how can it be
+> > > >    referenced from bpf_prog_tracepoint (prog type TRACEPOINT) which would be
+> > > >    loaded separately?
+> > >
+> > > The api to support shared libraries was discussed, but not yet implemented.
+> > > We've discussed 'FD + name' approach.
+> > > FD identifies a loaded program (which is root program + a set of subprogs)
+> > > and other programs can be loaded at any time later. The BPF_CALL instructions
+> > > in such later program would refer to older subprogs via FD + name.
+> > > Note that both tracing and networking progs can be part of single elf file.
+> > > libbpf has to be smart to load progs into kernel step by step
+> > > and reusing subprogs that are already loaded.
+> > >
+> > > Note that libbpf work for such feature can begin _without_ kernel changes.
+> > > libbpf can pass bpf_prog_kprobe+bpf_subprog as a single program first,
+> > > then pass bpf_prog_tracepoint+bpf_subprog second (as a separate program).
+> > > The bpf_subprog will be duplicated and JITed twice, but sharing will happen
+> > > because data structures (maps, global and static data) will be shared.
+> > > This way the support for 'pseudo shared libraries' can begin.
+> > > (later accompanied by FD+name kernel support)
+> >
+> > As far as I can determine, the current libbpd implementation is already able
+> > to do the duplication of the called function, even when the ELF object contains
+> > programs of differemt program types.  I.e. the example you give at the top
+> > of the email actually seems to work already.  Right?
 > 
-> If an OpenCAPI context is to be used directly by a kernel driver, there
-> may not be a suitable mm to use.
+> Have you tried it?
+
+Yes, of course.  I wouldn't want to make an unfounded claim.
+
+> > In that case, I am a bit unsure what more can be done on the side of libbpf
+> > without needing kernel changes?
 > 
-> The patch makes the mm parameter to ocxl_context_attach optional.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> it's a bit weird to discuss hypothetical kernel changes when the first step
+> of changing libbpf wasn't even attempted.
 
-The one issue I can see here is that using mm == NULL bypasses our 
-method of enabling/disabling global TLBIs in mm_context_add_copro().
+It is not hypothetical.  The folowing example works fine:
 
-Discussing this privately with Alastair and Fred - this should be fine, 
-but perhaps we should document that.
+static int noinline bpf_action(void *ctx, long fd, long buf, long count)
+{
+        int                     cpu = bpf_get_smp_processor_id();
+        struct data {
+                u64     arg0;
+                u64     arg1;
+                u64     arg2;
+        }                       rec;
 
-> ---
->   drivers/misc/ocxl/context.c |  9 ++++++---
->   drivers/misc/ocxl/link.c    | 12 ++++++++----
->   2 files changed, 14 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-> index bab9c9364184..994563a078eb 100644
-> --- a/drivers/misc/ocxl/context.c
-> +++ b/drivers/misc/ocxl/context.c
-> @@ -69,6 +69,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
->   int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
->   {
->   	int rc;
-> +	unsigned long pidr = 0;
->   
->   	// Locks both status & tidr
->   	mutex_lock(&ctx->status_mutex);
-> @@ -77,9 +78,11 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
->   		goto out;
->   	}
->   
-> -	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
-> -			mm->context.id, ctx->tidr, amr, mm,
-> -			xsl_fault_error, ctx);
-> +	if (mm)
-> +		pidr = mm->context.id;
-> +
-> +	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid, pidr, ctx->tidr,
-> +			      amr, mm, xsl_fault_error, ctx);
->   	if (rc)
->   		goto out;
->   
-> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-> index cce5b0d64505..43542f124807 100644
-> --- a/drivers/misc/ocxl/link.c
-> +++ b/drivers/misc/ocxl/link.c
-> @@ -523,7 +523,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   	pe->amr = cpu_to_be64(amr);
->   	pe->software_state = cpu_to_be32(SPA_PE_VALID);
->   
-> -	mm_context_add_copro(mm);
-> +	if (mm)
-> +		mm_context_add_copro(mm);
->   	/*
->   	 * Barrier is to make sure PE is visible in the SPA before it
->   	 * is used by the device. It also helps with the global TLBI
-> @@ -546,7 +547,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
->   	 * have a reference on mm_users. Incrementing mm_count solves
->   	 * the problem.
->   	 */
-> -	mmgrab(mm);
-> +	if (mm)
-> +		mmgrab(mm);
->   	trace_ocxl_context_add(current->pid, spa->spa_mem, pasid, pidr, tidr);
->   unlock:
->   	mutex_unlock(&spa->spa_lock);
-> @@ -652,8 +654,10 @@ int ocxl_link_remove_pe(void *link_handle, int pasid)
->   	if (!pe_data) {
->   		WARN(1, "Couldn't find pe data when removing PE\n");
->   	} else {
-> -		mm_context_remove_copro(pe_data->mm);
-> -		mmdrop(pe_data->mm);
-> +		if (pe_data->mm) {
-> +			mm_context_remove_copro(pe_data->mm);
-> +			mmdrop(pe_data->mm);
-> +		}
->   		kfree_rcu(pe_data, rcu);
->   	}
->   unlock:
-> 
+        memset(&rec, 0, sizeof(rec));
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
+        rec.arg0 = fd;
+        rec.arg1 = buf;
+        rec.arg2 = count;
 
+        bpf_perf_event_output(ctx, &buffers, cpu, &rec, sizeof(rec));
+
+        return 0;
+}
+
+SEC("kprobe/ksys_write")
+int bpf_kprobe(struct pt_regs *ctx)
+{
+        return bpf_action(ctx, ctx->di, ctx->si, ctx->dx);
+}
+
+SEC("tracepoint/syscalls/sys_enter_write")
+int bpf_tp(struct syscalls_enter_write_args *ctx)
+{
+        return bpf_action(ctx, ctx->fd, ctx->buf, ctx->count);
+}
+
+char _license[] SEC("license") = "GPL";
+u32 _version SEC("version") = LINUX_VERSION_CODE;
