@@ -2,109 +2,113 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51881C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:32:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D270C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:33:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 332F220823
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C93E20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:33:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560843230;
+	bh=jTVsM3abHm+rU7xAxotgBljTljQR8L8QQ5Ojozvh/uo=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=ehkyCpWm/1XbFFqM5AXw5yRkWUAvmr4B6LjBfRXP9N+jN8eRE3sZEFz6AOH3jBScL
+	 PfKgaSmJgMLfn9ID1DI4bABV156bG6FWvg9Jwbi2aSk8x+eOvpSe9oF7SyR2jGP3Bg
+	 CZBYDXMhkU2szcEcGYsW8LGMcrbrptrGgO6BzQls=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfFRHck (ORCPT
+        id S1729011AbfFRHds (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:32:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44456 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725870AbfFRHck (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:32:40 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5I7SVn7104593
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 03:32:38 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t6ta4b7mt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 03:32:38 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 18 Jun 2019 08:32:37 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Jun 2019 08:32:33 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5I7WWdI32702618
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 07:32:32 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 94A9C4C046;
-        Tue, 18 Jun 2019 07:32:32 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DFB6B4C063;
-        Tue, 18 Jun 2019 07:32:30 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.53])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 18 Jun 2019 07:32:30 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Tue, 18 Jun 2019 10:32:30 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH] arm64/mm: don't initialize pgd_cache twice
-Date:   Tue, 18 Jun 2019 10:32:29 +0300
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-x-cbid: 19061807-0016-0000-0000-0000028A04C9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061807-0017-0000-0000-000032E7538F
-Message-Id: <1560843149-13845-1-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=857 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906180062
+        Tue, 18 Jun 2019 03:33:48 -0400
+Received: from mga11.intel.com ([192.55.52.93]:22887 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725934AbfFRHds (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:33:48 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 00:33:48 -0700
+X-ExtLoop1: 1
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Jun 2019 00:33:45 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        James Grant <james.grant@jci.com>, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
+In-Reply-To: <20190510124248.2430-1-alexandre.belloni@bootlin.com>
+References: <20190510124248.2430-1-alexandre.belloni@bootlin.com>
+Date:   Tue, 18 Jun 2019 10:33:41 +0300
+Message-ID: <87zhmffiui.fsf@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When PGD_SIZE != PAGE_SIZE, arm64 uses kmem_cache for allocation of PGD
-memory. That cache was initialized twice: first through
-pgtable_cache_init() alias and then as an override for weak
-pgd_cache_init().
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-Remove the alias from pgtable_cache_init() and keep the only pgd_cache
-initialization in pgd_cache_init().
+Alexandre Belloni <alexandre.belloni@bootlin.com> writes:
 
-Fixes: caa841360134 ("x86/mm: Initialize PGD cache during mm initialization")
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- arch/arm64/include/asm/pgtable.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> Gadget drivers may queue request in interrupt context. This would lead to
+> a descriptor allocation in that context. In that case we would hit
+> BUG_ON(in_interrupt()) in __get_vm_area_node.
+>
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/usb/gadget/udc/lpc32xx_udc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget/ud=
+c/lpc32xx_udc.c
+> index d8f1c60793ed..b706d9c85a35 100644
+> --- a/drivers/usb/gadget/udc/lpc32xx_udc.c
+> +++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
+> @@ -938,7 +938,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(struc=
+t lpc32xx_udc *udc)
+>  	struct lpc32xx_usbd_dd_gad	*dd;
+>=20=20
+>  	dd =3D (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
+> -			udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
+> +			udc->dd_cache, (GFP_ATOMIC | GFP_DMA), &dma);
 
-diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
-index 2c41b04..851c68d 100644
---- a/arch/arm64/include/asm/pgtable.h
-+++ b/arch/arm64/include/asm/pgtable.h
-@@ -812,8 +812,7 @@ extern int kern_addr_valid(unsigned long addr);
- 
- #include <asm-generic/pgtable.h>
- 
--void pgd_cache_init(void);
--#define pgtable_cache_init	pgd_cache_init
-+static inline void pgtable_cache_init(void) { }
- 
- /*
-  * On AArch64, the cache coherency is handled via the set_pte_at() function.
--- 
-2.7.4
+doesn't apply:
 
+checking file drivers/usb/gadget/udc/lpc32xx_udc.c
+Hunk #1 FAILED at 938.
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0Ik9UACgkQzL64meEa
+mQZe/BAA1Wmem2fEj1kGc0BIPALzcahe+BFPQjo2Rm2du+gW/LJhZXH7KZnPXSLj
+CaJGl79vPA0+cG+50uf25eAL3Q9DjuJPSENwD723ZNGdM+eLUnW5a+q8kLnGgSyk
+wqgvrXzwnmiIY6v5fM4s1+gfmqZEssA9VnG+/JhODxJpVmbSEIc5WSGWmQ4zdRyO
+t/82DKMnCkYRhgNzxSqVfm7Rua2bfW47UL9B4X4vm9Lgm6K5qwBAF9+AghFPDoyP
+OHM1d6tPgoO1bVByW7yU3HVYKiVXnqlxo3E1M7Zm+dinuYgDrvQ7SDU9wfbhx42n
+8x8NaHShxval8T2v0knz/9F0SwjU/FHAoCO3XHMzqs5u0BCFyE8FBJ0+oFCFuX90
+nDBGNnIkPt3bZRdAPd1qkxBnu1tpKU8h0yguKuecPhnnm1da3/ec5pLWaLBPGlzH
+5NSQt/ROyJzJAfLRiiRgFeFr6iLV4cZqM0xPdJzA8EJwZ+vQjiQKroSxAZ+6oyuW
+xrd6CZaR1r1sm1OPIGOJZxb9YNfttNiOtDDe7rcP42EpyC7+IXYqmYAcHsWSr1lr
+Xr6MdIJlGBH9/2F7dl3exjfe4xD8bOkwqD3LrQ8eSnNdlsRR74UcREx4llhqA/c+
+PTKq6k/wEu8h2skItle3dBJX8YvNVY5JMWoGO5s78MIW7Zkf8Co=
+=U+ZK
+-----END PGP SIGNATURE-----
+--=-=-=--
